@@ -1,0 +1,57 @@
+<ul class="dropdown-menu item-options">
+    <% var canEdit = data.canEdit ? "" : "disabled"; %>
+    <li class="<%= canEdit %>">
+        <a href="#" class="edit-item <%= canEdit %>" data-id="<%= data.item.id %>"><%= data.text.ui.edit %></a>
+    </li>
+    <% var canDeleteLaunch = !data.canDeleteLaunch || data.validator.durationInProgress(data.item) ||
+    data.isLaunchInProgress
+    ? 'disabled' :
+    '' %>
+    <li class="<%= canDeleteLaunch %>">
+        <a href="#" class="delete-item <%= canDeleteLaunch %>"
+           data-id="<%= data.item.id %>"
+           data-name="<%- data.item.name %>"><%= data.text.ui.delete %></a>
+    </li>
+    <% if(!_.isUndefined(data.isDebug)){ %>
+    <% if(!data.isCustomer){ %>
+        <% if(!_.isUndefined(data.item.mode)){ %>
+        <li class="<%= canEdit %>">
+            <% var title = (data.item.mode === 'DEBUG') ? data.text.launches.shiftToLaunches : data.text.launches.shiftToDebug; %>
+            <a class="launch-mode-switch <%= canEdit %>" href="#"><%= title %></a>
+        </li>
+        <% } %>
+    <% } %>
+    <% var isDisabled = data.validator.durationInProgress(data.item) && data.validator.canStopLaunch(data.item, data.isDebug) ? "" : "disabled"; %>
+    <li class="<%= isDisabled %>">
+        <a href="#" class="force-finish <%= isDisabled %>" data-id="<%- data.item.id %>" data-name="<%- data.item.name %>">
+            <%= data.text.launches.forceFinish %>
+        </a>
+    </li>
+    <% if(!data.isDebug){ %>
+        <% var canAnalyzeClass = data.item.isProcessing ? "disabled" : ""; %>
+        <li class="<%= canAnalyzeClass %>">
+            <a href="#" class="start-analyze <%= canAnalyzeClass %>" data-type="analyze" data-id="<%- data.item.id %>"><%= data.text.ui.analyze %></a>
+        </li>
+    <% } %>
+    <% if(!data.isDebug){ %>
+        <% var canMatchClass = data.canMatchIssues ? "" : "disabled"; %>
+        <li class="<%= canMatchClass %>">
+            <a href="#" class="match-issues <%= canMatchClass %>" data-id="<%- data.item.id %>" data-name="<%- data.item.name %>" data-type="match">
+                <%= data.text.launches.matchTitle %>
+            </a>
+        </li>
+    <% } %>
+    <% } %>
+    <% if(data.exportFormats){ %>
+        <% var disabled = data.validator.durationInProgress(data.item) ? 'disabled' : '' %>
+        <li role="separator" class="divider"></li>
+        <li class="rp-export-launch-group">
+            <span class="rp-export-label"><%= data.text.launches.export %>:</span>
+            <div class="rp-export-btn-group">
+                <% _.each(data.exportFormats, function(f){ %>
+                    <a href="<%= data.util.updateImagePath(data.getExportUrl(data.item.id, f)) %>" target="_blank" class="rp-btn rp-btn-default <%= disabled %>"><%= f %></a>
+                <% }); %>
+            </div>
+        </li>
+    <% } %>
+</ul>

@@ -1,0 +1,33 @@
+<div class="form-group col-sm-12">
+    <div class="col-sm-12">
+        <label class="control-label"><%= data.text.forms.description %></label>
+        <% if(data.item.max){ %>
+        <span class="control-label pull-right">(<span class="vsize"><%= data.item.description ? data.item.description.length : 0 %></span>/<%= data.item.max %>)</span>
+        <% } %>
+    </div>
+    <div class="col-sm-12">
+        <textarea id="editDescription" cols="60" rows="4" class="col-sm-12 form-control" name="edit[description]"><%= data.item.description %></textarea>
+        <span class="help-inline"></span>
+    </div>
+</div>
+<div class="form-group col-sm-12">
+    <label class="col-sm-12 control-label"><%= data.text.forms.tags %></label>
+    <div class="col-sm-12">
+        <input type="text" id="editTags" data-warning="<%= data.text.ui.enterChars %>" class="filter-control"
+               name="edit[tags]" value="<%- data.item.tags ? data.item.tags.join(', ') : '' %>" />
+    </div>
+</div>
+<% if(data.type == 'updateLaunch') { %>
+    <div class="form-group col-sm-12">
+        <div class="col-sm-12">
+            <div class="well">
+                <h3 class="title-no-data text-center">
+                    <i class="rp-icons rp-icons-warning"></i>
+                    <span class="warning">
+                        <small><%= data.text.launches.disclaimerChangeDescription %></small>
+                    </span>
+                </h3>
+            </div>
+        </div>
+    </div>
+<% } %>

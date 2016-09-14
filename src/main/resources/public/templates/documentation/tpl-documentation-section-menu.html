@@ -1,0 +1,5 @@
+<ul id="toc">
+    <% _.each(data.menu, function(el){ %>
+       <li class="toc-level toc-level-<%=el.level%>"><a href="#documentation/<%= el.link %>"><%= el.title %></a></li>
+      <% }) %>
+</ul>

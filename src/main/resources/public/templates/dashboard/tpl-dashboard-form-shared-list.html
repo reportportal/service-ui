@@ -1,0 +1,42 @@
+<% if(!_.isEmpty(data.items)) { %>
+    <ul class="dashboard_list clearfix">
+        <li class="thead-dashboard-list clearfix">
+           <div class="col-md-6 col-sm-6 col-xs-6"><%= data.text.dashboard.tHeadTitleOwners %></div>
+           <div class="col-md-6 col-sm-6 col-xs-6"><%= data.text.dashboard.tHeadTitleDashboardName %></div>
+        </li>
+        <% _.each(data.items, function(item) { %>
+            <li class="title user_name clearfix">
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <%= item.name %>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-6">
+                    <% _.each(item.dashboards, function(dashboard) { %>
+                        <p class="dashboard_title clearfix">
+                            <% if (dashboard.dublicate) { %>
+                                <a class="shared-dashboard disabled-link"
+                                    title="<%= data.text.dashboard.dashboardExists %>"
+                                    href="#<%= dashboard.id %>"
+                                    data-dashboard-id="<%= dashboard.id %>">
+                                    <%- dashboard.name %>
+                                </a>
+                            <% } else { %>
+                                <a class="shared-dashboard"
+                                    href="#<%= dashboard.id %>"
+                                    data-dashboard-id="<%= dashboard.id %>">
+                                    <%- dashboard.name %>
+                                </a>
+                            <% } %>
+                        </p>
+                    <% }); %>
+                </div>
+            </li>
+        <% }); %>
+    </ul>
+<% } else { %>
+    <div class="no-dashboards">
+        <h3 class="title-no-data text-center">
+            <i class="rp-icons rp-icons-warning"></i>
+            <span class="warning"><%= data.text.dashboard.sharedNoFound %></span>
+        </h3>
+    </div>
+<% } %>

@@ -1,0 +1,12 @@
+<div id="TestItemsNav">
+    <nav class="log-testitems-nav row">
+        <ul class="pager pull-right">
+            <li><a <% if(data.prev){ %> title="<%= data.text.logs.prevTestItem %>" href="<%= data.prev %>"<% } else
+                {%>class="disabled"<% }
+                %>>&laquo;</a></li>
+            <li><a <% if(data.next){ %> title="<%= data.text.logs.nextTestItem %>" href="<%= data.next %>"<% } else
+                {%>class="disabled"<% }
+                %>>&raquo;</a></li>
+        </ul>
+    </nav>
+</div>

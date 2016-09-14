@@ -1,0 +1,205 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+/* WIDGETS */
+
+.widget-content {
+
+    .activity-widget {
+        padding: 0 15px 15px 15px;
+
+        .activity-date-header {
+            font-family: "OpenSansSemibold", sans-serif;
+            font-size: 13px;
+            line-height: 13px;
+            color: #999999;
+            margin: 10px 0 10px 0;
+            padding: 10px 0 10px 0;
+            border-bottom: 1px dotted #999999;
+        }
+
+        .activity-item {
+            margin: 0px 0 10px 0;
+            padding: 0px 0 10px 0;
+            border-bottom: 1px dotted #999999;
+        }
+    }
+
+    .activity-item-summary-wrap {
+        overflow: hidden;
+    }
+
+    .activity-item-user {
+        text-transform: capitalize;
+        font-size: 15px;
+        line-height: 15px;
+        color: #464547;
+    }
+
+    .activity-item-info {
+        margin: 0;
+        color: #777;
+        font-size: 13px;
+        line-height: 15px;
+    }
+
+    .activity-item {
+        border: none;
+        color: #404040;
+        min-height: 16px;
+        padding: 0;
+        margin: 0 0 10px 0;
+    }
+
+    .activity-item-summary {
+        color: #555;
+        font-size: 13px;
+        line-height: 20px;
+        word-wrap: break-word;
+        padding: 0;
+
+        p {
+            font-family: $OpenSansRegular;
+            font-size: 13px;
+            line-height: 15px;
+            color: #464547;
+            margin: 3px 0 1px 0;
+            /* text-transform: capitalize; */
+        }
+    }
+    .hoverFullTime {
+        font-family: $OpenSansRegular;
+        font-size: 13px;
+        line-height: 15px;
+        color: #999999;
+    }
+
+    .activity-avatar {
+        float: left;
+
+        img {
+            max-width: 30px;
+            max-height: 50px;
+            padding: 0;
+            margin: 0px 0 0 0;
+            margin-right: 14px;
+            border: none;
+            border-radius: 0;
+        }
+    }
+
+}
+
+/* INVALID DATA */
+
+.widget-content .panel-body.widget-invalid {
+    border-top-width: 100px;
+}
+#previewContent .panel-body.widget-invalid {
+    border-top-width: 46px;
+}
+
+.widget-invalid-data {
+    position: absolute;
+    left: 0;
+    top: -46px;
+    width: 100%;
+    height: 46px;
+    background: rgba(243, 108, 74, 0.2);
+    cursor: pointer;
+    font-size: 12px;
+    text-align: center;
+    padding: 5px;
+
+    .widget-invalid-text {
+        color: #ff3222;
+    }
+
+    .rp-link {
+        text-decoration: underline;
+    }
+}
+#previewContent .widget-invalid-data {
+    cursor: default;
+}
+.statistics-panel.widget-invalid {
+    padding-top: 50px;
+    position: relative;
+}
+.statistics-panel .widget-invalid-data {
+    top: 0;
+    margin: 0 -15px;
+    padding: 5px 15px;
+    box-sizing: content-box;
+    height: 36px;
+}
+#previewContent .statistics-panel.widget-invalid {
+    padding-top: 40px;
+}
+#previewContent .statistics-panel .widget-invalid-data {
+    top: -10px;
+}
+
+/*Temp change modal widget wizard ----------------------------- */
+
+#widgetWizardModal #widgetEditor #OwnFilters.tab-pane,
+#widgetWizardModal #widgetEditor #SharedFilters.tab-pane,
+#widgetWizardModal #widgetEditor #SharedWidgets.tab-pane {
+    overflow: hidden;
+    padding: 0;
+    height: auto;
+}
+#widgetWizardModal #widgetTemplates {
+    padding: 0;
+}
+#widgetWizardModal .borderWidget.smallOverflow {
+    padding: 0 15px 0 15px;
+}
+#widgetWizardModal #widgetEditor .container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+#widgetWizardModal .modal-dialog .modal-content .modal-body p {
+    font-size: 13px;
+    line-height: 20px;
+}
+
+/* -------------------------- */
+
+.criteria-holder-dropdown {
+    .custom-selector {
+        &.rp-btn {
+            padding-left: 25px;
+
+            i {
+                &.mi-add {
+                    position: absolute;
+                    top: 7px;
+                    left: 7px;
+                    width: 15px;
+                    height: 15px;
+                    font-size: 15px;
+                    line-height: 15px;
+                }
+            }
+        }
+    }
+}

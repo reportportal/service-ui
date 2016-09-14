@@ -1,0 +1,28 @@
+<div class="form-horizontal members-confirm">
+    <div class="confirm-top">
+        <span><%= data.text.members.linkTo %> <%= data.text.ui.toolname %> <a href="<%- data.link %>" class="rp-blue-link-undrl"><%- data.link %></a></span>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label"><%= data.text.forms.login %>:</label>
+        <div class="col-sm-3">
+            <span class="confirm-line"><%- data.data.login %></span>
+        </div>
+    </div>    <div class="form-group">
+        <label class="col-sm-3 control-label"><%= data.text.forms.fullName %>:</label>
+        <div class="col-sm-3">
+            <span class="confirm-line"><%- data.data.full_name %></span>
+        </div>
+    </div>    <div class="form-group">
+        <label class="col-sm-3 control-label"><%= data.text.forms.email %>:</label>
+        <div class="col-sm-3">
+            <span class="confirm-line"><%- data.data.email %></span>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-sm-3 control-label"><%= data.text.forms.password %>:</label>
+        <div class="col-sm-3">
+            <span class="confirm-line"><%- data.data.password %></span>
+        </div>
+    </div>
+</div>

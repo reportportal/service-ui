@@ -1,0 +1,58 @@
+<div id="logGallery">
+    <div class="panel rp-panel-styles">
+        <a href="#imageBlockCollapse"
+            class=""
+            data-parent="#accordion"
+            data-toggle="collapse"
+            id="galleryToggler">
+            <div class="panel-heading">
+                <h6 class="panel-title">
+                    <i class="material-icons icon-image">image</i>
+                    <%= data.text.ui.gallery %>
+                    <i class="material-icons arrow_down">keyboard_arrow_down</i>
+                </h6>
+            </div>
+        </a>
+        <div class="rp-panel-collapse panel-collapse collapse" id="imageBlockCollapse" style="">
+            <div class="panel-body" id="galleryContent"></div>
+        </div>
+    </div>
+</div>
+
+<div id="logHistory">
+    <div id="historyWell"></div>
+    <div id="defectWell" class="clearfix"></div>
+    <div id="activityWell"></div>
+</div>
+
+<div class="container-fluid rp-margin-reset" style="border: none;">
+    <div id="logFilter" class="pull-left"></div>
+    <div id="ScreenshotsFilter" class="pull-left"></div>
+    <!-- title -->
+    <div class="clearfix"></div>
+    <div class="row rp-table-thead hidden-xs fixed_table_header">
+        <div class="col-sm-10">
+            <div class="input-filter form-group" id="messageFilterWrapper">
+                <input type="text"
+                    class="rp-input-search favorites-name-filter"
+                    id="messageFilter"
+                    name="messageFilter"
+                    placeholder="<%= data.text.launchesHeaders.message %>"
+                    value="<%- data.messageFilterValue || '' %>" />
+                <i class="material-icons">search</i>
+                <div class="error-hint help-inline" style="display:none;"></div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <div id="sortByTime"
+                class="rp-table-th ASC"
+                data-sorter="time"
+                style="padding-left: 0;">
+                <%= data.text.launchesHeaders.time %>
+                <i class="material-icons arrow_up">keyboard_arrow_up</i>
+                <i class="material-icons arrow_down">keyboard_arrow_down</i>
+            </div>
+        </div>
+    </div>
+    <!-- ./title -->
+</div>

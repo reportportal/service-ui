@@ -1,0 +1,351 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+/*------------*/
+/* Login Form */
+
+%BLOCK_LOGIN_FORM {
+    .block-login-form {
+        position: relative;
+        //padding-top: 200px;
+        padding-right: 0;
+        padding-left: 0;
+        margin: 0 auto;
+        color: #fff;
+    }
+}
+
+%BLOCK_LOGIN_LABLE {
+    label {
+        &.block-login-label {
+            width: 100%;
+            margin: 0;
+
+            span {
+                display: inline-block;
+                font-size: 16px;
+                line-height: 16px;
+                margin-bottom: 8px;
+            }
+        }
+    }
+}
+
+#restore-form, #reset-form {
+    span {
+        &.block-login-title {
+            margin-top: 0;
+            display: inline-block;
+            font-size: 16px;
+            line-height: 16px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+    }
+
+    .has-error .rp-input-auth,
+    .has-error .rp-input-auth:focus {
+        // color: #393939;
+        box-shadow: 0 0 2px 0 rgba(255,49,33,.7);
+        border: 1px solid #ff3222;
+    }
+}
+
+
+#login-form,
+#restore-form,
+#reset-form {
+    padding: 0 60px 130px 40px;
+    height: 100%;
+    display: table;
+    width: 100%;
+    min-height: 580px;
+    position: relative;
+    @extend %BLOCK_LOGIN_FORM;
+    @extend %BLOCK_LOGIN_LABLE;
+    .login-form-overflow {
+        position: relative;
+        display: table-cell;
+        width: 100%;
+        height: 100%;
+        vertical-align: middle;
+    }
+    .block-login-error {
+        color: #cc4c12;
+        margin-top: -10px;
+        padding-bottom: 10px;
+        display: none;
+    }
+
+    .block-login-frgtpswd {
+        display: block;
+        color: #999;
+        margin-top: 15px;
+        font-size: 16px;
+        line-height: 16px;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+
+    .block-login-info {
+        text-align: center;
+        margin-top: 0;
+        padding-top: 20px;
+        font-size: 12px;
+        font-weight: bolder;
+        color: #999;
+        /* border-top: 1px solid #4a7a48;*/
+    }
+
+    .build-version {
+        position: absolute;
+        left: 50%;
+        width: 300px;
+        margin-left: -150px;
+        bottom: 35px;
+        font-size: 10px;
+        text-align: left;
+        line-height: 20px;
+        span {
+            padding-right: 10px;
+            &.service-name {
+                padding-right: 0px;
+            }
+        }
+    }
+
+    .build-version .small {
+        padding-top: 2px;
+    }
+}
+
+.has-error .b-login__input,
+.has-error .b-login__input:focus,
+.has-error .b-login__input:active {
+    color: #fff;
+}
+
+.block-login {
+    position: fixed;
+    font-family: "OpenSansRegular", sans-serif;
+    top: 60px;
+    bottom: 0;
+    right: 0;
+    transform: translate(385px, 0);
+    width: 385px;
+    background-color: rgba(0, 0, 0, 0.8);
+    transition: transform 0.5s ease-in-out;
+
+    &.block-login-show {
+        transform: translate(0, 0);
+    }
+}
+
+.rp-btn-show-login {
+    position: absolute;
+    font-family: "OpenSansRegular", sans-serif;
+    top: 20px;
+    right: 30px;
+    font-size: 18px;
+    line-height: 18px;
+    font-weight: lighter;
+    color: #fff;
+    padding: 0 25px 0 0;
+    text-transform: uppercase;
+
+    &:hover {
+        color: #7b7b7b;
+        cursor: pointer;
+    }
+
+    i {
+        &.material-icons {
+            position: absolute;
+            top: 0px;
+            right: 0;
+        }
+    }
+}
+
+.authorized .rp-btn-show-login,
+.b-return__btn {
+    display: none;
+}
+
+#restore-form {
+    .btn-login-cancel {
+        display: inline-block;
+        margin: 0;
+        margin-right: 10px;
+        text-align: center;
+        padding: 10px 12px;
+        font-weight: normal;
+        background-image: none;
+        border-radius: 0;
+        float: left;
+        font-size: 15px;
+        line-height: 15px;
+        text-transform: uppercase;
+        border: none;
+        background: #999;
+        color: #fff;
+        outline: none;
+    }
+    .btn-login-change-pwd {
+        display: inline-block;
+        white-space: nowrap;
+        background-color: #5bc0de;
+        border-color: #46b8da;
+        margin: 0;
+        text-align: center;
+        padding: 10px 20px;
+        font-weight: normal;
+        background-image: none;
+        border-radius: 0;
+        float: right;
+        font-size: 15px;
+        line-height: 15px;
+        text-transform: uppercase;
+        border: none;
+        color: #fff;
+        outline: none;
+
+        &[disabled],
+        &[disabled="disabled"],
+        &.disabled {
+            cursor: not-allowed;
+            filter: alpha(opacity=65);
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            opacity: .65;
+        }
+
+        &:hover {
+
+        }
+
+        &:active {
+
+        }
+
+    }
+}
+
+@media (max-width: 768px) {
+    .block-login {
+        width: 100%;
+        transform: translate(100%, 0);
+        overflow-y: auto;
+        transition: transform 0.5s ease-in-out;
+
+        &.block-login-show {
+            // TODO
+        }
+
+        // TODO
+        &.b-login--docs {
+            top: 104px;
+        }
+
+        #login-form,
+        #restore-form {
+            .block-login-form {
+                width: 304px;
+                //padding-top: 100px;
+            }
+        }
+    }
+
+    .rp-btn-show-login {
+        right: 15px;
+    }
+}
+
+@media (max-width: 700px) {
+    .block-login-form {
+        width: 304px;
+    }
+}
+
+.authorized .rp-btn-show-login,
+.authorized .b-login__btn {
+    display: none;
+}
+
+// TODO
+
+.b-login__form-reset {
+    padding-bottom: 0;
+}
+
+.b-login__input--success {
+    border-color: #4a7a48;
+}
+
+.b-login__input--error {
+    border-color: #cc4c12;
+}
+
+.b-login__or {
+    margin: 25px 0 15px 0;
+}
+
+.b-login__or--border {
+    display: inline-block;
+    border-top: 1px solid #4a7a48;
+    width: 35%;
+    margin-bottom: 4px;
+}
+
+.b-login__submit--sso {
+    background-color: #4a7a48;
+}
+.btn.b-login__submit--sso:focus,
+.btn.b-login__submit--sso.btn-default[disabled],
+.btn.b-login__submit--sso:active,
+.btn.b-login__submit--sso:hover {
+    background-color: #294928;
+}
+.b-login__label {
+    font-size: 16px;
+}
+.b-login__or--text {
+    font-weight: bolder;
+    color: #4a7a48;
+    display: inline-block;
+    width: 30%;
+    border: none;
+    text-align: center;
+    margin: 0 -4px;
+}
+.build-version p {
+    margin: 0 auto 10px auto;
+    width: 215px;
+    overflow: hidden;
+    span {
+        float: right;
+        &:first-child {
+            float: left;
+        }
+    }
+}

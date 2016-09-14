@@ -1,0 +1,12 @@
+server:
+  port: 8181
+  compression:
+    enabled: true
+    min-response-size: 1024
+
+eureka:
+  instance:
+    hostname: ${reportportal.eureka.instance.hostname:localhost}
+  client:
+    serviceUrl:
+      defaultZone: http://${reportportal.eureka.hostname:localhost}:8761/eureka/

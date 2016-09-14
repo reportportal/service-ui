@@ -1,0 +1,78 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+/* filters page */
+
+.b-favorites-name-filter {
+    margin-top: 7px;
+    width: 90%;
+    position: relative;
+}
+
+// .b-favorites-name-filter .fa {
+//     top: 0;
+// }
+
+.b-favorites-name-filter .filter-hint {
+    position: absolute;
+    width: 100%;
+    padding: 6px 12px;
+    z-index: 1;
+    display: none;
+}
+
+.filter-option-select {
+    width: 50px;
+    display: table-cell;
+    background: transparent;
+    vertical-align: top;
+}
+
+.filter-option-input {
+    display: table-cell;
+    vertical-align: top;
+    position: relative;
+    float: none !important;
+}
+
+.filter-option-select .dropdown-toggle {
+    min-width: initial !important;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-right: none;
+    padding: 5px 6px 6px;
+    font-size: 12px;
+    width: 50px;
+    vertical-align: top;
+}
+
+.filter-shader-status {
+    i {
+        &.material-icons {
+            font-size: 18px;
+            line-height: 18px;
+            width: 18px;
+            height: 18px;
+        }
+    }
+}
+
+/* end filters page */

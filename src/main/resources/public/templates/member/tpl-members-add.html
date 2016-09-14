@@ -1,0 +1,158 @@
+<div class="form-horizontal add-member-form-wrapper">
+    <form id="addMemberForm" name="addMemberForm">
+        <div class="rp-form-group clearfix">
+            <div class="rp-custom-col">
+                <h4 class="common-title">
+                    <% if(data.type == 'users'){ %>
+                    <%= data.text.admin.addNewUser %>
+                    <% } else { %>
+                    <%= data.text.members.addMemberToProject %>
+                    <% } %>
+                </h4>
+            </div>
+        </div>        <div class="rp-form-group clearfix">
+            <label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col control-label obligatory-field" for="username">
+                <%= data.text.forms.login %>
+            </label>
+            <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">
+                <input id="username" name="username" type="text" value="" class="rp-input-default rp-width-100 form-control"/>
+                <div class="error-bottom">
+                    <div class="help-inline"></div>
+                </div>
+            </div>
+            <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+        </div>        <div class="rp-form-group clearfix">
+            <label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col control-label obligatory-field" for="fullName">
+                <%= data.text.forms.fullName %>
+            </label>
+            <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">
+                <input id="fullName" name="fullName" type="text" value="" class="rp-input-default rp-width-100 form-control"/>
+                <div class="error-bottom">
+                    <div class="help-inline"></div>
+                </div>
+            </div>
+            <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+        </div>        <div class="rp-form-group clearfix">
+            <label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col control-label obligatory-field" for="email">
+                <%= data.text.forms.email %>
+            </label>
+            <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">
+                <input id="email" name="email" type="text" value="" class="rp-input-default rp-width-100 form-control"/>
+                <div class="error-bottom">
+                    <div class="help-inline"></div>
+                </div>
+            </div>
+            <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+        </div>        <% if(data.type == 'users'){ %>
+        <div class="rp-form-group clearfix">
+            <label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col control-label obligatory-field" for="accountRole">
+                <%= data.text.forms.accountRole %>
+            </label>
+            <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">
+                <div class="rp-btn-group rp-width-100 btn-group input-group">
+                    <button id="accountRole" name="accountRole"
+                        data-value="<%= data.defaultAccountRole %>"
+                        data-defaultvalue="<%= data.defaultAccountRole %>"
+                        type="button"
+                        class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
+                        data-toggle="dropdown">
+                        <span class="select-value"><%= data.defaultAccountRole %></span>
+                        <span class="rp-caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <% _.each(data.accountRoles, function(role){ %>
+                        <li><a href="#" data-value="<%= role %>"><%= role.split('_').join(' ') %></a></li>
+                        <% }); %>
+                    </ul>
+                </div>
+                <div class="error-bottom">
+                    <div class="help-inline admin-privileges">
+                        <%= data.text.forms.adminPrivileges %>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+        </div>
+        <% } %>        <% if(data.type == 'users'){ %>
+        <div class="rp-form-group clearfix">
+            <label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col control-label obligatory-field" for="project">
+                <%= data.text.forms.project %>
+            </label>
+            <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">
+                <select id="project" name="project" class="select2-control">
+                    <option value="" style="display:none;"></option>
+                </select>
+                <div class="error-bottom">
+                    <div class="help-inline"></div>
+                </div>
+            </div>
+            <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+        </div>
+        <% } %>
+        <div class="rp-form-group clearfix">
+            <label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col control-label obligatory-field" for="projectRole">
+                <%= data.text.forms.projectRole %>
+            </label>
+            <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">
+                <div class="rp-btn-group rp-width-100">
+                    <button id="projectRole" name="projectRole"
+                        <%= data.isDefaultProject ? disabled='disabled' : '' %>
+                        data-value="<%= data.defaultProjectRole %>"
+                        data-defaultvalue="<%= data.defaultProjectRole %>"
+                        type="button"
+                        class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
+                        data-toggle="dropdown">
+                        <span class="select-value"><%= data.defaultProjectRole %></span>
+                        <span class="rp-caret"></span>
+                    </button>
+                    <% if(!data.isDefaultProject){ %>
+                    <ul class="dropdown-menu">
+                        <% _.each(data.roles, function(role){ %>
+                        <li><a href="#" data-value="<%= role %>"><%= role.split('_').join(' ') %></a></li>
+                        <% }); %>
+                    </ul>
+                    <% } %>
+                </div>
+            </div>
+            <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+        </div>        <div class="rp-form-group clearfix">
+            <label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col control-label obligatory-field" for="password">
+                <%= data.text.forms.password %>
+            </label>
+            <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">
+                <input id="password" name="password" value="" type="text" class="rp-input-default rp-width-100 form-control"/>
+                <div class="error-bottom">
+                    <div class="help-inline"></div>
+                </div>
+            </div>
+            <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+        </div>        <div class="rp-form-group clearfix generate_password-row">
+            <div class="col-md-3 col-sm-4 col-xs-12 rp-custom-col"></div>
+            <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col to-gen-pass">
+                <a href="#" class="rp-blue-link-undrl rp-link" id="generate_password">
+                    <%= data.text.forms.genPassword %>
+                </a>
+            </div>
+            <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+        </div>        <div class="rp-form-group alert-block clearfix">
+            <div class="col-sm-7 col-md-7">
+                <div id="success-message" class="alert alert-success pull-right" role="alert" style="display: none;">
+                    <%= data.text.members.successAddUser %>
+                </div>
+            </div>
+        </div>        <div class="rp-form-group clearfix">
+            <div class="col-md-7 col-sm-12 col-xs-12 rp-custom-col">
+                <button type="submit" class="rp-btn rp-btn-submit float-right" id="addUserButton">
+                    <%= data.text.ui.add %>
+                </button>
+                <button style="display: none;" type="button" disabled="disabled" class="rp-btn rp-btn-submit float-right" id="viewEmail">
+                    <%= data.text.ui.viewEmail %>
+                </button>
+                <button style="display: none;" type="button" disabled="disabled" class="rp-btn rp-btn-cancel float-right" id="cancelForm">
+                    <%= data.text.ui.backForm %>
+                </button>
+            </div>
+            <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+        </div>
+    </form>
+</div>

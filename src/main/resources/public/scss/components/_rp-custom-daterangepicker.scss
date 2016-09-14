@@ -1,0 +1,37 @@
+
+/*-----------------*/
+/* daterangepicker */
+.daterangepicker {
+    margin-top: 6px;
+
+    .dynamic_update {
+        display: none;
+        position: relative;
+        width: 100%;
+        clear: both;
+        padding: 15px 15px 4px 15px;
+
+        &.checked {
+            p {
+                display: block;
+            }
+        }
+        p {
+            display: none;
+        }
+    }
+
+    &.show-calendar {
+        .dynamic_update {
+            display: block;
+        }
+    }
+
+    button i {
+        color: white;
+    }
+
+    label {
+        left: auto !important;
+    }
+}

@@ -1,0 +1,88 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id "com.moowork.grunt" version "0.11"
+}
+
+apply plugin: "spring-boot"
+apply plugin: "io.spring.dependency-management"
+apply plugin: 'com.moowork.grunt'
+apply plugin: 'idea'
+
+
+apply from: '../build-docker.gradle'
+
+ext {
+    staticsInputDir = "${project.projectDir}/src/main/resources/public"
+    staticsOutputDir = "${project.buildDir}/resources/main/public"
+}
+
+dependencies {
+    compile 'org.springframework.cloud:spring-cloud-starter-config'
+    /* required for spring-retry and pooling for config from registry-service */
+    compile("org.springframework.retry:spring-retry")
+    compile "org.aspectj:aspectjweaver:${aspectjVersion}"
+
+    compile 'org.springframework.cloud:spring-cloud-starter-eureka'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'io.springfox:springfox-swagger-ui:2.3.0'
+
+
+
+    compile('org.hibernate:hibernate-validator:5.0.2.Final') {
+        exclude(module: 'validation-api')
+    }
+
+}
+
+
+grunt {
+    workDir = file("${staticsInputDir}")
+}
+
+
+node {
+    version = '4.4.3'
+    npmVersion = '2.15.1'
+    download = true
+    nodeModulesDir = file("${staticsInputDir}")
+}
+
+grunt_jst {
+    inputs.file "${staticsInputDir}/templates"
+    outputs.file "${staticsOutputDir}/templates/compiled/templates.js"
+}
+grunt_build {
+    inputs.file "${staticsInputDir}"
+    outputs.file "${staticsOutputDir}"
+}
+
+task copyToDocker(type: Copy) {
+    from("${project.buildDir}/resources/main/public")
+    into "${project.buildDir}/libs/public"
+}
+
+task runJsTests(type: NodeTask) {
+    script = project.file("${staticsInputDir}/node_modules/karma/bin/karma")
+    args = ['start', project.file("${staticsInputDir}/karma.conf.js").absolutePath, '--single-run']
+}
+
+idea {
+    module {
+        //and some extra dirs that should be excluded by IDEA
+        excludeDirs += [file("${staticsInputDir}/node_modules"), file("${staticsInputDir}/compiled")];
+
+    }
+}
+
+
+processResources {
+    exclude "**/public/*"
+}
+
+prepareDockerfile.dependsOn copyToDocker
+copyToDocker.dependsOn processResources
+processResources.dependsOn runJsTests
+runJsTests.dependsOn grunt_build
+grunt_build.dependsOn grunt_jst
+grunt_jst.dependsOn npmInstall

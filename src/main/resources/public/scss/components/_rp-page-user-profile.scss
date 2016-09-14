@@ -1,0 +1,371 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+#dynamic-content {
+    .pr-user-profile {
+        padding: 15px 0 0;
+        background: none;
+    }
+}
+
+/*--- USER PROFILE ---*/
+
+.pr-user-profile .media,
+.pr-user-profile .media-body {
+    overflow: inherit;
+}
+
+.pr-user-profile .media {
+    margin-bottom: 20px;
+}
+
+.pr-user-profile .media:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.pr-user-profile .media_wrapper {
+    background-color: #a3c644;
+}
+
+.pr-user-profile .media_image {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.pr-user-profile .media_image .avatar.img-thumbnail {
+    float: none;
+    margin: 0 auto;
+    padding: 7px;
+    border: none;
+    border-radius: 0;
+    background-color: #c1e169;
+}
+
+.pr-user-profile .page-title {
+    margin-bottom: 15px;
+    margin-top: 0;
+    font-family: $OswaldRegular;
+    font-size: 22px;
+    color: #fff;
+}
+
+.pr-user-profile .page-title .profile_name,
+.pr-user-profile .page-title .profile_mail {
+    display: block;
+    margin: 0;
+}
+
+.pr-user-profile .page-title .profile_name {
+    text-transform: uppercase;
+}
+
+.pr-user-profile .page-title small {
+    font-size: 16px;
+    color: #fff;
+}
+
+.pr-user-profile .profile_form .control-label {
+    font-family: $OswaldRegular;
+    font-size: 14px;
+    color: #fff;
+    line-height: 41px;
+}
+
+.pr-user-profile .profile_form #keyHolder .form-control {
+    border: none;
+    height: 41px;
+    width: 100%;
+}
+
+.pr-user-profile .profile_form .help-block {
+    text-align: left;
+    color: #666;
+}
+
+.pr-user-profile .profile_form .b-update-uudi {
+    margin: 0;
+}
+
+.rp-main-panel #dynamic-content .pr-user-profile .profile_form {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.b-update-uudi .btn {
+    height: 41px;
+    width: 41px;
+    padding: 1px 0 0;
+    border: 0;
+    background-color: #cdea7e;
+}
+
+// .b-update-uudi .btn .fa {
+//     font-size: 16px;
+//     color: #799b1c;
+// }
+
+.pr-user-profile .profile_project_list #project-list .project_list_header {
+    margin: 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    background-color: #f0f0f0;
+    font-size: 14px;
+}
+
+.pr-user-profile .profile_project_list .project_list_header .project_roles {
+    font-family: $OswaldRegular;
+    color: #464547;
+    text-transform: uppercase;
+}
+
+.pr-user-profile .profile_project_list .list-group-item {
+    padding: 10px 0;
+    border-color: #ccc;
+    border-top-color: #dbdbdb;
+    border-bottom-color: #dbdbdb;
+    font-family: "OpenSansSemibold", sans-serif;
+}
+
+.pr-user-profile .profile_project_list .list-group-item:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.pr-user-profile .profile_project_list .list-group-item:nth-child(odd) {
+    background-color: #fff;
+}
+
+.pr-user-profile .profile_project_list .list-group-item.active {
+    border-color: #aaca57;
+}
+
+.pr-user-profile .profile_project_list .list-group-item:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.pr-user-profile .profile_project_list .list-group-item:first-child,
+.pr-user-profile .profile_project_list .list-group-item:last-child {
+    border-radius: 0;
+}
+
+.pr-user-profile .profile_project_list .list-group-item .list-group-item-heading {
+    margin-bottom: 0;
+    font-family: "OpenSansSemibold", sans-serif;
+    color: #1a9cb0;
+}
+
+.pr-user-profile .profile_project_list .list-group-item .list-group-item-text {
+    font-family: "OpenSansRegular", sans-serif;
+    color: #666;
+}
+
+.pr-user-profile .code_editor .config-pills {
+    padding: 1px 15px 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: #999;
+}
+
+.pr-user-profile .code_editor .config-pills > li > a {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    font-family: $OswaldRegular;
+    font-size: 14px;
+    color: #fff;
+    text-transform: uppercase;
+    text-shadow: none;
+}
+
+.pr-user-profile .code_editor .config-pills > li.active > a {
+    background: #fff;
+    border-radius: 0;
+    box-shadow: none;
+    color: #999;
+}
+
+.pr-user-profile .code_editor #user-config {
+    border-radius: 0;
+    border: 1px solid #ccc;
+    border-top: none;
+    background: #fff;
+    padding: 14px 18px;
+    color: #999;
+    overflow: auto;
+}
+.pr-user-profile .code_editor #user-config .comment{
+    padding-left: 45px;
+    font-size: 12px;
+    line-height: 16px;
+}
+.pr-user-profile .code_editor #user-config p{
+    margin-bottom: 0;
+}
+.pr-user-profile .code_editor #user-config h1{
+    font-size: 15px;
+    margin-bottom: 0;
+    margin-top: 15px;
+}
+.pr-user-profile .code_editor #user-config .options{
+    padding-left: 21px;
+    font-size: 15px;
+    line-height: 20px;
+}
+
+.pr-user-profile .code_editor .ace-idle-fingers {
+    border: 1px solid #ccc;
+    border-top: none;
+    background: #fff;
+}
+
+.pr-user-profile .code_editor .ace_text-layer .ace_line_group .ace_line,
+.pr-user-profile .code_editor .ace_text-layer .ace_line_group .ace_line .ace_comment,
+.pr-user-profile .code_editor .ace_text-layer .ace_line_group .ace_line .ace_variable,
+.pr-user-profile .code_editor .ace_text-layer .ace_line_group .ace_line .ace_keyword {
+    color: #999;
+}
+
+.pr-user-profile .code_editor .ace_text-layer .ace_line_group .ace_string {
+    color: #a3c644;
+}
+/*--- END USER PROFILE ---*/
+
+
+
+/* user profile */
+#keyHolder {
+    text-align: right;
+
+    .btn-default:hover {
+        background-color: #cdea7e;
+    }
+
+    .material-icons {
+        &.mi-autorenew {
+            font-size: 24px;
+            line-height: 24px;
+            color: #799b1c;
+            margin-top: 2px;
+            width: 24px;
+            text-align: center;
+        }
+    }
+
+    .form-control {
+        width: auto;
+        display: inline-block;
+    }
+
+    .tooltip {
+        min-width: 200px;
+    }
+}
+
+
+.media-body .btn-default:hover {
+    background-color: #eeeeee;
+}
+
+#submitPhoto {
+    display: none;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+#wrongImageMessage {
+    display: none;
+}
+
+#wrongImageMessage.shown {
+    display: inline-block !important;
+}
+
+
+#avatarWrapper {
+    display: inline-block;
+    max-width: 120px;
+    min-width: 120px;
+    position: relative;
+}
+
+.remove-image {
+    display: none;
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    z-index: 10;
+    cursor: pointer;
+
+    .remove-image-wrap {
+        position: relative;
+        background: #ffffff;
+        border-radius: 100%;
+        width: 20px;
+        height: 20px;
+
+        .mi-close {
+            position: absolute;
+            top: 1px;
+            left: 0;
+            right: 0;
+            font-size: 18px;
+            line-height: 18px;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+        }
+    }
+}
+
+#avatarWrapper:hover .remove-image {
+    display: inline-block;
+}
+
+/* ---------------------------- */
+
+@media (min-width: 992px) and (max-width: 1240px) {
+    .pr-user-profile .col-md-6 {
+        width: 100%;
+    }
+}

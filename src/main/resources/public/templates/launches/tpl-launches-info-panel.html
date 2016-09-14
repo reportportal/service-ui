@@ -1,0 +1,28 @@
+<ul class="info_section clearfix">
+    <li>
+        <div class="progress" data-tooltip-type="executions">
+            <div style="width: <%= data.passed %>%; background: <%= data.getDefaultColor('passed') %>" class="progress-bar"></div>
+            <div style="width: <%= data.failed %>%; background: <%= data.getDefaultColor('failed') %>" class="progress-bar"></div>
+            <div style="width: <%= data.skipped %>%; background: <%= data.getDefaultColor('skipped') %>" class="progress-bar"></div>
+        </div>
+    </li>
+    <li><span class="info-section-passed"><%= data.text.launchesHeaders.passed %> <%= data.passed %>%</span></li>
+    <li><span class="info-section-total"><%= data.text.launchesHeaders.total %> <%= data.total %></span></li>
+    <li><span data-tooltip-type="duration" class="duration <%= data.status %>">
+        <%= data.text.launchesHeaders.duration %>
+        <span>
+            <% if(data.interrupted) { %>
+                <abbr title="<%= data.text.launchesHeaders.interruptedAfter %> <%= data.duration %>. <%= data.text.launchesHeaders.stoppedAt %> <%= data.finish %>" class="text-danger">
+                    <strong><%= data.duration %></strong></abbr>
+            <% } else { %>
+                <abbr>
+                    <%= data.duration %>
+                </abbr>
+            <% } %>
+            </span>
+        </span>
+    </li>
+    <% _.each(data.sortedIssueTypes, function(type){ %>
+        <%= data.renderDefect(data.defects[type]) %>
+    <% }); %>
+</ul>

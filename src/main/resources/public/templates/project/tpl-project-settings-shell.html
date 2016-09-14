@@ -1,0 +1,28 @@
+<ul class="nav-tabs-custom clearfix" role="tablist">
+    <li role="presentation" class="<%= data.tab === 'general' ? 'active' : '' %>">
+        <a href="#<% if(data.adminPage){ %>administrate/projects/<% } %><%= data.projectId %>/settings/general" data-target="#generalSettings" aria-controls="home" role="tab" data-toggle="tab" class="tab settings" data-action="general">
+            <%= data.text.project.generalTab %>
+        </a>
+    </li>
+    <li role="presentation" class="<%= data.tab === 'notifications' ? 'active' : '' %>">
+        <a href="#<% if(data.adminPage){ %>administrate/projects/<% } %><%= data.projectId %>/settings/notifications" data-target="#notificationsSettings" aria-controls="home" role="tab" data-toggle="tab" class="tab settings" data-action="notifications">
+            <%= data.text.project.notificationsTab %>
+        </a>
+    </li>
+    <li role="presentation" class="<%= data.tab === 'bts' ? 'active' : '' %>">
+        <a href="#<% if(data.adminPage){ %>administrate/projects/<% } %><%= data.projectId %>/settings/bts" data-target="#btsSettings" aria-controls="profile" role="tab" data-toggle="tab" class="tab settings" data-action="bts">
+            <%= data.text.project.btsTab %>
+            <span class="label label-above label-success"><%= data.text.project.beta %></span>
+        </a>
+    </li>
+    <li role="presentation" class="<%= data.tab === 'defect' ? 'active' : '' %>">
+        <a href="#<% if(data.adminPage){ %>administrate/projects/<% } %><%= data.projectId %>/settings/defect" data-target="#defectTypes" aria-controls="profile" role="tab" data-toggle="tab" class="tab settings" data-action="defect">
+            <%= data.text.project.defectTypes %>
+        </a>
+    </li>
+</ul><div class="tab-content setting-content-wrapper">
+    <div role="tabpanel" class="tab-pane <%= data.tab === 'general' ? 'active' : '' %>" id="generalSettings"></div>
+    <div role="tabpanel" class="tab-pane <%= data.tab === 'notifications' ? 'active' : '' %>" id="notificationsSettings"></div>
+    <div role="tabpanel" class="tab-pane <%= data.tab === 'bts' ? 'active' : '' %>" id="btsSettings"></div>
+    <div role="tabpanel" class="tab-pane <%= data.tab === 'defect' ? 'active' : '' %>" id="defectTypes"></div>
+</div>

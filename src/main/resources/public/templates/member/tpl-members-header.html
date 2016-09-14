@@ -1,0 +1,27 @@
+<div id="headerBar" class="clearfix">
+    <ul class="rp-nav-left">        <% /* %>
+        <li class="title-holder">
+            <% if (data.paramsForTitleTop.firstWordLink !== false) { %>
+                <a href="#<%- data.paramsForTitleTop.projectId %>/members"
+                    class="header-alike"
+                    title="<%= data.text.topMenu.members %>">
+                    <%= data.text.members.title %>
+                </a>
+            <% } else { %>
+                <span class="header-alike"><%= data.text.members.title %></span>
+            <% } %>
+        </li>
+        <% */ %>        <li class="title-holder" id="assignedTitle">
+            <span class="header-alike"><%= data.text.members.assignedMembers %></span>
+        </li>
+        <li class="title-holder" id="addTitle">
+            <span class="header-alike"><%= data.text.members.addMember %></span>
+        </li>
+        <li class="title-holder" id="inviteTitle">
+            <span class="header-alike"><%= data.text.members.inviteMember %></span>
+        </li>
+        <li class="title-holder" id="assignTitle">
+            <span class="header-alike"><%= data.text.members.assignTitle %></span>
+        </li>
+    </ul>
+</div>

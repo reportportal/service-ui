@@ -1,0 +1,35 @@
+<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4" data-type="longName">
+    <div class="dt-full-name">
+        <label class="dt-tag-wrap">
+            <span class="dt-tag-point" style="background-color: <%= data.model.color %>;"></span>
+            <span class="dt-tag-name"><%= data.model.longName %></span>
+        </label>
+    </div>
+</div>
+<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2" data-type="shortName">
+    <div class="shortening-difect-id">
+        <%= data.model.shortName %>
+    </div>
+</div>
+<div class="col-xs-1 col-sm-1 col-md-1 col-lg-1" data-type="color">
+    <div class="dt-point-wrap">
+        <span class="dt-tag-point" style="background-color: <%= data.model.color %>;"></span>
+    </div>
+</div>
+<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+    <% if (!data.first && data.edit) { %>
+        <a href="#" class="edit-item">
+            <i class="material-icons">edit</i>
+        </a>
+        <a href="#" class="delete-item">
+            <i class="rp-icons rp-icons-cancel"></i>
+        </a>
+    <% } %>
+</div>
+<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+    <% if (data.first) { %>
+        <div>
+            <svg id="diagramm_<%= data.model.typeRef.toLowerCase() %>"></svg>
+        </div>
+    <% } %>
+</div>

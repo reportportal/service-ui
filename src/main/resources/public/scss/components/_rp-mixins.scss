@@ -1,0 +1,272 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+/*---------------*/
+/* COMMON MIXINS */
+
+    @mixin setTransform($transforms) {
+        -webkit-transform: translateX($transforms);
+        -moz-transform: translateX($transforms);
+        -o-transform: translateX($transforms);
+        -ms-transform: translateX($transforms);
+        transform: translateX($transforms);
+    }
+
+/*---------------*/
+
+    @mixin beforeContent($content) {
+        &:before {
+            content: $content;
+        }
+    }
+
+    @mixin fSize($fsize) {
+        font-size: $fsize + px;
+    }
+
+    @mixin setColor($color) {
+        color: $color;
+    }
+
+    @mixin setPaddingAll($padTop, $padRight, $padBottom, $padLeft) {
+        padding-top: $padTop;
+        padding-right: $padRight;
+        padding-bottom: $padBottom;
+        padding-left: $padLeft;
+    }
+
+    @mixin setMarginAll($marginTop, $marginRight, $marginBottom, $marginLeft) {
+        margin-top: $marginTop;
+        margin-right: $marginRight;
+        margin-bottom: $marginBottom;
+        margin-left: $marginLeft;
+    }
+
+/*--------------------*/
+/* MIXINS FOR BUTTONS */
+
+    @mixin rpBtnStyle($txtColor, $bgColor, $brColor, $boxShadow) {
+        @if $txtColor != false {
+            color: $txtColor;
+        }
+        @if $bgColor != false {
+            background-color: $bgColor;
+        }
+        @if $brColor != false {
+            border-color: $brColor;
+        }
+        @if $brColor == false {
+            border: none;
+        }
+        @if $boxShadow != false {
+            box-shadow: $boxShadow;
+        }
+    }
+
+    @mixin rpBtnSetting($width, $height, $fonts, $lineH, $paddins, $margins, $border) {
+        @if $width != false {
+            width: $width;
+        }
+        @if $height != false {
+            height: $height;
+        }
+        @if $fonts != false {
+            font-size: $fonts;
+        }
+        @if $lineH != false {
+            line-height: $lineH;
+        }
+        @if $paddins != false {
+            padding: $paddins;
+        }
+        @if $margins != false {
+            margin: $margins;
+        }
+        @if $border != false {
+            border: 1px solid;
+        }
+        @if $border == false {
+            border: none !important;
+        }
+    }
+
+/*------------------*/
+/* MIXINS FOR INPUT */
+
+    @mixin rpInputStyleShadow($boxShadow) {
+        box-shadow: $boxShadow;
+    }
+
+    @mixin rpInputStyleColor($bgColor, $brColor) {
+        @if $bgColor != false {
+            background-color: $bgColor;
+        }
+        @if $brColor != false {
+            border-color: $brColor;
+        }
+    }
+
+    @mixin rpInputStyle($txtColor, $bgColor, $brColor, $boxShadow) {
+        @if $txtColor != false {
+            color: $txtColor;
+        }
+        @include rpInputStyleColor($bgColor, $brColor);
+        @if $boxShadow != false {
+            @include rpInputStyleShadow($boxShadow);
+        }
+    }
+
+    @mixin rpInputSetting($width, $height, $maxWidth, $fonts, $lineh, $paddins, $margins, $border) {
+        height: $height;
+        max-width: $maxWidth;
+        font-size: $fonts;
+        line-height: $lineh;
+        padding: $paddins;
+        margin: $margins;
+        @if $width == true {
+            width: $width;
+        }
+        @if $border == true {
+            border: 1px solid;
+        }
+        @if $border == false {
+            border: none !important;
+        }
+    }
+
+/*------------------*/
+/* MIXINS FOR LINKS */
+
+    @mixin rpLinksStyle($txt, $txtDecor) {
+        color: $txt;
+        text-decoration: $txtDecor
+    }
+
+    @mixin rpLinksSetting($fontS, $lineH, $paddins, $margins) {
+        font-size: $fontS;
+        line-height: $lineH;
+        padding: $paddins;
+        margin: $margins;
+    }
+
+/*---------------------*/
+/* FONT STYLE FOR TEXT */
+
+    @mixin setFontStyle($fontSize, $lineHeight, $color, $textTransform) {
+        @if $fontSize != false {
+            font-size: $fontSize;
+        }
+        @if $lineHeight != false {
+            line-height: $lineHeight;
+        }
+        @if $color != false {
+            color: $color;
+        }
+        @if $textTransform != false {
+            text-transform: $textTransform;
+        }
+    }
+
+/*--------------------*/
+/* MIXIN FOR GRADIENT */
+
+    @mixin linear-gradient-b($args) {
+        background-image: -o-linear-gradient($args);
+        background-image: -moz-linear-gradient($args);
+        background-image: -webkit-linear-gradient($args);
+        background-image: linear-gradient($args);
+    }
+
+/*------------------*/
+/* MIXIN TRANSITION */
+
+    @mixin setTransition($transition, $transition2) {
+        -webkit-transition: $transition, $transition2;
+        -moz-transition: $transition, $transition2;
+        -o-transition: $transition, $transition2;
+        transition: $transition, $transition2;
+    }
+
+/*----------------------*/
+/* MIXINS FOR ANIMATION */
+
+    @mixin setAnimation($str) {
+        -webkit-animation: #{$str};
+        -moz-animation: #{$str};
+        -ms-animation: #{$str};
+        -o-animation: #{$str};
+        animation: #{$str};
+    }
+
+/*--------------------*/
+/* MIXINS FOR OPACITY */
+
+    @mixin setOpacity($opacity) {
+        opacity: $opacity;
+        $opacity-ie: $opacity * 100;
+        filter: alpha(opacity=$opacity-ie); // IE8
+    }
+
+/*--------------------------------------*/
+/* RULES FOR UI - USER SELECT ELEMENTS */
+/* auto | none | text */
+
+    @mixin setUserSelectElem($param) {
+        -webkit-touch-callout: $param;
+        -webkit-user-select: $param;  // Chrome all / Safari all
+        -khtml-user-select: $param;
+        -ms-user-select: $param;      // IE 10+
+        -moz-user-select: $param;     // Firefox all
+        user-select: $param;          // Likely future
+    }
+
+/*---------------------*/
+/* INSERTING OF BLOCKS */
+
+    %CLEAR_FIX {
+        *zoom: 1;
+
+        &:before,
+        &:after {
+            content: " ";
+            display: table;
+        }
+        &:after {
+            clear: both;
+        }
+    }
+
+    %MSG_ERR_STYLE {
+        color: #ff3222;
+        margin: 4px 0;
+    }
+
+
+    %flip-horizontal {
+        -moz-transform: scale(-1, 1);
+        -webkit-transform: scale(-1, 1);
+        -o-transform: scale(-1, 1);
+        transform: scale(-1, 1);
+        filter: FlipH;
+        -ms-filter: "FlipH";
+    }
+
+/*---------------------*/

@@ -1,0 +1,22 @@
+<div class="col-sm-5 col-xs-12">
+    <label class="name-label" for="userSelector"><%= data.text.widgets.typeUserName %>:</label>
+    <div class="">
+        <div class="input-group b-users-typeahead">
+            <span class="input-group-addon">
+                <i class="material-icons">star_border</i>
+            </span>
+            <% var warning =
+                (data.id != 'tags'
+                    ? (data.text.ui.minPrefix + ' ' + data.startSearch + ' ' + data.text.ui.minSufix)
+                    : data.text.ui.enterChars) %>
+            <input style="width:100%;"
+                placeholder="<%= data.text.widgets.allMembers %>"
+                class="users-typeahead"
+                id="userSelector"
+                type="text"
+                value="<%= data.selected.join(', ') %>"
+                data-warning="<%= warning %>" />
+        </div>
+        <!--<div class="help-inline pad-formhelp col-sm-5" style="display:none;"></div>-->
+    </div>
+</div>

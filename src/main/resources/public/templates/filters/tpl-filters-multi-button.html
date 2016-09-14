@@ -1,0 +1,10 @@
+<div class="log_level"><%= data.text.logs.logLevel %></div>
+<ul class="my_button_group">
+    <% _.each(data.values, function(value){ var btnClass = data.value.indexOf(value) >= 0 ? 'active' : ''; %>
+        <li>
+            <button class="my_button <%= btnClass %> <%= value %>" type="button" data-id="<%= value %>">
+                <%= data.text.filterNameByValue[value] %>
+            </button>
+        </li>
+    <% }); %>
+</ul>

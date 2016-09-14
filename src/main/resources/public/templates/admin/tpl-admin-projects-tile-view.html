@@ -1,0 +1,75 @@
+<% var counter = 0; %>
+<% _.forEach(data.collection, function(project, index){ %>
+    <% if(data.filter(project, data.search)){ %>
+    <% counter += 1; %>
+        <% var lastRunClass = data.inactiveProject || (project.lastRun && !data.hasRunsLastWeek(project.lastRun)) ? 'dimmed' : ''; %>
+        <% var newLabel = data.isNew && data.isNew(project.creationDate); %>
+        <% var noLabelClass = newLabel ? '': 'no-label' ; %>
+          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 project-item project-row <%= lastRunClass %>">
+            <div class="project-wrapper col-sm-12">
+                <% if(data.canDelete(project)) { %>
+                    <div class="remove-project"
+                        data-id="<%- project.projectId %>"
+                        data-active="<%= data.active %>">
+                        <i class="material-icons">clear</i>
+                    </div>
+                <% } %>
+                <h2 class="col-sm-12 project_name <%= noLabelClass %>">
+                    <a href="#administrate/project-details/<%- project.projectId %>" class="project_details break-link" title="<%= data.text.admin.projectTitle %>">
+                        <%= data.search ? data.textWrapper(project.projectId, data.search) : project.projectId %>
+                    </a>
+                    <% if (newLabel) { %>
+                    <span class="label label-success you"><%= data.text.admin.newProject %></span>
+                    <% } %>
+                </h2>
+                <div class="col-sm-12 project_info_wrapper">
+                    <div class="col-sm-6 text-center heartbeat_block">
+                        <div class="col-sm-12 health_icon">
+                            <i class="rp-icons rp-icons-heartbeat"></i>
+                        </div>
+                        <div class="col-sm-12 health_index"><!-- health index --></div>
+                    </div>
+                    <div class="col-sm-6 project_info_block">
+                        <div class="col-sm-12 project_info"><span class="bold"><%= project.usersQuantity %></span><%= data.text.admin.usersQuantity %></div>
+                        <div class="col-sm-12 project_info"><span class="bold"><%= project.launchesQuantity %></span><%= data.text.admin.launchesQuantity %></div>
+                        <div class="col-sm-12 project_info"><%= data.text.admin.lastRunPrefix %><%= project.lastRun ? data.util.daysFromNow(project.lastRun) : data.text.admin.lastRunSuffix %></div>
+                    </div>
+                </div>
+                <% var assigned = !!data.userProjects[project.projectId]; %>
+                <div class="col-sm-12 nopadding project-link_wrapper <%= assigned ? '' : 'no-assigned' %>">
+                    <a class="col-sm-4 project-link text-center" href="#administrate/projects/<%- project.projectId %>/settings">
+                        <i class="material-icons">settings</i>
+                        <span class="hidden-md"><%= data.text.ui.settings %></span>
+                    </a>
+                    <a class="col-sm-4 project-link text-center" href="#administrate/projects/<%- project.projectId %>/members">
+                        <i class="rp-icons rp-icons-all-users fsize-15"></i>
+                        <span class="hidden-md"><%= data.text.ui.members %></span>
+                    </a>
+                    <a class="col-sm-4 project-link text-center go-to-project" href="#<%- project.projectId %>">
+                        <i class="material-icons">open_in_browser</i>
+                        <span class="hidden-md"><%= data.text.admin.goToProject %></span>
+                    </a>
+                    <% if(!assigned){ %>
+                    <a class="col-sm-4 project-link text-center assign-to-project" href="#" data-project="<%- project.projectId %>">
+                        <i class="material-icons">add</i>
+                        <%= data.text.admin.assignToProject %>
+                    </a>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <% if(counter%4===0){ %>
+            <div class="clearfix"></div>
+        <% } %>
+    <% } %>
+<% }); %>
+<% if(counter === 0) { %>
+    <div class="col-sm-12">
+        <div class="col-sm-12 text-center">
+            <h3 class="title-no-data text-center">
+                <i class="rp-icons rp-icons-warning"></i>
+                <span class="warning"><%= data.text.infoMessages.noResults %></span>
+            </h3>
+        </div>
+    </div>
+<% } %>

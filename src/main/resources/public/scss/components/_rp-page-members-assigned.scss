@@ -1,0 +1,91 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+/*------------------------------*/
+/* STYLE FOR ASSIGNED MEMBERS PAGE */
+
+%ASSIGNED_MEMBERS {
+    #assignedMembers {
+        .all-users {
+            padding-top: 0;
+
+            #membersList {
+
+            }
+        }
+    }
+}
+
+#assignedMembers .btn-danger {
+    margin-left: -15px;
+}
+
+
+/*----------------*/
+/* INCLUDE STYLES */
+
+/* FOR USUAL USERS */
+#dynamic-content {
+    @extend %ASSIGNED_MEMBERS;
+}
+
+/* FOR ADMINISTRATORS USERS */
+#dynamicContent {
+    @extend %ASSIGNED_MEMBERS;
+}
+
+/*-----------------------------------*/
+/* STYLES OF DYNAMIC WIDTH OF SCREEN */
+
+
+@media (min-width: 992px) and (max-width: 1410px) {
+    #assignedMembers #membersList .member-action {
+        margin-left: -35px;
+    }
+
+    #assignedMembers .rp-table-thead > div.col-md-1 {
+        margin-left: -35px;
+    }
+
+    #assignedMembers .rp-table-row > div:nth-child(4) > div {
+        padding-right: 5px;
+    }
+}
+
+
+/* xs - 767px */
+@media (max-width: $SCREEN_XS_MAX) {
+
+}
+
+/* sm - 768px - 991px */
+@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+
+}
+
+/* md - 992px - 1199px */
+@media (min-width: $SCREEN_MD_MIN) and (max-width: $SCREEN_MD_MAX) {
+
+}
+
+/* lg - 1200px */
+@media (min-width: $SCREEN_LG_MIN) {
+
+}

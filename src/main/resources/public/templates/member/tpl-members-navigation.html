@@ -1,0 +1,66 @@
+<div class="container-fluid">
+    <div class="row">
+        <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+            <li role="presentation"
+                class="<%= (!data.query || data.query === 'assigned') ? 'active' : '' %>">
+                <a href="#<% if(data.adminPage){ %>administrate/projects/<% } %><%= data.projectId %>/members/assigned"
+                    data-target="#assignedMembers"
+                    aria-controls="home"
+                    role="tab"
+                    data-toggle="tab"
+                    class="tab"
+                    data-query="assigned">
+                    <%= data.text.admin.assigned %>
+                </a>
+            </li>
+            <% if(data.canManage){ %>
+                <% if(data.hideAddBlock !== true){ %>
+                <li role="presentation"
+                    class="<%= data.query === 'add' ? 'active' : '' %>">
+                    <a href="#<% if(data.adminPage){ %>administrate/projects/<% } %><%= data.projectId %>/members/add"
+                        data-target="#addMember"
+                        aria-controls="profile"
+                        role="tab"
+                        data-toggle="tab"
+                        class="tab"
+                        data-query="add">
+                        <%= data.text.admin.add %>
+                    </a>
+                </li>
+                <% } %>
+                <li role="presentation"
+                    class="<%= data.query === 'invite' ? 'active' : '' %>">
+                    <a href="#<% if(data.adminPage){ %>administrate/projects/<% } %><%= data.projectId %>/members/invite"
+                        data-target="#inviteMember"
+                        aria-controls="profile"
+                        role="tab"
+                        data-toggle="tab"
+                        class="tab"
+                        data-query="invite">
+                        <%= data.text.admin.invite %>
+                    </a>
+                </li>
+                <li role="presentation"
+                    class="<%= data.query === 'assign' ? 'active' : '' %>">
+                    <a href="#<% if(data.adminPage){ %>administrate/projects/<% } %><%= data.projectId %>/members/assign"
+                        data-target="#assignMember"
+                        aria-controls="profile"
+                        role="tab"
+                        data-toggle="tab"
+                        class="tab"
+                        data-query="assign">
+                        <%= data.text.admin.assign %>
+                    </a>
+                </li>
+            <% } %>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane form-horizontal <%= (!data.query || data.query === 'assigned') ? 'active' : '' %>" id="assignedMembers"></div>
+            <% if(data.canManage){ %>
+            <div role="tabpanel" class="tab-pane form-horizontal <%= data.query === 'add' ? 'active' : '' %>" id="addMember"></div>
+            <div role="tabpanel" class="tab-pane form-horizontal <%= data.query === 'invite' ? 'active' : '' %>" id="inviteMember"></div>
+            <div role="tabpanel" class="tab-pane form-horizontal <%= data.query === 'assign' ? 'active' : '' %>" id="assignMember"></div>
+            <% } %>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+/*---------------------*/
+/* SETUP SVG FOR ICONS */
+
+i {
+    &.rp-svg-icon {
+        position: relative;
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+
+        // <i class="rp-svg-icon svg-icon-menu-size-14"></i>
+        &.svg-icon-menu-size-14 {
+            width: 14px;
+            height: 14px;
+            opacity: 0.5;
+            background-image: url('../fonts/font-ReportPortal/svg-icon/ic_menu-14px.svg');
+            background-repeat: no-repeat;
+            background-position: 0 0;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+}
+
+/*----------------------------------*/

@@ -1,0 +1,36 @@
+<div class="all-users">
+    <div class="container-fluid rp-margin-reset rp-odd-even rp-members-list rp-table-hover">
+        <div class="row rp-table-thead visible-md visible-lg">
+            <div class="col-md-6">
+                <div class="col-md-6">
+                    <div class="input-filter form-group">
+                        <input type="text"
+                            class="favorites-name-filter rp-input-search"
+                            id="userFilter"
+                            name="userFilter"
+                            placeholder="<%= data.text.favorites.fName %>"
+                            value="<%- data.nameFilterValue || '' %>" />
+                        <i class="material-icons">search</i>
+                        <div class="error-hint help-inline" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="rp-table-th"><%= data.text.admin.lastLogin %></div>
+            </div>
+            <div class="col-md-2">
+                <div class="rp-table-th"><%= data.text.admin.projectsRoles %></div>
+            </div>
+            <div class="col-md-2">
+                <div class="rp-table-th"><%= data.text.admin.deleteUser %></div>
+            </div>
+        </div>
+        <div class="users-list">
+            <div id="usersList"></div>
+            <div id="popupLoader" class="admin-section" style="display:none;">
+                <i class="material-icons loader-animation">refresh</i>
+            </div>
+        </div>
+    </div>
+    <div id="pagingHolder"></div>
+</div>

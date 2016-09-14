@@ -1,0 +1,34 @@
+<div id="login-form">
+    <div class="login-form-overflow">
+        <form class="block-login-form" autocomplete="on">
+            <div class="form-group">
+                <label class="block-login-label">
+                    <span><%= data.text.login.loginTitle %></span>
+                    <input type="text" class="rp-input-auth" id="user_login" size="30" autofocus="autofocus" maxlength="128" placeholder="<%= data.text.login.loginTitle %>">
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="block-login-label">
+                    <span><%= data.text.login.passwordTitle %></span>
+                    <input type="password" class="rp-input-auth" id="user_password" size="30" autocomplete="off" maxlength="25" placeholder="<%= data.text.login.passwordTitle %>">
+                </label>
+            </div>
+            <div class="block-login-error js-loginerror">
+                <%= data.text.ui.error %>: <span id="errorText"></span>
+            </div>
+            <div class="form-group">
+                <input type="button" id="submit_user" value="<%= data.text.login.signIn %>" name="commit" class="rp-input-auth-submit">
+            </div>
+            <div class="form-group">
+                <a class="block-login-frgtpswd" id="forgotPass"><%= data.text.login.forgotPassword %></a>
+            </div>
+            <div class="form-group">
+                <p>
+                    <a href="http://www.gnu.org/licenses/lgpl-3.0.en.html" target="_blank" style="visibility: hidden"><%= data.text.footer.licensing %> <%= data.text.footer.lgplv3 %></a>
+                </p>
+            </div>
+        </form>
+    </div>
+    <p class="block-login-info build-version" data-js-build-versions>
+    </p>
+</div>

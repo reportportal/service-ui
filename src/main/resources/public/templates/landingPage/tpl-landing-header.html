@@ -1,0 +1,60 @@
+<nav class="navbar navbar-default">
+    <div class="container">
+        <div class="b-header__menuline js-menuline"></div>
+        <div class="navbar-header">
+            <button type="button"
+                class="navbar-toggle collapsed js-collapse"
+                data-toggle="collapse"
+                data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <span class="navbar-brand b-header__logo js-logo"></span>
+        </div>
+        <div class="collapse navbar-collapse js-navbar" id="navbar">
+            <ul class="nav navbar-nav b-header__menu js-headermenu" id="pagenavigator">
+                <li class="b-menu__link">
+                    <a href="#features">
+                        <%= data.text.landing.header.linkFeatures %>
+                    </a>
+                </li>
+                <li class="b-menu__link">
+                    <a href="#analysis">
+                        <%= data.text.landing.header.linkAutoAnalysis %>
+                    </a>
+                </li>
+                <li class="b-menu__link">
+                    <a href="#productionUsage">
+                        <%= data.text.landing.header.linkProductionUsage %>
+                    </a>
+                </li>
+                <li class="b-menu__link">
+                    <a href="#distributionOfFails">
+                        <%= data.text.landing.header.linkDistributionOfFails %>
+                    </a>
+                </li>
+                <li class="b-menu__link">
+                    <a href="#resultAnalysis">
+                        <%= data.text.landing.header.linkYouResultAnalysis %>
+                    </a>
+                </li>
+                <li class="b-menu__link js-doc-link">
+                    <a href="#documentation">
+                        <%= data.text.landing.header.linkDocumentation %>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <span class="rp-btn-show-login js-showlogin">
+        <span><%= data.text.landing.header.btnLogin %></span>
+        <i class="material-icons">exit_to_app</i>
+    </span>
+    <a class="b-return__btn" href="/reportportal-ws">
+        <i class="material-icons">reply</i>
+        <span><%= data.text.landing.header.returnToRP %></span>
+    </a>
+</nav>
+<div class="block-login js-loginblock"></div>

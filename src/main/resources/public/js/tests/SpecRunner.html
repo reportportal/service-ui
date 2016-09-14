@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Jasmine Spec Runner v2.1.3</title>
+
+    <link rel="shortcut icon" type="image/png" href="lib/jasmine-2.1.3/jasmine_favicon.png">
+    <link rel="stylesheet" type="text/css" href="lib/jasmine-2.1.3/jasmine.css">
+
+    <script type="text/javascript" src="../lib/require-min-2.1.14.js"></script>
+
+
+    <script type="text/javascript" src="lib/jasmine-2.1.3/jasmine.js"></script>
+    <script type="text/javascript" src="lib/jasmine-2.1.3/jasmine-html.js"></script>
+    <script type="text/javascript" src="lib/jasmine-2.1.3/boot.js"></script>
+    <script type="text/eqcss" src="../../eqcss/main.eqcss"></script>
+
+</head>
+
+<body>
+<script>
+    window.App = window.App || {};
+    window.App.Global = window.App.Global || {};
+    window.App.Global.apiVersion = "";
+    window.App.Global.currentProject = "";
+    require({
+        baseUrl: '../src',
+        paths: {
+            spec: '../tests/spec',
+            router: 'router/router',
+
+            initialState: '../tests/lib/initialState',
+
+            app: 'core/app-config',
+            jquery: '../lib/jquery-latest',
+            jqueryUI: '../lib/jquery-ui',
+            'jaddons': '../lib/jquery-addons',
+            underscore: '../lib/lodash.min',
+            backbone: '../lib/backbone-min-my',
+            'backbone-epoxy': '../lib/backbone-epoxy',
+            util: 'core/util',
+            'baron': '../lib/baron',
+            'TestRoute': 'router/TestRoute',
+            'landingPage': 'landing/LandingPage',
+            cookie: '../lib/jquery.cookie',
+            autogrow: '../lib/jq_autogrow.min',
+            nicescroll: '../lib/jquery.nicescroll',
+            bootstrap: '../lib/bootstrap.min',
+            bootswitch: '../lib/bootstrap-switch.min',
+            elementQuery: '../lib/EQCSS',
+            base64: '../lib/base64',
+            nprogress: '../lib/nprogress',
+            localization: 'localizations/default',
+            moment: '../lib/moment.2.10.2',
+            message: 'message/message-panel',
+            templates: '../../compiled/templates/templates',
+            mainview: 'main-view',
+            favorites: 'favorites/favorites',
+            register: 'register/register',
+            filters: 'filter/filters',
+            components: 'core/components',
+            lazyload: '../lib/jquery.lazyload.min',
+            daterangepicker: '../lib/daterangepicker',
+            'readmore-js': '../lib/readmore',
+            select2: '../lib/select2.custom',
+            launch: 'launch/launch-navigation',
+            launchgrid: 'launch/launch-grid',
+            launchCrumbs: 'launch/launch-crumbs',
+            defectEditor: 'defect/defect-editor',
+            log: 'log/logs',
+            member: 'member/member',
+            memberService: 'member/service',
+            launchEditor: 'launch/launch-editor',
+            stickyHeader: 'core/sticky-header',
+            'launchCrumbs': 'launch/launch-crumbs',
+            log: 'log/logs',
+
+            dataUrlResolver: 'core/data-url-resolver',
+            project: 'project/project',
+            'projectinfo': 'project/projectinfo',
+            validators: 'core/validators',
+            validate: '../lib/jquery.validate',
+
+            filtersPanel: 'filter/filters-panel',
+            filtersResolver: 'filter/filters-resolver',
+            filtersService: 'filter/filters-service',
+            profile: 'login/user_profile',
+            ace: '../lib/ace/ace.custom',
+            aceDark: '../lib/ace/theme-dark',
+            'mode-properties': '../lib/ace/mode-properties',
+
+            "colorpicker": "../lib/colorpicker/bootstrap-colorpicker",
+            "colorpickerConfig": "../lib/colorpicker/bootstrap-colorpicker-cfg-custom",
+
+            'lunr': '../lib/lunr',
+
+            callService: 'core/call-service',
+            coreService: 'core/core-service',
+            storageService: 'core/storage-service',
+            widgetWizard: 'wizard/widget',
+            widgets: 'widget/widgets',
+            dashboard: 'dashboard/dashboard-view',
+            'fullscreen': '../lib/jquery.fullscreen',
+            'isLoading': '../lib/jquery.isLoading',
+            'equalHeightRows': '../lib/grids',            
+            'popup': '../lib/jquery.magnific-popup',
+            'highlight': '../lib/highlight.pack',
+            'gridstack': '../lib/gridstack/gridstack.custom',
+            helpers: 'core/helpers',
+
+            d3: '../lib/d3/d3.v3.min',
+            nvd3: '../lib/nvd3/nv.d3.custom',
+            d3Tip: '../lib/d3/d3.tip.custom',
+            elasticColumns: '../lib/elastic-columns.min',
+            'slick': '../lib/slick',
+            'landingMain': 'landing/main',
+            'landingUI': 'landing/ui',
+            'landingDocs': 'landing/documentation',
+
+            admin: 'admin/admin',
+            projects: 'admin/projects',
+            users: 'admin/users',
+            settings: 'admin/settings',
+            adminService: 'admin/service',
+
+            'textile': '../lib/textile',
+            'markitup': '../lib/jquery.markitup.custom',
+            'markitupset': '../lib/jquery.markitup.textile',
+            'stickyHeader': 'core/sticky-header',
+            'cacheService': 'core/cache-service',
+            'scrollable': 'core/scrollable-view',            
+            "text" : "../lib/text",
+
+            fakeData: '../tests/mocks/data',
+            adminFakeData: '../tests/mocks/adminData',
+            jasminejQuery: '../tests/lib/jasmine-jquery.2.0.5'
+        },
+        shim: {
+            backbone: { deps : ["underscore", "jquery"] },
+            daterangepicker: { deps : ["jquery"] },
+            lazyload:  { deps : ["jquery"] },
+            'isLoading': ['jquery'],
+            jasminejQuery: {exports: 'jasminejQuery', deps : ["jquery"] },
+            bootstrap: { deps : ["jquery"] },
+            bootswitch: { deps : ["jquery", "bootstrap"] },
+            select2: { deps: ["jquery"]},
+            equalHeightRows:  ['jquery'],
+            nvd3: { 'deps': ['d3'], exports : "nv"},
+            'widgets': ['d3', 'nvd3', 'elementQuery'],
+            markitupset: ['markitup'],
+            'gridstack': ['jquery', 'jqueryUI', 'underscore'],
+            'fullscreen': ['jquery']
+        }
+    }, ['jasminejQuery',
+        'spec/login/login',
+        //'spec/filter/filters-panel',
+        'spec/dashboards/add-dashboard',
+        'spec/dashboards/edit-dashboard',
+        'spec/project/project',
+        'spec/post_bug_to_jira/post_bug_to_bts',
+        'spec/admin/admin',
+        'spec/post_bug_to_jira/load_bug_to_bts',
+        'spec/test_item_editor/testItemEditor',
+        'spec/dashboards/dashboards-menu',
+        'spec/dashboards/dashboards',
+        'spec/widgets/widgets',
+        'spec/member/member_assigned',
+        'spec/member/assign_member',
+        'spec/member/invite_member',
+        //'spec/favorites/favorites',
+        'spec/launches/historyGrid',
+        'spec/user_profile/user_profile',
+        'spec/components/paging',
+        'spec/project/projectinfo',
+        'spec/wizard/widget-wizard',
+
+    ], function(){
+        jasmine.getEnv().execute();
+    });
+</script>
+<div id="sandbox" style="height: 1px; position:absolute;left: 2000px;"></div>
+</body>
+</html>

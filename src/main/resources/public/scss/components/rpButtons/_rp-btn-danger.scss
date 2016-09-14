@@ -1,0 +1,55 @@
+/*-------------------------*/
+/* REMINDER FOR USE MIXINS */
+
+// @mixin rpBtnStyle($txtColor, $bgColor, $brColor, $boxShadow);
+
+/*-------------------*/
+/* CONSTANTS FOR USE */
+
+// $COLOR--white-default: #ffffff;
+//             $COLOR---: #ed5a43;
+
+/*--------*/
+/* DANGER */
+
+.rp-btn {
+    &.rp-btn-danger {
+        @include rpBtnStyle(
+            $COLOR--white-default,
+            #ed5a43,
+            #ed5a43,
+            false
+        );
+
+        &:hover {
+            @include rpBtnStyle(
+                $COLOR--white-default,
+                #ed5a43,
+                #ed5a43,
+                false
+            );
+        }
+
+        &:active {
+            @include rpBtnStyle(
+                $COLOR--white-default,
+                #ed5a43,
+                #ed5a43,
+                false
+            );
+        }
+
+        &:disabled,
+        &[disabled="disabled"],
+        &[disabled],
+        &.disabled {
+            @include rpBtnStyle(
+                $COLOR--white-default,
+                #ed5a43,
+                #ed5a43,
+                false
+            );
+            opacity: 0.4;
+        }
+    }
+}

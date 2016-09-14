@@ -1,0 +1,57 @@
+/*-------------------------*/
+/* REMINDER FOR USE MIXINS */
+
+// @mixin rpBtnStyle($txtColor, $bgColor, $brColor, $boxShadow);
+
+/*-------------------*/
+/* CONSTANTS FOR USE */
+
+// $COLOR--white-default: #ffffff;
+//             $COLOR---: #a3c644;
+//             $COLOR---: #7f993a;
+//             $COLOR---: #5f722b;
+//             $COLOR---: #bed379;
+
+/*--------------*/
+/* SUBMIT || OK */
+
+.rp-btn {
+    &.rp-btn-submit {
+        @include rpBtnStyle(
+            $COLOR--white-default,
+            #a3c644,
+            #a3c644,
+            false
+        );
+
+        &:hover {
+            @include rpBtnStyle(
+                $COLOR--white-default,
+                #7f993a,
+                #7f993a,
+                false
+            );
+        }
+
+        &:active {
+            @include rpBtnStyle(
+                $COLOR--white-default,
+                #5f722b,
+                #5f722b,
+                false
+            );
+        }
+
+        &:disabled,
+        &[disabled="disabled"],
+        &[disabled],
+        &.disabled {
+            @include rpBtnStyle(
+                $COLOR--white-default,
+                #bed379,
+                #bed379,
+                false
+            );
+        }
+    }
+}

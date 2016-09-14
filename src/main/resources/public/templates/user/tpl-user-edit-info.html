@@ -1,0 +1,17 @@
+<div id="infoEditor" class="row">
+    <h3 class="page-title text-capitalize col-xs-12">
+        <span class="profile_name"><%= data.user_login %></span>
+    </h3>
+    <span class="form-group col-sm-12">
+        <input id="fullName" class="form-control" type="text" value="<%= data.fullName %>">
+        <span class="help-inline"></span>
+    </span>
+    <span class="form-group col-sm-12">
+        <input id="email" class="form-control" type="text" maxlength="128" value="<%= data.email %>">
+        <span class="help-inline"></span>
+    </span>
+    <div class="form-inline col-sm-12 p-top-10 p-bottom-10 clearfix">
+        <input type="button" id="submit_info" value="<%= data.text.ui.save %>" class="btn-create btn btn-info pull-right disabled">
+        <input type="button" id="cancel_info" value="<%= data.text.ui.cancel %>" class="btn btn-default m-right-10 pull-right">
+    </div>
+</div>

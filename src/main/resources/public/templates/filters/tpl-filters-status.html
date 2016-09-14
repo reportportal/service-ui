@@ -1,0 +1,35 @@
+<div class="form-group" data-id="<%= data.id %>">
+    <label class="filter-name"><%= data.text.filterNameById[data.id.escapeLessDirection()] %></label>
+    <% if(!data.required) { %>
+        <span class="remove-filter float-right">
+            <i class="material-icons">clear</i>
+        </span>
+    <% } %>
+    <div class="input-group input-group-sm dropdown-like">
+        <div class="input-group-btn btn-group-fix-font">
+            <button class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
+                id="statusFilterSelector"
+                data-toggle="dropdown">
+                <span class="select-value"><%= data.value %></span>
+                <span class="rp-caret"></span>
+            </button>
+            <ul class="dropdown-menu rp-width-100">
+                <% _.each(data.values, function(option, index) { %>
+                    <li class="filter">
+                        <a class="checkbox value-selector">
+                            <label>
+                                <% if (index > 0) { %>
+                                    <% var isChecked = data.value.toUpperCase().indexOf(option.toUpperCase()) !== -1 || data.value === 'All' ? 'checked="checked"' : ''; %>
+                                    <input class="rp-input-checkbox"
+                                        data-value="<%= option %>"
+                                        type="checkbox" <%= isChecked %> />
+                                <% } %>
+                                <span><%= option %></span>
+                            </label>
+                        </a>
+                    </li>
+                <% }); %>
+            </ul>
+        </div>
+    </div>
+</div>

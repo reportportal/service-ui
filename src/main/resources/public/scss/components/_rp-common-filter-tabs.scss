@@ -1,0 +1,355 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+/* ------------------------*/
+/* STYLES FOR FILTER PANEL */
+
+.rp-filter-tabs {
+    display: inline-block;
+    position: absolute;
+    top: -35px;
+    left: -1px;
+    border: none;
+}
+
+.rp-filter-tabs .tab {
+    border-top: 1px solid #e4e5e6;
+    margin-bottom: -2px;
+    margin-left: 1px;
+    margin-right: 1px;
+    padding: 7px 20px 8px 20px;
+    display: inline-block;
+    float: left;
+    cursor: pointer;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    position: relative;
+    /*-webkit-padding-after: 8px;*/
+}
+
+.rp-filter-tabs > li{
+    margin-bottom: -2px;
+}
+.rp-filter-tabs:first-child {
+    border-top-left-radius: 4px;
+}
+.rp-filter-tabs > li.active > a{
+    border: 1px solid #67686b;
+    border-bottom-color: #ffffff;
+    padding-right: 12px;
+}
+.rp-filter-tabs > li.active > a:hover{
+    border: 1px solid #67686b;
+    border-bottom-color: #ffffff;
+}
+.rp-filter-tabs > li > a:hover {
+    border-bottom: 1px solid #67686b;
+}
+
+
+.rp-filter-tabs .tab.active {
+    background: #fff;
+    border: 1px solid #67686b;
+    border-bottom-color: #ffffff;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.rp-filter-tabs .tab:first-child.active:after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 1px;
+    background: white;
+    bottom: -1px;
+    left: -1px;
+}
+
+.rp-filter-tabs .tab:first-child.active:after {
+    border-left: 1px solid #67686b;
+    height: 3px;
+    bottom: -3px;
+}
+
+.add-new .form-control {
+    display: none;
+}
+
+.add-new.in-focus .form-control,
+.under-edit .form-control {
+    display: inline-block;
+    font-size: 12px;
+}
+
+.add-new.in-focus .form-control,
+.under-edit .form-control {
+    height: 29px;
+    padding-right: 20px;
+}
+
+.rp-filter-tabs .active.in-focus,
+.rp-filter-tabs .active.under-edit {
+    padding: 3px 5px 2px 5px;
+}
+
+.filters-cover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 5;
+}
+
+.clear-text {
+    background: url("../img/delete-icon.png") 0 0 no-repeat;
+    cursor: pointer;
+    display: block;
+    height: 16px;
+    position: absolute;
+    right: 0;
+    top: 9px;
+    width: 16px;
+    z-index: 5;
+}
+
+.tab .tab-controls,
+.tab.active.history .tab-controls {
+    display: none;
+}
+
+.tab.active .tab-controls {
+    display: inline-block;
+}
+
+#messageFilterWrapper .material-icons.custom-style {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #999;
+    width: 30px;
+    height: 30px;
+    line-height: 35px;
+    font-size: 19px;
+}
+
+/* ------------------------*/
+
+#mainContainer {
+    &.tabbed {
+        padding-top: 0;
+
+        .rp-main-panel {
+            // padding-top: 0;
+        }
+
+        #filterPanel {
+            position: relative;
+            min-height: 80px;
+            background-color: #ffffff;
+            display: none;
+
+            .rp-filter-tabs {
+                position: relative;
+                top: 0;
+                left: 0;
+                width: 100%;
+                background-color: #999;
+                // max-height: 40px;
+                min-height: 40px;
+
+                .tab {
+                    position: relative;
+                    margin: 0;
+                    padding: 10px 23px 8px 23px;
+                    border: none;
+                    border-left: 1px solid #b1b1b1;
+                    border-radius: 0;
+                    max-height: 40px;
+                    color: #fff;
+                    text-transform: uppercase;
+
+                    &.active {
+                        padding-left: 15px;
+                        border-left: none;
+
+                        &:first-child {
+                            &::after {
+                                display: none;
+                            }
+                        }
+
+                        & + .tab {
+                            border-left: none;
+                        }
+
+                        .tab-controls {
+                            position: relative;
+                            display: block;
+                            vertical-align: top;
+                            width: 14px;
+                            margin-right: 10px;
+                            z-index: 10;
+                            color: #464547;
+
+                            .svg-icon-menu-size-14 {
+                                position: absolute;
+                                top: 5px;
+                                left: 0;
+                            }
+                        }
+
+                        .name-text {
+                            padding-left: 24px;
+                            color: #464547;
+                        }
+
+                        i {
+                            color: #464547;
+                        }
+                    }
+
+                    &.shared {
+                        padding-right: 20px;
+                    }
+
+                    &.unsaved {
+                        padding-right: 20px;
+
+                        .name-text {
+                            padding-right: 9px;
+                            white-space: nowrap !important;
+
+                            &:after {
+                                display: inline-block;
+                                right: 0px;
+                                font-weight: normal;
+                            }
+                        }
+                    }
+
+                    &.add-new {
+                        padding-left: 30px;
+                        text-transform: none;
+                        opacity: 0.7;
+
+                        &:hover {
+                            opacity: 1;
+                        }
+
+                        i.material-icons {
+                            position: absolute;
+                            top: 11px;
+                            left: 10px;
+                            font-size: 16px;
+                            line-height: 16px;
+                            width: 16px;
+                            height: 16px;
+                            color: #fff;
+                        }
+
+                        span {
+                            position: relative;
+                            display: inline-block;
+                            font-family: $OpenSansSemibold;
+                            font-size: 13px;
+                            line-height: 13px;
+                            padding: 4px 0;
+                            color: #fff;
+                        }
+
+                        .icon-cancel {
+                            position: relative;
+                            display: none;
+                        }
+                    }
+
+                    &:first-child {
+                        border-left: none;
+                    }
+
+                    .name-text {
+                        position: relative;
+                        display: inline-block;
+                        vertical-align: top;
+                        padding-left: 0px;
+                        max-width: 200px;
+                        font-size: 12px;
+                        line-height: 12px;
+                        padding: 5px 0;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+
+                        &:after {
+                            display: none;
+                            content: "*";
+                            position: absolute;
+                            top: 0;
+                            right: 7px;
+                            color: #ec3900;
+                            font-size: 12px;
+                            line-height: 12px;
+                        }
+
+                        &.multiple-spaces {
+                            white-space: nowrap !important;
+                        }
+                    }
+
+                    .public-icon-wrapper {
+                        position: relative;
+                        display: inline-block;
+                        width: 20px;
+                        height: 14px;
+                        line-height: 14px;
+                        padding: 0;
+                        margin: 0;
+                    }
+
+                    .share-icon-wrapper {
+                        position: relative;
+                        display: inline-block;
+                        width: 20px;
+                        height: 17px;
+                        line-height: 14px;
+                        padding: 0;
+                        margin: 0;
+                    }
+
+                    .public-icon-wrapper,
+                    .share-icon-wrapper {
+                        .material-icons {
+                            position: absolute;
+                            top: 2px;
+                            right: 0;
+                            font-size: 16px;
+                            line-height: 16px;
+                            width: 16px;
+                            height: 16px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

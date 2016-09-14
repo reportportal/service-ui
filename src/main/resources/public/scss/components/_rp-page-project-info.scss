@@ -1,0 +1,350 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+.page-settings-wrap {
+    box-shadow: none;
+    background-color: transparent;
+}
+
+.page-settings-wrap #contentHeader {
+    margin-bottom: 20px;
+}
+
+.page-settings-wrap #contentHeader .project-header-title {
+    padding: 0;
+    padding-left: 10px;
+}
+
+#contentHeader .project-header-title h2 {
+    padding: 0;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    text-transform: uppercase;
+    font-family: "OswaldRegular", sans-serif;
+    font-size: 22px;
+    line-height: 22px;
+    color: #333333;
+}
+
+.page-settings-wrap #contentHeader .in-header-block {
+    padding: 0px;
+    margin: 0px;
+}
+
+/* TODO */
+/*.rp-wrapper-of-project-details .nvd3 text {*/
+.page-settings-wrap .nvd3 text {
+    font-family: "OpenSansRegular", sans-serif !important;
+    font-weight: normal !important;
+    font-size: 13px !important;
+    color: #777777 !important;
+}
+
+/*--------------*/
+/* PROJECT INFO */
+
+#ProjectInfo {
+    background: #fff;
+    padding-right: 0px;
+    padding-left: 0px;
+
+    .item-col-custom {
+        margin-bottom: 20px;
+    }
+
+    .row-custom {
+        .widget-content {
+            height: 180px;
+        }
+    }
+    .widget-content {
+        height: 300px;
+    }
+
+    .project-widget {
+        border: none;
+
+        h4.project-item-info-title {
+            font-family: $OpenSansSemibold;
+            text-transform: uppercase;
+            border-bottom: solid 1px #e9e9e9;
+            font-size: 14px;
+            color: #1a9cb0;
+            padding: 7px 10px 10px 10px;
+            margin: 0;
+        }
+    }
+
+    #general_info {
+        .general-info {
+            padding-top: 10px;
+
+            .row > div {
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+        }
+
+        .data-number {
+            font-family: $OpenSansSemibold;
+            font-size: 16px;
+            line-height: 18px;
+            color: #464547;
+            margin-right: 5px;
+        }
+
+        .data-text {
+            font-family: $OpenSansRegular;
+            font-size: 14px;
+            line-height: 18px;
+            color: #464547;
+        }
+    }
+
+    #launches_owners {
+
+        table tbody td {
+            font-size: 14px;
+            line-height: 18px;
+            padding: 7px 10px 6px 10px;
+            border-top: 1px solid #e9e9e9;
+        }
+
+        table tbody tr:first-child td {
+            border: none;
+        }
+
+        .project-content {
+            padding-top: 10px;
+        }
+
+    }
+
+    #launches_quantity,
+    #investigated,
+    #issues_chart {
+        .panel-body {
+            padding-top: 10px;
+        }
+    }
+
+    .average-percent {
+        margin: 25px 0 10px;
+    }
+
+    .activity-date-header {
+        font-family: $OpenSansSemibold;
+        font-size: 13px;
+        line-height: 15px;
+        color: #999999;
+        margin: 10px 0 16px 0;
+        padding: 0;
+        // border: none;
+    }
+
+    .activity-item-summary-wrap {
+        overflow: hidden;
+    }
+
+    .activity-item-user {
+        text-transform: capitalize;
+        font-size: 15px;
+        line-height: 15px;
+        color: #464547;
+    }
+    .activity-item-info {
+        margin: 0;
+        color: #777;
+        font-size: 13px;
+        line-height: 15px;
+    }
+
+    .activity-item {
+        border: none;
+        color: #404040;
+        min-height: 16px;
+        padding: 0;
+        margin: 0 0 10px 0;
+    }
+
+    .activity-item-summary {
+        color: #555;
+        font-size: 13px;
+        line-height: 15px;
+        word-wrap: break-word;
+        padding: 0;
+
+        p {
+            font-family: $OpenSansRegular;
+            font-size: 13px;
+            line-height: 15px;
+            color: #464547;
+            margin: 3px 0 1px 0;
+            /* text-transform: capitalize; */
+        }
+    }
+    .hoverFullTime {
+        font-family: $OpenSansRegular;
+        font-size: 13px;
+        line-height: 15px;
+        color: #999999;
+    }
+
+    .activity-avatar {
+        float: left;
+
+        img {
+            max-width: 30px;
+            max-height: 50px;
+            padding: 0;
+            margin: 2px 0 0 0;
+            margin-right: 14px;
+            border: none;
+            border-radius: 0;
+        }
+    }
+
+}
+
+/* activity stream */
+
+.activity-widget {
+    padding: 0 15px;
+}
+.activity-widget .activity-date-header {
+
+}
+.activity-date-header {
+    // border-top: 1px dotted #b1aeae;
+    // color: #808080;
+    // font-size: 14px;
+    // font-weight: bold;
+    // margin: 10px 0 16px 0;
+    // padding: 0;
+}
+
+.activity-item {
+    // background-position: 0.6em 0.6em;
+    // background-repeat: no-repeat;
+    // border-top: 1px dotted #b1aeae;
+    // color: #404040;
+    // line-height: 125%;
+    // min-height: 16px;
+    // padding: 0 0 0.6em;
+    // vertical-align: top;
+    // margin: 0;
+}
+
+.bugs-avatar {
+    float: left;
+}
+.activity-avatar .avatar,
+.bugs-avatar .avatar {
+    max-width: 36px;
+    padding: 2px;
+    margin-right: 0.6em;
+}
+
+.activity-date-header:first-child {
+    border-top: none;
+    padding-top: 12px;
+}
+
+.no-data-available {
+    background: #fff url("../img/plug-empty-data-graf.png") no-repeat center bottom;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.project-item-info-title {
+    // background-color: #f0f0f0;
+    // margin: 0;
+    // padding: 7px 5px;
+}
+
+.in-header-block .btn {
+    opacity: 0.5;
+}
+.in-header-block .btn.active {
+    opacity: 1;
+    color: #000;
+}
+
+.in-header-block {
+    margin-top: 5px;
+    // padding: 12px 10px 20px 10px;
+}
+
+.in-header-block label.btn-custom {
+    margin: 0 6px;
+    padding: 2px 17px;
+    background-color: #f8f8f8;
+    font-family: "OpenSansSemibold", sans-serif;
+    font-size: 12px;
+    color: #777777;
+
+    border-radius: 100px;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -khtml-border-radius: 100px;
+}
+.in-header-block label.btn-custom.active {
+    margin: 0 6px;
+    padding: 2px 17px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+
+    border-radius: 100px;
+    -moz-border-radius: 100px;
+    -webkit-border-radius: 100px;
+    -khtml-border-radius: 100px;
+}
+.in-header-block label.btn-custom:last-child:not(:first-child) {
+    border-radius: 23px;
+    -moz-border-radius: 23px;
+    -webkit-border-radius: 23px;
+    -khtml-border-radius: 23px;
+}
+.btn-group > .dropdown-toggle:not(:first-child) {
+    border-radius: 23px;
+    -moz-border-radius: 23px;
+    -webkit-border-radius: 23px;
+    -khtml-border-radius: 23px;
+}
+.in-header-block label.btn-custom:first-child {
+    margin-left: 0;
+}
+.in-header-block label.btn-custom:last-child {
+    margin-right: 0;
+    margin-left: 6px;
+}
+
+.in-header-block label.btn-custom:first-child:not(:last-child):not(.dropdown-toggle) {
+    border-radius: 100px;
+}
+.in-header-block label.btn-custom:not(:first-child):not(:last-child):not(.dropdown-toggle) {
+    border-radius: 100px;
+    margin: 0 6px;
+}

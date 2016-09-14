@@ -1,0 +1,30 @@
+<div class="form-group" data-id="<%= data.id %>">
+    <label class="filter-name"><%= data.text.filterNameById[data.id.escapeLessDirection()] %></label>
+    <% if(!data.required) { %>
+        <span class="remove-filter float-right">
+            <i class="material-icons">clear</i>
+        </span>
+    <% } %>
+    <div class="input-group input-group-sm">
+        <% if(data.options && data.options.length){ %>
+        <div class="input-group-sm filter-option-select">
+            <button type="button" class="btn dropdown-toggle" data-value="<%= data.condition %>" data-toggle="dropdown" aria-expanded="false">
+                <span class="select-value">
+                    <% var opt = _.find(data.options, function(o){ return data.condition == o.id }); %>
+                    <%= opt.shortCut || data.condition %>
+                </span> <span class="caret"></span></button>
+            <ul class="dropdown-menu option-menu dropdown-menu-left" role="menu">
+                <% _.each(data.options, function(o){ %>
+                <li <% if(data.condition ==  o.id){ %>class="active"<% } %>><a href="#" data-short="<%= o.shortCut || '' %>" data-value="<%= o.id %>"><%= data.text.filterConditions[o.shortCut || o.id] %></a></li>
+                <% }); %>
+            </ul>
+        </div>
+        <% } %>        
+        <div class="filter-option-input">
+            <% var warning = (data.id != 'tags' ? (data.text.ui.minPrefix + ' ' + data.startSearch + ' ' + data.text.ui.minSufix) : data.text.ui.enterChars) %>
+            <input autocomplete="off" id="tagFilter" type="text"
+                   data-warning="<%= warning %>"
+                   value="<%= data.value %>" class="input-sm tags-typeahead" />
+        </div>
+    </div>
+</div>

@@ -1,0 +1,39 @@
+<div class="form-group">
+    <div class="dt-form-group-header">
+        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 title-defect-name">
+            <span><%= data.text.project.nav.defectName %></span>
+        </div>
+        <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 title-abbreviation">
+            <span><%= data.text.project.nav.abbreviation %></span>
+        </div>
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+            <span><%= data.text.project.nav.color %></span>
+        </div>
+        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 title-diagram">
+            <span><%= data.text.project.nav.diagram %></span>
+        </div>
+    </div>    <div class="dt-form-group-body" id='types'>
+        <% _.each(data.order, function(element, key) {
+            if (element !== 'text') { %>                <div class="dt-content-item-title">
+                    <% if (element == 'product_bug') { %>
+                        <span><%= data.text.project.titleGroup.titleProductBug %></span>
+                    <% } %>                    <% if (element == 'automation_bug') { %>
+                        <span><%= data.text.project.titleGroup.titleAutomationBug %></span>
+                    <% } %>                    <% if (element == 'system_issue') { %>
+                        <span><%= data.text.project.titleGroup.titleSystemIssue %></span>
+                    <% } %>                    <% if (element == 'no_defect') { %>
+                        <span><%= data.text.project.titleGroup.titleNoDefect %></span>
+                    <% } %>                    <% if (element == 'to_investigate') { %>
+                        <span><%= data.text.project.titleGroup.titleToInvestigate %></span>
+                    <% } %>
+                </div>                <div class="dt-content-item-wrap" id="<%= element %>"></div>
+            <% }        }); %>        <div id="chart" class="collection-colors">
+            <h4><%= data.text.project.ExplChosenColors %></h4>
+            <svg></svg>
+        </div>        <div class="dt-form-group-footer">
+            <% if (data.edit) { %>
+                <a href="javascript:void(0);" id="reset-color" class="rp-link float-right" title=""><%= data.text.project.LinkResetToDefaultColors %></a>
+            <% } %>
+        </div>
+    </div>
+</div>

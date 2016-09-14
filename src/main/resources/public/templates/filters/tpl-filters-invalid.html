@@ -1,0 +1,20 @@
+<div class="form-group has-error" data-id="<%= data.id %>">
+    <label class="filter-name"><%= data.name %></label>
+    <% if(!data.required) { %>
+        <span class="remove-filter float-right">
+            <i class="material-icons">clear</i>
+        </span>
+    <% } %>
+    <div class="input-group input-group-sm dropdown-like">
+        <div class="filter-option-input">
+            <input disabled type="text"
+                class="form-control input-sm invalid"
+                placeholder=""
+                value="<%- data.value %>" />
+            <div class="help-inline">
+                <span><%= data.text.filters.noInfoFilter %></span>
+            </div>
+        </div>
+    </div>
+    <div class="tt-dropdown-menu filter-hint"></div>
+</div>

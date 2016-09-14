@@ -1,0 +1,19 @@
+<div class="col-sm-5 col-xs-12">
+    <label class="name-label" for="launchesSelector">
+        <%= data.text.widgets.typeLaunchName %>:
+    </label>
+    <div class="">
+        <div class="input-group b-users-typeahead">
+            <span class="input-group-addon">
+                <i class="material-icons">star_border</i>
+            </span>
+            <input type="text"
+                class="filter-control users-typeahead"
+                id="launchesSelector"
+                name="launchesSelector"
+                size="30"
+                placeholder=""
+                value="<%= data.selected.join(', ') %>" />
+        </div>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+<% if(!data.hideDismiss){ %>
+<button data-dismiss="modal" class="rp-btn rp-btn-cancel" type="button">
+    <%= data.text.ui[data.dismissTxt || 'cancel'] %>
+</button>
+<% } %>
+<button class="rp-btn rp-btn-submit <%= data.actionStatus ? '' : 'disabled' %>" id="actionBtnDialog" type="button">
+    <%= data.text.ui[data.actionTxt || 'save'] %>
+</button>

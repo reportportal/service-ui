@@ -1,0 +1,11 @@
+<li <% if(data.active) { %> class="active"<% } %> >
+    <a class="dashboard-project-link clearfix"
+        href="#<%= data.projectUrl %>/dashboard/<%= data.dash.id %>"
+        id="<%= data.dash.id %>"
+        title="<%= data.dash.name %>">
+        <span class="dashboard-project-name"><%- data.dash.name %></span>
+        <% if(data.dash.isShared) { %>
+            <i class="material-icons">reply</i>
+        <% } %>
+    </a>
+</li>

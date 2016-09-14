@@ -1,0 +1,13 @@
+<div class="col-sm-4 col-xs-12">
+    <div class="btn-group rp-btn-group btn-group-justified padding-top-30"
+        role="group"
+        id="<%= data.type %>Selector"
+        data-type="<%= data.type %>">
+        <% _.each(data.criteria, function(val, key) { %>
+            <% var classes = "rp-btn rp-btn-default btn-justified" + (key == data.defautlCriteria ? ' active' : '') %>
+            <a href="#" class="<%= classes %>" role="button" data-value="<%= key %>">
+                <span class="rp-btn-val"><%= val %></span>
+            </a>
+        <% }); %>
+    </div>
+</div>

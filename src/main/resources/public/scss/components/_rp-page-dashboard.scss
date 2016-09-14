@@ -1,0 +1,646 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+.rp-popup-settings {
+  color: #444444;
+}
+.rp-popup-settings h4 {
+  font-size: 20px;
+}
+.rp-popup-settings .modal-header,
+.rp-popup-settings .modal-body,
+.rp-popup-settings .modal-footer {
+  padding: 15px 20px;
+}
+.rp-popup-settings .form-horizontal .control-label {
+  font-weight: normal;
+}
+.rp-popup-settings .form-horizontal .control-label.rp-left-position {
+  text-align: left;
+}
+.rp-popup-settings .modal-header {
+  border-bottom: none;
+}
+.rp-popup-settings .modal-footer {
+  border-top: none;
+  background-color: #eeeeee;
+  border-bottom-left-radius: 6px ;
+  border-bottom-right-radius: 6px ;
+}
+/* end main settings */
+.rp-dashboard-overflow {
+  padding-top: 20px;
+  border-top: 1px solid #e5e5e5;
+}
+.rp-dashboard-overflow .rp-dashboard-content {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 20px 40px 0;
+}
+.borderWidget > div > img {
+  margin-bottom: 10px;
+  border: 1px solid #a8a8a8;
+  height: 100px;
+  width: 100px;
+}
+@media screen and (min-width: 768px) {
+  .borderWidget > div > img {
+    height: 128px;
+    width: 128px;
+  }
+}
+.borderWidget > div > span {
+  display: block;
+  vertical-align: middle;
+  font-size: 13px;
+  width: 128px;
+  margin: 0 auto;
+}
+.borderWidget.smallOverflow {
+    /*  height: 350px;*/
+    /*  overflow-y: auto;*/
+    // border: 1px solid #a8a8a8;
+    padding: 20px 10px 0;
+}
+@media screen and (min-width: 768px) {
+    .borderWidget.smallOverflow {
+        padding: 20px 40px 0;
+    }
+}
+.subBlock {
+  padding-top: 20px;
+}
+.filterBlock {
+  border-bottom: 1px solid #959595;
+}
+.filterName {
+  margin: 20px 0 20px 4px;
+  width: 260px;
+  height: 29px;
+  padding-left: 5px;
+}
+.filterBlock > .col-md-6 > a {
+  margin: 5px 20px 0 0;
+  display: block;
+  float: left;
+  color: #428bca;
+  text-decoration: underline !important;
+}
+.filterBlock > .col-md-6 > a:hover {
+  color: #2a6496;
+  text-decoration: none !important;
+}
+.graphBlock {
+  padding-top: 27px;
+}
+.graphBlock h4 {
+  margin-top: 0;
+  font-size: 14px;
+}
+.graphBlock p {
+  font-size: 11px;
+  margin-bottom: 30px;
+}
+.graphBlock > .col-md-4 > img {
+  margin-top: 20px;
+}
+.borderWidget > .columnWidget {
+  float: left;
+  width: 100%;
+  margin: 0;
+  height: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-align: left;
+}
+@media screen and (min-width: 768px) {
+  .borderWidget > .columnWidget {
+    width: 50%;
+  }
+}
+@media screen and (min-width: 992px) {
+  .borderWidget > .columnWidget {
+    width: 33%;
+  }
+}
+.columnWidget > ul > li {
+  list-style: none;
+  padding-bottom: 14px;
+}
+.columnWidget > ul > li a {
+  color: #444444;
+  display: block;
+  padding: 6px 10px;
+  margin: 0 -10px;
+}
+.columnWidget > ul > li a:hover {
+  background-color: #c2daf2;
+  text-decoration: none;
+}
+.columnWidget > ul > li.title {
+  font-weight: bold;
+  text-decoration: underline;
+}
+.bigOverflow {
+  max-height: 450px;
+  overflow-y: auto;
+  border: 1px solid #a8a8a8;
+  padding: 20px 40px 0;
+}
+.rp-even-odd > div:nth-child(2n) {
+  background-color: #fafafa;
+}
+.rp-even-odd a {
+  color: #428bca;
+  text-decoration: underline !important;
+}
+.rp-even-odd a:hover,
+.rp-even-odd a:focus,
+.rp-even-odd a:active {
+  color: #2a6496;
+  text-decoration: none !important;
+}
+.chart_time_icon {
+  float: left;
+  width: 29px;
+  margin: 0 10px;
+  font-size: 11px;
+  text-align: center;
+}
+input + label {
+  margin: 0 0 0 7px;
+}
+input[type=checkbox] + label {
+  white-space: nowrap;
+}
+.overtime_period_select {
+  width: 100%;
+}
+.field {
+  border: 1px solid #bfc1c2;
+  border-top: 1px solid #d4d4d6;
+  border-bottom: 1px solid #aaadae;
+  border-radius: 3px;
+  outline: none;
+  padding: 5px;
+}
+.rp-top-links {
+  float: right;
+}
+.rp-top-links li {
+  float: right;
+}
+.rp-top-links li a {
+  padding: 0 5px;
+}
+.rp-top-links li a:hover i,
+.rp-top-links li a:focus i {
+  color: #5a5a5a;
+}
+.rb-panel-btn {
+  background-color: inherit;
+  box-shadow: none;
+  border: none;
+}
+.rb-btn-settings {
+  background-color: inherit;
+  border: 2px dashed #CFCFCF;
+  color: #CFCFCF;
+}
+.rb-btn-settings:hover,
+.rb-btn-settings:focus,
+.rb-btn-settings:active {
+  background-color: inherit;
+  border: 2px dashed #b0b0b0;
+  color: #b0b0b0;
+}
+.rb-btn-settings h3 {
+  margin: 5px 0;
+}
+
+@media screen and (max-width: 767px) {
+  .rb-btn-settings h3 {
+    font-size: 16px;
+  }
+}
+
+.dashboard_row {
+    border-top: 1px solid black;
+}
+
+/* ---------------------*/
+/* STYLES FOR DASHBOARD */
+
+#mainContainer {
+    .rp-main-panel {
+        #contentHeader {
+
+            #headerBar {
+                &.dashboard-header-wrap {
+                    padding-top: 10px;
+                    padding-right: 15px;
+                    padding-bottom: 10px;
+                    padding-left: 15px;
+                    margin: 0;
+                    background: #fff;
+                    border-bottom: 1px solid #e9e9e9;
+
+                    ul {
+                        &.rp-nav-right {
+                            padding-right: 0;
+                        }
+                    }
+                }
+
+                ul {
+                    &.dashboard-title {
+                        display: inline-block;
+                        margin: 0;
+                        padding: 0;
+
+                        li {
+                            a {
+                                padding: 0px 22px;
+
+                                &.break-link {
+                                    position: relative;
+                                    display: block;
+                                    font-family: $OpenSansSemibold;
+                                    font-size: 13px;
+                                    line-height: 13px;
+                                    color: #464547;
+                                    padding: 8px 24px;
+                                    margin-left: 2px;
+                                    text-shadow: none;
+                                    text-transform: uppercase;
+                                    text-decoration: none;
+                                    max-width: 100%;
+                                    word-break: break-word;
+
+                                    & > i {
+                                        &.material-icons,
+                                        &.rp-svg-icon {
+                                            position: absolute;
+                                        }
+                                        &.svg-icon-menu-size-14 {
+                                            left: 0;
+                                            top: 10px;
+                                        }
+                                        &.material-icons {
+                                            top: 6px;
+                                            width: 18px;
+                                            height: 18px;
+                                            font-size: 18px;
+                                            line-height: 18px;
+                                            margin-left: 4px;
+                                            right: 4px;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    &.dashboard-edits {
+                        li {
+                            margin: 0 5px 0 0;
+
+                            a {
+                                padding: 7px 10px;
+                                border: 1px solid #ccc;
+                                border-radius: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+#createDashboard {
+    .shared-switcher {
+        padding-right: 15px;
+        max-width: 120px;
+        min-width: 116px;
+    }
+}
+
+/*--------------------------*/
+
+.action-panel-dashboard {
+
+}
+
+/*--- DASHBOARD ---*/
+.widgets-list .panel-default {
+    border-color: #ccc;
+    border-radius: 0;
+}
+
+.widgets-list .panel-default .panel-heading {
+    border-bottom: none;
+    background-color: #f0f0f0;
+    font-family: $OswaldRegular;
+    font-size: 14px;
+    color: #464547;
+}
+
+.widgets-list .panel-heading {
+    color: #464547;
+}
+
+.widgets-list .panel-heading strong {
+    text-transform: uppercase;
+}
+
+.widgets-list .panel-heading .rp-top-links {
+    font-size: 16px;
+    color: #666;
+}
+
+.widgets-list .panel-heading .rp-top-links .disabled {
+    opacity: 0.6;
+}
+
+.widgets-list .panel-default > .panel-heading .badge {
+    position: relative;
+    top: -2px;
+    font-family: $OpenSansRegular;
+    background: #666;
+}
+
+/*--- END DASHBOARD ---*/
+
+
+
+
+/*--- DASHBOARDS MENU ---*/
+.b-dashboars-list {
+    border-color: #ddd;
+    border-top: none;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+}
+.add-dash-button .btn.add-new-dashboard {
+    // border-color: #a3c644;
+    // background: #a3c644;
+}
+
+.b-dashboars-list .columnWidget > ul,
+.b-shareddash-list .columnWidget > ul {
+    margin: 0;
+}
+
+.b-dashboars-list .columnWidget > ul > li a {
+    word-wrap: break-word;
+    border: 1px solid transparent;
+}
+
+.b-dashboars-list .columnWidget > ul > li a:hover,
+.b-dashboars-list .columnWidget > ul > li.active a,
+.b-dashboars-list .columnWidget > ul > li.active a:hover {
+    border-color: #a9ca50;
+}
+
+.b-dashboars-list .columnWidget > ul > li.active a,
+.b-dashboars-list .columnWidget > ul > li.active a:hover {
+    background-color: #fcfdfa;
+}
+
+.b-dashboars-list .columnWidget > ul > li a:hover {
+    background-color: transparent;
+}
+
+/*--- END DASHBOARDS MENU ---*/
+
+
+
+
+/*--- ADD DASHBOARD POPUP ---*/
+.modal-content .modal-body,
+.rp-popup-settings .modal-body,
+.rp-popup-settings #shareDashboard .b-shareddash-list {
+    padding: 0;
+}
+
+.modal-body.filter-name {
+    padding-top: 15px;
+}
+
+.rp-popup-settings .rp-dashboard-overflow {
+    border-top: none;
+}
+
+.rp-popup-settings #shareDashboard .dashboard_list li {
+    padding: 12px 20px;
+    border-top: 1px solid #dbdbdb;
+    font-size: 14px;
+    color: #666;
+}
+
+.rp-popup-settings #shareDashboard .dashboard_list .user_name {
+    background-color: #f9f9f9;
+    font-weight: bold;
+}
+
+.rp-popup-settings .btn-default {
+    margin-right: 0;
+}
+
+.modal-dialog {
+    .modal-content {
+        #createNewDashboard {
+            .rp-custom-col {
+                vertical-align: top;
+            }
+            .rp-control-label {
+                margin-bottom: 8px;
+            }
+
+            ul { 
+                &#dashboard_list {
+                    .dashboard_list {
+                        .user_name {
+                            padding: 8px 10px;
+                            min-height: 30px;
+                            background-color: #f9f9f9;
+                            font-family: $OpenSansSemibold;
+                            font-size: 13px;
+                            line-height: 13px;
+                            color: #777777;
+                        }
+                    }
+                }
+            }
+        }
+
+        #shareDashboard {
+            .dashboard_list {
+                li {
+                    &.title {
+                        padding: 12px 0px;
+                        border-bottom: solid 1px #e9e9e9;
+                    }
+                }
+                p.dashboard_title {
+                    font-family: $OpenSansRegular;
+                    font-size: 13px;
+                    line-height: 13px;
+                    color: #464547;
+                    padding: 0;
+                    margin: 0px;
+
+                    a {
+                        position: relative;
+                        display: inline-block;
+                        font-family: $OpenSansRegular;
+                        font-size: 13px;
+                        line-height: 13px;
+                        color: #464547;
+                        margin: 0;
+
+                        &.disabled-link,
+                        &.disabled-link:hover {
+                            color: #B8B8B8;
+                            cursor: default;
+                        }
+                    }
+                }
+
+                p.dashboard_title {
+                    &:not(:last-child) {
+                        a {
+                            margin-bottom: 10px;
+                        }
+                    }
+                }
+            }
+            .thead-dashboard-list {
+                background-color: #f9f9f9;
+                min-height: 30px;
+
+                & > div {
+                    font-family: $OpenSansSemibold;
+                    font-size: 12px;
+                    line-height: 30px;
+                    color: #777777;
+                    text-transform: uppercase;
+                }
+            }
+            .rp-dashboard-overflow {
+                border-top: none;
+            }
+        }
+    }
+
+    .modal-dialog-create-new-dashboard {
+        & > ul {
+            &.nav-tabs-custom {
+                padding-top: 0;
+            }
+        }
+    }
+}
+
+/*--- END ADD DASHBOARD POPUP ---*/
+
+.dashboards-container {
+    .my-dashboards-list {
+        .columnWidget {
+            .dashboard-project-link {
+                position: relative;
+                display: block;
+                width: 100%;
+                word-wrap: break-word;
+                padding: 5px 10px;
+
+                .dashboard-project-name {
+                    position: relative;
+                    display: inline-block;
+                    max-width: 80%;
+                    overflow: hidden;
+                    float: left;
+                    word-wrap: break-word;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+
+                i {
+                    display: inline-block;
+                    margin-left: 5px;
+
+                    @extend %flip-horizontal;
+                }
+
+            }
+        }
+    }
+}
+
+#OwnDashboards {
+    .dashboard-selector-wrapper {
+        min-height: 60px;
+    }
+
+    .dashboard-project-link {
+        position: relative;
+        display: block;
+        width: 100%;
+        word-wrap: break-word;
+        padding: 5px 10px;
+
+        .dashboard-project-name {
+            position: relative;
+            display: inline-block;
+            max-width: 80%;
+            overflow: hidden;
+            float: left;
+            word-wrap: break-word;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        i {
+            display: inline-block;
+            margin-left: 5px;
+
+            @extend %flip-horizontal;
+        }
+
+    }
+}
+
+.rp-shared-dashboard {
+    display: inline-block;
+    text-transform: none;
+    white-space: nowrap;
+
+    span {
+        position: relative;
+        display: inline-block;
+        padding-left: 16px;
+    }
+    .material-icons {
+        position: absolute;
+        left: 0;
+        top: 1px;
+    }
+}

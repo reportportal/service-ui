@@ -1,0 +1,38 @@
+<div class="container-fluid general-info">
+    <div class="row">
+        <div class="col-sm-12">
+            <span class="data-number"><%= data.info.launchesQuantity %></span>
+            <% if (data.info.launchesQuantity > 1) { %>
+                <span class="data-text"><%= data.text.admin.launchesQuantity %></span>
+            <% } else { %>
+                <span class="data-text"><%= data.text.admin.launchesQuantity %></span>
+            <% } %>
+        </div>
+        <div class="col-sm-12">
+            <span class="data-number"><%= data.info.launchesPerWeek %></span>
+            <% if (data.info.launchesPerWeek > 1) { %>
+                <span class="data-text"><%= data.text.admin.launchesAverage %></span>
+            <% } else { %>
+                <span class="data-text"><%= data.text.admin.launchesAverage %></span>
+            <% } %>
+        </div>
+        <div class="col-sm-12">
+            <span class="data-number"><%= data.info.usersQuantity %></span>
+            <% if (data.info.usersQuantity > 1) { %>
+                <span class="data-text"><%= data.text.admin.usersQuantity %></span>
+            <% } else { %>
+                <span class="data-text"><%= data.text.admin.usersQuantity %></span>
+            <% } %>
+        </div>
+        <% if(data.hasValidBtsSystem) { %>
+        <div class="col-sm-12">
+            <span class="data-number"><%= data.info.uniqueTickets %></span>
+            <% if (data.info.uniqueTickets > 1) { %>
+                <span class="data-text"><%= data.text.admin.uniqueBugs %></span>
+            <% } else { %>
+                <span class="data-text"><%= data.text.admin.uniqueBugs %></span>
+            <% } %>
+        </div>
+        <% } %>
+    </div>
+</div>

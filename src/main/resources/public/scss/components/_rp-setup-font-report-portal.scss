@@ -1,0 +1,296 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+/*---------------------------------*/
+/* SETTINGS FOR FONT REPORT PORTAL */
+
+%FontFamilyReportPortal {
+    font-family: $ReportPortal;
+    display: inline-block;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+i {
+    &.rp-icons {
+        @extend %FontFamilyReportPortal;
+    }
+}
+
+/*------------------------*/
+/* ICONS FOR LANDING PAGE */
+
+.rp-icons {
+    &.rp-icons-live-visibility-landing {
+        @include beforeContent("\e90a");
+    }
+    &.rp-icons-fighter-jet-landing {
+        @include beforeContent("\e905");
+    }
+    &.rp-icons-settings-landing {
+        @include beforeContent("\e910");
+    }
+    &.rp-icons-report-landing {
+        @include beforeContent("\e90f");
+    }
+    &.rp-icons-integrate-landing {
+        @include beforeContent("\e908");
+    }
+    &.rp-icons-refactoring-landing {
+        @include beforeContent("\e90e");
+    }
+
+    /*---------------------*/
+    /* ICONS FOR MAIN MENU */
+
+    &.rp-icons-launches {
+        @include beforeContent("\e909");
+    }
+    &.rp-icons-filter {
+        @include beforeContent("\e906");
+    }
+    &.rp-icons-eye {
+        @include beforeContent('\e904');
+    }
+    &.rp-icons-statusbar {
+        @include beforeContent("\e912");
+    }
+    &.rp-icons-dashboard {
+        @include beforeContent("\e902");
+    }
+    &.rp-icons-projects {
+        @include beforeContent("\e90d");
+    }
+    &.rp-icons-settings-left-menu {
+        @include beforeContent("\e911");
+    }
+
+    /*---------------------------------------*/
+    /* ICONS FOR MAIN MENU AND TOP MAIN MENU */
+
+    &.rp-icons-all-users {
+        @include beforeContent("\e900");
+    }
+    &.rp-icons-menu {
+        @include beforeContent("\e944");
+    }
+    &.rp-icons-settings {
+        @include beforeContent("\e915");
+    }
+
+    /*------------------*/
+    /* TODO */
+    /* ICONS - NOT USED */
+
+    &.rp-icons-edit {
+        @include beforeContent("\e903");
+    }
+    &.rp-icons-close {
+        @include beforeContent("\e91f");
+    }
+    &.rp-icons-ticket {
+        @include beforeContent("\e913");
+    }
+
+    /*-------------------*/
+    /* ICONS FOR ACTIONS */
+
+    &.rp-icons-cancel {
+        @include beforeContent("\e901");
+    }
+    &.rp-icons-ok {
+        @include beforeContent("\e90c");
+    }
+    &.rp-icons-delete {
+        @include beforeContent("\e933");
+    }
+    &.rp-icons-search {
+        @include beforeContent("\e914");
+    }
+
+    /*-------------*/
+    /* OTHER ICONS */
+
+    &.rp-icons-heartbeat {
+        @include beforeContent("\e907");
+    }
+    &.rp-icons-magic {
+        @include beforeContent("\e90b");
+    }
+    &.rp-icons-unlock {
+        @include beforeContent("\e923");
+    }
+    &.rp-icons-add-project {
+        @include beforeContent("\e91a");
+    }
+    &.rp-icons-add-user {
+        @include beforeContent("\e91b");
+    }
+    &.rp-icons-invite-user {
+        @include beforeContent("\e922");
+    }
+    &.rp-icons-assign {
+        @include beforeContent("\e91c");
+    }
+    &.rp-icons-unassign {
+        @include beforeContent("\e919");
+    }
+    &.rp-icons-check {
+        @include beforeContent("\e91e");
+    }
+    &.rp-icons-history-view {
+        @include beforeContent("\e921");
+    }
+    &.rp-icons-open {
+        @include beforeContent("\e924");
+    }
+    &.rp-icons-sort {
+        @include beforeContent("\e916");
+    }
+    &.rp-icons-square-minus {
+        @include beforeContent("\e91d");
+    }
+    &.rp-icons-square-plus {
+        @include beforeContent("\e918");
+    }
+    &.rp-icons-warning {
+        @include beforeContent("\e917");
+    }
+    &.rp-icons-buble {
+        @include beforeContent("\e920");
+    }
+    &.rp-icons-add-filter {
+        @include beforeContent("\e930");
+    }
+    &.rp-icons-discard {
+        @include beforeContent("\e934");
+    }
+    &.rp-icons-expand {
+        @include beforeContent("\e935");
+    }
+
+    /*-----------------------*/
+    /* ICONS FOR TEXT EDITOR */
+
+    &.rp-icons-H1 {
+        @include beforeContent("\e936");
+    }
+    &.rp-icons-H2 {
+        @include beforeContent("\e937");
+    }
+    &.rp-icons-H3 {
+        @include beforeContent("\e938");
+    }
+    &.rp-icons-H4 {
+        @include beforeContent("\e939");
+    }
+    &.rp-icons-H5 {
+        @include beforeContent("\e940");
+    }
+    &.rp-icons-H6 {
+        @include beforeContent("\e941");
+    }
+    &.rp-icons-paragraph {
+        @include beforeContent("\e943");
+    }
+    &.rp-icons-numbers {
+        @include beforeContent("\e942");
+    }
+    &.rp-icons-bullets {
+        @include beforeContent("\e931");
+    }
+    &.rp-icons-code {
+        @include beforeContent("\e932");
+    }
+    &.rp-icons-bold {
+        @include beforeContent("\e945");
+    }
+    &.rp-icons-link {
+        @include beforeContent("\e946");
+    }
+    &.rp-icons-image {
+        @include beforeContent("\e947");
+    }
+    &.rp-icons-italic {
+        @include beforeContent("\e948");
+    }
+    &.rp-icons-quote {
+        @include beforeContent("\e949");
+    }
+    &.rp-icons-strikethrough {
+        @include beforeContent("\e950");
+    }
+}
+
+/*----------------------------------*/
+/* ICONS SETTING - CUSTOM FONT SIZE */
+
+i {
+    &.rp-icons {
+        &.fsize-15 {
+            @include fSize(15);
+        }
+        &.fsize-16 {
+            @include fSize(16);
+        }
+        &.fsize-17 {
+            @include fSize(17);
+        }
+        &.fsize-18 {
+            @include fSize(18);
+        }
+        &.fsize-19 {
+            @include fSize(19);
+        }
+        &.fsize-20 {
+            @include fSize(20);
+        }
+        &.fsize-21 {
+            @include fSize(21);
+        }
+        &.fsize-22 {
+            @include fSize(22);
+        }
+        &.fsize-23 {
+            @include fSize(23);
+        }
+        &.fsize-24 {
+            @include fSize(24);
+        }
+        &.fsize-25 {
+            @include fSize(25);
+        }
+        &.fsize-130 {
+            @include fSize(130);
+        }
+        &.fsize-150 {
+            @include fSize(150);
+        }
+    }
+}

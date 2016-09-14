@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+<title>success</title>
+<meta name="description" content="">
+<body>
+<script type="text/javascript" charset="utf-8">
+    function parseUrl() {
+        var i, nameVal, parseURL_anchor, parseUrl_params, parseUrl_paramsStr, parseUrl_result, parseUrl_url;
+        parseUrl_result = {};
+        parseUrl_url = decodeURI(window.location.search);
+        parseUrl_paramsStr = parseUrl_url.split("?")[1];
+        parseURL_anchor = window.location.href.split("#")[1];
+        if (typeof parseUrl_paramsStr !== "undefined") {
+            parseUrl_params = parseUrl_paramsStr.split("&");
+            nameVal = "";
+            i = 0;
+            while (i < parseUrl_params.length) {
+                nameVal = parseUrl_params[i].split("=");
+                if (nameVal.length === 2) {
+                    parseUrl_result[nameVal[0]] = nameVal[1];
+                }
+                i++;
+            }
+        }
+        if (typeof parseURL_anchor !== "undefined") {
+            parseUrl_result.anchor = parseURL_anchor;
+        }
+        return parseUrl_result;
+    };
+    var params = parseUrl();
+    window.location.href = '/ui/#?access_token='+ params.token +'&token_type=' + params.token_type
+//    if (!!window.opener && !!window.opener.callAuthSuccess) {
+//        window.opener.callAuthSuccess(parseUrl());
+//    }
+//    window.close();
+//    window.location.replace("/");
+</script>
+</body>
+</html>

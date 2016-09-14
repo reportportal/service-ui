@@ -1,0 +1,21 @@
+<div id="changePass" class="row">
+    <h3 class="page-title text-capitalize col-xs-12">
+        <span class="profile_name"><%= data.user_login %></span>
+    </h3>
+    <span class="form-group col-sm-12">
+        <input id="originalPass" class="form-control" type="password" placeholder="<%= data.text.userProfile.oldPass %>" value="">
+        <span class="help-inline"><%= data.text.validation.originalPassRegex %></span>
+    </span>
+    <span class="form-group col-sm-12" id="confirmGroup">
+        <input id="newPass" class="form-control m-bottom-15" type="password"  placeholder="<%= data.text.login.newPassword %>" value="">
+        <input id="newPassComfirm" class="form-control confirm" type="password" placeholder="<%= data.text.login.confirmNewPassword %>" value="">
+        <div class="form-inline p-top-10 clearfix">
+            <label class="text-muted small pull-left"><input type="checkbox" id="showPass" class="" /> <%= data.text.login.showPassword %></label>
+        </div>
+        <span class="help-inline"></span>
+    </span>
+    <div class="form-inline col-sm-12 p-top-10 p-bottom-10 clearfix">
+        <input type="button" id="submit_change" value="<%= data.text.login.changePassword %>" class="btn-create btn btn-info pull-right disabled">
+        <input type="button" id="cancel_change" value="<%= data.text.ui.cancel %>" class="btn btn-default m-right-10 pull-right">
+    </div>
+</div>

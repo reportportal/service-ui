@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Clear page</title>
+	</head>
+	<body>
+		<script>
+			function deleteAllCookies() {
+				var cookies = document.cookie.split(";");
+				for (var i = 0; i < cookies.length; i++) {
+					var cookie = cookies[i];
+					var eqPos = cookie.indexOf("=");
+					var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+					document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+				}
+			}
+			deleteAllCookies();
+            window.localStorage.removeItem('current_login');
+			var redirectUrl = window.location.origin + (window.location.pathname || '/') + '#login';
+			window.location.replace(redirectUrl);
+			window.location.reload(true);
+		</script>
+	</body>
+</html>

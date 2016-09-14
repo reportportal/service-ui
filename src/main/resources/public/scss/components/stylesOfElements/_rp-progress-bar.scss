@@ -1,0 +1,16 @@
+/*--------------*/
+/* PROGRESS BAR */
+
+.progress-bar-empty .empty {
+    top: -2px;
+}
+
+.progress-bar-empty .small {
+    position: relative;
+    top: -6px;
+}
+
+.progress-bar-success .small {
+    position: relative;
+    top: 4px;
+}

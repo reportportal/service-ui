@@ -1,0 +1,107 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+/*------------------------*/
+/* COMMON MIXIN FOR FONTS */
+
+$LAST_DATE_OF_UPDATE: "v=08.22.2016";
+
+@mixin font-face($fontFamily, $filePath, $fontStyle, $fontWeight) {
+    @font-face {
+        font-family: $fontFamily;
+        src: url("#{$filePath}.eot?#{$LAST_DATE_OF_UPDATE}"),
+             url("#{$filePath}.eot?#iefix&#{$LAST_DATE_OF_UPDATE}") format("embedded-opentype");
+
+        @if $fontFamily == 'MaterialIconsRegular' {
+            src: local('MaterialIconsRegular'),
+                 local('MaterialIcons-Regular');
+        }
+
+        src: local("☺"),
+             url("#{$filePath}.woff2?#{$LAST_DATE_OF_UPDATE}") format("woff2"),
+             url("#{$filePath}.woff?#{$LAST_DATE_OF_UPDATE}") format("woff"),
+             url("#{$filePath}.ttf?#{$LAST_DATE_OF_UPDATE}") format("truetype"),
+             url("#{$filePath}.svg?#{$LAST_DATE_OF_UPDATE}&##{$fontFamily}") format("svg");
+        font-style: $fontStyle;
+        font-weight: $fontWeight;
+    }
+
+    @media screen and (-webkit-min-device-pixel-ratio: 0) {
+        @font-face {
+            font-family: $fontFamily;
+            src: url('#{$filePath}.svg##{$fontFamily}') format('svg');
+        }
+    }
+}
+
+/*-------------*/
+/* SETUP FONTS */
+
+/* Font Report Portal */
+$urlFontReportPortal: '../fonts/font-ReportPortal/report-portal';
+@include font-face('ReportPortal', $urlFontReportPortal, normal, normal);
+
+/* Font Material Icons */
+$urlFontMaterialIconsRegular: '../fonts/font-MaterialIconsRegular/MaterialIcons-Regular';
+@include font-face('MaterialIconsRegular', $urlFontMaterialIconsRegular, normal, 400);
+
+/* Font OswaldLight */
+$urlFontOswaldLight: '../fonts/font-OswaldLight/oswald-light';
+@include font-face('OswaldLight', $urlFontOswaldLight, normal, normal);
+
+/* Font OswaldRegular */
+$urlFontOswaldRegular: '../fonts/font-OswaldRegular/oswald-regular';
+@include font-face('OswaldRegular', $urlFontOswaldRegular, normal, normal);
+
+/* Font OswaldBold */
+$urlFontOswaldBold: '../fonts/font-OswaldBold/oswald-regular';
+@include font-face('OswaldBold', $urlFontOswaldBold, normal, normal);
+
+/* Font OpenSansRegular */
+$urlFontOpenSansRegular: '../fonts/font-OpenSansRegular/open-sans-regular';
+@include font-face('OpenSansRegular', $urlFontOpenSansRegular, normal, normal);
+
+/* Font OpenSansSemibold */
+$urlFontOpenSansSemibold: '../fonts/font-OpenSansSemibold/open-sans-semibold';
+@include font-face('OpenSansSemibold', $urlFontOpenSansSemibold, normal, normal);
+
+/* Font Slick (Icons) */
+$urlFontSlick: '../fonts/font-Slick/slick';
+@include font-face('Slick', $urlFontSlick, normal, normal);
+
+/* Font Montserrat */
+$urlFontMontserrat: '../fonts/font-Montserrat/Montserrat';
+@include font-face('FontMontserratRegular', $urlFontMontserrat, normal, 400);
+
+/*------------------------------*/
+
+$ReportPortal: "ReportPortal", sans-serif;
+
+$OswaldLight: "OswaldLight", sans-serif;
+$OswaldRegular: "OswaldRegular", sans-serif;
+$OswaldBold: "OswaldBold", sans-serif;
+
+$OpenSansRegular: "OpenSansRegular", sans-serif;
+$OpenSansSemibold: "OpenSansSemibold", sans-serif;
+
+$FontMontserratRegular: "FontMontserratRegular", sans-serif;
+
+$MaterialIconsRegular: "MaterialIconsRegular", sans-serif;

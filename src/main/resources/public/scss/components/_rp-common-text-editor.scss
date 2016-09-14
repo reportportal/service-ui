@@ -1,0 +1,308 @@
+/*-------------*/
+/* TEXT EDITOR */
+
+#gridWrapper {
+    .rp-table-hover {
+        .rp-table-row {
+            &.selected {
+                border: 1px solid #999;
+                border-bottom: none;
+                background-color: #e9e9e9 !important;
+            }
+            &.selected:last-child {
+                border-bottom: 1px solid #999;
+            }
+        }
+    }
+    .rp-margin-reset {
+        .rp-table-thead {
+            .rp-table-th {
+                padding-left: 0;
+            }
+        }
+    }
+}
+
+.rp-table-hover {
+    .rp-table-row {
+        &.selected + .rp-table-row,
+        &.selected + .method-collapsed .rp-table-row {
+            border-top: 1px solid #999;
+        }
+        &.selected:last-child {
+            border-bottom: 1px solid #999;
+        }
+    }
+}
+
+/*-------------*/
+
+.text-editor {
+    position: relative;
+    margin-top: 10px;
+
+    .markItUp {
+        padding: 0;
+        border: none;
+
+        .markItUpContainer {
+            padding: 0;
+            border-color: #ccc;
+            background: #fff;
+
+            .markItUpHeader {
+                padding: 0 10px;
+                height: 42px;
+                border-bottom: 1px solid #ccc;
+
+                &:after {
+                    content: "";
+                    display: block;
+                    clear: both;
+                }
+
+                .markItUpButton[class*="markItUpButton"] a {
+                    background-image: none;
+                }
+
+                /*----------------------------*/
+
+                .markItUpButton {
+                    a {
+                        position: relative;
+                        display: block;
+                        height: 42px;
+                        width: 25px;
+
+                        &:before {
+                            position: absolute;
+                            width: 19px;
+                            height: 19px;
+                            top: 14px;
+                            color: #666;
+                            text-indent: 0;
+                            cursor: pointer;
+                            // top: 50%;
+                            // transform: translateY(-50%);
+                        }
+                    }
+                }
+
+                /*----------------------------*/
+                /* Font Family - ReportPortal */
+
+                .markItUpButton {
+                    margin-right: 5px;
+
+                    &.markItUpButton1,
+                    &.markItUpButton2,
+                    &.markItUpButton3,
+                    &.markItUpButton4,
+                    &.markItUpButton5,
+                    &.markItUpButton6,
+                    &.markItUpButton7,
+                    &.markItUpButton8,
+                    &.markItUpButton9,
+                    &.markItUpButton10,
+                    &.markItUpButton11,
+                    &.markItUpButton12,
+                    &.markItUpButton13,
+                    &.markItUpButton14,
+                    &.markItUpButton15,
+                    &.markItUpButton16 {
+                        a:before {
+                            @extend %FontFamilyReportPortal;
+                            font-size: 12px;
+                            line-height: 12px;
+                            left: 4px;
+                        }
+                    }
+
+                    // .rp-icons-H1
+                    &.markItUpButton1 {
+                        a {
+                            @include beforeContent("\e936");
+                        }
+                    }
+
+                    // .rp-icons-H2
+                    &.markItUpButton2 {
+                        a {
+                            @include beforeContent("\e937");
+                        }
+                    }
+
+                    // .rp-icons-H3
+                    &.markItUpButton3 {
+                        a {
+                            @include beforeContent("\e938");
+                        }
+                    }
+
+                    // .rp-icons-H4
+                    &.markItUpButton4 {
+                        a {
+                            @include beforeContent("\e939");
+                        }
+                    }
+
+                    // .rp-icons-H5
+                    &.markItUpButton5 {
+                        a {
+                            @include beforeContent("\e940");
+                        }
+                    }
+
+                    // .rp-icons-H6
+                    &.markItUpButton6 {
+                        a {
+                            @include beforeContent("\e941");
+                        }
+                    }
+
+                    // .rp-icons-paragraph
+                    &.markItUpButton7 {
+                        a {
+                            @include beforeContent("\e943");
+                        }
+                    }
+
+                    // .rp-icons-bold
+                    &.markItUpButton8 {
+                        a {
+                            @include beforeContent("\e945");
+                        }
+                    }
+
+                    // .rp-icons-italic
+                    &.markItUpButton9 {
+                        a {
+                            @include beforeContent("\e948");
+                        }
+                    }
+
+                    // .rp-icons-strikethrough
+                    &.markItUpButton10 {
+                        a {
+                            @include beforeContent("\e950");
+                        }
+                    }
+
+                    // .rp-icons-bullets
+                    &.markItUpButton11 {
+                        a {
+                            @include beforeContent("\e931");
+                        }
+                    }
+
+                    // .rp-icons-numbers
+                    &.markItUpButton12 {
+                        a {
+                            @include beforeContent("\e942");
+
+                            &:before {
+                                top: 13px;
+                                font-size: 14px;
+                                line-height: 14px;
+                            }
+                        }
+                    }
+
+                    // .rp-icons-image
+                    &.markItUpButton13 {
+                        a {
+                            @include beforeContent("\e947");
+
+                            &:before {
+                                top: 13px;
+                                font-size: 14px;
+                                line-height: 14px;
+                            }
+                        }
+                    }
+
+                    // .rp-icons-link
+                    &.markItUpButton14 {
+                        a {
+                            @include beforeContent("\e946");
+
+                            &:before {
+                                top: 16px;
+                                font-size: 10px;
+                                line-height: 10px;
+                            }
+                        }
+                    }
+
+                    // .rp-icons-quote
+                    &.markItUpButton15 {
+                        a {
+                            @include beforeContent("\e949");
+                        }
+                    }
+
+                    // .rp-icons-code
+                    &.markItUpButton16 {
+                        a {
+                            @include beforeContent("\e932");
+
+                            &:before {
+                                top: 13px;
+                                font-size: 16px;
+                                line-height: 16px;
+                            }
+                        }
+                    }
+                }
+
+                ul {
+                    .markItUpSeparator {
+                        top: 0px;
+                        height: 42px;
+                        margin: 0 15px 0 10px;
+                    }
+                }
+            }
+
+            textarea.markItUpEditor {
+                height: 125px;
+                padding: 15px;
+                border: none;
+                background: transparent;
+                font-family: $OpenSansRegular;
+                resize: none;
+            }
+        }
+    }
+
+    .absolute-buttons {
+        &.in-process {
+            position: relative;
+        }
+    }
+}
+
+.absolute-buttons {
+    background-color: #fff;
+    box-shadow: none;
+    border-radius: 0;
+
+    &.save-options {
+        top: 1px;
+        right: 20px;
+        height: 25px;
+        padding: 0 0 0 5px;
+        border: none;
+
+        .aui-button,
+        .aui-button:visited {
+            border: none;
+            background: transparent;
+        }
+    }
+}
+
+.aui-button,
+.aui-button:visited {
+    border-radius: 0;
+}

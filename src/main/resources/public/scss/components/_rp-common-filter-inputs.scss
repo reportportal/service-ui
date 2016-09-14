@@ -1,0 +1,191 @@
+
+
+/*
+#filter-inputs .input-group-addon {
+    line-height: normal;
+}
+#filter-inputs .dropdown-like .form-control {
+    border-radius: 4px;
+}
+#filter-inputs .dropdown-like .form-control {
+    border-radius: 0;
+}
+#filter-inputs {
+    position: relative;
+}
+#filter-inputs div.input-group button.close{
+    font-size: 16px;
+}
+#filter-inputs .input-group-addon{
+    font-size: inherit;
+}
+#filter-inputs .filter-rows.disabled {
+    opacity: 0.4;
+}
+#filter-inputs ul.list-inline > li{
+    display: inline-table;
+}
+#filter-inputs .form-control {
+    vertical-align: baseline;
+}
+#filter-inputs .filter-hint {
+    position: absolute; 
+    top: 100%; 
+    left: 0;
+    z-index: 100; 
+    right: auto; 
+    padding: 10px 11px; 
+    width: 190px; 
+    display: none;
+    font-size: 12px;
+}
+*/
+
+
+/*
+.rp-filter-inputs > .breadcrumb {
+    background-color: inherit;
+    padding: 0 15px;
+}
+.rp-filter-inputs > .breadcrumb > li + li:before {
+    color: #ccc;
+    content: "";
+    padding: 0;
+    position: absolute;
+}
+.rp-filter-inputs > .breadcrumb > li {
+    margin-top: 7px;
+    padding-right: 7px;
+    margin-right: 5px;
+    border-right: 1px solid #d7d7d7;
+}
+.rp-filter-inputs > .breadcrumb > li i {
+    color: #9e9e9e;
+}
+.rp-filter-inputs > .breadcrumb > li div.form-group {
+    margin-bottom: 0;
+}
+.rp-filter-inputs > .breadcrumb > li label {
+    font-size: 0.9em;
+}
+*/
+
+.rp-filter-inputs {
+    background-color: #fff;
+    padding-top: 15px;
+
+    #filterInputs {
+        .filter-wrapper {
+            .form-group {
+                .filter-hint {
+                    width: 100%;
+                    background-color: #fff;
+                    border: 1px solid rgba(0, 0, 0, 0.2);
+                    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+                }
+                label {
+                    &.filter-name {
+                        font-weight: normal;
+                    }
+                }
+                .filter-option-input {
+                    input {
+                        max-height: 30px;
+                    }
+                    .select2-choices {
+                        max-height: 30px;
+                    }
+                }
+                .remove-filter {
+                    position: relative;
+
+                    &:hover {
+                        .material-icons {
+                            color: #333;
+                        }
+                    }
+                    .material-icons {
+                        position: absolute;
+                        color: #9e9e9e;
+                        font-size: 14px;
+                        line-height: 14px;
+                        top: 0;
+                        right: 0;
+                        cursor: pointer;
+                    }
+                }
+                .timerange {
+                    display: initial;
+                    font-family: $OpenSansRegular;
+                    font-size: 13px;
+                    line-height: 28px;
+                    color: #393939;
+                    margin: 0;
+                    white-space: nowrap;
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+.rp-filter-inputs {
+    .filter-rows {
+        & > li {
+            border-right: 1px solid #d7d7d7;
+            margin-right: 5px;
+            margin-top: 7px;
+            padding-right: 7px;
+            margin-bottom: 7px;
+
+            label {
+                font-size: 0.9em;
+            }
+
+            .form-group {
+                margin-bottom: 5px;
+            }
+        }
+    }
+}
+
+
+.tab-filters {
+    .dropdown-menu {
+        &.filters-criteria {
+            li {
+                a {
+                    &.checkbox {
+                        font-size: 13px;
+                        line-height: 30px;
+
+                        &.sub-option {
+                            label {
+                                padding-left: 35px;
+                            }
+                        }
+
+                        label {
+                            left: 0;
+                            padding-left: 14px;
+                            padding-right: 14px;
+                        }
+                    }
+                }
+            }
+        }
+
+        label {
+            font-weight: normal;
+        }
+    }
+
+    label {
+        position: relative;
+        font-weight: normal;
+    }
+
+    .criteria-btn {
+        margin-left: -12px;
+    }
+}

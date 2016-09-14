@@ -1,0 +1,13 @@
+<div class="active tab <%= data.isShared ? 'shared' : '' %>" data-id="<%= data.id %>">
+    <a href="#" data-toggle="dropdown" class="tab-controls">
+        <i class="rp-svg-icon svg-icon-menu-size-14"></i>
+    </a>
+    <span class="name-text multiple-spaces">
+        <%- data.name %>
+    </span>
+    <% if(data.isShared) { %>
+        <span class="share-icon-wrapper">
+            <i class="material-icons" title="<%= data.text.launches.filterIsShared %>">share</i>
+        </span>
+    <% } %>
+</div>

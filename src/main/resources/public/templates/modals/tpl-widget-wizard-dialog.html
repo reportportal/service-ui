@@ -1,0 +1,230 @@
+<div class="modal fade dialog-shell rp-modal-dialog"
+    id="widgetWizardModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myLargeModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" id="widgetEditor">
+            <div class="modal-header">
+                <h2 class="col-lg-10 col-md-10 col-sm-10 col-xs-10 break-link">
+                    <%= data.text.wizard.widgetWizard %>
+                </h2>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 panel-action">
+                    <sapn class="close-pop-up" data-js-close data-dismiss="modal">
+                        <i class="material-icons">clear</i>
+                    </span>
+                </div>
+            </div>
+            <!--
+                <div class="modal-header">
+                    <h4 class="modal-title title-inline"><%= data.text.wizard.widgetWizard %></h4>
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-default hide" data-dismiss="modal">
+                            <%= data.text.ui.cancel %>
+                        </button>
+                        <button type="button" class="btn btn-primary hide">
+                            <%= data.text.ui.save %>
+                        </button>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="material-icons" aria-hidden="true">clear</i>
+                    </button>
+                </div>
+            -->
+            <div class="modal-body clearfix">
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs top-level row" role="tablist">
+                        <li role="presentation" class="active col-xs-4 nopadding">
+                            <a href="#widgetType" aria-controls="home" role="tab" data-toggle="tab">
+                                <i class="material-icons">check_circle</i>
+                                <%= data.text.wizard.widgetType %>
+                                <span class="label label-warning"><%= data.text.wizard.incomplete %></span>
+                            </a>
+                        </li>
+                        <li role="presentation" class="col-xs-4 nopadding">
+                            <a href="#widgetFilters" aria-controls="profile" role="tab" data-toggle="tab">
+                                <i class="material-icons">check_circle</i>
+                                <%= data.text.topMenu.filters %>
+                                <span class="label label-warning"><%= data.text.wizard.incomplete %></span>
+                            </a>
+                        </li>
+                        <li role="presentation" class="col-xs-4 nopadding">
+                            <a href="#widgetData" aria-controls="profile" role="tab" data-toggle="tab">
+                                <i class="material-icons">check_circle</i>
+                                <%= data.text.wizard.nameAndDashboard %>
+                                <span class="label label-warning"><%= data.text.wizard.incomplete %></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content top-level">
+                        <div role="tabpanel" class="tab-pane active" id="widgetType">
+                        <ul class="nav nav-tabs nav-tabs-custom">
+                                <li class="active">
+                                    <a data-toggle="tab" href="#widgetTemplates">
+                                        <%= data.text.wizard.widgetTemplates %>
+                                    </a>
+                                </li>
+                                <li class="shared-tab">
+                                    <a data-toggle="tab" href="#SharedWidgets">
+                                        <%= data.text.wizard.sharedWidgets %>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="widgetTemplates" class="tab-pane active"></div>
+                                <div id="SharedWidgets" class="tab-pane">
+                                    <div class="wizard-loader">
+                                        <i class="material-icons loader-animation">refresh</i>
+                                    </div>
+                                    <div class="container-fluid content-holder" style="display: none;"></div>
+                                </div>
+                                <div id="templateConfig" class="row">
+                                    <div id="templateOptions" class="row nopadding"></div>
+                                    <div id="templateValidations" class="row alert alert-danger" role="alert"></div>
+                                </div>
+                            </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane" id="widgetFilters">
+                            <ul class="nav nav-tabs nav-tabs-custom">
+                                <li class="active">
+                                    <a data-toggle="tab" class="own-filters filters-tab" href="#OwnFilters">
+                                        <%= data.text.wizard.ownFilters %>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a data-toggle="tab" class="shared-filters filters-tab" href="#SharedFilters">
+                                        <%= data.text.wizard.sharedFilters %>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="OwnFilters" class="tab-pane active">
+                                    <div class="wizard-loader">
+                                        <i class="material-icons loader-animation">refresh</i>
+                                    </div>
+                                    <div class="content-holder" style="display: none;"></div>
+                                </div>
+                                <div id="SharedFilters" class="tab-pane">
+                                    <div class="wizard-loader">
+                                        <i class="material-icons loader-animation">refresh</i>
+                                    </div>
+                                    <div class="content-holder" style="display: none;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="widgetData">
+                            <div class="form-group col-sm-6">
+                                <label class="col-sm-3 control-label wizard-name-label" for="widgetName"><%= data.text.filters.name %></label>
+                                <div class="col-sm-12" style="padding-right: 5px;">
+                                    <input type="text" placeholder="<%= data.text.wizard.enterWidgetName %>" id="widgetName" class="form-control rp-input-default">
+                                    <span class="help-inline"></span>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-3 col-md-2 col-xs-3">
+                                <label class="control-label wizard-shared-label"  for="tabShared"><%= data.text.filters.shared %></label>
+                                <div class="shared-switcher">
+                                    <input id="tabShared" type="checkbox" class="js-switch" <% if (data.shared) { %> checked="checked" <% } %> />
+                                </div>
+                            </div>
+                            <div role="tabpanel" class="tab-pane active" id="dashboardSelect">
+                                <ul class="nav-tabs-custom clearfix">
+                                    <li class="active">
+                                        <a data-toggle="tab" href="#OwnDashboards">
+                                            <%= data.text.wizard.ownDashboards %>
+                                        </a>
+                                    </li>
+                                    <li class="">
+                                        <a data-toggle="tab" class="" href="#createDashboard">
+                                            <%= data.text.wizard.createDashboard %>
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="OwnDashboards" class="tab-pane active">
+                                        <div class="wizard-loader">
+                                            <i class="material-icons loader-animation">refresh</i>
+                                        </div>
+                                        <div class="content-holder row" style="display: none;"></div>
+                                    </div>
+                                    <div id="createDashboard" class="tab-pane row">
+                                        <div class="form-group col-md-6 col-sm-6 col-xs-6">
+                                            <label class="col-sm-3 control-label wizard-name-label"
+                                                for="dashboardName">
+                                                <%= data.text.filters.name %>
+                                            </label>
+                                            <div class="col-sm-12">
+                                                <input type="text" placeholder="<%= data.text.wizard.enterDashboardName %>" id="dashboardName" class="form-control rp-input-default">
+                                                <span class="help-inline"></span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-6 col-sm-6 col-xs-6">
+                                            <div class="clearfix">
+                                                <div class="float-left">
+                                                    <label class="control-label wizard-shared-label"
+                                                        for="dashboardShared">
+                                                        <%= data.text.filters.shared %>
+                                                    </label>
+                                                    <div class="shared-switcher">
+                                                        <input id="dashboardShared"
+                                                            type="checkbox"
+                                                            class="js-switch"
+                                                            <% if (data.shared) { %> checked="checked" <% } %> />
+                                                    </div>
+                                                </div>
+                                                <div class="float-left margin-left-10">
+                                                    <div class="form-group clearfix">
+                                                        <button type="button"
+                                                            class="rp-btn rp-btn-submit float-left"
+                                                            style="margin-top: 30px;">
+                                                            <%= data.text.ui.create %>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-warning soft-hidden"
+                                            id="newDashboardWarning">
+                                            <%= data.text.wizard.saveNewDashboard %>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                    </div>
+                </div>
+                <div id="widgetPreview">
+                    <div id="previewValidationHolder"
+                        data-default="<%= data.text.wizard.previewDefault %>"
+                        data-nofilter="<%= data.text.wizard.previewNoFilter %>"
+                        data-notavailable="<%= data.text.wizard.previewNotAvailable %>"
+                        data-nodata="<%= data.text.failMessages.widgetPreviewData %>"
+                        data-notemplate="<%= data.text.wizard.previewNoTemplate %>">
+                        <h3 class="title-no-data text-center">
+                            <i class="rp-icons rp-icons-warning"></i>
+                            <span id="previewValidationMessage"></span>
+                        </h3>
+                    </div>
+                    <div id="previewContent"
+                        class="panel panel-default widget-content"
+                        style="display: none;">
+                    </div>
+                </div>
+                <div id="globalValidation" class="alert alert-danger">
+                    <%= data.text.validation.selectAllOptionsForWidget %>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="rp-btn rp-btn-cancel" data-dismiss="modal">
+                    <%= data.text.ui.cancel %>
+                </button>
+                <button type="button" class="rp-btn rp-btn-submit" disabled="disabled" id="saveWidget">
+                    <%= data.text.ui.save %>
+                </button>
+            </div>
+            <div id="popupLoader">
+                <i class="material-icons loader-animation">refresh</i>
+            </div>
+        </div>
+    </div>
+</div>

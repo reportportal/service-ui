@@ -1,0 +1,58 @@
+/*-------------------------*/
+/* REMINDER FOR USE MIXINS */
+
+// @mixin rpBtnStyle($txtColor, $bgColor, $brColor, $boxShadow);
+
+/*-------------------*/
+/* CONSTANTS FOR USE */
+
+// $COLOR--white-default: #ffffff;
+//       $COLOR--gray-60: #999999;
+//             $COLOR---: #1a9cb0;
+//             $COLOR---: #22c0d7;
+//             $COLOR---: #009ab0;
+
+/*----------------*/
+/* DEFAULT-REVERS */
+
+.rp-btn {
+    &.rp-btn-default-revers {
+        @include rpBtnStyle(
+            #1a9cb0,
+            $COLOR--white-default,
+            $COLOR--white-default,
+            0 1px 3px 0 rgba(0, 0, 0, 0.15)
+        );
+        text-align: center;
+
+        &:hover {
+            @include rpBtnStyle(
+                $COLOR--white-default,
+                #22c0d7,
+                #22c0d7,
+                0 1px 3px 0 rgba(0, 0, 0, 0.15)
+            );
+        }
+
+        &:active {
+            @include rpBtnStyle(
+                $COLOR--white-default,
+                #009ab0,
+                #009ab0,
+                false
+            );
+        }
+
+        &:disabled,
+        &[disabled="disabled"],
+        &[disabled],
+        &.disabled {
+            @include rpBtnStyle(
+                $COLOR--gray-60,
+                $COLOR--white-default,
+                $COLOR--white-default,
+                false
+            );
+        }
+    }
+}

@@ -1,0 +1,46 @@
+<div class="row-custom projects-header clearfix">
+    <ul class="rp-nav-left projects-title">
+        <li class="title-holder">
+            <span class="header-alike">
+                <%= data.text.admin.activeProjects %> (<span id="activeFound">0</span>)
+            </span>
+        </li>
+    </ul>    <ul class="rp-nav rp-nav-right projects-view-switcher" role="group">
+        <li class="float-left">
+            <button class="projects-view projects-view-tile rp-btn rp-btn-default active"
+                data-view-type="tile">
+                <i class="material-icons">view_module</i>
+            </button>
+        </li>
+        <li class="float-left">
+            <button class="projects-view projects-view-table rp-btn rp-btn-default"
+                data-view-type="table">
+                <i class="material-icons">view_list</i>
+            </button>
+        </li>
+    </ul>
+</div><div id="activeProjectsList" class="col-sm-12 nopadding" role="tabpanel">
+    <div id="popupLoader" class="admin-section">
+        <i class="material-icons loader-animation">refresh</i>
+    </div>
+</div><div id="accordion" class="panel-group clearfix" aria-multiselectable="true" role="tablist">
+    <div class="clearfix" >
+        <ul class="rp-nav-left" role="tab">
+            <li class="title-holder">
+                <a id="inactiveLink"
+                    class="collapsed header-alike"
+                    href="#collapseInactive"
+                    data-parent="#accordion"
+                    data-toggle="collapse">
+                    <%= data.text.admin.notActiveProjects %> (<span id="inactiveFound">0</span>)
+                    <span class="plus">
+                        <i class="rp-icons rp-icons-square-plus"></i>
+                    </span>
+                    <span class="minus">
+                        <i class="rp-icons rp-icons-square-minus"></i>
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>    <div id="collapseInactive" class="panel-collapse col-sm-12 nopadding collapse" role="tabpanel"></div>
+</div>

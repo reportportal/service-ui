@@ -1,0 +1,160 @@
+<div class="content pr-user-profile row">
+    <div class="col-xs-12 col-md-6">
+        <div class="media">
+            <div class="media_wrapper col-sm-12">
+                <div class="row">
+                    <div class="media_image col-sm-3">
+                        <div id="avatarWrapper" class="<%= data.photo_loaded ? 'active' : '' %>">
+                            <% if(data.account_type === "INTERNAL"){ %>
+                            <div id="remove-image" class="remove-image">
+                                <div class="remove-image-wrap">
+                                    <i class="material-icons mi-close">close</i>
+                                </div>
+                            </div>
+                            <% } %>
+                            <img class="img-thumbnail avatar"
+                                id="userProfileAvatar"
+                                data-original="<%= data.image %>"
+                                src="<%= data.image %>"
+                                alt="<%= data.text.ui.avatar %>" />
+                        </div>
+                        <form id="fileUploadForm">
+                            <span class="btn btn-file btn-salad-bg m-top-10">
+                                <%= data.text.userProfile.selectPhoto %>
+                                <input type="file"
+                                    id="imgSelector"
+                                    name="file"
+                                    accept="image/gif, image/jpeg, image/png"
+                                    title="<%= data.text.userProfile.selectPhoto %>" />
+                            </span>
+                            <input type="submit"
+                                class="btn btn-salad-bg m-top-10"
+                                id="submitPhoto"
+                                value="<%= data.text.userProfile.savePhoto %>"
+                                title="<%= data.text.userProfile.savePhoto %>" />
+                        </form>
+                        <span id="wrongImageMessage"
+                            class="alert alert-danger col-sm-12 m-top-10">
+                            <%= data.text.validation.wrongImage %>
+                        </span>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="col-sm-12 text-right" id="updateButtons">
+                            <button class="btn btn-salad-bg m-top-10 m-right-15" id="editInfo">
+                                <%= data.text.userProfile.editInfo %>
+                            </button>
+                            <button class="btn btn-salad-bg m-top-10" id="changePassword">
+                                <%= data.text.login.changePassword %>
+                            </button>
+                        </div>
+                        <div class="row" id="staticInfo">
+                            <h3 class="page-title text-capitalize col-xs-12">
+                                <span class="profile_name text-wrapper"><%= data.user_login %></span>
+                                <small class="profile_full_name multiple-spaces text-wrapper p-bottom-10"><%= data.fullName %></small>
+                                <small class="profile_mail text-lowercase"><%= data.email %></small>
+                            </h3>
+                            <div class="profile_form form-group container-fluid row">
+                                <label for="user_uuid" class="col-sm-1 control-label"><%= data.text.userProfile.UUID %></label>
+                                <div class="col-sm-11" id="keyHolder">
+                                    <div class="col-xs-10 col-sm-10" data-js-block-is-token>
+                                        <div class="row">
+                                            <input type="text" value="<%= data.label %>" size="40" readonly="readonly" name="user[uuid]" id="user_uuid" class="form-control col-sm-12" data-js-input-token>
+                                            <div class="row">
+                                                <span class="help-block col-sm-12">
+                                                    <%= data.text.userProfile.msgUUIDTop %>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xs-2 col-sm-2">
+                                        <span class="help-block b-update-uudi postooltip">
+                                            <button id="update-uuid"
+                                                type="button"
+                                                name="update-uuid"
+                                                class="btn btn-default btn-save"
+                                                data-toggle="tooltip"
+                                                title="<%= data.text.userProfile.msgRegenTop %>
+                                                    <br>
+                                                    <br>
+                                                    <span style='color: red;'>
+                                                        <%= data.text.userProfile.msgRegenMid %>
+                                                    </span>
+                                                    <br>
+                                                    <%= data.text.userProfile.msgRegenFoot %>
+                                                ">
+                                                <i class="material-icons mi-autorenew">autorenew</i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="profile_project_list row">
+            <div id="project-list" class="container-fluid col-sm-12">
+                <fieldset class="project_list_wrapper">
+                    <legend class="project_list_header row">
+                        <div class="project_roles col-sm-7">
+                            <%= data.text.userProfile.projectAndRoles %>:
+                        </div>
+                        <div class="col-sm-5">
+                            <small class="pull-right">
+                                <%= _.size(data.projects) %><%= data.text.userProfile.ofThem %>
+                            </small>
+                        </div>
+                    </legend>
+                    <div class="padded">
+                        <div id="projects" class="list-group">
+                            <% _.each(data.projects, function(val, project){ %>
+                                <a href="#"
+                                    class="project project-row list-group-item <% if (project == data.defaultProject) {%>active default_project<% } %>">
+                                    <h5 class="list-group-item-heading uppercase col-sm-7">
+                                        <strong class="break-link">
+                                            <%- project %>
+                                        </strong>
+                                    </h5>
+                                    <p class="list-group-item-text col-sm-5"><%= val.projectRole %></p>
+                                </a>
+                            <% }); %>
+                        </div>
+                    </div>
+                </fieldset>
+                <div id="actionsUserProfile" class="actions form-group row text-right"></div>
+            </div>
+        </div>
+    </div>
+    <div class="code_editor form-group col-xs-12 col-md-6 pull-right"
+        data-js-block-is-token
+        style="position: static;">
+        <ul class="nav nav-pills nav-justified config-pills">
+            <li class="active">
+                <a href="#testng"><%= data.text.userProfile.testNG %></a>
+            </li>
+            <li>
+                <a href="#ruby"><%= data.text.userProfile.ruby %></a>
+            </li>
+            <li>
+                <a href="#soap"><%= data.text.userProfile.soapUI %></a>
+            </li>
+            <li>
+                <a href="#.net"><%= data.text.userProfile.donNet %></a>
+            </li>
+        </ul>
+        <div class="">
+            <div class="config-container">
+                <div id="user-config"></div>
+            </div>
+        </div>
+        <a href="<%= data.certificateUrl %>"
+            class="rp-blue-link"
+            <% /* download="Certificate for Report Portal" */ %>
+            download
+            target="_blank"
+            id="certificate">
+            <%= data.text.userProfile.downloadCertificate %>
+        </a>
+    </div>
+</div>

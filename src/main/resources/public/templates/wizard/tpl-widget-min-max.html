@@ -1,0 +1,19 @@
+<div class="col-sm-<% if(data.gadget == 'unique_bug_table'){ %>6<% } else {%>3<% } %> col-xs-12 min-max-wrapper">
+    <label class="name-label" for="limitSelector">
+        <%= data.limit.name || data.text.widgets.limit %>:
+    </label>
+    <div class="min-max-holder">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="material-icons">star_border</i>
+            </span>
+            <input class="form-control input-sm"
+                data-min="<%= data.limit.min %>"
+                data-max="<%= data.limit.max %>"
+                id="limitSelector"
+                placeholder="<%= data.limit.min %>-<%= data.limit.max %>"
+                type="text"
+                value='<%- data.value || data.limit.def %>' />
+        </div>
+    </div>
+</div>

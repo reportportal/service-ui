@@ -1,0 +1,9 @@
+<ul class="button_filter">
+    <li>
+        <button class="my_button <%= data.name %> <%= (data.value) ? 'active' : '' %>"
+            type="button"
+            data-id="<%= data.name %>">
+            <%= data.text.filterNameByValue[data.name] %>
+        </button>
+    </li>
+</ul>

@@ -1,0 +1,42 @@
+<div class="tooltip defects-tooltip">
+    <div class="tooltip-inner">
+        <div class="defects-tip-content container-fluid">
+            <% if(!data.noSubDefects){ %>
+            <div class="defects-tip-title row">
+                <div class="col-sm-12">
+                    <div class="col-sm-10">
+                        <span class="defects-tip-color" style="background: <%- data.color %>"></span>
+                        <%= data.text.infoLine[data.type] %>
+                    </div>
+                    <div class="col-sm-2">
+                        <span class="tip-total-bugs">
+                            <% if(data.noTotalLink){ %>
+                                <%= data.total %>
+                            <% } else { %>
+                                <a href="<%- data.url ? data.url : _.isFunction(data.urlResolver) ? data.urlResolver(data.type, data.item, data.tab) : '' %>" class="rp-link"><%= data.total %></a>
+                            <% } %>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+            <% if(!_.isEmpty(data.defects) && data.type !== "to_investigate" || data.noSubDefects){ %>
+            <ul class="defects-tip-list <% if(data.noSubDefects){ %>defects-tip-no-defects<% } %>">
+                <% _.each(data.defects, function(d){ %>
+                <li class="row">
+                    <div class="col-sm-12">
+                        <div class="col-sm-10">
+                            <span class="defects-tip-color" style="background: <%- d.color %>"></span>
+                            <%- d.longName %>
+                        </div>
+                        <div class="col-sm-2">
+                            <%= d.val %>
+                        </div>
+                    </div>
+                </li>
+                <% }); %>
+            </ul>
+            <% } %>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+<div class="tooltip defects-tooltip">
+    <div class="tooltip-inner">
+        <div class="stats-tip-content container-fluid">
+            <ul class="stats-tip-list">
+                <% _.each(data.stats, function(d) { %>
+                    <li class="row">
+                        <div class="col-sm-12">
+                            <div class="col-sm-7">
+                                <span><%- data.text.filterNameByValue[d.name.toUpperCase()] %></span>
+                            </div>
+                            <div class="col-sm-5"><%= d.value %>%</div>
+                        </div>
+                    </li>
+                <% }); %>
+            </ul>
+        </div>
+    </div>
+</div>

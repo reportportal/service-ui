@@ -1,0 +1,10 @@
+<% if(data.status === 'Error') { %>
+    <strong><%= data.text.logs.ticketNotFound %></strong> <%= data.text.logs.ticketStatusProblem %>
+<% } else { %>
+    <strong><%= data.text.logs.summary %></strong> <%= data.summary %><br />
+    <strong><%= data.text.logs.status %></strong> <% if(data.status === 'Closed' || data.status === 'Resolved') { %>
+                                   <strike><%= data.status %></strike>
+                                <% } else { %>
+                                    <%= data.status %>
+                                <% } %>
+<% } %>

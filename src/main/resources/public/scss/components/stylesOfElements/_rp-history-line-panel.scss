@@ -1,0 +1,271 @@
+/*--------------*/
+/* HISTORY LINE */
+
+#historyWell {
+    display: none;
+    padding-top: 15px;
+
+    .progress-bar {
+        cursor: pointer;
+    }
+
+    .historyLinePanel {
+        cursor: default;
+    }
+}
+
+.historyLinePanel {
+    padding: 0 0 20px;
+    cursor: pointer;
+}
+.historyLinePanel .progress .progress-bar-danger a{
+    color: #A5E3F3;
+}
+
+.historyLinePanel a.arrow{
+    position: absolute;
+    bottom: 3px;
+    left: 0;
+    float: right;
+    margin: -11px 0 0;
+    padding: 0 5px;
+    color: #FFFFFF;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.historyLinePanel .progress {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+    height: 4px;
+}
+.historyLinePanel .container-fluid {
+    padding: 0;
+}
+
+.historyLinePanel .progress-bar:first-child {
+    border: none;
+}
+.historyLinePanel .progress-bar:last-child .chevron{
+    display: none;
+}
+
+.historyLinePanel .progress-bar-danger{
+    background-color: #F56561;
+    color: #FEFCFB;
+}
+
+.historyLinePanel .progress-bar-reseted{
+    background-color: #E0E0E0;
+    color: #ADADAD;
+}
+
+.historyLinePanel .progress-bar-empty{
+    background-color: #E0E0E0;
+    color: #ADADAD;
+    overflow: hidden;
+}
+.historyLinePanel .progress-bar-skip {
+    background-color: #D4D4D4;
+    color: #4D4D4D;
+}
+.historyLinePanel .progress-bar .chevron:before,
+.historyLinePanel .progress-bar .chevron{
+    z-index: 10;
+}
+.historyLinePanel .progress-bar .chevron:before {
+    position: absolute;
+    top: -22px;
+    right: 0px;
+    margin-right: 2px;
+    z-index: 10;
+    display: block;
+    border-width: 22px 0 22px 4px;
+    border-style: solid none solid solid;
+    border-image: none;
+    content: "";
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+}
+.historyLinePanel .progress-bar .chevron {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-right: -5px;
+    z-index: 10;
+    display: block;
+    border-width: 22px 0 22px 4px;
+    border-style: solid none solid solid;
+    border-color: rgba(0, 0, 0, 0) #F56561 rgba(0, 0, 0, 0) #EDEDED;
+    border-image: none;
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+}
+.historyLinePanel .progress-bar-danger .chevron:before{
+    border-color: rgba(0, 0, 0, 0) #F56561 rgba(0, 0, 0, 0) #F56561;
+}
+.historyLinePanel .progress-bar-skip .chevron:before{
+    border-color: rgba(0, 0, 0, 0) #F56561 rgba(0, 0, 0, 0) #D4D4D4;
+}
+.historyLinePanel .progress-bar-success .chevron:before{
+    border-color: rgba(0, 0, 0, 0) #5CB85C rgba(0, 0, 0, 0) #5CB85C;
+}
+.historyLinePanel .progress-bar-empty .chevron:before,
+.historyLinePanel .progress-bar-reseted .chevron:before{
+    border-color: rgba(0, 0, 0, 0) #F56561 rgba(0, 0, 0, 0) #E0E0E0;
+}
+.historyLinePanel .progress-bar-warning .chevron:before{
+    border-color: rgba(0, 0, 0, 0) #F56561 rgba(0, 0, 0, 0) #F0AD4E;
+}
+.historyLinePanel .progress-bar-inprogress .chevron:before {
+    border-color: rgba(0, 0, 0, 0) #F56561 rgba(0, 0, 0, 0) #428bca;
+}
+
+#historyLinePanel .progress-bar-danger .issue-tracker-link.error{
+    color: #DFDFDF;
+}
+#historyLinePanel .progress-bar-danger .issue-tracker-link.error {
+    color: #DFDFDF;
+}
+
+.historyLinePanel span.empty{
+    position: relative;
+    display: none;
+    visibility: hidden;
+    width: 100%;
+    color: #000000;
+    opacity: 0.2;
+}
+.historyLinePanel .progress-bar-empty span.empty {
+    display: inline;
+    visibility: visible;
+}
+.historyLinePanel .progress-bar-empty span.empty i.clear {
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 21px;
+    width: 21px;
+    height: 21px;
+}
+
+.historyLinePanel {
+    padding: 0 0 20px;
+    cursor: pointer;
+
+    .history-cont {
+        overflow: visible;
+    }
+
+    .line-icon {
+        font-size: 18px;
+        display: inline-block;
+        top: 4px;
+    }
+
+    .progress .progress-bar-danger a {
+        color: #A5E3F3;
+    }
+
+    a.arrow {
+        bottom: 3px;
+        cursor: pointer;
+        float: right;
+        font-size: 16px;
+        left: 0;
+        margin: -11px 0 0;
+        padding: 0 5px;
+        position: absolute;
+        color: #FFFFFF
+    }
+
+    .progress {
+        position: relative;
+        margin: 0;
+        height: 4px;
+        overflow: hidden;
+    }
+
+    .container-fluid {
+        padding: 0;
+    }
+
+    .progress-bar {
+        position: relative;
+        border-left: 1px solid #FFFFFF;
+        color: #FEFEFE;
+        padding: 3px;
+        height: 76px;
+        word-wrap: break-word;
+    }
+
+    .progress-bar{
+        position: relative;
+        padding: 3px;
+        height: 44px;
+        border-left: 1px solid #FFFFFF;
+        color: #FEFEFE;
+        word-wrap: break-word;
+    }
+    
+    .progress-bar:first-child {
+        border: none;
+    }
+
+    .progress-bar:last-child .chevron{
+        display: none;
+    }
+
+    .progress {
+        overflow: visible;
+    }
+
+    .progress-bar {
+        padding-top: 10px;
+        display: table-cell;
+        vertical-align: middle;
+        line-height: 0.9em;
+    }
+
+    .activeItem .progress-bar {
+        opacity: 0.5;
+    }
+
+    .progress-bar.activeItem {
+        opacity: 1;
+    }
+
+    .progress-bar.activeItem:after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        height: 3px;
+        width: 100%;
+        background: #008000;
+        opacity: 0.6;
+    }
+
+    .progress {
+        width: 100%;
+        height: 44px;
+    }
+}
+
+
+#defectWell {
+    padding: 15px 0;
+    position: relative;
+
+    .defect-type.disabled {
+        cursor: default;
+    }
+
+    .defect-desc {
+        max-height: none;
+    }
+}

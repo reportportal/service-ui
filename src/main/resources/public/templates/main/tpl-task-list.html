@@ -1,0 +1,6 @@
+<ul class="main-menu">
+    <% _.each(menu, function(item){ %>
+    <li class="menu-item"><a href="<%- item.url %>"><%- item.name %></a></li>
+    <% }); %>
+</ul>
+<li><strong><%- name %></strong> - <%- date %></li>

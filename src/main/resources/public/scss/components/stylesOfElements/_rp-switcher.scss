@@ -1,0 +1,100 @@
+.rp-switcher {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 12px;
+    border-radius: 6px;
+    margin: 0;
+
+    input {
+        display: none;
+
+        &:checked {
+            & + .slider {
+                background-color: $COLOR--tealish;
+
+                &:before {
+                    @include setTransform(8px);
+                }
+            }
+        }
+
+        &:focus {
+            & + .slider {
+                box-shadow: 0 0 1px #2196F3;
+            }
+        }
+    }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 6px;
+        background-color: $COLOR--white;
+        border: 1px solid $COLOR--gray-60;
+        transition: .4s;
+
+        &:before {
+            position: absolute;
+            content: "";
+            height: 12px;
+            width: 12px;
+            left: -1px;
+            bottom: -1px;
+            border-radius: 6px;
+            background-color: $COLOR--white;
+            border: 1px solid $COLOR--topaz;
+            transition: .4s;
+        }
+    }
+}
+
+/*-----------------------------------*/
+/* STYLES OF DYNAMIC WIDTH OF SCREEN */
+
+/* xs - 767px */
+@media (max-width: $SCREEN_XS_MAX) {
+    .rp-switcher.rp-switcher-sm {
+        width: 30px;
+        height: 18px;
+
+        input {
+            &:checked {
+                & + .slider {
+                    &:before {
+                        @include setTransform(12px);
+                    }
+                }
+            }
+        }
+
+        .slider {
+            border-radius: 9px;
+
+            &:before {
+                height: 18px;
+                width: 18px;
+                border-radius: 9px;
+            }
+        }
+    }
+}
+
+/* sm - 768px - 991px */
+@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+
+}
+
+/* md - 992px - 1199px */
+@media (min-width: $SCREEN_MD_MIN) and (max-width: $SCREEN_MD_MAX) {
+
+}
+
+/* lg - 1200px */
+@media (min-width: $SCREEN_LG_MIN) {
+
+}

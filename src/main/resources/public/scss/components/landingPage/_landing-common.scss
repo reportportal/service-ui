@@ -1,0 +1,299 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+.landing-page {
+    padding: 0;
+    background-color: #fff;
+    font-family: "OpenSansRegular", sans-serif;
+}
+
+.landing-page.documentation {
+    font-family: "OswaldRegular", sans-serif;
+}
+/*
+.landing-page .b-main {
+    padding-right: 12px;
+}
+*/
+.g-parallax {
+    width: 100%;
+}
+main {
+    background-color: white;
+}
+.g-dib {
+    position: relative;
+    display: inline-block;
+}
+
+.g-bolder {
+    font-weight: bolder;
+}
+
+.g-visible {
+    visibility: visible;
+}
+
+.g-invisible {
+    visibility: hidden;
+}
+
+.g-green {
+    color: #a3c644 !important;
+}
+
+.g-darkgray {
+    color: #666666 !important;
+}
+
+.g-rotate--forty-five {
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.g-nav--scrolled {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+.b-common {
+    position: relative;
+    overflow: hidden;
+    background-color: #e9e9e9;
+    padding: 70px 0;
+}
+
+.b-common__header {
+    margin-top: 60px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    font-family: "OswaldRegular", sans-serif;
+    font-weight: bolder;
+    font-size: 44px;
+    color: #666666;
+}
+
+.b-common__text {
+    margin-bottom: 60px;
+    color: #999;
+    line-height: 2em;
+    font-size: 16px;
+}
+
+.b-common:nth-child(even) {
+    background-color: #fff;
+}
+
+.b-common:nth-child(even) .b-common__header {
+    color: #a3c644;
+}
+
+.b-common__button {
+    display: inline-block;
+    border: 2px solid #666;
+    color: #666;
+    font-size: 16px;
+    font-weight: lighter;
+    text-transform: uppercase;
+    padding: 10px 20px;
+}
+
+.b-common__button:hover {
+    color: #666;
+    text-decoration: underline;
+}
+
+.b-common__svg {
+    text-align: right;
+    height: 350px;
+}
+
+.b-common__svg img {
+    width: 80%;
+}
+
+.b-common__svg svg {
+    width: 100%;
+    height: 350px;
+}
+
+.b-common--divider {
+    padding-bottom: 60px;
+    border-bottom: 1px solid #ccc;
+}
+
+.b-common__list {
+    font-size: 24px;
+    text-transform: uppercase;
+}
+
+.b-common__li {
+    margin: 25px 0;
+    text-align: left;
+}
+
+.b-common__marker {
+    display: inline-block;
+    margin: 0 10px 4px -20px;
+    width: 10px;
+    height: 10px;
+    background-color: #a3c644;
+    border-radius: 5px;
+}
+
+@media (max-width: 1200px) {
+    .b-common__svg img {
+        width: 100%;
+    }
+}
+
+@media (max-width: 992px) {
+    .b-common {
+        text-align: center;
+        padding: 60px 120px;
+    }
+
+    .b-common__header {
+        font-size: 48px;
+        margin-top: 0;
+    }
+
+    .b-common__text {
+        text-align: left;
+        font-size: 16px;
+        margin-bottom: 0;
+    }
+
+    .b-common img {
+        width: 70%;
+        margin-top: 50px;
+    }
+
+    .b-common__svg {
+        text-align: center;
+    }
+
+    .b-common__svg svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .b-common__button {
+        margin-top: -10px;
+    }
+
+    .b-common--divider {
+        margin: 0 -60px 60px -60px;
+    }
+
+    .b-common__li {
+        margin: 15px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .b-common {
+        text-align: center;
+        padding: 60px 80px;
+    }
+
+    .b-common__header {
+        font-size: 36px;
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    .b-common__text {
+        line-height: 1.5em;
+        font-weight: normal;
+        text-align: left;
+        font-size: 22px;
+        padding-top: 40px;
+    }
+
+    .b-common img {
+        width: 100%;
+    }
+
+    .b-common__svg {
+        margin: 0 -25px;
+        text-align: center;
+    }
+
+    .b-common__list {
+        margin-left: 17%;
+    }
+
+    .b-common__li {
+        margin: 10px 0;
+        text-align: left;
+    }
+
+    .b-common__li:last-child {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 700px) {
+    .b-common {
+        padding: 40px 10px;
+        min-height: 500px;
+    }
+
+    .b-common__header {
+        font-size: 24px;
+    }
+
+    .b-common__text {
+        padding-top: 20px;
+        font-size: 14px;
+    }
+
+    .b-common__svg{
+        height: 250px;
+    }
+    .b-common__svg img {
+        width: 80%;
+    }
+
+    .b-common--divider {
+        margin: 0 0 60px 0;
+    }
+
+    .b-common__list {
+        font-size: 18px;
+    }
+
+    .b-common__li:nth-child(2) {
+        margin: 10px 0;
+    }
+
+    .b-common__marker {
+        display: inline-block;
+        margin: 0 10px 2px -15px;
+        width: 10px;
+        height: 10px;
+        background-color: #a3c644;
+        border-radius: 10px;
+    }
+
+    .b-common__button {
+        font-size: 12px;
+    }
+}

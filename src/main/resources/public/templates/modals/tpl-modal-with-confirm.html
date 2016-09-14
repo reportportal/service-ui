@@ -1,0 +1,62 @@
+<div class="modal fade dialog-shell rp-modal-dialog <%= data.paramModal.additionalClass %>"
+    id="ConfirmModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="ConfirmModal"
+    aria-hidden="true">
+    <div class="modal-dialog modal-<%= data.paramModal.sizeModal %>">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="col-lg-10 col-md-10 col-sm-10 col-xs-10 break-link">
+                    <%= data.dialogHeader.title %>
+                </h2>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 panel-action">
+                    <sapn class="close-pop-up"
+                        title="<%= data.text.uiCommonElements.close %>"
+                        data-js-close
+                        data-dismiss="modal">
+                        <i class="material-icons">clear</i>
+                    </span>
+                </div>
+            </div>            <div class="modal-body">
+                <% if(data.paramModal.isFormatText) { %>
+                    <p><%= data.dialogBody.txtMessageTop %></p>
+                <% } %>                <% if(data.paramModal.withConfirm) { %>
+                    <p class="no-margin">
+                        <label>
+                            <input type="checkbox" class="rp-input-checkbox confirm">
+                            <span class="font-bold"><%= data.dialogBody.txtMessage %></span>
+                        </label>
+                    </p>
+                <% } %>                <% if(!data.paramModal.withConfirm) { %>
+                    <p class="no-margin">
+                        <span><%= data.dialogBody.txtMessage %></span>
+                    </p>
+                <% } %>
+            </div>            <div class="modal-footer">
+                <% if(data.dialogFooter.cancelButton) { %>
+                    <button type="button"
+                        class="rp-btn rp-btn-cancel"
+                        data-dismiss="modal">
+                        <%= data.dialogFooter.cancelButton %>
+                    </button>
+                <% } %>
+                <% if(data.dialogFooter.dangerButton) { %>
+                    <button type="button"
+                        class="rp-btn rp-btn-danger"
+                        <% if(data.paramModal.withConfirm) { %> disabled="disabled" <% } %> >
+                        <%= data.dialogFooter.dangerButton %>
+                    </button>
+                <% } %>
+                <% if(data.dialogFooter.submitButton) { %>
+                    <button type="button"
+                        class="rp-btn rp-btn-submit">
+                        <%= data.dialogFooter.submitButton %>
+                    </button>
+                <% } %>                <% if(data.dialogFooter.customEvents) { %>
+                    <%= data.dialogFooter.customEvents %>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,97 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+/*---------------------------------*/
+/* STYLE FOR GENERAL SETTINGS PAGE */
+
+%EMAIL_SETTINGS {
+    #email-settings {
+        padding-top: 15px;
+    }
+}
+
+%EMAIL_SETTINGS_ADMIN {
+    #email-settings {
+        padding-top: 30px;
+        padding-bottom: 20px;
+    }
+}
+
+/*-----------------*/
+/* FOR USUAL USERS */
+
+%DYNAMIC_CONTENT {
+    #dynamic-content {
+        @extend %EMAIL_SETTINGS;
+
+        .form-group {
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+}
+
+/*---------------------------*/
+/* FOR ADMINISTRATORS USERS  */
+
+%DYNAMIC_CONTENT {
+    #dynamicContent {
+        @extend %EMAIL_SETTINGS_ADMIN;
+    }
+}
+
+/*--------------*/
+/* MAIN WRAPPER */
+
+.rp-main-panel {
+    @extend %DYNAMIC_CONTENT;
+}
+
+/*-----------------------------------*/
+/* STYLES OF DYNAMIC WIDTH OF SCREEN */
+
+/* xs - 767px */
+@media (max-width: $SCREEN_XS_MAX) {
+    #email-settings {
+        .rp-form-group {
+            .button-panel {
+                margin-top: 0;
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+/* sm - 768px - 991px */
+@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+
+}
+
+/* md - 992px - 1199px */
+@media (min-width: $SCREEN_MD_MIN) and (max-width: $SCREEN_MD_MAX) {
+
+}
+
+/* lg - 1200px */
+@media (min-width: $SCREEN_LG_MIN) {
+
+}
+
+/*-----------------------------------*/

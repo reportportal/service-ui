@@ -1,0 +1,108 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+@import 'outdatedbrowser';
+
+@import 'components/rp-mixins';
+@import 'components/rp-variables';
+
+@import 'components/rp-setup-fonts';
+@import 'components/rp-setup-font-report-portal';
+@import 'components/rp-setup-font-material-icons';
+@import 'components/rp-setup-svg';
+
+@import 'components/stylesOfElements/rp-switcher';
+@import 'components/stylesOfElements/rp-sorting';
+@import 'components/stylesOfElements/rp-progress-bar';
+@import 'components/stylesOfElements/rp-history-line-panel';
+
+@import 'components/rpButtons/rp-btn';
+@import 'components/rpButtons/rp-btn-default';
+@import 'components/rpButtons/rp-btn-default-revers';
+@import 'components/rpButtons/rp-btn-submit';
+@import 'components/rpButtons/rp-btn-danger';
+@import 'components/rpButtons/rp-btn-cancel';
+@import 'components/rpButtons/rp-btn-with-dropdown';
+
+@import 'components/rp-common-styles';
+@import 'components/rp-common-header';
+@import 'components/rp-common-footer';
+@import 'components/rp-common-all-users-list';
+@import 'components/rp-common-pagination';
+@import 'components/rp-common-filter-tabs';
+@import 'components/rp-common-filter-inputs';
+@import 'components/rp-common-navigation-tabs';
+@import 'components/rp-common-sidebar-menu';
+@import 'components/rp-common-widgets';
+@import 'components/rp-common-launches-grid';
+@import 'components/rp-common-defects-editor';
+@import 'components/rp-common-text-editor';
+
+@import 'components/rp-common-modal';
+@import 'components/rp-common-modal-permissions-map';
+
+@import 'components/rp-custom-icons';
+
+@import 'components/rp-custom-form-elements';
+@import 'components/rp-custom-button-with-icon';
+@import 'components/rp-custom-breadcrumbs';
+@import 'components/rp-custom-nav';
+@import 'components/rp-custom-daterangepicker';
+@import 'components/rp-custom-bootstrap-colorpicker';
+@import 'components/rp-custom-baron';
+
+// @import 'components/landingPage/landing-analysis';
+@import 'components/landingPage/landing-common';
+@import 'components/landingPage/landing-features';
+@import 'components/landingPage/landing-header';
+@import 'components/landingPage/landing-styles';
+@import 'components/landingPage/landing-trees';
+@import 'components/landingPage/landing-watch';
+@import 'components/landingPage/landing-block-login';
+
+@import 'components/rp-page-registration';
+
+@import 'components/rp-page-project-info';
+
+@import 'components/rp-page-projects-list';
+@import 'components/rp-page-user-profile';
+
+@import 'components/rp-page-dashboard';
+
+@import 'components/rp-page-filter';
+
+@import 'components/rp-page-settings';
+@import 'components/rp-page-settings-notifications';
+@import 'components/rp-page-settings-bts';
+@import 'components/rp-page-settings-general';
+@import 'components/rp-page-settings-defect-types';
+
+@import 'components/rp-page-members';
+@import 'components/rp-page-members-assigned';
+@import 'components/rp-page-members-add';
+@import 'components/rp-page-members-invite';
+@import 'components/rp-page-members-assign';
+
+@import 'components/rp-page-logs';
+
+@import 'components/rp-page-admin-add-new-project';
+
+@import 'components/rp-page-server-settings';

@@ -1,0 +1,119 @@
+<div class="form-horizontal">
+    <form id="inviteMemberForm" name="inviteMemberForm" class="clearfix">
+        <div class="rp-form-group clearfix">
+            <div class="rp-custom-col">
+                <h4 class="common-title">
+                <% if(data.type == 'users'){ %>
+                <%= data.text.admin.inviteNewUser %>
+                <% } else { %>
+                <%= data.text.members.inviteMemberToProject %>
+                <% } %>
+                </h4>
+            </div>
+        </div>
+        <div id="inviteForm">
+            <div class="rp-form-group clearfix">
+                <label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col control-label obligatory-field" for="email">
+                    <%= data.text.forms.email %>
+                </label>
+                <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">
+                    <input id="email" name="email" type="text" value=""
+                        class="rp-input-default rp-width-100 form-control" />
+                    <div class="error-bottom">
+                        <div class="help-inline"></div>
+                    </div>
+                </div>
+                <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+            </div>            <% if(data.type == 'users'){ %>
+                <div class="rp-form-group clearfix">
+                    <label for="project"
+                        class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col control-label obligatory-field">
+                        <%= data.text.forms.project %>
+                    </label>
+                    <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">
+                        <select id="project" name="project" class="select2-control">
+                            <option value="" style="display:none;"></option>
+                        </select>
+                        <div class="error-bottom">
+                            <div class="help-inline"></div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+                </div>
+            <% } %>            <div class="rp-form-group clearfix">
+                <label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col obligatory-field"
+                    for="projectRole">
+                    <%= data.text.forms.projectRole %>
+                </label>
+                <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">
+                    <div class="rp-btn-group rp-width-100">
+                        <button type="button"
+                            id="projectRole"
+                            data-defaultvalue="<%= data.defaultProjectRole %>"
+                            data-value="<%= data.defaultProjectRole %>"
+                            <%= data.isDefaultProject ? disabled='disabled' : '' %>
+                            class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
+                            data-toggle="dropdown">
+                            <span class="select-value"><%= data.roles[1] %></span>
+                            <span class="rp-caret"></span>
+                        </button>
+                        <% if(!data.isDefaultProject){ %>
+                        <ul class="dropdown-menu">
+                            <% _.each(data.roles, function(role){ %>
+                                <li>
+                                    <a href="#" class="<%= (data.isLead && role == data.memberOption) ? 'disabled-option' : '' %>" data-value="<%= role %>">
+                                        <%= role.split('_').join(' ') %>
+                                    </a>
+                                </li>
+                            <% }); %>
+                        </ul>
+                        <% } %>
+                    </div>
+                </div>
+                <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+            </div>            <div class="rp-form-group clearfix">
+                <div class="col-md-7 col-sm-12 col-xs-12 rp-custom-col">
+                    <button type="submit" class="rp-btn rp-btn-submit float-right" id="sendInvite">
+                        <%= data.text.ui.sendInvite %>
+                    </button>
+                </div>
+                <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+            </div>
+        </div>        <div id="linkForm" style="display: none;">
+            <div class="rp-form-group clearfix">
+                <label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col">
+                    <%= data.text.members.invitationSent %>
+                </label>
+                <div class="col-md-4 col-sm-8 col-xs-12 rp-custom-col">
+                    <div style="display: block">
+                        <span class="rp-invite-email" id="inviteEmail"></span>
+                    </div>
+                </div>
+                <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+            </div>            <div class="rp-form-group clearfix">
+                <label class="col-md-3 col-sm-4 col-xs-12 rp-control-label rp-custom-col" for="email">
+                    <%= data.text.forms.linkInvitation %>
+                </label>
+                <div class="col-md-9 col-sm-8 col-xs-12 rp-custom-col">
+                    <input id="inviteLink"
+                        name="inviteLink"
+                        readonly="readonly"
+                        type="text"
+                        class="rp-input-default rp-width-100 form-control"
+                        value="" />
+                </div>
+                <div class="hidden-md hidden-sm hidden-xs rp-custom-col"></div>
+            </div>            <div class="rp-form-group clearfix">
+                <div class="col-md-3 col-sm-4 hidden-xs rp-custom-col"></div>
+                <div class="col-md-9 col-sm-8 col-xs-12 rp-custom-col">
+                    <button type="button"
+                        id="cancelInvite"
+                        style="display: none;"
+                        class="rp-link float-left xs-float-right">
+                        <%= data.text.ui.backForm %>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

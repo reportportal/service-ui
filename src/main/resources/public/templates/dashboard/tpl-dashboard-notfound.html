@@ -1,0 +1,27 @@
+<div class="no-dashboards">
+    <div class="well">
+        <h3 class="title-no-data text-center">
+            <i class="rp-icons rp-icons-warning"></i>
+            <span class="warning">
+                <% if(data.notfound) { %>
+                    <%= data.text.dashboard.noDashboard %>
+                <% } else if (data.no_dashboards) { %>
+                    <%= data.text.dashboard.dashboardsEmpty %>
+                <% } else if (data.dashboardIsNotShared) { %>
+                    <%= data.text.dashboard.dashboardIsNotShared %>
+                <% } else if (data.deletedShared) { %>
+                    <%= data.text.dashboard.deletedSharedDashboard %>
+                <% } else if (data.notShared) { %>
+                    <%= data.text.dashboard.dashboardNotShared %>
+                <% } else if (data.noWidgets) { %>
+                    <%= data.text.dashboard.widgetEmpty %>
+                    <span id="clickToAddWidget">
+                        <%= data.text.dashboard.clickToAddWidget %>
+                    </span>
+                <% } else if (data.sharedEmpty) { %>
+                    <%= data.text.dashboard.noWidgetsInDashBoard %>
+                <% } %>
+            </span>
+        </h3>
+    </div>
+</div>

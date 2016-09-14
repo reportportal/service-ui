@@ -1,0 +1,121 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+/*-----------------------*/
+/* DECLARATION VARIABLES */
+
+$iconsControllPanel: url("../img/icons/icons-controll-panel.png");
+
+/*-------------------------------------*/
+/* STYLE FOR CUSTOM BUTTONS WITH ICONS */
+
+.rp-btn-custom {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    text-indent: -9999px;
+    background-repeat: no-repeat;
+    background-image: $iconsControllPanel;
+    font-weight: normal;
+    font-style: normal;
+    font-size: inherit;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+
+    // &.rp-btn-edit {
+    //     background-position: 0px 0px;
+    //     &:hover {
+    //         background-position: 0px -22px;
+    //     }
+    //     &.rp-btn-disabled {
+    //         background-position: 0px -44px;
+    //     }
+    // }
+
+    // &.rp-btn-delete {
+    //     background-position: -44px 0px;
+    //     &:hover {
+    //         background-position: -44px -22px;
+    //     }
+    //     &.rp-btn-disabled {
+    //         background-position: -44px -44px;
+    //     }
+    // }
+
+    &.rp-btn-cancel {
+        background-position: -44px 0px;
+        &:hover {
+            background-position: -44px -22px;
+        }
+        &.rp-btn-disabled {
+            background-position: -44px -44px;
+        }
+    }
+
+    // &.rp-btn-save {
+    //     background-position: -22px 0px;
+    //     &:hover {
+    //         background-position: -22px -22px;
+    //     }
+    //     &.rp-btn-disabled {
+    //         background-position: -22px -44px;
+    //     }
+    // }
+
+    &.rp-btn-close {
+        background-position: -65px 0px;
+        width: 15px;
+
+        &:hover {
+            background-position: -65px -22px;
+        }
+        &.rp-btn-disabled {
+            background-position: -65px -44px;
+        }
+    }
+}
+
+.rp-toggle-content {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    text-indent: -9999px;
+    right: 9px;
+    cursor: pointer;
+    border-left: none;
+    border-right: none;
+    border: 6px solid transparent;
+
+    &.hide-content {
+        top: 6px;
+        border-bottom: 6px solid #999999;
+    }
+
+    &.show-content {
+        top: 12px;
+        border-top: 6px solid #999999;
+    }
+}

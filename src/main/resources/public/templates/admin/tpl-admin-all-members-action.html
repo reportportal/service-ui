@@ -1,0 +1,20 @@
+<% var member = data.member; %>
+<div class="col-md-4 rp-custom-col">
+    <div class="rp-info rp-info-padding">
+        <a href="#viewProejcts" class="rp-btn rp-btn-default rp-button-with-icon" data-js-view-projects data-id="<%= member.userId %>" title="<%= data.text.admin.viewProjects %>">
+            <i class="material-icons">visibility</i>
+            <span class="hidden-sm hidden-xs rp-btn-val"><%= data.text.admin.viewProjects %></span>
+        </a>
+    </div>
+</div>
+<div class="col-md-2 rp-custom-col">
+    <div class="rp-info rp-info-padding">
+        <% if(member.account_type == 'INTERNAL' && !data.util.isYou(member)) { %>
+            <div class="rp-btn rp-btn-danger rp-button-with-icon member-action" data-id="<%= member.userId %>" title="<%= data.text.ui.delete %>">
+                <i class="material-icons">clear</i>
+                <span class="hidden-sm hidden-xs rp-btn-val"><%= data.text.ui.del %></span>
+            </div>
+        <% } %>
+    </div>
+</div>
+<% delete data.member; delete data.isAdmin; %>

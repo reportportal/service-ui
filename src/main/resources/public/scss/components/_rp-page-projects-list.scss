@@ -1,0 +1,585 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+/*--------------------*/
+/* PROJECT LIST PAGES */
+
+#contentHeader {
+    #messageFilterWrapper {
+
+    }
+
+    #adminNavigation {
+        padding-top: 44px;
+        padding-right: 20px;
+    }
+}
+
+/*--------------------*/
+#contentBody {
+    .projects-header {
+        margin-bottom: 20px;
+
+        .projects-title {
+            padding-top: 20px;
+        }
+        .projects-view-switcher {
+            padding-top: 20px;
+            padding-right: 10px;
+
+            .projects-view {
+                width: 24px;
+                height: 24px;
+                font-size: 24px;
+                line-height: 24px;
+                min-width: 24px;
+                min-height: 24px;
+                padding: 1px;
+                margin: 0;
+                box-shadow: none;
+                opacity: 0.5;
+                box-sizing: content-box;
+
+                &.active {
+                    opacity: 1;
+                }
+
+                &.projects-view-table {
+                    margin-left: -1px;
+                }
+            }
+        }
+    }
+
+    #activeProjectsList {
+        position: relative;
+        min-height: 50px;
+
+        & > .col-sm-4 {
+            padding: 10px;
+        }
+
+    }
+
+    #accordion {
+        #inactiveLink {
+            position: relative;
+            color: #666;
+            margin-bottom: 10px;
+            text-decoration: none;
+
+            &.collapsed {
+                .minus {
+                    display: none;
+                }
+
+                .plus {
+                    display: inline-block;
+                }
+            }
+
+            .plus {
+                display: none;
+            }
+
+            .minus {
+                display: inline-block;
+            }
+
+            .rp-icons {
+                position: absolute;
+                width: 15px;
+                height: 15px;
+                top: 8px;
+                font-size: 15px;
+                right: -25px;
+            }
+        }
+
+    }
+}
+
+/*--------------------*/
+/*--- ADMINISTRATE ---*/
+
+.admin_header_controls a:focus {
+    color: #fff;
+}
+
+.sort_projects_dropdown {
+    margin-top: 7px;
+}
+
+.sort_projects_dropdown .radio label {
+    padding-left: 0;
+}
+
+#users-button .pr-launch-btn > a {
+    display: block;
+    padding: 0 15px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    line-height: 30px;
+    box-shadow: none;
+    font-size: 14px;
+    color: #666;
+    text-shadow: none;
+}
+
+#users-button .pr-launch-btn {
+    box-shadow: none;
+    margin-left: 6px;
+}
+
+.admin_form {
+    padding-top: 17px;
+    padding-bottom: 19px;
+}
+
+.admin_form .form_label {
+    margin: 0;
+    line-height: 14px;
+}
+
+.input-filter .form-control {
+    height: 30px;
+    border-color: #ccc;
+    border-radius: 0;
+    box-shadow: none;
+    font-weight: normal;
+}
+
+.input-filter .form-control:focus {
+    box-shadow: none;
+}
+
+.input-filter .form-control-feedback {
+    color: #999;
+}
+
+#activeProjectsList .project-wrapper,
+#collapseInactive .project-wrapper {
+    margin: 0 0 20px;
+    padding: 0;
+    border-color: #d5d5d5;
+    background-color: #f9f9f9;
+}
+
+.project-wrapper > h2 {
+    margin: 17px 0 0;
+    padding: 0 20px 20px;
+    border-bottom: 1px solid #e6e6e6;
+    font-family: $OswaldRegular;
+    font-size: 18px;
+    color: #464547;
+    text-transform: uppercase;
+}
+
+.project-wrapper > h2 span.label.you {
+    position: relative;
+    top: -2px;
+    display: inline-block;
+    height: 18px;
+    margin-left: 3px;
+    padding: 0 6px;
+    line-height: 18px;
+    border-radius: 0;
+    background-color: #a3c644;
+    font-family: $OpenSansRegular;
+    font-weight: normal;
+    font-size: 10px;
+}
+
+.project-wrapper .project_info_wrapper {
+    border-bottom: 1px solid #dcdcdc;
+    padding-bottom: 0 !important;
+}
+
+.project-wrapper .heartbeat_block {
+    padding-top: 16px;
+    padding-left: 0;
+    border-right: 1px solid #e6e6e6;
+}
+
+#dynamicContent .project-wrapper .heartbeat_block .col-sm-12 {
+    padding-bottom: 10px;
+}
+
+.project-wrapper .project_info_block {
+    padding-top: 15px;
+    padding-right: 0;
+    font-family: "OpenSansRegular", sans-serif;
+}
+
+.project-wrapper .project_info {
+    padding: 0 0 5px !important;
+    font-size: 14px;
+    color: #666;
+}
+
+.project-wrapper .project_info .bold {
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+.project-wrapper .project-link_wrapper {
+    background-color: #f1f1f1;
+}
+
+.project-wrapper .project-link {
+    font-family: "OpenSansRegular", sans-serif;
+    color: #828282;
+}
+
+#activeProjectsList .project-item,
+#collapseInactive .project-item {
+    padding: 0 10px;
+}
+
+.table_view .project-item {
+    width: 100%;
+    margin: -1px 0 0;
+}
+
+#activeProjectsList.table_view .project-wrapper,
+#collapseInactive.table_view .project-wrapper {
+    margin: 0;
+}
+
+.table_view .project-item .remove-project {
+    top: 13px;
+}
+
+.table_view .project-item .project_name {
+    width: 15%;
+    margin: 0;
+    padding: 11px 15px;
+    border-bottom: none;
+}
+
+.table_view .project-item .project_info_wrapper {
+    width: 45%;
+    border-bottom: none;
+}
+
+.table_view .project-item .project_info_wrapper .heartbeat_block {
+    width: 20%;
+    padding-top: 11px;
+    padding-bottom: 10px;
+    border: none;
+}
+
+.health_icon {
+    i {
+        position: relative;
+        font-size: 5vw;
+        width: auto;
+        height: auto;
+        opacity: 0.3;
+    }
+}
+
+.table_view .project-item .project_info_wrapper .health_icon {
+    display: none;
+}
+
+.table_view .project-item .project_info_wrapper .health_index {
+    width: 100%;
+}
+
+.table_view .project-item .project_info_wrapper .project_info_block {
+    width: 80%;
+    padding-top: 11px;
+    padding-bottom: 10px;
+}
+
+.table_view .project-item .project_info_wrapper .project_info {
+    width: 33.33%;
+}
+
+.table_view .project-item .project-link_wrapper {
+    width: 35%;
+    background-color: transparent;
+}
+
+.table_view .project-item .project-link_wrapper .project-link {
+    padding-top: 13px;
+    padding-bottom: 10px;
+}
+
+/*--- END ADMINISTRATE ---*/
+
+.project-link i {
+    display: block;
+    margin: 0 auto;
+    width: 30px;
+    height: 22px;
+    font-size: 22px;
+    line-height: 22px;
+}
+
+#coverLoader {
+    background-color: rgba(255, 255, 255, 0.4);
+    height: 100%;
+    left: 0;
+    padding: 15px 0;
+    position: absolute;
+    text-align: center;
+    top: 0;
+    width: 100%;
+}
+#coverLoader i {position: relative;top: 50%;margin-top: -50%;}
+
+#contentBody {min-height: 120px;}
+#contentBody #popupLoader {display: block;height:auto;}
+
+.project-wrapper {position:relative; border: 1px solid #666;}
+.project-wrapper h1 {padding-left: 10px;padding-right: 10px;}
+.project-wrapper .project-link {padding: 10px;color:#565656;}
+// .project-link i {float: none;}
+.project-wrapper .remove-project {
+    position:absolute;
+    right: 10px;
+    top: 10px;
+    width: 22px;
+    height: 22px;
+    font-size: 22px;
+    line-height: 22px;
+    display: none;
+    z-index: 5;
+    cursor: pointer;
+}
+.project-wrapper:hover .remove-project {
+    display: inline-block;
+}
+.remove-project i {color: #656565;}
+.project-wrapper:hover .remove-project {display:inline;}
+
+#popupLoader.admin-section i {top:0px;}
+
+.assign-to-project {display: none;}
+.no-assigned .go-to-project {display: none;}
+.no-assigned .assign-to-project {display: inline-block;}
+
+.dimmed {
+    opacity: 0.65;
+}
+.dimmed .project_info_wrapper{opacity: 0.5;}
+
+.custom-label {padding: 7px 0 0;text-align: right;font-weight: normal;}
+
+#inviteMemberForm .form-group,
+#addMemberForm .form-group,
+#projectSettings .form-group {
+    margin-bottom: 15px;
+}
+
+/* USERS  */
+.all-users .rp-member-wrap .rp-member-body {
+    padding-top: 0;
+}
+.users-list {
+    position: relative;
+}
+.users-list #popupLoader.admin-section i {
+    top:15px;
+}
+
+.label-hover {
+    display: none;
+}
+
+.rp-table-row:hover .label-hover {
+    display: inline;
+}
+
+
+#collapseInactive > .col-sm-4 {
+    padding: 10px;
+}
+
+.projects-table-view {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.projects-table-view .project-link {
+    color: #828282;
+}
+
+.projects-table-view .label.you {
+  position: relative; 
+  background-color: #a3c644;
+}
+
+.projects-table-view .project_name {
+    display: inline-block;
+}
+
+.projects-table-view .remove-project {
+    display: none;
+}
+
+.projects-table-view .rp-table-row:hover .remove-project {
+    display: inline-block;
+}
+
+.projects-table-view-list-item,
+.projects-table-view-list-item .project-link {
+    padding-left: 0;
+}
+
+.projects-table-view-list-item .project-link i {
+    width: 30px;
+    height: 22px;
+    font-size: 18px;
+    line-height: 18px;
+}
+.projects-table-view .project-link.assign-to-project {
+    display: none;
+}
+.projects-table-view .no-assigned .project-link.go-to-project {
+    display: none;
+}
+.projects-table-view .no-assigned .project-link.assign-to-project {
+    display: inline-block;
+}
+
+
+/* ---------------------------------- */
+
+
+
+@media (max-width: 768px) {
+    .header {
+        /*padding: 0 10px;*/
+    }
+
+    .login-box {
+        left: auto;
+    }
+
+    .project_info_wrapper .heartbeat_block {
+        width: 100%;
+        border-right: none;
+    }
+
+    .project-wrapper .project-link_wrapper {
+        padding: 10px 0 !important;
+    }
+
+    .rp-navbar-header .rp-padding-reset {
+        padding: 0 15px;
+    }
+
+    #navbar-header-collapse .rp-header-nav.rp-navbar-right .dropdown-menu > li {
+        margin: 0 0 5px;
+        float: none;
+        border: 1px solid #ddd;
+    }
+
+    #projectProperties,
+    #jiraConfig {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    #dynamicFields + .fields-controls {
+        padding-right: 25px;
+    }
+
+    /*--- ADMIN PAGE TABLE VIEW ---*/
+    .table_view .project-item {
+        width: 100%;
+        margin: -1px 0 0;
+    }
+
+    #activeProjectsList.table_view .project-wrapper,
+    #collapseInactive.table_view .project-wrapper {
+        margin: 0;
+    }
+
+    .table_view .project-item .remove-project {
+        top: 13px;
+        display: block;
+    }
+
+    .table_view .project-item .project_name {
+        width: 100%;
+        margin: 0;
+        padding: 11px 15px;
+        border-bottom: none;
+    }
+
+    .table_view .project-item .project_info_wrapper {
+        width: 100%;
+        border-bottom: none;
+    }
+
+    .table_view .project-item .project_info_wrapper .heartbeat_block {
+        width: 100%;
+        padding-top: 11px;
+        padding-bottom: 10px;
+        border: none;
+    }
+
+    .table_view .project-item .project_info_wrapper .health_icon {
+        display: none;
+    }
+
+    .table_view .project-item .project_info_wrapper .health_index {
+        width: 100%;
+    }
+
+    .table_view .project-item .project_info_wrapper .project_info_block {
+        width: 100%;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .table_view .project-item .project_info_wrapper .project_info_block:after,
+    .table_view .project-item .project-link_wrapper:after {
+        content: "";
+        display: block;
+        clear: both;
+    }
+
+    .table_view .project-item .project_info_wrapper .project_info {
+        float: left;
+        width: 33.3%;
+    }
+
+    .table_view .project-item .project-link_wrapper {
+        width: 100%;
+        padding: 0 15px !important;
+        background-color: transparent;
+    }
+
+    .table_view .project-item .project-link_wrapper .project-link {
+        float: left;
+        display: block;
+        width: 33.3%;
+        padding: 5px 0 10px;
+        text-align: left;
+    }
+
+    /*--- END ADMIN PAGE TABLE VIEW ---*/
+}

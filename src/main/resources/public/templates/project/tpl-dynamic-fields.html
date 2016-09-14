@@ -1,0 +1,80 @@
+<% var notAllowed = (!data.access) ? 'disabled="disabled"' : '' %>
+<% _.forEach(data.collection, function(field) { %>
+        <div class="rp-form-group">
+            <% var obligatoryField = field.required ? 'obligatory-field' : '';  %>
+            <label class="<%= data.popup ? 'col-sm-4' : 'col-md-3 col-sm-3' %> col-xs-12 rp-control-label rp-custom-col <%= obligatoryField %> <%= data.update ? 'custom-style-1' : 'custom-style-2' %>" for="<%- field.id %>">
+                <%- field.fieldName %>
+            </label>
+            <div class="<%= data.popup ? 'col-sm-8' : 'col-md-4 col-sm-7' %>  col-xs-10 rp-custom-col <%= data.update ? 'custom-style-1' : 'custom-style-2' %>">
+                <% var isDisabled = data.disabled.indexOf(field.id) !== -1 ? 'disabled="disabled"' : ''; %>
+                <% if(field.definedValues && field.definedValues.length){ %>
+                    <% if(field.fieldType === 'array') { %>
+                        <div class="btn-group input-group to-100-width">
+                            <div class="b-users-typeahead">
+                                <input class="rp-input-default rp-width-100 users-typeahead default-value" data-name="<%= field.fieldName %>" id="<%= field.id %>" value="<%= field.value ? field.value.join(',') : '' %>" <%= notAllowed %>>
+                            </div>
+                        </div>
+                    <% }else{ %>
+                        <% if(field.definedValues.length > 10){ %>
+                            <% var id = field.value ? field.value[0] : ''; %>
+                            <select id="<%- field.id %>" data-id="<%- field.id.replaceAll('.', '') %>" class="btn-group input-group to-100-width">
+                                <option value=""><%= data.text.ui.selectValue %></option>
+                                <% _.forEach(field.definedValues, function(option) { %>
+                                    <option value="<%= option.valueId %>" <%= option.valueId === id ? 'selected' : '' %>><%= option.valueName %></option>
+                                <% }); %>
+                            </select>
+                        <% } else { %>
+                        <% var value = field.value ? field.value[0] : (field.definedValues[0].valueName || ''); %>
+                        <!-- <div class="btn-group input-group to-100-width"> -->
+                        <div class="rp-btn-group rp-width-100">
+                            <button <%= notAllowed %> id="<%- field.id %>"
+                                data-id="<%- field.id.replaceAll('.', '') %>"
+                                data-toggle="dropdown" data-name="<%= field.fieldName %>"
+                                data-type="<%= field.fieldType %>"
+                                class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle default-value <%= field.required ? 'required-value' : '' %>" <%= isDisabled %>>
+                                    <span class="select-value dynamic-fields"><%- value %></span>
+                                    <span class="rp-caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <% _.forEach(field.definedValues, function(type) { %>
+                                    <li id="<%= type.valueId %>" class="<%= type.valueName === value ? 'active' : '' %>">
+                                        <a href="#" class="option-selector"><%= type.valueName %></a>
+                                    </li>
+                                <% }) %>
+                            </ul>
+                        </div>
+                        <% } %>
+                    <% } %>
+                <% }else{ %>
+                    <% if(field.fieldType === 'Html') { %>
+                        <textarea <%= notAllowed %> class="form-control default-value <%= field.required ? 'required-value' : '' %>"
+                            data-name="<%= field.fieldName %>"
+                            data-type="<%= field.fieldType %>"
+                            id="<%- field.id %>" data-id="<%- field.id.replaceAll('.', '') %>"
+                            <%= isDisabled %> ><%- field.value ? field.value[0] : '' %></textarea>
+                    <% } else { %>
+                        <input type="text" <%= notAllowed %> class="rp-input-default rp-width-100 form-control default-value <%= field.required ? 'required-value' : '' %>"
+                                data-name="<%= field.fieldName %>"
+                                data-type="<%= field.fieldType %>"
+                               id="<%- field.id %>" data-id="<%- field.id.replaceAll('.', '') %>" value="<%- field.value ? field.value[0] : '' %>" <%= isDisabled %> />
+                    <% } %>
+                    <span class="help-inline"></span>
+                <% } %>
+            </div>
+            <% if(data.update){ %>
+                <div class="col-md-5 col-sm-2 col-xs-2 rp-custom-col">
+                    <label class="rp-checkbox-wrap">
+                        <% var checked = field.checked || field.required || data.editable ? "checked=checked" : ""; %>
+                        <% var disabled = field.required ? "disabled" : ""; %>
+                        <input type="checkbox" class="rp-input-checkbox form-control default-selector" data-type="<%= field.fieldType %>" <%= notAllowed %> <%= checked %> <%= disabled %> />
+                        <span class="span-empty"></span>
+                    </label>
+                </div>
+            <% } %>
+        </div>
+<% }); %>
+<% if(!data.collection){ %>
+    <div class="alert alert-warning custom-position">
+        <%= data.text.bts.configureFields %>
+    </div>
+<% } %>

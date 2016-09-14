@@ -1,0 +1,16 @@
+<%
+    var onChecked;
+    var title;
+
+    onChecked = data.statusPreconditions === 'hide' ? 'checked' : '';
+    title = data.text.launches[data.statusPreconditions + 'PreconditionMethods'];
+%>
+
+<div id="collapseMethodBtn" class="collapse-method-btn">
+    <label class="rp-switcher" data-toggle-switch title="<%= title %>">
+        <input type="checkbox" <%= onChecked %> />
+        <div class="slider"></div>
+    </label>
+</div>
+
+

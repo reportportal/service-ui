@@ -1,0 +1,13 @@
+<div class="form-group col-sm-9">
+    <label class="rp-control-label" for="tabName"><%= data.text.filter.name %></label>
+    <div>
+        <input type="text" placeholder="<%= data.text.filters.enterFilterName %>" id="tabName" class="rp-input rp-width-100"
+               value="<%- data.name || '' %>">
+        <span class="help-inline"></span>
+    </div>
+</div><div class="form-group col-sm-3 col-xs-3">
+    <label class="rp-control-label"  for="tabShared"><%= data.text.filter.share %></label>
+    <div>
+        <input id="tabShared" type="checkbox" class="js-switch" <% if (data.isShared) { %> checked="checked" <% } %> />
+    </div>
+</div>

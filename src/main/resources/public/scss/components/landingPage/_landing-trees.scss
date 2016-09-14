@@ -1,0 +1,641 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+.b-trees {
+    position: relative;
+    overflow: visible;
+    background-color: #031201;
+}
+.b-trees:after{
+    position: absolute;
+    content: "";
+    width: 0;
+    height: 0;
+    bottom: -26px;
+    left: 50%;
+    margin-left: -46px;
+    border-left: 46px solid transparent;
+    border-right: 46px solid transparent;
+    border-top: 28px solid #031201;
+}
+.b-trees__overflow{
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+.b-trees__bg {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.b-trees__bg--bg {
+    height: 105vw;
+    background-size: contain;
+    background-image: url("../img/landing/intro/1_Background_color.png");
+    background-repeat: no-repeat;
+    background-position: 0 -50px;
+}
+
+.b-trees__bg--backtreeone {
+    /*z-index: 1001;*/
+    background-size: 50vw;
+    background-image: url("../img/landing/intro/4_Back_Tree1.png");
+    background-repeat: no-repeat;
+    background-position: 0 21vw;
+}
+
+.b-trees__bg--backtreetwo {
+    /*z-index: 1002;*/
+    background-size: 60vw;
+    background-image: url("../img/landing/intro/3_Back_Tree.png");
+    background-repeat: no-repeat;
+    background-position: left top;
+}
+
+.b-trees__bg--fronttree {
+    /*z-index: 1000;*/
+    background-size: 55vw;
+    background-image: url("../img/landing/intro/6_branche_right.png");
+    background-repeat: no-repeat;
+    background-position: right top;
+}
+
+.b-trees__bg--sun {
+    /*z-index: 1009;*/
+    background-size: 100vw;
+    background-image: url("../img/landing/intro/5_Splash_Light1.png");
+    background-repeat: no-repeat;
+    background-position: right top;
+}
+.b-central {
+    position: relative;
+    height: 100vh;
+    /*z-index: 1010;*/
+}
+
+.b-central__logo {
+    text-align: center;
+    position: relative;
+    padding: 35vh 0 30vh 0;
+}
+
+.b-central__logo p {
+    margin-top: -10px;
+    text-transform: uppercase;
+    color: #97ca9b;
+    font-family: "OswaldRegular", sans-serif;
+    font-size: 20px;
+    font-weight: lighter;
+}
+
+.b-central__play {
+    position: absolute;
+    line-height: 12vw;
+    text-align: center;
+    font-size: 8vw;
+    left: 50%;
+    width: 14vw;
+    margin-left: -7vw;
+    border-radius: 10vw;
+    border: 1vw solid rgba(255, 255, 255, 0.2);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.b-central__play:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.b-central__play:hover i {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.b-central__play i {
+    transition: all 0.2s ease-in-out;
+    color: rgba(255, 255, 255, 0.2);
+    margin-left: 2vw;
+}
+
+.b-leaves {
+    position: relative;
+    height: 730px;
+    /*margin-top: 100px;*/
+    padding-bottom: 270px;
+    z-index: 1010;
+    background-size: 95vw;
+    background-image: url("../img/landing/intro/2_Back_Foliage.png");
+    background-repeat: no-repeat;
+    background-position: center top;
+}
+
+.b-leaves .b-leaf {
+    position: absolute;
+    text-align: center;
+}
+
+.b-leaves .b-leaf .b-leafborder,
+.b-leaves .b-leaf .b-leaf__info {
+    opacity: 1;
+}
+
+.b-leaves .b-leaf:hover .b-leafborder,
+.b-leaves .b-leaf:hover .b-leaf__info {
+    opacity: 1;
+}
+
+.b-leaves .b-leaf--orange {
+    /*z-index: 1050;*/
+    /*bottom: 0px;*/
+    margin-top: 700px;
+    left: 50%;
+    margin-left: 15px;
+    color: #E79C7B;
+    border-color: #e84d00;
+}
+
+.b-leaves .b-leaf--orange .b-leaf__border {
+    width: 230px;
+    height: 125px;
+}
+
+.b-leaves .b-leaf--orange .b-leafborder {
+    width: 20px;
+    height: 25px;
+}
+
+.b-leaves .b-leaf--orange .b-leaf__info {
+    width: 20vw;
+    width: 400px;
+    bottom: 140px;
+    bottom: 100%;
+    left: 50%;
+}
+
+.b-leaves .b-leaf--orange .b-leaf__info .b-leafinfo__header {
+    color: #e84d00;
+}
+
+.b-leaves .b-leaf--yellow {
+    /*z-index: 1040;*/
+    /*bottom: 100px;*/
+    margin-top: 550px;
+    right: 50%;
+    margin-right: 80px;
+    color: #989759;
+    border-color: #dedb33;
+}
+
+.b-leaves .b-leaf--yellow .b-leaf__border {
+    width: 190px;
+    height: 125px;
+}
+
+.b-leaves .b-leaf--yellow .b-leafborder {
+    width: 18px;
+    height: 25px;
+}
+
+.b-leaves .b-leaf--yellow .b-leaf__info {
+    width: 15vw;
+    width: 260px;
+    top: 120px;
+    left: -200px;
+}
+
+.b-leaves .b-leaf--yellow .b-leaf__info .b-leafinfo__header {
+    color: #C3C140;
+}
+
+.b-leaves .b-leaf--biggreen {
+    /*z-index: 1030;*/
+    /*top: 30%;*/
+    margin-top: 150px;
+    left: 50%;
+    margin-left: -80px;
+    width: 190px;
+    height: 125px;
+    color: #637654;
+    border-color: #ccf2bd;
+}
+
+.b-leaves .b-leaf--biggreen .b-leaf__border {
+    width: 190px;
+    height: 125px;
+}
+
+.b-leaves .b-leaf--biggreen .b-leaf__border img {
+    margin-top: -25px;
+}
+
+.b-leaves .b-leaf--biggreen .b-leafborder {
+    width: 15px;
+    height: 20px;
+}
+
+.b-leaves .b-leaf--biggreen .b-leaf__info {
+    width: 20vw;
+    width: 400px;
+    top: -20px;
+    left: -25vw;
+    left: -450px;
+}
+
+.b-leaves .b-leaf--biggreen .b-leaf__info .b-leafinfo__header {
+    color: #ccf2bd;
+}
+
+.b-leaves .b-leaf--smallgreen {
+    /*z-index: 1020;*/
+    margin-top: 145px;
+    left: 50%;
+    margin-left: 170px;
+    color: #637654;
+    border-color: #ccf2bd;
+}
+
+.b-leaves .b-leaf--smallgreen .b-leaf__border {
+    width: 105px;
+    height: 70px;
+}
+
+.b-leaves .b-leaf--smallgreen .b-leaf__border img {
+    margin-top: -10px;
+}
+
+.b-leaves .b-leaf--smallgreen .b-leafborder {
+    width: 10px;
+    height: 15px;
+}
+
+.b-leaves .b-leaf--smallgreen .b-leaf__info {
+    width: 17vw;
+    width: 320px;
+    bottom: 100%;
+    left: 30px;
+}
+
+.b-leaves .b-leaf--smallgreen .b-leaf__info .b-leafinfo__header {
+    color: #ccf2bd;
+}
+
+.b-leaves .b-leafborder {
+    position: absolute;
+    opacity: 0;
+    border-width: 1px;
+    border-style: solid;
+    border-color: inherit;
+    transition: all 0.5s ease-in-out;
+    transition-delay: 0.2s;
+}
+
+.b-leaves .b-leafborder--tl {
+    top: 0;
+    left: 0;
+    border-bottom: none;
+    border-right: none;
+}
+
+.b-leaves .b-leafborder--tr {
+    top: 0;
+    right: 0;
+    border-bottom: none;
+    border-left: none;
+}
+
+.b-leaves .b-leafborder--br {
+    bottom: 0;
+    right: 0;
+    border-top: none;
+    border-left: none;
+}
+
+.b-leaves .b-leafborder--bl {
+    bottom: 0;
+    left: 0;
+    border-top: none;
+    border-right: none;
+}
+
+.b-leaves .b-leaf__info {
+    text-align: left;
+    opacity: 0;
+    position: absolute;
+    color: inherit;
+    transition: all 0.5s ease-in-out;
+    transition-delay: 0.2s;
+}
+
+.b-leaves .b-leaf__info .b-leafinfo__header {
+    font-family: "OswaldRegular", sans-serif;
+    font-weight: bolder;
+    font-size: 20px;
+    text-transform: uppercase;
+}
+
+.b-leaves .b-leaf__info .b-leafinfo__text {
+    font-size: 16px;
+}
+
+.b-leaves .b-leaf__border {
+    display: inline-block;
+    position: relative;
+    padding: 10px;
+    border-color: inherit;
+}
+@media (max-width: 1200px) {
+    .b-leaves .b-leaf--orange .b-leaf__info {
+        width: 35vw;
+    }
+
+    .b-leaves .b-leaf--biggreen .b-leaf__info {
+        width: 35vw;
+        left: -38vw;
+    }
+
+    .b-leaves .b-leaf--smallgreen .b-leaf__info {
+        width: 28vw;
+    }
+}
+@media (max-width: 992px) {
+    .b-central__logo {
+        padding: 150px 0 100px 0;
+    }
+
+    .b-central__play {
+        position: relative;
+        margin: 50px 0 0;
+        line-height: 12vw;
+        text-align: center;
+        font-size: 8vw;
+        left: 50%;
+        width: 14vw;
+        margin-left: -7vw;
+        border-radius: 10vw;
+    }
+
+    .b-leaves {
+        height: 700px;
+        text-align: left;
+    }
+
+    .b-leaves .b-leaf--orange {
+        /*bottom: 240px;*/
+        left: 65%;
+    }
+
+    .b-leaves .b-leaf--orange .b-leaf__info {
+        /*top: 175px;*/
+        left: -15vw;
+        width: 45vw;
+    }
+
+    .b-leaves .b-leaf--yellow {
+        /*bottom: 290px;*/
+        left: 25%;
+    }
+
+    .b-leaves .b-leaf--yellow .b-leaf__info {
+        top: 125px;
+        left: -16vw;
+        width: 25vw;
+    }
+
+    .b-leaves .b-leaf--biggreen {
+        /*top: -70px;*/
+        left: 50%;
+        margin-left: 70px;
+    }
+
+    .b-leaves .b-leaf--biggreen .b-leaf__info {
+        top: 135%;
+        left: 5px;
+        width: 35vw;
+    }
+
+    .b-leaves .b-leaf--smallgreen {
+        top: 15%;
+        left: auto;
+        right: 50%;
+        margin-right: -20px;
+    }
+
+    .b-leaves .b-leaf--smallgreen .b-leaf__info {
+        bottom: 100%;
+        left: auto;
+        right: 40px;
+        width: 340px;
+        width: 40vw;
+    }
+}
+@media (max-width: 768px) {
+    .b-trees {
+        height: auto;
+    }
+
+    .b-central__logo {
+        padding: 150px 0 0px 0;
+    }
+
+    .b-central__logo img {
+        width: 50%;
+    }
+
+    .b-central__logo p {
+        font-size: 18px;
+        margin-top: -10px;
+    }
+
+    .b-leaves {
+        height: auto;
+        padding: 150px 0 0 0;
+        text-align: center;
+    }
+
+    .b-leaves .b-leaf {
+        position: relative;
+        top: 0;
+        left: 0;
+    }
+
+    .b-leaves .b-leaf .b-leafborder,
+    .b-leaves .b-leaf .b-leaf__info {
+        opacity: 1;
+    }
+
+    .b-leaves .b-leaf--orange {
+        margin: 0;
+    }
+
+    .b-leaves .b-leaf--orange .b-leaf__info {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: auto;
+    }
+
+    .b-leaves .b-leaf--yellow {
+        margin: 0;
+    }
+
+    .b-leaves .b-leaf--yellow .b-leaf__info {
+        top: 0;
+        left: 0;
+        width: auto;
+    }
+
+    .b-leaves .b-leaf--biggreen {
+        margin: 0;
+        width: auto;
+        height: auto;
+    }
+
+    .b-leaves .b-leaf--biggreen .b-leaf__info {
+        top: 0;
+        left: 0;
+        width: auto;
+    }
+
+    .b-leaves .b-leaf--smallgreen {
+        margin: 0;
+    }
+
+    .b-leaves .b-leaf--smallgreen .b-leaf__info {
+        left: 0;
+        width: auto;
+    }
+
+    .b-leaves .b-leaf__info {
+        position: relative;
+        text-align: center;
+        left: 0;
+        margin: 20px 0 80px 0;
+    }
+
+    .b-leaves .b-leaf__info .b-leafinfo {
+        padding: 0 75px;
+    }
+
+    .b-leaves .b-leaf__info .b-leafinfo__header {
+        font-size: 42px;
+        margin: 40px 0 20px 0;
+    }
+
+    .b-leaves .b-leaf__info .b-leafinfo__text {
+        width: 100%;
+        margin: 0 auto;
+        font-size: 28px;
+    }
+
+    .b-leaves .b-leaf:last-child {
+        padding-bottom: 140px;
+    }
+}
+
+@media (max-width: 700px) {
+    .b-central__logo p {
+        font-size: 14px;
+        margin-top: 0;
+    }
+
+    .b-leaves {
+        padding-top: 150px;
+        text-align: center;
+    }
+
+    .b-leaves .b-leaf {
+        position: relative;
+        top: 0;
+        left: 0;
+    }
+
+    .b-leaves .b-leaf .b-leafborder, .b-leaves .b-leaf .b-leaf__info {
+        opacity: 1;
+    }
+
+    .b-leaves .b-leaf--orange .b-leaf__border {
+        width: 200px;
+        margin: 20px auto;
+    }
+
+    .b-leaves .b-leaf--orange .b-leaf__info {
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: auto;
+    }
+
+    .b-leaves .b-leaf--yellow .b-leaf__border {
+        width: 200px;
+        margin: 0 auto;
+    }
+
+    .b-leaves .b-leaf--yellow .b-leaf__info {
+        top: 0;
+        left: 0;
+        width: auto;
+    }
+
+    .b-leaves .b-leaf--biggreen .b-leaf__border {
+        width: 180px;
+        margin: 0 auto;
+    }
+
+    .b-leaves .b-leaf--biggreen .b-leaf__info {
+        top: 0;
+        left: 0;
+        width: auto;
+    }
+
+    .b-leaves .b-leaf--smallgreen .b-leaf__border {
+        width: 100px;
+        margin: 0 auto;
+    }
+
+    .b-leaves .b-leaf--smallgreen .b-leaf__info {
+        left: 0;
+        width: auto;
+    }
+
+    .b-leaves .b-leaf__info {
+        position: relative;
+        left: 0;
+        margin: 20px 0 40px 0;
+    }
+
+    .b-leaves .b-leaf__info .b-leafinfo {
+        padding: 0 20px;
+    }
+
+    .b-leaves .b-leaf__info .b-leafinfo__header {
+        font-size: 24px;
+        margin: 40px 0 20px 0;
+    }
+
+    .b-leaves .b-leaf__info .b-leafinfo__text {
+        margin: 0 auto;
+        font-size: 14px;
+    }
+
+    .b-leaves .b-leaf:last-child {
+        padding-bottom: 80px;
+    }
+}

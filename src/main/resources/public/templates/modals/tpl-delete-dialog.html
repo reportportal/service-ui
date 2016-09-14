@@ -1,0 +1,33 @@
+<div class="modal fade dialog-shell rp-modal-dialog delete-dialog" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="col-lg-10 col-md-10 col-sm-10 col-xs-10 break-link">
+                    <%= data.text.dialogHeader[data.message] %>
+                </h2>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 panel-action">
+                    <span class="close-pop-up" data-js-close data-dismiss="modal">
+                        <i class="material-icons">clear</i>
+                    </span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p>
+                    <% if(data.format) { %>
+                        <%= data.format(data.text.dialog[data.message]) %>?
+                    <% } else { %>
+                        <%= data.text.dialog[data.message] %><%- data.segment %>?
+                    <% } %>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="rp-btn rp-btn-cancel" data-dismiss="modal">
+                    <%= data.cancelButton || data.text.ui.cancel %>
+                </button>
+                <button type="button" class="rp-btn rp-btn-danger">
+                    <%= data.okButton || data.text.dialog[data.message+"Btn"] || data.text.ui.del %>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

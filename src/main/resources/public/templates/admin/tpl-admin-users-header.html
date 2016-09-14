@@ -1,0 +1,27 @@
+<div id="headerBar" class="clearfix">
+    <ul class="rp-nav-left">
+        <li class="title-holder">
+            <span class="header-alike"><%= data.text.admin.users %></span>
+        </li>
+    </ul>
+    <ul class="rp-nav-right">
+        <li class="rp-launch-bt float-right margin-left-10 rp-item-li-fix-height">
+            <a href="#administrate/users/add"
+                id="toAddUser"
+                title="<%= data.text.admin.addUser %>"
+                class="rp-btn rp-btn-default-revers rp-button-with-icon <% if(data.action == 'add'){ 'disabled' } %>">
+                <i class="rp-icons rp-icons-add-user"></i>
+                <span class="hidden-sm hidden-xs rp-btn-val"><%= data.text.admin.addUser %></span>
+            </a>
+        </li>
+        <li class="rp-launch-btn float-right margin-left-10 rp-item-li-fix-height">
+            <a href="#administrate/users/invite"
+                id="toInviteUser"
+                title="<%= data.text.admin.inviteUser %>"
+                class="rp-btn rp-btn-default-revers rp-button-with-icon <% if(data.action == 'invite'){ 'disabled' } %>">
+                <i class="rp-icons rp-icons-invite-user"></i>
+                <span class="hidden-sm hidden-xs rp-btn-val"><%= data.text.admin.inviteUser %></span>
+            </a>
+        </li>
+    </ul>
+</div>

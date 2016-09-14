@@ -1,0 +1,31 @@
+<li class="breadcrumbs-mode-container">
+    <div class="breadcrumb-mode <%= data.expanded ? data.expanded : '' %>" id="breadcrumbToggle">
+        <i class="material-icons breadcrumb-plus">add_box</i>
+        <i class="material-icons breadcrumb-minus">indeterminate_check_box</i>
+    </div>
+</li>
+<% _.forEach(data.steps, function(step, index, all){ var islast = data.steps.length - 1 === index; %>
+<% if(step.id && step.name){ %>
+<li class="crumb <% if(islast) { %>inactive<% } %>">
+    <% var listIcon = (step.id.indexOf("all-cases-for") == 0) ? '<i title="List view" class="material-icons mi-list">format_indent_increase</i>' : ''; %>
+    <% if(!islast){ %>
+        <a href="<%= step.link %>" class="ellipse" title="<%- step.name %>">
+            <%= listIcon %>
+            <span><%- step.name %></span>
+        </a>
+        <% if(index === 1 && step.data && step.data.isProcessing){ %>
+            <span class="label autoanalyze label-danger"><%= data.text.ui.autoAnalyzeShort %></span>
+        <% } %>
+        <i class="material-icons">keyboard_arrow_right</i>
+    <% } else { %>
+        <span class="link-as-element ellipse" title="<%- step.name %>">
+            <%= listIcon %>
+            <span><%- step.name !== 'history' ? step.name : data.text.forms.history %></span>
+        </span>
+        <% if(index === 1 && step.data && step.data.isProcessing){ %>
+            <span class="label autoanalyze label-danger"><%= data.text.ui.autoAnalyzeShort %></span>
+        <% } %>
+    <% } %>
+</li>
+<% } %>
+<% }); %>

@@ -1,0 +1,79 @@
+
+/*---------------*/
+/* LAUNCHES LOGS */
+
+#sortByTime {
+    cursor: pointer;
+
+    &.ASC {
+        .arrow_up {
+            display: inline-block;
+        }
+    }
+
+    &.DESC {
+        .arrow_down {
+            display: inline-block;
+        }
+    }
+
+    .material-icons {
+        display: none;
+        position: absolute;
+        width: 14px;
+        height: 14px;
+        font-size: 14px;
+        line-height: 14px;
+        top: 15px;
+        padding-left: 5px;
+    }
+}
+
+/*-------------------*/
+/* ADMINISTRATE PAGE */
+
+#sortDirection {
+    button {
+        margin: 0;
+
+        &.active {
+            padding-right: 25px;
+
+            &.desc {
+                .arrow_down {
+                    display: inline-block;
+                }
+                .arrow_up {
+                    display: none;
+                }
+            }
+
+            .arrow_up {
+                display: inline-block;
+            }
+        }
+
+        i {
+            &.material-icons {
+                position: absolute;
+                display: none;
+                top: 9px;
+                right: 8px;
+            }
+        }
+    }
+}
+
+/*-----------------------------*/
+
+.sorting-pd {
+    position: relative;
+    display: inline-block;
+    text-align: left;
+}
+
+.sorting-pd > i {
+    display: inline;
+}
+
+/*-----------------------------*/

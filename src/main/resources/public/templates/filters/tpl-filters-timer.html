@@ -1,0 +1,17 @@
+<div class="form-group" data-id="<%= data.id %>">
+    <label for="filter-name" class="filter-name">
+        <%= data.text.filterNameById[data.id.escapeLessDirection()] %>
+    </label>
+    <% if(!data.required) { %>
+        <span class="remove-filter float-right">
+            <i class="material-icons">clear</i>
+        </span>
+    <% } %>
+    <div class="input-group input-group-sm dropdown-like">
+        <span class="input-group-btn rp-btn rp-btn-with-dropdown form-control input-sm timerange">
+            <%= data.value %>
+            <span class="caret"></span>
+        </span>
+        <span class="hidden val"></span>
+    </div>
+</div>

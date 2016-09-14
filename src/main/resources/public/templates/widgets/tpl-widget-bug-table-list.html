@@ -1,0 +1,30 @@
+<div class="row rp-table-row">
+    <div class="col-xs-11 col-sm-3">
+        <strong id="bugId-<%= data.item.bugId %>"><%= data.item.bugId %></strong>
+    </div>
+    <div class="col-xs-11 col-sm-4"></div>
+    <div class="col-xs-11 col-sm-2">
+        <% var date = data.item.time ? new Date(data.item.time) : null; %>
+        <% if(date) { %>
+            <div class="hoverFullTime">
+                <span class="timeMoment timeHover">
+                    <%= data.moment(data.dateFormat(date)).fromNow() %>
+                </span>
+                <div class="time-full timeHover hidden">
+                    <span><%= data.dateFormat(date) %></span>
+                </div>
+                <span class="time-ms hidden"><%= date %></span>
+            </div>
+        <% } %>
+    </div>
+    <div class="col-xs-11 col-sm-3">
+        <% if (data.item.name) { %>
+            <div class="bugs-avatar">
+                <img src="<%= data.methodUpdateImagePath(data.imageRoot() + data.item.name) %>"
+                    class="img-thumbnail avatar"
+                    alt="<%= data.item.name %>"/>
+            </div>
+            <strong><%- data.item.name.split('_').join(' ').capitalize() %></strong>
+        <% } %>
+    </div>
+</div>

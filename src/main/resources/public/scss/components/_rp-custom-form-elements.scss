@@ -1,0 +1,792 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+.form-group label,
+.rp-form-group label {
+    font-family: $OpenSansRegular;
+}
+
+// ADDITIONAL OF SETTINGS - FOR CUSTOM STYLES OF BUTTONS
+.rp-btn {
+    &.rp-btn-right {
+        float: right
+    }
+
+    &.rp-btn-indent-left {
+        margin-left: 10px;
+    }
+
+    &.m-right-5 {
+        margin-right: 5px;
+    }
+}
+
+/*------------------*/
+/* STYLE FOR INPUTS */
+
+/* input[type="text"].rp-input */
+/* input[type="text"].rp-input-default */
+input {
+    &.rp-input,
+    &.rp-input-default {
+        @include rpInputSetting(false, 30px, 100%, 13px, 13px, 6px 10px, 0, true);
+        @include rpInputStyle(#464547, #ffffff, #cccccc, false);
+        font-family: $OpenSansRegular;
+        outline: none;
+
+        &:hover {
+            @include rpInputStyle(inherit, inherit, #777777, false);
+        }
+
+        &:active {
+            @include rpInputStyle(inherit, inherit, #777777, 0 0 2px 0 rgba(119, 119, 119, 0.7));
+        }
+
+        &:focus {
+            @include rpInputStyle(inherit, inherit, #1a9cb0, 0 0 2px 0 rgba(25, 155, 176, 0.7));
+        }
+
+        &:invalid,
+        &:required {
+            @include rpInputStyle(#393939, inherit, #ff3222, 0 0 2px 0 rgba(255, 49, 33, 0.7));
+        }
+
+        &:disabled,
+        &[disabled="disabled"],
+        &[disabled],
+        &.disabled {
+            @include rpInputStyle(#464547, #e9e9e9, #cccccc, none);
+            cursor: no-drop;
+        }
+
+        /* TODO - no delete */
+        /*@extend %setParamPlaceholder;*/
+        &::-webkit-input-placeholder,
+        &::-moz-input-placeholder,
+        &::-ms-input-placeholder {
+            color: #999999;
+        }
+    }
+
+    /* input[type="text"] */
+    /* input[type="password"] */
+    &.rp-input-auth {
+        display: inline-block;
+        width: 100%;
+        font-size: 13px;
+        line-height: 13px;
+        height: 44px;
+        padding: 0 12px;
+        border: 1px solid;
+        border-radius: 0;
+        font-weight: normal;
+        outline: none;
+
+        @include rpInputStyle(#fff, rgba(62, 62, 62, 0.7), #4a7a48, false);
+        @include setTransition(border-color ease-in-out .15s, box-shadow ease-in-out .15s);
+
+        &:active,
+        &:focus,
+        &:hover {
+            @include rpInputStyle(#fff, rgba(62, 62, 62, 0.7), #5a5a5a, false);
+        }
+    }
+
+    /* input[type="button"] */
+    &.rp-input-auth-submit {
+        width: 100%;
+        border: none;
+        background-color: #cc4c12;
+        color: #fff;
+        text-align: center;
+        font-size: 18px;
+        line-height: 18px;
+        height: 45px;
+        text-transform: uppercase;
+        margin-top: 15px;
+        padding: 10px 0;
+        cursor: pointer;
+        outline: none;
+
+        &:active,
+        &:focus,
+        &:hover {
+            background-color: #8f3917;
+            color: #fff;
+        }
+        &:disabled {
+            background-color: #8f3917;
+            color: #fff;
+            cursor: not-allowed;
+        }
+    }
+
+    /* input[type="button"] */
+    &.rp-input-search {
+        @include rpInputSetting(false, 30px, 100%, 13px, 13px, 6px 25px 6px 10px, 0, true);
+        @include rpInputStyle(#464547, #ffffff, #cccccc, false);
+        display: inline-block;
+        width: 100%;
+        font-family: $OpenSansRegular;
+        font-weight: normal;
+        border-radius: 0;
+        box-shadow: none;
+        outline: none;
+
+        -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+        -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+        -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+
+        &:hover {
+            @include rpInputStyle(inherit, inherit, #777777, false);
+        }
+
+        &:active {
+            @include rpInputStyle(inherit, inherit, #777777, 0 0 2px 0 rgba(119, 119, 119, 0.7));
+        }
+
+        &:focus {
+            @include rpInputStyle(inherit, inherit, #1a9cb0, 0 0 2px 0 rgba(25, 155, 176, 0.7));
+        }
+
+        &:invalid,
+        &:required {
+            @include rpInputStyle(#393939, inherit, #ff3222, 0 0 2px 0 rgba(255, 49, 33, 0.7));
+        }
+
+        &:disabled,
+        &[disabled="disabled"],
+        &[disabled],
+        &.disabled {
+            @include rpInputStyle(#464547, #e9e9e9, #cccccc, none);
+            cursor: no-drop;
+        }
+
+        /* TODO - no delete */
+        /*@extend %setParamPlaceholder;*/
+        &::-webkit-input-placeholder,
+        &::-moz-input-placeholder,
+        &::-ms-input-placeholder {
+            color: #999999;
+        }
+
+        & + i.material-icons {
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: #999;
+            width: 25px;
+            text-align: center;
+            height: 30px;
+            font-size: 16px;
+            line-height: 30px;
+        }
+    }
+}
+
+/* input[type="checkbox"].rp-input-checkbox + label */
+input[type="checkbox"] {
+    &.rp-input-checkbox {
+        display: none;
+
+        &:not(:checked) + label,
+        &:checked + label {
+            position: relative;
+            padding-left: 23px;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        &:not(:checked) + label:before,
+        &:checked + label:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 13px;
+            height: 13px;
+            border-radius: 2px;
+            border: 1px solid;
+        }
+        &:not(:checked) + label:before {
+            @include rpInputStyleColor(#ffffff, #999999);
+        }
+        &:checked + label:before {
+            @include rpInputStyleColor(#1a9cb0, #1a9cb0);
+        }
+
+        /* TODO */
+        &:checked + label:hover {
+
+        }
+        &:not(:checked) + label:hover {
+
+        }
+        &:not(:checked) + label:hover:before {
+            border-color: #464547;
+        }
+
+        &:not(:checked) + label:after,
+        &:checked + label:after {
+            position: absolute;
+            content: '\2714';
+            top: 0;
+            left: 2px;
+            font-size: 10px;
+            color: #fff;
+            transition: all .2s;
+        }
+        &:not(:checked) + label:after {
+            opacity: 0;
+            transform: scale(0);
+        }
+        &:checked + label:after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* TODO */
+        &:disabled + label {
+            cursor: default;
+
+        }
+        &:disabled:not(:checked) + label:before,
+        &:disabled:checked + label:before {
+            /*box-shadow: none;*/
+            @include rpInputStyleColor(#f5f5f5, #e9e9e9);
+        }
+        &:disabled:checked + label:after {
+            color: #999999;
+        }
+
+        /* TODO */
+        &:checked:focus + label,
+        &:not(:checked):focus + label {
+
+        }
+        &:checked:focus + label:before,
+        &:not(:checked):focus + label:before {
+            @include rpInputStyleColor(#ffffff, #777777);
+            @include rpInputStyleShadow(0 0 2px 0 rgba(119, 119, 119, 0.7));
+        }
+    }
+}
+
+/* label > input[type="checkbox"].rp-input-checkbox + span */
+label.rp-checkbox-wrap input[type="checkbox"],
+input[type="checkbox"] {
+    &.rp-input-checkbox {
+        display: none;
+
+        &:not(:checked) + span,
+        &:checked + span {
+            position: relative;
+            display: inline-block;
+            max-width: 100%;
+            font-size: 13px;
+            line-height: 13px;
+            // white-space: nowrap;
+            font-weight: normal;
+            padding-left: 23px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        &:not(:checked) + span:before,
+        &:checked + span:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0px;
+            width: 13px;
+            height: 13px;
+            border-radius: 2px;
+            border: 1px solid;
+        }
+        &:not(:checked) + span:before {
+            @include rpInputStyleColor(#ffffff, #999999);
+        }
+        &:checked + span:before {
+            @include rpInputStyleColor(#1a9cb0, #1a9cb0);
+        }
+
+        /* TODO */
+        &:checked + span:hover {
+
+        }
+        &:not(:checked) + span:hover {
+
+        }
+        &:not(:checked) + span:hover:before {
+            border-color: #464547;
+        }
+
+        &:not(:checked) + span:after,
+        &:checked + span:after {
+            position: absolute;
+            font-family: $ReportPortal;
+            content: '\e91e';
+            top: 3px;
+            left: 2px;
+            font-size: 7px;
+            line-height: 7px;
+            color: #fff;
+            transition: all .2s;
+        }
+        &:not(:checked) + span:after {
+            opacity: 0;
+            transform: scale(0);
+        }
+        &:checked + span:after {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* TODO */
+        &:disabled + span {
+            cursor: default;
+        }
+        &:disabled:not(:checked) + span:before,
+        &:disabled:checked + span:before {
+            /*box-shadow: none;*/
+            @include rpInputStyleColor(#f5f5f5, #e9e9e9);
+        }
+        &:disabled:checked + span:after {
+            color: #999999;
+        }
+
+        /* TODO */
+        &:checked:focus + span,
+        &:not(:checked):focus + span {
+
+        }
+        &:checked:focus + span:before,
+        &:not(:checked):focus + span:before {
+            @include rpInputStyleColor(#ffffff, #777777);
+            @include rpInputStyleShadow(0 0 2px 0 rgba(119, 119, 119, 0.7));
+        }
+    }
+}
+
+// label.rp-radio-wrap {
+//     input[type="radio"] {
+//         &.rp-input-radio {
+
+//         }
+//     }
+// }
+
+/*-----------------*/
+/* STYLE FOR LINKS */
+
+.rp-link {
+    @include rpLinksSetting(13px, 16px, 0, 0);
+    @include rpLinksStyle(#428bca, none);
+    font-family: $OpenSansRegular;
+    cursor: pointer;
+
+    &:hover {
+        @include rpLinksStyle(#2a6496, underline);
+    }
+
+    &.disabled {
+        @include rpLinksStyle(#999999, underline);
+        cursor: not-allowed;
+
+        &:hover {
+            @include rpLinksStyle(#999999, underline);
+        }
+    }
+
+    &[type="button"] {
+        background-color: transparent;
+        border: none;
+
+        &:hover,
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.rp-link {
+    &.rp-link-with-icon {
+        padding-left: 25px;
+
+        i {
+            &.material-icons {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    font-size: 13px;
+                    line-height: 28px;
+                    width: 32px;
+                    padding: 0 6px;
+                    margin: 0;
+                    color: inherit;
+                    text-align: center;
+            }
+        }
+    }
+}
+
+/*------------------------------------------------*/
+/* STYLE FOR 'RP-BTN-GROUP' WITH 'DROPDDOWN-MENU' */
+
+.rp-btn-group {
+    position: relative;
+    display: inline-block;
+    vertical-align: middle;
+
+    &.rp-width-100 {
+        .rp-btn {
+            // text-align: left;
+        }
+    }
+
+    &.open {
+        button {
+            &.rp-btn-with-dropdown {
+                @include rpInputStyle(#464547, #ffffff, #777777, 0 0 2px 0 rgba(119, 119, 119, 0.7));
+                border-color: #1a9cb0;
+                box-shadow: 0 0 2px 0 rgba(25, 155, 176, 0.7);
+            }
+        }
+    }
+
+    ul {
+        &.dropdown-menu {
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+            border: solid 1px #cccccc;
+            margin: 5px 0 0 0;
+            padding: 10px 0;
+            width: 100%;
+
+            li {
+                height: 30px;
+
+                &:hover {
+                    // opacity: 0.2;
+                    // background-color: #39c2d7;
+                    background-color: rgba(57, 194, 215, 0.2);
+                }
+
+                a {
+                    display: block;
+                    background: transparent;
+                    padding: 8px 16px;
+                    clear: both;
+                    white-space: nowrap;
+
+                    font-family: $OpenSansRegular;
+                    @include setFontStyle(13px, 13px, #464547, false);
+                }
+            }
+        }
+    }
+}
+
+/*---------------------------*/
+/* STYLE FOR TAGS WITH POINT */
+
+$DT_TAG_DEFAULT_BG: #eee;
+
+.dt-tag-wrap {
+    position: relative;
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    font-weight: normal;
+
+    .dt-tag-point {
+        position: absolute;
+        top: 4px;
+        left: 7px;
+    }
+    .dt-tag-name {
+        padding: 4px 7px 4px 25px;
+    }
+}
+
+.dt-tag-point {
+    position: relative;
+    display: inline-block;
+    border-radius: 100%;
+    width: 12px;
+    height: 12px;
+
+    background-color: $DT_TAG_DEFAULT_BG;
+}
+
+.dt-tag-name {
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0px;
+        height: 20px;
+        left: 0;
+        right: 0;
+        border: solid 1px #cccccc;
+        border-radius: 100px;
+    }
+
+    position: relative;
+    display: inline-block;
+    padding: 4px 7px 4px 7px;
+    margin: 0;
+    white-space: nowrap;
+    line-height: 12px;
+    min-width: 54px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+label.obligatory-field {
+    &:after {
+        content: "*";
+        color: #ec3900;
+    }
+}
+
+/*----------------------------*/
+
+.rp-form-title {
+    width: 100%;
+    height: 30px;
+    background-color: #f9f9f9;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: #777777;
+    text-transform: uppercase;
+    font-family: $OpenSansSemibold;
+    padding-left: 11px;
+    line-height: 30px;
+}
+
+
+/* STYLES FOR - RP-FORM-GROUP */
+
+.rp-form-group {
+    position: relative;
+    display: table;
+    width: 100%;
+    margin-bottom: 20px;
+    @extend %CLEAR_FIX;
+
+    &:last-child {
+        margin-bottom: 15px;
+    }
+
+    &.rp-wrap-underline {
+        margin-bottom: 15px
+    }
+    .help-inline {
+        position: relative;
+        display: none;
+        margin-top: 7px;
+        color: $COLOR--orange-red;
+        font-size: 12px;
+        line-height: 12px;
+
+        label {
+            color: $COLOR--orange-red;
+        }
+    }
+    &.has-error {
+        .help-inline {
+            display: block;
+        }
+        .help-inline-pos-right {
+            display: none;
+            color: #ff3222;
+            font-size: 12px;
+            line-height: 12px;
+        }
+    }
+
+    .rp-custom-col {
+        position: relative;
+        display: table-cell;
+        float: none;
+        margin: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        vertical-align: middle;
+        max-width: 100%;
+    }
+
+    .rp-custom-col {
+        .rp-link {
+            line-height: 30px;
+        }
+    }
+
+    label {
+        &.rp-control-label {
+            @include setFontStyle(13px, 13px, #464547, false);
+            vertical-align: top;
+            padding-top: 8px;
+        }
+    }
+
+    .rp-underline {
+        width: 100%;
+        margin: 10px auto 0 auto;
+        border-bottom: 1px solid #bdc7cc;
+    }
+
+    .rp-help-block {
+        display: inline-block;
+        font-size: 12px;
+        line-height: 14px;
+        color: #999999;
+        margin: 0;
+    }
+}
+
+/*-----------------*/
+/* STYLE FOR ERROR */
+
+.err-hint {
+    color: $COLOR--orange-red;
+}
+.help-inline label {
+    font-weight: normal;
+    // padding-top: 8px;
+    margin: 0 4px 0 0;
+}
+
+/*-----------------------*/
+/* STYLE FOR CUSTOM GRID */
+
+/* xs - 767px */
+@media (max-width: $SCREEN_XS_MAX) {
+    .rp-form-group {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 20px;
+
+        .rp-control-label {
+            text-align: left;
+        }
+
+        .rp-custom-col {
+            display: inline-block;
+            margin-bottom: 8px;
+            float: left;
+        }
+    }
+}
+
+/* sm - 768px - 991px */
+@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+    .rp-form-group {
+        position: relative;
+        margin-bottom: 20px;
+
+        &:last-child {
+            margin-bottom: 15px;
+        }
+
+        .rp-control-label {
+            text-align: right;
+        }
+
+        .rp-custom-col {
+            &.rp-comment-block {
+                position: absolute;
+                display: inline-block;
+                top: 100%;
+                height: 100%;
+                right: 0;
+                padding-top: 6px;
+            }
+        }
+    }
+}
+
+/* md - 992px - 1199px */
+@media (min-width: $SCREEN_MD_MIN) and (max-width: $SCREEN_MD_MAX) {
+    .rp-form-group {
+        display: table;
+
+        .rp-control-label {
+            text-align: right;
+        }
+
+        .rp-custom-col {
+            display: table-cell;
+            float: none;
+        }
+    }
+}
+
+/* lg - 1200px */
+@media (min-width: $SCREEN_LG_MIN) {
+    .rp-form-group {
+        display: table;
+
+        .rp-control-label {
+            text-align: right;
+        }
+
+        .rp-custom-col {
+            display: table-cell;
+            float: none;
+        }
+    }
+}
+
+/*--------------*/
+
+/* STYLE FOR SELECT BOX*/
+
+.rp-select {
+    position: relative;
+    select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        &::-ms-expand {
+            display: none;
+        }
+        line-height: 24px;
+        text-indent: 5px;
+        height: 25px;
+        border: 1px solid #ccc;
+        width: 100%;
+        height: 100%;
+    }
+    .icon {
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        bottom: 1px;
+        width: 20px;
+        font-size: 18px;
+        line-height: 30px;
+        color: #9e9e9e;
+        pointer-events: none;
+    }
+}

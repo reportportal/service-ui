@@ -1,0 +1,138 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+/*----------------------------*/
+/* COMMON VARIABLES OF COLORS */
+
+/*--------------------*/
+/* GROUP WHITE COLORS */
+
+    $COLOR--white-default: #ffffff;
+
+
+/*--------------------*/
+/* GROUP GRAY COLORS */
+
+    $COLOR--gray-47: #777777;
+    $COLOR--gray-60: #999999;
+    $COLOR--gray-80: #cccccc;
+    $COLOR--gray-91: #e9e9e9;
+
+
+/*---------------------------------------------*/
+/* COLOR USE WITH THE 'ZEPLIN' OF STYLE GUIDE: */
+
+    // var(--system-issue);
+    $COLOR--system-issue: #0274d1;
+    //$COLOR_RGBA--system-issue: rgba(2, 116, 209, 1);
+
+    // var(--to-investigate);
+    $COLOR--to-investigate: #ffb743;
+    //$COLOR_RGBA--to-investigate: rgba(255, 183, 67, 1);
+
+    // var(--atomation-bug);
+    $COLOR--atomation-bug: #f7d63e;
+    //$COLOR_RGBA--atomation-bug: rgba(247, 214, 62, 1);
+
+    // var(--passed);
+    $COLOR--passed: #87b77b;
+    //$COLOR_RGBA--passed: rgba(135, 183, 123, 1);
+
+    // var(--failed);
+    $COLOR--failed: #f36c4a;
+    //$COLOR_RGBA--failed: rgba(243, 108, 74, 1);
+
+    // var(--skipped);
+    $COLOR--skipped: #bdc7cc;
+    //$COLOR_RGBA--skipped: rgba(189, 199, 204, 1);
+
+    // var(--charcoal-grey);
+    $COLOR--charcoal-grey: #464547;
+    //$COLOR_RGBA--charcoal-grey: rgba(70, 69, 71, 1);
+
+    // var(--tealish);
+    $COLOR--tealish: #39c2d7;
+
+    // var(--topaz);
+    $COLOR--topaz: #1a9cb0;
+
+    // var(--booger);
+    $COLOR--booger: #a3c644;
+
+    // var(--windows-blue);
+    $COLOR--windows-blue: #428bca;
+
+    // var(--dark-pastel-green);
+    $COLOR--dark-pastel-green: #5cb755;
+
+    // var(--pale-red);
+    $COLOR--pale-red: #d9534f;
+
+    // var(--orange-red);
+    $COLOR--orange-red: #ff3222;
+
+    // var(--gunmetal);
+    $COLOR--gunmetal: #535455;
+
+    // var(--greyish-brown);
+    $COLOR--greyish-brown: #4c4c4c;
+
+    // var(--black);
+    $COLOR--black: #333333;
+
+    // var(--black-two);
+    $COLOR--black-two: #393939;
+
+    // var(--black-three);
+    $COLOR--black-three: #313131;
+
+    // var(--black-four);
+    $COLOR--black-four: #000000;
+
+    // var(--black-five);
+    $COLOR--black-five: #2b2b2b;
+
+    $COLOR--white: #f5f5f5;
+    //$COLOR_RGBA--white: rgba(245, 245, 245, 1);
+
+    // var(--white-four);
+    $COLOR--white-four: #f9f9f9;
+
+/*------------------------------------------------------------------*/
+/* COMMON CONSTANTS OF WIDTH FOR DYNAMIC GRID (FOR SCREEN CHANGING) */
+
+    $SCREEN_XS_MAX: 767px;
+
+    $SCREEN_SM_MIN: 768px;
+    $SCREEN_SM_MAX: 991px;
+
+    $SCREEN_MD_MIN: 992px;
+    $SCREEN_MD_MAX: 1199px;
+
+    $SCREEN_LG_MIN: 1200px;
+
+/*-----------------------------------------------------------*/
+/* COMMON VARIABLES OF WIDTH FOR LAYOUT (FOR WRAPPER LAYOUT) */
+
+    $WIDTH_LAYOUT_PAGE_SETTINGS: 90%;
+    $MAX_WIDTH_LAYOUT_PAGE_SETTINGS: 1000px;
+
+/*-----------------------------*/

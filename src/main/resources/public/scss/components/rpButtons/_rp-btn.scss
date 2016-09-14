@@ -1,0 +1,45 @@
+/*-------------------------*/
+/* REMINDER FOR USE MIXINS */
+
+// @mixin rpBtnSetting($width, $height, $fonts, $lineh, $paddins, $margins, $border);
+
+/*-------------------------*/
+/* COMMAN STYLE FOR BUTTON */
+
+a,
+div,
+button {
+    &.rp-btn {
+        position: relative;
+        display: inline-block;
+        font-family: $OpenSansRegular;
+        @include rpBtnSetting(false, 30px, 13px, 13px, 8px 10px, 0px, true);
+        min-width: 38px;
+        min-height: 30px;
+        cursor: pointer;
+        outline: none;
+        text-shadow: none;
+        text-decoration: none;
+        border-radius: 0;
+
+        &:hover {
+            text-decoration: none;
+        }
+
+        &:active {
+            text-decoration: none;
+        }
+
+        &:disabled,
+        &[disabled="disabled"],
+        &[disabled],
+        &.disabled {
+            box-shadow: none;
+            cursor: no-drop;
+
+            &:hover {
+                box-shadow: none;
+            }
+        }
+    }
+}

@@ -1,0 +1,57 @@
+/*-------------------------*/
+/* REMINDER FOR USE MIXINS */
+
+// @mixin rpBtnStyle($txtColor, $bgColor, $brColor, $boxShadow);
+
+/*-------------------*/
+/* CONSTANTS FOR USE */
+
+// $COLOR--white-default: #ffffff;
+//       $COLOR--gray-60: #999999;
+//       $COLOR--gray-80: #cccccc;
+//             $COLOR---: #464547;
+//             $COLOR---: #393939;
+
+/*--------*/
+/* CANCEL */
+
+.rp-btn {
+    &.rp-btn-cancel {
+        @include rpBtnStyle(
+            $COLOR--white-default,
+            $COLOR--gray-60,
+            $COLOR--gray-60,
+            false
+        );
+
+        &:hover {
+            @include rpBtnStyle(
+                $COLOR--white-default,
+                #464547,
+                #464547,
+                false
+            );
+        }
+
+        &:active {
+            @include rpBtnStyle(
+                $COLOR--white-default,
+                #393939,
+                #393939,
+                false
+            );
+        }
+
+        &:disabled,
+        &[disabled="disabled"],
+        &[disabled],
+        &.disabled {
+            @include rpBtnStyle(
+                $COLOR--white-default,
+                $COLOR--gray-80,
+                $COLOR--gray-80,
+                false
+            );
+        }
+    }
+}

@@ -1,0 +1,42 @@
+<div class="all-users">
+    <div class="container-fluid rp-margin-reset rp-odd-even rp-members-list rp-table-hover">
+        <div class="row">
+            <div class="rp-table-thead-search clearfix">
+                <div class="col-md-12 col-sm-12 col-xs-12 rp-form-group clearfix">
+                    <label class="rp-control-label rp-table-th-title">
+                        <span><%= data.text.members.titleAllMembers %></span>
+                        (<span class="rp-members-qty">0</span>)
+                    </label>
+                    <div class="rp-input-search-wrap">
+                        <div class="input-filter form-group">
+                            <input type="text"
+                                class="rp-input-search favorites-name-filter form-control"
+                                id="userFilter"
+                                name="userFilter"
+                                placeholder="<%= data.grandAdmin ? data.text.members.searchNameLoginEmail : data.text.members.searchName %>"
+                                value="<%- data.nameFilterValue || '' %>" />
+                            <i class="material-icons">search</i>
+                            <div class="error-bottom">
+                                <div class="help-inline"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        <div class="row">
+            <div class="rp-table-thead rp-form-group clearfix">
+                <div class="col-md-4 col-sm-4 col-xs-4 rp-custom-col">
+                    <div class="rp-table-th"><%= data.text.members.titleNameLoginEmail %></div>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-2 rp-custom-col">
+                    <div class="rp-table-th"><%= data.text.admin.lastLogin %></div>
+                </div>
+                <%= data.util.templates(data.actionTpl) %>
+            </div>
+        </div>        <div id="membersList" class="clearfix">
+            <div id="popupLoader" class="admin-section">
+                <i class="material-icons loader-animation">refresh</i>
+            </div>
+        </div>    </div>
+    <div class="col-sm-12 project_list_paginate"></div>
+</div>

@@ -1,0 +1,60 @@
+<%
+    var member;
+    var isAdmin;
+    var canEdit;    member = data.member,
+    isAdmin = data.isAdmin;
+    canEdit = data.canEdit(member);
+%><div class="col-md-4 rp-custom-col clearfix">
+    <% if(isAdmin){ %>
+        <div class="col-sm-12 rp-info rp-info-padding admin-role">
+            <%= data.text.admin.privileges %>
+        </div>
+    <% } else { %>
+    <div class="rp-btn-group rp-width-100 rp-info rp-info-padding select-role">
+        <button type="button"
+            data-value="<%= data.defaultRole %>" 
+            class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle <%= data.getColorClass && data.getColorClass(member) %>"
+            data-toggle="dropdown">
+            <span class="select-value" data-id="<%= member.userId %>"><%= data.defaultRole %></span>
+            <span class="rp-caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <% var index = 0; %>
+            <% _.forEach(data.roles, function(val, key){ %>
+                <% var isDisabled = index > data.projectRoleIndex ? 'disabled' : ''  %>
+                    <li class="<%= isDisabled %>">
+                        <a href="#"
+                            class="project-roles <%= data.defaultRole === key ? 'active' : '' %> <%= isDisabled %>"
+                            data-value="<%= key %>">
+                            <%= val %>
+                        </a>
+                    </li>
+                <% index +=1; %>
+            <% }); %>
+        </ul>
+    </div>
+    <div class="rp-btn-group col-sm-2 rp-info-padding action-info">
+        <% if(isAdmin) { %>
+            <i class="material-icons" title="<%= data.text.ui.lockedTitle %>">lock</i>
+        <% } %>
+    </div>
+    <% } %>
+</div>
+<div class="col-md-2 rp-custom-col clearfix">
+    <div class="rp-info rp-info-padding">
+        <% if(!data.unassignedLock(member)){ %>
+            <% if(canEdit) { %> 
+                <button data-id="<%= member.userId %>"
+                    class="rp-btn rp-btn-default rp-button-with-icon member-action"
+                    data-value="<%= data.defaultRole %>"
+                    title="<%= data.text.members.assignTitle %>">
+                    <i class="rp-icons rp-icons-assign"></i>
+                    <span class="hidden-sm hidden-xs rp-btn-val"><%= data.text.members.assign %></span>
+                </button>
+            <% } %>
+        <% } %>
+    </div>
+</div><%
+    delete data.member;
+    delete data.isAdmin;
+%>

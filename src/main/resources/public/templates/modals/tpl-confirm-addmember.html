@@ -1,0 +1,25 @@
+<div class="modal fade dialog-shell rp-modal-dialog" id="ConfirmModal" tabindex="-1" role="dialog" aria-labelledby="ConfirmModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="col-lg-10 col-md-10 col-sm-10 col-xs-10 break-link">
+                    <%= data.text.members.viewEmail %>
+                </h2>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 panel-action">
+                    <sapn class="close-pop-up" data-dismiss="modal" data-js-close>
+                        <i class="material-icons">clear</i>
+                    </span>
+                </div>
+            </div>
+            <div class="modal-body" id="confirmContent">
+                
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right">
+                    <button type="button" class="btn cancel" data-dismiss="modal"><%= data.text.ui.ok %></button>
+                    <a href="#" class="btn ok btn-success" id="btn-send-email"><%= data.text.ui.sendEmail %></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,95 @@
+<% _.forEach(data.members, function(member) { %>
+    <% var isAdmin = data.util.isAdmin(member); %>
+    <div class="row rp-table-row" data-user="<%= member.userId %>">
+        <div class="col-md-4 clearfix">
+            <div class="rp-member-wrap">
+                <div class="rp-member-img float-left">
+                    <img class="rp-member-avatar" src="<%= data.util.updateImagePath(data.imageRoot + member.userId) %>" />
+                </div>
+                <div class="rp-member-body clearfix">
+                    <div class="user-name text-wrapper ">
+                        <p class="member-name">
+                            <%
+                                var memberName = data.searchString
+                                ? data.textWrapper(member.full_name, data.searchString)
+                                : member.full_name
+                            %>
+                            <span><%= memberName %></span>
+                            <% if(data.isGrandAdmin) { %>
+                                <% if(isAdmin) { %>
+                                    <% if(data.util.isYou(member)) { %>
+                                        <span class="label-ellipse label-danger label-size-md">
+                                            <%= data.text.ui.admin %>
+                                        </span>
+                                    <% } else { %>
+                                        <a href="#"
+                                            class="label-ellipse label-danger label-size-md change-role"
+                                            data-id="<%= member.userId %>">
+                                                <%= data.text.ui.admin %>
+                                        </a>
+                                    <% } %>
+                                <% } else { %>
+                                    <a href="#"
+                                        class="label-ellipse label-grey label-hover label-size-md change-role"
+                                        data-id="<%= member.userId %>">
+                                            <%= data.text.ui.makeAdmin %>
+                                    </a>
+                                <% } %>
+                            <% } else { %>
+                                <% if(isAdmin) { %>
+                                    <span class="label-ellipse label-danger label-size-md">
+                                        <%= data.text.ui.admin %>
+                                    </span>
+                                <% } %>
+                            <% } %>
+                            <% if(data.util.isYou(member)) { %>
+                                <span class="label-ellipse label-green label-success label-size-md">
+                                    <%= data.text.ui.you %>
+                                </span>
+                            <% } %>
+                        </p>
+                        <p class="member-id">
+                            <%
+                                var memberId = data.searchString
+                                    ? data.textWrapper(member.userId, data.searchString)
+                                    : member.userId
+                            %>
+                            <span><%= memberId %></span>
+                            <% if (data.isAdmin) { %>
+                                <span class="label-ellipse label-danger label-size-md">
+                                    <%= data.text.ui.admin %>
+                                </span>
+                            <% } %>
+                        </p>
+                        <p class="member-email">
+                            <a href="mailto:<%= member.email %>" class="rp-link">
+                                <%
+                                    var memberEmail = data.searchString
+                                        ? data.textWrapper(member.email, data.searchString)
+                                        : member.email
+                                %>
+                                <span class="email-link"><%= memberEmail %></span>
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 clearfix">
+            <div class="rp-info rp-info-padding show-time">
+                <% var date_format = data.util.dateFormat(member.last_login); %>
+                <span class="from-now"><%= data.util.fromNowFormat(date_format) %></span>
+                <span class="exact-time"><%= date_format %></span>
+            </div>
+        </div>
+        <% data['isAdmin'] = isAdmin; data['member'] = member; %>
+        <%= data.util.templates(data.actionTpl, data) %>    </div>
+<% }); %>
+<% if(!data.members.length){ %>
+    <div class="col-sm-12">
+        <h3 class="title-no-data text-center">
+            <i class="rp-icons rp-icons-warning"></i>
+            <span class="warning"><%= data.text.infoMessages.noResults %></span>
+        </h3>
+    </div>
+<% } %>

@@ -1,0 +1,8 @@
+<div class="widget-invalid-data">
+    <div class="widget-invalid-text">
+        <%= data.text.widgets.haveInvalidCriteria.replace('%%%',  data.qty ? data.qty : '').replace('$$$', data.text.widgets[data.qty > 1 ? 'criteria' : 'criterion']) %>
+    </div>
+    <% if(data.canEdit){%>
+    <div><%= data.text.widgets.pleaseUpdateWidget %></div>
+    <% } %>
+</div>

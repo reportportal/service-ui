@@ -1,0 +1,30 @@
+<div class="">
+    <div id="gallery" class="container collapse">
+        <div id="myCarousel" class="carousel slide" data-interval="0">
+            <ol class="carousel-indicators">
+                <% _.each(data.content, function(item, index, all){ %>
+                <li class="<%- item.cls %>" data-slide-to="<%- index %>" data-target="#myCarousel"></li>
+                <% }); %>
+            </ol>
+            <div class="carousel-inner">
+                <% _.each(data.content, function(item){ %>
+                <%= item.elContent %>
+                <% }); %>
+            </div>
+            <a data-slide="prev" href="#myCarousel" class="left carousel-control">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+            <a data-slide="next" href="#myCarousel" class="right carousel-control">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+        </div>
+    </div>
+    <ul id="gallery-breadcrumb" class="breadcrumb" title="<%= data.text.ui.clickToggleGallery %>">
+        <li>
+            <a class="gallery-collapser collapsed" data-toggle="collapse" data-target="#gallery">
+                <i class="material-icons">image</i>
+                <%= data.text.ui.gallery %>
+            </a>
+        </li>
+    </ul>
+</div>

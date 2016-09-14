@@ -1,0 +1,205 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+/*-------------------------------------*/
+/* COMMON STYLES FOR - 'rp-form-group' */
+
+.form-group {
+    .help-inline {
+        display: none;
+        color: $COLOR--orange-red;
+        font-size: 12px;
+        line-height: 12px;
+    }
+
+    &.has-error {
+        .help-inline {
+            display: inline-block;
+        }
+    }
+}
+.error-bottom {
+    display: none;
+}
+.has-error {
+    .error-bottom {
+        display: block;
+    }
+}
+
+/* validator */
+.error-hint {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    font-size: 12px;
+    padding: 10px 11px;
+    background-clip: padding-box;
+    background-color: $COLOR--white-default;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 2px;
+    min-width: 190px;
+    z-index: 1100;
+}
+
+// .has-error .help-inline {
+//     color: #B94A48;
+// }
+
+.form-group.has-error .help-inline {
+    display: inline-block;
+}
+
+.form-group .custom-padding,
+.control-label.custom-padding {
+    padding: 7px 0 0;
+    text-align: right;
+}
+
+.form-group .wizard-name-label {
+    padding: 7px 0 0 15px;
+}
+
+.form-group .wizard-shared-label {
+    padding: 7px 0 0;
+}
+
+.shared-switcher {
+    padding-right: 15px;
+    max-width: 120px;
+}
+
+.has-error .help-inline.error-hint {
+    color: $COLOR--black;
+    font-weight: normal;
+}
+
+.duplicate-error {
+    display: none;
+    font-size: 12px;
+    line-height: 12px;
+    font-family: $OpenSansRegular;
+    color: $COLOR--orange-red;
+    text-align: left;
+    padding: 0;
+}
+
+.duplicate .control-label {
+    color: #a94442;
+}
+
+.duplicate .select2-container-multi .select2-choices,
+.duplicate .btn.dropdown-toggle,
+.duplicate .rp-btn.rp-btn-with-dropdown {
+    border-color: #a94442;
+    color: #a94442;
+}
+
+.duplicate .duplicate-error {
+    display: block;
+}
+
+/* validator end */
+
+.separator-small {
+    padding: 10px 0;
+    border-top: 1px dashed #ccc;
+    width: 36%;
+    margin-left: 13%;
+    margin-bottom: 35px;
+}
+
+.remove-email-item {
+    cursor: pointer;
+    position: absolute;
+    left: 0;
+    top: -1px;
+}
+
+.remove-email-item-label {
+    padding-left: 20px;
+    position: relative;
+}
+
+.remove-email-item.checkbox {
+    cursor: pointer;
+}
+
+#tbsChangeWarning {
+    &.rp-text-danger {
+        color: $COLOR--orange-red;
+    }
+}
+
+/*-----------------*/
+/* FOR USUAL USERS */
+
+#dynamic-content {
+    .form-group {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+/*-----------------------------------*/
+/* STYLES OF DYNAMIC WIDTH OF SCREEN */
+
+/* xs - 767px */
+@media (max-width: $SCREEN_XS_MAX) {
+
+}
+
+/* sm - 768px - 991px */
+@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+
+}
+
+/* md - 992px - 1199px */
+@media (min-width: $SCREEN_MD_MIN) and (max-width: $SCREEN_MD_MAX) {
+
+}
+
+/* lg - 1200px */
+@media (min-width: $SCREEN_LG_MIN) {
+
+}
+
+/*-----------------------------------*/
+
+
+/*--- PROJECT SETTINGS START ---*/
+/*--- BUG TRACKING SYSTEM START ---*/
+
+#jiraBlock #resetFieldsWarning {
+    margin-top: -15px;
+    margin-bottom: 15px;
+}
+
+/*--- BUG TRACKING SYSTEM END ---*/
+/*--- PROJECT SETTINGS END ---*/
+
+
+
+#projectSettings .nav-tabs {
+    margin: 0 -10px 25px -10px;
+}

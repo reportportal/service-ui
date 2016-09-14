@@ -1,0 +1,14 @@
+<div class="no-dashboards no-launches">
+    <div class="well">
+        <h3 class="title-no-data text-center">
+            <i class="rp-icons rp-icons-warning"></i>
+            <span class="warning">
+                <% if(data.isLaunch) { %>
+                    <%= data.text.launches.noLaunchFound %>.
+                <% } else { %>
+                    <%= data.text.launches.noItemFound %>.
+                <% } %>
+            <span>
+        </h3>
+    </div>
+</div>

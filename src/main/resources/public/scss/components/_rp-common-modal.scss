@@ -1,0 +1,688 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+/* modal */
+
+.modal-footer {
+    background-color: #eeeeee;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-top: medium none;
+}
+
+.modal-header, .modal-body, .modal-footer {
+    padding: 15px 20px;
+}
+
+.modal-body.filter-name .form-group {
+    overflow: visible;
+    position: relative;
+}
+
+.modal-header {
+    border-bottom: medium none;
+}
+
+.modal-header h4,
+.modal-body h4 {
+    font-weight: bold;
+}
+
+.has-error.error-holder {
+    color: #a94442;
+}
+
+.modal-title.title-inline {
+    display: inline-block;
+}
+
+#widgetEditor .btn-primary {
+    margin-left: 5px;
+}
+
+#widgetEditor .modal-body {
+    padding: 0 10px;
+}
+
+#widgetEditor .row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#widgetEditor .container-fluid {
+    padding: 0px;
+}
+
+#widgetEditor .rp-margin-reset {
+    margin: 0;
+    border-top: 0;
+}
+
+.unshared-dashboard,
+#widgetEditor .rp-table-row:not(.active) {
+    cursor: pointer;
+}
+
+.unshared-dashboard i {
+    float: right;
+}
+
+#modal-content-text {
+    word-break: normal;
+}
+
+.borderWidget.smallOverflow {
+    padding: 15px 0 0;
+    border: 0;
+}
+
+.top-level li {
+    text-align: center;
+}
+
+.nav-tabs.top-level {
+    border-top: 1px solid #959595;
+    border-bottom: 1px solid #959595;
+}
+
+.nav-tabs.top-level > li {
+    margin: 0;
+}
+
+.nav-tabs > li.right-side {
+    float: right;
+}
+
+.nav-tabs.top-level > li > a {
+    border: none;
+    border-radius: 0;
+    margin: 0;
+}
+
+.nav-tabs.top-level > li.active > a {
+    background-color: transparent;
+}
+
+.nav-tabs.top-level > li.active > a,
+.nav-tabs.top-level > li.active > a:hover,
+.nav-tabs.top-level > li.active > a:focus {
+    border: none;
+}
+
+.nav-tabs.top-level > li.active {
+    background-color: #d1f6d9;
+}
+
+#createDashboard .btn-primary {
+    margin-bottom: 15px;
+}
+
+#widgetType {
+    margin-top: 1px;
+}
+
+#widgetType .nav-tabs > li > a {
+    margin: 0;
+}
+
+#widgetData h4 {
+    font-size: 15px;
+}
+
+#widgetType h5 {
+    font-weight: bold;
+    margin-right: 12px;
+}
+
+#widgetTemplates {
+    height: 300px;
+    overflow-y: auto;
+    margin: 0 0 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+#widgetData,
+#createDashboard {
+    padding: 8px 0;
+}
+
+#widgetPreview {
+    padding: 8px 0;
+}
+
+#previewContent {
+    position: relative;
+    height: 300px;
+    border-top: 1px solid #ddd;
+}
+
+#previewContent .panel-body {
+    border-top: 10px solid transparent;
+}
+
+#previewContent div[class*="col-"] {
+    padding-left: 15px;
+    padding-right: 0;
+
+}
+
+#widgetEditor .pull-right .btn {
+    float: left;
+}
+
+.wizard-loader {
+    text-align: center;
+    padding: 15px 0;
+}
+
+.wizard-loader i,
+#popupLoader i,
+#coverLoader i {
+    color: #29d;
+    display: inline-block;
+    font-size: 40px;
+}
+
+.modal-content > #popupLoader {
+    height: 100%;
+}
+
+.widget_type {
+    cursor: pointer;
+}
+
+.widget_type.active,
+.filter-row.active,
+.rp-margin-reset > .row.active:nth-child(2n),
+.rp-table-row.active:hover {
+    background-color: lightblue;
+}
+
+.widget_type.disabled {
+    cursor: default;
+}
+.widget_type.disabled .widget_type_wrapper {
+    opacity: 0.6;
+    background: #dcdcdc;
+}
+
+.widget_type.active span {
+
+}
+
+#SharedWidgets, #SharedFilters, #OwnFilters {
+    height: 300px;
+    overflow-y: auto;
+    position: relative;
+    margin: 0 0 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+#SharedWidgets .shared_widget_owner {
+    text-transform: capitalize;
+}
+
+#SharedWidgets .shared_widget_block {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    cursor: pointer;
+}
+
+#SharedWidgets .widget_name {
+    font-weight: bold;
+    word-break: break-all;
+}
+
+#SharedWidgets .shared_widget_block.active {
+    background-color: lightblue;
+}
+
+#SharedWidgets .shared_widget_block.disabled {
+    cursor: default;
+}
+
+#SharedWidgets .shared_widget_block.disabled .widget_shared_wrapper {
+    opacity: 0.6;
+    background: #dcdcdc;
+    cursor: default;
+}
+
+.graphBlock {
+    min-height: 120px;
+}
+
+#criteriaOptions {
+    width: 180px;
+}
+
+#criteriaOptions label,
+#actionOptions label {
+    padding: 5px 20px 5px 20px;
+    cursor: pointer;
+    font-weight: normal;
+    text-align: left;
+}
+
+#criteriaOptions label.rp-radio-wrap {
+    padding: 5px 20px 5px 40px;
+}
+
+.check-all {
+    text-align: left;
+}
+
+#actionOptions {
+    width: 230px;
+}
+
+#templateConfig {
+    padding: 8px 0;
+}
+
+#templateConfig .name-label {
+    margin-top: 8px;
+    padding: 0 8px 0 0;
+}
+
+#templateConfig .min-max-holder {
+    position: relative;
+    display: block;
+    width: 86px;
+}
+
+#templateConfig .criteria-holder-dropdown {
+    display: inline-block;
+    width: 86px;
+    position: relative;
+}
+
+#templateOptions .min-max-wrapper > .min-max-holder {
+    // width: auto;
+}
+#templateOptions .input-group-addon {
+    border-radius: 0;
+}
+#templateConfig .min-max-holder .input-sm {
+    padding: 5px 8px;
+}
+#templateConfig .min-max-holder .input-group-addon {
+    padding: 6px 10px;
+}
+
+#templateConfig .criteria-holder-dropdown {
+    width: 130px;
+}
+
+#previewValidationHolder {
+    padding: 5px;
+    text-align: center;
+    font-size: 24px;
+}
+
+// #previewValidationHolder i {
+//     margin-right: 5px;
+// }
+
+#previewValidationMessage {
+}
+
+.pre-view {
+    white-space: pre-line;
+}
+#widgetFilters .filter-name,
+.filter-link-to-launches.rp-table-title {
+    white-space:pre-wrap;
+}
+
+#OwnDashboards a, #SharedDashboards a {
+    padding: 5px;
+    display: block;
+}
+
+#OwnDashboards a:hover, #SharedDashboards a:hover {
+    background-color: #c2daf2;
+}
+
+#OwnDashboards a.active, #SharedDashboards a.active {
+    background-color: #add8e6;
+}
+
+.shared-dashboard-owner {
+    text-transform: capitalize;
+}
+
+#OwnDashboards .content-holder, #SharedDashboards .content-holder {
+    padding: 15px 0;
+}
+
+#OwnDashboards a.dashboard-selector.disabled, #OwnDashboards a.dashboard-selector.disabled:hover {
+    opacity: 0.6;
+    background: #ECECEC;
+    border: none;
+    cursor: default;
+}
+
+#popupLoader {
+    display: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+#popupLoader i {
+    position: relative;
+    left: 48%;
+    top: 48%;
+}
+
+.top-level .label {
+    font-size: 65%;
+    position: relative;
+    top: -5px;
+}
+
+.top-level .validated .label-warning,
+.top-level .disabled .label-warning,
+.top-level .disabled.validated .label-warning {
+    display: none;
+}
+.label-above {
+    position: relative;
+    top: -13px;
+    text-transform: lowercase;
+    font-family: "OpenSansRegular", sans-serif;
+    font-weight: normal;
+    font-size: 10px;
+}
+#widgetFilters .filter-name {
+    word-break: break-all;
+    display: block;
+}
+.landing-active .nicescroll-rails-vr {
+    z-index: 1500 !important;
+}
+
+.filter-adv  {
+    word-break: break-all;
+}
+
+#widgetFilters .form-group {
+    margin-bottom: 0;
+}
+
+#widgetFilters #nameFilter, #widgetFilters #nameFilterShared {
+    padding-right: 27px;
+}
+
+#widgetFilters .filter-row .rp-info.info-break {
+    font-size: 13px;
+    word-break: break-all;
+}
+
+#globalValidation {
+    display: none;
+    margin: 0 20px 20px;
+}
+
+#editLaunchModal {
+    label {
+        font-weight: normal;
+    }
+
+    input {
+        float: left;
+        margin-right: 5px;
+    }
+}
+
+#myLargeModalLabel {
+    text-align: left;
+}
+
+.modal-message {
+    padding: 15px 20px;
+    font-size: 14px;
+}
+
+/* modal end */
+
+
+/*--- MODALS ---*/
+.modal-header {
+    position: relative;
+}
+
+.modal-header .close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    color: #fff;
+    opacity: 1;
+}
+
+.modal-header .close:hover {
+    opacity: 0.7;
+}
+
+.modal-body:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.control-label,
+.rp-popup-settings .form-horizontal .control-label {
+    color: #666;
+}
+
+#filterEditor .control-label {
+    text-align: left;
+}
+
+#filterEditor.modal-body .form-group > *:not(button) {
+    padding-left: 0;
+}
+
+output {
+    color: #666;
+}
+
+.well {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.warning_modal,
+.modal-content .modal-body > p {
+    padding: 10px 18px 0;
+}
+
+/*--- END MODALS ---*/
+
+
+/*--- MODALS ---*/
+.modal-content,
+.modal-header.panel-heading {
+    border-radius: 0;
+}
+
+.modal-header,
+.modal-header.panel-heading {
+    background-color: #999;
+}
+
+.modal-header .modal-title,
+.modal-header h4 {
+    font-family: "OswaldRegular", sans-serif;
+    font-size: 17px;
+    font-weight: normal;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.modal-header h4 {
+    margin: 0;
+}
+
+.modal-content .btn {
+    border: none;
+    font-family: "OpenSansRegular", sans-serif;
+}
+
+.modal-content .btn.btn-primary {
+    background-color: #a3c644;
+}
+
+.modal-content .modal-footer {
+    border-top: 1px solid #ddd;
+    background-color: #efefef;
+}
+
+/*--- END MODALS ---*/
+
+/*--------*/
+/* MIXINS */
+
+%textRight {
+    text-align: right;
+}
+
+%modalHeader {
+    border-bottom: 1px solid #e9e9e9;
+    background-color: #fff;
+    margin: -10px 0 0 0;
+    padding: 10px 0 18px 0;
+    overflow: hidden;
+    text-transform: uppercase;
+
+    h2 {
+        font-family: $OswaldRegular;
+        font-size: 16px;
+        line-height: 30px;
+        color: #1a9cb0;
+        margin: 0;
+        padding: 0;
+        padding-left: 10px;
+    }
+
+    .panel-action {
+        padding-right: 0;
+
+        .close-pop-up {
+            float: right;
+            cursor: pointer;
+            margin-right: 10px;
+            color: #999999;
+        }
+
+        i.rp-icons {
+            width: 13px;
+            height: 13px;
+            font-size: 13px;
+            line-height: 13px;
+            text-align: center;
+        }
+
+        i.material-icons {
+            width: 20px;
+            height: 20px;
+            font-size: 20px;
+            line-height: 20px;
+            text-align: center;
+        }
+    }
+}
+
+%modalBody {
+    padding: 40px 20px 40px 20px;
+
+    p {
+        padding: 2px 0;
+        font-size: 14px;
+        line-height: 20px;
+    }
+
+    .param-content {
+        padding: 12px;
+    }
+
+    h5 {
+        line-height: 1.4;
+    }
+
+    input {
+        &.rp-input-checkbox {
+            & + span.font-bold {
+                font-family: $OpenSansSemibold;
+            }
+        }
+    }
+}
+
+%modalFooter {
+    padding: 0 10px;
+    border-top: none;
+    background-color: #fff;
+
+    .rp-btn-cancel {
+        margin-right: 10px;
+    }
+}
+
+%modalBackdrop {
+    background-color: rgba(70, 69, 71, 0.3);
+}
+
+/*--------------------*/
+/* CONNECT ALL MIXINS */
+
+.rp-modal-dialog {
+    .modal-dialog {
+        /*margin-top: 270px;*/
+
+        .modal-content {
+            padding: 20px 10px;
+
+            .modal-header {
+                @extend %modalHeader;
+            }
+            .modal-body {
+                @extend %modalBody;
+            }
+            .modal-footer {
+                @extend %modalFooter;
+            }
+        }
+    }
+    &.min-padding {
+        .modal-content {
+            .modal-body {
+                padding: 20px 10px;
+            }
+        }
+    }
+    & + .modal-backdrop {
+        @extend %modalBackdrop;
+    }
+}

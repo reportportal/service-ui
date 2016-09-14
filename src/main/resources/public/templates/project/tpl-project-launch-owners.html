@@ -1,0 +1,34 @@
+<div class="col-sm-12 col-xs-12 project-content">
+    <!-- <table class="table table-striped"> -->
+    <div class="row">
+        <table class="table">
+            <!-- 
+                <thead>
+                    <tr>
+                        <th colspan="2"><%= data.text.admin.memberName %></th>
+                        <th><%= data.text.admin.numberOfLaunches %></th>
+                    </tr>
+                </thead>
+            -->
+            <tbody>
+                <% if(data.launchesPerUser && data.launchesPerUser.length) { %>
+                    <% _.forEach(data.launchesPerUser, function(member) { %>
+                        <tr>
+                            <td><%= member.fullName %></td>
+                            <td><%= member.count %></td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="2">
+                            <h3 class="title-no-data text-center">
+                                <i class="rp-icons rp-icons-warning m-right-10"></i>
+                                <span class="warning"><%= data.text.admin.noLaunchesPerformed %></span>
+                            </h3>
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>

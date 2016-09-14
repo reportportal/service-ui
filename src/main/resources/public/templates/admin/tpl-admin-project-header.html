@@ -1,0 +1,31 @@
+<%
+    var visabilityTabSettings = "rp-hide";
+    var visabilityTabMembers = "rp-hide";
+    var projectName = data.projectName;    if (data.tab === "settings") {
+        visabilityTabSettings = "rp-show"
+    }
+    if (data.tab === "members") {
+        visabilityTabMembers = "rp-show"
+    }
+%>
+<div id="headerBar" class="clearfix">
+    <ul class="rp-nav-left">
+        <li class="title-holder" id="title-all-project">
+            <a href="#administrate/projects" class="header-alike">
+                <%= data.text.admin.titleAllProjects %>
+            </a>
+        </li>
+        <% if (projectName !== undefined) { %>
+            <li class="title-holder" id="title-current-project">
+                <a href="#administrate/project-details/<%= data.projectName %>" class="header-alike">
+                    <%= projectName %>
+                </a>
+            </li>
+        <% } %>        <li class="title-holder <%= visabilityTabMembers %>" id="title-members">
+            <span class="header-alike"><%= data.text.admin.titleMembers %></span>
+        </li>
+        <li class="title-holder <%= visabilityTabSettings %>" id="title-settings">
+            <span class="header-alike"><%= data.text.admin.titleSettings %></span>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,171 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+/*-----------------*/
+/* NAVIGATION TABS */
+
+%NAV_TABS_CUSTOM {
+    ul {
+        &.nav-tabs-custom {
+            position: relative;
+            margin: 0 0 20px 0;
+            text-align: center;
+            padding-top: 15px;
+
+            & > li {
+                position: relative;
+                display: inline-block;
+                float: none;
+                padding: 0 0 10px 0;
+                margin: 0;
+
+                &.active {
+                    &:after,
+                    &:before {
+                        content: "";
+                        position: absolute;
+                        display: block;
+                    }
+                    &:after {
+                        bottom: -12px;
+                        left: 50%;
+                        margin-left: -3px;
+                        height: 0;
+                        width: 0;
+                        border: 5px solid #1a9cb0;
+                        border-left-color: transparent;
+                        border-right-color: transparent;
+                        border-bottom-color: transparent;
+                    }
+                    &:before {
+                        bottom: -2px;
+                        left: 0;
+                        right: 0;
+                        height: 2px;
+                        background: #1a9cb0;
+                    }
+
+                    a {
+                        &:after {
+                            content: initial;
+                        }
+                        color: #1a9cb0;
+                        border: none;
+                        &:hover {
+                            color: #1a9cb0;
+                            cursor: default;
+                        }
+                    }
+                }
+
+                a {
+                    position: relative;
+                    display: block;
+                    @include setFontStyle(16px, 16px, #777777, uppercase);
+                    font-family: $OswaldRegular;
+                    border: none;
+                    border-radius: 0;
+                    padding: 10px 10px 0px 10px;
+                    margin: 0;
+                    background: initial;
+                    text-decoration: none;
+
+                    &:hover {
+                        color: #39c2d7;
+                        background: transparent;
+                        border: none;
+                    }
+                }
+            }
+
+            .label-above {
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                z-index: 1;
+                font-size: 9px;
+                border-radius: 12px;
+                line-height: 9px;
+            }
+        }
+    }
+}
+
+/*--------------------------*/
+/* STYLES FOR OTHER SCREENS */
+
+/* xs - 767px */
+@media (max-width: $SCREEN_XS_MAX) {
+    #dynamicContent,
+    #dynamic-content {
+        ul {
+            &.nav-tabs-custom {
+                .label-above {
+                    position: absolute;
+                    font-size: 9px;
+                    border-radius: 100px;
+                    line-height: 9px;
+                    top: -5px;
+                    margin-left: 5px;
+                    right: -5px;
+                }
+            }
+        }
+    }
+}
+
+/* sm - 768px - 991px */
+@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+    
+}
+
+/* md - 992px - 1199px */
+@media (min-width: $SCREEN_MD_MIN) and (max-width: $SCREEN_MD_MAX) {
+    
+}
+
+/* lg - 1200px */
+@media (min-width: $SCREEN_LG_MIN) {
+    
+}
+
+/*----------------*/
+/* INCLUDE STYLES */
+
+#dynamic-content {
+    @extend %NAV_TABS_CUSTOM;
+    .nav-tabs-custom {
+        border-bottom: solid 2px #e9e9e9;
+    }
+}
+
+#dynamicContent {
+    @extend %NAV_TABS_CUSTOM;
+    .nav-tabs-custom {
+        border-bottom: solid 2px #e9e9e9;
+    }
+}
+
+.rp-modal-dialog {
+    @extend %NAV_TABS_CUSTOM;
+    .nav-tabs-custom {
+        border-bottom: solid 2px #e9e9e9;
+    }
+}

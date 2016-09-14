@@ -1,0 +1,39 @@
+<div class="general_tabs clearfix" role="tabpanel">
+    <div class="tab-content clearfix">
+        <div role="tabpanel"
+            id="projectSettings"
+            class="tab-pane form-horizontal <%= data.tab === 'settings' ? 'active' : '' %>">
+            <% if(!data.id){ %>
+                <div class="admin-add-project-wrapper clearfix">
+                    <div class="rp-form-group clearfix">
+                        <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col control-label obligatory-field" for="projectName">
+                            <%= data.text.favorites.fName %>
+                        </label>
+                        <div class="col-md-6 col-sm-9 col-xs-12 rp-custom-col">
+                            <input type="text"
+                                placeholder="<%= data.text.favorites.fName %>"
+                                id="projectName"
+                                autocomplete="off"
+                                class="rp-input-default rp-width-100 form-control" />
+                            <div class="error-bottom">
+                                <div class="help-inline"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 hidden-sm hidden-xs rp-custom-col"></div>
+                    </div>                    <div class="rp-form-group clearfix">
+                        <div class="col-md-9 col-sm-12 col-xs-12 rp-custom-col clearfix">
+                            <button type="button" class="rp-btn rp-btn-submit create-project float-right" id="create-project">
+                                <%= data.text.ui.save %>
+                            </button>
+                            <a href="#administrate/projects" class="rp-btn rp-btn-cancel float-right">
+                                <%= data.text.ui.cancel %>
+                            </a>
+                        </div>
+                        <div class="col-md-3 hidden-sm hidden-xs rp-custom-col"></div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+        <div role="tabpanel" class="tab-pane form-horizontal <%= data.tab === 'members' ? 'active' : '' %>" id="projectUsers"></div>
+    </div>
+</div>

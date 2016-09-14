@@ -1,0 +1,15 @@
+<div class="modal fade dialog-shell" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h4 class="col-sm-12" id="modal-content-text">
+                    <%= data.format(data.text.ui[data.message]) %>?
+                </h4>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="rp-btn rp-btn-cancel" data-dismiss="modal"><%= data.text.ui.cancel %></button>
+                <button type="button" class="rp-btn rp-btn-danger"><%= data.text.ui.remove %></button>
+            </div>
+        </div>
+    </div>
+</div>

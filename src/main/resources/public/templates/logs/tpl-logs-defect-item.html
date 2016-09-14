@@ -1,0 +1,49 @@
+<%
+    var step = data.step || {};
+    var shouldRenderInfo = step.id === data.logId ? true : data.item.items.length === 1;
+%>
+
+<span class="small">#<%- data.item.launch %></span>
+<span class="text-center empty">
+    <i class="material-icons clear">clear</i>
+</span>
+<% if (!_.isEmpty(step) && step.issue && shouldRenderInfo) { %>
+    <% var issueType = data.defectTypes.getDefectType(step.issue.issue_type) %>
+    <% if(issueType){ %>
+    <span class="step-tooltip"
+        data-toggle="tooltip"
+        data-placement="top"
+        title="<div class='text-left'>
+            <span data-launch='<%- data.item.launch %>'
+                class='badge pull-center <%- issueType.typeRef %>'
+                style='background: <%- issueType.color %>'>
+                <%- issueType.longName %>
+            </span>
+            <% if(step.issue.comment) { %>
+                <br>
+                <%- data.textile(step.issue.comment.setMaxLength(100)).escapeScript() %>
+            <% } %>
+            </div>">
+        <span data-launch='<%- data.item.launch %>'
+            class='badge pull-center <%- issueType.typeRef %>'
+            style='background: <%- issueType.color %>'>
+            <%- issueType.shortName %>
+        </span>
+
+        <% if (step.issue.comment) { %>
+            <span data-ticket-id="<%- step.issue.ticketId %>"
+                data-system-id="<%- step.issue.systemId %>"
+                class="line-icon">
+                <i class="material-icons">chat</i>
+            </span>
+        <% } %>
+
+        <% if (step.issue.externalSystemIssues && step.issue.externalSystemIssues.length) { %>
+            <span class="line-icon">
+                <i class="material-icons">link</i>
+            </span>
+        <% } %>
+    </span>
+    <% } %>
+<% } %>
+<span class="chevron"></span>

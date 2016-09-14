@@ -1,0 +1,28 @@
+<% _.forEach(data.tabs, function(value, key){ %>
+    <div class="<%= key === data.id ? 'active' : '' %> tab <%= value.isShared ? 'shared' : '' %> <%= (key === 'allCases') ? 'all-cases' : '' %>"
+         data-id="<%= key %>">
+        <a href="#" data-toggle="dropdown" class="tab-controls">
+            <i class="rp-svg-icon svg-icon-menu-size-14"></i>
+        </a>
+        <span class="name-text multiple-spaces"><%- value.name || data.text.filters.all %></span>
+        <% if(value.isShared) { %>
+            <% if(value.owner !== data.user) { %>
+                <span class="public-icon-wrapper">
+                    <i class="material-icons" title="<%= data.text.launches.filterIsSharedByOtherUser %>">
+                        public
+                    </i>
+                </span>
+            <% } else { %>
+                <span class="share-icon-wrapper">
+                    <i class="material-icons" title="<%= data.text.launches.filterIsShared %>">share</i>
+                </span>
+            <% } %>
+        <% } %>
+    </div>
+<% }); %>
+<div class="add-new tab">
+    <i class="material-icons">add</i>
+    <input class='form-control' placeholder='<%= data.text.filters.enterFilterName %>' />
+    <i class="material-icons icon-cancel" title="<%= data.text.filters.close %>">cancel</i>
+    <span>Add Filter</span>
+</div>
