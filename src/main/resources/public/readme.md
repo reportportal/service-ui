@@ -1,1 +1,0 @@
-cd src/main/resources/public

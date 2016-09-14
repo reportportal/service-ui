@@ -4,6 +4,7 @@
   "description": "report generation",
   "main": "index.js",
   "scripts": {
+    "grunt": "grunt",
     "server": "webpack-dev-server --config config-server.js",
     "tests": "karma start"
   },
