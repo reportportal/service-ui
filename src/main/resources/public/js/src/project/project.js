@@ -2646,8 +2646,8 @@ define(function(require, exports, module) {
         recountAddLeft: function () {
             var collectionLength = this.getCollectionLength();
             this.addLeft = 10 - collectionLength;
-            var parent = $(this.el).find('.add-item').parent();
 
+            var parent = this.$el.find('.add-item').parent();
             if (this.addLeft > 0) {
                 $(parent).find('p:first span').html(this.addLeft);
                 $(parent).find('p:last').hide();
