@@ -7,19 +7,29 @@
 .copyright {
     padding: 0 12px;
 }
+.footer-copy {
+    padding-right: 2px;
+}
 .breadcrumbs {
     display:inline-block;
     float: right;
-    padding: 5px 0;
+    //padding: 5px 0;
+    padding: 0 40px 0 0;
+    margin: 0;
 }
 .breadcrumbs>li {
     float: left;
     padding: 0 1px;
+    list-style: none;
+}
+.breadcrumbs>li>a {
+    text-decoration: none;
+    color: inherit;
 }
 .breadcrumbs>li>a:before {
-    content: " / ";
+    content: " | ";
     padding: 0 5px;
-        text-decoration: none !important;
+    text-decoration: none !important;
     display: inline-block;
 }
 .breadcrumbs>li:first-child>a:before{

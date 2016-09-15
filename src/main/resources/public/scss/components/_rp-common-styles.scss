@@ -357,7 +357,6 @@ h4 {
                     margin: 0;
                     color: #464547;
                     white-space: nowrap;
-                    
                     cursor: pointer;
                     width: 100%;
 
@@ -530,6 +529,18 @@ ul.rp-nav-left > li.title-holder {
     position: relative;
     width: 100%;
     height: 100%;
+    & .wrapper {
+        padding-left: 90px;
+    }
+    & .container {
+        width: 100%;
+    }
+}
+
+@media (min-width: 1600px) {
+    #main_content .container {
+        width: 1370px;
+    }
 }
 
 @media (min-width:768px) {

@@ -137,7 +137,7 @@
 }
 @media screen and (min-width: 992px) {
   .borderWidget > .columnWidget {
-    width: 33%;
+    width: 20%;
   }
 }
 .columnWidget > ul > li {
@@ -219,6 +219,14 @@ input[type=checkbox] + label {
   box-shadow: none;
   border: none;
 }
+.panel.rb-panel-btn {
+    margin: 16px 0 0;
+    & #addNewWidget {
+        font-size: 24px;
+        font-weight: 500;
+        padding: 11px 12px;
+    }
+}
 .rb-btn-settings {
   background-color: inherit;
   border: 2px dashed #CFCFCF;
@@ -245,7 +253,23 @@ input[type=checkbox] + label {
     border-top: 1px solid black;
 }
 
+
+
 /* ---------------------*/
+
+/* Fullscreen */
+.fullscreen-close {
+    display: none;
+    position: fixed;
+    right: 15px;
+    top: 10px;
+}
+
+.fullscreen .fullscreen-close {
+    display: block;
+}
+/* ---------------------*/
+
 /* STYLES FOR DASHBOARD */
 
 #mainContainer {
@@ -265,6 +289,8 @@ input[type=checkbox] + label {
                     ul {
                         &.rp-nav-right {
                             padding-right: 0;
+                            padding-left: 0;
+                            margin: 0;
                         }
                     }
                 }
@@ -276,6 +302,7 @@ input[type=checkbox] + label {
                         padding: 0;
 
                         li {
+                            list-style: none;
                             a {
                                 padding: 0px 22px;
 
@@ -351,9 +378,22 @@ input[type=checkbox] + label {
 }
 
 /*--- DASHBOARD ---*/
+.widgets-list {
+    padding: 0;
+    z-index: 10;
+    margin: 30px -7px 0;
+
+    & .widget-item .ui-resizable-handle {
+        background: none;
+    }
+}
+
 .widgets-list .panel-default {
     border-color: #ccc;
     border-radius: 0;
+}
+.widgets-list .widget-content > .baron__root {
+    position: absolute;
 }
 
 .widgets-list .panel-default .panel-heading {
@@ -366,6 +406,9 @@ input[type=checkbox] + label {
 
 .widgets-list .panel-heading {
     color: #464547;
+    height: 54px;
+    padding: 8px 15px 10px;
+    position: relative;
 }
 
 .widgets-list .panel-heading strong {
@@ -373,6 +416,7 @@ input[type=checkbox] + label {
 }
 
 .widgets-list .panel-heading .rp-top-links {
+    padding-top: 8px;
     font-size: 16px;
     color: #666;
 }
@@ -386,18 +430,101 @@ input[type=checkbox] + label {
     top: -2px;
     font-family: $OpenSansRegular;
     background: #666;
+
+    & .shared-text {
+        display: none;
+        margin-left: 5px;
+    }
 }
+
+.widgets-list .panel-default > .panel-heading .widget-type-name {
+    font-size: 13px;
+}
+
+.widgets-list .panel-default .drag-handle {
+    cursor: move;
+
+    & .rp-top-links {
+        margin-right: 0;
+
+        & li {
+            float: left;
+
+            & a {
+                text-decoration: none;
+                color: inherit;
+
+                &:hover {
+                    text-decoration: none;
+                    color: inherit;
+                }
+            }
+        }
+    }
+}
+
+.loader, .loader i {
+    position: absolute;
+}
+
+.loading-widget.loader {
+    left: 10px;
+    right: 10px;
+    width: auto;
+}
+
+.loader {
+    left: 0;
+    top: 0;
+    height: 100%;
+    border-radius: 4px;
+    background: #fff;
+    opacity: .6;
+    z-index: 3;
+
+    & i {
+        display: inline-block;
+        left: 50%;
+        top: 50%;
+        margin: -24px 0 0 -24px;
+        font-size: 40px;
+        color: #29d;
+    }
+}
+
+
+
 
 /*--- END DASHBOARD ---*/
 
 
-
-
 /*--- DASHBOARDS MENU ---*/
 .b-dashboars-list {
-    border-color: #ddd;
+    position: absolute;
+    left: -1px;
+    top: 0;
+    width: 100%;
+    max-width: 1150px;
+    border: 1px solid #858687;
+    background: #fff;
     border-top: none;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    border-radius: 0 0 4px 4px;
+    box-sizing: content-box;
+    box-shadow: 0 2px 4px rgba(0,0,0,.5);
+    z-index: 99;
+    overflow: hidden;
+
+    & > .dashboards-container {
+        padding: 20px;
+
+        & > .add-dash-button {
+          padding: 0 0 12px 0;
+        } 
+    }
+
+    & .row {
+      margin-bottom: 16px;
+    }
 }
 .add-dash-button .btn.add-new-dashboard {
     // border-color: #a3c644;
@@ -408,8 +535,16 @@ input[type=checkbox] + label {
 .b-shareddash-list .columnWidget > ul {
     margin: 0;
 }
-
+.b-dashboars-list .columnWidget > ul {
+    padding: 0;
+    margin: 0 8px;
+}
+.b-dashboars-list .columnWidget > ul > li {
+    list-style: none;
+    padding-bottom: 4px;
+}
 .b-dashboars-list .columnWidget > ul > li a {
+    margin: 0;
     word-wrap: break-word;
     border: 1px solid transparent;
 }
@@ -422,11 +557,22 @@ input[type=checkbox] + label {
 
 .b-dashboars-list .columnWidget > ul > li.active a,
 .b-dashboars-list .columnWidget > ul > li.active a:hover {
-    background-color: #fcfdfa;
+    background-color: #d7d7d7;
+    color: #909090;
+    cursor: default;
 }
 
 .b-dashboars-list .columnWidget > ul > li a:hover {
     background-color: transparent;
+}
+
+.b-dashboars-list .borderWidget .title {
+    float: none;
+    border-bottom: 1px solid #333;
+    padding: 10px 10px 2px 0;
+    margin-bottom: 8px;
+    text-decoration: none;
+    line-height: 1.2;
 }
 
 /*--- END DASHBOARDS MENU ---*/

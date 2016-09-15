@@ -105,6 +105,17 @@
         }
     }
 
+    & .panel-body {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border-top: 54px solid transparent;
+        box-sizing: border-box;
+        overflow: visible;
+    }
 }
 
 /* INVALID DATA */
