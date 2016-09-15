@@ -1,20 +1,44 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE"
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
+
+    }
+}
+
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id "com.moowork.grunt" version "0.11"
 }
 
+apply plugin: 'java'
 apply plugin: "spring-boot"
 apply plugin: "io.spring.dependency-management"
 apply plugin: 'com.moowork.grunt'
 apply plugin: 'idea'
 
 
-apply from: '../build-docker.gradle'
-
 ext {
     staticsInputDir = "${project.projectDir}/src/main/resources/public"
     staticsOutputDir = "${project.buildDir}/resources/main/public"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-starter-parent:Camden.RC1"
+
+    }
+}
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.spring.io/libs-milestone' }
+
 }
 
 dependencies {
@@ -25,13 +49,6 @@ dependencies {
 
     compile 'org.springframework.cloud:spring-cloud-starter-eureka'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile 'io.springfox:springfox-swagger-ui:2.3.0'
-
-
-
-    compile('org.hibernate:hibernate-validator:5.0.2.Final') {
-        exclude(module: 'validation-api')
-    }
 
 }
 
@@ -78,10 +95,14 @@ idea {
 
 processResources {
     exclude "**/public/*"
+    filesMatching('**/bootstrap.yaml') {
+        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [version: project.property("version")])
+    }
 }
 
-prepareDockerfile.dependsOn copyToDocker
-copyToDocker.dependsOn processResources
+
+//prepareDockerfile.dependsOn copyToDocker
+//copyToDocker.dependsOn processResources
 processResources.dependsOn runJsTests
 runJsTests.dependsOn grunt_build
 grunt_build.dependsOn grunt_jst
