@@ -1,0 +1,45 @@
+<% if(data.isCollapsedMethod) { %>
+<div class="method-collapsed">
+    <div class="method-collapsed-toggle">
+<% } %>
+        <div class="row rp-table-row" data-js-status-class>
+            <div class="grid-cell time-grid-cell">
+                <span class="text-muted" data-js-method-type></span>
+            </div>
+            <div class="grid-cell name-grid-cell">
+                <h5 class="rp-grid-name">
+                    <div class="btn-group">
+                        <a class="item-menu" data-toggle="dropdown" href="#" data-js-launch-menu>
+                            <i class="rp-svg-icon svg-icon-menu-size-14"></i>
+                        </a>
+                    </div>
+                    <a class="navigateable rp-blue-link-undrl break-link" href="" data-js-name></a>
+                </h5>
+                <pre class="rp-grid-description nicescroll-it" data-js-description></pre>
+                <div class="rp-grid-tags tags">
+                    <% if(data.tags && data.tags.length) { %>
+                    <span class="text-muted">
+                                <i class="material-icons">local_offer</i>
+                                <% _.each(data.sortTags, function (tag) { %>
+                                    <a class="text-muted tag" data-tag="<%- tag %>" href="#"><%- tag.replaceTabs() %></a>
+                                <% }); %>
+                            </span>
+                    <% } %>
+                    <small class="">
+
+                    </small>
+                </div>
+            </div>
+            <div class="grid-cell status-grid-cell" data-js-status></div>
+            <div class="grid-cell time-grid-cell">
+                <span class="hidden-sm hidden-md hidden-lg"><b><%= data.text.launches.prefixStartTime %></b></span>
+                <span class="from-now" data-js-time-from-now></span>
+                <span class="exact-time" data-js-time-exact></span>
+            </div>
+            <div class="grid-cell status-grid-cell" data-js-item-status></div>
+            <div class="grid-cell type-grid-cell" data-js-step-issue></div>
+        </div>
+<% if(data.isCollapsedMethod) { %>
+    </div>
+</div>
+<% } %>

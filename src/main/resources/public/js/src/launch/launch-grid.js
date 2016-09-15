@@ -1192,7 +1192,6 @@ define(function (require, exports, module) {
         },
 
         editDefect: function (e) {
-            e.preventDefault();
             var that = this,
                 $el = $(e.currentTarget),
                 id = $el.data('id'),

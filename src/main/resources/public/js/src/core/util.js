@@ -364,60 +364,60 @@ define(function (require, exports, module) {
         hideOverlay: function(element) {
             $(element).LoadingOverlay("hide");
         },
-        setupVisualEffects: function () {
-            var self = this;
-
-            $(window)
-                .on("load resize", function () {
-                    if ($(".js-menu-toggle").hasClass("js-active")) {
-                        $(".js-sidebar").animate({left: '-250px'});
-                        $(".js-header").animate({left: "0px"});
-                        $(".js-main-content").animate({left: "0px"});
-                        $(".js-menu-toggle").removeClass("js-active").animate({left: "0px"});
-                    }
-                });
-
-            $(document)
-                .on("click", "#topHeader .js-menu-toggle", function () {
-                    if ($(this).hasClass("js-active")) {
-                        $(".js-sidebar").animate({left: '-250px'});
-                        $(this).removeClass("js-active").animate({left: "0px"});
-                    } else {
-                        if ($('#navbar-header-collapse').hasClass('in')) {
-                            $('.js-projects-toggle').click();
-                        }
-                        $(this).addClass("js-active").animate({left: "250px"});
-                        $(".js-sidebar").animate({left: '0px'});
-                    }
-                })
-                .off('click.hide-sidebar')
-                .on("click.hide-sidebar", ".js-main-content, #topHeader", function (event) {
-                    var target = $(event.target);
-
-                    if (target.hasClass('js-menu-toggle') || target.closest('.js-menu-toggle').length > 0) return
-                    if ($(".js-menu-toggle").hasClass("js-active")) {
-                        $(".js-menu-toggle").click();
-                    }
-                });
-
-            $(document).on("click", "#topHeader .js-projects-toggle", function () {
-                self.setEqualHeightRow($('.user-projects .rp-mobile.list-group-item'));
-                var anotherMenuButton = $('#topHeader .js-menu-toggle');
-                if (anotherMenuButton.hasClass("js-active")) {
-                    $(".js-sidebar").animate({left: '-250px'});
-                    anotherMenuButton.removeClass("js-active").animate({left: "0px"});
-                }
-            });
-
-            $(".js-sidebar").on("click", ".main-menu a", function () {
-                if ($(".js-menu-toggle").hasClass("js-active")) {
-                    $(".js-sidebar").animate({left: '-250px'});
-                    $(".js-header").animate({left: "0px"});
-                    $(".js-main-content").animate({left: "0px"});
-                    $(".js-menu-toggle").removeClass("js-active").animate({left: "0px"});
-                }
-            });
-        },
+        // setupVisualEffects: function () {
+        //     var self = this;
+        //
+        //     $(window)
+        //         .on("load resize", function () {
+        //             if ($(".js-menu-toggle").hasClass("js-active")) {
+        //                 $(".js-sidebar").animate({left: '-250px'});
+        //                 $(".js-header").animate({left: "0px"});
+        //                 $(".js-main-content").animate({left: "0px"});
+        //                 $(".js-menu-toggle").removeClass("js-active").animate({left: "0px"});
+        //             }
+        //         });
+        //
+        //     $(document)
+        //         .on("click", "#topHeader .js-menu-toggle", function () {
+        //             if ($(this).hasClass("js-active")) {
+        //                 $(".js-sidebar").animate({left: '-250px'});
+        //                 $(this).removeClass("js-active").animate({left: "0px"});
+        //             } else {
+        //                 if ($('#navbar-header-collapse').hasClass('in')) {
+        //                     $('.js-projects-toggle').click();
+        //                 }
+        //                 $(this).addClass("js-active").animate({left: "250px"});
+        //                 $(".js-sidebar").animate({left: '0px'});
+        //             }
+        //         })
+        //         .off('click.hide-sidebar')
+        //         .on("click.hide-sidebar", ".js-main-content, #topHeader", function (event) {
+        //             var target = $(event.target);
+        //
+        //             if (target.hasClass('js-menu-toggle') || target.closest('.js-menu-toggle').length > 0) return
+        //             if ($(".js-menu-toggle").hasClass("js-active")) {
+        //                 $(".js-menu-toggle").click();
+        //             }
+        //         });
+        //
+        //     $(document).on("click", "#topHeader .js-projects-toggle", function () {
+        //         self.setEqualHeightRow($('.user-projects .rp-mobile.list-group-item'));
+        //         var anotherMenuButton = $('#topHeader .js-menu-toggle');
+        //         if (anotherMenuButton.hasClass("js-active")) {
+        //             $(".js-sidebar").animate({left: '-250px'});
+        //             anotherMenuButton.removeClass("js-active").animate({left: "0px"});
+        //         }
+        //     });
+        //
+        //     $(".js-sidebar").on("click", ".main-menu a", function () {
+        //         if ($(".js-menu-toggle").hasClass("js-active")) {
+        //             $(".js-sidebar").animate({left: '-250px'});
+        //             $(".js-header").animate({left: "0px"});
+        //             $(".js-main-content").animate({left: "0px"});
+        //             $(".js-menu-toggle").removeClass("js-active").animate({left: "0px"});
+        //         }
+        //     });
+        // },
 
         hideMessagePanel: function () {
             var self = this;
@@ -543,7 +543,7 @@ define(function (require, exports, module) {
         setupSelect2WhithScroll: function(el, options) {
             el.select2(options);
             el.one('select2-open', function(e){
-                $('input.select2-input', el.parent()).on('input', function(ev){
+                $('#select2-drop input.select2-input').on('input', function(ev){
                     if($(this).val().trim().length<3){
                         Util.setupBaronScrollSize(e.currentTarget.$scrollEl, {maxHeight: 200});
                     }
@@ -750,7 +750,7 @@ define(function (require, exports, module) {
             return time;
         },
         dateFormat: function (val, withUtc) {
-            var date = val ? new Date(val) : new Date(),
+            var date = new Date(val),
                 month = date.getMonth() + 1,
                 day = date.getDate(),
                 hour = date.getHours(),
@@ -762,6 +762,7 @@ define(function (require, exports, module) {
             } else {
                 utc = 'UTC' + utc;
             }
+
 
             // normalize value to 2 symbols string
             //   1 -> 01
@@ -861,6 +862,7 @@ define(function (require, exports, module) {
 
         getDialog: function (options) {
             $('.rp-modal-dialog').remove();
+            console.log('Modal ' + options.name);
             var modalEl = $("<div>" + this.templates(options.name, options.data) + "</div>")
                 .find(".dialog-shell")
                 .unwrap()
@@ -1084,6 +1086,7 @@ define(function (require, exports, module) {
             if (valid) {
                 var matchXML = item.message.match(/(>)\s*(<)(\/*)/g);
                 if (matchXML && matchXML.length > 8) {
+                    console.log('matchXML');
                     split = Util.beautifyText(item.message).split('<!--!>');
                     split.push('xml');
                 } else {

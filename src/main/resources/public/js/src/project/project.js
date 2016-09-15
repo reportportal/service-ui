@@ -966,7 +966,7 @@ define(function(require, exports, module) {
                 // todo : extract to helpers
                 Util.setupSelect2WhithScroll(this.$launchContainer.eq(index), {
                     multiple: true,
-                    minimumInputLength: 3,
+                    minimumInputLength: 1,
                     formatInputTooShort: function (input, min) {
                         return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto
                     },
@@ -1560,6 +1560,7 @@ define(function(require, exports, module) {
             this.$instanceBoby.empty();
 
             var params = this.model.toJSON();
+
             params['authorizationTypes'] = this.settings['bts' + this.model.get('systemType')].authorizationType;
             params['access'] = this.access;
             params['settings'] = this.settings;
@@ -1894,15 +1895,15 @@ define(function(require, exports, module) {
                             if (self.systems.length) {
                                 self.model = new BtsProperties(self.systems[0]);
                             } else {
-                                var type = config.forSettings.btsList[0].value;
+                                var type = self.model.get('systemType');
                                 self.model = new BtsProperties({
                                     systemType: type
                                 });
                             }
                             self.systemAt = 0;
-                            self.setPristineBTSForm();
-                            self.renderInstance();
                             self.renderMultiSelector();
+                            self.renderInstance();
+                            self.setPristineBTSForm();
                             Util.ajaxSuccessMessenger("deleteBts");
                         })
                         .fail(function (error) {

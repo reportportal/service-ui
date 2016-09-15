@@ -1,0 +1,47 @@
+<div data-js-issue-type class="defect-type">
+    <input data-js-issue-checkbox class="select-test" type="checkbox" />
+    <div class="rp-defect-type-edit">
+        <% var issueType = data.issueType %>
+        <% if(issueType) { %>
+            <span class="pr-defect-type-badge <%- issueType.typeRef %>"
+                title="<%= issueType.longName %>">
+                <i style="background: <%- issueType.color %>"></i>
+                <%= issueType.longName.setMaxLength(20) %>
+            </span>
+        <% } %>
+        <i class="material-icons edit-defect">edit</i>
+    </div>
+
+    <% var btsIssues = data.btsIssues %>
+    <% if(btsIssues && btsIssues.length) { %>
+        <span class="tickets-container" data-id="<%= data.id %>">
+            <% var tickets = _.isArray(btsIssues) ? btsIssues : [btsIssues]; %>
+            <% _.each(tickets, function(ticket) { %>
+                <a href="<%= ticket.url %>"
+                   target="_blank"
+                   class="badge external-ticket issue-tracker-link"
+                   data-ticket-id="<%= ticket.ticketId %>"
+                   data-system-id="<%= ticket.systemId %>"
+                   data-toggle="tooltip" title="<span class='loading-indicator'></span>">
+                    <div>
+                        #<%= ticket.ticketId %>
+                    </div>
+                    <i data-js-event="removeTicket" class="material-icons">clear</i>
+                </a>
+            <% }); %>
+        </span>
+    <% } %>
+    <% if(data.needMatchIssue) { %>
+        <span data-js="" class="match-issue label <%= data.canMatchIssue ? '' : 'disabled' %> <%= data.launchInProcess ? 'label-danger autoanalyze' : '' %>"
+          title="<%= data.canMatchIssue ? '' : data.text.launches.nothingToMatch %>">
+                <i class="rp-icons rp-icons-magic margin-right-5"></i>
+                <%= data.text.launches.matchTitle %>
+        </span>
+    <% } %>
+    <% if(data.comment) { %>
+        <div class="defect-desc nicescroll-it">
+            <%= data.textile(data.comment.replace('*IssueDescription:*',"<br>*IssueDescription:*")).replaceNewLines().escapeScript()
+            %>
+        </div>
+    <% } %>
+</div>

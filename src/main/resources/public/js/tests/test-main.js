@@ -50,7 +50,7 @@ require.config({
         mainview: 'main-view',
         favorites: 'favorites/favorites',
         register: 'register/register',
-        filters: 'filter/filters',
+        // filters: 'filter/filters',
         components: 'core/components',
         lazyload: '../lib/jquery.lazyload.min',
         daterangepicker: '../lib/daterangepicker',

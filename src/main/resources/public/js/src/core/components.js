@@ -254,7 +254,6 @@ define(function (require, exports, module) {
                     active: currentPage,
                     objectsOnPage: size
                 };
-
             if (totalPages > 1) {
                 var pages;
                 // should be 10 page links
@@ -280,8 +279,8 @@ define(function (require, exports, module) {
             }
             this.$el.html(Util.templates(this.tpl, model));
 
-            this.pageSize = $("#pageSize", this.$el);
-            this.pageSizeStatic = $(".itemsPerPage:first", this.$el);
+            this.pageSize = $("[data-js-per-page-input]", this.$el);
+            this.pageSizeStatic = $("[data-js-per-page]", this.$el);
             return this;
         },
 
@@ -322,15 +321,14 @@ define(function (require, exports, module) {
         },
 
         events: {
-            'click ul a': 'scrollToTop',
-            'click a.first': 'first',
-            'click a.previous': 'previous',
-            'click a.next': 'next',
-            'click a.last': 'last',
-            'click a.page': 'page',
-            'click a.itemsPerPage': 'showItemsPerPageControl',
-            'keyup #pageSize': 'onKeyUpPageSize',
-            'change #pageSize': 'hideItemsPerPageControl'
+            'click .first': 'first',
+            'click .previous': 'previous',
+            'click .next': 'next',
+            'click .last': 'last',
+            'click .page': 'page',
+            'click [data-js-per-page]': 'showItemsPerPageControl',
+            'keyup [data-js-per-page-input]': 'onKeyUpPageSize',
+            'change [data-js-per-page-input]': 'hideItemsPerPageControl'
         },
 
         scrollToTop: function (ev) {
@@ -338,7 +336,6 @@ define(function (require, exports, module) {
         },
 
         showItemsPerPageControl: function (e) {
-            e.preventDefault();
             $(e.currentTarget).hide();
             this.pageSize.val('').show().focus();
         },

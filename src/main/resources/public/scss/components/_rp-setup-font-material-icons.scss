@@ -50,7 +50,7 @@
 
 .material-icons {
     &.loader-animation {
-        -webkit-animation: fa-spin 2s infinite linear;
-        animation: fa-spin 2s infinite linear;
+        -webkit-animation: rp-rotate 2s infinite linear;
+        animation: rp-rotate 2s infinite linear;
     }
 }

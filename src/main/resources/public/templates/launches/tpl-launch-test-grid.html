@@ -81,11 +81,10 @@
                     <small class="">
                         <% if(item.tags && item.tags.length) { %>
                             <span class="text-muted">
+                            <i class="material-icons">local_offer</i>
                             <% var sortedTags = data.tagSorter(item.tags); %>
                             <% _.each(sortedTags, function (tag) { %>
-                                <a class="text-muted tag" data-tag="<%- tag %>" href="#">
-                                    <i class="material-icons">local_offer</i><%- tag.replaceTabs() %>
-                                </a>
+                                <a class="text-muted tag" data-tag="<%- tag %>" href="#"><%- tag.replaceTabs() %></a>
                             <% }); %>
                             </span>
                         <% } %>

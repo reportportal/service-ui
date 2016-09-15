@@ -30,7 +30,7 @@ define(function (require, exports, module) {
     var Service = require('adminService');
     var Main = require('mainview');
     var urls = require('dataUrlResolver');
-    var Filter = require('filters');
+    // var Filter = require('filters');
     var Member = require('member');
     var memberService = require('memberService');
     var Localization = require('localization');

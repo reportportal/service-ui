@@ -54,7 +54,10 @@ define(['app'], function (App) {
         var idsString = ids.join(',');
         return getProjectBase() + "/filter/filters?ids=" + idsString;
     };
-    var saveFilter = function () {
+    var saveFilter = function (query) {
+        if(query) {
+            return getProjectBase() + '/filter' + query;
+        }
         return getProjectBase() + '/filter';
     };
     var filterById = function (id) {

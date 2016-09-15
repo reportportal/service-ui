@@ -594,7 +594,7 @@ define(function(require, exports, module) {
                 if(self.paging.urlModel.get('filter.cnt.login')) {
                     self.searchString = self.paging.urlModel.get('filter.cnt.login');
                 }
-                self.$memberFilter.val(self.searchString)
+                self.$memberFilter.val(self.searchString);
                 self.prevVal = self.searchString;
                 self.changeMembers();
             });

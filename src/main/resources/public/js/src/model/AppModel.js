@@ -25,11 +25,8 @@ define(function(require, exports, module) {
 
     var AppModel = Backbone.Model.extend({
         defaults: {
-            projectId: null
+            projectId: null,
         },
-        initialize: function(){
-
-        }
     });
 
     return AppModel;

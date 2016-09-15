@@ -272,7 +272,12 @@ define(function (require, exports, module) {
             name: 'Outdated Browser',
             license: 'MIT License',
             link: 'http://outdatedbrowser.com/'
-        }
+        },
+        {
+            name: 'Modernizr',
+            license: 'MIT License',
+            link: 'https://modernizr.com/'
+        },
     ];
 
     var BaseHideableView = Backbone.Epoxy.View.extend({
@@ -355,7 +360,7 @@ define(function (require, exports, module) {
         tpl: 'tpl-main-top-header',
 
         initialize: function (options) {
-            this.user = options.user;
+            // this.user = options.user;
             this.project = options.project;
             this.canDebug = options.canDebug;
             this.currentPage = options.currentPage;
@@ -413,7 +418,8 @@ define(function (require, exports, module) {
             'click .user-projects a': 'changeProject',
             'click #userNavigator a': 'trackClick',
             'click .mem-set': 'updateMemSet',
-            'click #logout': 'onClickLogout'
+            'click #logout': 'onClickLogout',
+            'click [data-js-toogle-menu]': 'onClickMenuOpen',
         },
 
         onClickLogout: function (e) {
@@ -465,6 +471,9 @@ define(function (require, exports, module) {
             config.userModel.set('bts', null);
             config.trackingDispatcher.projectChanged(project);
             config.router.navigate($el.attr('data-href'), {trigger: true});
+        },
+        onClickMenuOpen: function() {
+            $('body').toggleClass('menu-open');
         }
     });
 
@@ -472,6 +481,11 @@ define(function (require, exports, module) {
         el: "#pageSidebar",
 
         tpl: 'tpl-main-side-bar',
+
+        events: {
+            'click .main-menu a': 'closeMenu',
+            'click [data-js-sidebar-close]': 'closeMenu'
+        },
 
         initialize: function (options) {
             this.projectUrl = options.projectUrl;
@@ -484,6 +498,7 @@ define(function (require, exports, module) {
                 projectUrl: this.projectUrl,
                 userLogin: Storage.getDebugUser() || config.userModel.get('name'),
                 canDebug: this.canDebug,
+                isAdmin: Util.isAdmin(config.userModel.toJSON()),
                 lastActive: this.getLastActive()
             };
 
@@ -524,6 +539,9 @@ define(function (require, exports, module) {
                 urlArray[0] = "#" + projectId;
                 $link.attr('href', urlArray.join("/"));
             });
+        },
+        closeMenu: function() {
+            $('body').removeClass('menu-open');
         },
 
         clearActives: function () {

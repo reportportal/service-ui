@@ -1,0 +1,46 @@
+<div class="row rp-table-row">
+    <div class="grid-cell name-grid-cell name-cell">
+        <span class="label label-danger autoanalyze" data-js-analize-label><%= data.text.ui.analyze %></span>
+        <h5 class="rp-grid-name">
+            <div class="btn-group" data-js-launch-edit>
+                <a class="item-menu" data-js-launch-menu data-toggle="dropdown" href="#">
+                    <i class="rp-svg-icon svg-icon-menu-size-14"></i>
+                </a>
+            </div>
+            <a class="navigateable rp-blue-link-undrl" href="" data-js-name></a>
+            <span data-js-launch-number></span>
+        </h5>
+        <pre class="rp-grid-description nicescroll-it" data-js-description></pre>
+        <div class="rp-grid-tags tags">
+            <small>
+                <span title="Owner" class="text-muted owner" data-js-owner-block>
+                    <i class="material-icons">person</i>
+                    <a class="text-muted tag" href="#" data-js-owner-name></a>
+                </span>
+                <br class="visible-xs-block">
+                <% if(data.sortTags && data.sortTags.length) { %>
+                <span class="text-muted">
+                            <i class="material-icons">local_offer</i>
+                            <% _.each(data.sortTags, function (tag) { %>
+                                <a class="text-muted tag" data-tag="<%- tag %>" href="#"><%- tag.replaceTabs() %></a>
+                            <% }); %>
+                        </span>
+                <% } %>
+            </small>
+        </div>
+    </div>
+    <div class="grid-cell time-grid-cell rp-grid-th">
+        <span class="hidden-sm hidden-md hidden-lg"><b><%= data.text.launches.prefixStartTime %></b></span>
+        <span class="from-now" data-js-time-from-now></span>
+        <span class="exact-time" data-js-time-exact></span>
+    </div>
+    <div class="grid-cell counter-grid-cell rp-grid-th" data-js-item-status></div>
+    <div class="grid-cell number-grid-cell" data-js-statistics-total></div>
+    <div class="grid-cell number-grid-cell" data-js-statistics-passed></div>
+    <div class="grid-cell number-grid-cell" data-js-statistics-failed></div>
+    <div class="grid-cell number-grid-cell" data-js-statistics-skipped></div>
+    <div class="grid-cell counter-grid-cell" data-js-statistics-product_bug></div>
+    <div class="grid-cell counter-grid-cell" data-js-statistics-automation_bug></div>
+    <div class="grid-cell counter-grid-cell" data-js-statistics-system_issue></div>
+    <div class="grid-cell counter-grid-cell" data-js-statistics-to_investigate></div>
+</div>

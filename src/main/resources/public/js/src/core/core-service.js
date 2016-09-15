@@ -140,7 +140,9 @@ define([
     var getSharedWidgetData = function (id) {
         return call('GET', urls.widgetById(id));
     };
-
+    var saveFilter = function(query) {
+        return call('GET', urls.saveFilter(query));
+    };
     var getOwnFilters = function () {
         return call('GET', urls.ownFilters());
     };
@@ -385,6 +387,8 @@ define([
         getDefectItem: getDefectItem,
         loadHistory: loadHistory,
         loadActivityItems: loadActivityItems,
+
+        saveFilter: saveFilter,
 
         saveWidget: saveWidget,
         updateWidget: updateWidget,

@@ -25,7 +25,7 @@ define(function (require, exports, module) {
     var _ = require('underscore');
     var $ = require('jquery');
     var Backbone = require('backbone');
-    var Filters = require('filters');
+    var Filters = require('filter/filters');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var Localization = require('localization');
 
@@ -178,12 +178,10 @@ define(function (require, exports, module) {
                 values: ['Any'],
                 value: ''
             }),
-            /*new ReportPortal.Filter.Model({name: 'Duration', id: 'filter.cnt.duration'}), can't be filtered*/
             new Filters.StatusModel({
                 id: 'issue$issue_type',
                 condition: 'in',
                 values: issueTypes,
-                // values: ['All', 'To Investigate', 'Product Bug', 'Automation Bug', 'System Issue', 'No Defect'],
                 value: 'All'
             }),
             new Filters.Model({id: 'issue$issue_comment', condition: 'cnt'}),

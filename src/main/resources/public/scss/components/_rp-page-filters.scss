@@ -1,0 +1,154 @@
+#filter-page {
+  margin: 0 -15px -15px -15px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  &.load {
+    .preloader {
+      display: block;
+    }
+  }
+  .filter-header {
+    height: 70px;
+    margin-bottom: 0;
+    display: table;
+    width: 100%;
+    & > div {
+      display: table-cell;
+      vertical-align: middle;
+      height: 100%;
+      float: none;
+    }
+    .input-filter {
+      margin-top: 0;
+      .error-bottom {
+        position: absolute;
+        top: 30px;
+      }
+    }
+  }
+  .no-filters-exist, .no-filters-found {
+    position: relative;
+    width: 100%;
+    color: $COLOR--gray-47;
+    text-align: center;
+  }
+  .no-filters-exist {
+    height: 350px;
+    .no-filter-img {
+      background: url(../img/filters/no-filters.png) center no-repeat;
+      width: 213px;
+      height: 133px;
+      margin: 10px auto;
+    }
+    h3 {
+      font-size: 17px;
+      margin-top: 10px;
+      margin-bottom: 17px;
+    }
+    p {
+      font-size: 13px;
+    }
+  }
+  .no-filters-found {
+    height: 120px;
+    overflow: hidden;
+    h3 {
+      font-size: 17px;
+      margin-top: 28px;
+      i {
+        margin-right: 7px;
+      }
+    }
+  }
+  .rp-table-row {
+    padding: 10px 0;
+    & > div {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+    i {
+      font-size: 18px;
+      vertical-align: middle;
+      color: $COLOR--gray-60;
+      cursor: pointer;
+      margin: 0 10px;
+      &:hover {
+        color: $COLOR--black;
+      }
+    }
+  }
+
+  .switcher-block {
+    border-right: 1px solid $COLOR--gray-91;
+    .rp-switcher, span {
+      vertical-align: middle;
+    }
+  }
+  .switcher-text{
+    display: inline-block;
+    width: 30px;
+  }
+  .mobile-title {
+    .rp-link, .rp-link + span {
+      font-size: 16px;
+      line-height: 16px;
+    }
+    i {
+      vertical-align: bottom;
+    }
+  }
+}
+@media (max-width: 992px) {
+  #filter-page {
+    .filter-header{
+      height: auto;
+      border-bottom: 1px solid $COLOR--gray-91;
+      & > div {
+        display: block;
+        padding-top: 14px;
+        padding-bottom: 16px;
+        float: left;
+      }
+      .search-description {
+        display: none;
+      }
+      .input-filter {
+        .error-bottom {
+          position: relative;
+          top: 0;
+          margin-top: 5px;
+        }
+      }
+    }
+    .no-filters-exist {
+      .no-filter-img {
+        margin: 0 auto;
+      }
+      h3 {
+        margin-top: 6px;
+        margin-bottom: 13px;
+      }
+      p {
+        width: 195px;
+        margin: 0 auto;
+        font-size: 14px;
+        line-height: 29px;
+      }
+      .rp-btn {
+        margin-top: 9px;
+      }
+    }
+    .rp-table-row {
+      padding: 22px 0;
+      font-size: 12px;
+      i {
+        font-size: 21px;
+      }
+      .description {
+        color: $COLOR--gray-47;
+        padding-right: 10px;
+        text-transform: uppercase;
+      }
+    }
+  }
+}

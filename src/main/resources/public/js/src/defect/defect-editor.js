@@ -501,9 +501,7 @@ define([
                 }
                 
                 if (item.id == $('.editor-row').closest('.selected').attr('id')) {
-                    var val = $('.markItUpEditor').val(),
-                        comment = item.issue.comment;
-                    issue.comment = val.trim() === comment.trim() ? comment : val;
+                    issue.comment = $('.markItUpEditor').val();
                 }
 
                 issue.externalSystemIssues.push({

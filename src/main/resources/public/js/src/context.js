@@ -32,6 +32,7 @@ define(function (require, exports, module) {
     var Dashboard = require('dashboard');
     var Favorites = require('favorites');
     var Launch = require('launch');
+    var LaunchPage = require('launches/launchPage');
     var Profile = require('profile');
     var Util = require('util');
     var Service = require('coreService');
@@ -39,9 +40,11 @@ define(function (require, exports, module) {
     var Register = require('register');
 
     var SingletonAppModel = require('model/SingletonAppModel');
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
 
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
+    var launchFilterCollection = new SingletonLaunchFilterCollection();
     var Context = {
 
         pages: [
@@ -61,6 +64,9 @@ define(function (require, exports, module) {
                 case "launches":
                 case "userdebug":
                     return Launch;
+                    break;
+                case "newlaunches":
+                    return LaunchPage;
                     break;
                 case "members":
                     return Member;
@@ -123,8 +129,9 @@ define(function (require, exports, module) {
         },
 
         loadPreferences: function () {
-            return Service.getPreferences().done(function (result) {
-                config.preferences = result;
+            return Service.getPreferences().done(function (response) {
+                config.preferences = response;
+                launchFilterCollection.parse(response.filters);
             });
         },
 

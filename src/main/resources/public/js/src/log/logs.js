@@ -33,7 +33,7 @@ define(function (require, exports, module) {
     var MarkitupSettings = require('markitupset');
     var Textile = require('textile');
     var Service = require('coreService');
-    var Filter = require('filters');
+    var Filter = require('filter/filters');
     var Moment = require('moment');
 
     var config = App.getInstance();

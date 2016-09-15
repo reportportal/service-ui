@@ -1,0 +1,9 @@
+<% var type = data.type %>
+<% var total = data.total %>
+<% if(total > 0) { %>
+    <a href="" data-js-all-cases-url class="cases-view rp-blue-link-undrl" data-js-executions-total></a>
+<% } else { %>
+    <span class="text-muted visible-xs-inline" data-js-executions-total></span>
+    <span class="invisible hidden-xs" data-js-executions-total></span>
+<% } %>
+<p class="visible-xs cell-name"><%= data.text.launchesHeaders[type]%></p>

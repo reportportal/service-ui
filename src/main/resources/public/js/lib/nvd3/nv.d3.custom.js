@@ -4900,10 +4900,9 @@ nv.models.ohlcBarChart = function() {
                         }
                         else {
                             // d.disabled = !d.disabled; custom
-                            var key = d.seriesId ? 'seriesId' : 'key';
                             for (var dd = 0; dd < data.length; dd++) {
                                 var serie = data[dd];
-                                if (serie[key] == d[key]) {
+                                if (serie.key == d.key) {
                                      serie.disabled = !d.disabled;
                                 }
                             }    

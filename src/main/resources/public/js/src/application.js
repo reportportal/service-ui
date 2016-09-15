@@ -38,6 +38,7 @@ define(function(require, exports, module) {
     require('bootstrap');
     require('jaddons');
     require('landingDocs');
+    require('updateBackbone');
 
 
     $('[rel="shortcut icon"]').attr('href', document.location.protocol + '//' + document.location.host + document.location.pathname + 'favicon.ico');
@@ -51,7 +52,7 @@ define(function(require, exports, module) {
     Util.trackAjaxCalls();
 
     App.eqjs = Eqjs;
-    Util.setupVisualEffects();
+    // Util.setupVisualEffects();
     Util.shimBind();
 
     Util.addSymbolsValidation();
@@ -69,6 +70,11 @@ define(function(require, exports, module) {
     Util.setupBackTop();
 
     config.userModel.load();
+    if('DEBUG_STATE') {
+        window.userModel = config.userModel;
+        window.router = config.router;
+        window.config = config;
+    }
 
     (new ExternalService())
         .done(function() {

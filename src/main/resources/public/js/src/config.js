@@ -27,7 +27,6 @@ require.config({
         'bootstrap': '../lib/bootstrap.min',
         'underscore': '../lib/lodash.min',
         'backbone': '../lib/backbone',
-        'backbone-mixin': '../lib/backbone-mixin',
         'backbone-epoxy': '../lib/backbone-epoxy',
         'backbone-filter': '../lib/backbone-route-filter',
         'jaddons': '../lib/jquery-addons',
@@ -85,7 +84,7 @@ require.config({
         'mainview': 'main-view',
         'widgets': 'widget/widgets',
         'favorites': 'favorites/favorites',
-        'filters': 'filter/filters',
+        // 'filters': 'filter/filters',
         'dashboard': 'dashboard/dashboard-view',
         'context': 'context',
 

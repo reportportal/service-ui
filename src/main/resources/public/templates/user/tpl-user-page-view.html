@@ -5,13 +5,11 @@
                 <div class="row">
                     <div class="media_image col-sm-3">
                         <div id="avatarWrapper" class="<%= data.photo_loaded ? 'active' : '' %>">
-                            <% if(data.account_type === "INTERNAL"){ %>
                             <div id="remove-image" class="remove-image">
                                 <div class="remove-image-wrap">
                                     <i class="material-icons mi-close">close</i>
                                 </div>
                             </div>
-                            <% } %>
                             <img class="img-thumbnail avatar"
                                 id="userProfileAvatar"
                                 data-original="<%= data.image %>"

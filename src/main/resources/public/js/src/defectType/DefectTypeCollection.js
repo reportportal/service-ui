@@ -28,9 +28,6 @@ define(function (require, exports, module) {
     var DefectTypeModel = require('defectType/DefectTypeModel');
     var SingletonAppModel = require('model/SingletonAppModel');
 
-    // TODO - moved to initialize
-    // var Util = require('util');
-
     var DefectTypeCollection = Backbone.Collection.extend({
         model: DefectTypeModel,
 
