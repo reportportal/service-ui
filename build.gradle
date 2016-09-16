@@ -11,7 +11,6 @@ buildscript {
     }
 }
 
-import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id "com.moowork.grunt" version "0.11"
@@ -26,7 +25,7 @@ apply plugin: "spring-boot"
 apply plugin: "io.spring.dependency-management"
 apply plugin: 'com.moowork.grunt'
 apply plugin: 'idea'
-
+apply from: 'release-container.gradle'
 
 ext {
     staticsInputDir = "${project.projectDir}/src/main/resources/public"
@@ -78,11 +77,6 @@ grunt_build {
     outputs.file "${staticsOutputDir}"
 }
 
-task copyToDocker(type: Copy) {
-    from("${project.buildDir}/resources/main/public")
-    into "${project.buildDir}/libs/public"
-}
-
 task runJsTests(type: NodeTask) {
     script = project.file("${staticsInputDir}/node_modules/karma/bin/karma")
     args = ['start', project.file("${staticsInputDir}/karma.conf.js").absolutePath, '--single-run']
@@ -105,55 +99,7 @@ processResources {
 }
 
 
-//prepareDockerfile.dependsOn copyToDocker
-//copyToDocker.dependsOn processResources
 processResources.dependsOn runJsTests
 runJsTests.dependsOn grunt_build
 grunt_build.dependsOn grunt_jst
 grunt_jst.dependsOn npmInstall
-
-
-
-
-//RELEASE STUFF
-
-release {
-    preTagCommitMessage = 'Release commit: '
-    tagCommitMessage = 'Creating tag: '
-    newVersionCommitMessage = "New version commit: "
-    tagCommitMessage = ''
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            groupId 'com.epam.reportportal'
-            artifactId 'service-ui'
-        }
-    }
-}
-
-
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-    publications = ['mavenJava']
-    pkg {
-        repo = 'reportportal'
-        name = 'service-ui'
-        desc = "$description"
-        websiteUrl = 'https://reportportal.github.io/'
-        issueTrackerUrl = 'https://github.com/eportportal/service-ui/issues'
-        vcsUrl = 'https://github.com/reportportal/service-ui'
-        githubRepo = 'reportportal/service-ui'
-        githubReleaseNotesFile = 'CHANGELOG.md'
-
-        userOrg = 'reportportal'
-        licenses = ['GPL-3.0']
-
-
-    }
-}
-//afterReleaseBuild.dependsOn bintrayUpload
-
