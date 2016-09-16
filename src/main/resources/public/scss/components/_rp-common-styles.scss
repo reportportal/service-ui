@@ -189,6 +189,10 @@ h4 {
     margin: 0;
 }
 
+.nopadding {
+    padding: 0!important;
+}
+
 .d3-tip {
     z-index: 10002;
 }
@@ -850,10 +854,30 @@ textarea {
 
 /*--------------------------------*/
 
+.grid-stack-placeholder>.placeholder-content {
+    border-color: #4d4c4c;
+    background: $COLOR--white;
+}
+
+/*--------------------------------*/
+
 .select2-container-multi .select2-choices {
     max-height: 30px;
 }
 
+.btn.dropdown-toggle, 
+.form-control, 
+.select2-container-multi 
+.select2-choices {
+    background-color:  $COLOR--white-default;
+    border: 1px solid $COLOR--gray-80;
+    font-size: 13px;
+    color: $COLOR--gray-60;
+}
+
+.select2-drop-active {
+
+}
 /*--------------------------------*/
 
 .margin-left-10 {
@@ -889,3 +913,33 @@ textarea {
 }
 
 /*--------------------------------*/
+
+.btn.dropdown-toggle.active, 
+.btn.dropdown-toggle:active, 
+.btn.dropdown-toggle:focus, 
+.form-control:focus, 
+.open>.btn.dropdown-toggle, 
+.open>.btn.dropdown-toggle.focus, 
+.open>.btn.dropdown-toggle:focus, 
+.select2-container-multi.select2-container-active .select2-choices, 
+.select2-container-multi.select2-container-active:hover .select2-choices, 
+.select2-container-multi.select2-dropdown-open .select2-choices, 
+.select2-drop-active {
+    color: $COLOR--greyish-brown;
+    box-shadow: 0 0 2px 0 $COLOR--topaz;
+    border: 1px solid $COLOR--topaz;
+    background: $COLOR--white-default;
+}
+
+/*--------------------------------*/
+
+.combo-pie-widget, .combo-pie-part {
+    position: relative;
+    height: 100%;
+}
+
+.combo-pie-widget > .row,
+.combo-pie-widget > .row > div[class*="col-"] {
+    height: 100%;
+    padding: 0;
+}
