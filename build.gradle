@@ -11,18 +11,21 @@ buildscript {
     }
 }
 
-import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id "com.moowork.grunt" version "0.11"
+    id 'net.researchgate.release' version '2.4.1'
+    id "com.jfrog.bintray" version "1.7"
 }
 
 apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: "spring-boot"
 apply plugin: "io.spring.dependency-management"
 apply plugin: 'com.moowork.grunt'
 apply plugin: 'idea'
-
+apply from: 'release-container.gradle'
 
 ext {
     staticsInputDir = "${project.projectDir}/src/main/resources/public"
@@ -74,11 +77,6 @@ grunt_build {
     outputs.file "${staticsOutputDir}"
 }
 
-task copyToDocker(type: Copy) {
-    from("${project.buildDir}/resources/main/public")
-    into "${project.buildDir}/libs/public"
-}
-
 task runJsTests(type: NodeTask) {
     script = project.file("${staticsInputDir}/node_modules/karma/bin/karma")
     args = ['start', project.file("${staticsInputDir}/karma.conf.js").absolutePath, '--single-run']
@@ -101,8 +99,6 @@ processResources {
 }
 
 
-//prepareDockerfile.dependsOn copyToDocker
-//copyToDocker.dependsOn processResources
 processResources.dependsOn runJsTests
 runJsTests.dependsOn grunt_build
 grunt_build.dependsOn grunt_jst

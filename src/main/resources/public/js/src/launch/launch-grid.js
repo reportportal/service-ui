@@ -832,7 +832,10 @@ define(function (require, exports, module) {
         launchInProgress: function (item) {
             var progress = false;
             if(item.launchId){
-                var launch = this.navigationInfo.get(item.launchId);
+                var launch = _.find(this.navigationInfo.models, function(m){
+                    var data = m.get('data');
+                    return data ? data.id === item.launchId : false;
+                });
                 if(launch){
                     var launchData = launch.get('data');
                     if(launchData){
