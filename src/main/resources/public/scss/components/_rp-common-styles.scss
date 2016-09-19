@@ -943,3 +943,100 @@ textarea {
     height: 100%;
     padding: 0;
 }
+
+/*--------------------------------*/
+
+/*------Widget wizard - Filters - table header--------*/
+.input-filter {
+    margin-top: 9px;
+    position: relative;
+    width: 100%;
+}
+
+.rp-margin-reset .rp-table-thead .rp-table-th, 
+.rp-margin-reset-log .rp-table-thead .rp-table-th {
+    padding: 14px 0 13px;
+}
+
+.rp-margin-reset .rp-table-thead {
+    font-size: 14px;
+    font-weight: 700;
+    color: #464547;
+
+    & .rp-table-th {
+        font-family: OpenSansSemibold,sans-serif;
+        font-weight: 400;
+        font-size: 13px;
+        line-height: 13px;
+        padding-left: 15px;
+    }
+}
+
+.rp-margin-reset .rp-table-thead:after, 
+.rp-margin-reset-log .rp-table-thead:after {
+    content: "";
+    height: 3px;
+    width: 100%;
+}
+
+.rp-margin-reset .rp-table-thead:after, 
+.rp-margin-reset-log .rp-table-thead:after {
+    display: none;
+}
+
+.rp-margin-reset .rp-table-thead:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.rp-margin-reset .rp-table-thead:after, 
+.rp-margin-reset-log .rp-table-thead:after {
+    border: none;
+    box-shadow: none;
+}
+
+/*--------------------------------*/
+
+/*------Widget wizard - Filters - --------*/
+
+.rp-margin-reset-log > .row:nth-child(2n), 
+.rp-margin-reset > .rp-table-row:nth-child(2n) {
+    background-color: $COLOR--white-four;
+}
+
+.rp-table-row {
+    position: relative;
+    padding: 8px 0;
+    background: $COLOR--white-default;
+    border-bottom: 1px solid $COLOR--gray-91;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    -webkit-transition: background-color .2s ease 0s;
+    -moz-transition: background-color .2s ease 0s;
+    -ms-transition: background-color .2s ease 0s;
+    -o-transition: background-color .2s ease 0s;
+    transition: background-color .2s ease 0s;
+}
+
+.rp-margin-reset-log>.row:nth-child(2n):hover,
+.rp-margin-reset>.rp-table-row:nth-child(2n):hover,
+.rp-table-row.danger:hover .rp-margin-reset>.rp-table-row:hover,
+.rp-table-row:hover, .rp-table-row:nth-child(2n):hover {
+    background-color: $COLOR--gray-91;
+    -webkit-transition: background-color .2s ease 0s;
+    -moz-transition: background-color .2s ease 0s;
+    -ms-transition: background-color .2s ease 0s;
+    -o-transition: background-color .2s ease 0s;
+    transition: background-color .2s ease 0s;
+}
+
+.rp-table-hover>div.row:hover {
+    transition: background-color .2s ease 0s;
+}
+
+.filter-row>:first-child {
+    position: relative;
+    padding-left: 40px;
+}
+/*--------------------------------*/

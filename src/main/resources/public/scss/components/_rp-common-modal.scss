@@ -112,6 +112,12 @@
             & > .active {
                 display: block;
             }
+
+            & .rp-table-thead {
+                border-top: 1px solid $COLOR--gray-80;
+                border-bottom: 1px solid $COLOR--gray-80;
+                background-color: $COLOR--gray-91;
+            }
         }
     }
 
@@ -313,10 +319,64 @@
             }
         }
     }
+
+    & #widgetFilters {
+
+        & .filter-row  {
+            padding: 8px 0;
+
+            & .material-icons {
+                position: absolute;
+                top: 0;
+                left: 10px;
+                font-size: 20px;
+                color: $COLOR--gray-80;
+            }
+
+            & .check_circle {
+                display: none;
+            }
+
+            & .filter-name {
+                display: block;
+                font-size: 14px;
+                font-weight: 700;
+                color: $COLOR--topaz;
+                word-break: break-all;
+            }
+
+            & .rp-info {
+                font-size: 14px;
+            }
+
+            & .rp-info.info-break {
+                font-size: 13px;
+                word-break: break-all;
+            }
+        }
+
+        & .filter-row.active .check_circle {
+            display: inline-block;
+            color: $COLOR--booger;
+        }
+
+        & .filter-adv .text-muted {
+            font-size: 12px;
+        }
+        & .filter-adv .text-muted, 
+        & .filter-row .rp-info {
+            color: $COLOR--gunmetal;
+        }
+    }
 }
 
 
 
+
+#widgetFilters .filter-name,
+.filter-link-to-launches.rp-table-title {
+    white-space:pre-wrap;
+}
 
 #widgetType {
     margin-top: 1px;
@@ -357,8 +417,6 @@
 #modal-content-text {
     word-break: normal;
 }
-
-
 
 .top-level li {
     text-align: center;
@@ -416,14 +474,6 @@
 #createDashboard {
     padding: 8px 0;
 }
-
-
-
-
-
-
-
-
 
 #widgetEditor .pull-right .btn {
     float: left;
@@ -554,10 +604,6 @@
 .pre-view {
     white-space: pre-line;
 }
-#widgetFilters .filter-name,
-.filter-link-to-launches.rp-table-title {
-    white-space:pre-wrap;
-}
 
 #OwnDashboards a, #SharedDashboards a {
     padding: 5px;
@@ -622,10 +668,7 @@
     font-weight: normal;
     font-size: 10px;
 }
-#widgetFilters .filter-name {
-    word-break: break-all;
-    display: block;
-}
+
 .landing-active .nicescroll-rails-vr {
     z-index: 1500 !important;
 }
