@@ -38,9 +38,6 @@ return '<div class="table-wrapper">' +
         <div class="grid-cell time-grid-cell rp-grid-th" data-sorter="start_time" data-filter="start_time">
             <%= getItemHtml(data.text.launchesHeaders.start_time, data.text.launchesHeaders.start_time_short) %>
         </div>
-        <div class="grid-cell status-grid-cell rp-grid-th">
-            <%= getItemHtml(data.text.launchesHeaders.duration, data.text.launchesHeaders.duration_short) %>
-        </div>
         <div class="grid-cell type-grid-cell rp-grid-th" data-sorter="issue$issue_type" data-filter="issue$issue_type">
             <%= getItemHtml(data.text.launchesHeaders.issue, data.text.launchesHeaders.issue_short) %>
         </div>

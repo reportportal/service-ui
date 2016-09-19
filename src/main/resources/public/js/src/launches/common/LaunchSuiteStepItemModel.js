@@ -27,7 +27,8 @@ define(function(require, exports, module) {
     var App = require('app');
 
     var config = App.getInstance();
-    var LaunchSuiteItemModel = Epoxy.Model.extend({
+
+    var LaunchSuiteStepItemModel = Epoxy.Model.extend({
         defaults: {
             approximateDuration: 0,
             description: '',
@@ -45,7 +46,7 @@ define(function(require, exports, module) {
                 executions: {},
             },
             status: '',
-            tags: [],
+            tags: '',
             type: '',
 
             //test step append
@@ -166,10 +167,27 @@ define(function(require, exports, module) {
             }
         },
 
-        initialize: function() {
-
+        getIssue: function() {
+            try {
+                return JSON.parse(this.get('issue'));
+            } catch(err) {
+                return {};
+            }
+        },
+        setIssue: function(issue) {
+            this.set({issue: JSON.stringify(issue)});
+        },
+        getTags: function() {
+            try {
+                return JSON.parse(this.get('tags'));
+            } catch(err) {
+                return [];
+            }
+        },
+        setTags: function(tags) {
+            this.set({issue: JSON.stringify(tags)});
         },
     });
 
-    return LaunchSuiteItemModel;
+    return LaunchSuiteStepItemModel;
 });

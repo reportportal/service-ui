@@ -56,7 +56,7 @@ define(function (require, exports, module) {
             this.parentModel = parentModel;
 
             var optionsURL = optionsURL || '';
-            var filterData = this.calculateFilterOptions(optionsURL);
+            var filterData = this.calculateFilterOptions(optionsURL); // set this.logOptions
             var self = this;
             if(!launchModel && !parentModel) {
                 var launchFilters = new SingletonLaunchFilterCollection();
@@ -92,12 +92,27 @@ define(function (require, exports, module) {
             }
             return async.promise();
         },
+        getPathByLogItemId: function(logItemId) {
+            var options = this.getParamsFilter();
+            options.push('log.item=' + logItemId);
+            var mainHash = window.location.hash.split('?')[0];
+            return mainHash + '?' + options.join('&');
+        },
         setPaging: function(curPage, size) {
             this.pagingPage = curPage;
             if(size) {
                 this.pagingSize = size;
             }
             this.load();
+        },
+
+        setLogItem: function(logItemId) {
+            if(!this.get(logItemId)) {
+                console.log('log item not found');
+                return;
+            }
+            this.logOptions = {item: logItemId}; // reset log settings
+            this.trigger('change:log:item', logItemId);
         },
         setSelfModels: function(filterModel) {
             this.stopListening(this.filterModel);
@@ -107,10 +122,17 @@ define(function (require, exports, module) {
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.changeFilterOptions);
             return this.load();
         },
+        activateLogsItem: function(itemId) {
+            var parentItemModel = this.get(itemId);
+            if(parentItemModel) {
+                this.trigger('activate:log', parentItemModel);
+            }
+        },
         calculateFilterOptions: function(optionsUrl) {
             var options = optionsUrl.split('&');
             var filterEntities = [];
             var answer = {};
+            this.logOptions = {};
             _.each(options, function(option) {
                 var optionSeparate = option.split('=');
                 var keySeparate = optionSeparate[0].split('.');
@@ -135,6 +157,9 @@ define(function (require, exports, module) {
                         });
                     }
                 }
+                if(keyFirstPart == 'log') {
+                    this.logOptions[keySeparate[1]] = optionSeparate[1];
+                }
             }, this);
             answer.entities = JSON.stringify(filterEntities);
             return answer;
@@ -152,7 +177,13 @@ define(function (require, exports, module) {
                 type: this.checkType(),
             }
         },
+        getInfoLog: function() {
+            return this.logOptions;
+        },
         checkType: function() {
+            if(this.logOptions.item){
+                return 'LOG';
+            }
             var types = {};
             _.each(this.models, function(model) {
                 types[model.get('type')] = true;
@@ -169,18 +200,30 @@ define(function (require, exports, module) {
             var levelPriority = ['SUITE', 'STORY', 'TEST', 'SCENARIO', 'STEP', 'BEFORE_CLASS', 'BEFORE_GROUPS', 'BEFORE_METHOD', 'BEFORE_SUITE', 'BEFORE_TEST', 'AFTER_CLASS', 'AFTER_GROUPS', 'AFTER_METHOD', 'AFTER_SUITE', 'AFTER_TEST'];
             return typesMas[0];
         },
-        load: function() {
-            var self = this;
-            var path = Urls.getGridUrl('launch');
+        getParamsFilter: function(onlyPage) {
             var params = [];
             params.push('page.page=' + this.pagingPage);
             params.push('page.size=' + this.pagingSize);
-            if(!this.launchModel) {
-                this.trigger('change:params', params.join('&'));
+            if(onlyPage) {
+                return params;
             }
             params = params.concat(this.filterModel.getOptions());
+            return params;
+        },
+        load: function() {
+            var self = this;
+            var path = Urls.getGridUrl('launch');
+            if(!this.launchModel) {
+                this.trigger('change:params', this.getParamsFilter(true).join('&'));
+            }
+            var params = this.getParamsFilter();
             if(this.launchModel) {
-                this.trigger('change:params', params.join('&'));
+                var logParams = [];
+                _.each(this.logOptions, function(value, key) {
+                    logParams.push('log.' + key + '=' + value);
+                });
+                logParams = logParams.concat(params);
+                this.trigger('change:params', logParams.join('&'));
             }
             if(this.launchModel) {
                 path = Urls.getGridUrl('suit');
@@ -191,7 +234,6 @@ define(function (require, exports, module) {
                     params.push('filter.size.path=0');
                 }
             }
-
             if(params && params.length) {
                 path += '?' + params.join('&');
             }
@@ -203,11 +245,14 @@ define(function (require, exports, module) {
             this.reset([]);
             this.request = call('GET', path)
                 .done(function(data) {
-                    self.trigger('change:paging', data.page);
+                    self.pagingData = data.page;
                     self.parse(data);
                 })
                 .always(function() {
-                   self.trigger('loading', false);
+                    if(self.logOptions && self.logOptions.item) {
+                        self.trigger('set:log:item', self.logOptions.item);
+                    }
+                    self.trigger('loading', false);
                 });
             return this.request;
         },
@@ -218,6 +263,8 @@ define(function (require, exports, module) {
             var self = this;
             if(this.launchModel) {
                 _.each(response.content, function(modelData) {
+                    modelData.issue && (modelData.issue = JSON.stringify(modelData.issue));
+                    modelData.tags && (modelData.issue = JSON.stringify(modelData.tags));
                     modelData.parent_launch_owner = self.launchModel.get('owner');
                     modelData.parent_launch_status = self.launchModel.get('status');
                     modelData.parent_launch_isProcessing = self.launchModel.get('isProcessing');

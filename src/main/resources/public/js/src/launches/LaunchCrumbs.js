@@ -73,6 +73,15 @@ define(function (require, exports, module) {
                     })
                 }
             } else {
+                if(this.collection.cacheModel && this.collection.cacheModel.get('id') == this.get('id')) {
+                    this.set(this.collection.cacheModel.toJSON());
+                    this.ready.resolve();
+                    return;
+                }
+                if(this.collection.lastLogItem && this.collection.lastLogItem == this.get('id')) {
+                    this.ready.resolve();
+                    return;
+                }
                 var url = Urls.getProjectBase() + '/' + this.get('level') + '/' + this.get('id');
                 call('GET', url)
                     .done(function(data) {
@@ -89,7 +98,8 @@ define(function (require, exports, module) {
 
     var LaunchCrumbCollection = Backbone.Collection.extend({
         model: LaunchCrumbModel,
-        sync: function(newPath) {
+        sync: function(newPath, cacheModel) {
+            this.cacheModel = cacheModel;
             var async = $.Deferred();
             var currentPath = [];
             _.each(this.models, function(model) {
@@ -181,15 +191,24 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
-        update: function(partPath) {
+        cacheItem: function(itemModel) {
+            this.cacheModel = itemModel;
+        },
+        update: function(partPath, optionsURL) {
             $('#breadCrumbs', this.$el).addClass('load');
             var self = this;
-            var async = this.collection.sync(partPath)
-                .done(function() {
-                    $('#breadCrumbs', this.$el).removeClass('load');
+            this.collection.sync(partPath, this.cacheModel)
+                .done(function(launchModel, parentModel) {
+                    $('#breadCrumbs', self.$el).removeClass('load');
+                    self.trigger('change:path', launchModel, parentModel, optionsURL);
                 });
-
-            return async;
+        },
+        setLogItem: function(itemModel) {
+            if(this.collection.lastLogItem) {
+                this.collection.remove(this.collection.lastLogItem);
+            }
+            this.collection.lastLogItem = itemModel.get('id');
+            this.collection.add(itemModel.toJSON());
         },
         onAddCrumb: function(model) {
             $('[data-js-crumbs-container]', this.$el).append((new LaunchCrumbView({
