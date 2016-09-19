@@ -30,7 +30,7 @@ task prepareDockerfile(type: Copy) {
 
 task buildDocker(type: DockerBuildImage, dependsOn: prepareDockerfile) {
     inputDir = file("${project.buildDir}/libs")
-    tag = "${dockerProjectName}:${version}"
+    tag = "${dockerProjectName}:latest"
 }
 
 
