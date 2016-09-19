@@ -3,7 +3,7 @@ FROM frolvlad/alpine-oraclejdk8:slim
 MAINTAINER Andrei Varabyeu <andrei_varabyeu@epam.com>
 
 VOLUME /tmp
-ADD ui-service-${version}.jar app.jar
+ADD service-ui-${version}.jar app.jar
 ADD public /public
 RUN sh -c 'touch /app.jar'
 EXPOSE 8080
