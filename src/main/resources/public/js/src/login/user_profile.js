@@ -581,7 +581,7 @@ define(function (require, exports, module) {
                                 '<p>rp.convertimage = true</p>' +
                                 '<p>rp.mode = DEFAULT</p>' +
                                 '<p>rp.skipped.issue = true</p>' +
-                                '<p>rp.batch.size.logs = 1</p>' +
+                                '<p>rp.batch.size.logs = 20</p>' +
                             '</div>';
                         break;
                 }
