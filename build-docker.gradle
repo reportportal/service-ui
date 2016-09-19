@@ -16,7 +16,7 @@ docker {
     url = "${dockerServerUrl}"
 }
 
-def dockerProjectName = "reportportal/${project.name}".toLowerCase()
+def dockerProjectName = "reportportal-dev/${project.name}".toLowerCase()
 
 
 
