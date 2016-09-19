@@ -63,6 +63,10 @@
     & .modal-body {
         padding: 0;
 
+        & .nav-tabs[role=tablist]~.tab-content .tab-content .tab-pane {
+            padding: 0 10px;
+        }
+
         & .nav-tabs[role=tablist] {
             border: none;
 
@@ -368,10 +372,122 @@
             color: $COLOR--gunmetal;
         }
     }
+
+    & #widgetData {
+        & .control-label {
+            font-weight: 400;
+        }
+
+        & #dashboardSelect {
+            clear: both;
+            float: none;
+        }
+
+        & #dashboardSelect {
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+        }
+
+        & .has-error {
+
+            & .form-control, 
+            & .form-control:focus {
+                color: $COLOR--black-two;
+                box-shadow: 0 0 2px 0 rgba(255,49,33,.7);
+                border: 1px solid $COLOR--orange-red;
+            }
+
+
+        }
+        & .shared-switcher {
+
+            & .bootstrap-switch {
+                height: 30px;
+                width: 100%;
+                min-width: 60px;
+                z-index: 0;
+
+                & .bootstrap-switch-container {
+
+                    & .bootstrap-switch-primary {
+                        background: $COLOR--booger;
+                        color: $COLOR--white-default;
+                    }
+
+                    & .bootstrap-switch-default, 
+                    & .bootstrap-switch-primary {
+                        font-family: OpenSansRegular,sans-serif;
+                        font-size: 12px;
+                        font-weight: 600;
+                    }
+
+                    & .bootstrap-switch-default {
+                        color: $COLOR--white-default;
+                        background: $COLOR--gray-60;
+                    }
+                }
+            }
+        }
+
+        & #createDashboard .form-group:first-child {
+            padding-left: 5px;
+            padding-right: 5px;
+            margin-left: 0;
+        }
+    }
+}
+#OwnDashboards a, 
+#SharedDashboards a {
+    padding: 5px;
+    display: block;
+    border: 1px solid transparent;
+    background-color: transparent;
+    word-wrap: break-word;
+    color: $COLOR--black;
+}
+
+#OwnDashboards .dashboard-project-link {
+    position: relative;
+    display: block;
+    width: 100%;
+    word-wrap: break-word;
+    padding: 5px 10px;
+}
+
+#OwnDashboards a.active, 
+#OwnDashboards a:focus, 
+#OwnDashboards a:hover, 
+#SharedDashboards a.active, 
+#SharedDashboards a:focus, 
+#SharedDashboards a:hover {
+    border-color: $COLOR--booger;
+    background-color: $COLOR--white;
+    color: $COLOR--greyish-brown;
+}
+
+#OwnDashboards .content-holder, 
+#SharedDashboards .content-holder {
+    padding: 10px;
+}
+
+#OwnDashboards a.dashboard-selector.disabled, 
+#OwnDashboards a.dashboard-selector.disabled:hover {
+    opacity: 0.6;
+    background: #ECECEC;
+    border: none;
+    cursor: default;
 }
 
 
+.bootstrap-switch.bootstrap-switch-focused,
+.form-control:focus {
+    border-color: $COLOR--gray-80;
+    box-shadow: none;
+}
 
+.bootstrap-switch.bootstrap-switch-focused {
+    outline: 0;
+}
 
 #widgetFilters .filter-name,
 .filter-link-to-launches.rp-table-title {
@@ -605,32 +721,8 @@
     white-space: pre-line;
 }
 
-#OwnDashboards a, #SharedDashboards a {
-    padding: 5px;
-    display: block;
-}
-
-#OwnDashboards a:hover, #SharedDashboards a:hover {
-    background-color: #c2daf2;
-}
-
-#OwnDashboards a.active, #SharedDashboards a.active {
-    background-color: #add8e6;
-}
-
 .shared-dashboard-owner {
     text-transform: capitalize;
-}
-
-#OwnDashboards .content-holder, #SharedDashboards .content-holder {
-    padding: 15px 0;
-}
-
-#OwnDashboards a.dashboard-selector.disabled, #OwnDashboards a.dashboard-selector.disabled:hover {
-    opacity: 0.6;
-    background: #ECECEC;
-    border: none;
-    cursor: default;
 }
 
 #popupLoader {

@@ -147,9 +147,12 @@
         text-decoration: underline;
     }
 }
-#previewContent .widget-invalid-data {
+#previewContent .widget-invalid-data,
+#previewContent svg .nv-legend-symbol, 
+#previewContent svg .nv-legend-text {
     cursor: default;
 }
+
 .statistics-panel.widget-invalid {
     padding-top: 50px;
     position: relative;

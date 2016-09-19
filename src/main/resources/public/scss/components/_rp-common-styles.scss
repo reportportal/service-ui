@@ -54,6 +54,10 @@ body {
     background: #e4e5e6;
 }
 
+ul, ol {
+    padding: 0;
+}
+
 /*---------------*/
 /* CUSTOM STYLES */
 
@@ -1039,4 +1043,38 @@ textarea {
     position: relative;
     padding-left: 40px;
 }
+
 /*--------------------------------*/
+
+/*----Widget wizard - name & dasboard tab -----*/
+
+.bootstrap-switch, 
+.bootstrap-switch .bootstrap-switch-handle-off, 
+.bootstrap-switch .bootstrap-switch-handle-on, 
+.btn, .form-control, .select2-container-multi .select2-choices {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/*--------------------------------*/
+
+#errorBlock, .login-loader, .soft-hidden {
+    display: none;
+    clear: both;
+}
+
+/*--------------------------------*/
+.badge, 
+.daterangepicker .calendar-date, 
+.daterangepicker .ranges .input-mini, 
+.daterangepicker .ranges li, 
+.daterangepicker td, 
+.daterangepicker td.end-date, 
+.daterangepicker td.start-date, 
+.daterangepicker th, .dropdown-menu, 
+.input-group-sm>.form-control, 
+.input-group-sm>.input-group-addon, 
+.input-group-sm>.input-group-btn>.btn, 
+.label, .my_button {
+    border-radius: 0;
+}

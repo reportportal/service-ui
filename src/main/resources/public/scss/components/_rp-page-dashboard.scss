@@ -430,6 +430,9 @@ input[type=checkbox] + label {
     top: -2px;
     font-family: $OpenSansRegular;
     background: #666;
+    margin-top: 1px;
+    margin-left: 5px;
+    padding: 3px 8px 4px 7px;
 
     & .shared-text {
         display: none;
