@@ -59,6 +59,9 @@ dependencies {
 
 }
 
+jar {
+    baseName "service-ui"
+}
 
 grunt {
     workDir = file("${staticsInputDir}")
