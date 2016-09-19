@@ -2,6 +2,7 @@
   position: relative;
   width: 100%;
   margin-top: 11px;
+  cursor: pointer;
   .history-line-item {
     float: right;
     width: 10%;
@@ -19,7 +20,7 @@
       position:relative;
       width: 100%;
       height: 30px;
-      background: $COLOR--failed;
+      text-align: center;
       &:before {
         content: "";
         position: absolute;
@@ -28,6 +29,12 @@
         border-left: 8px solid white;
         right: -27px;
         top: -5px;
+      }
+      i {
+        position: relative;
+        font-size: 20px;
+        line-height: 30px;
+        color: $COLOR--gray-60;
       }
     }
     .active_bg {
@@ -41,7 +48,6 @@
         content: "";
         position: absolute;
         display: block;
-        background: $COLOR--failed;
         height: 100%;
         left: 0;
         right: 10px;
@@ -51,12 +57,13 @@
         position: absolute;
         display: block;
         border: 20px solid transparent;
-        border-left: 8px solid $COLOR--failed;
+        border-left: 8px solid transparent;
         right: -16px;
         top: -5px;
       }
     }
     &.active {
+      cursor: default;
       .active_bg {
         top: -3px;
         bottom: -3px;
@@ -67,12 +74,56 @@
           right: -16px;
           top: -2px;
         }
+
+      }
+      &:first-child {
+        .active_bg:before {
+          right: 10px;
+        }
+      }
+      .title-launch {
+        color: $COLOR--charcoal-grey;
+        span:first-child {
+          display: inline;
+        }
+      }
+      .history-item-container {
+        i {
+          color: $COLOR--charcoal-grey;
+        }
       }
     }
     &:first-child {
       .active_bg:after, .history-item-container:before {
         display: none;
       }
+    }
+    @mixin logColorSet($colorDisabled, $color) {
+      .history-item-container, .active_bg:before {
+        background-color: $colorDisabled;
+      }
+      .active_bg:after {
+        border-left-color: $colorDisabled;
+      }
+      &.active {
+        .history-item-container, .active_bg:before {
+          background-color: $color;
+        }
+        .active_bg:after {
+          border-left-color: $color;
+        }
+      }
+    }
+    &.status-FAILED {
+      @include logColorSet($COLOR--failed-disabled, $COLOR--failed);
+    }
+    &.status-MANY {
+      cursor: default;
+      @include logColorSet($COLOR--light-yellow, $COLOR--light-yellow);
+    }
+    &.status-NOT_FOUND {
+      cursor: default;
+      @include logColorSet($COLOR--white, $COLOR--white);
     }
   }
 }
