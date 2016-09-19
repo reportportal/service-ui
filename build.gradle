@@ -67,6 +67,9 @@ grunt {
     workDir = file("${staticsInputDir}")
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.0'
+}
 
 node {
     version = '4.4.3'
