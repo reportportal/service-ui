@@ -7,7 +7,8 @@ buildscript {
     dependencies {
         classpath "io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE"
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.0.RELEASE")
-
+        classpath 'com.github.jengelman.gradle.plugins:gradle-processes:0.3.0'
+        classpath 'com.bmuschko:gradle-docker-plugin:3.0.3'
     }
 }
 
@@ -26,7 +27,9 @@ apply plugin: "io.spring.dependency-management"
 apply plugin: 'com.moowork.grunt'
 apply plugin: 'idea'
 apply from: 'release-container.gradle'
-apply from: 'build-docker.gradle'
+
+apply plugin: 'com.bmuschko.docker-remote-api'
+
 
 ext {
     staticsInputDir = "${project.projectDir}/src/main/resources/public"
@@ -56,11 +59,17 @@ dependencies {
 
 }
 
+jar {
+    baseName "service-ui"
+}
 
 grunt {
     workDir = file("${staticsInputDir}")
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.0'
+}
 
 node {
     version = '4.4.3'
@@ -104,3 +113,38 @@ processResources.dependsOn runJsTests
 runJsTests.dependsOn grunt_build
 grunt_build.dependsOn grunt_jst
 grunt_jst.dependsOn npmInstall
+
+
+
+
+
+//DOCKER
+
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
+docker {
+    url = "${dockerServerUrl}"
+}
+
+def dockerProjectName = "reportportal-dev/${project.name}".toLowerCase()
+
+
+
+task prepareDockerfile(type: Copy) {
+    /* copy dockerfile and replace version of JAR */
+    from 'docker/Dockerfile-develop'
+    into "${project.buildDir}/libs"
+    expand(version: project.property("version"))
+    rename ('Dockerfile-develop', 'Dockerfile')
+}
+
+task buildDocker(type: DockerBuildImage, dependsOn: prepareDockerfile) {
+    inputDir = file("${project.buildDir}/libs")
+    tag = "${dockerProjectName}:latest"
+}
+
+
+prepareDockerfile.dependsOn build
+buildDocker.dependsOn prepareDockerfile
+
+
