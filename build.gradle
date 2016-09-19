@@ -27,7 +27,6 @@ apply plugin: 'com.moowork.grunt'
 apply plugin: 'idea'
 apply from: 'release-container.gradle'
 
-apply plugin: 'com.bmuschko.docker-remote-api'
 apply from: 'build-docker.gradle'
 
 ext {
