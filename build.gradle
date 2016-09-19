@@ -144,9 +144,6 @@ task buildDocker(type: DockerBuildImage, dependsOn: prepareDockerfile) {
 }
 
 
-
-
-
 prepareDockerfile.dependsOn build
 buildDocker.dependsOn prepareDockerfile
 
