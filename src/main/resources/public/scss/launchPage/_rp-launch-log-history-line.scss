@@ -1,0 +1,78 @@
+.launch-log-history-line {
+  position: relative;
+  width: 100%;
+  margin-top: 11px;
+  .history-line-item {
+    float: right;
+    width: 10%;
+    .title-launch {
+      text-align: center;
+      font-size: 11px;
+      color: $COLOR--gray-60;
+      font-family: OpenSansSemibold;
+      margin-bottom: 7px;
+      span:first-child {
+        display: none;
+      }
+    }
+    .history-item-container {
+      position:relative;
+      width: 100%;
+      height: 30px;
+      background: $COLOR--failed;
+      &:before {
+        content: "";
+        position: absolute;
+        display: block;
+        border: 20px solid transparent;
+        border-left: 8px solid white;
+        right: -27px;
+        top: -5px;
+      }
+    }
+    .active_bg {
+      position: absolute;
+      left: 0;
+      right: -10px;
+      top: 0;
+      bottom: 0;
+      overflow: hidden;
+      &:before {
+        content: "";
+        position: absolute;
+        display: block;
+        background: $COLOR--failed;
+        height: 100%;
+        left: 0;
+        right: 10px;
+      }
+      &:after {
+        content: "";
+        position: absolute;
+        display: block;
+        border: 20px solid transparent;
+        border-left: 8px solid $COLOR--failed;
+        right: -16px;
+        top: -5px;
+      }
+    }
+    &.active {
+      .active_bg {
+        top: -3px;
+        bottom: -3px;
+        &:before {
+          right: 12px;
+        }
+        &:after {
+          right: -16px;
+          top: -2px;
+        }
+      }
+    }
+    &:first-child {
+      .active_bg:after, .history-item-container:before {
+        display: none;
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+.launch-log-body {
+  margin: 0 -15px;
+  padding: 0 15px;
+  border-top: 1px solid $COLOR--gray-91;
+  &.load {
+    border-top: none;
+    .launch-log-preloader {
+      display: inline-block;
+    }
+  }
+}

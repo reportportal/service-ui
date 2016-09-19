@@ -30,6 +30,8 @@ define(function (require, exports, module) {
     var SuiteTableView = require('launches/suiteLevel/SuiteTableView');
     var StepControlView = require('launches/stepLevel/StepControlView');
     var StepTableView = require('launches/stepLevel/StepTableView');
+    var LogControlView = require('launches/logLevel/LogControlView');
+    var LogBodyView = require('launches/logLevel/LogBodyView');
 
     var LaunchSuiteStepItemCollection = require('launches/common/LaunchSuiteStepItemCollection');
 
@@ -48,11 +50,37 @@ define(function (require, exports, module) {
             });
             this.collectionItems = new LaunchSuiteStepItemCollection();
             this.listenTo(this.collectionItems, 'change:params', this.onChangeParamsFilter);
-            this.listenTo(this.crumbs, 'change:item')
+            this.listenTo(this.collectionItems, 'drill:item', this.onDrillItem);
+            this.listenTo(this.collectionItems, 'change:log:item', this.onChangeLogItem);
+            this.listenTo(this.collectionItems, 'set:log:item', this.onSetLogItem);
+            this.listenTo(this.crumbs, 'change:path', this.onChangeItemCrumbs);
         },
         onChangeParamsFilter: function(params) {
-            var mainHash = window.location.hash.split('?')[0]
+            var mainHash = window.location.hash.split('?')[0];
             config.router.navigate(mainHash + '?' + params, {trigger: false, replace: true});
+        },
+        onChangeLogItem: function(logItemId) {
+            this.crumbs.setLogItem(this.collectionItems.get(logItemId));
+            config.router.navigate(this.collectionItems.getPathByLogItemId(logItemId), {trigger: false});
+        },
+        onSetLogItem: function(logItemId) {
+            this.crumbs.setLogItem(this.collectionItems.get(logItemId));
+        },
+        onDrillItem: function(itemModel) {
+            this.crumbs.cacheItem(itemModel);
+        },
+        onChangeItemCrumbs: function(launchModel, parentModel, optionsURL) {
+            var self = this;
+            this.collectionItems.update(launchModel, parentModel, optionsURL)
+                .done(function() {
+                    self.onChangePathId();
+                })
+                .always(function() {
+                    $('[data-js-preloader-launch-body]', self.$el).removeClass('rp-display-block');
+                })
+                .fail(function() {
+                    config.router.show404Page();
+                })
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
@@ -63,18 +91,6 @@ define(function (require, exports, module) {
             this.control && this.control.destroy();
             $('[data-js-preloader-launch-body]', this.$el).addClass('rp-display-block');
             this.crumbs.update(partPath, optionsURL)
-                .done(function(launchModel, parentModel) {
-                    self.collectionItems.update(launchModel, parentModel, optionsURL)
-                        .done(function() {
-                            self.onChangePathId();
-                        })
-                        .always(function() {
-                            $('[data-js-preloader-launch-body]', self.$el).removeClass('rp-display-block');
-                        })
-                        .fail(function() {
-                            config.router.show404Page();
-                        })
-                });
         },
         onChangePathId: function() {
             var info = this.collectionItems.getInfoByCollection();
@@ -109,10 +125,21 @@ define(function (require, exports, module) {
                 }
                 case 'LOG': {
                     this.trigger('change:level', 'LOG');
-                    console.log('render log grid');
+                    this.renderLogLevel(info);
                     break;
                 }
             }
+        },
+        renderLogLevel: function(info) {
+            this.control = new LogControlView({
+                el: $('[data-js-controls-container]', this.$el),
+                collectionItems: this.collectionItems,
+            });
+            this.body = new LogBodyView({
+                el: $('[data-js-info-container]', this.$el),
+                collectionItems: this.collectionItems,
+                launchModel: info.launchModel,
+            })
         },
         renderStepLevel: function(info) {
             this.control = new StepControlView({

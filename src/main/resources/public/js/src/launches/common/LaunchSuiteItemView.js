@@ -108,6 +108,7 @@ define(function (require, exports, module) {
         },
         onClickName: function(e) {
             e.preventDefault();
+            this.model.trigger('drill:item', this.model);
             config.router.navigate($(e.currentTarget).attr('href'), {trigger: true});
         },
         destroy: function () {

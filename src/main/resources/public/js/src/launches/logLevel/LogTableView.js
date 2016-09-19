@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function (require, exports, module) {
+    'use strict';
 
-@import 'rp-launch-body';
-@import 'rp-launch-header';
-@import 'rp-launch-suite-grid';
-@import 'rp-launch-step-grid';
-@import 'rp-launch-suite-info-panel';
-@import 'rp-launch-log-body';
-@import 'rp-launch-log-history-line';
+    var $ = require('jquery');
+    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
+
+});

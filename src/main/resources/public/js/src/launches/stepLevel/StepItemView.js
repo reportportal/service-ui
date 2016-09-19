@@ -134,6 +134,7 @@ define(function (require, exports, module) {
             e.preventDefault();
             var href = $(e.currentTarget).attr('href');
             if(href != '') {
+                this.model.trigger('drill:item', this.model);
                 config.router.navigate(href, {trigger: true});
             } else {
                 var currentPath = window.location.hash;

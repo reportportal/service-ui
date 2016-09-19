@@ -1,6 +1,9 @@
 .launches-header-bar {
   padding: 10px 0;
   margin: 0 -15px;
+  .rp-btn {
+    vertical-align: top;
+  }
   .info-wrapper, .refine-wrapper {
     width: 100%;
     float: left;

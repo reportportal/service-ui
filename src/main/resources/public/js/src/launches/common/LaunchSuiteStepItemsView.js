@@ -38,25 +38,18 @@ define(function (require, exports, module) {
             this.filterModel = options.filterModel;
             this.listenTo(this.collection, 'reset', this.renderItems);
             this.listenTo(this.collection, 'loading', this.onLoadingCollection);
-            this.listenTo(this.collection, 'change:paging', this.onChangePagingInfo);
             this.render();
             this.renderedItems = [];
             this.pagingModel = new Backbone.Model();
 
-            this.renderItems();
             this.paging = new Components.PagingToolbar({
                 el: $('[data-js-paginate-container]', this.$el),
                 model: this.pagingModel,
             });
+            this.renderItems();
 
             this.listenTo(this.paging, 'page', this.onChangePage);
             this.listenTo(this.paging, 'count', this.onChangePageCount);
-
-            this.onChangePagingInfo();
-        },
-        onChangePagingInfo: function() {
-            this.pagingModel.set(this.collection.pagingData);
-            this.paging.render();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
@@ -64,9 +57,11 @@ define(function (require, exports, module) {
         onLoadingCollection: function(state) {
             if(state) {
                 $('[data-js-preloader]',self.$el).addClass('rp-display-block');
+                this.paging.$el.addClass('hide');
                 return;
             }
             $('[data-js-preloader]',self.$el).removeClass('rp-display-block');
+            this.paging.$el.removeClass('hide');
         },
         onChangePage: function(page) {
             this.collection.setPaging(page);
@@ -83,6 +78,8 @@ define(function (require, exports, module) {
                 $itemsContainer.append(item.$el);
                 self.renderedItems.push(item);
             })
+            this.pagingModel.set(this.collection.pagingData);
+            this.paging.render();
         },
         destroy: function () {
             while(this.renderedItems.length) {
