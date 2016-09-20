@@ -17,7 +17,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 define(function (require, exports, module) {
     'use strict';
 
@@ -25,8 +25,10 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Util = require('util');
     var App = require('app');
+    var SingletonAppModel = require('model/SingletonAppModel');
 
     var config = App.getInstance();
+    var appModel = new SingletonAppModel();
 
     var loadExternal = function(){
         var async = $.Deferred();
@@ -41,7 +43,7 @@ define(function (require, exports, module) {
 
                 return;
             }
-            new window.ExternalServices({Backbone: Backbone, Util: Util, config: config});
+            new window.ExternalServices({Backbone: Backbone, Util: Util, config: config, AppModel: appModel});
             async.resolve();
         };
         script.onerror = function() {
