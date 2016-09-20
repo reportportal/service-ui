@@ -57,6 +57,9 @@ dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-eureka'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
 
+    compile 'io.springfox:springfox-swagger-ui:2.3.0'
+
+
 }
 
 jar {
