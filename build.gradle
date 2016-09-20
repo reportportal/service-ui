@@ -27,8 +27,8 @@ apply plugin: "io.spring.dependency-management"
 apply plugin: 'com.moowork.grunt'
 apply plugin: 'idea'
 apply from: 'release-container.gradle'
+apply from: 'build-docker.gradle'
 
-apply plugin: 'com.bmuschko.docker-remote-api'
 
 
 ext {
@@ -56,6 +56,9 @@ dependencies {
 
     compile 'org.springframework.cloud:spring-cloud-starter-eureka'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
+
+    compile 'io.springfox:springfox-swagger-ui:2.3.0'
+
 
 }
 
@@ -113,38 +116,3 @@ processResources.dependsOn runJsTests
 runJsTests.dependsOn grunt_build
 grunt_build.dependsOn grunt_jst
 grunt_jst.dependsOn npmInstall
-
-
-
-
-
-//DOCKER
-
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-
-docker {
-    url = "${dockerServerUrl}"
-}
-
-def dockerProjectName = "reportportal-dev/${project.name}".toLowerCase()
-
-
-
-task prepareDockerfile(type: Copy) {
-    /* copy dockerfile and replace version of JAR */
-    from 'docker/Dockerfile-develop'
-    into "${project.buildDir}/libs"
-    expand(version: project.property("version"))
-    rename ('Dockerfile-develop', 'Dockerfile')
-}
-
-task buildDocker(type: DockerBuildImage, dependsOn: prepareDockerfile) {
-    inputDir = file("${project.buildDir}/libs")
-    tag = "${dockerProjectName}:latest"
-}
-
-
-prepareDockerfile.dependsOn build
-buildDocker.dependsOn prepareDockerfile
-
-
