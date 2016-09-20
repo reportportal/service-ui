@@ -44,6 +44,7 @@ import org.springframework.boot.web.servlet.ErrorPage;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 /**
@@ -57,6 +58,16 @@ public class UIApp extends WebMvcConfigurerAdapter {
 
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(UIApp.class, args);
+	}
+
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		if (!registry.hasMappingForPattern("/webjars/**")) {
+			registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+		}
+		if (!registry.hasMappingForPattern("/**")) {
+			registry.addResourceHandler("/**").addResourceLocations("classpath:/public/");
+		}
 	}
 
 	@Component
