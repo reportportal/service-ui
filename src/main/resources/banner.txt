@@ -6,3 +6,4 @@ ${AnsiColor.BRIGHT_YELLOW}
 /_/ |_|\___/ .___/\____/_/   \__/_/    \____/_/   \__/\__,_/_/
           /_/
                 ${application.title} ${application.version}
+                Build with String Boot ${spring-boot.formatted-version}

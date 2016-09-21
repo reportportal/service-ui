@@ -55,14 +55,19 @@
     // var(--passed);
     $COLOR--passed: #87b77b;
     //$COLOR_RGBA--passed: rgba(135, 183, 123, 1);
+    $COLOR--passed-disabled: lighten($COLOR--passed, 10%);
 
     // var(--failed);
     $COLOR--failed: #f36c4a;
     //$COLOR_RGBA--failed: rgba(243, 108, 74, 1);
+    $COLOR--failed-disabled: lighten($COLOR--failed, 10%);
 
     // var(--skipped);
     $COLOR--skipped: #bdc7cc;
     //$COLOR_RGBA--skipped: rgba(189, 199, 204, 1);
+    $COLOR--skipped-disabled: lighten($COLOR--skipped, 10%);
+
+    $COLOR--light-yellow: #f5f9ec;
 
     // var(--charcoal-grey);
     $COLOR--charcoal-grey: #464547;

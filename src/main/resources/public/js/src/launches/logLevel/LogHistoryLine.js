@@ -34,7 +34,14 @@ define(function (require, exports, module) {
         model: LaunchSuiteStepItemModel,
 
         initialize: function(options) {
-            this.launchId = options.launchId
+            this.launchId = options.launchId;
+            this.listenTo(this, 'activate', this.activateItem);
+        },
+        activateItem: function(activeModel) {
+            _.each(this.models, function(model) {
+                model.set({active: false});
+            })
+            activeModel.set({active: true});
         },
         load: function(itemId) {
             var self = this;
@@ -46,20 +53,22 @@ define(function (require, exports, module) {
         parse: function(data, itemId) {
             var self = this;
             return  _.map(data, function(item) {
-                var answer = {launchNumber: item.launchNumber};
+                var answer = {launchNumber: item.launchNumber, active: false};
                 if(item.launchId == self.launchId) {
                     _.each(item.resources, function(resource) {
                         if(resource.id == itemId) {
                             answer = _.extend(answer, self.updateDataForModel(resource));
+                            answer.active = true;
                         }
                     })
                 } else if(item.resources.length == 1){
-                    answer = _.extend(answer, self.model.parseData(item.resources[0]));
+                    answer = _.extend(answer, self.updateDataForModel(item.resources[0]));
                 } else if(item.resources.length == 0) {
                     answer.status = 'NOT_FOUND';
                 } else {
                     answer.status = 'MANY';
                 }
+
                 return answer;
             })
         },
@@ -78,14 +87,23 @@ define(function (require, exports, module) {
         template: 'tpl-launch-log-history-line-item',
         className: 'history-line-item',
 
+        events: {
+            'click': 'onClickItem',
+        },
         bindings: {
             '[data-js-launch-number]': 'text: launchNumber',
+            ':el': 'classes: {active: active}',
         },
 
         initialize: function() {
             this.render();
+            this.$el.addClass('status-' + this.model.get('status'));
         },
-
+        onClickItem: function() {
+            if(this.model.get('status') != 'MANY' && this.model.get('status') != 'NOT_FOUND'){
+                this.model.trigger('activate', this.model);
+            }
+        },
         render: function() {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));
         }
