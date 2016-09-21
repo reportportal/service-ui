@@ -1,0 +1,63 @@
+<div class="inline-editor">
+    <div class="container-fluid">
+        <div class="btn-group pull-left">
+            <button data-toggle="dropdown" class="btn rp-defect-type-dropdown dropdown-toggle">
+                <span data-js-issue-title class="pr-defect-type-badge" data-id="">
+                    <i data-js-issue-color></i>
+                    <span data-js-issue-name></span>
+                </span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu rp-defects-menu">
+                <% _.each(data.defectsGroup, function(defect, i){ %>
+                    <% var rowDesktop = i == 0 ? '12' : '3', rowTablet = i == 0 ? '12' : '6' %>
+                    <% var sepDesktop = i == 1 ? 'visible-md visible-lg' : '', sepTable = i%2 == 0 ? '' : 'visible-sm' %>
+                    <% if(i > 0){ %>
+                        <li role="separator" class="divider <%= sepDesktop %>"></li>
+                        <li role="separator" class="divider <%= sepTable %>"></li>
+                        <li role="separator" class="divider visible-xs-block"></li>
+                    <% } %>
+                    <li class="col-md-<%= rowDesktop %> col-sm-<%= rowTablet %> col-xs-12">
+                        <% _.each(data.subDefects[defect], function(d){ %>
+                        <% var checked = d.locator == data.issueType ? true : false %>
+                        <div class="rp-defect-row">
+                            <label title="<%- d.longName %>" class="<%= checked ? 'selected' : '' %>" data-js-select-issue data-locator="<%= d.locator %>">
+                                <i style="background: <%- d.color %>"></i><%- d.longName.setMaxLength(20) %>
+                            </label>
+                        </div>
+                        <% }); %>
+                    </li>
+                <% }); %>
+            </ul>
+        </div>
+        <div data-js-issue-tickets class="tickets-container"></div>
+        <div class="pull-right">
+            <button title="<%= data.text.ui.clickToCancel %>" data-js-close-editor class="rp-btn rp-btn-cancel" type="cancel">
+                <%= data.text.ui.cancel %>
+            </button>
+            <button title="<%= data.text.ui.clickToSubmit %>" data-js-submit class="rp-btn rp-btn-submit submit disabled" type="submit">
+                <%= data.text.ui.submit %>
+            </button>
+        </div>
+    </div>
+    <div class="text-editor">
+        <textarea rows="3" id="textile" class="" data-js-issue-comment><%- data.comment %></textarea>
+        <div class="rp-defect-multiple-edit" data-js-multiple-selected>
+            <span class="rp-defect-editor-counter">
+                <%= data.text.launches.youAreEditing %><span id="inProgressAmount" data-js-selected-qty></span>
+                <%= data.text.launches.objects %>
+            </span>
+            <label class="control-label replace-comments">
+                <input type="checkbox" checked="checked" data-js-replace-comment> <%= data.text.launches.replaceComments %>
+            </label>
+        </div>
+        <div class="rp-defect-post-issues">
+            <button data-js-post-bug class="rp-btn rp-btn-default pr-post-bug-btn" title="" type="button">
+                <i class="material-icons">&#xE868;</i><%= data.text.launches.postBug %>
+            </button>
+            <button data-js-load-bug class="rp-btn rp-btn-default pr-load-bug-btn" title="" type="button">
+                <i class="material-icons">&#xE157;</i><%= data.text.launches.loadBug %>
+            </button>
+        </div>
+    </div>
+</div>
