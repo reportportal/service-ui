@@ -1,0 +1,52 @@
+.fullscreen #contentHeader,
+.fullscreen #pageSidebar,
+.fullscreen .header,
+.fullscreen #pageFooter,
+.fullscreen .uv-icon {
+    display: none !important;
+}
+
+.fullscreen .wrapper,
+.fullscreen .main-content {
+    padding-left: 0;
+    padding-right: 0;
+    position: relative;
+}
+
+.fullscreen .color {
+    background: #fff;
+}
+
+.fullscreen .container {
+    width: 100%;
+}
+
+.fullscreen #mainContainer {
+    padding-bottom: 0;
+}
+
+.fullscreen #dynamic-content {
+    padding-top: 15px;
+}
+
+.fullscreen-close {
+    display: none;
+    position: fixed;
+    right: 15px;
+    top: 10px;
+}
+
+.fullscreen .fullscreen-close {
+    display: block;
+}
+
+.fullscreen-container {
+    height: auto !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+}
+
+.btn.btn-salad-bg {
+    background-color: #cdea7e;
+    color: #799b1c;
+}

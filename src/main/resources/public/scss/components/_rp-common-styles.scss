@@ -58,8 +58,18 @@ ul, ol {
     padding: 0;
 }
 
+ul {
+    margin: 0;
+    -webkit-padding-start: 0;
+}
+
 /*---------------*/
 /* CUSTOM STYLES */
+
+.checkbox, .radio {
+    margin-top: 0;
+    margin-bottom: 0;
+}
 
 .rp-nav {
     display: inline-block;
@@ -1064,6 +1074,7 @@ textarea {
 }
 
 /*--------------------------------*/
+
 .badge, 
 .daterangepicker .calendar-date, 
 .daterangepicker .ranges .input-mini, 
@@ -1077,4 +1088,43 @@ textarea {
 .input-group-sm>.input-group-btn>.btn, 
 .label, .my_button {
     border-radius: 0;
+}
+
+/*--------------------------------*/
+
+.dropdown-like .btn-default, 
+.fluid-filter .input-group.input-group-sm, 
+.tokenfield.input-sm .twitter-typeahead .tt-query {
+    min-width: 206px!important;
+}
+
+/*--------------------------------*/
+
+.btn.dropdown-toggle {
+    background-color: $COLOR--gray-80;
+    font-size: 13px;
+    color: $COLOR--charcoal-grey;
+}
+
+/*--------------------------------*/
+
+.exact-match .select2-result-label::after, 
+.exact-match .select2-result-label:after {
+    position: absolute;
+    display: inline-block;
+    color: $COLOR--gray-80;
+    content: "New";
+    right: 5px;
+}
+
+/*--------------------------------*/
+
+#filter-actions, 
+.b-content ul, 
+.b-partners ul, 
+.config-pills, 
+.slick-dots, 
+.well-list, 
+li {
+    list-style: none;
 }

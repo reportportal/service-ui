@@ -1,0 +1,339 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+
+#filterPanel {
+    .rp-filter-inputs {
+        #filterInputs {
+            .filter-wrapper {
+                display: inline-block;
+                float: left;
+                height: 60px;
+                width: 216px;
+                min-width: 150px;
+                position: relative;
+                margin-right: 35px;
+                margin-bottom: 14px;
+                margin-top: 7px;
+                padding-right: 0;
+                border-right: 0;
+
+                .btn.dropdown-toggle {
+                    background-color: $COLOR--gray-80;
+                    font-size: 13px;
+                    color: $COLOR--charcoal-grey;
+
+                    &:focus {
+                        background-color: $COLOR--white-default;
+                    }
+                }
+
+                .filter-hint {
+                    position: absolute;
+                    top: 100%;
+                    right: auto;
+                    left: 0;
+                    z-index: 100;
+                    display: none;
+                    padding: 10px 11px;
+                    width: 190px;
+                    font-size: 12px;
+                }
+
+                .btn, .dropdown-menu {
+                    font-size: inherit;
+                }
+            }
+
+            .tab-filters {
+                .filter-wrapper {
+                    display: inline-block;
+                    float: left;
+                    height: 60px;
+                    width: 216px;
+                    min-width: 150px;
+                    position: relative;
+                    margin-bottom: 14px;
+                    margin-top: 7px;
+                    margin-right: 35px;
+                    padding-right: 0;
+                    border-right: 0;
+
+                    &.fluid-filter {
+                        width: auto;
+                        height: auto;
+                        min-height: 60px;
+
+                        .form-group {
+                            margin: 0;
+                            display: inline-block;
+
+                            .filter-option-input .select2-container {
+                                height: auto;
+
+                                &.input-sm {
+                                    padding: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .criteria-btn {
+                    padding: 30px 10px 13px 12px;
+                    float: left;
+
+                    .filters-criteria {
+                        margin-top: -11px;
+                        margin-left: 12px;
+                    }
+                }
+            }
+        }
+    }
+
+    .has-error .form-control, 
+    .has-error .form-control:focus {
+        color: $COLOR--black-two;
+        box-shadow: 0 0 2px 0 rgba(255,49,33,.7);
+        border: 1px solid $COLOR--orange-red;
+    }
+}
+
+#headerBar.affix {
+    position: fixed;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid #ccc;
+    background: #fff;
+}
+
+#gridWrapper {
+    .rp-margin-reset {
+        margin: 0 -15px;
+        border: 1px solid #ddd;
+        border-left: none;
+        border-right: none;
+        font-weight: 400;
+        border-top: none;
+        border-bottom: 1px solid #ddd;
+
+        .affix {
+            z-index: 10;
+            position: fixed;
+        }
+
+        .rp-table-thead.fixed_table_header.affix-top {
+            position: fixed;
+            top: 0 !important;
+            z-index: 100;
+            border-bottom: 1px solid #ccc;
+            background: #fff;
+        }
+
+
+        .extra-space {
+            margin: 0 4px;
+        }
+
+        .rp-grid-thead {
+            .last-col {
+                margin-left: -32px;
+            }
+
+            .margin-col {
+                margin-left: -8px;
+            }
+        }
+
+        .navigateable.rp-blue-link-undrl {
+            white-space: pre-wrap;
+            color: #428bca;
+            text-decoration: none!important;
+        }
+
+        .rp-table-row {
+            .name-cell {
+                .tags {
+                    overflow: hidden;
+
+                    small {
+                        text-align: right;
+
+                        .text-muted {
+                            position: relative;
+                            display: inline-block;
+                            word-break: break-all;
+                            margin-right: 3px;
+                            font-size: 12px;
+                            overflow-y: auto;
+                            overflow-x: hidden;
+
+                            i.material-icons {
+                                position: absolute;
+                                top: 3px;
+                                left: 0;
+                                width: 14px;
+                                height: 14px;
+                                font-size: 15px;
+                                line-height: 14px;
+                            }
+
+                            a.tag, 
+                            span.to-history {
+                                padding-left: 20px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .show-time {
+                .from-now {
+                    padding-bottom: 1.2em;
+                }
+                &:hover .from-now {
+                    display: none;
+                }
+
+                .exact-time {
+                    display: none;
+                }
+                &:hover .exact-time {
+                    display: inline;
+                }
+            }
+
+            .to_investigate-table-cell {
+                top: 10px;
+                right: 10px;
+                position: absolute;
+            }
+        }
+    }
+
+    #pagingHolder {
+        clear: both;
+
+        .pagination, .no-margin {
+            margin-bottom: 0;
+        }
+
+        .col-md-2 {
+            margin-top: 10px;
+        }
+    }
+}
+
+
+
+.dropdown-like .btn-default, 
+.input-group.input-group-sm {
+    width: 100%;
+}
+
+.filter-control, 
+.select2-container {
+    width: 100%;
+}
+
+
+/*---------round diagrams & their tooltip-----------*/
+.nvd3.nv-pie path {
+    stroke-width: 0;
+}
+
+.nvd3.nv-pie .nv-pie-title {
+    font-size: 1.2em;
+    fill: #333;
+}
+/*---*/
+.pr-grid-defect-stats:hover .defects-tooltip {
+    display: block;
+}
+
+.defects-tooltip.tooltip {
+    padding: 0;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);
+    border: 1px solid #ccc;
+    opacity: 1;
+
+    .tooltip-inner {
+        padding: 0;
+        max-width: none;
+        background: #fff;
+        color: #464547;
+        text-align: left;
+        border-radius: 0;
+        font-family: OpenSansSemibold,sans-serif;
+        word-wrap: break-word;
+
+        .defects-tip-content {
+            width: 260px;
+            padding: 8px 10px;
+            color: #777;
+
+            .defects-tip-title {
+                font-size: 13px;
+                color: #777;
+                margin: 0;
+                padding: 8px 0 10px 5px;
+            }
+
+            .defects-tip-list {
+                margin: 4px 0 0;
+                padding: 10px 0 0;
+                border-top: solid 1px #e9e9e9;
+            }
+
+            .defects-tip-color {
+                display: inline-block;
+                width: 12px;
+                height: 12px;
+                border-radius: 100px;
+                margin: 0 2px 0 0;
+                position: relative;
+                top: 1px;
+            }
+        }
+    }
+}
+
+.defects-tip-list>li div[class*=col-], 
+.defects-tip-title div[class*=col-], 
+.stats-tip-list>li div[class*=col-] {
+    padding: 0;
+}
+/*--------------------------------*/
+
+.defects-tip-list>li, .stats-tip-list>li {
+    float: none;
+    margin: 0;
+    padding: 4px 0 4px 5px;
+}
+
+
+a.stacktrace, 
+div.sortable, 
+th.sortable {
+    cursor: pointer;
+}
