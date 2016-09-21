@@ -29,7 +29,7 @@ define(function (require, exports, module) {
     var Localization = require('localization');
     var LaunchSuiteStepItemMenuView = require('launches/common/LaunchSuiteStepItemMenuView');
     var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
-    var DefectEditor = require('defectEditor');
+    var DefectEditor = require('launches/stepLevel/DefectEditorView');
 
     var config = App.getInstance();
 
@@ -110,19 +110,18 @@ define(function (require, exports, module) {
             }
             e.stopPropagation();
         },
-        setupEditor: function (origin, item, items) {
+        setupEditor: function () {
             var item = this.model.toJSON({computed: true}),
                 items = {};
-            items[item.id] = item;
+            //items[item.id] = item;
             this.removeEditor();
-            this.$editor = new DefectEditor.Editor({
-                element: $("<div class='col-sm-12 editor-row'/>").appendTo(this.$el.closest('.rp-table-row')),
-                origin: this.$el,
-                item: item,
-                items: items,
-                //navigationInfo: {},
-                //defectCallBack: 'navigation::reload::table'
-            }).render();
+            this.$editor = new DefectEditor({
+                origin: $('.rp-table-row', this.$el),
+                model: this.model/*,
+                items: items*/
+            });
+            $('[data-js-issue-type]', this.$el).hide();
+            $('[data-js-status-class]', this.$el).addClass('selected');
         },
         removeEditor: function () {
             if (this.$editor) {

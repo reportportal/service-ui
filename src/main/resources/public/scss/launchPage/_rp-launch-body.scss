@@ -67,3 +67,39 @@
     }
   }
 }
+
+/* ------------------------- */
+
+.launch-body-wrapper {
+  .rp-table-hover {
+    .rp-table-row {
+      &.selected {
+        border: 1px solid #999;
+        border-bottom: none;
+        background-color: #e9e9e9 !important;
+      }
+      &.selected:last-child {
+        border-bottom: 1px solid #999;
+      }
+    }
+  }
+  .rp-margin-reset {
+    .rp-table-thead {
+      .rp-table-th {
+        padding-left: 0;
+      }
+    }
+  }
+}
+
+.rp-table-hover {
+  .rp-table-row {
+    &.selected + .rp-table-row,
+    &.selected + .method-collapsed .rp-table-row {
+      border-top: 1px solid #999;
+    }
+    &.selected:last-child {
+      border-bottom: 1px solid #999;
+    }
+  }
+}

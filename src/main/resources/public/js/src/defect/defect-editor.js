@@ -230,8 +230,8 @@ define([
                 return {comment: $.trim(self.$textarea.val()), issue_type: self.selectedIssue}
             };
             var issues = [];
-            var replaceComments = this.$replaceComments.is(':checked');
-            var editorItemId = this.item.id;
+            //var replaceComments = this.$replaceComments.is(':checked');
+            //var editorItemId = this.item.id;
             var getIssueForReplace = function (item) {
                 if (item.id === editorItemId) {
                     return getDefaultIssue();
