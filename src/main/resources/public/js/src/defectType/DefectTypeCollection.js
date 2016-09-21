@@ -60,6 +60,13 @@ define(function (require, exports, module) {
             }
             return defect;
         },
+        getDefectByLocator: function(locator) {
+            var defects = this.where({locator: locator});
+            if(defects.length >= 1) {
+                return defects[0];
+            }
+            return null;
+        },
         checkForSubDefects: function(){
             return this.length > 5;
         },

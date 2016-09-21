@@ -28,6 +28,9 @@ define(function (require, exports, module) {
     var StepItemView = require('launches/stepLevel/StepItemView');
     var LaunchSuiteStepItemsView = require('launches/common/LaunchSuiteStepItemsView');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var StepTableView = Epoxy.View.extend({
         template: 'tpl-launch-step-table',
@@ -35,7 +38,8 @@ define(function (require, exports, module) {
         events: {
             'click .rp-grid-th[data-sorter]': 'onClickSorter',
             'click .rp-grid-th[data-filter] .rp-icons-filter': 'onClickFilter',
-            'click [data-collapse-methods]': 'toggleCollapsedMethods',
+            'click [data-js-collapse-label]': 'clickCollapseInput',
+            'change [data-js-collapse-input]': function(e) { this.onChangeCollapseInput($(e.currentTarget)); },
         },
 
         initialize: function(options) {
@@ -57,40 +61,28 @@ define(function (require, exports, module) {
                 self.applyPreconditionsStatus();
             });
         },
-        applyPreconditionsStatus: function(){
-            this.statusPreconditions = this.userSettings.get('statusPreconditions') || 'OFF';
-            //this.toggleCollapsedMethods();
-            this.toggleCollapsedSwitcher();
-        },
-        toggleCollapsedMethods: function(e){
-            e.preventDefault();
-            this.statusPreconditions = this.statusPreconditions === 'ON' ? 'OFF' : 'ON';
-            this.userSettings.set('statusPreconditions', this.statusPreconditions);
-            this.setPreconditionMethods();
-            this.toggleCollapsedSwitcher();
+        clickCollapseInput: function(e) {
             e.stopPropagation();
         },
-        toggleCollapsedSwitcher: function () {
-            var title = Localization.launches[(this.statusPreconditions == 'ON' ? 'hide' : 'show') + 'PreconditionMethods'],
-                checked = this.statusPreconditions == 'ON' ? true : false;
-
-            //$('input.select-test', collapsed).prop('checked', false);
-            //$('div.row.rp-table-row', collapsed).removeClass('selected');
-
-            $('[data-collapse-methods] .rp-switcher', this.$el).attr('title', title);
-            $('[data-collapse-methods] .rp-switcher input', this.$el).prop('checked', checked);
-            this.toggleCollapsedRowsCls();
-        },
-        toggleCollapsedRowsCls: function(){
-            if(this.statusPreconditions === 'OFF'){
+        onChangeCollapseInput: function($el, silent) {
+            var active = $el.is(':checked');
+            this.userSettings.set('statusPreconditions', active);
+            var title = Localization.launches.showPreconditionMethods;
+            if(active) {
+                title = Localization.launches.hidePreconditionMethods;
+                $('[data-js-table-container]', this.$el).addClass('hide-collapsed-methods');
+            } else {
                 $('[data-js-table-container]', this.$el).removeClass('hide-collapsed-methods');
             }
-            else {
-                $('[data-js-table-container]', this.$el).addClass('hide-collapsed-methods');
+            if(!silent) {
+                config.trackingDispatcher.preconditionMethods(active ? 'ON' : 'OFF');
             }
+            $('[data-js-collapse-label]', this.$el).attr('title', title);
         },
-        setPreconditionMethods: function () {
-            return config.trackingDispatcher.preconditionMethods(this.statusPreconditions);
+        applyPreconditionsStatus: function(){
+            var collapseInput = $('[data-js-collapse-input]', this.$el);
+            collapseInput.prop('checked', this.userSettings.get('statusPreconditions'));
+            this.onChangeCollapseInput(collapseInput, true);
         },
         onClickSorter: function(e) {
             var sorter = $(e.currentTarget).data('sorter');

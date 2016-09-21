@@ -27,6 +27,7 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Service = require('coreService');
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
+    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var Util = require('util');
 
 
@@ -52,7 +53,7 @@ define(function (require, exports, module) {
         },
         parse: function(data, itemId) {
             var self = this;
-            return  _.map(data, function(item) {
+            var answerData = _.map(data, function(item) {
                 var answer = {launchNumber: item.launchNumber, active: false};
                 if(item.launchId == self.launchId) {
                     _.each(item.resources, function(resource) {
@@ -70,7 +71,8 @@ define(function (require, exports, module) {
                 }
 
                 return answer;
-            })
+            });
+            return answerData.reverse();
         },
         updateDataForModel: function(data) {
             if(data.issue) {
@@ -98,14 +100,50 @@ define(function (require, exports, module) {
         initialize: function() {
             this.render();
             this.$el.addClass('status-' + this.model.get('status'));
+            this.defectTypeCollection = new SingletonDefectTypeCollection();
+            this.updateIssue();
+            this.listenTo(this.model, 'change:issue', this.updateIssue);
+        },
+        updateIssue: function() {
+            var self = this;
+            var issue = this.model.getIssue();
+            if(issue.comment) {
+                $('[data-js-comment]', this.$el).addClass('rp-display-inline');
+            } else {
+                $('[data-js-comment]', this.$el).removeClass('rp-display-inline')
+            }
+            if(issue.issue_type) {
+                this.defectTypeCollection.ready.done(function() {
+                    var defectTypeModel = self.defectTypeCollection.getDefectByLocator(issue.issue_type);
+                    $('[data-js-issue-type]', self.$el).removeClass('hide').css({
+                        backgroundColor: defectTypeModel.get('color'),
+                        color: defectTypeModel.get('reverseColor'),
+                        boxShadow: '0 0 1px ' + defectTypeModel.get('reverseColor'),
+                    }).text(defectTypeModel.get('shortName'));
+                })
+            } else {
+                $('[data-js-issue-type]', self.$el).addClass('hide')
+            }
+            if(issue.externalSystemIssues) {
+                $('[data-js-ticket]', this.$el).addClass('rp-display-inline');
+            } else {
+                $('[data-js-ticket]', this.$el).removeClass('rp-display-inline')
+            }
         },
         onClickItem: function() {
-            if(this.model.get('status') != 'MANY' && this.model.get('status') != 'NOT_FOUND'){
+            if(!this.model.get('active') && this.model.get('status') != 'MANY' && this.model.get('status') != 'NOT_FOUND'){
                 this.model.trigger('activate', this.model);
             }
         },
         render: function() {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));
+        },
+        destroy: function() {
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            this.$el.remove();
+            delete this;
         }
     });
 
@@ -115,7 +153,6 @@ define(function (require, exports, module) {
             this.collectionItems = options.collectionItems;
             this.launchModel = options.launchModel;
             this.renderedItems = [];
-            this.$el = options.$el;
             this.collection = new LogHistoryLineCollection({launchId: this.launchModel.get('id')});
             this.listenTo(this.collection, 'reset', this.onResetHistoryItems);
             this.render();
@@ -123,7 +160,14 @@ define(function (require, exports, module) {
             this.collection.load(this.collectionItems.getInfoLog().item)
                 .always(function() {
                     self.trigger('load:history');
+                    var activeModels = self.collection.where({active: true});
+                    if(activeModels.length == 1) {
+                        self.trigger('activate:item', activeModels[0]);
+                    }
                 })
+            this.listenTo(this.collection, 'activate', function(model) {
+                self.trigger('activate:item', model);
+            })
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));

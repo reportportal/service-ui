@@ -2,47 +2,63 @@
   position: relative;
   width: 100%;
   margin-top: 11px;
-  cursor: pointer;
+  overflow: hidden;
+  padding-bottom: 10px;
   .history-line-item {
-    float: right;
+    float: left;
     width: 10%;
+    cursor: pointer;
     .title-launch {
       text-align: center;
       font-size: 11px;
       color: $COLOR--gray-60;
       font-family: OpenSansSemibold;
       margin-bottom: 7px;
-      text-indent: 6px;
+      padding-left: 10px;
       span:first-child {
         display: none;
       }
     }
     .history-item-container {
       position:relative;
-      width: 100%;
       height: 30px;
+      width: 100%;
       text-align: center;
-      text-indent: 6px;
+      padding-left: 10px;
       &:before {
         content: "";
         position: absolute;
-        display: block;
-        border: 20px solid transparent;
-        border-left: 8px solid white;
-        right: -27px;
-        top: -5px;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        left: 10px;
       }
       i {
         position: relative;
-        font-size: 20px;
+        font-size: 18px;
         line-height: 30px;
         color: $COLOR--gray-60;
         display: none;
       }
+      .issue-type {
+        vertical-align: top;
+        display: inline-block;
+        position: relative;
+        margin-top: 6px;
+        padding: 0 8px;
+        border-radius: 8px;
+      }
+    }
+    &:first-child {
+      .history-item-container {
+        &:before {
+          left: 0;
+        }
+      }
     }
     .active_bg {
       position: absolute;
-      left: 0;
+      left: 2px;
       right: -10px;
       top: 0;
       bottom: 0;
@@ -51,17 +67,22 @@
         content: "";
         position: absolute;
         display: block;
-        height: 100%;
-        left: 0;
-        right: 10px;
+        border-top: 20px solid transparent !important;
+        border-bottom: 20px solid transparent !important;
+        border-right: 3px solid transparent !important;
+        border-left: 8px solid transparent;
+        right: 0;
+        top: -5px;
       }
       &:after {
         content: "";
         position: absolute;
         display: block;
-        border: 20px solid transparent;
-        border-left: 8px solid transparent;
-        right: -16px;
+        border-left: 8px solid transparent !important;
+        border-right: 3px solid transparent;
+        border-top: 20px solid transparent;
+        border-bottom: 20px solid transparent;
+        left: 0;
         top: -5px;
       }
     }
@@ -70,18 +91,8 @@
       .active_bg {
         top: -3px;
         bottom: -3px;
-        &:before {
-          right: 12px;
-        }
-        &:after {
-          right: -16px;
+        &:before, &:after {
           top: -2px;
-        }
-
-      }
-      &:first-child {
-        .active_bg:before {
-          right: 10px;
         }
       }
       .title-launch {
@@ -91,33 +102,32 @@
         }
       }
       .history-item-container {
+        &:before {
+          top: -3px;
+          bottom: -3px;
+        }
         i {
           color: $COLOR--charcoal-grey;
         }
       }
     }
-    &:first-child {
-      .active_bg:after, .history-item-container:before {
-        display: none;
-      }
-    }
     @mixin logColorSet($colorDisabled, $color) {
-      .history-item-container, .active_bg:before {
+      .history-item-container:before {
         background-color: $colorDisabled;
       }
-      .active_bg:after {
-        border-left-color: $colorDisabled;
+      .active_bg:after, .active_bg:before {
+        border-color: $colorDisabled;
       }
       &.active {
-        .history-item-container, .active_bg:before {
+        .history-item-container:before {
           background-color: $color;
         }
-        .active_bg:after {
-          border-left-color: $color;
+        .active_bg:after, .active_bg:before {
+          border-color: $color;
         }
       }
     }
-    &.status-FAILED {
+    &.status-FAILED, &.status-INTERRUPTED {
       @include logColorSet($COLOR--failed-disabled, $COLOR--failed);
     }
     &.status-MANY {
@@ -133,6 +143,12 @@
       [data-js-not-found] {
         display: inline;
       }
+    }
+    &.status-SKIPPED {
+      @include logColorSet($COLOR--skipped-disabled, $COLOR--skipped);
+    }
+    &.status-PASSED {
+      @include logColorSet($COLOR--passed-disabled, $COLOR--passed);
     }
   }
 }

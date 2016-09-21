@@ -18,54 +18,33 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function (require, exports, module) {
+    'use strict';
 
+    var $ = require('jquery');
+    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
+    var Util = require('util')
 
-.method-collapsed {
-  position: relative;
-  margin: 0 -15px;
-}
-.method-collapsed-toggle {
-  width: 100%;
-  padding: 0 15px;
-}
+    var LogItemInfoStackTraceView = Epoxy.View.extend({
+        template: 'tpl-launch-log-item-info-stack-trace',
 
-.defect-type .badge,
-.tickets-container .badge,
-.tooltip-inner .badge {
-  max-width: 100%;
-  padding: 2px 4px 0px;
-  text-align: left;
-  white-space: normal;
-  word-wrap: break-word;
-  display: inline-block;
-}
-.tickets-container .badge,
-.tooltip-inner .badge {
-  white-space: nowrap;
-}
+        initialize: function() {
+            this.render();
+        },
 
-.tickets-container > .badge {
-  margin: 3px 4px 3px 0;
-}
+        render: function() {
+            this.$el.html(Util.templates(this.template), {});
+        },
 
+        destroy: function() {
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            this.$el.html('');
+            delete this;
+        }
+    })
 
-.external-ticket {
-  padding: 3px 5px 0 5px;
-  margin: 0 4px 6px 0;
-
-  & > i {
-    position: absolute;
-    top: 1px;
-    left: 3px;
-  }
-
-  & > span {
-    margin-left: 16px;
-    display: inline-block;
-    overflow: hidden;
-    max-width: 120px;
-    word-wrap: break-word;
-  }
-}
-
-
+    return LogItemInfoStackTraceView;
+});

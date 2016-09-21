@@ -27,6 +27,7 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var LogHistoryLine = require('launches/logLevel/LogHistoryLine');
+    var LogItemInfoView = require('launches/logLevel/LogItemInfoView')
 
     var LogBodyView = Epoxy.View.extend({
         template: 'tpl-launch-log-body',
@@ -35,16 +36,34 @@ define(function (require, exports, module) {
             this.collectionItems = options.collectionItems;
             this.launchModel = options.launchModel;
             this.render();
+            this.listenTo(this.collectionItems, 'change:log:item', this.onChangeLogItem);
+            this.onChangeLogItem();
+        },
+        onChangeLogItem: function() {
+            $('[data-js-log-item-container]',this.$el).addClass('load');
+            if(this.history) {
+                this.off(this.history);
+            }
             this.history = new LogHistoryLine({
-                $el: $('[data-js-history-line]', this.$el),
+                el: $('[data-js-history-line]', this.$el),
                 collectionItems: this.collectionItems,
                 launchModel: this.launchModel,
             });
-            $('[data-js-log-item-container]',this.$el).addClass('load');
             this.listenTo(this.history, 'load:history', this.onLoadHistory);
+            this.listenTo(this.history, 'activate:item', this.selectHistoryItem);
         },
         onLoadHistory: function() {
             $('[data-js-log-item-container]',this.$el).removeClass('load');
+        },
+
+        selectHistoryItem: function(itemModel) {
+            if(this.historyItem) {
+                this.historyItem.destroy();
+            }
+            this.historyItem = new LogItemInfoView({
+                el: $('[data-js-item-info]', this.$el),
+                itemModel: itemModel
+            });
         },
 
         render: function() {

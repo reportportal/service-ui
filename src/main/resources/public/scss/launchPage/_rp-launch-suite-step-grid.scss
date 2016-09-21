@@ -161,10 +161,6 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
       width: $launch-number-cell-width;
       text-align: right;
     }
-    //.rp-grid-th-name {
-    //  overflow-wrap: break-word;
-    //  width: 100%;
-    //}
     @media (max-width: 1150px) {
       &.name-grid-cell {
         width: $launch-min-name-cell-width;
@@ -205,6 +201,25 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
     }
     &.type-grid-cell {
       width: $step-type-cell-width;
+    }
+    &.add-collapse-methods-btn {
+      padding-left: 44px;
+      .rp-switcher {
+        position: absolute;
+        left: 7px;
+        top: 50%;
+        margin-top: -6px;
+      }
+    }
+  }
+  &.hide-collapsed-methods {
+    .collapse-method {
+      overflow: hidden;
+      height: 0;
+      padding-top: 3px;
+      .grid-cell {
+        display: none;
+      }
     }
   }
 }

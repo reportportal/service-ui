@@ -826,6 +826,12 @@ define(['util'], function () {
             stoppedAt: 'Stopped at:',
             durationSpecific: 'Duration is interval between first child starts and last child ends. But if child run in parallel, end time is a time of longest child, in this case duration will not be equal to child duration sum.'
         },
+        launchLogItem: {
+            stackTrace: 'stack trace',
+            attachments: 'attachments',
+            itemDetails: 'item details',
+            historyOfActions: 'history of actions',
+        },
 
         statisticsPanel: {
             productBug: "Product Bugs",

@@ -24,5 +24,63 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
+    var Util = require('util')
 
+    var LogItemInfoStackTraceView = require('launches/logLevel/LogItemInfoStackTraceView');
+
+    var LogItemInfoView = Epoxy.View.extend({
+        template: 'tpl-launch-log-item-info',
+
+        events: {
+            'click [data-js-item-stack-trace-label]': function(){ this.toggleModelField('stackTrace') },
+            'click [data-js-item-gallery-label]': function(){ this.toggleModelField('attachments') },
+            'click [data-js-item-details-label]': function(){ this.toggleModelField('itemDetails') },
+            'click [data-js-item-activity-label]': function(){ this.toggleModelField('activity') },
+        },
+
+        bindings: {
+            '[data-js-item-stack-trace-label]': 'classes: {active: stackTrace}',
+            '[data-js-item-gallery-label]': 'classes: {active: attachments}',
+            '[data-js-item-details-label]': 'classes: {active: itemDetails}',
+            '[data-js-item-activity-label]': 'classes: {active: activity}',
+            '[data-js-item-stack-trace]': 'classes: {hide: not(stackTrace)}',
+            '[data-js-item-gallery]': 'classes: {hide: not(attachments)}',
+            '[data-js-item-details]': 'classes: {hide: not(itemDetails)}',
+            '[data-js-item-activity]': 'classes: {hide: not(activity)}',
+        },
+
+        initialize: function(options) {
+            this.itemModel = options.itemModel;
+            this.model = new Epoxy.Model({
+                stackTrace: false,
+                attachments: false,
+                itemDetails: false,
+                activity: false,
+            });
+            this.render();
+            this.stackTrace = new LogItemInfoStackTraceView({
+                el: $('[data-js-item-stack-trace]', this.$el),
+                itemModel: this.itemModel,
+                parentModel: this.model,
+            })
+        },
+
+        toggleModelField: function(field) {
+            this.model.set(field, !this.model.get(field));
+        },
+
+        render: function() {
+            this.$el.html(Util.templates(this.template), {});
+        },
+
+        destroy: function() {
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            this.$el.html('');
+            delete this;
+        }
+    })
+
+    return LogItemInfoView;
 });

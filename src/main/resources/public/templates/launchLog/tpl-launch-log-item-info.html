@@ -1,0 +1,42 @@
+<div class="launch-log-item-info">
+    <div class="item-info">
+        <div class="rp-nav rp-nav-right">
+            <div class="rp-nav">
+                <div class="rp-btn rp-btn-default rp-button-with-icon" title=" <%= data.text.launches.postBug %>">
+                    <i class="material-icons">bug_report</i>
+                    <span class="rp-btn-val hidden-sm hidden-xs"> <%= data.text.launches.postBug %></span>
+                </div>
+            </div>
+            <div class="rp-nav ">
+                <div class="rp-btn rp-btn-default rp-button-with-icon" title="<%= data.text.launches.loadBug %>">
+                    <i class="material-icons">link</i>
+                    <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.launches.loadBug %></span>
+                </div>
+            </div>
+            <div class="rp-nav">
+                <div class="rp-btn rp-btn-default rp-button-with-icon" title="<%= data.text.launches.matchTitle %>">
+                    <i class="rp-icons rp-icons-magic"></i>
+                    <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.launches.matchTitle %></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul class="tabs">
+        <li data-js-item-stack-trace-label><i class="material-icons">assignment</i><span><%= data.text.launchLogItem.stackTrace %></span></li>
+        <li data-js-item-gallery-label><i class="material-icons">attach_file</i><span><%= data.text.launchLogItem.attachments %></span></li>
+        <li data-js-item-details-label><i class="material-icons">info_outline</i><span><%= data.text.launchLogItem.itemDetails %></span></li>
+        <li data-js-item-activity-label><i class="material-icons">access_time</i><span><%= data.text.launchLogItem.historyOfActions %></span></li>
+    </ul>
+    <div class="tabs-item stack-trace" data-js-item-stack-trace>
+
+    </div>
+    <div class="tabs-item" data-js-item-gallery>
+
+    </div>
+    <div class="tabs-item" data-js-item-details>
+
+    </div>
+    <div class="tabs-item" data-js-item-activity>
+
+    </div>
+</div>
