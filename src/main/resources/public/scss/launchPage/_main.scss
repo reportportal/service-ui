@@ -19,11 +19,13 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'rp-launch-body';
-@import 'rp-launch-header';
-@import 'rp-launch-suite-step-grid';
-@import 'rp-launch-step-grid';
-@import 'rp-launch-suite-info-panel';
-@import 'rp-launch-log-body';
-@import 'rp-launch-log-history-line';
-@import 'rp-launch-log-item-info';
+@import 'body';
+@import 'header';
+@import 'suite-step-grid';
+@import 'step-grid';
+@import 'suite-info-panel';
+@import 'log-body';
+@import 'log-history-line';
+@import 'log-info';
+@import 'log-info-details';
+@import 'log-info-activity';

@@ -26,6 +26,7 @@ define(function (require, exports, module) {
 
     var LaunchControlView = Epoxy.View.extend({
         events: {
+            'click [data-js-refresh]': 'onClickRefresh',
         },
 
         bindings: {
@@ -33,10 +34,14 @@ define(function (require, exports, module) {
 
         template: 'tpl-launch-launch-control',
         initialize: function(options) {
+            this.collectionItems = options.collectionItems;
             this.render();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onClickRefresh: function() {
+            this.collectionItems.load();
         },
 
         destroy: function () {

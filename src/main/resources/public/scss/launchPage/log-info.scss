@@ -38,4 +38,23 @@
       }
     }
   }
+  .tabs-item {
+    position: relative;
+    border-top: 1px solid $COLOR--white-four;
+    box-shadow: inset 0 -1px 0 0 $COLOR--gray-91;
+    background-color: $COLOR--white-four;
+    overflow: hidden;
+    .close-icon {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .not-found-message {
+      width: 100%;
+      text-align: center;
+      padding: 20px;
+    }
+  }
 }

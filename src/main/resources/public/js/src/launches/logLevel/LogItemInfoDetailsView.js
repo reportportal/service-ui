@@ -26,8 +26,10 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util')
 
-    var LogItemInfoAttachmentsView = Epoxy.View.extend({
-        template: 'tpl-launch-log-item-info-attachments',
+    var StepItemView = require('launches/stepLevel/StepItemView');
+
+    var LogItemInfoDetailsView = Epoxy.View.extend({
+        template: 'tpl-launch-log-item-info-details',
 
         events: {
             'click [data-ja-close]': 'onClickClose',
@@ -35,49 +37,30 @@ define(function (require, exports, module) {
 
         initialize: function(options) {
             this.render();
-            this.isLoad = false;
             this.itemModel = options.itemModel;
             this.parentModel = options.parentModel;
-            this.listenTo(this.parentModel, 'change:attachments', this.onShow);
-
-        },
-        onShow: function(model, show) {
-            if(show && !this.isLoad) {
-                this.isLoad = true;
-                this.load();
-            }
-        },
-        load: function() {
-            $('[data-js-preloader-log-item-activity]', this.$el).addClass('rp-display-block');
-            var self = this;
-            // Service.loadActivityItems(this.itemModel.get('id'))
-            //     .done(function(data) {
-            //         self.parse(data);
-            //     })
-            //     .fail(function() {
-            //         $('[data-js-not-activity]', self.$el).removeClass('hide');
-            //     })
-            //     .always(function() {
-            //         $('[data-js-preloader-log-item-activity]', self.$el).removeClass('rp-display-block');
-            //     })
-        },
-
-        onClickClose: function() {
-            this.parentModel.set({attachments: false});
+            this.itemView = new StepItemView({
+                el: $('[data-js-item-detail-container]', this.$el),
+                model: this.itemModel
+            })
         },
 
         render: function() {
             this.$el.html(Util.templates(this.template), {});
         },
+        onClickClose: function() {
+            this.parentModel.set({itemDetails: false});
+        },
 
         destroy: function() {
+            this.itemView.destroy();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
             this.$el.html('');
             delete this;
         }
-    });
+    })
 
-    return LogItemInfoAttachmentsView;
+    return LogItemInfoDetailsView;
 });

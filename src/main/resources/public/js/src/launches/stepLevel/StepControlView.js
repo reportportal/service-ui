@@ -27,11 +27,15 @@ define(function (require, exports, module) {
     var InfoPanelView = require('launches/common/InfoPanelView');
 
     var StepControlView = Epoxy.View.extend({
+        events: {
+            'click [data-js-refresh]': 'onClickRefresh',
+        },
 
         template: 'tpl-launch-suite-step-control',
         initialize: function(options) {
             this.filterModel = options.filterModel;
             this.parentModel = options.parentModel;
+            this.collectionItems =  options.collectionItems;
             this.render();
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-refine-entities]', this.$el),
@@ -45,6 +49,9 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onClickRefresh: function() {
+            this.collectionItems.load();
         },
 
         destroy: function () {
