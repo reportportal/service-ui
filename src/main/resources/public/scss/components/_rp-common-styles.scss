@@ -290,6 +290,15 @@ a.itemsPerPage {
         margin: 0;
     }
 }
+
+.rp-margin-reset {
+    margin: 0 -15px;
+    border: 1px solid #ddd;
+    border-left: none;
+    border-right: none;
+    font-weight: 400;
+    border-bottom: 1px solid #ddd;
+}
 /*-----------*/
 
 .rp-btn-group .dropdown-menu,
@@ -921,9 +930,6 @@ textarea {
     color: $COLOR--gray-60;
 }
 
-.select2-drop-active {
-
-}
 /*--------------------------------*/
 
 .margin-left-10 {
@@ -1090,9 +1096,6 @@ textarea {
 
 /*----Widget wizard - name & dasboard tab -----*/
 
-.bootstrap-switch, 
-.bootstrap-switch .bootstrap-switch-handle-off, 
-.bootstrap-switch .bootstrap-switch-handle-on, 
 .btn, .form-control, .select2-container-multi .select2-choices {
     border-radius: 0;
     box-shadow: none;
@@ -1160,3 +1163,20 @@ textarea {
 li {
     list-style: none;
 }
+
+/*--------------------------------*/
+
+.pr-skip,
+.rp-empty,
+.rp-fail,
+.rp-inprogress,
+.rp-pass,
+.rp-reseted,
+.rp-warning {
+    margin: 0;
+    text-align: center;
+    box-sizing: content-box;
+    padding: 4px;
+}
+
+/*--------------------------------*/

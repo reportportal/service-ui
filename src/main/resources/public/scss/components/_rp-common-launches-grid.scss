@@ -488,6 +488,19 @@ $borderRadius100: 100px;
     }
 }
 
+.history-panel {
+    padding: 15px;
+    background-color: $COLOR--white-default;
+    margin-top: 15px;
+    margin-top: 0;
+
+    &.affix {
+        border-bottom: 1px solid #ddd;
+        margin-top: 0;
+        z-index: 10;
+    }
+}
+
 .history-row {
     display: table-row;
 
@@ -646,6 +659,25 @@ $borderRadius100: 100px;
     display: inline-block;
     padding: 0.4em 0.6em 0.6em;
 }
+
+.history-inputs-row>ul>li>.label {
+    padding-top: .5em;
+}
+
+.history-items {
+    .label {
+        border-radius: 0;
+        font-weight: 400;
+        font-size: 100%;
+    }
+
+    .remove-item {
+        color: #fff;
+        margin-left: 5px;
+        cursor: pointer;
+    }
+}
+    
 
 .history-inputs-row > i {
     position: absolute;

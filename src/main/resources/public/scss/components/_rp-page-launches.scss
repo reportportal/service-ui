@@ -57,8 +57,16 @@
                     font-size: 12px;
                 }
 
-                .btn, .dropdown-menu {
-                    font-size: inherit;
+                .dropdown-menu>li>a {
+                    display: block;
+                    padding: 3px 20px;
+                    line-height: 1.42857143;
+                    white-space: nowrap;
+                    clear: both;
+                    font-size: 12px;
+                    font-weight: 400;
+                    color: #333;
+                    cursor: pointer;
                 }
             }
 
@@ -197,12 +205,6 @@
     }
 
     & > .rp-margin-reset {
-        margin: 0 -15px;
-        border: 1px solid #ddd;
-        border-left: none;
-        border-right: none;
-        font-weight: 400;
-        border-bottom: 1px solid #ddd;
 
         #logFilter {
             overflow: hidden;
@@ -305,16 +307,8 @@
     }
 }
 
-#gridWrapper {
+#gridWrapper, #compareGrid, #mergeGrid {
     .rp-margin-reset {
-        margin: 0 -15px;
-        border: 1px solid #ddd;
-        border-left: none;
-        border-right: none;
-        font-weight: 400;
-        border-top: none;
-        border-bottom: 1px solid #ddd;
-
         .affix {
             z-index: 10;
             position: fixed;
@@ -482,7 +476,16 @@
 
                 }
             }
+
+            &.rp-fail {
+                background: #e8ada3;
+            }
         }
+    }
+
+    .rp-history-grid.rp-margin-reset {
+        border: none;
+        border-left: 1px solid #e9e9e9;
     }
 
     #pagingHolder {
@@ -592,4 +595,19 @@ a.stacktrace,
 div.sortable, 
 th.sortable {
     cursor: pointer;
+}
+
+#compareGrid div.rp-table-row.selected-forhistory, 
+#mergeGrid div.rp-table-row.selected-forhistory {
+    background-color: #DFF0D8!important;
+}
+#compareGrid .rp-table-row, 
+#gridWrapper .suit-grid .rp-table-row, 
+#mergeGrid .rp-table-row {
+    padding: 13px 0;
+}
+
+#mergeGrid .row.disabled {
+    color: $COLOR--gray-60;
+    opacity: .6;
 }
