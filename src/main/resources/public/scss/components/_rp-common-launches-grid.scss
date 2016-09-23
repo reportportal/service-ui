@@ -256,6 +256,10 @@ $borderRadius100: 100px;
 
 
 .filter-table-panel {
+    .margin-reset {
+        margin: 0;
+        border: none;
+    }
     .rp-grid-description,
     .rp-grid-name {
         padding: 0;
