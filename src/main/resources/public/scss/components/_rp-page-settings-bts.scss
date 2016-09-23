@@ -27,6 +27,10 @@
 
         #instanceHead {
             margin-bottom: 20px;
+
+            .close-add {
+                display: none;
+            }
         }
 
         .rp-form-group {
@@ -133,6 +137,7 @@
         .tbs-change-warning-block {
             margin: 0;
             #tbsChangeWarning {
+                display: none;
                 padding-bottom: 20px;
             }
         }
@@ -177,6 +182,40 @@
         }
     }
 }
+
+
+/* TODO. Looks like only usual users styles */
+#authorizationType,
+.btn-group.to-100-width,
+.input-group.to-100-width,
+.to-100-width .btn,
+.to-80-width .btn {
+    width: 100%;
+    text-align: left;
+    position: relative;
+    display: inline-block;
+}
+
+#cancelBtsProperties,
+#cancelFields,
+#credentialsWrong,
+#externalError,
+#fieldsWrapper,
+#requiredFields,
+#resetFieldsWarning {
+    display: none;
+}
+
+#fieldsLoader {
+    display: none;
+    position: relative;
+    height: 65px;
+}
+
+#submitPropertiesBlock, .col-sm-12.p-bottom-15 {
+    padding-bottom: 15px;
+}
+/*----------------*/
 
 /*----------------*/
 /* INCLUDE STYLES */
