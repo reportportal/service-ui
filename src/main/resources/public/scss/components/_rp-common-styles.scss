@@ -219,6 +219,10 @@ h4 {
     font-weight: bold;
 }
 
+.to_upper, .uppercase {
+    text-transform: uppercase;
+}
+
 .rp-padding-0 {
     padding: 0;
 }
@@ -297,6 +301,10 @@ a.itemsPerPage {
     border-left: none;
     border-right: none;
     font-weight: 400;
+}
+
+.btn, .dropdown-menu {
+    font-size: inherit;
 }
 /*-----------*/
 
