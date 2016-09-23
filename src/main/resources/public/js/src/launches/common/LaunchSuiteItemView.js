@@ -66,6 +66,7 @@ define(function (require, exports, module) {
             data.sortTags = this.model.get('sortTags'); // computed field
             this.$el.html(Util.templates(this.template, data));
             this.renderDuration();
+
             this.renderStatistics();
         },
         toggleStartTimeView: function (e) {
@@ -124,7 +125,6 @@ define(function (require, exports, module) {
             this.menu = new LaunchSuiteStepItemMenuView({
                 model: this.model
             });
-
             $link
                 .after(this.menu.$el)
                 .addClass('rendered')

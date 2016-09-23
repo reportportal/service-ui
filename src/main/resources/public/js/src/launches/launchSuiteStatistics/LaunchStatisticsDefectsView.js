@@ -21,7 +21,6 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
@@ -29,6 +28,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var d3 = require('d3');
     var nvd3 = require('nvd3');
+    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var LaunchSuiteDefectsTooltip = require('launches/launchSuiteStatistics/LaunchSuiteDefectsTooltip');
 
     var config = App.getInstance();
@@ -38,7 +38,10 @@ define(function (require, exports, module) {
         initialize: function(options) {
             this.$container = options.$container;
             this.type = options.type;
-            this.render();
+            this.defectsCollection = new SingletonDefectTypeCollection();
+            this.defectsCollection.ready.done(function(){
+                this.render();
+            }.bind(this));
         },
         events: {
             'mouseenter [data-js-defect-type-id]:not(.rendered)': 'showDefectTooltip'
@@ -65,11 +68,10 @@ define(function (require, exports, module) {
                     owner = this.getBinding('owner'),
                     positionalFilter = owner !== undefined ? '&filter.eq.launch=' : '&filter.in.path=',
                     statusFilter = '&filter.in.issue$issue_type=',
-                    defectTypes = new SingletonDefectTypeCollection(),
-                    subDefects = defectTypes.toJSON(),
+                    subDefects = this.defectsCollection.toJSON(),
                     defects = Util.getSubDefectsLocators(this.type, subDefects).join('%2C');
 
-                return url + '?page.page=1&page.sort=start_time,ASC'
+                return url + '?'
                     + '&filter.eq.has_childs=false'
                     + statusFilter
                     + defects
@@ -110,8 +112,7 @@ define(function (require, exports, module) {
 
             _.each(defect, function(v, k){
                 if(k !== 'total'){
-                    var defects = new SingletonDefectTypeCollection(),
-                        customDefect = defects.getDefectType(k);
+                    var customDefect = this.defectsCollection.getDefectType(k);
                     if(customDefect){
                         data.push({color: customDefect.color, key: customDefect.longName, value: parseInt(v)});
                     }
@@ -122,12 +123,11 @@ define(function (require, exports, module) {
         getDefectColor: function () {
             var sd = config.patterns.defectsLocator,
                 defect = this.getDefectByType(),
-                defects = new SingletonDefectTypeCollection(),
                 defectType = _.findKey(defect, function(v, k){
                     return sd.test(k);
                 });
             if(defectType){
-                var issueType = defects.getDefectType(defectType);
+                var issueType = this.defectsCollection.getDefectType(defectType);
                 if(issueType){
                     return issueType.color;
                 }

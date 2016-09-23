@@ -64,7 +64,7 @@ define(function (require, exports, module) {
                     default:
                         break;
                 }
-                return url + '?page.page=1&page.sort=start_time,ASC'
+                return url + '?'
                     + '&filter.eq.has_childs=false'
                     + statusFilter
                     + positionalFilter + id;
