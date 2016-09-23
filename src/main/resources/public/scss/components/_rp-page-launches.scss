@@ -309,6 +309,8 @@
 
 #gridWrapper, #compareGrid, #mergeGrid {
     .rp-margin-reset {
+        border-top: 0;
+        
         .affix {
             z-index: 10;
             position: fixed;
