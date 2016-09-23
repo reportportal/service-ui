@@ -167,24 +167,6 @@
     fill-opacity: 0.7;
 }
 
-.statistics-panel.widget-invalid {
-    padding-top: 50px;
-    position: relative;
-}
-.statistics-panel .widget-invalid-data {
-    top: 0;
-    margin: 0 -15px;
-    padding: 5px 15px;
-    box-sizing: content-box;
-    height: 36px;
-}
-#previewContent .statistics-panel.widget-invalid {
-    padding-top: 40px;
-}
-#previewContent .statistics-panel .widget-invalid-data {
-    top: -10px;
-}
-
 /*Temp change modal widget wizard ----------------------------- */
 
 #widgetWizardModal #widgetEditor #OwnFilters.tab-pane,
