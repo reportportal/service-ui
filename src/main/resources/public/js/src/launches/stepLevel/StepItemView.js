@@ -28,6 +28,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var Localization = require('localization');
     var LaunchSuiteStepItemMenuView = require('launches/common/LaunchSuiteStepItemMenuView');
+    var ItemDurationView = require('launches/common/ItemDurationView');
     var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
     var DefectEditor = require('launches/stepLevel/DefectEditorView');
 
@@ -36,7 +37,6 @@ define(function (require, exports, module) {
 
     var StepItemView = Epoxy.View.extend({
         template: 'tpl-launch-step-item',
-        statusTpl: 'tpl-launch-suite-item-status',
         events: {
             'click [data-js-name]': 'onClickName',
             'click [data-js-launch-menu]:not(.rendered)': 'showItemMenu',
@@ -49,8 +49,7 @@ define(function (require, exports, module) {
             '[data-js-method-type]': 'text: showMethodType',
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
-            '[data-js-status-class]': 'classes: {danger: highlightedFailed}',
-            '[data-js-item-status]': 'html: renderStatus'
+            '[data-js-status-class]': 'classes: {danger: highlightedFailed}'
         },
         computeds: {
             showMethodType: function(){
@@ -58,10 +57,6 @@ define(function (require, exports, module) {
             },
             highlightedFailed: function(){
                 return this.getBinding('status') == 'FAILED';
-            },
-            renderStatus: function(){
-                var status = this.getBinding('status');
-                return Util.templates(this.statusTpl, this.model.toJSON({computed: true}));
             }
         },
         initialize: function() {
@@ -73,9 +68,16 @@ define(function (require, exports, module) {
                 isCollapsedMethod: this.isCollapsedMethod()
 
             }));
+            this.renderDuration();
             if(this.hasIssue()){
                 this.renderIssue();
             }
+        },
+        renderDuration: function(){
+            this.duration = new ItemDurationView({
+                model: this.model,
+                $el: $('[data-js-item-status]', this.$el)
+            });
         },
         isCollapsedMethod: function () {
             return this.model.get('type') !== 'STEP' &&  this.model.get('status') !== 'FAILED';
@@ -102,7 +104,6 @@ define(function (require, exports, module) {
                 .dropdown();
         },
         showDefectEditor: function(e){
-            console.log('showDefectEditor');
             e.preventDefault();
             var el = $(e.currentTarget);
             if(!el.hasClass('disabled')){
@@ -111,14 +112,11 @@ define(function (require, exports, module) {
             e.stopPropagation();
         },
         setupEditor: function () {
-            var item = this.model.toJSON({computed: true}),
-                items = {};
-            //items[item.id] = item;
+            var item = this.model.toJSON({computed: true});
             this.removeEditor();
             this.$editor = new DefectEditor({
                 origin: $('.rp-table-row', this.$el),
-                model: this.model/*,
-                items: items*/
+                model: this.model
             });
             $('[data-js-issue-type]', this.$el).hide();
             $('[data-js-status-class]', this.$el).addClass('selected');
@@ -143,7 +141,9 @@ define(function (require, exports, module) {
 
         },
         destroy: function () {
+            this.menu && this.menu.destroy();
             this.issueView && this.issueView.destroy();
+            this.duration && this.duration.destroy();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();

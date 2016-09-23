@@ -128,6 +128,51 @@
     }
 
   }
+  .rp-item-duration {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 10px;
+    .duration-content {
+      position: relative;
+      display: inline-block;
+      padding-left: 18px;
+      line-height: 1;
+      color: #464547;
+      i {
+        position: absolute;
+        left: -1px;
+        top: 0;
+      }
+      .material-icons {
+        top: -2px;
+        color: #999;
+        font-size: 16px;
+      }
+    }
+    .duration-time {
+      font-size: 12px;
+    }
+    .duration-error {
+      color: #ff3222;
+      .material-icons {
+        color: #ff3222;
+      }
+      .duration-time {
+        text-decoration: underline;
+      }
+    }
+    .rp-icons-warning {
+      top: -2px;
+      font-size: 12px;
+      color: #ff3222;
+      & + .duration-time {
+        &:after{
+          content: '-';
+          visibility: hidden;
+        }
+      }
+    }
+  }
 }
 
 $launch-name-cell-width: 30%;
@@ -223,3 +268,4 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
     }
   }
 }
+

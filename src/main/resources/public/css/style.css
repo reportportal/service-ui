@@ -842,16 +842,6 @@ div#logs table {
     border-spacing: 0 0; /* Расстояние между ячейками */
 }
 
-div.tags {
-    overflow: hidden;
-    text-align: right;
-    /*width: 100%;*/
-}
-
-div.tags small{
-    text-align: right;
-}
-
 #favTab {
     margin: 0 0 20px;
 }

@@ -30,6 +30,7 @@ define(function (require, exports, module) {
     var LaunchSuiteStepItemMenuView = require('launches/common/LaunchSuiteStepItemMenuView');
     var LaunchStatisticsDefectsView = require('launches/launchSuiteStatistics/LaunchStatisticsDefectsView');
     var LaunchStatisticsExecutionsView = require('launches/launchSuiteStatistics/LaunchStatisticsExecutionsView');
+    var ItemDurationView = require('launches/common/ItemDurationView');
     var d3 = require('d3');
     var nvd3 = require('nvd3');
 
@@ -51,12 +52,16 @@ define(function (require, exports, module) {
             '[data-js-owner-name]': 'text: owner',
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
-            '[data-js-item-status]': 'html: renderStatus'
+            //'[data-js-item-status]': 'html: renderStatus'
         },
         computeds: {
             renderStatus: function(){
                 var status = this.getBinding('status');
-                return Util.templates(this.statusTpl, this.model.toJSON({computed: true}));
+                return Util.templates(this.statusTpl, {
+                    model: this.model.toJSON({computed: true}),
+                    invalidStatus: this.isInvalidStatus(),
+                    durationTime: this.getDurationTime()
+                });
             }
         },
         initialize: function(options) {
@@ -67,7 +72,16 @@ define(function (require, exports, module) {
             var data = this.model.toJSON();
             data.sortTags = this.model.get('sortTags'); // computed field
             this.$el.html(Util.templates(this.template, data));
+            this.renderDuration();
             this.renderStatistics();
+        },
+        isInvalidStatus: function(){
+
+        },
+        getDurationTime: function() {
+            var startTime = this.getBinding('start_time'),
+                endTime = this.getBinding('end_time');
+            return Util.timeFormat(startTime, endTime);
         },
         renderStatistics: function(){
             var statistics = this.model.get('statistics');
@@ -82,6 +96,12 @@ define(function (require, exports, module) {
                     this.statistics.push(view)
                 }, this);
             }, this);
+        },
+        renderDuration: function(){
+            this.duration = new ItemDurationView({
+                model: this.model,
+                $el: $('[data-js-item-status]', this.$el)
+            });
         },
         getStatisticsView: function(type){
             switch (type) {
@@ -112,9 +132,8 @@ define(function (require, exports, module) {
             config.router.navigate($(e.currentTarget).attr('href'), {trigger: true});
         },
         destroy: function () {
-            if(this.menu){
-                this.menu.destroy();
-            }
+            this.menu && this.menu.destroy();
+            this.duration && this.duration.destroy();
             _.each(this.statistics, function(v){
                 if(_.isFunction(v.destroy)){
                     v.destroy();

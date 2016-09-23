@@ -121,6 +121,7 @@ $borderRadius100: 100px;
     white-space: pre-wrap;
     background: none;
     border: none;
+    margin: 0 0 6px;
 }
 
 .rp-grid-description.nicescroll-it {
@@ -128,9 +129,7 @@ $borderRadius100: 100px;
 }
 
 .rp-grid-tags {
-    float: left;
-    text-align: right;
-    margin: 8px 0 0 24px;
+    margin: 0 0 0 24px;
 }
 
 .pr-select-all-issues {

@@ -141,24 +141,6 @@ define(function(require, exports, module) {
                     return (status == 'INTERRUPTED') || (status == 'STOPPED');
                 }
             },
-            isStartAndEndTime: {
-                deps: ['start_time', 'end_time'],
-                get: function(startTime, endTime) {
-                    return !!(startTime && endTime);
-                }
-            },
-            isStartNoEndTime: {
-                deps: ['start_time', 'end_time'],
-                get: function(startTime, endTime) {
-                    return !!(startTime && !endTime);
-                }
-            },
-            durationTime: {
-                deps: ['start_time', 'end_time'],
-                get: function(startTime, endTime) {
-                    return Util.timeFormat(startTime, endTime);
-                }
-            },
             formatEndTime: {
                 deps: ['end_time'],
                 get: function(endTime) {
@@ -166,7 +148,6 @@ define(function(require, exports, module) {
                 }
             }
         },
-
         getIssue: function() {
             try {
                 return JSON.parse(this.get('issue'));

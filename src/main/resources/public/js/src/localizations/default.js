@@ -641,6 +641,8 @@ define(['util'], function () {
             noIssuesLoad: "You cant Load Bug if item has no issues",
             historyView: "History View",
             skippedDuration: "SKIPPED. Duration: ",
+            stoppedDuration: 'Run STOPPED after:',
+            interruptedDuration: 'Run INTERRUPTED after:',
             inProcessAndEndedDuration: "Wrong status: 'In Progress' with finish time",
             notInProcessNotEndedDuration: "Wrong state: item is not 'In Progress', but has no finish time",
             inProcess: "In Progress",
