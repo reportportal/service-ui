@@ -31,6 +31,7 @@ define(function (require, exports, module) {
     var LaunchStatisticsDefectsView = require('launches/launchSuiteStatistics/LaunchStatisticsDefectsView');
     var LaunchStatisticsExecutionsView = require('launches/launchSuiteStatistics/LaunchStatisticsExecutionsView');
     var ItemDurationView = require('launches/common/ItemDurationView');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
     var d3 = require('d3');
     var nvd3 = require('nvd3');
 
@@ -41,7 +42,8 @@ define(function (require, exports, module) {
         statusTpl: 'tpl-launch-suite-item-status',
         events: {
             'click [data-js-name]': 'onClickName',
-            'click [data-js-launch-menu]:not(.rendered)': 'showItemMenu'
+            'click [data-js-launch-menu]:not(.rendered)': 'showItemMenu',
+            'click [data-js-time-format]': 'toggleStartTimeView'
         },
         bindings: {
             '[data-js-analize-label]': 'classes: {hide: not(isProcessing)}',
@@ -51,21 +53,12 @@ define(function (require, exports, module) {
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
             '[data-js-time-from-now]': 'text: startFromNow',
-            '[data-js-time-exact]': 'text: startFormat',
-            //'[data-js-item-status]': 'html: renderStatus'
+            '[data-js-time-exact]': 'text: startFormat'
         },
-        computeds: {
-            renderStatus: function(){
-                var status = this.getBinding('status');
-                return Util.templates(this.statusTpl, {
-                    model: this.model.toJSON({computed: true}),
-                    invalidStatus: this.isInvalidStatus(),
-                    durationTime: this.getDurationTime()
-                });
-            }
-        },
+        computeds: {},
         initialize: function(options) {
             this.statistics = [];
+            this.userStorage = new SingletonUserStorage();
             this.render();
         },
         render: function() {
@@ -75,8 +68,19 @@ define(function (require, exports, module) {
             this.renderDuration();
             this.renderStatistics();
         },
-        isInvalidStatus: function(){
-
+        toggleStartTimeView: function (e) {
+            var $el = $(e.currentTarget),
+                table = $el.closest('[data-js-table-container]'),
+                timeFormat = this.userStorage.get('startTimeFormat');
+            if(timeFormat === 'exact'){
+                table.removeClass('exact-driven');
+                timeFormat = ''
+            }
+            else {
+                table.addClass('exact-driven');
+                timeFormat = 'exact';
+            }
+            this.userStorage.set('startTimeFormat', timeFormat);
         },
         getDurationTime: function() {
             var startTime = this.getBinding('start_time'),

@@ -31,6 +31,7 @@ define(function (require, exports, module) {
     var ItemDurationView = require('launches/common/ItemDurationView');
     var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
     var DefectEditor = require('launches/stepLevel/DefectEditorView');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
 
     var config = App.getInstance();
 
@@ -40,7 +41,8 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-name]': 'onClickName',
             'click [data-js-launch-menu]:not(.rendered)': 'showItemMenu',
-            'click [data-js-issue-type]': 'showDefectEditor'
+            'click [data-js-issue-type]': 'showDefectEditor',
+            'click [data-js-time-format]': 'toggleStartTimeView'
         },
         bindings: {
             '[data-js-name]': 'text: name, attr: {href: url}',
@@ -60,6 +62,7 @@ define(function (require, exports, module) {
             }
         },
         initialize: function() {
+            this.userStorage = new SingletonUserStorage();
             this.render();
         },
         render: function() {
@@ -78,6 +81,20 @@ define(function (require, exports, module) {
                 model: this.model,
                 $el: $('[data-js-item-status]', this.$el)
             });
+        },
+        toggleStartTimeView: function (e) {
+            var $el = $(e.currentTarget),
+                table = $el.closest('[data-js-table-container]'),
+                timeFormat = this.userStorage.get('startTimeFormat');
+            if(timeFormat === 'exact'){
+                table.removeClass('exact-driven');
+                timeFormat = ''
+            }
+            else {
+                table.addClass('exact-driven');
+                timeFormat = 'exact';
+            }
+            this.userStorage.set('startTimeFormat', timeFormat);
         },
         isCollapsedMethod: function () {
             return this.model.get('type') !== 'STEP' &&  this.model.get('status') !== 'FAILED';

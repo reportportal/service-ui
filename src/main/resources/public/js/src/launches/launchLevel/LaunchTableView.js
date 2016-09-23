@@ -30,6 +30,7 @@ define(function (require, exports, module) {
     var LaunchSuiteItemView = require('launches/common/LaunchSuiteItemView');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var FilterModel = require('filters/FilterModel');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
 
     var config = App.getInstance();
 
@@ -40,12 +41,18 @@ define(function (require, exports, module) {
             'click .rp-grid-th[data-filter] .rp-icons-filter': 'onClickFilter',
         },
         bindings: {
+            '[data-js-table-container]': 'classes: {"exact-driven": updateTimeFormat}'
         },
-
+        computeds: {
+            updateTimeFormat: function(){
+                var timeFormat = this.userStorage.get('startTimeFormat');
+                return timeFormat == 'exact' ? true : false;
+            }
+        },
         initialize: function(options) {
             this.filterModel = options.filterModel;
             this.render();
-
+            this.userStorage = new SingletonUserStorage();
             this.tableItems = new LaunchSuiteStepItemsView({
                 collection: options.collectionItems,
                 itemView: LaunchSuiteItemView,

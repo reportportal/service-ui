@@ -26,6 +26,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var LaunchSuiteItemView = require('launches/common/LaunchSuiteItemView');
     var LaunchSuiteStepItemsView = require('launches/common/LaunchSuiteStepItemsView');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
 
     var SuiteTableView = Epoxy.View.extend({
         template: 'tpl-launch-suite-table',
@@ -34,9 +35,18 @@ define(function (require, exports, module) {
             'click .rp-grid-th[data-sorter]': 'onClickSorter',
             'click .rp-grid-th[data-filter] .rp-icons-filter': 'onClickFilter',
         },
-
+        bindings: {
+            '[data-js-table-container]': 'classes: {"exact-driven": updateTimeFormat}'
+        },
+        computeds: {
+            updateTimeFormat: function(){
+                var timeFormat = this.userStorage.get('startTimeFormat');
+                return timeFormat == 'exact' ? true : false;
+            }
+        },
         initialize: function(options) {
             this.filterModel = options.filterModel;
+            this.userStorage = new SingletonUserStorage();
             this.render();
 
             this.tableItems = new LaunchSuiteStepItemsView({

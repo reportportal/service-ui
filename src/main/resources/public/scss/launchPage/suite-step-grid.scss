@@ -173,6 +173,40 @@
       }
     }
   }
+  .pr-grid-show-time {
+    &:hover {
+      .from-now {
+        display: none;
+      }
+      .exact-time {
+        display: inline;
+      }
+    }
+    .from-now {
+      padding-bottom: 1.2em;
+    }
+    .exact-time {
+      display: none;
+    }
+  }
+}
+.exact-driven {
+  .pr-grid-show-time {
+    &:hover {
+      .exact-time {
+        display: none;
+      }
+      .from-now {
+        display: inline;
+      }
+    }
+    .exact-time {
+      display: inline;
+    }
+    .from-now {
+      display: none;
+    }
+  }
 }
 
 $launch-name-cell-width: 30%;

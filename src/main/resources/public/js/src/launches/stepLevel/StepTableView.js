@@ -41,7 +41,15 @@ define(function (require, exports, module) {
             'click [data-js-collapse-label]': 'clickCollapseInput',
             'change [data-js-collapse-input]': function(e) { this.onChangeCollapseInput($(e.currentTarget)); },
         },
-
+        bindings: {
+            '[data-js-table-container]': 'classes: {"exact-driven": updateTimeFormat}'
+        },
+        computeds: {
+            updateTimeFormat: function(){
+                var timeFormat = this.userStorage.get('startTimeFormat');
+                return timeFormat == 'exact' ? true : false;
+            }
+        },
         initialize: function(options) {
             this.filterModel = options.filterModel;
             this.render();
@@ -55,9 +63,9 @@ define(function (require, exports, module) {
 
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.onChangeSelectionParameters);
             this.onChangeSelectionParameters();
-            this.userSettings = new SingletonUserStorage();
+            this.userStorage = new SingletonUserStorage();
             var self = this;
-            this.userSettings.ready.done(function(){
+            this.userStorage.ready.done(function(){
                 self.applyPreconditionsStatus();
             });
         },
@@ -66,7 +74,7 @@ define(function (require, exports, module) {
         },
         onChangeCollapseInput: function($el, silent) {
             var active = $el.is(':checked');
-            this.userSettings.set('statusPreconditions', active);
+            this.userStorage.set('statusPreconditions', active);
             var title = Localization.launches.showPreconditionMethods;
             if(active) {
                 title = Localization.launches.hidePreconditionMethods;
@@ -81,7 +89,7 @@ define(function (require, exports, module) {
         },
         applyPreconditionsStatus: function(){
             var collapseInput = $('[data-js-collapse-input]', this.$el);
-            collapseInput.prop('checked', this.userSettings.get('statusPreconditions'));
+            collapseInput.prop('checked', this.userStorage.get('statusPreconditions'));
             this.onChangeCollapseInput(collapseInput, true);
         },
         onClickSorter: function(e) {
