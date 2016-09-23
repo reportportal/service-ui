@@ -1,0 +1,88 @@
+.launch-log-info-activity {
+  padding-bottom: 10px;
+  .activity-row {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 15px 15px 0 15px;
+    color: $COLOR--charcoal-grey;
+  }
+  .grid-cell {
+    float: left;
+    position: relative;
+    min-height: 1px;
+    span {
+      word-wrap: break-word;
+    }
+    &.name-cell {
+      width: 11%;
+      i {
+        font-size: 18px;
+        float: left;
+        padding-right: 22px;
+        color: $COLOR--gray-60;
+      }
+    }
+    &.action-cell {
+      width: 15%;
+      font-family: OpenSansSemibold;
+    }
+    &.time-cell {
+      width: 10%;
+      .moment-time {
+        position: absolute;
+        right: 30px;
+        left: 0;
+      }
+      .full-time {
+        opacity: 0;
+      }
+      &:hover {
+        .moment-time {
+          opacity: 0;
+        }
+        .full-time {
+          opacity: 1;
+        }
+      }
+    }
+    &.difference-cell {
+      width: 62%;
+      .action-row {
+        width: 100%;
+        overflow: hidden;
+        padding-bottom: 10px;
+      }
+      .separate-items {
+        width: 6%;
+        text-align: center;
+        i {
+          font-size: 15px;
+          margin-top: 2px;
+        }
+      }
+      .action-item {
+        min-height: 1px;
+        width: 47%;
+        &:last-child {
+          font-family: OpenSansSemibold;
+        }
+      }
+    }
+    &.separate-right {
+      padding-right: 30px;
+      &:after {
+        content: '';
+        position: absolute;
+        width: 1px;
+        top: 0;
+        right: 20px;
+        height: 23px;
+        background: $COLOR--gray-80;
+      }
+    }
+    .action-item, .separate-items {
+      float: left;
+    }
+  }
+}

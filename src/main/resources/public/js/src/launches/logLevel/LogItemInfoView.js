@@ -27,6 +27,9 @@ define(function (require, exports, module) {
     var Util = require('util')
 
     var LogItemInfoStackTraceView = require('launches/logLevel/LogItemInfoStackTraceView');
+    var LogItemInfoDetailsView = require('launches/logLevel/LogItemInfoDetailsView');
+    var LogItemInfoActivity = require('launches/logLevel/LogItemInfoActivity');
+    var LogItemInfoAttachmentsView = require('launches/logLevel/LogItemInfoAttachmentsView');
 
     var LogItemInfoView = Epoxy.View.extend({
         template: 'tpl-launch-log-item-info',
@@ -62,7 +65,22 @@ define(function (require, exports, module) {
                 el: $('[data-js-item-stack-trace]', this.$el),
                 itemModel: this.itemModel,
                 parentModel: this.model,
-            })
+            });
+            this.details = new LogItemInfoDetailsView({
+                el: $('[data-js-item-details]', this.$el),
+                itemModel: this.itemModel,
+                parentModel: this.model,
+            });
+            this.activity = new LogItemInfoActivity({
+                el: $('[ data-js-item-activity]', this.$el),
+                itemModel: this.itemModel,
+                parentModel: this.model,
+            });
+            this.attachments = new LogItemInfoAttachmentsView({
+                el: $('[data-js-item-gallery]', this.$el),
+                itemModel: this.itemModel,
+                parentModel: this.model,
+            });
         },
 
         toggleModelField: function(field) {

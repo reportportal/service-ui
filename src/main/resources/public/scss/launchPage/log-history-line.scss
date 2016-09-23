@@ -39,6 +39,14 @@
         line-height: 30px;
         color: $COLOR--gray-60;
         display: none;
+        &.icon-comment {
+          margin-top: 1px;
+        }
+        &.icon-ticket {
+          font-size: 17px;
+          vertical-align: top;
+          margin-top: 1px;
+        }
       }
       .issue-type {
         vertical-align: top;

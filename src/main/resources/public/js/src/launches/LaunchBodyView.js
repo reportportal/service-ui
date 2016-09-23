@@ -146,6 +146,7 @@ define(function (require, exports, module) {
                 el: $('[data-js-controls-container]', this.$el),
                 filterModel: info.filterModel,
                 parentModel: (info.parentModel || info.launchModel),
+                collectionItems: this.collectionItems,
             });
             this.body = new StepTableView({
                 el: $('[data-js-info-container]', this.$el),
@@ -158,6 +159,7 @@ define(function (require, exports, module) {
                 filterModel: info.filterModel,
                 parentModel: (info.parentModel || info.launchModel),
                 el: $('[data-js-controls-container]', this.$el),
+                collectionItems: this.collectionItems,
             });
             this.body = new SuiteTableView({
                 el: $('[data-js-info-container]', this.$el),
@@ -168,6 +170,7 @@ define(function (require, exports, module) {
         renderLaunchLevel: function(filterModel) {
             this.control = new LaunchControlView({
                 el: $('[data-js-controls-container]', this.$el),
+                collectionItems: this.collectionItems
             });
             this.body = new LaunchTableView({
                 el: $('[data-js-info-container]', this.$el),
