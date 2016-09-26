@@ -29,7 +29,7 @@ define(function (require, exports, module) {
     var LogItemInfoStackTraceView = require('launches/logLevel/LogItemInfoStackTraceView');
     var LogItemInfoDetailsView = require('launches/logLevel/LogItemInfoDetailsView');
     var LogItemInfoActivity = require('launches/logLevel/LogItemInfoActivity');
-    var LogItemInfoAttachmentsView = require('launches/logLevel/LogItemInfoAttachmentsView');
+    var LogItemInfoAttachmentsView = require('launches/logLevel/LogItemInfoAttachments');
 
     var LogItemInfoView = Epoxy.View.extend({
         template: 'tpl-launch-log-item-info',

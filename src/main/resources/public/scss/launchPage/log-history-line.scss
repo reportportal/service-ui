@@ -158,5 +158,8 @@
     &.status-PASSED {
       @include logColorSet($COLOR--passed-disabled, $COLOR--passed);
     }
+    &.status-IN_PROGRESS {
+      @include logColorSet($COLOR--system-issue-disabled, $COLOR--system-issue);
+    }
   }
 }

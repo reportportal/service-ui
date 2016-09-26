@@ -34,7 +34,7 @@ define(function (require, exports, module) {
         FiltersService = require('filtersService'),
         Moment = require('moment'),
         WidgetsConfig = require('widget/widgetsConfig'),
-        Components = require('components'),
+        Components = require('core/components'),
         Localization = require('localization'),
         SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
 

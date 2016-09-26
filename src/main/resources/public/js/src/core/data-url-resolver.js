@@ -359,6 +359,14 @@ define(['app'], function (App) {
     var getFile = function () {
         return getProjectBase() + '/data/';
     };
+    var getFileById = function(dataId) {
+        var token = config.userModel.get('token');
+        var params = '';
+        if(token) {
+            params = '?access_token=' + token.split(' ')[1];
+        }
+        return getProjectBase() + '/data/' + dataId + params;
+    };
     var uploadPhoto = function () {
         return config.apiVersion + 'data/photo';
     };
@@ -432,6 +440,9 @@ define(['app'], function (App) {
                 break;
         }
         return getProjectBase() + "/" + type;
+    };
+    var getLogsUrl = function() {
+        return getProjectBase() + "/log";
     };
 
     var getLaunchItemUrl = function(type, id){
@@ -558,6 +569,7 @@ define(['app'], function (App) {
 
         uploadPhoto: uploadPhoto,
         getFile: getFile,
+        getFileById: getFileById,
         generateUUID: generateUUID,
         exportLaunchUrl: exportLaunchUrl,
 
@@ -565,6 +577,7 @@ define(['app'], function (App) {
         postDefectTypes: postDefectTypes,
         
         getGridUrl: getGridUrl,
+        getLogsUrl: getLogsUrl,
         getLaunchItemUrl: getLaunchItemUrl,
 
         userByEmail:userByEmail

@@ -22,7 +22,7 @@
 define([
     'jquery',
     'backbone',
-    'components',
+    'core/components',
     'util',
     'app',
     'coreService',

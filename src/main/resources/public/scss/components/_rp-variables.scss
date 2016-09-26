@@ -43,6 +43,7 @@
     // var(--system-issue);
     $COLOR--system-issue: #0274d1;
     //$COLOR_RGBA--system-issue: rgba(2, 116, 209, 1);
+    $COLOR--system-issue-disabled: lighten($COLOR--system-issue, 10%);
 
     // var(--to-investigate);
     $COLOR--to-investigate: #ffb743;

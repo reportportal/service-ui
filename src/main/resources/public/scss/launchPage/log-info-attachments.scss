@@ -1,0 +1,123 @@
+.launch-log-info-attachments {
+  .not-found-message {
+    display: none;
+  }
+  .gallery-preview {
+    .swipe-gallery-component {
+      width: 100%;
+      height: 80px;
+      & > .ul_overflow {
+        width: 80%;
+        margin: 0 auto;
+        li {
+          width: 100%;
+          height: 100%;
+          .gallery-preview {
+            width: 16.6%;
+            height: 100%;
+            float: left;
+            &.active {
+              .gallery-image {
+                border-color: $COLOR--charcoal-grey;
+                cursor: default;
+              }
+            }
+          }
+          .gallery-image {
+            background-size: contain;
+            margin: 16px auto 0 auto;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 106px;
+            height: 48px;
+            border: 1px solid $COLOR--dark-pastel-green;
+            cursor: pointer;
+          }
+          &.load {
+            .preloader {
+              padding: 18px 0px;
+              display: block;
+            }
+            .attachment-list {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+    .arrow_left, .arrow_right {
+      font-size: 24px;
+      margin-top: -14px;
+    }
+    .arrow_left {
+      left: 40px;
+    }
+    .arrow_right {
+      right: 40px;
+    }
+  }
+  .gallery-main {
+    height: 365px;
+    .ul_overflow {
+      width: 650px;
+      margin: 0 auto;
+      & > ul {
+        & > li {
+          width: 100%;
+          height: 100%;
+          &.hide-content {
+            .item-content {
+              opacity: 0;
+            }
+          }
+        }
+      }
+    }
+    .main-image {
+      width: 630px;
+      height: 300px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 20px auto 0 auto;
+      border: 1px solid $COLOR--dark-pastel-green;
+    }
+    .arrow_left, .arrow_right {
+      font-size: 43px;
+      margin-top: -38px;
+      left: 50%;
+    }
+    .arrow_left {
+      margin-left: -378px;
+    }
+    .arrow_right {
+      margin-left: 333px;
+    }
+  }
+  .arrow_left, .arrow_right {
+    position: absolute;
+    top: 50%;
+    color: $COLOR--gray-60;
+    cursor: pointer;
+    &.disabled {
+      cursor: default;
+      color: $COLOR--gray-80;
+    }
+  }
+  &.load {
+    .gallery-container {
+      display: none;
+    }
+    .preloader {
+      display: block;
+    }
+  }
+  &.not-found {
+    .gallery-container {
+      display: none;
+    }
+    .not-found-message {
+      display: block;
+    }
+  }
+}

@@ -29,7 +29,7 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
-    var Components = require('components');
+    var Components = require('core/components');
     var Util = require('util');
     var CoreService = require('coreService');
     var FilterCollection = require('filters/FilterCollection');

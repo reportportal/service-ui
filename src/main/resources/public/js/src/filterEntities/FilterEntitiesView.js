@@ -28,7 +28,7 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
 
     var FilterEntitiesResolver = require('filterEntities/FilterEntitiesResolver');
-    var Components = require('components');
+    var Components = require('core/components');
     var FilterEntityView = require('filterEntities/FilterEntityView');
     var FilterEntitiesChoiceView = require('filterEntities/FilterEntitiesChoiceView');
 

@@ -237,9 +237,7 @@ define(function (require, exports, module) {
             if(params && params.length) {
                 path += '?' + params.join('&');
             }
-            if(this.request) {
-                this.request.abort();
-            }
+            this.request && this.request.abort();
 
             this.trigger('loading', true);
             this.reset([]);

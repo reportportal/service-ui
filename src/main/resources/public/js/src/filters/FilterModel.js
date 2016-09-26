@@ -28,7 +28,7 @@ define(function(require, exports, module) {
     var Helpers = require('helpers');
     var Localization = require('localization');
     var Util = require('util');
-    var Components = require('components');
+    var Components = require('core/components');
     var App = require('app');
 
     var config = App.getInstance();

@@ -25,7 +25,7 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
-    var Components = require('components');
+    var Components = require('core/components');
     var Util = require('util');
     var Storage = require('storageService');
     var Moment = require('moment');

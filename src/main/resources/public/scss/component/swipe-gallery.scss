@@ -1,0 +1,30 @@
+.swipe-gallery-component {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  & > .ul_overflow {
+    overflow: hidden;
+    height: 100%;
+    position: relative;
+    & > ul {
+      position: relative;
+      height: 100%;
+      &.animate {
+        -webkit-transition: -webkit-transform 0.5s ease;
+        -moz-transition: -moz-transform 0.5s ease;
+        -o-transition: -o-transform 0.5s ease;
+        transition: transform 0.5s ease;
+      }
+      & > li {
+        position: absolute;
+      }
+    }
+
+  }
+  .arrow_left, .arrow_right {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+  }
+}

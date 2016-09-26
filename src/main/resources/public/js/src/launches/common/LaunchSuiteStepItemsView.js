@@ -26,7 +26,7 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
-    var Components = require('components');
+    var Components = require('core/components');
 
     var config = App.getInstance();
 
