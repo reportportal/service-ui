@@ -973,7 +973,8 @@ define(['util'], function () {
             LinkResetToDefaultColors: 'Reset to Default Colors',
 
             ruleDeleted: 'Rule will be deleted after submit',
-            noCustomDefectsWereAdded: 'No custom defects were added'
+            noCustomDefectsWereAdded: 'No custom defects were added',
+            noCustomColors: 'No colors to update'
         },
 
         bts: {
