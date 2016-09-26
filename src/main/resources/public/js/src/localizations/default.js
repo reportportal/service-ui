@@ -1244,7 +1244,7 @@ define(['util'], function () {
             changeRole: "Failed to change user role for '%%%'",
             loadProjectInfo: "Failed to load a project information",
             submitForgotPass: "User with entered email address is not found",
-            submitForgotPassRestricted: "The password cannot be changed. Please use your domain password",
+            submitForgotPassRestricted: "Unable to change password for external user",
             submitForgotPassBrokenConf: "Email configuration is broken or switched-off. Please configure email server in Report Portal settings.",
             submitChangePass: "Failed to update password",
             submitProfileInfo: "Failed to update profile info",

@@ -123,7 +123,7 @@ define(function(require, exports, module) {
                     _.delay(self.closerForgotPass.bind(self), 700);
                 })
                 .fail(function (error) {
-                    var type = error.responseText.indexOf('UPSA user') > -1
+                    var type = error.responseText.indexOf('external user') > -1
                         ? 'submitForgotPassRestricted'
                         : 'submitForgotPass';
 
