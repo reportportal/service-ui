@@ -1729,6 +1729,7 @@ define(function (require, exports, module) {
                 launches: launches,
                 items: this.getHistoryItems(),
                 getCls: this.getCls,
+                getDefectCls: Util.getDefectCls,
                 getIssuesByType: this.getIssuesByType,
                 getTickets: this.getTickets,
                 defectTypes: this.navigationInfo.defectTypes,
