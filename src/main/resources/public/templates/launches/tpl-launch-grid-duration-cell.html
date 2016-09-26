@@ -26,12 +26,12 @@
         </span>
     <% } else { %>
         <span title="<%= data.text.launches.prefixDuration %><%= time %><%= data.text.launches.finishTime %><%= finish %>">
-            <% if(data.validator.durationStopped(data.item) || data.isStopped) { %>
+            <% if(data.validator.durationStopped(data.item)){ %>
                 <abbr class="text-danger"
                     title="Run STOPPED after: <%= time %>. Stopped at: <%= finish %>">
                     <strong><%= time %></strong>
                 </abbr>
-            <% } else if(data.validator.durationInterrupted(data.item)) { %>
+            <% } else if(data.validator.durationInterrupted(data.item)){ %>
                 <abbr class="text-danger"
                     title="Run INTERRUPTED after: <%= time %>. Stopped at: <%= finish %>">
                     <strong><%= time %></strong>

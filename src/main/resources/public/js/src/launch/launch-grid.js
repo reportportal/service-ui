@@ -335,18 +335,9 @@ define(function (require, exports, module) {
                 },
 
                 renderDuration: function (item) {
-                    if (item) {
-                        var launch = _.filter(this.navigationInfo.toJSON(), function (suit) {
-                            return suit.id == item.launchId;
-                        })[0];
-                        if (launch && launch.data && launch.data.status == 'STOPPED') {
-                            var isStopped = true;
-                        }
-                    }
                     return Util.templates(that.durationTpl, {
                         item: item,
                         util: Util,
-                        isStopped: isStopped,
                         validator: that.navigationInfo.getValidator()
                     });
                 },
