@@ -306,6 +306,12 @@ a.itemsPerPage {
 .btn, .dropdown-menu {
     font-size: inherit;
 }
+
+.btn.btn-salad-bg {
+    background-color: #cdea7e;
+    color: #799b1c;
+}
+
 /*-----------*/
 
 .rp-btn-group .dropdown-menu,
@@ -736,7 +742,7 @@ ul.rp-nav-left > li.title-holder {
 .has-error.checkbox label,
 .has-error.radio-inline label,
 .has-error.checkbox-inline label {
-    color: #ff3222;
+    color: $COLOR--orange-red;
 }
 
 textarea {
