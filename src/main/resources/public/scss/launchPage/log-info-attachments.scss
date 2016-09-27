@@ -3,6 +3,16 @@
     display: none;
   }
   .gallery-preview {
+    position: relative;
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 30px;
+      right: 30px;
+      height: 1px;
+      background: $COLOR--gray-91;
+    }
     .swipe-gallery-component {
       width: 100%;
       height: 80px;
@@ -18,7 +28,7 @@
             float: left;
             &.active {
               .gallery-image {
-                border-color: $COLOR--charcoal-grey;
+                border: 2px solid $COLOR--charcoal-grey;
                 cursor: default;
               }
             }
@@ -76,11 +86,25 @@
     .main-image {
       width: 630px;
       height: 300px;
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
+      overflow: hidden;
       margin: 20px auto 0 auto;
       border: 1px solid $COLOR--dark-pastel-green;
+      text-align: center;
+      img {
+        max-height: 100%;
+        max-width: 100%;
+      }
+    }
+    .gallery-image-rotate {
+      position: absolute;
+      right: 11px;
+      font-size: 20px;
+      bottom: 14px;
+      cursor: pointer;
+      color: $COLOR--gray-60;
+      &:hover {
+        color: $COLOR--charcoal-grey;
+      }
     }
     .arrow_left, .arrow_right {
       font-size: 43px;

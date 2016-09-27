@@ -150,12 +150,6 @@ define(function (require, exports, module) {
                     return '';
                 }
             },
-            shortId: {
-                deps: ['id'],
-                get: function(id) {
-                    return id.substr(20)
-                }
-            }
         },
     });
 
@@ -167,7 +161,7 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-gallery-image]': 'css: {backgroundImage: format("url($1)", previewImg)}, text: shortId',
+            '[data-js-gallery-image]': 'css: {backgroundImage: format("url($1)", previewImg)}',
             ':el': 'classes: {active: active}',
         },
 
@@ -183,15 +177,25 @@ define(function (require, exports, module) {
         tagName: 'li',
         template: 'tpl-launch-log-item-info-attachments-main-item',
 
+        events: {
+            'click [data-js-rotate]': 'onClickRotate'
+        },
+
         bindings: {
-            '[data-js-main-image]': 'css: {backgroundImage: format("url($1)", mainImg)}, text: shortId'
+            '[data-js-main-image]': 'html: format("<img src=$1>", mainImg)'
         },
 
         initialize: function() {
+            this.rotate = 0;
             this.render();
             this.listenTo(this.model, 'change:id', this.onChangeId);
         },
+        onClickRotate: function() {
+            this.rotate += 90;
+            $('[data-js-main-image] img', this.$el).css('transform', 'rotate('+this.rotate+'deg)');
+        },
         onChangeId: function(model, id) {
+            this.rotate = 0;
             if(id) {
                 this.$el.removeClass('hide-content')
             } else {
@@ -230,7 +234,7 @@ define(function (require, exports, module) {
                 collection: this.collectionMain,
                 itemView: ItemAttachmentMainView,
                 options: {
-                    mouseEvents: true,
+                    // mouseEvents: true,
                     loop: true,
                 }
             });
@@ -239,7 +243,7 @@ define(function (require, exports, module) {
                 collection: this.collectionPreviews,
                 itemView: ItemAttachmentsView,
                 options: {
-                    mouseEvents: true,
+                    // mouseEvents: true,
                     loop: true,
                 }
             });
@@ -297,12 +301,15 @@ define(function (require, exports, module) {
                 .done(function(data) {
                     self.totalPages = data.page.totalPages;
                     itemsModel.set({totalPages: self.totalPages});
-                    if(self.totalPages > 3)
-                    self.collectionPreviews.reset([
-                        itemsModel,
-                        {pageNumber: self.curPage + 1, itemId: self.itemModel.get('id'), totalPages: self.totalPages},
-                        {pageNumber: self.curPage - 1, itemId: self.itemModel.get('id'), totalPages: self.totalPages},
-                        ]);
+                    var dataForPreview = [itemsModel];
+                    if(self.totalPages > 1) {
+                        dataForPreview.push({pageNumber: self.curPage + 1, itemId: self.itemModel.get('id'), totalPages: self.totalPages});
+                        if(self.totalPages > 2) {
+                            dataForPreview.push({pageNumber: self.curPage - 1, itemId: self.itemModel.get('id'), totalPages: self.totalPages});
+                        }
+                    }
+                    self.collectionPreviews.reset(dataForPreview);
+
                     self.$main.removeClass('load');
                     self.galleryPreviews.setRenderStatus();
                     self.galleryMain.setRenderStatus();
@@ -381,9 +388,11 @@ define(function (require, exports, module) {
                 return;
             }
             if(options.dirrection == 'right'){
+                options.galleryModels[options.index+1] &&
                 options.galleryModels[options.index+1].set({pageNumber: pageNumber +1});
                 return;
             }
+            options.galleryModels[options.index-1] &&
             options.galleryModels[options.index-1].set({pageNumber: pageNumber -1})
         },
         updateArrowState: function(activePageNumber) {
