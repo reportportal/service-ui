@@ -37,14 +37,14 @@ define(function (require, exports, module) {
     var Editor = Epoxy.View.extend({
         template: 'tpl-step-defect-editor',
         ticketsTpl: 'tpl-launch-step-issue-tickets',
-        className: 'col-sm-12 editor-row',
+        className: 'row rp-table-row selected editor-row',
         bindings: {
-            '[data-js-load-bug]': 'attr: {disabled: canLoadBug, title: titleForLoadBug}',
-            '[data-js-post-bug]': 'attr: {disabled: canPostBug, title: titleForPostBug}',
+            '[data-js-load-bug]': 'attr: {title: titleForLoadBug}, disabled: canLoadBug',
+            '[data-js-post-bug]': 'attr: {title: titleForPostBug, disabled: canPostBug}',
             '[data-js-multiple-selected]': 'classes: {hidden: showMultipleSelected}',
             '[data-js-issue-name]': 'text: setIssueName',
-            '[data-js-issue-title]': 'text: setIssueTitle, attr: {dataId: setIssueId}',
-            '[data-js-issue-color]': 'text: setIssueColor',
+            '[data-js-issue-title]': 'attr: {dataId: setIssueId, title: setIssueTitle}',
+            '[data-js-issue-color]': 'attr: {style: setIssueColor}',
             '[data-js-issue-tickets]': 'html: attachTickets'
         },
         computeds: {
@@ -74,13 +74,13 @@ define(function (require, exports, module) {
                 return Util.templates(this.ticketsTpl, {tickets: tickets});
             },
             canLoadBug: function(){
-                return this.validateForLoadBug() ? 'disabled' : '';
+                return !this.validateForLoadBug();
             },
             titleForLoadBug: function(){
                 return this.validateForLoadBug() ? Localization.launches.loadBug : Localization.launches.configureTBS;
             },
             canPostBug: function(){
-                return this.validateForPostBug() ? 'disabled' : '';
+                return !this.validateForPostBug();
             },
             titleForPostBug: function(){
                 return this.validateForPostBug() ? Localization.launches.postBug : Localization.launches.configureTBS;
@@ -115,9 +115,10 @@ define(function (require, exports, module) {
                 defectsGroup: ['TO_INVESTIGATE', 'PRODUCT_BUG', 'AUTOMATION_BUG', 'SYSTEM_ISSUE', 'NO_DEFECT'],
                 subDefects: this.getSubDefects()
             }));
-            this.$origin.append(this.$el);
+            this.$origin.after(this.$el);
             this.setupAnchors();
             this.setupMarkItUp();
+            this.attachKeyActions();
         },
         setupAnchors: function () {
             this.$submitBtn = $("[data-js-submit]", this.$el);
@@ -126,6 +127,16 @@ define(function (require, exports, module) {
             //this.$multipleEditHolder = $(".rp-defect-multiple-edit:first", this.$el);
             this.$multipleEditAmount = $("[data-js-selected-qty]", this.$el);
             this.$replaceComments = $("[data-js-replace-comment]", this.$el);
+        },
+        attachKeyActions: function(){
+            this.$el.on('keydown', function(e){
+                if(e.keyCode === 27){
+                    this.closeEditor();
+                }
+                else if(e.ctrlKey && e.keyCode === 13){
+                    this.updateDefectType();
+                }
+            }.bind(this))
         },
         validateForLoadBug: function(){
             return Util.hasValidBtsSystem();
@@ -216,7 +227,7 @@ define(function (require, exports, module) {
                     Util.ajaxFailMessenger(error);
                 });
         },
-        validateForSubmition: function () {
+        validateForSubmition: function (e) {
             if (this.$textarea.val() !== (this.getIssueComment() || '') || this.selectedIssue !== this.getIssueType()) {
                 this.$submitBtn.removeClass('disabled');
             } else {
@@ -235,8 +246,9 @@ define(function (require, exports, module) {
                     this.validateForSubmition();
                 }.bind(this)
             }, MarkitupSettings));
+            this.$textarea.focus();
         },
-        updateDefectType: function (callback) {
+        updateDefectType: function () {
             if (this.inProcess) {
                 return;
             }

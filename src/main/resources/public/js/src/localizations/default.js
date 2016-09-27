@@ -51,6 +51,8 @@ define(['util'], function () {
             register: "Register",
             refresh: "Refresh",
             report: "Report",
+            escToCancel: '<strong>Esc</strong> to Cancel',
+            ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> to Submit',
             loading: "Loading",
             gallery: "Gallery",
             build: "Build",
