@@ -106,12 +106,13 @@ define(function (require, exports, module) {
             var galleryModels = [];
             _.each(itemMas, function(item) {
                 galleryModels.push(self.collection.models[item.index]);
-            })
-            this.trigger('change:slide', {
+            });
+            this.state = {
                 index: index,
                 galleryModels: galleryModels,
                 dirrection: dirrection,
-            })
+            };
+            this.trigger('change:slide', this.state);
         },
         refreshPlugin: function() {
             if(this.gallery) {
@@ -142,10 +143,14 @@ define(function (require, exports, module) {
             this.gallery && this.gallery.goTo($(e.currentTarget).index());
         },
         onClickLeft: function() {
+            this.trigger('before:click:left', this.state);
             this.gallery && this.gallery.prev();
+            this.trigger('after:click:left', this.state);
         },
         onClickRight: function() {
+            this.trigger('before:click:right', this.state);
             this.gallery && this.gallery.next();
+            this.trigger('after:click:right', this.state);
         },
 
         render: function() {

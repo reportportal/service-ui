@@ -24,8 +24,10 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
-    var Util = require('util')
+    var Util = require('util');
+    var DefectEditor = require('launches/stepLevel/DefectEditorView');
 
+    var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
     var LogItemInfoStackTraceView = require('launches/logLevel/LogItemInfoStackTraceView');
     var LogItemInfoDetailsView = require('launches/logLevel/LogItemInfoDetailsView');
     var LogItemInfoActivity = require('launches/logLevel/LogItemInfoActivity');
@@ -61,6 +63,14 @@ define(function (require, exports, module) {
                 activity: false,
             });
             this.render();
+            // this.issueView = new StepItemIssueView({
+            //     model: this.itemModel,
+            //     $container: $('[data-js-step-issue]', this.$el)
+            // });
+            // this.defectEditor = new DefectEditor({
+            //     origin: $('[data-js-defect-editor]', this.$el),
+            //     model: this.itemModel,
+            // });
             this.stackTrace = new LogItemInfoStackTraceView({
                 el: $('[data-js-item-stack-trace]', this.$el),
                 itemModel: this.itemModel,

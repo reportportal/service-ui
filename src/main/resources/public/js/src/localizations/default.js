@@ -823,7 +823,11 @@ define(['util'], function () {
             issue: 'Defect Type',
             issue_short: 'Defect Type',
             time: 'Time',
-            message: 'Message',
+            time_short: 'Time',
+            message: 'Log Message',
+            message_short: 'LogMessage',
+            attachment: 'Attachment',
+            attachment_short: 'ATH',
             interruptedAfter: 'Run INTERRUPTED after:',
             stoppedAt: 'Stopped at:',
             durationSpecific: 'Duration is interval between first child starts and last child ends. But if child run in parallel, end time is a time of longest child, in this case duration will not be equal to child duration sum.'
