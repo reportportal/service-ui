@@ -76,10 +76,29 @@
     }
     .widget-content {
         height: 300px;
+
+        .widget-body {
+            max-height: 600px;
+            overflow-y: auto;
+
+            .panel-body {
+                border: none;
+                position: relative;
+                overflow: visible;
+            }
+        }
+
+        .widget-chart {
+            height: 100%;
+            overflow: visible;
+        }
     }
+
+
 
     .project-widget {
         border: none;
+        margin: 10px 0;
 
         h4.project-item-info-title {
             font-family: $OpenSansSemibold;
@@ -149,6 +168,9 @@
 
     .average-percent {
         margin: 25px 0 10px;
+        font-size: 12px;
+        min-height: 20px;
+        text-align: center;
     }
 
     .activity-date-header {

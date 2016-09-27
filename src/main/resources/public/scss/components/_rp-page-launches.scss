@@ -35,6 +35,16 @@
                 padding-right: 0;
                 border-right: 0;
 
+                &.fluid-filter {
+                    width: auto;
+                    height: auto;
+                    min-height: 60px;
+
+                    .input-group-btn {
+                        width: auto;
+                    }
+                }
+
                 .btn.dropdown-toggle {
                     background-color: $COLOR--gray-80;
                     font-size: 13px;
@@ -42,6 +52,15 @@
 
                     &:focus {
                         background-color: $COLOR--white-default;
+                    }
+                }
+
+                .form-group {
+                    //display: inline-block;
+                    margin: 0;
+                    
+                    #statusFilterSelector {
+                        width: 210px;
                     }
                 }
 
@@ -63,10 +82,19 @@
                     line-height: 1.42857143;
                     white-space: nowrap;
                     clear: both;
-                    font-size: 12px;
+                    font-size: 13px;
                     font-weight: 400;
-                    color: #333;
+                    color: $COLOR--black;
                     cursor: pointer;
+                }
+
+                .dropdown-menu>.active>a,
+                .dropdown-menu>.active>a:focus,
+                .dropdown-menu>.active>a:hover {
+                    color: $COLOR--white-default;
+                    text-decoration: none;
+                    background-color: $COLOR--windows-blue;
+                    outline: 0;
                 }
             }
 
@@ -150,6 +178,186 @@
                     line-height: 1;
                     white-space: nowrap;
                     text-align: center;
+                }
+
+                .tickets-container {
+                    .external-ticket {
+                        display: inline-block;
+                        max-width: 100%;
+                        margin: 3px 4px 3px 0;
+                        padding: 2px 4px 0;
+                        text-align: left;
+                        white-space: nowrap;
+                        word-wrap: break-word;
+                        
+
+                        & > div {
+                            margin-left: 16px;
+                            display: inline-block;
+                            overflow: hidden;
+                            max-width: 120px;
+                            word-wrap: break-word;
+                        }
+
+                        & > i {
+                            position: absolute;
+                            top: 1px;
+                            left: 3px;
+                        }
+                    }
+                }
+            }
+        }
+
+        #activityWell {
+            #accordion {
+                clear: both;
+
+                .panel-activity {
+                    position: relative;
+                    padding: 1px;
+
+                    .panel-heading {
+                        padding: 2px 10px;
+
+                        .well-list {
+                            margin: 0;
+
+                            span.activity-list {
+                                position: absolute;
+                                right: 7px;
+                                font-size: 12px;
+                                opacity: .3;
+                            }
+
+                            .activity-user .activity-iconpd {
+                                margin: 3px 0;
+
+                                .user-reff {
+                                    position: relative;
+                                    display: inline-block;
+                                    margin: 0 5px 0 0;
+                                    padding-left: 20px;
+
+                                    i.material-icons {
+                                        position: absolute;
+                                        top: 0;
+                                        left: 0;
+                                        font-size: 16px;
+                                        line-height: 16px;
+                                        width: 16px;
+                                        height: 16px;
+                                    }
+                                }
+
+                                .hoverFullTime {
+                                    width: 81px;
+                                    height: 34px;
+
+                                    .timeHover {
+                                        cursor: pointer;
+                                    }
+                                }
+                            }
+
+                            .activity-str {
+                                position: relative;
+                                margin: 3px 0;
+
+                                .actyvity-val {
+                                    overflow: hidden;
+
+                                    a {
+                                        text-decoration: underline !important;
+                                    }
+                                }
+
+                                i.material-icons {
+                                    position: absolute;
+                                    left: 50%;
+                                    top: 50%;
+                                    margin: -.45em 0 0;
+                                }
+                            }
+                        }
+                    }
+
+                    .panel-heading+.panel-collapse {
+                        .well-list {
+                            margin: 0;
+                            padding: 0 15px;
+                            border: none;
+
+                            li.team_member_row {
+                                position: relative;
+                                padding: 10px;
+                                min-height: 20px;
+                                border-top: 1px solid rgba(0,0,0,.05);
+
+                                &:first-child {
+                                    border: none;
+                                }
+
+                                .activity-iconpd {
+                                    margin: 3px 0;
+
+                                    .user-reff {
+                                        position: relative;
+                                        display: inline-block;
+                                        margin: 0 5px 0 0;
+                                        padding-left: 20px;
+
+                                        i.material-icons {
+                                            position: absolute;
+                                            top: 0;
+                                            left: 0;
+                                            font-size: 16px;
+                                            line-height: 16px;
+                                            width: 16px;
+                                            height: 16px;
+                                        }
+                                    }
+
+                                    .hoverFullTime {
+                                        width: 81px;
+                                        height: 34px;
+
+                                        .timeHover {
+                                            cursor: pointer;
+                                        }
+                                    }
+                                }
+
+                                .activity-str {
+                                    position: relative;
+                                    margin: 3px 0;
+
+                                    .actyvity-val {
+                                        overflow: hidden;
+
+                                        a {
+                                            text-decoration: underline !important;
+                                        }
+                                    }
+
+                                    i.material-icons {
+                                        position: absolute;
+                                        left: 50%;
+                                        top: 50%;
+                                        margin: -.45em 0 0;
+                                    }
+                                }
+                            }
+                        }
+
+                        .media-list-hover li:hover i {
+                            opacity: 1;
+                        }
+
+                        .media-list-hover li i {
+                            opacity: .3;
+                        }
+                    }
                 }
             }
         }
@@ -308,6 +516,13 @@
 }
 
 #gridWrapper, #compareGrid, #mergeGrid {
+
+    .rp-margin-reset-log>div.rp-table-row>.text-wrapper,
+    .rp-margin-reset>div.rp-table-row>.text-wrapper {
+        font-family: monospace;
+        overflow: hidden;
+    }
+
     .rp-margin-reset {
         border-top: 0;
         
@@ -355,6 +570,19 @@
             }
         }
 
+        .rp-table-row.parents-line {
+            background: rgba(0,0,0,0)!important;
+            margin-bottom: -5px;
+            margin-top: -4px;
+            padding: 0;
+
+            a {
+                display: inline-block;
+                padding: 10px;
+                color: $COLOR--windows-blue;
+            }
+        }
+
         .navigateable.rp-blue-link-undrl {
             white-space: pre-wrap;
             color: $COLOR--windows-blue;
@@ -363,6 +591,19 @@
 
         .rp-table-row {
             .name-cell {
+                span.label.autoanalyze {
+                    position: absolute;
+                    top: 5px;
+                    right: 5px;
+                    margin-right: 6px;
+                    font-size: 10px;
+
+                    -moz-animation: 2s linear 0s reverse none infinite auto-analyze-blink;
+                    -ms-animation: 2s linear 0s reverse none infinite auto-analyze-blink;
+                    -webkit-animation: 2s linear 0s reverse none infinite auto-analyze-blink;
+                    animation: 2s linear 0s reverse none infinite auto-analyze-blink;
+                }
+
                 .tags {
                     overflow: hidden;
 
@@ -424,6 +665,75 @@
                     white-space: normal;
                 }
             }
+
+            .defect-type {
+                .tickets-container {
+                    .external-ticket {
+                        display: inline-block;
+                        max-width: 100%;
+                        margin: 3px 4px 3px 0;
+                        padding: 2px 4px 0;
+                        text-align: left;
+                        white-space: nowrap;
+                        word-wrap: break-word;
+                        
+
+                        & > div {
+                            margin-left: 16px;
+                            display: inline-block;
+                            overflow: hidden;
+                            max-width: 120px;
+                            word-wrap: break-word;
+                        }
+
+                        & > i {
+                            position: absolute;
+                            top: 1px;
+                            left: 3px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .rp-table-row.ERROR {
+            background-color: #f2dede!important;
+        }
+
+        .INFO {
+            border-left: 4px solid $COLOR--windows-blue!important;
+
+            &:hover {
+                background-color: #c4e3f3!important;
+            }
+        }
+
+        .ERROR {
+            border-left: 4px solid #F56561!important;
+
+            &:hover {
+                background-color: #ebcccc!important;
+            }
+        }
+
+        .DEBUG {
+            border-left: 4px solid #F0F0F0!important;
+            
+            &:hover {
+                background-color: #F5F5F5!important;
+            }
+        }
+
+        .TRACE {
+            border-left: 4px solid #D4D4D4!important;
+        }
+
+        .WARN {
+            border-left: 4px solid #F0AD4E!important;
+
+            &:hover {
+                background-color: #faf2cc!important;
+            }
         }
     }
 
@@ -482,6 +792,14 @@
             &.rp-fail {
                 background: #e8ada3;
             }
+
+            .tooltip-inner {
+                .defects-tip-duration {
+                    width: 240px;
+                    color: $COLOR--gray-60;
+                    padding: 12px 15px;
+                }
+            }
         }
     }
 
@@ -502,8 +820,6 @@
         }
     }
 }
-
-
 
 .dropdown-like .btn-default, 
 .input-group.input-group-sm {
@@ -612,4 +928,29 @@ th.sortable {
 #mergeGrid .row.disabled {
     color: $COLOR--gray-60;
     opacity: .6;
+}
+
+@keyframes auto-analyze-blink {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-webkit-keyframes auto-analyze-blink {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@-ms-keyframes auto-analyze-blink {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }

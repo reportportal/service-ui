@@ -294,6 +294,7 @@
 }
 
 .daterangepicker .rp-select {
+  height: 26px;
   width: 50px;
   margin-bottom: 0;
   display: inline-block;

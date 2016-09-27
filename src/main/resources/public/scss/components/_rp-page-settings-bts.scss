@@ -50,6 +50,10 @@
             .nav-tabs-bts-instances {
                 border-bottom: solid 1px #e9e9e9;
 
+                .activated .close-add {
+                    display: inline-block !important;
+                }
+
                 li {
                     position: relative;
                     float: left;

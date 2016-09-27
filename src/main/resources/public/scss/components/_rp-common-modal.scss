@@ -28,7 +28,9 @@
     border-top: medium none;
 }
 
-.modal-header, .modal-body, .modal-footer {
+.modal-header,
+.modal-body,
+.modal-footer {
     padding: 15px 20px;
 }
 
@@ -849,6 +851,15 @@ output {
     color: #666;
 }
 
+#contentModal output {
+    padding-top: 0;
+}
+
+.edit-launch-name,
+.edit-launch-number {
+    font-weight: 700;
+}
+
 .well {
     border-radius: 0;
     box-shadow: none;
@@ -857,6 +868,23 @@ output {
 .warning_modal,
 .modal-content .modal-body > p {
     padding: 10px 18px 0;
+}
+
+.compare-content .panel-body,
+.widget-content .panel-body {
+    border-top: 54px solid transparent;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    box-sizing: border-box;
+    overflow: visible;
+}
+
+.compare-content .panel-body {
+    border-top: 24px solid transparent;
 }
 
 /*--- END MODALS ---*/
@@ -900,7 +928,45 @@ output {
     background-color: #efefef;
 }
 
+#dialogShellLoader,
+.submitticket-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    border-radius: 4px;
+    background: #fff;
+    opacity: .6;
+}
+
+.shared-loader {
+    padding: 0 0 24px;
+    text-align: center;
+}
+
+#dialogShellLoader i,
+.submitticket-loader i {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: inline-block;
+    margin: -24px 0 0 -24px;
+    color: #29d;
+    font-size: 40px;
+}
+
 /*--- END MODALS ---*/
+
+#rowHolder .remove-block {
+    display: none;
+}
+
+#rowHolder.multi .remove-block {
+    display: inline;
+    cursor: pointer;
+}
 
 /*--------*/
 /* MIXINS */
@@ -958,6 +1024,10 @@ output {
 %modalBody {
     padding: 40px 20px 40px 20px;
 
+    .merge-form {
+        padding: 10px 15px 0;
+    }
+
     p {
         padding: 2px 0;
         font-size: 14px;
@@ -993,6 +1063,10 @@ output {
 
 %modalBackdrop {
     background-color: rgba(70, 69, 71, 0.3);
+
+    &.fade.in {
+        opacity: .8;
+    }
 }
 
 /*--------------------*/

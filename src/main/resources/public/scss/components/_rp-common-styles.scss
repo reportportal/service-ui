@@ -134,6 +134,13 @@ h4 {
         padding: 0;
     }
 }
+
+a, a:hover {
+    text-decoration: none;
+}
+a, a:hover {
+    color: inherit;
+}
 /*--------------------------*/
 
 .bottom-15 {
@@ -205,6 +212,10 @@ h4 {
 
 .nopadding {
     padding: 0!important;
+}
+
+.custom-padding {
+    padding-right: 5px;
 }
 
 .d3-tip {
@@ -285,7 +296,7 @@ a.itemsPerPage {
 }
 
 .rp-blue-link {
-    color: #428bca;
+    color: $COLOR--windows-blue;
     text-decoration: underline!important;
 }
 
@@ -312,6 +323,39 @@ a.itemsPerPage {
     color: #799b1c;
 }
 
+.btn-controls .btn.btn-default,
+.btn.btn-default.btn-cancel,
+.btn.cancelBtn, .btn.cancelBtn:hover,
+.modal-content .btn.btn-default.btn-cancel,
+.modal-content .btn.btn-default.cancel,
+.modal-content .modal-footer .btn.btn-default {
+    background: $COLOR--gray-60;
+    color: $COLOR--white-default;
+}
+
+.rp-blue-link-undrl,
+.suit-grid .navigateable.rp-blue-link-undrl {
+    color: $COLOR--windows-blue;
+    text-decoration: none!important;
+}
+
+
+.popover,
+.tooltip {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.42857143;
+    text-shadow: none;
+    text-transform: none;
+    word-break: normal;
+    word-wrap: normal;
+    white-space: normal;
+    line-break: auto;
+    text-decoration: none;
+    letter-spacing: normal;
+    word-spacing: normal;
+}
 /*-----------*/
 
 .rp-btn-group .dropdown-menu,
@@ -494,6 +538,13 @@ label {
     &.rp-control-label {
         font-weight: normal;
     }
+}
+
+.align-label {
+    margin-left: 15px;
+}
+.control-label {
+    font-weight: 400;
 }
 
 /*---------------------------*/
@@ -930,12 +981,30 @@ textarea {
 /*--------------------------------*/
 
 .select2-container-multi .select2-choices {
-    max-height: 30px;
+    background: 0 0;
+    max-height: 100%;
+    min-height: 30px!important;
 }
 
-.btn.dropdown-toggle, 
-.form-control, 
-.select2-container-multi 
+.select2-result-label,
+.select2-search-choice div {
+    max-width: 100%;
+    white-space: pre-wrap;
+    word-break: break-word;
+    word-wrap: break-word;
+}
+
+.filter-option-input .select2-container {
+    height: auto;
+}
+
+.select2-container.input-sm {
+    padding: 0;
+}
+
+.btn.dropdown-toggle,
+.form-control,
+.select2-container-multi
 .select2-choices {
     background-color:  $COLOR--white-default;
     border: 1px solid $COLOR--gray-80;
@@ -943,11 +1012,32 @@ textarea {
     color: $COLOR--gray-60;
 }
 
-/*--------------------------------*/
-
-.margin-left-10 {
-    margin-left: 10px;
+.select2-container-multi .select2-choices .select2-search-field input {
+    padding: 4px 5px;
 }
+
+.select2-container-multi .select2-choices .select2-search-choice.common-tag {
+    background: #ebf1f6;
+    background: -moz-linear-gradient(top,#ebf1f6 0,#abd3ee 50%,#89c3eb 51%,#d5ebfb 100%);
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0,#ebf1f6),color-stop(50%,#abd3ee),color-stop(51%,#89c3eb),color-stop(100%,#d5ebfb));
+    background: -webkit-linear-gradient(top,#ebf1f6 0,#abd3ee 50%,#89c3eb 51%,#d5ebfb 100%);
+    background: -o-linear-gradient(top,#ebf1f6 0,#abd3ee 50%,#89c3eb 51%,#d5ebfb 100%);
+    background: -ms-linear-gradient(top,#ebf1f6 0,#abd3ee 50%,#89c3eb 51%,#d5ebfb 100%);
+    background: linear-gradient(to bottom,#ebf1f6 0,#abd3ee 50%,#89c3eb 51%,#d5ebfb 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#ebf1f6", endColorstr="#d5ebfb", GradientType=0);
+}
+
+#editLaunchModal .select2-container-multi .select2-choices,
+#form-merge-launches .select2-container-multi .select2-choices,
+.dropdown-like.input-group-sm>.input-group-btn>.btn,
+.input-group-sm .token,
+.select2-container-multi .select2-choices .select2-search-choice,
+.select2-container-multi .select2-choices .select2-search-choice.common-tag,
+.tokenfield.input-sm .token {
+    border-radius: 0;
+}
+
+/*--------------------------------*/
 
 /* xs - 767px */
 @media (max-width: $SCREEN_XS_MAX) {
@@ -1109,14 +1199,18 @@ textarea {
 
 /*----Widget wizard - name & dasboard tab -----*/
 
-.btn, .form-control, .select2-container-multi .select2-choices {
+.btn,
+.form-control,
+.select2-container-multi .select2-choices {
     border-radius: 0;
     box-shadow: none;
 }
 
 /*--------------------------------*/
 
-#errorBlock, .login-loader, .soft-hidden {
+#errorBlock,
+.login-loader,
+.soft-hidden {
     display: none;
     clear: both;
 }

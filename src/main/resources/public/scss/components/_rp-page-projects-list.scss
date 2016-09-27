@@ -157,6 +157,9 @@
 .admin_form .form_label {
     margin: 0;
     line-height: 14px;
+    font-size: 14px;
+    font-weight: 400;
+    color: #666;
 }
 
 .input-filter .form-control {
@@ -191,21 +194,22 @@
     font-size: 18px;
     color: #464547;
     text-transform: uppercase;
-}
 
-.project-wrapper > h2 span.label.you {
-    position: relative;
-    top: -2px;
-    display: inline-block;
-    height: 18px;
-    margin-left: 3px;
-    padding: 0 6px;
-    line-height: 18px;
-    border-radius: 0;
-    background-color: #a3c644;
-    font-family: $OpenSansRegular;
-    font-weight: normal;
-    font-size: 10px;
+    span.label.you {
+        position: relative;
+        top: -2px;
+        left: 1%;
+        display: inline-block;
+        height: 18px;
+        margin-left: 3px;
+        padding: 0 6px;
+        line-height: 18px;
+        border-radius: 0;
+        background-color: #a3c644;
+        font-family: $OpenSansRegular;
+        font-weight: normal;
+        font-size: 10px;
+    }
 }
 
 .project-wrapper .project_info_wrapper {
