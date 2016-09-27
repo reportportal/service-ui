@@ -47,10 +47,10 @@ define(function (require, exports, module) {
         },
         load: function() {
             var async = $.Deferred();
-            this.trigger('load', true);
+            this.trigger('load:true', true);
             var self = this;
             async.always(function() {
-                self.trigger('load', false);
+                self.trigger('load:false', false);
             });
             if(this.get('pageNumber') < 1 || this.get('pageNumber') > this.get('totalPages')) {
                 this.set({content: []});
@@ -71,7 +71,7 @@ define(function (require, exports, module) {
                         async.reject();
                     });
             }
-            return async.promise()
+            return async.promise();
         },
         getParamsUrl: function() {
             var params = ['filter.ex.binary_content=true'];
@@ -106,7 +106,7 @@ define(function (require, exports, module) {
             var content = this.model.get('content');
             _.each(content, function(item) {
                 item.pageNumber = self.model.get('pageNumber');
-            })
+            });
             this.collection.reset(content);
             this.model.set({itemModels: this.collection.models});
         },
@@ -150,6 +150,12 @@ define(function (require, exports, module) {
                     return '';
                 }
             },
+            shortId: {
+                deps: ['id'],
+                get: function(id) {
+                    return id.substr(20);
+                }
+            }
         },
     });
 
@@ -161,7 +167,7 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-gallery-image]': 'css: {backgroundImage: format("url($1)", previewImg)}',
+            '[data-js-gallery-image]': 'css: {backgroundImage: format("url($1)", previewImg)}, text: shortId',
             ':el': 'classes: {active: active}',
         },
 
@@ -182,7 +188,7 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-main-image]': 'html: format("<img src=$1>", mainImg)'
+            '[data-js-main-image]': 'html: format("<img src=$1 title=$2>", mainImg, shortId)',
         },
 
         initialize: function() {
@@ -251,6 +257,7 @@ define(function (require, exports, module) {
             this.listenTo(this.galleryPreviews, 'change:slide', this.onChangeSlide);
             this.listenTo(this.galleryMain, 'change:slide', this.onChangeGalleryMainSlide);
             this.listenTo(this.currentLoadCollection, 'change:active:slide', this.onChangeMainActiveSlide);
+            this.listenTo(this.galleryPreviews, 'after:click:right after:click:left', this.onClickPreviewNav);
         },
         onShow: function(model, show) {
             if(show && !this.isLoad) {
@@ -259,6 +266,7 @@ define(function (require, exports, module) {
             }
         },
         onChangeMainActiveSlide: function(activeModel) {
+            if(!activeModel) { return; }
             var self = this;
             var index = 0;
             _.each(this.currentLoadCollection.models, function(model, num) {
@@ -288,6 +296,21 @@ define(function (require, exports, module) {
             _.each(this.sortPreviewModels.models, function(model) {
                 self.currentLoadCollection.push(model.get('itemModels'))
             });
+            var activeModel = this.currentLoadCollection.where({active: true})[0];
+            if(!activeModel || activeModel.get('pageNumber') != this.curPage) {
+                _.each(this.currentLoadCollection.models, function(model, num) {
+                    if(model.get('pageNumber') == self.curPage) {
+                        self.onChangeMainActiveSlide(model);
+                        self.updateArrowMainGallery(num);
+                        return false;
+                    }
+                })
+            }
+        },
+        onClickPreviewNav: function(state) {
+            if(state.galleryModels.length < 3) {
+                this.updateLoadItems();
+            }
         },
         load: function() {
             this.$main.addClass('load');
@@ -313,9 +336,8 @@ define(function (require, exports, module) {
                     self.$main.removeClass('load');
                     self.galleryPreviews.setRenderStatus();
                     self.galleryMain.setRenderStatus();
-                    self.onChangeMainActiveSlide(self.currentLoadCollection.at(0));
-                    self.updateArrowMainGallery(0);
                     self.updateArrowState(self.curPage);
+                    self.updateArrowMainGallery(0)
                 })
                 .fail(function() {
                     self.$main.removeClass('load');
@@ -378,6 +400,7 @@ define(function (require, exports, module) {
             this.sortPreviewModels = {models: options.galleryModels};
             var activeModel = options.galleryModels[options.index];
             var pageNumber = activeModel.get('pageNumber');
+            this.curPage = pageNumber;
             this.updateArrowState(pageNumber);
             if (pageNumber < 1 || pageNumber > this.totalPages) {
                 if(options.dirrection == 'left') {

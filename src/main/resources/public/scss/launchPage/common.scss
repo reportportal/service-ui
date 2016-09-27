@@ -1,0 +1,193 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+.suit-grid, .step-grid, .log-grid {
+  .table-wrapper {
+    display: table;
+    width: 100%;
+    height: 100%;
+    .middle-wrapper {
+      display: table-cell;
+      vertical-align: middle;
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .rp-grid-thead {
+    height: 50px;
+    .grid-cell {
+      .short-size {
+        display: none;
+      }
+      .text-overflow i {
+        display: inline;
+      }
+      .filter-icon-wrapper {
+        display: none;
+        width: 0;
+        margin-left: -3px;
+        opacity: 0;
+        i {
+          position: relative;
+          margin-left: -12px;
+          color: $COLOR--gray-60;
+          &:hover {
+            color: $COLOR--topaz
+          }
+          &:after {
+            position: absolute;
+            content: '';
+            top: -5px;
+            bottom: -5px;
+            left: -5px;
+            right: 0;
+          }
+        }
+      }
+      .sort-icon-wrapper {
+        display: none;
+        width: 0;
+        opacity: 0;
+        i {
+          margin-left: -3px;
+          &:first-child {
+            display: inline;
+          }
+          &:last-child {
+            display: none;
+          }
+        }
+      }
+      &:hover {
+        .filter-icon-wrapper, .sort-icon-wrapper {
+          opacity: 1;
+        }
+      }
+    }
+    @media (max-width: 1450px) {
+      .grid-cell {
+        .long-size{
+          display: none;
+        }
+        .short-size {
+          display: inline;
+        }
+      }
+    }
+  }
+
+  .grid-cell {
+    float: left;
+    padding-right: 10px;
+    padding-left: 15px;
+    min-height: 1px;
+    &.rp-grid-th {
+      cursor: default;
+      &[data-filter] {
+        .filter-icon-wrapper {
+          display: inline-block;
+        }
+      }
+      &[data-sorter] {
+        cursor: pointer;
+        .sort-icon-wrapper {
+          display: inline-block;
+        }
+      }
+      &.sorting-desc, &.sorting-asc {
+        .sort-icon-wrapper {
+          opacity: 1;
+        }
+      }
+      &.sorting-desc .sort-icon-wrapper i {
+        &:first-child {
+          display: none;
+        }
+        &:last-child {
+          display: inline;
+        }
+      }
+    }
+
+  }
+  .rp-item-duration {
+    display: inline-block;
+    vertical-align: top;
+    margin-right: 10px;
+    .duration-content {
+      position: relative;
+      display: inline-block;
+      padding-left: 18px;
+      line-height: 1;
+      color: #464547;
+      i {
+        position: absolute;
+        left: -1px;
+        top: 0;
+      }
+      .material-icons {
+        top: -2px;
+        color: #999;
+        font-size: 16px;
+      }
+    }
+    .duration-time {
+      font-size: 12px;
+    }
+    .duration-error {
+      color: #ff3222;
+      .material-icons {
+        color: #ff3222;
+      }
+      .duration-time {
+        text-decoration: underline;
+      }
+    }
+    .rp-icons-warning {
+      top: -2px;
+      font-size: 12px;
+      color: #ff3222;
+      & + .duration-time {
+        &:after{
+          content: '-';
+          visibility: hidden;
+        }
+      }
+    }
+  }
+  .pr-grid-show-time {
+    &:hover {
+      .from-now {
+        display: none;
+      }
+      .exact-time {
+        display: inline;
+      }
+    }
+    .from-now {
+      padding-bottom: 1.2em;
+    }
+    .exact-time {
+      display: none;
+    }
+  }
+}

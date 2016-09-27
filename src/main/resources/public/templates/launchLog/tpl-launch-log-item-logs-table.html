@@ -1,0 +1,34 @@
+<% function getItemHtml(name, shortName) {
+return '<div class="table-wrapper">' +
+    '<div class="middle-wrapper">' +
+        '<span class="text-overflow">' +
+                        '<span class="long-size">' + name + '</span>' +
+                        '<span class="short-size" title="' + name + '">' + shortName + '</span>&nbsp;' +
+                        '<div class="sort-icon-wrapper">' +
+                            '<i class="material-icons">keyboard_arrow_up</i>' +
+                            '<i class="material-icons">keyboard_arrow_down</i>' +
+                        '</div>' +
+                    '</span>' +
+        '</div>' +
+    '</div>';
+} %>
+
+
+
+
+
+<div class="log-grid rp-odd-even rp-table-hover" data-js-table-container>
+    <div class="row rp-grid-thead hidden-xs fixed_table_header">
+        <div class="grid-cell message-grid-cell rp-grid-th">
+            <%= getItemHtml(data.text.launchesHeaders.message, data.text.launchesHeaders.message_short) %>
+
+        </div>
+        <div class="grid-cell attachment-grid-cell rp-grid-th">
+            <%= getItemHtml(data.text.launchesHeaders.attachment, data.text.launchesHeaders.attachment_short) %>
+        </div>
+        <div class="grid-cell time-grid-cell rp-grid-th" data-sorter="status">
+            <%= getItemHtml(data.text.launchesHeaders.time, data.text.launchesHeaders.time_short) %>
+        </div>
+    </div>
+
+</div>

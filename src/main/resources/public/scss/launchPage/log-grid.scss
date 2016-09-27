@@ -18,21 +18,3 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-.launch-log-info-details{
-  padding: 10px 15px 0 15px;
-  .rp-grid-name .btn-group, .type-grid-cell{
-    display: none;
-  }
-  .rp-grid-name a {
-    cursor: default;
-    color: $COLOR--black;
-    pointer-events: none;
-    &:hover {
-      text-decoration: none !important;
-    }
-
-  }
-  .rp-table-row:hover, .rp-table-row{
-    background-color: $COLOR--white-four !important;
-  }
-}

@@ -208,8 +208,6 @@ define(function (require, exports, module) {
         ];
     };
 
-
-
     var UserDebugFilters = function (userId) {
         var launchFilters = LaunchStepFilters();
         // place user filter on the second place but first is required Name filter so we insert at index 2
@@ -250,10 +248,6 @@ define(function (require, exports, module) {
             ].concat(Statistics())
         );
     };
-
-
-
-
 
     var LaunchEntities = function () {
         var launchSuiteEntitiesCollection = LaunchSuiteEntities();
@@ -307,8 +301,6 @@ define(function (require, exports, module) {
         );
     };
 
-
-
     var TestStepFilters = function () {
         return new Backbone.Collection(
             [
@@ -345,7 +337,12 @@ define(function (require, exports, module) {
 
     var LogStepFilters = function () {
         return new Backbone.Collection(
-            [new Filters.Model({id: 'message', required: true, condition: 'cnt'})].concat(LogFilters())
+            [new Filters.EntityInputModel({
+                id: 'message',
+                condition: 'cnt',
+                valueMinLength: 3,
+                valueOnlyDigits: false,
+            })].concat(LogFilters())
         );
     };
 
