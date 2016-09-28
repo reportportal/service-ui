@@ -3181,7 +3181,7 @@ the specific language governing permissions and limitations under the Apache Lic
             searchWidth = maxWidth - (left - containerLeft) - sideBorderPadding;
 
             if(this.opts.noResizeSearch){
-                searchWidth = minimumWidth;
+                searchWidth = searchWidth;
             }
             else {
                 if (searchWidth < minimumWidth) {
@@ -3196,7 +3196,6 @@ the specific language governing permissions and limitations under the Apache Lic
                     searchWidth = minimumWidth;
                 }
             }
-
             this.search.width(Math.floor(searchWidth));
         },
 
