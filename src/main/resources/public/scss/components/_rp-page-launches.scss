@@ -17,7 +17,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 #filterPanel {
     .rp-filter-inputs {
@@ -58,7 +58,7 @@
                 .form-group {
                     //display: inline-block;
                     margin: 0;
-                    
+
                     #statusFilterSelector {
                         width: 210px;
                     }
@@ -76,7 +76,7 @@
                     font-size: 12px;
                 }
 
-                .dropdown-menu>li>a {
+                .dropdown-menu > li > a {
                     display: block;
                     padding: 3px 20px;
                     line-height: 1.42857143;
@@ -88,9 +88,9 @@
                     cursor: pointer;
                 }
 
-                .dropdown-menu>.active>a,
-                .dropdown-menu>.active>a:focus,
-                .dropdown-menu>.active>a:hover {
+                .dropdown-menu > .active > a,
+                .dropdown-menu > .active > a:focus,
+                .dropdown-menu > .active > a:hover {
                     color: $COLOR--white-default;
                     text-decoration: none;
                     background-color: $COLOR--windows-blue;
@@ -145,10 +145,10 @@
         }
     }
 
-    .has-error .form-control, 
+    .has-error .form-control,
     .has-error .form-control:focus {
         color: $COLOR--black-two;
-        box-shadow: 0 0 2px 0 rgba(255,49,33,.7);
+        box-shadow: 0 0 2px 0 rgba(255, 49, 33, .7);
         border: 1px solid $COLOR--orange-red;
     }
 }
@@ -163,6 +163,202 @@
 
 #infoWrapper {
     font-size: 12px;
+
+    #logGallery {
+        padding-top: 20px;
+
+        .rp-panel-styles {
+            padding: 5px 0;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fafafa;
+            box-shadow: none;
+            font-size: 12px;
+            font-weight: 300;
+
+            .panel-heading {
+                padding: 2px 10px;
+
+                .panel-title {
+                    font-size: 12px;
+                }
+            }
+
+            .rp-panel-collapse {
+                margin-top: 5px;
+                border-top: 1px solid #ddd;
+
+                #slider {
+                    .rp-bounding-box {
+                        width: 100%;
+                        margin: 0 auto;
+
+                        @media screen and (min-width: 992px) {
+                            width: 640px;
+                        }
+
+                        .carousel {
+
+                            .item {
+                                min-height: 200px;
+
+                                .carousel-caption {
+                                    cursor: pointer;
+                                }
+
+                                .carousel-custom-settings {
+                                    opacity: .7;
+                                    color: #454545;
+                                    bottom: auto;
+                                    top: 0;
+                                    left: 0;
+                                    right: 0;
+                                    padding: 5px 5%;
+                                    max-height: 88px;
+                                    background-color: #e7e7e7;
+                                    position: relative;
+                                    text-shadow: none;
+                                    border-bottom: 5px solid #e7e7e7;
+                                    text-decoration: underline;
+
+                                    .rotate-image {
+                                        position: absolute;
+                                        left: 10px;
+                                        top: 7px;
+
+                                        i.material-icons {
+                                            position: absolute;
+                                            left: 0;
+                                            top: 0;
+                                            width: 24px;
+                                            height: 24px;
+                                            font-size: 24px;
+                                            line-height: 24px;
+                                        }
+                                    }
+
+                                    p {
+                                        margin: 5px 0;
+                                    }
+                                }
+                            }
+
+                            .carousel-control.custom-left-position {
+                                @media screen and (min-width: 992px) {
+                                    font-size: 80px;
+                                    left: -15%;
+                                    color: #454545;
+                                    background-image: none;
+                                }
+
+                                i {
+                                    display: inline-block;
+                                    position: absolute;
+                                    top: 50%;
+                                    z-index: 5;
+                                    margin-top: -43px;
+                                    left: 25%;
+                                }
+                            }
+
+                            .carousel-control.custom-right-position {
+                                @media screen and (min-width: 992px) {
+                                    font-size: 80px;
+                                    left: 100%;
+                                    color: #454545;
+                                    background-image: none;
+                                }
+
+                                i {
+                                    display: inline-block;
+                                    position: absolute;
+                                    top: 50%;
+                                    z-index: 5;
+                                    margin-top: -43px;
+                                    right: 25%;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                .navigation-wrap {
+                    position: relative;
+                    margin: 0 auto;
+                    padding: 0 15px;
+
+                    @media screen and (min-width: 992px) {
+                        width: 786px;
+                    }
+                    @media screen and (min-width: 1200px) {
+                        width: 1002px;
+                    }
+
+                    .navigation-content {
+                        height: 60px;
+                        overflow: hidden;
+                        position: relative;
+
+                        @media screen and (min-width: 992px) {
+                            width: 756px;
+                        }
+                        @media screen and (min-width: 1200px) {
+                            width: 972px;
+                        }
+
+                        .navigation-items {
+                            overflow: hidden;
+                            white-space: nowrap;
+                            position: absolute;
+                            top: 0;
+                            width: 2000px;
+
+                            .navigation-item {
+                                float: left;
+                                padding: 0 10px;
+                                cursor: pointer;
+
+                                img.img-responsive {
+                                    margin: 0 auto;
+                                }
+                            }
+                        }
+                    }
+
+                    .carousel-control.nav-left-position,
+                    .carousel-control.nav-right-position {
+                        @media screen and (min-width: 992px) {
+                            font-size: 28px;
+                            color: #454545;
+                            background-image: none;
+                            width: auto;
+                            cursor: pointer;
+                        }
+
+                        & i,
+                        & i {
+                            @media screen and (min-width: 992px) {
+                                vertical-align: bottom;
+                            }
+                        }
+                    }
+
+                    .carousel-control.nav-left-position {
+                        @media screen and (min-width: 992px) {
+                            left: 0;
+                        }
+                    }
+
+                    .carousel-control.nav-right-position {
+                        @media screen and (min-width: 992px) {
+                            right: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     #logHistory {
         #defectWell {
@@ -189,7 +385,6 @@
                         text-align: left;
                         white-space: nowrap;
                         word-wrap: break-word;
-                        
 
                         & > div {
                             margin-left: 16px;
@@ -282,7 +477,7 @@
                         }
                     }
 
-                    .panel-heading+.panel-collapse {
+                    .panel-heading + .panel-collapse {
                         .well-list {
                             margin: 0;
                             padding: 0 15px;
@@ -292,7 +487,7 @@
                                 position: relative;
                                 padding: 10px;
                                 min-height: 20px;
-                                border-top: 1px solid rgba(0,0,0,.05);
+                                border-top: 1px solid rgba(0, 0, 0, .05);
 
                                 &:first-child {
                                     border: none;
@@ -395,7 +590,7 @@
             display: inline-block;
             padding: 3px 0;
             height: 18px;
-            font-family: OpenSansRegular,sans-serif;
+            font-family: OpenSansRegular, sans-serif;
             font-size: 13px;
             line-height: 13px;
         }
@@ -441,12 +636,12 @@
                         border: 0;
                         opacity: 0.5;
                         background: #7db9e8;
-                        background: -moz-linear-gradient(top,#7db9e8 0,#fdfdfd 0,#ebeced 100%);
-                        background: -webkit-gradient(linear,left top,left bottom,color-stop(0,#7db9e8),color-stop(0,#fdfdfd),color-stop(100%,#ebeced));
-                        background: -webkit-linear-gradient(top,#7db9e8 0,#fdfdfd 0,#ebeced 100%);
-                        background: -o-linear-gradient(top,#7db9e8 0,#fdfdfd 0,#ebeced 100%);
-                        background: -ms-linear-gradient(top,#7db9e8 0,#fdfdfd 0,#ebeced 100%);
-                        background: linear-gradient(to bottom,#7db9e8 0,#fdfdfd 0,#ebeced 100%);
+                        background: -moz-linear-gradient(top, #7db9e8 0, #fdfdfd 0, #ebeced 100%);
+                        background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #7db9e8), color-stop(0, #fdfdfd), color-stop(100%, #ebeced));
+                        background: -webkit-linear-gradient(top, #7db9e8 0, #fdfdfd 0, #ebeced 100%);
+                        background: -o-linear-gradient(top, #7db9e8 0, #fdfdfd 0, #ebeced 100%);
+                        background: -ms-linear-gradient(top, #7db9e8 0, #fdfdfd 0, #ebeced 100%);
+                        background: linear-gradient(to bottom, #7db9e8 0, #fdfdfd 0, #ebeced 100%);
                         text-align: center;
 
                         &.active {
@@ -455,25 +650,25 @@
                     }
 
                     .TRACE {
-                        border-left: 4px solid #D4D4D4!important;
+                        border-left: 4px solid #D4D4D4 !important;
                     }
 
                     .DEBUG {
-                        border-left: 4px solid #F0F0F0!important;
+                        border-left: 4px solid #F0F0F0 !important;
                     }
 
                     .INFO {
-                        border-left: 4px solid #428BCA!important;
+                        border-left: 4px solid #428BCA !important;
                         background: #c4e3f3;
                     }
-                    
+
                     .WARN {
-                        border-left: 4px solid #F0AD4E!important;
+                        border-left: 4px solid #F0AD4E !important;
                         background: #faf2cc;
                     }
 
                     .ERROR {
-                        border-left: 4px solid #F56561!important;
+                        border-left: 4px solid #F56561 !important;
                         background: #ebcccc;
                     }
                 }
@@ -485,19 +680,19 @@
             padding: 5px 0;
             position: relative;
             z-index: 1;
-            
+
             .my_button {
                 margin-bottom: 10px;
                 width: 80px;
                 height: 30px;
                 border: 0;
                 background: #7db9e8;
-                background: -moz-linear-gradient(top,#7db9e8 0,#fdfdfd 0,#ebeced 100%);
-                background: -webkit-gradient(linear,left top,left bottom,color-stop(0,#7db9e8),color-stop(0,#fdfdfd),color-stop(100%,#ebeced));
-                background: -webkit-linear-gradient(top,#7db9e8 0,#fdfdfd 0,#ebeced 100%);
-                background: -o-linear-gradient(top,#7db9e8 0,#fdfdfd 0,#ebeced 100%);
-                background: -ms-linear-gradient(top,#7db9e8 0,#fdfdfd 0,#ebeced 100%);
-                background: linear-gradient(to bottom,#7db9e8 0,#fdfdfd 0,#ebeced 100%);
+                background: -moz-linear-gradient(top, #7db9e8 0, #fdfdfd 0, #ebeced 100%);
+                background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #7db9e8), color-stop(0, #fdfdfd), color-stop(100%, #ebeced));
+                background: -webkit-linear-gradient(top, #7db9e8 0, #fdfdfd 0, #ebeced 100%);
+                background: -o-linear-gradient(top, #7db9e8 0, #fdfdfd 0, #ebeced 100%);
+                background: -ms-linear-gradient(top, #7db9e8 0, #fdfdfd 0, #ebeced 100%);
+                background: linear-gradient(to bottom, #7db9e8 0, #fdfdfd 0, #ebeced 100%);
                 text-align: center;
                 opacity: 0.5;
 
@@ -517,15 +712,15 @@
 
 #gridWrapper, #compareGrid, #mergeGrid {
 
-    .rp-margin-reset-log>div.rp-table-row>.text-wrapper,
-    .rp-margin-reset>div.rp-table-row>.text-wrapper {
+    .rp-margin-reset-log > div.rp-table-row > .text-wrapper,
+    .rp-margin-reset > div.rp-table-row > .text-wrapper {
         font-family: monospace;
         overflow: hidden;
     }
 
     .rp-margin-reset {
         border-top: 0;
-        
+
         .affix {
             z-index: 10;
             position: fixed;
@@ -571,7 +766,7 @@
         }
 
         .rp-table-row.parents-line {
-            background: rgba(0,0,0,0)!important;
+            background: rgba(0, 0, 0, 0) !important;
             margin-bottom: -5px;
             margin-top: -4px;
             padding: 0;
@@ -586,7 +781,7 @@
         .navigateable.rp-blue-link-undrl {
             white-space: pre-wrap;
             color: $COLOR--windows-blue;
-            text-decoration: none!important;
+            text-decoration: none !important;
         }
 
         .rp-table-row {
@@ -629,7 +824,7 @@
                                 line-height: 14px;
                             }
 
-                            a.tag, 
+                            a.tag,
                             span.to-history {
                                 padding-left: 20px;
                             }
@@ -676,7 +871,6 @@
                         text-align: left;
                         white-space: nowrap;
                         word-wrap: break-word;
-                        
 
                         & > div {
                             margin-left: 16px;
@@ -697,42 +891,42 @@
         }
 
         .rp-table-row.ERROR {
-            background-color: #f2dede!important;
+            background-color: #f2dede !important;
         }
 
         .INFO {
-            border-left: 4px solid $COLOR--windows-blue!important;
+            border-left: 4px solid $COLOR--windows-blue !important;
 
             &:hover {
-                background-color: #c4e3f3!important;
+                background-color: #c4e3f3 !important;
             }
         }
 
         .ERROR {
-            border-left: 4px solid #F56561!important;
+            border-left: 4px solid #F56561 !important;
 
             &:hover {
-                background-color: #ebcccc!important;
+                background-color: #ebcccc !important;
             }
         }
 
         .DEBUG {
-            border-left: 4px solid #F0F0F0!important;
-            
+            border-left: 4px solid #F0F0F0 !important;
+
             &:hover {
-                background-color: #F5F5F5!important;
+                background-color: #F5F5F5 !important;
             }
         }
 
         .TRACE {
-            border-left: 4px solid #D4D4D4!important;
+            border-left: 4px solid #D4D4D4 !important;
         }
 
         .WARN {
-            border-left: 4px solid #F0AD4E!important;
+            border-left: 4px solid #F0AD4E !important;
 
             &:hover {
-                background-color: #faf2cc!important;
+                background-color: #faf2cc !important;
             }
         }
     }
@@ -770,7 +964,7 @@
                 .tag {
                     margin-right: 2px;
                     margin-top: 2px;
-                    
+
                     &:hover {
                         text-decoration: underline;
                         color: #2a6496;
@@ -821,16 +1015,15 @@
     }
 }
 
-.dropdown-like .btn-default, 
+.dropdown-like .btn-default,
 .input-group.input-group-sm {
     width: 100%;
 }
 
-.filter-control, 
+.filter-control,
 .select2-container {
     width: 100%;
 }
-
 
 /*---------round diagrams & their tooltip-----------*/
 .nvd3.nv-pie path {
@@ -841,6 +1034,7 @@
     font-size: 1.2em;
     fill: #333;
 }
+
 /*---*/
 .pr-grid-defect-stats:hover .defects-tooltip {
     display: block;
@@ -850,7 +1044,7 @@
     padding: 0;
     background: #fff;
     border-radius: 2px;
-    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2);
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .2);
     border: 1px solid #ccc;
     opacity: 1;
 
@@ -861,7 +1055,7 @@
         color: #464547;
         text-align: left;
         border-radius: 0;
-        font-family: OpenSansSemibold,sans-serif;
+        font-family: OpenSansSemibold, sans-serif;
         word-wrap: break-word;
 
         .defects-tip-content {
@@ -895,32 +1089,33 @@
     }
 }
 
-.defects-tip-list>li div[class*=col-], 
-.defects-tip-title div[class*=col-], 
-.stats-tip-list>li div[class*=col-] {
+.defects-tip-list > li div[class*=col-],
+.defects-tip-title div[class*=col-],
+.stats-tip-list > li div[class*=col-] {
     padding: 0;
 }
+
 /*--------------------------------*/
 
-.defects-tip-list>li, .stats-tip-list>li {
+.defects-tip-list > li, .stats-tip-list > li {
     float: none;
     margin: 0;
     padding: 4px 0 4px 5px;
 }
 
-
-a.stacktrace, 
-div.sortable, 
+a.stacktrace,
+div.sortable,
 th.sortable {
     cursor: pointer;
 }
 
-#compareGrid div.rp-table-row.selected-forhistory, 
+#compareGrid div.rp-table-row.selected-forhistory,
 #mergeGrid div.rp-table-row.selected-forhistory {
-    background-color: #DFF0D8!important;
+    background-color: #DFF0D8 !important;
 }
-#compareGrid .rp-table-row, 
-#gridWrapper .suit-grid .rp-table-row, 
+
+#compareGrid .rp-table-row,
+#gridWrapper .suit-grid .rp-table-row,
 #mergeGrid .rp-table-row {
     padding: 13px 0;
 }
@@ -938,6 +1133,7 @@ th.sortable {
         opacity: 1;
     }
 }
+
 @-webkit-keyframes auto-analyze-blink {
     from {
         opacity: 0;
@@ -946,6 +1142,7 @@ th.sortable {
         opacity: 1;
     }
 }
+
 @-ms-keyframes auto-analyze-blink {
     from {
         opacity: 0;
