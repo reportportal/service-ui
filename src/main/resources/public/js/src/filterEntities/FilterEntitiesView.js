@@ -91,7 +91,7 @@ define(function (require, exports, module) {
                         value: entity.value,
                         visible: true,
                     });
-                } else {
+                } else if(entity.filtering_field != 'has_childs'){  // hidden fields
                     this.invalidCollection.add(new (FilterEntitiesResolver.getInvalidModel())({
                         condition: entity.condition,
                         value: entity.value,
