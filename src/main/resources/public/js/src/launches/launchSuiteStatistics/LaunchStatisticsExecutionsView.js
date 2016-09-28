@@ -67,7 +67,7 @@ define(function (require, exports, module) {
                 return url + '?'
                     + '&filter.eq.has_childs=false'
                     + statusFilter
-                    + positionalFilter + id;
+                    // + positionalFilter + id;
             }
         },
         render: function() {

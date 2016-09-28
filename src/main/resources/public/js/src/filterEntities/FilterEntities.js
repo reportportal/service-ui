@@ -375,7 +375,7 @@ define(function (require, exports, module) {
         },
         initialize: function() {
             this.render();
-            this.onChangeState();
+            this.initState();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));
@@ -386,6 +386,34 @@ define(function (require, exports, module) {
             var subType = $(e.currentTarget).data('subtype');
             var subTypeElements = $('input[data-maintype="'+ subType +'"]', this.$el);
             subTypeElements.prop('checked', checked).prop('disabled', checked);
+        },
+        initState: function() {
+            var self = this;
+            var checkedValue = this.model.get('value').split(',');
+            _.each($('.rp-input-checkbox', this.$el), function(checkbox) {
+                var $checkbox = $(checkbox);
+                if(_.contains(checkedValue, $checkbox.data('value'))) {
+                    $checkbox.prop('checked', true);
+                }
+            });
+            _.each($('.rp-input-checkbox[data-subtype]', this.$el), function(checkbox) {
+                var $checkbox = $(checkbox);
+                var subTypes = $checkbox.data('value').split(',')
+                var allChecked = true;
+                _.each(subTypes, function(type) {
+                    var $element = $('.rp-input-checkbox[data-value='+ type +']', self.$el);
+                    if(!($element && $element.is(':checked'))) {
+                        allChecked = false;
+                        return false;
+                    }
+                });
+                if(allChecked) {
+                    $checkbox.prop('checked', true);
+                    self.onChangeMainType({currentTarget: $checkbox.get(0)});
+                }
+            });
+
+            this.onChangeState();
         },
         onChangeState: function() {
             var nameMas = [];

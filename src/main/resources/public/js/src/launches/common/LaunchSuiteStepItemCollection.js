@@ -49,6 +49,7 @@ define(function (require, exports, module) {
             this.listenTo(this, 'remove', this.onRemove);
             this.pagingPage = 1;
             this.pagingSize = 50;
+            this.noChildFilter = false;
         },
         update: function(launchModel, parentModel, optionsURL) {
             var async = $.Deferred();
@@ -131,6 +132,7 @@ define(function (require, exports, module) {
         calculateFilterOptions: function(optionsUrl) {
             var options = optionsUrl.split('&');
             var filterEntities = [];
+            this.noChildFilter = false;
             var answer = {};
             this.logOptions = {};
             _.each(options, function(option) {
@@ -138,11 +140,16 @@ define(function (require, exports, module) {
                 var keySeparate = optionSeparate[0].split('.');
                 var keyFirstPart = keySeparate[0];
                 if(keyFirstPart == 'filter') {
+                    if(optionSeparate[0] == 'filter.eq.has_childs') {
+                        this.noChildFilter = true;
+                    }
                     filterEntities.push({
                         condition: keySeparate[1],
                         filtering_field: keySeparate[2],
                         value: decodeURIComponent(optionSeparate[1]),
                     });
+
+
                 }
                 if(keyFirstPart == 'page') {
                     if(keySeparate[1] == 'page') {
@@ -229,9 +236,10 @@ define(function (require, exports, module) {
                 path = Urls.getGridUrl('suit');
                 params.push('filter.eq.launch=' + this.launchModel.get('id'));
                 if(this.parentModel) {
-                    params.push('filter.eq.parent=' + this.parentModel.get('id'));
+                    this.noChildFilter && params.push('filter.in.path=' + this.parentModel.get('id'));
+                    !this.noChildFilter && params.push('filter.eq.parent=' + this.parentModel.get('id'));
                 } else {
-                    params.push('filter.size.path=0');
+                    !this.noChildFilter && params.push('filter.size.path=0');
                 }
             }
             if(params && params.length) {
