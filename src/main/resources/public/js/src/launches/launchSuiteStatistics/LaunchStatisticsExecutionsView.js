@@ -49,7 +49,6 @@ define(function (require, exports, module) {
                 var url = this.getBinding('url'),
                     id = this.getBinding('id'),
                     owner = this.getBinding('owner'),
-                    positionalFilter = owner !== undefined ? '&filter.eq.launch=' : '&filter.in.path=',
                     statusFilter = '';
 
                 switch (this.type) {
@@ -66,8 +65,7 @@ define(function (require, exports, module) {
                 }
                 return url + '?'
                     + '&filter.eq.has_childs=false'
-                    + statusFilter
-                    // + positionalFilter + id;
+                    + statusFilter;
             }
         },
         render: function() {

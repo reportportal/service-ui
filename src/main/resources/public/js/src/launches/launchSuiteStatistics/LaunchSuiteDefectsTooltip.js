@@ -87,17 +87,15 @@ define(function (require, exports, module) {
             var url = this.model.get('url'),
                 id = this.model.get('id'),
                 owner = this.model.get('owner'),
-                positionalFilter = owner !== undefined ? '&filter.eq.launch=' : '&filter.in.path=',
                 statusFilter = '&filter.in.issue$issue_type=',
                 defectTypes = new SingletonDefectTypeCollection(),
                 subDefects = defectTypes.toJSON(),
                 defects = Util.getSubDefectsLocators(this.type, subDefects).join('%2C');
 
-            return url + '?page.page=1&page.sort=start_time,ASC'
+            return url + '?'
                 + '&filter.eq.has_childs=false'
                 + statusFilter
-                + defects
-                + positionalFilter + id;
+                + defects;
         },
         destroy: function () {
             this.undelegateEvents();

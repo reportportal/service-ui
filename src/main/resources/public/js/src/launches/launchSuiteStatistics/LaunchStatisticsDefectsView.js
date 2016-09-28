@@ -66,7 +66,6 @@ define(function (require, exports, module) {
                 var url = this.getBinding('url'),
                     id = this.getBinding('id'),
                     owner = this.getBinding('owner'),
-                    positionalFilter = owner !== undefined ? '&filter.eq.launch=' : '&filter.in.path=',
                     statusFilter = '&filter.in.issue$issue_type=',
                     subDefects = this.defectsCollection.toJSON(),
                     defects = Util.getSubDefectsLocators(this.type, subDefects).join('%2C');
@@ -74,8 +73,7 @@ define(function (require, exports, module) {
                 return url + '?'
                     + '&filter.eq.has_childs=false'
                     + statusFilter
-                    + defects
-                    + positionalFilter + id;
+                    + defects;
             },
             defectBorderColor: function(){
                 return 'border-color: ' + this.getDefectColor();
