@@ -3181,7 +3181,7 @@ the specific language governing permissions and limitations under the Apache Lic
             searchWidth = maxWidth - (left - containerLeft) - sideBorderPadding;
 
             if(this.opts.noResizeSearch){
-                searchWidth = searchWidth;
+                searchWidth = minimumWidth;
             }
             else {
                 if (searchWidth < minimumWidth) {
