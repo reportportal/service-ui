@@ -846,6 +846,7 @@ the specific language governing permissions and limitations under the Apache Lic
 
         // abstract
         destroy: function () {
+            sizer = null;
             var element=this.opts.element, select2 = element.data("select2"), self = this;
 
             this.close();
