@@ -129,7 +129,32 @@ $borderRadius100: 100px;
 }
 
 .rp-grid-tags {
+    text-align: right;
     margin: 0 0 0 24px;
+    .rp-launch-tags, .rp-launch-owner {
+        display: inline-block;
+        padding: 0 0 0 20px;
+        position: relative;
+        color: #777;
+        i.material-icons {
+            position: absolute;
+            top: 4px;
+            left: 0;
+            width: 14px;
+            height: 14px;
+            font-size: 15px;
+            line-height: 14px;
+        }
+        a.tag {
+            padding-left: 0;
+        }
+    }
+    .rp-launch-owner {
+        margin-right: 10px;
+        i.material-icons {
+            font-size: 18px;
+        }
+    }
 }
 
 .pr-select-all-issues {

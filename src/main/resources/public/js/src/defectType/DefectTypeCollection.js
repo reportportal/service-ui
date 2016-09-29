@@ -27,6 +27,9 @@ define(function (require, exports, module) {
     var Service = require('coreService');
     var DefectTypeModel = require('defectType/DefectTypeModel');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var DefectTypeCollection = Backbone.Collection.extend({
         model: DefectTypeModel,
@@ -107,11 +110,12 @@ define(function (require, exports, module) {
         onResetColors: function(){
             var defaults = {},
                 self = this,
+                sd = config.patterns.defectsLocator,
                 ids = [];
 
             _.each(this.models, function (defectType, key) {
                 var model = defectType.toUpdateItem();
-                if (model.id === model.shortName + '001') {
+                if (sd.test(model.id)) {
                     defaults[model.typeRef.toLowerCase()] = model.color;
                     return;
                 }

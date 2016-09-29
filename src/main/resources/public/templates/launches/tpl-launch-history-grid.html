@@ -61,8 +61,8 @@
                         <% } else if(issue){ %>
                             <% if(issue.issue_type){ %>
                                 <% var issueType = data.defectTypes.getDefectType(issue.issue_type) %>
-                                <% var type = deff[issueType.typeRef.toLowerCase()] %>
-                                    <div class="history-defect-badge no-stats <%= type.cls %>"
+                                <% var type = issueType.typeRef.toLowerCase(), cls = data.getDefectCls(type); %>
+                                    <div class="history-defect-badge no-stats <%= cls %>"
                                         style="background: <%- issueType.color %>"
                                         data-tooltip-type="warning"
                                         data-tooltip-content="<%- issueType.longName %>">

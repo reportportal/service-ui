@@ -2881,16 +2881,22 @@ define(function(require, exports, module) {
             this.defectTypes.trigger('resetColors');
         },
         disableReset: function () {
+            var defaultColors = [];
+            _.each(this.defectTypes.models, function(type){
+                if(type.get('mainType')){
+                    defaultColors.push(type.get('color'));
+                }
+            });
             var disable = _.every(this.defectTypes.models, function (type) {
-                return type.get('locator') === type.get('shortName') + '001';
+                return _.contains(defaultColors, type.get('color'));
             }, this);
             if (disable) {
                 $('#reset-color').addClass('disabled');
-                $('#reset-color').attr('title', Localization.project.noCustomDefectsWereAdded);
+                $('#reset-color').attr('title', Localization.project.noCustomColors);
                 return;
             }
             $('#reset-color').removeClass('disabled');
-            $('#reset-color').removeAttr('title', Localization.project.noCustomDefectsWereAdded);
+            $('#reset-color').removeAttr('title');
         },
         destroy: function () {
             this.defectTypes.off('reset');

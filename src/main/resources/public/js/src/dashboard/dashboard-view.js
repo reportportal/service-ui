@@ -1305,13 +1305,14 @@ define(function (require, exports, module) {
                     dashboard.name = (val) ? val : this.model.get('name');
                 }
                 dashboard.share = shared;
-
+                this.model.set({name: ((val) ? val : self.model.get('name')), isShared: dashboard.share});
                 var self = this;
                 this.model.updateName(dashboard, function () {
-                    self.model.set({name: ((val) ? val : this.model.get('name')), isShared: dashboard.share});
-                    self.context.parent.trigger('onUpdateDashboard', [self.model]);
-                    self.$el.modal('hide');
-                    Util.ajaxSuccessMessenger('dashboardUpdated');
+                    if(self.model){
+                        self.context.parent.trigger('onUpdateDashboard', [self.model]);
+                        self.$el.modal('hide');
+                        Util.ajaxSuccessMessenger('dashboardUpdated');
+                    }
                 });
             }
         },

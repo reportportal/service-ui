@@ -3196,7 +3196,6 @@ the specific language governing permissions and limitations under the Apache Lic
                     searchWidth = minimumWidth;
                 }
             }
-
             this.search.width(Math.floor(searchWidth));
         },
 
