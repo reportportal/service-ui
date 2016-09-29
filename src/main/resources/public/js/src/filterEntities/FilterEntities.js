@@ -372,6 +372,7 @@ define(function (require, exports, module) {
         events: {
             'change .rp-input-checkbox': 'onChangeState',
             'change input[data-subtype]': 'onChangeMainType',
+            'click [data-js-toggle-all]': 'onClickToggle',
         },
         initialize: function() {
             this.render();
@@ -386,6 +387,21 @@ define(function (require, exports, module) {
             var subType = $(e.currentTarget).data('subtype');
             var subTypeElements = $('input[data-maintype="'+ subType +'"]', this.$el);
             subTypeElements.prop('checked', checked).prop('disabled', checked);
+        },
+        onClickToggle: function() {
+            var allChecked = true;
+            var self = this;
+            var checkboxMas = $("input[type=checkbox]", this.$el);
+            checkboxMas.each(function() {
+                if(!$(this).is(':checked')) { allChecked = false; }
+            });
+            checkboxMas.prop('checked', !allChecked);
+            if(!allChecked){
+                _.each($('.rp-input-checkbox[data-subtype]', this.$el), function(checkbox) {
+                    self.onChangeMainType({currentTarget: checkbox.get(0)});
+                });
+            }
+            this.onChangeState();
         },
         initState: function() {
             var self = this;

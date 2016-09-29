@@ -7,7 +7,7 @@
     <% _.each(data.values, function(option, index) { %>
     <li class="filter">
         <a class="checkbox value-selector <%= option.subOption ? 'sub-option' : ''%>">
-            <label class="rp-checkbox-wrap" <% (option.value == 'All') ? 'data-js-toggle-all' : '' %>>
+            <label class="rp-checkbox-wrap" <%= (option.value == 'All') ? 'data-js-toggle-all' : '' %>>
                 <% if (option.value != 'All') { %>
                 <input class="rp-input-checkbox"
                        data-value="<%- option.value %>"

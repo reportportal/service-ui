@@ -319,12 +319,6 @@ define(function (require, exports, module) {
 
     var LogFilters = function () {
         return [
-            new Filters.EntityTimeRangeModel({
-                id: 'time',
-                condition: 'btw',
-                values: ['Any'],
-                value: ''
-            }),
             new Filters.StatusModel({
                 id: 'level',
                 condition: 'in',

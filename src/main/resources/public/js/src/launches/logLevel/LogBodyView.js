@@ -64,6 +64,7 @@ define(function (require, exports, module) {
                 itemModel: itemModel
             });
             this.logsItem && this.logsItem.destroy();
+            this.collectionItems.getInfoLog() //  log options
             this.logsItem = new LogItemLogsTable({
                 el: $('[data-js-item-logs]', this.$el),
                 itemModel: itemModel

@@ -827,7 +827,7 @@ define(['util'], function () {
             time: 'Time',
             time_short: 'Time',
             message: 'Log Message',
-            message_short: 'LogMessage',
+            message_short: 'Log Message',
             attachment: 'Attachment',
             attachment_short: 'ATH',
             interruptedAfter: 'Run INTERRUPTED after:',
@@ -857,7 +857,8 @@ define(['util'], function () {
             summary: "Summary:",
             status: "Status:",
             prevTestItem: "Previous Test Item",
-            nextTestItem: "Next Test Item"
+            nextTestItem: "Next Test Item",
+            filterAttachments: 'Logs with Attachments',
         },
 
         defectNameById: {
