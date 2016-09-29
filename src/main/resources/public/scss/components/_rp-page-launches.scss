@@ -86,6 +86,11 @@
                     font-weight: 400;
                     color: $COLOR--black;
                     cursor: pointer;
+
+                    &.sub-option {
+                        padding-left: 30px;
+                    }
+
                 }
 
                 .dropdown-menu > .active > a,
@@ -385,7 +390,36 @@
                         text-align: left;
                         white-space: nowrap;
                         word-wrap: break-word;
+                        & > div {
+                            margin-left: 16px;
+                            display: inline-block;
+                            overflow: hidden;
+                            max-width: 120px;
+                            word-wrap: break-word;
+                        }
 
+                        & > i {
+                            position: absolute;
+                            top: 1px;
+                            left: 3px;
+                        }
+                    }
+                }
+            }
+
+            .inline-editor {
+                .tickets-container {
+                    display: inline-block;
+                    margin: 3px 0 0 10px;
+
+                    .external-ticket {
+                        display: inline-block;
+                        max-width: 100%;
+                        margin: 5px 0 0 5px;
+                        padding: 2px 4px 0;
+                        text-align: left;
+                        white-space: nowrap;
+                        word-wrap: break-word;
                         & > div {
                             margin-left: 16px;
                             display: inline-block;
@@ -602,7 +636,7 @@
 
         .defects-tip-duration {
             width: 430px;
-            color: $COLOR--gray-60;
+            color: $COLOR--gray-47;
             padding: 12px 15px;
         }
     }
@@ -742,6 +776,10 @@
             background-color: $COLOR--light-red;
         }
 
+        .rp-table-row.reset-transition {
+            transition: none;
+        }
+
         .rp-grid-thead {
             .last-col {
                 margin-left: -32px;
@@ -782,6 +820,13 @@
             white-space: pre-wrap;
             color: $COLOR--windows-blue;
             text-decoration: none !important;
+        }
+
+        .method-collapsed-hide .method-collapsed-toggle {
+            height: 2px;
+            width: 100%;
+            padding: 0 15px;
+            overflow: hidden;
         }
 
         .rp-table-row {
@@ -830,6 +875,16 @@
                             }
                         }
                     }
+
+                    .tag {
+                        margin-right: 2px;
+                        margin-top: 2px;
+
+                        &:hover {
+                            text-decoration: underline;
+                            color: #2a6496;
+                        }
+                    }
                 }
             }
 
@@ -858,6 +913,23 @@
             .rp-grid-name {
                 .navigateable.rp-blue-link-undrl {
                     white-space: normal;
+                }
+            }
+
+            .rp-grid-tags {
+                text-align: right;
+                margin: 0 0 0 24px;
+
+                .rp-launch-owner,
+                .rp-launch-tags {
+                    display: inline-block;
+                    padding: 0 0 0 20px;
+                    position: relative;
+                    color: $COLOR--gray-47;
+                }
+
+                .rp-launch-owner {
+                    margin-right: 10px;
                 }
             }
 
@@ -990,7 +1062,7 @@
             .tooltip-inner {
                 .defects-tip-duration {
                     width: 240px;
-                    color: $COLOR--gray-60;
+                    color: $COLOR--gray-47;
                     padding: 12px 15px;
                 }
             }

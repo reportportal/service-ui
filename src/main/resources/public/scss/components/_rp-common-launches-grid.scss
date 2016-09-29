@@ -98,14 +98,14 @@ $borderRadius100: 100px;
     line-height: 14px;
     word-wrap: break-word;
     padding-left: 24px;
-    margin: 0px 0 5px 0;
+    margin: 0 0 5px 0;
 
     .btn-group {
         position: absolute;
         // left: -2px;
         // top: 2px;
-        left: 0px;
-        top: 0px;
+        left: 0;
+        top: 0;
     }
     .rp-svg-icon,
     .svg-icon-menu-size-14 {
@@ -127,11 +127,11 @@ $borderRadius100: 100px;
     max-height: none;
 }
 
-.rp-grid-tags {
-    float: left;
-    text-align: right;
-    margin: 8px 0 0 24px;
-}
+//.rp-grid-tags {
+//    float: left;
+//    text-align: right;
+//    margin: 8px 0 0 24px;
+//}
 
 .pr-select-all-issues {
     width: 100%;
@@ -495,7 +495,6 @@ $borderRadius100: 100px;
 .history-panel {
     padding: 15px;
     background-color: $COLOR--white-default;
-    margin-top: 15px;
     margin-top: 0;
 
     &.affix {
@@ -685,7 +684,7 @@ $borderRadius100: 100px;
 
 .history-inputs-row > i {
     position: absolute;
-    left: 0px;
+    left: 0;
     top: 0;
     font-size: 25px;
     min-height: 30px;
@@ -700,14 +699,8 @@ $borderRadius100: 100px;
     line-height: 30px;
     color: #333333;
     text-transform: uppercase;
-    padding-top: 0px;
-    padding-right: 0px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin-top: 0px;
-    margin-right: 0px;
-    margin-bottom: 0px;
-    margin-left: 0px;
+    padding: 0;
+    margin: 0;
 }
 
 /* -------------------------- */
