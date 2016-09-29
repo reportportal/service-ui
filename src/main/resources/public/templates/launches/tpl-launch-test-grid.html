@@ -78,18 +78,17 @@
                 <% if(item.description) { %><pre class="rp-grid-description nicescroll-it"><%- item.description %></pre>
                 <% } %>
                 <div class="rp-grid-tags tags">
-                    <small class="">
                         <% if(item.tags && item.tags.length) { %>
-                            <span class="text-muted">
+                            <span class="rp-launch-tags">
+                                <i class="material-icons">local_offer</i>
                             <% var sortedTags = data.tagSorter(item.tags); %>
                             <% _.each(sortedTags, function (tag) { %>
                                 <a class="text-muted tag" data-tag="<%- tag %>" href="#">
-                                    <i class="material-icons">local_offer</i><%- tag.replaceTabs() %>
+                                    <%- tag.replaceTabs() %>
                                 </a>
                             <% }); %>
                             </span>
                         <% } %>
-                    </small>
                 </div>
             </div>
         </div>

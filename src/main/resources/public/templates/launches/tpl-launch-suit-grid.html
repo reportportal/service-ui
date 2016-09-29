@@ -108,26 +108,26 @@
             </h5>
             <% if(item.description) { %>
             <pre class="rp-grid-description nicescroll-it <%= isShifted %>"><%- item.description.trim() %></pre>
-            <% } %>            <div class="rp-grid-tags tags">
-                <small class="">
+            <% } %>
+            <div class="rp-grid-tags tags">
                     <% if(item.owner) { %>
-                    <span title="Owner" class="text-muted owner">
+                    <span title="Owner" class="rp-launch-owner owner">
                         <i class="material-icons">person</i>
                         <a class="text-muted tag" data-tag="<%- item.owner %>" data-tag-type="user" href="#"><%- item.owner %></a>
                     </span>
                     <br class="visible-xs-block">
                     <% } %>
                     <% if(item.tags && item.tags.length) { %>
-                        <span class="text-muted">
+                        <span class="rp-launch-tags">
+                            <i class="material-icons">local_offer</i>
                             <% var sortedTags = data.tagSorter(item.tags); %>
                             <% _.each(sortedTags, function (tag) { %>
                                 <a class="text-muted tag" data-tag="<%- tag %>" href="#">
-                                    <i class="material-icons">local_offer</i><%- tag.replaceTabs() %>
+                                    <%- tag.replaceTabs() %>
                                 </a>
                             <% }); %>
                         </span>
                     <% } %>
-                </small>
             </div>
         </div>
         <div class="col-xs-12 col-sm-2 border-right-bold rp-mobile-padding">

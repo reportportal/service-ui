@@ -88,7 +88,7 @@ $borderRadius100: 100px;
 
 .rp-table-row {
     position: relative;
-    padding: 8px 0;
+    padding: 12px 0;
 }
 
 .rp-grid-name {
@@ -98,14 +98,14 @@ $borderRadius100: 100px;
     line-height: 14px;
     word-wrap: break-word;
     padding-left: 24px;
-    margin: 0 0 5px 0;
+    margin: 0px 0 5px 0;
 
     .btn-group {
         position: absolute;
         // left: -2px;
         // top: 2px;
-        left: 0;
-        top: 0;
+        left: 0px;
+        top: 0px;
     }
     .rp-svg-icon,
     .svg-icon-menu-size-14 {
@@ -127,11 +127,34 @@ $borderRadius100: 100px;
     max-height: none;
 }
 
-//.rp-grid-tags {
-//    float: left;
-//    text-align: right;
-//    margin: 8px 0 0 24px;
-//}
+.rp-grid-tags {
+    text-align: right;
+    margin: 0px 0 0 24px;
+    .rp-launch-tags, .rp-launch-owner {
+        display: inline-block;
+        padding: 0 0 0 20px;
+        position: relative;
+        color: #777;
+        i.material-icons {
+            position: absolute;
+            top: 4px;
+            left: 0;
+            width: 14px;
+            height: 14px;
+            font-size: 15px;
+            line-height: 14px;
+        }
+        a.tag {
+            padding-left: 0;
+        }
+    }
+    .rp-launch-owner {
+        margin-right: 10px;
+        i.material-icons {
+            font-size: 18px;
+        }
+    }
+}
 
 .pr-select-all-issues {
     width: 100%;
@@ -256,10 +279,6 @@ $borderRadius100: 100px;
 
 
 .filter-table-panel {
-    .margin-reset {
-        margin: 0;
-        border: none;
-    }
     .rp-grid-description,
     .rp-grid-name {
         padding: 0;
@@ -492,18 +511,6 @@ $borderRadius100: 100px;
     }
 }
 
-.history-panel {
-    padding: 15px;
-    background-color: $COLOR--white-default;
-    margin-top: 0;
-
-    &.affix {
-        border-bottom: 1px solid #ddd;
-        margin-top: 0;
-        z-index: 10;
-    }
-}
-
 .history-row {
     display: table-row;
 
@@ -663,28 +670,9 @@ $borderRadius100: 100px;
     padding: 0.4em 0.6em 0.6em;
 }
 
-.history-inputs-row>ul>li>.label {
-    padding-top: .5em;
-}
-
-.history-items {
-    .label {
-        border-radius: 0;
-        font-weight: 400;
-        font-size: 100%;
-    }
-
-    .remove-item {
-        color: #fff;
-        margin-left: 5px;
-        cursor: pointer;
-    }
-}
-    
-
 .history-inputs-row > i {
     position: absolute;
-    left: 0;
+    left: 0px;
     top: 0;
     font-size: 25px;
     min-height: 30px;
@@ -699,8 +687,14 @@ $borderRadius100: 100px;
     line-height: 30px;
     color: #333333;
     text-transform: uppercase;
-    padding: 0;
-    margin: 0;
+    padding-top: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    margin-top: 0px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
 }
 
 /* -------------------------- */
