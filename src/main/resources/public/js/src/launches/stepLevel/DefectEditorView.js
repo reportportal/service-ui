@@ -30,6 +30,8 @@ define(function (require, exports, module) {
     var Markitup = require('markitup');
     var MarkitupSettings = require('markitupset');
     var CoreService = require('coreService');
+    var LoadBug = require('launches/stepLevel/LoadBug');
+    var PostBug = require('launches/stepLevel/PostBug');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
 
     var config = App.getInstance();
@@ -190,10 +192,23 @@ define(function (require, exports, module) {
             this.validateForSubmition();
         },
         openPostBug: function(){
-            console.log('openPostBug');
+            this.postBugView && this.postBugView.destroy();
+            this.postBugView = new PostBug({
+                //items: _.values(this.items)
+                model: this.model,
+                editor: this
+            }).render();
+            this.listenTo(this.postBugView, "bug::attached", this.closeEditor);
         },
         openLoadBug: function(){
-            console.log('openLoadBug');
+            this.loadBugView && this.loadBugView.destroy();
+            this.loadBugView = new LoadBug({
+                model: this.model,
+                //items: _.values(this.items),
+                editor: this
+            }).render();
+            this.listenTo(this.loadBugView, "bug::loaded", this.closeEditor);
+
         },
         closeEditor: function(){
             this.destroy();
