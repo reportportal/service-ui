@@ -18,3 +18,43 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+.log-grid {
+  .message-grid-cell {
+    width: 70%;
+  }
+  .attachment-grid-cell {
+    width: 12%;
+  }
+  .time-grid-cell {
+    width: 18%;
+  }
+  .rp-table-row {
+    position: relative;
+    overflow: hidden;
+    padding: 15px 0;
+    line-height: 18px;
+    .attachment-grid-cell {
+      img {
+        max-width: 100%;
+      }
+    }
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 5px;
+      display: block;
+    }
+    &.level-INFO:before {
+      background-color: $COLOR--windows-blue;
+    }
+    &.level-ERROR {
+      &:before {
+        background-color: $COLOR--orange-red;
+      }
+    }
+  }
+}

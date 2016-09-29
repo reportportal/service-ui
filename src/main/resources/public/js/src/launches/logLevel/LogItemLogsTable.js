@@ -26,17 +26,109 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var FilterModel = require('filters/FilterModel');
+    var FilterEntities = require('filterEntities/FilterEntities');
+    var LogItemCollection = require('launches/logLevel/LogItemCollection');
+    var Components = require('core/components');
+    var LogItemLogsItem = require('launches/logLevel/LogItemLogsItem');
 
     var LogItemLogsTable = Epoxy.View.extend({
         template: 'tpl-launch-log-item-logs-table',
 
-        initialize: function() {
-            this.filterModel = new FilterModel({temp: true});
+        events: {
+            'change [data-js-attachments-filter]': 'onChangeFilter',
+            'click .rp-grid-th[data-sorter]': 'onClickSorter',
+        },
+
+        initialize: function(options) {
+            this.itemModel = options.itemModel;
+            this.filterModel = new FilterModel({
+                temp: true,
+                selection_parameters: '{"is_asc": false, "sorting_column": "time"}',
+            });
+            this.pagingModel = new Backbone.Model();
+
+
+            this.collection = new LogItemCollection({
+                filterModel: this.filterModel,
+                itemModel: this.itemModel,
+            });
             this.render();
+            this.collection.load();
+            this.listenTo(this.collection, 'reset', this.onResetCollection);
+            this.listenTo(this.selectModel, 'change:condition change:value', this.onChangeFilter);
+            this.listenTo(this.nameModel, 'change:value', this.onChangeFilter);
+            this.listenTo(this.filterModel, 'change:newSelectionParameters', this.onChangeSelectionParameters);
+            this.onChangeSelectionParameters();
         },
 
         render: function() {
             this.$el.html(Util.templates(this.template), {});
+
+            this.selectModel = new FilterEntities.EntitySelectModel({
+                id: 'level',
+                condition: 'in',
+                values: [
+                    {name: 'All', value: 'All'},
+                    {name:'Trace', value: 'TRACE'},
+                    {name: 'Debug', value: 'DEBUG'},
+                    {name: 'Info', value: 'INFO'},
+                    {name: 'Warn', value: 'WARN'},
+                    {name: 'Error', value: 'ERROR'},
+                ],
+                value: 'All'
+            });
+            this.nameModel = new FilterEntities.EntityInputModel({
+                id: 'message',
+                condition: 'cnt',
+                valueMinLength: 3,
+                valueOnlyDigits: false,
+            });
+            $('[data-js-select-filter]', this.$el).html((new this.selectModel.view({model: this.selectModel})).$el);
+            $('[data-js-name-filter]', this.$el).html((new this.nameModel.view({model: this.nameModel})).$el);
+            this.paging = new Components.PagingToolbar({
+                el: $('[data-js-paginate-container]', this.$el),
+                model: this.pagingModel,
+            });
+        },
+        onChangeFilter: function() {
+            var newEntities = [];
+            newEntities.push(this.selectModel.getInfo());
+            newEntities.push(this.nameModel.getInfo());
+            if($('[data-js-attachments-filter]', this.$el).is(':checked')) {
+                newEntities.push({
+                    condition: 'ex',
+                    filtering_field: 'binary_content',
+                    value: 'true',
+                });
+            }
+            this.filterModel.set({newEntities: JSON.stringify(newEntities)});
+        },
+        onClickSorter: function(e) {
+            var sorter = $(e.currentTarget).data('sorter');
+            var filterParams = this.filterModel.getParametersObj();
+            if(filterParams.sorting_column == sorter) {
+                filterParams.is_asc = !filterParams.is_asc;
+            } else {
+                filterParams.is_asc = true;
+                filterParams.sorting_column = sorter;
+            }
+            this.filterModel.set({newSelectionParameters: JSON.stringify(filterParams), curPage: 1});
+        },
+        onChangeSelectionParameters: function() {
+            $('[data-sorter]', this.$el).removeClass('sorting-asc sorting-desc');
+            var filterParams = this.filterModel.getParametersObj();
+            var $element = $('[data-sorter="' + filterParams.sorting_column + '"]', this.$el);
+            if($element && $element.length) {
+                $element.addClass((filterParams.is_asc) ? 'sorting-asc' : 'sorting-desc');
+            }
+        },
+
+        onResetCollection: function() {
+            var $container = $('[data-js-table-container]', this.$el);
+            $container.html('');
+            _.each(this.collection.models, function(model) {
+                $container.append((new LogItemLogsItem({model: model})).$el);
+            })
         },
 
         destroy: function() {

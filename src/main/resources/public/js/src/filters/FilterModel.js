@@ -113,9 +113,12 @@ define(function(require, exports, module) {
             }
         },
         getOptions: function() {
-            var data = _.map(this.getEntitiesObj(), function(entity){
-                return 'filter.' + entity.condition + '.' + entity.filtering_field +
-                        '=' + encodeURIComponent(entity.value);
+            var data = [];
+            _.each(this.getEntitiesObj(), function(entity){
+                if(entity.value) {
+                    data.push('filter.' + entity.condition + '.' + entity.filtering_field +
+                        '=' + encodeURIComponent(entity.value));
+                }
             });
             var selectionParameters = this.getParametersObj();
             var sortDirection = 'ASC';

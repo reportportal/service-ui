@@ -135,7 +135,10 @@ define(function (require, exports, module) {
             previewImg: {
                 deps: ['binary_content'],
                 get: function(binaryContent) {
-                    if(binaryContent && binaryContent.content_type == 'image/png' && binaryContent.thumbnail_id) {
+                    if(binaryContent && binaryContent.thumbnail_id) {
+                        if(binaryContent.content_type != 'image/png') {
+                            return 'img/launch/attachment.png'
+                        }
                         return Urls.getFileById(binaryContent.thumbnail_id);
                     }
                     return '#';
@@ -144,7 +147,10 @@ define(function (require, exports, module) {
             mainImg: {
                 deps: ['binary_content'],
                 get: function(binaryContent) {
-                    if(binaryContent && binaryContent.content_type == 'image/png' && binaryContent.id) {
+                    if(binaryContent && binaryContent.id) {
+                        if(binaryContent.content_type != 'image/png') {
+                            return 'img/launch/attachment-big.png'
+                        }
                         return Urls.getFileById(binaryContent.id);
                     }
                     return '';
