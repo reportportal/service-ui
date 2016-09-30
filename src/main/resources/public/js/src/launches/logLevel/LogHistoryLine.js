@@ -30,6 +30,8 @@ define(function (require, exports, module) {
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var Util = require('util');
 
+    var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
+
 
     var LogHistoryLineCollection = Backbone.Collection.extend({
         model: LaunchSuiteStepItemModel,
@@ -96,7 +98,9 @@ define(function (require, exports, module) {
             '[data-js-launch-number]': 'text: launchNumber',
             ':el': 'classes: {active: active}',
         },
-
+        isAction: function() {
+            return this.model.get('status') != 'MANY' && this.model.get('status') != 'NOT_FOUND';
+        },
         initialize: function() {
             this.render();
             this.$el.addClass('status-' + this.model.get('status'));
@@ -131,8 +135,9 @@ define(function (require, exports, module) {
             }
         },
         onClickItem: function() {
-            if(!this.model.get('active') && this.model.get('status') != 'MANY' && this.model.get('status') != 'NOT_FOUND'){
+            if(!this.model.get('active') && this.isAction()){
                 this.model.trigger('activate', this.model);
+                this.model.trigger('hover:false');
             }
         },
         render: function() {
@@ -149,12 +154,15 @@ define(function (require, exports, module) {
 
     var LogHistoryLineView = Epoxy.View.extend({
         template: 'tpl-launch-log-history-line',
+
         initialize: function(options) {
             this.collectionItems = options.collectionItems;
             this.launchModel = options.launchModel;
             this.renderedItems = [];
             this.collection = new LogHistoryLineCollection({launchId: this.launchModel.get('id')});
             this.listenTo(this.collection, 'reset', this.onResetHistoryItems);
+            this.listenTo(this.collection, 'hover:true', this.onHoverItem);
+            this.listenTo(this.collection, 'hover:false', this.onOutItem);
             this.render();
             var self = this;
             this.collection.load(this.collectionItems.getInfoLog().item)
@@ -164,7 +172,7 @@ define(function (require, exports, module) {
                     if(activeModels.length == 1) {
                         self.trigger('activate:item', activeModels[0]);
                     }
-                })
+                });
             this.listenTo(this.collection, 'activate', function(model) {
                 self.trigger('activate:item', model);
             })
