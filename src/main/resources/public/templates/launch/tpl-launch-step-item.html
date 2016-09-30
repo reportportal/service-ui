@@ -15,12 +15,12 @@
         <div class="rp-grid-tags tags">
             <div class="rp-item-duration" data-js-item-status></div>
             <% if(data.tags && data.tags.length) { %>
-            <span class="text-muted">
-                        <i class="material-icons">local_offer</i>
-                        <% _.each(data.sortTags, function (tag) { %>
-                            <a class="text-muted tag" data-tag="<%- tag %>" href="#"><%- tag.replaceTabs() %></a>
-                        <% }); %>
-                    </span>
+            <span class="rp-launch-tags">
+                <i class="material-icons">local_offer</i>
+                <% _.each(data.sortTags, function (tag) { %>
+                <a class="text-muted tag" data-tag="<%- tag %>" href="#"><%- tag.replaceTabs() %></a>
+                <% }); %>
+            </span>
             <% } %>
         </div>
     </div>

@@ -131,4 +131,9 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
     }
   }
 }
+.grid-cell {
+  .rp-grid-tags {
+    text-align: left;
+  }
+}
 
