@@ -92,7 +92,7 @@ define(function (require, exports, module) {
 
             this.renderFields();
             this.renderCredentials();
-
+            this.attachKeyActions();
             this.delegateEvents();
             return this;
         },
@@ -148,6 +148,14 @@ define(function (require, exports, module) {
                 'keyup .required-value': 'clearRequiredError',
                 'click .project-name': 'updateFieldSet'
             });
+        },
+        
+        attachKeyActions: function(){
+            this.$el.on('keydown', function(e){
+                if(e.ctrlKey && e.keyCode === 13){
+                    this.submit();
+                }
+            }.bind(this))
         },
 
         handleCredentials: function (e) {
