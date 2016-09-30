@@ -237,6 +237,7 @@ define(function (require, exports, module) {
 
         initialize: function (options) {
             this.model = options.model;
+            this.minPaging = options.minMode || false;
         },
 
         tpl: "tpl-components-paging",
@@ -251,8 +252,10 @@ define(function (require, exports, module) {
                     from: totalElements === 0 ? 0 : (currentPage - 1) * size + 1,
                     to: totalPages === currentPage ? totalElements : size * currentPage,
                     totalElements: totalElements,
+                    totalPages: totalPages,
                     active: currentPage,
-                    objectsOnPage: size
+                    objectsOnPage: size,
+                    minPaging: this.minPaging,
                 };
             if (totalPages > 1) {
                 var pages;

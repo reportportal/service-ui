@@ -10,3 +10,10 @@
     font-size: 40px;
   }
 }
+.no-result-found {
+  text-align: center;
+  padding: 15px 0;
+  font-size: 17px;
+  color: $COLOR--gray-47;
+  display: none;
+}

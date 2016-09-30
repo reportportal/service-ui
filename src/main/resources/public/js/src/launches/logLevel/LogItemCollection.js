@@ -34,10 +34,14 @@ define(function (require, exports, module) {
         initialize: function(options) {
             this.filterModel = options.filterModel;
             this.itemModel = options.itemModel;
-            this.pagingModel = options.pagingModel;
-            this.listenTo(this.filterModel, 'change:newSelectionParameters change:newEntities', this.load);
+            this.listenTo(this.filterModel, 'change:newSelectionParameters change:newEntities', this.onChangeFilter);
+            this.pagingPage = 1;
+            this.pagingSize = 50;
         },
-
+        onChangeFilter:function() {
+            this.pagingPage = 1;
+            this.load();
+        },
         load: function() {
             this.trigger('loading:true');
             var path = Urls.getLogsUrl() + '?' + this.getParamsForRequest().join('&');
@@ -45,15 +49,25 @@ define(function (require, exports, module) {
             this.request && this.request.abort();
             this.request = call('GET', path)
                 .done(function(data) {
+                    self.trigger('change:paging', data.page);
                     self.reset(data.content);
                 })
                 .always(function() {
                     self.trigger('loading:false')
                 });
         },
+        setPaging: function(curPage, size) {
+            this.pagingPage = curPage;
+            if(size) {
+                this.pagingSize = size;
+            }
+            this.load();
+        },
 
         getParamsForRequest: function() {
             var answer = ['filter.eq.item='+this.itemModel.get('id')];
+            answer.push('page.page=' + this.pagingPage);
+            answer.push('page.size=' + this.pagingSize);
             answer = answer.concat(this.filterModel.getOptions());
             return answer;
         }

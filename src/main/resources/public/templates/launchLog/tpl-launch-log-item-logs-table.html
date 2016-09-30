@@ -13,13 +13,20 @@ return '<div class="table-wrapper">' +
     '</div>';
 } %>
 
-<div class="launch-log-items-wrapper">
+<div class="launch-log-items-wrapper" data-js-logs-wrapper>
     <div class="filters-block">
         <div class="filter-entity-wrapper" data-js-select-filter></div>
         <label class="rp-checkbox-wrap attachments-filter">
             <input class="rp-input-checkbox" type="checkbox" data-js-attachments-filter>
             <span><%= data.text.logs.filterAttachments %></span>
         </label>
+        <div class="min-paging" data-js-paginate-min-container></div>
+        <div class="rp-nav rp-nav-right">
+            <div class="rp-btn rp-btn-default rp-button-with-icon next-error-button" title="Next Error">
+                <i class="material-icons">keyboard_arrow_right</i>
+                <span class="rp-btn-val hidden-sm hidden-xs">Next Error</span>
+            </div>
+        </div>
     </div>
 
 
@@ -43,4 +50,11 @@ return '<div class="table-wrapper">' +
 
     </div>
     <div data-js-paginate-container></div>
+    <div class="preloader launch-log-grid-preloader">
+        <i class="material-icons loader-animation">refresh</i>
+    </div>
+    <div class="no-result-found">
+        <i class="rp-icons rp-icons-warning"></i>
+        <span><%= data.text.ui.noResultsFound %></span>
+    </div>
 </div>

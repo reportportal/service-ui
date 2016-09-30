@@ -140,24 +140,24 @@ define(function (require, exports, module) {
               }
         },
         load: function() {
-            $('[data-js-preloader-log-item-activity]', this.$el).addClass('rp-display-block');
+            $('[data-js-activity-container]', this.$el).addClass('load');
             var self = this;
             Service.loadActivityItems(this.itemModel.get('id'))
                 .done(function(data) {
                     self.parse(data);
                 })
                 .fail(function() {
-                    $('[data-js-not-activity]', self.$el).removeClass('hide');
+                    $('[data-js-activity-container]', self.$el).addClass('not-found');
                 })
                 .always(function() {
-                    $('[data-js-preloader-log-item-activity]', self.$el).removeClass('rp-display-block');
+                    $('[data-js-activity-container]', self.$el).removeClass('load');
                 })
         },
         parse: function(data) {
             var self = this;
             var $activityContainer = $('[data-js-activity-container]', this.$el);
             if(data.length == 0) {
-                $('[data-js-not-activity]', self.$el).removeClass('hide');
+                $('[data-js-activity-container]', self.$el).addClass('not-found');
                 return;
             } else {
                 _.each(data, function(dataModel){

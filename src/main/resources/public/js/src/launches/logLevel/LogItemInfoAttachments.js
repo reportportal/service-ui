@@ -230,7 +230,7 @@ define(function (require, exports, module) {
         initialize: function(options) {
             this.render();
             this.isLoad = false;
-            this.$main = $('.launch-log-info-attachments', this.$el);
+            this.$main = $('[data-js-attachments-container]', this.$el);
             this.itemModel = options.itemModel;
             this.parentModel = options.parentModel;
             this.listenTo(this.parentModel, 'change:attachments', this.onShow);

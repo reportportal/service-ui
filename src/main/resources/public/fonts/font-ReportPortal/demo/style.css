@@ -1,10 +1,10 @@
 @font-face {
     font-family: 'ReportPortal';
-    src: url('../report-portal.eot');
-    src: url('../report-portal.eot#iefix') format('embedded-opentype'),
-         url('../report-portal.ttf') format('truetype'),
-         url('../report-portal.woff') format('woff'),
-         url('../report-portal.svg#ReportPortal') format('svg');
+    src: url('../Report-Portal-Font.eot');
+    src: url('../Report-Portal-Font.eot#iefix') format('embedded-opentype'),
+         url('../Report-Portal-Font.ttf') format('truetype'),
+         url('../Report-Portal-Font.woff') format('woff'),
+         url('../Report-Portal-Font.svg#ReportPortal') format('svg');
     font-weight: normal;
     font-style: normal;
 }
@@ -198,4 +198,22 @@
 }
 .rp-icons-menu:before {
     content: "\e944";
+}
+.rp-icons-right:before {
+    content: "\e925";
+}
+.rp-icons-warning2:before {
+    content: "\e926";
+}
+.rp-icons-add-dash:before {
+    content: "\e927";
+}
+.rp-icons-left:before {
+    content: "\e928";
+}
+.rp-icons-sorting:before {
+    content: "\e929";
+}
+.rp-icons-code:before {
+    content: "\e932";
 }

@@ -56,6 +56,21 @@
       padding-left: 20px;
     }
   }
+  .min-paging {
+    padding-left: 10px;
+    float: right;
+  }
+  .next-error-button {
+    padding: 0 20px 0 10px;
+    i.material-icons:first-child {
+      left: auto;
+      right: 0;
+    }
+    i + .rp-btn-val {
+      padding: 0px 10px 0px 0px;
+      line-height: 27px;
+    }
+  }
   .filter-name-block {
     position: absolute;
     top: 0;
@@ -88,6 +103,22 @@
     .filter-hint {
       font-size: 10px;
       color: $COLOR--gray-60;
+    }
+  }
+  &.not-found {
+    .no-result-found {
+      display: block;
+    }
+    .rp-table-row, .pagination-component {
+      display: none;
+    }
+  }
+  &.load {
+    .launch-log-grid-preloader {
+      display: block;
+    }
+    .rp-table-row, .pagination-component, .no-result-found {
+      display: none;
     }
   }
 }

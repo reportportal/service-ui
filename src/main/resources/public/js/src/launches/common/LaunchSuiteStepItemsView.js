@@ -77,7 +77,7 @@ define(function (require, exports, module) {
                 var item = new self.itemView({model: model})
                 $itemsContainer.append(item.$el);
                 self.renderedItems.push(item);
-            })
+            });
             this.pagingModel.set(this.collection.pagingData);
             this.paging.render();
         },

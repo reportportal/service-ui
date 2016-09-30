@@ -22,7 +22,27 @@
 /*------------*/
 /* PAGINATION */
 
-
+.pagination-min-component, .pagination-component {
+    ul {
+        li {
+            float: left;
+            cursor: pointer;
+            &.first, &.next, &.previous, &.last {
+                color: $COLOR--gray-60;
+            }
+            &:hover {
+                color: $COLOR--tealish;
+            }
+            &.disabled {
+                cursor: default;
+                color: $COLOR--gray-80;
+                &:hover {
+                    color: $COLOR--gray-80;
+                }
+            }
+        }
+    }
+}
 .pagination-component {
     position: relative;
     text-align: center;
@@ -39,17 +59,15 @@
             display: inline-block;
             font-size: 13px;
             color: $COLOR--gray-47;
-            cursor: pointer;
             font-family: OpenSansSemibold;
             padding: 0 6px;
             height: 100%;
             margin: 0 2px;
-            float: left;
             &.first, &.next, &.previous, &.last {
-                color: $COLOR--gray-60
-            }
-            &:hover {
-                color: $COLOR--tealish;
+                font-size: 19px;
+                i {
+                    vertical-align: top;
+                }
             }
             &.active {
                 color: $COLOR--topaz;
@@ -59,6 +77,7 @@
             &.more {
                 cursor: default;
                 color: $COLOR--gray-47;
+                line-height: 22px;
             }
             &.first:after, &.last:after {
                 content: ' ';
@@ -73,7 +92,6 @@
                 right: auto;
                 left: -5px;
             }
-
         }
     }
     .left-block {
@@ -112,6 +130,29 @@
                 padding: 0 4px;
                 font-size: 12px;
             }
+        }
+    }
+}
+.pagination-min-component {
+    ul {
+        height: 30px;
+        font-size: 12px;
+        li {
+            float: left;
+        }
+        .min-paging-text {
+            line-height: 33px;
+            float: left;
+            font-family: OpenSansSemibold;
+            color: $COLOR--gray-60;
+            span {
+                padding: 0 9px;
+            }
+        }
+        i {
+            font-size: 20px;
+            line-height: 33px;
+            vertical-align: top;
         }
     }
 }

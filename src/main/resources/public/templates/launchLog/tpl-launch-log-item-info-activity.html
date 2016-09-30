@@ -1,8 +1,11 @@
-<div class="launch-log-info-activity">
-    <div class="preloader" data-js-preloader-log-item-activity>
+<div class="launch-log-info-activity" data-js-activity-container>
+    <div class="preloader activity-preloader">
         <i class="material-icons loader-animation">refresh</i>
     </div>
     <div data-js-activity-container></div>
-    <p data-js-not-activity class="hide not-found-message">Activity not fount</p>
+    <div class="no-result-found">
+        <i class="rp-icons rp-icons-warning"></i>
+        <span><%= data.text.logs.notFoundActivity %></span>
+    </div>
     <i class="material-icons close-icon" data-ja-close>clear</i>
 </div>

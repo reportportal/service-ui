@@ -46,24 +46,6 @@ define(function (require, exports, module) {
                 selection_parameters: '{"is_asc": false, "sorting_column": "time"}',
             });
             this.pagingModel = new Backbone.Model();
-
-
-            this.collection = new LogItemCollection({
-                filterModel: this.filterModel,
-                itemModel: this.itemModel,
-            });
-            this.render();
-            this.collection.load();
-            this.listenTo(this.collection, 'reset', this.onResetCollection);
-            this.listenTo(this.selectModel, 'change:condition change:value', this.onChangeFilter);
-            this.listenTo(this.nameModel, 'change:value', this.onChangeFilter);
-            this.listenTo(this.filterModel, 'change:newSelectionParameters', this.onChangeSelectionParameters);
-            this.onChangeSelectionParameters();
-        },
-
-        render: function() {
-            this.$el.html(Util.templates(this.template), {});
-
             this.selectModel = new FilterEntities.EntitySelectModel({
                 id: 'level',
                 condition: 'in',
@@ -83,12 +65,57 @@ define(function (require, exports, module) {
                 valueMinLength: 3,
                 valueOnlyDigits: false,
             });
+
+
+            this.collection = new LogItemCollection({
+                filterModel: this.filterModel,
+                itemModel: this.itemModel,
+            });
+            this.render();
+            this.listenTo(this.collection, 'change:paging', this.onChangePaging);
+            this.listenTo(this.collection, 'loading:true', this.onStartLoading);
+            this.listenTo(this.collection, 'loading:false', this.onStopLoading);
+            this.collection.load();
+            this.listenTo(this.collection, 'reset', this.onResetCollection);
+            this.listenTo(this.selectModel, 'change:condition change:value', this.onChangeFilter);
+            this.listenTo(this.nameModel, 'change:value', this.onChangeFilter);
+            this.listenTo(this.filterModel, 'change:newSelectionParameters', this.onChangeSelectionParameters);
+            this.onChangeSelectionParameters();
+            this.listenTo(this.paging, 'page', this.onChangePage);
+            this.listenTo(this.minPaging, 'page', this.onChangePage);
+            this.listenTo(this.paging, 'count', this.onChangePageCount);
+        },
+
+        render: function() {
+            this.$el.html(Util.templates(this.template), {});
             $('[data-js-select-filter]', this.$el).html((new this.selectModel.view({model: this.selectModel})).$el);
             $('[data-js-name-filter]', this.$el).html((new this.nameModel.view({model: this.nameModel})).$el);
             this.paging = new Components.PagingToolbar({
                 el: $('[data-js-paginate-container]', this.$el),
                 model: this.pagingModel,
             });
+            this.minPaging = new Components.PagingToolbar({
+                el: $('[data-js-paginate-min-container]', this.$el),
+                model: this.pagingModel,
+                minMode: true,
+            })
+        },
+        onStartLoading: function() {
+            $('[data-js-logs-wrapper]', this.$el).addClass('load');
+        },
+        onStopLoading: function() {
+            $('[data-js-logs-wrapper]', this.$el).removeClass('load');
+        },
+        onChangePage: function(page) {
+            this.collection.setPaging(page);
+        },
+        onChangePageCount: function(count) {
+            this.collection.setPaging(1, count);
+        },
+        onChangePaging: function(pageData) {
+            this.pagingModel.set(pageData);
+            this.paging.render();
+            this.minPaging.render();
         },
         onChangeFilter: function() {
             var newEntities = [];
@@ -126,6 +153,11 @@ define(function (require, exports, module) {
         onResetCollection: function() {
             var $container = $('[data-js-table-container]', this.$el);
             $container.html('');
+            if(!this.collection.models.length) {
+                $('[data-js-logs-wrapper]', this.$el).addClass('not-found');
+            } else {
+                $('[data-js-logs-wrapper]', this.$el).removeClass('not-found');
+            }
             _.each(this.collection.models, function(model) {
                 $container.append((new LogItemLogsItem({model: model})).$el);
             })

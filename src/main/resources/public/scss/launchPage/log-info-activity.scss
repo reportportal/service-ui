@@ -105,4 +105,14 @@
       float: left;
     }
   }
+  &.load {
+    .activity-preloader {
+      display: block;
+    }
+  }
+  &.not-found {
+    .no-result-found {
+      display: block;
+    }
+  }
 }
