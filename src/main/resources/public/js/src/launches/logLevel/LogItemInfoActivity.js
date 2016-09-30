@@ -85,6 +85,7 @@ define(function (require, exports, module) {
             }
         },
         getActionTicketsHtml: function(tickets) {
+            var tickets = tickets || '';
             var ticketMas = tickets.split(',');
             var resultMas = [];
             _.each(ticketMas, function(ticket) {
@@ -140,24 +141,24 @@ define(function (require, exports, module) {
               }
         },
         load: function() {
-            $('[data-js-activity-container]', this.$el).addClass('load');
+            $('[data-js-activity-wrapper]', this.$el).addClass('load');
             var self = this;
             Service.loadActivityItems(this.itemModel.get('id'))
                 .done(function(data) {
                     self.parse(data);
                 })
                 .fail(function() {
-                    $('[data-js-activity-container]', self.$el).addClass('not-found');
+                    $('[data-js-activity-wrapper]', self.$el).addClass('not-found');
                 })
                 .always(function() {
-                    $('[data-js-activity-container]', self.$el).removeClass('load');
+                    $('[data-js-activity-wrapper]', self.$el).removeClass('load');
                 })
         },
         parse: function(data) {
             var self = this;
             var $activityContainer = $('[data-js-activity-container]', this.$el);
             if(data.length == 0) {
-                $('[data-js-activity-container]', self.$el).addClass('not-found');
+                $('[data-js-activity-wrapper]', self.$el).addClass('not-found');
                 return;
             } else {
                 _.each(data, function(dataModel){
