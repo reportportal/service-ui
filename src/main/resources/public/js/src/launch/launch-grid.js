@@ -413,12 +413,11 @@ define(function (require, exports, module) {
             elem.preventDefault();
 
             var collapsed = $('div.method-collapsed', this.$el);
-            var titleStatusPreconditions = Localization.launches[this.statusPreconditions + 'PreconditionMethods'];
 
             if (this.statusPreconditions == 'show') {
-                this.onSwitcher(collapsed, titleStatusPreconditions);
+                this.onSwitcher(collapsed);
             } else {
-                this.offSwitcher(collapsed, titleStatusPreconditions);
+                this.offSwitcher(collapsed);
             }
             Storage.setPreconditionMethodsStatus(this.statusPreconditions);
             elem.stopPropagation();
@@ -434,17 +433,17 @@ define(function (require, exports, module) {
             this.statusPreconditions = status;
         },
 
-        onSwitcher: function (collapsed, title) {
+        onSwitcher: function (collapsed) {
             this.setPreconditionMethods('ON');
             this.updateStatusMethodCollapsed(collapsed, 'hide');
 
-            $('#collapseMethodBtn .rp-switcher', this.$el).attr('title', title);
+            $('#collapseMethodBtn .rp-switcher', this.$el).attr('title', Localization.launches[this.statusPreconditions + 'PreconditionMethods']);
             $('#collapseMethodBtn .rp-switcher input', this.$el).prop('checked', true);
 
             this.toggleCollapsedRows(this.statusPreconditions, true);
         },
 
-        offSwitcher: function (collapsed, title) {
+        offSwitcher: function (collapsed) {
             this.setPreconditionMethods('OFF');
             this.updateStatusMethodCollapsed(collapsed, 'show');
 
@@ -452,7 +451,7 @@ define(function (require, exports, module) {
 
             $('div.row.rp-table-row', collapsed).removeClass('selected');
 
-            $('#collapseMethodBtn .rp-switcher', this.$el).attr('title', title);
+            $('#collapseMethodBtn .rp-switcher', this.$el).attr('title', Localization.launches[this.statusPreconditions + 'PreconditionMethods']);
             $('#collapseMethodBtn .rp-switcher input', this.$el).prop('checked', false);
 
             this.toggleCollapsedRows(this.statusPreconditions, true);

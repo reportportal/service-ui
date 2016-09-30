@@ -349,3 +349,24 @@
         }
     }
 }
+.external-auth-link {
+    position: relative;
+    width: 100%;
+    height: 45px;
+    background: #4a7a48;
+    display: block;
+    text-align: center;
+    line-height: 45px;
+    color: white;
+    font-size: 16px;
+    svg {
+        width: 20px;
+        height: 20px;
+        color: white;
+        display: inline-block;
+        fill: white;
+        vertical-align: top;
+        margin-top: 12px;
+        margin-right: 8px;
+    }
+}
