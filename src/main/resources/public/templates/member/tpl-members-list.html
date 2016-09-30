@@ -61,6 +61,7 @@
                                 </span>
                             <% } %>
                         </p>
+                        <% if(member.email) { %>
                         <p class="member-email">
                             <a href="mailto:<%= member.email %>" class="rp-link">
                                 <%
@@ -71,6 +72,7 @@
                                 <span class="email-link"><%= memberEmail %></span>
                             </a>
                         </p>
+                        <% } %>
                     </div>
                 </div>
             </div>
