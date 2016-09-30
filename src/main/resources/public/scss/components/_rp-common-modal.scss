@@ -193,7 +193,7 @@
     #SharedWidgets .shared_widget_block.active .widget_shared_wrapper, 
     #widgetTemplates .widget_type.active .widget_type_wrapper {
         border-color: $COLOR--booger;
-        background-color: $COLOR--white;
+        background-color: #fcfdfa;
     }
 
     #SharedWidgets .widget_shared_wrapper .material-icons, 
@@ -303,11 +303,12 @@
 
     #widgetPreview {
         padding: 0;
+        border-top: none;
 
         .widget-content {
             position: relative;
             height: 300px;
-            border-top: 1px solid #ddd;
+            border-top: none;
             margin-bottom: 0;
             border-bottom: none;
 

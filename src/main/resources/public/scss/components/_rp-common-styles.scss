@@ -62,7 +62,19 @@ ul {
     margin: 0;
     -webkit-padding-start: 0;
 }
+a.btn:focus,
+a:focus,
+button.btn:focus,
+input.btn:focus {
+    outline: 0;
+}
 
+input::-ms-clear {      //hide cross icon (IE)
+    display: none;
+}
+input[type="password"]::-ms-reveal {  //hide show password icon (IE)
+    display: none;
+}
 /*---------------*/
 /* CUSTOM STYLES */
 
@@ -999,6 +1011,21 @@ textarea {
 
 /*--------------------------------*/
 
+.select2-container-multi.select2-container-active .select2-choices,
+.select2-container-multi.select2-container-active:hover .select2-choices,
+.select2-container-multi.select2-dropdown-open .select2-choices,
+.select2-drop-active {
+    color: $COLOR--greyish-brown;
+    box-shadow: 0 0 2px 0 $COLOR--topaz;
+    border: 1px solid $COLOR--topaz;
+    background: $COLOR--white-default;
+}
+
+.select2-dropdown-open .select2-choice {
+    background: 0 0;
+    border-radius: 0 4px 0 0;
+}
+
 .select2-container-multi .select2-choices {
     background: 0 0;
     max-height: 100%;
@@ -1056,6 +1083,12 @@ textarea {
     border-radius: 0;
 }
 
+.select2-drop-active {
+    border-radius: 0;
+    border-top: none;
+    box-shadow: none;
+}
+
 /*--------------------------------*/
 
 /* xs - 767px */
@@ -1094,11 +1127,7 @@ textarea {
 .form-control:focus, 
 .open>.btn.dropdown-toggle, 
 .open>.btn.dropdown-toggle.focus, 
-.open>.btn.dropdown-toggle:focus, 
-.select2-container-multi.select2-container-active .select2-choices, 
-.select2-container-multi.select2-container-active:hover .select2-choices, 
-.select2-container-multi.select2-dropdown-open .select2-choices, 
-.select2-drop-active {
+.open>.btn.dropdown-toggle:focus {
     color: $COLOR--greyish-brown;
     box-shadow: 0 0 2px 0 $COLOR--topaz;
     border: 1px solid $COLOR--topaz;
@@ -1328,3 +1357,23 @@ li {
 .xml .vbscript {
     opacity: .5;
 }
+/*--------------------------------*/
+
+.ico-loading,
+.loading-indicator {
+    display: inline-block;
+    margin: 0 6px 0 0;
+    width: 14px;
+    height: 14px;
+    border: 2px solid transparent;
+    border-top-color: #29d;
+    border-left-color: #29d;
+    border-radius: 14px;
+    -webkit-animation: nprogress-spinner .4s linear infinite;
+    -moz-animation: nprogress-spinner .4s linear infinite;
+    -ms-animation: nprogress-spinner .4s linear infinite;
+    -o-animation: nprogress-spinner .4s linear infinite;
+    animation: nprogress-spinner .4s linear infinite;
+}
+
+/*--------------------------------*/

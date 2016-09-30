@@ -33,6 +33,18 @@
             }
         }
 
+        #instanceBody {
+            #fieldsLoader {
+                display: none;
+                position: relative;
+                height: 65px;
+
+                .loader {
+                    width: 100%;
+                }
+            }
+        }
+
         .rp-form-group {
         
         }
@@ -208,12 +220,6 @@
 #requiredFields,
 #resetFieldsWarning {
     display: none;
-}
-
-#fieldsLoader {
-    display: none;
-    position: relative;
-    height: 65px;
 }
 
 #submitPropertiesBlock, .col-sm-12.p-bottom-15 {

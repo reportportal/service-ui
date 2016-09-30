@@ -49,6 +49,7 @@
 .filter-option-input {
     display: table-cell;
     vertical-align: top;
+    width: 166px;
     position: relative;
     float: none !important;
 }
@@ -116,6 +117,7 @@
         color: $COLOR--charcoal-grey;
         background-color: inherit!important;
         cursor: pointer;
+        outline: 0;
 
         &:focus,
         &:hover {

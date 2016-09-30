@@ -17,7 +17,68 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
+
+/* Widgets D3 axises & tooltips fixes ---> */
+.d3tooltip {
+    background-color: rgba(255,255,255,1);
+    padding: 5px;
+    border: 1px solid rgba(0,0,0,.2);
+    z-index: 10000;
+    font-family: OpenSansRegular,sans-serif;
+    min-width: 150px;
+    max-width: 100%;
+    font-size: 13px;
+    text-align: left;
+}
+
+.nvtooltip {
+    position: absolute;
+    background-color: rgba(255,255,255,1);
+    padding: 1px;
+    border: 1px solid rgba(0,0,0,.2);
+    z-index: 10000;
+    font-family: Arial;
+    font-size: 13px;
+    text-align: left;
+    pointer-events: none;
+    white-space: nowrap;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    h3 {
+        margin: 0;
+        padding: 4px 14px;
+        line-height: 18px;
+        font-weight: bold;
+        font-size: inherit;
+        background-color: rgba(247,247,247,.75);
+        text-align: center;
+        border-bottom: 1px solid #ebebeb;
+        -webkit-border-radius: 5px 5px 0 0;
+        -moz-border-radius: 5px 5px 0 0;
+        border-radius: 1px 5px 0 0;
+    }
+}
+
+.nvd3 .nv-axis {
+    pointer-events: visiblePainted;
+    cursor: default;
+}
+
+.nv-discreteBarWithAxes .nv-y.nv-axis .nv-zeroLine {
+    display: none;
+}
+/* <--- Widgets D3 axises & tooltips fixes   */
+
+/* Widgets D3 X axis stroke line ---> */
+.nvd3 .nv-axis.nv-x path.domain {
+    stroke-opacity: .75;
+}
+/* <--- Widgets D3 X axis stroke line */
 .rp-popup-settings {
   color: #444444;
 }
@@ -252,9 +313,6 @@ input[type=checkbox] + label {
 .dashboard_row {
     border-top: 1px solid black;
 }
-
-
-
 /* ---------------------*/
 
 /* Fullscreen */
@@ -378,6 +436,15 @@ input[type=checkbox] + label {
 }
 
 /*--- DASHBOARD ---*/
+
+.grid-stack > .grid-stack-item > .grid-stack-item-content {
+    z-index: auto!important;
+}
+.grid-stack-item .widget-content,
+.widget-item .widget-content {
+    position: absolute;
+    overflow: visible!important;
+}
 .widgets-list {
     padding: 0;
     z-index: 10;
@@ -437,6 +504,11 @@ input[type=checkbox] + label {
     & .shared-text {
         display: none;
         margin-left: 5px;
+
+        .label {
+            display: inline-block;
+            padding: 1px 3px;
+        }
     }
 }
 
@@ -494,10 +566,6 @@ input[type=checkbox] + label {
         color: #29d;
     }
 }
-
-
-
-
 /*--- END DASHBOARD ---*/
 
 
@@ -579,9 +647,6 @@ input[type=checkbox] + label {
 }
 
 /*--- END DASHBOARDS MENU ---*/
-
-
-
 
 /*--- ADD DASHBOARD POPUP ---*/
 .modal-content .modal-body,
