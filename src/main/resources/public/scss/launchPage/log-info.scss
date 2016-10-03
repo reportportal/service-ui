@@ -22,12 +22,17 @@
   margin-top: 4px;
   padding-top: 15px;
   border: 1px solid $COLOR--gray-80;
+  background: #f9f9f9;
   width: 100%;
   overflow: hidden;
   .item-info {
     position: relative;
     width: 100%;
     overflow: hidden;
+  }
+  .rp-grid-item-issue {
+    margin: 0 15px;
+    float: left;
   }
   .tabs {
     position: relative;

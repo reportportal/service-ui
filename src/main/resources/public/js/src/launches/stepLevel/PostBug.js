@@ -149,7 +149,7 @@ define(function (require, exports, module) {
                 'click .project-name': 'updateFieldSet'
             });
         },
-        
+
         attachKeyActions: function(){
             this.$el.on('keydown', function(e){
                 if(e.ctrlKey && e.keyCode === 13){

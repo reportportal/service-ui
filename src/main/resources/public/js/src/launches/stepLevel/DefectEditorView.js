@@ -108,6 +108,8 @@ define(function (require, exports, module) {
             }.bind(this));
             this.selectedIssue = this.getIssueType();
             this.inProcess = false;
+
+            this.trigger('defect::editor::show');
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
@@ -117,7 +119,7 @@ define(function (require, exports, module) {
                 defectsGroup: ['TO_INVESTIGATE', 'PRODUCT_BUG', 'AUTOMATION_BUG', 'SYSTEM_ISSUE', 'NO_DEFECT'],
                 subDefects: this.getSubDefects()
             }));
-            this.$origin.after(this.$el);
+            this.$origin.html(this.$el);
             this.setupAnchors();
             this.setupMarkItUp();
             this.attachKeyActions();
@@ -211,9 +213,8 @@ define(function (require, exports, module) {
 
         },
         closeEditor: function(){
+            this.trigger('defect::editor::hide');
             this.destroy();
-            $('[data-js-issue-type]', this.$origin).show();
-            this.$origin.removeClass('selected');
         },
         removeTicket: function(e){
             e.preventDefault();
@@ -271,8 +272,8 @@ define(function (require, exports, module) {
             var self = this,
                 issue = {comment: $.trim(this.$textarea.val()), issue_type: this.selectedIssue},
                 issue_type = this.getIssueType(),
-                issues = [],
-                replaceComments = this.$replaceComments.is(':checked');
+                issues = [];//,
+                //replaceComments = this.$replaceComments.is(':checked');
             issues.push({
                 test_item_id: this.model.get('id'),
                 issue: issue

@@ -129,14 +129,23 @@ define(function (require, exports, module) {
             e.stopPropagation();
         },
         setupEditor: function () {
-            var item = this.model.toJSON({computed: true});
             this.removeEditor();
             this.$editor = new DefectEditor({
-                origin: $('.rp-table-row', this.$el),
+                origin: $('[data-js-defect-editor]', this.$el),
                 model: this.model
             });
-            $('[data-js-issue-type]', this.$el).hide();
+            this.listenTo(this.$editor, 'defect::editor::show', this.onShowEditor);
+            this.listenTo(this.$editor, 'defect::editor::hide', this.onHideEditor);
+        },
+        onShowEditor: function(){
+            console.log('onShowEditor');
             $('[data-js-status-class]', this.$el).addClass('selected');
+            $('[data-js-step-issue]', this.$el).hide();
+        },
+        onHideEditor: function(){
+            console.log('onHideEditor');
+            $('[data-js-status-class]', this.$el).removeClass('selected');
+            $('[data-js-step-issue]', this.$el).show();
         },
         removeEditor: function () {
             if (this.$editor) {
@@ -161,6 +170,7 @@ define(function (require, exports, module) {
             this.menu && this.menu.destroy();
             this.issueView && this.issueView.destroy();
             this.duration && this.duration.destroy();
+            this.removeEditor();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
