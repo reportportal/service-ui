@@ -370,6 +370,37 @@ a.itemsPerPage {
     text-decoration: none!important;
 }
 
+/* Header buttons in mobile view ----> */
+.button-position {
+    float: left;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding: 9px 10px;
+}
+
+.rp-button-right {
+    float: right;
+}
+.rp-button-left,
+.rp-button-right {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    padding: 9px 10px;
+}
+
+#topHeader .btn-default,
+.navbar-header .btn-default {
+    background-color: #fff;
+    border-color: #ccc;
+    color: #333;
+
+    &:hover,
+    &:active,
+    &:focus {
+        background: $COLOR--white-default;
+    }
+}
+/* <---- Header buttons in mobile view */
 
 .popover,
 .tooltip {
@@ -694,6 +725,26 @@ ul.rp-nav-left > li.title-holder {
         // left: 0 !important;
         padding: 0 15px 0 15px;
         min-height: 100%;
+    }
+}
+
+@media (max-width: 767px) {
+    .wrapper {
+        padding-left: 0 !important;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .menu-xs {
+        float: left;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    #members,
+    #settings {
+        display: inline-block;
+        padding-top: 10px;
     }
 }
 
