@@ -62,6 +62,7 @@ ul {
     margin: 0;
     -webkit-padding-start: 0;
 }
+
 a.btn:focus,
 a:focus,
 button.btn:focus,
@@ -72,8 +73,15 @@ input.btn:focus {
 input::-ms-clear {      //hide cross icon (IE)
     display: none;
 }
+
 input[type="password"]::-ms-reveal {  //hide show password icon (IE)
     display: none;
+}
+
+mark {
+    color: #a94442;
+    background: 0 0;
+    padding: 0;
 }
 /*---------------*/
 /* CUSTOM STYLES */
@@ -1425,6 +1433,62 @@ li {
     -ms-animation: nprogress-spinner .4s linear infinite;
     -o-animation: nprogress-spinner .4s linear infinite;
     animation: nprogress-spinner .4s linear infinite;
+}
+
+/*--------incorrect form fields lightup-----------*/
+
+.has-error .form-control,
+.has-error .form-control:focus {
+    color: #393939;
+    box-shadow: 0 0 2px 0 rgba(255,49,33,.7);
+    border: 1px solid $COLOR--orange-red;
+}
+
+/*----------Post bug modal window------------*/
+
+#collapseCredentials .has-error,
+#externalError .alert,
+#staticContent .panel-group {
+    margin-bottom: 0;
+}
+
+#staticContent {
+    padding-bottom: 15px;
+}
+
+#credentialsLink {
+    position: relative;
+
+    &:after {
+        content: "-";
+        position: absolute;
+        right: -15px;
+        font-size: 24px;
+    }
+
+    &.collapsed:after {
+        content: "+";
+    }
+}
+
+#accordion {
+    clear: both;
+}
+
+/*------Selected option in dropdown lists styling---------*/
+
+.btn-group ul.dropdown-menu li.active,
+.btn-group ul.dropdown-menu li.active > a {
+    background-color: #e9e9e9;
+    cursor: default;
+    color: $COLOR--black-two;
+}
+
+/*------Background for hovered options in dropdowns---------*/
+
+.dropdown-menu > li > a:focus,
+.dropdown-menu > li > a:hover {
+    background: #d8f3f7;
 }
 
 /*--------------------------------*/

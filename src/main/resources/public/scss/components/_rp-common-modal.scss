@@ -60,7 +60,6 @@
     margin-left: 5px;
 }
 
-
 #widgetEditor {
     .modal-body {
         padding: 0;
@@ -298,6 +297,10 @@
                     }
                 }
             }
+        }
+
+        #templateOptions .criteria-holder-dropdown .checkbox .radio-label {
+            white-space: nowrap;
         }
     }
 
@@ -645,8 +648,6 @@
     margin: 0 0 8px;
     border-bottom: 1px solid #ddd;
 }
-
-
 
 .graphBlock {
     min-height: 120px;

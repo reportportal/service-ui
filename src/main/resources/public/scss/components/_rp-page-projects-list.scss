@@ -24,7 +24,12 @@
 
 #contentHeader {
     #messageFilterWrapper {
-
+        .favorites-name-filter.rp-input-search {
+            &:focus,
+            &:hover {
+                background-color: $COLOR--white-default;
+            }
+        }
     }
 
     #adminNavigation {

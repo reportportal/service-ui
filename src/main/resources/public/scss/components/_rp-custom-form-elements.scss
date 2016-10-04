@@ -491,6 +491,16 @@ input[type="checkbox"] {
                     background-color: rgba(57, 194, 215, 0.2);
                 }
 
+                &.active,
+                &.active > a {
+                    background-color: $COLOR--gray-91;
+                    cursor: default;
+                }
+
+                &.active > a:hover {
+                    color: $COLOR--charcoal-grey;
+                }
+
                 a {
                     display: block;
                     background: transparent;

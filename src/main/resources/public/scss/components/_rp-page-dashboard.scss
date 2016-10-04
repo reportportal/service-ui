@@ -416,6 +416,12 @@ input[type=checkbox] + label {
                 }
             }
         }
+
+        #dynamic-content {
+            .no-dashboards {
+                padding: 15px 0 0;
+            }
+        }
     }
 }
 
@@ -593,8 +599,25 @@ input[type=checkbox] + label {
         } 
     }
 
-    & .row {
+    .row {
       margin-bottom: 16px;
+    }
+
+    .shared-dashboards-list {
+        .remove {
+            float: right;
+            display: inline-block;
+            text-align: center;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            margin: -1px 0 0 6px;
+            cursor: pointer;
+
+            &:hover {
+                background: #eee;
+            }
+        }
     }
 }
 .add-dash-button .btn.add-new-dashboard {
@@ -624,6 +647,17 @@ input[type=checkbox] + label {
 .b-dashboars-list .columnWidget > ul > li.active a,
 .b-dashboars-list .columnWidget > ul > li.active a:hover {
     border-color: #a9ca50;
+}
+
+.b-dashboars-list .columnWidget > ul > li a.disabled {
+    cursor: default;
+
+    &:active,
+    &:focus,
+    &:hover {
+        border-color: transparent;
+        text-decoration: none;
+    }
 }
 
 .b-dashboars-list .columnWidget > ul > li.active a,
@@ -769,6 +803,19 @@ input[type=checkbox] + label {
         & > ul {
             &.nav-tabs-custom {
                 padding-top: 0;
+            }
+        }
+
+        .rp-dashboard-overflow .rp-dashboard-content {
+            padding: 0;
+            overflow-y: auto!important;
+
+            .title {
+                position: relative;
+                float: none;
+                padding-top: 9px;
+                font-weight: 300;
+                line-height: 1.2;
             }
         }
     }
