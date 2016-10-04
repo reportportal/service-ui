@@ -107,6 +107,8 @@ define(function (require, exports, module) {
             this.$activeHolder = $("#activeProjectsList", this.$body);
             this.$inactiveAmount = $("#inactiveFound", this.$body);
             this.$inactiveHolder = $("#collapseInactive", this.$body);
+            this.$personalHolder = $('[data-js-personal-projects]', this.$body);
+            this.$personalAmount = $('[data-js-personal-amount]', this.$body);
 
             this.restoreSettings();
             this.loadProjects();
@@ -179,6 +181,7 @@ define(function (require, exports, module) {
 
         makeSorting: function () {
             this.projectsData.active = _.sortByOrder(this.projectsData.active, this.filter.sort, this.filter.direction === 'asc');
+            this.projectsData.personal = _.sortByOrder(this.projectsData.personal, this.filter.sort, this.filter.direction === 'asc');
             if (this.$inactiveHolder.hasClass('in')) {
                 this.projectsData.inactive = _.sortByOrder(this.projectsData.inactive, this.filter.sort, this.filter.direction === 'asc');
             }
@@ -198,6 +201,7 @@ define(function (require, exports, module) {
 
         reRenderProjects: function () {
             this.renderActiveProjects();
+            this.renderPersonalProjects();
             if (this.$inactiveHolder.hasClass('in')) {
                 this.renderInactive();
             } else {
@@ -207,6 +211,23 @@ define(function (require, exports, module) {
                 }, 0);
                 this.$inactiveAmount.text(result);
             }
+        },
+
+        renderPersonalProjects: function(){
+            this.$personalHolder.html(Util.templates(this.currentTpl, {
+                collection: this.projectsData.personal,
+                util: Util,
+                isNew: this.isNew,
+                hasRunsLastWeek: this.hasRunsLastWeek,
+                active: true,
+                canDelete: this.canDelete,
+                search: this.filter.search,
+                filter: this.searchFilter,
+                textWrapper: Util.textWrapper,
+                userProjects: config.userModel.get('projects')
+            }));
+
+            this.$personalAmount.text($(".project-row", this.$personalHolder).length);
         },
 
         renderInactive: function () {
@@ -241,7 +262,7 @@ define(function (require, exports, module) {
                             return project.creationDate;
                         }).reverse();
                         self.projectsData = _.groupBy(data, function (project) {
-                            return project.launchesQuantity || self.isNew(project.creationDate) ? 'active' : 'inactive';
+                            return project.entryType == "PERSONAL" ? 'personal' : project.launchesQuantity || self.isNew(project.creationDate) ? 'active' : 'inactive';
                         });
                         self.makeSorting();
                     })

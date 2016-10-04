@@ -340,6 +340,9 @@ define([
     var deleteDefectType = function(projectId, id){
         return call('DELETE', urls.postDefectTypes(projectId) + id);
     };
+    var generateDemoData = function(data){
+        return call('POST', urls.postDemoDataUrl(), data);
+    };
     
 
     return {
@@ -429,6 +432,7 @@ define([
         putDefectType: putDefectType,
         deleteDefectType: deleteDefectType,
 
-        getUserByEmail: getUserByEmail
+        getUserByEmail: getUserByEmail,
+        generateDemoData: generateDemoData
     }
 });
