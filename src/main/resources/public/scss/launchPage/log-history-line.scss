@@ -179,6 +179,12 @@
           }
         }
       }
+      &.launch-is-progress {
+        .history-item-container:before {
+          background-image: url(/img/launch/launch-is-processing.png);
+          background-size: 22px 100%;
+        }
+      }
       @mixin logColorSet($colorDisabled, $color) {
         .history-item-container:before {
           background-color: $colorDisabled;
@@ -219,7 +225,7 @@
         @include logColorSet($COLOR--passed-disabled, $COLOR--passed);
       }
       &.status-IN_PROGRESS {
-        @include logColorSet($COLOR--system-issue-disabled, $COLOR--system-issue);
+        @include logColorSet($COLOR--violet-disabled, $COLOR--violet);
       }
     }
 

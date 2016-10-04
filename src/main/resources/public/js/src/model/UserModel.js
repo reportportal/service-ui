@@ -271,6 +271,14 @@ define(function(require, exports, module) {
             }
             return permission;
         },
+        getRoleForCurrentProject: function() {
+            var project = this.get('projects')[config.project.projectId];
+            var role = '';
+            if(project) {
+                role = project.projectRole
+            }
+            return role;
+        },
 
 
         logout: function () {

@@ -56,7 +56,7 @@ define(function (require, exports, module) {
         parse: function(data, itemId) {
             var self = this;
             var answerData = _.map(data, function(item) {
-                var answer = {launchNumber: item.launchNumber, active: false};
+                var answer = {launchNumber: item.launchNumber, active: false, parent_launch_status: item.launchStatus};
                 if(item.launchId == self.launchId) {
                     _.each(item.resources, function(resource) {
                         if(resource.id == itemId) {
@@ -107,6 +107,9 @@ define(function (require, exports, module) {
             this.defectTypeCollection = new SingletonDefectTypeCollection();
             this.updateIssue();
             this.listenTo(this.model, 'change:issue', this.updateIssue);
+            if(this.model.get('parent_launch_status') == 'IN_PROGRESS') {
+                this.$el.addClass('launch-is-progress');
+            }
         },
         updateIssue: function() {
             var self = this;

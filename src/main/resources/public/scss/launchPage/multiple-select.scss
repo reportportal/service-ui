@@ -23,7 +23,6 @@
   position: relative;
   border-bottom: 1px solid $COLOR--white;
   width: 100%;
-  overflow: hidden;
   padding: 0 15px 15px 15px;
   margin-bottom: 10px;
   h2 {
@@ -39,6 +38,9 @@
     font-size: 22px;
     cursor: pointer;
   }
+  .items-container {
+    overflow: hidden;
+  }
   .multi-select-item {
     position: relative;
     float: left;
@@ -47,13 +49,37 @@
     background-color: $COLOR--white;
     display: inline-block;
     line-height: 17px;
-    padding: 0 6px 0 2px;
+    padding: 0 2px 0 6px;
     margin-right: 10px;
     margin-bottom: 5px;
     .close-icon-item {
       vertical-align: top;
       margin-top: 3px;
       cursor: pointer;
+    }
+    &.error-validate {
+      border-color: $COLOR--orange-red;
+      background-color: #fde1dc;
+    }
+
+  }
+  .error-message {
+    position: relative;
+    margin-top: 5px;
+    font-size: 12px;
+    margin-bottom: 5px;
+    color: $COLOR--orange-red;
+    display: none;
+  }
+  .proceed-button {
+    position: absolute;
+    left: 15px;
+    bottom: -40px;
+    display: none;
+  }
+  &.invalid-state {
+    .error-message, .proceed-button {
+      display: block;
     }
   }
 }

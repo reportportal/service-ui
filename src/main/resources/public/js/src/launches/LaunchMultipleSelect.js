@@ -23,8 +23,11 @@ define(function (require, exports, module) {
     var _ = require('underscore');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
+    var App = require('app');
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
     var Util = require('util');
+
+    var config = App.getInstance();
 
     var LaunchMultipleSelectItem = Epoxy.View.extend({
         className: 'multi-select-item',
@@ -36,6 +39,7 @@ define(function (require, exports, module) {
 
         bindings: {
             '[data-js-item-name]': 'text: format("$1$2", name, numberText)',
+            ':el': 'attr: {title: invalidMessage}, classes: {"error-validate": invalidMessage}',
         },
 
         initialize: function() {
@@ -67,6 +71,21 @@ define(function (require, exports, module) {
 
         events: {
             'click [data-ja-close]': 'onClickClose',
+            'click [data-js-proceed]': 'onClickProceed',
+        },
+
+        actionValidators: {
+            merge: function() {
+                _.each(this.collection.models, function(model) {
+                    if(model.get('owner') != config.userModel.get('name')) {
+                        model.set({invalidMessage: 'You are not a launch owner'})
+                    } else if (model.get('status') == 'IN_PROGRESS') {
+                        model.set({invalidMessage: 'Launch should not be in the status IN PROGRESS'})
+                    } else {
+                        model.set({invalidMessage: ''})
+                    }
+                })
+            }
         },
 
         initialize: function(options) {
@@ -78,6 +97,7 @@ define(function (require, exports, module) {
             this.listenTo(this.collectionItems, 'reset', this.onResetCollectionItems);
             this.listenTo(this.collection, 'change:select', this.onUnCheckItem);
             this.listenTo(this.collection, 'add', this.onAddItem);
+            this.currentAction = '';
         },
         onChangeSelect: function(model, select) {
             var cloneModel = model.clone();
@@ -113,9 +133,39 @@ define(function (require, exports, module) {
                 this.collection.remove(model);
                 this.checkStatus();
             }
+            if(this.currentAction) {
+                this.actionValidators[this.currentAction].call(this);
+                this.checkInvalidStatus();
+            }
+        },
+        checkInvalidStatus: function() {
+            var answer = true;
+            _.each(this.collection.models, function(model) {
+                if(model.get('invalidMessage') != '') {
+                    answer = false;
+                    return false;
+                }
+            });
+            if(answer) {
+                this.$el.removeClass('invalid-state');
+            } else {
+                this.$el.addClass('invalid-state');
+            }
+            return answer;
+
+        },
+        setAction: function(actionName) {
+            if(this.actionValidators[actionName]) {
+                this.actionValidators[actionName].call(this);
+                this.currentAction = actionName;
+                this.checkInvalidStatus();
+            }
         },
         reset: function() {
             this.onClickClose();
+        },
+        onClickProceed: function() {
+
         },
         onClickClose: function() {
             while(this.collection.models.length) {

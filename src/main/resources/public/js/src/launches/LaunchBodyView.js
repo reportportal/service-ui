@@ -80,7 +80,7 @@ define(function (require, exports, module) {
             this.control && this.control.disableMultiple();
         },
         onMultiAction: function(actionName) {
-            console.log(actionName);
+            this.multipleSelected.setAction(actionName);
         },
         onChangeParamsFilter: function(params) {
             var mainHash = window.location.hash.split('?')[0];

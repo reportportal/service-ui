@@ -21,6 +21,7 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -37,17 +38,20 @@ define(function (require, exports, module) {
         initialize: function(options) {
             this.collectionItems = options.collectionItems;
             this.render();
+            if(config.userModel.getRoleForCurrentProject() == 'CUSTOMER') {
+                $('[data-js-multi-action="movedebug"]', this.$el).addClass('hide');
+            }
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
         activateMultiple: function() {
             $('[data-js-refresh]', this.$el).addClass('disabled');
-            $('[data-js-multi-button]', this.$el).removeClass('disabled');
+            $('[data-js-multi-button]', this.$el).removeClass('disabled').attr({title: Localization.ui.actions});
         },
         disableMultiple: function() {
             $('[data-js-refresh]', this.$el).removeClass('disabled');
-            $('[data-js-multi-button]', this.$el).addClass('disabled');
+            $('[data-js-multi-button]', this.$el).addClass('disabled').attr({title: Localization.launches.actionTitle});
         },
         onClickMultiAction: function(e) {
             this.trigger('multi:action', $(e.currentTarget).data('js-multi-action'));

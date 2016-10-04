@@ -123,6 +123,9 @@
     // var(--white-four);
     $COLOR--white-four: #f9f9f9;
 
+    $COLOR--violet: #c5cae9;
+    $COLOR--violet-disabled: lighten($COLOR--violet, 5%);
+
 /*------------------------------------------------------------------*/
 /* COMMON CONSTANTS OF WIDTH FOR DYNAMIC GRID (FOR SCREEN CHANGING) */
 

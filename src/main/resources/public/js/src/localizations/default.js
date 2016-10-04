@@ -625,6 +625,10 @@ define(['util'], function () {
             willBePostedTo: "Bug will be posted to",
             willBeLoadedTo: "Bug will be loaded to",
 
+            actionTitle: 'Select several items to processing',
+            multiSelectError: 'You cannot perform operation to invalid launches',
+            proceedValidItems: 'Proceed Valid Items',
+
 
             issueTitle: "Issue title",
             components: "Components:",

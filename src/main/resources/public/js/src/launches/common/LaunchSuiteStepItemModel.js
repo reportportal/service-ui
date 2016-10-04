@@ -54,6 +54,7 @@ define(function(require, exports, module) {
             issue: '',
 
             select: false,
+            invalidMessage: '',
 
             // append keys
             level: '',
