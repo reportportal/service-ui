@@ -79,8 +79,9 @@
 
     }
 
-    #accordion {
-        #inactiveLink {
+    .pr-collapsed-projects {
+        margin: 0;
+        .collapsed-projects-title {
             position: relative;
             color: #666;
             margin-bottom: 10px;
@@ -176,7 +177,7 @@
 }
 
 #activeProjectsList .project-wrapper,
-#collapseInactive .project-wrapper {
+.pr-collapsed-projects .project-wrapper {
     margin: 0 0 20px;
     padding: 0;
     border-color: #d5d5d5;
@@ -250,7 +251,7 @@
 }
 
 #activeProjectsList .project-item,
-#collapseInactive .project-item {
+.pr-collapsed-projects .project-item {
     padding: 0 10px;
 }
 
@@ -260,7 +261,7 @@
 }
 
 #activeProjectsList.table_view .project-wrapper,
-#collapseInactive.table_view .project-wrapper {
+.pr-collapsed-projects .table_view .project-wrapper {
     margin: 0;
 }
 
@@ -412,7 +413,7 @@
 }
 
 
-#collapseInactive > .col-sm-4 {
+.pr-collapsed-projects .col-sm-4 {
     padding: 10px;
 }
 
@@ -513,7 +514,7 @@
     }
 
     #activeProjectsList.table_view .project-wrapper,
-    #collapseInactive.table_view .project-wrapper {
+    .pr-collapsed-projects .table_view .project-wrapper {
         margin: 0;
     }
 
