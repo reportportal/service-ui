@@ -72,6 +72,14 @@
             white-space: nowrap;
         }
     }
+    &.rp-button-dropdown {
+        padding-right: 35px;
+        i:last-child {
+            position:absolute;
+            right: 10px;
+            top: 7px;
+        }
+    }
 }
 
 /*-------------------*/

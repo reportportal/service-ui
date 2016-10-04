@@ -63,10 +63,10 @@ define(function (require, exports, module) {
                 activity: false,
             });
             this.render();
-            this.issueView = new StepItemIssueView({
-                model: this.itemModel,
-                $container: $('[data-js-step-issue]', this.$el)
-            });
+            // this.issueView = new StepItemIssueView({
+            //     model: this.itemModel,
+            //     $container: $('[data-js-step-issue]', this.$el)
+            // });
             // this.defectEditor = new DefectEditor({
             //     origin: $('[data-js-defect-editor]', this.$el),
             //     model: this.itemModel,

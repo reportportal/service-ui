@@ -21,6 +21,8 @@
 .launches-header-bar {
   padding: 10px 0;
   margin: 0 -15px;
+  background-color: $COLOR--white-default;
+  border-bottom: solid 1px $COLOR--gray-91;
   .rp-btn {
     vertical-align: top;
   }
@@ -50,6 +52,17 @@
       border-top-width: 2px;
     }
     border-bottom: 2px solid #e9e9e9;
+  }
+  .multiple-selected-container {
+    display: none;
+  }
+  &.multiple-select {
+    .multiple-selected-container {
+      display: block;
+    }
+    .crumbs-container, .info-wrapper, .refine-wrapper {
+      display: none;
+    }
   }
 }
 #breadCrumbs {

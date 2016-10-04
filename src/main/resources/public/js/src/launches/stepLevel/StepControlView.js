@@ -50,6 +50,12 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
+        activateMultiple: function() {
+            $('[data-js-refresh]', this.$el).addClass('disabled');
+        },
+        disableMultiple: function() {
+            $('[data-js-refresh]', this.$el).removeClass('disabled');
+        },
         onClickRefresh: function() {
             this.collectionItems.load();
         },

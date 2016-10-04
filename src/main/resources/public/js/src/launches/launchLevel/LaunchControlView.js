@@ -27,6 +27,7 @@ define(function (require, exports, module) {
     var LaunchControlView = Epoxy.View.extend({
         events: {
             'click [data-js-refresh]': 'onClickRefresh',
+            'click [data-js-multi-action]': 'onClickMultiAction',
         },
 
         bindings: {
@@ -39,6 +40,17 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        activateMultiple: function() {
+            $('[data-js-refresh]', this.$el).addClass('disabled');
+            $('[data-js-multi-button]', this.$el).removeClass('disabled');
+        },
+        disableMultiple: function() {
+            $('[data-js-refresh]', this.$el).removeClass('disabled');
+            $('[data-js-multi-button]', this.$el).addClass('disabled');
+        },
+        onClickMultiAction: function(e) {
+            this.trigger('multi:action', $(e.currentTarget).data('js-multi-action'));
         },
         onClickRefresh: function() {
             this.collectionItems.load();

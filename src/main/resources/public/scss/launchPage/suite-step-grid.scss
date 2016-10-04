@@ -41,13 +41,15 @@
 $launch-name-cell-width: 30%;
 $launch-time-cell-width: 10%;
 $launch-number-cell-width: 5.5%;
-$launch-counter-cell-width: (100 - $launch-name-cell-width - $launch-time-cell-width -$launch-number-cell-width*4) / 4;
+$launch-select-cell-width: 2%;
+$launch-counter-cell-width: (100 - $launch-name-cell-width - $launch-time-cell-width -$launch-number-cell-width*4 - $launch-select-cell-width) / 4;
 
 
 $launch-min-name-cell-width: 25%;
 $launch-min-time-cell-width: 8%;
 $launch-min-number-cell-width: 5.5%;
-$launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min-time-cell-width -$launch-min-number-cell-width*4) / 4;
+$launch-min-select-cell-width: 2%;
+$launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min-time-cell-width -$launch-min-number-cell-width*4 - $launch-min-select-cell-width) / 4;
 .suit-grid {
   .grid-cell {
     &.name-grid-cell {
@@ -69,6 +71,14 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
       width: $launch-number-cell-width;
       text-align: right;
     }
+    &.select-grid-cell {
+      width: $launch-select-cell-width;
+      text-align: center;
+      padding: 0;
+      .rp-checkbox-wrap span {
+        height: 11px;
+      }
+    }
     @media (max-width: 1150px) {
       &.name-grid-cell {
         width: $launch-min-name-cell-width;
@@ -82,6 +92,9 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
       &.number-grid-cell {
         width: $launch-min-number-cell-width;
       }
+      &.select-grid-cell {
+        width: $launch-min-select-cell-width;
+      }
     }
   }
 }
@@ -89,7 +102,8 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
 $step-name-cell-width: 37%;
 $step-time-cell-width: 12.5%;
 $step-status-cell-width: 8%;
-$step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - $step-status-cell-width);
+$step-select-cell-width: 2%;
+$step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - $step-status-cell-width - $step-select-cell-width);
 .step-grid {
   .grid-cell {
     &.name-grid-cell {
@@ -109,6 +123,14 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
     }
     &.type-grid-cell {
       width: $step-type-cell-width;
+    }
+    &.select-grid-cell {
+      width: $step-select-cell-width;
+      text-align: center;
+      padding: 0;
+      .rp-checkbox-wrap span {
+        height: 11px;
+      }
     }
     &.add-collapse-methods-btn {
       padding-left: 44px;

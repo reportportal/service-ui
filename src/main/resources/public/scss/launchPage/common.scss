@@ -32,6 +32,11 @@
       height: 100%;
     }
   }
+  .rp-table-row {
+    &.select-state {
+      background-color: $COLOR--gray-91;
+    }
+  }
   .rp-grid-thead {
     height: 50px;
     .grid-cell {

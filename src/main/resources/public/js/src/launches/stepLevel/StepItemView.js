@@ -51,7 +51,8 @@ define(function (require, exports, module) {
             '[data-js-method-type]': 'text: showMethodType',
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
-            '[data-js-status-class]': 'classes: {danger: highlightedFailed}'
+            '[data-js-status-class]': 'classes: {danger: highlightedFailed, "select-state": select}',
+            '[data-js-select-item]': 'checked:select',
         },
         computeds: {
             showMethodType: function(){

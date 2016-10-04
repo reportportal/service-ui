@@ -22,6 +22,7 @@
 define(['util'], function () {
     return {
         ui: {
+            actions: 'Actions',
             on: "ON",
             off: "OFF",
             save: "Save",
@@ -693,7 +694,8 @@ define(['util'], function () {
             launchFinished: 'Launch is finished',
             launchIsDeleting: 'The launch is in the removal process!',
             noItemInLaunch: 'No Item<br> in Launch',
-            severalItems: 'There’re several items with the same names, descriptions and tags'
+            severalItems: 'There’re several items with the same names, descriptions and tags',
+            multipleSelectHeader: 'YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:',
         },
 
         launchStatus: {

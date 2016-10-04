@@ -53,6 +53,8 @@ define(function(require, exports, module) {
             has_childs: true,
             issue: '',
 
+            select: false,
+
             // append keys
             level: '',
             parent_launch_owner: null,
