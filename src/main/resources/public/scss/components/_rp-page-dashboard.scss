@@ -17,7 +17,68 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
+
+/* Widgets D3 axises & tooltips fixes ---> */
+.d3tooltip {
+    background-color: rgba(255,255,255,1);
+    padding: 5px;
+    border: 1px solid rgba(0,0,0,.2);
+    z-index: 10000;
+    font-family: OpenSansRegular,sans-serif;
+    min-width: 150px;
+    max-width: 100%;
+    font-size: 13px;
+    text-align: left;
+}
+
+.nvtooltip {
+    position: absolute;
+    background-color: rgba(255,255,255,1);
+    padding: 1px;
+    border: 1px solid rgba(0,0,0,.2);
+    z-index: 10000;
+    font-family: Arial;
+    font-size: 13px;
+    text-align: left;
+    pointer-events: none;
+    white-space: nowrap;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    h3 {
+        margin: 0;
+        padding: 4px 14px;
+        line-height: 18px;
+        font-weight: bold;
+        font-size: inherit;
+        background-color: rgba(247,247,247,.75);
+        text-align: center;
+        border-bottom: 1px solid #ebebeb;
+        -webkit-border-radius: 5px 5px 0 0;
+        -moz-border-radius: 5px 5px 0 0;
+        border-radius: 1px 5px 0 0;
+    }
+}
+
+.nvd3 .nv-axis {
+    pointer-events: visiblePainted;
+    cursor: default;
+}
+
+.nv-discreteBarWithAxes .nv-y.nv-axis .nv-zeroLine {
+    display: none;
+}
+/* <--- Widgets D3 axises & tooltips fixes   */
+
+/* Widgets D3 X axis stroke line ---> */
+.nvd3 .nv-axis.nv-x path.domain {
+    stroke-opacity: .75;
+}
+/* <--- Widgets D3 X axis stroke line */
 .rp-popup-settings {
   color: #444444;
 }
@@ -137,7 +198,7 @@
 }
 @media screen and (min-width: 992px) {
   .borderWidget > .columnWidget {
-    width: 33%;
+    width: 20%;
   }
 }
 .columnWidget > ul > li {
@@ -219,6 +280,14 @@ input[type=checkbox] + label {
   box-shadow: none;
   border: none;
 }
+.panel.rb-panel-btn {
+    margin: 16px 0 0;
+    & #addNewWidget {
+        font-size: 24px;
+        font-weight: 500;
+        padding: 11px 12px;
+    }
+}
 .rb-btn-settings {
   background-color: inherit;
   border: 2px dashed #CFCFCF;
@@ -244,8 +313,21 @@ input[type=checkbox] + label {
 .dashboard_row {
     border-top: 1px solid black;
 }
-
 /* ---------------------*/
+
+/* Fullscreen */
+.fullscreen-close {
+    display: none;
+    position: fixed;
+    right: 15px;
+    top: 10px;
+}
+
+.fullscreen .fullscreen-close {
+    display: block;
+}
+/* ---------------------*/
+
 /* STYLES FOR DASHBOARD */
 
 #mainContainer {
@@ -265,6 +347,8 @@ input[type=checkbox] + label {
                     ul {
                         &.rp-nav-right {
                             padding-right: 0;
+                            padding-left: 0;
+                            margin: 0;
                         }
                     }
                 }
@@ -276,6 +360,7 @@ input[type=checkbox] + label {
                         padding: 0;
 
                         li {
+                            list-style: none;
                             a {
                                 padding: 0px 22px;
 
@@ -331,6 +416,12 @@ input[type=checkbox] + label {
                 }
             }
         }
+
+        #dynamic-content {
+            .no-dashboards {
+                padding: 15px 0 0;
+            }
+        }
     }
 }
 
@@ -351,9 +442,31 @@ input[type=checkbox] + label {
 }
 
 /*--- DASHBOARD ---*/
+
+.grid-stack > .grid-stack-item > .grid-stack-item-content {
+    z-index: auto!important;
+}
+.grid-stack-item .widget-content,
+.widget-item .widget-content {
+    position: absolute;
+    overflow: visible!important;
+}
+.widgets-list {
+    padding: 0;
+    z-index: 10;
+    margin: 30px -7px 0;
+
+    & .widget-item .ui-resizable-handle {
+        background: none;
+    }
+}
+
 .widgets-list .panel-default {
     border-color: #ccc;
     border-radius: 0;
+}
+.widgets-list .widget-content > .baron__root {
+    position: absolute;
 }
 
 .widgets-list .panel-default .panel-heading {
@@ -366,6 +479,9 @@ input[type=checkbox] + label {
 
 .widgets-list .panel-heading {
     color: #464547;
+    height: 54px;
+    padding: 8px 15px 10px;
+    position: relative;
 }
 
 .widgets-list .panel-heading strong {
@@ -373,6 +489,7 @@ input[type=checkbox] + label {
 }
 
 .widgets-list .panel-heading .rp-top-links {
+    padding-top: 8px;
     font-size: 16px;
     color: #666;
 }
@@ -386,18 +503,122 @@ input[type=checkbox] + label {
     top: -2px;
     font-family: $OpenSansRegular;
     background: #666;
+    margin-top: 1px;
+    margin-left: 5px;
+    padding: 3px 8px 4px 7px;
+
+    & .shared-text {
+        display: none;
+        margin-left: 5px;
+
+        .label {
+            display: inline-block;
+            padding: 1px 3px;
+        }
+    }
 }
 
+.widgets-list .panel-default > .panel-heading .widget-type-name {
+    font-size: 13px;
+}
+
+.widgets-list .panel-default .drag-handle {
+    cursor: move;
+
+    & .rp-top-links {
+        margin-right: 0;
+
+        & li {
+            float: left;
+
+            & a {
+                text-decoration: none;
+                color: inherit;
+
+                &:hover {
+                    text-decoration: none;
+                    color: inherit;
+                }
+            }
+        }
+    }
+}
+
+.loader, .loader i {
+    position: absolute;
+}
+
+.loading-widget.loader {
+    left: 10px;
+    right: 10px;
+    width: auto;
+}
+
+.loader {
+    left: 0;
+    top: 0;
+    height: 100%;
+    border-radius: 4px;
+    background: #fff;
+    opacity: .6;
+    z-index: 3;
+
+    & i {
+        display: inline-block;
+        left: 50%;
+        top: 50%;
+        margin: -24px 0 0 -24px;
+        font-size: 40px;
+        color: #29d;
+    }
+}
 /*--- END DASHBOARD ---*/
-
-
 
 
 /*--- DASHBOARDS MENU ---*/
 .b-dashboars-list {
-    border-color: #ddd;
+    position: absolute;
+    left: -1px;
+    top: 0;
+    width: 100%;
+    max-width: 1150px;
+    border: 1px solid #858687;
+    background: #fff;
     border-top: none;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
+    border-radius: 0 0 4px 4px;
+    box-sizing: content-box;
+    box-shadow: 0 2px 4px rgba(0,0,0,.5);
+    z-index: 99;
+    overflow: hidden;
+
+    & > .dashboards-container {
+        padding: 20px;
+
+        & > .add-dash-button {
+          padding: 0 0 12px 0;
+        } 
+    }
+
+    .row {
+      margin-bottom: 16px;
+    }
+
+    .shared-dashboards-list {
+        .remove {
+            float: right;
+            display: inline-block;
+            text-align: center;
+            width: 20px;
+            height: 20px;
+            line-height: 20px;
+            margin: -1px 0 0 6px;
+            cursor: pointer;
+
+            &:hover {
+                background: #eee;
+            }
+        }
+    }
 }
 .add-dash-button .btn.add-new-dashboard {
     // border-color: #a3c644;
@@ -408,8 +629,16 @@ input[type=checkbox] + label {
 .b-shareddash-list .columnWidget > ul {
     margin: 0;
 }
-
+.b-dashboars-list .columnWidget > ul {
+    padding: 0;
+    margin: 0 8px;
+}
+.b-dashboars-list .columnWidget > ul > li {
+    list-style: none;
+    padding-bottom: 4px;
+}
 .b-dashboars-list .columnWidget > ul > li a {
+    margin: 0;
     word-wrap: break-word;
     border: 1px solid transparent;
 }
@@ -420,19 +649,38 @@ input[type=checkbox] + label {
     border-color: #a9ca50;
 }
 
+.b-dashboars-list .columnWidget > ul > li a.disabled {
+    cursor: default;
+
+    &:active,
+    &:focus,
+    &:hover {
+        border-color: transparent;
+        text-decoration: none;
+    }
+}
+
 .b-dashboars-list .columnWidget > ul > li.active a,
 .b-dashboars-list .columnWidget > ul > li.active a:hover {
-    background-color: #fcfdfa;
+    background-color: #d7d7d7;
+    color: #909090;
+    cursor: default;
 }
 
 .b-dashboars-list .columnWidget > ul > li a:hover {
     background-color: transparent;
 }
 
+.b-dashboars-list .borderWidget .title {
+    float: none;
+    border-bottom: 1px solid #333;
+    padding: 10px 10px 2px 0;
+    margin-bottom: 8px;
+    text-decoration: none;
+    line-height: 1.2;
+}
+
 /*--- END DASHBOARDS MENU ---*/
-
-
-
 
 /*--- ADD DASHBOARD POPUP ---*/
 .modal-content .modal-body,
@@ -555,6 +803,19 @@ input[type=checkbox] + label {
         & > ul {
             &.nav-tabs-custom {
                 padding-top: 0;
+            }
+        }
+
+        .rp-dashboard-overflow .rp-dashboard-content {
+            padding: 0;
+            overflow-y: auto!important;
+
+            .title {
+                position: relative;
+                float: none;
+                padding-top: 9px;
+                font-weight: 300;
+                line-height: 1.2;
             }
         }
     }

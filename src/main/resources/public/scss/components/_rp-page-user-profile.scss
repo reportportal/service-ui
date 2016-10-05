@@ -18,351 +18,391 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */ 
-#dynamic-content {
-    .pr-user-profile {
-        padding: 15px 0 0;
-        background: none;
-    }
-}
 
 /*--- USER PROFILE ---*/
 
-.pr-user-profile .media,
-.pr-user-profile .media-body {
-    overflow: inherit;
-}
+#dynamic-content {
+    .pr-user-profile {
+        padding: 15px 0 0;
+        background: none !important;
 
-.pr-user-profile .media {
-    margin-bottom: 20px;
-}
+        .media,
+        .media-body {
+            overflow: inherit;
+        }
 
-.pr-user-profile .media:after {
-    content: "";
-    display: block;
-    clear: both;
-}
+        .media {
+            margin-bottom: 20px;
 
-.pr-user-profile .media_wrapper {
-    background-color: #a3c644;
-}
+            &:after {
+                content: "";
+                display: block;
+                clear: both;
+            }
 
-.pr-user-profile .media_image {
-    margin: 20px 0;
-    text-align: center;
-}
+            .media_wrapper {
+                background-color: $COLOR--booger;
 
-.pr-user-profile .media_image .avatar.img-thumbnail {
-    float: none;
-    margin: 0 auto;
-    padding: 7px;
-    border: none;
-    border-radius: 0;
-    background-color: #c1e169;
-}
+                .media_image {
+                    margin: 20px 0;
+                    text-align: center;
 
-.pr-user-profile .page-title {
-    margin-bottom: 15px;
-    margin-top: 0;
-    font-family: $OswaldRegular;
-    font-size: 22px;
-    color: #fff;
-}
+                    #avatarWrapper {
+                        display: inline-block;
+                        max-width: 120px;
+                        min-width: 120px;
+                        position: relative;
 
-.pr-user-profile .page-title .profile_name,
-.pr-user-profile .page-title .profile_mail {
-    display: block;
-    margin: 0;
-}
+                        &:hover {
+                            .remove-image {
+                                display: inline-block;
+                            }
+                        }
 
-.pr-user-profile .page-title .profile_name {
-    text-transform: uppercase;
-}
+                        .remove-image {
+                            display: none;
+                            position: absolute;
+                            right: -10px;
+                            top: -10px;
+                            z-index: 10;
+                            cursor: pointer;
 
-.pr-user-profile .page-title small {
-    font-size: 16px;
-    color: #fff;
-}
+                            .remove-image-wrap {
+                                position: relative;
+                                background: $COLOR--white-default;
+                                border-radius: 100%;
+                                width: 20px;
+                                height: 20px;
 
-.pr-user-profile .profile_form .control-label {
-    font-family: $OswaldRegular;
-    font-size: 14px;
-    color: #fff;
-    line-height: 41px;
-}
+                                .mi-close {
+                                    position: absolute;
+                                    top: 1px;
+                                    left: 0;
+                                    right: 0;
+                                    font-size: 18px;
+                                    line-height: 18px;
+                                    width: 20px;
+                                    height: 20px;
+                                    text-align: center;
+                                }
+                            }
+                        }
+                        .avatar.img-thumbnail {
+                            float: none;
+                            margin: 0 auto;
+                            padding: 7px;
+                            border: none;
+                            border-radius: 0;
+                            background-color: #c1e169;
+                        }
+                    }
 
-.pr-user-profile .profile_form #keyHolder .form-control {
-    border: none;
-    height: 41px;
-    width: 100%;
-}
+                    #fileUploadForm {
+                        .btn-file {
+                            position: relative;
+                            overflow: hidden;
 
-.pr-user-profile .profile_form .help-block {
-    text-align: left;
-    color: #666;
-}
+                            input[type=file] {
+                                position: absolute;
+                                top: 0;
+                                right: 0;
+                                min-width: 100%;
+                                min-height: 100%;
+                                font-size: 100px;
+                                text-align: right;
+                                filter: alpha(opacity=0);
+                                opacity: 0;
+                                outline: none;
+                                background: white;
+                                cursor: inherit;
+                                display: block;
+                            }
+                        }
 
-.pr-user-profile .profile_form .b-update-uudi {
-    margin: 0;
-}
+                        #submitPhoto {
+                            display: none;
+                        }
+                    }
 
-.rp-main-panel #dynamic-content .pr-user-profile .profile_form {
-    padding-left: 0;
-    padding-right: 0;
-}
+                    #wrongImageMessage {
+                        display: none;
 
-.b-update-uudi .btn {
-    height: 41px;
-    width: 41px;
-    padding: 1px 0 0;
-    border: 0;
-    background-color: #cdea7e;
-}
+                        &.shown {
+                            display: inline-block !important;
+                        }
+                    }
+                }
 
-// .b-update-uudi .btn .fa {
-//     font-size: 16px;
-//     color: #799b1c;
-// }
+                .page-title {
+                    margin-bottom: 15px;
+                    margin-top: 0;
+                    font-family: $OswaldRegular;
+                    font-size: 22px;
+                    color: $COLOR--white-default;
+                    line-height: 2;
 
-.pr-user-profile .profile_project_list #project-list .project_list_header {
-    margin: 0;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    border: 1px solid #ccc;
-    border-bottom: none;
-    background-color: #f0f0f0;
-    font-size: 14px;
-}
+                    .profile_name,
+                    .profile_mail {
+                        display: block;
+                        margin: 0;
+                    }
 
-.pr-user-profile .profile_project_list .project_list_header .project_roles {
-    font-family: $OswaldRegular;
-    color: #464547;
-    text-transform: uppercase;
-}
+                    .profile_name {
+                        text-transform: uppercase;
+                    }
 
-.pr-user-profile .profile_project_list .list-group-item {
-    padding: 10px 0;
-    border-color: #ccc;
-    border-top-color: #dbdbdb;
-    border-bottom-color: #dbdbdb;
-    font-family: "OpenSansSemibold", sans-serif;
-}
+                    small {
+                        font-size: 16px;
+                        color: $COLOR--white-default;
+                    }
+                }
 
-.pr-user-profile .profile_project_list .list-group-item:nth-child(even) {
-    background-color: #f9f9f9;
-}
+                .profile_form {
+                    padding-left: 0;
+                    padding-right: 0;
 
-.pr-user-profile .profile_project_list .list-group-item:nth-child(odd) {
-    background-color: #fff;
-}
+                    .control-label {
+                        font-family: $OswaldRegular;
+                        font-size: 14px;
+                        font-weight: 400;
+                        color: $COLOR--white-default;
+                        line-height: 41px;
+                    }
 
-.pr-user-profile .profile_project_list .list-group-item.active {
-    border-color: #aaca57;
-}
+                    #keyHolder {
+                        text-align: right;
 
-.pr-user-profile .profile_project_list .list-group-item:after {
-    content: "";
-    display: block;
-    clear: both;
-}
+                        .form-control {
+                            border: none;
+                            height: 41px;
+                            width: 100%;
+                            //width: auto;
+                            display: inline-block;
+                        }
 
-.pr-user-profile .profile_project_list .list-group-item:first-child,
-.pr-user-profile .profile_project_list .list-group-item:last-child {
-    border-radius: 0;
-}
+                        .help-block {
+                            text-align: left;
+                            color: $COLOR--gunmetal;
+                        }
 
-.pr-user-profile .profile_project_list .list-group-item .list-group-item-heading {
-    margin-bottom: 0;
-    font-family: "OpenSansSemibold", sans-serif;
-    color: #1a9cb0;
-}
+                        .b-update-uudi {
+                            margin: 0;
 
-.pr-user-profile .profile_project_list .list-group-item .list-group-item-text {
-    font-family: "OpenSansRegular", sans-serif;
-    color: #666;
-}
+                            .btn {
+                                height: 41px;
+                                width: 41px;
+                                padding: 1px 0 0;
+                                border: 0;
+                                background-color: #cdea7e;
 
-.pr-user-profile .code_editor .config-pills {
-    padding: 1px 15px 0;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    background: #999;
-}
+                                // .b-update-uudi .btn .fa {
+                                //     font-size: 16px;
+                                //     color: #799b1c;
+                                // }
+                            }
+                        }
 
-.pr-user-profile .code_editor .config-pills > li > a {
-    padding-top: 8px;
-    padding-bottom: 8px;
-    font-family: $OswaldRegular;
-    font-size: 14px;
-    color: #fff;
-    text-transform: uppercase;
-    text-shadow: none;
-}
+                        .btn-default:hover {
+                            background-color: #cdea7e;
+                        }
 
-.pr-user-profile .code_editor .config-pills > li.active > a {
-    background: #fff;
-    border-radius: 0;
-    box-shadow: none;
-    color: #999;
-}
+                        .material-icons {
+                            &.mi-autorenew {
+                                font-size: 24px;
+                                line-height: 24px;
+                                color: #799b1c;
+                                margin-top: 2px;
+                                width: 24px;
+                                text-align: center;
+                            }
+                        }
 
-.pr-user-profile .code_editor #user-config {
-    border-radius: 0;
-    border: 1px solid #ccc;
-    border-top: none;
-    background: #fff;
-    padding: 14px 18px;
-    color: #999;
-    overflow: auto;
-}
-.pr-user-profile .code_editor #user-config .comment{
-    padding-left: 45px;
-    font-size: 12px;
-    line-height: 16px;
-}
-.pr-user-profile .code_editor #user-config p{
-    margin-bottom: 0;
-}
-.pr-user-profile .code_editor #user-config h1{
-    font-size: 15px;
-    margin-bottom: 0;
-    margin-top: 15px;
-}
-.pr-user-profile .code_editor #user-config .options{
-    padding-left: 21px;
-    font-size: 15px;
-    line-height: 20px;
-}
+                        .tooltip {
+                            min-width: 200px;
+                        }
+                    }
+                }
+            }
+        }
 
-.pr-user-profile .code_editor .ace-idle-fingers {
-    border: 1px solid #ccc;
-    border-top: none;
-    background: #fff;
-}
+        .profile_project_list {
+            #project-list {
+                .project_list_header {
+                    margin: 0;
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                    border: 1px solid $COLOR--gray-80;
+                    border-bottom: none;
+                    background-color: $COLOR--white;
+                    font-size: 14px;
 
-.pr-user-profile .code_editor .ace_text-layer .ace_line_group .ace_line,
-.pr-user-profile .code_editor .ace_text-layer .ace_line_group .ace_line .ace_comment,
-.pr-user-profile .code_editor .ace_text-layer .ace_line_group .ace_line .ace_variable,
-.pr-user-profile .code_editor .ace_text-layer .ace_line_group .ace_line .ace_keyword {
-    color: #999;
-}
+                    .project_roles {
+                        font-family: $OswaldRegular;
+                        color: $COLOR--greyish-brown;
+                        text-transform: uppercase;
+                    }
+                }
 
-.pr-user-profile .code_editor .ace_text-layer .ace_line_group .ace_string {
-    color: #a3c644;
-}
-/*--- END USER PROFILE ---*/
+                .list-group {
+                    .list-group-item {
+                        padding: 10px 0;
+                        border-color: #ccc;
+                        border-top-color: #dbdbdb;
+                        border-bottom-color: #dbdbdb;
+                        font-family: "OpenSansSemibold", sans-serif;
 
+                        &:nth-child(even) {
+                            background-color: $COLOR--white-four;
+                        }
 
+                        &:nth-child(odd) {
+                            background-color: $COLOR--white-default;
+                        }
 
-/* user profile */
-#keyHolder {
-    text-align: right;
+                        &.active {
+                            border-color: #aaca57;
+                        }
 
-    .btn-default:hover {
-        background-color: #cdea7e;
-    }
+                        &:after {
+                            content: "";
+                            display: block;
+                            clear: both;
+                        }
 
-    .material-icons {
-        &.mi-autorenew {
-            font-size: 24px;
-            line-height: 24px;
-            color: #799b1c;
-            margin-top: 2px;
-            width: 24px;
-            text-align: center;
+                        &:first-child,
+                        &:last-child {
+                            border-radius: 0;
+                        }
+
+                        .list-group-item-heading {
+                            margin-bottom: 0;
+                            font-family: "OpenSansSemibold", sans-serif;
+                            color: $COLOR--topaz;
+                        }
+
+                        .list-group-item-text {
+                            font-family: "OpenSansRegular", sans-serif;
+                            color: $COLOR--gunmetal;
+                        }
+                    }
+                }
+            }
+        }
+
+        .code_editor {
+            .config-pills {
+                position: relative;
+                padding: 1px 15px 0;
+                margin: 0;
+                border: none;
+                border-radius: 0;
+                box-shadow: none;
+                background: $COLOR--gray-60;
+                z-index: 1;
+
+                li {
+                    a {
+                        display: inline-block;
+                        float: left;
+                        padding: 8px 20px;
+                        border-radius: 4px 4px 0 0;
+                        font-family: $OswaldRegular;
+                        font-size: 14px;
+                        color: $COLOR--white-default;
+                        text-transform: uppercase;
+                        text-shadow: none;
+                        text-decoration: none;
+
+                        &:hover {
+                            color: $COLOR--white-default;
+                            text-decoration: none;
+                            background: inherit;
+                        }
+                    }
+
+                    &.active {
+                        a {
+                            background: $COLOR--white-default;
+                            border-radius: 0;
+                            box-shadow: none;
+                            color: $COLOR--gray-60;
+                        }
+                    }
+                }
+            }
+
+            .config-container {
+                height: 300px;
+                position: relative;
+
+                #user-config {
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    height: 100%;
+                    border-radius: 0;
+                    border: 1px solid $COLOR--gray-80;
+                    border-top: none;
+                    background: $COLOR--white-default;
+                    padding: 14px 18px;
+                    color: $COLOR--gray-60;
+                    overflow: auto;
+
+                    p{
+                        margin-bottom: 0;
+                    }
+
+                    h1{
+                        font-size: 15px;
+                        margin-bottom: 0;
+                        margin-top: 15px;
+                    }
+
+                    .comment {
+                        padding-left: 45px;
+                        font-size: 12px;
+                        line-height: 16px;
+                    }
+
+                    .options {
+                        padding-left: 21px;
+                        font-size: 15px;
+                        line-height: 20px;
+                    }
+                }
+            }
+
+            .ace-idle-fingers {
+                border: 1px solid $COLOR--gray-80;
+                border-top: none;
+                background: $COLOR--white-default;
+            }
+
+            .ace_text-layer .ace_line_group {
+                .ace_line,
+                .ace_line .ace_comment,
+                .ace_line .ace_variable,
+                .ace_line .ace_keyword {
+                    color: $COLOR--gray-60;
+                }
+
+                .ace_string {
+                    color: $COLOR--booger;
+                }
+            }
         }
     }
-
-    .form-control {
-        width: auto;
-        display: inline-block;
-    }
-
-    .tooltip {
-        min-width: 200px;
-    }
 }
 
+/*--- END USER PROFILE ---*/
+
+/* ---------------------------- */
 
 .media-body .btn-default:hover {
     background-color: #eeeeee;
 }
-
-#submitPhoto {
-    display: none;
-}
-
-.btn-file {
-    position: relative;
-    overflow: hidden;
-}
-
-.btn-file input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;
-    background: white;
-    cursor: inherit;
-    display: block;
-}
-
-#wrongImageMessage {
-    display: none;
-}
-
-#wrongImageMessage.shown {
-    display: inline-block !important;
-}
-
-
-#avatarWrapper {
-    display: inline-block;
-    max-width: 120px;
-    min-width: 120px;
-    position: relative;
-}
-
-.remove-image {
-    display: none;
-    position: absolute;
-    right: -10px;
-    top: -10px;
-    z-index: 10;
-    cursor: pointer;
-
-    .remove-image-wrap {
-        position: relative;
-        background: #ffffff;
-        border-radius: 100%;
-        width: 20px;
-        height: 20px;
-
-        .mi-close {
-            position: absolute;
-            top: 1px;
-            left: 0;
-            right: 0;
-            font-size: 18px;
-            line-height: 18px;
-            width: 20px;
-            height: 20px;
-            text-align: center;
-        }
-    }
-}
-
-#avatarWrapper:hover .remove-image {
-    display: inline-block;
-}
-
-/* ---------------------------- */
 
 @media (min-width: 992px) and (max-width: 1240px) {
     .pr-user-profile .col-md-6 {

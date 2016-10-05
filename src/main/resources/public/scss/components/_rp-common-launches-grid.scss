@@ -86,11 +86,6 @@ $borderRadius100: 100px;
     transform: translateY(-50%);
 }
 
-.rp-table-row {
-    position: relative;
-    padding: 12px 0;
-}
-
 .rp-grid-name {
     position: relative;
     font-family: $OpenSansSemibold;
@@ -651,50 +646,6 @@ $borderRadius100: 100px;
 .history-col .tooltip-inner {
     min-width: 120px;
     word-break: normal;
-}
-
-.history-inputs-row {
-    position: relative;
-    padding: 0 0 0 34px;
-}
-.history-inputs-row > ul {
-    margin: 0;
-}
-
-.history-inputs-row > ul > li {
-    padding: 0 6px 6px 0;
-}
-
-.history-inputs-row > ul > li > .label {
-    display: inline-block;
-    padding: 0.4em 0.6em 0.6em;
-}
-
-.history-inputs-row > i {
-    position: absolute;
-    left: 0px;
-    top: 0;
-    font-size: 25px;
-    min-height: 30px;
-    line-height: 30px;
-}
-
-.history-inputs-row > h5 {
-    display: inline-block;
-    font-family: $OswaldRegular;
-    min-height: 30px;
-    font-size: 16px;
-    line-height: 30px;
-    color: #333333;
-    text-transform: uppercase;
-    padding-top: 0px;
-    padding-right: 0px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin-top: 0px;
-    margin-right: 0px;
-    margin-bottom: 0px;
-    margin-left: 0px;
 }
 
 /* -------------------------- */
