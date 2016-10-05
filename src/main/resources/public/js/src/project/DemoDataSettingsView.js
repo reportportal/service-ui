@@ -41,7 +41,9 @@ define(function(require, exports, module) {
         },
         tpl: 'tpl-project-settings-demo-data',
         render: function () {
-            this.$el.html(Util.templates(this.tpl));
+            this.$el.html(Util.templates(this.tpl, {
+                access: Util.isAdmin(config.userModel.toJSON()) || Util.isPersonalProject()
+            }));
             this.setupAnchors();
             return this;
         },

@@ -80,6 +80,18 @@
 @media (max-width: $SCREEN_XS_MAX) {
     .rp-settings-demo-data {
         width: 100%;
+        .demo-data-form {
+            input {
+                margin: 0 auto;
+                display: block;
+            }
+        }
+        .rp-wrap-button {
+            text-align: center;
+        }
+        .demo-data-warning-block {
+            margin-top: 0;
+        }
     }
 }
 
