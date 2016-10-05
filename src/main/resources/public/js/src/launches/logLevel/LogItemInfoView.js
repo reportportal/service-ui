@@ -25,7 +25,7 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var DefectEditor = require('launches/stepLevel/DefectEditorView');
+    var DefectEditorView = require('launches/stepLevel/DefectEditorView');
 
     var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
     var LogItemInfoStackTraceView = require('launches/logLevel/LogItemInfoStackTraceView');
@@ -99,12 +99,11 @@ define(function (require, exports, module) {
         },
         setupEditor: function () {
             this.removeEditor();
-            this.$editor = new DefectEditor({
+            this.$editor = new DefectEditorView({
                 origin: $('[data-js-defect-editor]', this.$el),
                 model: this.itemModel
             });
-            this.listenTo(this.$editor, 'defect::editor::show', this.onShowEditor);
-            this.listenTo(this.$editor, 'defect::editor::hide', this.onHideEditor);
+            //this.listenTo(this.$editor, 'defect::editor::hide', this.onHideEditor);
         },
         removeEditor: function () {
             if (this.$editor) {

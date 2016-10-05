@@ -134,16 +134,14 @@ define(function (require, exports, module) {
                 origin: $('[data-js-defect-editor]', this.$el),
                 model: this.model
             });
-            this.listenTo(this.$editor, 'defect::editor::show', this.onShowEditor);
             this.listenTo(this.$editor, 'defect::editor::hide', this.onHideEditor);
+            this.onShowEditor();
         },
         onShowEditor: function(){
-            console.log('onShowEditor');
             $('[data-js-status-class]', this.$el).addClass('selected');
             $('[data-js-step-issue]', this.$el).hide();
         },
         onHideEditor: function(){
-            console.log('onHideEditor');
             $('[data-js-status-class]', this.$el).removeClass('selected');
             $('[data-js-step-issue]', this.$el).show();
         },

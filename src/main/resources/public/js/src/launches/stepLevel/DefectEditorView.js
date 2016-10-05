@@ -108,8 +108,6 @@ define(function (require, exports, module) {
             }.bind(this));
             this.selectedIssue = this.getIssueType();
             this.inProcess = false;
-
-            this.trigger('defect::editor::show');
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
@@ -123,11 +121,12 @@ define(function (require, exports, module) {
             this.setupAnchors();
             this.setupMarkItUp();
             this.attachKeyActions();
+            console.log('render');
         },
         setupAnchors: function () {
             this.$submitBtn = $("[data-js-submit]", this.$el);
             this.$textarea = $("[data-js-issue-comment]", this.$el);
-            this.$type = $(".pr-defect-type-badge span", this.$el);
+            this.$type = $(".pr-defect-type-badge span", this.$el); //need to fix
             //this.$multipleEditHolder = $(".rp-defect-multiple-edit:first", this.$el);
             this.$multipleEditAmount = $("[data-js-selected-qty]", this.$el);
             this.$replaceComments = $("[data-js-replace-comment]", this.$el);
@@ -263,6 +262,8 @@ define(function (require, exports, module) {
                 }.bind(this)
             }, MarkitupSettings));
             this.$textarea.focus();
+
+            console.log('setupMarkItUp');
         },
         updateDefectType: function () {
             if (this.inProcess) {
@@ -289,8 +290,8 @@ define(function (require, exports, module) {
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, "updateDefect");
                 }).always(function () {
-                this.inProcess = false;
-            }.bind(this));
+                    this.inProcess = false;
+                }.bind(this));
         },
         destroy: function () {
             this.undelegateEvents();
