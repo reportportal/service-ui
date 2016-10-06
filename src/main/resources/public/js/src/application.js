@@ -32,6 +32,10 @@ define(function(require, exports, module) {
     var Eqjs = require('elementQuery');
     var TrackingDispatcher = require('dispatchers/TrackingDispatcher');
     var ExternalService = require('externalServices/externalServices');
+    var Urls = require('dataUrlResolver');
+    var callService = require('callService');
+
+    var call = callService.call;
 
     require('../lib/outdatedbrowser');
     require('cookie');
@@ -73,10 +77,17 @@ define(function(require, exports, module) {
     (new ExternalService())
         .done(function() {
             // start app
-            $('html').removeClass('loading');
-            Backbone.history.start();
-            config.userModel.ready.done(function() {
-                config.userModel.checkAuthUrl();
-            });
+            call('GET', Urls.getExternalSystems())
+                .done(function(services) {
+                    config.forSettings.btsList = _.map(services, function(service) {
+                        return {name: service.toUpperCase(), value: service.toUpperCase()}
+                    });
+                    $('html').removeClass('loading');
+                    Backbone.history.start();
+                    config.userModel.ready.done(function() {
+                        config.userModel.checkAuthUrl();
+                    });
+                })
+
         });
 });
