@@ -356,6 +356,9 @@ a.itemsPerPage {
 
 .btn, .dropdown-menu {
     font-size: 13px;
+    .rp-checkbox-wrap {
+        display: block;
+    }
 }
 
 .btn.btn-salad-bg {
