@@ -121,14 +121,13 @@ define(function (require, exports, module) {
             this.setupAnchors();
             this.setupMarkItUp();
             this.attachKeyActions();
-            console.log('render');
         },
         setupAnchors: function () {
             this.$submitBtn = $("[data-js-submit]", this.$el);
             this.$textarea = $("[data-js-issue-comment]", this.$el);
-            this.$type = $(".pr-defect-type-badge span", this.$el); //need to fix
+            this.$type = $("[data-js-issue-name]", this.$el); //need to fix
             //this.$multipleEditHolder = $(".rp-defect-multiple-edit:first", this.$el);
-            this.$multipleEditAmount = $("[data-js-selected-qty]", this.$el);
+            //this.$multipleEditAmount = $("[data-js-selected-qty]", this.$el);
             this.$replaceComments = $("[data-js-replace-comment]", this.$el);
         },
         attachKeyActions: function(){
@@ -262,8 +261,6 @@ define(function (require, exports, module) {
                 }.bind(this)
             }, MarkitupSettings));
             this.$textarea.focus();
-
-            console.log('setupMarkItUp');
         },
         updateDefectType: function () {
             if (this.inProcess) {

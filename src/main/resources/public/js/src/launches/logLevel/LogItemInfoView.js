@@ -94,16 +94,23 @@ define(function (require, exports, module) {
             var el = $(e.currentTarget);
             if(!el.hasClass('disabled')){
                 this.setupEditor();
+                this.onShowEditor();
             }
             e.stopPropagation();
         },
         setupEditor: function () {
             this.removeEditor();
             this.$editor = new DefectEditorView({
-                origin: $('[data-js-defect-editor]', this.$el),
+                origin: $('[data-js-log-defect-editor]', this.$el),
                 model: this.itemModel
             });
-            //this.listenTo(this.$editor, 'defect::editor::hide', this.onHideEditor);
+            this.listenTo(this.$editor, 'defect::editor::hide', this.onHideEditor);
+        },
+        onShowEditor: function(){
+            $('[data-js-item-info-issue]', this.$el).hide();
+        },
+        onHideEditor: function(){
+            $('[data-js-item-info-issue]', this.$el).show();
         },
         removeEditor: function () {
             if (this.$editor) {

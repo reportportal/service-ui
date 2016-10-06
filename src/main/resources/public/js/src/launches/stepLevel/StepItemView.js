@@ -61,7 +61,8 @@ define(function (require, exports, module) {
                 return this.getBinding('status') == 'FAILED';
             }
         },
-        initialize: function() {
+        initialize: function(options) {
+            this.noIssue = options.noIssue;
             this.userStorage = new SingletonUserStorage();
             this.render();
         },
@@ -72,7 +73,7 @@ define(function (require, exports, module) {
 
             }));
             this.renderDuration();
-            if(this.hasIssue()){
+            if(this.hasIssue() && !this.noIssue){
                 this.renderIssue();
             }
         },

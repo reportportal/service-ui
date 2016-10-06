@@ -20,7 +20,6 @@
  */
 .launch-log-item-info {
   margin-top: 4px;
-  padding-top: 15px;
   border: 1px solid $COLOR--gray-80;
   background: #f9f9f9;
   width: 100%;
@@ -28,7 +27,14 @@
   .item-info {
     position: relative;
     width: 100%;
-    overflow: hidden;
+    .launch-log-item-issue {
+      padding: 15px;
+    }
+    .editor-row {
+      padding: 10px 15px;
+      border-top: none;
+      background: $COLOR--white-four;
+    }
   }
   .rp-grid-item-issue {
     margin: 0 15px;
@@ -38,7 +44,6 @@
     position: relative;
     width: 100%;
     background: $COLOR--gray-91;
-    margin-top: 10px;
     padding: 9px 0 5px 0;
     overflow: hidden;
     li {
