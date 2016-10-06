@@ -24,6 +24,7 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
     var text = require('localization');
+
     var config = function () {
         return {
             secureContext: false,
@@ -195,10 +196,9 @@ define(function (require, exports, module) {
                 ],
                 btsList: [
                     //{name: 'NONE', value: 'NONE'},
-                    // {name: 'JIRA', value: 'JIRA'},
-                    // {name: 'RALLY', value: 'RALLY'}//,
+                    {name: 'JIRA', value: 'JIRA'},
+                    {name: 'RALLY', value: 'RALLY'}//,
                     // {name: 'TFS', value: 'TFS'}
-                    //  LOADING IN APPLICATION.JS
                 ],
                 btsJIRA: {
                     multiple: true,
