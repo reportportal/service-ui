@@ -1,5 +1,5 @@
 
-<div id="filter-page" class="container-fluid suit-grid rp-margin-reset rp-odd-even rp-table-hover">
+<div id="filter-page" class="container-fluid rp-margin-reset rp-odd-even rp-table-hover">
     <div class="row">
         <div class="filter-header">
             <div class="col-md-4 col-xs-7">
@@ -22,37 +22,25 @@
             </div>
         </div>
     </div>
-    <div class="row rp-grid-thead fixed_table_header visible-md visible-lg visible-xl">
-        <div class="col-md-2">
-            <div class="rp-grid-th">
+    <div class="row favorites-grid rp-grid-thead fixed_table_header visible-md visible-lg visible-xl">
+            <div class="grid-cell name-grid-cell rp-grid-th">
                 <span class="rp-grid-th-name"><%- data.text.favorites.fName %></span>
             </div>
-        </div>
-        <div class="col-md-5">
-            <div class="rp-grid-th">
+            <div class="grid-cell option-grid-cell rp-grid-th">
                 <span class="rp-grid-th-name"><%- data.text.favorites.fOptions %></span>
             </div>
-        </div>
-        <div class="col-md-2">
-            <div class="rp-grid-th">
+            <div class="grid-cell owner-grid-cell rp-grid-th">
                 <span class="rp-grid-th-name"><%- data.text.favorites.fOwner %></span>
             </div>
-        </div>
-        <div class="col-md-1">
-            <div class="rp-grid-th text-center">
+            <div class="grid-cell icons-grid-cell rp-grid-th text-center">
                 <span class="rp-grid-th-name"><%- data.text.favorites.fShared %></span>
             </div>
-        </div>
-        <div class="col-md-1">
-            <div class="rp-grid-th text-center">
+            <div class="grid-cell display-launch-grid-cell rp-grid-th text-center">
                 <span class="rp-grid-th-name"><%- data.text.favorites.fDisplayOnLaunches %></span>
             </div>
-        </div>
-        <div class="col-md-1">
-            <div class="rp-grid-th text-center">
+            <div class="grid-cell icons-grid-cell rp-grid-th text-center">
                 <span class="rp-grid-th-name"><%- data.text.favorites.fDelete %></span>
             </div>
-        </div>
     </div>
     <div class="no-filters-exist" data-js-empty-block>
         <div class="no-filter-img"></div>

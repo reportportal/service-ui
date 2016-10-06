@@ -1,4 +1,4 @@
-<div class="row rp-table-row">
+<div class="row rp-table-row" data-js-item-row>
     <div class="grid-cell name-grid-cell name-cell">
         <span class="label label-danger autoanalyze" data-js-analize-label><%= data.text.ui.analyze %></span>
         <h5 class="rp-grid-name">
@@ -44,4 +44,14 @@
     <div class="grid-cell counter-grid-cell" data-js-statistics-automation_bug></div>
     <div class="grid-cell counter-grid-cell" data-js-statistics-system_issue></div>
     <div class="grid-cell counter-grid-cell" data-js-statistics-to_investigate></div>
+    <div class="grid-cell select-grid-cell">
+        <div class="table-wrapper">
+            <div class="middle-wrapper">
+                <label class="rp-checkbox-wrap">
+                    <input class="rp-input-checkbox" type="checkbox" data-js-select-item>
+                    <span></span>
+                </label>
+            </div>
+        </div>
+    </div>
 </div>

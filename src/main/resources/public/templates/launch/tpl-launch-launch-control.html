@@ -1,12 +1,26 @@
 <div class="rp-nav rp-nav-right">
-    <div class="rp-btn rp-btn-default rp-button-with-icon" title="<%= data.text.launches.merge %>">
-        <i class="material-icons">call_merge</i>
-        <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.launches.merge %></span>
+    <div class="rp-btn rp-btn-default rp-button-with-icon rp-button-dropdown disabled" data-js-multi-button aria-expanded="true" data-toggle="dropdown" title="<%= data.text.launches.actionTitle %>">
+        <i class="material-icons">menu</i>
+        <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.ui.actions %></span>
+        <i class="material-icons">keyboard_arrow_down</i>
     </div>
-    <div class="rp-btn rp-btn-default rp-button-with-icon" title="<%= data.text.launches.Compare %>">
-        <i class="material-icons">equalizer</i>
-        <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.launches.Compare %></span>
-    </div>
+    <ul class="dropdown-menu">
+        <li>
+            <a data-js-multi-action="merge"><%= data.text.launches.merge %></a>
+        </li>
+        <li>
+            <a data-js-multi-action="compare"><%= data.text.launches.Compare %></a>
+        </li>
+        <li>
+            <a data-js-multi-action="movedebug"><%= data.text.launches.shiftToDebug %></a>
+        </li>
+        <li>
+            <a data-js-multi-action="forcefinish"><%= data.text.launches.forceFinish %></a>
+        </li>
+        <li>
+            <a data-js-multi-action="remove"><%= data.text.ui.delete %></a>
+        </li>
+    </ul>
     <div class="rp-btn rp-btn-default rp-button-with-icon" data-js-refresh title="<%= data.text.ui.refresh %>">
         <i class="material-icons">autorenew</i>
         <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.ui.refresh %></span>

@@ -176,7 +176,7 @@
       padding-bottom: 15px;
     }
   }
-  &[data-js-state="LOG"] {
+  &[data-js-state="LOG"], &[data-js-state="MULTIPLE"] {
     display: none;
   }
   @media (max-width: 650px) {

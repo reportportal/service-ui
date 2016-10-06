@@ -34,9 +34,11 @@ define(function (require, exports, module) {
     var LogBodyView = require('launches/logLevel/LogBodyView');
 
     var LaunchSuiteStepItemCollection = require('launches/common/LaunchSuiteStepItemCollection');
+    var LaunchMultipleSelect = require('launches/LaunchMultipleSelect');
 
     var LaunchCrumbs = require('launches/LaunchCrumbs');
     var Util = require('util');
+    var StickyHeader = require('core/StickyHeader');
 
     var config = App.getInstance();
 
@@ -48,12 +50,37 @@ define(function (require, exports, module) {
             this.crumbs = new LaunchCrumbs({
                 el: $('[data-js-crumbs]', this.$el),
             });
+            this.currentLevel = '';
             this.collectionItems = new LaunchSuiteStepItemCollection();
+            this.multipleSelected = new LaunchMultipleSelect({
+                el: $('[data-js-multiple-selected]', this.$el),
+                collectionItems: this.collectionItems,
+            });
             this.listenTo(this.collectionItems, 'change:params', this.onChangeParamsFilter);
             this.listenTo(this.collectionItems, 'drill:item', this.onDrillItem);
             this.listenTo(this.collectionItems, 'change:log:item', this.onChangeLogItem);
             this.listenTo(this.collectionItems, 'set:log:item', this.onSetLogItem);
             this.listenTo(this.crumbs, 'change:path', this.onChangeItemCrumbs);
+            this.listenTo(this.multipleSelected, 'activate:true', this.onActivateMultipleSelect);
+            this.listenTo(this.multipleSelected, 'activate:false', this.onDisableMultipleSelect);
+        },
+        onActivateMultipleSelect: function() {
+            this.trigger('change:level', 'MULTIPLE');
+            this.body && this.body.destroyStickyHeader();
+            this.stickyHeader && this.stickyHeader.destroy();
+            $('[data-js-header-bar]', this.$el).addClass('multiple-select');
+            this.stickyHeader = new StickyHeader({fixedBlock: $('[data-js-header-bar]', this.$el), topMargin: 0});
+            this.control && this.control.activateMultiple();
+        },
+        onDisableMultipleSelect: function() {
+            this.trigger('change:level', this.currentLevel);
+            $('[data-js-header-bar]', this.$el).removeClass('multiple-select');
+            this.body && this.body.setupStickyHeader();
+            this.stickyHeader && this.stickyHeader.destroy();
+            this.control && this.control.disableMultiple();
+        },
+        onMultiAction: function(actionName) {
+            this.multipleSelected.setAction(actionName);
         },
         onChangeParamsFilter: function(params) {
             var mainHash = window.location.hash.split('?')[0];
@@ -87,10 +114,11 @@ define(function (require, exports, module) {
         },
         update: function(partPath, optionsURL) {
             var self = this;
+            this.multipleSelected.reset();
             this.body && this.body.destroy();
-            this.control && this.control.destroy();
+            this.control && this.stopListening(this.control) && this.control.destroy();
             $('[data-js-preloader-launch-body]', this.$el).addClass('rp-display-block');
-            this.crumbs.update(partPath, optionsURL)
+            this.crumbs.update(partPath, optionsURL);
         },
         onChangePathId: function() {
             var info = this.collectionItems.getInfoByCollection();
@@ -98,6 +126,7 @@ define(function (require, exports, module) {
                 case 'LAUNCH': {
                     this.renderLaunchLevel(info.filterModel);
                     this.trigger('change:level', 'LAUNCH');
+                    this.currentLevel = 'LAUNCH';
                     break;
                 }
                 case 'SUITE':
@@ -106,6 +135,7 @@ define(function (require, exports, module) {
                 case 'SCENARIO': {
                     this.renderSuiteLevel(info);
                     this.trigger('change:level', 'SUITE');
+                    this.currentLevel = 'SUITE';
                     break;
                 }
                 case 'STEP':
@@ -121,14 +151,17 @@ define(function (require, exports, module) {
                 case 'AFTER_TEST': {
                     this.renderStepLevel(info);
                     this.trigger('change:level', 'STEP');
+                    this.currentLevel = 'STEP';
                     break;
                 }
                 case 'LOG': {
                     this.trigger('change:level', 'LOG');
+                    this.currentLevel = 'LOG';
                     this.renderLogLevel(info);
                     break;
                 }
             }
+            this.listenTo(this.control, 'multi:action', this.onMultiAction);
         },
         renderLogLevel: function(info) {
             this.control = new LogControlView({
@@ -179,6 +212,8 @@ define(function (require, exports, module) {
             });
         },
         destroy: function () {
+            this.stickyHeader && this.stickyHeader.destroy();
+            this.multipleSelected.destroy();
             this.$el.html('');
             this.undelegateEvents();
             this.stopListening();

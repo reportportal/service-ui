@@ -33,6 +33,18 @@
         </div>
     </div>
     <!--<div class="grid-cell status-grid-cell" data-js-item-status></div>-->
+    <% if(!data.noIssue){ %>
     <div class="grid-cell type-grid-cell" data-js-step-issue></div>
+    <div class="grid-cell select-grid-cell" data-js-select-cell>
+        <div class="table-wrapper">
+            <div class="middle-wrapper">
+                <label class="rp-checkbox-wrap">
+                    <input class="rp-input-checkbox" type="checkbox" data-js-select-item>
+                    <span></span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <% } %>
 </div>
 <div data-js-defect-editor></div>

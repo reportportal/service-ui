@@ -51,7 +51,8 @@ define(function (require, exports, module) {
             '[data-js-method-type]': 'text: showMethodType',
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
-            '[data-js-status-class]': 'classes: {danger: highlightedFailed}'
+            '[data-js-status-class]': 'classes: {danger: highlightedFailed, "select-state": select}',
+            '[data-js-select-item]': 'checked:select',
         },
         computeds: {
             showMethodType: function(){
@@ -69,8 +70,8 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {
                 model: this.model.toJSON({computed: true}),
+                noIssue: this.noIssue,
                 isCollapsedMethod: this.isCollapsedMethod()
-
             }));
             this.renderDuration();
             if(this.hasIssue() && !this.noIssue){
@@ -141,10 +142,12 @@ define(function (require, exports, module) {
         onShowEditor: function(){
             $('[data-js-status-class]', this.$el).addClass('selected');
             $('[data-js-step-issue]', this.$el).hide();
+            $('[data-js-select-cell]', this.$el).hide();
         },
         onHideEditor: function(){
             $('[data-js-status-class]', this.$el).removeClass('selected');
             $('[data-js-step-issue]', this.$el).show();
+            $('[data-js-select-cell]', this.$el).show();
         },
         removeEditor: function () {
             if (this.$editor) {

@@ -120,7 +120,7 @@ define(function (require, exports, module) {
 
             this.filterModel = filterModel;
             this.listenTo(this.filterModel, 'change:newEntities', this.changeFilterOptions);
-            this.listenTo(this.filterModel, 'change:newSelectionParameters', this.changeFilterOptions);
+            this.listenTo(this.filterModel, 'change:newSelectionParameters', this.load);
             return this.load();
         },
         activateLogsItem: function(itemId) {

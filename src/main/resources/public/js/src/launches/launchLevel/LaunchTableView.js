@@ -22,6 +22,7 @@ define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
@@ -31,6 +32,7 @@ define(function (require, exports, module) {
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var FilterModel = require('filters/FilterModel');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
+    var StickyHeader = require('core/StickyHeader');
 
     var config = App.getInstance();
 
@@ -39,6 +41,7 @@ define(function (require, exports, module) {
         events: {
             'click .rp-grid-th[data-sorter]': 'onClickSorter',
             'click .rp-grid-th[data-filter] .rp-icons-filter': 'onClickFilter',
+            'change [data-js-select-all]': 'onChangeSelectAll',
         },
         bindings: {
             '[data-js-table-container]': 'classes: {"exact-driven": updateTimeFormat}'
@@ -53,15 +56,41 @@ define(function (require, exports, module) {
             this.filterModel = options.filterModel;
             this.render();
             this.userStorage = new SingletonUserStorage();
+            this.collectionItems = options.collectionItems;
             this.tableItems = new LaunchSuiteStepItemsView({
-                collection: options.collectionItems,
+                collection: this.collectionItems,
                 itemView: LaunchSuiteItemView,
                 filterModel: this.filterModel,
             });
             $('[data-js-table-container]', this.$el).append(this.tableItems.$el);
 
+
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.onChangeSelectionParameters);
+            this.listenTo(this.collectionItems, 'reset change:select', _.debounce(this.onResetCollection, 100));
             this.onChangeSelectionParameters();
+            this.setupStickyHeader();
+        },
+        onResetCollection: function() {
+            var notSelectModels = this.collectionItems.where({select: false});
+            if(notSelectModels.length) {
+                $('[data-js-select-all]', this.$el).prop('checked', false);
+            }
+        },
+        setupStickyHeader: function() {
+            this.destroyStickyHeader();
+            this.stickyHeader = new StickyHeader({fixedBlock: $('[data-js-fixed-header]', this.$el), topMargin: 0});
+        },
+        destroyStickyHeader: function() {
+            this.stickyHeader && this.stickyHeader.destroy();
+        },
+        onChangeSelectAll: function(e) {
+            var value = false;
+            if($(e.currentTarget).is(':checked')) {
+                value = true;
+            }
+            _.each(this.collectionItems.models, function(model) {
+                model.set({select: value});
+            })
         },
         onClickSorter: function(e) {
             var sorter = $(e.currentTarget).data('sorter');
@@ -98,6 +127,7 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         destroy: function () {
+            this.destroyStickyHeader();
             this.tableItems && this.tableItems.destroy();
             this.undelegateEvents();
             this.stopListening();

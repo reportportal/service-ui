@@ -46,6 +46,7 @@ define(function (require, exports, module) {
             'click [data-js-time-format]': 'toggleStartTimeView'
         },
         bindings: {
+            '[data-js-item-row]': 'classes: {"select-state": select}',
             '[data-js-analize-label]': 'classes: {hide: not(isProcessing)}',
             '[data-js-name]': 'text: name, attr: {href: url}',
             '[data-js-launch-number]': 'text: numberText',
@@ -53,9 +54,9 @@ define(function (require, exports, module) {
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
             '[data-js-time-from-now]': 'text: startFromNow',
-            '[data-js-time-exact]': 'text: startFormat'
+            '[data-js-time-exact]': 'text: startFormat',
+            '[data-js-select-item]': 'checked:select',
         },
-        computeds: {},
         initialize: function(options) {
             this.statistics = [];
             this.userStorage = new SingletonUserStorage();

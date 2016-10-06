@@ -29,6 +29,7 @@ define(function (require, exports, module) {
     var LaunchSuiteStepItemsView = require('launches/common/LaunchSuiteStepItemsView');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var App = require('app');
+    var StickyHeader = require('core/StickyHeader');
 
     var config = App.getInstance();
 
@@ -39,6 +40,7 @@ define(function (require, exports, module) {
             'click .rp-grid-th[data-sorter]': 'onClickSorter',
             'click .rp-grid-th[data-filter] .rp-icons-filter': 'onClickFilter',
             'click [data-js-collapse-label]': 'clickCollapseInput',
+            'change [data-js-select-all]': 'onChangeSelectAll',
             'change [data-js-collapse-input]': function(e) { this.onChangeCollapseInput($(e.currentTarget)); },
         },
         bindings: {
@@ -52,22 +54,30 @@ define(function (require, exports, module) {
         },
         initialize: function(options) {
             this.filterModel = options.filterModel;
+            this.collectionItems = options.collectionItems;
             this.render();
 
             this.tableItems = new LaunchSuiteStepItemsView({
-                collection: options.collectionItems,
+                collection: this.collectionItems,
                 itemView: StepItemView,
                 filterModel: this.filterModel
             });
             $('[data-js-table-container]', this.$el).append(this.tableItems.$el);
 
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.onChangeSelectionParameters);
+            this.listenTo(this.collectionItems, 'reset change:select', _.debounce(this.onResetCollection, 100));
             this.onChangeSelectionParameters();
             this.userStorage = new SingletonUserStorage();
             var self = this;
             this.userStorage.ready.done(function(){
                 self.applyPreconditionsStatus();
             });
+        },
+        onResetCollection: function() {
+            var notSelectModels = this.collectionItems.where({select: false});
+            if(notSelectModels.length) {
+                $('[data-js-select-all]', this.$el).prop('checked', false);
+            }
         },
         clickCollapseInput: function(e) {
             e.stopPropagation();
@@ -91,6 +101,15 @@ define(function (require, exports, module) {
             var collapseInput = $('[data-js-collapse-input]', this.$el);
             collapseInput.prop('checked', this.userStorage.get('statusPreconditions'));
             this.onChangeCollapseInput(collapseInput, true);
+        },
+        onChangeSelectAll: function(e) {
+            var value = false;
+            if($(e.currentTarget).is(':checked')) {
+                value = true;
+            }
+            _.each(this.collectionItems.models, function(model) {
+                model.set({select: value});
+            })
         },
         onClickSorter: function(e) {
             var sorter = $(e.currentTarget).data('sorter');
@@ -128,7 +147,15 @@ define(function (require, exports, module) {
                 preconditionsStatusCls: this.statusPreconditions == 'ON' ? '' : 'hide-collapsed-methods'
             }));
         },
+        setupStickyHeader: function() {
+            this.destroyStickyHeader();
+            this.stickyHeader = new StickyHeader({fixedBlock: $('[data-js-fixed-header]', this.$el), topMargin: 0});
+        },
+        destroyStickyHeader: function() {
+            this.stickyHeader && this.stickyHeader.destroy();
+        },
         destroy: function () {
+            this.destroyStickyHeader();
             this.tableItems && this.tableItems.destroy();
             this.undelegateEvents();
             this.stopListening();

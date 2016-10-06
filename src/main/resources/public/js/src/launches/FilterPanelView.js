@@ -40,7 +40,7 @@ define(function (require, exports, module) {
             'click [data-js-clone-filter]': 'onClickClone',
         },
         bindings: {
-            '[data-js-filter-not-save-descr]': 'classes: {hide: all(not(temp), not(newEntities))}',
+            '[data-js-filter-not-save-descr]': 'classes: {hide: all(not(temp), not(newEntities), not(newSelectionParameters))}',
             '[data-js-filter-shared-descr]': 'classes: {hide: not(isShared)}',
             '[data-js-save-filter]': 'attr: {disabled: any(all(not(newEntities), not(newSelectionParameters)), notMyFilter)}',
             '[data-js-discard-filter]': 'attr: {disabled: all(not(newEntities), not(newSelectionParameters))}',

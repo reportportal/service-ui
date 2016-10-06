@@ -22,6 +22,7 @@
 define(['util'], function () {
     return {
         ui: {
+            actions: 'Actions',
             on: "ON",
             off: "OFF",
             save: "Save",
@@ -624,6 +625,11 @@ define(['util'], function () {
             willBePostedTo: "Bug will be posted to",
             willBeLoadedTo: "Bug will be loaded to",
 
+            actionTitle: 'Select several items to processing',
+            multiSelectError: 'You cannot perform operation to invalid launches',
+            proceedValidItems: 'Proceed Valid Items',
+            editDefects: 'Edit Defects',
+
 
             issueTitle: "Issue title",
             components: "Components:",
@@ -693,7 +699,8 @@ define(['util'], function () {
             launchFinished: 'Launch is finished',
             launchIsDeleting: 'The launch is in the removal process!',
             noItemInLaunch: 'No Item<br> in Launch',
-            severalItems: 'There’re several items with the same names, descriptions and tags'
+            severalItems: 'There’re several items with the same names, descriptions and tags',
+            multipleSelectHeader: 'YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:',
         },
 
         launchStatus: {

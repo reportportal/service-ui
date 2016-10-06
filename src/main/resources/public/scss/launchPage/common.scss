@@ -32,6 +32,11 @@
       height: 100%;
     }
   }
+  .rp-table-row {
+    &.select-state {
+      background-color: $COLOR--gray-91;
+    }
+  }
   .rp-grid-thead {
     height: 50px;
     .grid-cell {
@@ -96,10 +101,6 @@
   }
 
   .grid-cell {
-    float: left;
-    padding-right: 10px;
-    padding-left: 15px;
-    min-height: 1px;
     &.rp-grid-th {
       cursor: default;
       &[data-filter] {

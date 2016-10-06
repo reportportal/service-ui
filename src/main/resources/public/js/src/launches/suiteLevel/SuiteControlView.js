@@ -33,9 +33,10 @@ define(function (require, exports, module) {
     var SuiteControlView = Epoxy.View.extend({
         events: {
             'click [data-js-refresh]': 'onClickRefresh',
+            'click [data-js-milti-delete]': 'onClickMultiDelete',
         },
 
-        template: 'tpl-launch-suite-step-control',
+        template: 'tpl-launch-suite-control',
         initialize: function(options) {
             this.filterModel = options.filterModel;
             this.parentModel = options.parentModel;
@@ -53,6 +54,17 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        activateMultiple: function() {
+            $('[data-js-refresh]', this.$el).addClass('disabled');
+            $('[data-js-milti-delete]', this.$el).removeClass('disabled');
+        },
+        onClickMultiDelete: function() {
+            this.trigger('multi:action', 'remove');
+        },
+        disableMultiple: function() {
+            $('[data-js-refresh]', this.$el).removeClass('disabled');
+            $('[data-js-milti-delete]', this.$el).addClass('disabled');
         },
         onClickRefresh: function() {
             this.collectionItems.load();

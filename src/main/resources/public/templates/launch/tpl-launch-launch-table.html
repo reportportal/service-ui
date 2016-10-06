@@ -19,7 +19,7 @@
 
 
 <div class="suit-grid rp-odd-even rp-table-hover" data-js-table-container>
-    <div class="row rp-grid-thead hidden-xs fixed_table_header">
+    <div class="row rp-grid-thead hidden-xs" data-js-fixed-header>
         <div class="grid-cell name-grid-cell rp-grid-th" data-sorter="name" data-filter="name">
             <%= getItemHtml(data.text.launchesHeaders.name, data.text.launchesHeaders.name_short) %>
         </div>
@@ -49,6 +49,16 @@
         </div>
         <div class="grid-cell counter-grid-cell rp-grid-th" data-sorter="statistics$defects$to_investigate" data-filter="statistics$defects$to_investigate$total">
             <%= getItemHtml(data.text.launchesHeaders.to_investigate, data.text.launchesHeaders.to_investigate_short) %>
+        </div>
+        <div class="grid-cell select-grid-cell rp-grid-th">
+            <div class="table-wrapper">
+                <div class="middle-wrapper">
+                    <label class="rp-checkbox-wrap">
+                        <input class="rp-input-checkbox" type="checkbox" data-js-select-all>
+                        <span></span>
+                    </label>
+                </div>
+            </div>
         </div>
     </div>
 

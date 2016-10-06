@@ -1,0 +1,85 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.multiple-selected-container {
+  position: relative;
+  border-bottom: 1px solid $COLOR--white;
+  width: 100%;
+  padding: 0 15px 15px 15px;
+  margin-bottom: 10px;
+  h2 {
+    font-weight: normal;
+    font-size: 12px;
+    margin: 9px 0 10px 0;
+    color: $COLOR--gray-60;
+  }
+  .close-icon {
+    position: absolute;
+    top: 1px;
+    right: 11px;
+    font-size: 22px;
+    cursor: pointer;
+  }
+  .items-container {
+    overflow: hidden;
+  }
+  .multi-select-item {
+    position: relative;
+    float: left;
+    height: 20px;
+    border: 1px solid $COLOR--gray-80;
+    background-color: $COLOR--white;
+    display: inline-block;
+    line-height: 17px;
+    padding: 0 2px 0 6px;
+    margin-right: 10px;
+    margin-bottom: 5px;
+    .close-icon-item {
+      vertical-align: top;
+      margin-top: 3px;
+      cursor: pointer;
+    }
+    &.error-validate {
+      border-color: $COLOR--orange-red;
+      background-color: #fde1dc;
+    }
+
+  }
+  .error-message {
+    position: relative;
+    margin-top: 5px;
+    font-size: 12px;
+    margin-bottom: 5px;
+    color: $COLOR--orange-red;
+    display: none;
+  }
+  .proceed-button {
+    position: absolute;
+    left: 15px;
+    bottom: -40px;
+    display: none;
+  }
+  &.invalid-state {
+    .error-message, .proceed-button {
+      display: block;
+    }
+  }
+}
