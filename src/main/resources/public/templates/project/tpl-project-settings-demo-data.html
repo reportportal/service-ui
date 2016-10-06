@@ -1,4 +1,3 @@
-<% var notAllowed = (!data.access) ? 'disabled="disabled"' : '' %>
 <div class="rp-settings-demo-data">
     <div class="rp-form-group demo-data-details">
         <h4><%= data.text.project.generateDemoDataTitle %></h4>
@@ -10,12 +9,13 @@
     </div>
     <div class="rp-form-group demo-data-form">
         <label class="rp-control-label">
-            <%= data.text.project.prefixLabel %>
+            <%= data.text.project.postfixLabel %>
         </label>
-        <input <%= notAllowed %> data-js-demo-data-prefix placeholder="<%= data.text.project.prefixPlaceHolder %>" name="prefix_name" value="" class="rp-input-default">
+        <input data-js-demo-data-postfix placeholder="<%= data.text.project.postfixPlaceHolder %>" name="postfix_name" value="" class="rp-input-default form-control">
+        <span class="help-inline"></span>
     </div>
     <div class="rp-form-group rp-wrap-button">
-        <button <%= notAllowed %> type="submit" class="rp-btn rp-btn-submit" data-js-demo-data-submit>
+        <button type="submit" class="rp-btn rp-btn-submit" data-js-demo-data-submit>
             <%= data.text.project.generateDemoData %>
         </button>
     </div>
