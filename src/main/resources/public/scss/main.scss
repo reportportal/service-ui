@@ -61,12 +61,10 @@
 @import 'components/rp-common-defects-editor';
 @import 'components/rp-common-text-editor';
 @import 'components/_rp-common-notification-flash-line';
-
 @import 'components/rp-common-modal';
 @import 'components/rp-common-modal-permissions-map';
 
 @import 'components/rp-custom-icons';
-
 @import 'components/rp-custom-form-elements';
 @import 'components/rp-custom-button-with-icon';
 @import 'components/rp-custom-breadcrumbs';
@@ -119,8 +117,13 @@
 
 @import 'components/rp-page-server-settings';
 
-@import 'common/rp-table-common';
+@import 'components/rp-fullscreen';
 
+@import 'components/projectSettings/rp-project-settings';
+
+/*--------------------------------------------------------*/
+
+@import 'common/rp-table-common';
 
 @import 'launchPage/main';
 
@@ -129,7 +132,3 @@
 @import 'component/main';
 
 @import 'filters/rp-filter-entities';
-
-@import 'components/rp-fullscreen';
-
-@import 'components/projectSettings/rp-project-settings';
