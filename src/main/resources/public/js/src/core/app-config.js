@@ -286,6 +286,7 @@ define(function (require, exports, module) {
         instance = null;
     };
 
+
     return {
         getInstance: getInstance,
         clear: clear
