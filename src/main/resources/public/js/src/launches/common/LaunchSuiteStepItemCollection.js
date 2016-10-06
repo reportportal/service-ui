@@ -177,35 +177,62 @@ define(function (require, exports, module) {
             }
         },
         getInfoByCollection: function() {
-            return {
-                filterModel: this.filterModel,
-                parentModel: this.parentModel,
-                launchModel: this.launchModel,
-                type: this.checkType(),
-            }
+            var async = $.Deferred();
+            var self = this;
+            this.checkType()
+                .done(function(type) {
+                    async.resolve({
+                        filterModel: self.filterModel,
+                        parentModel: self.parentModel,
+                        launchModel: self.launchModel,
+                        type: type,
+                    })
+                })
+            return async;
         },
         getInfoLog: function() {
             return this.logOptions;
         },
-        checkType: function() {
+        checkType: function(models) {
+            var models = models || this.toJSON();
+            var async = $.Deferred();
+            var self = this;
             if(this.logOptions.item){
-                return 'LOG';
+                async.resolve('LOG');
+                return async;
             }
             var types = {};
-            _.each(this.models, function(model) {
-                types[model.get('type')] = true;
+            _.each(models, function(model) {
+                types[model.type] = true;
             });
             var typesMas = _.keys(types);
             if(typesMas.length == 0) {
-                if(!this.launchModel) { return 'LAUNCH'; }
-                if(this.launchModel && !this.parentModel) { return 'SUITE'; }
-                return 'STEP';
+                if(!this.launchModel) {
+                    async.resolve('LAUNCH');
+                } else if(this.launchModel && !this.parentModel) {
+                    async.resolve('SUITE');
+                } else {
+                    this.loadSuiteStepChildren()
+                        .done(function(responce) {
+                            if(responce.content.length) {
+                                self.checkType(responce.content)
+                                    .done(function(type) {
+                                        async.resolve(type);
+                                    })
+                            } else {
+                                async.resolve('STEP');
+                            }
+                        })
+                }
+            } else {
+                if(typesMas.length == 1) {
+                    async.resolve(typesMas[0] || 'LAUNCH');
+                } else {
+                    var levelPriority = ['SUITE', 'STORY', 'TEST', 'SCENARIO', 'STEP', 'BEFORE_CLASS', 'BEFORE_GROUPS', 'BEFORE_METHOD', 'BEFORE_SUITE', 'BEFORE_TEST', 'AFTER_CLASS', 'AFTER_GROUPS', 'AFTER_METHOD', 'AFTER_SUITE', 'AFTER_TEST'];
+                    async.resolve(typesMas[0]);
+                }
             }
-            if(typesMas.length == 1) {
-                return typesMas[0] || 'LAUNCH';
-            }
-            var levelPriority = ['SUITE', 'STORY', 'TEST', 'SCENARIO', 'STEP', 'BEFORE_CLASS', 'BEFORE_GROUPS', 'BEFORE_METHOD', 'BEFORE_SUITE', 'BEFORE_TEST', 'AFTER_CLASS', 'AFTER_GROUPS', 'AFTER_METHOD', 'AFTER_SUITE', 'AFTER_TEST'];
-            return typesMas[0];
+            return async;
         },
         getParamsFilter: function(onlyPage) {
             var params = [];
@@ -261,6 +288,11 @@ define(function (require, exports, module) {
                     self.trigger('loading', false);
                 });
             return this.request;
+        },
+        loadSuiteStepChildren: function() {  // only for check type
+            var path = Urls.getGridUrl('suit') + '?filter.eq.launch=' + this.launchModel.get('id') +
+                    '&filter.eq.parent=' + this.parentModel.get('id');
+            return call('GET', path)
         },
         onRemove: function() {
             this.load(this.lastParams);

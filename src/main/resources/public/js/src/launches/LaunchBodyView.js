@@ -121,47 +121,50 @@ define(function (require, exports, module) {
             this.crumbs.update(partPath, optionsURL);
         },
         onChangePathId: function() {
-            var info = this.collectionItems.getInfoByCollection();
-            switch(info.type) {
-                case 'LAUNCH': {
-                    this.renderLaunchLevel(info.filterModel);
-                    this.trigger('change:level', 'LAUNCH');
-                    this.currentLevel = 'LAUNCH';
-                    break;
-                }
-                case 'SUITE':
-                case 'STORY':
-                case 'TEST':
-                case 'SCENARIO': {
-                    this.renderSuiteLevel(info);
-                    this.trigger('change:level', 'SUITE');
-                    this.currentLevel = 'SUITE';
-                    break;
-                }
-                case 'STEP':
-                case 'BEFORE_CLASS':
-                case 'BEFORE_GROUPS':
-                case 'BEFORE_METHOD':
-                case 'BEFORE_SUITE':
-                case 'BEFORE_TEST':
-                case 'AFTER_CLASS':
-                case 'AFTER_GROUPS':
-                case 'AFTER_METHOD':
-                case 'AFTER_SUITE':
-                case 'AFTER_TEST': {
-                    this.renderStepLevel(info);
-                    this.trigger('change:level', 'STEP');
-                    this.currentLevel = 'STEP';
-                    break;
-                }
-                case 'LOG': {
-                    this.trigger('change:level', 'LOG');
-                    this.currentLevel = 'LOG';
-                    this.renderLogLevel(info);
-                    break;
-                }
-            }
-            this.listenTo(this.control, 'multi:action', this.onMultiAction);
+            this.collectionItems.getInfoByCollection()
+                .done(function(info) {
+                    switch(info.type) {
+                        case 'LAUNCH': {
+                            this.renderLaunchLevel(info.filterModel);
+                            this.trigger('change:level', 'LAUNCH');
+                            this.currentLevel = 'LAUNCH';
+                            break;
+                        }
+                        case 'SUITE':
+                        case 'STORY':
+                        case 'TEST':
+                        case 'SCENARIO': {
+                            this.renderSuiteLevel(info);
+                            this.trigger('change:level', 'SUITE');
+                            this.currentLevel = 'SUITE';
+                            break;
+                        }
+                        case 'STEP':
+                        case 'BEFORE_CLASS':
+                        case 'BEFORE_GROUPS':
+                        case 'BEFORE_METHOD':
+                        case 'BEFORE_SUITE':
+                        case 'BEFORE_TEST':
+                        case 'AFTER_CLASS':
+                        case 'AFTER_GROUPS':
+                        case 'AFTER_METHOD':
+                        case 'AFTER_SUITE':
+                        case 'AFTER_TEST': {
+                            this.renderStepLevel(info);
+                            this.trigger('change:level', 'STEP');
+                            this.currentLevel = 'STEP';
+                            break;
+                        }
+                        case 'LOG': {
+                            this.trigger('change:level', 'LOG');
+                            this.currentLevel = 'LOG';
+                            this.renderLogLevel(info);
+                            break;
+                        }
+                    }
+                    this.listenTo(this.control, 'multi:action', this.onMultiAction);
+                }.bind(this));
+
         },
         renderLogLevel: function(info) {
             this.control = new LogControlView({

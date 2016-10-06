@@ -198,6 +198,7 @@ define(function (require, exports, module) {
             new Filters.EntityInputModel({
                 id: 'issue$issue_comment',
                 valueMinLength: 3,
+                condition: 'in',
                 valueOnlyDigits: false,
             }),
             new Filters.EntityConditionTagModel({

@@ -95,6 +95,10 @@
     vertical-align: top;
     position: relative;
     float: none !important;
+    input.invalid {
+      border-color: $COLOR--orange-red;
+      background-color: #fde1dc;
+    }
   }
 
   .filter-option-select .dropdown-toggle {

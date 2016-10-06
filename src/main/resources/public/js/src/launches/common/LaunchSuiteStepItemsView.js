@@ -51,6 +51,9 @@ define(function (require, exports, module) {
 
             this.listenTo(this.paging, 'page', this.onChangePage);
             this.listenTo(this.paging, 'count', this.onChangePageCount);
+            if(!this.collection.models.length) {
+                this.$el.addClass('not-found');
+            }
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
