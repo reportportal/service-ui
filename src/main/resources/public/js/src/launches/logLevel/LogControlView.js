@@ -31,6 +31,7 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-button-prev]': 'onClickNavigation',
             'click [data-js-button-next]': 'onClickNavigation',
+            'click [data-js-button-refresh]': 'onClickRefresh',
         },
 
         template: 'tpl-launch-log-control',
@@ -67,6 +68,9 @@ define(function (require, exports, module) {
             var $nav = $(e.currentTarget);
             this.collectionItems.setLogItem($nav.data('id'));
             this.updateNavButton($nav.data('id'));
+        },
+        onClickRefresh: function() {
+            this.collectionItems.setLogItem(this.collectionItems.logOptions.item);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));

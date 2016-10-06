@@ -128,11 +128,12 @@
   }
   .icons-grid-cell {
     width: 8%;
+    text-align: center;
   }
   .display-launch-grid-cell {
     width: 11%
   }
-  @media (max-width: 600px) {
+  @media (max-width: 992px) {
     .name-grid-cell, .owner-grid-cell, .icons-grid-cell, .display-launch-grid-cell {
       width: 100%;
     }

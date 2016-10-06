@@ -869,6 +869,7 @@ define(['util'], function () {
             filterAttachments: 'Logs with Attachments',
             notFoundActivity: 'There is no Activity to display',
             notFoundAttachments: 'There is no Attachments to display',
+            nextError: 'Next Error',
         },
 
         defectNameById: {

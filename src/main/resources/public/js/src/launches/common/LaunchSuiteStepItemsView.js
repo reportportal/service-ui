@@ -31,6 +31,7 @@ define(function (require, exports, module) {
     var config = App.getInstance();
 
     var LaunchSuiteTestItemsView = Epoxy.View.extend({
+        className: 'launch-suite-step-items',
         template: 'tpl-launch-suite-step-items',
 
         initialize: function(options) {
@@ -56,12 +57,13 @@ define(function (require, exports, module) {
         },
         onLoadingCollection: function(state) {
             if(state) {
-                $('[data-js-preloader]',self.$el).addClass('rp-display-block');
-                this.paging.$el.addClass('hide');
+                this.$el.addClass('load').removeClass('not-found');
                 return;
             }
-            $('[data-js-preloader]',self.$el).removeClass('rp-display-block');
-            this.paging.$el.removeClass('hide');
+            this.$el.removeClass('load');
+            if(!this.collection.models.length) {
+                this.$el.addClass('not-found');
+            }
         },
         onChangePage: function(page) {
             this.collection.setPaging(page);
