@@ -98,6 +98,15 @@
                     }
                 }
             }
+
+            .has-error {
+                input,
+                input:focus {
+                    color: $COLOR--black-two;
+                    box-shadow: 0 0 2px 0 rgba(255, 49, 33, .7);
+                    border: 1px solid $COLOR--orange-red;
+                }
+            }
         }
 
         .error-block {

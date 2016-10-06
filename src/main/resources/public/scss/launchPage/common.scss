@@ -192,3 +192,21 @@
     }
   }
 }
+.launch-suite-step-items {
+  &.load {
+    .preloader {
+      display: block;
+    }
+    .pagination-component {
+      display: none;
+    }
+  }
+  &.not-found {
+    .pagination-component {
+      display: none;
+    }
+    .no-result-found {
+      display: block;
+    }
+  }
+}

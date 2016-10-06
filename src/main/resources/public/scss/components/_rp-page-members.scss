@@ -24,12 +24,22 @@
     padding: 0;
 }
 
+.rp-margin-reset {
+    border-top: none;
+}
+
 #membersList .rp-table-thead {
     border-bottom: 1px solid #ddd;
 }
 
+.rp-member-wrap {
+    padding: 7px 0;
+}
+
 .rp-member-wrap .rp-member-img {
-    margin-left: 0;
+    margin-right: 10px;
+    margin-left: 15px;
+    min-height: 50px;
 }
 
 .table_permissions {
@@ -170,6 +180,15 @@
     text-transform: lowercase;
     top: -4px;
 }
+ss
+.user-name.text-wrapper {
+    display: block;
+}
+.user-name {
+    padding-left: 50px;
+    font-size: 13px;
+    line-height: 15px;
+}
 
 .members-pre-loader {
     height: 100px;
@@ -198,4 +217,30 @@ span.rp-role {
 
 .members-confirm .control-label {
     font-weight: bold;
+}
+
+.rp-info.show-time {
+    font-size: 13px;
+    line-height: 15px;
+
+    &:hover .from-now {
+    display: none;
+    }
+
+    &:hover .exact-time {
+        display: inline;
+    }
+
+    .from-now {
+        padding-bottom: 1.2em;
+    }
+    .exact-time {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    .rp-info-padding {
+        padding: 22px 0 0;
+    }
 }

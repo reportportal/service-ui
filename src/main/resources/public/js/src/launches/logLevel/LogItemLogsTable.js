@@ -116,6 +116,7 @@ define(function (require, exports, module) {
             this.pagingModel.set(pageData);
             this.paging.render();
             this.minPaging.render();
+            $('[data-js-next-error]', this.$el).removeClass('hide');
         },
         onChangeFilter: function() {
             var newEntities = [];

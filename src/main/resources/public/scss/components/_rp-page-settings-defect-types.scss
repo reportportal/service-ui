@@ -273,6 +273,10 @@
                     a {
                         display: inline-block;
                     }
+
+                    &.b-defects-reset-color {
+                        text-align: right;
+                    }
                 }
             }
         }

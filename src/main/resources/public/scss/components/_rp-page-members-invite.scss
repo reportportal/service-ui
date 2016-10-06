@@ -32,6 +32,44 @@
             &:last-child {
                margin-bottom: 20px;
             }
+
+            .select2-container {
+                .select2-choice {
+                    background-image: none;
+                    border-color: #ccc;
+                    border-radius: 0;
+                    box-shadow: none;
+                    height: auto;
+                    min-height: 30px;
+                    margin-right: -1px;
+
+                    .select2-chosen {
+                        margin-right: 30px;
+                        box-shadow: none;
+                        padding: 2px 5px;
+                    }
+
+                    .select2-arrow {
+                        width: 30px;
+                        border: none;
+                        background: 0 0;
+
+                        b {
+                            background: 0 0;
+                            display: inline-block;
+                            width: 0;
+                            height: 0;
+                            margin-left: 10px;
+                            margin-top: 2px;
+                            vertical-align: middle;
+                            border-top: 4px solid;
+                            border-right: 4px solid transparent;
+                            border-left: 4px solid transparent;
+                            background-position: 2px 1px;
+                        }
+                    }
+                }
+            }
         }
 
         h4 {

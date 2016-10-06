@@ -287,3 +287,140 @@ div.inline-editor {
         }
     }
 }
+.disabled .defect-type {
+    cursor: default;
+}
+
+.defect-type i,
+.tickets-container i {
+    font-size: 14px;
+}
+
+.defect-desc {
+    padding: 10px 5px;
+    font-size: 12px;
+    word-wrap: break-word;
+    max-height: 300px;
+    overflow-y: auto;
+
+    &.nicescroll-it {
+        max-height: none;
+    }
+}
+
+#defectWell .defect-desc {
+    overflow: hidden;
+}
+
+.issue-selector {
+    padding: 2px 5px;
+    cursor: pointer;
+}
+
+.inline-editor {
+    .tickets-container {
+        display: inline-block;
+        margin: 3px 0 0 10px;
+
+        i {
+            margin: 0;
+        }
+        .badge.external-ticket {
+            display: inline-block;
+            margin: 5px 0 0 5px;
+        }
+
+        .external-ticket {
+            display: inline-block;
+            max-width: 100%;
+            margin: 5px 0 0 5px;
+            padding: 2px 4px 0;
+            text-align: left;
+            white-space: nowrap;
+            word-wrap: break-word;
+            & > div {
+                margin-left: 16px;
+                display: inline-block;
+                overflow: hidden;
+                max-width: 120px;
+                word-wrap: break-word;
+            }
+
+            & > i {
+                position: absolute;
+                top: 1px;
+                left: 3px;
+            }
+        }
+    }
+}
+
+.defect-desc h1,
+.history-col .tooltip h1,
+#historyWell .tooltip h1,
+#activityWell .actyvity-val h1 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.defect-desc h2,
+.history-col .tooltip h2,
+#historyWell .tooltip h2,
+#activityWell .actyvity-val h2 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.defect-desc h3,
+.history-col .tooltip h3,
+#historyWell .tooltip h3,
+#activityWell .actyvity-val h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.defect-desc h4,
+.history-col .tooltip h4,
+#historyWell .tooltip h4,
+#activityWell .actyvity-val h4 {
+    margin: 0;
+    font-size: 14px;
+}
+
+.defect-desc h5,
+.history-col .tooltip h5,
+#historyWell .tooltip h5,
+#activityWell .actyvity-val h5 {
+    margin: 0;
+    font-size: 12px;
+}
+
+.defect-desc h6,
+.history-col .tooltip h6,
+#historyWell .tooltip h6,
+#activityWell .actyvity-val h6 {
+    margin: 0;
+    font-size: 10px;
+}
+
+.defect-desc,
+#activityWell .actyvity-val {
+    ul, ol {
+        margin: 0 0 9px 2em;
+    }
+}
+
+.defect-desc ul li,
+#activityWell .actyvity-val ul li {
+    list-style: inside;
+    margin-left: 10px;
+}
+
+.defect-desc a,
+#activityWell .actyvity-val a {
+    text-decoration: underline !important;
+}
+
+.text-editor {
+    margin-top: 5px;
+}

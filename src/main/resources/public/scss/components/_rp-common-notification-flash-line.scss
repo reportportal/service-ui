@@ -1,0 +1,51 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */ 
+ 
+.flash-container {
+    bottom: 0;
+    color: $COLOR--white-default;
+    cursor: pointer;
+    margin: 0;
+    opacity: 0.8;
+    position: fixed;
+    text-align: center;
+    width: 100%;
+    z-index: 2000;
+    font-size: 14px;
+}
+
+.flash-alert {
+    background: none repeat scroll 0 0 #BD362F;
+    padding: 10px;
+    text-shadow: 0 1px 1px #7A1000;
+}
+
+.flash-notice {
+    background: none repeat scroll 0 0 #4499CC;
+    padding: 10px;
+    text-shadow: 0 1px 1px #365458;
+}
+
+.flash-success {
+    background: none repeat scroll 0 0 #31A031;
+    padding: 10px;
+    text-shadow: 0 1px 1px #005800;
+}

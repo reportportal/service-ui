@@ -19,16 +19,18 @@
             </button>
         </li>
     </ul>
-</div><div id="activeProjectsList" class="col-sm-12 nopadding" role="tabpanel">
+</div>
+<div id="activeProjectsList" class="col-sm-12 nopadding" role="tabpanel">
     <div id="popupLoader" class="admin-section">
         <i class="material-icons loader-animation">refresh</i>
     </div>
-</div><div id="accordion" class="panel-group clearfix" aria-multiselectable="true" role="tablist">
+</div>
+<div id="accordion" class="pr-collapsed-projects panel-group clearfix" aria-multiselectable="true" role="tablist">
     <div class="clearfix" >
         <ul class="rp-nav-left" role="tab">
             <li class="title-holder">
                 <a id="inactiveLink"
-                    class="collapsed header-alike"
+                    class="collapsed-projects-title collapsed header-alike"
                     href="#collapseInactive"
                     data-parent="#accordion"
                     data-toggle="collapse">
@@ -42,5 +44,28 @@
                 </a>
             </li>
         </ul>
-    </div>    <div id="collapseInactive" class="panel-collapse col-sm-12 nopadding collapse" role="tabpanel"></div>
+    </div>
+    <div id="collapseInactive" class="panel-collapse col-sm-12 nopadding collapse" role="tabpanel"></div>
+</div>
+<div id="personalProjects" class="pr-collapsed-projects panel-group clearfix" aria-multiselectable="true" role="tablist">
+    <div class="clearfix" >
+        <ul class="rp-nav-left" role="tab">
+            <li class="title-holder">
+                <a id="personalLink"
+                   class="collapsed-projects-title collapsed header-alike"
+                   href="#collapsePersonal"
+                   data-parent="#personalProjects"
+                   data-toggle="collapse">
+                    <%= data.text.admin.personalProjects %> (<span data-js-personal-amount>0</span>)
+                    <span class="plus">
+                        <i class="rp-icons rp-icons-square-plus"></i>
+                    </span>
+                    <span class="minus">
+                        <i class="rp-icons rp-icons-square-minus"></i>
+                    </span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="collapsePersonal" data-js-personal-projects class="panel-collapse col-sm-12 nopadding collapse" role="tabpanel"></div>
 </div>

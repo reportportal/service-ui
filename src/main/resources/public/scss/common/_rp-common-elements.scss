@@ -1,0 +1,19 @@
+.preloader {
+  position: relative;
+  width: 100%;
+  padding: 15px 0;
+  text-align: center;
+  display: none;
+  i {
+    color: #29d;
+    display: inline-block;
+    font-size: 40px;
+  }
+}
+.no-result-found {
+  text-align: center;
+  padding: 25px 0;
+  font-size: 17px;
+  color: $COLOR--gray-47;
+  display: none;
+}

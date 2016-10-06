@@ -194,6 +194,7 @@
 // #topHeader .navbar {
 #topHeader .rp-navbar-header {
     margin-bottom: 0;
+    border: initial;
 }
 
 #topHeader .btn-default:hover,
@@ -303,6 +304,7 @@
         padding: 0 15px;
 
         .navbar-right {
+            margin-right: 0;
             .rp-user-navigator {
                 position: relative;
                 display: block;

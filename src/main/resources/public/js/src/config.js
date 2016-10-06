@@ -116,6 +116,7 @@ require.config({
         'cacheService': 'core/cache-service',
         'scrollable': 'core/scrollable-view',
         "text": "../lib/text",
+        'DemoDataSettingsView': 'project/DemoDataSettingsView',
 
         "colorpicker": "../lib/colorpicker/bootstrap-colorpicker",
         "colorpickerConfig": "../lib/colorpicker/bootstrap-colorpicker-cfg-custom",

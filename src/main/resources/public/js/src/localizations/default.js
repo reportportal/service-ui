@@ -117,6 +117,7 @@ define(['util'], function () {
             previous: "Previous",
             next: "Next",
             warning: "WARNING",
+            warningSm: "warning",
             toolname: "Report Portal",
             sec: "sec",
             month: "month",
@@ -868,6 +869,7 @@ define(['util'], function () {
             filterAttachments: 'Logs with Attachments',
             notFoundActivity: 'There is no Activity to display',
             notFoundAttachments: 'There is no Attachments to display',
+            nextError: 'Next Error',
         },
 
         defectNameById: {
@@ -977,6 +979,15 @@ define(['util'], function () {
             generalTab: "General",
             notificationsTab: "Notifications",
             btsTab: "Bug Tracking System",
+            demoDataSettings: 'Demo Data',
+            generateDemoData: 'Generate Demo Data',
+            generateDemoDataTitle: 'the system will generate the followingd demo data:',
+            generateDemoDataLaunches: '10 Launches',
+            generateDemoDataDashboard: '1 Dashboard with 9 Widgets',
+            generateDemoDataFilter: '1 filter',
+            prefixLabel: 'Prefix will be added to the demo dashboard, widgets, filter name',
+            removeDemoData: 'You will have to remove the Demo Data manually.',
+            prefixPlaceHolder: 'Enter Prefix',
             beta: "beta",
             aboutinfo: 'Detailed information about the project',
             unableLoadData: 'Unable to load data',
@@ -1068,6 +1079,7 @@ define(['util'], function () {
             addNewProject: "Add new project",
             activeProjects: "Active projects",
             notActiveProjects: "Not active projects",
+            personalProjects: "Personal projects",
             newProject: "new",
             usersQuantity: "members",
             launchesQuantity: "launches",
@@ -1221,7 +1233,7 @@ define(['util'], function () {
             updateUuid: "UUID has been regenerated",
             addSubType: "New defect type was successfully created",
             startAnalyzeAction: 'Auto-analyzer has been started.',
-
+            generateDemoData: 'Demo Data has been generated',
             changedColorDefectTypes: "Defect types have been updated."
         },
 
