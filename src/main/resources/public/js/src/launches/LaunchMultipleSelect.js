@@ -26,6 +26,8 @@ define(function (require, exports, module) {
     var App = require('app');
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
     var Util = require('util');
+    var MergeAction = require('launches/multipleActions/mergeAction');
+    var CompareAction = require('launches/multipleActions/compareAction');
 
     var config = App.getInstance();
 
@@ -77,14 +79,84 @@ define(function (require, exports, module) {
         actionValidators: {
             merge: function() {
                 _.each(this.collection.models, function(model) {
-                    if(model.get('owner') != config.userModel.get('name')) {
-                        model.set({invalidMessage: 'You are not a launch owner'})
+                    if(model.get('launch_owner') != config.userModel.get('name')) {
+                        model.set({invalidMessage: 'You are not a launch owner'});
                     } else if (model.get('status') == 'IN_PROGRESS') {
-                        model.set({invalidMessage: 'Launch should not be in the status IN PROGRESS'})
+                        model.set({invalidMessage: 'Launch should not be in the status IN PROGRESS'});
+                    } else if(model.get('isProcessing')) {
+                        model.set({invalidMessage: 'Launch should not be processing by Auto Analysis'});
                     } else {
                         model.set({invalidMessage: ''})
                     }
                 })
+            },
+            compare: function() {
+                _.each(this.collection.models, function(model) {
+                    model.set({invalidMessage: ''})
+                })
+            },
+            movedebug: function() {
+                _.each(this.collection.models, function(model) {
+                    if(model.get('launch_owner') != config.userModel.get('name')) {
+                        model.set({invalidMessage: 'You are not a launch owner'});
+                    } else {
+                        model.set({invalidMessage: ''});
+                    }
+                })
+            },
+            forcefinish: function() {
+                _.each(this.collection.models, function(model) {
+                    if (model.get('status') != 'IN_PROGRESS') {
+                        model.set({invalidMessage: 'Launch is already finished'});
+                    } else if(model.get('launch_owner') != config.userModel.get('name')) {
+                        model.set({invalidMessage: 'You are not a launch owner'});
+                    } else {
+                        model.set({invalidMessage: ''})
+                    }
+                })
+            },
+            remove: function() {
+                _.each(this.collection.models, function(model) {
+                     if(model.get('launch_owner') != config.userModel.get('name')) {
+                        model.set({invalidMessage: 'You are not a launch owner'});
+                    } else if (model.get('status') == 'IN_PROGRESS') {
+                        model.set({invalidMessage: 'Launch should not be in the status IN PROGRESS'});
+                    } else {
+                        model.set({invalidMessage: ''})
+                    }
+                })
+            },
+        },
+        actionCall: {
+            merge: function() {
+                var self = this;
+                this.mergeAction = new MergeAction({
+                    items: this.collection.models,
+                })
+                this.mergeAction.getAsync().done(function() {
+                    self.collectionItems.load();
+                    self.mergeAction = null;
+                    self.reset();
+                })
+            },
+            compare: function() {
+                var self = this;
+                this.compareAction = new CompareAction({
+                    items: this.collection.models,
+                });
+                this.compareAction.getAsync().done(function() {
+                    self.compareAction = null;
+                    self.reset();
+                });
+            },
+            movedebug: function() {
+
+            },
+            forcefinish: function() {
+
+            },
+            remove: function() {
+                console.log('remove');
             }
         },
 
@@ -158,14 +230,22 @@ define(function (require, exports, module) {
             if(this.actionValidators[actionName]) {
                 this.actionValidators[actionName].call(this);
                 this.currentAction = actionName;
-                this.checkInvalidStatus();
+                if(this.checkInvalidStatus()) {
+                    this.actionCall[actionName].call(this);
+                }
             }
         },
         reset: function() {
             this.onClickClose();
         },
         onClickProceed: function() {
-
+            var invalidItems = _.filter(this.collection.models, function(model) {
+               return model.get('invalidMessage') != ''
+            });
+            _.each(invalidItems, function(model) {
+                model.set({select: false});
+            });
+            this.setAction(this.currentAction);
         },
         onClickClose: function() {
             while(this.collection.models.length) {

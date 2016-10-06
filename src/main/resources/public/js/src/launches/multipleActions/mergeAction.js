@@ -1,142 +1,34 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/epam/ReportPortal
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
-
+ */
 define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
     var Util = require('util');
     var Components = require('core/components');
     var Service = require('coreService');
     var App = require('app');
 
     var config = App.getInstance();
-
-    var LaunchEditor = Components.DialogShell.extend({
-
-        initialize: function (options) {
-            options['size'] = 'lg';
-            Components.DialogShell.prototype.initialize.call(this, options);
-            this.editorType = options.editorType || 'updateLaunch';
-            this.eventBus = options.eventBus;
-            if (!options.item.tags) {
-                options.item.tags = [];
-            }
-            this.item = options.item;
-            this.item['max'] = options.descriptionMax;
-            this.result = {
-                description: '',
-                tags: []
-            };
-        },
-
-        contentHeader: 'tpl-launch-editor-header',
-        contentBody: 'tpl-item-editor-body',
-
-        render: function () {
-            Components.DialogShell.prototype.render.call(this);
-            this.$content.html(Util.templates(this.contentHeader, this.item));
-            this.$content.append(Util.templates(this.contentBody, {item: this.item, type: this.editorType}));
-
-            this.$description = $("#editDescription", this.$el);
-            this.item.max && setupDescriptionBlock(this.$description, this.item.max);
-
-            this.$tags = $('#editTags', this.$el);
-            setupSelect2Tags(this.$tags);
-            this.delegateEvents();
-
-            return this;
-        },
-
-        events: function () {
-            return _.extend({}, Components.DialogShell.prototype.events, {
-                'change #editTags': 'validate',
-                'keyup #editDescription': 'validate',
-                'paste #editDescription': 'validate',
-                'shown.bs.modal': 'focusSetup'
-            });
-        },
-
-        focusSetup: function () {
-            this.$description.focus();
-        },
-
-        validate: function () {
-            this.result.description = this.$description.val().trim();
-            var tagsValue = this.$tags.val().trim();
-            if (tagsValue) {
-                this.result.tags = tagsValue.split(',');
-            } else {
-                this.result.tags = [];
-            }
-            var max = this.item.max ? this.result.description.length <= this.item.max : true,
-                validity = (this.result.description !== this.item.description || tagsValue !== this.item.tags.join(',')) && max;
-            var actionClass = validity ? 'remove' : 'add';
-            this.$actionBtn[actionClass + 'Class']('disabled');
-        },
-
-        submit: function () {
-            var self = this;
-            Service[this.editorType](this.result, this.item.id)
-                .done(function () {
-                    config.commentAnchor = self.item.id;
-                    self.eventBus.trigger('navigation::reload::table', {});
-                    Util.ajaxSuccessMessenger(self.editorType);
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error);
-                })
-                .always(function () {
-                    self.$el.modal('hide');
-                });
-        },
-
-        destroy: function () {
-            this.$tags.select2('destroy');
-            this.eventBus = null;
-            this.item = null;
-            Components.DialogShell.prototype.destroy.call(this);
-        }
-
-    });
-
-    var ItemEditor = LaunchEditor.extend({
-        contentHeader: 'tpl-item-editor-header',
-        initialize: function (options) {
-            options['headerTxt'] = 'itemEditor';
-            options['editorType'] = 'updateTestItem';
-            LaunchEditor.prototype.initialize.call(this, options);
-        }
-    });
-
-    var setupDescriptionBlock = function (element, max, min) {
-        Util.attachCounter(element, {selector: '.vsize'});
-        Util.bootValidator(element, [{
-            validator: 'minMaxNotRequired',
-            type: 'launchDescription',
-            min: min || 0,
-            max: max
-        }]);
-    };
 
     var setupSelect2Tags = function ($tags, options) {
         options = options || {};
@@ -222,30 +114,42 @@ define(function (require, exports, module) {
             }
         });
         $tags.on('remove', function () {
-                warning = null;
-                $tags = null;
-                options = null;
-                if (timeOut) {
-                    clearTimeout(timeOut);
-                    timeOut = null;
-                }
-            });
+            warning = null;
+            $tags = null;
+            options = null;
+            if (timeOut) {
+                clearTimeout(timeOut);
+                timeOut = null;
+            }
+        });
+    };
+    var setupDescriptionBlock = function (element, max, min) {
+        Util.attachCounter(element, {selector: '.vsize'});
+        Util.bootValidator(element, [{
+            validator: 'minMaxNotRequired',
+            type: 'launchDescription',
+            min: min || 0,
+            max: max
+        }]);
     };
 
-    var MergeEditor = Components.DialogShell.extend({
+    var MergeAction = Components.DialogShell.extend({
 
         initialize: function (options) {
+            this.async = $.Deferred();
             options['headerTxt'] = 'mergeLaunches';
             options['actionTxt'] = 'merge';
             Components.DialogShell.prototype.initialize.call(this, options);
-            this.owner = options.owner;
-            this.eventBus = options.eventBus;
-            this.launches = options.launches;
+            this.mode = options.mode || 'DEFAULT'; // or DEBUG
+            this.launches = options.items;
             this.descriptionMax = options.descriptionMax;
-            this.callback = options.callback;
             this.ids = [];
 
             this.walkThroughLaunches();
+            this.render();
+        },
+        getAsync: function() {
+            return this.async;
         },
 
         walkThroughLaunches: function () {
@@ -256,7 +160,7 @@ define(function (require, exports, module) {
                 tags: [],
                 descriptionMax: this.descriptionMax,
                 dateFormat: Util.dateFormat,
-                owner: this.owner,
+                owner: config.userModel.get('name').replace('_', ' ').capitalize(),
                 name: this.launches[0].get('name')
             };
             _.forEach(this.launches, function (launch) {
@@ -311,7 +215,6 @@ define(function (require, exports, module) {
             this.validate();
 
             this.delegateEvents();
-            return this;
         },
 
         highlightCommonTags: function () {
@@ -330,7 +233,6 @@ define(function (require, exports, module) {
             return _.extend({}, Components.DialogShell.prototype.events, {
                 'validation::change #mergeName': 'validate',
                 'validation::change #mergeDescription': 'validate',
-                // 'shown.bs.modal': 'initScroll'
             });
         },
 
@@ -344,7 +246,7 @@ define(function (require, exports, module) {
             if (!$(".has-error", this.$el).length) {
                 var data = {
                     tags: this.$tags.val().trim().split(','),
-                    mode: this.eventBus.isDebug() ? 'DEBUG' : 'DEFAULT',
+                    mode: this.mode,
                     start_time: new Date().valueOf(),
                     name: this.$name.val(),
                     description: this.$description.val(),
@@ -355,11 +257,12 @@ define(function (require, exports, module) {
                 this.$loader.show();
                 Service.mergeLaunches(data)
                     .done(function (response) {
-                        self.callback(response, self.lastLaunch);
+                        self.async.resolve(response, self.lastLaunch);
                         Util.ajaxSuccessMessenger('mergeLaunches');
                     })
                     .fail(function (response) {
                         Util.ajaxFailMessenger(response, 'mergeLaunches');
+                        self.async.reject();
                     })
                     .always(function () {
                         self.$el.modal('hide');
@@ -368,17 +271,10 @@ define(function (require, exports, module) {
         },
 
         destroy: function () {
-            this.eventBus = null;
-            this.launches = null;
-            this.callback = null;
             Components.DialogShell.prototype.destroy.call(this);
         }
     });
 
-    return {
-        LaunchEditor: LaunchEditor,
-        ItemEditor: ItemEditor,
-        MergeEditor: MergeEditor,
-        setupSelect2Tags: setupSelect2Tags
-    };
+
+    return MergeAction;
 });

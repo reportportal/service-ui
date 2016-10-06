@@ -31,7 +31,7 @@ define(function (require, exports, module) {
             'click [data-js-refresh]': 'onClickRefresh',
         },
 
-        template: 'tpl-launch-suite-step-control',
+        template: 'tpl-launch-step-control',
         initialize: function(options) {
             this.filterModel = options.filterModel;
             this.parentModel = options.parentModel;

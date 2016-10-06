@@ -628,6 +628,7 @@ define(['util'], function () {
             actionTitle: 'Select several items to processing',
             multiSelectError: 'You cannot perform operation to invalid launches',
             proceedValidItems: 'Proceed Valid Items',
+            editDefects: 'Edit Defects',
 
 
             issueTitle: "Issue title",

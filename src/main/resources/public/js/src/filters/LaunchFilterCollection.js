@@ -102,7 +102,7 @@ define(function(require, exports, module) {
         },
         generateTempModel: function(data) {
             var data = data || {};
-            var startName = 'New filter';
+            var startName = 'New_filter';
             var modelName = startName;
             var randomCounter = 1;
             while(this.findWhere({name: modelName})) {
