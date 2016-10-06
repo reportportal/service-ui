@@ -1,0 +1,29 @@
+<% var notAllowed = (!data.access) ? 'disabled="disabled"' : '' %>
+<div class="rp-settings-demo-data">
+    <div class="rp-form-group demo-data-details">
+        <h4><%= data.text.project.generateDemoDataTitle %></h4>
+        <ul>
+            <li><%= data.text.project.generateDemoDataLaunches %></li>
+            <li><%= data.text.project.generateDemoDataDashboard %></li>
+            <li><%= data.text.project.generateDemoDataFilter %></li>
+        </ul>
+    </div>
+    <div class="rp-form-group demo-data-form">
+        <label class="rp-control-label">
+            <%= data.text.project.prefixLabel %>
+        </label>
+        <input <%= notAllowed %> data-js-demo-data-prefix placeholder="<%= data.text.project.prefixPlaceHolder %>" name="prefix_name" value="" class="rp-input-default">
+    </div>
+    <div class="rp-form-group rp-wrap-button">
+        <button <%= notAllowed %> type="submit" class="rp-btn rp-btn-submit" data-js-demo-data-submit>
+            <%= data.text.project.generateDemoData %>
+        </button>
+    </div>
+    <div class="rp-form-group demo-data-warning-block">
+        <span class="demo-data-warning">
+            <i class="material-icons">warning</i>
+            <span><%= data.text.ui.warningSm %>!</span>
+        </span><br>
+        <%= data.text.project.removeDemoData %>
+    </div>
+</div>

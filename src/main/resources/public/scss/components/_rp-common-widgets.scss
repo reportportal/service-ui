@@ -36,8 +36,8 @@
         }
 
         .activity-item {
-            margin: 0px 0 10px 0;
-            padding: 0px 0 10px 0;
+            margin: 0 0 10px 0;
+            padding: 0 0 10px 0;
             border-bottom: 1px dotted #999999;
         }
     }
@@ -98,13 +98,23 @@
             max-width: 30px;
             max-height: 50px;
             padding: 0;
-            margin: 0px 0 0 0;
-            margin-right: 14px;
+            margin: 0 14px 0 0;
             border: none;
             border-radius: 0;
         }
     }
 
+    & .panel-body {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border-top: 54px solid transparent;
+        box-sizing: border-box;
+        overflow: visible;
+    }
 }
 
 /* INVALID DATA */
@@ -136,25 +146,24 @@
         text-decoration: underline;
     }
 }
-#previewContent .widget-invalid-data {
+#previewContent .widget-invalid-data,
+#previewContent svg .nv-legend-symbol, 
+#previewContent svg .nv-legend-text {
     cursor: default;
 }
-.statistics-panel.widget-invalid {
-    padding-top: 50px;
-    position: relative;
-}
-.statistics-panel .widget-invalid-data {
-    top: 0;
-    margin: 0 -15px;
-    padding: 5px 15px;
-    box-sizing: content-box;
-    height: 36px;
-}
-#previewContent .statistics-panel.widget-invalid {
-    padding-top: 40px;
-}
-#previewContent .statistics-panel .widget-invalid-data {
-    top: -10px;
+
+#previewContent svg .nvd3.nv-stackedarea path.nv-area,
+#previewContent svg .nvd3.nv-stackedarea path.nv-area.hover,
+#previewContent svg .nvd3 .nv-multibar .nv-groups rect,
+#previewContent svg .nvd3 .nv-multibar .nv-groups rect.hover,
+#previewContent svg .nvd3 .nv-multibarHorizontal .nv-groups rect,
+#previewContent svg .nvd3 .nv-multibarHorizontal .nv-groups rect.hover,
+#previewContent svg .nvd3 .nv-discretebar .nv-groups rect,
+#previewContent svg .nvd3 .nv-discretebar .nv-groups rect.hover,
+#previewContent svg .nvd3.nv-pie path,
+#previewContent svg .nvd3.nv-pie .hover path {
+    cursor: default;
+    fill-opacity: 0.7;
 }
 
 /*Temp change modal widget wizard ----------------------------- */

@@ -117,6 +117,10 @@
     margin-top: 6px;
 }
 
+.b-header .navbar-collapse {
+    padding: 0;
+}
+
 .b-header.b-header--dark .navbar {
     background-color: rgba(0, 0, 0, 0.9);
 }
@@ -136,7 +140,7 @@
 
 @media (min-width: 1200px) {
     .landing-page .b-header .container {
-        width: 1170px;
+        width: 1170px !important;
     }
 }
 @media (max-width: 1200px) {

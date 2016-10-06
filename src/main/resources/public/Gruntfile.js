@@ -30,10 +30,10 @@ module.exports = function (grunt) {
         'css/animate.min.css',
 
         // TODO
-        'css/style.css',
-        'css/default.css',
-        'css/style-custom.css',
-        'css/epam-style.css',
+        // 'css/style.css',
+        // 'css/default.css',
+        // 'css/style-custom.css',
+        // 'css/epam-style.css',
     ];
 
     grunt.initConfig({

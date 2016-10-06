@@ -1,0 +1,40 @@
+.bootstrap-switch {
+    height: 30px;
+    width: 100%;
+    min-width: 60px;
+    border-radius: 0;
+    box-shadow: none;
+    z-index: 0;
+
+    .bootstrap-switch-container {
+        height: 31px;
+
+        .bootstrap-switch-default,
+        .bootstrap-switch-primary {
+            font-family: "OpenSansRegular", sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .bootstrap-switch-handle-on,
+        .bootstrap-switch-handle-off {
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        .bootstrap-switch-default {
+            color: $COLOR--white-default;
+            background: $COLOR--gray-60;
+        }
+
+        .bootstrap-switch-primary {
+            background: $COLOR--booger;
+            color: $COLOR--white-default;
+        }
+    }
+
+    &.bootstrap-switch-focused {
+        border-color: $COLOR--gray-80;
+        box-shadow: none;
+    }
+}

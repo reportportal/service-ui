@@ -38,6 +38,7 @@ define(function(require, exports, module) {
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var DefectTypeModel = require('defectType/DefectTypeModel');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var DemoDataSettingsView = require('DemoDataSettingsView');
 
     require('colorpicker');
 
@@ -179,6 +180,7 @@ define(function(require, exports, module) {
             this.$notificationsHolder = $("#notificationsSettings", this.$el);
             this.$btslHolder = $("#btsSettings", this.$el);
             this.$defect = $("#defectTypes", this.$el);
+            this.$demoDataHolder = $("[data-js-demo-data]", this.$el);
 
             this[this.tab + "Render"]();
 
@@ -229,6 +231,13 @@ define(function(require, exports, module) {
                 }).render();
             }
         },
+        demoDataRender: function(){
+            if (!this.demoDataView) {
+                this.demoDataView = new DemoDataSettingsView({
+                    holder: this.$demoDataHolder
+                }).render();
+            }
+        },
         events: {
             'click .tab.settings': 'renderTab'
         },
@@ -252,6 +261,9 @@ define(function(require, exports, module) {
 
             this.defectView && this.defectView.destroy();
             this.defectView = null;
+
+            this.demoDataView && this.demoDataView.destroy();
+            this.demoDataView = null;
 
             Backbone.Events.off(null, null, this);
             Components.BaseView.prototype.destroy.call(this);

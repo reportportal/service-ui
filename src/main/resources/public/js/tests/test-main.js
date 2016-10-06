@@ -67,6 +67,7 @@ require.config({
         stickyHeader: 'core/sticky-header',
         'launchCrumbs': 'launch/launch-crumbs',
         log: 'log/logs',
+        'DemoDataSettingsView': 'project/DemoDataSettingsView',
 
         dataUrlResolver: 'core/data-url-resolver',
         project: 'project/project',

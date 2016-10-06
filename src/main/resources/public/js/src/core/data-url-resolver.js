@@ -449,6 +449,10 @@ define(['app'], function (App) {
         return getGridUrl(type) + '/' + id;
     };
 
+    var postDemoDataUrl = function(){
+        return config.apiVersion + 'demo/' + config.project.projectId;
+    };
+
     return {
         getApiToken: getApiToken,
 
@@ -580,7 +584,8 @@ define(['app'], function (App) {
         getLogsUrl: getLogsUrl,
         getLaunchItemUrl: getLaunchItemUrl,
 
-        userByEmail:userByEmail
+        userByEmail:userByEmail,
+        postDemoDataUrl: postDemoDataUrl
 
     };
 });
