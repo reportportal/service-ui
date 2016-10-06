@@ -981,13 +981,13 @@ define(['util'], function () {
             btsTab: "Bug Tracking System",
             demoDataSettings: 'Demo Data',
             generateDemoData: 'Generate Demo Data',
-            generateDemoDataTitle: 'the system will generate the followingd demo data:',
+            generateDemoDataTitle: 'the system will generate the following demo data:',
             generateDemoDataLaunches: '10 Launches',
             generateDemoDataDashboard: '1 Dashboard with 9 Widgets',
-            generateDemoDataFilter: '1 filter',
-            prefixLabel: 'Prefix will be added to the demo dashboard, widgets, filter name',
+            generateDemoDataFilter: '1 Filter',
+            postfixLabel: 'Postfix will be added to the demo dashboard, widgets, filter name',
             removeDemoData: 'You will have to remove the Demo Data manually.',
-            prefixPlaceHolder: 'Enter Prefix',
+            postfixPlaceHolder: 'Enter Postfix',
             beta: "beta",
             aboutinfo: 'Detailed information about the project',
             unableLoadData: 'Unable to load data',
@@ -1401,7 +1401,8 @@ define(['util'], function () {
             wrongSymbol: "Only Latin, numbers symbols, hyphen, underscore are possible",
             defectUniq: "Full name and Short name set should be unique",
             defectShortName: "Short name should have size from '1' to '4'",
-            defectColor: "Select color for defect type"
+            defectColor: "Select color for defect type",
+            postfixLength: "'Postfix should have size from '{0}' to '{1}'"
         },
 
         forms: {

@@ -37,33 +37,50 @@ define(function(require, exports, module) {
             this.$el = options.holder;
         },
         events: {
-            'click [data-js-demo-data-submit]': 'submitSettings'
+            'click [data-js-demo-data-submit]': 'submitSettings',
+            'input [data-js-demo-data-postfix]': 'validate',
         },
         tpl: 'tpl-project-settings-demo-data',
         render: function () {
-            this.$el.html(Util.templates(this.tpl, {
-                access: Util.isAdmin(config.userModel.toJSON()) || Util.isPersonalProject()
-            }));
+            this.$el.html(Util.templates(this.tpl));
             this.setupAnchors();
+            this.initValidators();
             return this;
         },
         setupAnchors: function(){
             this.$submitSettings = $('[data-js-demo-data-submit]', this.$el);
-            this.$prefixInput = $('[data-js-demo-data-prefix]', this.$el);
+            this.$postfixInput = $('[data-js-demo-data-postfix]', this.$el);
         },
         toggleDisableForm: function(disable){
-            this.$prefixInput.prop('disabled', disable);
+            this.$postfixInput.prop('disabled', disable);
             this.$submitSettings.prop('disabled', disable);
         },
+        initValidators: function () {
+            var self = this;
+            Util.bootValidator(this.$postfixInput, [
+                {
+                    type: 'postfix',
+                    validator: 'minMaxRequired',
+                    min: 1,
+                    max: 90
+                }
+            ]);
+        },
+        validate: function(){
+            this.$postfixInput.trigger('validate');
+            return this.$postfixInput.data('valid');
+
+        },
         submitSettings: function (e) {
-            var prefix = this.$prefixInput.val(),
+            if (!this.validate()) {
+                return;
+            }
+            var postfix = this.$postfixInput.val(),
                 data = {
-                    "launchName": "Demo Api Tests" + ' # ' + prefix,
-                    "dashboardName": "DEMO DASHBOARD" + ' # ' + prefix,
-                    "launchesQuantity": 10,
-                    "isCreateDashboard": "false",
-                    "filterName": "DEMO FILTER" + ' # ' + prefix
+                    "isCreateDashboard": "true",
+                    "postfix": postfix
                 };
+
             this.toggleDisableForm(true);
             Service.generateDemoData(data)
                 .done(function (response) {
