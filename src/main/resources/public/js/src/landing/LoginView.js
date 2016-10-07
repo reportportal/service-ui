@@ -85,6 +85,7 @@ define(function(require, exports, module) {
                     });
             } else if(urlModel.get('errorAuth')) {
                 this.showError(urlModel.get('errorAuth'), false);
+                urlModel.set('errorAuth', null);
             }
             return this;
         },
