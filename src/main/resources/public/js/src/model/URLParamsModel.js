@@ -57,7 +57,9 @@ define(function(require, exports, module) {
             var queryMas = [];
             var params = this.toJSON();
             for(var key in params){
-                queryMas.push(key + '=' + encodeURIComponent(params[key]))
+                if(params[key] != null){
+                    queryMas.push(key + '=' + encodeURIComponent(params[key]));
+                }
             }
             return queryMas.join('&');
         },
@@ -67,7 +69,7 @@ define(function(require, exports, module) {
                 return;
             }
             var queryString = this._getQueryString();
-            if(!queryString || !config.router) return;
+            if(!config.router) return;
             config.router.navigate(this.mainHash + '?' + queryString, {trigger: false});
         }
     });
