@@ -127,7 +127,7 @@ define(function (require, exports, module) {
             return this.getBinding('mode') === 'DEBUG';
         },
         isLaunch: function(){
-            return this.model.get('level') === 'FILTER';
+            return this.model.get('type') === 'LAUNCH';
         },
         showEdit: function (e) {
             e.preventDefault();

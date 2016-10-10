@@ -318,6 +318,11 @@ define(function (require, exports, module) {
                     modelData.parent_launch_isProcessing = self.launchModel.get('isProcessing');
                 });
             }
+            else {
+                _.each(response.content, function(modelData) {
+                    modelData.type = 'LAUNCH';
+                });
+            }
             this.reset(response.content);
             // this.reset([{
             //         description: "dashboard_tests",

@@ -1,13 +1,3 @@
-<li data-js-can-edit>
-    <a href="#" data-js-can-edit class="edit-item" data-js-edit-item>
-        <%= data.text.ui.edit %>
-    </a>
-</li>
-<li data-js-can-delete>
-    <a href="#" data-js-can-delete data-js-delete-item class="delete-item">
-        <%= data.text.ui.delete %>
-    </a>
-</li>
 <% if(data.isLaunch){ %>
     <% if(!data.isCustomer){ %>
         <% if(!_.isUndefined(data.item.mode)){ %>
@@ -35,6 +25,18 @@
             </a>
         </li>
     <% } %>
+<% } %>
+<li data-js-can-edit>
+    <a href="#" data-js-can-edit class="edit-item" data-js-edit-item>
+        <%= data.text.ui.edit %>
+    </a>
+</li>
+<li data-js-can-delete>
+    <a href="#" data-js-can-delete data-js-delete-item class="delete-item">
+        <%= data.text.ui.delete %>
+    </a>
+</li>
+<% if(data.isLaunch){ %>
     <% if(data.exportFormats){ %>
         <li role="separator" class="divider"></li>
         <li class="rp-export-launch-group">
