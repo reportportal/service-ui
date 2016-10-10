@@ -58,6 +58,7 @@ define(function (require, exports, module) {
             this.$rowsHolder = $("#rowHolder", this.$content);
             this.$postToUrl = $("#postToUrl", this.$el);
             this.renderRow();
+            this.attachKeyActions();
             this.delegateEvents();
             return this;
         },
@@ -93,6 +94,13 @@ define(function (require, exports, module) {
                 'click .remove-row': 'removeRow',
                 'blur .issue-link': 'autoFillId'
             });
+        },
+        attachKeyActions: function(){
+            this.$el.on('keydown', function(e){
+                if(e.ctrlKey && e.keyCode === 13){
+                    this.submit();
+                }
+            }.bind(this))
         },
         autoFillId: function (e) {
             if (this.canAutoFill()) {

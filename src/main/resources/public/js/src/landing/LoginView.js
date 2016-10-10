@@ -30,6 +30,7 @@ define(function(require, exports, module) {
     var Localization = require('localization');
     var Service = require('coreService');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
+    var SingletonURLParamsModel = require('model/SingletonURLParamsModel');
 
     var config = App.getInstance();
 
@@ -61,7 +62,6 @@ define(function(require, exports, module) {
         initialize: function (options) {
             this.user = new UserModel();
             this.listenTo(this.user, 'login::loader::hide', this.hideLoader);
-            this.restoreKey = window.location.hash.split(config.restorationStamp)[1];
             this.viewModel = new SingletonRegistryInfoModel();
             this.render();
         },
@@ -69,10 +69,10 @@ define(function(require, exports, module) {
             this.$el.html(Util.templates(this.tpl));
             this.setupAnchors();
             Util.setupBaronScroll($('#login-form', this.$el));
-
-            if (this.restoreKey) {
+            var urlModel = new SingletonURLParamsModel();
+            if (urlModel.get('reset')) {
                 var self = this;
-                Service.validateRestorationKey(this.restoreKey)
+                Service.validateRestorationKey(urlModel.get('reset'))
                     .done(function (response) {
                         if (response.is) {
                             self.openResetPassword();
@@ -83,6 +83,9 @@ define(function(require, exports, module) {
                     .fail(function (error) {
                         self.showRestorationError();
                     });
+            } else if(urlModel.get('errorAuth')) {
+                this.showError(urlModel.get('errorAuth'), false);
+                urlModel.set('errorAuth', null);
             }
             return this;
         },

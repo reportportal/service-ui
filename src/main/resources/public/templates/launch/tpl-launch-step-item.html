@@ -15,12 +15,12 @@
         <div class="rp-grid-tags tags">
             <div class="rp-item-duration" data-js-item-status></div>
             <% if(data.tags && data.tags.length) { %>
-            <span class="text-muted">
-                        <i class="material-icons">local_offer</i>
-                        <% _.each(data.sortTags, function (tag) { %>
-                            <a class="text-muted tag" data-tag="<%- tag %>" href="#"><%- tag.replaceTabs() %></a>
-                        <% }); %>
-                    </span>
+            <span class="rp-launch-tags">
+                <i class="material-icons">local_offer</i>
+                <% _.each(data.sortTags, function (tag) { %>
+                <a class="text-muted tag" data-tag="<%- tag %>" href="#"><%- tag.replaceTabs() %></a>
+                <% }); %>
+            </span>
             <% } %>
         </div>
     </div>
@@ -33,8 +33,9 @@
         </div>
     </div>
     <!--<div class="grid-cell status-grid-cell" data-js-item-status></div>-->
+    <% if(!data.noIssue){ %>
     <div class="grid-cell type-grid-cell" data-js-step-issue></div>
-    <div class="grid-cell select-grid-cell">
+    <div class="grid-cell select-grid-cell" data-js-select-cell>
         <div class="table-wrapper">
             <div class="middle-wrapper">
                 <label class="rp-checkbox-wrap">
@@ -44,4 +45,6 @@
             </div>
         </div>
     </div>
+    <% } %>
 </div>
+<div data-js-defect-editor></div>

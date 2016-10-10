@@ -22,7 +22,7 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var fixedClass = 'affix'
+    var fixedClass = 'fixed-block';
     var App = require('app');
     var config = App.getInstance();
 

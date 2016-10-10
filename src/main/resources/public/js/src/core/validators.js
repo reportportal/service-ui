@@ -57,7 +57,7 @@ define(function (require, exports, module) {
     var minMaxRequired = function (val, options) {
         var length = val.length;
         if (length === 0 || validateForMinMax(length, options)) {
-            return Localization.validation[options.type + "Length"];
+            return Localization.validation[options.type + "Length"].replace('{0}', options.min).replace('{1}', options.max);
         }
         return null;
     };

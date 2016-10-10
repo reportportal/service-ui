@@ -1154,6 +1154,10 @@
                 background: #e8ada3;
             }
 
+            &.rp-pass {
+                background: #b4d2af;
+            }
+
             .tooltip-inner {
                 .defects-tip-duration {
                     width: 240px;
@@ -1239,7 +1243,7 @@
                 padding: 8px 0 10px 5px;
             }
 
-            .defects-tip-list {
+            .defects-tip-title + .defects-tip-list {
                 margin: 4px 0 0;
                 padding: 10px 0 0;
                 border-top: solid 1px #e9e9e9;

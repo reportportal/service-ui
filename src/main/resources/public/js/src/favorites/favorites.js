@@ -38,25 +38,26 @@ define(function (require, exports, module) {
     var appModel = new SingletonAppModel();
 
     var FilterItem = Epoxy.View.extend({
-            events: {
-                'click [data-js-remove]': 'onClickRemove',
-                'click [data-js-filter-edit]': 'onClickEdit',
-                'click [data-js-filter-shared]': 'onClickEdit',
-            },
-            bindings: {
-                '[data-js-filter-link]': 'text: name, attr: {href: url}, classes: {hide: not(isLaunch)}',
-                '[data-js-filter-name]': 'text: name, classes: {hide: isLaunch}',
-                '[data-js-filter-options]': 'html: optionsString',
-                '[data-js-owner]': 'text: owner',
-                '[data-js-filter-shared]': 'classes: {hide: not(isShared)}',
-                '[data-js-switch-to-launch]': 'checked: isLaunch',
-                '[data-js-switch-to-launch-mobile]': 'checked: isLaunch',
-                '[data-js-switch-to-launch-text]': 'text: isLaunchString',
-            },
-            initialize: function() {
-                this.render();
-            },
-            template: 'tpl-favorite-item',
+        className: 'row rp-table-row',
+        events: {
+            'click [data-js-remove]': 'onClickRemove',
+            'click [data-js-filter-edit]': 'onClickEdit',
+            'click [data-js-filter-shared]': 'onClickEdit',
+        },
+        bindings: {
+            '[data-js-filter-link]': 'text: name, attr: {href: url}, classes: {hide: not(isLaunch)}',
+            '[data-js-filter-name]': 'text: name, classes: {hide: isLaunch}',
+            '[data-js-filter-options]': 'html: optionsString',
+            '[data-js-owner]': 'text: owner',
+            '[data-js-filter-shared]': 'classes: {hide: not(isShared)}',
+            '[data-js-switch-to-launch]': 'checked: isLaunch',
+            '[data-js-switch-to-launch-mobile]': 'checked: isLaunch',
+            '[data-js-switch-to-launch-text]': 'text: isLaunchString',
+        },
+        initialize: function() {
+            this.render();
+        },
+        template: 'tpl-favorite-item',
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },

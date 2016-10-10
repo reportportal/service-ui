@@ -36,6 +36,7 @@ define(function (require, exports, module) {
     var StepItemIssueView = Epoxy.View.extend({
         template: 'tpl-launch-step-issue',
         ticketsTpl: 'tpl-launch-step-issue-tickets',
+        className: 'rp-grid-item-issue',
         events: {
             'click [data-js-issue-remove-ticket]': 'removeTicket'
         },

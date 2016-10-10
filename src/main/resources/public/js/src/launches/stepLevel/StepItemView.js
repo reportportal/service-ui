@@ -62,18 +62,19 @@ define(function (require, exports, module) {
                 return this.getBinding('status') == 'FAILED';
             }
         },
-        initialize: function() {
+        initialize: function(options) {
+            this.noIssue = options.noIssue;
             this.userStorage = new SingletonUserStorage();
             this.render();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
                 model: this.model.toJSON({computed: true}),
+                noIssue: this.noIssue,
                 isCollapsedMethod: this.isCollapsedMethod()
-
             }));
             this.renderDuration();
-            if(this.hasIssue()){
+            if(this.hasIssue() && !this.noIssue){
                 this.renderIssue();
             }
         },
@@ -130,14 +131,23 @@ define(function (require, exports, module) {
             e.stopPropagation();
         },
         setupEditor: function () {
-            var item = this.model.toJSON({computed: true});
             this.removeEditor();
             this.$editor = new DefectEditor({
-                origin: $('.rp-table-row', this.$el),
+                origin: $('[data-js-defect-editor]', this.$el),
                 model: this.model
             });
-            $('[data-js-issue-type]', this.$el).hide();
+            this.listenTo(this.$editor, 'defect::editor::hide', this.onHideEditor);
+            this.onShowEditor();
+        },
+        onShowEditor: function(){
             $('[data-js-status-class]', this.$el).addClass('selected');
+            $('[data-js-step-issue]', this.$el).hide();
+            $('[data-js-select-cell]', this.$el).hide();
+        },
+        onHideEditor: function(){
+            $('[data-js-status-class]', this.$el).removeClass('selected');
+            $('[data-js-step-issue]', this.$el).show();
+            $('[data-js-select-cell]', this.$el).show();
         },
         removeEditor: function () {
             if (this.$editor) {
@@ -162,6 +172,7 @@ define(function (require, exports, module) {
             this.menu && this.menu.destroy();
             this.issueView && this.issueView.destroy();
             this.duration && this.duration.destroy();
+            this.removeEditor();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();

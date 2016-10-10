@@ -25,7 +25,7 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var DefectEditor = require('launches/stepLevel/DefectEditorView');
+    var DefectEditorView = require('launches/stepLevel/DefectEditorView');
 
     var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
     var LogItemInfoStackTraceView = require('launches/logLevel/LogItemInfoStackTraceView');
@@ -41,6 +41,7 @@ define(function (require, exports, module) {
             'click [data-js-item-gallery-label]': function(){ this.toggleModelField('attachments') },
             'click [data-js-item-details-label]': function(){ this.toggleModelField('itemDetails') },
             'click [data-js-item-activity-label]': function(){ this.toggleModelField('activity') },
+            'click [data-js-step-issue]': 'showDefectEditor'
         },
 
         bindings: {
@@ -63,14 +64,10 @@ define(function (require, exports, module) {
                 activity: false,
             });
             this.render();
-            // this.issueView = new StepItemIssueView({
-            //     model: this.itemModel,
-            //     $container: $('[data-js-step-issue]', this.$el)
-            // });
-            // this.defectEditor = new DefectEditor({
-            //     origin: $('[data-js-defect-editor]', this.$el),
-            //     model: this.itemModel,
-            // });
+            this.issueView = new StepItemIssueView({
+                model: this.itemModel,
+                $container: $('[data-js-step-issue]', this.$el)
+            });
             this.stackTrace = new LogItemInfoStackTraceView({
                 el: $('[data-js-item-stack-trace]', this.$el),
                 itemModel: this.itemModel,
@@ -92,7 +89,35 @@ define(function (require, exports, module) {
                 parentModel: this.model,
             });
         },
-
+        showDefectEditor: function(e){
+            e.preventDefault();
+            var el = $(e.currentTarget);
+            if(!el.hasClass('disabled')){
+                this.setupEditor();
+                this.onShowEditor();
+            }
+            e.stopPropagation();
+        },
+        setupEditor: function () {
+            this.removeEditor();
+            this.$editor = new DefectEditorView({
+                origin: $('[data-js-log-defect-editor]', this.$el),
+                model: this.itemModel
+            });
+            this.listenTo(this.$editor, 'defect::editor::hide', this.onHideEditor);
+        },
+        onShowEditor: function(){
+            $('[data-js-item-info-issue]', this.$el).hide();
+        },
+        onHideEditor: function(){
+            $('[data-js-item-info-issue]', this.$el).show();
+        },
+        removeEditor: function () {
+            if (this.$editor) {
+                this.$editor.destroy();
+                this.$editor = null;
+            }
+        },
         toggleModelField: function(field) {
             this.model.set(field, !this.model.get(field));
         },
@@ -102,6 +127,8 @@ define(function (require, exports, module) {
         },
 
         destroy: function() {
+            this.issueView && this.issueView.destroy();
+            this.removeEditor();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();

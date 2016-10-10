@@ -174,6 +174,7 @@ define(function(require, exports, module) {
             this.$el.html(Util.templates(this.tpl, {
                 tab: this.tab,
                 projectId: this.projectId,
+                generateDemoDataAccess: Util.isInPrivilegedGroup() || Util.isPersonalProjectOwner(),
                 adminPage: this.adminPage
             }));
             this.$generalHolder = $("#generalSettings", this.$el);

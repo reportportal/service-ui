@@ -9,7 +9,7 @@
 </div>
 <div class="col-md-2 rp-custom-col">
     <div class="rp-info rp-info-padding">
-        <% if(member.account_type == 'INTERNAL' && !data.util.isYou(member)) { %>
+        <% if(member.account_type != 'UPSA' && !data.util.isYou(member)) { %>
             <div class="rp-btn rp-btn-danger rp-button-with-icon member-action" data-id="<%= member.userId %>" title="<%= data.text.ui.delete %>">
                 <i class="material-icons">clear</i>
                 <span class="hidden-sm hidden-xs rp-btn-val"><%= data.text.ui.del %></span>

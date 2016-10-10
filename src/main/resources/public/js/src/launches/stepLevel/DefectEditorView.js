@@ -117,7 +117,7 @@ define(function (require, exports, module) {
                 defectsGroup: ['TO_INVESTIGATE', 'PRODUCT_BUG', 'AUTOMATION_BUG', 'SYSTEM_ISSUE', 'NO_DEFECT'],
                 subDefects: this.getSubDefects()
             }));
-            this.$origin.after(this.$el);
+            this.$origin.html(this.$el);
             this.setupAnchors();
             this.setupMarkItUp();
             this.attachKeyActions();
@@ -125,9 +125,9 @@ define(function (require, exports, module) {
         setupAnchors: function () {
             this.$submitBtn = $("[data-js-submit]", this.$el);
             this.$textarea = $("[data-js-issue-comment]", this.$el);
-            this.$type = $(".pr-defect-type-badge span", this.$el);
+            this.$type = $("[data-js-issue-name]", this.$el); //need to fix
             //this.$multipleEditHolder = $(".rp-defect-multiple-edit:first", this.$el);
-            this.$multipleEditAmount = $("[data-js-selected-qty]", this.$el);
+            //this.$multipleEditAmount = $("[data-js-selected-qty]", this.$el);
             this.$replaceComments = $("[data-js-replace-comment]", this.$el);
         },
         attachKeyActions: function(){
@@ -211,9 +211,8 @@ define(function (require, exports, module) {
 
         },
         closeEditor: function(){
+            this.trigger('defect::editor::hide');
             this.destroy();
-            $('[data-js-issue-type]', this.$origin).show();
-            this.$origin.removeClass('selected');
         },
         removeTicket: function(e){
             e.preventDefault();
@@ -271,8 +270,8 @@ define(function (require, exports, module) {
             var self = this,
                 issue = {comment: $.trim(this.$textarea.val()), issue_type: this.selectedIssue},
                 issue_type = this.getIssueType(),
-                issues = [],
-                replaceComments = this.$replaceComments.is(':checked');
+                issues = [];//,
+                //replaceComments = this.$replaceComments.is(':checked');
             issues.push({
                 test_item_id: this.model.get('id'),
                 issue: issue
@@ -288,8 +287,8 @@ define(function (require, exports, module) {
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, "updateDefect");
                 }).always(function () {
-                this.inProcess = false;
-            }.bind(this));
+                    this.inProcess = false;
+                }.bind(this));
         },
         destroy: function () {
             this.undelegateEvents();
