@@ -643,6 +643,10 @@ input[type=checkbox] + label {
     border: 1px solid transparent;
 }
 
+.b-dashboars-list .columnWidget > ul > li a i{
+    margin-top: 4px;
+}
+
 .b-dashboars-list .columnWidget > ul > li a:hover,
 .b-dashboars-list .columnWidget > ul > li.active a,
 .b-dashboars-list .columnWidget > ul > li.active a:hover {
