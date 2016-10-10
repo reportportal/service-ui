@@ -453,7 +453,6 @@
     width: 100%;
     background-color: #fff;
 
-
     .b-docs ol {
         counter-reset: item;
     }
@@ -462,14 +461,23 @@
         display: block;
     }
 
-    .b-docs__wrapper li {
-        font-family: "OpenSansRegular", sans-serif;
-        text-indent: -29px;
-        margin-left: 11px;
-        padding-left: 20px;
-        font-size:14px;
-        color: #666;
-        list-style: decimal;
+    .b-docs__wrapper {
+        ol {
+            list-style: decimal;
+        }
+
+        ul {
+            list-style: none;
+        }
+        li {
+            font-family: "OpenSansRegular", sans-serif;
+            text-indent: -29px;
+            margin-left: 11px;
+            padding-left: 20px;
+            font-size: 14px;
+            color: #666;
+            list-style: inherit;
+        }
     }
 
     .b-docs li:before {
