@@ -98,13 +98,9 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
-                model: this.model.toJSON({computed: true}),
-                needMatchIssue: this.needMatchIssue()
+                model: this.model.toJSON({computed: true})
             }));
             this.$container.append(this.$el);
-        },
-        needMatchIssue: function(){
-            return this.model.get('level') === 'LOG';
         },
         getIssueType: function(){
             var issue = this.model.getIssue();

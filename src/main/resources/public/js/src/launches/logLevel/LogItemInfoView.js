@@ -100,10 +100,10 @@ define(function (require, exports, module) {
                 activity: false,
             });
             this.render();
-            // this.issueView = new StepItemIssueView({
-            //     model: this.itemModel,
-            //     $container: $('[data-js-step-issue]', this.$el)
-            // });
+            this.issueView = new StepItemIssueView({
+                model: this.itemModel,
+                $container: $('[data-js-step-issue]', this.$el)
+            });
             this.stackTrace = new LogItemInfoStackTraceView({
                 el: $('[data-js-item-stack-trace]', this.$el),
                 itemModel: this.itemModel,
