@@ -24,13 +24,13 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Util = require('util');
-    var ModalConfirmWithAction = require('modals/modalConfirmWithAction');
+    var ModalConfirm = require('modals/modalConfirm');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
 
     var MoveToDebugAction = function(options) {
         var items = options.items;
-        var modal = new ModalConfirmWithAction({
+        var modal = new ModalConfirm({
             headerText: 'Move to debug',
             bodyText: 'Are you sure you want to move selected launches to Debug?',
             cancelButtonText: 'Cancel',

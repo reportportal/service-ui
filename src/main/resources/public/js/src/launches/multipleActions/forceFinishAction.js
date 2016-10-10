@@ -24,13 +24,13 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Util = require('util');
-    var ModalConfirmWithAction = require('modals/modalConfirmWithAction');
+    var ModalConfirm = require('modals/modalConfirm');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
 
     var ForceFinishAction = function(options) {
         var items = options.items;
-        var modal = new ModalConfirmWithAction({
+        var modal = new ModalConfirm({
             headerText: 'Force Finish',
             bodyText: 'In case of finish the launches, all data will be missed. Are you sure you want to finish selected launches?',
             confirmText: 'I am sure I want to finish launches',
