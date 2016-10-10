@@ -32,6 +32,9 @@ define(function (require, exports, module) {
     var LogItemInfoDetailsView = require('launches/logLevel/LogItemInfoDetailsView');
     var LogItemInfoActivity = require('launches/logLevel/LogItemInfoActivity');
     var LogItemInfoAttachmentsView = require('launches/logLevel/LogItemInfoAttachments');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var LogItemInfoView = Epoxy.View.extend({
         template: 'tpl-launch-log-item-info',
@@ -53,6 +56,39 @@ define(function (require, exports, module) {
             '[data-js-item-gallery]': 'classes: {hide: not(attachments)}',
             '[data-js-item-details]': 'classes: {hide: not(itemDetails)}',
             '[data-js-item-activity]': 'classes: {hide: not(activity)}',
+            '[data-js-match]': 'classes: {disabled: mainLaunch}',
+            '[data-js-post-bug]': 'classes: {disabled: btsNotConfigured}, attr: {title: postBugTitle}',
+            '[data-js-load-bug]': 'classes: {disabled: btsNotConfigured}',
+        },
+
+        computeds: {
+            mainLaunch: {
+                deps: [],
+                get: function() {
+                    return false;
+                }
+            },
+            btsNotConfigured: {
+                deps: [],
+                get: function() {
+                    var configuration = config.userModel.get('configuration');
+                    if(!configuration) {
+                        return true;
+                    }
+                    if(configuration.externalSystem && configuration.externalSystem.length) {
+                        return false;
+                    }
+                    return true;
+                }
+            },
+            postBugTitle: {
+                deps: ['btsNotConfigured'],
+                get: function(btsNotConfigured) {
+                    if(btsNotConfigured) {
+
+                    }
+                }
+            }
         },
 
         initialize: function(options) {
@@ -64,10 +100,10 @@ define(function (require, exports, module) {
                 activity: false,
             });
             this.render();
-            this.issueView = new StepItemIssueView({
-                model: this.itemModel,
-                $container: $('[data-js-step-issue]', this.$el)
-            });
+            // this.issueView = new StepItemIssueView({
+            //     model: this.itemModel,
+            //     $container: $('[data-js-step-issue]', this.$el)
+            // });
             this.stackTrace = new LogItemInfoStackTraceView({
                 el: $('[data-js-item-stack-trace]', this.$el),
                 itemModel: this.itemModel,

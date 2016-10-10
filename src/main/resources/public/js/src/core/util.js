@@ -55,7 +55,7 @@ define(function (require, exports, module) {
             var template = Tpl[name];
             if (template) {
                 var tplText = Tpl[name](data);
-                if('DEBUG_STATE') {
+                if('DEBUG_STATE' && name != '_tpl-modal') {
                     tplText = '<!-- start ' + name + ' -->' + tplText;
                     tplText = tplText + '<!-- end ' + name + ' -->';
                 }
@@ -364,61 +364,6 @@ define(function (require, exports, module) {
         hideOverlay: function(element) {
             $(element).LoadingOverlay("hide");
         },
-        // setupVisualEffects: function () {
-        //     var self = this;
-        //
-        //     $(window)
-        //         .on("load resize", function () {
-        //             if ($(".js-menu-toggle").hasClass("js-active")) {
-        //                 $(".js-sidebar").animate({left: '-250px'});
-        //                 $(".js-header").animate({left: "0px"});
-        //                 $(".js-main-content").animate({left: "0px"});
-        //                 $(".js-menu-toggle").removeClass("js-active").animate({left: "0px"});
-        //             }
-        //         });
-        //
-        //     $(document)
-        //         .on("click", "#topHeader .js-menu-toggle", function () {
-        //             if ($(this).hasClass("js-active")) {
-        //                 $(".js-sidebar").animate({left: '-250px'});
-        //                 $(this).removeClass("js-active").animate({left: "0px"});
-        //             } else {
-        //                 if ($('#navbar-header-collapse').hasClass('in')) {
-        //                     $('.js-projects-toggle').click();
-        //                 }
-        //                 $(this).addClass("js-active").animate({left: "250px"});
-        //                 $(".js-sidebar").animate({left: '0px'});
-        //             }
-        //         })
-        //         .off('click.hide-sidebar')
-        //         .on("click.hide-sidebar", ".js-main-content, #topHeader", function (event) {
-        //             var target = $(event.target);
-        //
-        //             if (target.hasClass('js-menu-toggle') || target.closest('.js-menu-toggle').length > 0) return
-        //             if ($(".js-menu-toggle").hasClass("js-active")) {
-        //                 $(".js-menu-toggle").click();
-        //             }
-        //         });
-        //
-        //     $(document).on("click", "#topHeader .js-projects-toggle", function () {
-        //         self.setEqualHeightRow($('.user-projects .rp-mobile.list-group-item'));
-        //         var anotherMenuButton = $('#topHeader .js-menu-toggle');
-        //         if (anotherMenuButton.hasClass("js-active")) {
-        //             $(".js-sidebar").animate({left: '-250px'});
-        //             anotherMenuButton.removeClass("js-active").animate({left: "0px"});
-        //         }
-        //     });
-        //
-        //     $(".js-sidebar").on("click", ".main-menu a", function () {
-        //         if ($(".js-menu-toggle").hasClass("js-active")) {
-        //             $(".js-sidebar").animate({left: '-250px'});
-        //             $(".js-header").animate({left: "0px"});
-        //             $(".js-main-content").animate({left: "0px"});
-        //             $(".js-menu-toggle").removeClass("js-active").animate({left: "0px"});
-        //         }
-        //     });
-        // },
-
         hideMessagePanel: function () {
             var self = this;
             $('.cancel, [type="cancel"]').on('click', function () {
@@ -431,71 +376,6 @@ define(function (require, exports, module) {
                 this.messages.close();
             }
         },
-        // isMac: function () {
-        //     return navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-        // },
-        // updateNiceScrollLib: function () {
-        //     var self = this;
-        //
-        //     $(document.body).on('wheel DoMMouseScroll', function (e) {
-        //         var eo = e.originalEvent;
-        //         if (self.isMac()) {
-        //             if (eo.wheelDeltaY || eo.wheelDeltaX) {
-        //                 if (Math.abs(eo.wheelDeltaY) < 10 && Math.abs(eo.wheelDeltaX) > 2) {
-        //
-        //                     if (eo.wheelDeltaX < -3 || eo.wheelDeltaX > 3) {
-        //                         $('.modal').modal('hide');
-        //                         $.nicescroll[0].wheelprevented = true;
-        //                     } else if (eo.wheelDeltaY < -2 || eo.wheelDeltaY > 2) {
-        //                         $.nicescroll[0].wheelprevented = false;
-        //                     }
-        //                 }
-        //             } else {
-        //                 if (eo.deltaX != 0) {
-        //                     $.nicescroll[0].wheelprevented = true;
-        //                 } else if (eo.deltaY != 0) {
-        //                     $.nicescroll[0].wheelprevented = false;
-        //                 }
-        //             }
-        //         }
-        //     });
-        // },
-        // setupNiceScroll: function (element) {
-        //     var options = $.extend({}, {
-        //         autohidemode: 'false',
-        //         cursorborderradius: '5px', // Scroll cursor radius
-        //         background: '#d8d9dc',     // The scrollbar rail color
-        //         cursorwidth: '10px',       // Scroll cursor width
-        //         cursorcolor: '#666'     // Scroll cursor color
-        //     });
-        //
-        //     if (!this.isMac()) {
-        //         if (element) {
-        //             element.niceScroll(options);
-        //             var scroll = element.getNiceScroll();
-        //             if (scroll[0]) {
-        //                 scroll[0].setScrollTop = function (val) {
-        //                     return setTimeout(function () {
-        //                         if (scroll[0] && scroll[0].docscroll) {
-        //                             scroll[0].docscroll.scrollTop(val);
-        //                         }
-        //                     }, 1);
-        //                 };
-        //                 scroll[0].setScrollLeft = function (val) {
-        //                     return setTimeout(function () {
-        //                         if (scroll[0] && scroll[0].docscroll) {
-        //                             scroll[0].docscroll.scrollLeft((scroll[0].detected.ismozilla && scroll[0].isrtlmode) ? -val : val);
-        //                         }
-        //                     }, 1);
-        //                 };
-        //             }
-        //         } else {
-        //             $(function () {
-        //                 $("body").niceScroll(options);
-        //             });
-        //         }
-        //     }
-        // },
         setupBaronScroll: function($element, inner){
             var wrapHtml = '<div class="baron baron__root baron__clipper"><div class="baron_scroller"></div></div>';
             var $rootElement = null;
@@ -561,22 +441,22 @@ define(function (require, exports, module) {
         setEqualHeightRow: function (elem) {
             $(elem).responsiveEqualHeightGrid();
         },
-        attachNiceScrollToDropDown: function (options) {
-            var found = $("li", options.holder).length,
-                target = $("ul:first", options.holder);
-            if (found > options.acceptable) {
-                options.holder
-                    .on('shown.bs.dropdown', function () {
-
-                        Util.setupNiceScroll(target);
-                    }).on('hidden.bs.dropdown', function () {
-                    target.getNiceScroll().remove();
-                }).on('remove', function () {
-                    target = null;
-                    options.holder = null;
-                });
-            }
-        },
+        // attachNiceScrollToDropDown: function (options) {
+        //     var found = $("li", options.holder).length,
+        //         target = $("ul:first", options.holder);
+        //     if (found > options.acceptable) {
+        //         options.holder
+        //             .on('shown.bs.dropdown', function () {
+        //
+        //                 Util.setupNiceScroll(target);
+        //             }).on('hidden.bs.dropdown', function () {
+        //             target.getNiceScroll().remove();
+        //         }).on('remove', function () {
+        //             target = null;
+        //             options.holder = null;
+        //         });
+        //     }
+        // },
 
         scrollToHighlight: function (id, needPurification) {
             id = config.commentAnchor || id;
@@ -602,37 +482,6 @@ define(function (require, exports, module) {
             config.commentAnchor = '';
         },
 
-        // setupScrollTracker: function () {
-        //     var backTop = $('#back-top'),
-        //         win = $(window),
-        //         scrollTracker = function () {
-        //             var data = {top: win.scrollTop(), height: win.height()};
-        //             $.publish("scroll:change", data);
-        //             if (win.scrollTop() > 100) {
-        //                 $.publish("scroll:greater:than:100", data);
-        //                 if (!backTop.is(':visible')) {
-        //                     backTop.show();
-        //                 }
-        //             } else {
-        //                 backTop.fadeOut();
-        //             }
-        //         };
-        //     win.off('scroll').scroll(function () {
-        //         scrollTracker();
-        //     });
-        //     // scroll body to 0px on click
-        //     backTop.off('click').click(function () {
-        //         $(this).fadeOut();
-        //         $('body,html').animate({
-        //             scrollTop: 0
-        //         }, 100);
-        //         return false;
-        //     });
-        //     // resize tracker
-        //     win.off('resize').resize(function () {
-        //         $.publish("window:resize");
-        //     });
-        // },
         setupBackTop: function(){
             $('body').on('click', '#back-top', function(){
                 config.mainScrollElement.animate({
@@ -859,6 +708,8 @@ define(function (require, exports, module) {
                 message: Localization.infoMessages[type] || Localization.infoMessages.defaults
             });
         },
+
+
 
         getDialog: function (options) {
             $('.rp-modal-dialog').remove();

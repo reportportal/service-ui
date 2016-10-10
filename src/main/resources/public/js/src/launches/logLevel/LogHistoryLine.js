@@ -29,6 +29,7 @@ define(function (require, exports, module) {
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var Util = require('util');
+    var Localization = require('localization');
 
     var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
 
@@ -97,6 +98,16 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-launch-number]': 'text: launchNumber',
             ':el': 'classes: {active: active}',
+            '[data-js-tooltip-item]': 'attr: {title: statusTitle}',
+        },
+
+        computeds: {
+            statusTitle: {
+                deps: ['status'],
+                get: function(status) {
+                    return Localization.historyLine.tooltips[status];
+                }
+            }
         },
         isAction: function() {
             return this.model.get('status') != 'MANY' && this.model.get('status') != 'NOT_FOUND';

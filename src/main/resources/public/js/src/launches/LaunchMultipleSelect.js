@@ -28,6 +28,8 @@ define(function (require, exports, module) {
     var Util = require('util');
     var MergeAction = require('launches/multipleActions/mergeAction');
     var CompareAction = require('launches/multipleActions/compareAction');
+    var RemoveAction = require('launches/multipleActions/removeAction');
+    var MoveToDebugAction = require('launches/multipleActions/moveToDebugAction');
 
     var config = App.getInstance();
 
@@ -150,13 +152,23 @@ define(function (require, exports, module) {
                 });
             },
             movedebug: function() {
-
+                var self = this;
+                MoveToDebugAction({items: this.collection.models}).done(function() {
+                    self.compareAction = null;
+                    self.collectionItems.load(true);
+                    self.reset();
+                })
             },
             forcefinish: function() {
 
             },
             remove: function() {
-                console.log('remove');
+                var self = this;
+                RemoveAction({items: this.collection.models}).done(function() {
+                    self.compareAction = null;
+                    self.collectionItems.load(true);
+                    self.reset();
+                })
             }
         },
 
