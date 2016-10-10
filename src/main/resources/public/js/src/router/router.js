@@ -60,7 +60,7 @@ define(function(require, exports, module) {
             this.user.ready.done(function(){
                 self.listenTo(self.user, 'change:auth', self.onChangeUserAuth.bind(self));
             });
-            this.route(/^(.*)\/launches\/all(.*)$/, "openLaunches");
+            this.route(/^(.*)\/oldlaunches\/all(.*)$/, "openLaunches");
             this.route(/^(.*)\/userdebug\/all(.*)$/, "openUserDebug");
         },
         onChangeUserAuth: function(model, auth){
@@ -102,7 +102,7 @@ define(function(require, exports, module) {
             ':project/dashboard': 'openDashboard',
             ':project/dashboard/:id': 'openDashboard',
             ':project/dashboard/:id?*queryString': 'openDashboard',
-            ':project/newlanches/:filterId(/*path)': 'openLaunch',
+            ':project/launches/:filterId(/*path)': 'openLaunch',
 
             ':project(/)': 'openDashboard',
             '*invalidRoute': "show404Page"

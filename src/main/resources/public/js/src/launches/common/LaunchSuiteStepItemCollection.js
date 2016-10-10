@@ -48,6 +48,7 @@ define(function (require, exports, module) {
             // this.level = lastModelCrumbs.get('level');
             this.listenTo(this, 'remove', this.onRemove);
             this.pagingPage = 1;
+            this.pagingTotalPages = 1;
             this.pagingSize = 50;
             this.noChildFilter = false;
         },
@@ -101,6 +102,7 @@ define(function (require, exports, module) {
         },
         setPaging: function(curPage, size) {
             this.pagingPage = curPage;
+            this.pagingTotalPages = curPage;
             if(size) {
                 this.pagingSize = size;
             }
@@ -244,7 +246,7 @@ define(function (require, exports, module) {
             params = params.concat(this.filterModel.getOptions());
             return params;
         },
-        load: function() {
+        load: function(dynamicPge) {  // double load page if content = []
             var self = this;
             var path = Urls.getGridUrl('launch');
             if(!this.launchModel) {
@@ -278,16 +280,24 @@ define(function (require, exports, module) {
             this.reset([]);
             this.request = call('GET', path)
                 .done(function(data) {
+                    if(!data.content.length && dynamicPge && data.page.totalPages != 0) {
+                        self.setPaging(data.page.totalPages);
+                        return false;
+                    }
                     self.pagingData = data.page;
                     self.parse(data);
+                    self.afterLoadActions();
                 })
-                .always(function() {
-                    if(self.logOptions && self.logOptions.item) {
-                        self.trigger('set:log:item', self.logOptions.item);
-                    }
-                    self.trigger('loading', false);
+                .fail(function() {
+                    self.afterLoadActions();
                 });
             return this.request;
+        },
+        afterLoadActions: function() {
+            if(this.logOptions && this.logOptions.item) {
+                this.trigger('set:log:item', this.logOptions.item);
+            }
+            this.trigger('loading', false);
         },
         loadSuiteStepChildren: function() {  // only for check type
             var path = Urls.getGridUrl('suit') + '?filter.eq.launch=' + this.launchModel.get('id') +

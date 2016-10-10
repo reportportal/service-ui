@@ -129,7 +129,7 @@ define(function(require, exports, module) {
             return data;
         },
         computedsUrl: function() {
-            this.set({url: '#' + appModel.get('projectId') + '/newlanches/' + this.get('id')});
+            this.set({url: '#' + appModel.get('projectId') + '/launches/' + this.get('id')});
         },
         onChangeFilterInfo: function() {
             if(!this.get('temp')) {

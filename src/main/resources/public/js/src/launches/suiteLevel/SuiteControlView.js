@@ -27,6 +27,7 @@ define(function (require, exports, module) {
     var FilterModel = require('filters/FilterModel');
     var App = require('app');
     var InfoPanelView = require('launches/common/InfoPanelView');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -57,14 +58,14 @@ define(function (require, exports, module) {
         },
         activateMultiple: function() {
             $('[data-js-refresh]', this.$el).addClass('disabled');
-            $('[data-js-milti-delete]', this.$el).removeClass('disabled');
+            $('[data-js-milti-delete]', this.$el).removeClass('disabled').attr({title: Localization.ui.delete});
         },
         onClickMultiDelete: function() {
             this.trigger('multi:action', 'remove');
         },
         disableMultiple: function() {
             $('[data-js-refresh]', this.$el).removeClass('disabled');
-            $('[data-js-milti-delete]', this.$el).addClass('disabled');
+            $('[data-js-milti-delete]', this.$el).addClass('disabled').attr({title: Localization.launches.actionTitle});
         },
         onClickRefresh: function() {
             this.collectionItems.load();

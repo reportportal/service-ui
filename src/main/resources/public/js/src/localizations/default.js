@@ -712,6 +712,19 @@ define(['util'], function () {
             IN_PROGRESS: 'In Progress'
         },
 
+        historyLine: {
+            tooltips: {
+                FAILED: 'Failed',
+                PASSED: 'Passed',
+                STOPPED: 'Stopped',
+                SKIPPED: 'Skipped',
+                INTERRUPTED: 'Interrupted',
+                IN_PROGRESS: 'In Progress',
+                MANY: 'There are several items with the same names, descriptions and tags',
+                NOT_FOUND: 'No Item in Launch',
+            }
+        },
+
         infoLine: {
             product_bug: "Total Product Bugs",
             automation_bug: "Total Automation Bugs",
@@ -1191,6 +1204,7 @@ define(['util'], function () {
             deletedWidget: "Widget has been removed!",
             dashboardDeletedUnsharedByOwner: "Dashboard has been removed",
             deleteLaunch: "Launch was deleted",
+            deleteLaunches: 'Launches was deleted',
             deleteTestItem: "Test item was deleted",
 
             editFilter: "Filter name has been updated!",

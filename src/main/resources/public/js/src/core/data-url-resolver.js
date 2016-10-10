@@ -105,9 +105,17 @@ define(['app'], function (App) {
     var tabUrl = function (filtersUrl) {
         return launchesBase() + "/all?" + filtersUrl;
     };
-    var getMerge = function () {
-        return getProjectBase() + '/launch/merge';
+
+    var getLaunchBase = function() {
+        return getProjectBase() + '/launch';
     };
+    var getLaunchMerge = function () {
+        return getLaunchBase() + '/merge';
+    };
+    var getLaunchUpdate = function() {
+        return getLaunchBase() + '/update';
+    };
+
     var queryByTags = function (tags) {
         return getProjectBase() + '/launch/tags?filter.cnt.tags=' + encodeURI(tags);
     };
@@ -503,7 +511,10 @@ define(['app'], function (App) {
         launchMatchUrl: launchMatchUrl,
         launchFinishUrl: launchFinishUrl,
         tabUrl: tabUrl,
-        getMerge: getMerge,
+
+        getLaunchBase: getLaunchBase,
+        getMerge: getLaunchMerge,
+        getLaunchUpdate: getLaunchUpdate,
         queryByTags: queryByTags,
         queryByLaunchName: queryByLaunchName,
         userAutoCompleteUrl: userAutoCompleteUrl,
