@@ -61,6 +61,8 @@ define(function(require, exports, module) {
             parent_launch_owner: null,
             parent_launch_status: null,
             parent_launch_isProcessing: null,
+            parent_launch_number: null,
+            parent_launch_investigate: 0,
         },
         computeds: {
             launch_owner: {
