@@ -316,6 +316,8 @@ define(function (require, exports, module) {
                     modelData.parent_launch_owner = self.launchModel.get('owner');
                     modelData.parent_launch_status = self.launchModel.get('status');
                     modelData.parent_launch_isProcessing = self.launchModel.get('isProcessing');
+                    modelData.parent_launch_number = self.launchModel.get('number');
+                    modelData.parent_launch_investigate = self.launchModel.getToInvestigate();
                 });
             }
             this.reset(response.content);

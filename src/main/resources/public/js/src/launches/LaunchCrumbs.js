@@ -29,6 +29,7 @@ define(function (require, exports, module) {
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
+    var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
 
     var config = App.getInstance();
 
@@ -57,6 +58,16 @@ define(function (require, exports, module) {
             this.ready = $.Deferred();
             this.listenTo(this, 'change:id', this.updateData);
             this.updateData();
+        },
+        getToInvestigate: function() {
+            if(this.get('parent_launch_investigate')) {
+                return this.get('parent_launch_investigate');
+            }
+            var statistics = this.get('statistics');
+            if(statistics && statistics.defects && statistics.defects.to_investigate) {
+                return statistics.defects.to_investigate.total;
+            }
+            return 0;
         },
         updateData: function() {
             var self = this;
