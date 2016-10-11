@@ -201,7 +201,6 @@ define(function (require, exports, module) {
 
         reRenderProjects: function () {
             this.renderActiveProjects();
-            this.renderPersonalProjects();
             if (this.$inactiveHolder.hasClass('in')) {
                 this.renderInactive();
             } else {
@@ -210,6 +209,15 @@ define(function (require, exports, module) {
                     return sum + self.searchFilter(p, self.filter.search);
                 }, 0);
                 this.$inactiveAmount.text(result);
+            }
+            if (this.$personalHolder.hasClass('in')) {
+                this.renderPersonalProjects();
+            } else {
+                var self = this;
+                var result = _.reduce(this.projectsData.personal, function (sum, p) {
+                    return sum + self.searchFilter(p, self.filter.search);
+                }, 0);
+                this.$personalAmount.text(result);
             }
         },
 
