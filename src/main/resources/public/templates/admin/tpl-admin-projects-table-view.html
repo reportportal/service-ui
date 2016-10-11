@@ -27,7 +27,7 @@
                                     <%= data.search ? data.textWrapper(project.projectId, data.search) : project.projectId %>
                                 </a>
                             </h4>
-                             <% if(data.isNew && data.isNew(project.creationDate)) { %>
+                             <% if(!data.isPersonalProject && data.isNew && data.isNew(project.creationDate)) { %>
                                 <span class="label label-success you"><%= data.text.admin.newProject %></span>
                              <% } %>
                         </div>

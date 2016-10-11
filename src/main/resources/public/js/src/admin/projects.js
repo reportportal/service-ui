@@ -218,6 +218,7 @@ define(function (require, exports, module) {
                 collection: this.projectsData.personal,
                 util: Util,
                 isNew: this.isNew,
+                isPersonalProject: true,
                 hasRunsLastWeek: this.hasRunsLastWeek,
                 active: true,
                 canDelete: this.canDelete,
@@ -262,7 +263,7 @@ define(function (require, exports, module) {
                             return project.creationDate;
                         }).reverse();
                         self.projectsData = _.groupBy(data, function (project) {
-                            return project.entryType == "PERSONAL" ? 'personal' : project.launchesQuantity || self.isNew(project.creationDate) ? 'active' : 'inactive';
+                            return self.isPersonalProject(project) ? 'personal' : project.launchesQuantity || self.isNew(project.creationDate) ? 'active' : 'inactive';
                         });
                         self.makeSorting();
                     })
@@ -273,6 +274,10 @@ define(function (require, exports, module) {
                         self.$searchString.removeAttr('disabled');
                     });
             });
+        },
+
+        isPersonalProject: function(project){
+            return project.entryType == "PERSONAL";
         },
 
         renderActiveProjects: function () {
