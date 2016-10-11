@@ -18,3 +18,292 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+ .header {
+   position: relative;
+   margin: 0;
+   padding: 0 15px;
+   background-color: $COLOR--black-five;
+   letter-spacing: .5px;
+
+   & > .container > .row { // #topHeader
+     min-height: 30px;
+     margin-bottom: 0;
+     padding: 16px 0 11px;
+     box-sizing: content-box;
+     color: $COLOR--white-default;
+
+     .navbar {
+       min-height: 30px;
+       margin-bottom: 0;
+       padding-left: 0;
+       padding-right: 0;
+       border: initial;
+       font-family: OswaldRegular,sans-serif;
+
+       .navbar-header {
+          // TODO Mobile view styles
+       }
+
+       .navbar-collapse {
+         padding: 0 15px;
+
+         @media (min-width: 768px) {
+           display: block!important;
+           height: auto!important;
+           padding-bottom: 0;
+           overflow: visible!important;
+         }
+
+
+         ul.navbar-nav {
+           @media (min-width: 768px) {
+             float: left;
+             margin: 0;
+           }
+         }
+
+         ul.rp-navbar-right {
+           margin-right: 0;
+
+           .dropdown {
+             padding-bottom: 0;
+             font-size: 16px;
+
+             .rp-user-navigator {
+               position: relative;
+               display: block;
+               height: 100%;
+               width: 100%;
+               padding: 0;
+               background-color: inherit!important;
+               font-size: 14px;
+               color: $COLOR--white-default;
+               line-height: 20px;
+               cursor: pointer;
+
+               .user-login-wrap {
+                 position: absolute;
+                 display: block;
+                 right: 0;
+                 top: 0;
+                 bottom: 0;
+                 width: auto;
+                 padding: 0 55px 0 0;
+
+                 .user-status {
+                   position: relative;
+                   display: block;
+                   height: 14px;
+                   max-height: 14px;
+                   margin-top: -5px;
+                   margin-right: 15px;
+                   text-align: right;
+                   white-space: nowrap;
+                   color: $COLOR--white-default;
+
+                   .user-status-text {
+                     position: relative;
+                     display: inline-block;
+                     background-color: #ff3222;
+                     text-transform: lowercase;
+                     border-radius: 100px;
+                     padding: 1px 10px 2px;
+                     font-family: OpenSansRegular,sans-serif;
+                     font-size: 10px;
+                     line-height: 10px;
+                   }
+                 }
+
+                 .user-name {
+                   position: relative;
+                   display: block;
+                   margin-top: 10px;
+                   margin-right: 15px;
+                   padding: 0;
+                   text-align: right;
+                   white-space: nowrap;
+                   color: $COLOR--white-default;
+                   font-family: OswaldRegular,sans-serif;
+                   font-size: 12px;
+                   line-height: 12px;
+                   text-shadow: 1px 2px 2px rgba(39,39,40,.4);
+                 }
+               }
+
+               .user-avatar-wrap {
+                 position: relative;
+                 display: block;
+                 margin: 0;
+                 padding-right: 25px;
+
+                 img {
+                   position: relative;
+                   float: none;
+                   max-height: 34px;
+                   max-width: 30px;
+                   border-radius: 0;
+                   margin: 0;
+                   padding: 0;
+                   height: auto;
+                   width: auto;
+                   text-align: center;
+                 }
+               }
+
+               .material-icons.arrow_drop_down {
+                 position: absolute;
+                 display: block;
+                 top: 0;
+                 right: 0;
+                 font-size: 22px;
+                 width: 22px;
+                 line-height: 30px;
+               }
+             }
+
+             .dropdown-menu {
+               margin-top: 0;
+               top: 44px;
+               padding: 0;
+               border-radius: 0;
+               border-color: #d9d9d9;
+
+               li {
+                 position: relative;
+                 padding: 0;
+
+                 a {
+                   clear: both;
+                   display: block;
+                   margin: 0;
+                   padding: 8px 19px 9px;
+                   background-color: inherit;
+                   color: #464547;
+                   font-size: 13px;
+                   font-weight: 400;
+                   line-height: 1.42857143;
+                   white-space: nowrap;
+
+                   &:hover {
+                     background: #d8f3f7;
+                   }
+                 }
+               }
+             }
+           }
+         }
+
+         ul.rp-navbar-left {
+           & > li:first-child {
+             padding-right: 30px;
+           }
+
+
+
+           .dropdown { // #projecSelector
+             padding-bottom: 0;
+             font-size: 16px;
+
+             a.dropdown-toggle {
+               padding: 0;
+               background-color: inherit!important;
+               color: $COLOR--white-default;
+               font-size: 20px;
+               text-transform: uppercase;
+               text-decoration: none;
+
+               .selected-project {
+                 margin-right: 10px;
+                 text-decoration: none;
+               }
+             }
+
+             h4 {
+               padding: 0 10px;
+             }
+
+             .baron__root {
+               position: absolute;
+               top: 44px;
+               width: 100%;
+               height: 0;
+
+               &.open {
+                 border: 1px solid rgba(0,0,0,.15);
+                 z-index: 1000;
+               }
+
+               .baron_scroller {
+                 overflow-x: hidden;
+
+                 .dropdown-menu.user-projects {
+                   top: 0;
+                   max-height: none;
+                   padding: 0;
+                   margin: 0;
+                   border: none;
+
+                   li {
+                     position: relative;
+                     padding: 0;
+
+                     a {
+                       clear: both;
+                       padding: 8px 19px 9px;
+                       font-size: 13px;
+                       font-weight: 400;
+                       color: #464547;
+                       text-transform: uppercase;
+                       text-decoration: none;
+                     }
+
+                     &.active > a {
+                       background-color: $COLOR--gray-91;
+                       border: none;
+                     }
+                   }
+                 }
+               }
+
+               .baron__track {
+                 z-index: 1001;
+               }
+             }
+
+             &:after {
+               content: "";
+               position: absolute;
+               top: -2px;
+               right: 0;
+               display: block;
+               width: 1px;
+               height: 29px;
+               background-color: #575658;
+             }
+           }
+
+           li[title = "Members"] {
+             a {
+               padding: 6px 0 0;
+               margin-left: 30px;
+               font-size: 13px;
+               line-height: 13px;
+               color: $COLOR--gray-91;
+             }
+           }
+
+           li[title = "Settings"] {
+             a {
+               padding: 5px 0 0;
+               margin: 0 0 0 30px;
+               font-size: 16px;
+               line-height: 16px;
+               color: $COLOR--gray-91;
+             }
+           }
+         }
+       }
+     }
+   }
+ }
