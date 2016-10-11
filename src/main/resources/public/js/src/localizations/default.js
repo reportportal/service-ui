@@ -235,6 +235,7 @@ define(['util'], function () {
             },
             header: {
                 btnLogin: 'Login',
+                forkGithub: 'Fork on',
                 returnToRP: 'Return to RP',
                 linkFeatures: 'Benefits',
                 linkAutoAnalysis: 'Accelerated analysis',
