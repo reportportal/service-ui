@@ -1,3 +1,29 @@
 .modal-load-bug {
-
+  .modal-body {
+    padding: 40px 10px 10px 21px;
+    h4 {
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+  }
+  .load-items-container {
+    padding: 17px 9px 10px 9px;
+    .link-label {
+      width: 320px;
+    }
+    .issue-label {
+      width: 100px;
+      margin-left: 7px;
+    }
+    label{
+      font-weight: normal;
+      span {
+        display: block
+      }
+      input {
+        width: 100%;
+        margin-top: 6px;
+      }
+    }
+  }
 }

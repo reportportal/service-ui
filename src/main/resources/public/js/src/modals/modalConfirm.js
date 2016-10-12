@@ -41,12 +41,13 @@ define(function (require, exports, module) {
                confirmText: '',   //optional
                cancelButtonText: '',   //optional
                okButtonText: '',  //optional
+               confirmFunction: function() { return $.Deferred()},
             }*/
             this.render(options);
             this.confirmFunction = options.confirmFunction;
         },
         render: function(options) {
-            this.$el.html(Util.templates(this.template, options))
+            this.$el.html(Util.templates(this.template, options));
         },
         onChangeCheckbox: function(e) {
             if($(e.currentTarget).is(':checked')) {

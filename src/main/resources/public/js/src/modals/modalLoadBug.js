@@ -47,6 +47,7 @@ define(function (require, exports, module) {
     });
     var TicketView = Epoxy.View.extend({
        template: 'tpl-model-load-bug-item',
+        className: 'ticket-row-view',
 
         initialize: function() {
            this.render();
@@ -64,7 +65,7 @@ define(function (require, exports, module) {
             this.render();
             this.collection = new TicketCollection();
             this.listenTo(this.collection, 'add', this.onAddTicket);
-            this.collection.add({});
+            this.collection.add({}, {});
         },
         onAddTicket: function(model) {
             $('[data-js-load-items-container]', this.$el).append((new TicketView({model: model})).$el);
