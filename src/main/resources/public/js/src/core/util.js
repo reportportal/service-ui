@@ -51,6 +51,7 @@ define(function (require, exports, module) {
        templates: function (name, data) {
             var data = data || {};
             data['text'] = Localization;
+            data.includeTemplate = Util.templates;
 
             var template = Tpl[name];
             if (template) {

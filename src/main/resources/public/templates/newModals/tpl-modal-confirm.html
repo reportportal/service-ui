@@ -1,12 +1,4 @@
-<div class="modal-header">
-    <h2><%= data.headerText %></h2>
-    <span class="close-modal"
-          title="<%= data.text.uiCommonElements.close %>"
-          data-js-close
-          data-dismiss="modal">
-            <i class="material-icons">clear</i>
-        </span>
-</div>
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.headerText}) %>
 <div class="modal-body">
     <p><%= data.bodyText %></p>
     <% if(data.confirmText) { %>
