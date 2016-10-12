@@ -945,6 +945,7 @@ define(['util'], function () {
             postfixLabel: 'Postfix will be added to the demo dashboard, widgets, filter name',
             removeDemoData: 'You will have to remove the Demo Data manually.',
             postfixPlaceHolder: 'Enter Postfix',
+            posfixUniq: 'Postfix should to be unique',
             beta: "beta",
             aboutinfo: 'Detailed information about the project',
             unableLoadData: 'Unable to load data',
