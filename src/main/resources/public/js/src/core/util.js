@@ -201,6 +201,9 @@ define(function (require, exports, module) {
         },
 
         textWrapper: function (value, search) {
+            if(!value) {
+                return '';
+            }
             var regex = new RegExp(search, 'ig');
             return value.replace(regex, '<mark>$&</mark>');
         },
