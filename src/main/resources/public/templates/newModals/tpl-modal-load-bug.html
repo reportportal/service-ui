@@ -1,16 +1,4 @@
-<div class="modal-header">
-    <h2 class="col-lg-10 col-md-10 col-sm-10 col-xs-10 break-link">
-        <%= data.text.launches.loadBug %>
-    </h2>
-    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 panel-action">
-        <span class="close-pop-up"
-              title="<%= data.text.uiCommonElements.close %>"
-              data-js-close
-              data-dismiss="modal">
-            <i class="material-icons">clear</i>
-        </span>
-    </div>
-</div>
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.launches.loadBug}) %>
 <div class="modal-body">
     <h4><%= data.text.launches.addIssueId %></h4>
     <div class="load-items-container" data-js-load-items-container></div>

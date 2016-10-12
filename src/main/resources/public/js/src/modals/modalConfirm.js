@@ -35,6 +35,13 @@ define(function (require, exports, module) {
         },
 
         initialize: function(options) {
+            /*  options = {
+               headerText: '',
+               bodyText: '',
+               confirmText: '',   //optional
+               cancelButtonText: '',   //optional
+               okButtonText: '',  //optional
+            }*/
             this.render(options);
             this.confirmFunction = options.confirmFunction;
         },
