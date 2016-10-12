@@ -21,6 +21,8 @@ define(function (require, exports, module) {
 
     var $ = require('jquery');
     var _ = require('underscore');
+    var ModalView = require('modals/_modalView');
+
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
@@ -33,6 +35,44 @@ define(function (require, exports, module) {
     var MarkitupSettings = require('markitupset');
 
     var config = App.getInstance();
+
+    var TicketModel = Epoxy.Model.extend({
+        defaults: {
+            link: '',
+            issue: '',
+        }
+    });
+    var TicketCollection = Backbone.Collection.extend({
+        model: TicketModel,
+    });
+    var TicketView = Epoxy.View.extend({
+       template: 'tpl-model-load-bug-item',
+
+        initialize: function() {
+           this.render();
+        },
+        render: function() {
+            this.$el.html(Util.templates(this.template, {}));
+        }
+    });
+
+    var ModalLoadBug = ModalView.extend({
+        template: 'tpl-modal-load-bug',
+        className: 'modal-load-bug',
+
+        initialize: function(options) {
+            this.render();
+            this.collection = new TicketCollection();
+            this.listenTo(this.collection, 'add', this.onAddTicket);
+            this.collection.add({});
+        },
+        onAddTicket: function(model) {
+            $('[data-js-load-items-container]', this.$el).append((new TicketView({model: model})).$el);
+        },
+        render: function() {
+            this.$el.html(Util.templates(this.template, {}))
+        }
+    });
 
     // TODO -rewrite for Modal object
 
@@ -207,5 +247,5 @@ define(function (require, exports, module) {
         }
     });
 
-    return LoadBug;
+    return ModalLoadBug;
 })

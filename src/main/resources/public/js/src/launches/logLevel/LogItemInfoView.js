@@ -203,10 +203,11 @@ define(function (require, exports, module) {
 
         },
         onClickLoadBug: function() {
-            (new ModalLoadBug({
+            var modal =(new ModalLoadBug({
                 items: [this.viewModel.toJSON() ],
                 systems: this.appModel.get('configuration'),
-            })).render()
+            }));
+            modal.show();
         },
         onClickMatch: function() {
             var self = this;
