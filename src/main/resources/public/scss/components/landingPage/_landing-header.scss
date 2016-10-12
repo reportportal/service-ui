@@ -232,6 +232,11 @@
         box-shadow: none;
     }
 }
+@media (max-width: 1400px) {
+  .rp-btn-landing-header .gh-hide {
+    display: none;
+  }
+}
 @media (min-width: 768px) and (max-width: 992px) {
     .b-header .navbar > .container .navbar-brand {
         margin-left: 0;
