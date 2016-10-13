@@ -3,11 +3,11 @@
     <% if(data.filter(project, data.search)){ %>
     <% counter += 1; %>
         <% var lastRunClass = data.inactiveProject || (project.lastRun && !data.hasRunsLastWeek(project.lastRun)) ? 'dimmed' : ''; %>
-        <% var newLabel = data.isNew && data.isNew(project.creationDate); %>
+        <% var newLabel = !data.isPersonalProject && data.isNew && data.isNew(project.creationDate); %>
         <% var noLabelClass = newLabel ? '': 'no-label' ; %>
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 project-item project-row <%= lastRunClass %>">
             <div class="project-wrapper col-sm-12">
-                <% if(data.canDelete(project)) { %>
+                <% if(data.canDelete(project) && !data.isPersonalProject) { %>
                     <div class="remove-project"
                         data-id="<%- project.projectId %>"
                         data-active="<%= data.active %>">

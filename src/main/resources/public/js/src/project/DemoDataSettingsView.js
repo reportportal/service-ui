@@ -28,6 +28,7 @@ define(function(require, exports, module) {
     var Components = require('components');
     var App = require('app');
     var Service = require('coreService');
+    var Localization = require('localization');
     var SingletonAppModel = require('model/SingletonAppModel');
 
     var config = App.getInstance();
@@ -71,10 +72,43 @@ define(function(require, exports, module) {
             return this.$postfixInput.data('valid');
 
         },
+        showFormError: function(error){
+            var response = null,
+                message = '';
+            if (error) {
+                try {
+                    response = JSON.parse(error.responseText);
+                } catch (e) {
+                    message = Localization.failMessages.defaults;
+                }
+                if(error.status === 409){
+                    message = Localization.project.posfixUniq;
+                }
+                else {
+                    if (response && response.message) {
+                        if(response.message.indexOf("You couldn't create the duplicate") >=0){
+                            message = Localization.project.posfixUniq;
+                        }
+                        else {
+                            message = response.message.replace('{}', '');
+                        }
+                    }
+                }
+            }
+            var form = this.$postfixInput.closest('.rp-form-group');
+            form.addClass('has-error');
+            $('.help-inline', form).text(message);
+        },
+        hideFormError: function(){
+            var form = this.$postfixInput.closest('.rp-form-group');
+            form.removeClass('has-error');
+            $('.help-inline', form).text('');
+        },
         submitSettings: function (e) {
             if (!this.validate()) {
                 return;
             }
+            this.hideFormError();
             var postfix = this.$postfixInput.val(),
                 data = {
                     "isCreateDashboard": "true",
@@ -84,11 +118,13 @@ define(function(require, exports, module) {
             this.toggleDisableForm(true);
             Service.generateDemoData(data)
                 .done(function (response) {
+                    this.$postfixInput.val('');
                     Util.ajaxSuccessMessenger('generateDemoData');
-                })
+                }.bind(this))
                 .fail(function (error) {
+                    this.showFormError(error);
                     Util.ajaxFailMessenger(error);
-                })
+                }.bind(this))
                 .always(function(){
                     this.toggleDisableForm(false);
                 }.bind(this));

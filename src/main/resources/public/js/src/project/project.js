@@ -174,7 +174,7 @@ define(function(require, exports, module) {
             this.$el.html(Util.templates(this.tpl, {
                 tab: this.tab,
                 projectId: this.projectId,
-                generateDemoDataAccess: Util.isInPrivilegedGroup() || Util.isPersonalProjectOwner(),
+                generateDemoDataAccess: Util.isInPrivilegedGroup() || this.isPersonalProjectOwner(),
                 adminPage: this.adminPage
             }));
             this.$generalHolder = $("#generalSettings", this.$el);
@@ -203,6 +203,12 @@ define(function(require, exports, module) {
                     holder: this.$generalHolder
                 }).render();
             }
+        },
+        isPersonalProjectOwner: function(){
+            var user = config.userModel.get('name'),
+                project = this.appModel.get('projectId'),
+                isPersonalProject = this.appModel.isPersonalProject();
+            return isPersonalProject && project === user + '_personal';
         },
         notificationsRender: function () {
             if (!this.notificationsView) {

@@ -56,10 +56,14 @@
             max-width: 320px;
         }
     }
+    .demo-data-submit-mobile {
+        display: none;
+    }
     .demo-data-warning-block {
         margin-top: 26px;
         font-size: 12px;
         .demo-data-warning {
+            display: block;
             color: $COLOR--failed;
             font-size: 13px;
             padding-left: 20px;
@@ -81,6 +85,7 @@
     .rp-settings-demo-data {
         width: 100%;
         .demo-data-form {
+            display: none;
             input {
                 margin: 0 auto;
                 display: block;
@@ -90,7 +95,13 @@
             text-align: center;
         }
         .demo-data-warning-block {
-            margin-top: 0;
+            display: none;
+        }
+        .rp-btn-submit {
+            display: none;
+        }
+        .demo-data-submit-mobile {
+            display: inline-block;
         }
     }
 }
