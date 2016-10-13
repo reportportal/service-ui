@@ -48,12 +48,53 @@ define(function (require, exports, module) {
     var TicketView = Epoxy.View.extend({
        template: 'tpl-model-load-bug-item',
         className: 'ticket-row-view',
+        events: {
+           'click [data-js-remove-row]': 'onClickRemove',
+            'blur [data-js-link-input]': 'onBlurLinkInput',
+        },
 
         initialize: function() {
-           this.render();
+            this.render();
+            this.listenTo(this.model.collection, 'add remove', this.onChangeCollection);
+            this.onChangeCollection();
+            Util.bootValidator($('[data-js-issue-input]', this.$el), {
+                validator: 'minMaxRequired',
+                type: 'issueId',
+                min: 1,
+                max: 128
+            });
+            Util.bootValidator($('[data-js-link-input]', this.$el), [
+                {
+                    validator: 'matchRegex',
+                    type: 'issueLinkRegex',
+                    pattern: config.patterns.urlT,
+                    arg: 'i'
+                }
+            ]);
+        },
+        onBlurLinkInput: function() {
+
+        },
+        onChangeCollection: function() {
+            if(this.model.collection.models.length <= 1) {
+                $('[data-js-remove-row]', this.$el).addClass('hide');
+            } else {
+                $('[data-js-remove-row]', this.$el).removeClass('hide');
+            }
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onClickRemove: function() {
+            this.model.collection.remove(this.model);
+            this.destroy();
+        },
+        destroy: function() {
+            this.$el.remove();
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            delete this;
         }
     });
 
@@ -61,11 +102,25 @@ define(function (require, exports, module) {
         template: 'tpl-modal-load-bug',
         className: 'modal-load-bug',
 
+        events: {
+            'click [data-js-add-ticket]': 'onClickAddTicket',
+            'click [data-js-load]': 'onClickLoad',
+        },
+
         initialize: function(options) {
             this.render();
             this.collection = new TicketCollection();
             this.listenTo(this.collection, 'add', this.onAddTicket);
-            this.collection.add({}, {});
+            this.collection.add({});
+        },
+        onClickAddTicket: function() {
+            this.collection.add({});
+        },
+        onClickLoad: function() {
+            $('.form-control', this.$el).trigger('validate');
+            if (!$('.has-error', this.$el).length) {
+
+            }
         },
         onAddTicket: function(model) {
             $('[data-js-load-items-container]', this.$el).append((new TicketView({model: model})).$el);
@@ -110,20 +165,20 @@ define(function (require, exports, module) {
         },
         renderRow: function () {
             this.$rowsHolder.append(Util.templates(this.rowTpl));
-            Util.bootValidator($(".issue-row:last .issue-id", this.$rowsHolder), {
-                validator: 'minMaxRequired',
-                type: 'issueId',
-                min: 1,
-                max: 128
-            });
-            Util.bootValidator($(".issue-row:last .issue-link", this.$rowsHolder), [
-                {
-                    validator: 'matchRegex',
-                    type: 'issueLinkRegex',
-                    pattern: config.patterns.urlT,
-                    arg: 'i'
-                }
-            ]);
+            // Util.bootValidator($(".issue-row:last .issue-id", this.$rowsHolder), {
+            //     validator: 'minMaxRequired',
+            //     type: 'issueId',
+            //     min: 1,
+            //     max: 128
+            // });
+            // Util.bootValidator($(".issue-row:last .issue-link", this.$rowsHolder), [
+            //     {
+            //         validator: 'matchRegex',
+            //         type: 'issueLinkRegex',
+            //         pattern: config.patterns.urlT,
+            //         arg: 'i'
+            //     }
+            // ]);
         },
         addRow: function () {
             this.renderRow();

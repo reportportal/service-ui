@@ -1020,7 +1020,7 @@ define(function (require, exports, module) {
             $el.data('valid', true).data('was', $el.val());
 
             // TODO - added variant with class 'rp-form-group'
-            var $holder = $el.closest(".form-group, .rp-form-group");
+            var $holder = $el.closest(".form-group, .rp-form-group, label");
 
             var $messenger = $(".help-inline:first", $holder);
             var isHint = $messenger.hasClass('error-hint');

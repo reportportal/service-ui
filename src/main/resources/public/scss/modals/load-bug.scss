@@ -1,13 +1,17 @@
 .modal-load-bug {
   .modal-body {
-    padding: 40px 10px 10px 21px;
+    padding: 40px 10px 10px 10px;
     h4 {
       font-size: 12px;
       text-transform: uppercase;
+      color: $COLOR--gray-47;
+      background-color: $COLOR--white-four;
+      margin: 0;
+      padding: 10px;
     }
   }
   .load-items-container {
-    padding: 17px 9px 10px 9px;
+    padding: 17px 9px 10px 20px;
     .link-label {
       width: 320px;
     }
@@ -17,13 +21,32 @@
     }
     label{
       font-weight: normal;
-      span {
+      position: relative;
+      color: $COLOR--charcoal-grey;
+      vertical-align: top;
+      span:first-child {
         display: block
       }
       input {
         width: 100%;
         margin-top: 6px;
       }
+      .help-inline {
+        padding-top: 5px;
+      }
     }
+    .remove-row {
+      margin: 31px 0 0 3px;
+      display: inline-block;
+      vertical-align: top;
+      cursor: pointer;
+      color: $COLOR--gray-60;
+      &:hover {
+        color: $COLOR--gray-47;
+      }
+    }
+  }
+  .add-button {
+    margin: 5px 0 20px 21px;
   }
 }

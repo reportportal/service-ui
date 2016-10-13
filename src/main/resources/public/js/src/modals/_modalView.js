@@ -63,6 +63,12 @@ define(function (require, exports, module) {
         },
         hideLoading: function() {
             this.$modalWrapper && this.$modalWrapper.removeClass('load animate');
+        },
+        destroy: function() {
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            delete this;
         }
     })
 

@@ -55,6 +55,7 @@ define(['util'], function () {
             escToCancel: '<strong>Esc</strong> to Cancel',
             ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> to Submit',
             loading: "Loading",
+            load: 'Load',
             gallery: "Gallery",
             build: "Build",
             error: "Error",
@@ -1066,7 +1067,7 @@ define(['util'], function () {
             configureFields: "Configure Bug Tracking System default properties to post bugs",
             issueId: "Issue ID",
             linkToIssue: "Link to Issue",
-            addMoreIssues: "Add more issues",
+            addNewIssues: "Add New Issues",
             btsInstances: "Bts Instances:",
             btsAddNewInstance: "Add New Instance"
         },
