@@ -556,6 +556,9 @@ define(function(require, exports, module) {
             this.isGrandAdmin = options.grandAdmin;
             this.pageType = 'PaginateProjectMembers_' + this.memberAction + '_' + this.projectId;
             this.appModel = new SingletonAppModel();
+            if(options.project){
+                this.appModel.set(options.project);
+            }
         },
         shellTpl: 'tpl-members-shell',
         membersTpl: 'tpl-members-list',

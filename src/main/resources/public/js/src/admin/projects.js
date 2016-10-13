@@ -513,6 +513,7 @@ define(function (require, exports, module) {
 
             if (this.fullMembers) {
                 data.projectId = this.id;
+                data.project = {type: config.project.configuration.entryType, projectId: this.id};
                 data.user = config.userModel.toJSON();
                 data.roles = config.projectRoles;
                 data.memberAction = 'unAssignMember';
