@@ -31,6 +31,7 @@ define(function(require, exports, module) {
     var Localization = require('localization');
     var Service = require('memberService');
     var Scrollable = require('scrollable');
+    var SingletonAppModel = require('model/SingletonAppModel');
 
     require('validate');
 
@@ -554,6 +555,10 @@ define(function(require, exports, module) {
             this.isDefaultProject = options.isDefaultProject;
             this.isGrandAdmin = options.grandAdmin;
             this.pageType = 'PaginateProjectMembers_' + this.memberAction + '_' + this.projectId;
+            this.appModel = new SingletonAppModel();
+            if(options.project){
+                this.appModel.set(options.project);
+            }
         },
         shellTpl: 'tpl-members-shell',
         membersTpl: 'tpl-members-list',
@@ -663,6 +668,13 @@ define(function(require, exports, module) {
             }
             return color;
         },
+        isPersonalProjectOwner: function(){
+            var project = this.appModel.get('projectId'),
+                isPersonalProject = this.appModel.isPersonalProject();
+            return function(user){
+                return isPersonalProject && (project === user.userId + '_personal');
+            }
+        },
         renderMembers: function (members) {
             members = members || this.members;
             if(members) {
@@ -708,6 +720,7 @@ define(function(require, exports, module) {
                 util: Util,
                 getColorClass: this.getColorClass,
                 unassignedLock: this.unassignedLock(),
+                isPersonalProjectOwner: this.isPersonalProjectOwner(),
                 canEdit: this.canEdit,
                 isGrandAdmin: this.isGrandAdmin,
                 defaultRole: this.defaultRole,

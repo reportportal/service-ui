@@ -36,7 +36,8 @@
             </div>
             <div class="rp-table-th col-md-3">
                 <%if(!data.unassignedLock(data.member, val)){ %>
-                    <% if(data.defaultProject !== key){ %>
+                    <% var isOwnerPersonalProject = data.isPersonalProjectOwner(data.member, elem); %>
+                    <% if(data.defaultProject !== key && !isOwnerPersonalProject){ %>
                         <div class="rp-btn rp-btn-default rp-button-with-icon unassign-member"
                             title="<%= data.text.members.unAssignTitle %>"
                             data-project="<%= key %>">
@@ -48,7 +49,7 @@
                     <% } else { %>
                         <span class="btn">
                             <i class="material-icons"
-                                title="<%= data.text.admin.cantUnAssignFromDefault %>">lock</i>
+                                title="<%= isOwnerPersonalProject ? data.text.admin.cantUnAssignFromPersonal : data.text.admin.cantUnAssignFromDefault %>">lock</i>
                         </span>
                     <% } %>
                 <% } %>
