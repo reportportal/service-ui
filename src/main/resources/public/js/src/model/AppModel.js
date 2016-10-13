@@ -32,10 +32,10 @@ define(function(require, exports, module) {
 
         },
         isPersonalProject: function(){
-            return this.get('type') === 'PERSONAL';
+            return this.get('configuration').entryType === 'PERSONAL';
         },
         isInternalProject: function(){
-            return this.get('type') === 'INTERNAL';
+            return this.get('configuration').entryType === 'INTERNAL';
         }
 
     });
