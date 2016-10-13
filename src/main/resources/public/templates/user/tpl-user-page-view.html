@@ -18,6 +18,7 @@
                                 src="<%= data.image %>"
                                 alt="<%= data.text.ui.avatar %>" />
                         </div>
+                        <% if(data.account_type === "INTERNAL"){ %>
                         <form id="fileUploadForm">
                             <span class="btn btn-file btn-salad-bg m-top-10">
                                 <%= data.text.userProfile.selectPhoto %>
@@ -37,8 +38,10 @@
                             class="alert alert-danger col-sm-12 m-top-10">
                             <%= data.text.validation.wrongImage %>
                         </span>
+                        <% } %>
                     </div>
                     <div class="col-sm-9">
+                        <% if(data.account_type === "INTERNAL"){ %>
                         <div class="col-sm-12 text-right" id="updateButtons">
                             <button class="btn btn-salad-bg m-top-10 m-right-15" id="editInfo">
                                 <%= data.text.userProfile.editInfo %>
@@ -47,6 +50,7 @@
                                 <%= data.text.login.changePassword %>
                             </button>
                         </div>
+                        <% } %>
                         <div class="row" id="staticInfo">
                             <h3 class="page-title text-capitalize col-xs-12">
                                 <span class="profile_name text-wrapper"><%= data.user_login %></span>
