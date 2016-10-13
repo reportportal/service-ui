@@ -115,7 +115,7 @@ define(['app'], function (App) {
         return getProjectBase() + '/launch/owners?filter.cnt.user=' + encodeURI(term) + (mode ? '&mode=' + mode : '');
     };
     var autocompleteUserUrl = function(term){
-        return config.apiVersion + 'project/' + config.project.projectId + '/users?filter.cnt.name=' + encodeURI(term);
+        return config.apiVersion + 'project/' + config.project.projectId + '/usernames?filter.cnt.users=' + encodeURI(term);
     };
     var tagsLaunchAutoCompleteUrl = function (term, id) {
         return getProjectBase() + '/item/tags?launch=' + id.replace('all-cases-for-', '') + '&filter.cnt.tags=' + encodeURI(term);
