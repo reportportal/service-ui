@@ -183,7 +183,7 @@ define(['util'], function () {
             api: "API",
             licensing: "Licensing",
             lgplv3: "LGPL 3.0",
-            forkUs: 'Fork us on GitHab',
+            forkUs: 'Fork us on GitHub',
             chatSlack: 'Chat with us on Slack',
             textCopyright: "&copy; 2016 Report Portal. All Rights Reserved.",
             menu: {
