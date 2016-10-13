@@ -17,278 +17,295 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 .b-header {
-    position: fixed;
-    width: 100%;
-    z-index: 1300;
+  position: fixed;
+  width: 100%;
+  z-index: 1300;
 }
+
 .b-header .navbar {
-    border-radius: 0;
-    border: none;
-    overflow: visible;
-    height: 60px;
-    background-color: rgba(0, 0, 0, 0.8);
-    transition: all 0.5s ease-in-out;
-    /*margin-righght: 12px;*/
-    margin-bottom: 0;
+  border-radius: 0;
+  border: none;
+  overflow: visible;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.8);
+  transition: all 0.5s ease-in-out;
+  /*margin-righght: 12px;*/
+  margin-bottom: 0;
 }
 
 .navbar-header .b-header__logo {
-    position: absolute;
-    z-index: 1010;
-    height: 75px;
-    width: 130px;
-    margin-right: 60px !important;
-    background-color: #fff;
-    text-align: center;
-    background-image: url("../img/landing/logo.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    transition: all 0.5s ease-in-out;
+  position: absolute;
+  z-index: 1010;
+  height: 75px;
+  width: 130px;
+  margin-right: 60px !important;
+  background-color: #fff;
+  text-align: center;
+  background-image: url("../img/landing/logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  transition: all 0.5s ease-in-out;
 }
 
 .b-header__menuline {
-    position: absolute;
-    z-index: 1009;
-    bottom: 0;
-    background-color: #fff;
-    height: 2px;
+  position: absolute;
+  z-index: 1009;
+  bottom: 0;
+  background-color: #fff;
+  height: 2px;
 }
 
 .b-header.b-header--dark .b-header__logo {
-    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
 }
 
 .b-header .navbar-header {
-    height: 60px;
+  height: 60px;
 }
+
 .b-header .navbar-default .navbar-nav {
-    margin-left: 130px;
+  margin-left: 130px;
 }
 
 .b-header .navbar-default .navbar-nav > li > a,
-.b-header .navbar-default .navbar-nav > .menu-item > a{
-    font-family: "OswaldRegular", sans-serif;
-    font-size: 18px;
-    font-weight: lighter;
-    text-transform: uppercase;
-    color: #7b7b7b;
-    padding-top: 20px;
-    padding-bottom: 18px;
-}
-.b-header .navbar-default .navbar-nav > .menu-item {
-    display: block;
-    position: relative;
-    float: left;
-
-    & > a {
-        display: inline-block;
-        padding-top: 17px;
-        padding-left: 15px;
-        color: white;
-        text-decoration: none;
-        svg {
-            width: 21px;
-            height: 21px;
-            display: inline-block;
-            vertical-align: top;
-            fill: white;
-            margin-left: 2px;
-        }
-    }
-}
-
-.b-header .navbar-default .navbar-nav > li > a:hover {
+.b-header .navbar-default .navbar-nav > .menu-item > a {
+  font-family: "OswaldRegular", sans-serif;
+  font-size: 18px;
+  font-weight: lighter;
+  text-transform: uppercase;
+  color: #7b7b7b;
+  padding-top: 20px;
+  padding-bottom: 18px;
+  svg {
+    fill: #7b7b7b;
+  }
+  &:hover {
     color: #fff;
+    svg {
+      fill: #fff;
+    }
+  }
+}
+
+.b-header .navbar-default .navbar-nav > .menu-item {
+  display: block;
+  position: relative;
+  float: left;
+
+  & > a {
+    display: inline-block;
+    padding-top: 17px;
+    padding-left: 15px;
+    //color: white;
+    text-decoration: none;
+    svg {
+      width: 21px;
+      height: 21px;
+      display: inline-block;
+      vertical-align: top;
+      margin-left: 2px;
+    }
+  }
 }
 
 .b-header .navbar-default .navbar-nav > .active > a,
 .b-header .navbar-default .navbar-nav > .active > a:hover {
-    color: #fff;
-    background-color: transparent;
+  color: #fff;
+  background-color: transparent;
 }
 
 .b-header .navbar-default .navbar-brand:hover,
 .b-header .navbar-default .navbar-brand:focus {
-    background-color: #fff;
+  background-color: #fff;
 }
 
 .b-header .navbar-default .navbar-toggle {
-    float: left;
-    border: none;
-    margin-left: 10px;
-    margin-right: 10px;
+  float: left;
+  border: none;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .b-header .navbar-default .navbar-toggle:hover,
 .b-header .navbar-default .navbar-toggle:focus {
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .b-header .navbar-default .navbar-toggle .icon-bar {
-    background-color: #fff;
-    width: 35px;
-    height: 4px;
-    border-radius: 0;
-    border-radius: 0;
+  background-color: #fff;
+  width: 35px;
+  height: 4px;
+  border-radius: 0;
+  border-radius: 0;
 }
 
 .b-header .navbar-default .navbar-toggle .icon-bar + .icon-bar {
-    margin-top: 6px;
+  margin-top: 6px;
 }
 
 .b-header .navbar-collapse {
-    padding: 0;
+  padding: 0;
 }
 
 .b-header.b-header--dark .navbar {
-    background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.9);
 }
+
 .b-header--dark .b-login {
-    background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.9);
 }
+
 .b-header .b-header__logo {
-    box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
 }
+
 .documentation .b-header {
-    z-index: 1600;
+  z-index: 1600;
 }
+
 .documentation .b-header .navbar {
-    margin-right: 0;
+  margin-right: 0;
 }
 
 @media (min-width: 1200px) {
-    .landing-page .b-header .container {
-        width: 1170px !important;
-    }
+  .landing-page .b-header .container {
+    width: 1170px !important;
+  }
 }
+
 @media (max-width: 1200px) {
-    .b-header .container {
-        width: 100%;
-    }
+  .b-header .container {
+    width: 100%;
+  }
 
-    .b-header .container .navbar-brand {
-        margin-left: 0;
-    }
+  .b-header .container .navbar-brand {
+    margin-left: 0;
+  }
 
-    .b-header .navbar {
-        height: auto;
-    }
+  .b-header .navbar {
+    height: auto;
+  }
 
-    .b-header .navbar-default .navbar-nav {
-        margin-left: 0;
-    }
+  .b-header .navbar-default .navbar-nav {
+    margin-left: 0;
+  }
 
-    .b-header .navbar-toggle {
-        display: block;
-    }
+  .b-header .navbar-toggle {
+    display: block;
+  }
 
-    .b-header .navbar-collapse {
-        position: relative;
-        z-index: 1350;
-        box-shadow: none;
-        margin-left: -15px;
-        margin-right: -15px;
-    }
+  .b-header .navbar-collapse {
+    position: relative;
+    z-index: 1350;
+    box-shadow: none;
+    margin-left: -15px;
+    margin-right: -15px;
+  }
 
-    .b-header .navbar-collapse.collapse {
-        display: none !important;
-    }
+  .b-header .navbar-collapse.collapse {
+    display: none !important;
+  }
 
-    .b-header .navbar-collapse.collapse.in {
-        display: block !important;
-    }
+  .b-header .navbar-collapse.collapse.in {
+    display: block !important;
+  }
 
-    .b-header .navbar-header {
-        float: none;
-    }
+  .b-header .navbar-header {
+    float: none;
+  }
 
-    .b-header .navbar-default .navbar-nav > li,
-    .b-header .navbar-default .navbar-nav > .menu-item{
-        border-left: 5px solid transparent;
-    }
+  .b-header .navbar-default .navbar-nav > li,
+  .b-header .navbar-default .navbar-nav > .menu-item {
+    border-left: 5px solid transparent;
+  }
 
-    .b-header .navbar-default .navbar-nav > li.active {
-        border-color: #fff;
-    }
+  .b-header .navbar-default .navbar-nav > li.active {
+    border-color: #fff;
+  }
 
-    .b-header .navbar-default .navbar-brand:hover,
-    .b-header .navbar-default .navbar-brand:focus {
-        background-color: transparent;
-    }
+  .b-header .navbar-default .navbar-brand:hover,
+  .b-header .navbar-default .navbar-brand:focus {
+    background-color: transparent;
+  }
 
-    .b-header .navbar-nav > li {
-        float: none;
-    }
-    .b-header__menuline {
-        display: none;
-    }
+  .b-header .navbar-nav > li {
+    float: none;
+  }
+  .b-header__menuline {
+    display: none;
+  }
 
-    .b-header .b-header__logo {
-        height: 60px;
-        background-color: transparent;
-        background-size: 100%;
-        background-image: url("../img/landing/logo_small.png");
-        box-shadow: none;
-    }
+  .b-header .b-header__logo {
+    height: 60px;
+    background-color: transparent;
+    background-size: 100%;
+    background-image: url("../img/landing/logo_small.png");
+    box-shadow: none;
+  }
 
-    .b-header.b-header--dark .b-header__logo {
-        box-shadow: none;
-    }
+  .b-header.b-header--dark .b-header__logo {
+    box-shadow: none;
+  }
 }
+
 @media (min-width: 768px) and (max-width: 1200px) {
-    .b-header .container {
-        width: 100%;
-        padding-left: 0;
-    }
+  .b-header .container {
+    width: 100%;
+    padding-left: 0;
+  }
 }
+
 @media (max-width: 992px) {
-    .b-header .b-header__logo {
-        box-shadow: none;
-    }
+  .b-header .b-header__logo {
+    box-shadow: none;
+  }
 }
+
 @media (max-width: 1400px) {
   .rp-btn-landing-header .gh-hide {
     display: none;
   }
 }
+
 @media (min-width: 768px) and (max-width: 992px) {
-    .b-header .navbar > .container .navbar-brand {
-        margin-left: 0;
-    }
+  .b-header .navbar > .container .navbar-brand {
+    margin-left: 0;
+  }
 
-    .b-header .navbar-nav > li {
-        float: none;
-    }
+  .b-header .navbar-nav > li {
+    float: none;
+  }
 }
+
 @media (max-width: 768px) {
-    .b-header .navbar {
-        height: 60px;
-    }
+  .b-header .navbar {
+    height: 60px;
+  }
 
-    .b-header .navbar-default .navbar-nav {
-        margin: 0;
-    }
+  .b-header .navbar-default .navbar-nav {
+    margin: 0;
+  }
 
-    .b-header .navbar-collapse {
-        box-shadow: none;
-        padding-left: 0;
-        width: 100vw;
-        background-color: rgba(0, 0, 0, 0.8);
-    }
+  .b-header .navbar-collapse {
+    box-shadow: none;
+    padding-left: 0;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.8);
+  }
 
-    .b-header .navbar-default .navbar-collapse {
-        border: none;
-    }
+  .b-header .navbar-default .navbar-collapse {
+    border: none;
+  }
 
-    .b-header.b-header--dark .navbar-collapse {
-        background-color: rgba(0, 0, 0, 0.9);
-    }
+  .b-header.b-header--dark .navbar-collapse {
+    background-color: rgba(0, 0, 0, 0.9);
+  }
 
-    .b-header.b-header--docs .navbar-collapse {
-        margin-top: 44px;
-    }
+  .b-header.b-header--docs .navbar-collapse {
+    margin-top: 44px;
+  }
 }
