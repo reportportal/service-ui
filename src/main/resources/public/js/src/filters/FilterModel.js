@@ -39,6 +39,7 @@ define(function(require, exports, module) {
     var FilterModel = Epoxy.Model.extend({
         defaults: {
             name: '',
+            description: '',
             entities: '',
             selection_parameters: '{"is_asc": false, "sorting_column": "start_time"}',
             owner: '',
@@ -154,6 +155,7 @@ define(function(require, exports, module) {
             }
             return {
                 name: this.get('name'),
+                description: this.get('description'),
                 entities: entities,
                 share: this.get('isShared'),
                 selection_parameters: this.getParametersObj(),
