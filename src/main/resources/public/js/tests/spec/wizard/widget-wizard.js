@@ -273,7 +273,7 @@ define(function (require, exports, module) {
                 templateConfig = $("#templateConfig", sandbox),
                 filtersTab = $("a[href='#widgetFilters']:first", sandbox).parent();
 
-            spyOn(Service, 'getProjectUsers').and.callFake(function () {
+            spyOn(Service, 'getProjectUsersById').and.callFake(function () {
                 var deferred = new $.Deferred();
                 deferred.resolve([]);
                 return deferred.promise();
