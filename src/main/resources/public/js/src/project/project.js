@@ -423,7 +423,7 @@ define(function(require, exports, module) {
                 if (Util.isCustomer() && !Util.isAdmin()) {
                     self.setupDisabledRecipients(index);
                 } else {
-                    self.getMembers(index);
+                    self.filterMembers(true, index);
                 }
                 if (self.model.get('emailEnabled')) {
                     self.filterLaunches(index);
@@ -582,29 +582,6 @@ define(function(require, exports, module) {
             }
         },
 
-        getMembers: function(index){
-            var users = this.getRecipients(index),
-                self = this;
-
-            if(_.isEmpty(users)){
-                self.filterMembers(true, index);
-            }
-            else {
-                _.each(users, function(u){
-                    var email = u.email;
-                    Service.getUserByEmail(email)
-                        .done(function(data){
-                            self.parseUsers(data);
-                            self.filterMembers(true, index);
-                        })
-                        .fail(function(error){
-                            Util.ajaxFailMessenger(error, 'getUsers');
-                        });
-                });
-            }
-
-        },
-
         filterMembers: function (getAnyway, index, callback) {
             this.$recipients = $('input.recipients');
             this.$launchOwner = $('input.launchOwner');
@@ -640,8 +617,7 @@ define(function(require, exports, module) {
                             }).length === 0) {
                             return {
                                 id: term,
-                                text: term,
-                                email: term
+                                text: term
                             };
                         }
                     },
@@ -666,18 +642,17 @@ define(function(require, exports, module) {
                                     self.validateRecipients();
                                 }
                                 query.term = query.term.replace(/[@#.?*+^$[\]\\(){}|-]/g, "\\$&");
-                                Service.getProjectUsers(query.term)
+                                Service.getProjectUsersById(query.term)
                                     .done(function (response) {
                                         remoteUsers = [];
-                                        _.each(response.content, function (item) {
-                                            if (item.full_name == query.term) {
+                                        _.each(response, function (item) {
+                                            if (item == query.term) {
                                                 resultFound = true;
                                             }
                                             remoteUsers.push(item);
                                             data.results.push({
-                                                id: item.userId,
-                                                text: item.full_name,
-                                                email: item.email
+                                                id: item,
+                                                text: item
                                             });
                                         });
                                         query.callback(data);
@@ -690,8 +665,7 @@ define(function(require, exports, module) {
                             remoteUsers = [];
                             data.results.push({
                                 id: query.term,
-                                text: query.term,
-                                email: item.email
+                                text: query.term
                             });
                             query.callback(data);
                         }
@@ -726,15 +700,14 @@ define(function(require, exports, module) {
             var users = _.map(data.content, function (user) {
                 return {
                     id: user.userId,
-                    text: user.full_name,
-                    email: user.email
+                    text: user.userId
                 };
             });
             this.users = this.users.concat(users);
         },
 
         onChangeRicipients: function (value, eci) {
-            var recips = _.map(value, function(v){ return v.email; }),
+            var recips = _.map(value, function(v){ return v.id; }),
                 checked = eci.find(".launchOwner").is(':checked'),
                 emails = [];
 
@@ -748,13 +721,13 @@ define(function(require, exports, module) {
                     return u.id === v;
                 });
                 if (user) {
-                    emails.push(user.email);
+                    emails.push(user.id);
                     this.isValidEmail = true;
                 } else {
-                    if (!Util.validateEmail(v)) {
+                    /*if (!Util.validateEmail(v)) {
                         this.showFormErrors(eci.find('.select2-container.recipients'), Localization.project.incorectEmail);
                         this.isValidEmail = false;
-                    }
+                    }*/
                     emails.push(v);
                 }
 
@@ -808,15 +781,14 @@ define(function(require, exports, module) {
 
                     _.each(rejected, function (m) {
                         var em = _.find(this.users, function (e) {
-                            return e.email === m
+                            return e.id === m
                         });
                         if (em) {
                             val.push(em);
                         } else {
                             val.push({
                                 id: m,
-                                text: m,
-                                email: m
+                                text: m
                             });
                         }
                     }, this);
@@ -829,15 +801,14 @@ define(function(require, exports, module) {
                         }, this);
                     _.each(rejected, function (m) {
                         var em = _.find(this.users, function (e) {
-                            return e.email === m
+                            return e.id === m
                         });
                         if (em) {
                             val.push(em);
                         } else {
                             val.push({
                                 id: m,
-                                text: m,
-                                email: m
+                                text: m
                             });
                         }
                     }, this);
@@ -1279,8 +1250,7 @@ define(function(require, exports, module) {
                 if (emailCase && !emailCaseToDelete) {
                     _.each(emailCase.recipients, function (item) {
                         if (validRecipients) {
-                            validRecipients = Util.validateEmail(item) || item === 'OWNER';
-
+                            //validRecipients = Util.validateEmail(item) || item === 'OWNER';
                             if (validAllRecipients) {
                                 validAllRecipients = validRecipients;
                             }
@@ -1336,7 +1306,7 @@ define(function(require, exports, module) {
                     return false;
                 }
                 if (this.validateRecipients()) {
-                    return false;
+                    //return false;
                 } else if ($('.email-case-item:not(.will-delete)').find('.has-error').length > 0) {
                     return false;
                 } else if (this.checkCases()) {

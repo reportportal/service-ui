@@ -116,6 +116,7 @@ define(function (require, exports, module) {
 
         events: {
             'show.bs.collapse #accordion': 'renderInactive',
+            'show.bs.collapse [data-js-personal-accordion]': 'renderPersonalProjects',
             'click .remove-project': 'removeProject',
             'click #sortDirection .rp-btn': 'changeSorting',
             'validation::change #nameFilter': 'filterProjects',
@@ -181,9 +182,11 @@ define(function (require, exports, module) {
 
         makeSorting: function () {
             this.projectsData.active = _.sortByOrder(this.projectsData.active, this.filter.sort, this.filter.direction === 'asc');
-            this.projectsData.personal = _.sortByOrder(this.projectsData.personal, this.filter.sort, this.filter.direction === 'asc');
             if (this.$inactiveHolder.hasClass('in')) {
                 this.projectsData.inactive = _.sortByOrder(this.projectsData.inactive, this.filter.sort, this.filter.direction === 'asc');
+            }
+            if (this.$personalHolder.hasClass('in')) {
+                this.projectsData.personal = _.sortByOrder(this.projectsData.personal, this.filter.sort, this.filter.direction === 'asc');
             }
             this.reRenderProjects();
         },
