@@ -34,7 +34,7 @@ define(function(require, exports, module) {
         tpl: 'tpl-landing-header',
         bindings: {
             ':el': 'classes: {"b-header--dark": darkMenu, authorized: auth}',
-            '.b-return__btn': 'attr: {href: lastInsideHash}'
+            '[data-js-return-button]': 'attr: {href: lastInsideHash}'
         },
         events: {
             'click .js-logo': 'onClickLogo',
