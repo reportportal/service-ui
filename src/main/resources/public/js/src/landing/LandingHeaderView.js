@@ -44,7 +44,6 @@ define(function(require, exports, module) {
             'click .navbar-toggle': 'onOpenMenuMobile',
             'click .js-showlogin': 'onClickShowLogin',
             'keydown': 'keyDownHandler',
-            'click [data-js-fork-github]': 'onClickForkGithub'
         },
         initialize: function(){
             this.render();
@@ -63,9 +62,6 @@ define(function(require, exports, module) {
             // $(".b-contents--open").removeClass("b-contents--open");
             // $(".b-docs__nav--open").removeClass("b-docs__nav--open");
             this.loginView.toggle();
-        },
-        onClickForkGithub: function() {
-            window.open('https://github.com/reportportal/reportportal')
         },
         showLoginBlock: function() {
             var self = this;
