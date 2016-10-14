@@ -509,9 +509,9 @@ define(function(require, exports, module) {
                 $('.email-case-item', this.$el).prop('disabled', true).removeClass('the-only');
             } else {
                 $('.remove-email-case:not(:checked)', this.$el).prop('disabled', true).closest('.email-case-item').addClass('the-only');
-                if(allLength == 1 && checkedLength == 1){
-                    var emailCase = $('.email-case-item', this.$el);
-
+                if(allLength == checkedLength){
+                    var emailCase = $('.email-case-item', this.$el).eq(0);
+                    
                     this.updateEmailCase(emailCase, 'remove');
                     $('.remove-email-case', emailCase).prop('disabled', true)
                     emailCase.addClass('the-only');
