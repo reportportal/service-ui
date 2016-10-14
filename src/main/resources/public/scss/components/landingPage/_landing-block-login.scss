@@ -193,12 +193,20 @@
             }
         }
     }
+  .return-button {
+    display: none;
+  }
 }
 
 
-.authorized .rp-btn-show-login,
-.b-return__btn {
+.authorized .rp-landing-header-buttons {
+  .login-button {
     display: none;
+  }
+  .return-button {
+    display: block;
+  }
+
 }
 
 #restore-form {
