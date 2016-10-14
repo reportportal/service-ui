@@ -1277,7 +1277,8 @@ define(['util'], function () {
             loadActivityItems: "Failed to load activity items",
             loadNavigationStep: "Failed to load",
             sessionExpired: 'Your session has been expired',
-            getItemInfo: 'Failed to load info for item'
+            getItemInfo: 'Failed to load info for item',
+            dublPostFix: 'Postfix already used or not align with already existing data. Please use another one'
         },
 
         infoMessages: {
