@@ -43,7 +43,7 @@ define(function(require, exports, module) {
             'click .b-menu__link': 'onClickMenuItem',
             'click .navbar-toggle': 'onOpenMenuMobile',
             'click .js-showlogin': 'onClickShowLogin',
-            'keydown': 'keyDownHandler'
+            'keydown': 'keyDownHandler',
         },
         initialize: function(){
             this.render();

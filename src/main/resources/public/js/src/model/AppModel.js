@@ -26,7 +26,18 @@ define(function(require, exports, module) {
     var AppModel = Backbone.Model.extend({
         defaults: {
             projectId: null,
+            type: ''
         },
+        initialize: function(){
+
+        },
+        isPersonalProject: function(){
+            return this.get('configuration').entryType === 'PERSONAL';
+        },
+        isInternalProject: function(){
+            return this.get('configuration').entryType === 'INTERNAL';
+        }
+
     });
 
     return AppModel;

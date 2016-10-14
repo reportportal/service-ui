@@ -9,12 +9,17 @@
                 <div class="rp-member-body clearfix">
                     <div class="user-name text-wrapper ">
                         <p class="member-name">
-                            <%
-                                var memberName = data.searchString
-                                ? data.textWrapper(member.full_name, data.searchString)
-                                : member.full_name
-                            %>
-                            <span><%= memberName %></span>
+                            <% if(member.full_name){ %>
+                                <% var memberName = data.searchString
+                                    ? data.textWrapper(member.full_name, data.searchString)
+                                    : member.full_name %>
+                                <span><%= memberName %></span>
+                            <% } else { %>
+                                <% var memberId = data.searchString
+                                    ? data.textWrapper(member.userId, data.searchString)
+                                    : member.userId %>
+                                <span><%= memberId %></span>
+                            <% } %>
                             <% if(data.isGrandAdmin) { %>
                                 <% if(isAdmin) { %>
                                     <% if(data.util.isYou(member)) { %>
@@ -48,6 +53,7 @@
                                 </span>
                             <% } %>
                         </p>
+                        <% if(member.full_name){ %>
                         <p class="member-id">
                             <%
                                 var memberId = data.searchString
@@ -61,6 +67,7 @@
                                 </span>
                             <% } %>
                         </p>
+                        <% } %>
                         <% if(member.email) { %>
                         <p class="member-email">
                             <a href="mailto:<%= member.email %>" class="rp-link">
@@ -84,7 +91,7 @@
                 <span class="exact-time"><%= date_format %></span>
             </div>
         </div>
-        <% data['isAdmin'] = isAdmin; data['member'] = member; %>
+        <% data['isAdmin'] = isAdmin; data['member'] = member; data.isOwnerPersonalProject = data.isPersonalProjectOwner(member) %>
         <%= data.util.templates(data.actionTpl, data) %>    </div>
 <% }); %>
 <% if(!data.members.length){ %>

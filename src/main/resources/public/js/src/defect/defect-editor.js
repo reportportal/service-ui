@@ -497,11 +497,13 @@ define([
                     };
                 
                 if ($('#replaceComments').prop('checked')) {
-                    issue.comment = $('.markItUpEditor').val().length > 0 ? $('.markItUpEditor').val() : this.items[i].issue.comment;
+                    issue.comment = $('.markItUpEditor').val().length > 0 ? $('.markItUpEditor').val() : item.issue.comment;
                 }
                 
                 if (item.id == $('.editor-row').closest('.selected').attr('id')) {
-                    issue.comment = $('.markItUpEditor').val();
+                    var val = $('.markItUpEditor').val(),
+                        comment = item.issue.comment;
+                    issue.comment = comment && (val.trim() === comment.trim()) ? comment : val;
                 }
 
                 issue.externalSystemIssues.push({

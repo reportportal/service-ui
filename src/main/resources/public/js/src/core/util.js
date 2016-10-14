@@ -51,6 +51,7 @@ define(function (require, exports, module) {
        templates: function (name, data) {
             var data = data || {};
             data['text'] = Localization;
+            data.includeTemplate = Util.templates;
 
             var template = Tpl[name];
             if (template) {
@@ -201,6 +202,9 @@ define(function (require, exports, module) {
         },
 
         textWrapper: function (value, search) {
+            if(!value) {
+                return '';
+            }
             var regex = new RegExp(search, 'ig');
             return value.replace(regex, '<mark>$&</mark>');
         },
@@ -853,14 +857,6 @@ define(function (require, exports, module) {
         getCopyName: function (name) {
             return Localization.ui.copy + " " + name;
         },
-        isPersonalProject: function(){
-            var project = config.project;
-            return project && project.configuration && project.configuration.entryType == 'PERSONAL';
-        },
-        isPersonalProjectOwner: function(){
-            var user =  config.userModel;
-            return this.isPersonalProject() && config.project.projectId == user.get('name') + '_project';
-        },
         isAdmin: function (user) {
             user = user || config.userModel.toJSON();
             return user.userRole === config.accountRolesEnum.administrator;
@@ -1016,7 +1012,7 @@ define(function (require, exports, module) {
             $el.data('valid', true).data('was', $el.val());
 
             // TODO - added variant with class 'rp-form-group'
-            var $holder = $el.closest(".form-group, .rp-form-group");
+            var $holder = $el.closest(".form-group, .rp-form-group, label");
 
             var $messenger = $(".help-inline:first", $holder);
             var isHint = $messenger.hasClass('error-hint');
