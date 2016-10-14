@@ -42,7 +42,7 @@ define(function(require, exports, module) {
             'mouseout .js-headermenu': 'onMouseOutMenu',
             'click .b-menu__link': 'onClickMenuItem',
             'click .navbar-toggle': 'onOpenMenuMobile',
-            'click .js-showlogin': 'onClickShowLogin',
+            'click [data-js-show-login]': 'onClickShowLogin',
             'keydown': 'keyDownHandler',
         },
         initialize: function(){
