@@ -927,7 +927,10 @@ define(['util'], function () {
         },
         filter: {
             name: 'Filter name',
+            namePlaceholder: 'Enter Filter Name',
             share: 'Share',
+            description: 'Description',
+            descriptionPlaceholder: 'Enter Filter Description',
         },
 
         project: {
@@ -1527,7 +1530,7 @@ define(['util'], function () {
             unableSelectForMerge: "Error: Unable to select launch for merge!",
             createNewDashboard: "Create new Dashboard",
             dashboardSettings: "Dashboard settings",
-            deleteFilter: "Are you sure you want to delete the filter <b>'%%%'</b>",
+            deleteFilter: "Are you sure you want to delete the filter <b>'%%%'</b>?",
             deleteProject: "Are you sure you want to delete the project <b>'%%%'</b>",
             deleteEmailRule: "Are you sure you want to remove notification rule",
             deleteEmailRuleBtn: 'Remove',

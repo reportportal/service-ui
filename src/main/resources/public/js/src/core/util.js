@@ -218,6 +218,13 @@ define(function (require, exports, module) {
                 return finalString;
             }
         },
+        replaceTemplate: function(template) {
+            var result = template;
+            for(var i = 1; i < arguments.length; i++) {
+                result = result.replace('%%%', arguments[1]);
+            }
+            return result;
+        },
         shimBind: function () {
             if (!Function.prototype.bind) {
                 Function.prototype.bind = function (oThis) {

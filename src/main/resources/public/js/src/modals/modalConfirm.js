@@ -27,7 +27,7 @@ define(function (require, exports, module) {
 
     var ModalConfirm = ModalView.extend({
         template: 'tpl-modal-confirm',
-        className: 'confirm-modal',
+        className: 'modal-confirm',
 
         events: {
             'change [data-js-select]': 'onChangeCheckbox',

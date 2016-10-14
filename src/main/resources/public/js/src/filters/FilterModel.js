@@ -29,6 +29,7 @@ define(function(require, exports, module) {
     var Localization = require('localization');
     var Util = require('util');
     var Components = require('core/components');
+    var ModalFilterEdit = require('modals/modalFilterEdit');
     var App = require('app');
 
     var config = App.getInstance();
@@ -164,20 +165,22 @@ define(function(require, exports, module) {
         },
         editMainInfo: function() {
             var self = this;
-            this.showPopupMyInfo(function (name, shared) {
+            this.showPopupMyInfo(function (name, shared, description) {
                 self.set({
                     name: name,
-                    isShared: shared
+                    isShared: shared,
+                    description: description,
                 });
             }, 'update')
         },
         saveFilter: function() {
             var self = this;
             if (this.get('temp')) {
-                this.showPopupMyInfo(function (name, shared) {
+                this.showPopupMyInfo(function (name, shared, description) {
                     self.set({
                         name: name,
                         isShared: shared,
+                        description: description,
                         entities: self.get('newEntities') || self.get('entities'),
                         newEntities: '',
                         selection_parameters: self.get('newSelectionParameters') || self.get('selection_parameters'),
@@ -195,37 +198,46 @@ define(function(require, exports, module) {
                  })
             }
         },
-        showPopupMyInfo: function(callback, actionTxt) {
-            this.modal = new Components.DialogWithCallBack({
-                headerTxt: 'editFilter',
-                actionTxt: actionTxt,
-                actionStatus: true,
-                contentTpl: 'tpl-filters-tab-editor',
-                data: this.toJSON(),
-                callback: function (done) {
-                    if ($(".has-error", this.modal.$content).length) return;
-                    var name = $("#tabName", this.modal.$content).val();
-                    var shared = $("#tabShared", this.modal.$content).is(':checked');
-                    callback(name, shared);
-                    done();
-                }.bind(this),
-                afterRenderCallback: function () {
-                    Util.switcheryInitialize(this.$content);
-                },
-                destroyCallback: function () {
-                    this.copyInProcess = false;
-                }.bind(this),
-                shownCallback: function () {
-                    var $name = $("#tabName", this.modal.$content);
-                    Util.bootValidator($name, {
-                        validator: 'minMaxRequired',
-                        type: 'filterName',
-                        min: 3,
-                        max: 55
-                    });
-                    $name.focus();
-                }.bind(this)
-            }).render();
+        showPopupMyInfo: function(callback, mode) {
+            var modal = new ModalFilterEdit({
+                mode: mode,
+                filterModel: this,
+            });
+            modal.show()
+                .done(function(name, shared, description) {
+                    callback(name, shared, description)
+                });
+
+            // this.modal = new Components.DialogWithCallBack({
+            //     headerTxt: 'editFilter',
+            //     actionTxt: actionTxt,
+            //     actionStatus: true,
+            //     contentTpl: 'tpl-filters-tab-editor',
+            //     data: this.toJSON(),
+            //     callback: function (done) {
+            //         if ($(".has-error", this.modal.$content).length) return;
+            //         var name = $("#tabName", this.modal.$content).val();
+            //         var shared = $("#tabShared", this.modal.$content).is(':checked');
+            //         callback(name, shared);
+            //         done();
+            //     }.bind(this),
+            //     afterRenderCallback: function () {
+            //         Util.switcheryInitialize(this.$content);
+            //     },
+            //     destroyCallback: function () {
+            //         this.copyInProcess = false;
+            //     }.bind(this),
+            //     shownCallback: function () {
+            //         var $name = $("#tabName", this.modal.$content);
+            //         Util.bootValidator($name, {
+            //             validator: 'minMaxRequired',
+            //             type: 'filterName',
+            //             min: 3,
+            //             max: 55
+            //         });
+            //         $name.focus();
+            //     }.bind(this)
+            // }).render();
         },
 
         remove: function() {

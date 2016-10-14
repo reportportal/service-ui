@@ -19,33 +19,37 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.swipe-gallery-component {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  & > .ul_overflow {
-    overflow: hidden;
-    height: 100%;
-    position: relative;
-    & > ul {
-      position: relative;
-      height: 100%;
-      &.animate {
-        -webkit-transition: -webkit-transform 0.5s ease;
-        -moz-transition: -moz-transform 0.5s ease;
-        -o-transition: -o-transform 0.5s ease;
-        transition: transform 0.5s ease;
-      }
-      & > li {
-        position: absolute;
+.modal-filter-edit {
+  .modal-body {
+    padding: 36px 20px 21px 29px;
+    .name-label {
+      width: 320px;
+    }
+    .share-label {
+      width: 100px;
+      margin-left: 8px;
+    }
+    .description-label {
+      width: 430px;
+      textarea {
+        height: 68px;
       }
     }
-
-  }
-  .arrow_left, .arrow_right {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    user-select: none;
+    & > label{
+      font-weight: normal;
+      position: relative;
+      color: $COLOR--charcoal-grey;
+      vertical-align: top;
+      span:first-child {
+        display: block
+      }
+      input, textarea, .rp-switcher-big {
+        width: 100%;
+        margin-top: 6px;
+      }
+      .help-inline {
+        padding-top: 5px;
+      }
+    }
   }
 }

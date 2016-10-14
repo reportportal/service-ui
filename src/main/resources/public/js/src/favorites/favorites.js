@@ -33,6 +33,8 @@ define(function (require, exports, module) {
     var Util = require('util');
     var CoreService = require('coreService');
     var FilterCollection = require('filters/FilterCollection');
+    var ModalConfirm = require('modals/modalConfirm');
+    var Localization = require('localization');
 
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
@@ -62,16 +64,18 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickRemove: function() {
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    this.model.remove()
-                        .done(function(){
-                            this.remove();
-                        }.bind(this))
-                }.bind(this),
-                message: 'deleteFilter',
-                format: [this.model.get('name')]
+            var self = this;
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.deleteFilter,
+                bodyText: Util.replaceTemplate(Localization.dialog.deleteFilter, this.model.get('name').escapeHtml()),
+                confirmText: 'I am sure I want to delete',
+                cancelButtonText: Localization.ui.cancel,
+                okButtonText: Localization.ui.delete,
             });
+            modal.show()
+                .done(function() {
+                    return self.model.remove();
+                });
         },
         onClickEdit: function() {
             this.model.editMainInfo();
