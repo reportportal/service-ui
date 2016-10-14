@@ -615,10 +615,15 @@ define(function(require, exports, module) {
                         if ($(data).filter(function () {
                                 return this.text.localeCompare(term) === 0;
                             }).length === 0) {
-                            return {
-                                id: term,
-                                text: term
-                            };
+                            if(Util.validateEmail(term)){
+                                return {
+                                    id: term,
+                                    text: term
+                                };
+                            }
+                            else {
+                                return null;
+                            }
                         }
                     },
                     initSelection: function (element, callback) {
@@ -626,6 +631,9 @@ define(function(require, exports, module) {
                             id: element.val(),
                             text: element.val()
                         });
+                    },
+                    formatNoMatches: function(){
+                            return Localization.project.notFoundRecipients;
                     },
                     query: function (query) {
                         resultFound = false;
@@ -724,10 +732,6 @@ define(function(require, exports, module) {
                     emails.push(user.id);
                     this.isValidEmail = true;
                 } else {
-                    /*if (!Util.validateEmail(v)) {
-                        this.showFormErrors(eci.find('.select2-container.recipients'), Localization.project.incorectEmail);
-                        this.isValidEmail = false;
-                    }*/
                     emails.push(v);
                 }
 
