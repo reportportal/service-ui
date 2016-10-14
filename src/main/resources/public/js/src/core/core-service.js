@@ -59,8 +59,8 @@ define([
         return call('GET', urls.getProject());
     };
 
-    var getProjectUsers = function (query) {
-        return call('GET', urls.projectUsers(query));
+    var getProjectUsersById = function (query) {
+        return call('GET', urls.autocompleteUserUrl(query));
     };
 
     var getUserByEmail = function(query){
@@ -357,7 +357,7 @@ define([
         getPreferences: getPreferences,
         getProfileImage: getProfileImage,
         getProject: getProject,
-        getProjectUsers: getProjectUsers,
+        getProjectUsersById: getProjectUsersById,
         getProjectDashboard: getProjectDashboard,
         getProjectDashboards: getProjectDashboards,
         getSharedWidgets: getSharedWidgets,
