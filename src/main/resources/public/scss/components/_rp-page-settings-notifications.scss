@@ -100,8 +100,9 @@
             }
 
             .has-error {
-                input,
-                input:focus {
+                input:not(.select2-input),
+                .select2-choices,
+                input:focus:not(.select2-input) {
                     color: $COLOR--black-two;
                     box-shadow: 0 0 2px 0 rgba(255, 49, 33, .7);
                     border: 1px solid $COLOR--orange-red;

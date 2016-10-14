@@ -1250,23 +1250,15 @@ define(function(require, exports, module) {
                 if (emailCase && _.isEmpty(emailCase.recipients) && !emailCaseToDelete) {
                     self.showFormErrors($(elem).find('input.recipients'), Localization.project.emptyRecipients);
                 }
-
                 if (emailCase && !emailCaseToDelete) {
-                    _.each(emailCase.recipients, function (item) {
-                        if (validRecipients) {
-                            //validRecipients = Util.validateEmail(item) || item === 'OWNER';
-                            if (validAllRecipients) {
-                                validAllRecipients = validRecipients;
-                            }
-                        }
-                    });
-
+                    if (validRecipients) {
+                        validRecipients = _.isEmpty(emailCase.recipients) ? false : true;
+                    }
+                    validAllRecipients = validRecipients;
                     if (!validRecipients) {
                         self.showFormErrors($(elem).find('input.recipients'), Localization.project.invalidRecipients);
                     }
                 }
-
-
             });
             return this.model.get('emailEnabled') && (recipients || !validAllRecipients);
         },
@@ -1310,7 +1302,7 @@ define(function(require, exports, module) {
                     return false;
                 }
                 if (this.validateRecipients()) {
-                    //return false;
+                    return false;
                 } else if ($('.email-case-item:not(.will-delete)').find('.has-error').length > 0) {
                     return false;
                 } else if (this.checkCases()) {
