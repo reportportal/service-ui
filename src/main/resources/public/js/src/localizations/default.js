@@ -1417,7 +1417,7 @@ define(['util'], function () {
 
             issueLinkRegex: "Link should match a valid website address",
             issueLinkRequired: "Link should match a valid website address",
-            issueIdLength: "Issue Id should have size from '1' to '128'",
+            issueIdLength: "Issue Id should have size from %%% to %%%",
 
             fieldRequired: "This field is required",
             defectName: "Full name should have size from '3' to '55'",
