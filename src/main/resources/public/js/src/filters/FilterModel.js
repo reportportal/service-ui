@@ -88,7 +88,7 @@ define(function(require, exports, module) {
         },
 
         initialize: function() {
-            this.listenTo(this, 'change:name change:isShared change:entities change:selection_parameters', this.onChangeFilterInfo);
+            this.listenTo(this, 'change:name change:isShared change:description change:entities change:selection_parameters', this.onChangeFilterInfo);
 
             this.listenTo(this, 'change:id', this.computedsUrl);
             this.listenTo(appModel, 'change:projectId', this.computedsUrl.bind(this));
@@ -165,22 +165,22 @@ define(function(require, exports, module) {
         },
         editMainInfo: function() {
             var self = this;
-            this.showPopupMyInfo(function (name, shared, description) {
+            this.showPopupMyInfo(function (dataModel) {
                 self.set({
-                    name: name,
-                    isShared: shared,
-                    description: description,
+                    name: dataModel.get('name'),
+                    isShared: dataModel.get('isShared'),
+                    description: dataModel.get('description'),
                 });
             }, 'update')
         },
         saveFilter: function() {
             var self = this;
             if (this.get('temp')) {
-                this.showPopupMyInfo(function (name, shared, description) {
+                this.showPopupMyInfo(function (dataModel) {
                     self.set({
-                        name: name,
-                        isShared: shared,
-                        description: description,
+                        name: dataModel.get('name'),
+                        isShared: dataModel.get('isShared'),
+                        description: dataModel.get('description'),
                         entities: self.get('newEntities') || self.get('entities'),
                         newEntities: '',
                         selection_parameters: self.get('newSelectionParameters') || self.get('selection_parameters'),
@@ -204,8 +204,8 @@ define(function(require, exports, module) {
                 filterModel: this,
             });
             modal.show()
-                .done(function(name, shared, description) {
-                    callback(name, shared, description)
+                .done(function(dataModel) {
+                    callback(dataModel)
                 });
 
             // this.modal = new Components.DialogWithCallBack({

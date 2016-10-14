@@ -31,11 +31,12 @@ define(function (require, exports, module) {
         className: 'modal-filter-edit',
 
         bindings: {
-
+            '[data-js-name-input]': 'value: name',
+            '[data-js-is-shared]': 'checked: isShared',
+            '[data-js-description]': 'value: description',
         },
-
         events: {
-
+            'click [data-js-ok]': 'onClickOk',
         },
 
         initialize: function(options) {
@@ -45,11 +46,28 @@ define(function (require, exports, module) {
                 name: filterModel.get('name'),
                 isShared: filterModel.get('isShared'),
                 description: filterModel.get('description'),
-            })
+            });
+            Util.bootValidator($('[data-js-name-input]', this.$el), {
+                validator: 'minMaxRequired',
+                type: 'filterName',
+                min: 3,
+                max: 55
+            });
+            Util.bootValidator($('[data-js-description]', this.$el), {
+                validator: 'minMaxRequired',
+                type: 'filterDescription',
+                min: 0,
+                max: 256
+            });
         },
         render: function(options) {
             this.$el.html(Util.templates(this.template, options));
         },
+        onClickOk: function() {
+            if ($('.has-error', this.$el).length) return;
+            this.$modalWrapper && this.$modalWrapper.modal('hide');
+            this.closeAsync.resolve(this.model);
+        }
 
     });
 

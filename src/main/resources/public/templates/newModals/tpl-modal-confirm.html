@@ -1,6 +1,6 @@
 <%= data.includeTemplate('_tpl-modal-header', {headerText: data.headerText}) %>
 <div class="modal-body">
-    <p><%- data.bodyText %></p>
+    <p><%= data.bodyText %></p>
     <% if(data.confirmText) { %>
         <label class="rp-checkbox-wrap confirm-block">
             <input class="rp-input-checkbox" type="checkbox" data-js-select>
