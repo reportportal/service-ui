@@ -29,7 +29,6 @@
    & > .container > .row { // #topHeader
      min-height: 30px;
      margin-bottom: 0;
-     padding: 16px 0 11px;
      box-sizing: content-box;
      color: $COLOR--white-default;
 
@@ -41,17 +40,37 @@
        border: initial;
        font-family: OswaldRegular,sans-serif;
 
-       .navbar-header {
-          // TODO Mobile view styles
+       .mobile-main-header {
+         .button-menu-open {
+           position: relative;
+           width: 50px;
+           height: 60px;
+           padding: 20px 10px 20px 10px;
+           .menu-icon-part {
+             width: 100%;
+             height: 3px;
+             background: white;
+             margin-bottom: 5px;
+           }
+         }
+         .rp-logo {
+           width: 130px;
+           height: 29px;
+           background-size: 100%;
+           background-image: url("../img/landing/logo_small.png");
+           position: absolute;
+           top: 16px;
+           left: 50%;
+           margin-left: -65px;
+         }
        }
 
        .navbar-collapse {
-         padding: 0 15px;
+         padding: 16px 15px 11px;
 
          @media (min-width: 768px) {
            display: block!important;
            height: auto!important;
-           padding-bottom: 0;
            overflow: visible!important;
          }
 
