@@ -988,6 +988,7 @@ define(['util'], function () {
             launchOwnerDescription: "Launch owner (who launched - that received)",
             sendNotification: "Send e-mail notifications about launches finished",
             emptyRecipients: "Select at least one recipient",
+            notFoundRecipients: 'User does not exist. Please, check the entered data.',
             invalidRecipients: "Please enter correct email",
             sendLaunchNames: "Send notifications about selected launches finished",
             sendTags: "Send notifications about launches containing specified tags",
