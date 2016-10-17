@@ -175,6 +175,11 @@
         font-size: 18px;
         display: inline-block;
         top: 4px;
+
+        i {
+            position: absolute;
+            top: -17px;
+        }
     }
 
     .progress .progress-bar-danger a {
