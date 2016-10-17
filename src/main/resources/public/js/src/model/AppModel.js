@@ -26,6 +26,37 @@ define(function(require, exports, module) {
     var AppModel = Backbone.Model.extend({
         defaults: {
             projectId: null,
+            type: ''
+        },
+        initialize: function(){
+
+        },
+        isPersonalProject: function(){
+            if(!this.get('configuration')) {
+                return null;
+            }
+            return this.get('configuration').entryType === 'PERSONAL';
+        },
+        isInternalProject: function(){
+            if(!this.get('configuration')) {
+                return null;
+            }
+            return this.get('configuration').entryType === 'INTERNAL';
+        },
+        parse: function(data) {
+            data.externalSystem = '';
+            if(data.configuration && data.configuration.externalSystem) {
+                data.externalSystem = JSON.stringify(data.configuration.externalSystem);
+            }
+            this.set(data);
+        },
+        getArr: function(field) {
+            var string = this.get(field);
+            try {
+                return JSON.parse(string);
+            } catch(err) {
+                return [];
+            }
         },
     });
 

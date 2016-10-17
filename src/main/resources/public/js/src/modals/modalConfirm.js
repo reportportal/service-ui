@@ -27,6 +27,7 @@ define(function (require, exports, module) {
 
     var ModalConfirm = ModalView.extend({
         template: 'tpl-modal-confirm',
+        className: 'modal-confirm',
 
         events: {
             'change [data-js-select]': 'onChangeCheckbox',
@@ -34,11 +35,19 @@ define(function (require, exports, module) {
         },
 
         initialize: function(options) {
+            /*  options = {
+               headerText: '',
+               bodyText: '',
+               confirmText: '',   //optional
+               cancelButtonText: '',   //optional
+               okButtonText: '',  //optional
+               confirmFunction: function() { return $.Deferred()},
+            }*/
             this.render(options);
             this.confirmFunction = options.confirmFunction;
         },
         render: function(options) {
-            this.$el.html(Util.templates(this.template, options))
+            this.$el.html(Util.templates(this.template, options));
         },
         onChangeCheckbox: function(e) {
             if($(e.currentTarget).is(':checked')) {
@@ -50,8 +59,7 @@ define(function (require, exports, module) {
         onClickSuccess: function() {
             var self = this;
             if(!this.confirmFunction) {
-                self.closeAsync && self.closeAsync.resolve();
-                self.$modalWrapper && self.$modalWrapper.modal('hide');
+                self.successClose();
                 return;
             }
             this.showLoading();

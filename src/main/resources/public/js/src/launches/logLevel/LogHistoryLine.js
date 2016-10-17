@@ -38,6 +38,7 @@ define(function (require, exports, module) {
         model: LaunchSuiteStepItemModel,
 
         initialize: function(options) {
+            this.launchModel = options.launchModel;
             this.launchId = options.launchId;
             this.listenTo(this, 'activate', this.activateItem);
         },
@@ -58,7 +59,8 @@ define(function (require, exports, module) {
             var self = this;
             var answerData = _.map(data, function(item) {
                 var answer = {launchNumber: item.launchNumber, active: false, parent_launch_status: item.launchStatus};
-                if(item.launchId == self.launchId) {
+                if(item.launchId == self.launchModel.get('id')) {
+                    answer.parent_launch_investigate = self.launchModel.getToInvestigate();
                     _.each(item.resources, function(resource) {
                         if(resource.id == itemId) {
                             answer = _.extend(answer, self.updateDataForModel(resource));
@@ -126,9 +128,9 @@ define(function (require, exports, module) {
             var self = this;
             var issue = this.model.getIssue();
             if(issue.comment) {
-                $('[data-js-comment]', this.$el).addClass('rp-display-inline-block');
+                $('[data-js-comment]', this.$el).removeClass('hide');
             } else {
-                $('[data-js-comment]', this.$el).removeClass('rp-display-inline-block')
+                $('[data-js-comment]', this.$el).addClass('hide')
             }
             if(issue.issue_type) {
                 this.defectTypeCollection.ready.done(function() {
@@ -142,10 +144,10 @@ define(function (require, exports, module) {
             } else {
                 $('[data-js-issue-type]', self.$el).addClass('hide')
             }
-            if(issue.externalSystemIssues) {
-                $('[data-js-ticket]', this.$el).addClass('rp-display-inline-block');
+            if(issue.externalSystemIssues && issue.externalSystemIssues.length) {
+                $('[data-js-ticket]', this.$el).removeClass('hide');
             } else {
-                $('[data-js-ticket]', this.$el).removeClass('rp-display-inline-block')
+                $('[data-js-ticket]', this.$el).addClass('hide')
             }
         },
         onClickItem: function() {
@@ -173,7 +175,7 @@ define(function (require, exports, module) {
             this.collectionItems = options.collectionItems;
             this.launchModel = options.launchModel;
             this.renderedItems = [];
-            this.collection = new LogHistoryLineCollection({launchId: this.launchModel.get('id')});
+            this.collection = new LogHistoryLineCollection({launchModel: this.launchModel});
             this.listenTo(this.collection, 'reset', this.onResetHistoryItems);
             this.listenTo(this.collection, 'hover:true', this.onHoverItem);
             this.listenTo(this.collection, 'hover:false', this.onOutItem);

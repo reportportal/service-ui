@@ -174,7 +174,7 @@ define(function(require, exports, module) {
             this.$el.html(Util.templates(this.tpl, {
                 tab: this.tab,
                 projectId: this.projectId,
-                generateDemoDataAccess: Util.isInPrivilegedGroup() || Util.isPersonalProjectOwner(),
+                generateDemoDataAccess: Util.isInPrivilegedGroup() || this.isPersonalProjectOwner(),
                 adminPage: this.adminPage
             }));
             this.$generalHolder = $("#generalSettings", this.$el);
@@ -203,6 +203,12 @@ define(function(require, exports, module) {
                     holder: this.$generalHolder
                 }).render();
             }
+        },
+        isPersonalProjectOwner: function(){
+            var user = config.userModel.get('name'),
+                project = this.appModel.get('projectId'),
+                isPersonalProject = this.appModel.isPersonalProject();
+            return isPersonalProject && project === user + '_personal';
         },
         notificationsRender: function () {
             if (!this.notificationsView) {
@@ -417,7 +423,7 @@ define(function(require, exports, module) {
                 if (Util.isCustomer() && !Util.isAdmin()) {
                     self.setupDisabledRecipients(index);
                 } else {
-                    self.getMembers(index);
+                    self.filterMembers(true, index);
                 }
                 if (self.model.get('emailEnabled')) {
                     self.filterLaunches(index);
@@ -503,9 +509,9 @@ define(function(require, exports, module) {
                 $('.email-case-item', this.$el).prop('disabled', true).removeClass('the-only');
             } else {
                 $('.remove-email-case:not(:checked)', this.$el).prop('disabled', true).closest('.email-case-item').addClass('the-only');
-                if(allLength == 1 && checkedLength == 1){
-                    var emailCase = $('.email-case-item', this.$el);
-
+                if(allLength == checkedLength){
+                    var emailCase = $('.email-case-item', this.$el).eq(0);
+                    
                     this.updateEmailCase(emailCase, 'remove');
                     $('.remove-email-case', emailCase).prop('disabled', true)
                     emailCase.addClass('the-only');
@@ -576,29 +582,6 @@ define(function(require, exports, module) {
             }
         },
 
-        getMembers: function(index){
-            var users = this.getRecipients(index),
-                self = this;
-
-            if(_.isEmpty(users)){
-                self.filterMembers(true, index);
-            }
-            else {
-                _.each(users, function(u){
-                    var email = u.email;
-                    Service.getUserByEmail(email)
-                        .done(function(data){
-                            self.parseUsers(data);
-                            self.filterMembers(true, index);
-                        })
-                        .fail(function(error){
-                            Util.ajaxFailMessenger(error, 'getUsers');
-                        });
-                });
-            }
-
-        },
-
         filterMembers: function (getAnyway, index, callback) {
             this.$recipients = $('input.recipients');
             this.$launchOwner = $('input.launchOwner');
@@ -632,11 +615,15 @@ define(function(require, exports, module) {
                         if ($(data).filter(function () {
                                 return this.text.localeCompare(term) === 0;
                             }).length === 0) {
-                            return {
-                                id: term,
-                                text: term,
-                                email: term
-                            };
+                            if(Util.validateEmail(term)){
+                                return {
+                                    id: term,
+                                    text: term
+                                };
+                            }
+                            else {
+                                return null;
+                            }
                         }
                     },
                     initSelection: function (element, callback) {
@@ -644,6 +631,9 @@ define(function(require, exports, module) {
                             id: element.val(),
                             text: element.val()
                         });
+                    },
+                    formatNoMatches: function(){
+                            return Localization.project.notFoundRecipients;
                     },
                     query: function (query) {
                         resultFound = false;
@@ -660,18 +650,17 @@ define(function(require, exports, module) {
                                     self.validateRecipients();
                                 }
                                 query.term = query.term.replace(/[@#.?*+^$[\]\\(){}|-]/g, "\\$&");
-                                Service.getProjectUsers(query.term)
+                                Service.getProjectUsersById(query.term)
                                     .done(function (response) {
                                         remoteUsers = [];
-                                        _.each(response.content, function (item) {
-                                            if (item.full_name == query.term) {
+                                        _.each(response, function (item) {
+                                            if (item == query.term) {
                                                 resultFound = true;
                                             }
                                             remoteUsers.push(item);
                                             data.results.push({
-                                                id: item.userId,
-                                                text: item.full_name,
-                                                email: item.email
+                                                id: item,
+                                                text: item
                                             });
                                         });
                                         query.callback(data);
@@ -684,8 +673,7 @@ define(function(require, exports, module) {
                             remoteUsers = [];
                             data.results.push({
                                 id: query.term,
-                                text: query.term,
-                                email: item.email
+                                text: query.term
                             });
                             query.callback(data);
                         }
@@ -720,15 +708,14 @@ define(function(require, exports, module) {
             var users = _.map(data.content, function (user) {
                 return {
                     id: user.userId,
-                    text: user.full_name,
-                    email: user.email
+                    text: user.userId
                 };
             });
             this.users = this.users.concat(users);
         },
 
         onChangeRicipients: function (value, eci) {
-            var recips = _.map(value, function(v){ return v.email; }),
+            var recips = _.map(value, function(v){ return v.id; }),
                 checked = eci.find(".launchOwner").is(':checked'),
                 emails = [];
 
@@ -742,13 +729,9 @@ define(function(require, exports, module) {
                     return u.id === v;
                 });
                 if (user) {
-                    emails.push(user.email);
+                    emails.push(user.id);
                     this.isValidEmail = true;
                 } else {
-                    if (!Util.validateEmail(v)) {
-                        this.showFormErrors(eci.find('.select2-container.recipients'), Localization.project.incorectEmail);
-                        this.isValidEmail = false;
-                    }
                     emails.push(v);
                 }
 
@@ -802,15 +785,14 @@ define(function(require, exports, module) {
 
                     _.each(rejected, function (m) {
                         var em = _.find(this.users, function (e) {
-                            return e.email === m
+                            return e.id === m
                         });
                         if (em) {
                             val.push(em);
                         } else {
                             val.push({
                                 id: m,
-                                text: m,
-                                email: m
+                                text: m
                             });
                         }
                     }, this);
@@ -823,15 +805,14 @@ define(function(require, exports, module) {
                         }, this);
                     _.each(rejected, function (m) {
                         var em = _.find(this.users, function (e) {
-                            return e.email === m
+                            return e.id === m
                         });
                         if (em) {
                             val.push(em);
                         } else {
                             val.push({
                                 id: m,
-                                text: m,
-                                email: m
+                                text: m
                             });
                         }
                     }, this);
@@ -1269,24 +1250,15 @@ define(function(require, exports, module) {
                 if (emailCase && _.isEmpty(emailCase.recipients) && !emailCaseToDelete) {
                     self.showFormErrors($(elem).find('input.recipients'), Localization.project.emptyRecipients);
                 }
-
                 if (emailCase && !emailCaseToDelete) {
-                    _.each(emailCase.recipients, function (item) {
-                        if (validRecipients) {
-                            validRecipients = Util.validateEmail(item) || item === 'OWNER';
-
-                            if (validAllRecipients) {
-                                validAllRecipients = validRecipients;
-                            }
-                        }
-                    });
-
+                    if (validRecipients) {
+                        validRecipients = _.isEmpty(emailCase.recipients) ? false : true;
+                    }
+                    validAllRecipients = validRecipients;
                     if (!validRecipients) {
                         self.showFormErrors($(elem).find('input.recipients'), Localization.project.invalidRecipients);
                     }
                 }
-
-
             });
             return this.model.get('emailEnabled') && (recipients || !validAllRecipients);
         },

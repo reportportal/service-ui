@@ -33,6 +33,12 @@ define(function (require, exports, module) {
     var LogItemInfoActivity = require('launches/logLevel/LogItemInfoActivity');
     var LogItemInfoAttachmentsView = require('launches/logLevel/LogItemInfoAttachments');
     var App = require('app');
+    var ModalLoadBug = require('modals/modalLoadBug')
+    var SingletonAppModel = require('model/SingletonAppModel');
+    var Localization = require('localization');
+    var CallService = require('callService');
+    var Urls = require('dataUrlResolver');
+    var call = CallService.call;
 
     var config = App.getInstance();
 
@@ -44,7 +50,10 @@ define(function (require, exports, module) {
             'click [data-js-item-gallery-label]': function(){ this.toggleModelField('attachments') },
             'click [data-js-item-details-label]': function(){ this.toggleModelField('itemDetails') },
             'click [data-js-item-activity-label]': function(){ this.toggleModelField('activity') },
-            'click [data-js-step-issue]': 'showDefectEditor'
+            'click [data-js-step-issue]': 'showDefectEditor',
+            'click [data-js-match]': 'onClickMatch',
+            'click [data-js-post-bug]': 'onClickPostBug',
+            'click [data-js-load-bug]': 'onClickLoadBug'
         },
 
         bindings: {
@@ -56,22 +65,16 @@ define(function (require, exports, module) {
             '[data-js-item-gallery]': 'classes: {hide: not(attachments)}',
             '[data-js-item-details]': 'classes: {hide: not(itemDetails)}',
             '[data-js-item-activity]': 'classes: {hide: not(activity)}',
-            '[data-js-match]': 'classes: {disabled: mainLaunch}',
-            '[data-js-post-bug]': 'classes: {disabled: btsNotConfigured}, attr: {title: postBugTitle}',
-            '[data-js-load-bug]': 'classes: {disabled: btsNotConfigured}',
+            '[data-js-match]': 'classes: {hide: not(parent_launch_investigate)}',
+            '[data-js-post-bug]': 'classes: {disabled: any(btsNotConfigured, notHaveIssue)}, attr: {title: postBugTitle}',
+            '[data-js-load-bug]': 'classes: {disabled: any(btsNotCreate, notHaveIssue)}, attr: {title: loadBugTitle}',
         },
 
         computeds: {
-            mainLaunch: {
+            btsNotCreate: {
                 deps: [],
                 get: function() {
-                    return false;
-                }
-            },
-            btsNotConfigured: {
-                deps: [],
-                get: function() {
-                    var configuration = config.userModel.get('configuration');
+                    var configuration = this.appModel.get('configuration');
                     if(!configuration) {
                         return true;
                     }
@@ -81,18 +84,60 @@ define(function (require, exports, module) {
                     return true;
                 }
             },
+            btsNotConfigured: {
+                deps: ['btsNotCreate'],
+                get: function(btsNotCreate) {
+                    if(btsNotCreate) {
+                        return true;
+                    }
+                    var configuration = this.appModel.get('configuration');
+                    if(_.any(configuration.externalSystem, function (bts) {
+                        return bts.fields && bts.fields.length;
+                    })) {
+                        return false;
+                    }
+                    return true;
+                }
+            },
+            notHaveIssue: {
+                deps: ['issue'],
+                get: function() {
+                    var issue = this.viewModel.getIssue();
+                    if(issue && issue.issue_type) {
+                        return false;
+                    }
+                    return true;
+                }
+            },
             postBugTitle: {
-                deps: ['btsNotConfigured'],
-                get: function(btsNotConfigured) {
+                deps: ['btsNotConfigured', 'notHaveIssue'],
+                get: function(btsNotConfigured, notHaveIssue) {
                     if(btsNotConfigured) {
-
+                        return Localization.launches.configureTBS;
+                    }else if(notHaveIssue) {
+                        return Localization.launches.noIssues;
+                    } else{
+                        return Localization.launches.postBug;
                     }
                 }
-            }
+            },
+            loadBugTitle: {
+                deps: ['btsNotCreate', 'notHaveIssue'],
+                get: function(btsNotCreate, notHaveIssue) {
+                    if(btsNotCreate) {
+                        return Localization.launches.configureTBSLoad;
+                    } else if(notHaveIssue) {
+                        return Localization.launches.noIssuesLoad;
+                    } else {
+                        return Localization.launches.loadBug;
+                    }
+                }
+            },
         },
 
         initialize: function(options) {
-            this.itemModel = options.itemModel;
+            this.appModel = new SingletonAppModel()
+            this.viewModel = options.itemModel;
             this.model = new Epoxy.Model({
                 stackTrace: false,
                 attachments: false,
@@ -106,22 +151,22 @@ define(function (require, exports, module) {
             });
             this.stackTrace = new LogItemInfoStackTraceView({
                 el: $('[data-js-item-stack-trace]', this.$el),
-                itemModel: this.itemModel,
+                itemModel: this.viewModel,
                 parentModel: this.model,
             });
             this.details = new LogItemInfoDetailsView({
                 el: $('[data-js-item-details]', this.$el),
-                itemModel: this.itemModel,
+                itemModel: this.viewModel,
                 parentModel: this.model,
             });
             this.activity = new LogItemInfoActivity({
                 el: $('[ data-js-item-activity]', this.$el),
-                itemModel: this.itemModel,
+                itemModel: this.viewModel,
                 parentModel: this.model,
             });
             this.attachments = new LogItemInfoAttachmentsView({
                 el: $('[data-js-item-gallery]', this.$el),
-                itemModel: this.itemModel,
+                itemModel: this.viewModel,
                 parentModel: this.model,
             });
         },
@@ -138,7 +183,7 @@ define(function (require, exports, module) {
             this.removeEditor();
             this.$editor = new DefectEditorView({
                 origin: $('[data-js-log-defect-editor]', this.$el),
-                model: this.itemModel
+                model: this.viewModel
             });
             this.listenTo(this.$editor, 'defect::editor::hide', this.onHideEditor);
         },
@@ -153,6 +198,26 @@ define(function (require, exports, module) {
                 this.$editor.destroy();
                 this.$editor = null;
             }
+        },
+        onClickPostBug: function() {
+
+        },
+        onClickLoadBug: function() {
+            var modal =(new ModalLoadBug({
+                items: [this.viewModel],
+            }));
+            modal.show();
+        },
+        onClickMatch: function() {
+            var self = this;
+            call('POST', Urls.launchMatchUrl(this.viewModel.get('launchId')))
+                .done(function(response){
+                    self.viewModel.set('isProcessing', true);
+                    Util.ajaxSuccessMessenger("startAnalyzeAction");
+                })
+                .fail(function (error) {
+                    Util.ajaxFailMessenger(error, "startAnalyzeAction");
+                })
         },
         toggleModelField: function(field) {
             this.model.set(field, !this.model.get(field));

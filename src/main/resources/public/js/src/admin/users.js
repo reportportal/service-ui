@@ -75,15 +75,6 @@ define(function (require, exports, module) {
                 action: this.action
             }).render();
 
-            /*
-                this.$el.html(Util.templates(this.tpl, {
-                    paramsForTitleTop: {
-                        firstWordLink: true,
-                        projectId: config.project.projectId
-                    }
-                }));
-            */
-
             this.renderBody();
 
             return this;
@@ -379,7 +370,8 @@ define(function (require, exports, module) {
                         member: self.member,
                         roles: self.roles,
                         defaultProject: self.defaultProject,
-                        unassignedLock: Util.isUnassignedLock, 
+                        unassignedLock: Util.isUnassignedLock,
+                        isPersonalProjectOwner: self.isPersonalProjectOwner(),
                         isAdmin: Util.isAdmin
                     }));
                     self.$addRow = $(".add-row", self.$el);
@@ -395,7 +387,13 @@ define(function (require, exports, module) {
             'click .assign-member': 'assignMember',
             'select2-selecting #projectId': 'projectSelected'
         },
-
+        isPersonalProjectOwner: function(){
+            return function(user, project){
+                var projectId = project.key,
+                    isPersonal = project.value.entryType == 'PERSONAL';
+                return isPersonal && (projectId === user.userId + '_personal');
+            }
+        },
         handleDropDown: function (e) {
             e.preventDefault();
             this.$assignBtn.data('role', $(e.currentTarget).data('value'));

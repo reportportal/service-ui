@@ -54,10 +54,10 @@ define(function (require, exports, module) {
         return null;
     };
 
-    var minMaxRequired = function (val, options) {
+    var minMaxRequired = function (val, options, Util) {
         var length = val.length;
         if (length === 0 || validateForMinMax(length, options)) {
-            return Localization.validation[options.type + "Length"].replace('{0}', options.min).replace('{1}', options.max);
+            return Util.replaceTemplate(Localization.validation[options.type + "Length"], options.min, options.max);
         }
         return null;
     };

@@ -24,17 +24,70 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
-    var Util = require('util')
+    var Util = require('util');
+    var FilterModel = require('filters/FilterModel');
+    var LogItemCollection = require('launches/logLevel/LogItemCollection');
+
+
+    var LogItemInfoStackTraceItemView = Epoxy.View.extend({
+        className: 'stack-trace-item',
+
+        bindings: {
+            ':el': 'text: message'
+        },
+        initialize: function() {
+        },
+    });
 
     var LogItemInfoStackTraceView = Epoxy.View.extend({
         template: 'tpl-launch-log-item-info-stack-trace',
 
-        initialize: function() {
+        initialize: function(options) {
             this.render();
+            this.isLoad = false;
+            this.itemModel = options.itemModel;
+            this.parentModel = options.parentModel;
+            this.listenTo(this.parentModel, 'change:stackTrace', this.onShow);
+            var filterModel = new FilterModel({
+                temp: true,
+                entities: '[{"filtering_field":"level","condition":"in","value":"ERROR"}]',
+                selection_parameters: '{"is_asc": false, "sorting_column": "time"}',
+            });
+            this.collection = new LogItemCollection({
+                filterModel: filterModel,
+                itemModel: this.itemModel,
+            });
+            this.listenTo(this.collection, 'loading:true', this.onStartLoading);
+            this.listenTo(this.collection, 'loading:false', this.onStopLoading);
+            this.listenTo(this.collection, 'reset', this.onResetCollection);
         },
 
         render: function() {
             this.$el.html(Util.templates(this.template), {});
+        },
+        onShow: function(model, show) {
+            if(show && !this.isLoad) {
+                this.isLoad = true;
+                this.load();
+            }
+        },
+        onResetCollection: function() {
+            if(!this.collection.models.length) {
+                $('[data-js-stack-trace-container]', this.$el).html('');
+                $('[data-js-stack-trace-wrapper]', this.$el).addClass('not-found');
+            } else {
+                $('[data-js-stack-trace-wrapper]', this.$el).removeClass('not-found');
+                $('[data-js-stack-trace-container]', this.$el).append((new LogItemInfoStackTraceItemView({model: this.collection.models[0]})).$el);
+            }
+        },
+        onStartLoading: function() {
+            $('[data-js-stack-trace-wrapper]', this.$el).addClass('load');
+        },
+        onStopLoading: function() {
+            $('[data-js-stack-trace-wrapper]', this.$el).removeClass('load');
+        },
+        load: function() {
+            this.collection.setPaging(1, 1); // call loading
         },
 
         destroy: function() {

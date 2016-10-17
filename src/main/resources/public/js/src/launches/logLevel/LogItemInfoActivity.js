@@ -124,7 +124,7 @@ define(function (require, exports, module) {
         template: 'tpl-launch-log-item-info-activity',
 
         events: {
-            'click [data-ja-close]': 'onClickClose',
+            'click [data-js-close]': 'onClickClose',
         },
 
         initialize: function(options) {
@@ -137,10 +137,12 @@ define(function (require, exports, module) {
         onShow: function(model, show) {
               if(show && !this.isLoad) {
                   this.isLoad = true;
+                  this.listenTo(this.itemModel, 'change:issue', this.load);
                   this.load();
               }
         },
         load: function() {
+            $('[data-js-activity-container]', this.$el).html('');
             $('[data-js-activity-wrapper]', this.$el).addClass('load');
             var self = this;
             Service.loadActivityItems(this.itemModel.get('id'))

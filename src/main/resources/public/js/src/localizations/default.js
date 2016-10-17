@@ -55,6 +55,7 @@ define(['util'], function () {
             escToCancel: '<strong>Esc</strong> to Cancel',
             ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> to Submit',
             loading: "Loading",
+            load: 'Load',
             gallery: "Gallery",
             build: "Build",
             error: "Error",
@@ -186,7 +187,8 @@ define(['util'], function () {
             api: "API",
             licensing: "Licensing",
             lgplv3: "LGPL 3.0",
-            components: "Used Components",
+            forkUs: 'Fork us on GitHub',
+            chatSlack: 'Chat with us on Slack',
             textCopyright: "&copy; 2016 Report Portal. All Rights Reserved.",
             menu: {
                 news: "News",
@@ -882,6 +884,7 @@ define(['util'], function () {
             filterAttachments: 'Logs with Attachments',
             notFoundActivity: 'There is no Activity to display',
             notFoundAttachments: 'There is no Attachments to display',
+            notFoundStackTrace: 'There is no Stack Trace to display',
             nextError: 'Next Error',
         },
 
@@ -925,7 +928,10 @@ define(['util'], function () {
         },
         filter: {
             name: 'Filter name',
+            namePlaceholder: 'Enter Filter Name',
             share: 'Share',
+            description: 'Description',
+            descriptionPlaceholder: 'Enter Filter Description',
         },
 
         project: {
@@ -983,7 +989,8 @@ define(['util'], function () {
             launchOwnerDescription: "Launch owner (who launched - that received)",
             sendNotification: "Send e-mail notifications about launches finished",
             emptyRecipients: "Select at least one recipient",
-            invalidRecipients: "Please enter correct email",
+            notFoundRecipients: 'User does not exist. Please, check the entered data.',
+            invalidRecipients: "Please select at least one recipient",
             sendLaunchNames: "Send notifications about selected launches finished",
             sendTags: "Send notifications about launches containing specified tags",
             incorectEmail: "Please enter correct email",
@@ -1001,6 +1008,7 @@ define(['util'], function () {
             postfixLabel: 'Postfix will be added to the demo dashboard, widgets, filter name',
             removeDemoData: 'You will have to remove the Demo Data manually.',
             postfixPlaceHolder: 'Enter Postfix',
+            posfixUniq: 'Postfix already used or not align with already existing data. Please use another one',
             beta: "beta",
             aboutinfo: 'Detailed information about the project',
             unableLoadData: 'Unable to load data',
@@ -1066,7 +1074,7 @@ define(['util'], function () {
             configureFields: "Configure Bug Tracking System default properties to post bugs",
             issueId: "Issue ID",
             linkToIssue: "Link to Issue",
-            addMoreIssues: "Add more issues",
+            addNewIssues: "Add New Issues",
             btsInstances: "Bts Instances:",
             btsAddNewInstance: "Add New Instance"
         },
@@ -1122,6 +1130,7 @@ define(['util'], function () {
             projectName: "Project name",
             projectRole: "Project role",
             cantUnAssignFromDefault: "The user cannot be unassigned from Default_Project",
+            cantUnAssignFromPersonal: "The user cannot be unassigned from Personal project",
             kpi: 'KPI',
             projectTitle: "See detailed information",
             projectDetailsTitle: "See detailed information about the project ",
@@ -1331,7 +1340,8 @@ define(['util'], function () {
             loadActivityItems: "Failed to load activity items",
             loadNavigationStep: "Failed to load",
             sessionExpired: 'Your session has been expired',
-            getItemInfo: 'Failed to load info for item'
+            getItemInfo: 'Failed to load info for item',
+            dublPostFix: 'Postfix already used or not align with already existing data. Please use another one'
         },
 
         infoMessages: {
@@ -1345,9 +1355,10 @@ define(['util'], function () {
             issueTitleEmpty: "Title should not contain only white spaces and shouldn't be empty",
             issueTitleLength: "Title should have size from '4' to '512'",
             componentsLength: "Components should not contains only white spaces and shouldn't be empty",
-            logMessageLength: "Message length should have size from 3 to 55.",
-            filtersNameLength: "Filter name length should have size from '{min}' to '{max}'",
-            filterNameLength: "Filter name length should have size from 3 to 128.",
+            logMessageLength: "Message length should have size from %%% to %%%.",
+            filtersNameLength: "Filter name length should have size from %%% to %%%",
+            filterNameLength: "Filter name length should have size from %%% to %%%.",
+            filterDescriptionLength: "Filter description length should have size from %%% to %%%.",
             filterNameDuplication: "This name is already in use. Please choose something else.",
             filterStaticsDigitsOnly: "This filter accepts only digits.",
             dashboardNameLength: "Dashboard name should have size from '3' to '128'",
@@ -1408,7 +1419,7 @@ define(['util'], function () {
 
             issueLinkRegex: "Link should match a valid website address",
             issueLinkRequired: "Link should match a valid website address",
-            issueIdLength: "Issue Id should have size from '1' to '128'",
+            issueIdLength: "Issue Id should have size from %%% to %%%",
 
             fieldRequired: "This field is required",
             defectName: "Full name should have size from '3' to '55'",
@@ -1461,7 +1472,9 @@ define(['util'], function () {
             linkInvitation: "Link to invitation",
             createUser: 'Add, register user',
             updateDefects: 'Update defect types',
-            updateBts: 'Update BTS'
+            updateBts: 'Update BTS',
+            projectNameIn: 'Project Name in',
+            bugWillBeLoaded: 'Bug will be loaded to ',
         },
 
         wizard: {
@@ -1523,7 +1536,7 @@ define(['util'], function () {
             unableSelectForMerge: "Error: Unable to select launch for merge!",
             createNewDashboard: "Create new Dashboard",
             dashboardSettings: "Dashboard settings",
-            deleteFilter: "Are you sure you want to delete the filter <b>'%%%'</b>",
+            deleteFilter: "Are you sure you want to delete the filter <b>'%%%'</b>?",
             deleteProject: "Are you sure you want to delete the project <b>'%%%'</b>",
             deleteEmailRule: "Are you sure you want to remove notification rule",
             deleteEmailRuleBtn: 'Remove',

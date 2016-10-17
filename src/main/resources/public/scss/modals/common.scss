@@ -20,6 +20,47 @@
  */
 
 .rp-modal-dialog {
+  .modal-content {
+    border-radius: 0;
+    border: none;
+    padding: 10px;
+    .modal-header {
+      border-bottom: 1px solid $COLOR--gray-91;
+      padding: 9px 40px 17px 9px;
+      h2 {
+        text-transform: uppercase;
+        padding: 0;
+        margin: 0;
+        font-size: 17px;
+        font-family: OswaldRegular;
+        color: $COLOR--topaz;
+      }
+      .close-modal {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        font-size: 22px;
+        padding: 0 5px;
+        width: 30px;
+        height: 26px;
+        cursor: pointer;
+        color: $COLOR--gray-60;
+        &:hover {
+          color: $COLOR--gray-47;
+        }
+      }
+    }
+    .modal-body {
+
+    }
+    .modal-footer {
+      border: none;
+      padding: 10px 6px;
+      .rp-btn {
+        margin: 0 3px;
+      }
+    }
+  }
 
   &.load {
     .modal-loading {
@@ -60,4 +101,10 @@
       }
     }
   }
+}
+.modal-backdrop {
+    background-color: rgba(70, 69, 71, 0.3);
+    &.fade.in {
+        opacity: .8;
+    }
 }

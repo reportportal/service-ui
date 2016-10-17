@@ -51,6 +51,7 @@ define(function (require, exports, module) {
        templates: function (name, data) {
             var data = data || {};
             data['text'] = Localization;
+            data.includeTemplate = Util.templates;
 
             var template = Tpl[name];
             if (template) {
@@ -201,6 +202,9 @@ define(function (require, exports, module) {
         },
 
         textWrapper: function (value, search) {
+            if(!value) {
+                return '';
+            }
             var regex = new RegExp(search, 'ig');
             return value.replace(regex, '<mark>$&</mark>');
         },
@@ -213,6 +217,13 @@ define(function (require, exports, module) {
                 }
                 return finalString;
             }
+        },
+        replaceTemplate: function(template) {
+            var result = template;
+            for(var i = 1; i < arguments.length; i++) {
+                result = result.replace('%%%', arguments[i]);
+            }
+            return result;
         },
         shimBind: function () {
             if (!Function.prototype.bind) {
@@ -853,14 +864,6 @@ define(function (require, exports, module) {
         getCopyName: function (name) {
             return Localization.ui.copy + " " + name;
         },
-        isPersonalProject: function(){
-            var project = config.project;
-            return project && project.configuration && project.configuration.entryType == 'PERSONAL';
-        },
-        isPersonalProjectOwner: function(){
-            var user =  config.userModel;
-            return this.isPersonalProject() && config.project.projectId == user.get('name') + '_project';
-        },
         isAdmin: function (user) {
             user = user || config.userModel.toJSON();
             return user.userRole === config.accountRolesEnum.administrator;
@@ -1053,7 +1056,7 @@ define(function (require, exports, module) {
                         });
                     }
                     else {
-                        var message = validator.type(val, validator.options);
+                        var message = validator.type(val, validator.options, Util);
                         if (message) {
                             result = !result ?  message + "</br>" : result;
                         }

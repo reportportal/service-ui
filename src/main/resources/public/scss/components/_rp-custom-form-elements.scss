@@ -47,7 +47,7 @@
 
 /* input[type="text"].rp-input */
 /* input[type="text"].rp-input-default */
-input {
+input, textarea {
     &.rp-input,
     &.rp-input-default {
         @include rpInputSetting(false, 30px, 100%, 13px, 13px, 6px 10px, 0, true);
