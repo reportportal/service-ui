@@ -5,7 +5,7 @@
     <div class="load-items-container">
         <% if(data.externalSystems.length > 1) { %>
         <label class="bts-label">
-            <span>Project Name in</span>
+            <span><%= data.text.forms.projectNameIn %></span>
             <button class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 <span class="select-value" data-js-bts-value></span>
                 <span class="rp-caret"></span>
@@ -20,7 +20,7 @@
                 <% } %>
             </ul>
         </label>
-        <span class="bts-description"> Bug will be loaded to <span data-js-bts-link></span></span>
+        <span class="bts-description"><%= data.text.forms.bugWillBeLoaded %> <span data-js-bts-link></span></span>
         <% } %>
         <div data-js-load-items-container></div>
     </div>

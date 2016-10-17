@@ -64,7 +64,7 @@
           font-size: 18px;
           line-height: 30px;
           color: $COLOR--gray-60;
-          display: none;
+          display: inline-block;
           &.icon-comment {
             margin-top: 1px;
           }
@@ -73,6 +73,9 @@
             vertical-align: top;
             margin-top: 1px;
           }
+        }
+        .many-items, .not-found-items {
+          display: none;
         }
         .issue-type {
           vertical-align: top;
@@ -207,14 +210,14 @@
       &.status-MANY {
         cursor: default;
         @include logColorSet($COLOR--light-yellow, $COLOR--light-yellow);
-        [data-js-many-items] {
-          display: inline
+        .many-items {
+          display: inline;
         }
       }
       &.status-NOT_FOUND {
         cursor: default;
         @include logColorSet($COLOR--white, $COLOR--white);
-        [data-js-not-found] {
+        .not-found-items {
           display: inline;
         }
       }

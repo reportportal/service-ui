@@ -65,8 +65,7 @@ define(function (require, exports, module) {
         },
         onClickOk: function() {
             if ($('.has-error', this.$el).length) return;
-            this.$modalWrapper && this.$modalWrapper.modal('hide');
-            this.closeAsync.resolve(this.model);
+            this.successClose(this.model);
         }
 
     });

@@ -59,8 +59,7 @@ define(function (require, exports, module) {
         onClickSuccess: function() {
             var self = this;
             if(!this.confirmFunction) {
-                self.closeAsync && self.closeAsync.resolve();
-                self.$modalWrapper && self.$modalWrapper.modal('hide');
+                self.successClose();
                 return;
             }
             this.showLoading();

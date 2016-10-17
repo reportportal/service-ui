@@ -84,6 +84,7 @@
       .action-item {
         min-height: 1px;
         width: 47%;
+        word-wrap: break-word;
         &:last-child {
           font-family: OpenSansSemibold;
         }

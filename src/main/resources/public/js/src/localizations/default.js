@@ -884,6 +884,7 @@ define(['util'], function () {
             filterAttachments: 'Logs with Attachments',
             notFoundActivity: 'There is no Activity to display',
             notFoundAttachments: 'There is no Attachments to display',
+            notFoundStackTrace: 'There is no Stack Trace to display',
             nextError: 'Next Error',
         },
 
@@ -1471,7 +1472,9 @@ define(['util'], function () {
             linkInvitation: "Link to invitation",
             createUser: 'Add, register user',
             updateDefects: 'Update defect types',
-            updateBts: 'Update BTS'
+            updateBts: 'Update BTS',
+            projectNameIn: 'Project Name in',
+            bugWillBeLoaded: 'Bug will be loaded to ',
         },
 
         wizard: {

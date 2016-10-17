@@ -128,9 +128,9 @@ define(function (require, exports, module) {
             var self = this;
             var issue = this.model.getIssue();
             if(issue.comment) {
-                $('[data-js-comment]', this.$el).addClass('rp-display-inline-block');
+                $('[data-js-comment]', this.$el).removeClass('hide');
             } else {
-                $('[data-js-comment]', this.$el).removeClass('rp-display-inline-block')
+                $('[data-js-comment]', this.$el).addClass('hide')
             }
             if(issue.issue_type) {
                 this.defectTypeCollection.ready.done(function() {
@@ -144,10 +144,10 @@ define(function (require, exports, module) {
             } else {
                 $('[data-js-issue-type]', self.$el).addClass('hide')
             }
-            if(issue.externalSystemIssues) {
-                $('[data-js-ticket]', this.$el).addClass('rp-display-inline-block');
+            if(issue.externalSystemIssues && issue.externalSystemIssues.length) {
+                $('[data-js-ticket]', this.$el).removeClass('hide');
             } else {
-                $('[data-js-ticket]', this.$el).removeClass('rp-display-inline-block')
+                $('[data-js-ticket]', this.$el).addClass('hide')
             }
         },
         onClickItem: function() {
