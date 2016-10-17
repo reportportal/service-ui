@@ -51,6 +51,7 @@ define(function(require, exports, module) {
         setupAnchors: function(){
             this.$submitSettings = $('[data-js-demo-data-submit]', this.$el);
             this.$postfixInput = $('[data-js-demo-data-postfix]', this.$el);
+            this.$alertLoaderBlock = $('[data-js-demo-data-loader]', this.$el);
         },
         toggleDisableForm: function(disable){
             this.$postfixInput.prop('disabled', disable);
@@ -104,6 +105,9 @@ define(function(require, exports, module) {
             form.removeClass('has-error');
             $('.help-inline', form).text('');
         },
+        toggleLoader: function(action){
+            this.$alertLoaderBlock[action]();
+        },
         submitSettings: function (e) {
             if (!this.validate()) {
                 return;
@@ -116,6 +120,7 @@ define(function(require, exports, module) {
                 };
 
             this.toggleDisableForm(true);
+            this.toggleLoader('show');
             Service.generateDemoData(data)
                 .done(function (response) {
                     this.$postfixInput.val('');
@@ -132,6 +137,7 @@ define(function(require, exports, module) {
                     }
                 }.bind(this))
                 .always(function(){
+                    this.toggleLoader('hide');
                     this.toggleDisableForm(false);
                 }.bind(this));
 
