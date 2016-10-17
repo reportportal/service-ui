@@ -33,8 +33,10 @@ define(function (require, exports, module) {
     var Storage = require('storageService');
     var Markitup = require('markitup');
     var MarkitupSettings = require('markitupset');
+    var SingletonAppModel = require('model/SingletonAppModel');
 
     var config = App.getInstance();
+    var appModel = new SingletonAppModel();
 
     var TicketModel = Epoxy.Model.extend({
         defaults: {
@@ -54,6 +56,11 @@ define(function (require, exports, module) {
         },
 
         initialize: function() {
+            var externalSystems = appModel.getArr('externalSystem');
+            this.externalSystemType = '';
+            if(externalSystems[0] && externalSystems[0].systemType) {
+                this.externalSystemType = externalSystems[0].systemType;
+            }
             this.render();
             this.listenTo(this.model.collection, 'add remove', this.onChangeCollection);
             this.onChangeCollection();
@@ -73,7 +80,19 @@ define(function (require, exports, module) {
             ]);
         },
         onBlurLinkInput: function() {
-
+            var $link = $('[data-js-link-input]', this.$el);
+            var $issue = $('[data-js-issue-input]', this.$el);
+            if (!$link.data('valid') || $.trim($issue.val())) return;
+            var autoValue = '';
+            if (this.externalSystemType == 'JIRA') {
+                autoValue = $link.val().split('/');
+                autoValue = autoValue[autoValue.length - 1];
+            }
+            if (this.externalSystemType == 'TFS') {
+                autoValue = $link.val().split('id=')[1];
+                autoValue = autoValue ? autoValue.split('&')[0] : '';
+            }
+            $issue.val(autoValue).trigger('validate');
         },
         onChangeCollection: function() {
             if(this.model.collection.models.length <= 1) {
@@ -103,12 +122,22 @@ define(function (require, exports, module) {
         className: 'modal-load-bug',
 
         events: {
+            'click [data-bts-select-item]': 'onClickBts',
             'click [data-js-add-ticket]': 'onClickAddTicket',
             'click [data-js-load]': 'onClickLoad',
         },
 
-        initialize: function(options) {
+        initialize: function(option) {
+            this.externalSystems = appModel.getArr('externalSystem');
+            if(!this.externalSystems.length) {
+                console.log('No bts found');
+                return;
+            }
+            this.testItemsIds = _.map(option.items, function(model) {
+                return model.get('id');
+            });
             this.render();
+            this.selectBts(this.externalSystems[0].id);
             this.collection = new TicketCollection();
             this.listenTo(this.collection, 'add', this.onAddTicket);
             this.collection.add({});
@@ -119,14 +148,65 @@ define(function (require, exports, module) {
         onClickLoad: function() {
             $('.form-control', this.$el).trigger('validate');
             if (!$('.has-error', this.$el).length) {
-
+                var issues = _.map(this.collection.models, function(model) {
+                    return {
+                        ticketId: model.get('issue'),
+                        url: model.get('link'),
+                    }
+                });
+                Service.loadBugs({
+                    systemId: this.currentBts.id,
+                    issues: issues,
+                    testItemIds: this.testItemsIds,
+                })
+                    .done(function (response) {
+                        var issues = self.updateIssues(self.items, data);
+                        Service.updateDefect({issues: issues})
+                            .done(function () {
+                                Util.ajaxSuccessMessenger("submitKeys");
+                                self.trigger("bug::loaded");
+                            })
+                            .fail(function (error) {
+                                errorHandler(error);
+                            })
+                            .always(function () {
+                                self.done();
+                            });
+                        config.session.lastLoadedTo = self.systemId;
+                        config.trackingDispatcher.jiraTicketLoad(data.issues.length);
+                    })
+                    .fail(function (error) {
+                        Util.ajaxFailMessenger(error, "submitKeys");
+                    })
+                    .always(function () {
+                        self.inSubmit = false;
+                    });
             }
         },
         onAddTicket: function(model) {
             $('[data-js-load-items-container]', this.$el).append((new TicketView({model: model})).$el);
         },
+        onClickBts: function(e) {
+            e.preventDefault();
+            this.selectBts($(e.currentTarget).data('bts-select-item'));
+        },
+        selectBts: function(id) {
+            var currentBts = null;
+            _.each(this.externalSystems, function(externalSystem) {
+                if(externalSystem.id == id) {
+                    currentBts = externalSystem;
+                    return false;
+                }
+            });
+            if(!currentBts) {
+                return;
+            }
+            this.currentBts = currentBts;
+            $('[data-js-bts-value]', this.$el).text(currentBts.project);
+            $('[data-js-bts-link]', this.$el).text(currentBts.url);
+        },
         render: function() {
-            this.$el.html(Util.templates(this.template, {}))
+            this.$el.html(Util.templates(this.template, {externalSystems: this.externalSystems}))
         }
     });
 
@@ -180,85 +260,85 @@ define(function (require, exports, module) {
             //     }
             // ]);
         },
-        addRow: function () {
-            this.renderRow();
-            this.$rowsHolder.addClass('multi');
-        },
-        removeRow: function (e) {
-            $(e.currentTarget).closest('.issue-row').remove();
-            if ($(".issue-row", this.$rowsHolder).length === 1) this.$rowsHolder.removeClass('multi');
-        },
-        events: function () {
-            return _.extend({}, Components.DialogShell.prototype.events, {
-                'click .project-name': 'updateProject',
-                'click #addRow': 'addRow',
-                'click .remove-row': 'removeRow',
-                'blur .issue-link': 'autoFillId'
-            });
-        },
-        autoFillId: function (e) {
-            if (this.canAutoFill()) {
-                var $link = $(e.currentTarget),
-                    $id = $link.closest('.issue-row').find('.issue-id'),
-                    link = $link.val(),
-                    autoValue;
-                if (!link || !$link.data('valid') || $.trim($id.val())) return;
-                if (this.isJiraBts()) {
-                    autoValue = link.split('/');
-                    autoValue = autoValue[autoValue.length - 1];
-                }
-                if (this.isTfsBts()) {
-                    autoValue = link.split('id=')[1];
-                    autoValue = autoValue ? autoValue.split('&')[0] : '';
-                }
-                $id.val(autoValue).trigger('validate');
-            }
-        },
-        canAutoFill: function () {
-            return this.type && (this.isJiraBts() || this.isTfsBts());
-        },
-        isJiraBts: function () {
-            return this.type === config.btsEnum.jira;
-        },
-        isTfsBts: function () {
-            return this.type === config.btsEnum.tfs;
-        },
-        updateProject: function (e) {
-            Util.dropDownHandler(e);
-            this.systemId = $(e.currentTarget).attr('id');
-            var system = _.find(this.systems, {id: this.systemId});
-            this.$postToUrl.text(system.url);
-        },
+        // addRow: function () {
+        //     this.renderRow();
+        //     this.$rowsHolder.addClass('multi');
+        // },
+        // removeRow: function (e) {
+        //     $(e.currentTarget).closest('.issue-row').remove();
+        //     if ($(".issue-row", this.$rowsHolder).length === 1) this.$rowsHolder.removeClass('multi');
+        // },
+        // events: function () {
+        //     return _.extend({}, Components.DialogShell.prototype.events, {
+        //         'click .project-name': 'updateProject',
+        //         'click #addRow': 'addRow',
+        //         'click .remove-row': 'removeRow',
+        //         'blur .issue-link': 'autoFillId'
+        //     });
+        // },
+        // autoFillId: function (e) {
+        //     if (this.canAutoFill()) {
+        //         var $link = $(e.currentTarget),
+        //             $id = $link.closest('.issue-row').find('.issue-id'),
+        //             link = $link.val(),
+        //             autoValue;
+        //         if (!link || !$link.data('valid') || $.trim($id.val())) return;
+        //         if (this.isJiraBts()) {
+        //             autoValue = link.split('/');
+        //             autoValue = autoValue[autoValue.length - 1];
+        //         }
+        //         if (this.isTfsBts()) {
+        //             autoValue = link.split('id=')[1];
+        //             autoValue = autoValue ? autoValue.split('&')[0] : '';
+        //         }
+        //         $id.val(autoValue).trigger('validate');
+        //     }
+        // },
+        // canAutoFill: function () {
+        //     return this.type && (this.isJiraBts() || this.isTfsBts());
+        // },
+        // isJiraBts: function () {
+        //     return this.type === config.btsEnum.jira;
+        // },
+        // isTfsBts: function () {
+        //     return this.type === config.btsEnum.tfs;
+        // },
+        // updateProject: function (e) {
+        //     Util.dropDownHandler(e);
+        //     this.systemId = $(e.currentTarget).attr('id');
+        //     var system = _.find(this.systems, {id: this.systemId});
+        //     this.$postToUrl.text(system.url);
+        // },
 
-        updateIssues: function (items, response) {
-            var issues = [];
-            _.forEach(items, function (item, i) {
-                var defectBadge = $('.inline-editor .rp-defect-type-dropdown .pr-defect-type-badge'),
-                    chosenIssue = defectBadge.length > 0 ? defectBadge.data('id') : null,
-                    issue = {
-                        issue_type: chosenIssue ? chosenIssue : item.issue.issue_type,
-                        comment: item.issue.comment,
-                        externalSystemIssues: item.issue.externalSystemIssues || []
-                    };
-
-                if ($('#replaceComments').prop('checked')) {
-                    issue.comment = $('.markItUpEditor').val().length > 0 ? $('.markItUpEditor').val() : this.items[i].issue.comment;
-                }
-
-                if (item.id == $('.editor-row').closest('.selected').attr('id')) {
-                    issue.comment = $('.markItUpEditor').val();
-                }
-                _.each(response.issues, function(is){
-                    issue.externalSystemIssues.push({
-                        ticketId: is.ticketId,
-                        systemId: response.systemId,
-                        url: is.url
-                    });
-                });
-                issues.push({issue: issue, test_item_id: item.id});
-            }, this);
-            return issues;
-        },
+        // updateIssues: function (items, response) {
+        //     var issues = [];
+        //     _.forEach(items, function (item, i) {
+        //         var defectBadge = $('.inline-editor .rp-defect-type-dropdown .pr-defect-type-badge'),
+        //             chosenIssue = defectBadge.length > 0 ? defectBadge.data('id') : null,
+        //             issue = {
+        //                 issue_type: chosenIssue ? chosenIssue : item.issue.issue_type,
+        //                 comment: item.issue.comment,
+        //                 externalSystemIssues: item.issue.externalSystemIssues || []
+        //             };
+        //
+        //         if ($('#replaceComments').prop('checked')) {
+        //             issue.comment = $('.markItUpEditor').val().length > 0 ? $('.markItUpEditor').val() : this.items[i].issue.comment;
+        //         }
+        //
+        //         if (item.id == $('.editor-row').closest('.selected').attr('id')) {
+        //             issue.comment = $('.markItUpEditor').val();
+        //         }
+        //         _.each(response.issues, function(is){
+        //             issue.externalSystemIssues.push({
+        //                 ticketId: is.ticketId,
+        //                 systemId: response.systemId,
+        //                 url: is.url
+        //             });
+        //         });
+        //         issues.push({issue: issue, test_item_id: item.id});
+        //     }, this);
+        //     return issues;
+        // },
 
         submit: function () {
             $('.form-control', this.$rowsHolder).trigger('validate');

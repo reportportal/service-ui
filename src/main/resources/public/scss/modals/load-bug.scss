@@ -32,6 +32,14 @@
   }
   .load-items-container {
     padding: 17px 9px 10px 20px;
+    .bts-description {
+      display: block;
+      margin-bottom: 15px;
+      color: $COLOR--gray-60;
+    }
+    .bts-label {
+      width: 430px;
+    }
     .link-label {
       width: 320px;
     }
@@ -47,7 +55,7 @@
       span:first-child {
         display: block
       }
-      input {
+      input, button {
         width: 100%;
         margin-top: 6px;
       }
