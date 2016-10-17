@@ -116,6 +116,7 @@ define(function (require, exports, module) {
 
         events: {
             'show.bs.collapse #accordion': 'renderInactive',
+            'show.bs.collapse [data-js-personal-accordion]': 'renderPersonalProjects',
             'click .remove-project': 'removeProject',
             'click #sortDirection .rp-btn': 'changeSorting',
             'validation::change #nameFilter': 'filterProjects',
@@ -181,9 +182,11 @@ define(function (require, exports, module) {
 
         makeSorting: function () {
             this.projectsData.active = _.sortByOrder(this.projectsData.active, this.filter.sort, this.filter.direction === 'asc');
-            this.projectsData.personal = _.sortByOrder(this.projectsData.personal, this.filter.sort, this.filter.direction === 'asc');
             if (this.$inactiveHolder.hasClass('in')) {
                 this.projectsData.inactive = _.sortByOrder(this.projectsData.inactive, this.filter.sort, this.filter.direction === 'asc');
+            }
+            if (this.$personalHolder.hasClass('in')) {
+                this.projectsData.personal = _.sortByOrder(this.projectsData.personal, this.filter.sort, this.filter.direction === 'asc');
             }
             this.reRenderProjects();
         },
@@ -201,7 +204,6 @@ define(function (require, exports, module) {
 
         reRenderProjects: function () {
             this.renderActiveProjects();
-            this.renderPersonalProjects();
             if (this.$inactiveHolder.hasClass('in')) {
                 this.renderInactive();
             } else {
@@ -211,6 +213,15 @@ define(function (require, exports, module) {
                 }, 0);
                 this.$inactiveAmount.text(result);
             }
+            if (this.$personalHolder.hasClass('in')) {
+                this.renderPersonalProjects();
+            } else {
+                var self = this;
+                var result = _.reduce(this.projectsData.personal, function (sum, p) {
+                    return sum + self.searchFilter(p, self.filter.search);
+                }, 0);
+                this.$personalAmount.text(result);
+            }
         },
 
         renderPersonalProjects: function(){
@@ -218,6 +229,7 @@ define(function (require, exports, module) {
                 collection: this.projectsData.personal,
                 util: Util,
                 isNew: this.isNew,
+                isPersonalProject: true,
                 hasRunsLastWeek: this.hasRunsLastWeek,
                 active: true,
                 canDelete: this.canDelete,
@@ -262,7 +274,7 @@ define(function (require, exports, module) {
                             return project.creationDate;
                         }).reverse();
                         self.projectsData = _.groupBy(data, function (project) {
-                            return project.entryType == "PERSONAL" ? 'personal' : project.launchesQuantity || self.isNew(project.creationDate) ? 'active' : 'inactive';
+                            return self.isPersonalProject(project) ? 'personal' : project.launchesQuantity || self.isNew(project.creationDate) ? 'active' : 'inactive';
                         });
                         self.makeSorting();
                     })
@@ -273,6 +285,10 @@ define(function (require, exports, module) {
                         self.$searchString.removeAttr('disabled');
                     });
             });
+        },
+
+        isPersonalProject: function(project){
+            return project.entryType == "PERSONAL";
         },
 
         renderActiveProjects: function () {
@@ -500,6 +516,7 @@ define(function (require, exports, module) {
 
             if (this.fullMembers) {
                 data.projectId = this.id;
+                data.project = {type: config.project.configuration.entryType, projectId: this.id};
                 data.user = config.userModel.toJSON();
                 data.roles = config.projectRoles;
                 data.memberAction = 'unAssignMember';

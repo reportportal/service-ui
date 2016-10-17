@@ -118,7 +118,7 @@ define(function (require, exports, module) {
                 function (response) {
                     self.currentProjectId = response.projectId;
                     config.project = response;
-                    appModel.set({projectId: response.projectId});
+                    appModel.set({projectId: response.projectId, type: response.configuration.entryType});
                 });
         },
 

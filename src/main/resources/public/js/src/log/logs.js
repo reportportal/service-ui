@@ -330,6 +330,11 @@ define(function (require, exports, module) {
                 else if (log.status == "RESETED") {
                     cls = 'progress-bar-reseted';
                 }
+                if (item.launchStatus == 'INTERRUPTED') {
+                    cls += ' progress-bar-interupt';
+                } else if (item.launchStatus == 'IN_PROGRESS') {
+                    cls += ' progress-striped active';
+                }
             }
             else {
                 cls = item.cls;
@@ -786,7 +791,8 @@ define(function (require, exports, module) {
                     items: val.resources,
                     launch: val.launchNumber,
                     startTime: parseInt(val.startTime),
-                    launchNumber: parseInt(val.launchNumber)
+                    launchNumber: parseInt(val.launchNumber),
+                    launchStatus: val.launchStatus
                 };
                 if (_.isEmpty(val.resources)) {
                     //if EMPTY
@@ -820,7 +826,7 @@ define(function (require, exports, module) {
                         }
                         else if (itemOne.status == "IN_PROGRESS") {
                             skipped += 1;
-                            item.cls = 'progress-striped progress-bar-inprogress';
+                            item.cls = 'progress-striped active progress-bar-inprogress';
                             item.type = 'IN_PROGRESS';
                         }
                         else if (itemOne.status == "RESETED") {
@@ -828,13 +834,13 @@ define(function (require, exports, module) {
                             item.cls = 'progress-bar-reseted';
                             item.type = 'EMPTY';
                         }
-                        // check launch status
-                        if (itemOne.launchStatus == 'INTERRUPTED') {
-                            item.cls += ' progress-striped progress-bar-interupt';
-                        } else if (itemOne.launchStatus == 'IN_PROGRESS') {
-                            item.cls += ' progress-striped active';
-                        }
                     }
+                }
+                // check launch status
+                if (item.launchStatus == 'INTERRUPTED') {
+                    item.cls += ' progress-bar-interupt';
+                } else if (item.launchStatus == 'IN_PROGRESS') {
+                    item.cls += ' progress-striped active';
                 }
                 items.push(item);
             });

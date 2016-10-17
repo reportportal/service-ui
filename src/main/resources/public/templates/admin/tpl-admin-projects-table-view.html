@@ -27,7 +27,7 @@
                                     <%= data.search ? data.textWrapper(project.projectId, data.search) : project.projectId %>
                                 </a>
                             </h4>
-                             <% if(data.isNew && data.isNew(project.creationDate)) { %>
+                             <% if(!data.isPersonalProject && data.isNew && data.isNew(project.creationDate)) { %>
                                 <span class="label label-success you"><%= data.text.admin.newProject %></span>
                              <% } %>
                         </div>
@@ -101,7 +101,7 @@
                                     <% } %>
                                 </li>
                                 <li class="col-xs-3 projects-table-view-list-item">
-                                    <% if(data.canDelete(project)) { %>
+                                    <% if(data.canDelete(project) && !data.isPersonalProject) { %>
                                         <a class="col-sm-4 project-link text-center remove-project"
                                             href="#" title="<%= data.text.permissionMap.deleteProject %>"
                                             data-id="<%- project.projectId %>"

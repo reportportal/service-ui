@@ -201,6 +201,9 @@ define(function (require, exports, module) {
         },
 
         textWrapper: function (value, search) {
+            if(!value) {
+                return '';
+            }
             var regex = new RegExp(search, 'ig');
             return value.replace(regex, '<mark>$&</mark>');
         },
@@ -999,14 +1002,6 @@ define(function (require, exports, module) {
 
         getCopyName: function (name) {
             return Localization.ui.copy + " " + name;
-        },
-        isPersonalProject: function(){
-            var project = config.project;
-            return project && project.configuration && project.configuration.entryType == 'PERSONAL';
-        },
-        isPersonalProjectOwner: function(){
-            var user =  config.userModel;
-            return this.isPersonalProject() && config.project.projectId == user.get('name') + '_project';
         },
         isAdmin: function (user) {
             user = user || config.userModel.toJSON();

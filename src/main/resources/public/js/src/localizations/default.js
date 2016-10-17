@@ -183,7 +183,8 @@ define(['util'], function () {
             api: "API",
             licensing: "Licensing",
             lgplv3: "LGPL 3.0",
-            components: "Used Components",
+            forkUs: 'Fork us on GitHub',
+            chatSlack: 'Chat with us on Slack',
             textCopyright: "&copy; 2016 Report Portal. All Rights Reserved.",
             menu: {
                 news: "News",
@@ -927,7 +928,8 @@ define(['util'], function () {
             launchOwnerDescription: "Launch owner (who launched - that received)",
             sendNotification: "Send e-mail notifications about launches finished",
             emptyRecipients: "Select at least one recipient",
-            invalidRecipients: "Please enter correct email",
+            notFoundRecipients: 'User does not exist. Please, check the entered data.',
+            invalidRecipients: "Please select at least one recipient",
             sendLaunchNames: "Send notifications about selected launches finished",
             sendTags: "Send notifications about launches containing specified tags",
             incorectEmail: "Please enter correct email",
@@ -945,6 +947,7 @@ define(['util'], function () {
             postfixLabel: 'Postfix will be added to the demo dashboard, widgets, filter name',
             removeDemoData: 'You will have to remove the Demo Data manually.',
             postfixPlaceHolder: 'Enter Postfix',
+            posfixUniq: 'Postfix already used or not align with already existing data. Please use another one',
             beta: "beta",
             aboutinfo: 'Detailed information about the project',
             unableLoadData: 'Unable to load data',
@@ -1066,6 +1069,7 @@ define(['util'], function () {
             projectName: "Project name",
             projectRole: "Project role",
             cantUnAssignFromDefault: "The user cannot be unassigned from Default_Project",
+            cantUnAssignFromPersonal: "The user cannot be unassigned from Personal project",
             kpi: 'KPI',
             projectTitle: "See detailed information",
             projectDetailsTitle: "See detailed information about the project ",
@@ -1274,7 +1278,8 @@ define(['util'], function () {
             loadActivityItems: "Failed to load activity items",
             loadNavigationStep: "Failed to load",
             sessionExpired: 'Your session has been expired',
-            getItemInfo: 'Failed to load info for item'
+            getItemInfo: 'Failed to load info for item',
+            dublPostFix: 'Postfix already used or not align with already existing data. Please use another one'
         },
 
         infoMessages: {
