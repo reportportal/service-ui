@@ -511,7 +511,7 @@ define(function(require, exports, module) {
                 $('.remove-email-case:not(:checked)', this.$el).prop('disabled', true).closest('.email-case-item').addClass('the-only');
                 if(allLength == checkedLength){
                     var emailCase = $('.email-case-item', this.$el).eq(0);
-                    
+
                     this.updateEmailCase(emailCase, 'remove');
                     $('.remove-email-case', emailCase).prop('disabled', true)
                     emailCase.addClass('the-only');
@@ -649,7 +649,7 @@ define(function(require, exports, module) {
                                 if (queryLength == 256) {
                                     self.validateRecipients();
                                 }
-                                query.term = query.term.replace(/[@#.?*+^$[\]\\(){}|-]/g, "\\$&");
+                                //query.term = query.term.replace(/[@#.?*+^$[\]\\(){}|-]/g, "\\$&");
                                 Service.getProjectUsersById(query.term)
                                     .done(function (response) {
                                         remoteUsers = [];
