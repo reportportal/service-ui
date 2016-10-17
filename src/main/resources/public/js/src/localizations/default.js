@@ -1008,7 +1008,7 @@ define(['util'], function () {
             password: "BTS password",
             domain: "Domain",
             removeProject: "Remove project",
-            projectNameIn: "Project name in",
+            projectNameIn: "Project name",
             tbsChangeWarning: "Warning! If you configure new system settings, the current project will be reset!",
             configureFields: "Configure Bug Tracking System default properties to post bugs",
             issueId: "Issue ID",
