@@ -43,8 +43,12 @@ dependencyManagement {
 }
 repositories {
     mavenCentral()
-
 }
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+description = 'EPAM Report portal. UI Service'
 
 dependencies {
     compile 'org.springframework.cloud:spring-cloud-starter-config'
