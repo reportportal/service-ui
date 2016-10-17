@@ -929,7 +929,7 @@ define(['util'], function () {
             sendNotification: "Send e-mail notifications about launches finished",
             emptyRecipients: "Select at least one recipient",
             notFoundRecipients: 'User does not exist. Please, check the entered data.',
-            invalidRecipients: "Please enter correct email",
+            invalidRecipients: "Please select at least one recipient",
             sendLaunchNames: "Send notifications about selected launches finished",
             sendTags: "Send notifications about launches containing specified tags",
             incorectEmail: "Please enter correct email",
