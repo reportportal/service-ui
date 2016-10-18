@@ -123,7 +123,13 @@ define(function(require, exports, module) {
                 }.bind(this))
                 .fail(function (error) {
                     this.showFormError(error);
-                    Util.ajaxFailMessenger(error);
+                    if(error.status === 409){
+                        var message = Localization.project.posfixUniq;
+                        Util.ajaxFailMessenger(null, 'dublPostFix');
+                    }
+                    else {
+                        Util.ajaxFailMessenger(error);
+                    }
                 }.bind(this))
                 .always(function(){
                     this.toggleDisableForm(false);

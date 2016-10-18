@@ -32,12 +32,32 @@ define(function(require, exports, module) {
 
         },
         isPersonalProject: function(){
+            if(!this.get('configuration')) {
+                return null;
+            }
             return this.get('configuration').entryType === 'PERSONAL';
         },
         isInternalProject: function(){
+            if(!this.get('configuration')) {
+                return null;
+            }
             return this.get('configuration').entryType === 'INTERNAL';
-        }
-
+        },
+        parse: function(data) {
+            data.externalSystem = '';
+            if(data.configuration && data.configuration.externalSystem) {
+                data.externalSystem = JSON.stringify(data.configuration.externalSystem);
+            }
+            this.set(data);
+        },
+        getArr: function(field) {
+            var string = this.get(field);
+            try {
+                return JSON.parse(string);
+            } catch(err) {
+                return [];
+            }
+        },
     });
 
     return AppModel;

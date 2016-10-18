@@ -204,8 +204,7 @@ define(function (require, exports, module) {
         },
         onClickLoadBug: function() {
             var modal =(new ModalLoadBug({
-                items: [this.viewModel.toJSON() ],
-                systems: this.appModel.get('configuration'),
+                items: [this.viewModel],
             }));
             modal.show();
         },

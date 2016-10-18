@@ -173,7 +173,7 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-gallery-image]': 'css: {backgroundImage: format("url($1)", previewImg)}, text: shortId',
+            '[data-js-gallery-image]': 'css: {backgroundImage: format("url($1)", previewImg)}',
             ':el': 'classes: {active: active}',
         },
 
@@ -194,7 +194,7 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-main-image]': 'html: format("<img src=$1 title=$2>", mainImg, shortId)',
+            '[data-js-main-image]': 'html: format("<img src=$1>", mainImg)',
         },
 
         initialize: function() {

@@ -27,13 +27,36 @@
     width: 12%;
   }
   .time-grid-cell {
-    width: 18%;
+    width: 16%;
+  }
+  .icon-grid-cell {
+    padding: 4px 0 0 0;
+    width: 2%;
+    i {
+      cursor: pointer;
+      display: none;
+    }
   }
   .rp-table-row {
     position: relative;
     overflow: hidden;
     padding: 15px 0;
     line-height: 18px;
+    overflow: hidden;
+    max-height: 108px;
+    &.open {
+      max-height: 100%;
+      .icon-grid-cell {
+        transform: scale(1, -1);
+      }
+    }
+    &.show-accordion {
+      .icon-grid-cell {
+        i {
+          display: inline;
+        }
+      }
+    }
     .attachment-grid-cell {
       img {
         max-width: 100%;
@@ -52,6 +75,7 @@
       background-color: $COLOR--windows-blue;
     }
     &.level-ERROR {
+      background-color: $COLOR--light-red;
       &:before {
         background-color: $COLOR--orange-red;
       }

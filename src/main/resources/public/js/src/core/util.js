@@ -218,6 +218,13 @@ define(function (require, exports, module) {
                 return finalString;
             }
         },
+        replaceTemplate: function(template) {
+            var result = template;
+            for(var i = 1; i < arguments.length; i++) {
+                result = result.replace('%%%', arguments[i]);
+            }
+            return result;
+        },
         shimBind: function () {
             if (!Function.prototype.bind) {
                 Function.prototype.bind = function (oThis) {
@@ -1012,7 +1019,7 @@ define(function (require, exports, module) {
             $el.data('valid', true).data('was', $el.val());
 
             // TODO - added variant with class 'rp-form-group'
-            var $holder = $el.closest(".form-group, .rp-form-group, label");
+            var $holder = $el.closest(".form-group, .rp-form-group");
 
             var $messenger = $(".help-inline:first", $holder);
             var isHint = $messenger.hasClass('error-hint');
@@ -1049,7 +1056,7 @@ define(function (require, exports, module) {
                         });
                     }
                     else {
-                        var message = validator.type(val, validator.options);
+                        var message = validator.type(val, validator.options, Util);
                         if (message) {
                             result = !result ?  message + "</br>" : result;
                         }

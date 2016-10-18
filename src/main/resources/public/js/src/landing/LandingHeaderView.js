@@ -34,7 +34,7 @@ define(function(require, exports, module) {
         tpl: 'tpl-landing-header',
         bindings: {
             ':el': 'classes: {"b-header--dark": darkMenu, authorized: auth}',
-            '.b-return__btn': 'attr: {href: lastInsideHash}'
+            '[data-js-return-button]': 'attr: {href: lastInsideHash}'
         },
         events: {
             'click .js-logo': 'onClickLogo',
@@ -42,7 +42,7 @@ define(function(require, exports, module) {
             'mouseout .js-headermenu': 'onMouseOutMenu',
             'click .b-menu__link': 'onClickMenuItem',
             'click .navbar-toggle': 'onOpenMenuMobile',
-            'click .js-showlogin': 'onClickShowLogin',
+            'click [data-js-show-login]': 'onClickShowLogin',
             'keydown': 'keyDownHandler',
         },
         initialize: function(){

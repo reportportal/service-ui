@@ -28,6 +28,10 @@ define(function (require, exports, module) {
     var LogItemLogsItem = Epoxy.View.extend({
         template: 'tpl-launch-log-item-logs-item',
 
+        events: {
+            'click [data-js-toggle-open]': 'onClickOpen',
+        },
+
         bindings: {
             '[data-js-message]': 'text: message',
             '[data-js-time]': 'text: timeString',
@@ -44,12 +48,22 @@ define(function (require, exports, module) {
             }
         },
 
+        onClickOpen: function() {
+            $('[data-js-table-row]', this.$el).toggleClass('open');
+        },
+
         initialize: function() {
             this.render();
         },
 
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+
+        activateAccordion: function() {
+            if ($('[data-js-message]', this.$el).height() > 100) {
+                $('[data-js-table-row]', this.$el).addClass('show-accordion');
+            }
         }
     });
 

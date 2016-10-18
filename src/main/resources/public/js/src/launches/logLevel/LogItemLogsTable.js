@@ -105,6 +105,9 @@ define(function (require, exports, module) {
         },
         onStopLoading: function() {
             $('[data-js-logs-wrapper]', this.$el).removeClass('load');
+            _.each(this.items, function(item) {
+                item.activateAccordion();
+            })
         },
         onChangePage: function(page) {
             this.collection.setPaging(page);
@@ -153,18 +156,23 @@ define(function (require, exports, module) {
 
         onResetCollection: function() {
             var $container = $('[data-js-table-container]', this.$el);
+            var self = this;
             $container.html('');
             if(!this.collection.models.length) {
                 $('[data-js-logs-wrapper]', this.$el).addClass('not-found');
             } else {
                 $('[data-js-logs-wrapper]', this.$el).removeClass('not-found');
             }
+            this.items = [];
             _.each(this.collection.models, function(model) {
-                $container.append((new LogItemLogsItem({model: model})).$el);
+                var item = new LogItemLogsItem({model: model});
+                $container.append(item.$el);
+                self.items.push(item);
             })
         },
 
         destroy: function() {
+            this.items = null;
             this.undelegateEvents();
             this.stopListening();
             this.unbind();

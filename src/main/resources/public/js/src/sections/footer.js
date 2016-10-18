@@ -19,4 +19,32 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'favorites-body';
+define(function (require, exports, module) {
+    "use strict";
+    var $ = require('jquery');
+    var Backbone = require('backbone');
+
+    var SideBar = Backbone.View.extend({
+        el: "#pageSidebar",
+        tpl: 'tpl-main-side-bar',
+
+        events: {
+            'click .main-menu a': 'closeMenu',
+            'click .user-menu a': 'closeMenu',
+            'click [data-js-sidebar-close]': 'closeMenu',
+        },
+
+        initialize: function () {
+
+        },
+
+        render: function () {
+
+        },
+
+
+        destroy: function () {
+
+        }
+    });
+});
