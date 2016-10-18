@@ -42,6 +42,10 @@ define(function (require, exports, module) {
     var LogItemInfoStackTraceView = Epoxy.View.extend({
         template: 'tpl-launch-log-item-info-stack-trace',
 
+        events: {
+            'click [data-js-close]': 'onClickClose',
+        },
+
         initialize: function(options) {
             this.render();
             this.isLoad = false;
@@ -60,6 +64,9 @@ define(function (require, exports, module) {
             this.listenTo(this.collection, 'loading:true', this.onStartLoading);
             this.listenTo(this.collection, 'loading:false', this.onStopLoading);
             this.listenTo(this.collection, 'reset', this.onResetCollection);
+        },
+        onClickClose: function() {
+            this.parentModel.set({stackTrace: false});
         },
 
         render: function() {
