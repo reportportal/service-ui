@@ -23,28 +23,38 @@ define(function (require, exports, module) {
     "use strict";
     var $ = require('jquery');
     var Backbone = require('backbone');
+    var Util = require('util');
+    var Moment = require('moment');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
 
-    var SideBar = Backbone.View.extend({
-        el: "#pageSidebar",
-        tpl: 'tpl-main-side-bar',
-
-        events: {
-            'click .main-menu a': 'closeMenu',
-            'click .user-menu a': 'closeMenu',
-            'click [data-js-sidebar-close]': 'closeMenu',
-        },
+    var Footer = Backbone.View.extend({
+        el: "#pageFooter",
+        tpl: 'tpl-footer',
 
         initialize: function () {
-
+            this.viewModel = new SingletonRegistryInfoModel();
         },
 
         render: function () {
+            var self = this;
 
+            this.$el.html(Util.templates(this.tpl, {moment: Moment, util: Util})).show();
+            this.viewModel.ready
+                .done(function () {
+                    $('#buildVersion', self.$el).text(self.viewModel.get('uiBuildVersion'));
+                });
+            Util.setupBaronScroll($('#ComponentsModal .modal-dialog', this.$el));
+            return this;
         },
 
-
         destroy: function () {
-
+            this.$el.html('');
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            delete this;
         }
     });
+
+    return Footer;
 });

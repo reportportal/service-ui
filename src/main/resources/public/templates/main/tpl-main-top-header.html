@@ -39,7 +39,7 @@
                     </li>
                     <% if(data.isAdmin) { %>
                         <li class="<%= isActive %> col-xs-6 col-sm-12">
-                            <a href="#administrate" id="administrate" class="admin-section">
+                            <a href="#administrate" id="administrate" class="admin-section" data-js-administrate-page-link>
                                 <span class="custom-padding"><%= data.text.topMenu.administrate %></span>
                             </a>
                         </li>
@@ -78,7 +78,7 @@
                 <li id="members"
                     data-id="members"
                     title="<%= data.text.topMenu.members %>"
-                    class=" <%= data.currentPage == 'members' ? 'active' : '' %>">
+                    class="members">
                     <a href="#<%- data.project.projectId %>/members" class="mem-set">
                         <i class="rp-icons rp-icons-all-users"></i>
                     </a>
@@ -87,7 +87,7 @@
             <li id="settings"
                 data-id="settings"
                 title="<%= data.text.topMenu.settings %>"
-                class="<%= data.currentPage == 'settings' ? 'active' : '' %>">
+                class="settings">
                 <a href="#<%- data.project.projectId %>/settings" class="mem-set">
                     <i class="material-icons">settings</i>
                 </a>

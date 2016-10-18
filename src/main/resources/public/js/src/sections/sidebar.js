@@ -34,7 +34,7 @@ define(function (require, exports, module) {
             'click .main-menu a': 'closeMenu',
             'click .user-menu a': 'closeMenu',
             'click [data-js-sidebar-close]': 'closeMenu',
-            'click #administrate': 'setLastActivePage' //replace to the js-mark
+            'click [data-js-administrate-page-link]': 'setLastActivePage'
         },
 
         initialize: function (options) {
@@ -74,7 +74,6 @@ define(function (require, exports, module) {
             if (this.currentHash === "#administrate") {
                 this.currentHash += "/projects";
             }
-            console.log(this.userStorage.get('lastActiveURL'));
             this.$el.find('a[href^="' + this.currentHash + '"]', this.$el).addClass('active');
         },
 
@@ -87,24 +86,7 @@ define(function (require, exports, module) {
             return lastActive;
         },
 
-        // getLastActive: function () {
-        //     var lastActive = '';
-        //     var pref = config.preferences;
-        //     var activeUrl = pref.active;
-        //
-        //     if (activeUrl && activeUrl.indexOf('\/') > -1) {
-        //         var last = _.last(activeUrl.split('/'));
-        //         var params = _.last(last.split('?'));
-        //         var arrParams = params.split('&');
-        //         var tab = _.find(arrParams, function(t){ return t.indexOf('tab.id=') >=0 });
-        //         var id = tab ? _.last(tab.split('=')) : null;
-        //         lastActive = _.contains(pref.filters, id) ? activeUrl : '';
-        //     }
-        //
-        //     return lastActive;
-        // },
-
-        closeMenu: function() {
+        closeMenu: function () {
             $('body').removeClass('menu-open');
         },
 

@@ -207,6 +207,11 @@
                    &:hover {
                      background: #d8f3f7;
                    }
+
+                   &.active {
+                     color: $COLOR--charcoal-grey;
+                     background-color: $COLOR--gray-91;
+                   }
                  }
                }
              }
@@ -220,7 +225,7 @@
 
 
 
-           .dropdown { // #projecSelector
+           .dropdown { // #projectSelector
              padding-bottom: 0;
              font-size: 16px;
 
@@ -278,8 +283,8 @@
                      }
 
                      &.active > a {
+                       color: $COLOR--charcoal-grey;
                        background-color: $COLOR--gray-91;
-                       border: none;
                      }
                    }
                  }
@@ -303,22 +308,42 @@
            }
 
            li[title = "Members"] {
+
              a {
                padding: 6px 0 0;
                margin-left: 30px;
                font-size: 13px;
                line-height: 13px;
                color: $COLOR--gray-91;
+
+               &.active {
+                 color: #a3c644;
+               }
+
+               &:hover,
+               &:focus{
+                 background-color: inherit;
+               }
              }
            }
 
            li[title = "Settings"] {
+
              a {
                padding: 5px 0 0;
                margin: 0 0 0 30px;
                font-size: 16px;
                line-height: 16px;
                color: $COLOR--gray-91;
+
+               &.active {
+                 color: #a3c644;
+               }
+
+               &:hover,
+               &:focus{
+                 background-color: inherit;
+               }
              }
            }
          }

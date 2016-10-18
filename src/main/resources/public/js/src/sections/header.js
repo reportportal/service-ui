@@ -24,7 +24,7 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
-    var Storage = require('storageService');
+    var UserModel = require('model/UserModel');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
 
     var Header = Backbone.View.extend({
@@ -33,20 +33,22 @@ define(function (require, exports, module) {
         events: {
             'click .user-projects a': 'changeProject',
             'click #userNavigator a': 'trackClick',
-            'click .mem-set': 'updateMemSet',
             'click #logout': 'onClickLogout',
             'click [data-js-toogle-menu]': 'onClickMenuOpen',
+            'click [data-js-administrate-page-link]': 'setLastActivePage'
         },
 
-        initialize: function () {
+        initialize: function (options) {
+            this.tpl = options.tpl;
             this.project = options.project;
             this.canDebug = options.canDebug;
             this.currentPage = options.currentPage;
             this.userModel = new UserModel();
+            this.userStorage = new SingletonUserStorage();
+            this.listenTo(config.router, "route", this.updateActiveLink);
         },
 
         render: function () {
-            var ddEl= $("#projectSelector", this.$el);
             var self = this;
             var userAttributes = this.userModel.toJSON();
             this.$el.html(Util.templates(this.tpl, {
@@ -61,6 +63,9 @@ define(function (require, exports, module) {
             this.contentProjects = $('.user-projects', this.$el);
             this.scrollerProjects = Util.setupBaronScroll(this.contentProjects);
             this.blockHeightProjects = this.scrollerProjects.parent('.baron__root');
+            this.$el.find('#projectSelector a[data-href="' + this.project.projectId + '"]').parent().addClass('active'); // highlightes selected project in dropdown-list
+            this.updateActiveLink();
+
             $("#projectSelector", self.$el).on('shown.bs.dropdown', function () {
                 var height = self.contentProjects.height();
                 if (height > 280) {
@@ -77,13 +82,17 @@ define(function (require, exports, module) {
                     self.scrollerProjects.scrollTop(currentProject.position().top - 40);
                 }
             });
-            $("#projectSelector", self.$el)
-                .on('hide.bs.dropdown', function () {
-                        self.scrollerProjects.removeClass('open');
-                        self.blockHeightProjects.removeClass('open').height(0);
-                    }
-                );
+
+            $("#projectSelector", self.$el).on('hide.bs.dropdown', function () {
+                self.scrollerProjects.removeClass('open');
+                self.blockHeightProjects.removeClass('open').height(0);
+            });
+
             return this;
+        },
+
+        setLastActivePage: function () {
+            this.userStorage.set('lastActiveURL', Backbone.history.getFragment());
         },
 
         onClickLogout: function (e) {
@@ -100,21 +109,20 @@ define(function (require, exports, module) {
             }
         },
 
-        updateMemSet: function (e) {
-            e.preventDefault();
-            var $link = $(e.currentTarget);
-            var $linkContainer = $link.parent();
-            var linkText = $linkContainer.text().trim();
-
-            if ( (linkText != 'Profile') && ($linkContainer.hasClass('active')) ) {
-                return;
+        updateActiveLink: function () {
+            this.clearActives();
+            this.currentHash = "#" + Backbone.history.getFragment().split('?')[0].split('/', 2).join('/');
+            if (this.currentHash === "#" + this.project.projectId) {
+                this.currentHash += "/dashboard";
             }
-            $linkContainer.addClass('active');
-            config.router.navigate($link.attr('href'), {trigger: true});
+            if (this.currentHash === "#administrate") {
+                this.currentHash += "/projects";
+            }
+            this.$el.find('a[href^="' + this.currentHash + '"]', this.$el).addClass('active');
         },
 
-        clearMemSetState: function () {
-            $('.rp-header-nav > .active', this.$el).removeClass('active');
+        clearActives: function () {
+            $("a.active", this.$el).removeClass('active');
         },
 
         openTopMenuItem: function (e) {
@@ -136,7 +144,8 @@ define(function (require, exports, module) {
             config.trackingDispatcher.projectChanged(project);
             config.router.navigate($el.attr('data-href'), {trigger: true});
         },
-        onClickMenuOpen: function() {
+
+        onClickMenuOpen: function () {
             $('body').toggleClass('menu-open');
         },
 
@@ -148,4 +157,6 @@ define(function (require, exports, module) {
             delete this;
         }
     });
+
+    return Header;
 });
