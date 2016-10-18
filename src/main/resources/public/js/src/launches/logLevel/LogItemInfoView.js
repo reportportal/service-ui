@@ -33,7 +33,8 @@ define(function (require, exports, module) {
     var LogItemInfoActivity = require('launches/logLevel/LogItemInfoActivity');
     var LogItemInfoAttachmentsView = require('launches/logLevel/LogItemInfoAttachments');
     var App = require('app');
-    var ModalLoadBug = require('modals/modalLoadBug')
+    var ModalLoadBug = require('modals/modalLoadBug');
+    var ModalPostBug = require('modals/modalPostBug');
     var SingletonAppModel = require('model/SingletonAppModel');
     var Localization = require('localization');
     var CallService = require('callService');
@@ -46,10 +47,18 @@ define(function (require, exports, module) {
         template: 'tpl-launch-log-item-info',
 
         events: {
-            'click [data-js-item-stack-trace-label]': function(){ this.toggleModelField('stackTrace') },
-            'click [data-js-item-gallery-label]': function(){ this.toggleModelField('attachments') },
-            'click [data-js-item-details-label]': function(){ this.toggleModelField('itemDetails') },
-            'click [data-js-item-activity-label]': function(){ this.toggleModelField('activity') },
+            'click [data-js-item-stack-trace-label]': function () {
+                this.toggleModelField('stackTrace')
+            },
+            'click [data-js-item-gallery-label]': function () {
+                this.toggleModelField('attachments')
+            },
+            'click [data-js-item-details-label]': function () {
+                this.toggleModelField('itemDetails')
+            },
+            'click [data-js-item-activity-label]': function () {
+                this.toggleModelField('activity')
+            },
             'click [data-js-step-issue]': 'showDefectEditor',
             'click [data-js-match]': 'onClickMatch',
             'click [data-js-post-bug]': 'onClickPostBug',
@@ -73,12 +82,12 @@ define(function (require, exports, module) {
         computeds: {
             btsNotCreate: {
                 deps: [],
-                get: function() {
+                get: function () {
                     var configuration = this.appModel.get('configuration');
-                    if(!configuration) {
+                    if (!configuration) {
                         return true;
                     }
-                    if(configuration.externalSystem && configuration.externalSystem.length) {
+                    if (configuration.externalSystem && configuration.externalSystem.length) {
                         return false;
                     }
                     return true;
@@ -86,14 +95,14 @@ define(function (require, exports, module) {
             },
             btsNotConfigured: {
                 deps: ['btsNotCreate'],
-                get: function(btsNotCreate) {
-                    if(btsNotCreate) {
+                get: function (btsNotCreate) {
+                    if (btsNotCreate) {
                         return true;
                     }
                     var configuration = this.appModel.get('configuration');
-                    if(_.any(configuration.externalSystem, function (bts) {
-                        return bts.fields && bts.fields.length;
-                    })) {
+                    if (_.any(configuration.externalSystem, function (bts) {
+                            return bts.fields && bts.fields.length;
+                        })) {
                         return false;
                     }
                     return true;
@@ -101,9 +110,9 @@ define(function (require, exports, module) {
             },
             notHaveIssue: {
                 deps: ['issue'],
-                get: function() {
+                get: function () {
                     var issue = this.viewModel.getIssue();
-                    if(issue && issue.issue_type) {
+                    if (issue && issue.issue_type) {
                         return false;
                     }
                     return true;
@@ -111,22 +120,22 @@ define(function (require, exports, module) {
             },
             postBugTitle: {
                 deps: ['btsNotConfigured', 'notHaveIssue'],
-                get: function(btsNotConfigured, notHaveIssue) {
-                    if(btsNotConfigured) {
+                get: function (btsNotConfigured, notHaveIssue) {
+                    if (btsNotConfigured) {
                         return Localization.launches.configureTBS;
-                    }else if(notHaveIssue) {
+                    } else if (notHaveIssue) {
                         return Localization.launches.noIssues;
-                    } else{
+                    } else {
                         return Localization.launches.postBug;
                     }
                 }
             },
             loadBugTitle: {
                 deps: ['btsNotCreate', 'notHaveIssue'],
-                get: function(btsNotCreate, notHaveIssue) {
-                    if(btsNotCreate) {
+                get: function (btsNotCreate, notHaveIssue) {
+                    if (btsNotCreate) {
                         return Localization.launches.configureTBSLoad;
-                    } else if(notHaveIssue) {
+                    } else if (notHaveIssue) {
                         return Localization.launches.noIssuesLoad;
                     } else {
                         return Localization.launches.loadBug;
@@ -135,7 +144,7 @@ define(function (require, exports, module) {
             },
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.appModel = new SingletonAppModel()
             this.viewModel = options.itemModel;
             this.model = new Epoxy.Model({
@@ -170,10 +179,10 @@ define(function (require, exports, module) {
                 parentModel: this.model,
             });
         },
-        showDefectEditor: function(e){
+        showDefectEditor: function (e) {
             e.preventDefault();
             var el = $(e.currentTarget);
-            if(!el.hasClass('disabled')){
+            if (!el.hasClass('disabled')) {
                 this.setupEditor();
                 this.onShowEditor();
             }
@@ -187,10 +196,10 @@ define(function (require, exports, module) {
             });
             this.listenTo(this.$editor, 'defect::editor::hide', this.onHideEditor);
         },
-        onShowEditor: function(){
+        onShowEditor: function () {
             $('[data-js-item-info-issue]', this.$el).hide();
         },
-        onHideEditor: function(){
+        onHideEditor: function () {
             $('[data-js-item-info-issue]', this.$el).show();
         },
         removeEditor: function () {
@@ -199,19 +208,22 @@ define(function (require, exports, module) {
                 this.$editor = null;
             }
         },
-        onClickPostBug: function() {
-
+        onClickPostBug: function () {
+            var modal = new ModalPostBug({
+                items: [this.viewModel],
+            });
+            modal.render();
         },
-        onClickLoadBug: function() {
-            var modal =(new ModalLoadBug({
+        onClickLoadBug: function () {
+            var modal = (new ModalLoadBug({
                 items: [this.viewModel],
             }));
             modal.show();
         },
-        onClickMatch: function() {
+        onClickMatch: function () {
             var self = this;
             call('POST', Urls.launchMatchUrl(this.viewModel.get('launchId')))
-                .done(function(response){
+                .done(function (response) {
                     self.viewModel.set('isProcessing', true);
                     Util.ajaxSuccessMessenger("startAnalyzeAction");
                 })
@@ -219,15 +231,15 @@ define(function (require, exports, module) {
                     Util.ajaxFailMessenger(error, "startAnalyzeAction");
                 })
         },
-        toggleModelField: function(field) {
+        toggleModelField: function (field) {
             this.model.set(field, !this.model.get(field));
         },
 
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template), {});
         },
 
-        destroy: function() {
+        destroy: function () {
             this.issueView && this.issueView.destroy();
             this.removeEditor();
             this.undelegateEvents();
