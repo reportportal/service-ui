@@ -122,6 +122,9 @@ define(function (require, exports, module) {
             if (this.currentHash === "#" + this.project.projectId) {
                 this.currentHash += "/dashboard";
             }
+            if (this.currentHash === "#" + this.project.projectId + "/") {
+                this.currentHash += "dashboard";
+            }
             if (this.currentHash === "#administrate") {
                 this.currentHash += "/projects";
             }

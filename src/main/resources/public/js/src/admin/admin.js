@@ -80,7 +80,7 @@ define(function (require, exports, module) {
         },
 
         makeLinkActive: function () {
-            $(".active", this.$el).removeClass('active');
+            $("a.active", this.$el).removeClass('active');
             this.currentHash = "#" + Backbone.history.getFragment().split('?')[0].split('/', 2).join('/');
             if (this.currentHash === "#administrate") {
                 this.currentHash += "/projects";

@@ -71,6 +71,9 @@ define(function (require, exports, module) {
             if (this.currentHash === "#" + this.projectUrl) {
                 this.currentHash += "/dashboard";
             }
+            if (this.currentHash === "#" + this.projectUrl + "/") {
+                this.currentHash += "dashboard";
+            }
             if (this.currentHash === "#administrate") {
                 this.currentHash += "/projects";
             }
@@ -91,7 +94,7 @@ define(function (require, exports, module) {
         },
 
         clearActives: function () {
-            $(".active", this.$el).removeClass('active');
+            $("a.active", this.$el).removeClass('active');
         },
 
         destroy: function () {
