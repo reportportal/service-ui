@@ -41,7 +41,7 @@ define(function (require, exports, module) {
             this.tpl = options.tpl;
             this.projectUrl = options.projectUrl;
             this.currentPage = options.currentPage;
-            this.canDebug = options.canDebug;
+            this.canDebug = Util.isAdmin() || !Util.isCustomer();
             this.currentHash = "#" + Backbone.history.getFragment().split('?')[0].split('/', 2).join('/');
             this.listenTo(config.router, "route", this.updateActiveLink);
 

@@ -27,6 +27,8 @@ define(function (require, exports, module) {
     var UserModel = require('model/UserModel');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
 
+    var SingletonAppModel = require('model/SingletonAppModel');
+
     var Header = Backbone.View.extend({
         el: "#topHeader",
 
@@ -40,11 +42,15 @@ define(function (require, exports, module) {
 
         initialize: function (options) {
             this.tpl = options.tpl;
-            this.project = options.project;
-            this.canDebug = options.canDebug;
+            this.lastURL = options.lastURL;
             this.currentPage = options.currentPage;
+
+            this.appModel = new SingletonAppModel();
+            this.project = this.appModel.attributes;
+            this.canDebug = Util.isAdmin() || !Util.isCustomer();
             this.userModel = new UserModel();
             this.userStorage = new SingletonUserStorage();
+
             this.listenTo(config.router, "route", this.updateActiveLink);
         },
 
@@ -52,6 +58,7 @@ define(function (require, exports, module) {
             var self = this;
             var userAttributes = this.userModel.toJSON();
             this.$el.html(Util.templates(this.tpl, {
+                lastURL: this.lastURL,
                 project: this.project,
                 currentPage: this.currentPage,
                 projects: _.keys(this.userModel.get('projects')).sort(),

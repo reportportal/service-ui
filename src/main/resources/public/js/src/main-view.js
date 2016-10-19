@@ -29,9 +29,9 @@ define(function (require, exports, module) {
     var UserModel = require('model/UserModel');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
 
-    var Header = require('header');
-    var Sidebar = require('sidebar');
-    var Footer = require('footer');
+    var Header = require('sections/header');
+    var Sidebar = require('sections/sidebar');
+    var Footer = require('sections/footer');
 
     require('equalHeightRows');
 
@@ -43,7 +43,6 @@ define(function (require, exports, module) {
             this.contextName = options.contextName;
             //this.$header = null;
             this.$body = null;
-            this.canDebug = Util.isAdmin() || !Util.isCustomer();
         },
 
         render: function () {
@@ -53,15 +52,11 @@ define(function (require, exports, module) {
                 tpl: 'tpl-main-side-bar',
                 projectUrl: config.project.projectId,
                 currentPage: this.contextName,
-                canDebug: this.canDebug
             }).render();
 
             this.headerView = new Header({
                 tpl: 'tpl-main-top-header',
-                user: config.userModel.toJSON(),
-                project: config.project,
                 currentPage: this.contextName,
-                canDebug: this.canDebug
             }).render();
 
             this.footerView = new Footer().render();

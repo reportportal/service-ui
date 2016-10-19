@@ -82,12 +82,7 @@ require.config({
         'launchEditor' : 'launch/launch-editor',
         'launchCrumbs': 'launch/launch-crumbs',
         'defectEditor': 'defect/defect-editor',
-
         'mainview': 'main-view',
-        'sidebar': 'sections/sidebar',
-        'header': 'sections/header',
-        'footer': 'sections/footer',
-
         'widgets': 'widget/widgets',
         'favorites': 'favorites/favorites',
         // 'filters': 'filter/filters',

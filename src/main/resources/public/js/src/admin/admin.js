@@ -33,9 +33,9 @@ define(function (require, exports, module) {
     var UserModel = require('model/UserModel');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
 
-    var Header = require('header');
-    var Sidebar = require('sidebar');
-    var Footer = require('footer');
+    var Header = require('sections/header');
+    var Sidebar = require('sections/sidebar');
+    var Footer = require('sections/footer');
 
     var config = App.getInstance();
 
@@ -65,10 +65,10 @@ define(function (require, exports, module) {
             }).render();
             config.currentProjectsSettings = {};
             // Util.setupScrollTracker();
-            var returnProject = this.userStorage.get('lastActiveURL') || config.userModel.get('defaultProject');
+            var lastURL = this.userStorage.get('lastActiveURL') || config.userModel.get('defaultProject');
             this.headerView = new Header({
                 tpl: 'tpl-admin-header',
-                project: returnProject
+                lastURL: lastURL
             }).render();
             this.footerView = new Footer().render();
 
