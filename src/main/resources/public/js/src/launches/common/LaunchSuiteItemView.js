@@ -43,7 +43,8 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-name]': 'onClickName',
             'click [data-js-launch-menu]:not(.rendered)': 'showItemMenu',
-            'click [data-js-time-format]': 'toggleStartTimeView'
+            'click [data-js-time-format]': 'toggleStartTimeView',
+            'click [data-js-item-edit]': 'onClickEdit',
         },
         bindings: {
             '[data-js-item-row]': 'classes: {"select-state": select}',
@@ -135,6 +136,9 @@ define(function (require, exports, module) {
             e.preventDefault();
             this.model.trigger('drill:item', this.model);
             config.router.navigate($(e.currentTarget).attr('href'), {trigger: true});
+        },
+        onClickEdit: function() {
+
         },
         destroy: function () {
             this.menu && this.menu.destroy();

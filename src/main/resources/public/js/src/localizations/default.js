@@ -62,6 +62,7 @@ define(['util'], function () {
             hide: "Hide",
             yes: "Yes",
             no: "No",
+            move: 'move',
             restore: "Restore",
             settings: "Settings",
             members: "Members",
@@ -133,6 +134,9 @@ define(['util'], function () {
             from: 'from',
             to: 'to',
             launch: 'launch',
+            selectedLaunches: 'selected launches',
+            debug: 'Debug',
+            allLaunches: 'All Launches',
             smof: 'of',
             smon: 'on',
             backHome: "Back to home",
@@ -1534,6 +1538,8 @@ define(['util'], function () {
             titleEditDefectType: 'Edit Defect Type',
             titleDeleteDefectType: "Delete defect type",
             forceFinish: 'Force Finish',
+            moveToDebug: 'Move to debug',
+            moveToAllLaunches: 'Move to all launches',
         },
 
         dialog: {
@@ -1567,6 +1573,7 @@ define(['util'], function () {
 
             editFilter: "Edit filter",
             addFilter: "Add filter",
+            moveLaunch: 'Are you sure you want to move %%% to %%%?',
 
             filterOptions: "Filter Options",
 
