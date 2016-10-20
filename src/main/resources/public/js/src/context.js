@@ -288,9 +288,6 @@ define(function (require, exports, module) {
                 });
                 this.mainView.render();
                 this.trigger('renderMainView', this.mainView);
-            } else {
-                // set update active links
-                this.mainView.update(options);
             }
         },
 

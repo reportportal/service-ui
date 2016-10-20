@@ -27,7 +27,6 @@ define(function (require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var Localization = require('localization');
-    var LaunchSuiteStepItemMenuView = require('launches/common/LaunchSuiteStepItemMenuView');
     var ItemDurationView = require('launches/common/ItemDurationView');
     var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
     var ModalDefectEditor = require('modals/modalDefectEditor');
@@ -40,7 +39,6 @@ define(function (require, exports, module) {
         template: 'tpl-launch-step-item',
         events: {
             'click [data-js-name]': 'onClickName',
-            'click [data-js-launch-menu]:not(.rendered)': 'showItemMenu',
             'click [data-js-issue-type]': 'showDefectEditor',
             'click [data-js-time-format]': 'toggleStartTimeView'
         },
@@ -111,20 +109,9 @@ define(function (require, exports, module) {
                 $container: $('[data-js-step-issue]', this.$el)
             });
         },
-        showItemMenu: function (e) {
-            var $link = $(e.currentTarget);
-            this.menu = new LaunchSuiteStepItemMenuView({
-                model: this.model
-            });
-
-            $link
-                .after(this.menu.$el)
-                .addClass('rendered')
-                .dropdown();
-        },
         showDefectEditor: function () {
             var defectEditor = new ModalDefectEditor({
-                items: [this.model],
+                items: [this.model]
             });
             defectEditor.show();
         },
@@ -142,7 +129,6 @@ define(function (require, exports, module) {
 
         },
         destroy: function () {
-            this.menu && this.menu.destroy();
             this.issueView && this.issueView.destroy();
             this.duration && this.duration.destroy();
             this.undelegateEvents();

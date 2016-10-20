@@ -154,10 +154,12 @@ define(function (require, exports, module) {
                 activity: false,
             });
             this.render();
-            this.issueView = new StepItemIssueView({
-                model: this.viewModel,
-                $container: $('[data-js-step-issue]', this.$el)
-            });
+            if(this.validateForIssue()){
+                this.issueView = new StepItemIssueView({
+                    model: this.viewModel,
+                    $container: $('[data-js-step-issue]', this.$el)
+                });
+            }
             this.stackTrace = new LogItemInfoStackTraceView({
                 el: $('[data-js-item-stack-trace]', this.$el),
                 itemModel: this.viewModel,
@@ -178,6 +180,9 @@ define(function (require, exports, module) {
                 itemModel: this.viewModel,
                 parentModel: this.model,
             });
+        },
+        validateForIssue: function(){
+            return !!this.viewModel.get('issue');
         },
         onClickDefectEditor: function(){
             var defectEditor = new ModalDefectEditor({
@@ -213,7 +218,7 @@ define(function (require, exports, module) {
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.template), {});
+            this.$el.html(Util.templates(this.template, {validateForIssue: this.validateForIssue()}));
         },
 
         destroy: function () {

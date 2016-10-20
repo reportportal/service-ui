@@ -1,12 +1,23 @@
 <div class="rp-nav rp-nav-right">
-    <div class="rp-btn rp-btn-default rp-button-with-icon disabled" data-js-milti-edit title="<%= data.text.launches.editDefects %>">
-        <i class="material-icons edit-defect">edit</i>
-        <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.launches.editDefects %></span>
+    <div class="rp-btn rp-btn-default rp-button-with-icon rp-button-dropdown disabled" data-js-multi-button aria-expanded="true" data-toggle="dropdown" title="<%= data.text.launches.actionTitle %>">
+        <i class="material-icons">menu</i>
+        <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.ui.actions %></span>
+        <i class="material-icons">keyboard_arrow_down</i>
     </div>
-    <div class="rp-btn rp-btn-default rp-button-with-icon disabled" data-js-milti-delete title="<%= data.text.launches.actionTitle %>">
-        <i class="rp-icons rp-icons-delete"></i>
-        <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.ui.delete %></span>
-    </div>
+    <ul class="dropdown-menu">
+        <li>
+            <a data-js-multi-action="editdefect"><%= data.text.launches.editDefects %></a>
+        </li>
+        <li>
+            <a data-js-multi-action="postbug"><%= data.text.launches.postBug %></a>
+        </li>
+        <li>
+            <a data-js-multi-action="loadbug"><%= data.text.launches.loadBug %></a>
+        </li>
+        <li>
+            <a data-js-multi-action="remove"><%= data.text.ui.delete %></a>
+        </li>
+    </ul>
     <div class="rp-btn rp-btn-default rp-button-with-icon" data-js-history-view title="<%= data.text.launches.historyView %>">
         <i class="material-icons">history</i>
         <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.launches.historyView %></span>

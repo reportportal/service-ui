@@ -25,10 +25,12 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var InfoPanelView = require('launches/common/InfoPanelView');
+    var Localization = require('localization');
 
     var StepControlView = Epoxy.View.extend({
         events: {
             'click [data-js-refresh]': 'onClickRefresh',
+            'click [data-js-multi-action]': 'onClickMultiAction',
         },
 
         template: 'tpl-launch-step-control',
@@ -51,10 +53,15 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         activateMultiple: function() {
-            $('[data-js-refresh]', this.$el).addClass('disabled');
+            $('[data-js-refresh], [data-js-history-view]', this.$el).addClass('disabled');
+            $('[data-js-multi-button]', this.$el).removeClass('disabled').attr({title: Localization.ui.actions});
         },
         disableMultiple: function() {
-            $('[data-js-refresh]', this.$el).removeClass('disabled');
+            $('[data-js-refresh], [data-js-history-view]', this.$el).removeClass('disabled');
+            $('[data-js-multi-button]', this.$el).addClass('disabled').attr({title: Localization.launches.actionTitle});
+        },
+        onClickMultiAction: function(e) {
+            this.trigger('multi:action', $(e.currentTarget).data('js-multi-action'));
         },
         onClickRefresh: function() {
             this.collectionItems.load();
