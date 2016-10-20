@@ -59,16 +59,26 @@
     .demo-data-submit-mobile {
         display: none;
     }
+    .demo-data-loader {
+        margin: 0;
+        span {
+            display: inline-block;
+            vertical-align: top;
+            margin: 10px 0 0;
+        }
+    }
     .demo-data-warning-block {
-        margin-top: 26px;
+        margin-top: 10px;
         font-size: 12px;
         .demo-data-warning {
-            display: block;
+            display: inline-block;
             color: $COLOR--failed;
             font-size: 13px;
             padding-left: 20px;
             position: relative;
             span {
+                display: inline-block;
+                text-transform: capitalize;
                 &:first-letter {
                     text-transform: uppercase;
                 }

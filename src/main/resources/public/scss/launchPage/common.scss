@@ -36,6 +36,11 @@
     &.select-state {
       background-color: $COLOR--gray-91;
     }
+    &:hover {
+      .item-edit-icon {
+        opacity: 1;
+      }
+    }
   }
   .rp-grid-thead {
     height: 50px;
@@ -130,6 +135,18 @@
     }
 
   }
+  .item-edit-icon {
+    vertical-align: top;
+    font-size: 18px;
+    color: $COLOR--gray-60;
+    cursor: pointer;
+    width: 0px;
+    opacity: 0;
+    line-height: 16px;
+    &:hover {
+      color: $COLOR--black
+    }
+  }
   .rp-item-duration {
     display: inline-block;
     vertical-align: top;
@@ -139,7 +156,7 @@
       display: inline-block;
       padding-left: 18px;
       line-height: 1;
-      color: #464547;
+      color: $COLOR--charcoal-grey;
       i {
         position: absolute;
         left: -1px;
@@ -147,7 +164,7 @@
       }
       .material-icons {
         top: -2px;
-        color: #999;
+        color: $COLOR--gray-60;
         font-size: 16px;
       }
     }

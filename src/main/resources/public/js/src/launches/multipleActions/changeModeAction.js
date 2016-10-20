@@ -27,23 +27,27 @@ define(function (require, exports, module) {
     var ModalConfirm = require('modals/modalConfirm');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
+    var Localization = require('localization');
 
-    var MoveToDebugAction = function(options) {
+    var ChangeModeAction = function(options) {
         var items = options.items;
+        var mode = items[0].get('mode') == 'DEBUG' ? 'DEFAULT' : 'DEBUG';
+        var itemsText = (items.length > 1) ? Localization.ui.selectedLaunches : Localization.ui.launch;
+        var modeText = (mode == 'DEBUG') ? Localization.ui.debug : Localization.ui.allLaunches;
         var modal = new ModalConfirm({
-            headerText: 'Move to debug',
-            bodyText: 'Are you sure you want to move selected launches to Debug?',
-            cancelButtonText: 'Cancel',
-            okButtonText: 'Move',
+            headerText: (mode == 'DEBUG') ? Localization.dialogHeader.moveToDebug: Localization.dialogHeader.moveToAllLaunches,
+            bodyText: Util.replaceTemplate(Localization.dialog.moveLaunch, itemsText, modeText),
+            cancelButtonText: Localization.ui.cancel,
+            okButtonText: Localization.ui.move,
             confirmFunction: function() {
                 var entities = {};
                 _.each(items, function(item) {
-                    entities[item.get('id')] = {mode: 'DEBUG'};
+                    entities[item.get('id')] = {mode: mode};
                 });
                 return CallService.call('PUT', Urls.getLaunchUpdate(), {entities: entities}).done(function() {
-                    Util.ajaxSuccessMessenger('switchToDebug');
+                    Util.ajaxSuccessMessenger((mode == 'DEBUG') ? 'switchToDebug' : 'switchToAllLaunches');
                 }).fail(function(err) {
-                    Util.ajaxFailMessenger(err, 'switchToDebug');
+                    Util.ajaxFailMessenger(err, (mode == 'DEBUG') ? 'switchToDebug' : 'switchToAllLaunches');
                 })
             }
         });
@@ -52,5 +56,5 @@ define(function (require, exports, module) {
     };
 
 
-    return MoveToDebugAction;
+    return ChangeModeAction;
 });

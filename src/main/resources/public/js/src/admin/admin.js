@@ -25,15 +25,17 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
-    var Components = require('core/components');
     var App = require('app');
-    var Service = require('adminService');
     var Main = require('mainview');
     var Projects = require('projects');
     var Users = require('users');
     var Settings = require('settings');
     var UserModel = require('model/UserModel');
-    // var Localization = require('localization');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
+
+    var Header = require('sections/header');
+    var Sidebar = require('sections/sidebar');
+    var Footer = require('sections/footer');
 
     var config = App.getInstance();
 
@@ -43,6 +45,10 @@ define(function (require, exports, module) {
             this.contextName = 'admin';
             this.setupAnchors();
             this.user = new UserModel();
+            this.currentHash = "#" + Backbone.history.getFragment().split('?')[0].split('/', 2).join('/');
+            this.listenTo(config.router, "route", this.makeLinkActive);
+
+            this.userStorage = new SingletonUserStorage();
         },
 
         events: {
@@ -50,36 +56,36 @@ define(function (require, exports, module) {
         },
 
         setupAnchors: function () {
-            this.$header = $("#topHeader", this.$el);
             this.$body = $("#mainContainer", this.$el);
-            this.$side = $("#pageSidebar", this.$el);
         },
 
-        sideBarTpl: 'tpl-admin-side-bar',
-        headerTpl: 'tpl-admin-header',
-
         render: function (options) {
+            this.sidebarView = new Sidebar({
+                tpl: 'tpl-admin-side-bar'
+            }).render();
             config.currentProjectsSettings = {};
-            this.$side.html(Util.templates(this.sideBarTpl, {
-                page: options.page
-            })).show();
             // Util.setupScrollTracker();
-            var returnProject = config.project.projectId || config.userModel.get('defaultProject');
-            this.$header.html(Util.templates(this.headerTpl, {project: returnProject})).show();
-            this.footerView = new Main.Footer().render();
+            var lastURL = this.userStorage.get('lastActiveURL') || config.userModel.get('defaultProject');
+            this.headerView = new Header({
+                tpl: 'tpl-admin-header',
+                lastURL: lastURL
+            }).render();
+            this.footerView = new Footer().render();
+
             this.contentView = new ContentView({
                 el: this.$body,
                 queryString: options.queryString
             }).render(options);
-            this.$side.on('click', '.main-menu a', function (e) {
-                e.preventDefault;
-                config.currentProjectsSettings.sorting = '';
-                config.currentProjectsSettings.search = '';
-                config.router.navigate($(e.currentTarget).attr('href'), {trigger: true});
-                // Backbone.history.loadUrl($(e.currentTarget).attr('href'));
-                // window.location.hash = $(e.currentTarget).attr('href');
-            });
             return this;
+        },
+
+        makeLinkActive: function () {
+            $("a.active", this.$el).removeClass('active');
+            this.currentHash = "#" + Backbone.history.getFragment().split('?')[0].split('/', 2).join('/');
+            if (this.currentHash === "#administrate") {
+                this.currentHash += "/projects";
+            }
+            this.$el.find('a[href^="' + this.currentHash + '"]', this.$el).addClass('active');
         },
 
         onClickLogout: function (e) {
@@ -88,18 +94,17 @@ define(function (require, exports, module) {
         },
 
         update: function (options) {
-            this.$side.html(Util.templates(this.sideBarTpl, {
-                page: options.page
-            }));
-            // Util.setupScrollTracker();
             this.contentView.update(options);
         },
 
         destroy: function () {
             this.contentView.destroy();
-            this.$header.off().empty().hide();
-            this.$side.off().empty().hide();
+            this.sidebarView.destroy();
+            this.sidebarView = null;
+            this.headerView.destroy();
+            this.headerView = null;
             this.footerView.destroy();
+            this.footerView = null;
             this.$el && this.$el.off();
         }
     });
@@ -141,14 +146,14 @@ define(function (require, exports, module) {
         },
 
         getViewForPage: function (options) {
-            if(options.page === 'users') {
+            if (options.page === 'users') {
                 return Users.ContentView;
             } else if (options.page === 'project-details') {
                 return Projects.ProjectDetails;
             } else if (options.page === 'settings') {
                 return Settings.ContentView;
             } else {
-                var key = options.page+'-'+options.action;
+                var key = options.page + '-' + options.action;
                 switch (key) {
                     case "projects-add":
                     case "projects-settings":

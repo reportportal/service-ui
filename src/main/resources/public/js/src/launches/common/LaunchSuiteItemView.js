@@ -27,7 +27,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
-    var LaunchSuiteStepItemMenuView = require('launches/common/LaunchSuiteStepItemMenuView');
+    var LaunchItemMenuView = require('launches/launchLevel/LaunchItemMenuView');
     var LaunchStatisticsDefectsView = require('launches/launchSuiteStatistics/LaunchStatisticsDefectsView');
     var LaunchStatisticsExecutionsView = require('launches/launchSuiteStatistics/LaunchStatisticsExecutionsView');
     var ItemDurationView = require('launches/common/ItemDurationView');
@@ -43,7 +43,8 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-name]': 'onClickName',
             'click [data-js-launch-menu]:not(.rendered)': 'showItemMenu',
-            'click [data-js-time-format]': 'toggleStartTimeView'
+            'click [data-js-time-format]': 'toggleStartTimeView',
+            'click [data-js-item-edit]': 'onClickEdit',
         },
         bindings: {
             '[data-js-item-row]': 'classes: {"select-state": select}',
@@ -123,7 +124,7 @@ define(function (require, exports, module) {
         },
         showItemMenu: function (e) {
             var $link = $(e.currentTarget);
-            this.menu = new LaunchSuiteStepItemMenuView({
+            this.menu = new LaunchItemMenuView({
                 model: this.model
             });
             $link
@@ -135,6 +136,9 @@ define(function (require, exports, module) {
             e.preventDefault();
             this.model.trigger('drill:item', this.model);
             config.router.navigate($(e.currentTarget).attr('href'), {trigger: true});
+        },
+        onClickEdit: function() {
+
         },
         destroy: function () {
             this.menu && this.menu.destroy();

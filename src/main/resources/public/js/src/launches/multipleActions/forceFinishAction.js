@@ -25,23 +25,24 @@ define(function (require, exports, module) {
     var _ = require('underscore');
     var Util = require('util');
     var ModalConfirm = require('modals/modalConfirm');
+    var Localization = require('localization');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
 
     var ForceFinishAction = function(options) {
         var items = options.items;
         var modal = new ModalConfirm({
-            headerText: 'Force Finish',
-            bodyText: 'In case of finish the launches, all data will be missed. Are you sure you want to finish selected launches?',
-            confirmText: 'I am sure I want to finish launches',
-            cancelButtonText: 'Cancel',
-            okButtonText: 'Finish',
+            headerText: Localization.dialogHeader.forceFinish,
+            bodyText: Localization.launches.finishItemsWarning,
+            confirmText: Localization.launches.finishItemsAgree,
+            cancelButtonText: Localization.ui.cancel,
+            okButtonText: Localization.ui.finish,
             confirmFunction: function() {
                 // var entities = {};
                 // _.each(items, function(item) {
                 //     entities[item.get('id')] = {mode: 'DEBUG'};
                 // });
-                // return CallService.call('PUT', Urls.getLaunchUpdate(), {entities: entities}).done(function() {
+                // return CallService.call('PUT', Urls.getLaunchStop(), {entities: entities}).done(function() {
                 //     Util.ajaxSuccessMessenger('switchToDebug');
                 // }).fail(function(err) {
                 //     Util.ajaxFailMessenger(err, 'switchToDebug');

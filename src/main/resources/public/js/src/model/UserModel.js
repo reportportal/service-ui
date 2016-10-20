@@ -22,7 +22,7 @@
 
 define(function(require, exports, module) {
     var $ = require('jquery');
-    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
     var Service = require('coreService');
@@ -37,7 +37,7 @@ define(function(require, exports, module) {
         if(!instance) instance = new UserModel;
         return instance
     };
-    var UserModel = Backbone.Model.extend({
+    var UserModel = Epoxy.Model.extend({
 
         defaults: {
             auth: false,
@@ -56,6 +56,14 @@ define(function(require, exports, module) {
             photo_loaded: false,
             lastInsideHash: null,
             token: 'Basic dWk6dWltYW4=',
+        },
+        computeds: {
+            isAdmin: {
+                deps: ['userRole'],
+                get: function(userRole) {
+                    return userRole === config.accountRolesEnum.administrator;
+                }
+            }
         },
 
         initialize: function () {
