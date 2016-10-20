@@ -32,7 +32,7 @@ define(function (require, exports, module) {
     var Dashboard = require('dashboard');
     var Favorites = require('favorites');
     var Launch = require('launch');
-    var LaunchPage = require('launches/launchPage');
+    var LaunchPage = require('launches/LaunchPage');
     var Profile = require('profile');
     var Util = require('util');
     var Service = require('coreService');
