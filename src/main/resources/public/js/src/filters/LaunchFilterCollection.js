@@ -22,7 +22,7 @@ define(function(require, exports, module) {
     'use strict';
 
     var Backbone = require('backbone');
-    var FilterModel = require('filters/filterModel');
+    var FilterModel = require('filters/FilterModel');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
     var $ = require('jquery');
