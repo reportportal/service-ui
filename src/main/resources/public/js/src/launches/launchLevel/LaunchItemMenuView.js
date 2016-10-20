@@ -30,7 +30,7 @@ define(function (require, exports, module) {
     var Service = require('coreService');
     var Localization = require('localization');
     var App = require('app');
-    var MoveToDebugAction = require('launches/multipleActions/moveToDebugAction');
+    var ChangeModeAction = require('launches/multipleActions/changeModeAction');
 
     var config = App.getInstance();
 
@@ -269,7 +269,7 @@ define(function (require, exports, module) {
         // },
         switchLaunchMode: function (e) {
             var self = this;
-            MoveToDebugAction({items: [this.model]}).done(function() {
+            ChangeModeAction({items: [this.model]}).done(function() {
                 self.model.collection.load(true);
             });
         },
