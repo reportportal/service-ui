@@ -64,10 +64,8 @@ define(function(require, exports, module) {
     var config = App.getInstance();
 
     config.mainScrollElement = Util.setupBaronScroll($('#main_content'));
-
     config.userModel = new UserModel;
     config.trackingDispatcher = TrackingDispatcher;
-
     config.router = new Router.Router();
 
     Util.setupWindowEvents();

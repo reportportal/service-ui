@@ -354,7 +354,7 @@ a.itemsPerPage {
     font-weight: 400;
 }
 
-.btn, .dropdown-menu {
+.btn {
     font-size: 13px;
     .rp-checkbox-wrap {
         display: block;
@@ -432,178 +432,178 @@ a.itemsPerPage {
 }
 /*-----------*/
 
-.rp-btn-group .dropdown-menu,
-.btn-group .dropdown-menu,
-.dropdown-menu {
-    &.filters-criteria {
-        li {
-            a {
-                &.checkbox {
-                    padding: 0;
-                }
-            }
-        }
-    }
-
-    &#userNavigator {
-        & > li {
-            &.active {
-                a {
-                    color: #464547;
-                    background-color: #e9e9e9;
-                }
-                &:hover {
-
-                }
-            }
-        }
-    }
-
-    &.item-options {
-        & > li {
-            position: relative;
-
-            & > a {
-                position: relative;
-                font-family: $OpenSansRegular;
-                font-size: 13px;
-                line-height: 13px;
-                padding: 6px 15px;
-                text-decoration: none;
-                text-transform: capitalize;
-                margin: 0;
-                color: #464547;
-                white-space: nowrap;
-
-                &:before {
-                    content: '';
-                    position: absolute;
-                    top: -2px;
-                    left: 0;
-                    right: 0;
-                    bottom: -2px;
-                    background: transparent;
-                    z-index: -1;
-                }
-
-                &:hover {
-                    background-color: transparent;
-
-                    &:before {
-                        background: rgba(57,194,215,0.2);
-                    }
-                }
-            }
-
-            &.disabled {
-                & > a {
-                    color: #999999;
-
-                    &:before {
-                        background-color: transparent;
-                    }
-                }
-            }
-        }
-    }
-
-    &.filter-manager {
-        li {
-            position: relative;
-
-            span {
-                &.menu-option {
-                    position: relative;
-                    display: inline-block;
-                    font-family: $OpenSansRegular;
-                    font-size: 13px;
-                    line-height: 13px;
-                    padding: 6px 15px;
-                    text-decoration: none;
-                    text-transform: capitalize;
-                    margin: 0;
-                    color: #464547;
-                    white-space: nowrap;
-                    cursor: pointer;
-                    width: 100%;
-
-                    &:before {
-                        content: '';
-                        position: absolute;
-                        top: -2px;
-                        left: 0;
-                        right: 0;
-                        bottom: -2px;
-                        background: transparent;
-                        z-index: -1;
-                    }
-
-                    &:hover {
-                        background-color: transparent;
-
-                        &:before {
-                            background-color: rgba(57,194,215,0.2);
-                        }
-                    }
-
-                    &.disabled {
-                        background-color: transparent;
-                        color: #999999;
-                        cursor: not-allowed;
-
-                        &:hover {
-                            &:before {
-                                background-color: transparent;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    & > li {
-        position: relative;
-
-        &.disabled {
-            background: transparent;
-
-            & > a {
-                color: #999999;
-                background: transparent;
-                border-color: #cccccc;
-                box-shadow: none;
-                cursor: not-allowed !important;
-            }
-
-            &:hover {
-                background: transparent;
-            }
-        }
-
-        & > a {
-            &.disabled-option {
-                color: #999999;
-                background: transparent;
-                border-color: #cccccc;
-                box-shadow: none;
-                cursor: not-allowed !important;
-
-                &:hover {
-                    background: transparent;
-                }
-            }
-        }
-
-        & > a {
-            &.checkbox {
-                label {
-                    padding-left: 0;
-                }
-            }
-        }
-    }
-}
+//.rp-btn-group .dropdown-menu,
+//.btn-group .dropdown-menu,
+//.dropdown-menu {
+//    &.filters-criteria {
+//        li {
+//            a {
+//                &.checkbox {
+//                    padding: 0;
+//                }
+//            }
+//        }
+//    }
+//
+//    &#userNavigator {
+//        & > li {
+//            &.active {
+//                a {
+//                    color: #464547;
+//                    background-color: #e9e9e9;
+//                }
+//                &:hover {
+//
+//                }
+//            }
+//        }
+//    }
+//
+//    &.item-options {
+//        & > li {
+//            position: relative;
+//
+//            & > a {
+//                position: relative;
+//                font-family: $OpenSansRegular;
+//                font-size: 13px;
+//                line-height: 13px;
+//                padding: 6px 15px;
+//                text-decoration: none;
+//                text-transform: capitalize;
+//                margin: 0;
+//                color: #464547;
+//                white-space: nowrap;
+//
+//                &:before {
+//                    content: '';
+//                    position: absolute;
+//                    top: -2px;
+//                    left: 0;
+//                    right: 0;
+//                    bottom: -2px;
+//                    background: transparent;
+//                    z-index: -1;
+//                }
+//
+//                &:hover {
+//                    background-color: transparent;
+//
+//                    &:before {
+//                        background: rgba(57,194,215,0.2);
+//                    }
+//                }
+//            }
+//
+//            &.disabled {
+//                & > a {
+//                    color: #999999;
+//
+//                    &:before {
+//                        background-color: transparent;
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    &.filter-manager {
+//        li {
+//            position: relative;
+//
+//            span {
+//                &.menu-option {
+//                    position: relative;
+//                    display: inline-block;
+//                    font-family: $OpenSansRegular;
+//                    font-size: 13px;
+//                    line-height: 13px;
+//                    padding: 6px 15px;
+//                    text-decoration: none;
+//                    text-transform: capitalize;
+//                    margin: 0;
+//                    color: #464547;
+//                    white-space: nowrap;
+//                    cursor: pointer;
+//                    width: 100%;
+//
+//                    &:before {
+//                        content: '';
+//                        position: absolute;
+//                        top: -2px;
+//                        left: 0;
+//                        right: 0;
+//                        bottom: -2px;
+//                        background: transparent;
+//                        z-index: -1;
+//                    }
+//
+//                    &:hover {
+//                        background-color: transparent;
+//
+//                        &:before {
+//                            background-color: rgba(57,194,215,0.2);
+//                        }
+//                    }
+//
+//                    &.disabled {
+//                        background-color: transparent;
+//                        color: #999999;
+//                        cursor: not-allowed;
+//
+//                        &:hover {
+//                            &:before {
+//                                background-color: transparent;
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    & > li {
+//
+//
+//        &.disabled {
+//            background: transparent;
+//
+//            & > a {
+//                color: #999999;
+//                background: transparent;
+//                border-color: #cccccc;
+//                box-shadow: none;
+//                //cursor: not-allowed !important;
+//            }
+//
+//            &:hover {
+//                background: transparent;
+//            }
+//        }
+//
+//        & > a {
+//            &.disabled-option {
+//                color: #999999;
+//                background: transparent;
+//                border-color: #cccccc;
+//                box-shadow: none;
+//                cursor: not-allowed !important;
+//
+//                &:hover {
+//                    background: transparent;
+//                }
+//            }
+//        }
+//
+//        & > a {
+//            &.checkbox {
+//                label {
+//                    padding-left: 0;
+//                }
+//            }
+//        }
+//    }
+//}
 
 /*-----------*/
 
@@ -1353,7 +1353,7 @@ textarea {
 .daterangepicker td,
 .daterangepicker td.end-date,
 .daterangepicker td.start-date,
-.daterangepicker th, .dropdown-menu,
+.daterangepicker th,
 .input-group-sm>.form-control,
 .input-group-sm>.input-group-addon,
 .input-group-sm>.input-group-btn>.btn,
@@ -1508,10 +1508,6 @@ li {
 
 /*------Background for hovered options in dropdowns---------*/
 
-.dropdown-menu > li > a:focus,
-.dropdown-menu > li > a:hover {
-    background: #d8f3f7;
-}
 
 /*------Dropdown list with a search field---------*/
 

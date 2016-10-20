@@ -2,11 +2,13 @@
     <div class="grid-cell name-grid-cell name-cell">
         <span class="label label-danger autoanalyze" data-js-analize-label><%= data.text.ui.analyze %></span>
         <h5 class="rp-grid-name">
+            <% if(data.type == '') { %>
             <div class="btn-group" data-js-launch-edit>
                 <a class="item-menu" data-js-launch-menu data-toggle="dropdown" href="#">
                     <i class="rp-svg-icon svg-icon-menu-size-14"></i>
                 </a>
             </div>
+            <% } %>
             <a class="navigateable rp-blue-link-undrl" href="" data-js-name></a>
             <span data-js-launch-number></span>
         </h5>

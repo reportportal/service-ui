@@ -115,6 +115,9 @@ define(['app'], function (App) {
     var getLaunchUpdate = function() {
         return getLaunchBase() + '/update';
     };
+    var getLaunchStop = function() {
+        return getLaunchBase() + '/stop';
+    };
 
     var queryByTags = function (tags) {
         return getProjectBase() + '/launch/tags?filter.cnt.tags=' + encodeURI(tags);
@@ -502,6 +505,7 @@ define(['app'], function (App) {
         updateFilter: updateFilter,
         filtersBase: filtersBase,
         launchesBase: launchesBase,
+        getLaunchStop: getLaunchStop,
         userDebugBade: userDebugBade,
         updateLaunchUrl: updateLaunchUrl,
         deleteLaunchUrl: deleteLaunchUrl,

@@ -28,7 +28,7 @@ define(function (require, exports, module) {
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
 
-    var MoveToDebugAction = function(options) {
+    var ChangeModeAction = function(options) {
         var items = options.items;
         var modal = new ModalConfirm({
             headerText: 'Move to debug',
@@ -48,9 +48,24 @@ define(function (require, exports, module) {
             }
         });
 
+        // e.preventDefault();
+        // var id = this.model.get('id');
+        // var data = {};
+        // var self = this;
+        // data.mode = this.model.get('mode') == 'DEBUG' ? 'DEFAULT' : 'DEBUG';
+        // Service.updateLaunch(data, id)
+        //     .done(function (response) {
+        //         self.model.collection.load();
+        //         Util.ajaxSuccessMessenger((data.mode == 'DEBUG') ? 'switchToDebug' : 'switchToAllLaunches');
+        //         config.trackingDispatcher[data.mode === 'DEBUG' ? 'debugOn' : 'debugOff'](self.model.get('status'));
+        //     })
+        //     .fail(function (error) {
+        //         Util.ajaxFailMessenger(error);
+        //     });
+
         return modal.show();
     };
 
 
-    return MoveToDebugAction;
+    return ChangeModeAction;
 });

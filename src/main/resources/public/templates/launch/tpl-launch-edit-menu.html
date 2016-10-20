@@ -1,52 +1,36 @@
-<li data-js-can-edit>
-    <a href="#" data-js-can-edit class="edit-item" data-js-edit-item>
-        <%= data.text.ui.edit %>
-    </a>
-</li>
-<li data-js-can-delete>
-    <a href="#" data-js-can-delete data-js-delete-item class="delete-item">
-        <%= data.text.ui.delete %>
-    </a>
-</li>
-<% if(data.isLaunch){ %>
-    <% if(!data.isCustomer){ %>
-        <% if(!_.isUndefined(data.item.mode)){ %>
-            <li data-js-can-edit>
-                <a class="launch-mode-switch" data-js-switch-mode data-js-can-edit data-js-mode href="#"></a>
-            </li>
-        <% } %>
+<% if(!data.isCustomer){ %>
+    <% if(!_.isUndefined(data.item.mode)){ %>
+        <li>
+            <a data-js-switch-mode></a>
+        </li>
     <% } %>
-    <li data-js-can-finish>
-        <a href="#" data-js-can-finish data-js-fihish-item>
-            <%= data.text.launches.forceFinish %>
+<% } %>
+<li>
+    <a data-js-finish><%= data.text.launches.forceFinish %></a>
+</li>
+<% if(!data.isDebug){ %>
+    <li>
+        <a href="#" data-js-can-match data-js-start-analyze data-type="match">
+            <%= data.text.launches.matchTitle %>
         </a>
     </li>
-    <% if(!data.isDebug){ %>
-        <li data-js-can-match>
-            <a href="#" data-js-can-match data-js-start-analyze data-type="match">
-                <%= data.text.launches.matchTitle %>
-            </a>
-        </li>
-    <% } %>
-    <% if(!data.isDebug){ %>
-        <li data-js-can-analyze>
-            <a href="#" data-js-can-analyze data-js-start-analyze data-analyze-type="analyze">
-                <%= data.text.ui.analyze %>
-            </a>
-        </li>
-    <% } %>
-    <% if(data.exportFormats){ %>
-        <li role="separator" class="divider"></li>
-        <li class="rp-export-launch-group">
-            <span class="rp-export-label"><%= data.text.launches.export %>:</span>
-            <div class="rp-export-btn-group">
-                <% _.each(data.exportFormats, function(f){ %>
-                <a href="<%= data.updateImagePath(data.getExportUrl(data.item.id, f)) %>"
-                   data-js-can-export
-                   data-js-export-item
-                   target="_blank" class="rp-btn rp-btn-default"><%= f %></a>
-                <% }); %>
-            </div>
-        </li>
-    <% } %>
+<% } %>
+<% if(!data.isDebug){ %>
+    <li>
+        <a data-js-can-analyze data-js-start-analyze data-analyze-type="analyze">
+            <%= data.text.ui.analyze %>
+        </a>
+    </li>
+<% } %>
+<% if(data.exportFormats){ %>
+    <li role="separator" class="divider"></li>
+    <li class="rp-export-launch-group">
+        <span class="rp-export-label"><%= data.text.launches.export %>:</span>
+        <div class="rp-export-btn-group">
+            <% _.each(data.exportFormats, function(f){ %>
+            <a href="<%= data.updateImagePath(data.getExportUrl(data.item.id, f)) %>" target="_blank"
+               data-js-can-export class="rp-btn rp-btn-default"><%= f %></a>
+            <% }); %>
+        </div>
+    </li>
 <% } %>
