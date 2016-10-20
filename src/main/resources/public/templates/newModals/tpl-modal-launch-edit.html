@@ -1,11 +1,10 @@
 <%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.launches.compareLaunches}) %>
 <div class="modal-body">
-    <div class="form-group col-sm-12 m-top-15">
-        <label class="col-sm-12 control-label no-margin"><%= data.text.launches.launchName %></label>
-        <div class="col-sm-12">
-            <output class="edit-launch-name"><%= data.name %></output>
-        </div>
-    </div>
+    <label>
+        <span><%= data.text.launches.launchName %></span>
+        <p data-js-launch-name></p>
+    </label>
+
     <div class="form-group col-sm-12">
         <label class="col-sm-12 control-label no-margin"><%= data.text.launches.launchNumber %></label>
         <div class="col-sm-12">
