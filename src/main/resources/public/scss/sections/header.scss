@@ -25,12 +25,18 @@
    padding: 0 15px;
    background-color: $COLOR--black-five;
    letter-spacing: .5px;
+   @media (max-width: $SCREEN_XS_MAX) {
+     padding: 0;
+   }
 
    & > .container > .row { // #topHeader
      min-height: 30px;
      margin-bottom: 0;
      box-sizing: content-box;
      color: $COLOR--white-default;
+     @media (max-width: $SCREEN_XS_MAX) {
+       padding: 0;
+     }
 
      .navbar {
        min-height: 30px;
@@ -68,12 +74,83 @@
        .navbar-collapse {
          padding: 16px 15px 11px;
 
-         @media (min-width: 768px) {
-           display: block!important;
-           height: auto!important;
-           overflow: visible!important;
+         @media (max-width: $SCREEN_XS_MAX) {
+           position: relative;
+           box-shadow: none;
+           border-top: none;
+           background: $COLOR--greyish-brown;
+           height: 50px;
+           #settings, #members {
+             position: absolute;
+             top: 0;
+             right: 0;
+             padding: 14px 12px;
+             a {
+               margin: 0;
+               padding: 0;
+               font-size: 24px;
+             }
+           }
+           #members {
+             right: 48px;
+             padding: 17px 8px;
+             a {
+               font-size: 18px;
+             }
+           }
+           #projectSelector {
+             position: absolute;
+             left: 0;
+             right: 0;
+             top: 0;
+             padding: 0;
+             height: 50px;
+             .dropdown-toggle {
+               padding-top: 15px;
+               padding-left: 9px;
+               padding-right: 96px;
+             }
+             .baron__root {
+               top: 50px;
+               width: 100% !important;
+               &.open {
+                 border: none;
+               }
+             }
+             &:after {
+               display: none;
+             }
+             .dropdown-menu {
+               background: #666666;
+               border-bottom: 1px solid #757575;
+               border-top: 1px solid #757575;
+               li {
+                 height: 50px;
+                 background: #666666;
+                 border-bottom: 1px solid #757575;
+                 overflow: hidden;
+                 &:last-child {
+                   border-bottom: none;
+                 }
+                 a {
+                   color: white;
+                   line-height: 50px;
+                   padding: 0 !important;
+                   text-align: left;
+                   text-indent: 10px;
+                   font-size: 16px;
+                 }
+                 &.active {
+                   background: $COLOR--black-three;
+                   a {
+                     background: none;
+                     color: $COLOR--booger;
+                   }
+                 }
+               }
+             }
+           }
          }
-
 
          ul.navbar-nav {
            @media (min-width: 768px) {
