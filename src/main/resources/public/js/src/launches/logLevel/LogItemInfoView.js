@@ -25,7 +25,6 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var DefectEditorView = require('launches/stepLevel/DefectEditorView');
 
     var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
     var LogItemInfoStackTraceView = require('launches/logLevel/LogItemInfoStackTraceView');
@@ -35,6 +34,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var ModalLoadBug = require('modals/modalLoadBug');
     var ModalPostBug = require('modals/modalPostBug');
+    var ModalDefectEditor = require('modals/modalDefectEditor');
     var SingletonAppModel = require('model/SingletonAppModel');
     var Localization = require('localization');
     var CallService = require('callService');
@@ -59,7 +59,7 @@ define(function (require, exports, module) {
             'click [data-js-item-activity-label]': function () {
                 this.toggleModelField('activity')
             },
-            'click [data-js-step-issue]': 'showDefectEditor',
+            'click [data-js-step-issue]': 'onClickDefectEditor',
             'click [data-js-match]': 'onClickMatch',
             'click [data-js-post-bug]': 'onClickPostBug',
             'click [data-js-load-bug]': 'onClickLoadBug'
@@ -155,7 +155,7 @@ define(function (require, exports, module) {
             });
             this.render();
             this.issueView = new StepItemIssueView({
-                model: this.itemModel,
+                model: this.viewModel,
                 $container: $('[data-js-step-issue]', this.$el)
             });
             this.stackTrace = new LogItemInfoStackTraceView({
@@ -179,34 +179,11 @@ define(function (require, exports, module) {
                 parentModel: this.model,
             });
         },
-        showDefectEditor: function (e) {
-            e.preventDefault();
-            var el = $(e.currentTarget);
-            if (!el.hasClass('disabled')) {
-                this.setupEditor();
-                this.onShowEditor();
-            }
-            e.stopPropagation();
-        },
-        setupEditor: function () {
-            this.removeEditor();
-            this.$editor = new DefectEditorView({
-                origin: $('[data-js-log-defect-editor]', this.$el),
-                model: this.viewModel
+        onClickDefectEditor: function(){
+            var defectEditor = new ModalDefectEditor({
+                items: [this.viewModel],
             });
-            this.listenTo(this.$editor, 'defect::editor::hide', this.onHideEditor);
-        },
-        onShowEditor: function () {
-            $('[data-js-item-info-issue]', this.$el).hide();
-        },
-        onHideEditor: function () {
-            $('[data-js-item-info-issue]', this.$el).show();
-        },
-        removeEditor: function () {
-            if (this.$editor) {
-                this.$editor.destroy();
-                this.$editor = null;
-            }
+            defectEditor.show();
         },
         onClickPostBug: function () {
             var modal = new ModalPostBug({

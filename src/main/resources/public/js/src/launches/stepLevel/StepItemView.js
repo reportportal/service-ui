@@ -30,7 +30,7 @@ define(function (require, exports, module) {
     var LaunchSuiteStepItemMenuView = require('launches/common/LaunchSuiteStepItemMenuView');
     var ItemDurationView = require('launches/common/ItemDurationView');
     var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
-    var DefectEditor = require('launches/stepLevel/DefectEditorView');
+    var ModalDefectEditor = require('modals/modalDefectEditor');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
 
     var config = App.getInstance();
@@ -122,38 +122,11 @@ define(function (require, exports, module) {
                 .addClass('rendered')
                 .dropdown();
         },
-        showDefectEditor: function(e){
-            e.preventDefault();
-            var el = $(e.currentTarget);
-            if(!el.hasClass('disabled')){
-                this.setupEditor();
-            }
-            e.stopPropagation();
-        },
-        setupEditor: function () {
-            this.removeEditor();
-            this.$editor = new DefectEditor({
-                origin: $('[data-js-defect-editor]', this.$el),
-                model: this.model
+        showDefectEditor: function () {
+            var defectEditor = new ModalDefectEditor({
+                items: [this.model],
             });
-            this.listenTo(this.$editor, 'defect::editor::hide', this.onHideEditor);
-            this.onShowEditor();
-        },
-        onShowEditor: function(){
-            $('[data-js-status-class]', this.$el).addClass('selected');
-            $('[data-js-step-issue]', this.$el).hide();
-            $('[data-js-select-cell]', this.$el).hide();
-        },
-        onHideEditor: function(){
-            $('[data-js-status-class]', this.$el).removeClass('selected');
-            $('[data-js-step-issue]', this.$el).show();
-            $('[data-js-select-cell]', this.$el).show();
-        },
-        removeEditor: function () {
-            if (this.$editor) {
-                this.$editor.destroy();
-                this.$editor = null;
-            }
+            defectEditor.show();
         },
         onClickName: function(e) {
             e.preventDefault();
@@ -172,7 +145,6 @@ define(function (require, exports, module) {
             this.menu && this.menu.destroy();
             this.issueView && this.issueView.destroy();
             this.duration && this.duration.destroy();
-            this.removeEditor();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();

@@ -127,6 +127,8 @@ define(function (require, exports, module) {
                 interrupted: 'INTERRUPTED'
             },
 
+            defectsGroupSorted :['TO_INVESTIGATE', 'PRODUCT_BUG', 'AUTOMATION_BUG', 'SYSTEM_ISSUE', 'NO_DEFECT'],
+
             defaultColors: {
                 'total': '#489BEB',
                 'passed': '#87b77b',

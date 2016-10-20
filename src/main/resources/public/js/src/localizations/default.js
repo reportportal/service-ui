@@ -1556,6 +1556,10 @@ define(['util'], function () {
 
             launchEditor: "Launch Editor",
             itemEditor: "Test item editor",
+            defectEditor: 'Edit defect type',
+            choseDefectType: 'Choose Defect Type',
+            commentForDefect: 'Leave Comment to Defect Type',
+            defectType: 'Defect Type',
             mergeLaunches: "Merge Launches",
             postBug: "Post bug",
             loadBug: "Load bug",
