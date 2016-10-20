@@ -97,6 +97,11 @@
         color: $COLOR--black;
       }
     }
+    &:hover {
+      .filter-edit {
+        opacity: 1;
+      }
+    }
   }
 
   .switcher-block {
@@ -120,9 +125,10 @@
   }
   .name-grid-cell {
     width: 16%;
-    i {
+    .filter-edit {
       vertical-align: top;
-      margin: 0 0 0 5px;
+      opacity: 0;
+      width: 0;
     }
     .description-item {
       font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
