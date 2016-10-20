@@ -26,6 +26,9 @@ define(function (require, exports, module) {
     var Util = require('util');
     var Storage = require('storageService');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var SideBar = Backbone.View.extend({
         el: "#pageSidebar",
