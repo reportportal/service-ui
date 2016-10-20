@@ -109,11 +109,14 @@ define(function (require, exports, module) {
                 $container: $('[data-js-step-issue]', this.$el)
             });
         },
-        showDefectEditor: function () {
-            var defectEditor = new ModalDefectEditor({
-                items: [this.model]
-            });
-            defectEditor.show();
+        showDefectEditor: function (e) {
+            var el = $(e.currentTarget);
+            if(!el.closest('.select-state').length){
+                var defectEditor = new ModalDefectEditor({
+                    items: [this.model]
+                });
+                defectEditor.show();
+            }
         },
         onClickName: function(e) {
             e.preventDefault();

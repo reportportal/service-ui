@@ -54,12 +54,11 @@ define(function (require, exports, module) {
             this.defectTypesCollection.ready.done(function(){
                 this.render();
             }.bind(this));
-            this.selectedIssue = this.getIssueType(this.items[0]);
+            this.selectedIssue = null;
             this.inProcess = false;
         },
 
         render: function() {
-            console.log('render editor');
             this.$el.html(Util.templates(this.template, {
                 item: this.items[0],
                 isMultipleEdit: this.isMultipleEdit(),
@@ -107,7 +106,6 @@ define(function (require, exports, module) {
         },
 
         getIssueType: function(item){
-            console.log(item);
             var data = item.getIssue();
             return data.issue_type;
         },
@@ -151,8 +149,10 @@ define(function (require, exports, module) {
             el.addClass('selected');
             this.selectedIssue = locator;
             this.$type.text(issueType.longName).attr('class', el.find('.badge').attr('class'));
-            this.$type.closest('.pr-defect-type-badge').data('id', this.selectedIssue)
-            $('.pr-defect-type-badge i', this.$el).css('background', issueType.color);
+            this.$type.closest('[data-js-issue-title]').data('id', this.selectedIssue);
+            $('[data-js-noissue-name]', this.$el).hide();
+            $('[data-js-issue-title]', this.$el).show();
+            $('[data-js-issue-title] i', this.$el).css('background', issueType.color);
             this.validateForSubmition();
         },
         setupMarkItUp: function(){
@@ -170,7 +170,6 @@ define(function (require, exports, module) {
             this.$textarea.focus();
         },
         updateDefectType: function () {
-            console.log('updateDefectType');
             if (this.inProcess) {
                 return;
             }
@@ -180,10 +179,11 @@ define(function (require, exports, module) {
                 issues = [],
                 replaceComments = this.$replaceComments.is(':checked');
             _.forEach(this.items, function (item) {
-                var issue = {issue_type: selectedIssue};
+                var issue = {};
                 if((replaceComments && this.isMultipleEdit() && comment) || (!this.isMultipleEdit() && comment)){
                     issue.comment = comment;
                 }
+                issue.issue_type = selectedIssue || this.getIssueType(item);
                 issues.push({
                     test_item_id: item.get('id'),
                     issue: issue
@@ -193,9 +193,10 @@ define(function (require, exports, module) {
             CoreService.updateDefect({issues: issues})
                 .done(function () {
                     var itemIssue = this.getIssueType(this.items[0]);
-                    if (itemIssue !== selectedIssue) {
+                    if (selectedIssue && itemIssue !== selectedIssue) {
                         config.trackingDispatcher.defectStateChange(itemIssue, selectedIssue);
                     }
+                    Util.ajaxSuccessMessenger("updateDefect");
                     this.hide();
                 }.bind(this))
                 .fail(function (error) {

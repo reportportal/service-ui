@@ -5,16 +5,12 @@
             <label class="rp-control-label rp-defect-type-label" for="selectDefectType"><%= data.text.dialog.defectType %></label>
             <div class="btn-group rp-defect-type-btn-group">
                 <% var defectType = !data.isMultipleEdit ? data.getDefectType(data.item) : null %>
-                <% console.log(defectType) %>
                 <button id="selectDefectType" data-toggle="dropdown" class="btn rp-defect-type-dropdown dropdown-toggle" value="">
-                    <% if(defectType){ %>
-                    <span data-js-issue-title title="<%= defectType.longName %>" class="pr-defect-type-badge">
-                        <i data-js-issue-color style="background: <%= defectType.color %>"></i>
-                        <span data-js-issue-name><%= defectType.longName %></span>
+                    <span style="<% if(!defectType){ %>display:none;<% } %>" data-js-issue-title title="<%= defectType ? defectType.longName : '' %>" class="pr-defect-type-badge">
+                        <i data-js-issue-color style="background: <%= defectType ? defectType.color : '' %>"></i>
+                        <span data-js-issue-name><%= defectType ? defectType.longName : '' %></span>
                     </span>
-                    <% } else { %>
-                    <span data-js-issue-name><%= data.text.dialog.choseDefectType %></span>
-                    <% } %>
+                    <span data-js-noissue-name style="<% if(defectType){ %>display:none;<% } %>"><%= data.text.dialog.choseDefectType %></span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu rp-defects-menu">
@@ -29,7 +25,7 @@
                     <% } %>
                     <li class="col-md-<%= rowDesktop %> col-sm-<%= rowTablet %> col-xs-12">
                         <% _.each(data.subDefects[defect], function(d){ %>
-                        <% var checked = d.locator == data.getIssueType(data.item) ? true : false %>
+                        <% var checked = !data.isMultipleEdit && d.locator == data.getIssueType(data.item) ? true : false %>
                         <div class="rp-defect-row">
                             <label title="<%- d.longName %>" class="<%= checked ? 'selected' : '' %>"
                                    data-js-select-issue data-locator="<%= d.locator %>">
@@ -46,10 +42,12 @@
             <textarea rows="3" id="textile" placeholder="<%= data.text.dialog.commentForDefect %>" class="" data-js-issue-comment><%- !data.isMultipleEdit ? data.getIssueComment(data.item) : '' %></textarea>
         </div>
         <div class="rp-defect-editor-bottom">
+            <% if(data.isMultipleEdit){ %>
             <label class="rp-checkbox-wrap replace-comments">
                 <input class="rp-input-checkbox" type="checkbox" data-js-replace-comment>
                 <span><%= data.text.launches.replaceComments %></span>
             </label>
+            <% } %>
             <span class="hot-keys"><%= data.text.ui.escToCancel %></span>
             <span class="hot-keys"><%= data.text.ui.ctrlEnterToSubmit %></span>
         </div>
