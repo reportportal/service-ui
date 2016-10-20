@@ -1,0 +1,89 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath 'org.ajoberstar:grgit:1.6.0-rc.1'
+    }
+}
+
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+javadoc() {
+    failOnError = false
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId 'com.epam.reportportal'
+            artifactId "$project.name"
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+}
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+    publications = ['mavenJava']
+    publish = true
+    pkg {
+        repo = 'reportportal'
+        name = "$project.name"
+        desc = "$project.description"
+        websiteUrl = 'https://reportportal.github.io/'
+        issueTrackerUrl = "https://github.com/reportportal/$project.name/issues"
+        vcsUrl = "https://github.com/reportportal/$project.name"
+        githubRepo = "reportportal/$project.name"
+        githubReleaseNotesFile = 'CHANGELOG.md'
+
+        userOrg = 'epam'
+        licenses = ['GPL-3.0']
+    }
+}
+
+ext {
+    grgit = org.ajoberstar.grgit.Grgit.open(dir: '.')
+}
+
+task releaseDockerfile(type: Copy) {
+    /* copy dockerfile and replace version of JAR */
+    from 'docker/Dockerfile-release'
+    into "${project.projectDir}/"
+    expand(project.properties)
+    rename ('Dockerfile-release', 'Dockerfile')
+}
+
+task addDockerfileToGit << {
+    grgit.add(patterns: ['Dockerfile'])
+}
+
+task removeDockerfileFromGit << {
+    grgit.remove(patterns: ['Dockerfile'])
+}
+
+addDockerfileToGit.dependsOn releaseDockerfile
+updateVersion.dependsOn removeDockerfileFromGit
+beforeReleaseBuild.dependsOn addDockerfileToGit
+afterReleaseBuild.dependsOn bintrayUpload

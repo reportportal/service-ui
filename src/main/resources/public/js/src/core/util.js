@@ -526,6 +526,11 @@ define(function (require, exports, module) {
             });
             $(window).on('resize', function(){
                 $.publish("window:resize", {height: $(window).height(), width: $(window).width()});
+            });
+            $(document).on('click', 'a', function(e) {
+                if ($(e.currentTarget).is(':disabled')) {
+                    e.preventDefault();
+                }
             })
         },
 

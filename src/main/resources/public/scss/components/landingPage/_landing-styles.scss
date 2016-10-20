@@ -478,6 +478,10 @@
             color: #666;
             list-style: inherit;
         }
+
+        ol li {
+            padding-left: 37px;
+        }
     }
 
     .b-docs li:before {
@@ -1820,7 +1824,7 @@ line.vlinehist {
 
 .documentation ol li p {
     display: inline;
-    margin-left: 17px;
+    //margin-left: 17px;
 }
 
 .documentation ol li.double-digit p {

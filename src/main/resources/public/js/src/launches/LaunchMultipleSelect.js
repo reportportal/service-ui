@@ -29,7 +29,7 @@ define(function (require, exports, module) {
     var MergeAction = require('launches/multipleActions/mergeAction');
     var CompareAction = require('launches/multipleActions/compareAction');
     var RemoveAction = require('launches/multipleActions/removeAction');
-    var MoveToDebugAction = require('launches/multipleActions/moveToDebugAction');
+    var ChangeModeAction = require('launches/multipleActions/changeModeAction');
 
     var config = App.getInstance();
 
@@ -81,51 +81,27 @@ define(function (require, exports, module) {
         actionValidators: {
             merge: function() {
                 _.each(this.collection.models, function(model) {
-                    if(model.get('launch_owner') != config.userModel.get('name')) {
-                        model.set({invalidMessage: 'You are not a launch owner'});
-                    } else if (model.get('status') == 'IN_PROGRESS') {
-                        model.set({invalidMessage: 'Launch should not be in the status IN PROGRESS'});
-                    } else if(model.get('isProcessing')) {
-                        model.set({invalidMessage: 'Launch should not be processing by Auto Analysis'});
-                    } else {
-                        model.set({invalidMessage: ''})
-                    }
-                })
+                    model.set({invalidMessage: model.validate.merge()});
+                });
             },
             compare: function() {
                 _.each(this.collection.models, function(model) {
                     model.set({invalidMessage: ''})
                 })
             },
-            movedebug: function() {
+            changemode: function() {
                 _.each(this.collection.models, function(model) {
-                    if(model.get('launch_owner') != config.userModel.get('name')) {
-                        model.set({invalidMessage: 'You are not a launch owner'});
-                    } else {
-                        model.set({invalidMessage: ''});
-                    }
+                    model.set({invalidMessage: model.validate.changeMode()})
                 })
             },
             forcefinish: function() {
                 _.each(this.collection.models, function(model) {
-                    if (model.get('status') != 'IN_PROGRESS') {
-                        model.set({invalidMessage: 'Launch is already finished'});
-                    } else if(model.get('launch_owner') != config.userModel.get('name')) {
-                        model.set({invalidMessage: 'You are not a launch owner'});
-                    } else {
-                        model.set({invalidMessage: ''})
-                    }
+                    model.set({invalidMessage: model.validate.forceFinish()})
                 })
             },
             remove: function() {
                 _.each(this.collection.models, function(model) {
-                     if(model.get('launch_owner') != config.userModel.get('name')) {
-                        model.set({invalidMessage: 'You are not a launch owner'});
-                    } else if (model.get('status') == 'IN_PROGRESS') {
-                        model.set({invalidMessage: 'Launch should not be in the status IN PROGRESS'});
-                    } else {
-                        model.set({invalidMessage: ''})
-                    }
+                     model.set({invalidMessage: model.validate.remove()})
                 })
             },
         },
@@ -151,9 +127,9 @@ define(function (require, exports, module) {
                     self.reset();
                 });
             },
-            movedebug: function() {
+            changemode: function() {
                 var self = this;
-                MoveToDebugAction({items: this.collection.models}).done(function() {
+                ChangeModeAction({items: this.collection.models}).done(function() {
                     self.compareAction = null;
                     self.collectionItems.load(true);
                     self.reset();

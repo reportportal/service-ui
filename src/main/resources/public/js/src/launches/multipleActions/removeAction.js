@@ -27,13 +27,18 @@ define(function (require, exports, module) {
     var ModalConfirm = require('modals/modalConfirm');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
+    var Localization = require('localization');
 
     var RemoveAction = function(options) {
         var items = options.items;
+        var typeItems = Localization.ui.launches;
+        if(items[0].get('type') != '') {
+            typeItems = Localization.ui.items;
+        }
         var modal = new ModalConfirm({
-            headerText: 'Delete items',
-            bodyText: 'In case of delete the launches, all related data will be deleted. Are you sure you want to delete launches?',
-            confirmText: 'I am sure I want to delete launches',
+            headerText: Localization.ui.delete +' '+ typeItems,
+            bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, typeItems, typeItems),
+            confirmText: Util.replaceTemplate(Localization.launches.deleteAgree, typeItems),
             cancelButtonText: 'Cancel',
             okButtonText: 'Delete',
             confirmFunction: function() {

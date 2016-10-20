@@ -19,8 +19,43 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'swipe-gallery';
-@import 'dropdown-list-with-search';
+/*
+<div class="dropdown-menu" >
+  <li>
+    <a>
+      // content
+    </a>
+  </li>
+</div
 
-@import 'switcher-big';
-@import 'dropdown-menu';
+*/
+
+
+.dropdown-menu {
+  border-radius: 0;
+  font-size: 13px;
+  line-height: 13px;
+  & > li {
+    position: relative;
+    & > a {
+      cursor: pointer;
+      position: relative;
+      font-family: $OpenSansRegular;
+      padding: 6px 15px;
+      text-decoration: none;
+      text-transform: capitalize;
+      color: #464547;
+      white-space: nowrap;
+      &:focus, &:hover {
+        background: $COLOR--tealish-opacity;
+      }
+      &[disabled] {
+        color: #999999;
+        background: transparent;
+        border-color: #cccccc;
+        box-shadow: none;
+        cursor: default;
+      }
+    }
+  }
+}

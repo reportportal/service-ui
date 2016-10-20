@@ -1,0 +1,12 @@
+apply plugin: 'findbugs'
+
+findbugs {
+    sourceSets = [sourceSets.main]
+    reportLevel = "high"
+}
+tasks.withType(org.gradle.api.plugins.quality.FindBugs) {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}

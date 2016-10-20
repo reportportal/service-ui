@@ -120,6 +120,8 @@ define(['util'], function () {
             warning: "WARNING",
             warningSm: "warning",
             toolname: "Report Portal",
+            launches: 'launches',
+            items: 'items',
             sec: "sec",
             month: "month",
             monthsString: "months",
@@ -613,11 +615,12 @@ define(['util'], function () {
             problemGeneral: "Error occurred: ",
             forceFinish: "Force finish",
             finishWarning: "In case of finish the launch, the remaining sent data will be missed for this execution. Are you sure you want to finish launch",
+            finishItemsWarning: 'In case of finish the launches, all data will be missed. Are you sure you want to finish selected launches?',
             deleteWarning: "In case of delete the launch, all related data will be deleted. Are you sure you want to delete launch",
             deleteItemWarning: "In case of delete the test item, all related data will be deleted. Are you sure you want to delete test item",
             finishAgree: "I am sure I want to finish launch",
-            deleteAgree: "I am sure I want to delete launch",
-            deleteItemAgree: "I am sure I want to delete test item",
+            finishItemsAgree: "I am sure I want to finish launches",
+            deleteAgree: "I am sure I want to delete %%%",
 
             jiraCredentials: "Jira credentials:",
             tfsCredentials: "TFS credentials:",
@@ -1009,6 +1012,7 @@ define(['util'], function () {
             removeDemoData: 'You will have to remove the Demo Data manually.',
             postfixPlaceHolder: 'Enter Postfix',
             posfixUniq: 'Postfix already used or not align with already existing data. Please use another one',
+            generationDataInProgress: 'Data generation in the process. The process can take several minutes, please wait.',
             beta: "beta",
             aboutinfo: 'Detailed information about the project',
             unableLoadData: 'Unable to load data',
@@ -1069,7 +1073,7 @@ define(['util'], function () {
             password: "BTS password",
             domain: "Domain",
             removeProject: "Remove project",
-            projectNameIn: "Project name in",
+            projectNameIn: "Project name",
             tbsChangeWarning: "Warning! If you configure new system settings, the current project will be reset!",
             configureFields: "Configure Bug Tracking System default properties to post bugs",
             issueId: "Issue ID",
@@ -1529,6 +1533,7 @@ define(['util'], function () {
             sureToRemoveWidget: 'REMOVE WIDGET',
             titleEditDefectType: 'Edit Defect Type',
             titleDeleteDefectType: "Delete defect type",
+            forceFinish: 'Force Finish',
         },
 
         dialog: {
@@ -1565,6 +1570,7 @@ define(['util'], function () {
 
             filterOptions: "Filter Options",
 
+            msgDeleteItems: 'In case of delete the %%%, all related data will be deleted. Are you sure you want to delete %%%?',
             msgDeleteDefectType: "I am sure I want to remove custom defect type",
             msgResetColorsDefectType: "Are you sure you want to reset custom defect's colors to default?",
             msgMessageTop: "In case of delete custom defect, all investigated as <strong>'%%%'</strong> defects will be marked as <strong>'%%%'</strong>",

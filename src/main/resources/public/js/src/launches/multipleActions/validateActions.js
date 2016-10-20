@@ -19,8 +19,13 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'swipe-gallery';
-@import 'dropdown-list-with-search';
 
-@import 'switcher-big';
-@import 'dropdown-menu';
+define(function (require, exports, module) {
+    'use strict';
+
+    var ValidateActions = {
+
+    }
+
+    return ValidateActions
+});

@@ -28,8 +28,7 @@ define(function (require, exports, module) {
     var Components = require('core/components');
     var Service = require('coreService');
     var App = require('app');
-    var WidgetsConfig = require('widget/widgetsConfig');
-    var Widgets = require('widgets');
+    var ModalLaunchesCompare = require('modals/modalLaunchesCompare');
 
     var config = App.getInstance();
 
@@ -37,48 +36,16 @@ define(function (require, exports, module) {
         initialize: function(options) {
             var self = this;
             this.async = $.Deferred();
-            this.ids = _.map(options.items, function(item) {
-                return item.get('id');
+            var modal = new ModalLaunchesCompare({
+                items: options.items,
             });
-            this.compareModal = Util.getDialog({name: "tpl-launches-compare-modal"});
-            this.modalContent = $("#compareContent", this.compareModal);
-            this.modalContent.css('min-height', '420px');
-            this.loader = $('.submitticket-loader', this.compareModal);
-            this.compareModal.modal("show").one('hidden.bs.modal', function(){
-                self.async.resolve();
-            });
-            this.load();
+            modal.show()
+                .always(function() {
+                    self.async.resolve();
+                })
         },
         getAsync: function() {
             return this.async;
-        },
-        load: function() {
-            var self = this;
-            Service.getCompare(this.ids.join(','))
-                .done(function (response) {
-                    self.loader.hide();
-                    self.createChart(response);
-                }).fail(function (response) {
-                    self.loader.hide();
-                    Util.ajaxFailMessenger(response, "errorUpdateWidget");
-                    self.compareModal.modal("hide");
-                });
-        },
-        createChart: function (response) {
-            var gadget = 'launches_comparison_chart',
-                widgetsConfig = WidgetsConfig.getInstance(),
-                criteria = widgetsConfig.widgetTypes[gadget].staticCriteria;
-            delete criteria['statistics$defects$no_defect$total'];
-            this.widget = new Widgets.LaunchesComparisonChart({
-                container: this.modalContent,
-                param: {
-                    gadget: gadget,
-                    content: response,
-                    content_fields: _.keys(widgetsConfig.widgetTypes[gadget].staticCriteria),
-                    height: config.defaultWidgetHeight
-                }
-            });
-            this.widget.render();
         },
     });
 

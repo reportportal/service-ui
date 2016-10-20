@@ -19,8 +19,12 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'swipe-gallery';
-@import 'dropdown-list-with-search';
+.launches-item-menu {
+  min-width: 246px;
+  padding: 12px 0;
 
-@import 'switcher-big';
-@import 'dropdown-menu';
+  .divider {
+    background: #e9e9e9;
+    margin: 10px 12px;
+  }
+}
