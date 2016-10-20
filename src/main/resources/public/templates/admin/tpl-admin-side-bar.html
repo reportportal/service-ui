@@ -29,6 +29,27 @@
             </a>
         </li>
     </ul>
+    <ul class="user-menu">
+        <% if (data.lastURL) { %>
+            <li class="<%= isActive %> col-xs-6 col-sm-12">
+                <a href="#<%- data.lastURL %>" class="mem-set user-id">
+                    <i class="material-icons">keyboard_arrow_left</i>
+                    <%= data.text.admin.backToProject %>
+                </a>
+            </li>
+        <% } %>
+        <li class="<%= isActive %> col-xs-6 col-sm-12">
+            <a href="#user-profile" class="mem-set user-id">
+                <span class="custom-padding"><%= data.text.topMenu.profile %></span>
+            </a>
+        </li>
+        <li class="<%= isActive %> col-xs-6 col-sm-12">
+            <a href="#login" id="logout" >
+                <span class="custom-padding"><%= data.text.topMenu.logout %></span>
+            </a>
+        </li>
+    </ul>
+</nav>
 </nav>
 <a id="back-top" class="hidden-xs" title="Back to Top" style="display: none;">
     <nobr>

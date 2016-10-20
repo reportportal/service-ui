@@ -60,12 +60,13 @@ define(function (require, exports, module) {
         },
 
         render: function (options) {
-            this.sidebarView = new Sidebar({
-                tpl: 'tpl-admin-side-bar'
-            }).render();
             config.currentProjectsSettings = {};
             // Util.setupScrollTracker();
             var lastURL = this.userStorage.get('lastActiveURL') || config.userModel.get('defaultProject');
+            this.sidebarView = new Sidebar({
+                tpl: 'tpl-admin-side-bar',
+                lastURL: lastURL
+            }).render();
             this.headerView = new Header({
                 tpl: 'tpl-admin-header',
                 lastURL: lastURL
