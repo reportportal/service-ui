@@ -39,6 +39,7 @@ define(function (require, exports, module) {
 
         initialize: function (options) {
             this.tpl = options.tpl;
+            this.lastURL = options.lastURL;
             this.projectUrl = options.projectUrl;
             this.currentPage = options.currentPage;
             this.canDebug = Util.isAdmin() || !Util.isCustomer();
@@ -54,7 +55,8 @@ define(function (require, exports, module) {
                 userLogin: Storage.getDebugUser() || config.userModel.get('name'),
                 canDebug: this.canDebug,
                 isAdmin: Util.isAdmin(config.userModel.toJSON()),
-                lastActive: this.getLastActive()
+                lastActive: this.getLastActive(),
+                lastURL: this.lastURL
             };
             this.$el.html(Util.templates(this.tpl, param)).show();
             this.updateActiveLink();
