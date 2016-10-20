@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "grunt": "grunt",
+    "build": "grunt build",
     "server": "webpack-dev-server --config config-server.js",
     "tests": "karma start"
   },

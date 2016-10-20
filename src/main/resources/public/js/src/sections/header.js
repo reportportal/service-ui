@@ -29,6 +29,10 @@ define(function (require, exports, module) {
 
     var SingletonAppModel = require('model/SingletonAppModel');
 
+    var App = require('app');
+
+    var config = App.getInstance();
+
     var Header = Backbone.View.extend({
         el: "#topHeader",
 

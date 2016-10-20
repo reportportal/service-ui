@@ -27,7 +27,9 @@ define(function(require, exports, module) {
     var Urls = require('dataUrlResolver');
     var $ = require('jquery');
     var _ = require('underscore');
+    var App = require('app');
 
+    var config = App.getInstance();
     var call = CallService.call;
 
 
