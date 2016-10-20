@@ -47,26 +47,24 @@
 @import 'common/rp-main-styles';
 @import 'common/rp-common-elements';
 @import 'components/rp-common-styles';
-@import 'components/rp-common-header';
-@import 'components/rp-header';
+//@import 'components/rp-common-header';
+//@import 'components/rp-header';
 @import 'components/rp-common-footer';
 @import 'components/rp-common-all-users-list';
 @import 'components/rp-common-pagination';
 @import 'components/rp-common-filter-tabs';
 @import 'components/rp-common-filter-inputs';
 @import 'components/rp-common-navigation-tabs';
-@import 'components/rp-common-sidebar-menu';
+//@import 'components/rp-common-sidebar-menu';
 @import 'components/rp-common-widgets';
 @import 'components/rp-common-launches-grid';
 @import 'components/rp-common-defects-editor';
 @import 'components/rp-common-text-editor';
 @import 'components/_rp-common-notification-flash-line';
-
 @import 'components/rp-common-modal';
 @import 'components/rp-common-modal-permissions-map';
 
 @import 'components/rp-custom-icons';
-
 @import 'components/rp-custom-form-elements';
 @import 'components/rp-custom-button-with-icon';
 @import 'components/rp-custom-breadcrumbs';
@@ -124,6 +122,14 @@
 
 @import 'components/rp-page-server-settings';
 
+@import 'components/rp-fullscreen';
+
+@import 'components/projectSettings/rp-project-settings';
+
+/*--------------------------------------------------------*/
+
+@import 'sections/main';
+
 @import 'common/rp-table-common';
 
 @import 'filterPage/main';
@@ -134,7 +140,3 @@
 @import 'modals/main';
 
 @import 'filters/rp-filter-entities';
-
-@import 'components/rp-fullscreen';
-
-@import 'components/projectSettings/rp-project-settings';

@@ -5,7 +5,7 @@
 <h3 class="col-sm-4 admin_header"><%= data.text.admin.managementBoard %></h3>
 <div class="pull-right admin_header_controls">
     <% if (data.project) { %>
-        <a id="backToProject" href="#<%- data.project %>" class="">
+        <a id="backToProject" href="#<%- data.lastURL %>" class="">
             <i class="material-icons">keyboard_arrow_left</i>
             <%= data.text.admin.backToProject %>
         </a>
