@@ -1575,6 +1575,8 @@ define(['util'], function () {
             mergeLaunches: "Merge Launches",
             postBug: "Post bug",
             loadBug: "Load bug",
+            launchDetails: 'Launch Details',
+            launchDescrPlaceholder: 'Enter Launch Description',
 
             editFilter: "Edit filter",
             addFilter: "Add filter",

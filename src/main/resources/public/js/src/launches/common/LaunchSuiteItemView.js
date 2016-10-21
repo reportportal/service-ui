@@ -32,6 +32,7 @@ define(function (require, exports, module) {
     var LaunchStatisticsExecutionsView = require('launches/launchSuiteStatistics/LaunchStatisticsExecutionsView');
     var ItemDurationView = require('launches/common/ItemDurationView');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
+    var ModalLaunchEdit = require('modals/modalLaunchEdit');
     var d3 = require('d3');
     var nvd3 = require('nvd3');
 
@@ -56,7 +57,25 @@ define(function (require, exports, module) {
             '[data-js-owner-name]': 'text: owner',
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
-            '[data-js-select-item]': 'checked:select',
+            '[data-js-select-item]': 'checked: select',
+            '[data-js-tags-container]': 'sortTags: tags'
+        },
+        bindingHandlers: {
+            sortTags: {
+                set: function($element) {
+                    var sortTags = this.view.model.get('sortTags');
+                    if(!sortTags.length){
+                        $element.addClass('hide');
+                    } else {
+                        $element.removeClass('hide');
+                    }
+                    var $tagsBlock = $('[data-js-tags]', $element);
+                    $tagsBlock.html('');
+                    _.each(sortTags, function(tag) {
+                        $tagsBlock.append('<a class="text-muted tag" data-tag="' + tag + '" href="#">' + tag.replaceTabs() + '</a>')
+                    })
+                }
+            }
         },
         initialize: function(options) {
             this.statistics = [];
@@ -138,7 +157,10 @@ define(function (require, exports, module) {
             config.router.navigate($(e.currentTarget).attr('href'), {trigger: true});
         },
         onClickEdit: function() {
-
+            var modal = new ModalLaunchEdit({
+                item: this.model,
+            })
+            modal.show();
         },
         destroy: function () {
             this.menu && this.menu.destroy();

@@ -309,22 +309,22 @@ define(function (require, exports, module) {
         },
         parse: function (response) {
             var self = this;
-            if(this.launchModel) {
-                _.each(response.content, function(modelData) {
-                    modelData.issue && (modelData.issue = JSON.stringify(modelData.issue));
-                    modelData.tags && (modelData.issue = JSON.stringify(modelData.tags));
+            _.each(response.content, function(modelData) {
+                modelData.issue && (modelData.issue = JSON.stringify(modelData.issue));
+                modelData.tags && (modelData.tags = JSON.stringify(modelData.tags));
+                if (self.launchModel) {
                     modelData.parent_launch_owner = self.launchModel.get('owner');
                     modelData.parent_launch_status = self.launchModel.get('status');
                     modelData.parent_launch_isProcessing = self.launchModel.get('isProcessing');
                     modelData.parent_launch_number = self.launchModel.get('number');
                     modelData.parent_launch_investigate = self.launchModel.getToInvestigate();
-                });
-            }
-            else {
-                _.each(response.content, function(modelData) {
-                    modelData.type = 'LAUNCH';
-                });
-            }
+                }
+                else {
+                    _.each(response.content, function(modelData) {
+                        modelData.type = 'LAUNCH';
+                    });
+                }
+            });
             this.reset(response.content);
             // this.reset([{
             //         description: "dashboard_tests",
@@ -401,7 +401,7 @@ define(function (require, exports, module) {
             //         status: "FAILED",
             //     }
             // ])
-        },
+        }
     });
 
     return LaunchSuiteStepItemCollection;

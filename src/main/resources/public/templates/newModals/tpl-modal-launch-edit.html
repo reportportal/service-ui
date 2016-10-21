@@ -1,55 +1,32 @@
-<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.launches.compareLaunches}) %>
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.dialog.launchEditor}) %>
 <div class="modal-body">
-    <label>
-        <span><%= data.text.launches.launchName %></span>
-        <p data-js-launch-name></p>
-    </label>
-
-    <div class="form-group col-sm-12">
-        <label class="col-sm-12 control-label no-margin"><%= data.text.launches.launchNumber %></label>
-        <div class="col-sm-12">
-            <output class="edit-launch-number">#<%= data.number %></output>
-        </div>
-    </div>
-    <div class="form-group col-sm-12">
-        <div class="col-sm-12">
-            <label class="control-label"><%= data.text.forms.description %></label>
-            <% if(data.item.max){ %>
-            <span class="control-label pull-right">(<span class="vsize"><%= data.item.description ? data.item.description.length : 0 %></span>/<%= data.item.max %>)</span>
-            <% } %>
-        </div>
-        <div class="col-sm-12">
-            <textarea id="editDescription" cols="60" rows="4" class="col-sm-12 form-control" name="edit[description]"><%= data.item.description %></textarea>
+    <h4><%= data.text.dialog.launchDetails %></h4>
+    <h2 data-js-launch-name></h2>
+    <div class="fields">
+        <label class="form-group">
+            <span><%=  data.text.forms.description %></span>
+            <textarea class="rp-input form-control" placeholder="<%= data.text.dialog.launchDescrPlaceholder %>" cols="60" rows="4" data-js-description></textarea>
             <span class="help-inline"></span>
-        </div>
+        </label>
+        <label>
+            <span><%= data.text.forms.tags %></span>
+            <input class="rp-input" type="text" data-js-tags>
+        </label>
     </div>
-    <div class="form-group col-sm-12">
-        <label class="col-sm-12 control-label"><%= data.text.forms.tags %></label>
-        <div class="col-sm-12">
-            <input type="text" id="editTags" data-warning="<%= data.text.ui.enterChars %>" class="filter-control"
-                   name="edit[tags]" value="<%- data.item.tags ? data.item.tags.join(', ') : '' %>" />
-        </div>
-    </div>
-    <% if(data.type == 'updateLaunch') { %>
-    <div class="form-group col-sm-12">
-        <div class="col-sm-12">
-            <div class="well">
-                <h3 class="title-no-data text-center">
-                    <i class="rp-icons rp-icons-warning"></i>
-                    <span class="warning">
+    <!--<div class="well">
+        <h3 class="title-no-data text-center">
+            <i class="rp-icons rp-icons-warning"></i>
+            <span class="warning">
                         <small><%= data.text.launches.disclaimerChangeDescription %></small>
                     </span>
-                </h3>
-            </div>
-        </div>
-    </div>
-    <% } %>
+        </h3>
+    </div>-->
 </div>
 <div class="modal-footer">
     <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
         <%= data.text.ui.cancel %>
     </button>
-    <button class="rp-btn rp-btn-success" type="button" data-js-save>
+    <button class="rp-btn rp-btn-submit" type="button" data-js-save>
         <%= data.text.ui.save %>
     </button>
 </div>
