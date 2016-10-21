@@ -149,7 +149,7 @@ define(function (require, exports, module) {
                 });
                 this.applyBindings();
             }.bind(this));
-
+            return this;
         },
         onChangeModelSearch: function() {
             this.paging.trigger('page', 1);
