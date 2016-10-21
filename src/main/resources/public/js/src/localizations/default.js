@@ -1540,6 +1540,8 @@ define(['util'], function () {
             forceFinish: 'Force Finish',
             moveToDebug: 'Move to debug',
             moveToAllLaunches: 'Move to all launches',
+            editLaunch: 'Edit Launch',
+            editTestItem: 'Edit Test Item',
         },
 
         dialog: {
@@ -1571,6 +1573,7 @@ define(['util'], function () {
             postBug: "Post bug",
             loadBug: "Load bug",
             launchDetails: 'Launch Details',
+            launchItemDetails: 'Test Item Details',
             launchDescrPlaceholder: 'Enter Launch Description',
 
             editFilter: "Edit filter",
