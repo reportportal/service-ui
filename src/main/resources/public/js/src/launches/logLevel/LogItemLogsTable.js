@@ -63,6 +63,7 @@ define(function (require, exports, module) {
                 id: 'message',
                 condition: 'cnt',
                 valueMinLength: 3,
+                valueMaxLength: 55,
                 valueOnlyDigits: false,
             });
 
