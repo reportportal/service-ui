@@ -77,8 +77,16 @@
     margin: 4px 0 0;
   }
   .edit-defect {
+    display: inline-block;
     font-size: 18px;
     top: 2px;
+  }
+}
+.select-state {
+  .rp-grid-item-issue {
+    .edit-defect {
+      display: none;
+    }
   }
 }
 

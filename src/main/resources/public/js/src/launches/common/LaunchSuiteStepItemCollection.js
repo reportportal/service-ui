@@ -319,6 +319,11 @@ define(function (require, exports, module) {
                     modelData.parent_launch_number = self.launchModel.get('number');
                     modelData.parent_launch_investigate = self.launchModel.getToInvestigate();
                 }
+                else {
+                    _.each(response.content, function(modelData) {
+                        modelData.type = 'LAUNCH';
+                    });
+                }
             });
             this.reset(response.content);
             // this.reset([{
@@ -396,7 +401,7 @@ define(function (require, exports, module) {
             //         status: "FAILED",
             //     }
             // ])
-        },
+        }
     });
 
     return LaunchSuiteStepItemCollection;

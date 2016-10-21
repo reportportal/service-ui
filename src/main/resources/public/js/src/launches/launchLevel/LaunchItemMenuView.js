@@ -100,7 +100,6 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {
                 isDebug: this.isDebug(),
                 isCustomer: Util.isCustomer(),
-                // isLaunch: this.isLaunch(),
                 getExportUrl: Urls.exportLaunchUrl,
                 updateImagePath: Util.updateImagePath,
                 exportFormats: this.exportFormats,

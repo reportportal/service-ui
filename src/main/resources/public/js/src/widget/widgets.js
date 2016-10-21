@@ -34,6 +34,7 @@ define(function (require, exports, module) {
         FiltersService = require('filtersService'),
         Moment = require('moment'),
         WidgetsConfig = require('widget/widgetsConfig'),
+        SingletonAppModel = require('model/SingletonAppModel'),
         Components = require('core/components'),
         Localization = require('localization'),
         SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
@@ -359,57 +360,68 @@ define(function (require, exports, module) {
         },
         linkToRedirectService: function (series, id) {
             var defectTypes = new SingletonDefectTypeCollection();
+            var appModel = new SingletonAppModel()
+            var project = '#' + appModel.get('projectId');
+            var filterId = this.param.filter_id;
+            var filterStatus = '';
+            var getLink = function(filters){
+                var arrLink = [project, 'launches', filterId];
+                var filterForAll = '?page.page=1&page.size=50&page.sort=start_time,DESC&filter.eq.has_childs=false';
+                var params = [[id, filterForAll].join('')];
+                params.push(filters);
+                arrLink.push(params.join('&'));
+                return arrLink.join('/');
+            };
             var getDefects = function(seria){
                 var typeArr = seria.split(' '),
                     type = _.map(typeArr, function(t){ return t.toLowerCase();}).join('_'),
                     subDefects = defectTypes.toJSON();
                 return Util.getSubDefectsLocators(type, subDefects);
             };
-
             switch (series) {
                 case 'Total':
                 case 'total':
                 case 'Grow test cases':
                 case 'grow_test_cases':
-                    return urls.totalAllCasesLink(id);
+                    filterStatus = 'filter.in.type=STEP&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED';
                     break;
                 case 'Passed':
                 case 'passed':
-                    return urls.passedAllCasesLink(id);
+                    filterStatus = 'filter.in.type=STEP&filter.in.status=PASSED';
                     break;
                 case 'Failed':
                 case 'failed':
-                    return urls.failedAllCasesLink(id);
+                    filterStatus = 'filter.in.type=STEP&filter.in.status=FAILED';
                     break;
                 case 'Skipped':
                 case 'skipped':
-                    return urls.skippedAllCasesLink(id);
+                    filterStatus = 'filter.in.type=STEP&filter.in.status=SKIPPED';
                     break;
                 case 'To Investigate':
                 case 'to_investigate':
                 case 'toInvestigate':
-                    return urls.toInvestigateAllCasesLink(id, getDefects('To Investigate'));
+                    filterStatus = ['filter.in.issue$issue_type=', getDefects('To Investigate')].join('');
                     break;
                 case 'System Issue':
                 case 'systemIssue':
                 case 'system_issue':
-                    return urls.systemIssueAllCasesLink(id, getDefects('System Issue'));
+                    filterStatus = ['filter.in.issue$issue_type=', getDefects('System Issue')].join('');
                     break;
                 case 'Product Bug':
                 case 'productBug':
                 case 'product_bug':
-                    return urls.productBugsAllCasesLink(id, getDefects('Product Bug'));
+                    filterStatus = ['filter.in.issue$issue_type=', getDefects('Product Bug')].join('');
                     break;
                 case 'No Defect':
                 case 'noDefect':
                 case 'no_defect':
-                    return urls.noDefectAllCasesLink(id, getDefects('No Defect'));
+                    filterStatus = ['filter.in.issue$issue_type=', getDefects('No Defect')].join('');
                     break;
                 case 'Automation Bug':
                 case 'Auto Bug':
                 case 'automationBug':
                 case 'automation_bug':
-                    return urls.automationBugsAllCasesLink(id, getDefects('Automation Bug'));
+                    filterStatus = ['filter.in.issue$issue_type=', getDefects('Automation Bug')].join('');
                     break;
                 case 'Investigated':
                 case 'investigated':
@@ -418,19 +430,22 @@ define(function (require, exports, module) {
                     _.each(types, function(d){
                         defects = defects.concat(getDefects(d));
                     });
-                    return urls.investigatedBugsAllCasesLink(id, defects);
+                    filterStatus = ['filter.in.issue$issue_type=', defects].join('');
                     break;
                 case 'Duration':
                 case 'duration':
-                    return urls.goLauch(id);
+                    filterStatus = '';
                     break;
                 default :
                     var defect = _.find(defectTypes.toJSON(), function(d){ return d.locator == series; });
                     if (defect) {
-                        return urls.investigatedBugsAllCasesLink(id, [defect.locator]);
+                        filterStatus = ['filter.in.issue$issue_type=', defect.locator].join('');
                     }
-                    return '';
+                    else {
+                        filterStatus = '';
+                    }
             }
+            return encodeURI(getLink(filterStatus));
         },
         destroy: function () {
             if (this.context) {
@@ -1181,17 +1196,21 @@ define(function (require, exports, module) {
         },
         redirectForTimeLine: function(e){
             var self = this,
-                range = 86400000;
-            Service.getFilterData([self.param.filter_id])
+                appModel = new SingletonAppModel(),
+                projectId = appModel.get('projectId'),
+                range = 86400000,
+                filterId = this.param.filter_id,
+                newFilter = 'New_filter',
+                linkArr = ['#'+projectId, 'launches', newFilter];
+            Service.getFilterData([filterId])
                 .done(function(response){
                     var link,
                         filterParams = new Components.RequestParameters(),
                         time = Moment.unix(e.point.startTime);
                     FiltersService.loadFilterIntoRequestParams(filterParams, response[0]);
-                    filterParams.setTab(config.defaultTabId);
                     filterParams.setSortInfo('start_time', 'DESC');
                     filterParams.setFilters(filterParams.getFilters().concat([{id: 'filter.btw.start_time', value: time.format('x') + ',' + (parseInt(time.format('x')) + range)}]));
-                    link = urls.tabUrl(filterParams.toURLSting());
+                    link = [linkArr.join('/'), filterParams.toURLSting()].join('?');
                     if (link) {
                         setTimeout(function(){
                             document.location.hash = link;

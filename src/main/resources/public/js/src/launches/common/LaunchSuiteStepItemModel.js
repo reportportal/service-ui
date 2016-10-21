@@ -222,6 +222,12 @@ define(function(require, exports, module) {
                     }
                     return '';
                 },
+                editDefect: function(){
+                    if (!self.get('issue')) {
+                        return 'Item not has issue for edit';
+                    }
+                    return '';
+                },
                 remove: function() {
                     if (self.get('launch_owner') != config.userModel.get('name')) {
                         return 'You are not a launch owner';

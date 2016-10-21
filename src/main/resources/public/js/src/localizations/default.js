@@ -636,7 +636,7 @@ define(['util'], function () {
             willBeLoadedTo: "Bug will be loaded to",
 
             actionTitle: 'Select several items to processing',
-            multiSelectError: 'You cannot perform operation to invalid launches',
+            multiSelectError: 'You cannot perform operation to invalid items',
             proceedValidItems: 'Proceed Valid Items',
             editDefects: 'Edit Defects',
 
@@ -1265,7 +1265,8 @@ define(['util'], function () {
             addSubType: "New defect type was successfully created",
             startAnalyzeAction: 'Auto-analyzer has been started.',
             generateDemoData: 'Demo Data has been generated',
-            changedColorDefectTypes: "Defect types have been updated."
+            changedColorDefectTypes: "Defect types have been updated.",
+            updateDefect: 'Defects have been updated'
         },
 
         failMessages: {
@@ -1569,6 +1570,10 @@ define(['util'], function () {
 
             launchEditor: "Launch Editor",
             itemEditor: "Test item editor",
+            defectEditor: 'Edit defect type',
+            choseDefectType: 'Choose Defect Type',
+            commentForDefect: 'Leave Comment to Defect Type',
+            defectType: 'Defect Type',
             mergeLaunches: "Merge Launches",
             postBug: "Post bug",
             loadBug: "Load bug",

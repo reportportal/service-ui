@@ -28,6 +28,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var MergeAction = require('launches/multipleActions/mergeAction');
     var CompareAction = require('launches/multipleActions/compareAction');
+    var EditDefectAction = require('launches/multipleActions/editDefectAction');
     var RemoveAction = require('launches/multipleActions/removeAction');
     var ChangeModeAction = require('launches/multipleActions/changeModeAction');
 
@@ -89,6 +90,11 @@ define(function (require, exports, module) {
                     model.set({invalidMessage: ''})
                 })
             },
+            editdefect: function(){
+                _.each(this.collection.models, function(model) {
+                    model.set({invalidMessage: model.validate.editDefect()})
+                })
+            },
             changemode: function() {
                 _.each(this.collection.models, function(model) {
                     model.set({invalidMessage: model.validate.changeMode()})
@@ -124,6 +130,16 @@ define(function (require, exports, module) {
                 });
                 this.compareAction.getAsync().done(function() {
                     self.compareAction = null;
+                    self.reset();
+                });
+            },
+            editdefect: function(){
+                var self = this;
+                this.editDefectAction = new EditDefectAction({
+                    items: this.collection.models,
+                });
+                this.editDefectAction.getAsync().done(function() {
+                    self.editDefectAction = null;
                     self.reset();
                 });
             },
@@ -209,10 +225,12 @@ define(function (require, exports, module) {
             if(answer) {
                 this.$el.removeClass('invalid-state');
             } else {
+                var processBtn = $('[data-js-proceed]', this.$el),
+                    action = _.every(this.collection.toJSON(), function(m){ return m.invalidMessage; }) ? 'addClass' : 'removeClass';
+                processBtn[action]('disabled');
                 this.$el.addClass('invalid-state');
             }
             return answer;
-
         },
         setAction: function(actionName) {
             if(this.actionValidators[actionName]) {
@@ -254,7 +272,6 @@ define(function (require, exports, module) {
             delete this;
         },
     });
-
 
     return LaunchMultipleSelectView;
 });

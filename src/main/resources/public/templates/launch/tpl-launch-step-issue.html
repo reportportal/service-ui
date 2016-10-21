@@ -7,12 +7,5 @@
         <i class="material-icons edit-defect">edit</i>
     </div>
     <div data-js-issue-tickets class="tickets-container"></div>
-    <% if(data.needMatchIssue) { %>
-        <span data-js="" class="match-issue label <%= data.canMatchIssue ? '' : 'disabled' %> <%= data.launchInProcess ? 'label-danger autoanalyze' : '' %>"
-          title="<%= data.canMatchIssue ? '' : data.text.launches.nothingToMatch %>">
-                <i class="rp-icons rp-icons-magic margin-right-5"></i>
-                <%= data.text.launches.matchTitle %>
-        </span>
-    <% } %>
     <div class="defect-desc rp-defect-comment nicescroll-it" data-js-issue-comment></div>
 </div>
