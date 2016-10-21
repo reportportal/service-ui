@@ -242,7 +242,7 @@ define(function(require, exports, module) {
         },
         onChangeItemInfo: function() {
             var action = 'updateLaunch';
-            if (this.get('type')) {
+            if (this.get('type') != 'LAUNCH') {
                 action = 'updateTestItem';
             }
             Service[action]({

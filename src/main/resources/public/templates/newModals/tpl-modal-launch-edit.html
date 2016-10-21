@@ -1,6 +1,6 @@
-<%= data.includeTemplate('_tpl-modal-header', {headerText: ((!data.type) ? data.text.dialogHeader.editLaunch : data.text.dialogHeader.editTestItem)}) %>
+<%= data.includeTemplate('_tpl-modal-header', {headerText: ((data.type == 'LAUNCH') ? data.text.dialogHeader.editLaunch : data.text.dialogHeader.editTestItem)}) %>
 <div class="modal-body">
-    <h4><%= (!data.type) ? data.text.dialog.launchDetails : data.text.dialog.launchItemDetails %></h4>
+    <h4><%= (data.type == 'LAUNCH') ? data.text.dialog.launchDetails : data.text.dialog.launchItemDetails %></h4>
     <h2 data-js-launch-name></h2>
     <div class="fields">
         <label class="form-group">
