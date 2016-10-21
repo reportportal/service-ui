@@ -87,20 +87,19 @@ define(function (require, exports, module) {
 
         validateForSubmition: function (e) {
             var item = this.items[0];
-            if (this.$textarea.val() !== (this.getIssueComment(item) || '') || this.selectedIssue !== this.getIssueType(item)) {
-                this.$submitBtn.removeAttr('disabled');
+            if (this.$textarea.val() !== (this.getIssueComment(item) || '') || (this.selectedIssue && this.selectedIssue !== this.getIssueType(item))) {
+                this.$submitBtn.prop('disabled', false);
             } else {
-                this.$submitBtn.attr('disabled', 'disabled');
+                this.$submitBtn.prop('disabled', true);
             }
         },
 
         attachKeyActions: function(){
             this.$el.on('keydown', function(e){
-                if(e.keyCode === 27){
-                    this.closeEditor();
-                }
-                else if(e.ctrlKey && e.keyCode === 13){
-                    this.updateDefectType();
+                if(e.ctrlKey && e.keyCode === 13){
+                    if(!this.$submitBtn.is(':disabled')){
+                        this.updateDefectType();
+                    }
                 }
             }.bind(this))
         },
