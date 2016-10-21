@@ -1566,8 +1566,8 @@ define(['util'], function () {
 
             sureToRemoveWidget: "Are you sure you want to remove %%% <b>'%%%'</b>",
 
-            launchEditor: "Launch Editor",
-            itemEditor: "Test item editor",
+            launchEditor: "Edit launch",
+            itemEditor: "Edit test item",
             defectEditor: 'Edit defect type',
             choseDefectType: 'Choose Defect Type',
             commentForDefect: 'Leave Comment to Defect Type',
@@ -1576,7 +1576,9 @@ define(['util'], function () {
             postBug: "Post bug",
             loadBug: "Load bug",
             launchDetails: 'Launch Details',
+            testItemDetails: 'Test Item Details',
             launchDescrPlaceholder: 'Enter Launch Description',
+            testItemDescrPlaceholder: 'Enter Item Description',
 
             editFilter: "Edit filter",
             addFilter: "Add filter",

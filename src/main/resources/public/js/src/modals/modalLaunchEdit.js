@@ -129,8 +129,11 @@ define(function (require, exports, module) {
             });
             this.listenTo(this.viewModel, 'change', function(model) { console.dir(model.attributes); })
         },
+        isEditLaunch: function(){
+            return this.itemModel.get('type') == 'LAUNCH';
+        },
         render: function () {
-            this.$el.html(Util.templates(this.template, {}))
+            this.$el.html(Util.templates(this.template, {isEditLaunch: this.isEditLaunch()}))
         },
         onClickSave: function() {
             $('.form-control', this.$el).trigger('validate');
