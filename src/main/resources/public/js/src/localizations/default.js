@@ -1541,6 +1541,8 @@ define(['util'], function () {
             forceFinish: 'Force Finish',
             moveToDebug: 'Move to debug',
             moveToAllLaunches: 'Move to all launches',
+            editLaunch: 'Edit Launch',
+            editTestItem: 'Edit Test Item',
         },
 
         dialog: {

@@ -105,13 +105,18 @@ define(function(require, exports, module) {
             }
         },
         getParametersObj: function() {
+            //TODO remove quantity after server change
             try {
                 if(this.get('newSelectionParameters')) {
-                    return JSON.parse(this.get('newSelectionParameters'));
+                    var data = JSON.parse(this.get('newSelectionParameters'));
+                    data.quantity = 50;
+                    return data;
                 }
-                return JSON.parse(this.get('selection_parameters'));
+                var data =  JSON.parse(this.get('selection_parameters'));
+                data.quantity = 50;
+                return data;
             } catch(err) {
-                return {};
+                return {quantity: 50};
             }
         },
         getOptions: function() {
@@ -156,7 +161,7 @@ define(function(require, exports, module) {
             }
             return {
                 name: this.get('name'),
-                description: this.get('description'),
+                description: this.get('description') || null,
                 entities: entities,
                 share: this.get('isShared'),
                 selection_parameters: this.getParametersObj(),

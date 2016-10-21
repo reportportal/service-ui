@@ -278,6 +278,7 @@ define(function (require, exports, module) {
 
             this.trigger('loading', true);
             this.reset([]);
+            var async = $.Deferred();
             this.request = call('GET', path)
                 .done(function(data) {
                     if(!data.content.length && dynamicPge && data.page.totalPages != 0) {
@@ -287,11 +288,17 @@ define(function (require, exports, module) {
                     self.pagingData = data.page;
                     self.parse(data);
                     self.afterLoadActions();
+                    async.resolve(data);
                 })
-                .fail(function() {
+                .fail(function(err, type) {
+                    if (type == 'abort') {
+                        async.resolve();
+                    } else {
+                        async.reject();
+                    }
                     self.afterLoadActions();
                 });
-            return this.request;
+            return async;
         },
         afterLoadActions: function() {
             if(this.logOptions && this.logOptions.item) {

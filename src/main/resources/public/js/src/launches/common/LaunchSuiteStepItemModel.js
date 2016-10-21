@@ -25,6 +25,7 @@ define(function(require, exports, module) {
     var _ = require('underscore');
     var Util = require('util');
     var App = require('app');
+    var Service = require('coreService');
 
     var config = App.getInstance();
 
@@ -169,6 +170,7 @@ define(function(require, exports, module) {
         },
         initialize: function() {
             this.validate = this.getValidate();
+            this.listenTo(this, 'change:description change:tags', this.onChangeItemInfo);
         },
         getIssue: function () {
             try {
@@ -237,6 +239,22 @@ define(function(require, exports, module) {
                 }
             }
             return result;
+        },
+        onChangeItemInfo: function() {
+            var action = 'updateLaunch';
+            if (this.get('type') != 'LAUNCH') {
+                action = 'updateTestItem';
+            }
+            Service[action]({
+                description: this.get('description'),
+                tags: this.getTags(),
+            }, this.get('id'))
+                .done(function () {
+                    Util.ajaxSuccessMessenger(action);
+                })
+                .fail(function (error) {
+                    Util.ajaxFailMessenger(error);
+                })
         },
 
     });
