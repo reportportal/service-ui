@@ -1581,7 +1581,7 @@ define(['util'], function () {
             testItemDetails: 'Test Item Details',
             launchDescrPlaceholder: 'Enter Launch Description',
             testItemDescrPlaceholder: 'Enter Item Description',
-
+            launchTagPlaceholder: 'Enter Tag Name',
             editFilter: "Edit filter",
             addFilter: "Add filter",
             moveLaunch: 'Are you sure you want to move %%% to %%%?',

@@ -31,6 +31,7 @@ define(function (require, exports, module) {
     var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
     var ModalDefectEditor = require('modals/modalDefectEditor');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
+    var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
 
     var config = App.getInstance();
 
@@ -40,7 +41,8 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-name]': 'onClickName',
             'click [data-js-issue-type]': 'showDefectEditor',
-            'click [data-js-time-format]': 'toggleStartTimeView'
+            'click [data-js-time-format]': 'toggleStartTimeView',
+            'click [data-js-item-edit]': 'onClickEdit',
         },
         bindings: {
             '[data-js-name]': 'text: name, attr: {href: url}',
@@ -130,6 +132,12 @@ define(function (require, exports, module) {
                 config.router.navigate(currentPath, {trigger: true});
             }
 
+        },
+        onClickEdit: function() {
+            var modal = new ModalLaunchItemEdit({
+                item: this.model,
+            })
+            modal.show();
         },
         destroy: function () {
             this.issueView && this.issueView.destroy();
