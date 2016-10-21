@@ -1580,6 +1580,7 @@ define(['util'], function () {
             launchDetails: 'Launch Details',
             launchItemDetails: 'Test Item Details',
             launchDescrPlaceholder: 'Enter Launch Description',
+            launchTagPlaceholder: 'Enter Tag Name',
 
             editFilter: "Edit filter",
             addFilter: "Add filter",

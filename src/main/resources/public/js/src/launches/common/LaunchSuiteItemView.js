@@ -32,7 +32,7 @@ define(function (require, exports, module) {
     var LaunchStatisticsExecutionsView = require('launches/launchSuiteStatistics/LaunchStatisticsExecutionsView');
     var ItemDurationView = require('launches/common/ItemDurationView');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
-    var ModalLaunchEdit = require('modals/modalLaunchEdit');
+    var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
     var d3 = require('d3');
     var nvd3 = require('nvd3');
 
@@ -157,7 +157,7 @@ define(function (require, exports, module) {
             config.router.navigate($(e.currentTarget).attr('href'), {trigger: true});
         },
         onClickEdit: function() {
-            var modal = new ModalLaunchEdit({
+            var modal = new ModalLaunchItemEdit({
                 item: this.model,
             })
             modal.show();
