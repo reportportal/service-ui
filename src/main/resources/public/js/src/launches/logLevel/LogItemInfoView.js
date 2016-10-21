@@ -223,7 +223,6 @@ define(function (require, exports, module) {
 
         destroy: function () {
             this.issueView && this.issueView.destroy();
-            this.removeEditor();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
