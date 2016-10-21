@@ -1224,7 +1224,7 @@ define(['util'], function () {
             deleteLaunches: 'Launches was deleted',
             deleteTestItem: "Test item was deleted",
 
-            editFilter: "Filter name has been updated!",
+            editFilter: "Filter has been updated!",
             sharedFilter: "Filter name has been shared!",
             unsharedFilter: "Filter name has been unshared!",
             signedIn: "Signed in successfully",

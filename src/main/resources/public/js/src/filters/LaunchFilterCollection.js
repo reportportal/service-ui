@@ -28,6 +28,7 @@ define(function(require, exports, module) {
     var $ = require('jquery');
     var _ = require('underscore');
     var App = require('app');
+    var Util = require('util');
 
     var config = App.getInstance();
     var call = CallService.call;
@@ -45,7 +46,13 @@ define(function(require, exports, module) {
         },
         onAddFilter: function(model) {
             if(!model.get('temp')) {
-                call('PUT', Urls.getPreferences(), {filters: this.getFiltersId()});
+                call('PUT', Urls.getPreferences(), {filters: this.getFiltersId()})
+                    .done(function(data) {
+                        Util.ajaxSuccessMessenger('savedLaunchFilter');
+                    })
+                    .fail(function(error) {
+                        Util.ajaxFailMessenger(error, 'savedLaunchFilter');
+                    })
             }
         },
         onRemoveFilter: function(model) {
