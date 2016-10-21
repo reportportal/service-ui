@@ -21,14 +21,6 @@
 .modal-load-bug {
   .modal-body {
     padding: 40px 10px 10px 10px;
-    h4 {
-      font-size: 12px;
-      text-transform: uppercase;
-      color: $COLOR--gray-47;
-      background-color: $COLOR--white-four;
-      margin: 0;
-      padding: 10px;
-    }
   }
   .load-items-container {
     padding: 17px 9px 10px 20px;
@@ -46,22 +38,6 @@
     .issue-label {
       width: 100px;
       margin-left: 7px;
-    }
-    label{
-      font-weight: normal;
-      position: relative;
-      color: $COLOR--charcoal-grey;
-      vertical-align: top;
-      span:first-child {
-        display: block
-      }
-      input, button {
-        width: 100%;
-        margin-top: 6px;
-      }
-      .help-inline {
-        padding-top: 5px;
-      }
     }
     .remove-row {
       margin: 31px 0 0 3px;

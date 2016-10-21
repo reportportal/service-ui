@@ -118,8 +118,8 @@ define(function(require, exports, module) {
             },
             sortTags: {
                 deps: ['tags'],
-                get: function (tags) {
-                    return _.sortBy(tags, function (t) {
+                get: function () {
+                    return _.sortBy(this.getTags(), function (t) {
                         return t.toUpperCase() === 'BUILD' || t.indexOf('uild') !== -1;
                     });
                 }

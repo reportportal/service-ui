@@ -19,6 +19,22 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*
+
+common elements:
+-  <h4></h4>
+
+-  <label>
+    <span> row name </span>
+    <input | textarea | button> row control </input | /textarea | /button>
+    <span class="help-inline"></span>
+   </label>
+
+*/
+
+
+
+
 .rp-modal-dialog {
   .modal-content {
     border-radius: 0;
@@ -51,7 +67,31 @@
       }
     }
     .modal-body {
-
+      h4 {
+        font-size: 12px;
+        font-family: OpenSansSemibold;
+        text-transform: uppercase;
+        color: $COLOR--gray-47;
+        background-color: $COLOR--white-four;
+        margin: 0;
+        padding: 10px;
+      }
+      label{
+        font-weight: normal;
+        position: relative;
+        color: $COLOR--charcoal-grey;
+        vertical-align: top;
+        span:first-child {
+          display: block
+        }
+        button, .rp-input {
+          width: 100%;
+          margin-top: 6px;
+        }
+        .help-inline {
+          padding-top: 5px;
+        }
+      }
     }
     .modal-footer {
       border: none;

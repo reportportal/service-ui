@@ -20,14 +20,10 @@
                     <a class="text-muted tag" href="#" data-js-owner-name></a>
                 </span>
                 <br class="visible-xs-block">
-                <% if(data.sortTags && data.sortTags.length) { %>
-                <span class="rp-launch-tags">
-                            <i class="material-icons">local_offer</i>
-                            <% _.each(data.sortTags, function (tag) { %>
-                                <a class="text-muted tag" data-tag="<%- tag %>" href="#"><%- tag.replaceTabs() %></a>
-                            <% }); %>
-                        </span>
-                <% } %>
+                <span class="rp-launch-tags" data-js-tags-container>
+                    <i class="material-icons">local_offer</i>
+                    <span data-js-tags></span>
+                </span>
         </div>
     </div>
     <div class="grid-cell time-grid-cell rp-grid-th">
