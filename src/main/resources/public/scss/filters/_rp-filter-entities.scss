@@ -117,17 +117,23 @@
   padding-top: 23px;
   margin-right: 100px;
   ul.dropdown-menu.filters-criteria {
-    a.checkbox {
-      font-size: 13px;
-      line-height: 30px;
-      label {
-        padding-left: 14px;
-        padding-right: 14px;
-      }
-      &.sub-option label {
+    li > label {
+      line-height: 20px;
+      &.sub-option {
         padding-left: 35px;
       }
     }
+    //a.checkbox {
+    //  font-size: 13px;
+    //  line-height: 30px;
+    //  label {
+    //    padding-left: 14px;
+    //    padding-right: 14px;
+    //  }
+    //  &.sub-option label {
+    //    padding-left: 35px;
+    //  }
+    //}
   }
 }
 @media (max-width: 500px) {
