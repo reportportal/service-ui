@@ -43,6 +43,7 @@ define(function (require, exports, module) {
         },
         initialize: function() {
             this.render();
+            Util.appendTooltip($('[data-js-filter-comment]', this.$el), this.$el);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));

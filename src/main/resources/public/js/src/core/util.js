@@ -200,6 +200,18 @@ define(function (require, exports, module) {
             };
             Object.defineProperty(Array.prototype, "equals", {enumerable: false});
         },
+        appendTooltip: function($el, $parrent) {
+            $el.tooltip({
+                position: {
+                    my: 'left top',
+                    at: 'left bottom+5',
+                    of: $parrent,
+                    collision: 'fit'
+                },
+                show: {effect: 'none', delay: 1000, duration: 0},
+                hide: {effect: 'none', duration: 0},
+            });
+        },
 
         textWrapper: function (value, search) {
             if(!value) {
@@ -257,7 +269,6 @@ define(function (require, exports, module) {
             req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
             this.addXhrToPool(req);
         },
-
         trackAjaxCalls: function () {
             var self = this;
             $.ajaxSetup({
@@ -286,7 +297,6 @@ define(function (require, exports, module) {
                 this.isActive = false;
             });
         },
-
         validateForLogOut: function (jqxhr) {
             if (jqxhr.status === 401) {
                 if(config.userModel.get('auth')){
@@ -298,7 +308,6 @@ define(function (require, exports, module) {
             }
             return false;
         },
-
         updateImagePath: function(path) {
             var token = config.userModel.get('token')
             if(!token) {
@@ -315,7 +324,6 @@ define(function (require, exports, module) {
             }
             return path + 'access_token=' + partToken;
         },
-
         clearXhrPool: function () {
             // because .abort() call complete event and xhr remove self
             var xhrPoolClone = _.clone(xhrPool);
@@ -326,21 +334,17 @@ define(function (require, exports, module) {
                 }
             });
         },
-
         addXhrToPool: function (jqXHR) {
             xhrPool.push(jqXHR);
         },
-
         removeXhrFromPool: function (jqXHR) {
             var i = xhrPool.indexOf(jqXHR);
             if (i > -1) xhrPool.splice(i, 1);
         },
-
         setupMessagesTracker: function (messages) {
             var self = this;
             self.messages = messages;
         },
-
         addMessage: function (options) {
             var self = this;
 

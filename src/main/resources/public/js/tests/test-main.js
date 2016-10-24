@@ -27,7 +27,7 @@ require.config({
 
         app: 'core/app-config',
         jquery: '../lib/jquery-latest',
-        jqueryUI: '../lib/jquery-ui',
+        jqueryUI: '../lib/old-jquery-ui',
         'jaddons': '../lib/jquery-addons',
         underscore: '../lib/lodash.min',
         backbone: '../lib/backbone-min-my',

@@ -35,10 +35,13 @@ define(function(require, exports, module) {
     var Urls = require('dataUrlResolver');
     var callService = require('callService');
 
+
     var call = callService.call;
 
     require('../lib/outdatedbrowser');
     require('cookie');
+    require('jqueryUI');
+    $.widget.bridge('uitooltip', $.ui.tooltip);
     require('bootstrap');
     require('jaddons');
     require('landingDocs');
@@ -77,7 +80,6 @@ define(function(require, exports, module) {
         window.router = config.router;
         window.config = config;
     }
-
     (new ExternalService())
         .done(function() {
             // start app

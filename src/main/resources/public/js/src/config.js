@@ -23,7 +23,7 @@ require.config({
     'paths': {
         'application': 'application',
         'jquery': '../lib/jquery-latest',
-        'jqueryUI': '../lib/jquery-ui-1.11.3',
+        'jqueryUI': '../lib/jquery-ui',
         'bootstrap': '../lib/bootstrap.min',
         'underscore': '../lib/lodash.min',
         'backbone': '../lib/backbone',
