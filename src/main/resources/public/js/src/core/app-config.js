@@ -124,7 +124,8 @@ define(function (require, exports, module) {
             launchStatus: {
                 inProgress: "IN_PROGRESS",
                 stopped: 'STOPPED',
-                interrupted: 'INTERRUPTED'
+                interrupted: 'INTERRUPTED',
+                skipped: 'SKIPPED'
             },
 
             defectsGroupSorted :['TO_INVESTIGATE', 'PRODUCT_BUG', 'AUTOMATION_BUG', 'SYSTEM_ISSUE', 'NO_DEFECT'],

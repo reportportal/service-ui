@@ -137,30 +137,6 @@ define(function(require, exports, module) {
                     return Util.fromNowFormat(startFormat)
                 }
             },
-            // isProgress: {
-            //     deps: ['status'],
-            //     get: function(status) {
-            //         return status == 'IN_PROGRESS';
-            //     }
-            // },
-            // isSkipped: {
-            //     deps: ['status'],
-            //     get: function(status) {
-            //         return status == 'SKIPPED';
-            //     }
-            // },
-            // isStopped: {
-            //     deps: ['status'],
-            //     get: function(status) {
-            //         return status == 'STOPPED';
-            //     }
-            // },
-            // isInterrupted: {
-            //     deps: ['status'],
-            //     get: function(status) {
-            //         return (status == 'INTERRUPTED') || (status == 'STOPPED');
-            //     }
-            // },
             formatEndTime: {
                 deps: ['end_time'],
                 get: function (endTime) {

@@ -26,7 +26,6 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
-    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var LaunchSuiteDefectsTooltip = require('launches/launchSuiteStatistics/LaunchSuiteDefectsTooltip');
     var Localization = require('localization');
 
@@ -105,6 +104,10 @@ define(function (require, exports, module) {
 
                 if(status === config.launchStatus.interrupted){
                     return '<abbr title="' + title + '" class="text-danger"><strong>' + duration + '</strong></abbr>';
+                }
+                else if(status === config.launchStatus.inProgress){
+                    var pref = Localization.launches.inProcess;
+                    return '<span title="' + pref + '" class="duration-time"><img alt="' + pref + '" src="img/time-in-progress.gif"></span>';
                 }
                 else {
                     return '<abbr>' + duration + '</abbr>';
