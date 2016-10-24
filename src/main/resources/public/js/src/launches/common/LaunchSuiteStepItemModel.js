@@ -26,8 +26,10 @@ define(function(require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var Service = require('coreService');
+    var Localization = require('localization');
 
     var config = App.getInstance();
+    var SingletonAppModel = require('model/SingletonAppModel');
 
     var LaunchSuiteStepItemModel = Epoxy.Model.extend({
         defaults: {
@@ -171,6 +173,7 @@ define(function(require, exports, module) {
         initialize: function() {
             this.validate = this.getValidate();
             this.listenTo(this, 'change:description change:tags', this.onChangeItemInfo);
+            this.appModel = new SingletonAppModel();
         },
         getIssue: function () {
             try {
@@ -234,6 +237,16 @@ define(function(require, exports, module) {
                     }
                     if (self.get('launch_status') == 'IN_PROGRESS') {
                         return 'Launch should not be in the status IN PROGRESS';
+                    }
+                    return '';
+                },
+                loadbug: function() {
+                    var configuration = self.appModel.get('configuration');
+                    var issue = self.getIssue();
+                    if (!configuration && !configuration.externalSystem && !configuration.externalSystem.length) {
+                        return Localization.launches.configureTBSLoad;
+                    } else if (!issue || !issue.issue_type) {
+                        return Localization.launches.noIssuesLoad
                     }
                     return '';
                 }

@@ -123,6 +123,7 @@ define(['util'], function () {
             toolname: "Report Portal",
             launches: 'launches',
             items: 'items',
+            item: 'item',
             sec: "sec",
             month: "month",
             monthsString: "months",

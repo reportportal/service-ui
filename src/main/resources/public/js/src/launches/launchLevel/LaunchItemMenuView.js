@@ -31,6 +31,7 @@ define(function (require, exports, module) {
     var Localization = require('localization');
     var App = require('app');
     var ChangeModeAction = require('launches/multipleActions/changeModeAction');
+    var RemoveAction = require('launches/multipleActions/removeAction');
 
     var config = App.getInstance();
 
@@ -44,6 +45,7 @@ define(function (require, exports, module) {
             'click [data-js-start-analyze]': 'startAnalyzeAction',
             'click [data-js-finish]': 'showFinishLaunchModal',
             'click [data-js-switch-mode]': 'switchLaunchMode',
+            'click [data-js-remove]': 'onClickRemove',
         },
         bindings: {
             '[data-js-finish]': 'attr:{disabled:not(isForceFinish)}',
@@ -266,7 +268,13 @@ define(function (require, exports, module) {
         //     })(id);
         //
         // },
-        switchLaunchMode: function (e) {
+        onClickRemove: function() {
+            var self = this;
+            RemoveAction({items: [this.model]}).done(function() {
+                self.model.collection.load(true);
+            });
+        },
+        switchLaunchMode: function () {
             var self = this;
             ChangeModeAction({items: [this.model]}).done(function() {
                 self.model.collection.load(true);

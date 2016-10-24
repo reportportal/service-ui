@@ -31,22 +31,22 @@ define(function (require, exports, module) {
 
     var RemoveAction = function(options) {
         var items = options.items;
-        var typeItems = Localization.ui.launches;
-        if(items[0].get('type') != '') {
-            typeItems = Localization.ui.items;
+        var typeItems = (items.length > 1) ? Localization.ui.launches : Localization.ui.launch;
+        if(items[0].get('type') != 'LAUNCH') {
+            typeItems = (items.length > 1) ? Localization.ui.items : Localization.ui.item;
         }
         var modal = new ModalConfirm({
             headerText: Localization.ui.delete +' '+ typeItems,
             bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, typeItems, typeItems),
             confirmText: Util.replaceTemplate(Localization.launches.deleteAgree, typeItems),
-            cancelButtonText: 'Cancel',
-            okButtonText: 'Delete',
+            cancelButtonText: Localization.ui.cancel,
+            okButtonText: Localization.ui.delete,
             confirmFunction: function() {
                 var ids = _.map(items, function(item) {
                     return item.get('id');
                 });
                 var path = Urls.getLaunchBase();
-                if(items[0].get('type') != '') {
+                if(items[0].get('type') != 'LAUNCH') {
                     path = Urls.itemBase();
                 }
                 return CallService.call('DELETE', path + '?ids=' + ids.join(',')).done(function() {

@@ -226,6 +226,7 @@ define(function (require, exports, module) {
                     condition: 'cnt',
                     options: filterNameOptions(),
                     valueMinLength: 3,
+                    valueMaxLength: 256,
                     valueOnlyDigits: false,
                 }),
                 new Filters.EntityTimeRangeModel({
@@ -259,6 +260,7 @@ define(function (require, exports, module) {
             condition: 'cnt',
             options: filterNameOptions(),
             valueMinLength: 3,
+            valueMaxLength: 256,
             valueOnlyDigits: false,
         }));
         launchSuiteEntitiesCollection.add(new Filters.EntityUserTagModel({id: 'user', condition: 'in'}), {at: 1});
@@ -273,6 +275,7 @@ define(function (require, exports, module) {
             condition: 'cnt',
             options: filterNameOptions(),
             valueMinLength: 3,
+            valueMaxLength: 256,
             valueOnlyDigits: false,
         }));
         return launchSuiteEntitiesCollection;
@@ -312,6 +315,7 @@ define(function (require, exports, module) {
                     condition: 'cnt',
                     options: filterNameOptions(),
                     valueMinLength: 3,
+                    valueMaxLength: 256,
                     valueOnlyDigits: false,
                 })
             ].concat(TestFilters())

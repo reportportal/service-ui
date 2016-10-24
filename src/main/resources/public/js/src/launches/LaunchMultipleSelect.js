@@ -31,6 +31,8 @@ define(function (require, exports, module) {
     var EditDefectAction = require('launches/multipleActions/editDefectAction');
     var RemoveAction = require('launches/multipleActions/removeAction');
     var ChangeModeAction = require('launches/multipleActions/changeModeAction');
+    var PostBugAction = require('launches/multipleActions/postBugAction');
+    var LoadBugAction = require('launches/multipleActions/loadBugAction');
 
     var config = App.getInstance();
 
@@ -110,6 +112,16 @@ define(function (require, exports, module) {
                      model.set({invalidMessage: model.validate.remove()})
                 })
             },
+            postbug: function() {
+                _.each(this.collection.models, function(model) {
+                    model.set({invalidMessage: ''})
+                })
+            },
+            loadbug: function() {
+                _.each(this.collection.models, function(model) {
+                    model.set({invalidMessage: model.validate.loadbug()})
+                })
+            },
         },
         actionCall: {
             merge: function() {
@@ -159,6 +171,18 @@ define(function (require, exports, module) {
                 RemoveAction({items: this.collection.models}).done(function() {
                     self.compareAction = null;
                     self.collectionItems.load(true);
+                    self.reset();
+                })
+            },
+            postbug: function() {
+                var self = this;
+                PostBugAction({items: this.collection.models}).done(function() {
+                    self.reset();
+                })
+            },
+            loadbug: function() {
+                var self = this;
+                LoadBugAction({items: this.collection.models}).done(function() {
                     self.reset();
                 })
             }

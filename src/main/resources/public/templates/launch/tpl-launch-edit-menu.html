@@ -10,18 +10,23 @@
 </li>
 <% if(!data.isDebug){ %>
     <li data-js-can-match>
-        <a href="#" data-js-can-match data-js-start-analyze data-type="match">
+        <a data-js-can-match data-js-start-analyze data-type="match">
             <%= data.text.launches.matchTitle %>
         </a>
     </li>
 <% } %>
 <% if(!data.isDebug){ %>
     <li data-js-can-analyze>
-        <a href="#" data-js-can-analyze data-js-start-analyze data-analyze-type="analyze">
+        <a data-js-can-analyze data-js-start-analyze data-analyze-type="analyze">
             <%= data.text.ui.analyze %>
         </a>
     </li>
 <% } %>
+<li>
+    <a data-js-remove>
+        <%= data.text.ui.delete %>
+    </a>
+</li>
 <% if(data.exportFormats){ %>
     <li role="separator" class="divider"></li>
     <li class="rp-export-launch-group">

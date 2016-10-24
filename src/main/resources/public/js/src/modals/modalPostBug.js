@@ -57,6 +57,11 @@ define(function (require, exports, module) {
             this.systemAuth = externalSystems[0].systemAuth;
             this.setUserBts();
         },
+        show: function() {
+            this.render();
+            this.async = $.Deferred();
+            return this.async;
+        },
 
         setupAnchors: function () {
             this.$dynamicContent = $("#dynamicContent", this.$el);
@@ -210,6 +215,7 @@ define(function (require, exports, module) {
                                 Util.ajaxSuccessMessenger("addTicket");
                                 self.trigger("defect::updated");
                                 self.done();
+                                self.async.resolve();
                             })
                             .fail(function (error) {
                                 errorHandler(error);

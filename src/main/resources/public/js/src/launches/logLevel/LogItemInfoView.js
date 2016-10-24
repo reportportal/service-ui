@@ -32,8 +32,8 @@ define(function (require, exports, module) {
     var LogItemInfoActivity = require('launches/logLevel/LogItemInfoActivity');
     var LogItemInfoAttachmentsView = require('launches/logLevel/LogItemInfoAttachments');
     var App = require('app');
-    var ModalLoadBug = require('modals/modalLoadBug');
-    var ModalPostBug = require('modals/modalPostBug');
+    var PostBugAction = require('launches/multipleActions/postBugAction');
+    var LoadBugAction = require('launches/multipleActions/loadBugAction');
     var ModalDefectEditor = require('modals/modalDefectEditor');
     var SingletonAppModel = require('model/SingletonAppModel');
     var Localization = require('localization');
@@ -131,15 +131,13 @@ define(function (require, exports, module) {
                 }
             },
             loadBugTitle: {
-                deps: ['btsNotCreate', 'notHaveIssue'],
-                get: function (btsNotCreate, notHaveIssue) {
-                    if (btsNotCreate) {
-                        return Localization.launches.configureTBSLoad;
-                    } else if (notHaveIssue) {
-                        return Localization.launches.noIssuesLoad;
-                    } else {
-                        return Localization.launches.loadBug;
+                deps: ['issue'],
+                get: function () {
+                    var error = this.viewModel.validate.loadbug();
+                    if (error) {
+                        return error;
                     }
+                    return Localization.launches.loadBug;
                 }
             },
         },
@@ -191,16 +189,10 @@ define(function (require, exports, module) {
             defectEditor.show();
         },
         onClickPostBug: function () {
-            var modal = new ModalPostBug({
-                items: [this.viewModel],
-            });
-            modal.render();
+            PostBugAction({items: [this.viewModel]});
         },
         onClickLoadBug: function () {
-            var modal = (new ModalLoadBug({
-                items: [this.viewModel],
-            }));
-            modal.show();
+            LoadBugAction({items: [this.viewModel]});
         },
         onClickMatch: function () {
             var self = this;

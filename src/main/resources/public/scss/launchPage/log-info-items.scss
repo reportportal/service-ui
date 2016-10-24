@@ -103,6 +103,7 @@
     .filter-hint {
       font-size: 10px;
       color: $COLOR--gray-60;
+      text-transform: none;
     }
   }
   &.not-found {
