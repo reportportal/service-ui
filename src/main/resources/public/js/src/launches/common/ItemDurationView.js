@@ -57,7 +57,7 @@ define(function (require, exports, module) {
                 if(this.isInvalidDuration()){
                     return ' ';
                 }
-                else if(this.getBinding('isProgress')){
+                else if(this.isProgress()){
                     var time = this.getApproximateTimeText(),
                         timeContainer = '<span data-js-approximate-time>' + time +'</span>';
                     return '<img alt="' + Localization.launches.inProcess+ '" src="img/time-in-progress.gif"/>' + (this.validateForApproximateTime() ? timeContainer : '');
@@ -67,7 +67,7 @@ define(function (require, exports, module) {
                 }
             },
             durationTimeClass: function(){
-                return this.getBinding('isStopped') || this.getBinding('isInterrupted');
+                return this.isStopped() || this.isInterrupted();
             },
             getStatusTitle: function(){
                 if(this.isInvalidDuration()){
@@ -78,7 +78,7 @@ define(function (require, exports, module) {
                         return Localization.launches.notInProcessNotEndedDuration;
                     }
                 }
-                else if(this.getBinding('isProgress')){
+                else if(this.isProgress()){
                     if(this.validateForApproximateTime()){
                         var time = this.getApproximateTime();
                         if(time <=0){
@@ -90,13 +90,13 @@ define(function (require, exports, module) {
                 else {
                     var durationTime = this.durationTime(),
                         endTime = this.getBinding('formatEndTime');
-                    if(this.getBinding('isSkipped')){
+                    if(this.isSkipped()){
                         return Localization.launches.skippedDuration + ' ' + durationTime;
                     }
-                    else if(this.getBinding('isStopped')){
+                    else if(this.isStopped()){
                         return Localization.launches.stoppedDuration + ' ' + durationTime + Localization.launches.stoppedAt + endTime;
                     }
-                    else if(this.getBinding('isInterrupted')){
+                    else if(this.isInterrupted()){
                         return Localization.launches.interruptedDuration + ' ' + durationTime + Localization.launches.stoppedAt + endTime;
                     }
                     else {
@@ -120,10 +120,26 @@ define(function (require, exports, module) {
             }
         },
         isInvalidDuration: function(){
-            var inProgress = this.getBinding('isProgress'),
+            var inProgress = this.isProgress(),
                 isStartAndEndTime = this.isStartAndEndTime(),
                 isStartNoEndTime = this.isStartNoEndTime();
             return (inProgress && isStartAndEndTime) || (!inProgress && isStartNoEndTime);
+        },
+        isProgress: function(){
+            var status = this.getBinding('status');
+            return status == config.launchStatus.inProgress;
+        },
+        isSkipped: function(){
+            var status = this.getBinding('status');
+            return status == config.launchStatus.skipped;
+        },
+        isStopped: function(){
+            var status = this.getBinding('status');
+            return status == config.launchStatus.stopped;
+        },
+        isInterrupted: function(){
+            var status = this.getBinding('status');
+            return status == config.launchStatus.interrupted;
         },
         isStartAndEndTime: function(){
             var startTime = this.getBinding('start_time'),
