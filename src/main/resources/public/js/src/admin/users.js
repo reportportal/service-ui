@@ -316,7 +316,7 @@ define(function (require, exports, module) {
                 .done(function () {
                     self.members.splice(index, 1);
                     self.changeMembers();
-                    Util.ajaxSuccessMessenger("deleteMember", member.full_name);
+                    Util.ajaxSuccessMessenger("deleteMember", member.full_name || member.userId);
                 })
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, "deleteMember");
