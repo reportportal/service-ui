@@ -182,7 +182,8 @@ define(function(require, exports, module) {
             };
             var result = {
                 merge: function () {
-                    if (self.get('launch_owner') != config.userModel.get('name')) {
+                    if (self.get('launch_owner') != config.userModel.get('name') &&
+                        !isAdminLeadProjectMenedger()) {
                         return 'You are not a launch owner';
                     }
                     if (self.get('launch_status') == 'IN_PROGRESS') {
@@ -194,7 +195,8 @@ define(function(require, exports, module) {
                     return ''
                 },
                 changeMode: function () {
-                    if (self.get('launch_owner') != config.userModel.get('name')) {
+                    if (self.get('launch_owner') != config.userModel.get('name') &&
+                        !isAdminLeadProjectMenedger()) {
                         return 'You are not a launch owner';
                     }
                     return ''
@@ -203,7 +205,8 @@ define(function(require, exports, module) {
                     if (self.get('status') != 'IN_PROGRESS') {
                         return 'Launch is already finished';
                     }
-                    if (self.get('launch_owner') != config.userModel.get('name')) {
+                    if (self.get('launch_owner') != config.userModel.get('name') &&
+                        !isAdminLeadProjectMenedger()) {
                         return 'You are not a launch owner';
                     }
                     return '';

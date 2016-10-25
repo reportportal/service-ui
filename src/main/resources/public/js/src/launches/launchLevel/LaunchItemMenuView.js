@@ -32,6 +32,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var ChangeModeAction = require('launches/multipleActions/changeModeAction');
     var RemoveAction = require('launches/multipleActions/removeAction');
+    var ForceFinish = require('launches/multipleActions/forceFinishAction');
 
     var config = App.getInstance();
 
@@ -39,7 +40,6 @@ define(function (require, exports, module) {
         className: 'dropdown-menu launches-item-menu',
         tagName: 'ul',
         template: 'tpl-launch-edit-menu',
-        forceFinishTpl: 'tpl-launch-warning-dialog',
         events: {
             'click [data-js-edit-item]': 'showEdit',
             'click [data-js-start-analyze]': 'startAnalyzeAction',
@@ -111,21 +111,6 @@ define(function (require, exports, module) {
         isDebug: function(){
             return this.getBinding('mode') === 'DEBUG';
         },
-        showEdit: function (e) {
-            e.preventDefault();
-            var el = $(e.currentTarget);
-            if(!el.hasClass('disabled')){
-                var editorType = this.isLaunch() ? 'LaunchEditor' : 'ItemEditor';
-                this.itemEditor = null;
-                this.itemEditor = new Editor[editorType]({
-                    item: this.model.toJSON({computed: true}),
-                    eventBus: {} // this.navigationInfo
-                }).render();
-            }
-            else {
-                e.stopPropagation();
-            }
-        },
         startAnalyzeAction: function (e) {
             e.preventDefault();
             var self = this,
@@ -146,128 +131,12 @@ define(function (require, exports, module) {
                 e.stopPropagation();
             }
         },
-        showFinishLaunchModal: function (e) {
-            e.preventDefault();
-            var $el = $(e.currentTarget);
-            if (!$el.hasClass('disabled')) {
-                var id = this.model.get('id'),
-                    name = this.model.get('name'),
-                    self = this;
-
-                if (!this.warningDialog) {
-                    this.warningDialog = {};
-                }
-                this.warningDialog['stopDialog'] = Util.getDialog({
-                    name: this.forceFinishTpl,
-                    data: {name: name}
-                });
-                this.warningDialog['submitButton'] = $(".rp-btn-danger", this.warningDialog.stopDialog);
-                this.warningDialog.stopDialog.on('click', ".rp-btn-danger", function (e) {
-
-                        self.warningDialog.stopDialog.modal("hide");
-                    })
-                    .on('change', "#deleteConfirm", function (e) {
-                        self.warningDialog.submitButton.prop('disabled', !$(this).is(':checked'));
-                    })
-                    .on('hidden.bs.modal', function () {
-                        $(this).data('modal', null);
-                        self.warningDialog.submitButton = null;
-                        self.warningDialog.stopDialog.remove();
-                    });
-                this.warningDialog.stopDialog.modal("show");
-
-            }
-            else {
-                e.stopPropagation();
-            }
-        },
         finishLaunch: function(){
-            var id = this.model.get('id'),
-                self = this;
-            Service.finishLaunch(id)
-                .done(function (responce) {
-                    Util.ajaxSuccessMessenger("finishLaunch");
-                    self.model.set('status', config.launchStatus.stopped);
-                    // to do collection for inProgress launches
-                    /*if (self.inProgress.length) {
-                     var before = self.inProgress.length;
-                     self.inProgress = _.reject(self.inProgress, function (v) {
-                     return v === id;
-                     });
-
-                     if ((before - that.inProgress.length) > 0) {
-                     self.navigationInfo.trigger('refresh::counter', before - self.inProgress.length);
-                     } else {
-                     self.navigationInfo.trigger('refresh::counter', self.inProgress.length);
-                     }
-                     } else {
-                     self.navigationInfo.trigger('reset::counter');
-                     }*/
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "finishLaunch");
-                });
+            var self = this;
+            ForceFinish({items: [this.model]}).done(function() {
+                self.model.collection.load(true);
+            });
         },
-        // showDeleteModal: function (e) {
-        //     e.preventDefault();
-        //     var $el = $(e.currentTarget);
-        //     if (!$el.hasClass('disabled')) {
-        //         var id = this.model.get('id'),
-        //             name = this.model.get('name'),
-        //             self = this;
-        //
-        //         if (!this.warningDialog) {
-        //             this.warningDialog = {};
-        //         }
-        //         this.warningDialog['deleteDialog'] = Util.getDialog({
-        //             name: this.deleteLaunchTpl,
-        //             data: {
-        //                 name: name,
-        //                 type: this.isLaunch() === 'FILTER' ? 'deleteLaunch' : 'deleteTestItem'
-        //             }
-        //         });
-        //         this.warningDialog['submitButton'] = $(".rp-btn-danger", this.warningDialog.deleteDialog);
-        //
-        //         this.warningDialog.deleteDialog
-        //             .on('click', ".rp-btn-danger", function (e) {
-        //                 self.deleteItem();
-        //                 self.warningDialog.deleteDialog.modal("hide");
-        //             })
-        //             .on('change', "#deleteConfirm", function (e) {
-        //                 self.warningDialog.submitButton.prop('disabled', !$(this).is(':checked'));
-        //             })
-        //             .on('hidden.bs.modal', function () {
-        //                 $(this).data('modal', null);
-        //                 self.warningDialog.submitButton = null;
-        //                 self.warningDialog.deleteDialog.remove();
-        //             });
-        //         this.warningDialog.deleteDialog.modal("show");
-        //     }
-        //     else {
-        //         e.stopPropagation();
-        //     }
-        // },
-        // deleteItem: function(){
-        //     var id = this.model.get('id'),
-        //         self = this,
-        //         type = this.isLaunch() ? 'deleteLaunch' : 'deleteTestItem'
-        //     Util.showOverlay('.rp-table-row[data-id='+ id +']');
-        //     config.deletingLaunches.push(id);
-        //     (function(id) {
-        //         Service[type](id)
-        //             .done(function (response) {
-        //                 self.model.collection.remove(self.model);
-        //                 Util.ajaxSuccessMessenger(type);
-        //                 config.deletingLaunches = _.without(config.deletingLaunches, id);
-        //             })
-        //             .fail(function (error) {
-        //                 Util.ajaxFailMessenger(error);
-        //                 Util.hideOverlay('.rp-table-row[data-id='+ id +']');
-        //                 config.deletingLaunches = _.without(config.deletingLaunches, id);
-        //             });
-        //     })(id);
-        //
-        // },
         onClickRemove: function() {
             var self = this;
             RemoveAction({items: [this.model]}).done(function() {

@@ -28,25 +28,39 @@ define(function (require, exports, module) {
     var Localization = require('localization');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var ForceFinishAction = function(options) {
         var items = options.items;
         var modal = new ModalConfirm({
             headerText: Localization.dialogHeader.forceFinish,
-            bodyText: Localization.launches.finishItemsWarning,
-            confirmText: Localization.launches.finishItemsAgree,
+            bodyText: (items.length > 1) ?
+                Util.replaceTemplate(Localization.launches.finishWarning, Localization.ui.launches, Localization.ui.selectedLaunches) :
+                Util.replaceTemplate(Localization.launches.finishWarning, Localization.ui.launch, Localization.ui.launch),
+            confirmText: (items.length > 1) ?
+                Util.replaceTemplate(Localization.launches.finishAgree, Localization.ui.launches) :
+                Util.replaceTemplate(Localization.launches.finishAgree, Localization.ui.launch),
             cancelButtonText: Localization.ui.cancel,
             okButtonText: Localization.ui.finish,
             confirmFunction: function() {
-                // var entities = {};
-                // _.each(items, function(item) {
-                //     entities[item.get('id')] = {mode: 'DEBUG'};
-                // });
-                // return CallService.call('PUT', Urls.getLaunchStop(), {entities: entities}).done(function() {
-                //     Util.ajaxSuccessMessenger('switchToDebug');
-                // }).fail(function(err) {
-                //     Util.ajaxFailMessenger(err, 'switchToDebug');
-                // })
+                var entities = {};
+                var time = new Date().getTime();
+                _.each(items, function(item) {
+                    entities[item.get('id')] = {
+                        end_time: time,
+                        status: config.launchStatus.stopped
+                    };
+                });
+                return CallService.call('PUT', Urls.getLaunchStop(), {entities: entities}).done(function() {
+                    Util.ajaxSuccessMessenger('finishLaunch');
+                    _.each(items, function(item) {
+                        item.set({status: config.launchStatus.stopped});
+                    });
+                }).fail(function(err) {
+                    Util.ajaxFailMessenger(err, 'finishLaunch');
+                })
             }
         });
 

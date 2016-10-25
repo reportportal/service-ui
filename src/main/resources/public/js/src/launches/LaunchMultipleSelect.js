@@ -29,6 +29,7 @@ define(function (require, exports, module) {
     var MergeAction = require('launches/multipleActions/mergeAction');
     var CompareAction = require('launches/multipleActions/compareAction');
     var EditDefectAction = require('launches/multipleActions/editDefectAction');
+    var ForceFinishAction = require('launches/multipleActions/forceFinishAction');
     var RemoveAction = require('launches/multipleActions/removeAction');
     var ChangeModeAction = require('launches/multipleActions/changeModeAction');
     var PostBugAction = require('launches/multipleActions/postBugAction');
@@ -158,13 +159,16 @@ define(function (require, exports, module) {
             changemode: function() {
                 var self = this;
                 ChangeModeAction({items: this.collection.models}).done(function() {
-                    self.compareAction = null;
                     self.collectionItems.load(true);
                     self.reset();
                 })
             },
             forcefinish: function() {
-
+                var self = this;
+                ForceFinishAction({items: this.collection.models}).done(function() {
+                    self.collectionItems.load();
+                    self.reset();
+                })
             },
             remove: function() {
                 var self = this;
