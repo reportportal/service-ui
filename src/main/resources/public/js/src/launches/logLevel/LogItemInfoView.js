@@ -75,67 +75,37 @@ define(function (require, exports, module) {
             '[data-js-item-details]': 'classes: {hide: not(itemDetails)}',
             '[data-js-item-activity]': 'classes: {hide: not(activity)}',
             '[data-js-match]': 'classes: {hide: not(parent_launch_investigate)}',
-            '[data-js-post-bug]': 'classes: {disabled: any(btsNotConfigured, notHaveIssue)}, attr: {title: postBugTitle}',
-            '[data-js-load-bug]': 'classes: {disabled: any(btsNotCreate, notHaveIssue)}, attr: {title: loadBugTitle}',
+            '[data-js-post-bug]': 'classes: {disabled: validatePostBug}, attr: {title: postBugTitle}',
+            '[data-js-load-bug]': 'classes: {disabled: validateLoadBug}, attr: {title: loadBugTitle}',
         },
 
         computeds: {
-            btsNotCreate: {
+            validateLoadBug: {
                 deps: [],
                 get: function () {
-                    var configuration = this.appModel.get('configuration');
-                    if (!configuration) {
-                        return true;
-                    }
-                    if (configuration.externalSystem && configuration.externalSystem.length) {
-                        return false;
-                    }
-                    return true;
+                    return this.viewModel.validate.loadbug();
                 }
             },
-            btsNotConfigured: {
-                deps: ['btsNotCreate'],
-                get: function (btsNotCreate) {
-                    if (btsNotCreate) {
-                        return true;
-                    }
-                    var configuration = this.appModel.get('configuration');
-                    if (_.any(configuration.externalSystem, function (bts) {
-                            return bts.fields && bts.fields.length;
-                        })) {
-                        return false;
-                    }
-                    return true;
-                }
-            },
-            notHaveIssue: {
-                deps: ['issue'],
+            validatePostBug: {
+                deps: [],
                 get: function () {
-                    var issue = this.viewModel.getIssue();
-                    if (issue && issue.issue_type) {
-                        return false;
-                    }
-                    return true;
+                    return this.viewModel.validate.postbug();
                 }
             },
             postBugTitle: {
-                deps: ['btsNotConfigured', 'notHaveIssue'],
-                get: function (btsNotConfigured, notHaveIssue) {
-                    if (btsNotConfigured) {
-                        return Localization.launches.configureTBS;
-                    } else if (notHaveIssue) {
-                        return Localization.launches.noIssues;
-                    } else {
-                        return Localization.launches.postBug;
+                deps: ['issue', 'validatePostBug'],
+                get: function (issue, validatePostBug) {
+                    if (validatePostBug) {
+                        return validatePostBug;
                     }
+                    return Localization.launches.postBug;
                 }
             },
             loadBugTitle: {
-                deps: ['issue'],
-                get: function () {
-                    var error = this.viewModel.validate.loadbug();
-                    if (error) {
-                        return error;
+                deps: ['issue', 'validateLoadBug'],
+                get: function (issue, validateLoadBug) {
+                    if (validateLoadBug) {
+                        return validateLoadBug;
                     }
                     return Localization.launches.loadBug;
                 }
@@ -210,7 +180,7 @@ define(function (require, exports, module) {
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.template, {validateForIssue: this.validateForIssue()}));
+            this.$el.html(Util.templates(this.template, {}));
         },
 
         destroy: function () {

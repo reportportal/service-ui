@@ -114,7 +114,7 @@ define(function (require, exports, module) {
             },
             postbug: function() {
                 _.each(this.collection.models, function(model) {
-                    model.set({invalidMessage: ''})
+                    model.set({invalidMessage: model.validate.postbug()})
                 })
             },
             loadbug: function() {
