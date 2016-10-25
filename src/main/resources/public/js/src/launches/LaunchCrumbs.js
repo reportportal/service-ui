@@ -73,7 +73,7 @@ define(function (require, exports, module) {
             var self = this;
             if(this.get('level') == 'filter') {
                 if(this.get('id') == 'all') {
-                    this.set({name: 'all'});
+                    this.set({name: 'All'});
                     this.ready.resolve();
                 } else {
                     var launchFilterCollection = new SingletonLaunchFilterCollection();

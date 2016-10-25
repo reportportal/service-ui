@@ -43,7 +43,7 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-edit-item]': 'showEdit',
             'click [data-js-start-analyze]': 'startAnalyzeAction',
-            'click [data-js-finish]': 'showFinishLaunchModal',
+            'click [data-js-finish]': 'finishLaunch',
             'click [data-js-switch-mode]': 'switchLaunchMode',
             'click [data-js-remove]': 'onClickRemove',
         },
