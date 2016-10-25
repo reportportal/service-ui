@@ -641,6 +641,8 @@ define(['util'], function () {
             proceedValidItems: 'Proceed Valid Items',
             editDefects: 'Edit Defects',
 
+            deleteBulk: 'Delete Test Items in bulk',
+
 
             issueTitle: "Issue title",
             components: "Components:",

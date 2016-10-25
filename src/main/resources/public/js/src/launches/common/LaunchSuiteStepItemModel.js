@@ -30,6 +30,7 @@ define(function(require, exports, module) {
 
     var config = App.getInstance();
     var SingletonAppModel = require('model/SingletonAppModel');
+    var UserModel = require('model/UserModel');
 
     var LaunchSuiteStepItemModel = Epoxy.Model.extend({
         defaults: {
@@ -150,6 +151,7 @@ define(function(require, exports, module) {
             this.validate = this.getValidate();
             this.listenTo(this, 'change:description change:tags', this.onChangeItemInfo);
             this.appModel = new SingletonAppModel();
+            this.userModel = new UserModel();
         },
         getIssue: function () {
             try {
@@ -173,6 +175,11 @@ define(function(require, exports, module) {
         },
         getValidate: function () {
             var self = this;
+            var isAdminLeadProjectMenedger = function() {
+                return ( self.userModel.get('isAdmin') ||
+                    self.userModel.getRoleForCurrentProject() == config.projectRolesEnum.lead ||
+                    self.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager)
+            };
             var result = {
                 merge: function () {
                     if (self.get('launch_owner') != config.userModel.get('name')) {
@@ -208,7 +215,8 @@ define(function(require, exports, module) {
                     return '';
                 },
                 remove: function() {
-                    if (self.get('launch_owner') != config.userModel.get('name')) {
+                    if (self.get('launch_owner') != config.userModel.get('name') &&
+                        !isAdminLeadProjectMenedger()) {
                         return 'You are not a launch owner';
                     }
                     if (self.get('launch_status') == 'IN_PROGRESS') {

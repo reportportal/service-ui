@@ -58,7 +58,7 @@ define(function (require, exports, module) {
         },
         activateMultiple: function() {
             $('[data-js-refresh]', this.$el).addClass('disabled');
-            $('[data-js-milti-delete]', this.$el).removeClass('disabled').attr({title: Localization.ui.delete});
+            $('[data-js-milti-delete]', this.$el).removeClass('disabled').attr({title: Localization.launches.deleteBulk});
         },
         onClickMultiDelete: function() {
             this.trigger('multi:action', 'remove');
