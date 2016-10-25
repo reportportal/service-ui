@@ -28,8 +28,10 @@ define(function (require, exports, module) {
     var App = require('app');
     var UserModel = require('model/UserModel');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
+    var SingletonAppModel = require('model/SingletonAppModel');
 
     var Header = require('sections/header');
+    var Content = require('sections/content1');
     var Sidebar = require('sections/sidebar');
     var Footer = require('sections/footer');
 
@@ -41,41 +43,35 @@ define(function (require, exports, module) {
         initialize: function (options) {
             this.$el = options.el;
             this.contextName = options.contextName;
-            //this.$header = null;
-            this.$body = null;
         },
 
-        render: function () {
+        render: function (options) {
             this.$el.empty();
-
             this.sidebarView = new Sidebar({
                 tpl: 'tpl-main-side-bar',
                 projectUrl: config.project.projectId,
                 currentPage: this.contextName,
             }).render();
-
+            this.footerView = new Footer().render();
             this.headerView = new Header({
                 tpl: 'tpl-main-top-header',
                 currentPage: this.contextName,
             }).render();
 
-            this.footerView = new Footer().render();
+            this.contentView = new Content({
+                container: this.$el,
+            }).render(options);
 
-            this.createMainContainer();
-            this.$header = $('#contentHeader', this.$el);
-            this.$body = $('#dynamic-content', this.$el);
         },
 
-        createMainContainer: function () {
-            this.main = new Container({
-                container: this.$el
-            });
-            this.main.render();
+        update: function (options) {
+            this.contentView.update(options);
         },
 
         destroy: function () {
-            if (this.main) {
-                this.main.destroy();
+            if (this.contentView) {
+                this.contentView.destroy();
+                this.contentView = null;
             }
             this.undelegateEvents();
             this.$el.removeData().unbind();
@@ -89,34 +85,6 @@ define(function (require, exports, module) {
             this.footerView = null;
         }
 
-    });
-
-    var Container = Backbone.View.extend({
-        initialize: function (options) {
-            this.$container = options.container;
-        },
-
-        tpl: 'tpl-container',
-
-        events: {
-            'click #btt': 'scrollTop'
-        },
-
-        scrollTop: function () {
-            $('body,html').animate({
-                scrollTop: 0
-            }, 100);
-            return false;
-        },
-
-        render: function () {
-            this.$container.append(this.$el.html(Util.templates(this.tpl)));
-        },
-
-        destroy: function () {
-            this.undelegateEvents();
-            this.remove();
-        }
     });
 
     var NotFoundPage = Backbone.View.extend({
@@ -142,8 +110,6 @@ define(function (require, exports, module) {
 
     return {
         MainView: MainView,
-        Container: Container,
-        Footer: Footer,
         NotFoundPage: NotFoundPage
     };
 });
