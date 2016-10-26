@@ -23,7 +23,10 @@
         </button>
     </div>
     <div class="rp-form-group demo-data-loader" style="display: none;" data-js-demo-data-loader>
-        <i class="material-icons loader-animation">refresh</i><span><%= data.text.project.generationDataInProgress %></span>
+        <div class="preloader" data-js-preloader-launch-body>
+            <i class="material-icons loader-animation">refresh</i>
+        </div>
+        <span><%= data.text.project.generationDataInProgress %></span>
     </div>
     <div class="rp-form-group demo-data-warning-block">
         <span class="demo-data-warning">

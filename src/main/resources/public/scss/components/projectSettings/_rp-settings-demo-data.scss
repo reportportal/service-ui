@@ -61,6 +61,12 @@
     }
     .demo-data-loader {
         margin: 0;
+        .preloader {
+            float: left;
+            display: block;
+            padding: 0;
+            width: auto;
+        }
         span {
             display: inline-block;
             vertical-align: top;
