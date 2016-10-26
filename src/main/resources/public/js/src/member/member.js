@@ -105,7 +105,7 @@ define(function(require, exports, module) {
         getMembersDataObject: function () {
             var data = {
                 container: this.membersTab,
-                isDefaultProject: config.project.projectId === config.demoProjectName
+                // isDefaultProject: config.project.projectId === config.demoProjectName
             };
             if (this.subContext !== "invite") {
                 data.projectId = config.project.projectId;
@@ -552,7 +552,7 @@ define(function(require, exports, module) {
             this.roles = Util.getRolesMap();
             this.memberAction = options.memberAction;
             this.projectRoleIndex = options.projectRoleIndex;
-            this.isDefaultProject = options.isDefaultProject;
+            // this.isDefaultProject = options.isDefaultProject;
             this.isGrandAdmin = options.grandAdmin;
             this.pageType = 'PaginateProjectMembers_' + this.memberAction + '_' + this.projectId;
             this.appModel = new SingletonAppModel();
@@ -725,7 +725,7 @@ define(function(require, exports, module) {
                 isGrandAdmin: this.isGrandAdmin,
                 defaultRole: this.defaultRole,
                 projectRoleIndex: this.projectRoleIndex,
-                isDefaultProject: this.isDefaultProject
+                // isDefaultProject: this.isDefaultProject
             };
         },
         renderContent: function (members, action) {

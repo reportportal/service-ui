@@ -294,7 +294,7 @@ define(function (require, exports, module) {
                     member: member,
                     roles: this.roles,
                     defaultRole: config.projectRoles[1],
-                    defaultProject: config.demoProjectName
+                    defaultProject: member.default_project
                 }).render();
             }
         },
