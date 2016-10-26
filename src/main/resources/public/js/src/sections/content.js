@@ -24,31 +24,60 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
+
+    // Main modules
+    var Dashboard = require('dashboard');
+    var Favorites = require('favorites');
+    var Launch = require('launch');
+    var LaunchPage = require('launches/LaunchPage');
+    var Project = require('project');
+    var ProjectInfo = require('projectinfo');
+    var Member = require('member');
+    var Profile = require('profile');
+
+    //Administrate modules
     var Projects = require('projects');
     var Users = require('users');
     var Settings = require('settings');
 
     var Content = Backbone.View.extend({
+
         initialize: function (options) {
-            this.$el = options.el;
-            this.queryString = options.queryString;
+            this.isAdminPage = options.isAdminPage;
+            if (this.isAdminPage) {
+                this.$el = options.el;
+                this.queryString = options.queryString;
+            } else {
+                this.container = options.container;
+            }
         },
 
-        shellTpl: 'tpl-admin-body',
-        buttonsTpl: 'tpl-admin-menu',
+        tpl: 'tpl-container',
+        adminTpl: 'tpl-admin-body',
+
+        events: {
+            'click #btt': 'scrollTop'
+        },
 
         render: function (options) {
-            this.$el.html(Util.templates(this.shellTpl));
-            this.$container = $("#dynamicContent", this.$el);
+            if (this.isAdminPage) {
+                this.$el.html(Util.templates(this.adminTpl));
+                this.$container = $("#dynamicContent", this.$el);
+            } else {
+                this.container.append(this.$el.html(Util.templates(this.tpl)));
+            }
+
             this.setupPageView(options);
             return this;
         },
 
         update: function (options) {
-            if(this.page !== options.page || this.action !== options.action) {
+            if(this.page !== options.contextName || this.action !== options.action) {
                 this.pageView.destroy();
-                this.page = options.page;
-                this.action = options.action;
+                if (this.isAdminPage) {
+                    this.page = options.page;
+                    this.action = options.action;
+                }
                 this.setupPageView(options);
             } else {
                 this.pageView.update(options);
@@ -56,14 +85,70 @@ define(function (require, exports, module) {
         },
 
         setupPageView: function (options) {
-            this.page = options.page;
-            var pageView = this.getViewForPage(options);
+            if (this.isAdminPage) {
+                this.page = options.page;
+                var pageView = this.getViewForAdministratePage(options);
+                options['el'] = this.$container;
+                this.pageView = new pageView(options).render();
+            } else {
+                this.page = options.contextName;
+                var PageView = this.getViewForPage(options.contextName);
+                this.$header = $('#contentHeader', this.$el);
+                this.$body = $('#dynamic-content', this.$el);
+                var self = this;
 
-            options['el'] = this.$container;
-            this.pageView = new pageView(options).render();
+                this.pageView = new PageView.ContentView({
+                    contextName: options.contextName,
+                    context: this.getAppProp(self),
+                    subContext: options.subContext,
+                    queryString: options.queryString
+                });
+                this.pageView.render();
+            }
         },
 
-        getViewForPage: function (options) {
+        getAppProp: function (context) {
+            var mainView = context;
+            return {
+                getMainView: function () {
+                    return mainView;
+                }
+            }
+        },
+
+        getViewForPage: function (name) {
+            switch (name) {
+                case "dashboard":
+                    return Dashboard;
+                    break;
+                case "filters":
+                    return Favorites;
+                    break;
+                case "launches":
+                case "userdebug":
+                    return Launch;
+                    break;
+                case "newlaunches":
+                    return LaunchPage;
+                    break;
+                case "members":
+                    return Member;
+                    break;
+                case "settings":
+                    return Project;
+                    break;
+                case "user-profile":
+                    return Profile;
+                    break;
+                case "info":
+                    return ProjectInfo;
+                    break;
+                default:
+                    break;
+            }
+        },
+
+        getViewForAdministratePage: function (options) {
             if (options.page === 'users') {
                 return Users.ContentView;
             } else if (options.page === 'project-details') {
@@ -83,6 +168,13 @@ define(function (require, exports, module) {
                         break;
                 }
             }
+        },
+
+        scrollTop: function () {
+            $('body,html').animate({
+                scrollTop: 0
+            }, 100);
+            return false;
         },
 
         destroy: function () {

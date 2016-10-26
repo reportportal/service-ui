@@ -29,9 +29,7 @@ define(function (require, exports, module) {
 
     var SingletonAppModel = require('model/SingletonAppModel');
 
-    var App = require('app');
 
-    var config = App.getInstance();
 
     var Header = Backbone.View.extend({
         el: "#topHeader",
@@ -133,6 +131,8 @@ define(function (require, exports, module) {
                 this.currentHash += "/projects";
             }
             this.$el.find('a[href^="' + this.currentHash + '"]', this.$el).addClass('active');
+            this.$el.find('#projectSelector a[data-href="' + this.project.projectId + '"]').parent().addClass('active'); // highlightes selected project in dropdown-list
+
         },
 
         clearActives: function () {

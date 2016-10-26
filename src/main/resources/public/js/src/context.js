@@ -31,6 +31,7 @@ define(function (require, exports, module) {
     var Service = require('coreService');
     var Admin = require('admin');
     var Register = require('register');
+    var NotFoundPage = require('pages/404');
 
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
@@ -149,7 +150,6 @@ define(function (require, exports, module) {
             } else {
                 renderPage();
             }
-
         },
 
         projectIsNotLoaded: function () {
@@ -212,7 +212,7 @@ define(function (require, exports, module) {
             } else {
                 target = $("#mainContainer");
             }
-            this.invalidView = new Main.NotFoundPage({container: target}).render();
+            this.invalidView = new NotFoundPage({container: target}).render();
         },
 
         logout: function () {

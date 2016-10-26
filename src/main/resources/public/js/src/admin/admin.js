@@ -39,20 +39,14 @@ define(function (require, exports, module) {
         initialize: function (options) {
             this.$el = options.el;
             this.contextName = 'admin';
-            this.setupAnchors();
+            this.$body = $("#mainContainer", this.$el);
             this.user = new UserModel();
-            this.currentHash = "#" + Backbone.history.getFragment().split('?')[0].split('/', 2).join('/');
-            this.listenTo(config.router, "route", this.makeLinkActive);
 
             this.userStorage = new SingletonUserStorage();
         },
 
         events: {
             'click #logout': 'onClickLogout'
-        },
-
-        setupAnchors: function () {
-            this.$body = $("#mainContainer", this.$el);
         },
 
         render: function (options) {
@@ -69,20 +63,12 @@ define(function (require, exports, module) {
             this.footerView = new Footer().render();
 
             this.contentView = new Content({
+                isAdminPage: true,
                 contextName: this.contextName,
                 el: this.$body,
                 queryString: options.queryString
             }).render(options);
             return this;
-        },
-
-        makeLinkActive: function () {
-            $("a.active", this.$el).removeClass('active');
-            this.currentHash = "#" + Backbone.history.getFragment().split('?')[0].split('/', 2).join('/');
-            if (this.currentHash === "#administrate") {
-                this.currentHash += "/projects";
-            }
-            this.$el.find('a[href^="' + this.currentHash + '"]', this.$el).addClass('active');
         },
 
         onClickLogout: function (e) {

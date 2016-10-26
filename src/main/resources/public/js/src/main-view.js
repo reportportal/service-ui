@@ -24,14 +24,13 @@ define(function (require, exports, module) {
 
     var $ = require('jquery');
     var Backbone = require('backbone');
-    var Util = require('util');
     var App = require('app');
     var UserModel = require('model/UserModel');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
     var SingletonAppModel = require('model/SingletonAppModel');
 
     var Header = require('sections/header');
-    var Content = require('sections/content1');
+    var Content = require('sections/content');
     var Sidebar = require('sections/sidebar');
     var Footer = require('sections/footer');
 
@@ -59,6 +58,7 @@ define(function (require, exports, module) {
             }).render();
 
             this.contentView = new Content({
+                isAdminPage: false,
                 container: this.$el,
             }).render(options);
 
@@ -69,47 +69,20 @@ define(function (require, exports, module) {
         },
 
         destroy: function () {
-            if (this.contentView) {
-                this.contentView.destroy();
-                this.contentView = null;
-            }
-            this.undelegateEvents();
-            this.$el.removeData().unbind();
-            this.$el.off().empty();
-
+            this.contentView.destroy();
+            this.contentView = null;
             this.sidebarView.destroy();
             this.sidebarView = null;
             this.headerView.destroy();
             this.headerView = null;
             this.footerView.destroy();
             this.footerView = null;
-        }
 
-    });
-
-    var NotFoundPage = Backbone.View.extend({
-        tpl: 'tpl-404',
-
-        initialize: function (options) {
-            this.$el = options.container;
-        },
-
-        render: function () {
-            this.$el.html(Util.templates(this.tpl, {
-                url: config.userModel.getDefaultProjectHash()
-            }));
-            config.userModel.set({lastInsideHash: config.userModel.getDefaultProjectHash()});
-            return this;
-        },
-
-        destroy: function () {
-            this.undelegateEvents();
-            this.$el.empty();
+            this.$el && this.$el.off();
         }
     });
 
     return {
         MainView: MainView,
-        NotFoundPage: NotFoundPage
     };
 });
