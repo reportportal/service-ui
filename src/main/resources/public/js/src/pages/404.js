@@ -47,6 +47,7 @@ define(function (require, exports, module) {
 
         destroy: function () {
             this.undelegateEvents();
+            this.stopListening();
             this.$el.empty();
         }
     });

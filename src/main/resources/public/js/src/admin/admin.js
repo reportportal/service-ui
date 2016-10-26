@@ -90,6 +90,8 @@ define(function (require, exports, module) {
             this.footerView.destroy();
             this.footerView = null;
 
+            this.undelegateEvents();
+            this.stopListening();
             this.$el && this.$el.off();
         }
     });

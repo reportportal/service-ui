@@ -180,6 +180,8 @@ define(function (require, exports, module) {
         destroy: function () {
             this.pageView.destroy();
             this.$el.off().empty();
+            this.undelegateEvents();
+            this.stopListening();
         }
     });
 
