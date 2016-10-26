@@ -28,12 +28,6 @@ module.exports = function (grunt) {
 
         'compiled/scss/main.css',
         'css/animate.min.css',
-
-        // TODO
-        // 'css/style.css',
-        // 'css/default.css',
-        // 'css/style-custom.css',
-        // 'css/epam-style.css',
     ];
 
     grunt.initConfig({
