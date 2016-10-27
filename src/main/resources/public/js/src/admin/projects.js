@@ -60,41 +60,42 @@ define(function (require, exports, module) {
         listShellTpl: 'tpl-admin-projects-list-shell',
 
         render: function (options) {
-            this.$el.html(Util.templates(this.shellTpl));
+            this.$el.html(Util.templates(this.shellTpl, {query: 'internal'}));
             this.$header = $("#contentHeader", this.$el);
             this.$body = $("#contentBody", this.$el);
-            this.fillContent(options);
+            this.fillContent();
             return this;
         },
 
-        restoreSettings: function () {
-            var tpl = this.currentTpl || config.currentProjectsSettings.listView || config.defaultProjectsSettings.listView;
-            var type = (tpl === this.listTableTpl) ? 'table' : 'tile';
-            var filterButtonGroup = $('#sortDirection .rp-btn');
-            var filterButton = $('#sortDirection .rp-btn[data-type="' + this.filter.sort + '"]');
-
-            $('.projects-view').removeClass('active');
-            $('.projects-view[data-view-type="' + type + '"]').addClass('active');
-            $('#nameFilter').val(this.filter.search);
-
-            filterButtonGroup.removeClass('active');
-            filterButton.addClass('active');
-
-            if (this.filter.direction === 'desc') {
-                filterButtonGroup.removeClass('desc');
-                filterButton.addClass('desc');
+        renderTab: function(e){
+            var tab = 'internal';
+            if(e) {
+                tab = $(e.currentTarget).data('query');
             }
+            if(this.tabView){
+                this.tabView.destroy();
+            }
+            this.tabView = this.getProjectsView(tab);
+            this.tabView.render();
+        },
 
-            filterButtonGroup.attr('disabled', true);
-            this.on('loadProjectsReady', this.onLoadProjectsReady, this);
+        getProjectsView: function (tab) {
+            return new ProjectsList({
+                projectsType: tab,
+                total: $('[data-js-'+tab+'-qty]', this.$el),
+                container: $('[data-js-'+tab+'-content]', this.$el),
+                filter: this.filter || this.getDefaultFilter()
+            });
         },
 
         fillContent: function (options) {
-            this.filter = this.getDefaultFilter();
+            this.filter = this.filter || this.getDefaultFilter();
 
             this.$header.html(Util.templates(this.headerTpl, options));
-            this.$sortBlock = $("#sortDirection", this.$header);
-            this.$searchString = $("#nameFilter", this.$header);
+            this.$body.html(Util.templates(this.listShellTpl, options));
+
+            this.setupAnchors();
+
             Util.bootValidator(this.$searchString, [{
                 validator: 'minMaxNotRequired',
                 type: 'addProjectName',
@@ -102,45 +103,231 @@ define(function (require, exports, module) {
                 max: 256
             }]);
 
-            this.$body.html(Util.templates(this.listShellTpl, options));
-            this.$activeAmount = $("#activeFound", this.$body);
-            this.$activeHolder = $("#activeProjectsList", this.$body);
-            this.$inactiveAmount = $("#inactiveFound", this.$body);
-            this.$inactiveHolder = $("#collapseInactive", this.$body);
-            this.$personalHolder = $('[data-js-personal-projects]', this.$body);
-            this.$personalAmount = $('[data-js-personal-amount]', this.$body);
+            this.renderTab();
+            this.listenTo(this.tabView, 'loadProjectsReady', this.onLoadProjectsReady);
+        },
 
-            this.restoreSettings();
-            this.loadProjects();
+        setupAnchors: function(){
+            this.$sortBlock = $("[data-js-sort-block]", this.$body);
+            this.$searchString = $("[data-js-filter-projects]", this.$body);
         },
 
         events: {
-            'show.bs.collapse #accordion': 'renderInactive',
-            'show.bs.collapse [data-js-personal-accordion]': 'renderPersonalProjects',
-            'click .remove-project': 'removeProject',
             'click #sortDirection .rp-btn': 'changeSorting',
             'validation::change #nameFilter': 'filterProjects',
-            'click .assign-to-project': 'assignAdminToProject',
-            'click .projects-view': 'changeProjectsView'
+            'click .projects-view': 'changeProjectsView',
+            'click [data-toggle="tab"]': 'renderTab'
         },
 
         changeProjectsView: function (event) {
             event.preventDefault();
-
             var $target = $(event.currentTarget);
-            var template = ($target.data('view-type') == 'table') ? this.listTableTpl : this.listTileTpl;
-
-            config.currentProjectsSettings.listView = template;
-            this.currentTpl = template;
-
             $('.projects-view').removeClass('active');
             $target.addClass('active');
-
-            if (this.projectsData && _.size(this.projectsData)) {
-                this.reRenderProjects();
-            }
+            this.tabView.updateView({
+                viewType: $target.data('view-type')
+            });
         },
 
+        onLoadProjectsReady: function () {
+            $('#sortDirection .rp-btn').attr('disabled', false);
+        },
+
+        changeSorting: function (e) {
+            var btn = $(e.currentTarget);
+            //this.off('loadProjectsReady', this.onLoadProjectsReady, this);
+            if (btn.hasClass('active')) {
+                btn.toggleClass('desc');
+                this.filter.direction = config.currentProjectsSettings.sortingDirection = btn.hasClass('desc') ? 'desc' : 'asc';
+            } else {
+                $(".active, .desc", this.$sortBlock).removeClass('active').removeClass('desc');
+                btn.addClass('active');
+                this.filter.direction = config.currentProjectsSettings.sortingDirection = 'asc';
+                this.filter.sort = config.currentProjectsSettings.sorting = btn.data('type');
+            }
+            this.tabView.update({
+                direction: this.filter.direction,
+                sort: this.filter.sort,
+                filter: this.filter.search
+            });
+        },
+
+        filterProjects: function (e, data) {
+            var self = this;
+            clearTimeout(this.searching);
+            this.searching = setTimeout(function () {
+                if (data.valid) {
+                    self.filter.search = config.currentProjectsSettings.search = data.value;
+                    self.tabView.update({
+                        direction: self.filter.direction,
+                        sort: self.filter.sort,
+                        filter: self.filter.search
+                    });
+                }
+            }, config.userFilterDelay);
+        },
+
+        destroy: function () {
+            this.projectsData = null;
+            Components.BaseView.prototype.destroy.call(this);
+        }
+    });
+
+    var ProjectsList =  Components.BaseView.extend({
+        initialize: function(options){
+            this.projectsType = options.projectsType;
+            this.$total = options.total;
+            this.$container = options.container;
+            this.currentTpl = options.tpl || this.listListTpl;
+            this.filter = options.filter;
+        },
+
+        tpl: 'tpl-admin-projects-list',
+        listListTpl: 'tpl-admin-projects-tile-view',
+        listTableTpl: 'tpl-admin-projects-table-view',
+
+        events: {
+            'click .remove-project': 'removeProject',
+            'click .assign-to-project': 'assignAdminToProject'
+        },
+
+        render: function(){
+            this.$container.append(this.$el.html(Util.templates(this.tpl)));
+            this.setupAnchors();
+
+            this.paging = new Components.PagingToolbarSaveUser({
+                el: this.$pagingEl,
+                model: new Backbone.Model(this.getDefaultPaging()),
+                pageType: 'adminProjectList'
+            });
+            this.listenTo(this.paging, 'page', this.onPage);
+            this.listenTo(this.paging, 'count', this.onPageCount);
+
+            this.loadProjects();
+        },
+        renderProjects: function(){
+            this.$listEl.append(Util.templates(this.currentTpl, {
+                collection: this.collection.toJSON(),
+                util: Util,
+                isNew: this.isNew,
+                hasRunsLastWeek: this.hasRunsLastWeek,
+                active: true,
+                canDelete: this.canDelete,
+                search: '',//this.filter.search,
+                filter: this.searchFilter,
+                textWrapper: Util.textWrapper,
+                userProjects: config.userModel.get('projects')
+            }));
+            this.trigger('loadProjectsReady');
+        },
+        updateView: function(data){
+            this.currentTpl = data.viewType == 'table' ? this.listTableTpl : this.listListTpl;
+            this.$listEl.empty();
+            this.renderProjects();
+        },
+        update: function(options){
+            this.filter = options || this.filter;
+            this.$listEl.empty();
+            this.loadProjects();
+        },
+        setupAnchors: function(){
+            this.$loaderEl = $('[data-js-projects-loader]', this.$el);
+            this.$listEl = $('[data-js-projects-list]', this.$el);
+            this.$pagingEl = $('[data-js-projects-paging]', this.$el);
+        },
+        getDefaultPaging: function(){
+            return {number: 1, size: 12};
+        },
+        onPage: function(page) {
+            this.update();
+        },
+        onPageCount: function(size) {
+            this.update();
+        },
+        onLoadProjects: function(data){
+            if(data.page.totalPages < data.page.number && data.page.totalPages != 0){
+                this.paging.trigger('page', data.page.totalPages);
+                return;
+            }
+            this.paging.model.set(data.page);
+            this.paging.render();
+            this.collection = new Backbone.Collection(data.content ? data.content : data);
+            this.renderProjects();
+
+            this.$total.html('('+data.page.totalElements+')');
+        },
+        getQueryData: function(){
+            var query = this.projectsType == 'personal' ? '?filter.eq.configuration$entryType=PERSONAL' : '?';
+            if(this.filter.filter){
+                query += '&filter.cnt.name=' + this.filter.filter;
+            }
+            if(this.filter.sort){
+                query += '&page.sort='+this.filter.sort;
+                if(this.filter.direction){
+                    query += ','+this.filter.direction;
+                }
+            }
+            query += '&page.page=' + this.paging.model.get('number') + '&page.size=' + this.paging.model.get('size');
+            return query;
+        },
+        loadProjects: function () {
+            var query = this.getQueryData();
+            config.userModel.ready.done(function () {
+                this.toggleLoader('show');
+                Service.getProjects(query)
+                    .done(function (data) {
+                        this.onLoadProjects(data);
+                    }.bind(this))
+                    .fail(function (error) {
+                        Util.ajaxFailMessenger(error, 'adminLoadProjects');
+                    })
+                    .always(function(){
+                        this.toggleLoader('hide');
+                    }.bind(this));
+            }.bind(this));
+        },
+        toggleLoader: function(action){
+            this.$loaderEl[action]();
+        },
+        searchFilter: function (item, searchString) {
+            if (!searchString) {
+                return true;
+            } else {
+                var regex = new RegExp(searchString.escapeRE(), 'i');
+                return regex.test(item.projectId);
+            }
+        },
+        hasRunsLastWeek: function (stamp) {
+            return Util.daysBetween(new Date(), new Date(stamp)) < 7;
+        },
+        canDelete: function (item) {
+            return !Util.isDeleteLock(item);
+        },
+        removeProject: function (e) {
+            e.preventDefault();
+            var el = $(e.currentTarget);
+            var id = '' + el.data('id');
+            var status = el.data('active');
+
+            Util.confirmDeletionDialog({
+                callback: function () {
+                    var self = this;
+                    Service.deleteProject(id)
+                        .done(function () {
+                            var curProjects = config.userModel.get('projects');
+                            delete curProjects[id];
+                            config.userModel.set('projects', curProjects);
+                            self.update();
+                            Util.ajaxSuccessMessenger("deleteProject");
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error, "deleteProject");
+                        });
+                }.bind(this),
+                message: 'deleteProject',
+                format: [id]
+            });
+        },
         assignAdminToProject: function (e) {
             e.preventDefault();
             var el = $(e.currentTarget);
@@ -159,214 +346,8 @@ define(function (require, exports, module) {
                     Util.ajaxFailMessenger(error, "assignYourSelf");
                 });
         },
-
-        onLoadProjectsReady: function () {
-            $('#sortDirection .rp-btn').attr('disabled', false);
-        },
-
-        changeSorting: function (e) {
-            var btn = $(e.currentTarget);
-            this.off('loadProjectsReady', this.onLoadProjectsReady, this);
-
-            if (btn.hasClass('active')) {
-                btn.toggleClass('desc');
-                this.filter.direction = config.currentProjectsSettings.sortingDirection = btn.hasClass('desc') ? 'desc' : 'asc';
-            } else {
-                $(".active, .desc", this.$sortBlock).removeClass('active').removeClass('desc');
-                btn.addClass('active');
-                this.filter.direction = config.currentProjectsSettings.sortingDirection = 'asc';
-                this.filter.sort = config.currentProjectsSettings.sorting = btn.data('type');
-            }
-            this.makeSorting();
-        },
-
-        makeSorting: function () {
-            this.projectsData.active = _.sortByOrder(this.projectsData.active, this.filter.sort, this.filter.direction === 'asc');
-            if (this.$inactiveHolder.hasClass('in')) {
-                this.projectsData.inactive = _.sortByOrder(this.projectsData.inactive, this.filter.sort, this.filter.direction === 'asc');
-            }
-            if (this.$personalHolder.hasClass('in')) {
-                this.projectsData.personal = _.sortByOrder(this.projectsData.personal, this.filter.sort, this.filter.direction === 'asc');
-            }
-            this.reRenderProjects();
-        },
-
-        filterProjects: function (e, data) {
-            var self = this;
-            clearTimeout(this.searching);
-            this.searching = setTimeout(function () {
-                if (data.valid) {
-                    self.filter.search = config.currentProjectsSettings.search = data.value;
-                    self.reRenderProjects();
-                }
-            }, config.userFilterDelay);
-        },
-
-        reRenderProjects: function () {
-            this.renderActiveProjects();
-            if (this.$inactiveHolder.hasClass('in')) {
-                this.renderInactive();
-            } else {
-                var self = this;
-                var result = _.reduce(this.projectsData.inactive, function (sum, p) {
-                    return sum + self.searchFilter(p, self.filter.search);
-                }, 0);
-                this.$inactiveAmount.text(result);
-            }
-            if (this.$personalHolder.hasClass('in')) {
-                this.renderPersonalProjects();
-            } else {
-                var self = this;
-                var result = _.reduce(this.projectsData.personal, function (sum, p) {
-                    return sum + self.searchFilter(p, self.filter.search);
-                }, 0);
-                this.$personalAmount.text(result);
-            }
-        },
-
-        renderPersonalProjects: function(){
-            this.$personalHolder.html(Util.templates(this.currentTpl, {
-                collection: this.projectsData.personal,
-                util: Util,
-                isNew: this.isNew,
-                isPersonalProject: true,
-                hasRunsLastWeek: this.hasRunsLastWeek,
-                active: true,
-                canDelete: this.canDelete,
-                search: this.filter.search,
-                filter: this.searchFilter,
-                textWrapper: Util.textWrapper,
-                userProjects: config.userModel.get('projects')
-            }));
-
-            this.$personalAmount.text($(".project-row", this.$personalHolder).length);
-        },
-
-        renderInactive: function () {
-            this.$inactiveHolder.html(Util.templates(this.currentTpl, {
-                collection: this.projectsData.inactive,
-                util: Util,
-                canDelete: this.canDelete,
-                search: this.filter.search,
-                filter: this.searchFilter,
-                textWrapper: Util.textWrapper,
-                userProjects: config.userModel.get('projects'),
-                inactiveProject: true
-            }));
-            this.$inactiveAmount.text($(".project-row", this.$inactiveHolder).length);
-        },
-
-        canDelete: function (item) {
-            return !Util.isDeleteLock(item);
-        },
-
-        update: function (options) {
-            this.fillContent(options);
-        },
-
-        loadProjects: function () {
-            var self = this;
-            this.$searchString.attr('disabled', 'disabled');
-            config.userModel.ready.done(function () {
-                Service.getProjects()
-                    .done(function (data) {
-                        data = _.sortBy(data, function (project) {
-                            return project.creationDate;
-                        }).reverse();
-                        self.projectsData = _.groupBy(data, function (project) {
-                            return self.isPersonalProject(project) ? 'personal' : project.launchesQuantity || self.isNew(project.creationDate) ? 'active' : 'inactive';
-                        });
-                        self.makeSorting();
-                    })
-                    .fail(function (error) {
-                        Util.ajaxFailMessenger(error, 'adminLoadProjects');
-                    })
-                    .always(function(){
-                        self.$searchString.removeAttr('disabled');
-                    });
-            });
-        },
-
-        isPersonalProject: function(project){
-            return project.entryType == "PERSONAL";
-        },
-
-        renderActiveProjects: function () {
-            this.$activeHolder.html(Util.templates(this.currentTpl, {
-                collection: this.projectsData.active,
-                util: Util,
-                isNew: this.isNew,
-                hasRunsLastWeek: this.hasRunsLastWeek,
-                active: true,
-                canDelete: this.canDelete,
-                search: this.filter.search,
-                filter: this.searchFilter,
-                textWrapper: Util.textWrapper,
-                userProjects: config.userModel.get('projects')
-            }));
-            this.$activeAmount.text($(".project-row", this.$activeHolder).length);
-
-            this.trigger('loadProjectsReady');
-        },
-
-        searchFilter: function (item, searchString) {
-            if (!searchString) {
-                return true;
-            } else {
-                var regex = new RegExp(searchString.escapeRE(), 'i');
-                return regex.test(item.projectId);
-            }
-        },
-
-        isNew: function (stamp) {
-            return Util.daysBetween(new Date(), new Date(stamp)) <= 7;
-        },
-
-        hasRunsLastWeek: function (stamp) {
-            return Util.daysBetween(new Date(), new Date(stamp)) < 7;
-        },
-
-        removeProject: function (e) {
-            e.preventDefault();
-            var el = $(e.currentTarget);
-            var id = '' + el.data('id');
-            var status = el.data('active');
-
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    var self = this;
-                    Service.deleteProject(id)
-                        .done(function () {
-                            self.removeFromCollection(id, status);
-                            var curProjects = config.userModel.get('projects');
-                            delete curProjects[id];
-                            config.userModel.set('projects', curProjects);
-                            Util.ajaxSuccessMessenger("deleteProject");
-                        })
-                        .fail(function (error) {
-                            Util.ajaxFailMessenger(error, "deleteProject");
-                        });
-                }.bind(this),
-                message: 'deleteProject',
-                format: [id]
-            });
-        },
-
-        removeFromCollection: function (id, status) {
-            var collection = status ? this.projectsData.active : this.projectsData.inactive;
-            var index = _.findIndex(collection, function (project) {
-                return project.projectId === id;
-            });
-            collection.splice(index, 1);
-            if (status) {
-                this.renderActiveProjects();
-            } else {
-                this.renderInactive();
-            }
-        },
-
-        destroy: function () {
-            this.projectsData = null;
+        destroy: function(){
+            this.paging = null;
             Components.BaseView.prototype.destroy.call(this);
         }
     });
