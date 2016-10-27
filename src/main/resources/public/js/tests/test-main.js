@@ -186,7 +186,7 @@ require.config({
 
         '../tests/spec/project/project',
 
-        '../tests/spec/admin/admin',
+        //'../tests/spec/admin/admin',
 
         '../tests/spec/member/member_assigned',
         '../tests/spec/member/assign_member',
