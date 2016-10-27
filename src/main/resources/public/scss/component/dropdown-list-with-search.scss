@@ -18,59 +18,42 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-%DROPDOWN_LIST_WITH_SEARCH_FIELD {
 
-  .select2-container {
-    width: 200px;
+.select2-container {
 
-    .select2-choice {
-      background-image: none;
-      border-color: $COLOR--gray-80;
-      border-radius: 0;
+  .select2-choice {
+    background-image: none;
+    border-color: $COLOR--gray-80;
+    border-radius: 0;
+    box-shadow: none;
+    height: auto;
+    min-height: 30px;
+    margin-right: -1px;
+
+    .select2-chosen {
+      margin-right: 30px;
       box-shadow: none;
-      height: auto;
-      min-height: 30px;
-      margin-right: -1px;
+      padding: 2px 5px;
+    }
 
-      .select2-chosen {
-        margin-right: 30px;
-        box-shadow: none;
-        padding: 2px 5px;
-      }
+    .select2-arrow {
+      width: 30px;
+      border: none;
+      background: 0 0;
 
-      .select2-arrow {
-        width: 30px;
-        border: none;
+      b {
         background: 0 0;
-
-        b {
-          background: 0 0;
-          display: inline-block;
-          width: 0;
-          height: 0;
-          margin-left: 10px;
-          margin-top: 2px;
-          vertical-align: middle;
-          border-top: 4px solid;
-          border-right: 4px solid transparent;
-          border-left: 4px solid transparent;
-          background-position: 2px 1px;
-        }
+        display: inline-block;
+        width: 0;
+        height: 0;
+        margin-left: 10px;
+        margin-top: 2px;
+        vertical-align: middle;
+        border-top: 4px solid;
+        border-right: 4px solid transparent;
+        border-left: 4px solid transparent;
+        background-position: 2px 1px;
       }
     }
   }
 }
-
-/* INCLUDE STYLES */
-
-/* FOR USUAL USERS */
-#dynamic-content {
-  @extend %DROPDOWN_LIST_WITH_SEARCH_FIELD;
-}
-
-/* FOR ADMINISTRATORS USERS */
-#dynamicContent {
-  @extend %DROPDOWN_LIST_WITH_SEARCH_FIELD;
-}
-
-/*-----------------------------------*/
