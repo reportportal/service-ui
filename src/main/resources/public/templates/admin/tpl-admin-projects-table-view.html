@@ -1,25 +1,25 @@
 <% var counter = 0; %>
-<div class="container-fluid rp-margin-reset projects-table-view rp-border-last-child rp-table-hover">
+<div class="container-fluid projects-table-view">
     <div class="row rp-table-thead visible-md visible-lg">     
         <div class="col-md-4"><div class="rp-table-th"><%= data.text.admin.projectName %></div></div>
-        <div class="col-md-2"><div class="rp-table-th"><%= data.text.admin.kpi %></div></div>
-        <div class="col-md-1"><div class="rp-table-th"><%= data.text.admin.projectMembers %></div></div>
-        <div class="col-md-1"><div class="rp-table-th"><%= data.text.topMenu.launches %></div></div>
+        <div class="col-md-1"><div class="rp-table-th"><%= data.text.admin.kpi %></div></div>
+        <div class="col-md-1"><div class="rp-table-th text-right"><%= data.text.admin.projectMembers %></div></div>
+        <div class="col-md-1"><div class="rp-table-th text-right"><%= data.text.topMenu.launches %></div></div>
         <div class="col-md-2"><div class="rp-table-th"><%= data.text.admin.lastLaunchDate %></div></div>
-        <div class="col-md-2"><div class="rp-table-th"><%= data.text.favorites.fActions %></div></div>
+        <div class="col-md-2"><div class="rp-table-th text-center"><%= data.text.favorites.fActions %></div></div>
+        <div class="col-md-1"><div class="rp-table-th text-center"><%= data.text.ui.delete %></div></div>
     </div>
     <% _.forEach(data.collection, function(project, index){ %>
         <% if(data.filter(project, data.search)){ %>
             <% counter += 1; %>
             <% var lastRunClass = data.inactiveProject || (project.lastRun && !data.hasRunsLastWeek(project.lastRun))   ? 'dimmed' : ''; %>
             <% var assigned = !!data.userProjects[project.projectId]; %>
-            <div class="row rp-table-row project-row <%= lastRunClass %>">
+            <div class="row project-row <%= lastRunClass %>">
                 <div class="col-md-4 clearfix">
                      <div class="col-xs-5 visible-xs visible-sm">
                         <h5><%= data.text.admin.projectName %></h5>
                     </div>
-                     <div class="col-xs-7 col-md-12">
-                        <div class="rp-info">
+                     <div class="col-xs-7 no-padding col-md-12">
                             <h4 class="project_name">
                                 <a href="#administrate/project-details/<%- project.projectId %>"
                                     class="project_details break-link"
@@ -30,17 +30,16 @@
                              <% if(!data.isPersonalProject && data.isNew && data.isNew(project.creationDate)) { %>
                                 <span class="label label-success you"><%= data.text.admin.newProject %></span>
                              <% } %>
-                        </div>
                      </div>
                 </div>
-                <div class="col-md-2 clearfix"></div> 
+                <div class="col-md-1 clearfix"></div>
                 <div class="col-md-1 clearfix">
                      <div class="col-xs-5 visible-xs visible-sm">
                         <h5><%= data.text.admin.projectMembers %></h5>
                     </div>
-                     <div class="col-xs-7 col-md-12">
-                        <div class="rp-info">
-                             <%= project.usersQuantity %>
+                     <div class="col-xs-7 no-padding col-md-12">
+                        <div class="project-info text-right">
+                             <strong><%= project.usersQuantity %></strong>
                         </div>
                      </div>
                 </div>
@@ -48,9 +47,9 @@
                     <div class="col-xs-5 visible-xs visible-sm">
                         <h5><%= data.text.topMenu.launches %></h5>
                     </div>
-                    <div class="col-xs-7 col-md-12">
-                        <div class="rp-info">
-                            <%= project.launchesQuantity %>
+                    <div class="col-xs-7 no-padding col-md-12">
+                        <div class="project-info text-right">
+                            <strong><%= project.launchesQuantity %></strong>
                         </div>
                     </div>
                 </div>
@@ -58,8 +57,8 @@
                     <div class="col-xs-5 visible-xs visible-sm">
                         <h5><%= data.text.admin.lastLaunchDate %></h5>
                     </div>
-                    <div class="col-xs-7 col-md-12">
-                        <div class="rp-info">
+                    <div class="col-xs-7 no-padding col-md-12">
+                        <div class="project-info">
                             <%= project.lastRun ? data.util.daysFromNow(project.lastRun) : data.text.admin.lastRunSuffix %>
                         </div>
                     </div>
@@ -68,51 +67,49 @@
                     <div class="col-xs-5 visible-xs visible-sm">
                         <h5><%= data.text.favorites.fActions %></h5>
                     </div>
-                    <div class="col-xs-7 col-md-12">
-                        <div class="rp-info">
-                            <ul class="nav rp-icons-style">
-                                <li class="col-xs-3 projects-table-view-list-item">
-                                    <a class="col-sm-4 project-link text-center"
+                    <div class="col-xs-7 no-padding col-md-12">
+                            <ul class="nav rp-icons-style projects-table-view-actions">
+                                <li class="col-xs-4 projects-table-view-list-item">
+                                    <a class="project-link"
                                         title="<%= data.text.ui.settings %>"
                                         href="#administrate/projects/<%- project.projectId %>/settings">
                                         <i class="material-icons">settings</i>
                                     </a>
                                 </li>
-                                <li class="col-xs-3 projects-table-view-list-item">
-                                    <a class="col-sm-4 project-link text-center"
+                                <li class="col-xs-4 projects-table-view-list-item">
+                                    <a class="project-link"
                                         title="<%= data.text.ui.members %>"
                                         href="#administrate/projects/<%- project.projectId %>/members">
                                         <i class="rp-icons rp-icons-all-users"></i>
                                     </a>
                                 </li>
-                                <li class="col-xs-3 switch-icons projects-table-view-list-item <%= assigned ? '' : 'no-assigned' %>">
-                                     <a class="col-sm-4 project-link text-center go-to-project"
+                                <li class="col-xs-4 switch-icons projects-table-view-list-item <%= assigned ? '' : 'no-assigned' %>">
+                                     <a class="project-link go-to-project"
                                         title="<%= data.text.admin.goToProject %>"
                                         href="#<%- project.projectId %>">
-                                         <i class="material-icons">open_in_browser</i>
+                                         <i class="material-icons">playlist_add_check</i>
                                      </a>
                                     <% if(!assigned){ %>
-                                        <a class="col-sm-4 project-link text-center assign-to-project"
+                                        <a class="project-link assign-to-project"
                                             title="<%= data.text.admin.assignToProject %>"
                                             href="#"
                                             data-project="<%- project.projectId %>">
-                                            <i class="material-icons">add</i>
-                                        </a>
-                                    <% } %>
-                                </li>
-                                <li class="col-xs-3 projects-table-view-list-item">
-                                    <% if(data.canDelete(project) && !data.isPersonalProject) { %>
-                                        <a class="col-sm-4 project-link text-center remove-project"
-                                            href="#" title="<%= data.text.permissionMap.deleteProject %>"
-                                            data-id="<%- project.projectId %>"
-                                            data-active="<%= data.active %>">
-                                            <i class="material-icons">clear</i>
+                                            <i class="material-icons">open_in_browser</i>
                                         </a>
                                     <% } %>
                                 </li>
                             </ul>
-                        </div>
                      </div>
+                </div>
+                <div class="col-md-1 no-padding clearfix text-center">
+                    <% if(data.canDelete(project) && !data.isPersonalProject) { %>
+                    <a class=" project-link remove-project"
+                       href="#" title="<%= data.text.permissionMap.deleteProject %>"
+                       data-id="<%- project.projectId %>"
+                       data-active="<%= data.active %>">
+                        <i class="rp-icons rp-icons-delete" data-js-remove=""></i>
+                    </a>
+                    <% } %>
                 </div>
             </div>
         <% } %>

@@ -17,113 +17,8 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-/*--------------------*/
-/* PROJECT LIST PAGES */
-
-#contentHeader {
-    #messageFilterWrapper {
-        .favorites-name-filter.rp-input-search {
-            &:focus,
-            &:hover {
-                background-color: $COLOR--white-default;
-            }
-        }
-    }
-
-    #adminNavigation {
-        padding-top: 44px;
-        padding-right: 20px;
-    }
-}
-
-/*--------------------*/
-#contentBody {
-    .projects-header {
-        margin-bottom: 20px;
-
-        .projects-title {
-            padding-top: 20px;
-        }
-        .projects-view-switcher {
-            padding-top: 20px;
-            padding-right: 10px;
-
-            .projects-view {
-                width: 24px;
-                height: 24px;
-                font-size: 24px;
-                line-height: 24px;
-                min-width: 24px;
-                min-height: 24px;
-                padding: 1px;
-                margin: 0;
-                box-shadow: none;
-                opacity: 0.5;
-                box-sizing: content-box;
-
-                &.active {
-                    opacity: 1;
-                }
-
-                &.projects-view-table {
-                    margin-left: -1px;
-                }
-            }
-        }
-    }
-
-    #activeProjectsList {
-        position: relative;
-        min-height: 50px;
-
-        & > .col-sm-4 {
-            padding: 10px;
-        }
-
-    }
-
-    .pr-collapsed-projects {
-        margin: 0;
-        .collapsed-projects-title {
-            position: relative;
-            color: #666;
-            margin-bottom: 10px;
-            text-decoration: none;
-
-            &.collapsed {
-                .minus {
-                    display: none;
-                }
-
-                .plus {
-                    display: inline-block;
-                }
-            }
-
-            .plus {
-                display: none;
-            }
-
-            .minus {
-                display: inline-block;
-            }
-
-            .rp-icons {
-                position: absolute;
-                width: 15px;
-                height: 15px;
-                top: 8px;
-                font-size: 15px;
-                right: -25px;
-            }
-        }
-
-    }
-}
-
-/*--------------------*/
 /*--- ADMINISTRATE ---*/
 
 .admin_header_controls a:focus {
@@ -182,86 +77,6 @@
 
 .input-filter .form-control-feedback {
     color: #999;
-}
-
-#activeProjectsList .project-wrapper,
-.pr-collapsed-projects .project-wrapper {
-    margin: 0 0 20px;
-    padding: 0;
-    border-color: #d5d5d5;
-    background-color: #f9f9f9;
-}
-
-.project-wrapper > h2 {
-    margin: 17px 0 0;
-    padding: 0 20px 20px;
-    border-bottom: 1px solid #e6e6e6;
-    font-family: $OswaldRegular;
-    font-size: 18px;
-    color: #464547;
-    text-transform: uppercase;
-
-    span.label.you {
-        position: relative;
-        top: -2px;
-        left: 1%;
-        display: inline-block;
-        height: 18px;
-        margin-left: 3px;
-        padding: 0 6px;
-        line-height: 18px;
-        border-radius: 0;
-        background-color: #a3c644;
-        font-family: $OpenSansRegular;
-        font-weight: normal;
-        font-size: 10px;
-    }
-}
-
-.project-wrapper .project_info_wrapper {
-    border-bottom: 1px solid #dcdcdc;
-    padding-bottom: 0 !important;
-}
-
-.project-wrapper .heartbeat_block {
-    padding-top: 16px;
-    padding-left: 0;
-    border-right: 1px solid #e6e6e6;
-}
-
-#dynamicContent .project-wrapper .heartbeat_block .col-sm-12 {
-    padding-bottom: 10px;
-}
-
-.project-wrapper .project_info_block {
-    padding-top: 15px;
-    padding-right: 0;
-    font-family: "OpenSansRegular", sans-serif;
-}
-
-.project-wrapper .project_info {
-    padding: 0 0 5px !important;
-    font-size: 14px;
-    color: #666;
-}
-
-.project-wrapper .project_info .bold {
-    font-size: 16px;
-    margin-right: 5px;
-}
-
-.project-wrapper .project-link_wrapper {
-    background-color: #f1f1f1;
-}
-
-.project-wrapper .project-link {
-    font-family: "OpenSansRegular", sans-serif;
-    color: #828282;
-}
-
-#activeProjectsList .project-item,
-.pr-collapsed-projects .project-item {
-    padding: 0 10px;
 }
 
 .table_view .project-item {
@@ -337,15 +152,6 @@
 
 /*--- END ADMINISTRATE ---*/
 
-.project-link i {
-    display: block;
-    margin: 0 auto;
-    width: 30px;
-    height: 22px;
-    font-size: 22px;
-    line-height: 22px;
-}
-
 #coverLoader {
     background-color: rgba(255, 255, 255, 0.4);
     height: 100%;
@@ -361,31 +167,8 @@
 #contentBody {min-height: 120px;}
 #contentBody #popupLoader {display: block;height:auto;}
 
-.project-wrapper {position:relative; border: 1px solid #666;}
-.project-wrapper h1 {padding-left: 10px;padding-right: 10px;}
-.project-wrapper .project-link {padding: 10px;color:#565656;}
-// .project-link i {float: none;}
-.project-wrapper .remove-project {
-    position:absolute;
-    right: 10px;
-    top: 10px;
-    width: 22px;
-    height: 22px;
-    font-size: 22px;
-    line-height: 22px;
-    display: none;
-    z-index: 5;
-    cursor: pointer;
-}
-.project-wrapper:hover .remove-project {
-    display: inline-block;
-}
-.remove-project i {color: #656565;}
-.project-wrapper:hover .remove-project {display:inline;}
-
 #popupLoader.admin-section i {top:0px;}
 
-.assign-to-project {display: none;}
 .no-assigned .go-to-project {display: none;}
 .no-assigned .assign-to-project {display: inline-block;}
 
@@ -422,57 +205,15 @@
 }
 
 
-.pr-collapsed-projects .col-sm-4 {
-    padding: 10px;
-}
-
 .projects-table-view {
     padding-left: 20px;
     padding-right: 20px;
 }
 
-.projects-table-view .project-link {
-    color: #828282;
-}
-
 .projects-table-view .label.you {
-  position: relative; 
+  position: relative;
   background-color: #a3c644;
 }
-
-.projects-table-view .project_name {
-    display: inline-block;
-}
-
-.projects-table-view .remove-project {
-    display: none;
-}
-
-.projects-table-view .rp-table-row:hover .remove-project {
-    display: inline-block;
-}
-
-.projects-table-view-list-item,
-.projects-table-view-list-item .project-link {
-    padding-left: 0;
-}
-
-.projects-table-view-list-item .project-link i {
-    width: 30px;
-    height: 22px;
-    font-size: 18px;
-    line-height: 18px;
-}
-.projects-table-view .project-link.assign-to-project {
-    display: none;
-}
-.projects-table-view .no-assigned .project-link.go-to-project {
-    display: none;
-}
-.projects-table-view .no-assigned .project-link.assign-to-project {
-    display: inline-block;
-}
-
 
 /* ---------------------------------- */
 

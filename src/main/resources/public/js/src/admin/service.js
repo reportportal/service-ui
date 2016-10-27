@@ -36,8 +36,8 @@ define(function (require, exports, module) {
         return call('GET', Urls.getProject());
     };
 
-    var getProjects = function () {
-        return call('GET', Urls.adminProjects());
+    var getProjects = function (data) {
+        return call('GET', Urls.adminProjects(data));
     };
 
     var deleteUser = function (id) {
