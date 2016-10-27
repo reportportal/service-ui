@@ -19,12 +19,68 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.main-content {
-  position: relative;
-  padding: 10px 15px 10px 15px;
+.rp-main-panel {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 15px 0 0 0;
 
-  @media (min-width: 768px) {
-    padding: 0 15px 0 15px;
-    min-height: 100%;
+  & > #contentHeader {
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    padding: 0;
+
+    #headerBar {
+      min-height: inherit;
+      margin: 0;
+      margin-bottom: 15px;
+      padding: 0;
+      background: transparent;
+    }
+  }
+
+  #dynamic-content {
+    position: relative;
+    padding: 0 15px 15px 15px;
+    background-color: #ffffff;
+  }
+
+  & > #dynamicContent {
+    position: relative;
+    padding: 0;
+
+    & > #contentHeader {
+      border: none;
+      border-radius: 0;
+      background-color: transparent;
+      min-height: inherit;
+      margin: 0;
+      padding: 0;
+
+      & > #headerBar {
+        min-height: inherit;
+        margin: 0;
+        margin-bottom: 15px;
+        padding: 0;
+        background: transparent;
+      }
+    }
+  }
+
+  #contentHeader {
+    #headerBar {
+      &.fixed_header {
+        border-top: solid 1px #e9e9e9;
+        border-bottom: solid 1px #e9e9e9;
+        border-left: none;
+        border-right: none;
+        background-color: #ffffff;
+        margin: 0;
+        padding: 10px 0;
+      }
+    }
   }
 }

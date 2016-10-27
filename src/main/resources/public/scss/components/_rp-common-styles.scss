@@ -719,6 +719,15 @@ ul.rp-nav-left > li.title-holder {
         width: 100%;
     }
 }
+.main-content {
+    position: relative;
+    padding: 10px 15px 10px 15px;
+
+    @media (min-width: 768px) {
+        padding: 0 15px 0 15px;
+        min-height: 100%;
+    }
+}
 #main_content {
     position: relative;
     width: 100%;
@@ -780,90 +789,13 @@ body.menu-open {
 
 #mainContainer {
     padding-bottom: 40px;
-
-    .rp-main-panel {
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
-        background-color: transparent;
-        margin: 0;
-        padding: 0;
-
-        & > #contentHeader {
-            border: none;
-            border-radius: 0;
-            background-color: transparent;
-            padding: 0;
-
-            #headerBar {
-                min-height: inherit;
-                margin: 0;
-                margin-bottom: 15px;
-                padding: 0;
-                background: transparent;
-            }
-        }
-
-        #dynamic-content {
-        // #dynamicContent {
-            position: relative;
-            padding: 15px;
-            background-color: #ffffff;
-        }
-    }
 }
 
 /*------------*/
 
 /* admin */
 #mainContainer {
-    .rp-main-panel {
-        padding-top: 15px;
 
-        & > #dynamicContent {
-            position: relative;
-            padding: 0;
-
-            & > #contentHeader {
-                border: none;
-                border-radius: 0;
-                background-color: transparent;
-                min-height: inherit;
-                margin: 0;
-                padding: 0;
-
-                & > #headerBar {
-                    min-height: inherit;
-                    margin: 0;
-                    margin-bottom: 15px;
-                    padding: 0;
-                    background: transparent;
-
-                    .rp-nav-right {
-                        li {
-                            &.active {
-
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        #contentHeader {
-            #headerBar {
-                &.fixed_header {
-                    border-top: solid 1px #e9e9e9;
-                    border-bottom: solid 1px #e9e9e9;
-                    border-left: none;
-                    border-right: none;
-                    background-color: #ffffff;
-                    margin: 0;
-                    padding: 10px 0;
-                }
-            }
-        }
-    }
 }
 
 
