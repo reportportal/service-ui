@@ -1086,7 +1086,10 @@ define(['util'], function () {
             noLaunchesPerformed: "No launches were performed at the selected period",
             titleAllProjects: "All Projects",
             titleMembers: "Members",
-            titleSettings: "Settings"
+            titleSettings: "Settings",
+            internalProjects: 'Internal projects',
+            personalProjects: 'Personal projects',
+            searchByName: "Search by Name",
         },
 
         members: {
