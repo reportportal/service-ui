@@ -694,11 +694,6 @@ ul.rp-nav-left > li.title-holder {
 /*--------------*/
 /* MAIN CONTENT */
 
-.main-content {
-    position: relative;
-    padding: 10px 15px 10px 15px;
-}
-
 #main_content {
     position: relative;
     width: 100%;
@@ -760,15 +755,6 @@ body.menu-open {
 @media (min-width: 1600px) {
     #main_content .container {
         width: 1370px;
-    }
-}
-
-@media (min-width:768px) {
-    .main-content {
-        // TODO
-        // left: 0 !important;
-        padding: 0 15px 0 15px;
-        min-height: 100%;
     }
 }
 
