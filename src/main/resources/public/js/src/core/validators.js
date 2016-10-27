@@ -48,11 +48,6 @@ define(function (require, exports, module) {
                 ? options.pattern
                 : new RegExp(options.pattern, options.arg);
         }
-        //console.log(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/.test(''+val))
-        //var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/m
-        var regexp = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-        //console.log(regexp.test(''+val));
-        console.log(regexp.exec(""+val));
         if (!regexes[options.type].test(''+val)) {
             return Localization.validation[options.type];
         }
