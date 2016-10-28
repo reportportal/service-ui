@@ -28,6 +28,9 @@ define(function (require, exports, module) {
     var SingletonUserStorage = require('storage/SingletonUserStorage');
 
     var SingletonAppModel = require('model/SingletonAppModel');
+    var App = require('app');
+
+    var config = App.getInstance();
 
 
 
