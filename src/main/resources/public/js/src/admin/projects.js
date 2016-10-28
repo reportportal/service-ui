@@ -135,7 +135,6 @@ define(function (require, exports, module) {
 
         changeSorting: function (e) {
             var btn = $(e.currentTarget);
-            //this.off('loadProjectsReady', this.onLoadProjectsReady, this);
             if (btn.hasClass('active')) {
                 btn.toggleClass('desc');
                 this.filter.direction = config.currentProjectsSettings.sortingDirection = btn.hasClass('desc') ? 'desc' : 'asc';
@@ -257,7 +256,7 @@ define(function (require, exports, module) {
             this.$total.html('('+data.page.totalElements+')');
         },
         getQueryData: function(){
-            var query = this.projectsType == 'personal' ? '?filter.eq.configuration$entryType=PERSONAL' : '?';
+            var query = this.projectsType == 'personal' ? '?filter.eq.configuration$entryType=PERSONAL' : '?filter.in.configuration$entryType=INTERNAL,UPSA';
             if(this.filter.filter){
                 query += '&filter.cnt.name=' + this.filter.filter;
             }

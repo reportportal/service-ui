@@ -58,8 +58,8 @@ define(function (require, exports, module) {
             projectId: null,
             defaultProjectsSettings: {
                 listView: 'tpl-admin-projects-tile-view',
-                sorting: 'creationDate',
-                sortingDirection: 'desc',
+                sorting: 'name',
+                sortingDirection: 'asc',
                 search: ''
             },
             currentProjectsSettings: {
