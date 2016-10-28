@@ -17,188 +17,188 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 /*------------------------------*/
 /* STYLE FOR BTS SETTINGS PAGE */
 
 %BTS_SETTINGS {
-    #btsSettings {
-        padding-top: 10px;
+  #btsSettings {
+    padding-top: 10px;
 
-        #instanceHead {
-            margin-bottom: 20px;
+    #instanceHead {
+      margin-bottom: 20px;
 
-            .close-add {
-                display: none;
-            }
-        }
-
-        #instanceBody {
-            #fieldsLoader {
-                display: none;
-                position: relative;
-                height: 65px;
-
-                .loader {
-                    width: 100%;
-                }
-            }
-        }
-
-        .rp-form-group {
-        
-        }
-
-        label {
-            &.obligatory-field {
-                &:after {
-                    position: absolute;
-                    margin-left: 2px;
-                }
-            }
-        }
-
-        .bts-instance-wrapper {
-            .nav-tabs-bts-instances {
-                border-bottom: solid 1px #e9e9e9;
-
-                .activated .close-add {
-                    display: inline-block !important;
-                }
-
-                li {
-                    position: relative;
-                    float: left;
-
-                    &.bts-instance-title {
-                        & > span {
-                            opacity: 0.9;
-                            font-size: 12px;
-                            color: $COLOR--gray-47;
-                            font-weight: 600;
-                            text-transform: uppercase;
-                        }
-                    }
-
-                    &.bts-name-project {
-                        margin-left: 20px;
-
-                        a {
-                            opacity: 0.6;
-                            font-size: 14px;
-                            cursor: pointer;
-                            font-weight: 600;
-                            text-transform: uppercase;
-                            color: $COLOR--gray-47;
-                            text-decoration: none;
-                        }
-                    }
-
-                    &.active {
-                        &:before {
-                            content: '';
-                            position: absolute;
-                            bottom: -1px;
-                            left: -10px;
-                            right: -10px;
-                            height: 1px;
-                            background-color: $COLOR--topaz;
-                        }
-
-                        a {
-                            color: $COLOR--topaz;
-                            opacity: 0.9;
-                        }
-                    }
-
-                    &.bts-instance-action {
-                        float: right;
-
-                        &.disabled {
-                            a {
-                                color: $COLOR--gray-60;
-                                cursor: not-allowed;
-                            }
-                        }
-
-                        a {
-                            color: $COLOR--topaz;
-                            font-weight: normal;
-                            font-size: 13px;
-                            text-transform: capitalize;
-                            text-decoration: none;
-                            opacity: 1;
-                            margin: 0;
-
-                            i {
-                                &.material-icons {
-                                    font-size: 13px;
-                                    line-height: 20px;
-                                    width: 25px;
-                                }
-                            }
-                        }
-                    }
-
-                    span,
-                    a {
-                        position: relative;
-                        font-family: $OpenSansRegular;
-                        line-height: 30px;
-                    }
-                }
-            }
-        }
-
-        .tbs-change-warning-block {
-            margin: 0;
-            #tbsChangeWarning {
-                display: none;
-                padding-bottom: 20px;
-            }
-        }
-
-        .title-block-wrapper {
-            margin-bottom: 12px;
-
-            h4 {
-                .common-title {
-                    margin: 0 0 4px 0;
-                    padding-left: 10px;
-                }
-            }
-        }
-
-        #authorizationType {
-            textarea {
-                overflow: auto;
-                resize: vertical;
-                max-height: 200px;
-                font-family: $OpenSansRegular;
-                font-size: 13px;
-                line-height: 18px;
-                color: #393939;
-                padding: 5px 11px 5px 11px;
-            }
-        }
-
-        .span-empty {
-            min-height: 8px;
-        }
-
-        .group-title-block {
-            margin-bottom: 5px;
-        }
-
-        #accessKeyBlock {
-            .rp-control-label {
-                vertical-align: top;
-                padding-top: 8px;
-            }
-        }
+      .close-add {
+        display: none;
+      }
     }
-}
 
+    #instanceBody {
+      #fieldsLoader {
+        display: none;
+        position: relative;
+        height: 65px;
+
+        .loader {
+          width: 100%;
+        }
+      }
+    }
+
+    .rp-form-group {
+
+    }
+
+    label {
+      &.obligatory-field {
+        &:after {
+          position: absolute;
+          margin-left: 2px;
+        }
+      }
+    }
+
+    .bts-instance-wrapper {
+      .nav-tabs-bts-instances {
+        border-bottom: solid 1px #e9e9e9;
+
+        .activated .close-add {
+          display: inline-block !important;
+        }
+
+        li {
+          position: relative;
+          float: left;
+
+          &.bts-instance-title {
+            & > span {
+              opacity: 0.9;
+              font-size: 12px;
+              color: $COLOR--gray-47;
+              font-weight: 600;
+              text-transform: uppercase;
+            }
+          }
+
+          &.bts-name-project {
+            margin-left: 20px;
+
+            a {
+              opacity: 0.6;
+              font-size: 14px;
+              cursor: pointer;
+              font-weight: 600;
+              text-transform: uppercase;
+              color: $COLOR--gray-47;
+              text-decoration: none;
+            }
+          }
+
+          &.active {
+            &:before {
+              content: '';
+              position: absolute;
+              bottom: -1px;
+              left: -10px;
+              right: -10px;
+              height: 1px;
+              background-color: $COLOR--topaz;
+            }
+
+            a {
+              color: $COLOR--topaz;
+              opacity: 0.9;
+            }
+          }
+
+          &.bts-instance-action {
+            float: right;
+
+            &.disabled {
+              a {
+                color: $COLOR--gray-60;
+                cursor: not-allowed;
+              }
+            }
+
+            a {
+              color: $COLOR--topaz;
+              font-weight: normal;
+              font-size: 13px;
+              text-transform: capitalize;
+              text-decoration: none;
+              opacity: 1;
+              margin: 0;
+
+              i {
+                &.material-icons {
+                  font-size: 13px;
+                  line-height: 20px;
+                  width: 25px;
+                }
+              }
+            }
+          }
+
+          span,
+          a {
+            position: relative;
+            font-family: $OpenSansRegular;
+            line-height: 30px;
+          }
+        }
+      }
+    }
+
+    .tbs-change-warning-block {
+      margin: 0;
+      #tbsChangeWarning {
+        display: none;
+        padding-bottom: 20px;
+      }
+    }
+
+    .title-block-wrapper {
+      margin-bottom: 12px;
+
+      h4 {
+        .common-title {
+          margin: 0 0 4px 0;
+          padding-left: 10px;
+        }
+      }
+    }
+
+    #authorizationType {
+      textarea {
+        height: auto;
+        overflow: auto;
+        resize: vertical;
+        max-height: 200px;
+        font-family: $OpenSansRegular;
+        font-size: 13px;
+        line-height: 18px;
+        color: #393939;
+        padding: 5px 11px 5px 11px;
+      }
+    }
+
+    .span-empty {
+      min-height: 8px;
+    }
+
+    .group-title-block {
+      margin-bottom: 5px;
+    }
+
+    #accessKeyBlock {
+      .rp-control-label {
+        vertical-align: top;
+        padding-top: 8px;
+      }
+    }
+  }
+}
 
 /* TODO. Looks like only usual users styles */
 #authorizationType,
@@ -206,10 +206,10 @@
 .input-group.to-100-width,
 .to-100-width .btn,
 .to-80-width .btn {
-    width: 100%;
-    text-align: left;
-    position: relative;
-    display: inline-block;
+  width: 100%;
+  text-align: left;
+  position: relative;
+  display: inline-block;
 }
 
 #cancelBtsProperties,
@@ -219,12 +219,13 @@
 #fieldsWrapper,
 #requiredFields,
 #resetFieldsWarning {
-    display: none;
+  display: none;
 }
 
 #submitPropertiesBlock, .col-sm-12.p-bottom-15 {
-    padding-bottom: 15px;
+  padding-bottom: 15px;
 }
+
 /*----------------*/
 
 /*----------------*/
@@ -232,12 +233,12 @@
 
 /* FOR USUAL USERS */
 #dynamic-content {
-    @extend %BTS_SETTINGS;
+  @extend %BTS_SETTINGS;
 }
 
 /* FOR ADMINISTRATORS USERS */
 #dynamicContent {
-    @extend %BTS_SETTINGS;
+  @extend %BTS_SETTINGS;
 }
 
 /*-----------------------------------*/
@@ -245,15 +246,15 @@
 
 /* xs - 767px */
 @media (max-width: $SCREEN_XS_MAX) {
-    #btsSettings {
-        #dynamicFields + .fields-controls {
-            padding: 0;
-        }
-
-        .rp-padding-right-30 {
-            padding-right: 30px;
-        }
+  #btsSettings {
+    #dynamicFields + .fields-controls {
+      padding: 0;
     }
+
+    .rp-padding-right-30 {
+      padding-right: 30px;
+    }
+  }
 }
 
 /* sm - 768px - 991px */
@@ -268,9 +269,9 @@
 
 /* lg - 1200px */
 @media (min-width: $SCREEN_LG_MIN) {
-    #btsSettings {
-        width: $WIDTH_LAYOUT_PAGE_SETTINGS;
-        max-width: $MAX_WIDTH_LAYOUT_PAGE_SETTINGS;
-        margin: 0 auto;
-    }
+  #btsSettings {
+    width: $WIDTH_LAYOUT_PAGE_SETTINGS;
+    max-width: $MAX_WIDTH_LAYOUT_PAGE_SETTINGS;
+    margin: 0 auto;
+  }
 }

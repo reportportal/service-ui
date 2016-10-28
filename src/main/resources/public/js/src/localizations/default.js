@@ -1018,7 +1018,7 @@ define(['util'], function () {
             removeDemoData: 'You will have to remove the Demo Data manually.',
             postfixPlaceHolder: 'Enter Postfix',
             posfixUniq: 'Postfix already used or not align with already existing data. Please use another one',
-            generationDataInProgress: 'Data generation in the process. The process can take several minutes, please wait.',
+            generationDataInProgress: 'Data generation is started. The process can take several minutes, please wait.',
             beta: "beta",
             aboutinfo: 'Detailed information about the project',
             unableLoadData: 'Unable to load data',
@@ -1156,7 +1156,10 @@ define(['util'], function () {
             noLaunchesPerformed: "No launches were performed at the selected period",
             titleAllProjects: "All Projects",
             titleMembers: "Members",
-            titleSettings: "Settings"
+            titleSettings: "Settings",
+            internalProjects: 'Internal projects',
+            personalProjects: 'Personal projects',
+            searchByName: "Search by Name",
         },
 
         members: {
