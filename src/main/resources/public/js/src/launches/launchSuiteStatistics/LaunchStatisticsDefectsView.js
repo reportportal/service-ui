@@ -91,6 +91,7 @@ define(function (require, exports, module) {
                 statistics: this.getStatisticsByType()
             }));
             this.$container.append(this.$el);
+            this.applyBindings();
             if(this.type !== 'to_investigate'){
                 setTimeout(function(){
                     this.drawPieChart();
