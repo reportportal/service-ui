@@ -1,0 +1,91 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.launch-breadcrumbs {
+  position: relative;
+  font-family: OpenSansRegular;
+  font-size: 12px;
+  padding-top: 9px;
+  .load-crumbs {
+    position: absolute;
+    right: 0;
+    top: 8px;
+    display: none;
+  }
+
+  &.load {
+    .load-crumbs {
+      display: block;
+    }
+  }
+  li {
+    float: left;
+    &.crumb {
+      margin-left: 5px;
+      a {
+        color: $COLOR--topaz;
+      }
+      span {
+        display: none;
+      }
+      a, span {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        width: 100%;
+      }
+      &:last-child {
+        span {
+          display: inline-block
+        }
+        a, i {
+          display: none;
+        }
+      }
+      i {
+        font-size: 17px;
+        vertical-align: top;
+        margin-top: 1px;
+      }
+    }
+  }
+  .breadcrumbs-mode-container {
+    cursor: pointer;
+    font-size: 13px;
+    margin-right: 5px;
+  }
+  .breadcrumb-plus {
+    display: none;
+  }
+  &.min-size {
+    .crumb{
+      span, a {
+        max-width: 120px;
+      }
+    }
+    .breadcrumb-plus {
+      display: inline-block;
+    }
+    .breadcrumb-minus {
+      display: none;
+    }
+  }
+}

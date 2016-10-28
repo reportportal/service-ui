@@ -72,10 +72,18 @@ define(function (require, exports, module) {
             this.parseModelEntities();
             this.listenTo(this.collection, 'change:condition change:value', this.onChangeFilterEntities)
         },
-        onAddEntityById: function(entityId) {
+        onAddEntityById: function(entityId, value) {
             var currentEntity = this.collection.where({id: entityId})[0];
-            if(currentEntity) {
-                currentEntity.set({visible: true});
+            if (currentEntity) {
+                if (value) {
+                    var values = currentEntity.get('value');
+                    if(currentEntity.get('id') == 'tags' || currentEntity.get('id') == 'user') {
+                        values = values ? values + ',' + value : value;
+                    }
+                    currentEntity.set({visible: true, value: values});
+                } else {
+                    currentEntity.set({visible: true});
+                }
                 currentEntity.trigger('focus', true);
             }
         },

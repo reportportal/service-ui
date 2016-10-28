@@ -38,7 +38,7 @@ define(function (require, exports, module) {
             'change [data-js-select-all]': 'onChangeSelectAll',
         },
         bindings: {
-            '[data-js-table-container]': 'classes: {"exact-driven": updateTimeFormat}'
+            '.launch-suite-step-items': 'classes: {"exact-driven": updateTimeFormat}'
         },
         computeds: {
             updateTimeFormat: function(){

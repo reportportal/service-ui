@@ -22,26 +22,42 @@
             </div>
         </div>
     </div>
-    <div class="row favorites-grid rp-grid-thead fixed_table_header visible-md visible-lg visible-xl">
+    <div class="rp-table-grid favorites-grid">
+        <div class="row rp-grid-thead fixed_table_header visible-md visible-lg visible-xl">
             <div class="grid-cell name-grid-cell rp-grid-th">
-                <span class="rp-grid-th-name"><%- data.text.favorites.fName %></span>
+                <div class="table-wrapper"><div class="middle-wrapper">
+                    <span class="rp-grid-th-name"><%- data.text.favorites.fName %></span>
+                </div></div>
             </div>
             <div class="grid-cell option-grid-cell rp-grid-th">
-                <span class="rp-grid-th-name"><%- data.text.favorites.fOptions %></span>
+                <div class="table-wrapper"><div class="middle-wrapper">
+                    <span class="rp-grid-th-name"><%- data.text.favorites.fOptions %></span>
+                </div></div>
             </div>
             <div class="grid-cell owner-grid-cell rp-grid-th">
-                <span class="rp-grid-th-name"><%- data.text.favorites.fOwner %></span>
+                <div class="table-wrapper"><div class="middle-wrapper">
+                    <span class="rp-grid-th-name"><%- data.text.favorites.fOwner %></span>
+                </div></div>
             </div>
             <div class="grid-cell icons-grid-cell rp-grid-th text-center">
-                <span class="rp-grid-th-name"><%- data.text.favorites.fShared %></span>
+                <div class="table-wrapper"><div class="middle-wrapper">
+                    <span class="rp-grid-th-name"><%- data.text.favorites.fShared %></span>
+                </div></div>
             </div>
             <div class="grid-cell display-launch-grid-cell rp-grid-th text-center">
-                <span class="rp-grid-th-name"><%- data.text.favorites.fDisplayOnLaunches %></span>
+                <div class="table-wrapper"><div class="middle-wrapper">
+                    <span class="rp-grid-th-name"><%- data.text.favorites.fDisplayOnLaunches %></span>
+                </div></div>
             </div>
             <div class="grid-cell icons-grid-cell rp-grid-th text-center">
-                <span class="rp-grid-th-name"><%- data.text.favorites.fDelete %></span>
+                <div class="table-wrapper"><div class="middle-wrapper">
+                    <span class="rp-grid-th-name"><%- data.text.favorites.fDelete %></span>
+                </div></div>
             </div>
+        </div>
+        <div data-js-filter-list></div>
     </div>
+
     <div class="no-filters-exist" data-js-empty-block>
         <div class="no-filter-img"></div>
         <h3>There Are No Filters</h3>
@@ -59,6 +75,6 @@
     <div class="preloader">
         <i class="material-icons loader-animation">refresh</i>
     </div>
-    <div data-js-filter-list></div>
+
     <div data-js-filter-paginate></div>
 </div>

@@ -34,13 +34,11 @@ define(function (require, exports, module) {
         template: 'tpl-launch-item-defects-tooltip',
         className: 'tooltip defects-tooltip',
         initialize: function(options) {
-            this.$container = options.$container;
             this.type = options.type;
             this.render();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, this.getData()));
-            this.$container.append(this.$el);
         },
         getData: function(){
             var defect = this.getDefectByType(),
