@@ -19,22 +19,5 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.ui-tooltip {
-  position: absolute;
-  border-radius: 0;
-  background: $COLOR--white-default;
-  opacity: 1;
-  border: 1px solid $COLOR--gray-80;
-  margin: 0;
-  z-index: 200;
-  max-width: 400px;
-  display: inline-block;
-  box-shadow: 1px 1px 6px -1px rgba(0, 0, 0, 0.4);
-  .ui-tooltip-content {
-    position: relative;
-    color: $COLOR--charcoal-grey;
-    font-family: OpenSansRegular;
-    font-size: 12px;
-    padding: 10px;
-  }
-}
+@import 'common';
+@import 'defects-tooltip';

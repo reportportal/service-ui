@@ -79,7 +79,7 @@ define(function (require, exports, module) {
             $itemsContainer.html('');
             var self = this;
             _.each(self.collection.models, function(model) {
-                var item = new self.itemView({model: model})
+                var item = new self.itemView({model: model, filterModel: self.filterModel})
                 $itemsContainer.append(item.$el);
                 self.renderedItems.push(item);
             });

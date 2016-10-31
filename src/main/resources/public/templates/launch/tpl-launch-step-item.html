@@ -3,20 +3,22 @@
         <span class="text-muted" data-js-method-type></span>
     </div>
     <div class="grid-cell name-grid-cell">
-        <h5 class="rp-grid-name">
-            <a class="navigateable rp-blue-link-undrl break-link" href="" data-js-name></a>&nbsp;&nbsp;<i class="item-edit-icon material-icons" data-js-item-edit>edit</i>
-        </h5>
-        <pre class="rp-grid-description nicescroll-it" data-js-description></pre>
-        <div class="rp-grid-tags tags">
-            <div class="rp-item-duration" data-js-item-status></div>
-            <% if(data.tags && data.tags.length) { %>
-            <span class="rp-launch-tags">
-                <i class="material-icons">local_offer</i>
-                <% _.each(data.sortTags, function (tag) { %>
-                <a class="text-muted tag" data-tag="<%- tag %>" href="#"><%- tag.replaceTabs() %></a>
-                <% }); %>
-            </span>
-            <% } %>
+        <div class="name-grid-overflow">
+            <h5 class="rp-grid-name">
+                <a href="" data-js-name-link><span data-js-name></span><span data-js-launch-number></span></a>&nbsp;&nbsp;<i class="item-edit-icon material-icons" data-js-item-edit>edit</i>
+            </h5>
+            <p class="rp-grid-description" data-js-description></p>
+            <ul class="rp-grid-tags">
+                <li class="rp-item-duration" data-js-item-status></li>
+                <li title="Owner" class="rp-launch-owner owner" data-js-owner-block>
+                    <i class="material-icons">person</i>
+                    <a data-js-owner-name></a>
+                </li>
+                <li class="rp-launch-tags" data-js-tags-container>
+                    <i class="rp-icons rp-icons-ticket"></i>
+                    <span data-js-tags></span>
+                </li>
+            </ul>
         </div>
     </div>
     <div class="grid-cell status-grid-cell" data-js-status></div>

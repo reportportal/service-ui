@@ -294,7 +294,7 @@ define(function (require, exports, module) {
                     member: member,
                     roles: this.roles,
                     defaultRole: config.projectRoles[1],
-                    defaultProject: config.demoProjectName
+                    defaultProject: member.default_project
                 }).render();
             }
         },
@@ -316,7 +316,7 @@ define(function (require, exports, module) {
                 .done(function () {
                     self.members.splice(index, 1);
                     self.changeMembers();
-                    Util.ajaxSuccessMessenger("deleteMember", member.full_name);
+                    Util.ajaxSuccessMessenger("deleteMember", member.full_name || member.userId);
                 })
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, "deleteMember");

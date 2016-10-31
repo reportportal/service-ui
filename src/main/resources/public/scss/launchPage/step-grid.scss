@@ -19,6 +19,60 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+$step-name-cell-width: 37%;
+$step-time-cell-width: 12.5%;
+$step-status-cell-width: 8%;
+$step-select-cell-width: 2%;
+$step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - $step-status-cell-width - $step-select-cell-width);
+.step-grid {
+  .grid-cell {
+    &.name-grid-cell {
+      padding-left: 10px;
+      width: $step-name-cell-width;
+      &.rp-grid-th {
+        .text-overflow {
+          padding-left: 25px;
+        }
+      }
+    }
+    &.time-grid-cell {
+      width: $step-time-cell-width;
+    }
+    &.status-grid-cell {
+      width: $step-status-cell-width;
+    }
+    &.type-grid-cell {
+      width: $step-type-cell-width;
+    }
+    &.select-grid-cell {
+      width: $step-select-cell-width;
+      text-align: center;
+      padding: 0;
+      .rp-checkbox-wrap span {
+        height: 11px;
+      }
+    }
+    &.add-collapse-methods-btn {
+      padding-left: 44px;
+      .rp-switcher {
+        position: absolute;
+        left: 7px;
+        top: 50%;
+        margin-top: -6px;
+      }
+    }
+  }
+  &.hide-collapsed-methods {
+    .collapse-method {
+      overflow: hidden;
+      height: 0;
+      padding-top: 3px;
+      .grid-cell {
+        display: none;
+      }
+    }
+  }
+}
 
 .method-collapsed {
   position: relative;

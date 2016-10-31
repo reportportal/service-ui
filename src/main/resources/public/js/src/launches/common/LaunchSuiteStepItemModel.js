@@ -117,7 +117,7 @@ define(function(require, exports, module) {
                     if (!number) {
                         return ''
                     }
-                    return '# ' + number;
+                    return ' #' + number;
                 }
             },
             sortTags: {

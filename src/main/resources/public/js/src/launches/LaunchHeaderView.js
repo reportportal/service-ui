@@ -45,13 +45,13 @@ define(function (require, exports, module) {
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.model = new FilterModel({id: 'all', active: true, name: 'All Launches', owner: config.userModel.get('name')});
             this.listenTo(this.launchFilterCollection, 'add', this.onAddFilter);
-            this.listenTo(this.launchFilterCollection, 'reset', this.renderFilterList);
             this.listenTo(this.launchFilterCollection, 'change:activeFilter', this.onChangeActiveFilter);
             this.listenTo(this.launchFilterCollection, 'change:id', this.onChangeIdFilter);
             this.render();
         },
         render: function() {
             this.launchFilterCollection.ready.done(function() {
+                this.listenTo(this.launchFilterCollection, 'reset', this.renderFilterList);
                 this.$el.html(Util.templates(this.template));
                 this.applyBindings();
                 this.renderFilterList();

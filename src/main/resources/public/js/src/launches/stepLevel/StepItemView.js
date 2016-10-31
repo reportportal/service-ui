@@ -39,20 +39,41 @@ define(function (require, exports, module) {
     var StepItemView = Epoxy.View.extend({
         template: 'tpl-launch-step-item',
         events: {
-            'click [data-js-name]': 'onClickName',
+            'click [data-js-name-link]': 'onClickName',
             'click [data-js-issue-type]': 'showDefectEditor',
             'click [data-js-time-format]': 'toggleStartTimeView',
             'click [data-js-item-edit]': 'onClickEdit',
         },
         bindings: {
-            '[data-js-name]': 'text: name, attr: {href: url}',
+            '[data-js-name-link]': 'attr: {href: url}',
+            '[data-js-name]': 'text: name',
             '[data-js-description]': 'text: description',
             '[data-js-status]': 'text: status',
+            '[data-js-owner-block]': 'classes: {hide: not(owner)}',
+            '[data-js-owner-name]': 'text: owner',
+            '[data-js-tags-container]': 'sortTags: tags',
             '[data-js-method-type]': 'text: showMethodType',
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
             '[data-js-status-class]': 'classes: {danger: highlightedFailed, "select-state": select}',
             '[data-js-select-item]': 'checked:select',
+        },
+        bindingHandlers: {
+            sortTags: {
+                set: function($element) {
+                    var sortTags = this.view.model.get('sortTags');
+                    if(!sortTags.length){
+                        $element.addClass('hide');
+                    } else {
+                        $element.removeClass('hide');
+                    }
+                    var $tagsBlock = $('[data-js-tags]', $element);
+                    $tagsBlock.html('');
+                    _.each(sortTags, function(tag) {
+                        $tagsBlock.append('  <a data-js-tag="' + tag + '">' + tag.replaceTabs() + '</a>')
+                    })
+                }
+            }
         },
         computeds: {
             showMethodType: function(){
@@ -79,14 +100,15 @@ define(function (require, exports, module) {
             }
         },
         renderDuration: function(){
+            this.duration && this.duration.destroy();
             this.duration = new ItemDurationView({
                 model: this.model,
-                $el: $('[data-js-item-status]', this.$el)
+                el: $('[data-js-item-status]', this.$el)
             });
         },
         toggleStartTimeView: function (e) {
             var $el = $(e.currentTarget),
-                table = $el.closest('[data-js-table-container]'),
+                table = $el.closest('.launch-suite-step-items'),
                 timeFormat = this.userStorage.get('startTimeFormat');
             if(timeFormat === 'exact'){
                 table.removeClass('exact-driven');

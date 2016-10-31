@@ -70,6 +70,13 @@ define(function (require, exports, module) {
             }
             return null;
         },
+        getMainColorByType: function(type) {
+            var mainDefect = this.findWhere({typeRef: type.toUpperCase(), mainType: true});
+            if(mainDefect) {
+                return mainDefect.get('color');
+            }
+            return Util.getDefaultColor(type);
+        },
         checkForSubDefects: function(){
             return this.length > 5;
         },

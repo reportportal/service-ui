@@ -75,6 +75,7 @@ define(function(require, exports, module) {
                 Service.validateRestorationKey(urlModel.get('reset'))
                     .done(function (response) {
                         if (response.is) {
+                            self.restoreKey = urlModel.get('reset');
                             self.openResetPassword();
                         } else {
                             self.showRestorationError();

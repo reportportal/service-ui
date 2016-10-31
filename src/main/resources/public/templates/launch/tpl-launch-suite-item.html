@@ -1,47 +1,44 @@
 <div class="row rp-table-row" data-js-item-row>
-    <div class="grid-cell name-grid-cell name-cell">
+    <div class="grid-cell name-grid-cell name-cell <%= (data.type == 'LAUNCH') ? 'launch-name-cell' : '' %>">
         <span class="label label-danger autoanalyze" data-js-analize-label><%= data.text.ui.analyze %></span>
-        <h5 class="rp-grid-name">
-            <% if(data.type == 'LAUNCH') { %>
-            <div class="btn-group" data-js-launch-edit>
-                <a class="item-menu" data-js-launch-menu data-toggle="dropdown" href="#">
-                    <i class="rp-svg-icon svg-icon-menu-size-14"></i>
-                </a>
-            </div>
-            <% } %>
-            <a class="navigateable rp-blue-link-undrl" href="" data-js-name></a>
-            <span data-js-launch-number></span>&nbsp;&nbsp;<i class="item-edit-icon material-icons" data-js-item-edit>edit</i>
-        </h5>
-        <pre class="rp-grid-description nicescroll-it" data-js-description></pre>
-        <div class="rp-grid-tags tags">
-            <div class="rp-item-duration" data-js-item-status></div>
-                <span title="Owner" class="rp-launch-owner owner" data-js-owner-block>
+        <div class="btn-group" data-js-launch-edit>
+            <a class="item-menu" data-js-launch-menu data-toggle="dropdown" href="#">
+                <i class="rp-svg-icon svg-icon-menu-size-14"></i>
+            </a>
+        </div>
+        <div class="name-grid-overflow">
+            <h5 class="rp-grid-name">
+                <a href="" data-js-name-link><span data-js-name></span><span data-js-launch-number></span></a>&nbsp;&nbsp;<i class="item-edit-icon material-icons" data-js-item-edit>edit</i>
+            </h5>
+            <p class="rp-grid-description" data-js-description></p>
+            <ul class="rp-grid-tags">
+                <li class="rp-item-duration" data-js-item-status></li>
+                <li title="Owner" class="rp-launch-owner owner" data-js-owner-block>
                     <i class="material-icons">person</i>
-                    <a class="text-muted tag" href="#" data-js-owner-name></a>
-                </span>
-                <br class="visible-xs-block">
-                <span class="rp-launch-tags" data-js-tags-container>
-                    <i class="material-icons">local_offer</i>
+                    <a data-js-owner-name></a>
+                </li>
+                <li class="rp-launch-tags" data-js-tags-container>
+                    <i class="rp-icons rp-icons-ticket"></i>
                     <span data-js-tags></span>
-                </span>
+                </li>
+            </ul>
         </div>
     </div>
-    <div class="grid-cell time-grid-cell rp-grid-th">
+    <div class="grid-cell time-grid-cell">
         <div data-js-time-format class="pr-grid-show-time">
             <span class="hidden-sm hidden-md hidden-lg"><b><%= data.text.launches.prefixStartTime %></b></span>
             <span class="from-now" data-js-time-from-now></span>
             <span class="exact-time" data-js-time-exact></span>
         </div>
     </div>
-    <!--<div class="grid-cell counter-grid-cell rp-grid-th" data-js-item-status></div>-->
-    <div class="grid-cell number-grid-cell" data-js-statistics-total></div>
-    <div class="grid-cell number-grid-cell" data-js-statistics-passed></div>
-    <div class="grid-cell number-grid-cell" data-js-statistics-failed></div>
-    <div class="grid-cell number-grid-cell" data-js-statistics-skipped></div>
-    <div class="grid-cell counter-grid-cell" data-js-statistics-product_bug></div>
-    <div class="grid-cell counter-grid-cell" data-js-statistics-automation_bug></div>
-    <div class="grid-cell counter-grid-cell" data-js-statistics-system_issue></div>
-    <div class="grid-cell counter-grid-cell" data-js-statistics-to_investigate></div>
+    <div class="grid-cell number-grid-cell total-number"><a data-js-statistics-total></a></div>
+    <div class="grid-cell number-grid-cell"><a data-js-statistics-passed></a></div>
+    <div class="grid-cell number-grid-cell"><a data-js-statistics-failed></a></div>
+    <div class="grid-cell number-grid-cell"><a data-js-statistics-skipped></a></div>
+    <div class="grid-cell counter-grid-cell" data-js-statistics-product-bug></div>
+    <div class="grid-cell counter-grid-cell" data-js-statistics-automation-bug></div>
+    <div class="grid-cell counter-grid-cell" data-js-statistics-system-issue></div>
+    <div class="grid-cell counter-grid-cell"><a class="defect-to-investigate" data-js-statistics-to-investigate></a></div>
     <div class="grid-cell select-grid-cell">
         <div class="table-wrapper">
             <div class="middle-wrapper">

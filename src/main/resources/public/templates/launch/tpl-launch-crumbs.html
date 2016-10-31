@@ -1,9 +1,7 @@
-<ul id="breadCrumbs" class="rp-nav rp-nav-left" data-js-crumbs-container>
+<ul class="rp-nav rp-nav-left launch-breadcrumbs" data-js-crumbs-container>
     <i class="load-crumbs material-icons loader-animation">refresh</i>
-    <li class="breadcrumbs-mode-container">
-        <div class="breadcrumb-mode <%= data.expanded ? data.expanded : '' %>" id="breadcrumbToggle">
-            <i class="material-icons breadcrumb-plus">add_box</i>
-            <i class="material-icons breadcrumb-minus">indeterminate_check_box</i>
-        </div>
+    <li class="breadcrumbs-mode-container" data-js-switch-mode>
+        <i class="rp-icons rp-icons-square-plus breadcrumb-plus"></i>
+        <i class="rp-icons rp-icons-square-minus breadcrumb-minus"></i>
     </li>
 </ul>

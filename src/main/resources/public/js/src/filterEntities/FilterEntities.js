@@ -30,7 +30,7 @@ define(function (require, exports, module) {
     var urls = require('dataUrlResolver');
     var Localization = require('localization');
     var Moment = require('moment');
-    var Editor = require('launchEditor');
+    var Service = require('coreService');
     var App = require('app');
     require('daterangepicker');
 
@@ -201,16 +201,20 @@ define(function (require, exports, module) {
             this.startSearch = options.startSearch;
             this.warning = options.warning;
             this.render();
+            this.listenTo(this.model, 'change:value', this.onChangeValue);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {warning: this.warning}));
             this.applyBindings();
-            Editor.setupSelect2Tags($('[data-js-tag-input]', this.$el), {
+            this.select2el = setupSelect2Tags($('[data-js-tag-input]', this.$el), {
                 type: this.type,
                 mode: this.model.get('mode'),
                 noResizeSearch: true,
                 startSearch: this.startSearch
             });
+        },
+        onChangeValue: function(model, value) {
+            this.select2el.val(value).trigger('change');
         }
     });
     var TimeRangeEntityView = Epoxy.View.extend({
@@ -557,6 +561,102 @@ define(function (require, exports, module) {
     var EntitySelectModel = Model.extend({
         view: EntitySelectView,
     });
+
+
+    function setupSelect2Tags($tags, options) {
+        options = options || {};
+        var warning = $tags.data('warning'),
+            remoteTags = [],
+            timeOut = null;
+        $tags.on('remove', function () {
+            warning = null;
+            $tags = null;
+            options = null;
+            if (timeOut) {
+                clearTimeout(timeOut);
+                timeOut = null;
+            }
+        });
+        return Util.setupSelect2WhithScroll($tags, {
+            formatInputTooShort: function (input, min) {
+                return warning;
+            },
+            tags: true,
+            multiple: true,
+            noResizeSearch: options.noResizeSearch ? options.noResizeSearch : false,
+            dropdownCssClass: options.dropdownCssClass || '',
+            minimumInputLength: options.min || 1,
+            //maximumInputLength: 5,
+            formatResultCssClass: function (state) {
+                if ((remoteTags.length == 0 || _.indexOf(remoteTags, state.text) < 0) && $('.select2-input.select2-active').val() == state.text) {
+                    return 'exact-match';
+                }
+            },
+            initSelection: function (item, callback) {
+                var tags = item.val().split(','),
+                    data = _.map(tags, function (tag) {
+                        tag = tag.trim();
+                        return {id: tag, text: tag};
+                    });
+                callback(data);
+            },
+            createSearchChoice: function (term, data) {
+                if(!options.noCreateNew) {
+                    if (_.filter(data, function (opt) {
+                            return opt.text.localeCompare(term) === 0;
+                        }).length === 0) {
+                        return {id: term, text: term};
+                    }
+                }
+                return null;
+            },
+            query: function (query) {
+
+                if (query.term === "?") return;
+
+                var data = {results: []};
+                if (options.startSearch && query.term.length < options.startSearch) {
+                    remoteTags = [];
+                    data.results.push({
+                        id: query.term,
+                        text: query.term
+                    });
+                    query.callback(data);
+                } else {
+                    clearTimeout(timeOut);
+                    timeOut = setTimeout(function () {
+                        Service.searchTags(query, options.type, options.mode)
+                            .done(function (response) {
+                                var respType = _.isObject(response) && response.content ? 'user' : 'default',
+                                    response = respType == 'default' ? response : response.content,
+                                    remoteTags = [];
+                                _.forEach(response, function (item) {
+                                    if(respType == 'user'){
+                                        data.results.push({
+                                            id: item.userId,
+                                            text: item.full_name
+                                        });
+                                        item = item.full_name;
+                                    }
+                                    else {
+                                        data.results.push({
+                                            id: item,
+                                            text: item
+                                        });
+                                    }
+                                    remoteTags.push(item);
+                                });
+                                query.callback(data);
+                            })
+                            .fail(function (error) {
+                                Util.ajaxFailMessenger(error);
+                            });
+                    }, config.userFilterDelay);
+                }
+            }
+        });
+
+    };
 
 
 

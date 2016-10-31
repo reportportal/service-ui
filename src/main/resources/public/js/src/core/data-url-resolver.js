@@ -270,8 +270,8 @@ define(['app'], function (App) {
         return config.apiVersion + "/settings/" + id;
     };
 
-    var adminProjects = function () {
-        return adminProjectRoot() + "/list";
+    var adminProjects = function (data) {
+        return adminProjectRoot() + "/list" + (data ? data : '');
     };
     var adminProject = function (id) {
         return adminProjects() + "/" + id;

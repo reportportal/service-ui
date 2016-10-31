@@ -200,17 +200,20 @@ define(function (require, exports, module) {
             };
             Object.defineProperty(Array.prototype, "equals", {enumerable: false});
         },
-        appendTooltip: function($el, $parrent) {
-            $el.tooltip({
+        appendTooltip: function(content, $el, $parrent) {
+            $el.uitooltip({
                 position: {
                     my: 'left top',
                     at: 'left bottom+5',
                     of: $parrent,
                     collision: 'fit'
                 },
-                show: {effect: 'none', delay: 1000, duration: 0},
+                show: {effect: 'none', delay: 100, duration: 0},
                 hide: {effect: 'none', duration: 0},
+                items: ':not([disabled])',
+                content: content,
             });
+            // $('.ui-helper-hidden-accessible').remove();  // this block needs for voiseover osx only
         },
 
         textWrapper: function (value, search) {
@@ -436,7 +439,6 @@ define(function (require, exports, module) {
                 
         },
         setupSelect2WhithScroll: function(el, options) {
-            el.select2(options);
             el.one('select2-open', function(e){
                 $('#select2-drop input.select2-input').on('input', function(ev){
                     if($(this).val().trim().length<3){
@@ -451,7 +453,7 @@ define(function (require, exports, module) {
                 }
                 Util.setupBaronScrollSize(e.currentTarget.$scrollEl, {maxHeight: 200});
             });
-            return el;
+            return el.select2(options);
         },
         setEqualHeightRow: function (elem) {
             $(elem).responsiveEqualHeightGrid();

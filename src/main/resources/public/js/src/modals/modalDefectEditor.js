@@ -68,7 +68,7 @@ define(function (require, exports, module) {
                 getIssueComment: this.getIssueComment,
                 getDefectType: this.getDefectType()
             }));
-
+            this.applyBindings();
             this.setupAnchors();
             this.setupMarkItUp();
             this.attachKeyActions();

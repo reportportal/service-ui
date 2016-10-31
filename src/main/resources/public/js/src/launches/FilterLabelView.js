@@ -36,14 +36,18 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-filter-shared]': 'classes: {hide: not(isShared)}',
             '[data-js-filter-name]': 'text: name',
-            '[data-js-filter-comment]': 'attr: {title: description}, classes: {hide: not(description)}',
+            '[data-js-filter-comment]': 'classes: {hide: not(description)}',
             '[data-js-filter-not-my]': 'classes: {hide: not(notMyFilter)}',
             '[data-js-filter-not-save]': 'classes: {hide: all(not(temp), not(newEntities), not(newSelectionParameters))}',
             ':el': 'attr: {href: url}, classes: {active: active}',
         },
         initialize: function() {
             this.render();
-            Util.appendTooltip($('[data-js-filter-comment]', this.$el), this.$el);
+
+            if (this.model.get('description')) {
+                Util.appendTooltip(this.model.get('description'), $('[data-js-filter-comment]', this.$el), this.$el);
+            }
+
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));

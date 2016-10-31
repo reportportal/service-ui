@@ -235,6 +235,8 @@ span.rp-role {
 @media screen and (min-width: 992px) {
     .rp-info-padding {
         padding: 22px 0 0;
+        &.memrbers-actions {
+            padding: 15px 0 0;
+        }
     }
-
 }

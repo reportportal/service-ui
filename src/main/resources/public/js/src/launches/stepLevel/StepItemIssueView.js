@@ -101,6 +101,7 @@ define(function (require, exports, module) {
                 model: this.model.toJSON({computed: true})
             }));
             this.$container.append(this.$el);
+            this.applyBindings();
         },
         getIssueType: function(){
             var issue = this.model.getIssue();

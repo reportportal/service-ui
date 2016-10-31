@@ -18,21 +18,34 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-.launch-log-info-details{
-  padding: 10px 15px 0 15px;
-  .rp-grid-name .btn-group, .type-grid-cell{
-    display: none;
-  }
-  .rp-grid-name a {
-    cursor: default;
-    color: $COLOR--black;
-    pointer-events: none;
-    &:hover {
-      text-decoration: none !important;
-    }
 
-  }
-  .rp-table-row:hover, .rp-table-row{
-    background-color: $COLOR--white-four !important;
+.launch-suite-defects {
+  position: relative;
+  .chart-overflow {
+    svg {
+      position: relative;
+      width: 46px;
+      height: 46px;
+      margin-top: 2px;
+    }
+    .total-overflow {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      right: 10px;
+      height: 10px;
+      padding-left: 46px;
+      min-width: 75px;
+    }
+    span {
+      border-style: solid;
+      border-width: 1px;
+      line-height: 16px;
+      padding: 0 8px;
+      border-radius: 10px;
+      background: white;
+      color: $COLOR--windows-blue;
+      font-family: "OpenSansSemibold", sans-serif;
+    }
   }
 }

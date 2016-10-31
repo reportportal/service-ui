@@ -191,6 +191,11 @@ define(function (require, exports, module) {
 
     var LaunchCrumbsView = Epoxy.View.extend({
         template: 'tpl-launch-crumbs',
+
+        events: {
+            'click [data-js-switch-mode]': 'onClickSwitchMode',
+        },
+
         initialize: function(options) {
             this.collection = new LaunchCrumbCollection();
             this.listenTo(this.collection, 'add', this.onAddCrumb);
@@ -225,6 +230,9 @@ define(function (require, exports, module) {
             $('[data-js-crumbs-container]', this.$el).append((new LaunchCrumbView({
                 model: model,
             })).$el);
+        },
+        onClickSwitchMode: function() {
+            $('[data-js-crumbs-container]',this.$el).toggleClass('min-size');
         },
         destroy: function () {
             this.$el.html('');
