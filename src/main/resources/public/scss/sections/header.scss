@@ -20,7 +20,10 @@
  */
 
  .header {
-   position: relative;
+   position: absolute;
+   //position: relative;
+   width: 100%;
+   z-index: 11;
    margin: 0;
    padding: 0 15px;
    background-color: $COLOR--black-five;

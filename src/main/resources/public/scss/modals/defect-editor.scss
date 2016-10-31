@@ -60,7 +60,7 @@
     }
   }
   .rp-defect-row {
-    padding: 3px 4px;
+    padding: 3px;
     margin: 0 -15px;
 
     label {
@@ -69,6 +69,9 @@
       display: inline-block;
       font-size: 12px;
       word-break: break-all;
+      -ms-text-overflow: ellipsis;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       padding: 2px 7px 0 21px;
       min-height: 20px;
       border: 1px solid transparent;
