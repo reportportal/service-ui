@@ -42,7 +42,7 @@ define(function (require, exports, module) {
     var List = Components.BaseView.extend({
         initialize: function (options) {
             this.$el = options.el;
-            this.currentTpl = config.currentProjectsSettings.listView || config.defaultProjectsSettings.listView;
+            this.currentView = config.currentProjectsSettings.listView || config.defaultProjectsSettings.listView;
         },
 
         getDefaultFilter: function () {
@@ -81,6 +81,7 @@ define(function (require, exports, module) {
 
         getProjectsView: function (tab) {
             return new ProjectsList({
+                viewType: this.currentView,
                 projectsType: tab,
                 total: $('[data-js-'+tab+'-qty]', this.$el),
                 container: $('[data-js-'+tab+'-content]', this.$el),
@@ -121,11 +122,13 @@ define(function (require, exports, module) {
 
         changeProjectsView: function (event) {
             event.preventDefault();
-            var $target = $(event.currentTarget);
+            var $target = $(event.currentTarget),
+                viewType = $target.data('view-type');
             $('.projects-view').removeClass('active');
             $target.addClass('active');
+            this.currentView = config.currentProjectsSettings.listView = viewType;
             this.tabView.updateView({
-                viewType: $target.data('view-type')
+                viewType: viewType
             });
         },
 
@@ -135,7 +138,6 @@ define(function (require, exports, module) {
 
         changeSorting: function (e) {
             var btn = $(e.currentTarget);
-            //this.off('loadProjectsReady', this.onLoadProjectsReady, this);
             if (btn.hasClass('active')) {
                 btn.toggleClass('desc');
                 this.filter.direction = config.currentProjectsSettings.sortingDirection = btn.hasClass('desc') ? 'desc' : 'asc';
@@ -156,7 +158,7 @@ define(function (require, exports, module) {
             var self = this;
             clearTimeout(this.searching);
             this.searching = setTimeout(function () {
-                if (data.valid) {
+                if (data.valid && self.filter.search !== data.value) {
                     self.filter.search = config.currentProjectsSettings.search = data.value;
                     self.tabView.update({
                         direction: self.filter.direction,
@@ -178,7 +180,7 @@ define(function (require, exports, module) {
             this.projectsType = options.projectsType;
             this.$total = options.total;
             this.$container = options.container;
-            this.currentTpl = options.tpl || this.listListTpl;
+            this.viewType = options.viewType || 'list-view';
             this.filter = options.filter;
         },
 
@@ -206,7 +208,8 @@ define(function (require, exports, module) {
             this.loadProjects();
         },
         renderProjects: function(){
-            this.$listEl.append(Util.templates(this.currentTpl, {
+            var tpl = this.getCurrentTpl();
+            this.$listEl.append(Util.templates(tpl, {
                 collection: this.collection.toJSON(),
                 util: Util,
                 isNew: this.isNew,
@@ -221,9 +224,12 @@ define(function (require, exports, module) {
             this.trigger('loadProjectsReady');
         },
         updateView: function(data){
-            this.currentTpl = data.viewType == 'table' ? this.listTableTpl : this.listListTpl;
+            this.viewType = data.viewType;
             this.$listEl.empty();
             this.renderProjects();
+        },
+        getCurrentTpl: function(){
+            return this.viewType === 'table' ? this.listTableTpl : this.listListTpl;
         },
         update: function(options){
             this.filter = options || this.filter;
@@ -257,7 +263,7 @@ define(function (require, exports, module) {
             this.$total.html('('+data.page.totalElements+')');
         },
         getQueryData: function(){
-            var query = this.projectsType == 'personal' ? '?filter.eq.configuration$entryType=PERSONAL' : '?';
+            var query = this.projectsType == 'personal' ? '?filter.eq.configuration$entryType=PERSONAL' : '?filter.in.configuration$entryType=INTERNAL,UPSA';
             if(this.filter.filter){
                 query += '&filter.cnt.name=' + this.filter.filter;
             }

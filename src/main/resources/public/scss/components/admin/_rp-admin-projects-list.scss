@@ -256,16 +256,30 @@
                 background-color: #f1f1f1;
                 margin: 0;
 
+                &.no-assigned .project-link.go-to-project {
+                    display: none;
+                }
+                &.no-assigned .project-link.assign-to-project {
+                    display: inline-block;
+                }
+
                 .project-link {
                     font: normal 15px $OpenSansRegular;
                     text-align: center;
                     color: $COLOR--gray-60;
                     padding: 8px 10px;
-                    &.go-to-project i {
-                        font-size: 22px;
+                    &.go-to-project {
+                        display: inline-block;
+
+                        i {
+                            font-size: 22px;
+                        }
                     }
-                    &.assign-to-project i {
+                    &.assign-to-project {
+                        display: none;
+                        i {
                         font-size: 20px;
+                        }
                     }
                     i {
                         display: inline-block;
