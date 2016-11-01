@@ -50,7 +50,7 @@
 input, textarea {
     &.rp-input,
     &.rp-input-default {
-        @include rpInputSetting(false, 30px, 100%, 13px, 13px, 6px 10px, 0, true);
+        @include rpInputSetting(false, auto, 100%, 13px, 13px, 6px 10px, 0, true);
         @include rpInputStyle(#464547, #ffffff, #cccccc, false);
         font-family: $OpenSansRegular;
         outline: none;

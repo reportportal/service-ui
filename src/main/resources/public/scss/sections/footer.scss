@@ -20,13 +20,13 @@
  */
 
 .footer {
-  position: relative;
-  margin-top: -30px;
-  padding: 0 20px 0 120px;
+  position: absolute;
+  bottom: 0;
+  padding: 10px 20px 10px 120px;
   font-size: 11px;
 
   @media (max-width: 768px) {
-    padding: 0 15px !important;
+    padding: 10px 15px !important;
     position: initial;
   }
 
@@ -74,10 +74,9 @@
   }
 }
 
-@media (max-width: 1035px) {
+@media (max-width: 1150px) {
   .footer {
     text-align: center;
-    margin-top: -40px;
 
     .breadcrumbs {
       padding: 0;
