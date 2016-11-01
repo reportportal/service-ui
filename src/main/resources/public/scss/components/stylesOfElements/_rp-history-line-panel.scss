@@ -175,10 +175,10 @@
         font-size: 18px;
         display: inline-block;
         top: 4px;
+        margin-top: -4px;
 
         i {
-            position: absolute;
-            top: -17px;
+            position: relative;
         }
     }
 
