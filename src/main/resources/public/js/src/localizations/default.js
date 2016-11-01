@@ -254,7 +254,7 @@ define(['util'], function () {
                 titleNoRefactoring: 'Team work',
                 descLiveVisibility: 'Into your test automation status',
                 descReduceEffort: 'Accelerate results analysis leveraging historical data',
-                descSupportsTools: 'Out of the box integration width mainstream automation and bugtracking',
+                descSupportsTools: 'Out of the box integration with mainstream automation and bugtracking',
                 descNiceReports: 'Out of the box analytics and custom dashboards',
                 descEasyIntegrate: 'Integrate your existing automation results in same day. On premise or cloud',
                 descNoRefactoring: 'Collaborative environment for your entire team',
