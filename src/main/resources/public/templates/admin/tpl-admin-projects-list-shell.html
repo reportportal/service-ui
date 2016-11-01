@@ -1,71 +1,78 @@
-<div class="row-custom projects-header clearfix">
-    <ul class="rp-nav-left projects-title">
-        <li class="title-holder">
-            <span class="header-alike">
-                <%= data.text.admin.activeProjects %> (<span id="activeFound">0</span>)
-            </span>
-        </li>
-    </ul>    <ul class="rp-nav rp-nav-right projects-view-switcher" role="group">
-        <li class="float-left">
-            <button class="projects-view projects-view-tile rp-btn rp-btn-default active"
-                data-view-type="tile">
-                <i class="material-icons">view_module</i>
-            </button>
-        </li>
-        <li class="float-left">
-            <button class="projects-view projects-view-table rp-btn rp-btn-default"
-                data-view-type="table">
-                <i class="material-icons">view_list</i>
-            </button>
-        </li>
-    </ul>
-</div>
-<div id="activeProjectsList" class="col-sm-12 nopadding" role="tabpanel">
-    <div id="popupLoader" class="admin-section">
-        <i class="material-icons loader-animation">refresh</i>
+<div class="row-custom rp-projects-list-header clearfix">
+    <div class="col-md-3">
+        <div class="form-group projects-list-search">
+            <input type="text" value=""  placeholder="<%= data.text.admin.searchByName %>" name="nameFilter"
+                   id="nameFilter" class="favorites-name-filter rp-input-search" data-js-filter-projects>
+            <i class="material-icons">search</i>
+            <div style="display:none;" class="error-hint help-inline"></div>
+        </div>
     </div>
-</div>
-<div id="accordion" class="pr-collapsed-projects panel-group clearfix" aria-multiselectable="true" role="tablist">
-    <div class="clearfix" >
-        <ul class="rp-nav-left" role="tab">
-            <li class="title-holder">
-                <a id="inactiveLink"
-                    class="collapsed-projects-title collapsed header-alike"
-                    href="#collapseInactive"
-                    data-parent="#accordion"
-                    data-toggle="collapse">
-                    <%= data.text.admin.notActiveProjects %> (<span id="inactiveFound">0</span>)
-                    <span class="plus">
-                        <i class="rp-icons rp-icons-square-plus"></i>
-                    </span>
-                    <span class="minus">
-                        <i class="rp-icons rp-icons-square-minus"></i>
-                    </span>
-                </a>
+
+    <div class="col-md-6 sort-projects-list">
+        <label class="form_label sort-label" for="sortDirection">
+            <%= data.text.admin.sortBy %>
+        </label>
+        <div class="btn-group" role="group" id="sortDirection" data-js-sort-block>
+            </button><button type="button" class="rp-btn rp-btn-default-revers active desc" data-type="name">
+                <%= data.text.admin.name %>
+                <i class="material-icons arrow_up">keyboard_arrow_up</i>
+                <i class="material-icons arrow_down">keyboard_arrow_down</i>
+            </button><button type="button" class="rp-btn rp-btn-default-revers" data-type="creationDate">
+                <%= data.text.admin.creationDate %>
+                <i class="material-icons arrow_up">keyboard_arrow_up</i>
+                <i class="material-icons arrow_down">keyboard_arrow_down</i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <ul class="rp-nav rp-nav-right projects-view-switcher" role="group">
+            <li class="float-left">
+                <button class="projects-view projects-view-tile rp-btn rp-btn-default active"
+                        data-view-type="tile">
+                    <i class="material-icons">view_module</i>
+                </button>
+            </li>
+            <li class="float-left">
+                <button class="projects-view projects-view-table rp-btn rp-btn-default"
+                        data-view-type="table">
+                    <i class="material-icons">view_list</i>
+                </button>
             </li>
         </ul>
     </div>
-    <div id="collapseInactive" class="panel-collapse col-sm-12 nopadding collapse" role="tabpanel"></div>
 </div>
-<div id="personalProjects" data-js-personal-accordion class="pr-collapsed-projects panel-group clearfix" aria-multiselectable="true" role="tablist">
-    <div class="clearfix" >
-        <ul class="rp-nav-left" role="tab">
-            <li class="title-holder">
-                <a id="personalLink"
-                   class="collapsed-projects-title collapsed header-alike"
-                   href="#collapsePersonal"
-                   data-parent="#personalProjects"
-                   data-toggle="collapse">
-                    <%= data.text.admin.personalProjects %> (<span data-js-personal-amount>0</span>)
-                    <span class="plus">
-                        <i class="rp-icons rp-icons-square-plus"></i>
-                    </span>
-                    <span class="minus">
-                        <i class="rp-icons rp-icons-square-minus"></i>
-                    </span>
+<div class="container-fluid rp-projects-list-body">
+    <div class="row">
+        <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+            <li role="presentation"
+                class="<%= (!data.query || data.query === 'internal') ? 'active' : '' %>">
+                <a href="#"
+                   data-target="#internalProjects"
+                   aria-controls="home"
+                   role="tab"
+                   data-toggle="tab"
+                   class="tab"
+                   data-query="internal">
+                    <%= data.text.admin.internalProjects %> <span data-js-internal-qty></span>
+                </a>
+            </li>
+            <li role="presentation" class="<%= (data.query === 'personal') ? 'active' : '' %>">
+                <a href="#"
+                   data-target="#personalProjects"
+                   aria-controls="profile"
+                   role="tab"
+                   data-toggle="tab"
+                   class="tab"
+                   data-query="personal">
+                    <%= data.text.admin.personalProjects %> <span data-js-personal-qty></span>
                 </a>
             </li>
         </ul>
+        <div class="tab-content">
+            <div role="tabpanel"
+                 class="tab-pane <%= (!data.query || data.query === 'internal') ? 'active' : '' %>"
+                 data-js-internal-content id="internalProjects"></div>
+            <div role="tabpanel" class="tab-pane <%= (data.query === 'personal') ? 'active' : '' %>"
+                 data-js-personal-content id="personalProjects"></div>
+        </div>
     </div>
-    <div id="collapsePersonal" data-js-personal-projects class="panel-collapse col-sm-12 nopadding collapse" role="tabpanel"></div>
 </div>

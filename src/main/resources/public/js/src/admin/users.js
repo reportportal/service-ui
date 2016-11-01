@@ -316,7 +316,7 @@ define(function (require, exports, module) {
                 .done(function () {
                     self.members.splice(index, 1);
                     self.changeMembers();
-                    Util.ajaxSuccessMessenger("deleteMember", member.full_name);
+                    Util.ajaxSuccessMessenger("deleteMember", member.full_name || member.userId);
                 })
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, "deleteMember");
@@ -417,7 +417,7 @@ define(function (require, exports, module) {
                     self.updateMySelf(self.member.userId);
                     //remove, because data load from server
                     // self.member.assigned_projects[selected.data('project')].projectRole = newRole;
-                    Util.ajaxSuccessMessenger('updateProjectRole', self.member.full_name);
+                    Util.ajaxSuccessMessenger('updateProjectRole', self.member.full_name || self.member.userId);
                 })
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, "updateProjectRole");
@@ -484,7 +484,7 @@ define(function (require, exports, module) {
                     self.$assignBtn = null;
                     self.updateMySelf(self.member.userId);
                     self.render();
-                    Util.ajaxSuccessMessenger("assignMember", self.member.full_name);
+                    Util.ajaxSuccessMessenger("assignMember", self.member.full_name || self.member.userId);
                 })
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, "assignMember");

@@ -766,10 +766,10 @@ define(function(require, exports, module) {
                             member.userRole = newRole;
                             var data = self.getRenderObject([member]);
                             el.closest('.rp-table-row').replaceWith(Util.templates(self.membersTpl, data));
-                            Util.ajaxSuccessMessenger("changeRole", member.full_name);
+                            Util.ajaxSuccessMessenger("changeRole", member.full_name || member.userId);
                         })
                         .fail(function (error) {
-                            Util.ajaxFailMessenger(error, "changeRole", member.full_name);
+                            Util.ajaxFailMessenger(error, "changeRole", member.full_name || member.userId);
                         });
 
                 }.bind(this),
@@ -817,7 +817,7 @@ define(function(require, exports, module) {
                     }
 
                     Util.flipActiveLi(el);
-                    Util.ajaxSuccessMessenger('updateProjectRole', member.full_name);
+                    Util.ajaxSuccessMessenger('updateProjectRole', member.full_name || member.userId);
                 })
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, "updateProjectRole");

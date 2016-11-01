@@ -411,7 +411,12 @@ define(function (require, exports, module) {
                 return;
             }
             var settings = {'page.page': 1, 'page.size': 50};
-            this.model.set({number: settings['page.page'], size: settings['page.size']});
+            if(!this.model.get('size')){
+                this.model.set('size', settings['page.size']);
+            }
+            if(!this.model.get('number')){
+                this.model.set('number', settings['page.page']);
+            }
         },
         getSettingsStorageData: function(){
             return this.userSettings.get(this.pageType)
