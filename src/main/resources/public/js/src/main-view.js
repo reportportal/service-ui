@@ -59,7 +59,7 @@ define(function (require, exports, module) {
 
             this.contentView = new Content({
                 isAdminPage: false,
-                container: this.$el,
+                el: this.$el,
             }).render(options);
 
         },
