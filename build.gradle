@@ -28,6 +28,7 @@ apply plugin: 'idea'
 apply from: 'build-quality.gradle'
 apply from: 'build-docker.gradle'
 apply from: 'release-service.gradle'
+apply from: 'https://raw.githubusercontent.com/reportportal/gradle-scripts/master/build-info.gradle'
 
 
 ext {
@@ -104,15 +105,6 @@ idea {
 
     }
 }
-
-
-processResources {
-    exclude "**/public/*"
-    filesMatching('**/bootstrap.yaml') {
-        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [version: project.property("version")])
-    }
-}
-
 
 processResources.dependsOn runJsTests
 runJsTests.dependsOn grunt_build
