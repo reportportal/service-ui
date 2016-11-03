@@ -75,6 +75,7 @@ define(function (require, exports, module) {
             if(this.tabView){
                 this.tabView.destroy();
             }
+            this.clearSearch();
             this.tabView = this.getProjectsView(tab);
             this.tabView.render();
         },
@@ -88,7 +89,10 @@ define(function (require, exports, module) {
                 filter: this.filter || this.getDefaultFilter()
             });
         },
-
+        clearSearch: function(){
+            this.filter.search = config.defaultProjectsSettings.search;
+            this.$searchString.val('');
+        },
         fillContent: function (options) {
             this.filter = this.filter || this.getDefaultFilter();
 
@@ -115,7 +119,7 @@ define(function (require, exports, module) {
 
         events: {
             'click #sortDirection .rp-btn': 'changeSorting',
-            'validation::change #nameFilter': 'filterProjects',
+            'validation::change [data-js-filter-projects]': 'filterProjects',
             'click .projects-view': 'changeProjectsView',
             'click [data-toggle="tab"]': 'renderTab'
         },
@@ -150,7 +154,7 @@ define(function (require, exports, module) {
             this.tabView.update({
                 direction: this.filter.direction,
                 sort: this.filter.sort,
-                filter: this.filter.search
+                search: this.filter.search
             });
         },
 
@@ -163,7 +167,7 @@ define(function (require, exports, module) {
                     self.tabView.update({
                         direction: self.filter.direction,
                         sort: self.filter.sort,
-                        filter: self.filter.search
+                        search: self.filter.search
                     });
                 }
             }, config.userFilterDelay);
@@ -214,9 +218,10 @@ define(function (require, exports, module) {
                 util: Util,
                 isNew: this.isNew,
                 hasRunsLastWeek: this.hasRunsLastWeek,
+                isPersonalProject: this.isPersonalProject,
                 active: true,
                 canDelete: this.canDelete,
-                search: '',//this.filter.search,
+                search: this.filter.search,
                 filter: this.searchFilter,
                 textWrapper: Util.textWrapper,
                 userProjects: config.userModel.get('projects')
@@ -227,6 +232,12 @@ define(function (require, exports, module) {
             this.viewType = data.viewType;
             this.$listEl.empty();
             this.renderProjects();
+        },
+        isPersonalProject: function(project){
+            return project.entryType === 'PERSONAL';
+        },
+        isNew: function(stamp){
+            return Util.daysBetween(new Date(), new Date(stamp)) <= 7;
         },
         getCurrentTpl: function(){
             return this.viewType === 'table' ? this.listTableTpl : this.listListTpl;
