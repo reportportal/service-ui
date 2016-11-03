@@ -42,6 +42,7 @@ define(function (require, exports, module) {
     var List = Components.BaseView.extend({
         initialize: function (options) {
             this.$el = options.el;
+            this.action = options.action || 'internal';
             this.currentView = config.currentProjectsSettings.listView || config.defaultProjectsSettings.listView;
         },
 
@@ -55,32 +56,38 @@ define(function (require, exports, module) {
 
         shellTpl: 'tpl-admin-content-shell',
         headerTpl: 'tpl-admin-projects-header',
-        listTileTpl: 'tpl-admin-projects-tile-view',
-        listTableTpl: 'tpl-admin-projects-table-view',
         listShellTpl: 'tpl-admin-projects-list-shell',
 
         render: function (options) {
-            this.$el.html(Util.templates(this.shellTpl, {query: 'internal'}));
+            this.$el.html(Util.templates(this.shellTpl));
             this.$header = $("#contentHeader", this.$el);
             this.$body = $("#contentBody", this.$el);
             this.fillContent();
             return this;
         },
 
-        renderTab: function(e){
-            var tab = 'internal';
-            if(e) {
-                tab = $(e.currentTarget).data('query');
-            }
+        renderTab: function(){
             if(this.tabView){
                 this.tabView.destroy();
+                this.clearSearch();
             }
-            this.clearSearch();
-            this.tabView = this.getProjectsView(tab);
+            this.tabView = this.getProjectsView();
             this.tabView.render();
         },
 
-        getProjectsView: function (tab) {
+        updateRoute: function (e) {
+            var el = $(e.currentTarget);
+            var query = el.data('query');
+            if (el.parent().hasClass('active')) {
+                return;
+            }
+            config.router.navigate(el.attr('href'), {silent: true});
+            this.action = query;
+            this.renderTab();
+        },
+
+        getProjectsView: function () {
+            var tab = this.action;
             return new ProjectsList({
                 viewType: this.currentView,
                 projectsType: tab,
@@ -97,7 +104,7 @@ define(function (require, exports, module) {
             this.filter = this.filter || this.getDefaultFilter();
 
             this.$header.html(Util.templates(this.headerTpl, options));
-            this.$body.html(Util.templates(this.listShellTpl, options));
+            this.$body.html(Util.templates(this.listShellTpl, {query: this.action}));
 
             this.setupAnchors();
 
@@ -121,7 +128,7 @@ define(function (require, exports, module) {
             'click #sortDirection .rp-btn': 'changeSorting',
             'validation::change [data-js-filter-projects]': 'filterProjects',
             'click .projects-view': 'changeProjectsView',
-            'click [data-toggle="tab"]': 'renderTab'
+            'click [data-toggle="tab"]': 'updateRoute'
         },
 
         changeProjectsView: function (event) {
