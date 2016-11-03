@@ -159,7 +159,7 @@
             padding: 8px 0 9px;
             @extend %CLEAR_FIX;
 
-            a.project-name {
+            .project-name {
                 font-weight: 600;
                 color: $COLOR--charcoal-grey;
                 text-decoration: none;

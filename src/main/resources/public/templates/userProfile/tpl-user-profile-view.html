@@ -3,7 +3,7 @@
     <div class="col-xs-12 col-md-6">
         <h2 class="user-profile-title"><%= data.text.userProfile.personalInfo %></h2>
         <div class="user-profile-info">
-            <div class="user-profile-photo">
+            <div class="user-profile-photo <%= data.photo_loaded ? 'active' : '' %>">
                 <img class="user-avatar" data-js-user-img data-original="<%= data.image %>" src="<%= data.image %>" alt="<%= data.text.ui.avatar %>" />
             </div>
             <% if(canEdit){ %>
@@ -61,7 +61,7 @@
             </div>
             <% _.each(data.projects, function(val, project){ %>
                 <div class="user-projects-row">
-                    <div class="col-sm-8 col-xs-12"><a href="#" class="project-name"><%- project %></a></div>
+                    <div class="col-sm-8 col-xs-12"><span class="project-name"><%- project %></span></div>
                     <div class="col-sm-4 col-xs-12"><%= val.projectRole %></div>
                 </div>
             <% }); %>
@@ -111,7 +111,7 @@
                 <div data-js-editor class="config-container"></div>
             </div>
             <div class="download-certif" data-js-certificate>
-                <a href="<%= data.certificateUrl %>" target="_blank">
+                <a href="<%= data.certificateUrl %>" download>
                     <%= data.text.userProfile.downloadCertificate %>
                 </a>
             </div>

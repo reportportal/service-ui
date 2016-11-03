@@ -1583,7 +1583,7 @@ define(['util'], function () {
             deleteUser: "Are you sure you want to delete user <b>'%%%'<b>",
             changeRole: "Are you sure you want to change the account role for the <b>'%%%'</b>",
             changeRoleBtn: "Change",
-            deleteImage: "Are you sure you want to delete profile photo",
+            deleteImage: "Are you sure you want to delete profile photo?",
             deleteBts: "Are you sure you want to remove %%% project <b>'%%%'</b> from project settings",
             dashboardDelete: "Are you sure you want to remove dashboard <b>'%%%'</b>",
             deletedWidget: "Are you sure you want to remove widget <b>'%%%'</b>",
