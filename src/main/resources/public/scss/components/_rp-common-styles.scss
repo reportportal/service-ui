@@ -709,8 +709,9 @@ ul.rp-nav-left > li.title-holder {
             right: 0;
             bottom: 0;
             left: 0;
+            background: #e4e5e6;
         }
-        .color, .content {
+        &>.content {
             background: #e4e5e6;
         }
     }

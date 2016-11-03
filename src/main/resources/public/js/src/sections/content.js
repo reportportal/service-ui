@@ -33,7 +33,7 @@ define(function (require, exports, module) {
     var Project = require('project');
     var ProjectInfo = require('projectinfo');
     var Member = require('member');
-    var Profile = require('profile');
+    var Profile = require('userProfile/UserProfilePage');
 
     //Administrate modules
     var Projects = require('projects');

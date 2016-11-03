@@ -497,7 +497,7 @@ define(['util'], function () {
 
         userProfile: {
             userProfile: "User profile",
-            projectAndRoles: "Projects and roles",
+            projectAndRoles: "Assigned on project",
             regenerateUUID: "Regenerate UUID",
             updateDataFromUPSA: "Update data from UPSA",
             reloginRequired: "relogin is required",
@@ -514,12 +514,29 @@ define(['util'], function () {
             ruby: "Ruby",
             soapUI: "SoapUI",
             donNet: ".NET",
-            ofThem: " of them",
             editInfo: "Edit personal info",
-            oldPass: "Old password",
+            oldPass: "Old Password",
+            newPass: "New Password",
+            enter: "Enter",
+            confirmPass: 'Confirm',
+            uploadPhoto: 'Upload photo',
+            removePhoto: 'Remove photo',
+            userName: 'User Name',
+            email: 'Email',
             selectPhoto: "Select photo",
             savePhoto: "Save photo",
             downloadCertificate: "Download certificate",
+            rubyConfigTitle: 'COPY AND SAVE IT AS A REPORT_PORTAL.YML FILE',
+            soapConfigTitle: 'SET THE FOLLOWS PROPERTIES INTO PROJECT PROPERTIES OR SET THEM TO SYSTEM VARIABLES',
+            dotnetConfigTitle: 'FOLLOW INSTALLER INSTRUCTIONS',
+            defaultConfigTitle: 'COPY AND SAVE IT AS A REPORTPORTAL.PROPERTIES FILE',
+            required: 'REQUIRED',
+            notRequired: 'NOT REQUIRED',
+            personalInfo: 'Personal Information',
+            configExamples: 'Configutation Examples',
+            uuidTitle: 'Universally Unique Identifier',
+            regenerateBtn: 'Regenerate',
+            projectRole: 'Project Role',
             oldClientComment: '<div class="comment"><p>Client versions before 2.2.3 support <b>com.epam.ta.reportportal.ws.*</b> parameters name format.</p>' +
             '<p>Client versions from 2.2.3 support <b>rp.*</b> and <b>com.epam.ta.reportportal.ws.*</b> parameters name formats.</p>' +
             '<p>Please use new names format, because old ones will be deprecated.</p></div>'
@@ -1548,6 +1565,8 @@ define(['util'], function () {
             moveToAllLaunches: 'Move to all launches',
             editLaunch: 'Edit Launch',
             editTestItem: 'Edit Test Item',
+            changePassword: "Change Password",
+            editUserInfo: 'Edit Personal Information'
         },
 
         dialog: {
