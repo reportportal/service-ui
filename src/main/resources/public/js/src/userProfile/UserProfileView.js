@@ -23,8 +23,8 @@ define(function (require, exports, module) {
     var Components = require('core/components');
     var Service = require('coreService');
     var Localization = require('localization');
-    var ModalChangePassword = require('modals/ModalChangePassword');
-    var ModalEditUserInfo = require('modals/ModalEditUserInfo');
+    var ModalChangePassword = require('modals/modalChangePassword');
+    var ModalEditUserInfo = require('modals/modalEditUserInfo');
     var ModalConfirm = require('modals/modalConfirm');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
