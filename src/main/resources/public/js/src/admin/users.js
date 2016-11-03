@@ -44,6 +44,7 @@ define(function (require, exports, module) {
 
         initialize: function (options) {
             this.$el = options.el;
+            this.$header = options.header;
             this.action = options.action;
             this.queryString = options.queryString;
         },
@@ -67,7 +68,6 @@ define(function (require, exports, module) {
         render: function () {
 
             this.$el.html(Util.templates(this.shellTpl));
-            this.$header = $("#contentHeader", this.$el);
             this.$body = $("#contentBody", this.$el);
 
             this.header = new Header({

@@ -23,15 +23,20 @@
   .rp-grid-name .btn-group, .type-grid-cell{
     display: none;
   }
-  .rp-grid-name a {
-    cursor: default;
-    color: $COLOR--black;
-    pointer-events: none;
-    &:hover {
-      text-decoration: none !important;
+  .rp-grid-name{
+    a {
+      cursor: default;
+      color: $COLOR--black;
+      pointer-events: none;
+      &:hover {
+        text-decoration: none !important;
+      }
     }
-
+    i {
+      display: none !important;
+    }
   }
+
   .rp-table-row:hover, .rp-table-row{
     background-color: $COLOR--white-four !important;
   }

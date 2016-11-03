@@ -35,7 +35,7 @@ define(function (require, exports, module) {
     var Member = require('member');
     var Profile = require('userProfile/UserProfilePage');
 
-    //Administrate modules
+    // Administrate modules
     var Projects = require('projects');
     var Users = require('users');
     var Settings = require('settings');
@@ -44,27 +44,22 @@ define(function (require, exports, module) {
 
         initialize: function (options) {
             this.isAdminPage = options.isAdminPage;
+            this.$el = options.el;
             if (this.isAdminPage) {
-                this.$el = options.el;
                 this.queryString = options.queryString;
-            } else {
-                this.container = options.container;
             }
         },
 
         tpl: 'tpl-container',
-        adminTpl: 'tpl-admin-body',
 
         events: {
             'click #btt': 'scrollTop'
         },
 
         render: function (options) {
+            this.$el.html(Util.templates(this.tpl));
             if (this.isAdminPage) {
-                this.$el.html(Util.templates(this.adminTpl));
-                this.$container = $("#dynamicContent", this.$el);
-            } else {
-                this.container.append(this.$el.html(Util.templates(this.tpl)));
+                this.$container = $("#dynamic-content", this.$el);
             }
 
             this.setupPageView(options);
@@ -87,9 +82,10 @@ define(function (require, exports, module) {
         setupPageView: function (options) {
             if (this.isAdminPage) {
                 this.page = options.page;
-                var pageView = this.getViewForAdministratePage(options);
+                var PageView = this.getViewForAdministratePage(options);
                 options['el'] = this.$container;
-                this.pageView = new pageView(options).render();
+                options['header'] = $('#contentHeader', this.$el);
+                this.pageView = new PageView(options).render();
             } else {
                 this.page = options.contextName;
                 var PageView = this.getViewForPage(options.contextName);

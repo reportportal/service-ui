@@ -35,13 +35,13 @@ define(function (require, exports, module) {
     var ContentView = Components.BaseView.extend({
         initialize: function (options) {
             this.$el = options.el;
+            this.$header = options.header;
         },
 
         shellTpl: 'tpl-admin-content-shell',
 
         render: function () {
             this.$el.html(Util.templates(this.shellTpl));
-            this.$header = $("#contentHeader", this.$el);
             this.$body = $("#contentBody", this.$el);
 
             this.header = new Header({

@@ -20,13 +20,28 @@
  */
 
  .header {
-   position: relative;
+   position: absolute;
+   //position: relative;
+   width: 100%;
+   z-index: 11;
    margin: 0;
    padding: 0 15px;
    background-color: $COLOR--black-five;
    letter-spacing: .5px;
+
    @media (max-width: $SCREEN_XS_MAX) {
      padding: 0;
+   }
+
+   .container {
+     @media (min-width: $SCREEN_XS_MAX) {
+       width: 100%;
+       padding-right: 100px;
+     }
+
+     @media (max-width: 991px) and (min-width: 768px) {
+       padding-right: 70px;
+     }
    }
 
    & > .container > .row { // #topHeader
@@ -270,13 +285,14 @@
                  padding: 0;
 
                  a {
+                   font-family: "OswaldRegular",sans-serif;
+                   font-size: 14px;
                    clear: both;
                    display: block;
                    margin: 0;
                    padding: 8px 19px 9px;
                    background-color: inherit;
                    color: #464547;
-                   font-size: 13px;
                    font-weight: 400;
                    line-height: 1.42857143;
                    white-space: nowrap;
@@ -351,9 +367,10 @@
                      padding: 0;
 
                      a {
+                       font-family: "OswaldRegular",sans-serif;
+                       font-size: 16px;
                        clear: both;
                        padding: 8px 19px 9px;
-                       font-size: 13px;
                        font-weight: 400;
                        color: #464547;
                        text-transform: uppercase;

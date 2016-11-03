@@ -47,19 +47,19 @@ define(function (require, exports, module) {
         render: function (options) {
             this.$el.empty();
             this.sidebarView = new Sidebar({
-                tpl: 'tpl-main-side-bar',
+                tpl: 'tpl-sidebar',
                 projectUrl: config.project.projectId,
                 currentPage: this.contextName,
             }).render();
             this.footerView = new Footer().render();
             this.headerView = new Header({
-                tpl: 'tpl-main-top-header',
+                tpl: 'tpl-header',
                 currentPage: this.contextName,
             }).render();
 
             this.contentView = new Content({
                 isAdminPage: false,
-                container: this.$el,
+                el: this.$el,
             }).render(options);
 
         },

@@ -42,6 +42,7 @@ define(function (require, exports, module) {
     var List = Components.BaseView.extend({
         initialize: function (options) {
             this.$el = options.el;
+            this.$header = options.header;
             this.currentTpl = config.currentProjectsSettings.listView || config.defaultProjectsSettings.listView;
         },
 
@@ -61,7 +62,6 @@ define(function (require, exports, module) {
 
         render: function (options) {
             this.$el.html(Util.templates(this.shellTpl, {query: 'internal'}));
-            this.$header = $("#contentHeader", this.$el);
             this.$body = $("#contentBody", this.$el);
             this.fillContent();
             return this;
