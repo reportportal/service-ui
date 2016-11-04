@@ -716,24 +716,23 @@ ul.rp-nav-left > li.title-holder {
   width: 100%;
   height: 100%;
 
-  & .wrapper {
-    height: 1px;
+  &.wrapper {
     min-height: 100%;
     background: #414243;
     padding-left: 90px;
-
-    .color {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+    
+      .color {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: #e4e5e6;
+      }
+      & > .content {
+        background: #e4e5e6;
+      }
     }
-    .color, .content {
-      background: #e4e5e6;
-    }
-  }
-
   & .content-layout {
     width: 100%;
   }

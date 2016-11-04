@@ -146,7 +146,7 @@ define(function (require, exports, module) {
         previewPhoto: function (e) {
             var file = e.currentTarget.files[0],
                 self = this;
-            
+
             if (file) {
                 if (this.validateFileExtension(file)) {
                     var reader = new FileReader();

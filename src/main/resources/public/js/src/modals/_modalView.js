@@ -74,7 +74,7 @@ define(function (require, exports, module) {
             this.unbind();
             delete this;
         }
-    })
+    });
 
     return ModalView;
 });
