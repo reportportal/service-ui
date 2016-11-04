@@ -19,7 +19,10 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'common';
-@import 'defects-tooltip';
-@import 'duration-tooltip';
-@import 'executions-tooltip';
+.duration-tooltip {
+  width: 400px;
+  color: $COLOR--gray-47;
+  font-family: 'OpenSansSemibold',sans-serif;
+  font-size: 12px;
+  word-wrap: break-word;
+}
