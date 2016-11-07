@@ -90,7 +90,6 @@ define(function (require, exports, module) {
             return this.getBinding("isProcessing") || this.getBinding('parent_launch_isProcessing');
         },
         initialize: function(options) {
-            this.$container = options.$container;
             this.defetTypesCollection = new SingletonDefectTypeCollection();
             this.defetTypesCollection.ready.done(function(){
                 this.render();
@@ -100,7 +99,6 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {
                 model: this.model.toJSON({computed: true})
             }));
-            this.$container.append(this.$el);
             this.applyBindings();
         },
         getIssueType: function(){

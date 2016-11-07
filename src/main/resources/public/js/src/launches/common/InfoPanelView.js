@@ -162,7 +162,7 @@ define(function (require, exports, module) {
             defectTooltips.each(function( index ) {
                 var el = $(this);
                 var type = el.data('js-defect-type');
-                var $hoverElement = el.closest($('[data-js-hover-element]', this.$el));
+                var $hoverElement = el.next($('[data-js-hover-element]', this.$el));
                 Util.appendTooltip(function() {
                     var tooltip = new LaunchSuiteDefectsTooltipView({
                         type: type,
@@ -174,7 +174,7 @@ define(function (require, exports, module) {
         },
         loadDurationTooltip: function(){
             var el = $('[data-js-duration]');
-            var $hoverElement = el.closest($('[data-js-hover-element]', this.$el));
+            var $hoverElement = el.next($('[data-js-hover-element]', this.$el));
             Util.appendTooltip(function() {
                 var tooltip = new LaunchSuiteDurationTooltipView({});
                 return tooltip.$el.html();
@@ -189,7 +189,7 @@ define(function (require, exports, module) {
                 failed: this.getExecutionStats(stats, 'failed'),
                 skipped: this.getExecutionStats(stats, 'skipped'),
             };
-            var $hoverElement = el.closest($('[data-js-hover-element]', this.$el));
+            var $hoverElement = el.next($('[data-js-hover-element]', this.$el));
             Util.appendTooltip(function() {
                 var tooltip = new LaunchSuiteExecutionsTooltipView({
                     data: data

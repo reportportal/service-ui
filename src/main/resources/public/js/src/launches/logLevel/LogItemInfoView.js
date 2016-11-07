@@ -125,7 +125,7 @@ define(function (require, exports, module) {
             if(this.validateForIssue()){
                 this.issueView = new StepItemIssueView({
                     model: this.viewModel,
-                    $container: $('[data-js-step-issue]', this.$el)
+                    el: $('[data-js-step-issue]', this.$el)
                 });
             }
             this.stackTrace = new LogItemInfoStackTraceView({
