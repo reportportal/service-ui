@@ -84,7 +84,9 @@ define(function (require, exports, module) {
         },
         onChangeParamsFilter: function(params) {
             var mainHash = window.location.hash.split('?')[0];
-            config.router.navigate(mainHash + '?' + params, {trigger: false, replace: true});
+            setTimeout(function() {
+                config.router.navigate(mainHash + '?' + params, {trigger: false, replace: true});
+            })
         },
         onChangeLogItem: function(logItemId) {
             this.crumbs.setLogItem(this.collectionItems.get(logItemId));

@@ -81,7 +81,11 @@ define(function (require, exports, module) {
             }
         },
         onRemoveFilter: function() {
-            config.router.navigate(this.header.model.get('url'), {trigger: true});
+            var self = this;
+            setTimeout(function() {
+                config.router.navigate(self.header.model.get('url'), {trigger: true});
+            });
+
         },
         destroy: function () {
             this.header.destroy();
