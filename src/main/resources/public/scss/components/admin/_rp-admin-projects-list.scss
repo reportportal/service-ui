@@ -107,10 +107,12 @@
                 padding: 0;
             }
             .project_name {
-                display: inline-block;
                 font: normal 15px $OswaldRegular;
                 text-transform: uppercase;
                 color: $COLOR--topaz;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
             }
             .project-info {
                 padding-top: 10px;
@@ -205,21 +207,9 @@
                 text-transform: uppercase;
                 color: $COLOR--topaz;
                 border-bottom: 1px solid $COLOR--gray-91;
-                span.label.you {
-                    position: relative;
-                    top: -2px;
-                    left: 1%;
-                    display: inline-block;
-                    height: 18px;
-                    margin-left: 3px;
-                    padding: 0 6px;
-                    line-height: 18px;
-                    border-radius: 0;
-                    background-color: #a3c644;
-                    font-family: $OpenSansRegular;
-                    font-weight: normal;
-                    font-size: 10px;
-                }
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
             }
             .project_info_wrapper {
                 margin: 0;

@@ -2,12 +2,12 @@
 <% _.forEach(data.collection, function(project, index){ %>
     <% if(data.filter(project, data.search)){ %>
     <% counter += 1; %>
-        <% var lastRunClass = data.inactiveProject || (project.lastRun && !data.hasRunsLastWeek(project.lastRun)) ? 'dimmed' : ''; %>
-        <% var newLabel = !data.isPersonalProject && data.isNew && data.isNew(project.creationDate); %>
+        <% var lastRunClass = project.lastRun && !data.hasRunsLastWeek(project.lastRun) ? 'dimmed' : ''; %>
+        <% var newLabel = !data.isPersonalProject(project) && data.isNew && data.isNew(project.creationDate); %>
         <% var noLabelClass = newLabel ? '': 'no-label' ; %>
           <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 project-item project-row <%= lastRunClass %>">
             <div class="project-wrapper">
-                <% if(data.canDelete(project) && !data.isPersonalProject) { %>
+                <% if(data.canDelete(project) && !data.isPersonalProject(project)) { %>
                     <div class="remove-project"
                         data-id="<%- project.projectId %>"
                         data-active="<%= data.active %>">
@@ -44,11 +44,11 @@
                         <i class="rp-icons rp-icons-all-users"></i>
                     </a>
                     <a class="col-sm-4 project-link go-to-project" title="<%= data.text.admin.goToProject %>" href="#<%- project.projectId %>">
-                        <i class="material-icons">playlist_add_check</i>
+                        <i class="material-icons">open_in_browser</i>
                     </a>
                     <% if(!assigned){ %>
                     <a class="col-sm-4 project-link assign-to-project" title="<%= data.text.admin.assignToProject %>" href="#" data-project="<%- project.projectId %>">
-                        <i class="material-icons">open_in_browser</i>
+                        <i class="material-icons">playlist_add_check</i>
                     </a>
                     <% } %>
                 </div>

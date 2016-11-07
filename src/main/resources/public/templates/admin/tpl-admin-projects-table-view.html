@@ -12,7 +12,7 @@
     <% _.forEach(data.collection, function(project, index){ %>
         <% if(data.filter(project, data.search)){ %>
             <% counter += 1; %>
-            <% var lastRunClass = data.inactiveProject || (project.lastRun && !data.hasRunsLastWeek(project.lastRun))   ? 'dimmed' : ''; %>
+            <% var lastRunClass = project.lastRun && !data.hasRunsLastWeek(project.lastRun) ? 'dimmed' : ''; %>
             <% var assigned = !!data.userProjects[project.projectId]; %>
             <div class="row project-row <%= lastRunClass %>">
                 <div class="col-md-4 clearfix">
@@ -26,10 +26,10 @@
                                     title="<%= data.text.admin.projectTitle %>">
                                     <%= data.search ? data.textWrapper(project.projectId, data.search) : project.projectId %>
                                 </a>
-                            </h4>
-                             <% if(!data.isPersonalProject && data.isNew && data.isNew(project.creationDate)) { %>
+                                <% if(!data.isPersonalProject(project) && data.isNew && data.isNew(project.creationDate)) { %>
                                 <span class="label label-success you"><%= data.text.admin.newProject %></span>
-                             <% } %>
+                                <% } %>
+                            </h4>
                      </div>
                 </div>
                 <div class="col-md-1 clearfix"></div>
@@ -87,14 +87,14 @@
                                      <a class="project-link go-to-project"
                                         title="<%= data.text.admin.goToProject %>"
                                         href="#<%- project.projectId %>">
-                                         <i class="material-icons">playlist_add_check</i>
+                                         <i class="material-icons">open_in_browser</i>
                                      </a>
                                     <% if(!assigned){ %>
                                         <a class="project-link assign-to-project"
                                             title="<%= data.text.admin.assignToProject %>"
                                             href="#"
                                             data-project="<%- project.projectId %>">
-                                            <i class="material-icons">open_in_browser</i>
+                                            <i class="material-icons">playlist_add_check</i>
                                         </a>
                                     <% } %>
                                 </li>
@@ -102,7 +102,7 @@
                      </div>
                 </div>
                 <div class="col-md-1 no-padding clearfix text-center">
-                    <% if(data.canDelete(project) && !data.isPersonalProject) { %>
+                    <% if(data.canDelete(project) && !data.isPersonalProject(project)) { %>
                     <a class=" project-link remove-project"
                        href="#" title="<%= data.text.permissionMap.deleteProject %>"
                        data-id="<%- project.projectId %>"
