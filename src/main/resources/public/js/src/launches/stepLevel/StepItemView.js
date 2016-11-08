@@ -28,8 +28,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var Localization = require('localization');
     var ItemDurationView = require('launches/common/ItemDurationView');
-    var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
-    var ModalDefectEditor = require('modals/modalDefectEditor');
+    var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
 
@@ -40,7 +39,6 @@ define(function (require, exports, module) {
         template: 'tpl-launch-step-item',
         events: {
             'click [data-js-name-link]': 'onClickName',
-            'click [data-js-issue-type]': 'showDefectEditor',
             'click [data-js-time-format]': 'toggleStartTimeView',
             'click [data-js-item-edit]': 'onClickEdit',
         },
@@ -128,19 +126,10 @@ define(function (require, exports, module) {
             return issue ? true : false;
         },
         renderIssue: function(){
-            this.issueView = new StepItemIssueView({
+            this.issueView = new StepLogDefectTypeView({
                 model: this.model,
                 el: $('[data-js-step-issue]', this.$el)
             });
-        },
-        showDefectEditor: function (e) {
-            var el = $(e.currentTarget);
-            if(!el.closest('.select-state').length){
-                var defectEditor = new ModalDefectEditor({
-                    items: [this.model]
-                });
-                defectEditor.show();
-            }
         },
         onClickName: function(e) {
             e.preventDefault();
