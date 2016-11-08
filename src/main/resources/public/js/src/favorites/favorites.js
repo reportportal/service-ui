@@ -47,15 +47,18 @@ define(function (require, exports, module) {
             'click [data-js-filter-shared]': 'onClickEdit',
         },
         bindings: {
+            ':el': 'classes: {"not-owner": notMyFilter}',
             '[data-js-filter-link]': 'text: name, attr: {href: url}, classes: {hide: not(isLaunch)}',
             '[data-js-filter-name]': 'text: name, classes: {hide: isLaunch}',
             '[data-js-description]': 'text: description',
             '[data-js-filter-options]': 'html: optionsString',
             '[data-js-owner]': 'text: owner',
-            '[data-js-filter-shared]': 'classes: {hide: not(isShared)}',
+            '[data-js-filter-shared]': 'classes: {hide: not(isShared)}, attr: {disabled: notMyFilter}',
             '[data-js-switch-to-launch]': 'checked: isLaunch',
             '[data-js-switch-to-launch-mobile]': 'checked: isLaunch',
             '[data-js-switch-to-launch-text]': 'text: isLaunchString',
+            '[data-js-remove]': 'attr: {disabled: notMyFilter}, classes: {disabled: notMyFilter}',
+            '[data-js-filter-shared-icon]': 'classes: {disabled: notMyFilter}',
         },
         initialize: function() {
             this.render();

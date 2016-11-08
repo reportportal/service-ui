@@ -25,7 +25,6 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var App = require('app');
     var Localization = require('localization');
 
 

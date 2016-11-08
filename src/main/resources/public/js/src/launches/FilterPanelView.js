@@ -64,7 +64,7 @@ define(function (require, exports, module) {
         },
         onClickClone: function() {
             var newFilter = this.model.collection.generateTempModel({
-                entities: this.model.get('newEntities') || this.model.get('entities'),
+                newEntities: this.model.get('newEntities') || this.model.get('entities'),
             });
             config.router.navigate(newFilter.get('url'), {trigger: true});
         },

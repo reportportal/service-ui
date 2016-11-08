@@ -27,6 +27,19 @@
   .item-info {
     position: relative;
     width: 100%;
+    .button-container {
+      position: absolute;
+      top: 10px;
+      right: 0;
+    }
+    .item-issue-container {
+      padding: 0 10px;
+      &:hover {
+        .edit-defect {
+          opacity: 1;
+        }
+      }
+    }
     .launch-log-item-issue {
       padding: 15px;
     }
@@ -36,6 +49,7 @@
       background: $COLOR--white-four;
     }
   }
+
   .rp-grid-item-issue {
     margin: 0 15px;
     float: left;

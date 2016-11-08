@@ -1,0 +1,10 @@
+<div class="executions-tooltip">
+    <ul class="stats-tip-list">
+        <% _.each(data.stats, function(val, key) { %>
+        <li class="stats-tip">
+            <span class="status"><%= key %></span>
+            <span class="percents"><%= val %>%</span>
+        </li>
+        <% }); %>
+    </ul>
+</div>

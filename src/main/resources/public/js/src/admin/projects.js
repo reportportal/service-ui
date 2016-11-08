@@ -56,8 +56,6 @@ define(function (require, exports, module) {
 
         shellTpl: 'tpl-admin-content-shell',
         headerTpl: 'tpl-admin-projects-header',
-        listTileTpl: 'tpl-admin-projects-tile-view',
-        listTableTpl: 'tpl-admin-projects-table-view',
         listShellTpl: 'tpl-admin-projects-list-shell',
 
         render: function (options) {
@@ -67,32 +65,45 @@ define(function (require, exports, module) {
             return this;
         },
 
-        renderTab: function(e){
-            var tab = 'internal';
-            if(e) {
-                tab = $(e.currentTarget).data('query');
-            }
+        renderTab: function(){
             if(this.tabView){
                 this.tabView.destroy();
+                this.clearSearch();
             }
-            this.tabView = this.getProjectsView(tab);
+            this.tabView = this.getProjectsView();
             this.tabView.render();
         },
 
-        getProjectsView: function (tab) {
+        updateRoute: function (e) {
+            var el = $(e.currentTarget);
+            var query = el.data('query');
+            if (el.parent().hasClass('active')) {
+                return;
+            }
+            config.router.navigate(el.attr('href'), {silent: true});
+            this.action = query;
+            this.renderTab();
+        },
+
+        getProjectsView: function () {
+            var tab = this.action;
             return new ProjectsList({
+                viewType: this.currentView,
                 projectsType: tab,
                 total: $('[data-js-'+tab+'-qty]', this.$el),
                 container: $('[data-js-'+tab+'-content]', this.$el),
                 filter: this.filter || this.getDefaultFilter()
             });
         },
-
+        clearSearch: function(){
+            this.filter.search = config.defaultProjectsSettings.search;
+            this.$searchString.val('');
+        },
         fillContent: function (options) {
             this.filter = this.filter || this.getDefaultFilter();
 
             this.$header.html(Util.templates(this.headerTpl, options));
-            this.$body.html(Util.templates(this.listShellTpl, options));
+            this.$body.html(Util.templates(this.listShellTpl, {query: this.action}));
 
             this.setupAnchors();
 
@@ -114,18 +125,20 @@ define(function (require, exports, module) {
 
         events: {
             'click #sortDirection .rp-btn': 'changeSorting',
-            'validation::change #nameFilter': 'filterProjects',
+            'validation::change [data-js-filter-projects]': 'filterProjects',
             'click .projects-view': 'changeProjectsView',
-            'click [data-toggle="tab"]': 'renderTab'
+            'click [data-toggle="tab"]': 'updateRoute'
         },
 
         changeProjectsView: function (event) {
             event.preventDefault();
-            var $target = $(event.currentTarget);
+            var $target = $(event.currentTarget),
+                viewType = $target.data('view-type');
             $('.projects-view').removeClass('active');
             $target.addClass('active');
+            this.currentView = config.currentProjectsSettings.listView = viewType;
             this.tabView.updateView({
-                viewType: $target.data('view-type')
+                viewType: viewType
             });
         },
 
@@ -135,7 +148,6 @@ define(function (require, exports, module) {
 
         changeSorting: function (e) {
             var btn = $(e.currentTarget);
-            //this.off('loadProjectsReady', this.onLoadProjectsReady, this);
             if (btn.hasClass('active')) {
                 btn.toggleClass('desc');
                 this.filter.direction = config.currentProjectsSettings.sortingDirection = btn.hasClass('desc') ? 'desc' : 'asc';
@@ -148,7 +160,7 @@ define(function (require, exports, module) {
             this.tabView.update({
                 direction: this.filter.direction,
                 sort: this.filter.sort,
-                filter: this.filter.search
+                search: this.filter.search
             });
         },
 
@@ -156,12 +168,12 @@ define(function (require, exports, module) {
             var self = this;
             clearTimeout(this.searching);
             this.searching = setTimeout(function () {
-                if (data.valid) {
+                if (data.valid && self.filter.search !== data.value) {
                     self.filter.search = config.currentProjectsSettings.search = data.value;
                     self.tabView.update({
                         direction: self.filter.direction,
                         sort: self.filter.sort,
-                        filter: self.filter.search
+                        search: self.filter.search
                     });
                 }
             }, config.userFilterDelay);
@@ -178,7 +190,7 @@ define(function (require, exports, module) {
             this.projectsType = options.projectsType;
             this.$total = options.total;
             this.$container = options.container;
-            this.currentTpl = options.tpl || this.listListTpl;
+            this.viewType = options.viewType || 'list-view';
             this.filter = options.filter;
         },
 
@@ -206,14 +218,16 @@ define(function (require, exports, module) {
             this.loadProjects();
         },
         renderProjects: function(){
-            this.$listEl.append(Util.templates(this.currentTpl, {
+            var tpl = this.getCurrentTpl();
+            this.$listEl.append(Util.templates(tpl, {
                 collection: this.collection.toJSON(),
                 util: Util,
                 isNew: this.isNew,
                 hasRunsLastWeek: this.hasRunsLastWeek,
+                isPersonalProject: this.isPersonalProject,
                 active: true,
                 canDelete: this.canDelete,
-                search: '',//this.filter.search,
+                search: this.filter.search,
                 filter: this.searchFilter,
                 textWrapper: Util.textWrapper,
                 userProjects: config.userModel.get('projects')
@@ -221,9 +235,18 @@ define(function (require, exports, module) {
             this.trigger('loadProjectsReady');
         },
         updateView: function(data){
-            this.currentTpl = data.viewType == 'table' ? this.listTableTpl : this.listListTpl;
+            this.viewType = data.viewType;
             this.$listEl.empty();
             this.renderProjects();
+        },
+        isPersonalProject: function(project){
+            return project.entryType === 'PERSONAL';
+        },
+        isNew: function(stamp){
+            return Util.daysBetween(new Date(), new Date(stamp)) <= 7;
+        },
+        getCurrentTpl: function(){
+            return this.viewType === 'table' ? this.listTableTpl : this.listListTpl;
         },
         update: function(options){
             this.filter = options || this.filter;
@@ -257,7 +280,7 @@ define(function (require, exports, module) {
             this.$total.html('('+data.page.totalElements+')');
         },
         getQueryData: function(){
-            var query = this.projectsType == 'personal' ? '?filter.eq.configuration$entryType=PERSONAL' : '?';
+            var query = this.projectsType == 'personal' ? '?filter.eq.configuration$entryType=PERSONAL' : '?filter.in.configuration$entryType=INTERNAL,UPSA';
             if(this.filter.filter){
                 query += '&filter.cnt.name=' + this.filter.filter;
             }

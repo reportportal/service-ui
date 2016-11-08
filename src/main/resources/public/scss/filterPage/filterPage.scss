@@ -97,10 +97,22 @@
       &:hover {
         color: $COLOR--black;
       }
+      &.disabled {
+        cursor: default;
+        opacity: 0.5;
+        &:hover {
+          color: $COLOR--gray-60;
+        }
+      }
     }
     &:hover {
       .filter-edit {
         opacity: 1;
+      }
+    }
+    &.not-owner {
+      .filter-edit, .filter-edit-mobile {
+        display: none;
       }
     }
   }

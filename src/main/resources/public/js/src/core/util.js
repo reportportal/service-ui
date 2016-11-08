@@ -213,7 +213,7 @@ define(function (require, exports, module) {
                 items: ':not([disabled])',
                 content: content,
             });
-            // $('.ui-helper-hidden-accessible').remove();  // this block needs for voiseover osx only
+            $('.ui-helper-hidden-accessible').remove();  // this block needs for voiseover osx only
         },
 
         textWrapper: function (value, search) {

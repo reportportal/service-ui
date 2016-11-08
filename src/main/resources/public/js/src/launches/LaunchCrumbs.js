@@ -109,7 +109,7 @@ define(function (require, exports, module) {
 
     var LaunchCrumbCollection = Backbone.Collection.extend({
         model: LaunchCrumbModel,
-        sync: function(newPath, cacheModel) {
+        update: function(newPath, cacheModel) {
             this.cacheModel = cacheModel;
             var async = $.Deferred();
             var currentPath = [];
@@ -213,7 +213,7 @@ define(function (require, exports, module) {
         update: function(partPath, optionsURL) {
             $('#breadCrumbs', this.$el).addClass('load');
             var self = this;
-            this.collection.sync(partPath, this.cacheModel)
+            this.collection.update(partPath, this.cacheModel)
                 .done(function(launchModel, parentModel) {
                     $('#breadCrumbs', self.$el).removeClass('load');
                     self.trigger('change:path', launchModel, parentModel, optionsURL);

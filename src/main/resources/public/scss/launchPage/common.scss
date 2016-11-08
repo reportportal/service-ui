@@ -27,7 +27,7 @@
       background-color: $COLOR--gray-91;
     }
     &:hover {
-      .item-edit-icon {
+      .item-edit-icon, .edit-defect {
         opacity: 1;
       }
     }
@@ -156,7 +156,7 @@
     opacity: 0;
     line-height: 16px;
     &:hover {
-      color: $COLOR--black
+      color: $COLOR--black;
     }
   }
   &.exact-driven {

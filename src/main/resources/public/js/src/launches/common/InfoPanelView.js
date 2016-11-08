@@ -26,20 +26,19 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
-    var LaunchSuiteDefectsTooltip = require('launches/launchSuiteStatistics/LaunchSuiteDefectsTooltip');
+
+    // Tooltips
+    var LaunchSuiteDefectsTooltipView = require('tooltips/LaunchSuiteDefectsTooltipView');
+    var LaunchSuiteExecutionsTooltipView = require('tooltips/LaunchSuiteExecutionsTooltipView');
+    var LaunchSuiteDurationTooltipView = require('tooltips/LaunchSuiteDurationTooltipView');
+
     var Localization = require('localization');
 
     var config = App.getInstance();
 
     var InfoPanelView = Epoxy.View.extend({
         template: 'tpl-launch-suite-info-panel',
-        durationTipTpl: 'tpl-launch-duration-tooltip',
-        executionsTipContent: 'tpl-launch-executions-tooltip',
-        events: {
-            'mouseenter [data-js-defect-type]:not(.rendered)': 'showDefectTooltip',
-            'mouseenter [data-js-executions]:not(.rendered)': 'showExecutionsTooltip',
-            'mouseenter [data-js-duration]:not(.rendered)': 'showDurationTooltip'
-        },
+
         bindings: {
             '[data-js-passed-progress]': 'attr: {style: getPassedForProgress}',
             '[data-js-failed-progress]': 'attr: {style: getFailedForProgress}',
@@ -123,6 +122,10 @@ define(function (require, exports, module) {
                 model: this.model.toJSON({computed: true}),
                 defectTypes: this.defectTypes
             }));
+
+            this.loadDefectTooltip();
+            this.loadDurationTooltip();
+            this.loadExecutionsTooltip();
         },
         getExecutionStats: function(stats, type){
             var exec = stats.executions,
@@ -153,31 +156,46 @@ define(function (require, exports, module) {
                 background = 'background: ' + Util.getDefaultColor(type) + ';';
             return width + ' ' + background;
         },
-        showDefectTooltip: function (e) {
-            var el = $(e.currentTarget),
-                type = el.data('js-defect-type');
-            el.addClass('rendered');
-            this.tooltip = new LaunchSuiteDefectsTooltip({
-                $container: el,
-                type: type,
-                model: this.model
+        loadDefectTooltip: function () {
+            var defectTooltips = this.$el.find('[data-js-defect-type]');
+            var self = this;
+            defectTooltips.each(function( index ) {
+                var el = $(this);
+                var type = el.data('js-defect-type');
+                var $hoverElement = el.next($('[data-js-hover-element]', this.$el));
+                Util.appendTooltip(function() {
+                    var tooltip = new LaunchSuiteDefectsTooltipView({
+                        type: type,
+                        model: self.model
+                    });
+                    return tooltip.$el.html();
+                }, $hoverElement, $hoverElement);
             });
         },
-        showDurationTooltip: function(e){
-            var el = $(e.currentTarget);
-            el.addClass('rendered');
-            el.closest('li').append(Util.templates(this.durationTipTpl, {message: Localization.launchesHeaders.durationSpecific}));
+        loadDurationTooltip: function(){
+            var el = $('[data-js-duration]');
+            var $hoverElement = el.next($('[data-js-hover-element]', this.$el));
+            Util.appendTooltip(function() {
+                var tooltip = new LaunchSuiteDurationTooltipView({});
+                return tooltip.$el.html();
+            }, $hoverElement, $hoverElement);
         },
-        showExecutionsTooltip: function(e){
-            var el = $(e.currentTarget),
-                stats = this.getBinding('statistics'),
-                data = {
-                    passed: this.getExecutionStats(stats, 'passed'),
-                    failed: this.getExecutionStats(stats, 'failed'),
-                    skipped: this.getExecutionStats(stats, 'skipped'),
-                };
-            el.addClass('rendered');
-            el.closest('li').append(Util.templates(this.executionsTipContent, {stats: data}));
+        loadExecutionsTooltip: function(){
+            var el = $('[data-js-executions]');
+            //var stats = this.getBinding('statistics');
+            var stats =  this.model.attributes.statistics;
+            var data = {
+                passed: this.getExecutionStats(stats, 'passed'),
+                failed: this.getExecutionStats(stats, 'failed'),
+                skipped: this.getExecutionStats(stats, 'skipped'),
+            };
+            var $hoverElement = el.next($('[data-js-hover-element]', this.$el));
+            Util.appendTooltip(function() {
+                var tooltip = new LaunchSuiteExecutionsTooltipView({
+                    data: data
+                });
+                return tooltip.$el.html();
+            }, $hoverElement, $hoverElement);
         },
         destroy: function () {
             this.undelegateEvents();
