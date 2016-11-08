@@ -38,6 +38,15 @@
         margin: 0 0 36px;
         @extend %CLEAR_FIX;
 
+        &:hover {
+            .user-info-content {
+                .user-edit {
+                    i {
+                        display: inline-block;
+                    }
+                }
+            }
+        }
         .user-profile-photo {
             float: left;
             width: 108px;
@@ -79,10 +88,11 @@
                 }
             }
             .user-edit {
-                display: inline-block;
+                display:  inline-block;
                 position: relative;
                 padding: 0 26px 0 0;
                 i {
+                    display: none;
                     position: absolute;
                     right: 0;
                     top: 2px;
@@ -92,10 +102,20 @@
                 }
             }
             .user-edit-photo {
+                vertical-align: baseline;
                 .rp-btn-default {
                     padding: 8px 10px;
                     position: relative;
                     overflow: hidden;
+                    &.user-upload-photo-btn {
+                        cursor: pointer;
+                        display: inline-block;
+                        border-width: 1px;
+                        border-style: solid;
+                        height: 30px;
+                        line-height: 13px;
+                        vertical-align: text-top;
+                    }
 
                     input[type=file] {
                         position: absolute;
@@ -114,10 +134,13 @@
                     }
                 }
                 .user-remove-photo {
+                    vertical-align: text-top;
                     cursor: pointer;
                     display: none;
                     color: $COLOR--windows-blue;
-                    margin: 0 0 0 6px;
+                    margin: 9px 0 9px 6px;
+                    height: 14px;
+                    line-height: 13px;
 
                     &.active {
                         display: inline-block;
@@ -160,9 +183,12 @@
             @extend %CLEAR_FIX;
 
             .project-name {
+                display: block;
+                overflow: hidden;
                 font-weight: 600;
                 color: $COLOR--charcoal-grey;
                 text-decoration: none;
+                text-overflow: ellipsis;
             }
         }
     }
@@ -324,6 +350,9 @@
             .user-profile-photo {
                 width: 40px;
                 height: 56px;
+                .user-avatar {
+                    width: 40px;
+                }
             }
         }
         .user-projects-list {

@@ -125,7 +125,8 @@ define(function (require, exports, module) {
                     config.trackingDispatcher.profileInfoEdit();
                 })
                 .fail(function (error) {
-                    var type = 'submitProfileInfo';
+                    var type = 'submitProfileInfo',
+                        message = '';
                     if (error.responseText.indexOf('4094') > -1) {
                         type = 'submitProfileInfoDuplication';
                     } else if (config.patterns.emailWrong.test(error.responseText)) {
@@ -134,7 +135,12 @@ define(function (require, exports, module) {
                     if (type !== 'submitProfileInfoWrongData') {
                         self.$email.focus();
                         self.$email.closest('.rp-form-group').addClass('has-error');
+                        message = Localization.validation.registeredEmail;
                     }
+                    else {
+                        message = Localization.failMessages.submitProfileInfoWrongData;
+                    }
+                    $('.help-line', self.$email.closest('.rp-form-group')).text(message)
                     self.isSubmit = false;
                     self.resetUserInfo();
                     Util.ajaxFailMessenger(null, type);

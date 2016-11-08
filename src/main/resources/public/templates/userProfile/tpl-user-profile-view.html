@@ -35,10 +35,10 @@
                 <div class="user-edit-photo">
                     <form  data-js-upload-photo-form>
                         <div class="" data-js-edit-photo>
-                            <button type="button" class="rp-btn rp-btn-default">
+                            <span class="rp-btn rp-btn-default user-upload-photo-btn">
                                 <%= data.text.userProfile.uploadPhoto %>
                                 <input data-js-select-photo type="file" name="file" accept="image/gif, image/jpeg, image/png" title="<%= data.text.userProfile.selectPhoto %>" />
-                            </button>
+                            </span>
                             <span class="user-remove-photo <%= data.photo_loaded ? 'active' : '' %>" data-js-remove-photo><%= data.text.userProfile.removePhoto %></span>
                         </div>
                         <div class="upload-photo-form" data-js-upload-block>
