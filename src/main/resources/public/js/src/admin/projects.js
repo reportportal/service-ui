@@ -282,8 +282,8 @@ define(function (require, exports, module) {
         },
         getQueryData: function(){
             var query = this.projectsType == 'personal' ? '?filter.eq.configuration$entryType=PERSONAL' : '?filter.in.configuration$entryType=INTERNAL,UPSA';
-            if(this.filter.filter){
-                query += '&filter.cnt.name=' + this.filter.filter;
+            if(this.filter.search){
+                query += '&filter.cnt.name=' + this.filter.search;
             }
             if(this.filter.sort){
                 query += '&page.sort='+this.filter.sort;
