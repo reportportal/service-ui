@@ -37,7 +37,7 @@ define(function (require, exports, module) {
         var self = this;
         for (var key in events) {
             var method = events[key];
-            if (!_.isFunction(method)) method = this[method];
+            if (!_.isFunction(method)) method = this[events[key]];
             if (!method) continue;
             var match = key.match(delegateEventSplitter);
             var eventName = match[1];

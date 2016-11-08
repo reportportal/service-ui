@@ -3,6 +3,7 @@ info:
     name: UI Service
     description: ReportPortal User Interface
     version: '@version@'
+    branch: '@branch@'
 
 spring:
   application:

@@ -13,15 +13,14 @@
             <%= data.text.admin.sortBy %>
         </label>
         <div class="btn-group" role="group" id="sortDirection" data-js-sort-block>
-            <button type="button" class="rp-btn rp-btn-default-revers active desc" data-type="creationDate">
-                <%= data.text.admin.creationDate %>
-                <i class="material-icons arrow_up">keyboard_arrow_up</i>
-                <i class="material-icons arrow_down">keyboard_arrow_down</i>
-            </button><button type="button" class="rp-btn rp-btn-default-revers" data-type="name">
+            </button><button type="button" class="rp-btn rp-btn-default-revers active asc" data-type="name">
                 <%= data.text.admin.name %>
                 <i class="material-icons arrow_up">keyboard_arrow_up</i>
                 <i class="material-icons arrow_down">keyboard_arrow_down</i>
-            </button>
+            </button><button type="button" class="rp-btn rp-btn-default-revers" data-type="creationDate">
+                <%= data.text.admin.creationDate %>
+                <i class="material-icons arrow_up">keyboard_arrow_up</i>
+                <i class="material-icons arrow_down">keyboard_arrow_down</i>
         </div>
     </div>
     <div class="col-md-3">
@@ -46,7 +45,7 @@
         <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
             <li role="presentation"
                 class="<%= (!data.query || data.query === 'internal') ? 'active' : '' %>">
-                <a href="#"
+                <a href="#administrate/projects/internal"
                    data-target="#internalProjects"
                    aria-controls="home"
                    role="tab"
@@ -57,7 +56,7 @@
                 </a>
             </li>
             <li role="presentation" class="<%= (data.query === 'personal') ? 'active' : '' %>">
-                <a href="#"
+                <a href="#administrate/projects/personal"
                    data-target="#personalProjects"
                    aria-controls="profile"
                    role="tab"

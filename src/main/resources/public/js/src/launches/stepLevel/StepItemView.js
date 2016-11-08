@@ -130,7 +130,7 @@ define(function (require, exports, module) {
         renderIssue: function(){
             this.issueView = new StepItemIssueView({
                 model: this.model,
-                $container: $('[data-js-step-issue]', this.$el)
+                el: $('[data-js-step-issue]', this.$el)
             });
         },
         showDefectEditor: function (e) {

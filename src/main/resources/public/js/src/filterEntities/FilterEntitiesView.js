@@ -44,6 +44,7 @@ define(function (require, exports, module) {
             this.listenTo(this.model, 'add_entity', this.onAddEntityById);
             this.listenTo(this.invalidCollection, 'add', this.renderEntity);
             this.listenTo(this.invalidCollection, 'change:visible', this.changeVisibleInvalidEntity);
+            this.hiddenFields = [];
             FilterEntitiesResolver.getDefaults(this.filterLevel)
                 .done(function(collection) {
                     this.collection.reset(collection.models);
@@ -99,7 +100,9 @@ define(function (require, exports, module) {
                         value: entity.value,
                         visible: true,
                     });
-                } else if(entity.filtering_field != 'has_childs'){  // hidden fields
+                } else if(entity.filtering_field == 'has_childs') {
+                    this.hiddenFields.push(entity);
+                } else {// hidden fields
                     this.invalidCollection.add(new (FilterEntitiesResolver.getInvalidModel())({
                         condition: entity.condition,
                         value: entity.value,
@@ -120,6 +123,9 @@ define(function (require, exports, module) {
             _.each(this.invalidCollection.models, function(model) {
                 newEntities.push(model.getInfo());
             }, this);
+            _.each(this.hiddenFields, function(field) {
+                newEntities.push(field);
+            });
             this.model.set({newEntities: JSON.stringify(newEntities)});
         },
         destroy: function () {

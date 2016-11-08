@@ -40,6 +40,11 @@ define(function (require, exports, module) {
         },
 
         initialize: function(options) {
+            var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+            var launchFilterCollection = new SingletonLaunchFilterCollection();
+            var filterNames = _.map(launchFilterCollection.models, function(model) {
+                return model.get('name');
+            })
             this.render(options);
             var filterModel = options.filterModel;
             this.model = new Epoxy.Model({
@@ -47,12 +52,12 @@ define(function (require, exports, module) {
                 isShared: filterModel.get('isShared'),
                 description: filterModel.get('description'),
             });
-            Util.bootValidator($('[data-js-name-input]', this.$el), {
+            Util.bootValidator($('[data-js-name-input]', this.$el), [{
                 validator: 'minMaxRequired',
                 type: 'filterName',
                 min: 3,
                 max: 55
-            });
+            }, {validator: 'noDuplications', type: 'filterName', source: filterNames}]);
             Util.bootValidator($('[data-js-description]', this.$el), {
                 validator: 'minMaxRequired',
                 type: 'filterDescription',
