@@ -182,8 +182,7 @@ define(function (require, exports, module) {
         },
         loadExecutionsTooltip: function(){
             var el = $('[data-js-executions]');
-            //var stats = this.getBinding('statistics');
-            var stats =  this.model.attributes.statistics;
+            var stats =  this.model.get('statistics');
             var data = {
                 passed: this.getExecutionStats(stats, 'passed'),
                 failed: this.getExecutionStats(stats, 'failed'),
