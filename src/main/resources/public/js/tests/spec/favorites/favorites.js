@@ -25,7 +25,7 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
-    var Components = require('components');
+    var Components = require('core/components');
     var Helpers = require('helpers');
     var Util = require('util');
     var Service = require('filtersService');
