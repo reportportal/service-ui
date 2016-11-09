@@ -26,7 +26,8 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
 
-    var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
+    var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
+
     var LogItemInfoStackTraceView = require('launches/logLevel/LogItemInfoStackTraceView');
     var LogItemInfoDetailsView = require('launches/logLevel/LogItemInfoDetailsView');
     var LogItemInfoActivity = require('launches/logLevel/LogItemInfoActivity');
@@ -34,7 +35,6 @@ define(function (require, exports, module) {
     var App = require('app');
     var PostBugAction = require('launches/multipleActions/postBugAction');
     var LoadBugAction = require('launches/multipleActions/loadBugAction');
-    var ModalDefectEditor = require('modals/modalDefectEditor');
     var SingletonAppModel = require('model/SingletonAppModel');
     var Localization = require('localization');
     var CallService = require('callService');
@@ -59,7 +59,6 @@ define(function (require, exports, module) {
             'click [data-js-item-activity-label]': function () {
                 this.toggleModelField('activity')
             },
-            'click [data-js-step-issue]': 'onClickDefectEditor',
             'click [data-js-match]': 'onClickMatch',
             'click [data-js-post-bug]': 'onClickPostBug',
             'click [data-js-load-bug]': 'onClickLoadBug'
@@ -123,7 +122,7 @@ define(function (require, exports, module) {
             });
             this.render();
             if(this.validateForIssue()){
-                this.issueView = new StepItemIssueView({
+                this.issueView = new StepLogDefectTypeView({
                     model: this.viewModel,
                     el: $('[data-js-step-issue]', this.$el)
                 });
@@ -151,12 +150,6 @@ define(function (require, exports, module) {
         },
         validateForIssue: function(){
             return !!this.viewModel.get('issue');
-        },
-        onClickDefectEditor: function(){
-            var defectEditor = new ModalDefectEditor({
-                items: [this.viewModel],
-            });
-            defectEditor.show();
         },
         onClickPostBug: function () {
             PostBugAction({items: [this.viewModel]});

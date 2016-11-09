@@ -31,9 +31,6 @@ define(function (require, exports, module) {
     var Util = require('util');
     var Localization = require('localization');
 
-    var StepItemIssueView = require('launches/stepLevel/StepItemIssueView');
-
-
     var LogHistoryLineCollection = Backbone.Collection.extend({
         model: LaunchSuiteStepItemModel,
 
