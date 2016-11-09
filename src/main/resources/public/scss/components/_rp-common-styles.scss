@@ -655,7 +655,11 @@ a {
 %TITLE_HOLDER {
     display: inline-block;
     font-family: $OswaldRegular;
+    max-width: 300px;
     min-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     @include setFontStyle(16px, 30px, #333333, uppercase);
     @include setPaddingAll(0px, 0px, 0px, 0px);
     @include setMarginAll(0px, 0px, 0px, 0px);
@@ -679,6 +683,7 @@ ul.rp-nav-left > li.title-holder {
 
     // title vs h2.title-holder
     & > span {
+
         @extend %TITLE_HOLDER;
     }
     & > a {
