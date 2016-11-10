@@ -169,19 +169,19 @@
       }
     }
 
-    #authorizationType {
-      textarea {
-        height: auto;
-        overflow: auto;
-        resize: vertical;
-        max-height: 200px;
-        font-family: $OpenSansRegular;
-        font-size: 13px;
-        line-height: 18px;
-        color: #393939;
-        padding: 5px 11px 5px 11px;
-      }
-    }
+        #authorizationType {
+            textarea {
+                height: 50px;
+                overflow: auto;
+                resize: vertical;
+                max-height: 200px;
+                font-family: $OpenSansRegular;
+                font-size: 13px;
+                line-height: 18px;
+                color: #393939;
+                padding: 5px 11px 5px 11px;
+            }
+        }
 
     .span-empty {
       min-height: 8px;
