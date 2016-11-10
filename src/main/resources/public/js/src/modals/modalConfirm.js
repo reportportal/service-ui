@@ -40,6 +40,7 @@ define(function (require, exports, module) {
                bodyText: '',
                confirmText: '',   //optional
                cancelButtonText: '',   //optional
+               okButtonDanger: false, //optional
                okButtonText: '',  //optional
                confirmFunction: function() { return $.Deferred()},
             }*/
