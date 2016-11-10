@@ -48,12 +48,12 @@ define(function (require, exports, module) {
             'click [data-js-remove]': 'onClickRemove',
         },
         bindings: {
-            '[data-js-finish]': 'attr:{title: titleForceFinish, disabled: titleForceFinish}',
+            '[data-js-finish]': 'attr:{title: titleForceFinish, disabled: any(titleForceFinish)}',
             '[data-js-can-export]': 'attr:{disabled:not(isExport)}',
             '[data-js-can-match]': 'attr:{disabled:not(isMatchIssues)}',
             '[data-js-can-analyze]': 'attr:{disabled:not(isAnalyze)}',
             '[data-js-switch-mode]': 'text:itemModeText, attr:{disabled:not(isChangeMode)}',
-            '[data-js-remove]': 'attr: {title: removeTitle, disabled: removeTitle}',
+            '[data-js-remove]': 'attr: {title: removeTitle, disabled: any(removeTitle)}',
         },
         initialize: function(options) {
             this.model = options.model;
@@ -86,9 +86,9 @@ define(function (require, exports, module) {
                 }
             },
             removeTitle: {
-                deps: ['launch_owner', 'launch_status'],
+                deps: ['launch_owner', 'status'],
                 get: function() {
-                    return this.model.validate.remove()
+                    return this.model.validate.remove();
                 }
             },
             itemModeText: {
