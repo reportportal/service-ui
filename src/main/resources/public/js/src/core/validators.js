@@ -61,6 +61,13 @@ define(function (require, exports, module) {
         }
         return null;
     };
+    var maxRequired = function (val, options, Util) {
+        var length = val.length;
+        if (validateForMax(length, options)) {
+            return Util.replaceTemplate(Localization.validation[options.type + "MaxLength"], options.max);
+        }
+        return null;
+    };
 
     var minMaxNumberRequired = function (val, options) {
         var integerVal = isInt(val),
@@ -89,6 +96,9 @@ define(function (require, exports, module) {
     var validateForMinMax = function (length, options) {
         return length < options.min || length > options.max;
     };
+    var validateForMax = function(length, options) {
+        return length > options.max;
+    }
 
     var remoteEmail = function (val, options) {
         var dfd = $.Deferred();

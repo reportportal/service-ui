@@ -59,9 +59,8 @@ define(function (require, exports, module) {
                 max: 128
             }, {validator: 'noDuplications', type: 'filterName', source: filterNames}]);
             Util.bootValidator($('[data-js-description]', this.$el), {
-                validator: 'minMaxRequired',
+                validator: 'maxRequired',
                 type: 'filterDescription',
-                min: 0,
                 max: 256
             });
         },
