@@ -105,18 +105,15 @@ define(function(require, exports, module) {
             }
         },
         getParametersObj: function() {
-            //TODO remove quantity after server change
             try {
                 if(this.get('newSelectionParameters')) {
                     var data = JSON.parse(this.get('newSelectionParameters'));
-                    data.quantity = 50;
                     return data;
                 }
                 var data =  JSON.parse(this.get('selection_parameters'));
-                data.quantity = 50;
                 return data;
             } catch(err) {
-                return {quantity: 50};
+                return {};
             }
         },
         getOptions: function() {

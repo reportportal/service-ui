@@ -129,7 +129,7 @@ define(function (require, exports, module) {
                 this.$filterPaginate = $('[data-js-filter-paginate]', this.$el);
                 Util.bootValidator(this.$filterName, [{
                     validator: 'minMaxNotRequired',
-                    type: 'memberName',
+                    type: 'filterName',
                     min: 3,
                     max: 128
                 }]);

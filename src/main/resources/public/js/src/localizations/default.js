@@ -1390,6 +1390,7 @@ define(['util'], function () {
             filtersNameLength: "Filter name length should have size from %%% to %%%",
             filterNameLength: "Filter name length should have size from %%% to %%%.",
             filterDescriptionLength: "Filter description length should have size from %%% to %%%.",
+            filterDescriptionMaxLength: "Filter description length should have size to %%%.",
             filterNameDuplication: "This name is already in use. Please choose something else.",
             filterStaticsDigitsOnly: "This filter accepts only digits.",
             dashboardNameLength: "Dashboard name should have size from '3' to '128'",

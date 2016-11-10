@@ -55,6 +55,7 @@ define(function (require, exports, module) {
             '[data-js-name-link]': 'attr: {href: url}',
             '[data-js-name]': 'text: name',
             '[data-js-launch-number]': 'text: numberText',
+            '[data-js-item-edit]': 'classes: {hide: hideEdit}',
             '[data-js-description]': 'text: description',
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
@@ -86,6 +87,12 @@ define(function (require, exports, module) {
             }
         },
         computeds: {
+            hideEdit: {
+                deps: ['launch_owner'],
+                get: function() {
+                    return this.model.validate.edit()
+                }
+            },
             executionTotal: {
                 deps: ['statistics'],
                 get: function(statistics) {

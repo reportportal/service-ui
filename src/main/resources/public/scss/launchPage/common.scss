@@ -158,6 +158,9 @@
     &:hover {
       color: $COLOR--black;
     }
+    &[disabled] {
+
+    }
   }
   &.exact-driven {
     .pr-grid-show-time {
