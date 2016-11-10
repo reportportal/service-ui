@@ -72,7 +72,7 @@ define(function (require, exports, module) {
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteFilter,
                 bodyText: Util.replaceTemplate(Localization.dialog.deleteFilter, this.model.get('name').escapeHtml()),
-                confirmText: 'I am sure I want to delete',
+                okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete,
             });
