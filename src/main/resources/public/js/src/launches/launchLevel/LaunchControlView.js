@@ -39,7 +39,7 @@ define(function (require, exports, module) {
             this.collectionItems = options.collectionItems;
             this.render();
             if(config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.customer) {
-                $('[data-js-multi-action="movedebug"]', this.$el).addClass('hide');
+                $('[data-js-multi-action="changemode"]', this.$el).addClass('hide');
             }
         },
         render: function() {
