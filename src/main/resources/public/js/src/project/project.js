@@ -1376,7 +1376,7 @@ define(function(require, exports, module) {
             id: 0,
             url: "",
             project: "",
-            systemType: '',
+            systemType: config.forSettings.btsList[0].value,
             systemAuth: "",
             username: "",
             password: config.forSettings.defaultPassword,
@@ -1389,9 +1389,6 @@ define(function(require, exports, module) {
             restorable: ['url', 'project', 'domain']
         },
         initialize: function () {
-            if (config.forSettings.btsList[0] && config.forSettings.btsList[0].value) {
-                this.set('systemType', config.forSettings.btsList[0].value);
-            }
             var params;
             if (!this.get('systemAuth')) {
                 params = config.forSettings['bts' + this.get('systemType')].authorizationType[0].value;
