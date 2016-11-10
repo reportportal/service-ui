@@ -89,6 +89,13 @@
        .navbar-collapse {
          padding: 16px 15px 11px;
 
+         @media(min-width: 1600px) {
+           width: 1370px;
+           margin: 0 auto;
+           padding-left: 0;
+           padding-right: 0;
+         }
+
          @media (max-width: $SCREEN_XS_MAX) {
            position: relative;
            box-shadow: none;
