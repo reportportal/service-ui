@@ -107,7 +107,10 @@ define(function (require, exports, module) {
         onStopLoading: function() {
             $('[data-js-logs-wrapper]', this.$el).removeClass('load');
             _.each(this.items, function(item) {
-                item.activateAccordion();
+                var level = item.model.get('level');
+                if (level == 'ERROR' || level == 'TRACE' || level == 'DEBUG') {
+                    item.activateAccordion();
+                }
             })
         },
         onChangePage: function(page) {
