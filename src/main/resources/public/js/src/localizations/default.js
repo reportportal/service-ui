@@ -951,6 +951,9 @@ define(['util'], function () {
             name: "Name:",
             shared: "Shared:",
             noInfoFilter: 'No info matches this filter',
+            notSaveDescription: 'Filter is not saved',
+            sharedDescription: 'Filter is shared',
+            globalDescription: 'Filter is shared by other user',
         },
         filter: {
             name: 'Filter name',
