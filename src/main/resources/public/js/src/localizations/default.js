@@ -1196,6 +1196,7 @@ define(['util'], function () {
             successAddUser: "New account has been created successfully",
             viewEmail: "View email",
             nameLoginEmail: "Name, login, e-mail",
+            searchNameLogin: "Search by Name, Login",
             searchNameLoginEmail: "Search by Name, Login, Email",
             searchName: "Search by Name",
             unAssignTitle: "Remove member from the team",

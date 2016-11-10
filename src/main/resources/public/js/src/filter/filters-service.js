@@ -43,7 +43,7 @@ define(function (require, exports, module) {
                 selection_parameters: {
                     sorting_column: sortingColumn,
                     is_asc: sorting.direction === "ASC",
-                    quantity: state.requestParams.getPageSize()
+                    // quantity: state.requestParams.getPageSize()
                 }
             };
 
