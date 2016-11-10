@@ -69,14 +69,12 @@ define(function (require, exports, module) {
                 min: 1,
                 max: 128
             });
-            Util.bootValidator($('[data-js-link-input]', this.$el), [
-                {
-                    validator: 'matchRegex',
-                    type: 'issueLinkRegex',
-                    pattern: config.patterns.urlT,
-                    arg: 'i'
-                }
-            ]);
+            Util.bootValidator($('[data-js-link-input]', this.$el), [{
+                validator: 'matchRegex',
+                type: 'issueLinkRegex',
+                pattern: config.patterns.urlT,
+                arg: 'i'
+            }]);
         },
         onBlurLinkInput: function() {
             var $link = $('[data-js-link-input]', this.$el);
@@ -91,7 +89,8 @@ define(function (require, exports, module) {
                 autoValue = $link.val().split('id=')[1];
                 autoValue = autoValue ? autoValue.split('&')[0] : '';
             }
-            $issue.val(autoValue).trigger('validate');
+            this.model.set({ticketId: autoValue});
+            $issue.trigger('validate');
         },
         onChangeCollection: function() {
             if(this.model.collection.models.length <= 1) {
