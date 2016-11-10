@@ -368,6 +368,12 @@
                    margin: 0;
                    border: none;
 
+                   @media (max-width: $SCREEN_XS_MAX) {
+                     & {
+                       max-width: none;
+                     }
+                   }
+
                    li {
                      position: relative;
                      padding: 0;
@@ -384,6 +390,12 @@
                        color: #464547;
                        text-transform: uppercase;
                        text-decoration: none;
+
+                       @media (max-width: $SCREEN_XS_MAX) {
+                         & {
+                           max-width: none;
+                         }
+                       }
                      }
 
                      &.active > a {
