@@ -75,13 +75,13 @@ define(function (require, exports, module) {
         return Number(n) == n && n % 1 === 0;
     };
 
-    var minMaxNotRequired = function (val, options) {
+    var minMaxNotRequired = function (val, options, Util) {
         var length = val.length;
         if (length === 0) {
             return null;
         }
         if (validateForMinMax(length, options)) {
-            return Localization.validation[options.type + "Length"];
+            return Util.replaceTemplate(Localization.validation[options.type + "Length"], options.min, options.max);
         }
         return null;
     };
