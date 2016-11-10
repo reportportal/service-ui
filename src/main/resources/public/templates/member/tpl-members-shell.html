@@ -13,7 +13,7 @@
                                 class="rp-input-search favorites-name-filter form-control"
                                 id="userFilter"
                                 name="userFilter"
-                                placeholder="<%= data.grandAdmin ? data.text.members.searchNameLoginEmail : data.text.members.searchName %>"
+                                placeholder="<%= data.grandAdmin ? data.projectId ? data.text.members.searchNameLogin : data.text.members.searchNameLoginEmail : data.text.members.searchName %>"
                                 value="<%- data.nameFilterValue || '' %>" />
                             <i class="material-icons">search</i>
                             <div class="error-bottom">
