@@ -21,13 +21,13 @@
 
 .footer {
   position: absolute;
+  width: 100%;
   bottom: 0;
-  padding: 10px 20px 10px 120px;
+  padding: 10px 20px 10px 20px;
   font-size: 11px;
 
   @media (max-width: 768px) {
     padding: 10px 15px !important;
-    position: initial;
   }
 
   .copyright {

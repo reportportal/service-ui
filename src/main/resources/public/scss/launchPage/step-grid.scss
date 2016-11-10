@@ -27,12 +27,18 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
 .step-grid {
   .grid-cell {
     &.name-grid-cell {
-      padding-left: 35px;
+      padding-left: 20px;
       width: $step-name-cell-width;
       &.rp-grid-th {
         .text-overflow {
           //padding-left: 25px;
         }
+      }
+    }
+
+    @media (min-width: $SCREEN_SM_MIN) {
+      &.method-type-grid-cell {
+        padding-left: 45px;
       }
     }
     &.time-grid-cell {

@@ -171,7 +171,6 @@
 
     #authorizationType {
       textarea {
-        height: auto;
         overflow: auto;
         resize: vertical;
         max-height: 200px;
@@ -210,6 +209,12 @@
   text-align: left;
   position: relative;
   display: inline-block;
+}
+
+#authorizationType {
+  textarea {
+    height: 50px;
+  }
 }
 
 #cancelBtsProperties,
