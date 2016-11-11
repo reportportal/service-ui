@@ -250,6 +250,7 @@
                         border-top-color: #dbdbdb;
                         border-bottom-color: #dbdbdb;
                         font-family: "OpenSansSemibold", sans-serif;
+                        cursor: pointer;
 
                         &:nth-child(even) {
                             background-color: $COLOR--white-four;
@@ -278,6 +279,12 @@
                             margin-bottom: 0;
                             font-family: "OpenSansSemibold", sans-serif;
                             color: $COLOR--topaz;
+                            .break-link {
+                                text-overflow: clip ellipsis;
+                                overflow: hidden;
+                                display: inline-block;
+                                max-width: 100%;
+                            }
                         }
 
                         .list-group-item-text {
