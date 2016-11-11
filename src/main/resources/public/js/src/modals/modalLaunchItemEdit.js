@@ -137,9 +137,13 @@ define(function (require, exports, module) {
         onClickSave: function() {
             $('.form-control', this.$el).trigger('validate');
             if (!$('.has-error', this.$el).length) {
+                var tags = [];
+                if (this.viewModel.get('tagsString') != '') {
+                    tags = this.viewModel.get('tagsString').split(',');
+                }
                 this.itemModel.set({
                     description: this.viewModel.get('description'),
-                    tags: JSON.stringify(this.viewModel.get('tagsString').split(','))
+                    tags: JSON.stringify(tags)
                 });
                 this.successClose();
             }
