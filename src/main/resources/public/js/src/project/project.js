@@ -1376,7 +1376,7 @@ define(function(require, exports, module) {
             id: 0,
             url: "",
             project: "",
-            systemType: config.forSettings.btsList[0].value,
+            systemType: '',
             systemAuth: "",
             username: "",
             password: config.forSettings.defaultPassword,
@@ -1388,7 +1388,15 @@ define(function(require, exports, module) {
             modelCache: null,
             restorable: ['url', 'project', 'domain']
         },
-        initialize: function () {
+        initialize: function (modelData) {
+            if (!modelData) {
+                var defaultBts = config.forSettings.btsList[0];
+                if (!defaultBts) {
+                    console.log('no bts');
+                } else {
+                    this.set({systemType: defaultBts.name})
+                }
+            }
             var params;
             if (!this.get('systemAuth')) {
                 params = config.forSettings['bts' + this.get('systemType')].authorizationType[0].value;
