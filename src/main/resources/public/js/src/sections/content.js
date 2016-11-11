@@ -75,10 +75,6 @@ define(function (require, exports, module) {
                 }
                 this.setupPageView(options);
             } else {
-                if (this.isAdminPage) {
-                    this.page = options.page;
-                    this.action = options.action;
-                }
                 this.pageView.update(options);
             }
         },
