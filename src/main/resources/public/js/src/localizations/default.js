@@ -1599,7 +1599,7 @@ define(['util'], function () {
 
             launchEditor: "Edit launch",
             itemEditor: "Edit test item",
-            defectEditor: 'Edit defect type',
+            defectEditor: 'Edit defect',
             choseDefectType: 'Choose Defect Type',
             commentForDefect: 'Leave Comment to Defect Type',
             defectType: 'Defect Type',
