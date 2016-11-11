@@ -113,6 +113,22 @@
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 overflow: hidden;
+                .name {
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: inline-block;
+                    max-width: 100%;
+                    position: relative;
+                    &.name-label {
+                        padding-right: 40px;
+                        .label {
+                            position: absolute;
+                            top: 1px;
+                            right: 0;
+                        }
+                    }
+                }
             }
             .project-info {
                 padding-top: 10px;
@@ -202,14 +218,27 @@
 
             .project_name {
                 margin: 0;
-                padding: 12px 20px 12px 12px;
+                padding: 12px 22px 12px 12px;
                 font: normal 15px $OswaldRegular;
                 text-transform: uppercase;
                 color: $COLOR--topaz;
                 border-bottom: 1px solid $COLOR--gray-91;
-                text-overflow: ellipsis;
-                white-space: nowrap;
-                overflow: hidden;
+                .name {
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    display: inline-block;
+                    max-width: 100%;
+                    position: relative;
+                    &.name-label {
+                        padding-right: 40px;
+                        .label {
+                            position: absolute;
+                            top: 1px;
+                            right: 0;
+                        }
+                    }
+                }
             }
             .project_info_wrapper {
                 margin: 0;

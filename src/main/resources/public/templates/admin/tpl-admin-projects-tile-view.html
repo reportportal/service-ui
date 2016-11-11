@@ -15,12 +15,14 @@
                     </div>
                 <% } %>
                 <h2 class="project_name <%= noLabelClass %>">
-                    <a href="#administrate/project-details/<%- project.projectId %>" class="project_details break-link" title="<%= data.text.admin.projectTitle %>">
-                        <%= data.search ? data.textWrapper(project.projectId, data.search) : project.projectId %>
-                    </a>
-                    <% if (newLabel) { %>
-                    <span class="label label-success you"><%= data.text.admin.newProject %></span>
-                    <% } %>
+                    <span class="name <% if (newLabel) { %>name-label<% } %>">
+                        <a href="#administrate/project-details/<%- project.projectId %>" class="project_details break-link" title="<%= data.text.admin.projectTitle %>">
+                            <%= data.search ? data.textWrapper(project.projectId, data.search) : project.projectId %>
+                        </a>
+                        <% if (newLabel) { %>
+                        <span class="label label-success you"><%= data.text.admin.newProject %></span>
+                        <% } %>
+                    </span>
                 </h2>
                 <div class="row project_info_wrapper">
                     <div class="col-sm-6 text-center heartbeat_block">

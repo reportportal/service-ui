@@ -13,6 +13,7 @@
         <% if(data.filter(project, data.search)){ %>
             <% counter += 1; %>
             <% var lastRunClass = project.lastRun && !data.hasRunsLastWeek(project.lastRun) ? 'dimmed' : ''; %>
+            <% var newLabel = !data.isPersonalProject(project) && data.isNew && data.isNew(project.creationDate); %>
             <% var assigned = !!data.userProjects[project.projectId]; %>
             <div class="row project-row <%= lastRunClass %>">
                 <div class="col-md-4 clearfix">
@@ -21,14 +22,14 @@
                     </div>
                      <div class="col-xs-7 no-padding col-md-12">
                             <h4 class="project_name">
-                                <a href="#administrate/project-details/<%- project.projectId %>"
-                                    class="project_details break-link"
-                                    title="<%= data.text.admin.projectTitle %>">
-                                    <%= data.search ? data.textWrapper(project.projectId, data.search) : project.projectId %>
-                                </a>
-                                <% if(!data.isPersonalProject(project) && data.isNew && data.isNew(project.creationDate)) { %>
-                                <span class="label label-success you"><%= data.text.admin.newProject %></span>
-                                <% } %>
+                                <span class="name <% if (newLabel) { %>name-label<% } %>">
+                                    <a href="#administrate/project-details/<%- project.projectId %>" class="project_details break-link" title="<%= data.text.admin.projectTitle %>">
+                                        <%= data.search ? data.textWrapper(project.projectId, data.search) : project.projectId %>
+                                    </a>
+                                    <% if (newLabel) { %>
+                                    <span class="label label-success you"><%= data.text.admin.newProject %></span>
+                                    <% } %>
+                                </span>
                             </h4>
                      </div>
                 </div>
