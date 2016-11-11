@@ -31,7 +31,7 @@ define(function (require, exports, module) {
     var LaunchSuiteDefectsView = require('launches/common/LaunchSuiteDefectsView');
     var ItemDurationView = require('launches/common/ItemDurationView');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
-    var SingletonUserStorage = require('storage/SingletonUserStorage');
+
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
     var d3 = require('d3');
     var nvd3 = require('nvd3');
@@ -171,7 +171,6 @@ define(function (require, exports, module) {
         initialize: function(options) {
             this.statistics = [];
             this.filterModel = options.filterModel;
-            this.userStorage = new SingletonUserStorage();
             this.render();
             this.applyBindings();
             if (this.getBinding('defectToInvestigate')) {
@@ -195,16 +194,7 @@ define(function (require, exports, module) {
             // this.renderStatistics();
         },
         toggleStartTimeView: function (e) {
-            var timeFormat = this.userStorage.get('startTimeFormat');
-            if(timeFormat === 'exact'){
-                this.$el.removeClass('exact-driven');
-                timeFormat = ''
-            }
-            else {
-                this.$el.addClass('exact-driven');
-                timeFormat = 'exact';
-            }
-            this.userStorage.set('startTimeFormat', timeFormat);
+            this.model.collection.trigger('change:time:format')
         },
         renderDuration: function(){
             this.duration && this.duration.destroy();

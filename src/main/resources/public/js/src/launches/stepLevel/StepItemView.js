@@ -29,7 +29,6 @@ define(function (require, exports, module) {
     var Localization = require('localization');
     var ItemDurationView = require('launches/common/ItemDurationView');
     var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
-    var SingletonUserStorage = require('storage/SingletonUserStorage');
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
 
     var config = App.getInstance();
@@ -83,7 +82,6 @@ define(function (require, exports, module) {
         },
         initialize: function(options) {
             this.noIssue = options.noIssue;
-            this.userStorage = new SingletonUserStorage();
             this.render();
         },
         render: function() {
@@ -105,18 +103,7 @@ define(function (require, exports, module) {
             });
         },
         toggleStartTimeView: function (e) {
-            var $el = $(e.currentTarget),
-                table = $el.closest('.launch-suite-step-items'),
-                timeFormat = this.userStorage.get('startTimeFormat');
-            if(timeFormat === 'exact'){
-                table.removeClass('exact-driven');
-                timeFormat = ''
-            }
-            else {
-                table.addClass('exact-driven');
-                timeFormat = 'exact';
-            }
-            this.userStorage.set('startTimeFormat', timeFormat);
+            this.model.collection.trigger('change:time:format')
         },
         isCollapsedMethod: function () {
             return this.model.get('type') !== 'STEP' &&  this.model.get('status') !== 'FAILED';
