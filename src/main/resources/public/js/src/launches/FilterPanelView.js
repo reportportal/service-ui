@@ -44,7 +44,7 @@ define(function (require, exports, module) {
             '[data-js-filter-shared-descr]': 'classes: {hide: not(isShared)}',
             '[data-js-save-filter]': 'attr: {disabled: any(all(not(newEntities), not(newSelectionParameters)), notMyFilter)}',
             '[data-js-discard-filter]': 'attr: {disabled: all(not(newEntities), not(newSelectionParameters))}',
-            '[data-js-edit-filter]': 'attr: {disabled: temp}',
+            '[data-js-edit-filter]': 'attr: {disabled: any(temp, notMyFilter)}',
             '[data-js-clone-filter]': 'attr: {disabled: all(not(entities), not(newEntities))}',
             '[data-js-filter-not-my-descr]': 'classes: {hide: not(notMyFilter)}',
         },
