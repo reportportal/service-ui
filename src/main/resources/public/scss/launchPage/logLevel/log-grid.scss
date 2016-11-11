@@ -27,42 +27,80 @@
     width: 12%;
   }
   .time-grid-cell {
-    width: 16%;
-  }
-  .icon-grid-cell {
-    padding: 4px 0 0 0;
-    width: 2%;
-    i {
-      cursor: pointer;
-      display: none;
-    }
+    width: 18%;
   }
   .rp-table-row {
     position: relative;
     overflow: hidden;
     padding: 15px 0;
     line-height: 18px;
-    overflow: hidden;
-    max-height: 108px;
+    max-height: 130px;
     &.open {
       max-height: 100%;
-      .icon-grid-cell {
-        transform: scale(1, -1);
+      padding-bottom: 40px;
+      .accordion-block {
+        box-shadow: none !important;
+        i {
+          display: none;
+        }
+        i.little {
+          display: inline-block;
+        }
+      }
+    }
+    .accordion-block {
+      display: none;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      text-align: center;
+      font-size: 19px;
+      box-shadow: 0 0px 20px 15px white;
+      i {
+        position: relative;
+        color: $COLOR--gray-60;
+        padding: 0 75px 8px 55px;
+        width: 20px;
+        display: inline-block;
+        cursor: pointer;
+        &:before, &:after {
+          position: absolute;
+          content: '';
+          top: 7px;
+          width: 50px;
+          border-top: 2px dotted $COLOR--gray-60;
+        }
+        &:before {
+          left: 0px;
+        }
+        &:after {
+          right: 0px;
+        }
+        &:hover {
+          color: $COLOR--charcoal-grey;
+          &:after, &:before {
+            border-color: $COLOR--charcoal-grey;
+          }
+        }
+        &.little {
+          display: none;
+        }
       }
     }
     &.show-accordion {
-      .icon-grid-cell {
-        i {
-          display: inline;
-        }
+      .accordion-block {
+        display: block;
       }
     }
     .attachment-grid-cell {
       img {
         max-width: 100%;
+        border: 1px solid $COLOR--gray-60;
       }
     }
-    &:before {
+    &:after {
       content: "";
       position: absolute;
       top: 0;
@@ -71,12 +109,16 @@
       width: 5px;
       display: block;
     }
-    &.level-INFO:before {
+    &.level-INFO:after {
       background-color: $COLOR--windows-blue;
     }
     &.level-ERROR {
       background-color: $COLOR--light-red;
-      &:before {
+      .accordion-block {
+        background-color: $COLOR--light-red;
+        box-shadow: 0 0px 20px 15px $COLOR--light-red;
+      }
+      &:after {
         background-color: $COLOR--orange-red;
       }
     }
