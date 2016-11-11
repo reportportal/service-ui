@@ -54,10 +54,12 @@ define(function (require, exports, module) {
         setButtonState: function($el, model) {
             if(!model) {
                 $el.addClass('disabled');
-                $el.attr({href: '', title: ''});
+                $el.removeAttr('href');
+                $el.attr({title: '', disabled: 'disabled'});
                 return;
             }
             $el.removeClass('disabled');
+            $el.removeAttr('disabled');
             $el.attr({
                 href: this.collectionItems.getPathByLogItemId(model.get('id')),
                 title: model.get('name'),

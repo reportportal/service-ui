@@ -174,7 +174,7 @@ define(function (require, exports, module) {
             return answer;
         },
         changeFilterOptions: function(model, value) {
-            if(value != '') {
+            if(value != '' || !model.changed.entities) {
                 this.load();
             }
         },

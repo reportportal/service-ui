@@ -1196,6 +1196,7 @@ define(['util'], function () {
             successAddUser: "New account has been created successfully",
             viewEmail: "View email",
             nameLoginEmail: "Name, login, e-mail",
+            searchNameLogin: "Search by Name, Login",
             searchNameLoginEmail: "Search by Name, Login, Email",
             searchName: "Search by Name",
             unAssignTitle: "Remove member from the team",
@@ -1598,7 +1599,7 @@ define(['util'], function () {
 
             launchEditor: "Edit launch",
             itemEditor: "Edit test item",
-            defectEditor: 'Edit defect type',
+            defectEditor: 'Edit defect',
             choseDefectType: 'Choose Defect Type',
             commentForDefect: 'Leave Comment to Defect Type',
             defectType: 'Defect Type',

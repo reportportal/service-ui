@@ -26,6 +26,7 @@ define(function (require, exports, module) {
     var Util = require('util');
 
     var LogItemLogsItem = Epoxy.View.extend({
+        className: 'rp-table-row',
         template: 'tpl-launch-log-item-logs-item',
 
         events: {
@@ -36,7 +37,7 @@ define(function (require, exports, module) {
             '[data-js-message]': 'text: message',
             '[data-js-time]': 'text: timeString',
             '[data-js-image]': 'attr: {src: imagePath}, classes: {hide: not(binary_content)}',
-            '[data-js-table-row]': 'levelClass: level'
+            ':el': 'levelClass: level'
         },
 
         bindingHandlers: {
@@ -49,7 +50,7 @@ define(function (require, exports, module) {
         },
 
         onClickOpen: function() {
-            $('[data-js-table-row]', this.$el).toggleClass('open');
+            this.$el.toggleClass('open');
         },
 
         initialize: function() {
@@ -61,8 +62,8 @@ define(function (require, exports, module) {
         },
 
         activateAccordion: function() {
-            if ($('[data-js-message]', this.$el).height() > 100) {
-                $('[data-js-table-row]', this.$el).addClass('show-accordion');
+            if ($('[data-js-message]', this.$el).height() > 128) {
+                this.$el.addClass('show-accordion');
             }
         }
     });

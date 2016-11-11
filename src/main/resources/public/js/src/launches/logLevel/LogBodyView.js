@@ -43,6 +43,7 @@ define(function (require, exports, module) {
         onChangeLogItem: function() {
             $('[data-js-log-item-container]',this.$el).addClass('load');
             this.history && this.off(this.history);
+            this.history && this.history.destroy();
             this.historyItem && this.historyItem.destroy();
             this.logsItem && this.logsItem.destroy();
             this.history = new LogHistoryLine({
