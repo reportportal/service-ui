@@ -48,9 +48,9 @@ define(function (require, exports, module) {
 
         getDefaultFilter: function () {
             return {
-                search: config.currentProjectsSettings.search || config.defaultProjectsSettings.search,
-                sort: config.currentProjectsSettings.sorting || config.defaultProjectsSettings.sorting,
-                direction: config.currentProjectsSettings.sortingDirection || config.defaultProjectsSettings.sortingDirection
+                search: config.defaultProjectsSettings.search,
+                sort: config.defaultProjectsSettings.sorting,
+                direction: config.defaultProjectsSettings.sortingDirection
             };
         },
 
@@ -181,7 +181,8 @@ define(function (require, exports, module) {
         },
 
         destroy: function () {
-            this.projectsData = null;
+            this.tabView && this.tabView.destroy();
+            this.tabView = null;
             Components.BaseView.prototype.destroy.call(this);
         }
     });
