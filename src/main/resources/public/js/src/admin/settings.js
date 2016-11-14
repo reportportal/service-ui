@@ -106,7 +106,13 @@ define(function (require, exports, module) {
 
         events: {
             'click #submit-email-settings': 'submitEmailSettings',
-            'click .dropdown-menu a': 'selectProp'
+            'click .dropdown-menu a': 'selectProp',
+            'change [data-js-ssl-enabled]': 'toggleSSL'
+        },
+
+        toggleSSL: function(e){
+            var $el = $(e.currentTarget);
+            this.model.set('starTlsEnabled', $el.prop('checked'));
         },
 
         selectProp: function (e) {
@@ -205,6 +211,7 @@ define(function (require, exports, module) {
             });
             var data = {
                 authEnabled: this.get('authEnabled'),
+                starTlsEnabled: this.get('starTlsEnabled'),
                 host: $.trim(this.get('host')),
                 password: this.get('authEnabled') ? this.get('password'): '',
                 port: $.trim(this.get('port')),
