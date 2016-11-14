@@ -109,7 +109,7 @@ define(function (require, exports, module) {
             this.screenShotsFilter = new Filter.ButtonFilter({
                 navigationInfo: this.navigationInfo,
                 element: $("#ScreenshotsFilter", this.$el),
-                id: 'binary_content',
+                id: 'binary_content$id',
                 condition: 'ex',
                 name: 'Screenshot',
                 triggerEvent: "log::update::filters"

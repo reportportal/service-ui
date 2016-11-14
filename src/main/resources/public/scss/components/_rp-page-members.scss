@@ -153,6 +153,10 @@
 
 .rp-members-list {
     .view_projects_wrapper {
+        .view_project_name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
         .select2-container {
             .select2-choice {
                 background-image: none;

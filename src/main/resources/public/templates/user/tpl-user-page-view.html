@@ -99,8 +99,8 @@
         </div>
         <div class="profile_project_list row">
             <div id="project-list" class="container-fluid col-sm-12">
-                <fieldset class="project_list_wrapper">
-                    <legend class="project_list_header row">
+                <div class="project_list_wrapper">
+                    <div class="project_list_header row">
                         <div class="project_roles col-sm-7">
                             <%= data.text.userProfile.projectAndRoles %>:
                         </div>
@@ -109,23 +109,20 @@
                                 <%= _.size(data.projects) %><%= data.text.userProfile.ofThem %>
                             </small>
                         </div>
-                    </legend>
+                    </div>
                     <div class="padded">
                         <div id="projects" class="list-group">
                             <% _.each(data.projects, function(val, project){ %>
-                                <a href="#"
-                                    class="project project-row list-group-item <% if (project == data.defaultProject) {%>active default_project<% } %>">
+                                <div class="project project-row list-group-item <% if (project == data.defaultProject) {%>active default_project<% } %>">
                                     <h5 class="list-group-item-heading uppercase col-sm-7">
-                                        <strong class="break-link">
-                                            <%- project %>
-                                        </strong>
+                                        <strong class="break-link"><%- project %></strong>
                                     </h5>
                                     <p class="list-group-item-text col-sm-5"><%= val.projectRole %></p>
-                                </a>
+                                </div>
                             <% }); %>
                         </div>
                     </div>
-                </fieldset>
+                </div>
                 <div id="actionsUserProfile" class="actions form-group row text-right"></div>
             </div>
         </div>
