@@ -34,7 +34,13 @@
 
         .tls-enabled {
             position: relative;
-            top: -4px
+            top: -4px;
+            .rp-checkbox-wrap {
+                margin-left: 30px;
+                &:first-child {
+                    margin-left: 0;
+                }
+            }
         }
     }
 }

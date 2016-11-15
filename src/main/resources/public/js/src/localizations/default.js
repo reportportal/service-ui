@@ -1093,6 +1093,7 @@ define(['util'], function () {
             internalProjects: 'Internal projects',
             personalProjects: 'Personal projects',
             searchByName: "Search by Name",
+            TLS: 'TLS',
             SSL: 'SSL'
         },
 
