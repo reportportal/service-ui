@@ -25,17 +25,37 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var InfoPanelView = require('launches/common/InfoPanelView');
+    var App = require('app');
     var Localization = require('localization');
+
+    var config = App.getInstance();
 
     var StepControlView = Epoxy.View.extend({
         events: {
             'click [data-js-refresh]': 'onClickRefresh',
             'click [data-js-multi-action]': 'onClickMultiAction',
+            'click [data-js-history]': 'onClickHistory'
+        },
+
+        bindings: {
+            '[data-js-history]': 'attr: {href:getHistoryHref, style: validateForHistoryBtn}'
+        },
+
+        computeds: {
+            validateForHistoryBtn: function(){
+                var interrupted = config.launchStatus.interrupted,
+                    showBtn = this.parentModel.get('status') !== interrupted && this.launchModel.get('status') !== interrupted ;
+                return 'display: ' + ( !showBtn ? 'none' : 'inline-block' );
+            },
+            getHistoryHref: function(){
+                return this.getHistoryLink();
+            }
         },
 
         template: 'tpl-launch-step-control',
         initialize: function(options) {
             this.filterModel = options.filterModel;
+            this.launchModel = options.launchModel;
             this.parentModel = options.parentModel;
             this.collectionItems =  options.collectionItems;
             this.render();
@@ -66,7 +86,15 @@ define(function (require, exports, module) {
         onClickRefresh: function() {
             this.collectionItems.load();
         },
-
+        getHistoryLink: function(){
+            var currentPath = window.location.hash;
+            currentPath += '&history.item=' + this.parentModel.get('id');
+            return currentPath;
+        },
+        onClickHistory: function(e){
+            e.preventDefault();
+            config.router.navigate(this.getHistoryLink(), {trigger: true});
+        },
         destroy: function () {
             this.filterEntities && this.filterEntities.destroy();
             this.infoLine && this.infoLine.destroy();

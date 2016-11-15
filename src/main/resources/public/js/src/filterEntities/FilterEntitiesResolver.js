@@ -348,7 +348,7 @@ define(function (require, exports, module) {
     var HistoryStepFilters = function () {
         return new Backbone.Collection(
             [
-                new Filters.SelectModel({
+                new Filters.EntitySelectModel({
                     name: 'History Depth',
                     id: 'history_depth',
                     noConditions: true,

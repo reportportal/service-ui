@@ -252,8 +252,8 @@ define(['app'], function (App) {
     var historyGrid = function (ids, depth) {
         return itemBase() + "/history?ids=" + ids.toString() + "&history_depth=" + depth;
     };
-    var historyGridUrl = function (ids, depth, tadId) {
-        return window.location.hash + "/history?ids=" + ids.join(',') + "&history_depth=" + depth + '&tab.id=' + tadId;
+    var historyGridUrl = function (ids, depth) {
+        return window.location.hash + "/history?ids=" + ids.join(',') + "&history_depth=" + depth;
     };
     var adminProjectRoot = function () {
         return config.apiVersion + "project";

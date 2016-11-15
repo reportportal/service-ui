@@ -676,7 +676,7 @@ define(['util'], function () {
             configureTBSLoad: "Configure Bug Tracking System to load bugs",
             noIssues: "You cant Post Bug if item has no issues",
             noIssuesLoad: "You cant Load Bug if item has no issues",
-            historyView: "History View",
+            historyView: "History",
             skippedDuration: "SKIPPED. Duration: ",
             stoppedDuration: 'Run STOPPED after:',
             interruptedDuration: 'Run INTERRUPTED after:',

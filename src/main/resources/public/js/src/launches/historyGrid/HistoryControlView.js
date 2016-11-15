@@ -24,45 +24,26 @@ define(function (require, exports, module) {
     var Util = require('util');
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
-    var FilterModel = require('filters/FilterModel');
-    var App = require('app');
     var InfoPanelView = require('launches/common/InfoPanelView');
+    var App = require('app');
     var Localization = require('localization');
 
     var config = App.getInstance();
 
-    var SuiteControlView = Epoxy.View.extend({
+    var HistoryControlView = Epoxy.View.extend({
         events: {
-            'click [data-js-refresh]': 'onClickRefresh',
-            'click [data-js-milti-delete]': 'onClickMultiDelete',
-            'click [data-js-history]': 'onClickHistory'
+            'click [data-js-refresh]': 'onClickRefresh'
         },
 
-        bindings: {
-            '[data-js-history]': 'attr: {href:getHistoryHref, style: validateForHistoryBtn}'
-        },
-
-        computeds: {
-            validateForHistoryBtn: function(){
-                var interrupted = config.launchStatus.interrupted,
-                    showBtn = this.parentModel.get('status') !== interrupted && this.launchModel.get('status') !== interrupted ;
-                return 'display: ' + ( !showBtn ? 'none' : 'inline-block' );
-            },
-            getHistoryHref: function(){
-                return this.getHistoryLink();
-            }
-        },
-
-        template: 'tpl-launch-suite-control',
+        template: 'tpl-launch-history-control',
         initialize: function(options) {
             this.filterModel = options.filterModel;
             this.parentModel = options.parentModel;
-            this.launchModel = options.launchModel;
-            this.collectionItems =  options.collectionItems;
+            this.collectionItems = options.collectionItems;
             this.render();
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-refine-entities]', this.$el),
-                filterLevel: 'suit',
+                filterLevel: 'history',
                 model: this.filterModel
             });
             this.infoLine = new InfoPanelView({
@@ -73,29 +54,10 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
-        activateMultiple: function() {
-            $('[data-js-refresh]', this.$el).addClass('disabled');
-            $('[data-js-milti-delete]', this.$el).removeClass('disabled').attr({title: Localization.launches.deleteBulk});
-        },
-        onClickMultiDelete: function() {
-            this.trigger('multi:action', 'remove');
-        },
-        disableMultiple: function() {
-            $('[data-js-refresh]', this.$el).removeClass('disabled');
-            $('[data-js-milti-delete]', this.$el).addClass('disabled').attr({title: Localization.launches.actionTitle});
-        },
         onClickRefresh: function() {
-            this.collectionItems.load();
+            this.trigger('refresh::history');
         },
-        getHistoryLink: function(){
-            var currentPath = window.location.hash;
-            currentPath += '&history.item=' + this.parentModel.get('id');
-            return currentPath;
-        },
-        onClickHistory: function(e){
-            e.preventDefault();
-            config.router.navigate(this.getHistoryLink(), {trigger: true});
-        },
+
         destroy: function () {
             this.filterEntities && this.filterEntities.destroy();
             this.infoLine && this.infoLine.destroy();
@@ -107,5 +69,6 @@ define(function (require, exports, module) {
         },
     });
 
-    return SuiteControlView;
+
+    return HistoryControlView;
 });

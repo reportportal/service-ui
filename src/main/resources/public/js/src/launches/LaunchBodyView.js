@@ -32,6 +32,8 @@ define(function (require, exports, module) {
     var StepTableView = require('launches/stepLevel/StepTableView');
     var LogControlView = require('launches/logLevel/LogControlView');
     var LogBodyView = require('launches/logLevel/LogBodyView');
+    var HistoryControlView = require('launches/historyGrid/HistoryControlView');
+    var HistoryBodyView = require('launches/historyGrid/HistoryBodyView');
 
     var LaunchSuiteStepItemCollection = require('launches/common/LaunchSuiteStepItemCollection');
     var LaunchMultipleSelect = require('launches/LaunchMultipleSelect');
@@ -157,6 +159,12 @@ define(function (require, exports, module) {
                             this.currentLevel = 'STEP';
                             break;
                         }
+                        case 'HISTORY': {
+                            this.trigger('change:level', 'HISTORY');
+                            this.currentLevel = 'HISTORY';
+                            this.renderHistory(info);
+                            break;
+                        }
                         case 'LOG': {
                             this.trigger('change:level', 'LOG');
                             this.currentLevel = 'LOG';
@@ -179,10 +187,25 @@ define(function (require, exports, module) {
                 launchModel: info.launchModel,
             })
         },
+        renderHistory: function(info){
+            this.control = new HistoryControlView({
+                el: $('[data-js-controls-container]', this.$el),
+                filterModel: info.filterModel,
+                parentModel: (info.parentModel || info.launchModel),
+                collectionItems: this.collectionItems,
+            });
+            this.body = new HistoryBodyView({
+                el: $('[data-js-info-container]', this.$el),
+                filterModel: info.filterModel,
+                control: this.control,
+                collectionItems: this.collectionItems,
+            })
+        },
         renderStepLevel: function(info) {
             this.control = new StepControlView({
                 el: $('[data-js-controls-container]', this.$el),
                 filterModel: info.filterModel,
+                launchModel: info.launchModel,
                 parentModel: (info.parentModel || info.launchModel),
                 collectionItems: this.collectionItems,
             });
@@ -195,6 +218,7 @@ define(function (require, exports, module) {
         renderSuiteLevel: function(info) {
             this.control = new SuiteControlView({
                 filterModel: info.filterModel,
+                launchModel: info.launchModel,
                 parentModel: (info.parentModel || info.launchModel),
                 el: $('[data-js-controls-container]', this.$el),
                 collectionItems: this.collectionItems,
@@ -226,7 +250,6 @@ define(function (require, exports, module) {
             delete this;
         },
     });
-
 
     return LaunchBodyView;
 });
