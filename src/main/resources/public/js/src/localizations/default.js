@@ -1091,7 +1091,8 @@ define(['util'], function () {
             personalProjects: 'Personal projects',
             searchByName: "Search by Name",
             TLS: 'TLS',
-            SSL: 'SSL'
+            SSL: 'SSL',
+            emailError: 'Test connection was failed:'
         },
 
         members: {
