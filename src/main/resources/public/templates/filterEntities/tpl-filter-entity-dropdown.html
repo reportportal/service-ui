@@ -1,0 +1,15 @@
+<button class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
+        data-toggle="dropdown">
+    <span class="select-value" data-js-value></span>
+    <span class="rp-caret"></span>
+</button>
+<ul class="dropdown-menu rp-width-100">
+    <% _.each(data.options, function(option, index) { %>
+    <li class="filter">
+        <a class="value-selector" data-value="<%= option.value %>">
+            <span class="text-ellipsis"><%= option.name %></span>
+        </a>
+    </li>
+    <% }) %>
+</ul>
+

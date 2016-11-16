@@ -188,6 +188,7 @@ define(function (require, exports, module) {
             })
         },
         renderHistory: function(info){
+            console.log('renderHistory: ', info);
             this.control = new HistoryControlView({
                 el: $('[data-js-controls-container]', this.$el),
                 filterModel: info.filterModel,

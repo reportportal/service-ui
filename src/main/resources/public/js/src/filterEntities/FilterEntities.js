@@ -450,6 +450,38 @@ define(function (require, exports, module) {
         }
     });
 
+    var DropDownEntityView = Epoxy.View.extend({
+        className: 'input-group-btn btn-group-fix-font filter-entities-dropdown',
+        template: 'tpl-filter-entity-dropdown',
+        bindings: {
+            '[data-js-value]': 'validateValue: value',
+        },
+        bindingHandlers: {
+            validateValue: {
+                set: function($element, value) {
+                    var option = _.find(this.view.model.get('options'), function(o){ return o.value === ''+value});
+                    $element.text(option.name);
+                }
+            }
+        },
+        events: {
+            'click a.value-selector': 'onLabelClick',
+        },
+        initialize: function() {
+            this.render();
+        },
+        render: function() {
+            this.$el.html(Util.templates(this.template, this.model.toJSON()));
+            this.applyBindings();
+        },
+        onLabelClick: function(e) {
+            e.preventDefault();
+            var $el = $(e.currentTarget),
+                val = ''+$el.data('value');
+            this.model.set({value: val});
+        }
+    });
+
     var EntityBaseView = Epoxy.View.extend({
         template: 'tpl-entity-base',
         events: {
@@ -535,8 +567,13 @@ define(function (require, exports, module) {
             })).$el);
         }
     });
-
-
+    var EntityDropDownView = EntityBaseView.extend({
+        onRender: function () {
+            this.$content.append((new DropDownEntityView({
+                model: this.model,
+            })).$el);
+        }
+    });
 
 
     var EntityInputModel = Model.extend({
@@ -560,6 +597,9 @@ define(function (require, exports, module) {
     });
     var EntitySelectModel = Model.extend({
         view: EntitySelectView,
+    });
+    var EntityDropDownModel = Model.extend({
+        view: EntityDropDownView,
     });
 
 
@@ -668,5 +708,6 @@ define(function (require, exports, module) {
         EntityTimeRangeModel: EntityTimeRangeModel,
         EntityInvalidModel: EntityInvalidModel,
         EntitySelectModel: EntitySelectModel,
+        EntityDropDownModel: EntityDropDownModel
     };
 });
