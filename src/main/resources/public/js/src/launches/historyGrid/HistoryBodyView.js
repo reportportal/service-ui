@@ -28,6 +28,8 @@ define(function (require, exports, module) {
     var Localization = require('localization');
     var Service = require('coreService');
     var HistoryTableView = require('launches/historyGrid/HistoryTableView');
+    var FilterModel = require('filters/FilterModel');
+    var Filters = require('filterEntities/FilterEntities');
     //var SingletonUserStorage = require('storage/SingletonUserStorage');
     var App = require('app');
     //var StickyHeader = require('core/StickyHeader');
@@ -48,17 +50,26 @@ define(function (require, exports, module) {
             this.filterModel = options.filterModel;
             this.collectionItems = options.collectionItems;
             this.conrol = options.control;
-            this.depth = 5;
+            this.depth = '10';
             this.qty = config.historyItemsToLoad;
             this.ids = _.map(this.collectionItems.models, function(i){ return i.get('id');});
             this.resetGrid();
+            this.depthFilterModel = new Filters.EntityDropDownModel({
+                name: 'History Depth',
+                id: 'history_depth',
+                noConditions: true,
+                required: true,
+                options: [{value: '3', name: '3'}, {value: '5', name: '5'}, {value: '10', name: '10'}],
+                value: this.depth
+            });
+            this.listenTo(this.depthFilterModel, 'change:value', this.onChangeDepth);
             this.listenTo(this.conrol, 'refresh::history', this.onRefreshGrid);
-            //this.listenTo(this.conrol, 'change::depth', this.onRefreshGrid);
             this.render();
             this.load();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+            $('[data-js-depth-filter]', this.$el).html((new this.depthFilterModel.view({model: this.depthFilterModel})).$el);
         },
         updateHistory: function(){
             this.table = new HistoryTableView({
@@ -133,6 +144,11 @@ define(function (require, exports, module) {
         onRefreshGrid: function(){
             this.resetGrid();
             this.load();
+        },
+        onChangeDepth: function(){
+            var info = this.depthFilterModel.getInfo();
+            this.depth = info.value;
+            this.onRefreshGrid();
         },
         getItemsForLoad: function(){
             this.toLoadIds = this.ids.slice(this.loaded, this.loaded + this.qty);

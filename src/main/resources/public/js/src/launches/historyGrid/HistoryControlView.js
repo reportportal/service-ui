@@ -37,15 +37,9 @@ define(function (require, exports, module) {
 
         template: 'tpl-launch-history-control',
         initialize: function(options) {
-            this.filterModel = options.filterModel;
             this.parentModel = options.parentModel;
             this.collectionItems = options.collectionItems;
             this.render();
-            this.filterEntities = new FilterEntitiesView({
-                el: $('[data-js-refine-entities]', this.$el),
-                filterLevel: 'history',
-                model: this.filterModel
-            });
             this.infoLine = new InfoPanelView({
                 el: $('[data-js-info-line]', this.$el),
                 model: this.parentModel,
@@ -59,7 +53,6 @@ define(function (require, exports, module) {
         },
 
         destroy: function () {
-            this.filterEntities && this.filterEntities.destroy();
             this.infoLine && this.infoLine.destroy();
             this.$el.html('');
             this.undelegateEvents();

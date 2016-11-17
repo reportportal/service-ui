@@ -252,5 +252,28 @@ $borderRadius100: 100px;
     }
 }
 
+.rp-history-filters {
+    border-bottom: solid 1px $COLOR--gray-91;
+    margin: 0 -15px;
+    padding: 0 15px;
+
+    .filter-wrapper {
+        display: inline-block;
+        height: 60px;
+        width: auto;
+        width: 200px;
+        position: relative;
+        margin-right: 35px;
+        margin-bottom: 14px;
+        margin-top: 7px;
+        padding-right: 0;
+        border-right: 0;
+
+        .form-group label.filter-name {
+            font-weight: normal;
+        }
+    }
+}
+
 
 
