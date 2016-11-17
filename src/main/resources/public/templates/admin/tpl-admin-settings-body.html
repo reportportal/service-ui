@@ -98,22 +98,30 @@
             </div>
             <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
         </div>
-        <div class="rp-form-group clearfix">
-            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col"></label>
-            <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                <div class="tls-enabled">
-                    <label class="rp-checkbox-wrap">
-                        <input data-js-tls-enabled class="rp-input-checkbox" type="checkbox" <% if(data.starTlsEnabled){ %>checked="checked"<% } %> id="tls">
-                        <span><%= data.text.admin.TLS %></span>
-                    </label>
-                    <label class="rp-checkbox-wrap">
-                        <input data-js-ssl-enabled class="rp-input-checkbox" type="checkbox" <% if(data.sslEnabled){ %>checked="checked"<% } %> id="ssl">
-                        <span><%= data.text.admin.SSL %></span>
-                    </label>
-                </div>
+    </div>
+    <div class="rp-form-group clearfix">
+        <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col"></label>
+        <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
+            <div class="tls-enabled">
+
+                <label class="rp-checkbox-wrap">
+                    <input data-js-tls-enabled class="rp-input-checkbox" type="checkbox" <% if(data.emailConfig.starTlsEnabled){ %>checked="checked"<% } %> id="tls">
+                    <span><%= data.text.admin.TLS %></span>
+                </label>
+                <label class="rp-checkbox-wrap">
+                    <input data-js-ssl-enabled class="rp-input-checkbox" type="checkbox" <% if(data.emailConfig.sslEnabled){ %>checked="checked"<% } %> id="ssl">
+                    <span><%= data.text.admin.SSL %></span>
+                </label>
             </div>
-            <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
         </div>
+        <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
+    </div>
+    <div class="rp-form-group clearfix email-server-error" data-js-connection-error style="display: none;">
+        <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col"></label>
+        <div class="col-md-6 col-sm-9 col-xs-12 rp-custom-col ">
+            <div class="alert alert-danger" data-js-connection-message></div>
+        </div>
+        <div class="col-md-3 rp-custom-col hidden-xs hidden-sm"></div>
     </div>
     <div class="rp-form-group clearfix">
         <div class="col-md-3 hidden-sm hidden-xs rp-custom-col"></div>

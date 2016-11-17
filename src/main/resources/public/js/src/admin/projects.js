@@ -66,6 +66,10 @@ define(function (require, exports, module) {
             return this;
         },
 
+        update: function(){
+            this.fillContent();
+        },
+
         renderTab: function(){
             if(this.tabView){
                 this.tabView.destroy();
