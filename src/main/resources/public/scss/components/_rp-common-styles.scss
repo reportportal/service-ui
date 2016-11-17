@@ -674,12 +674,16 @@ a {
 /* TITLE HOLDER - COMMON STYLE */
 
 %TITLE_HOLDER {
-  display: inline-block;
-  font-family: $OswaldRegular;
-  min-height: 30px;
-  @include setFontStyle(16px, 30px, #333333, uppercase);
-  @include setPaddingAll(0px, 0px, 0px, 0px);
-  @include setMarginAll(0px, 0px, 0px, 0px);
+    display: inline-block;
+    font-family: $OswaldRegular;
+    max-width: 300px;
+    min-height: 30px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    @include setFontStyle(16px, 30px, #333333, uppercase);
+    @include setPaddingAll(0px, 0px, 0px, 0px);
+    @include setMarginAll(0px, 0px, 0px, 0px);
 }
 
 ul.rp-nav-left > li.title-holder {
@@ -698,14 +702,18 @@ ul.rp-nav-left > li.title-holder {
     }
   }
 
-  // title vs h2.title-holder
-  & > span {
-    @extend %TITLE_HOLDER;
-  }
-  & > a {
-    @extend %TITLE_HOLDER;
-    color: #1a9cb0;
-  }
+    // title vs h2.title-holder
+    & > span {
+
+        @extend %TITLE_HOLDER;
+    }
+    & > a {
+        @extend %TITLE_HOLDER;
+        color: #1a9cb0;
+    }
+    & > span.favorites-title {
+        max-width: 730px;
+    }
 }
 
 /*--------------*/
@@ -1277,6 +1285,9 @@ textarea {
   box-shadow: none;
 }
 
+textarea.form-control {
+    height: 50px;
+}
 /*--------------------------------*/
 
 #errorBlock,

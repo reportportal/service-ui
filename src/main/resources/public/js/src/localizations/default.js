@@ -1130,7 +1130,9 @@ define(['util'], function () {
             personalProjects: "Personal projects",
             newProject: "new",
             usersQuantity: "members",
+            usersQuantitySingular: "member",
             launchesQuantity: "launches",
+            launchesQuantitySingular: "launch",
             lastRunPrefix: "Run ",
             lastRunSuffix: "0 days ago",
             goToProject: "Open",
@@ -1168,7 +1170,8 @@ define(['util'], function () {
             launches: " launches",
             launch: " launch",
             members: "member",
-            launchesAverage: "launch average per week",
+            launchesAverage: "launches average per week",
+            launchesAverageSingular: "launch average per week",
             uniqueBugs: "unique bug posted",
             noLaunchesPerformed: "No launches were performed at the selected period",
             titleAllProjects: "All Projects",
@@ -1177,6 +1180,8 @@ define(['util'], function () {
             internalProjects: 'Internal projects',
             personalProjects: 'Personal projects',
             searchByName: "Search by Name",
+            TLS: 'TLS',
+            SSL: 'SSL'
         },
 
         members: {
@@ -1193,6 +1198,7 @@ define(['util'], function () {
             successAddUser: "New account has been created successfully",
             viewEmail: "View email",
             nameLoginEmail: "Name, login, e-mail",
+            searchNameLogin: "Search by Name, Login",
             searchNameLoginEmail: "Search by Name, Login, Email",
             searchName: "Search by Name",
             unAssignTitle: "Remove member from the team",

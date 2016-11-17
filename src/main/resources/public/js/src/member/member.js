@@ -569,6 +569,7 @@ define(function(require, exports, module) {
             this.$el.html(Util.templates(this.shellTpl, {
                 actionTpl: this.actionHeaderTpl,
                 grandAdmin: this.isGrandAdmin || false,
+                projectId: this.projectId,
                 util: Util,
             }));
             this.$members = $("#membersList", this.$el);

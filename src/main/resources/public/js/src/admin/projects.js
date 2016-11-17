@@ -48,9 +48,9 @@ define(function (require, exports, module) {
 
         getDefaultFilter: function () {
             return {
-                search: config.currentProjectsSettings.search || config.defaultProjectsSettings.search,
-                sort: config.currentProjectsSettings.sorting || config.defaultProjectsSettings.sorting,
-                direction: config.currentProjectsSettings.sortingDirection || config.defaultProjectsSettings.sortingDirection
+                search: config.defaultProjectsSettings.search,
+                sort: config.defaultProjectsSettings.sorting,
+                direction: config.defaultProjectsSettings.sortingDirection
             };
         },
 
@@ -180,7 +180,8 @@ define(function (require, exports, module) {
         },
 
         destroy: function () {
-            this.projectsData = null;
+            this.tabView && this.tabView.destroy();
+            this.tabView = null;
             Components.BaseView.prototype.destroy.call(this);
         }
     });
@@ -281,8 +282,8 @@ define(function (require, exports, module) {
         },
         getQueryData: function(){
             var query = this.projectsType == 'personal' ? '?filter.eq.configuration$entryType=PERSONAL' : '?filter.in.configuration$entryType=INTERNAL,UPSA';
-            if(this.filter.filter){
-                query += '&filter.cnt.name=' + this.filter.filter;
+            if(this.filter.search){
+                query += '&filter.cnt.name=' + this.filter.search;
             }
             if(this.filter.sort){
                 query += '&page.sort='+this.filter.sort;
