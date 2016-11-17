@@ -533,6 +533,9 @@ define(function (require, exports, module) {
             var $overflowBlock = $scrollElem.parent('.baron__root');
             $contentBlock.css({maxHeight: 'none'});
             var height = $contentBlock.height();
+            if (height < 25) {
+                height = 25;
+            }
             if(options && height > options.maxHeight) {
                 height = options.maxHeight;
                 $overflowBlock.addClass('_scrollbar');
