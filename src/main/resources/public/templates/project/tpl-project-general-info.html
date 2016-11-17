@@ -2,24 +2,24 @@
     <div class="row">
         <div class="col-sm-12">
             <span class="data-number"><%= data.info.launchesQuantity %></span>
-            <% if (data.info.launchesQuantity > 1) { %>
-                <span class="data-text"><%= data.text.admin.launchesQuantity %></span>
+            <% if (data.info.launchesQuantity == 1) { %>
+                <span class="data-text"><%= data.text.admin.launchesQuantitySingular %></span>
             <% } else { %>
                 <span class="data-text"><%= data.text.admin.launchesQuantity %></span>
             <% } %>
         </div>
         <div class="col-sm-12">
             <span class="data-number"><%= data.info.launchesPerWeek %></span>
-            <% if (data.info.launchesPerWeek > 1) { %>
-                <span class="data-text"><%= data.text.admin.launchesAverage %></span>
+            <% if (data.info.launchesPerWeek == 1 ) { %>
+                <span class="data-text"><%= data.text.admin.launchesAverageSingular %></span>
             <% } else { %>
                 <span class="data-text"><%= data.text.admin.launchesAverage %></span>
             <% } %>
         </div>
         <div class="col-sm-12">
             <span class="data-number"><%= data.info.usersQuantity %></span>
-            <% if (data.info.usersQuantity > 1) { %>
-                <span class="data-text"><%= data.text.admin.usersQuantity %></span>
+            <% if (data.info.usersQuantity == 1) { %>
+                <span class="data-text"><%= data.text.admin.usersQuantitySingular %></span>
             <% } else { %>
                 <span class="data-text"><%= data.text.admin.usersQuantity %></span>
             <% } %>

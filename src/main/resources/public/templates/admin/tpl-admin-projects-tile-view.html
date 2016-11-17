@@ -32,8 +32,12 @@
                         <div class="health_index"><!-- health index --></div>
                     </div>
                     <div class="col-sm-6 project_info_block">
-                        <div class="project_info"><span class="bold"><%= project.usersQuantity %></span><%= data.text.admin.usersQuantity %></div>
-                        <div class="project_info"><span class="bold"><%= project.launchesQuantity %></span><%= data.text.admin.launchesQuantity %></div>
+                        <div class="project_info"><span class="bold"><%= project.usersQuantity %></span><%=
+                            (project.usersQuantity == 1) ? data.text.admin.usersQuantitySingular :
+                            data.text.admin.usersQuantity %></div>
+                        <div class="project_info"><span class="bold"><%= project.launchesQuantity %></span><%=
+                            (project.launchesQuantity == 1) ? data.text.admin.launchesQuantitySingular :
+                            data.text.admin.launchesQuantity %></div>
                         <div class="project_info"><%= data.text.admin.lastRunPrefix %><%= project.lastRun ? data.util.daysFromNow(project.lastRun) : data.text.admin.lastRunSuffix %></div>
                     </div>
                 </div>
