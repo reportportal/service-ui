@@ -140,6 +140,8 @@
 
 .view_projects_wrapper .view_project_name {
     padding-top: 5px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 /*--- START ADMIN ALL USERS ADD USER FORM ---*/
@@ -173,7 +175,7 @@
     text-transform: lowercase;
     top: -4px;
 }
-ss
+
 .user-name.text-wrapper {
     display: block;
 }
