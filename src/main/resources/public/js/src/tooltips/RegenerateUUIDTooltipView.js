@@ -18,10 +18,35 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function (require, exports, module) {
+    'use strict';
 
-@import 'common';
-@import 'defects-tooltip';
-@import 'duration-tooltip';
-@import 'executions-tooltip';
-@import 'message-tooltip';
-@import 'regenerate-uuid-tooltip';
+    var $ = require('jquery');
+    var Epoxy = require('backbone-epoxy');
+    var Util = require('util');
+    var Localization = require('localization');
+
+
+    var RegenerateUUIDTooltip = Epoxy.View.extend({
+        template: 'tpl-profile-regenerate-uuid',
+        className: 'regenerate-uuid-tooltip',
+
+        initialize: function() {
+            this.render();
+        },
+
+        render: function() {
+            this.$el.html(Util.templates(this.template));
+        },
+
+        destroy: function () {
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            this.$el.remove();
+            delete this;
+        },
+    });
+
+    return RegenerateUUIDTooltip;
+});

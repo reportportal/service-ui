@@ -19,9 +19,16 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'common';
-@import 'defects-tooltip';
-@import 'duration-tooltip';
-@import 'executions-tooltip';
-@import 'message-tooltip';
-@import 'regenerate-uuid-tooltip';
+.regenerate-uuid-tooltip {
+  width: 400px;
+  padding: 0 3px;
+  color: $COLOR--gray-47;
+  font-family: 'OpenSansSemibold',sans-serif;
+  font-size: 12px;
+  word-wrap: break-word;
+
+  .uuid-warning {
+    font-weight: bold;
+    color: red;
+  }
+}

@@ -26,6 +26,7 @@ define(function (require, exports, module) {
     var ModalChangePassword = require('modals/modalChangePassword');
     var ModalEditUserInfo = require('modals/modalEditUserInfo');
     var ModalConfirm = require('modals/modalConfirm');
+    var RegenerateUUIDTooltipView = require('tooltips/RegenerateUUIDTooltipView');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
     var Util = require('util');
@@ -75,6 +76,7 @@ define(function (require, exports, module) {
                 this.$el.html(Util.templates(this.tpl, params));
                 this.setupAnchors();
                 this.initEditor();
+                this.loadRegenerateUUIDTooltip();
             }.bind(this));
             return this;
         },
@@ -97,6 +99,14 @@ define(function (require, exports, module) {
         },
         selectToken: function (ev) {
             $(ev.target).select();
+        },
+        loadRegenerateUUIDTooltip: function(){
+            var el = $('[data-js-update-token]', this.$el);
+            var $hoverElement = $('[data-js-hover-element]', el);
+            Util.appendTooltip(function() {
+                var tooltip = new RegenerateUUIDTooltipView({});
+                return tooltip.$el.html();
+            }, $hoverElement, $hoverElement);
         },
         updateToken: function () {
             this.modalToken = new Components.DialogWithCallBack({
@@ -254,7 +264,7 @@ define(function (require, exports, module) {
         setEditorValue: function(){
             if (this.$editor) {
                 var value;
-                var oldClientComment = Localization.userProfile.oldClientComment;
+                //var oldClientComment = Localization.userProfile.oldClientComment;
 
                 switch (this.lang) {
                     case 'ruby':
@@ -272,7 +282,6 @@ define(function (require, exports, module) {
                         break;
                     case 'soap':
                         value =
-                            oldClientComment +
                             '<h1>'+Localization.userProfile.soapConfigTitle+'</h1>' +
                             '<br>' +
                             '<div class="options">' +
@@ -291,7 +300,6 @@ define(function (require, exports, module) {
                         break;
                     default:
                         value =
-                            oldClientComment +
                             '<h1>'+Localization.userProfile.defaultConfigTitle+'</h1>' +
                             '<h1>'+Localization.userProfile.required+'</h1>' +
                             '<div class="options">'+
