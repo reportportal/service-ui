@@ -535,7 +535,7 @@ define(function (require, exports, module) {
                 project: config.project,
                 getDefectColor: this.getDefectColor,
                 defectTypes: this.defectTypes,
-                linkToRedirectService: this.linkToRedirectService,
+                linkToRedirectService: this.linkToRedirectService.bind(this),
                 dateFormat: Util.dateFormat,
                 moment: Moment
             };

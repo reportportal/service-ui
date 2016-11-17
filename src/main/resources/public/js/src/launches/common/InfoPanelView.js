@@ -130,7 +130,7 @@ define(function (require, exports, module) {
         getExecutionStats: function(stats, type){
             var exec = stats.executions,
                 total = +exec.total;
-            return ((+exec[type]/total) * 100).toFixed(2);
+            return total ? ((+exec[type]/total) * 100).toFixed(2) : 0;
         },
         getDefectStats: function(stats, type){
             var defects = stats.defects;
