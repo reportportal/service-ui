@@ -67,8 +67,8 @@ define(function (require, exports, module) {
             return new  Filters.EntityConditionInputModel({
                 id: 'statistics$defects$' + type + '$' + subType.get('locator'),
                 condition: 'gte',
-                label: Localization.filterNameById[type] + ' ' + subType.get('shortName'),
-                name: subType.get('longName'),
+                label: subType.get('longName'),
+                name: Localization.filterNameById[type] + ' ' + subType.get('shortName'),
                 subEntity: true,
                 options: filterStatsOptions()
             })

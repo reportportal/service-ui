@@ -181,6 +181,13 @@ define(function(require, exports, module) {
                     self.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager)
             };
             var result = {
+                edit: function() {
+                    if (self.get('launch_owner') != config.userModel.get('name') &&
+                        !isAdminLeadProjectMenedger()) {
+                        return 'You are not a launch owner';
+                    }
+                    return '';
+                },
                 merge: function () {
                     if (self.get('launch_owner') != config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {

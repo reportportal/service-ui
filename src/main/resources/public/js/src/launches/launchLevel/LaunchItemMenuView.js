@@ -48,11 +48,12 @@ define(function (require, exports, module) {
             'click [data-js-remove]': 'onClickRemove',
         },
         bindings: {
-            '[data-js-finish]': 'attr:{disabled:not(isForceFinish)}',
+            '[data-js-finish]': 'attr:{title: titleForceFinish, disabled: any(titleForceFinish)}',
             '[data-js-can-export]': 'attr:{disabled:not(isExport)}',
             '[data-js-can-match]': 'attr:{disabled:not(isMatchIssues)}',
             '[data-js-can-analyze]': 'attr:{disabled:not(isAnalyze)}',
             '[data-js-switch-mode]': 'text:itemModeText, attr:{disabled:not(isChangeMode)}',
+            '[data-js-remove]': 'attr: {title: removeTitle, disabled: any(removeTitle)}',
         },
         initialize: function(options) {
             this.model = options.model;
@@ -72,16 +73,22 @@ define(function (require, exports, module) {
                     return !this.model.validate.changeMode();
                 }
             },
-            isForceFinish: {
+            titleForceFinish: {
                 deps: ['status', 'launch_owner'],
                 get: function() {
-                    return !this.model.validate.forceFinish();
+                    return this.model.validate.forceFinish();
                 }
             },
             isExport: {
                 deps: ['launch_status'],
                 get: function(launchStatus) {
                     return (launchStatus != 'IN_PROGRESS');
+                }
+            },
+            removeTitle: {
+                deps: ['launch_owner', 'status'],
+                get: function() {
+                    return this.model.validate.remove();
                 }
             },
             itemModeText: {

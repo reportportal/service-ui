@@ -51,7 +51,7 @@ require.config({
         favorites: 'favorites/favorites',
         register: 'register/register',
         // filters: 'filter/filters',
-        components: 'core/components',
+        //components: 'core/components',
         lazyload: '../lib/jquery.lazyload.min',
         daterangepicker: '../lib/daterangepicker',
         'readmore-js': '../lib/readmore',
@@ -124,6 +124,9 @@ require.config({
         'cacheService': 'core/cache-service',
         'scrollable': 'core/scrollable-view',
         "text" : "../lib/text",
+
+        'SwipeGallery': '../lib/SwipeGallery',
+        'Hammer': '../lib/hammer',
 
         fakeData: '../tests/mocks/data',
         adminFakeData: '../tests/mocks/adminData',

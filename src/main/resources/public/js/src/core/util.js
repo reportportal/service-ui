@@ -1034,6 +1034,9 @@ define(function (require, exports, module) {
 
             // TODO - added variant with class 'rp-form-group'
             var $holder = $el.closest(".form-group, .rp-form-group");
+            if(options && options.max) {
+                $el.attr('maxLength', options.max)
+            }
 
             var $messenger = $(".help-inline:first", $holder);
             var isHint = $messenger.hasClass('error-hint');

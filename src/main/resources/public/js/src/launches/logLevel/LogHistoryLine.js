@@ -178,7 +178,7 @@ define(function (require, exports, module) {
             this.listenTo(this.collection, 'hover:false', this.onOutItem);
             this.render();
             var self = this;
-            this.collection.load(this.collectionItems.getInfoLog().item)
+            this.load = this.collection.load(this.collectionItems.getInfoLog().item)
                 .always(function() {
                     self.trigger('load:history');
                     var activeModels = self.collection.where({active: true});
@@ -203,13 +203,14 @@ define(function (require, exports, module) {
             })
         },
         destroy: function () {
+            this.load && this.load.abort();
             while(this.renderedItems.length) {
                 this.renderedItems.pop().destroy();
             }
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
-            this.$el.remove();
+            this.$el.html('');
             delete this;
         },
     })

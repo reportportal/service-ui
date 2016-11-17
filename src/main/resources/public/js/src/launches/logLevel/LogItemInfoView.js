@@ -114,12 +114,15 @@ define(function (require, exports, module) {
         initialize: function (options) {
             this.appModel = new SingletonAppModel()
             this.viewModel = options.itemModel;
-            this.model = new Epoxy.Model({
-                stackTrace: false,
-                attachments: false,
-                itemDetails: false,
-                activity: false,
-            });
+            this.model = new (Epoxy.Model.extend({
+                defaults: {
+                    stackTrace: false,
+                    attachments: false,
+                    itemDetails: false,
+                    activity: false,
+                }
+            }));
+            this.listenTo(this.model, 'change:stackTrace change:attachments change:itemDetails change:activity', this.onChangeTabModel);
             this.render();
             if(this.validateForIssue()){
                 this.issueView = new StepLogDefectTypeView({
@@ -168,8 +171,13 @@ define(function (require, exports, module) {
                     Util.ajaxFailMessenger(error, "startAnalyzeAction");
                 })
         },
+        onChangeTabModel: function(model, value) {
+            if (value) {
+                this.model.set(_.extend(_.clone(this.model.defaults), model.changed));
+            }
+        },
         toggleModelField: function (field) {
-            this.model.set(field, !this.model.get(field));
+            this.model.set(field, true);
         },
 
         render: function () {

@@ -41,6 +41,7 @@ define(function (require, exports, module) {
 
     var List = Components.BaseView.extend({
         initialize: function (options) {
+            this.action = options.action || 'internal';
             this.$el = options.el;
             this.$header = options.header;
             this.currentTpl = config.currentProjectsSettings.listView || config.defaultProjectsSettings.listView;
@@ -84,7 +85,6 @@ define(function (require, exports, module) {
             this.action = query;
             this.renderTab();
         },
-
         getProjectsView: function () {
             var tab = this.action;
             return new ProjectsList({
@@ -382,6 +382,7 @@ define(function (require, exports, module) {
             this.id = options.id;
             this.action = options.action;
             this.query = options.queryString;
+            this.$header = options.header;
             this.vent = _.extend({}, Backbone.Events);
         },
 
@@ -389,7 +390,6 @@ define(function (require, exports, module) {
         $name: null,
         settingsBlock: undefined,
         usersBlock: undefined,
-
         headerTpl: 'tpl-admin-project-header',
         bodyTpl: 'tpl-admin-project-body',
         shellTpl: 'tpl-admin-content-shell',
@@ -398,7 +398,6 @@ define(function (require, exports, module) {
 
         render: function () {
             this.$el.html(Util.templates(this.shellTpl));
-            this.$header = $("#contentHeader", this.$el);
             this.$body = $("#contentBody", this.$el);
 
             var tab = this.action === 'members' ? 'members' : 'settings';
@@ -420,6 +419,9 @@ define(function (require, exports, module) {
                     }
                 }));
             }
+
+            this.$header.find('[data-js-show-permissions-map]').click(this.onClickShowPermissionsMap.bind(this));
+            this.$header.find('.tab').click(this.updateRoute.bind(this));
 
             this.$body.html(Util.templates(this.bodyTpl, {
                 tab: tab,
@@ -578,7 +580,6 @@ define(function (require, exports, module) {
             'click .tab': 'updateRoute',
             'click .rp-nav-tabs .disabled': 'stopPropagation',
             'click #create-project': 'createProject',
-            'click [data-js-show-permissions-map]': 'onClickShowPermissionsMap'
         },
 
         onClickShowPermissionsMap: function (e) {
@@ -630,7 +631,6 @@ define(function (require, exports, module) {
             if (action) {
                 this.action = el.data('action');
             }
-
             if (this.action === 'members') {
                 this.$header.find('#headerBar').find('#title-members').show();
                 this.$header.find('#headerBar').find('#title-settings').hide();
@@ -674,16 +674,19 @@ define(function (require, exports, module) {
             this.action = options.action;
             this.interval = this.getInterval(options.queryString);
             this.project = options.id;
+            this.$header = options.header;
         },
 
-        infoTpl: "tpl-admin-project-details",
+        headerTpl: "tpl-admin-project-details-header",
+        bodyTpl: "tpl-admin-project-details",
 
         getInterval: function (query) {
             return query ? +query.split('=')[1] : 3;
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.infoTpl, {
+            this.$el.html(Util.templates(this.bodyTpl, {}));
+            this.$header.html(Util.templates(this.headerTpl, {
                 projectId: this.id,
                 interval: this.interval
             }));

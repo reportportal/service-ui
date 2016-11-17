@@ -728,7 +728,7 @@ ul.rp-nav-left > li.title-holder {
     min-height: 100%;
     background: #414243;
     padding-left: 90px;
-    
+
       .color {
         position: absolute;
         top: 0;
@@ -757,6 +757,7 @@ ul.rp-nav-left > li.title-holder {
     min-height: 100%;
   }
   @media (max-width: $SCREEN_XS_MAX) {
+    min-height: 100%;
     padding-top: 112px;
   }
 }
@@ -767,6 +768,7 @@ ul.rp-nav-left > li.title-holder {
   height: 100%;
   transition: transform 0.5s cubic-bezier(0, 0, 0.2, 1);
   .wrapper {
+    height: 100%;
     padding-left: 90px;
     background: #e4e5e6;
     min-height: 100%;
@@ -1285,9 +1287,6 @@ textarea {
   box-shadow: none;
 }
 
-textarea.form-control {
-    height: 50px;
-}
 /*--------------------------------*/
 
 #errorBlock,

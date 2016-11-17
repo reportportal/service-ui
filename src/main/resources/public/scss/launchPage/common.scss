@@ -163,34 +163,36 @@
     .pr-grid-show-time {
       &:hover {
         .exact-time {
-          display: none;
+          visibility: hidden;
         }
         .from-now {
-          display: inline;
+          visibility: visible;
         }
       }
       .exact-time {
-        display: inline;
+        visibility: visible;
       }
       .from-now {
-        display: none;
+        visibility: hidden;
       }
     }
   }
   .pr-grid-show-time {
     &:hover {
       .from-now {
-        display: none;
+        visibility: hidden;
       }
       .exact-time {
-        display: inline;
+        visibility: visible;
       }
     }
     .from-now {
-      padding-bottom: 1.2em;
+      position: absolute;
+      display: inline-block;
     }
     .exact-time {
-      display: none;
+      visibility: hidden;
+      display: inline-block;
     }
   }
   .grid-cell {

@@ -34,12 +34,17 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
 .suit-grid {
   .grid-cell {
     &.name-grid-cell {
-      padding-left: 10px;
+      padding-left: 20px;
       width: $launch-name-cell-width;
       &.rp-grid-th {
         .text-overflow {
-          padding-left: 25px;
+         // padding-left: 25px;
         }
+      }
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      &.name-grid-cell {
+        padding-left: 10px;
       }
     }
     &.time-grid-cell {
@@ -50,7 +55,7 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
     }
     &.number-grid-cell {
       width: $launch-number-cell-width;
-      text-align: right;
+      text-align: left;
     }
     &.select-grid-cell {
       width: $launch-select-cell-width;

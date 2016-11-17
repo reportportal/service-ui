@@ -27,6 +27,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var Components = require('core/components');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
 
     var config = App.getInstance();
 
@@ -37,8 +38,11 @@ define(function (require, exports, module) {
         initialize: function(options) {
             this.itemView = options.itemView;
             this.filterModel = options.filterModel;
+            this.userStorage = new SingletonUserStorage();
             this.listenTo(this.collection, 'reset', this.renderItems);
             this.listenTo(this.collection, 'loading', this.onLoadingCollection);
+            this.listenTo(this.collection, 'change:time:format', this.onChangeTimeFormat);
+            this.onChangeTimeFormat(true);
             this.render();
             this.renderedItems = [];
             this.pagingModel = new Backbone.Model();
@@ -53,6 +57,23 @@ define(function (require, exports, module) {
             this.listenTo(this.paging, 'count', this.onChangePageCount);
             if(!this.collection.models.length) {
                 this.$el.addClass('not-found');
+            }
+        },
+        onChangeTimeFormat: function(silent) {
+            var timeFormat = this.userStorage.get('startTimeFormat');
+            if (!silent) {
+                if(timeFormat === 'exact'){
+                    timeFormat = ''
+                }
+                else {
+                    timeFormat = 'exact';
+                }
+                this.userStorage.set('startTimeFormat', timeFormat);
+            }
+            if(timeFormat) {
+                this.$el.addClass('exact-driven');
+            } else {
+                this.$el.removeClass('exact-driven');
             }
         },
         render: function() {

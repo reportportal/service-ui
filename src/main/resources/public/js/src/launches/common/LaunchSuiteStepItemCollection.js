@@ -53,6 +53,8 @@ define(function (require, exports, module) {
             this.noChildFilter = false;
         },
         update: function(launchModel, parentModel, optionsURL) {
+            this.pagingPage = 1;
+            this.pagingTotalPages = 1;
             var async = $.Deferred();
             this.launchModel = launchModel;
             this.parentModel = parentModel;
@@ -178,7 +180,7 @@ define(function (require, exports, module) {
             return answer;
         },
         changeFilterOptions: function(model, value) {
-            if(value != '') {
+            if(value != '' || !model.changed.entities) {
                 this.load();
             }
         },

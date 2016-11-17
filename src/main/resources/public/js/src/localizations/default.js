@@ -951,6 +951,9 @@ define(['util'], function () {
             name: "Name:",
             shared: "Shared:",
             noInfoFilter: 'No info matches this filter',
+            notSaveDescription: 'Filter is not saved',
+            sharedDescription: 'Filter is shared',
+            globalDescription: 'Filter is shared by other user',
         },
         filter: {
             name: 'Filter name',
@@ -1396,6 +1399,7 @@ define(['util'], function () {
             filtersNameLength: "Filter name length should have size from %%% to %%%",
             filterNameLength: "Filter name length should have size from %%% to %%%.",
             filterDescriptionLength: "Filter description length should have size from %%% to %%%.",
+            filterDescriptionMaxLength: "Filter description length should have size to %%%.",
             filterNameDuplication: "This name is already in use. Please choose something else.",
             filterStaticsDigitsOnly: "This filter accepts only digits.",
             dashboardNameLength: "Dashboard name should have size from '3' to '128'",
@@ -1600,7 +1604,7 @@ define(['util'], function () {
 
             launchEditor: "Edit launch",
             itemEditor: "Edit test item",
-            defectEditor: 'Edit defect type',
+            defectEditor: 'Edit defect',
             choseDefectType: 'Choose Defect Type',
             commentForDefect: 'Leave Comment to Defect Type',
             defectType: 'Defect Type',

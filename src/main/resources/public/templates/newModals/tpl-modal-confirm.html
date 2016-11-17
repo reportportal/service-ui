@@ -15,7 +15,7 @@
     </button>
     <% } %>
     <% if(data.okButtonText) { %>
-    <button class="rp-btn <%= data.confirmText?'disabled rp-btn-danger':'rp-btn-submit' %>" type="button" data-js-ok>
+    <button class="rp-btn <%= data.confirmText?'disabled':'' %> <%= (data.confirmText || data.okButtonDanger)?' rp-btn-danger':' rp-btn-submit' %>" type="button" data-js-ok>
         <%= data.okButtonText %>
     </button>
     <% } %>
