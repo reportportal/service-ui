@@ -102,11 +102,10 @@ define(function (require, exports, module) {
         },
         loadRegenerateUUIDTooltip: function(){
             var el = $('[data-js-update-token]', this.$el);
-            var $hoverElement = $('[data-js-hover-element]', el);
             Util.appendTooltip(function() {
                 var tooltip = new RegenerateUUIDTooltipView({});
                 return tooltip.$el.html();
-            }, $hoverElement, $hoverElement);
+            }, el, el);
         },
         updateToken: function () {
             this.modalToken = new Components.DialogWithCallBack({
