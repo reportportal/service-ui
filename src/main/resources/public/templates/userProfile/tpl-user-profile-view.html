@@ -4,6 +4,7 @@
         <h2 class="user-profile-title"><%= data.text.userProfile.personalInfo %></h2>
         <div class="user-profile-info">
             <div class="user-profile-photo <%= data.photo_loaded ? 'active' : '' %>">
+                <% console.log(data.image) %>
                 <img class="user-avatar" data-js-user-img data-original="<%= data.image %>" src="<%= data.image %>" alt="<%= data.text.ui.avatar %>" />
             </div>
             <% if(canEdit){ %>
@@ -72,16 +73,9 @@
         <div class="user-uuid-form">
             <label for="user_uuid" class="control-label user-uuid-label"><%= data.text.userProfile.UUID %></label>
             <div class="user-uuid-button">
-                <button data-js-update-token type="button" class="rp-btn rp-btn-default" data-toggle="tooltip"
-                        title="<%= data.text.userProfile.msgRegenTop %>
-                        <br>
-                        <br>
-                        <span style='color: red;'>
-                        <%= data.text.userProfile.msgRegenMid %>
-                        </span>
-                        <br>
-                        <%= data.text.userProfile.msgRegenFoot %>">
+                <button data-js-update-token type="button" class="rp-btn rp-btn-default">
                     <%= data.text.userProfile.regenerateBtn %>
+                    <div class="hover-area" data-js-hover-element></div>
                 </button>
             </div>
             <div class="user-uuid-field" data-js-block-is-token>

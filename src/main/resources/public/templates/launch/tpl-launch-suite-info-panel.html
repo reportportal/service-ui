@@ -21,12 +21,12 @@
         <div class="hover-area" data-js-hover-element></div>
     </li>
     <% _.each(data.defectTypes, function(defect, key){ %>
-    <li>
+    <li class="defect-block">
         <span class="info-section-issue" data-js-defect-type="<%= defect.type %>">
             <span class="issue-type"><i  style="background: <%= defect.color %>"></i><span><%= defect.shortName %></span></span>
             <span class="issues" data-js-defect-<%= defect.type %>-total title="<%= defect.longName %>" style="border-color: <%= defect.color %>"></span>
-        </span>
-        <div class="hover-area" data-js-hover-element></div>
+            <div class="defect-hover" data-js-hover-element></div>
+        </div>
     </li>
     <% }); %>
 </ul>

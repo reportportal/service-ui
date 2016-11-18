@@ -711,6 +711,9 @@ ul.rp-nav-left > li.title-holder {
         @extend %TITLE_HOLDER;
         color: #1a9cb0;
     }
+    & > span.favorites-title {
+        max-width: 730px;
+    }
 }
 
 /*--------------*/

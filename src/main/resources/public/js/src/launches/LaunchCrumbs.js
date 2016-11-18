@@ -42,6 +42,7 @@ define(function (require, exports, module) {
             type: 'FILTER',
             isProcessing: false,
             number: '',
+            listView: false,
         },
         computeds: {
             fullName: {
@@ -51,6 +52,12 @@ define(function (require, exports, module) {
                         return name;
                     }
                     return name + ' #' + number;
+                }
+            },
+            clearUrl: {
+                deps: ['url'],
+                get: function(url) {
+                    return url.split('|')[0];
                 }
             }
         },
@@ -118,19 +125,26 @@ define(function (require, exports, module) {
             });
             var url = '';
             for(var i = 0; i < Math.max(newPath.length, currentPath.length); i++) {
-                var level = 'item';
-                if(i == 0) {
-                    level = 'filter';
-                    url = (new FilterModel({id: newPath[0]})).get('url');
-                } else {
-                    url += '/' + newPath[i];
-                    level = (i == 1) ? 'launch' :'item';
-                }
                 if(newPath[i]) {
-                    if(currentPath[i]) {
-                        this.get(currentPath[i]).set({id: newPath[i], level: level, url: url});
+                    var listView = false;
+                    var level = 'item';
+                    var splitId = newPath[i].split('|');
+                    var currentNewPath = splitId[0];
+                    if(i == 0) {
+                        level = 'filter';
+                        url = (new FilterModel({id: newPath[0]})).get('url');
                     } else {
-                        this.add({id: newPath[i], level: level, url: url});
+                        url += '/' + currentNewPath;
+                        if (splitId[1]) {
+                            url += '|' + splitId[1] + '?' + decodeURIComponent(splitId[1]);
+                            listView = true;
+                        }
+                        level = (i == 1) ? 'launch' :'item';
+                    }
+                    if(currentPath[i]) {
+                        this.get(currentPath[i]).set({id: currentNewPath, level: level, url: url, listView: listView});
+                    } else {
+                        this.add({id: currentNewPath, level: level, url: url, listView: listView});
                     }
                 } else {
                     this.remove(currentPath[i]);
@@ -167,7 +181,8 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-name]': 'text: fullName',
             '[data-js-link]': 'text: fullName, attr: {href: url}',
-            '[data-js-auto-analize]': 'classes: {hide: not(isProcessing)}',
+            '[data-js-auto-analize]': 'classes: {visible: isProcessing}',
+            '[data-js-list-view-icon]': 'classes: {hide: not(listView)}'
         },
         initialize: function() {
             this.render();

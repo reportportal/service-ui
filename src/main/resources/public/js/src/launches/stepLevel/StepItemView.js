@@ -33,7 +33,6 @@ define(function (require, exports, module) {
 
     var config = App.getInstance();
 
-
     var StepItemView = Epoxy.View.extend({
         template: 'tpl-launch-step-item',
         events: {
@@ -129,7 +128,6 @@ define(function (require, exports, module) {
                 currentPath += '&log.item=' + this.model.get('id');
                 config.router.navigate(currentPath, {trigger: true});
             }
-
         },
         onClickEdit: function() {
             var modal = new ModalLaunchItemEdit({

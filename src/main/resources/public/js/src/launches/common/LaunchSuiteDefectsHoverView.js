@@ -27,10 +27,8 @@ define(function (require, exports, module) {
     var Util = require('util');
     var Localization = require('localization');
 
-
     var LaunchSuiteDefectsTooltip = Epoxy.View.extend({
-        template: 'tpl-launch-suite-defects-tooltip',
-        className: 'defects-tooltip',
+        template: 'tpl-launch-suite-defects-hover',
         initialize: function(options) {
             this.type = options.type;
             this.render();
@@ -42,22 +40,29 @@ define(function (require, exports, module) {
             var defects = this.getDefectByType();
             var defectsCollection = new SingletonDefectTypeCollection();
             var subDefects = [];
+
+            var url = this.model.get('clearUrl');
+            var appendFilter = 'filter.eq.has_childs=false&filter.in.issue$issue_type=';
             _.each(defects, function(value, key) {
                 var subDefectModel = defectsCollection.getDefectByLocator(key);
                 if(subDefectModel) {
                     subDefects.push({
                         color: subDefectModel.get('color'),
                         name: subDefectModel.get('longName'),
-                        value: value
+                        value: value,
+                        url: url + '|' + encodeURIComponent(appendFilter + subDefectModel.get('locator')) + '?' + appendFilter + subDefectModel.get('locator')
                     })
                 }
             });
+            var allSubDefects = defectsCollection.toJSON();
+            var allDefects = Util.getSubDefectsLocators(this.type, allSubDefects).join('%2C');
             return {
                 subDefects: subDefects,
                 total: {
                     color: defectsCollection.getMainColorByType(this.type),
                     name: Localization.infoLine[this.type],
-                    value: defects.total
+                    value: defects.total,
+                    url: url + '|' + encodeURIComponent(appendFilter + allDefects) + '?' + appendFilter + allDefects,
                 }}
         },
         getDefectByType: function(){

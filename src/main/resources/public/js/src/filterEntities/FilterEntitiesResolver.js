@@ -348,13 +348,13 @@ define(function (require, exports, module) {
     var HistoryStepFilters = function () {
         return new Backbone.Collection(
             [
-                new Filters.SelectModel({
+                new Filters.EntityDropDownModel({
                     name: 'History Depth',
                     id: 'history_depth',
                     noConditions: true,
                     required: true,
-                    values: [{value: '3', name: '3'}, {value: '5', name: '5'}, {value: '10', name: '10'}],
-                    value: '3'
+                    options: [{value: '3', name: '3'}, {value: '5', name: '5'}, {value: '10', name: '10'}],
+                    value: '10'
                 })
             ]
         );

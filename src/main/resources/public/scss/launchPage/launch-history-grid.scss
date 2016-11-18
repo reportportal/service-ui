@@ -1,0 +1,279 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$linkColor: #1a9cb0;
+$toInvestigateColor: #fff;
+$borderRadius100: 100px;
+
+%centerBlock {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+%defectPieSize {
+    width: 48px;
+    height: 48px;
+}
+
+%caret {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 7px;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    border-style: solid;
+}
+
+@mixin setCaretColorType($color, $type) {
+    @if $type == 'hover' {
+        border-width: 0 4px 4px 4px;
+        border-color: transparent transparent $color transparent;
+    }
+    @if $type == 'default' {
+        border-width: 4px 4px 0 4px;
+        border-color: $color transparent transparent transparent;
+    }
+}
+
+.rp-history-grid {
+    padding: 0;
+    border: none;
+    margin: 0 -15px;
+
+    .history-grid-table {
+        display: table;
+        width: 100%;
+    }
+    .history-grid-thead {
+        display: table-row;
+        overflow: hidden;
+        margin-right: -15px;
+        margin-left: -15px;
+        background: $COLOR--white;
+
+        .history-col {
+            padding: 0 4px;
+            text-align: center;
+
+            &:first-child {
+                padding: 0 4px 0 15px;
+                border-left: none;
+                text-align: left;
+            }
+        }
+        .history-grid-th {
+            height: 50px;
+            text-transform: uppercase;
+            font-size: 12px;
+            color: #777;
+            padding: 0;
+            position: relative;
+
+            .history-grid-th-name{
+                display: inline-block;
+                position: relative;
+                top: 50%;
+                transform: translateY(-50%);
+            }
+        }
+    }
+    .history-grid-row {
+        display: table-row;
+        overflow: hidden;
+        border-bottom: solid 1px $COLOR--gray-91;
+
+        .history-col {
+            &:first-child {
+                border-left: none;
+                padding-left: 15px;
+            }
+            .rp-grid-description {
+                font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+                font-size: 13px;
+                margin: 4px 0 0 1px;
+                word-wrap: break-word;
+            }
+            .rp-launch-tags {
+                font-size: 12px;
+                color: $COLOR--gray-60;
+            }
+            .history-defect-badge {
+                display: inline-block;
+                border-radius: $borderRadius100;
+                padding: 0 10px;
+                font-family: $OpenSansSemibold;
+                margin: 2px 0;
+                position: relative;
+
+                &.nd > span, &.pb > span, &.si > span {
+                    color: #fff;
+                }
+            }
+            .history-col-content {
+                text-align: center;
+                font-size: 12px;
+                position: relative;
+            }
+            .history-comment, .history-tickets {
+                display: inline-block;
+                color: $COLOR--white-default;
+                font-size: 16px;
+                margin: 0;
+                position: relative;
+                vertical-align: top;
+
+                &:hover {
+                    & > span {
+                        color: $COLOR--charcoal-grey;
+                    }
+                }
+                & > span {
+                    display: inline-block;
+                    color: $COLOR--gray-47;
+                    font-size: 22px;
+
+                }
+            }
+            &.history-status-PASSED {
+                background: $COLOR--passed;
+                .history-col-content {
+                    display: none;
+                }
+            }
+            &.history-status-FAILED {
+                background: $COLOR--failed;
+                .history-col-content {
+                    display: none;
+                }
+                .history-statistics {
+                    display: block;
+                }
+            }
+            &.history-status-IN_PROGRESS {
+                background-image: url(/img/launch/launch-is-processing.png);
+                background-size: 22px 100%;
+                background-color: $COLOR--violet;
+                .history-col-content {
+                    display: none;
+                }
+            }
+            &.history-status-SKIPPED {
+                background: $COLOR--skipped;
+                .history-col-content {
+                    display: none;
+                }
+                .history-statistics {
+                    display: block;
+                }
+            }
+            &.history-status-INTERRUPTED {
+                background: $COLOR--failed;
+                .history-col-content {
+                    display: none;
+                }
+            }
+            &.history-status-NOT_FOUND {
+                color: $COLOR--gray-80;
+                line-height: 1.0;
+                font-size: 12px;
+                background: $COLOR--white;
+                .history-col-content {
+                    display: none;
+                }
+                .history-empty-col {
+                    display: block;
+                    i {
+                        font-size: 18px;
+                    }
+                }
+            }
+            &.history-status-MANY {
+                background: $COLOR--light-yellow;
+                color: $COLOR--gray-47;
+                .history-col-content {
+                    display: none;
+                }
+                .history-warning-col {
+                    display: block;
+                    padding: 6px;
+                    &:hover {
+                        color: $COLOR--charcoal-grey;
+                    }
+                    .defects-tip-duration {
+                        width: 240px;
+                    }
+                    i {
+                        font-size: 22px;
+                    }
+                }
+            }
+        }
+    }
+    .history-col {
+        display: table-cell;
+        float: none;
+        height: 100%;
+        border-left: 1px solid $COLOR--gray-91;
+        border-bottom: solid 1px $COLOR--gray-91;
+        border-right: none;
+        border-top: none;
+        vertical-align: middle;
+        padding: 4px;
+    }
+}
+
+.pr-history-load-more {
+    margin: 15px 0 0;
+
+    .btn {
+        background-color: inherit;
+        border: 2px dashed #CFCFCF;
+        color: #CFCFCF;
+    }
+}
+
+.rp-history-filters {
+    border-bottom: solid 1px $COLOR--gray-91;
+    margin: 0 -15px;
+    padding: 0 15px;
+
+    .filter-wrapper {
+        display: inline-block;
+        height: 60px;
+        width: auto;
+        width: 200px;
+        position: relative;
+        margin-right: 35px;
+        margin-bottom: 14px;
+        margin-top: 7px;
+        padding-right: 0;
+        border-right: 0;
+
+        .form-group label.filter-name {
+            font-weight: normal;
+        }
+    }
+}
+
+
+

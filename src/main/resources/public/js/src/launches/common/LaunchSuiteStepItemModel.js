@@ -111,6 +111,12 @@ define(function(require, exports, module) {
                     return '';
                 }
             },
+            clearUrl: {
+                deps: ['url'],
+                get: function(url) {
+                    return url.split('|')[0];
+                }
+            },
             numberText: {
                 deps: ['number'],
                 get: function (number) {

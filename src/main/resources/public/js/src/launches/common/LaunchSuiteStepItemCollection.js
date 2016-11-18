@@ -139,6 +139,7 @@ define(function (require, exports, module) {
             this.noChildFilter = false;
             var answer = {};
             this.logOptions = {};
+            this.historyOptions = {};
             _.each(options, function(option) {
                 var optionSeparate = option.split('=');
                 var keySeparate = optionSeparate[0].split('.');
@@ -170,6 +171,9 @@ define(function (require, exports, module) {
                 }
                 if(keyFirstPart == 'log') {
                     this.logOptions[keySeparate[1]] = optionSeparate[1];
+                }
+                if(keyFirstPart == 'history') {
+                    this.historyOptions[keySeparate[1]] = optionSeparate[1];
                 }
             }, this);
             answer.entities = JSON.stringify(filterEntities);
@@ -203,6 +207,10 @@ define(function (require, exports, module) {
             var self = this;
             if(this.logOptions.item){
                 async.resolve('LOG');
+                return async;
+            }
+            if(this.historyOptions.item){
+                async.resolve('HISTORY');
                 return async;
             }
             var types = {};

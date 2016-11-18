@@ -75,7 +75,7 @@ define(function (require, exports, module) {
             if(mainDefect) {
                 return mainDefect.get('color');
             }
-            return Util.getDefaultColor(type);
+            return this.Util.getDefaultColor(type);
         },
         checkForSubDefects: function(){
             return this.length > 5;

@@ -676,7 +676,7 @@ define(['util'], function () {
             configureTBSLoad: "Configure Bug Tracking System to load bugs",
             noIssues: "You cant Post Bug if item has no issues",
             noIssuesLoad: "You cant Load Bug if item has no issues",
-            historyView: "History View",
+            historyView: "History",
             skippedDuration: "SKIPPED. Duration: ",
             stoppedDuration: 'Run STOPPED after:',
             interruptedDuration: 'Run INTERRUPTED after:',
@@ -1133,7 +1133,9 @@ define(['util'], function () {
             personalProjects: "Personal projects",
             newProject: "new",
             usersQuantity: "members",
+            usersQuantitySingular: "member",
             launchesQuantity: "launches",
+            launchesQuantitySingular: "launch",
             lastRunPrefix: "Run ",
             lastRunSuffix: "0 days ago",
             goToProject: "Open",
@@ -1171,7 +1173,8 @@ define(['util'], function () {
             launches: " launches",
             launch: " launch",
             members: "member",
-            launchesAverage: "launch average per week",
+            launchesAverage: "launches average per week",
+            launchesAverageSingular: "launch average per week",
             uniqueBugs: "unique bug posted",
             noLaunchesPerformed: "No launches were performed at the selected period",
             titleAllProjects: "All Projects",
@@ -1180,6 +1183,8 @@ define(['util'], function () {
             internalProjects: 'Internal projects',
             personalProjects: 'Personal projects',
             searchByName: "Search by Name",
+            TLS: 'TLS',
+            SSL: 'SSL'
         },
 
         members: {

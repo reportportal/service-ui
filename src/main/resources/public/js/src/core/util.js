@@ -208,7 +208,7 @@ define(function (require, exports, module) {
                     of: $parrent,
                     collision: 'fit'
                 },
-                show: {effect: 'none', delay: 100, duration: 0},
+                show: {effect: 'none', delay: 500, duration: 0},
                 hide: {effect: 'none', duration: 0},
                 items: ':not([disabled])',
                 content: content,
@@ -428,6 +428,9 @@ define(function (require, exports, module) {
             var $overflowBlock = $scrollElem.parent('.baron__root');
             $contentBlock.css({maxHeight: 'none'});
             var height = $contentBlock.height();
+            if (height < 25) {
+                height = 25;
+            }
             if(options && height > options.maxHeight) {
                 height = options.maxHeight;
                 $overflowBlock.addClass('_scrollbar');

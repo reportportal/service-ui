@@ -35,12 +35,29 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-refresh]': 'onClickRefresh',
             'click [data-js-milti-delete]': 'onClickMultiDelete',
+            'click [data-js-history]': 'onClickHistory'
+        },
+
+        bindings: {
+            '[data-js-history]': 'attr: {href:getHistoryHref, style: validateForHistoryBtn}'
+        },
+
+        computeds: {
+            validateForHistoryBtn: function(){
+                var interrupted = config.launchStatus.interrupted,
+                    showBtn = this.parentModel.get('status') !== interrupted && this.launchModel.get('status') !== interrupted ;
+                return 'display: ' + ( !showBtn ? 'none' : 'inline-block' );
+            },
+            getHistoryHref: function(){
+                return this.getHistoryLink();
+            }
         },
 
         template: 'tpl-launch-suite-control',
         initialize: function(options) {
             this.filterModel = options.filterModel;
             this.parentModel = options.parentModel;
+            this.launchModel = options.launchModel;
             this.collectionItems =  options.collectionItems;
             this.render();
             this.filterEntities = new FilterEntitiesView({
@@ -69,6 +86,15 @@ define(function (require, exports, module) {
         },
         onClickRefresh: function() {
             this.collectionItems.load();
+        },
+        getHistoryLink: function(){
+            var currentPath = window.location.hash;
+            currentPath += '&history.item=' + this.parentModel.get('id');
+            return currentPath;
+        },
+        onClickHistory: function(e){
+            e.preventDefault();
+            config.router.navigate(this.getHistoryLink(), {trigger: true});
         },
         destroy: function () {
             this.filterEntities && this.filterEntities.destroy();

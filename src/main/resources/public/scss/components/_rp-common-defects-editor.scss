@@ -252,6 +252,10 @@ div.inline-editor {
 
 #defectWell .defect-desc {
     overflow: hidden;
+
+    ol li {
+        list-style-type: decimal;
+    }
 }
 
 .issue-selector {
