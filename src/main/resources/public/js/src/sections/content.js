@@ -52,10 +52,6 @@ define(function (require, exports, module) {
 
         tpl: 'tpl-container',
 
-        events: {
-            'click #btt': 'scrollTop'
-        },
-
         render: function (options) {
             this.$el.html(Util.templates(this.tpl));
             if (this.isAdminPage) {
@@ -164,13 +160,6 @@ define(function (require, exports, module) {
                         break;
                 }
             }
-        },
-
-        scrollTop: function () {
-            $('body,html').animate({
-                scrollTop: 0
-            }, 100);
-            return false;
         },
 
         destroy: function () {

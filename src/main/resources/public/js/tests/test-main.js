@@ -130,7 +130,8 @@ require.config({
 
         fakeData: '../tests/mocks/data',
         adminFakeData: '../tests/mocks/adminData',
-        jasminejQuery: '../tests/lib/jasmine-jquery.2.0.5'
+        jasminejQuery: '../tests/lib/jasmine-jquery.2.0.5',
+
     },
     shim: {
         'jquery': {
@@ -197,6 +198,10 @@ require.config({
 
         //
         // '../tests/spec/filter/filters-panel',
+        '../tests/spec/sections/header',
+        '../tests/spec/sections/sidebar',
+        '../tests/spec/sections/footer',
+        '../tests/spec/sections/content'
     ],
 
     // we have to kickoff jasmine, as it is asynchronous
