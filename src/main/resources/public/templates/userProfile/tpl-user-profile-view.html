@@ -4,6 +4,7 @@
         <h2 class="user-profile-title"><%= data.text.userProfile.personalInfo %></h2>
         <div class="user-profile-info">
             <div class="user-profile-photo <%= data.photo_loaded ? 'active' : '' %>">
+                <% console.log(data.image) %>
                 <img class="user-avatar" data-js-user-img data-original="<%= data.image %>" src="<%= data.image %>" alt="<%= data.text.ui.avatar %>" />
             </div>
             <% if(canEdit){ %>

@@ -170,7 +170,6 @@ define(function(require, exports, module) {
                 userRole: response.userRole,
                 photo_loaded: response.photo_loaded,
                 image: config.apiVersion + 'data/photo?' + response.userId + '?at=' + Date.now(),
-            //
                 user_login: response.userId
             }
         },
