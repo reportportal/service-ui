@@ -1,0 +1,27 @@
+<div class="launch-suite-defect-hover">
+    <div class="defect-title">
+        <a href="<%- data.total.url %>">
+           <span class="defect-name">
+             <span class="defect-color" style="background: <%- data.total.color %>"></span>
+                <%- data.total.name %>
+            </span>
+            <span class="defect-value"><%= data.total.value %></span>
+        </a>
+    </div>
+    <% if(data.subDefects.length){ %>
+    <ul>
+        <% _.each(data.subDefects, function(defect){ %>
+        <li>
+            <a href="<%- defect.url %>">
+                <span class="defect-name">
+                    <span class="defect-color" style="background: <%- defect.color %>"></span>
+                    <%- defect.name %>
+                </span>
+                <span class="defect-value"><%= defect.value %></span>
+            </a>
+
+        </li>
+        <% }); %>
+    </ul>
+    <% } %>
+</div>

@@ -83,4 +83,18 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
       }
     }
   }
+  @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+    .rp-grid-thead {
+      display: none;
+    }
+    .grid-cell {
+      &.select-grid-cell, &.time-grid-cell {
+        display: none;
+      }
+      &.name-grid-cell {
+        width: 100%;
+      }
+    }
+
+  }
 }

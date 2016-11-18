@@ -28,7 +28,7 @@ define(function (require, exports, module) {
     var App = require('app');
 
     // Tooltips
-    var LaunchSuiteDefectsTooltipView = require('tooltips/LaunchSuiteDefectsTooltipView');
+    var LaunchSuiteDefectsHoverView = require('launches/common/LaunchSuiteDefectsHoverView');
     var LaunchSuiteExecutionsTooltipView = require('tooltips/LaunchSuiteExecutionsTooltipView');
     var LaunchSuiteDurationTooltipView = require('tooltips/LaunchSuiteDurationTooltipView');
 
@@ -162,14 +162,19 @@ define(function (require, exports, module) {
             defectTooltips.each(function( index ) {
                 var el = $(this);
                 var type = el.data('js-defect-type');
-                var $hoverElement = el.next($('[data-js-hover-element]', this.$el));
-                Util.appendTooltip(function() {
-                    var tooltip = new LaunchSuiteDefectsTooltipView({
-                        type: type,
-                        model: self.model
-                    });
-                    return tooltip.$el.html();
-                }, $hoverElement, $hoverElement);
+                // var $hoverElement = el.next($('[data-js-hover-element]', this.$el));
+                var tooltip = new LaunchSuiteDefectsHoverView({
+                    el: $('[data-js-hover-element]', el),
+                    type: type,
+                    model: self.model
+                });
+                // Util.appendTooltip(function() {
+                //     var tooltip = new LaunchSuiteDefectsHoverView({
+                //         type: type,
+                //         model: self.model
+                //     });
+                //     return tooltip.$el.html();
+                // }, $hoverElement, $hoverElement);
             });
         },
         loadDurationTooltip: function(){

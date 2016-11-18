@@ -35,7 +35,7 @@
         color: #464547;
         padding: 0 5px;
 
-        li {
+        & > li {
             float: left;
             margin: 0 10px;
             padding: 5px 0;
@@ -109,6 +109,37 @@
 
             span {
                 display: inline-block;
+            }
+            .defect-hover {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background: $COLOR--white-default;
+                border: 1px solid $COLOR--gray-80;
+                box-shadow: 1px 1px 6px -1px rgba(0, 0, 0, 0.4);
+                z-index: 10;
+                padding: 10px;
+                visibility: hidden;
+                opacity: 0;
+                transition: visibility 0s linear 0s;
+                margin-top: 5px;
+                &:before {
+                    content: ' ';
+                    display: block;
+                    position: absolute;
+                    top: -5px;
+                    left: 0;
+                    height: 20px;
+                    width: 100%;
+                }
+            }
+            &:hover {
+                .defect-hover {
+                    visibility: visible;
+                    opacity: 1;
+                    transition: visibility 0s linear 0.4s, opacity 0.2s ease 0.4s;
+
+                }
             }
         }
 

@@ -78,7 +78,7 @@ define(function (require, exports, module) {
         },
         setupStickyHeader: function() {
             this.destroyStickyHeader();
-            this.stickyHeader = new StickyHeader({fixedBlock: $('[data-js-fixed-header]', this.$el), topMargin: 0});
+            this.stickyHeader = new StickyHeader({fixedBlock: $('[data-js-fixed-header]', this.$el), topMargin: 0, minWidthWindow: 900});
         },
         destroyStickyHeader: function() {
             this.stickyHeader && this.stickyHeader.destroy();
