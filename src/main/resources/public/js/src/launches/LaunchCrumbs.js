@@ -42,6 +42,7 @@ define(function (require, exports, module) {
             type: 'FILTER',
             isProcessing: false,
             number: '',
+            listView: false,
         },
         computeds: {
             fullName: {
@@ -125,6 +126,7 @@ define(function (require, exports, module) {
             var url = '';
             for(var i = 0; i < Math.max(newPath.length, currentPath.length); i++) {
                 if(newPath[i]) {
+                    var listView = false;
                     var level = 'item';
                     var splitId = newPath[i].split('|');
                     var currentNewPath = splitId[0];
@@ -135,13 +137,14 @@ define(function (require, exports, module) {
                         url += '/' + currentNewPath;
                         if (splitId[1]) {
                             url += '|' + splitId[1] + '?' + decodeURIComponent(splitId[1]);
+                            listView = true;
                         }
                         level = (i == 1) ? 'launch' :'item';
                     }
                     if(currentPath[i]) {
-                        this.get(currentPath[i]).set({id: currentNewPath, level: level, url: url});
+                        this.get(currentPath[i]).set({id: currentNewPath, level: level, url: url, listView: listView});
                     } else {
-                        this.add({id: currentNewPath, level: level, url: url});
+                        this.add({id: currentNewPath, level: level, url: url, listView: listView});
                     }
                 } else {
                     this.remove(currentPath[i]);
@@ -179,6 +182,7 @@ define(function (require, exports, module) {
             '[data-js-name]': 'text: fullName',
             '[data-js-link]': 'text: fullName, attr: {href: url}',
             '[data-js-auto-analize]': 'classes: {visible: isProcessing}',
+            '[data-js-list-view-icon]': 'classes: {hide: not(listView)}'
         },
         initialize: function() {
             this.render();

@@ -69,14 +69,16 @@
         span.link-as-element {
           display: inline-block
         }
-        a, i {
+        a, i.arrow {
           display: none;
         }
       }
       i {
         font-size: 17px;
         vertical-align: top;
-        margin-top: 1px;
+        &.arrow {
+          margin-top: 1px;
+        }
       }
     }
   }
