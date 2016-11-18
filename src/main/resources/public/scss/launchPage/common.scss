@@ -221,6 +221,21 @@
       a {
         word-wrap: break-word;
       }
+      .autoanalyze {
+        width: auto;
+        border-radius: 10px;
+        background: $COLOR--orange-red;
+        padding: 0 5px 1px 5px;
+        color: $COLOR--white-default;
+        margin-left: 5px;
+        font-size: 10px;
+        vertical-align: top;
+        line-height: 16px;
+        display: none;
+        &.visible {
+          display: inline-block;
+        }
+      }
     }
     .rp-grid-description {
       font-family: Menlo,Monaco,Consolas,"Courier New",monospace;

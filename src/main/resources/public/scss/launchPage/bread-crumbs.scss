@@ -43,17 +43,30 @@
       a {
         color: $COLOR--topaz;
       }
-      span {
+      span.link-as-element {
         display: none;
       }
-      a, span {
+      a, span.link-as-element {
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        width: 100%;
+        max-width: 100%;
+      }
+      .autoanalyze {
+        width: auto;
+        border-radius: 10px;
+        background: $COLOR--orange-red;
+        padding: 0 5px;
+        color: $COLOR--white-default;
+        margin-left: 5px;
+        vertical-align: top;
+        display: none;
+        &.visible {
+          display: inline-block;
+        }
       }
       &:last-child {
-        span {
+        span.link-as-element {
           display: inline-block
         }
         a, i {

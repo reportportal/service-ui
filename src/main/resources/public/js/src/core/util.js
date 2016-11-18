@@ -208,7 +208,7 @@ define(function (require, exports, module) {
                     of: $parrent,
                     collision: 'fit'
                 },
-                show: {effect: 'none', delay: 100, duration: 0},
+                show: {effect: 'none', delay: 500, duration: 0},
                 hide: {effect: 'none', duration: 0},
                 items: ':not([disabled])',
                 content: content,

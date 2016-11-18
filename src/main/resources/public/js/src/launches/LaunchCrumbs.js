@@ -178,7 +178,7 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-name]': 'text: fullName',
             '[data-js-link]': 'text: fullName, attr: {href: url}',
-            '[data-js-auto-analize]': 'classes: {hide: not(isProcessing)}',
+            '[data-js-auto-analize]': 'classes: {visible: isProcessing}',
         },
         initialize: function() {
             this.render();

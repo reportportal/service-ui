@@ -51,7 +51,7 @@ define(function (require, exports, module) {
         },
         bindings: {
             '[data-js-item-row]': 'classes: {"select-state": select}',
-            '[data-js-analize-label]': 'classes: {hide: not(isProcessing)}',
+            '[data-js-analize-label]': 'classes: {visible: isProcessing}',
             '[data-js-name-link]': 'attr: {href: url}',
             '[data-js-name]': 'text: name',
             '[data-js-launch-number]': 'text: numberText',
