@@ -161,9 +161,8 @@ define(function (require, exports, module) {
                 default:
                     break;
             }
-            return url + '?'
-                + '&filter.eq.has_childs=false'
-                + statusFilter;
+            return url + '|'+ decodeURIComponent('filter.eq.has_childs=false' + statusFilter) + '?'
+                + '&filter.eq.has_childs=false' + statusFilter;
         },
 
 

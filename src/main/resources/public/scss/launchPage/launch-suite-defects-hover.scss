@@ -19,16 +19,14 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.defects-tooltip {
+
+.launch-suite-defect-hover {
   width: 215px;
   font-size: 13px;
   color: $COLOR--gray-47;
   .defect-title {
     font-family: OpenSansSemiBold;
     padding: 3px 0 15px 0;
-    .defect-value {
-      color: $COLOR--windows-blue;
-    }
   }
   .defect-name {
     display: inline-block;
@@ -46,6 +44,15 @@
     display: inline-block;
     float: right;
     padding-right: 4px;
+    color: $COLOR--windows-blue;
+  }
+  a {
+    display: block;
+    &:hover {
+      .defect-name {
+        color: $COLOR--charcoal-grey;
+      }
+    }
   }
   ul {
     padding-top: 9px;

@@ -29,7 +29,7 @@ define(function (require, exports, module) {
     var d3 = require('d3');
     var nvd3 = require('nvd3');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
-    var LaunchSuiteDefectsTooltipView = require('tooltips/LaunchSuiteDefectsTooltipView');
+    var LaunchSuiteDefectsHoverView = require('launches/common/LaunchSuiteDefectsHoverView');
 
     var config = App.getInstance();
 
@@ -52,15 +52,13 @@ define(function (require, exports, module) {
                 }
             },
             allCasesUrl: function(){
-                var url = this.model.get('url');
+                var url = this.model.get('clearUrl');
                 var statusFilter = '&filter.in.issue$issue_type=';
                 var subDefects = this.defectsCollection.toJSON();
                 var defects = Util.getSubDefectsLocators(this.type, subDefects).join('%2C');
 
-                return url + '?'
-                    + '&filter.eq.has_childs=false'
-                    + statusFilter
-                    + defects;
+                var appendFilter = 'filter.eq.has_childs=false' + statusFilter + defects;
+                return url + '|' + encodeURIComponent(appendFilter) + '?' + appendFilter;
             },
             defectBorderColor: function(){
                 return 'border-color: ' + this.defectsCollection.getMainColorByType(this.type);
@@ -81,14 +79,19 @@ define(function (require, exports, module) {
                 this.$el.html(Util.templates(this.template, {}));
                 this.drawPieChart();
                 var self = this;
-                var $hoverElement = $('[data-js-hover-element]', this.$el);
-                Util.appendTooltip(function() {
-                    var tooltip = new LaunchSuiteDefectsTooltipView({
-                        type: self.type,
-                        model: self.model
-                    });
-                    return tooltip.$el.html();
-                }, $hoverElement, $hoverElement);
+                // var $hoverElement = $('[data-js-hover-element]', this.$el);
+                this.hoverView = new LaunchSuiteDefectsHoverView({
+                    el: $('[data-js-hover-view-container]', this.$el),
+                    type: self.type,
+                    model: self.model
+                });
+                // Util.appendTooltip(function() {
+                //     var tooltip = new LaunchSuiteDefectsHoverView({
+                //         type: self.type,
+                //         model: self.model
+                //     });
+                //     return tooltip.$el.html();
+                // }, $hoverElement, $hoverElement);
                 this.applyBindings();
             }
         },
@@ -147,7 +150,7 @@ define(function (require, exports, module) {
                 .call(this.chart);
         },
         destroy: function () {
-            this.tooltip && this.tooltip.destroy();
+            this.hoverView && this.hoverView.destroy();
             this.chart = null;
             this.undelegateEvents();
             this.stopListening();

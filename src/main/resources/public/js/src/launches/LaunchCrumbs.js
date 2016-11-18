@@ -52,6 +52,12 @@ define(function (require, exports, module) {
                     }
                     return name + ' #' + number;
                 }
+            },
+            clearUrl: {
+                deps: ['url'],
+                get: function(url) {
+                    return url.split('|')[0];
+                }
             }
         },
         initialize: function() {
@@ -118,19 +124,24 @@ define(function (require, exports, module) {
             });
             var url = '';
             for(var i = 0; i < Math.max(newPath.length, currentPath.length); i++) {
-                var level = 'item';
-                if(i == 0) {
-                    level = 'filter';
-                    url = (new FilterModel({id: newPath[0]})).get('url');
-                } else {
-                    url += '/' + newPath[i];
-                    level = (i == 1) ? 'launch' :'item';
-                }
                 if(newPath[i]) {
-                    if(currentPath[i]) {
-                        this.get(currentPath[i]).set({id: newPath[i], level: level, url: url});
+                    var level = 'item';
+                    var splitId = newPath[i].split('|');
+                    var currentNewPath = splitId[0];
+                    if(i == 0) {
+                        level = 'filter';
+                        url = (new FilterModel({id: newPath[0]})).get('url');
                     } else {
-                        this.add({id: newPath[i], level: level, url: url});
+                        url += '/' + currentNewPath;
+                        if (splitId[1]) {
+                            url += '|' + splitId[1] + '?' + decodeURIComponent(splitId[1]);
+                        }
+                        level = (i == 1) ? 'launch' :'item';
+                    }
+                    if(currentPath[i]) {
+                        this.get(currentPath[i]).set({id: currentNewPath, level: level, url: url});
+                    } else {
+                        this.add({id: currentNewPath, level: level, url: url});
                     }
                 } else {
                     this.remove(currentPath[i]);
