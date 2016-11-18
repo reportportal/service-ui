@@ -27,7 +27,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
-    var MessageTooltipView = require('tooltips/MessageTooltipView');
+    var SimpleTooltipView = require('tooltips/SimpleTooltipView');
     // var LaunchSuiteDefectsTooltipView = require('tooltips/LaunchSuiteDefectsTooltipView');
     var Textile = require('textile');
     var Localization = require('localization');
@@ -137,7 +137,7 @@ define(function (require, exports, module) {
             if(type == 'warning' || type == 'comment' || type == 'tickets' || type == 'issue') {
                 var $hoverElement = el;
                 Util.appendTooltip(function() {
-                    var tooltip = new MessageTooltipView({message: el.data('tooltip-content')});
+                    var tooltip = new SimpleTooltipView({message: el.data('tooltip-content')});
                     return tooltip.$el.html();
                 }, $hoverElement, $hoverElement);
             }
