@@ -37,7 +37,8 @@ define(function (require, exports, module) {
         SingletonAppModel = require('model/SingletonAppModel'),
         Components = require('core/components'),
         Localization = require('localization'),
-        SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+        SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection'),
+        SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
 
     require('jqueryUI');
     require('elasticColumns');
@@ -365,8 +366,8 @@ define(function (require, exports, module) {
             var filterId = this.param.filter_id;
             var filterStatus = '';
             var getLink = function(filters){
-                var arrLink = [project, 'launches', filterId];
-                var filterForAll = '?page.page=1&page.size=50&page.sort=start_time,DESC&filter.eq.has_childs=false';
+                var arrLink = [project, 'launches/all'];
+                var filterForAll = '?page.page=1&page.size=50&page.sort=start_time&filter.eq.has_childs=false';
                 var params = [[id, filterForAll].join('')];
                 params.push(filters);
                 arrLink.push(params.join('&'));
@@ -1204,13 +1205,16 @@ define(function (require, exports, module) {
                 linkArr = ['#'+projectId, 'launches', newFilter];
             Service.getFilterData([filterId])
                 .done(function(response){
-                    var link,
-                        filterParams = new Components.RequestParameters(),
-                        time = Moment.unix(e.point.startTime);
-                    FiltersService.loadFilterIntoRequestParams(filterParams, response[0]);
-                    filterParams.setSortInfo('start_time', 'DESC');
-                    filterParams.setFilters(filterParams.getFilters().concat([{id: 'filter.btw.start_time', value: time.format('x') + ',' + (parseInt(time.format('x')) + range)}]));
-                    link = [linkArr.join('/'), filterParams.toURLSting()].join('?');
+                    var time = Moment.unix(e.point.startTime),
+                        dateFilter = {condition: 'btw', filtering_field: 'start_time', is_negative: false, value: time.format('x') + ',' + (parseInt(time.format('x')) + range)},
+                        filtersCollection = new SingletonLaunchFilterCollection(),
+                        newFilter = filtersCollection.generateTempModel(),
+                        entities = response[0].entities || [],
+                        link = newFilter.get('url');
+
+                    entities.push(dateFilter);
+                    newFilter.set('entities', JSON.stringify(entities));
+                    link += '?' + newFilter.getOptions().join('&');
                     if (link) {
                         setTimeout(function(){
                             document.location.hash = link;
