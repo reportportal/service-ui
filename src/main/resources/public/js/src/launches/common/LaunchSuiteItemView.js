@@ -40,6 +40,7 @@ define(function (require, exports, module) {
 
     var LaunchSuiteItemView = Epoxy.View.extend({
         template: 'tpl-launch-suite-item',
+        className: 'row rp-table-row',
         statusTpl: 'tpl-launch-suite-item-status',
         events: {
             'click [data-js-name-link]': 'onClickName',
@@ -50,7 +51,7 @@ define(function (require, exports, module) {
             'click [data-js-owner-name]': 'onClickOwnerName',
         },
         bindings: {
-            '[data-js-item-row]': 'classes: {"select-state": select}',
+            ':el': 'classes: {"select-state": select}',
             '[data-js-analize-label]': 'classes: {visible: isProcessing}',
             '[data-js-name-link]': 'attr: {href: url}',
             '[data-js-name]': 'text: name',
@@ -172,18 +173,23 @@ define(function (require, exports, module) {
             this.filterModel = options.filterModel;
             this.render();
             this.applyBindings();
-            if (this.getBinding('defectToInvestigate')) {
-                var defectCollection = new SingletonDefectTypeCollection();
-                var self = this;
-                defectCollection.ready.done(function(){
+
+            var defectCollection = new SingletonDefectTypeCollection();
+            var self = this;
+            defectCollection.ready.done(function(){
+                if (self.getBinding('defectToInvestigate')) {
                     var toInvest = defectCollection.findWhere({typeRef: 'TO_INVESTIGATE'});
                     if (toInvest) {
                         $('[data-js-statistics-to-investigate]', self.$el).attr({
                             href: self.model.get('url') + '?filter.eq.has_childs=false&filter.in.issue$issue_type=' + toInvest.get('locator')
                         })
                     }
-                })
-            }
+                }
+                $('[data-js-label-pb]', self.$el).css({backgroundColor: defectCollection.getMainColorByType('product_bug')});
+                $('[data-js-label-ab]', self.$el).css({backgroundColor: defectCollection.getMainColorByType('automation_bug')});
+                $('[data-js-label-si]', self.$el).css({backgroundColor: defectCollection.getMainColorByType('system_issue')});
+                $('[data-js-label-ti]', self.$el).css({backgroundColor: defectCollection.getMainColorByType('to_investigate')});
+            })
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {type: this.model.get('type')}));

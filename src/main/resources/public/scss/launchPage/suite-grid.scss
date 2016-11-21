@@ -36,6 +36,12 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
     &.name-grid-cell {
       padding-left: 20px;
       width: $launch-name-cell-width;
+      .mobile-time {
+        display: none;
+        span {
+          color: $COLOR--charcoal-grey;
+        }
+      }
       &.rp-grid-th {
         .text-overflow {
          // padding-left: 25px;
@@ -65,6 +71,15 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
         height: 11px;
       }
     }
+    .mobile-title {
+      display: none;
+      color: $COLOR--gray-47;
+      font-size: 12px;
+      font-family: "OpenSansSemibold", sans-serif;
+      text-transform: uppercase;
+      padding: 10px 0 2px 0;
+      margin: 0;
+    }
     @media (max-width: 1150px) {
       &.name-grid-cell {
         width: $launch-min-name-cell-width;
@@ -87,12 +102,85 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
     .rp-grid-thead {
       display: none;
     }
+    .rp-table-row {
+      padding-top: 20px;
+      padding-bottom: 0;
+      border-bottom-color: $COLOR--gray-80;
+      //&:nth-child(odd) {
+      //  background: $COLOR--white-four;
+      //}
+    }
     .grid-cell {
+      padding: 0;
+      .mobile-title {
+        display: block;
+      }
       &.select-grid-cell, &.time-grid-cell {
         display: none;
       }
       &.name-grid-cell {
         width: 100%;
+        padding-bottom: 10px;
+        .rp-grid-tags > li {
+          width: 100%;
+          margin: 0 0px 15px 0px;
+        }
+        .mobile-time {
+          display: inline;
+        }
+        &.launch-name-cell {
+          padding-left: 0;
+          .btn-group {
+            display: none;
+          }
+          .name-grid-overflow {
+            padding-left: 10px;
+          }
+        }
+      }
+      &.number-grid-cell, &.counter-grid-cell {
+        width: 25%;
+        height: 62px;
+        text-align: center;
+        a {
+          font-size: 16px;
+          position: relative;
+        }
+        svg {
+          display: none;
+        }
+        &:before {
+          content: '';
+          position: absolute;
+          top: -1px;
+          left: -2px;
+          right: 1px;
+          bottom: 0px;
+          border: 1px solid $COLOR--gray-91;
+        }
+        &.last-child {
+          &:before {
+            right:-2px;
+          }
+        }
+      }
+      &.counter-grid-cell {
+        .mobile-title {
+          color: $COLOR--charcoal-grey;
+          font-family: "OpenSansSemibold", sans-serif;
+          font-size: 13px;
+        }
+        i {
+          position: relative;
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          margin-right: 5px;
+        }
+        &.last-child a{
+          font-family: OpenSansRegular;
+        }
       }
     }
 

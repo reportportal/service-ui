@@ -269,6 +269,28 @@
         }
       }
     }
+    @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+      h5 {
+        font-size: 15px;
+      }
+      .rp-grid-description {
+        font-size: 14px;
+        margin: 7px 0 0 0px;
+      }
+      .rp-grid-tags {
+        font-size: 14px;
+        & > li {
+          i {
+            font-size: 24px;
+            line-height: 12px;
+            &.rp-icons-ticket {
+              font-size: 16px;
+              margin: 0 5px 0 4px;
+            }
+          }
+        }
+      }
+    }
   }
   .rp-item-duration {
     vertical-align: top;
@@ -307,11 +329,22 @@
         }
       }
     }
+    @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+      .duration-content {
+        padding-left: 28px;
+        .material-icons, .rp-icons {
+          top: 0;
+          font-size: 22px;
+        }
+      }
+    }
   }
   .number-grid-cell {
     color: $COLOR--windows-blue;
     &.total-number {
-      font-family: OpenSansSemiBold;
+      a {
+        font-family: OpenSansSemiBold;
+      }
     }
     a {
       cursor: pointer;
