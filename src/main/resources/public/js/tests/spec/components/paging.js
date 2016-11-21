@@ -36,7 +36,9 @@ define(function (require, exports, module) {
     $('body').append('<div id="sandbox" style="height: 1px; position:absolute;left: 2000px;"></div>');
 
     describe('PagingToolbar', function () {
+
         xdescribe("disabled suite", function () {
+
             var sandbox = $("#sandbox"),
                 context,
                 page,

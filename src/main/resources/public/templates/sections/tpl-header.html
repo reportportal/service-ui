@@ -32,19 +32,19 @@
                     <i class="material-icons arrow_drop_down">arrow_drop_down</i>
                 </a>
                 <ul class="dropdown-menu rp-mobile-position clearfix" role="menu" id="userNavigator">
-                    <li class="<%= isActive %> col-xs-6 col-sm-12">
+                    <li class="col-xs-6 col-sm-12">
                         <a href="#user-profile" class="mem-set user-id">
                             <span class="custom-padding"><%= data.text.topMenu.profile %></span>
                         </a>
                     </li>
                     <% if(data.isAdmin) { %>
-                        <li class="<%= isActive %> col-xs-6 col-sm-12">
+                        <li class="col-xs-6 col-sm-12">
                             <a href="#administrate" id="administrate" class="admin-section" data-js-administrate-page-link>
                                 <span class="custom-padding"><%= data.text.topMenu.administrate %></span>
                             </a>
                         </li>
                     <% } %>
-                    <li class="<%= isActive %> col-xs-6 col-sm-12">
+                    <li class="col-xs-6 col-sm-12">
                         <a href="#login" id="logout">
                             <span class="custom-padding"><%= data.text.topMenu.logout %></span>
                         </a>
@@ -63,7 +63,7 @@
                 <ul class="dropdown-menu user-projects rp-mobile-position clearfix" role="menu">
                     <% _.each(data.projects, function (project) { %>
                         <% var isActive = (project === data.project.projectId) ? 'active' : ''; %>
-                        <li class="<%= isActive %> col-xs-12 col-sm-12 text-uppercase"
+                        <li class="col-xs-12 col-sm-12 text-uppercase"
                             id="project-<%= project %>">
                             <a class=" rp-desktop"
                                 href="#"
