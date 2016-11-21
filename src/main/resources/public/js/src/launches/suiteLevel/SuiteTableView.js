@@ -62,6 +62,7 @@ define(function (require, exports, module) {
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.onChangeSelectionParameters);
             this.listenTo(this.collectionItems, 'reset change:select', _.debounce(this.onResetCollection, 100));
             this.onChangeSelectionParameters();
+            this.setupStickyHeader();
         },
         onResetCollection: function() {
             var notSelectModels = this.collectionItems.where({select: false});
@@ -114,7 +115,7 @@ define(function (require, exports, module) {
         },
         setupStickyHeader: function() {
             this.destroyStickyHeader();
-            this.stickyHeader = new StickyHeader({fixedBlock: $('[data-js-fixed-header]', this.$el), topMargin: 0});
+            this.stickyHeader = new StickyHeader({fixedBlock: $('[data-js-fixed-header]', this.$el), topMargin: 0, minWidthWindow: 900});
         },
         destroyStickyHeader: function() {
             this.stickyHeader && this.stickyHeader.destroy();
