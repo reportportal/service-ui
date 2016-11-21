@@ -62,7 +62,7 @@ define(function (require, exports, module) {
         },
 
         activateAccordion: function() {
-            if ($('[data-js-message]', this.$el).height() > 128) {
+            if (this.$el.innerHeight() > 128) {
                 this.$el.addClass('show-accordion');
             }
         }
