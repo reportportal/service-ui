@@ -162,9 +162,8 @@ define(function (require, exports, module) {
             this.unbind();
             this.$el.html('');
             delete this;
-        },
+        }
     });
-
 
     return StepTableView;
 });
