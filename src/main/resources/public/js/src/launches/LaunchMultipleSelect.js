@@ -58,7 +58,7 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickClose: function() {
-            this.model.set({select: false});
+            this.model.set({select: false, invalidMessage: ''});
         },
         destroy: function () {
             this.$el.remove();
@@ -204,9 +204,8 @@ define(function (require, exports, module) {
             this.currentAction = '';
         },
         onChangeSelect: function(model, select) {
-            var cloneModel = model.clone();
             if(select) {
-                !this.collection.get(model.get('id')) && this.collection.add(cloneModel);
+                !this.collection.get(model.get('id')) && this.collection.add(model);
             } else {
                 this.collection.remove(model.get('id'));
             }

@@ -26,18 +26,107 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
+    var Service = require('coreService');
     var Localization = require('localization');
     var Textile = require('textile');
     var CoreService = require('coreService');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var ModalDefectEditor = require('modals/modalDefectEditor');
+    var SimpleTooltipView = require('tooltips/SimpleTooltipView');
 
     var config = App.getInstance();
+
+    var TicketView = Epoxy.View.extend({
+        template: 'tpl-Launch-step-log-defect-ticket',
+        tagName: 'a',
+        events: {
+            'click [data-js-issue-remove-ticket]': 'onClickRemove',
+            'mouseenter': 'onMouseEnter',
+        },
+        bindings: {
+            ':el': 'attr: {href: url}',
+            '[data-js-ticket-id]': 'text: ticketId',
+        },
+        initialize: function() {
+            this.render();
+            this.$el.attr('target', '_blank');
+            this.hoverAction = false;
+        },
+        render: function() {
+            this.$el.html(Util.templates(this.template, {}));
+        },
+        onClickRemove: function(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            this.model.collection.remove(this.model);
+        },
+        onMouseEnter: function() {
+            if(!this.hoverAction) {
+                this.hoverAction = true;
+                var self = this;
+                this.model.collection.getTicketInfo(this.model.get('ticketId'), this.model.get('systemId'))
+                    .done(function(data) {
+                        $('[data-js-tooltip-message]', self.$el).html('<strong>' + Localization.logs.summary +
+                            '</strong> ' + data.summary +' <br>' +
+                            '<strong>' + Localization.logs.status + '</strong> ' +
+                            ((data.status === 'Closed' || data.status === 'Resolved')?'<s>' + data.status + '</s>' : data.status)
+                        );
+                    })
+                    .fail(function() {
+                        $('[data-js-tooltip-message]', self.$el).html('<strong>'+ Localization.logs.ticketNotFound
+                            +'</strong>' + Localization.logs.ticketStatusProblem);
+                    })
+                    .always(function() {
+                        $('[data-js-preloader]', self.$el).addClass('hide');
+                    })
+            }
+
+        },
+        destroy: function() {
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            this.$el.remove();
+            delete this;
+        }
+    });
+    var TicketModel = Epoxy.Model.extend({
+        defaults: {
+            submitDate: 0,
+            submitter: '',
+            systemId: '',
+            ticketId: '',
+            url: '',
+        }
+    });
+    var TicketCollection = Backbone.Collection.extend({
+        model: TicketModel,
+        initialize: function() {
+            this.cacheAnswer = {};
+        },
+        getTicketInfo: function(ticketId, systemId) {
+            var async = $.Deferred();
+            var self = this;
+            if (this.cacheAnswer[ticketId] && this.cacheAnswer[ticketId][systemId]) {
+                async.resolve(this.cacheAnswer[ticketId][systemId]);
+            } else {
+                Service.getBtsTicket(ticketId, systemId)
+                    .done(function (ticket) {
+                        self.cacheAnswer[ticketId] = {};
+                        self.cacheAnswer[ticketId][systemId] = ticket;
+                        async.resolve(ticket)
+                     })
+                    .fail(function () {
+                        async.reject();
+                    });
+            }
+            return async;
+        }
+    });
 
     var StepLogDefectTypeView = Epoxy.View.extend({
         template: 'tpl-launch-step-log-defect-type',
         events: {
-            'click [data-js-issue-remove-ticket]': 'onClickRemoveTicket',
             'click [data-js-edit-defect]': 'onClickEditDefect',
         },
         bindings: {
@@ -46,7 +135,6 @@ define(function (require, exports, module) {
             '[data-js-issue-color]': 'attr: {style: format("background-color: $1", issueColor)}',
             '[data-js-issue-title]': 'attr: {title: issueTitle}',
             '[data-js-edit-defect]': 'attr: {disabled: launch_isProcessing, title: editIssueTitle}, classes: {disabled: launch_isProcessing}',
-            '[data-js-issue-tickets]': 'html: issueTicketsHtml',
         },
         computeds: {
             issueComment: {
@@ -92,23 +180,6 @@ define(function (require, exports, module) {
                     return '';
                 }
             },
-            issueTicketsHtml: {
-                deps: ['issue'],
-                get: function(issue) {
-                    var issue = this.model.getIssue();
-                    if (issue && issue.externalSystemIssues) {
-                        var resultHtml = ''
-                        _.each(issue.externalSystemIssues, function(externalSystem) {
-                            resultHtml += '<a href=' + externalSystem.url + ' target="_blank">' +
-                                    '<span>' + externalSystem.ticketId + '</span>' +
-                                    '<i data-js-issue-remove-ticket="' + externalSystem.ticketId + '" class="material-icons">clear</i>'+
-                                 '</a>';
-                        })
-                        return resultHtml;
-                    }
-                    return '';
-                }
-            },
             editIssueTitle: {
                 deps: 'launch_isProcessing',
                 get: function(launch_isProcessing) {
@@ -120,6 +191,12 @@ define(function (require, exports, module) {
             this.defetTypesCollection = new SingletonDefectTypeCollection();
             this.defetTypesCollection.ready.done(function(){
                 this.render();
+                this.ticketsView = [];
+                this.ticketCollection = new TicketCollection();
+                this.listenTo(this.ticketCollection, 'reset', this.onResetTicketCollection);
+                this.listenTo(this.ticketCollection, 'remove', this.onRemoveTicket);
+                this.listenTo(this.model, 'change:issue', this.onChangeIssue);
+                this.onChangeIssue();
             }.bind(this));
         },
         render: function() {
@@ -128,7 +205,26 @@ define(function (require, exports, module) {
             }));
             this.applyBindings();
         },
-
+        onResetTicketCollection: function() {
+            var self = this;
+            while(self.ticketsView.length) {
+                (self.ticketsView.pop()).destroy();
+            }
+            var $container = $('[data-js-issue-tickets]', this.$el);
+            _.each(this.ticketCollection.models, function(model) {
+                var view = new TicketView({model: model});
+                $container.append(view.$el);
+                self.ticketsView.push(view);
+            })
+        },
+        onChangeIssue: function() {
+            var tickets = [];
+            var issue = this.model.getIssue();
+            if (issue && issue.externalSystemIssues) {
+                tickets = issue.externalSystemIssues;
+            }
+            this.ticketCollection.reset(tickets)
+        },
         onClickEditDefect: function() {
             var defectEditor = new ModalDefectEditor({
                 items: [this.model]
@@ -136,10 +232,8 @@ define(function (require, exports, module) {
             defectEditor.show();
         },
 
-        onClickRemoveTicket: function(e){
-            e.stopPropagation();
-            e.preventDefault();
-            var ticketId = $(e.currentTarget).data('js-issue-remove-ticket');
+        onRemoveTicket: function(ticketModel){
+            var ticketId = ticketModel.get('ticketId');
             var issue = this.model.getIssue();
             var newExternalSystem = _.reject(issue.externalSystemIssues, function (tk) {
                 return tk.ticketId === ticketId;

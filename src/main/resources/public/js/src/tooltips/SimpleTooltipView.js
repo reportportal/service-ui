@@ -27,9 +27,9 @@ define(function (require, exports, module) {
     var Localization = require('localization');
 
 
-    var tooltip = Epoxy.View.extend({
+    var SimpleTooltip = Epoxy.View.extend({
         template: 'tpl-launch-message-tooltip',
-        className: 'duration-tooltip',
+        className: 'simple-tooltip',
 
         initialize: function(options) {
             this.render(options);
@@ -37,6 +37,9 @@ define(function (require, exports, module) {
 
         render: function(options) {
             this.$el.html(Util.templates(this.template, {message: options.message}));
+            if (options.width) {
+                this.$el.css({width: options.width})
+            }
         },
 
         destroy: function () {
@@ -48,5 +51,5 @@ define(function (require, exports, module) {
         },
     });
 
-    return tooltip;
+    return SimpleTooltip;
 });
