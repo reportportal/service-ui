@@ -236,6 +236,7 @@
         vertical-align: top;
         line-height: 16px;
         display: none;
+        animation: flash 4s infinite alternate;
         &.visible {
           display: inline-block;
         }
