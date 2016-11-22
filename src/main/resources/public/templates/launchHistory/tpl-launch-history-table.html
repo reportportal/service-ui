@@ -9,7 +9,7 @@ nameWidth = 12 - cellWidth*data.launches.length %>
                 </div>
             </div>
             <% _.forEach(data.launches, function(launch){ %>
-            <div class="col-md-<%= cellWidth %> history-col<% if(launch.launchStatus == 'IN_PROGRESS'){ %>in-progress progress-striped<% } %>">
+            <div class="col-md-<%= cellWidth %> history-col <% if(launch.launchStatus == 'IN_PROGRESS'){ %>in-progress<% } %>">
                 <div class="history-grid-th">
                     <span class="history-grid-th-name">
                         <%= data.text.launches.launchHash %><%= launch.launchNumber %>

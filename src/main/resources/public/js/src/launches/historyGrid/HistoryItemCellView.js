@@ -30,7 +30,6 @@ define(function (require, exports, module) {
     var MessageTooltipView = require('tooltips/MessageTooltipView');
     var LaunchSuiteDefectsHoverView = require('launches/common/LaunchSuiteDefectsHoverView');
     var Textile = require('textile');
-    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -39,18 +38,20 @@ define(function (require, exports, module) {
         template: 'tpl-launch-history-item-cell',
         issueTpl: 'tpl-launch-history-item-issue',
         statisticsTpl: 'tpl-launch-history-item-stats',
-        className: function () {
-            var cellWidth = this.getCellWidth(),
-                statusCls = 'history-status-' + this.model.get('status');
-            return 'col-md-' + cellWidth + ' history-col ' + statusCls;
+        attributes: function(){
+            return {'data-js-history-cell': ''}
         },
         bindings: {
+            '[data-js-history-cell]': 'getClass: status',
             '[data-js-history-statistics]': 'getStatistics: statistics',
             '[data-js-history-issue]': 'getIssue: issue'
         },
         bindingHandlers: {
             getClass: {
-                set: function ($el) {
+                set: function($el, status) {
+                    var cellWidth = this.view.getCellWidth(),
+                        statusCls = 'history-status-' + status;
+                    $el.addClass('col-md-' + cellWidth + ' history-col ' + statusCls);
 
                 }
             },
@@ -118,7 +119,7 @@ define(function (require, exports, module) {
             'mouseenter [data-tooltip-type]': 'showTooltip'
         },
         render: function () {
-            this.$container.append(this.$el.html(Util.templates(this.template, {
+            this.$container.append(this.$el.addClass().html(Util.templates(this.template, {
                 cellWidth: this.getCellWidth()
             })));
         },
@@ -140,7 +141,7 @@ define(function (require, exports, module) {
                     var tooltip = new MessageTooltipView({message: el.data('tooltip-content')});
                     return tooltip.$el.html();
                 }, $hoverElement, $hoverElement);
-                el.tooltip("open");
+                el.tooltip('show');
             }
             else {
                 var hoverView = new LaunchSuiteDefectsHoverView({

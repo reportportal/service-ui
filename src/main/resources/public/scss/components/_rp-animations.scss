@@ -28,3 +28,12 @@
     transform: rotate(360deg);
   }
 }
+
+@keyframes progress-stripes-large {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -60px 0;
+  }
+}
