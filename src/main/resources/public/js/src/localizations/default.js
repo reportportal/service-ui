@@ -842,7 +842,7 @@ define(['util'], function () {
         },
 
         launchesHeaders: {
-            start_time: 'Start',
+            start_time: 'Start Time',
             start_time_short: 'Start',
             end_time: 'Finish time',
             name: 'Name',
