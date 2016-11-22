@@ -44,19 +44,19 @@
         <% } %>
     </ul>
     <ul class="user-menu">
-        <li class="<%= isActive %> col-xs-6 col-sm-12">
+        <li class="col-xs-6 col-sm-12">
             <a href="#user-profile" class="mem-set user-id">
                 <span class="custom-padding"><%= data.text.topMenu.profile %></span>
             </a>
         </li>
         <% if(data.isAdmin) { %>
-        <li class="<%= isActive %> col-xs-6 col-sm-12">
+        <li class="col-xs-6 col-sm-12">
             <a href="#administrate" id="administrate" class="admin-section" data-js-administrate-page-link>
                 <span class="custom-padding"><%= data.text.topMenu.administrate %></span>
             </a>
         </li>
         <% } %>
-        <li class="<%= isActive %> col-xs-6 col-sm-12">
+        <li class="col-xs-6 col-sm-12">
             <a href="#login" id="logout" >
                 <span class="custom-padding"><%= data.text.topMenu.logout %></span>
             </a>

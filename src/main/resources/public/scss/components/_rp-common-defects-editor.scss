@@ -354,6 +354,10 @@ div.inline-editor {
     ul, ol {
         margin: 0 0 9px 2em;
     }
+
+    ol > li {
+        list-style: decimal;
+    }
 }
 
 .defect-desc ul li,

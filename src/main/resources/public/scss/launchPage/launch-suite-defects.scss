@@ -68,4 +68,19 @@
       transition: visibility 0s linear 0.4s, opacity 0.2s ease 0.4s;
     }
   }
+  @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+    .chart-overflow {
+      .total-overflow {
+        padding: 0;
+        min-width: 0;
+        right: 0;
+        position: relative;
+        span {
+          border: none;
+          background: none;
+          font-family: OpenSansRegular;
+        }
+      }
+    }
+  }
 }

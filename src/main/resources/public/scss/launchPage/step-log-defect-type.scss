@@ -81,7 +81,23 @@
         vertical-align: top;
         padding: 2px;
       }
-
+      &:hover {
+        .ui-tooltip {
+          visibility: visible;
+          opacity: 1;
+          transition: visibility 0s linear 0.4s, opacity 0.2s ease 0.4s;
+        }
+      }
+    }
+    .ui-tooltip {
+      width: 200px;
+      left: 50%;
+      margin-left: -100px;
+      top: 120%;
+      text-align: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s linear 0s;
     }
   }
   .defect-type-description {

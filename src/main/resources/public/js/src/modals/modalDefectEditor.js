@@ -178,7 +178,7 @@ define(function (require, exports, module) {
                 issues = [],
                 replaceComments = this.$replaceComments.is(':checked');
             _.forEach(this.items, function (item) {
-                var issue = {};
+                var issue = item.getIssue();
                 if((replaceComments && this.isMultipleEdit() && comment) || (!this.isMultipleEdit() && comment)){
                     issue.comment = comment;
                 }

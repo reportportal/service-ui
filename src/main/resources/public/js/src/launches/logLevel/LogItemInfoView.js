@@ -73,7 +73,7 @@ define(function (require, exports, module) {
             '[data-js-item-gallery]': 'classes: {hide: not(attachments)}',
             '[data-js-item-details]': 'classes: {hide: not(itemDetails)}',
             '[data-js-item-activity]': 'classes: {hide: not(activity)}',
-            '[data-js-match]': 'classes: {hide: not(parent_launch_investigate)}',
+            '[data-js-match]': 'classes: {hide: not(parent_launch_investigate), disabled: parent_launch_isProcessing}',
             '[data-js-post-bug]': 'classes: {disabled: validatePostBug}, attr: {title: postBugTitle}',
             '[data-js-load-bug]': 'classes: {disabled: validateLoadBug}, attr: {title: loadBugTitle}',
         },
@@ -114,6 +114,7 @@ define(function (require, exports, module) {
         initialize: function (options) {
             this.appModel = new SingletonAppModel()
             this.viewModel = options.itemModel;
+            this.launchModel = options.launchModel;
             this.model = new (Epoxy.Model.extend({
                 defaults: {
                     stackTrace: false,
@@ -123,6 +124,8 @@ define(function (require, exports, module) {
                 }
             }));
             this.listenTo(this.model, 'change:stackTrace change:attachments change:itemDetails change:activity', this.onChangeTabModel);
+            this.listenTo(this.launchModel, 'change:isProcessing', this.onChangeLaunchProcessing);
+            this.onChangeLaunchProcessing();
             this.render();
             if(this.validateForIssue()){
                 this.issueView = new StepLogDefectTypeView({
@@ -151,6 +154,9 @@ define(function (require, exports, module) {
                 parentModel: this.model,
             });
         },
+        onChangeLaunchProcessing: function() {
+            this.viewModel.set({parent_launch_isProcessing: this.launchModel.get('isProcessing')});
+        },
         validateForIssue: function(){
             return !!this.viewModel.get('issue');
         },
@@ -164,7 +170,7 @@ define(function (require, exports, module) {
             var self = this;
             call('POST', Urls.launchMatchUrl(this.viewModel.get('launchId')))
                 .done(function (response) {
-                    self.viewModel.set('isProcessing', true);
+                    self.launchModel.set({isProcessing: true});
                     Util.ajaxSuccessMessenger("startAnalyzeAction");
                 })
                 .fail(function (error) {
@@ -177,7 +183,7 @@ define(function (require, exports, module) {
             }
         },
         toggleModelField: function (field) {
-            this.model.set(field, true);
+            this.model.set(field, !this.model.get(field));
         },
 
         render: function () {

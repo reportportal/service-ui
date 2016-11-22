@@ -64,6 +64,11 @@
       display: none;
     }
   }
+  @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+    .mobile-hide {
+      display: none;
+    }
+  }
 }
 
 .launch-body-wrapper {

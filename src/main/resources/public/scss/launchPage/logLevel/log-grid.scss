@@ -34,7 +34,9 @@
     overflow: hidden;
     padding: 15px 0;
     line-height: 18px;
-    max-height: 130px;
+    &.level-ERROR, &.level-TRACE, &.level-DEBUG {
+      max-height: 130px;
+    }
     &.open {
       max-height: 100%;
       padding-bottom: 40px;

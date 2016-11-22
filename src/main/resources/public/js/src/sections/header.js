@@ -135,7 +135,6 @@ define(function (require, exports, module) {
             }
             this.$el.find('a[href^="' + this.currentHash + '"]', this.$el).addClass('active');
             this.$el.find('#projectSelector a[data-href="' + this.project.projectId + '"]').parent().addClass('active'); // highlightes selected project in dropdown-list
-
         },
 
         clearActives: function () {

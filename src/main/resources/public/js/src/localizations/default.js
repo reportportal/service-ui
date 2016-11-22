@@ -842,7 +842,7 @@ define(['util'], function () {
         },
 
         launchesHeaders: {
-            start_time: 'Start',
+            start_time: 'Start Time',
             start_time_short: 'Start',
             end_time: 'Finish time',
             name: 'Name',
@@ -859,13 +859,17 @@ define(['util'], function () {
             skipped_short: 'SKP',
             product_bug: 'Product Bug',
             product_bug_short: 'Product Bug',
+            product_bug_super_short: 'PB',
             auto_bug: 'Auto Bug',
             automation_bug: 'Auto Bug',
             automation_bug_short: 'Auto Bug',
+            automation_bug_super_short: 'AB',
             system_issue: 'System Issue',
             system_issue_short: 'System Issue',
+            system_issue_super_short: 'SI',
             to_investigate: 'To Investigate',
             to_investigate_short: 'To Invest',
+            to_investigate_super_short: 'TI',
             no_defect: 'No Defect',
             type: 'Method Type',
             type_short: 'Method Type',
@@ -908,9 +912,9 @@ define(['util'], function () {
             prevTestItem: "Previous Test Item",
             nextTestItem: "Next Test Item",
             filterAttachments: 'Logs with Attachments',
-            notFoundActivity: 'There is no Activity to display',
-            notFoundAttachments: 'There is no Attachments to display',
-            notFoundStackTrace: 'There is no Stack Trace to display',
+            notFoundActivity: 'No activities to display',
+            notFoundAttachments: 'No attachments to display',
+            notFoundStackTrace: 'No Stack Trace to display',
             nextError: 'Next Error',
         },
 
@@ -1184,7 +1188,8 @@ define(['util'], function () {
             personalProjects: 'Personal projects',
             searchByName: "Search by Name",
             TLS: 'TLS',
-            SSL: 'SSL'
+            SSL: 'SSL',
+            emailError: 'Test connection was failed:'
         },
 
         members: {

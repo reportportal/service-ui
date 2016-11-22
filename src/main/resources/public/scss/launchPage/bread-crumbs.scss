@@ -61,6 +61,7 @@
         margin-left: 5px;
         vertical-align: top;
         display: none;
+        animation: flash 4s infinite alternate;
         &.visible {
           display: inline-block;
         }
