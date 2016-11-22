@@ -329,7 +329,7 @@ define(function (require, exports, module) {
                 allCasesEntity = _.find(entities, function(entity){
                     return entity.filtering_field == 'has_childs';
                 });
-            return allCasesEntity && allCasesEntity.value;
+            return !!allCasesEntity;
         },
         parse: function (response) {
             var self = this;
@@ -357,7 +357,7 @@ define(function (require, exports, module) {
                     var keys = _.keys(test.path_names);
                     return test.path_names[keys[0]];
                 }).value();
-                this.reset(sortedByParents);
+                this.reset(response.content);
             }
             else {
                 this.reset(response.content);
