@@ -24,15 +24,6 @@
   }
   .gallery-preview {
     position: relative;
-    &:before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 30px;
-      right: 30px;
-      height: 1px;
-      background: $COLOR--gray-91;
-    }
     .swipe-gallery-component {
       width: 100%;
       height: 80px;
@@ -87,7 +78,18 @@
     }
   }
   .gallery-main {
-    height: 365px;
+    &>.swipe-gallery-component {
+      height: 365px;
+      &:before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 30px;
+        right: 30px;
+        height: 1px;
+        background: $COLOR--gray-91;
+      }
+    }
     .ul_overflow {
       width: 650px;
       margin: 0 auto;
