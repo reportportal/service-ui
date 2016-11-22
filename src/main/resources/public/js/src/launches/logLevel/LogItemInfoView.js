@@ -177,7 +177,7 @@ define(function (require, exports, module) {
             }
         },
         toggleModelField: function (field) {
-            this.model.set(field, true);
+            this.model.set(field, !this.model.get(field));
         },
 
         render: function () {
