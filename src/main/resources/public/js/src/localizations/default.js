@@ -912,9 +912,9 @@ define(['util'], function () {
             prevTestItem: "Previous Test Item",
             nextTestItem: "Next Test Item",
             filterAttachments: 'Logs with Attachments',
-            notFoundActivity: 'There is no Activity to display',
-            notFoundAttachments: 'There is no Attachments to display',
-            notFoundStackTrace: 'There is no Stack Trace to display',
+            notFoundActivity: 'No activities to display',
+            notFoundAttachments: 'No attachments to display',
+            notFoundStackTrace: 'No Stack Trace to display',
             nextError: 'Next Error',
         },
 
