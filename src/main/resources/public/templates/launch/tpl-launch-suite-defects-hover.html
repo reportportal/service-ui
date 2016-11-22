@@ -1,25 +1,24 @@
 <div class="launch-suite-defect-hover">
     <div class="defect-title">
-        <a href="<%- data.total.url %>">
+        <<% if(!data.noLink){ %>a href="<%- data.total.url %>"<% } else { %>span<% } %> class="defect-row">
            <span class="defect-name">
              <span class="defect-color" style="background: <%- data.total.color %>"></span>
                 <%- data.total.name %>
             </span>
             <span class="defect-value"><%= data.total.value %></span>
-        </a>
+        </<% if(!data.noLink){ %>a<% } else { %>span<% } %>>
     </div>
     <% if(data.subDefects.length){ %>
     <ul>
         <% _.each(data.subDefects, function(defect){ %>
         <li>
-            <a href="<%- defect.url %>">
+            <<% if(!data.noLink){ %>a href="<%- defect.url %>"<% } else { %>span<% } %> class="defect-row">
                 <span class="defect-name">
                     <span class="defect-color" style="background: <%- defect.color %>"></span>
                     <%- defect.name %>
                 </span>
                 <span class="defect-value"><%= defect.value %></span>
-            </a>
-
+            </<% if(!data.noLink){ %>a<% } else { %>span<% } %>>
         </li>
         <% }); %>
     </ul>

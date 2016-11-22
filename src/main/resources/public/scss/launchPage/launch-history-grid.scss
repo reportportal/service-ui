@@ -23,38 +23,6 @@ $linkColor: #1a9cb0;
 $toInvestigateColor: #fff;
 $borderRadius100: 100px;
 
-%centerBlock {
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-%defectPieSize {
-    width: 48px;
-    height: 48px;
-}
-
-%caret {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 7px;
-    width: 0;
-    height: 0;
-    overflow: hidden;
-    border-style: solid;
-}
-
-@mixin setCaretColorType($color, $type) {
-    @if $type == 'hover' {
-        border-width: 0 4px 4px 4px;
-        border-color: transparent transparent $color transparent;
-    }
-    @if $type == 'default' {
-        border-width: 4px 4px 0 4px;
-        border-color: $color transparent transparent transparent;
-    }
-}
-
 .rp-history-grid {
     padding: 0;
     border: none;
@@ -127,6 +95,17 @@ $borderRadius100: 100px;
 
                 &.nd > span, &.pb > span, &.si > span {
                     color: #fff;
+                }
+                .defect-hover {
+                    text-align: left;
+                    .defect-name {
+                        font-family: $OpenSansRegular;
+                    }
+                    .defect-title {
+                        .defect-name {
+                            font-family: $OpenSansSemibold
+                        }
+                    }
                 }
             }
             .history-col-content {

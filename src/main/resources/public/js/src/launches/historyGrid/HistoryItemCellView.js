@@ -28,7 +28,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var MessageTooltipView = require('tooltips/MessageTooltipView');
-    // var LaunchSuiteDefectsTooltipView = require('tooltips/LaunchSuiteDefectsTooltipView');
+    var LaunchSuiteDefectsHoverView = require('launches/common/LaunchSuiteDefectsHoverView');
     var Textile = require('textile');
     var Localization = require('localization');
 
@@ -140,17 +140,15 @@ define(function (require, exports, module) {
                     var tooltip = new MessageTooltipView({message: el.data('tooltip-content')});
                     return tooltip.$el.html();
                 }, $hoverElement, $hoverElement);
+                el.tooltip("open");
             }
             else {
-                var $hoverElement = el,
-                    self = this;
-                // Util.appendTooltip(function() {
-                //     var tooltip = new LaunchSuiteDefectsTooltipView({
-                //         type: type,
-                //         model: self.model
-                //     });
-                //     return tooltip.$el.html();
-                // }, $hoverElement, $hoverElement);
+                var hoverView = new LaunchSuiteDefectsHoverView({
+                    el:  $('.defect-hover', el),
+                    type: type,
+                    noLink: true,
+                    model: this.model
+                });
             }
         },
         destroy: function () {

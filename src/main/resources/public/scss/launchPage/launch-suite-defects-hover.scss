@@ -46,8 +46,10 @@
     padding-right: 4px;
     color: $COLOR--windows-blue;
   }
-  a {
+  .defect-row {
     display: block;
+  }
+  a.defect-row {
     &:hover {
       .defect-name {
         color: $COLOR--charcoal-grey;

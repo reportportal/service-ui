@@ -31,6 +31,7 @@ define(function (require, exports, module) {
         template: 'tpl-launch-suite-defects-hover',
         initialize: function(options) {
             this.type = options.type;
+            this.noLink = options.noLink;
             this.render();
         },
         render: function() {
@@ -58,6 +59,7 @@ define(function (require, exports, module) {
             var allDefects = Util.getSubDefectsLocators(this.type, allSubDefects).join('%2C');
             return {
                 subDefects: subDefects,
+                noLink: this.noLink,
                 total: {
                     color: defectsCollection.getMainColorByType(this.type),
                     name: Localization.infoLine[this.type],
