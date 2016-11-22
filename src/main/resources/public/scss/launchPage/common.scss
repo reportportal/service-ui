@@ -220,6 +220,10 @@
       color: $COLOR--windows-blue;
       a {
         word-wrap: break-word;
+        &.not-link {
+          cursor: default;
+          color: $COLOR--gray-47;
+        }
       }
       .autoanalyze {
         width: auto;

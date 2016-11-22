@@ -80,7 +80,6 @@ define(function (require, exports, module) {
                         $('[data-js-preloader]', self.$el).addClass('hide');
                     })
             }
-
         },
         destroy: function() {
             this.undelegateEvents();
