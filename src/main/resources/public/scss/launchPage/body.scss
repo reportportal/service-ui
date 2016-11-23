@@ -26,6 +26,24 @@
   .rp-btn {
     vertical-align: top;
   }
+  .counter {
+      position: absolute;
+      min-width: 15px;
+      height: 15px;
+      text-align: center;
+      vertical-align: middle;
+      color: $COLOR--white-default;
+      background-color: $COLOR--orange-red;
+      bottom: 50%;
+      right: 3px;
+      font-size: 10px;
+      line-height: 10px;
+      padding: 1px 4px;
+      margin: 0px 0px 5px 1px;
+      border: 1px solid $COLOR--white-default;
+      border-radius: 100px;
+      animation: bounce 2s infinite;
+  }
   .info-wrapper, .refine-wrapper {
     width: 100%;
     float: left;
