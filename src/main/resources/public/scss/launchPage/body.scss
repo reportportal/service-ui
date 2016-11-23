@@ -26,6 +26,9 @@
   .rp-btn {
     vertical-align: top;
   }
+  .control-buttons {
+    margin-bottom: 10px;
+  }
   .counter {
       position: absolute;
       min-width: 15px;
@@ -47,12 +50,12 @@
   .info-wrapper, .refine-wrapper {
     width: 100%;
     float: left;
-    margin-top: 10px;
     border-top: 1px solid #e9e9e9;
   }
   .refine-wrapper {
     padding: 10px 15px 10px 15px;
     margin-top: 0px;
+    margin-top: 10px;
     margin-bottom: -10px;
     border-bottom: 1px solid #e9e9e9;
   }
