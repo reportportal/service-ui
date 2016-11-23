@@ -426,6 +426,12 @@ a.itemsPerPage {
     letter-spacing: normal;
     word-spacing: normal;
 }
+.tooltip {
+    ol > li {
+        list-style: decimal;
+        list-style-position: inside;
+    }
+}
 /*-----------*/
 
 .rp-btn-group .dropdown-menu,

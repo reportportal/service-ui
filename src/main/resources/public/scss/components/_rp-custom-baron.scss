@@ -76,13 +76,7 @@
 }
 
 .select2-drop-active .baron.baron__root .select2-results {
-     // min-height: 34px !important;
-}
-
-@-moz-document url-prefix() {
-    .select2-drop-active .baron.baron__root .select2-results {
-        min-height: 34px !important;
-    }
+      min-height: 34px !important;
 }
 
 .select2-results {
@@ -94,10 +88,6 @@
 .select2-results .select2-no-results {
     font-size: 12px;
     padding: 5px;
-}
-
-.select2-drop .baron__root .select2-results {
-    min-height: 15px;
 }
 
 .baron .baron__track {
