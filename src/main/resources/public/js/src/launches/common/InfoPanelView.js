@@ -71,7 +71,7 @@ define(function (require, exports, module) {
             },
             passedStatistics: function(){
                 var stats = this.getBinding('statistics');
-                return stats['executions'].passed;
+                return this.getExecutionStats(stats, 'passed');
             },
             productBugTotal: function(){
                 var stats = this.getBinding('statistics');

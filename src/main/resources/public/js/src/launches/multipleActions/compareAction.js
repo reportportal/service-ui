@@ -34,15 +34,10 @@ define(function (require, exports, module) {
 
     var CompareAction = Epoxy.View.extend({
         initialize: function(options) {
-            var self = this;
-            this.async = $.Deferred();
             var modal = new ModalLaunchesCompare({
                 items: options.items,
             });
-            modal.show()
-                .always(function() {
-                    self.async.resolve();
-                })
+            this.async = modal.show();
         },
         getAsync: function() {
             return this.async;
