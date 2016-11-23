@@ -220,6 +220,10 @@
       color: $COLOR--windows-blue;
       a {
         word-wrap: break-word;
+        &.not-link {
+          cursor: default;
+          color: $COLOR--gray-47;
+        }
       }
       .autoanalyze {
         width: auto;
@@ -232,6 +236,7 @@
         vertical-align: top;
         line-height: 16px;
         display: none;
+        animation: flash 4s infinite alternate;
         &.visible {
           display: inline-block;
         }
@@ -243,6 +248,7 @@
       margin: 4px 0 0 1px;
       word-wrap: break-word;
     }
+
     .rp-grid-tags {
       margin-top: 13px;
       font-size: 12px;
@@ -268,6 +274,12 @@
           }
         }
       }
+      .mobile-tag {
+        display: none;
+        span {
+          color: $COLOR--charcoal-grey;
+        }
+      }
     }
     @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
       h5 {
@@ -277,8 +289,12 @@
         font-size: 14px;
         margin: 7px 0 0 0px;
       }
+
       .rp-grid-tags {
         font-size: 14px;
+        .mobile-tag {
+          display: inline-block;
+        }
         & > li {
           i {
             font-size: 24px;

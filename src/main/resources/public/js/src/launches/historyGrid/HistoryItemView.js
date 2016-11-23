@@ -50,8 +50,9 @@ define(function (require, exports, module) {
                 get: function(launches) {
                     var hash = window.location.hash,
                         link = hash.split('?')[0],
-                        last = launches[_.last(_.keys(launches))][0];
-                    return link + (!last.has_childs ? '?log.item=' : '/') + last.id;
+                        lastLaunch = _.last(this.launches.models);
+                    var lastItem = launches[lastLaunch.get('launchNumber')][0];
+                    return link + (!lastItem.has_childs ? '?log.item=' : '/') + lastItem.id;
                 }
             }
         },

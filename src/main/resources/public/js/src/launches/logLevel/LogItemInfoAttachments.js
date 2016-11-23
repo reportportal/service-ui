@@ -181,6 +181,7 @@ define(function (require, exports, module) {
             this.$el.html('<div class="gallery-image" data-js-gallery-image></div>');
         },
         onClickGalleryImage: function() {
+            this.model.trigger('click:min:item', this.model);
             this.model.trigger('change:active:slide', this.model);
         }
     });
@@ -241,15 +242,7 @@ define(function (require, exports, module) {
             this.currentLoadCollection = new Backbone.Collection();
             this.totalPages = 1;
             this.curPage = 1;
-            this.galleryMain = new SwipeGalleryComponent({
-                el: $('[data-js-main-gallery]', self.$el),
-                collection: this.collectionMain,
-                itemView: ItemAttachmentMainView,
-                options: {
-                    // mouseEvents: true,
-                    loop: true,
-                }
-            });
+
             this.galleryPreviews = new SwipeGalleryComponent({
                 el: $('[data-js-min-gallery]',self.$el),
                 collection: this.collectionPreviews,
@@ -261,14 +254,30 @@ define(function (require, exports, module) {
             });
             this.listenTo(this.collectionPreviews, 'change:itemModels', this.updateLoadItems);
             this.listenTo(this.galleryPreviews, 'change:slide', this.onChangeSlide);
-            this.listenTo(this.galleryMain, 'change:slide', this.onChangeGalleryMainSlide);
+
             this.listenTo(this.currentLoadCollection, 'change:active:slide', this.onChangeMainActiveSlide);
+            this.listenTo(this.currentLoadCollection, 'click:min:item', this.activateMainGallery);
             this.listenTo(this.galleryPreviews, 'after:click:right after:click:left', this.onClickPreviewNav);
         },
         onShow: function(model, show) {
             if(show && !this.isLoad) {
                 this.isLoad = true;
                 this.load();
+            }
+        },
+        activateMainGallery: function() {
+            if(!this.galleryMain) {
+                this.galleryMain = new SwipeGalleryComponent({
+                    el: $('[data-js-main-gallery]', this.$el),
+                    collection: this.collectionMain,
+                    itemView: ItemAttachmentMainView,
+                    options: {
+                        // mouseEvents: true,
+                        loop: true,
+                    }
+                });
+                this.listenTo(this.galleryMain, 'change:slide', this.onChangeGalleryMainSlide);
+                this.galleryMain.setRenderStatus();
             }
         },
         onChangeMainActiveSlide: function(activeModel) {
@@ -341,7 +350,7 @@ define(function (require, exports, module) {
 
                     self.$main.removeClass('load');
                     self.galleryPreviews.setRenderStatus();
-                    self.galleryMain.setRenderStatus();
+                    self.galleryMain && self.galleryMain.setRenderStatus();
                     self.updateArrowState(self.curPage);
                     self.updateArrowMainGallery(0)
                 })

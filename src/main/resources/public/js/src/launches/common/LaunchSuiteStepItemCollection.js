@@ -324,6 +324,13 @@ define(function (require, exports, module) {
         onRemove: function() {
             this.load(this.lastParams);
         },
+        validateForAllCases: function(){
+            var entities = this.filterModel.getEntitiesObj(),
+                allCasesEntity = _.find(entities, function(entity){
+                    return entity.filtering_field == 'has_childs';
+                });
+            return !!allCasesEntity;
+        },
         parse: function (response) {
             var self = this;
             _.each(response.content, function(modelData) {
@@ -342,7 +349,19 @@ define(function (require, exports, module) {
                     });
                 }
             });
-            this.reset(response.content);
+            if(this.validateForAllCases()){
+                var sortedByParents = _(response.content).chain().sortBy(function (test) {
+                    var keys = _.keys(test.path_names);
+                    return test.path_names[keys[1]];
+                }).sortBy(function (test) {
+                    var keys = _.keys(test.path_names);
+                    return test.path_names[keys[0]];
+                }).value();
+                this.reset(response.content);
+            }
+            else {
+                this.reset(response.content);
+            }
             // this.reset([{
             //         description: "dashboard_tests",
             //         end_time: 1472205024785,

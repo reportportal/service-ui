@@ -42,10 +42,6 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-load-more]': 'onLoadMore',
         },
-        bindings: {
-        },
-        computeds: {
-        },
         initialize: function(options) {
             this.filterModel = options.filterModel;
             this.collectionItems = options.collectionItems;
@@ -79,7 +75,6 @@ define(function (require, exports, module) {
             });
         },
         load: function(){
-            //this.validateForLoad();
             this.table && this.table.destroy();
             this.toggleIsLoad('show');
             Service.getHistoryData(this.getItemsForLoad(), this.depth)
@@ -100,16 +95,16 @@ define(function (require, exports, module) {
                 var key = launch.launchNumber;
                 _.forEach(launch.resources, function(item){
                     var newItem = {
-                        name: item.name, description: item.description, tags: item.tags, launches: {}
+                        name: item.name, description: item.description || '' , tags: item.tags, launches: {}
                     };
                     newItem.launches[key] = [item];
                     if (_.isEmpty(items)) {
                         items.push(newItem);
                     } else {
                         var oneName = _.find(items, function (obj) {
-                            var name = obj.name === item.name,
-                                description = obj.description === item.description,
-                                tags = _.size(obj.tags) === _.size(item.tags) && _.every(obj.tags, function(i){return _.contains(item.tags, i)});
+                            var name = obj.name === newItem.name,
+                                description = obj.description === newItem.description,
+                                tags = _.size(obj.tags) === _.size(newItem.tags) && _.every(obj.tags, function(i){return _.contains(newItem.tags, i)});
                             return (name && description && tags);
                         });
                         if (!oneName) {
@@ -126,6 +121,7 @@ define(function (require, exports, module) {
                 delete launch.resources
                 launches.push(launch);
             });
+            launches.sort(function(a, b){ return parseInt(a.startTime) - parseInt(b.startTime); });
             this.launches.add(launches, {merge: true});
             this.items.add(items, {merge: true});
         },

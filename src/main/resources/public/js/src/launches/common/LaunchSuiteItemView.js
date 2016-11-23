@@ -53,7 +53,7 @@ define(function (require, exports, module) {
         bindings: {
             ':el': 'classes: {"select-state": select}',
             '[data-js-analize-label]': 'classes: {visible: isProcessing}',
-            '[data-js-name-link]': 'attr: {href: url}',
+            '[data-js-name-link]': 'attr: {href: url}, classes: {"not-link": not(url)}',
             '[data-js-name]': 'text: name',
             '[data-js-launch-number]': 'text: numberText',
             '[data-js-item-edit]': 'classes: {hide: hideEdit}',
@@ -248,8 +248,11 @@ define(function (require, exports, module) {
         },
         onClickName: function(e) {
             e.preventDefault();
-            this.model.trigger('drill:item', this.model);
-            config.router.navigate($(e.currentTarget).attr('href'), {trigger: true});
+            var href = $(e.currentTarget).attr('href');
+            if(href != '') {
+                this.model.trigger('drill:item', this.model);
+                config.router.navigate(href, {trigger: true});
+            }
         },
         onClickEdit: function() {
             var modal = new ModalLaunchItemEdit({

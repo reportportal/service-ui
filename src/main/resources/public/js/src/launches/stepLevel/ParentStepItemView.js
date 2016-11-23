@@ -22,34 +22,45 @@ define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
+    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var App = require('app');
     var Localization = require('localization');
+    var ItemDurationView = require('launches/common/ItemDurationView');
+    var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
+    var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
 
+    var config = App.getInstance();
 
-    var SimpleTooltip = Epoxy.View.extend({
-        template: 'tpl-launch-message-tooltip',
-        className: 'simple-tooltip',
-
+    var ParentStepItemView = Epoxy.View.extend({
+        template: 'tpl-launch-step-parent',
+        events: {
+        },
+        bindings: {
+        },
+        bindingHandlers: {
+        },
+        computeds: {
+        },
         initialize: function(options) {
-            this.render(options);
+            this.render();
         },
-
-        render: function(options) {
-            this.$el.html(Util.templates(this.template, {message: options.message}));
-            if (options.width) {
-                this.$el.css({width: options.width})
-            }
+        render: function() {
+            this.$el.html(Util.templates(this.template, {model: this.model.toJSON(), getParentUrl: this.getParentUrl}));
         },
-
+        getParentUrl: function(id){
+            var url = window.location.hash;
+            return url.split('?')[0] + "/" + id;
+        },
         destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
-            this.$el.remove();
+            this.$el.html('');
             delete this;
         },
     });
 
-    return SimpleTooltip;
+    return ParentStepItemView;
 });

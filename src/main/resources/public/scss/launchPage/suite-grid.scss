@@ -36,12 +36,6 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
     &.name-grid-cell {
       padding-left: 20px;
       width: $launch-name-cell-width;
-      .mobile-time {
-        display: none;
-        span {
-          color: $COLOR--charcoal-grey;
-        }
-      }
       &.rp-grid-th {
         .text-overflow {
          // padding-left: 25px;
@@ -112,9 +106,6 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
     }
     .grid-cell {
       padding: 0;
-      .mobile-title {
-        display: block;
-      }
       &.select-grid-cell, &.time-grid-cell {
         display: none;
       }

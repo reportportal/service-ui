@@ -34,7 +34,6 @@
     }
     .user-profile-info {
         padding: 15px;
-        background: $COLOR--light-yellow;
         margin: 0 0 36px;
         @extend %CLEAR_FIX;
 
@@ -62,6 +61,7 @@
         }
         .user-change-password {
             float: right;
+            margin-right: -15px;
             .rp-btn-default {
                 padding: 8px 10px;
             }
@@ -72,7 +72,7 @@
             .user-info-id {
                 font-size: 16px;
                 text-transform: uppercase;
-                margin: 0 122px 8px 0;
+                margin: 0 110px 8px 0;
             }
             .user-info-name {
                 font-size: 14px;
@@ -209,13 +209,6 @@
                 padding: 8px 10px;
                 float: right;
             }
-        }
-        .hover-area {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
         }
         .user-uuid-field {
             margin: 0 100px 0 44px;

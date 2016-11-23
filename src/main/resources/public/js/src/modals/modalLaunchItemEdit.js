@@ -53,12 +53,12 @@ define(function (require, exports, module) {
             });
             this.render();
             this.applyBindings();
-            Util.bootValidator($('[data-js-description]', this.$el), [{
+            Util.bootValidator($('[data-js-description]', this.$el), {
                 validator: 'minMaxNotRequired',
                 type: 'launchDescription',
                 min: 0,
                 max: 1024
-            }]);
+            });
             var self = this;
             var remoteTags = [];
             var timeOut = null;

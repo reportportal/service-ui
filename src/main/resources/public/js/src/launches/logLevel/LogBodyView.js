@@ -62,7 +62,8 @@ define(function (require, exports, module) {
             this.historyItem && this.historyItem.destroy();
             this.historyItem = new LogItemInfoView({
                 el: $('[data-js-item-info]', this.$el),
-                itemModel: itemModel
+                itemModel: itemModel,
+                launchModel: this.launchModel,
             });
             this.logsItem && this.logsItem.destroy();
             this.collectionItems.getInfoLog() //  log options

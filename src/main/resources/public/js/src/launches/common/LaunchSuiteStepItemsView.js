@@ -28,6 +28,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var Components = require('core/components');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
+    var ParentStepItemView = require('launches/stepLevel/ParentStepItemView');
 
     var config = App.getInstance();
 
@@ -96,16 +97,42 @@ define(function (require, exports, module) {
             this.collection.setPaging(1, count);
         },
         renderItems: function() {
-            var $itemsContainer = $('[data-js-launches-container]', this.$el);
+            var $itemsContainer = $('[data-js-launches-container]', this.$el),
+                isAllCases = this.collection.validateForAllCases(),
+                self = this;
             $itemsContainer.html('');
-            var self = this;
-            _.each(self.collection.models, function(model) {
-                var item = new self.itemView({model: model, filterModel: self.filterModel})
-                $itemsContainer.append(item.$el);
-                self.renderedItems.push(item);
-            });
+            if(isAllCases){
+                var parentPath = {};
+                _.each(self.collection.models, function(model) {
+                    var needParentLine = self.isValidForParent(model, parentPath);
+                    if(needParentLine){
+                        parentPath = needParentLine;
+                        var prentItem = new ParentStepItemView({ model: new Backbone.Model({parentPath:parentPath})});
+                        $itemsContainer.append(prentItem.$el);
+                        self.renderedItems.push(prentItem);
+                    }
+                    var item = new self.itemView({model: model, filterModel: self.filterModel})
+                    $itemsContainer.append(item.$el);
+                    self.renderedItems.push(item);
+                });
+            }
+            else {
+                _.each(self.collection.models, function(model) {
+                    var item = new self.itemView({model: model, filterModel: self.filterModel})
+                    $itemsContainer.append(item.$el);
+                    self.renderedItems.push(item);
+                });
+            }
             this.pagingModel.set(this.collection.pagingData);
             this.paging.render();
+        },
+        isValidForParent: function (item, parentLine) {
+            if (_.isEmpty(parentLine) || !_.isEqual(item.get('path_names'), parentLine)) {
+                parentLine = item.get('path_names');
+                return parentLine;
+            } else {
+                return false;
+            }
         },
         destroy: function () {
             while(this.renderedItems.length) {
@@ -116,9 +143,8 @@ define(function (require, exports, module) {
             this.unbind();
             this.$el.remove();
             delete this;
-        },
+        }
     });
-
 
     return LaunchSuiteTestItemsView;
 });

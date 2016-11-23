@@ -168,7 +168,8 @@ define(function (require, exports, module) {
             new Filters.EntityConditionInputModel({
                 id: 'description',
                 condition: 'cnt',
-                options: filterNameOptions()
+                options: filterNameOptions(),
+                valueOnlyDigits: false,
             }),
             new Filters.EntitySelectModel({
                 id: 'status',

@@ -23,38 +23,6 @@ $linkColor: #1a9cb0;
 $toInvestigateColor: #fff;
 $borderRadius100: 100px;
 
-%centerBlock {
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-%defectPieSize {
-    width: 48px;
-    height: 48px;
-}
-
-%caret {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 7px;
-    width: 0;
-    height: 0;
-    overflow: hidden;
-    border-style: solid;
-}
-
-@mixin setCaretColorType($color, $type) {
-    @if $type == 'hover' {
-        border-width: 0 4px 4px 4px;
-        border-color: transparent transparent $color transparent;
-    }
-    @if $type == 'default' {
-        border-width: 4px 4px 0 4px;
-        border-color: $color transparent transparent transparent;
-    }
-}
-
 .rp-history-grid {
     padding: 0;
     border: none;
@@ -74,11 +42,18 @@ $borderRadius100: 100px;
         .history-col {
             padding: 0 4px;
             text-align: center;
+            border-left: 1px solid transparent;
 
             &:first-child {
                 padding: 0 4px 0 15px;
                 border-left: none;
                 text-align: left;
+            }
+            &.in-progress {
+                background-image: -webkit-linear-gradient(1355deg, rgba(255, 255, 255, .90) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .90) 50%, rgba(255, 255, 255, .90) 75%, transparent 75%, transparent);
+                background-image: linear-gradient(135deg, rgba(255, 255, 255, .90) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .90) 50%, rgba(255, 255, 255, .90) 75%, transparent 75%, transparent);
+                background-size: 60px 60px;
+                animation: 2s linear 0s reverse none infinite progress-stripes-large;
             }
         }
         .history-grid-th {
@@ -128,6 +103,17 @@ $borderRadius100: 100px;
                 &.nd > span, &.pb > span, &.si > span {
                     color: #fff;
                 }
+                .defect-hover {
+                    text-align: left;
+                    .defect-name {
+                        font-family: $OpenSansRegular;
+                    }
+                    .defect-title {
+                        .defect-name {
+                            font-family: $OpenSansSemibold
+                        }
+                    }
+                }
             }
             .history-col-content {
                 text-align: center;
@@ -155,13 +141,14 @@ $borderRadius100: 100px;
                 }
             }
             &.history-status-PASSED {
-                background: $COLOR--passed;
+                background: $COLOR--passed-disabled;
                 .history-col-content {
                     display: none;
                 }
             }
-            &.history-status-FAILED {
-                background: $COLOR--failed;
+            &.history-status-FAILED,
+            &.history-status-STOPPED {
+                background: $COLOR--failed-disabled;
                 .history-col-content {
                     display: none;
                 }
@@ -170,15 +157,17 @@ $borderRadius100: 100px;
                 }
             }
             &.history-status-IN_PROGRESS {
-                background-image: url(/img/launch/launch-is-processing.png);
-                background-size: 22px 100%;
                 background-color: $COLOR--violet;
+                background-image: -webkit-linear-gradient(1355deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+                background-image: linear-gradient(135deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+                background-size: 60px 60px;
+                animation: 2s linear 0s reverse none infinite progress-stripes-large;
                 .history-col-content {
                     display: none;
                 }
             }
             &.history-status-SKIPPED {
-                background: $COLOR--skipped;
+                background: $COLOR--skipped-disabled;
                 .history-col-content {
                     display: none;
                 }
@@ -187,7 +176,13 @@ $borderRadius100: 100px;
                 }
             }
             &.history-status-INTERRUPTED {
-                background: $COLOR--failed;
+                background: $COLOR--failed-disabled;
+                .history-col-content {
+                    display: none;
+                }
+            }
+            &.history-status-RESETED {
+                background: $COLOR--skipped-disabled;
                 .history-col-content {
                     display: none;
                 }
