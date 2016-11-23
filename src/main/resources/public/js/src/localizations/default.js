@@ -938,9 +938,12 @@ define(['util'], function () {
         filterConditions: {
             "eq": "equals",
             "!eq": "not equals",
+            'ne': 'not equals',
             "cnt": "contains",
             "!cnt": "not contains",
             "and": "and",
+            'has': 'and',
+            'in': 'or',
             "or": "or",
             "gte": "greater than or equal",
             "lte": "less than or equal"

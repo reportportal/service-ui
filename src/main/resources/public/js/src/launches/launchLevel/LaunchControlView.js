@@ -22,6 +22,7 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
     var Localization = require('localization');
+    var Service = require('coreService');
 
     var config = App.getInstance();
 
@@ -32,18 +33,59 @@ define(function (require, exports, module) {
         },
 
         bindings: {
+            '[data-js-refresh-counter]': 'text: refreshItems, classes: {hide: not(refreshItems)}'
         },
 
         template: 'tpl-launch-launch-control',
         initialize: function(options) {
             this.collectionItems = options.collectionItems;
+            this.model = new (Epoxy.Model.extend({
+                defaults: {
+                    refreshItems: 0,
+                }
+            }))
             this.render();
             if(config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.customer) {
                 $('[data-js-multi-action="changemode"]', this.$el).addClass('hide');
             }
+            this.listenTo(this.collectionItems, 'reset', this.onResetCollectionItems);
+            this.onResetCollectionItems();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onResetCollectionItems: function() {
+            this.model.set({refreshItems: 0});
+            this.request && this.request.abort();
+            clearTimeout(this.timeout);
+            this.inProgressItems = this.collectionItems.where({status: config.launchStatus.inProgress});
+            this.checkItems();
+        },
+        checkItems: function() {
+            if (this.inProgressItems.length) {
+                var self = this;
+                var ids = _.map(this.inProgressItems, function(item) { return item.get('id') });
+                this.request = Service.checkForStatusUpdate(ids)
+                    .done(function(result) {
+                        var newInProgressItems = [];
+                        _.each(self.inProgressItems, function(item) {
+                            if (result[item.get('id')] != config.launchStatus.inProgress) {
+                                item.set({
+                                    status: result[item.get('id')],
+                                    end_time: (new Date()).getTime(),
+                                });
+                                self.model.set({refreshItems: self.model.get('refreshItems') + 1})
+                            } else {
+                                newInProgressItems.push(item);
+                            }
+                        })
+                        self.inProgressItems = newInProgressItems;
+                        clearTimeout(self.timeout);
+                        self.timeout = setTimeout(function() {
+                            self.checkItems();
+                        }, 5000);
+                    })
+            }
         },
         activateMultiple: function() {
             $('[data-js-refresh]', this.$el).addClass('disabled');

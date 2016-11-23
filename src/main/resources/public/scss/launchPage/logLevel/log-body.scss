@@ -38,4 +38,10 @@
   .item-info-block {
     margin-top: 80px;
   }
+  @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+    padding: 0 10px;
+    .item-info-block {
+      margin-top: 10px;
+    }
+  }
 }
