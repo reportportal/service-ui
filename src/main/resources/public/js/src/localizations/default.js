@@ -699,6 +699,7 @@ define(['util'], function () {
             inProgress: "In Progress",
             merge: "Merge",
             mergeLaunches: "Merge Launches",
+            mergeLaunchesModalTitle: "All selected launches will be merged in one",
             clickToLoadMore: "Click here to load more items",
             clickToMerge: "Click on two or more launches in table to select for merge!",
             filterIsShared: "Filter is shared",
