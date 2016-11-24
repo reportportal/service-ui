@@ -37,4 +37,7 @@
   font-size: 17px;
   color: $COLOR--gray-47;
   display: none;
+  @media(max-width: $SCREEN_XS_MAX) {
+    font-size: 14px;
+  }
 }

@@ -43,9 +43,12 @@
         color: $COLOR--gray-60;
       }
     }
-    &.action-cell {
+    &.action-cell, &.mobile-action-cell {
       width: 15%;
       font-family: OpenSansSemibold;
+    }
+    &.mobile-action-cell {
+      display: none;
     }
     &.time-cell {
       width: 10%;
@@ -81,6 +84,9 @@
           margin-top: 2px;
         }
       }
+      span {
+        display: none;
+      }
       .action-item {
         min-height: 1px;
         width: 47%;
@@ -114,6 +120,55 @@
   &.not-found {
     .no-result-found {
       display: block;
+    }
+  }
+  @media(max-width: 1200px) {
+    .grid-cell {
+      &.name-cell, &.action-cell {
+        width: auto;
+        padding-right: 25px;
+        &:after {
+          right: 13px;
+        }
+      }
+      &.difference-cell {
+        margin-top: 10px;
+        width: 100%;
+      }
+      &.time-cell {
+        width: auto;
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+  @media(max-width: $SCREEN_MAX_WIDTH_LAUNCHES_LOGS_TAB) {
+    .grid-cell {
+      &.action-cell {
+        display: none;
+      }
+      &.mobile-action-cell{
+        width: 100%;
+        display: block;
+        margin-top: 10px;
+      }
+      &.difference-cell {
+        margin-top: 0;
+        .action-item {
+          width: 100%;
+          margin-top: 10px;
+        }
+        .separate-items {
+          display: none;
+        }
+        span {
+          display: inline-block;
+          color: $COLOR--gray-47;
+          font-family: "OpenSansSemibold", sans-serif;
+          width: 50px;
+        }
+      }
     }
   }
 }

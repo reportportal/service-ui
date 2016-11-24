@@ -21,25 +21,41 @@
         </div>
     </div>
     <ul class="tabs">
-        <li data-js-item-stack-trace-label><i class="material-icons">assignment</i><span><%= data.text.launchLogItem.stackTrace %></span>
+        <li data-js-item-stack-trace-label class="desktop-tab"><i class="material-icons">assignment</i><span><%= data.text.launchLogItem.stackTrace %></span>
         </li>
-        <li data-js-item-gallery-label><i class="material-icons">attach_file</i><span><%= data.text.launchLogItem.attachments %></span>
+        <li data-js-item-gallery-label class="desktop-tab"><i class="material-icons">attach_file</i><span><%= data.text.launchLogItem.attachments %></span>
         </li>
-        <li data-js-item-details-label><i class="material-icons">info_outline</i><span><%= data.text.launchLogItem.itemDetails %></span>
+        <li data-js-item-details-label class="desktop-tab"><i class="material-icons">info_outline</i><span><%= data.text.launchLogItem.itemDetails %></span>
         </li>
-        <li data-js-item-activity-label><i class="material-icons">access_time</i><span><%= data.text.launchLogItem.historyOfActions %></span>
+        <li data-js-item-activity-label class="desktop-tab"><i class="material-icons">access_time</i><span><%= data.text.launchLogItem.historyOfActions %></span>
         </li>
     </ul>
-    <div class="tabs-item stack-trace" data-js-item-stack-trace>
-
+    <div data-js-item-stack-trace-label class="mobile-tab">
+        <i class="material-icons">assignment</i>
+        <span><%= data.text.launchLogItem.stackTrace %></span>
+        <i class="arrow-up material-icons">keyboard_arrow_up</i>
+        <i class="arrow-down material-icons">keyboard_arrow_down</i>
     </div>
-    <div class="tabs-item" data-js-item-gallery>
-
+    <div class="tabs-item stack-trace" data-js-item-stack-trace></div>
+    <div data-js-item-gallery-label class="mobile-tab">
+        <i class="material-icons">attach_file</i>
+        <span><%= data.text.launchLogItem.attachments %></span>
+        <i class="arrow-up material-icons">keyboard_arrow_up</i>
+        <i class="arrow-down material-icons">keyboard_arrow_down</i>
     </div>
-    <div class="tabs-item" data-js-item-details>
-
+    <div class="tabs-item" data-js-item-gallery></div>
+    <div data-js-item-details-label class="mobile-tab">
+        <i class="material-icons">info_outline</i>
+        <span><%= data.text.launchLogItem.itemDetails %></span>
+        <i class="arrow-up material-icons">keyboard_arrow_up</i>
+        <i class="arrow-down material-icons">keyboard_arrow_down</i>
     </div>
-    <div class="tabs-item" data-js-item-activity>
-
+    <div class="tabs-item" data-js-item-details></div>
+    <div data-js-item-activity-label class="mobile-tab">
+        <i class="material-icons">access_time</i>
+        <span><%= data.text.launchLogItem.historyOfActions %></span>
+        <i class="arrow-up material-icons">keyboard_arrow_up</i>
+        <i class="arrow-down material-icons">keyboard_arrow_down</i>
     </div>
+    <div class="tabs-item" data-js-item-activity></div>
 </div>

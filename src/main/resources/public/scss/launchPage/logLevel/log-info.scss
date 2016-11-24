@@ -18,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+
+
 .launch-log-item-info {
   margin-top: 4px;
   border: 1px solid $COLOR--gray-80;
@@ -31,6 +33,9 @@
       position: absolute;
       top: 10px;
       right: 10px;
+      @media (max-width: 500px) {
+        display: none;
+      }
     }
     .item-issue-container {
       padding: 0 10px;
@@ -61,26 +66,57 @@
     background: $COLOR--gray-91;
     padding: 9px 0 5px 0;
     overflow: hidden;
-    li {
-      font-size: 13px;
-      text-transform: uppercase;
-      float: left;
-      padding: 0 10px;
-      color: $COLOR--gray-47;
-      cursor: pointer;
-      &.active {
-        color: $COLOR--topaz;
+    @media(max-width: $SCREEN_MAX_WIDTH_LAUNCHES_LOGS_TAB) {
+      display: none;
+    }
+  }
+  .mobile-tab, .desktop-tab {
+    font-size: 13px;
+    text-transform: uppercase;
+    float: left;
+    padding: 0 10px;
+    color: $COLOR--gray-47;
+    cursor: pointer;
+    &.active {
+      color: $COLOR--topaz;
+    }
+    i {
+      font-size: 24px;
+    }
+    span {
+      display: inline-block;
+      margin-top: 3px;
+      margin-left: 7px;
+      vertical-align: top;
+      font-family: OpenSansSemibold;
+    }
+  }
+  .mobile-tab {
+    width: 100%;
+    background: $COLOR--gray-91;
+    float: none;
+    padding: 6px 8px;
+    border-top: 1px solid $COLOR--gray-80;
+    display: none;
+    .arrow-up, .arrow-down {
+      font-size: 26px;
+      position: absolute;
+      right: 14px;
+      color: $COLOR--gray-60;
+    }
+    .arrow-up {
+      display: none;
+    }
+    &.active {
+      .arrow-down {
+        display: none;
       }
-      i {
-        font-size: 24px;
-      }
-      span {
+      .arrow-up {
         display: inline-block;
-        margin-top: 3px;
-        margin-left: 7px;
-        vertical-align: top;
-        font-family: OpenSansSemibold;
       }
+    }
+    @media(max-width: $SCREEN_MAX_WIDTH_LAUNCHES_LOGS_TAB) {
+      display: block;
     }
   }
   .tabs-item {
@@ -95,6 +131,9 @@
       right: 10px;
       font-size: 20px;
       cursor: pointer;
+      @media(max-width: $SCREEN_MAX_WIDTH_LAUNCHES_LOGS_TAB) {
+        display: none;
+      }
     }
     .not-found-message {
       width: 100%;

@@ -70,13 +70,13 @@ define(function (require, exports, module) {
                     _.each(history, function(item, key) {
                         result += '<div class="action-row">';
                         if(key == 'ticketId') {
-                            result += '<div class="action-item">' + this.getActionTicketsHtml(item.oldValue) + '</div>' +
+                            result += '<div class="action-item"><span>FROM: </span>' + this.getActionTicketsHtml(item.oldValue) + '</div>' +
                                 '<div class="separate-items"><i class="material-icons">keyboard_arrow_right</i></div>' +
-                                '<div class="action-item">' + this.getActionTicketsHtml(item.newValue) +'</div>';
+                                '<div class="action-item"><span>TO: </span>' + this.getActionTicketsHtml(item.newValue) +'</div>';
                         } else {
-                            result += '<div class="action-item">' + this.getActionValueHtml(item.oldValue) + '</div>' +
+                            result += '<div class="action-item"><span>FROM: </span>' + this.getActionValueHtml(item.oldValue) + '</div>' +
                                 '<div class="separate-items"><i class="material-icons">keyboard_arrow_right</i></div>' +
-                                '<div class="action-item">' + this.getActionValueHtml(item.newValue) +'</div>';
+                                '<div class="action-item"><span>TO: </span>' + this.getActionValueHtml(item.newValue) +'</div>';
                         }
                         result += '</div>';
                     }, this);

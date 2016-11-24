@@ -24,6 +24,7 @@
   font-family: OpenSansRegular;
   font-size: 12px;
   padding-top: 9px;
+  padding-right: 15px;
   .load-crumbs {
     position: absolute;
     right: 0;
@@ -40,8 +41,10 @@
     float: left;
     &.crumb {
       margin-left: 5px;
+      margin-bottom: 10px;
       a {
         color: $COLOR--topaz;
+        display: inline-block;
       }
       span.link-as-element {
         display: none;
@@ -93,7 +96,7 @@
   }
   &.min-size {
     .crumb{
-      span, a {
+      span.link-as-element, a {
         max-width: 120px;
       }
     }

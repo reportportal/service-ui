@@ -50,9 +50,14 @@ define(function (require, exports, module) {
             if (this.collection.length !== 0) {
                 this.renderAll(this.collection);
             }
+            this.bindResize = this.resize.bind(this);
+            $.subscribe('window:resize', this.bindResize);
         },
         setRenderStatus: function() {
             this.renderAsync.resolve();
+        },
+        resize: function (event, data) {
+            this.gallery && this.gallery.update();
         },
         initCollection: function() {
             if (this.collection == null) {
@@ -158,7 +163,8 @@ define(function (require, exports, module) {
         },
 
         destroy: function () {
-            this.filterEntities.destroy();
+            this.gallery && this.gallery.destroy();
+            $.unsubscribe('window:resize', this.bindResize);
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
