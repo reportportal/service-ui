@@ -44,7 +44,7 @@ define(function (require, exports, module) {
         computeds: {
             validateForHistoryBtn: function(){
                 var interrupted = config.launchStatus.interrupted,
-                    showBtn = this.parentModel.get('status') !== interrupted && this.launchModel.get('status') !== interrupted && !this.collectionItems.validateForAllCases();
+                    showBtn = this.parentModel.get('status') !== interrupted && this.launchModel.get('status') !== interrupted && !this.collectionItems.validateForAllCases() && !_.isEmpty(this.collectionItems.models);
                 return 'display: ' + ( !showBtn ? 'none' : 'inline-block' );
             },
             getHistoryHref: function(){

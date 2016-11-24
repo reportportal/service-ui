@@ -125,6 +125,7 @@ define(function (require, exports, module) {
                 inProgress: "IN_PROGRESS",
                 stopped: 'STOPPED',
                 interrupted: 'INTERRUPTED',
+                reseted: 'RESETED',
                 skipped: 'SKIPPED'
             },
 

@@ -50,8 +50,12 @@ define(function (require, exports, module) {
                 get: function(launches) {
                     var hash = window.location.hash,
                         link = hash.split('?')[0],
-                        lastLaunch = _.last(this.launches.models);
-                    var lastItem = launches[lastLaunch.get('launchNumber')][0];
+                        lastLaunch = _.last(this.launches.models),
+                        lastItem = launches[lastLaunch.get('launchNumber')][0];
+                    if(lastItem.status === config.launchStatus.reseted) {
+                        $('[data-js-name]', this.$el).addClass('not-link');
+                        return '';
+                    }
                     return link + (!lastItem.has_childs ? '?log.item=' : '/') + lastItem.id;
                 }
             }
@@ -124,7 +128,11 @@ define(function (require, exports, module) {
             return data;
         },
         onClickName: function(e) {
-
+            e.preventDefault();
+            var href = $(e.currentTarget).attr('href');
+            if(href) {
+                config.router.navigate(href, {trigger: true});
+            }
         },
         destroy: function () {
             while(this.renderedItems.length) {

@@ -82,6 +82,18 @@ $borderRadius100: 100px;
                 border-left: none;
                 padding-left: 15px;
             }
+            .rp-grid-name {
+                font-family: OpenSansSemiBold;
+                a {
+                    color: $COLOR--windows-blue;
+                    text-decoration: none;
+                }
+                a.not-link {
+                    cursor: default;
+                    color: $COLOR--gray-47;
+                    text-decoration: none;
+                }
+            }
             .rp-grid-description {
                 font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
                 font-size: 13px;
@@ -119,6 +131,7 @@ $borderRadius100: 100px;
                 text-align: center;
                 font-size: 12px;
                 position: relative;
+
             }
             .history-comment, .history-tickets {
                 display: inline-block;
@@ -146,8 +159,7 @@ $borderRadius100: 100px;
                     display: none;
                 }
             }
-            &.history-status-FAILED,
-            &.history-status-STOPPED {
+            &.history-status-FAILED {
                 background: $COLOR--failed-disabled;
                 .history-col-content {
                     display: none;
@@ -175,14 +187,15 @@ $borderRadius100: 100px;
                     display: block;
                 }
             }
-            &.history-status-INTERRUPTED {
+            &.history-status-INTERRUPTED,
+            &.history-status-STOPPED {
                 background: $COLOR--failed-disabled;
                 .history-col-content {
                     display: none;
                 }
             }
             &.history-status-RESETED {
-                background: $COLOR--skipped-disabled;
+                background: $COLOR--reseted;
                 .history-col-content {
                     display: none;
                 }
