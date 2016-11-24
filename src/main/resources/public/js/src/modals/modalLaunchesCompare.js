@@ -57,11 +57,12 @@ define(function (require, exports, module) {
         },
         createChart: function (response) {
             var gadget = 'launches_comparison_chart',
+                container = $('[data-js-widget-content]', this.$el),
                 widgetsConfig = WidgetsConfig.getInstance(),
                 criteria = widgetsConfig.widgetTypes[gadget].staticCriteria;
             delete criteria['statistics$defects$no_defect$total'];
             this.widget = new Widgets.LaunchesComparisonChart({
-                container: $('[data-js-widget-content]', this.$el),
+                container: container,
                 param: {
                     gadget: gadget,
                     content: response,
