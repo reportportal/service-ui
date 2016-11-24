@@ -26,7 +26,7 @@
   color: $COLOR--gray-47;
   .defect-title {
     font-family: OpenSansSemiBold;
-    padding: 3px 0 15px 0;
+    padding: 3px 0 4px 0;
   }
   .defect-name {
     display: inline-block;
@@ -58,6 +58,7 @@
   }
   ul {
     padding-top: 9px;
+    margin-top: 10px;
     border-top: 1px solid $COLOR--gray-91;
     li {
       padding: 4px 0;

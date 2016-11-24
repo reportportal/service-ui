@@ -145,7 +145,7 @@ define(function (require, exports, module) {
             }
             else {
                 var hoverView = new LaunchSuiteDefectsHoverView({
-                    el:  $('.defect-hover', el),
+                    el:  $('[data-js-defect-hover]', el),
                     type: type,
                     noLink: true,
                     model: this.model

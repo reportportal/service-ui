@@ -59,6 +59,7 @@ define(function (require, exports, module) {
             var allDefects = Util.getSubDefectsLocators(this.type, allSubDefects).join('%2C');
             return {
                 subDefects: subDefects,
+                noSubDefects: this.isNoSubDefects(),
                 noLink: this.noLink,
                 total: {
                     color: defectsCollection.getMainColorByType(this.type),
@@ -66,6 +67,10 @@ define(function (require, exports, module) {
                     value: defects.total,
                     url: url + '|' + encodeURIComponent(appendFilter + allDefects) + '?' + appendFilter + allDefects,
                 }}
+        },
+        isNoSubDefects: function(){
+            var defectsCollection = new SingletonDefectTypeCollection();
+            return !defectsCollection.checkForSubDefects() || this.type === 'to_investigate';
         },
         getDefectByType: function(){
             var statistics = this.model.get('statistics');

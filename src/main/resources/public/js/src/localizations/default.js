@@ -755,11 +755,12 @@ define(['util'], function () {
         },
 
         infoLine: {
-            product_bug: "Total Product Bugs",
-            automation_bug: "Total Automation Bugs",
-            system_issue: "Total System Issues",
+            product_bug: "Product Bugs",
+            automation_bug: "Automation Bugs",
+            system_issue: "System Issues",
             to_investigate: "To Investigate",
-            no_defect: "Total No Defects"
+            no_defect: "No Defects",
+            total: 'Total'
         },
 
         testTableMethodTypes: {
