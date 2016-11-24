@@ -549,7 +549,7 @@ define(function (require, exports, module) {
         },
 
         events: {
-            'mouseenter .pr-grid-defect-stats': 'showDefectTooltip',
+            'mouseenter [data-js-launch-defect]': 'showDefectTooltip',
         },
 
         showDefectTooltip: function (e) {
@@ -564,7 +564,7 @@ define(function (require, exports, module) {
         renderDefects: function () {
             _.each(this.items, function(launch){
                 var row = $('#'+launch.id, this.container),
-                    defectCell = $('.pr-grid-defect-stats', row);
+                    defectCell = $('[data-js-launch-defect]', row);
                 _.each(defectCell, function(cell){
                     var el = $(cell),
                         type = el.data('defectType'),
