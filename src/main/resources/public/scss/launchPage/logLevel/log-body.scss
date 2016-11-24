@@ -40,8 +40,19 @@
   }
   @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
     padding: 0 10px;
+    .log-grid {
+      margin: 0 5px;
+    }
     .item-info-block {
       margin-top: 10px;
+    }
+  }
+  @media(max-width: 720px) {
+    .log-grid {
+      margin-top: 30px;
+      .rp-grid-thead {
+        display: none;
+      }
     }
   }
 }

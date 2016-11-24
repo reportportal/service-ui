@@ -55,6 +55,9 @@
       line-height: 30px;
       padding-left: 20px;
     }
+    @media(max-width: 720px) {
+      display: none;
+    }
   }
   .min-paging {
     padding-left: 10px;

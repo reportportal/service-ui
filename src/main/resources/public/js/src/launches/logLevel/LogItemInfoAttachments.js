@@ -30,6 +30,8 @@ define(function (require, exports, module) {
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
 
+    var PAGE_SIZE = 6;
+
     var ItemAttachmentsModel = Epoxy.Model.extend({
         defaults: {
             pageNumber: 1,
@@ -77,7 +79,7 @@ define(function (require, exports, module) {
             var params = ['filter.ex.binary_content=true'];
             params.push('filter.eq.item=' + this.get('itemId'));
             params.push('page.page=' + this.get('pageNumber'));
-            params.push('page.size=6');
+            params.push('page.size=' + PAGE_SIZE);
             return params;
         },
     });
@@ -104,8 +106,9 @@ define(function (require, exports, module) {
         onChangeContent: function() {
             var self = this;
             var content = this.model.get('content');
-            _.each(content, function(item) {
+            _.each(content, function(item, num) {
                 item.pageNumber = self.model.get('pageNumber');
+                item.pageIndex = num;
             });
             this.collection.reset(content);
             this.model.set({itemModels: this.collection.models});
@@ -173,12 +176,12 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-gallery-image]': 'css: {backgroundImage: format("url($1)", previewImg)}',
+            '[data-js-gallery-image]': 'attr: {src:  previewImg}',
             ':el': 'classes: {active: active}',
         },
 
         initialize: function() {
-            this.$el.html('<div class="gallery-image" data-js-gallery-image></div>');
+            this.$el.html('<div class="gallery-image"><img data-js-gallery-image></div>');
         },
         onClickGalleryImage: function() {
             this.model.trigger('click:min:item', this.model);
@@ -225,10 +228,21 @@ define(function (require, exports, module) {
         template: 'tpl-launch-log-item-info-attachments',
 
         events: {
-            'click [data-ja-close]': 'onClickClose',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-destroy-main-gallery]': 'destroyMainGallery',
+        },
+        bindings: {
+            '[data-js-main-gallery-current]': 'text: currentElement',
+            '[data-js-main-gallery-size]': 'text: totalElements',
         },
 
         initialize: function(options) {
+            this.model = new (Epoxy.Model.extend({
+                defaults: {
+                    currentElement: 0,
+                    totalElements: 0,
+                }
+            }))
             this.render();
             this.isLoad = false;
             this.$main = $('[data-js-attachments-container]', this.$el);
@@ -279,10 +293,19 @@ define(function (require, exports, module) {
                 this.listenTo(this.galleryMain, 'change:slide', this.onChangeGalleryMainSlide);
                 this.galleryMain.setRenderStatus();
             }
+            $('[data-js-gallery-main-head]', this.$el).addClass('activate');
+        },
+        destroyMainGallery: function() {
+            if (this.galleryMain) {
+                this.stopListening(this.galleryMain);
+                this.galleryMain.destroy();
+                this.galleryMain = null;
+                $('[data-js-gallery-main-head]', this.$el).removeClass('activate');
+            }
         },
         onChangeMainActiveSlide: function(activeModel) {
             if(!activeModel) { return; }
-            var self = this;
+            this.model.set({currentElement: (activeModel.get('pageNumber') - 1)*PAGE_SIZE + activeModel.get('pageIndex') + 1});
             var index = 0;
             _.each(this.currentLoadCollection.models, function(model, num) {
                 model.set({active: false});
@@ -337,6 +360,7 @@ define(function (require, exports, module) {
             var self = this;
             itemsModel.load()
                 .done(function(data) {
+                    self.model.set({totalElements: data.page.totalElements});
                     self.totalPages = data.page.totalPages;
                     itemsModel.set({totalPages: self.totalPages});
                     var dataForPreview = [itemsModel];
@@ -374,6 +398,7 @@ define(function (require, exports, module) {
         onChangeGalleryMainSlide: function(options) {
             var curIndex = 0;
             var activeModel = options.galleryModels[options.index];
+            this.model.set({currentElement: (activeModel.get('pageNumber') - 1)*PAGE_SIZE + activeModel.get('pageIndex') + 1});
             if(activeModel.get('id') == '') {
                 if(options.dirrection == 'right') {
                     this.galleryMain.prev();
@@ -455,6 +480,8 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template), {});
         },
         destroy: function() {
+            this.galleryMain && this.galleryMain.destroy();
+            this.galleryPreviews && this.galleryPreviews.destroy();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
