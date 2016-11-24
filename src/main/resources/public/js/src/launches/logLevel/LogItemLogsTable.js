@@ -29,6 +29,7 @@ define(function (require, exports, module) {
     var FilterEntities = require('filterEntities/FilterEntities');
     var LogItemCollection = require('launches/logLevel/LogItemCollection');
     var Components = require('core/components');
+    var StickyHeader = require('core/StickyHeader');
     var LogItemLogsItem = require('launches/logLevel/LogItemLogsItem');
 
     var LogItemLogsTable = Epoxy.View.extend({
@@ -85,6 +86,14 @@ define(function (require, exports, module) {
             this.listenTo(this.paging, 'page', this.onChangePage);
             this.listenTo(this.minPaging, 'page', this.onChangePage);
             this.listenTo(this.paging, 'count', this.onChangePageCount);
+            this.setupStickyHeader();
+        },
+        setupStickyHeader: function() {
+            this.destroyStickyHeader();
+            this.stickyHeader = new StickyHeader({fixedBlock: $('[data-js-fixed-header]', this.$el), topMargin: 0, minWidthWindow: 720});
+        },
+        destroyStickyHeader: function() {
+            this.stickyHeader && this.stickyHeader.destroy();
         },
 
         render: function() {

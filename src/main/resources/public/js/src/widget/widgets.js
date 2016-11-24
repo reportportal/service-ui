@@ -1989,7 +1989,7 @@ define(function (require, exports, module) {
 
         render: function () {
             this.addSVG();
-
+            this.container.find('svg').height('380').width('550');
             var data = this.getChartData(),
                 self = this,
                 tooltip = this.tooltipContent();

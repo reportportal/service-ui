@@ -32,8 +32,10 @@
             <input type="text" class="rp-input-default" value="<%- data.dateFormat(data.endTime) %>" disabled="disabled">
         </div>
         <div class="rp-form-group extended">
-            <input type="checkbox" id="extendWithOriginal" name="extendWithOriginal"/>
-            <%= data.text.launches.extendWithOriginal %>
+            <label class="rp-checkbox-wrap">
+                <input class="rp-input-checkbox" type="checkbox" id="extendWithOriginal" name="extendWithOriginal">
+                <span><%= data.text.launches.extendWithOriginal %></span>
+            </label>
         </div>
     </div>
     <div class="preloader">

@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 .launches-header-bar {
-  padding: 10px 0;
+  padding: 10px 0 0 0;
   margin: 0 -15px;
   background-color: $COLOR--white-default;
   border-bottom: solid 1px $COLOR--gray-91;
@@ -56,7 +56,6 @@
     padding: 10px 15px 10px 15px;
     margin-top: 0px;
     margin-top: 10px;
-    margin-bottom: -10px;
     border-bottom: 1px solid #e9e9e9;
   }
   .refine-label {
