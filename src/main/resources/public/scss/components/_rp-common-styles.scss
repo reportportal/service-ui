@@ -824,8 +824,12 @@ body.menu-open {
 
 #mainContainer {
   padding-bottom: 40px;
+
   @media (max-width: 1150px) {
     padding-bottom: 50px;
+  }
+  @media (max-width: 550px) {
+    padding-bottom: 150px;
   }
 }
 
