@@ -72,7 +72,8 @@ define(function (require, exports, module) {
             this.updateNavButton($nav.data('id'));
         },
         onClickRefresh: function() {
-            this.collectionItems.setLogItem(this.collectionItems.logOptions.item);
+            this.collectionItems.trigger('update:logs');
+            // this.collectionItems.setLogItem(this.collectionItems.logOptions.item);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));

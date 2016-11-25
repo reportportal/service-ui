@@ -38,6 +38,7 @@ define(function (require, exports, module) {
             this.launchModel = options.launchModel;
             this.render();
             this.listenTo(this.collectionItems, 'change:log:item', this.onChangeLogItem);
+            this.listenTo(this.collectionItems, 'update:logs', this.onChangeLogItem);
             this.onChangeLogItem();
         },
         onChangeLogItem: function() {
@@ -66,10 +67,12 @@ define(function (require, exports, module) {
                 launchModel: this.launchModel,
             });
             this.logsItem && this.logsItem.destroy();
-            this.collectionItems.getInfoLog() //  log options
             this.logsItem = new LogItemLogsTable({
                 el: $('[data-js-item-logs]', this.$el),
-                itemModel: itemModel
+                itemModel: itemModel,
+                collectionItems: this.collectionItems,
+                mainPath: this.collectionItems.getPathByLogItemId(itemModel.get('id')),
+                options: this.collectionItems.getInfoLog(),
             })
 
         },

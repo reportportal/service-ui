@@ -25,12 +25,16 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var App = require('app');
     var FilterModel = require('filters/FilterModel');
     var FilterEntities = require('filterEntities/FilterEntities');
     var LogItemCollection = require('launches/logLevel/LogItemCollection');
     var Components = require('core/components');
     var StickyHeader = require('core/StickyHeader');
     var LogItemLogsItem = require('launches/logLevel/LogItemLogsItem');
+    var SingletonURLParamsModel = require('model/SingletonURLParamsModel');
+
+    var config = App.getInstance();
 
     var LogItemLogsTable = Epoxy.View.extend({
         template: 'tpl-launch-log-item-logs-table',
@@ -42,9 +46,18 @@ define(function (require, exports, module) {
 
         initialize: function(options) {
             this.itemModel = options.itemModel;
+            this.mainPath = options.mainPath;
+            this.collectionItems = options.collectionItems;
+            // var urlModel = new SingletonURLParamsModel();
+            var startOptions = options.options;
+            console.dir(startOptions);
+            var isAscSort = 'true';
+            if (startOptions['page.sort'] && ~startOptions['page.sort'].indexOf('DESC')) {
+                isAscSort = 'false';
+            }
             this.filterModel = new FilterModel({
                 temp: true,
-                selection_parameters: '{"is_asc": false, "sorting_column": "time"}',
+                selection_parameters: '{"is_asc": '+ isAscSort +', "sorting_column": "time"}',
             });
             this.pagingModel = new Backbone.Model();
             this.selectModel = new FilterEntities.EntitySelectModel({
@@ -58,7 +71,7 @@ define(function (require, exports, module) {
                     {name: 'Warn', value: 'WARN'},
                     {name: 'Error', value: 'ERROR'},
                 ],
-                value: 'All'
+                value: (startOptions['filter.in.level'] && decodeURIComponent(startOptions['filter.in.level'])) || 'All',
             });
             this.nameModel = new FilterEntities.EntityInputModel({
                 id: 'message',
@@ -66,17 +79,25 @@ define(function (require, exports, module) {
                 valueMinLength: 3,
                 valueMaxLength: 55,
                 valueOnlyDigits: false,
+                value: startOptions['filter.cnt.message'] || '',
             });
 
 
+            this.render();
+            if (startOptions['filter.ex.binary_content'] && startOptions['filter.ex.binary_content'] == 'true') {
+                $('[data-js-attachments-filter]', this.$el).prop( "checked", true );
+            }
+            this.onChangeFilter();
             this.collection = new LogItemCollection({
                 filterModel: this.filterModel,
                 itemModel: this.itemModel,
+                pagingPage: (startOptions['page.page'] && parseInt(startOptions['page.page'])),
+                pagingSize: (startOptions['page.size'] && parseInt(startOptions['page.size'])),
             });
-            this.render();
             this.listenTo(this.collection, 'change:paging', this.onChangePaging);
             this.listenTo(this.collection, 'loading:true', this.onStartLoading);
             this.listenTo(this.collection, 'loading:false', this.onStopLoading);
+            this.listenTo(this.collection, 'change:options', this.onChangeOptionsFilter);
             this.collection.load();
             this.listenTo(this.collection, 'reset', this.onResetCollection);
             this.listenTo(this.selectModel, 'change:condition change:value', this.onChangeFilter);
@@ -109,6 +130,17 @@ define(function (require, exports, module) {
                 model: this.pagingModel,
                 minMode: true,
             })
+        },
+        onChangeOptionsFilter: function(newParams) {
+            config.router.navigate(this.mainPath + '&' + newParams.join('&'), {trigger: false});
+            var newLogOption = {}
+            _.each(newParams, function(param) {
+                param = param.replace('log.', '');
+                var splitParam = param.split('=');
+                newLogOption[splitParam[0]] = splitParam[1];
+            })
+            newLogOption.item = this.collectionItems.logOptions.item;
+            this.collectionItems.logOptions = newLogOption;
         },
         onStartLoading: function() {
             $('[data-js-logs-wrapper]', this.$el).addClass('load');

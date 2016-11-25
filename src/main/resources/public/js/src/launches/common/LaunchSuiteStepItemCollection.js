@@ -108,6 +108,7 @@ define(function (require, exports, module) {
             if(size) {
                 this.pagingSize = size;
             }
+            this.activateChangeParamsTrigger();
             this.load();
         },
 
@@ -125,6 +126,7 @@ define(function (require, exports, module) {
             this.filterModel = filterModel;
             this.listenTo(this.filterModel, 'change:newEntities', this.changeFilterOptions);
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.load);
+            this.activateChangeParamsTrigger();
             return this.load();
         },
         activateLogsItem: function(itemId) {
@@ -169,17 +171,20 @@ define(function (require, exports, module) {
                         });
                     }
                 }
+                keySeparate.shift();
+                var joinKey = keySeparate.join('.');
                 if(keyFirstPart == 'log') {
-                    this.logOptions[keySeparate[1]] = optionSeparate[1];
+                    this.logOptions[joinKey] = optionSeparate[1];
                 }
                 if(keyFirstPart == 'history') {
-                    this.historyOptions[keySeparate[1]] = optionSeparate[1];
+                    this.historyOptions[joinKey] = optionSeparate[1];
                 }
             }, this);
             answer.entities = JSON.stringify(filterEntities);
             return answer;
         },
         changeFilterOptions: function(model, value) {
+            this.activateChangeParamsTrigger();
             if(value != '' || !model.changed.entities) {
                 this.load();
             }
@@ -256,21 +261,26 @@ define(function (require, exports, module) {
             params = params.concat(this.filterModel.getOptions());
             return params;
         },
+        activateChangeParamsTrigger: function() {
+            if (!this.historyOptions.item && !this.logOptions.item) {
+                if(!this.launchModel) {
+                    this.trigger('change:params', this.getParamsFilter(true).join('&'));
+                }
+                var params = this.getParamsFilter();
+                if(this.launchModel) {
+                    var logParams = [];
+                    _.each(this.logOptions, function(value, key) {
+                        logParams.push('log.' + key + '=' + value);
+                    });
+                    logParams = logParams.concat(params);
+                    this.trigger('change:params', logParams.join('&'));
+                }
+            }
+        },
         load: function(dynamicPge) {  // double load page if content = []
             var self = this;
             var path = Urls.getGridUrl('launch');
-            if(!this.launchModel) {
-                this.trigger('change:params', this.getParamsFilter(true).join('&'));
-            }
             var params = this.getParamsFilter();
-            if(this.launchModel) {
-                var logParams = [];
-                _.each(this.logOptions, function(value, key) {
-                    logParams.push('log.' + key + '=' + value);
-                });
-                logParams = logParams.concat(params);
-                this.trigger('change:params', logParams.join('&'));
-            }
             if(this.launchModel) {
                 path = Urls.getGridUrl('suit');
                 params.push('filter.eq.launch=' + this.launchModel.get('id'));

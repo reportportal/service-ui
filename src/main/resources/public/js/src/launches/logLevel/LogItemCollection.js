@@ -35,12 +35,13 @@ define(function (require, exports, module) {
             this.filterModel = options.filterModel;
             this.itemModel = options.itemModel;
             this.listenTo(this.filterModel, 'change:newSelectionParameters change:newEntities', this.onChangeFilter);
-            this.pagingPage = 1;
-            this.pagingSize = 50;
+            this.pagingPage = options.pagingPage || 1;
+            this.pagingSize = options.pagingSize || 50;
         },
         onChangeFilter:function() {
             this.pagingPage = 1;
             this.load();
+            this.trigger('change:options', this.getParamsForUrl());
         },
         load: function() {
             this.trigger('loading:true');
@@ -62,6 +63,7 @@ define(function (require, exports, module) {
                 this.pagingSize = size;
             }
             this.load();
+            this.trigger('change:options', this.getParamsForUrl());
         },
 
         getParamsForRequest: function() {
@@ -69,6 +71,16 @@ define(function (require, exports, module) {
             answer.push('page.page=' + this.pagingPage);
             answer.push('page.size=' + this.pagingSize);
             answer = answer.concat(this.filterModel.getOptions());
+            return answer;
+        },
+        getParamsForUrl: function() {
+            var answer = [];
+            answer.push('log.page.page=' + this.pagingPage);
+            answer.push('log.page.size=' + this.pagingSize);
+            var filterOptions = _.map(this.filterModel.getOptions(), function(option) {
+                return 'log.' + option
+            })
+            answer = answer.concat(filterOptions);
             return answer;
         }
     })
