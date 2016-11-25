@@ -1451,6 +1451,7 @@ define(['util'], function () {
             launchDescriptionLength: "Description should have size not more than 1024 symbols",
 
             emailMatchRegex: "Check the entered email",
+            emailNotificationLength: "Email should have size from '{0}' to '{1}'.",
             emailInternalRegex: "The password cannot be changed. Please use you domain password.",
             confirmMinMax: "Password should have size from '4' to '25' symbols",
             confirmMatch: "Passwords do not match",

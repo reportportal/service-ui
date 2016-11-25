@@ -89,8 +89,8 @@
                     }
                 }
                 .filter-option-input {
-                    input {
-                        max-height: 30px;
+                    input.select2-input {
+                        margin: 0;
                     }
                     .select2-choices {
                         //max-height: 30px;

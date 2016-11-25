@@ -1663,14 +1663,14 @@ define(function (require, exports, module) {
                 isInProgress = (item.status == 'IN_PROGRESS') ? true : false;
             if (isPassed) {
                 cls = 'rp-pass';
-            } else if (isFailed || isDefects) {
-                cls = 'rp-fail';
             } else if (isSkipped) {
                 cls = 'pr-skip';
             } else if (isReseted) {
                 cls = 'rp-reseted';
             } else if(isInProgress){
                 cls = 'rp-inprogress progress-striped';
+            } else if (isFailed || isDefects) {
+                cls = 'rp-fail';
             }
             return cls;
         },
