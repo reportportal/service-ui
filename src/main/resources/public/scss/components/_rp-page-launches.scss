@@ -840,6 +840,13 @@
             .last-col {
                 margin-left: -32px;
             }
+            .in-progress {
+                background-color: rgba(160,180,200,.5);
+                background-image: -webkit-linear-gradient(1355deg, rgba(255, 255, 255, .25) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .25) 50%, rgba(255, 255, 255, .25) 75%, transparent 75%, transparent);
+                background-image: linear-gradient(135deg, rgba(255, 255, 255, .25) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .25) 50%, rgba(255, 255, 255, .25) 75%, transparent 75%, transparent);
+                background-size: 60px 60px;
+                animation: 2s linear 0s reverse none infinite progress-stripes-large;
+            }
 
             .margin-col {
                 margin-left: -8px;
@@ -1154,6 +1161,14 @@
                 background: #e8ada3;
             }
 
+            &.rp-inprogress {
+                background: #0274d1;
+                background-image: -webkit-linear-gradient(1355deg, rgba(255, 255, 255, .25) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .25) 50%, rgba(255, 255, 255, .25) 75%, transparent 75%, transparent);
+                background-image: linear-gradient(135deg, rgba(255, 255, 255, .25) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .25) 50%, rgba(255, 255, 255, .25) 75%, transparent 75%, transparent);
+                background-size: 60px 60px;
+                animation: 2s linear 0s reverse none infinite progress-stripes-large;
+            }
+
             &.rp-pass {
                 background: #b4d2af;
             }
@@ -1183,6 +1198,15 @@
         .col-md-2 {
             margin-top: 10px;
         }
+    }
+}
+
+@keyframes progress-stripes-large {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: -60px 0;
     }
 }
 

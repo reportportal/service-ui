@@ -405,6 +405,7 @@ define(function(require, exports, module) {
                 },
                 {
                     validator: 'minMaxRequired',
+                    type: 'emailNotification',
                     min: 5,
                     max: 256
                 }
