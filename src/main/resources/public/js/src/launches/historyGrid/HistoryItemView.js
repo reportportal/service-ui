@@ -51,8 +51,9 @@ define(function (require, exports, module) {
                     var hash = window.location.hash,
                         link = hash.split('?')[0],
                         lastLaunch = _.last(this.launches.models),
-                        lastItem = launches[lastLaunch.get('launchNumber')][0];
-                    if(lastItem.status === config.launchStatus.reseted) {
+                        items = launches[lastLaunch.get('launchNumber')],
+                        lastItem = !_.isEmpty(items) ? items[0] : null;
+                    if(!lastItem || lastItem.status === config.launchStatus.reseted) {
                         $('[data-js-name]', this.$el).addClass('not-link');
                         return '';
                     }

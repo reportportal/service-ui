@@ -141,7 +141,7 @@ define(function (require, exports, module) {
                     var tooltip = new SimpleTooltipView({message: el.data('tooltip-content')});
                     return tooltip.$el.html();
                 }, $hoverElement, $hoverElement);
-                el.tooltip('show');
+                el.uitooltip('option', 'position', {my: "center top+10" }).uitooltip('open');
             }
             else {
                 var hoverView = new LaunchSuiteDefectsHoverView({
