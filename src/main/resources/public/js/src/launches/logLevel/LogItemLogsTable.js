@@ -32,7 +32,6 @@ define(function (require, exports, module) {
     var Components = require('core/components');
     var StickyHeader = require('core/StickyHeader');
     var LogItemLogsItem = require('launches/logLevel/LogItemLogsItem');
-    var SingletonURLParamsModel = require('model/SingletonURLParamsModel');
 
     var config = App.getInstance();
 
@@ -48,9 +47,7 @@ define(function (require, exports, module) {
             this.itemModel = options.itemModel;
             this.mainPath = options.mainPath;
             this.collectionItems = options.collectionItems;
-            // var urlModel = new SingletonURLParamsModel();
             var startOptions = options.options;
-            console.dir(startOptions);
             var isAscSort = 'true';
             if (startOptions['page.sort'] && ~startOptions['page.sort'].indexOf('DESC')) {
                 isAscSort = 'false';

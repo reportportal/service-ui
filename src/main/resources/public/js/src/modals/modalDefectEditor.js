@@ -187,8 +187,8 @@ define(function (require, exports, module) {
                     test_item_id: item.get('id'),
                     issue: issue
                 });
-                item.setIssue(issue);
             }, this);
+            var self = this;
             CoreService.updateDefect({issues: issues})
                 .done(function () {
                     var itemIssue = this.getIssueType(this.items[0]);
@@ -196,6 +196,14 @@ define(function (require, exports, module) {
                         config.trackingDispatcher.defectStateChange(itemIssue, selectedIssue);
                     }
                     Util.ajaxSuccessMessenger("updateDefect");
+                    _.forEach(self.items, function (item) {
+                        var issue = item.getIssue();
+                        if((replaceComments && this.isMultipleEdit() && comment) || (!this.isMultipleEdit() && comment)){
+                            issue.comment = comment;
+                        }
+                        issue.issue_type = selectedIssue || this.getIssueType(item);
+                        item.setIssue(issue);
+                    }, self);
                     this.hide();
                 }.bind(this))
                 .fail(function (error) {

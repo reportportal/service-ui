@@ -95,7 +95,13 @@ define(function (require, exports, module) {
             config.router.navigate(this.collectionItems.getPathByLogItemId(logItemId), {trigger: false});
         },
         onSetLogItem: function(logItemId) {
-            this.crumbs.setLogItem(this.collectionItems.get(logItemId));
+            var logItemModel = this.collectionItems.get(logItemId);
+            if (logItemModel) {
+                this.crumbs.setLogItem(logItemModel);
+            } else {
+                console.log("Page not found")
+            }
+
         },
         onDrillItem: function(itemModel) {
             this.crumbs.cacheItem(itemModel);
