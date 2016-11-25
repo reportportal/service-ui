@@ -127,7 +127,7 @@ define(function (require, exports, module) {
                 .fail(function (error) {
                     var type = 'submitProfileInfo',
                         message = '';
-                    if (error.responseText.indexOf('4094') > -1) {
+                    if (error.responseText.indexOf('4094') >= 0) {
                         type = 'submitProfileInfoDuplication';
                     } else if (config.patterns.emailWrong.test(error.responseText)) {
                         type = 'submitProfileInfoWrongData';

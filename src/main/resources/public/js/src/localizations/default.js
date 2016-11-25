@@ -1376,7 +1376,7 @@ define(['util'], function () {
             submitForgotPassBrokenConf: "Email configuration is broken or switched-off. Please configure email server in Report Portal settings.",
             submitChangePass: "Failed to update password",
             submitProfileInfo: "Failed to update profile info",
-            submitProfileInfoDuplication: "Email already exists",
+            submitProfileInfoDuplication: "Entered email already exists in the system",
             submitProfileInfoWrongData: "Email is incorrect",
             submitProfileInfoEmail: "Check the entered email",
             submitChangePassInvalid: "Invalid password was entered",
