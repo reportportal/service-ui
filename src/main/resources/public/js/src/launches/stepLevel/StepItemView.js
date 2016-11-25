@@ -39,6 +39,7 @@ define(function (require, exports, module) {
             'click [data-js-name-link]': 'onClickName',
             'click [data-js-time-format]': 'toggleStartTimeView',
             'click [data-js-item-edit]': 'onClickEdit',
+            'click [data-js-tag]': 'onClickTag',
         },
         bindings: {
             '[data-js-name-link]': 'attr: {href: url}',
@@ -81,6 +82,7 @@ define(function (require, exports, module) {
         },
         initialize: function(options) {
             this.noIssue = options.noIssue;
+            this.filterModel = options.filterModel;
             this.render();
         },
         render: function() {
@@ -116,6 +118,13 @@ define(function (require, exports, module) {
                 model: this.model,
                 el: $('[data-js-step-issue]', this.$el)
             });
+        },
+        onClickTag: function(e) {
+            var tag = $(e.currentTarget).data('js-tag');
+            this.addFastFilter('tags', tag);
+        },
+        addFastFilter: function(filterId, value) {
+            this.filterModel.trigger('add_entity', filterId, value);
         },
         onClickName: function(e) {
             e.preventDefault();
