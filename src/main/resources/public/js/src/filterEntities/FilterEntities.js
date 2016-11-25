@@ -278,9 +278,9 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
             this.ranges = {
                 'Today': [Moment().startOf('day'), Moment().endOf('day')],
-                'Yesterday': [Moment().subtract(1, 'days').startOf('day'), Moment({minute: -1})],
-                'Last 7 Days': [Moment().subtract(7, 'days').startOf('day'), Moment({minute: -1})],
-                'Last 30 Days': [Moment().subtract(30, 'days').startOf('day'), Moment({minute: -1})],
+                'Yesterday': [Moment().subtract(1, 'days').startOf('day'), Moment()],
+                'Last 7 Days': [Moment().subtract(7, 'days').startOf('day'), Moment()],
+                'Last 30 Days': [Moment().subtract(30, 'days').startOf('day'), Moment()],
                 // 'This Month': [Moment().startOf('month'), Moment().endOf('month')],
                 // 'Last Month': [Moment().subtract(1, 'month').startOf('month'), Moment().subtract(1, 'month').endOf('month')]
             };
