@@ -78,7 +78,7 @@
     display: inline-block;
     font-family: "OpenSansSemibold", sans-serif;
     margin-bottom: 5px;
-    margin-right: 3px;
+    margin-right: 10px;
     text-transform: uppercase;
     padding: 0 23px 0 10px;
     position: relative;
@@ -170,6 +170,9 @@
       .right-items {
         height: 100%;
         float: right;
+        .rp-btn {
+          margin-left: 8px;
+        }
       }
     }
   }
