@@ -80,8 +80,8 @@ define(function (require, exports, module) {
 
             $("#projectSelector", self.$el).on('shown.bs.dropdown', function () {
                 var height = self.contentProjects.height();
-                if (height > 400) {
-                    height = 400;
+                if (height > 607) {
+                    height = 607;
                     self.blockHeightProjects.addClass('_scrollbar');
                 }
                 self.blockHeightProjects.height(height)

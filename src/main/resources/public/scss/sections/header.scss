@@ -281,6 +281,7 @@
              }
 
              .dropdown-menu {
+               min-width: 140px;
                margin-top: 0;
                top: 44px;
                padding: 0;
@@ -297,7 +298,7 @@
                    clear: both;
                    display: block;
                    margin: 0;
-                   padding: 8px 19px 9px;
+                   padding: 10px 19px 11px;
                    background-color: inherit;
                    color: #464547;
                    font-weight: 400;
@@ -341,11 +342,13 @@
                .selected-project {
                  white-space: nowrap;
                  max-width: 300px;
+                 font-weight: 500;
                  text-overflow: ellipsis;
                  overflow: hidden;
                  display: inline-block;
                  margin-right: 10px;
                  text-decoration: none;
+                 text-shadow: 1px 2px 2px rgba(39, 39, 40, 0.4);
                }
              }
 
@@ -355,9 +358,13 @@
 
              .baron__root {
                position: absolute;
+               left: -20px;
                top: 44px;
                width: 100%;
                height: 0;
+               @media (max-width: 767px) {
+                 left: 0;
+               }
 
                &.open {
                  border: 1px solid rgba(0,0,0,.15);
@@ -369,7 +376,7 @@
 
                  .dropdown-menu.user-projects {
                    top: 0;
-                   max-width: 300px;
+                   max-width: 250px;
                    max-height: none;
                    padding: 0;
                    margin: 0;
@@ -386,13 +393,14 @@
                      padding: 0;
 
                      a {
-                       max-width: 300px;
+                       max-width: 250px;
                        text-overflow: ellipsis;
                        overflow: hidden;
+                       line-height: 24px;
                        font-family: "OswaldRegular",sans-serif;
                        font-size: 16px;
                        clear: both;
-                       padding: 8px 19px 9px;
+                       padding: 10px 19px;
                        font-weight: 400;
                        color: #464547;
                        text-transform: uppercase;
