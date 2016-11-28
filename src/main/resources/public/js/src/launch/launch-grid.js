@@ -1665,7 +1665,7 @@ define(function (require, exports, module) {
             if (isPassed) {
                 cls = 'rp-pass';
             } else if (isSkipped) {
-                cls = 'pr-skip';
+                cls = 'rp-skip';
             } else if (isReseted) {
                 cls = 'rp-reseted';
             } else if(isInProgress){
