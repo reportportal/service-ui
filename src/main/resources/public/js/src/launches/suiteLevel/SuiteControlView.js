@@ -39,7 +39,7 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-history]': 'attr: {href:getHistoryHref, style: validateForHistoryBtn}'
+            '[data-js-history]': 'attr: {href:getHistoryHref, style: validateForHistoryBtn}',
         },
 
         computeds: {
@@ -47,6 +47,9 @@ define(function (require, exports, module) {
                 var interrupted = config.launchStatus.interrupted,
                     showBtn = this.parentModel.get('status') !== interrupted && this.launchModel.get('status') !== interrupted && !_.isEmpty(this.collectionItems.models);
                 return 'display: ' + ( !showBtn ? 'none' : 'inline-block' );
+            },
+            activeMultiDelete: function() {
+                return !(this.launchModel.get('status') == config.launchStatus.inProgress)
             },
             getHistoryHref: function(){
                 return this.getHistoryLink();
@@ -69,20 +72,27 @@ define(function (require, exports, module) {
                 el: $('[data-js-info-line]', this.$el),
                 model: this.parentModel,
             });
+            if(!this.getBinding('activeMultiDelete')) {
+                $('[data-js-milti-delete]', this.$el).attr({title: Localization.launches.launchNotInProgress});
+            }
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
         activateMultiple: function() {
             $('[data-js-refresh]', this.$el).addClass('disabled');
-            $('[data-js-milti-delete]', this.$el).removeClass('disabled').attr({title: Localization.launches.deleteBulk});
+            if (this.getBinding('activeMultiDelete')) {
+                $('[data-js-milti-delete]', this.$el).removeClass('disabled').attr({title: Localization.launches.deleteBulk});
+            }
         },
         onClickMultiDelete: function() {
             this.trigger('multi:action', 'remove');
         },
         disableMultiple: function() {
             $('[data-js-refresh]', this.$el).removeClass('disabled');
-            $('[data-js-milti-delete]', this.$el).addClass('disabled').attr({title: Localization.launches.actionTitle});
+            if (this.getBinding('activeMultiDelete')) {
+                $('[data-js-milti-delete]', this.$el).addClass('disabled').attr({title: Localization.launches.actionTitle});
+            }
         },
         onClickRefresh: function() {
             this.collectionItems.load();

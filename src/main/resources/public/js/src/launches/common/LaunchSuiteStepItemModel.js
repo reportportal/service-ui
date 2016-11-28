@@ -61,7 +61,7 @@ define(function(require, exports, module) {
             invalidMessage: '',
 
             // append keys
-            level: '',
+            // level: '',
             parent_launch_owner: null,
             parent_launch_status: null,
             parent_launch_isProcessing: null,
