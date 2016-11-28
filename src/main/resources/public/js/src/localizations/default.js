@@ -1198,11 +1198,12 @@ define(['util'], function () {
         },
 
         members: {
+            projectMembers: 'Project members',
             registration: "Registration",
             completeToRegister: "Complete the form to register on the Report Portal",
             title: "Members",
-            addMember: "Add member",
-            inviteMember: "Invite member",
+            addMember: "Add User",
+            inviteMember: "Invite User",
             addMemberToProject: "Add new member to the project",
             inviteMemberToProject: "Invite new member to the project",
             backToMembers: "Back to members",
@@ -1218,7 +1219,7 @@ define(['util'], function () {
             unAssign: "Unassign",
             assignTitle: "Add member to the project",
             assign: "Assign",
-            permissionsMap: "Permission map",
+            permissionsMap: "Permission Map",
             assignedMembers: "Project members",
             assignProjectTitle: "Assign member to the project",
             linkTo: "Link to",
