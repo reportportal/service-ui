@@ -29,6 +29,7 @@ define(function (require, exports, module) {
     var FilterModel = require('filters/FilterModel');
 
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
@@ -47,9 +48,10 @@ define(function (require, exports, module) {
             // this.appendData = lastModelCrumbs.toJSON();
             // this.level = lastModelCrumbs.get('level');
             this.listenTo(this, 'remove', this.onRemove);
+            this.userStorage = new SingletonUserStorage();
             this.pagingPage = 1;
             this.pagingTotalPages = 1;
-            this.pagingSize = 50;
+            this.pagingSize = this.userStorage.get('launchPageSize') || 50;
             this.noChildFilter = false;
         },
         update: function(launchModel, parentModel, optionsURL) {
@@ -107,6 +109,7 @@ define(function (require, exports, module) {
             this.pagingTotalPages = curPage;
             if(size) {
                 this.pagingSize = size;
+                this.userStorage.set('launchPageSize', size);
             }
             this.activateChangeParamsTrigger();
             this.load();

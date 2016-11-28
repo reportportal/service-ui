@@ -76,7 +76,7 @@ define(function (require, exports, module) {
             }
             return 0;
         },
-        updateData: function() {
+        updateData: function(force) {
             var self = this;
             if(this.get('level') == 'filter') {
                 if(this.get('id') == 'all') {
@@ -91,14 +91,16 @@ define(function (require, exports, module) {
                     })
                 }
             } else {
-                if(this.collection.cacheModel && this.collection.cacheModel.get('id') == this.get('id')) {
-                    this.set(this.collection.cacheModel.toJSON());
-                    this.ready.resolve();
-                    return;
-                }
-                if(this.collection.lastLogItem && this.collection.lastLogItem == this.get('id')) {
-                    this.ready.resolve();
-                    return;
+                if (!force) {
+                    if(this.collection.cacheModel && this.collection.cacheModel.get('id') == this.get('id')) {
+                        this.set(this.collection.cacheModel.toJSON());
+                        this.ready.resolve();
+                        return;
+                    }
+                    if(this.collection.lastLogItem && this.collection.lastLogItem == this.get('id')) {
+                        this.ready.resolve();
+                        return;
+                    }
                 }
                 var url = Urls.getProjectBase() + '/' + this.get('level') + '/' + this.get('id');
                 call('GET', url)
@@ -215,7 +217,8 @@ define(function (require, exports, module) {
             this.collection = new LaunchCrumbCollection();
             this.listenTo(this.collection, 'add', this.onAddCrumb);
             this.listenTo(this.collection, 'fail:load', function() {
-                config.router.show404Page();
+                // config.router.show404Page();
+                console.log('fail load crumbs item')
             });
             this.render();
         },

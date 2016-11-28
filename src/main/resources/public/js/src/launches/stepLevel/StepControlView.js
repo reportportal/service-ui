@@ -38,7 +38,8 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-history]': 'attr: {href:getHistoryHref, style: validateForHistoryBtn}'
+            '[data-js-history]': 'attr: {href:getHistoryHref, style: validateForHistoryBtn}',
+            '[data-js-multi-action="remove"]': 'attr: {disabled: not(activeMultiDelete), title: multipleDeleteTooltip}'
         },
 
         computeds: {
@@ -49,6 +50,15 @@ define(function (require, exports, module) {
             },
             getHistoryHref: function(){
                 return this.getHistoryLink();
+            },
+            activeMultiDelete: function() {
+                return !(this.launchModel.get('status') == config.launchStatus.inProgress)
+            },
+            multipleDeleteTooltip: function() {
+                if (this.getBinding('activeMultiDelete')) {
+                    return '';
+                }
+                return Localization.launches.launchNotInProgress;
             }
         },
 
