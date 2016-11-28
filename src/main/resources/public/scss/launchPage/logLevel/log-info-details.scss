@@ -39,5 +39,11 @@
 
   .rp-table-row:hover, .rp-table-row{
     background-color: $COLOR--white-four !important;
+    @media(max-width: 640px) {
+      padding: 0;
+      .grid-cell {
+        padding-bottom: 0;
+      }
+    }
   }
 }
