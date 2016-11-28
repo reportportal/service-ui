@@ -175,6 +175,8 @@ define(function (require, exports, module) {
                 RemoveAction({items: this.collection.models}).done(function() {
                     self.compareAction = null;
                     self.collectionItems.load(true);
+                    var parentModel = self.collectionItems.parentModel || self.collectionItems.launchModel;
+                    parentModel.updateData(true);
                     self.reset();
                 })
             },

@@ -1378,7 +1378,6 @@ define(['util'], function () {
             submitProfileInfo: "Failed to update profile info",
             submitProfileInfoDuplication: "Entered email already exists in the system",
             submitProfileInfoWrongData: "Email is incorrect",
-            submitProfileInfoEmail: "Check the entered email",
             submitChangePassInvalid: "Invalid password was entered",
             submitUpload: "Failed to upload photo",
             deletePhoto: "Failed to delete photo",
@@ -1449,7 +1448,7 @@ define(['util'], function () {
 
             bugIdPattern: "Special symbols are prohibited",
             launchDescriptionLength: "Description should have size not more than 1024 symbols",
-
+            submitProfileInfoEmail: "Email is incorrect",
             emailMatchRegex: "Check the entered email",
             emailNotificationLength: "Email should have size from '{0}' to '{1}'.",
             emailInternalRegex: "The password cannot be changed. Please use you domain password.",

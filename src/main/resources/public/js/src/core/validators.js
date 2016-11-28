@@ -49,7 +49,7 @@ define(function (require, exports, module) {
                 : new RegExp(options.pattern, options.arg);
         }
         if (!regexes[options.type].test(''+val)) {
-            return Localization.validation[options.type];
+            return options.message || Localization.validation[options.type];
         }
         return null;
     };

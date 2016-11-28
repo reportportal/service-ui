@@ -32,6 +32,7 @@ define(function (require, exports, module) {
     var Components = require('core/components');
     var StickyHeader = require('core/StickyHeader');
     var LogItemLogsItem = require('launches/logLevel/LogItemLogsItem');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
 
     var config = App.getInstance();
 
@@ -47,6 +48,7 @@ define(function (require, exports, module) {
             this.itemModel = options.itemModel;
             this.mainPath = options.mainPath;
             this.collectionItems = options.collectionItems;
+            this.userStorage = new SingletonUserStorage();
             var startOptions = options.options;
             var isAscSort = 'true';
             if (startOptions['page.sort'] && ~startOptions['page.sort'].indexOf('DESC')) {
@@ -89,7 +91,7 @@ define(function (require, exports, module) {
                 filterModel: this.filterModel,
                 itemModel: this.itemModel,
                 pagingPage: (startOptions['page.page'] && parseInt(startOptions['page.page'])),
-                pagingSize: (startOptions['page.size'] && parseInt(startOptions['page.size'])),
+                pagingSize: (startOptions['page.size'] && parseInt(startOptions['page.size'])) || this.userStorage.get('launchLogPageCount'),
             });
             this.listenTo(this.collection, 'change:paging', this.onChangePaging);
             this.listenTo(this.collection, 'loading:true', this.onStartLoading);
@@ -156,6 +158,7 @@ define(function (require, exports, module) {
         },
         onChangePageCount: function(count) {
             this.collection.setPaging(1, count);
+            this.userStorage.set({launchLogPageCount: count});
         },
         onChangePaging: function(pageData) {
             this.pagingModel.set(pageData);

@@ -22,12 +22,21 @@
 .log-grid {
   .message-grid-cell {
     width: 70%;
+    span {
+      word-wrap: break-word;
+    }
+    i {
+      display: none;
+    }
   }
   .attachment-grid-cell {
     width: 12%;
   }
   .time-grid-cell {
     width: 18%;
+  }
+  .mobile-block {
+    display: none;
   }
   .rp-table-row {
     position: relative;
@@ -122,6 +131,62 @@
       }
       &:after {
         background-color: $COLOR--orange-red;
+      }
+    }
+  }
+  @media(max-width: 720px) {
+    .message-grid-cell {
+      width: 100%;
+      span {
+        padding-right: 25px;
+        padding-bottom: 39px;
+        display: inline-block;
+        width: 100%;
+      }
+      i {
+        position: absolute;
+        top: 9px;
+        right: 5px;
+        padding: 10px;
+        cursor: pointer;
+      }
+    }
+    .time-grid-cell, .attachment-grid-cell {
+      display: none;
+    }
+    .rp-table-row {
+      &.show-accordion {
+        .message-grid-cell {
+          i {
+            display: block;
+          }
+        }
+      }
+      .accordion-block {
+        height: 50px;
+        i {
+          display: none !important;
+        }
+      }
+    }
+    .mobile-block {
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 34px;
+      left: 0;
+      bottom: 0;
+      margin: 8px 0;
+      padding: 0 17px;
+      span {
+        font-size: 14px;
+        line-height: 31px;
+        float: left;
+      }
+      img {
+        max-height: 100%;
+        max-width: 70px;
+        float: right;
       }
     }
   }
