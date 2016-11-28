@@ -810,7 +810,7 @@ define([
                 {
                     validator: 'matchRegex',
                     type: 'issueLinkRegex',
-                    pattern: config.patterns.urlT,
+                    pattern: config.patterns.inputLink,
                     arg: 'i'
                 }
             ]);
