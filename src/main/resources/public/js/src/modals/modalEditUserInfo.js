@@ -75,6 +75,7 @@ define(function (require, exports, module) {
                 {
                     validator: 'matchRegex',
                     type: 'emailMatchRegex',
+                    message: Localization.validation.submitProfileInfoEmail,
                     pattern: config.patterns.email
                 },
                 {
