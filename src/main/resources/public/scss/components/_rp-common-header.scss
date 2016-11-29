@@ -69,6 +69,9 @@
                 max-width: 300px;
                 text-overflow: ellipsis;
                 display: inline-block;
+                @-moz-document url-prefix() {
+                    line-height: 21px;
+                }
 
                 &:hover {
                     text-decoration: none;

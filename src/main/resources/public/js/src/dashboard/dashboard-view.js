@@ -468,7 +468,7 @@ define(function (require, exports, module) {
                     $("html").css("overflow", "visible");
                 })
                 .off('click.fullscreen')
-                .on('click.fullscreen', '.rp-blue-link-undrl, .text-muted, .cases-view, .pr-grid-defect-link, .rp-link', function () {
+                .on('click.fullscreen', '.rp-blue-link-undrl, .text-muted, .cases-view, .pr-grid-defect-link, .rp-link, .rp-ti-badge', function () {
                     $.fullscreen.exit();
                 })
                 .fullscreen({
