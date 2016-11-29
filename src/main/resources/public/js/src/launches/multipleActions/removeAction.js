@@ -45,14 +45,16 @@ define(function (require, exports, module) {
                 var ids = _.map(items, function(item) {
                     return item.get('id');
                 });
+                var message = (items.length > 1)? 'deleteLaunches' : 'deleteLaunch';
                 var path = Urls.getLaunchBase();
                 if(items[0].get('type') != 'LAUNCH') {
                     path = Urls.itemBase();
+                    message = (items.length > 1)? 'deleteTestItems' : 'deleteTestItem';
                 }
                 return CallService.call('DELETE', path + '?ids=' + ids.join(',')).done(function() {
-                    Util.ajaxSuccessMessenger('deleteLaunches');
+                    Util.ajaxSuccessMessenger(message);
                 }).fail(function(err) {
-                    Util.ajaxFailMessenger(err, 'deleteLaunches');
+                    Util.ajaxFailMessenger(err, message);
                 })
             }
         });

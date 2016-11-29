@@ -1263,8 +1263,9 @@ define(['util'], function () {
             deletedWidget: "Widget has been removed!",
             dashboardDeletedUnsharedByOwner: "Dashboard has been removed",
             deleteLaunch: "Launch was deleted",
-            deleteLaunches: 'Launches was deleted',
-            deleteTestItem: "Test item was deleted",
+            deleteLaunches: 'Launches where deleted',
+            deleteTestItem: "Item was deleted",
+            deleteTestItems: "Items where deleted",
 
             editFilter: "Filter has been updated!",
             sharedFilter: "Filter name has been shared!",
