@@ -144,6 +144,7 @@ define(function (require, exports, module) {
         load: function() {
             $('[data-js-activity-container]', this.$el).html('');
             $('[data-js-activity-wrapper]', this.$el).addClass('load');
+            $('[data-js-activity-wrapper]', this.$el).removeClass('not-found');
             var self = this;
             Service.loadActivityItems(this.itemModel.get('id'))
                 .done(function(data) {
@@ -163,6 +164,7 @@ define(function (require, exports, module) {
                 $('[data-js-activity-wrapper]', self.$el).addClass('not-found');
                 return;
             } else {
+                $('[data-js-activity-wrapper]', self.$el).removeClass('not-found');
                 _.each(data, function(dataModel){
                     var model = new LogItemInfoActivityItemModel(dataModel);
                     $activityContainer.append((new LogItemInfoActivityItemView({model: model})).$el);
