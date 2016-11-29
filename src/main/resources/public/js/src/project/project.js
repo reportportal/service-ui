@@ -1394,6 +1394,7 @@ define(function(require, exports, module) {
                 var defaultBts = config.forSettings.btsList[0];
                 if (!defaultBts) {
                     console.log('no bts');
+                    return;
                 } else {
                     this.set({systemType: defaultBts.name})
                 }
@@ -1531,9 +1532,12 @@ define(function(require, exports, module) {
             this.$instanceHead = $("#instanceHead", this.$el);
             this.$instanceBoby = $("#instanceBody", this.$el);
 
-            this.renderMultiSelector();
-            this.renderInstance();
-
+            if(this.renderMultiSelector()) {
+                this.renderInstance();
+            } else {
+                $('button', this.$el).prop({disabled: 'disabled'});
+                $('[data-js-no-bts-message]', this.$el).removeClass('hide');
+            }
             return this;
         },
 
@@ -1547,7 +1551,9 @@ define(function(require, exports, module) {
                     index: this.systemAt,
                     access: this.access
                 }));
+                return true;
             }
+            return false;
         },
 
         renderInstance: function () {
@@ -1576,7 +1582,7 @@ define(function(require, exports, module) {
         },
 
         systemWithMultipleProjects: function (system) {
-            return this.settings['bts' + system].multiple;
+            return (this.settings['bts' + system] && this.settings['bts' + system].multiple);
         },
 
         changeBts: function (e) {
