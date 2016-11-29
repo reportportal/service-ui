@@ -32,6 +32,7 @@ define(function(require, exports, module) {
     var Service = require('memberService');
     var Scrollable = require('scrollable');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var ModalConfirm = require('modals/modalConfirm');
 
     require('validate');
 
@@ -826,7 +827,8 @@ define(function(require, exports, module) {
         },
         applyMemberAction: function (e) {
             e.preventDefault();
-            var el = $(e.currentTarget),
+            var self = this,
+                el = $(e.currentTarget),
                 id = '' + el.data('id'),
                 index = -1,
                 member = _.find(this.members, function (m, i) {
@@ -837,13 +839,24 @@ define(function(require, exports, module) {
                         return valid;
                     }) || {};
 
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    this.doAction(member, index, el);
-                }.bind(this),
-                message: this.memberAction,
-                format: [member.full_name || member.userId, this.projectId]
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.unAssignMember,
+                bodyText: Util.replaceTemplate(Localization.dialog.unAssignMember, member.userId, this.projectId),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.dialog.unAssignMemberBtn,
+                confirmFunction: function() {
+                    return Service.unAssignMember(member.userId, self.projectId)
+                        .done(function () {
+                            Util.ajaxSuccessMessenger("unAssignMember");
+                            self.removeMember();
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error, "unAssignMember");
+                        });
+                }
             });
+            modal.show();
         },
         removeMember: function(index, el){
             var removeMember = this.members.splice(index, 1);
