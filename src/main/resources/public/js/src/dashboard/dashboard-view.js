@@ -17,7 +17,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 define(function (require, exports, module) {
     'use strict';
@@ -35,6 +35,7 @@ define(function (require, exports, module) {
     var WidgetsConfig = require('widget/widgetsConfig');
     var Localization = require('localization');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var ModalConfirm = require('modals/modalConfirm');
 
     require('gridstack');
     require('fullscreen');
@@ -49,7 +50,7 @@ define(function (require, exports, module) {
             if ($.fullscreen.isFullScreen()) {
                 if (content.find('.widget-item').length == 0) {
                     $('#clickToAddWidget', addWidget).hide();
-                } 
+                }
             }  else {
                 $('#clickToAddWidget', addWidget).show();
             }
@@ -397,7 +398,7 @@ define(function (require, exports, module) {
             this.navigationInfo.changeActive(dash.id);
             this.trigger('onUpdated');
         },
-        
+
         onWidgetDelete: function () {
             this.validateAddWidgetButton();
             updateFullscreenText();
@@ -411,7 +412,7 @@ define(function (require, exports, module) {
             this.tplAddDashModal = DashboardsList.prototype.tplAddDashModal,
             DashboardsList.prototype.showAddDashboardForm.call(this, e);
         },
-        
+
         validateAddWidgetButton: function () {
             if (this.currentDashboard) {
                 var dash = this.navigationInfo.getCurrentDashboard(),
@@ -420,8 +421,8 @@ define(function (require, exports, module) {
                     action = checkSize ? 'add' : 'remove',
                     title = checkSize ? Localization.dashboard.maxWidgetsAdded : '';
                 $('.add-widget', this.$el)[action+'Class']('disabled').attr('title', title);
-            }            
-        },       
+            }
+        },
         openFullscreenDashboard: function (event) {
             event.preventDefault();
             config.trackingDispatcher.dashboardFullScreen(this.currentDashboard.get('isShared'));
@@ -544,12 +545,17 @@ define(function (require, exports, module) {
             if ($(e.target).closest('li').hasClass('disabled')) {
                 return;
             }
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    var self = this,
-                        id = this.currentDashboard.get('id'),
-                        isShared = this.currentDashboard.get('owner') !== config.userModel.get('name');
-                    Service.deleteDashboard(id, isShared)
+            var self = this;
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.dashboardDelete,
+                bodyText: Util.replaceTemplate(Localization.dialog.dashboardDelete, this.currentDashboard.get('name')),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
+                confirmFunction: function() {
+                    var id = self.currentDashboard.get('id'),
+                        isShared = self.currentDashboard.get('owner') !== config.userModel.get('name');
+                    return Service.deleteDashboard(id, isShared)
                         .done(function () {
                             self.trigger('onRemoveDashboard', id);
                             Util.ajaxSuccessMessenger('dashboardDelete');
@@ -558,10 +564,9 @@ define(function (require, exports, module) {
                         .fail(function (error) {
                             Util.ajaxFailMessenger(error, 'dashboardDelete');
                         });
-                }.bind(this),
-                message: 'dashboardDelete',
-                format: [this.currentDashboard.get('name').escapeHtml()]
+                }
             });
+            modal.show();
         },
 
         destroy: function () {
@@ -638,9 +643,9 @@ define(function (require, exports, module) {
                     top: wisgetPosition[1],
                     left: wisgetPosition[0],
                     context: this.context
-                }).render();   
+                }).render();
             this.widgets.push(widget);
-            
+
             var grid = $('.grid-stack', this.$el).data('gridstack');
             if (grid) {
                 var el = $('#'+widget.$el.attr('id'));
@@ -652,7 +657,7 @@ define(function (require, exports, module) {
                 }
             }
         },
-        
+
         checkWidgetsForLoad: function () {
             _.each(this.widgets, function (w) {
                 if (!w.isStartLoad && this.checkScrollingForWidget(w.id)) {
@@ -660,7 +665,7 @@ define(function (require, exports, module) {
                 }
             }, this);
         },
-        
+
         checkScrollingForWidget: function (id) {
             return $(window).outerHeight() + $(window).scrollTop() >= $('#'+id).offset().top - 100;
         },
@@ -702,13 +707,13 @@ define(function (require, exports, module) {
                             var posA = a.widgetPosition[1], posB = b.widgetPosition[1];
                             return posA - posB;
                         });
-                        
+
                         var i = 0, size = widgets.length;
                         while (i < size && i < config.maxWidgetsOnDashboard) {
                             this.createWidget(widgets[i++]);
                         }
                         this.validateAddWidgetButton();
-                      
+
                         this.checkWidgetsForLoad();
                         // $.unsubscribe("scroll:greater:than:100");
                         $.subscribe("scroll:greater:than:100", this.bindCheckWidgetsForLoad);
@@ -772,7 +777,7 @@ define(function (require, exports, module) {
             });
 
         },
-        
+
         onWidgetDelete: function () {
             this.toggleNoWidgets();
             this.validateAddWidgetButton();
@@ -799,7 +804,7 @@ define(function (require, exports, module) {
                 }
             }
         },
-        
+
         validateAddWidgetButton: function () {
             var widgets = this.model.get('widgets'),
                 checkSize = widgets.length >= config.maxWidgetsOnDashboard,
@@ -1127,7 +1132,7 @@ define(function (require, exports, module) {
                 var owner = _.find(owners, function (item) {
                     return item.owner == val.owner;
                 });
-                var dublicate = this.isDublicateDashboard(key) 
+                var dublicate = this.isDublicateDashboard(key)
                     ? this.isDublicateDashboard(key)
                     : (key == directLinkDash);
                 var dashboard = {
