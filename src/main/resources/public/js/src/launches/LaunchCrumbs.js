@@ -43,6 +43,7 @@ define(function (require, exports, module) {
             isProcessing: false,
             number: '',
             listView: false,
+            failLoad: false,
         },
         computeds: {
             fullName: {
@@ -110,7 +111,9 @@ define(function (require, exports, module) {
                         self.ready.resolve();
                     })
                     .fail(function() {
-                        self.trigger('fail:load');
+                        self.set({failLoad: true});
+                        self.ready.resolve();
+                        // self.trigger('fail:load');
                     })
             }
         }
@@ -172,9 +175,18 @@ define(function (require, exports, module) {
                     }
                 })
             }
-
+            this.checkLostLaunch();
             return async.promise();
-        }
+        },
+        checkLostLaunch: function() {
+            var self = this;
+            $.when.apply(this, _.map(this.models, function(model) { return model.ready; })).always(function() {
+                var failModels = self.where({failLoad: true});
+                if(failModels.length == 1 && failModels[0].get('level') == 'launch') {
+                    self.trigger('lost:launch', failModels[0]);
+                }
+            })
+        },
     });
     var LaunchCrumbView = Epoxy.View.extend({
         tagName: 'li',
@@ -208,15 +220,13 @@ define(function (require, exports, module) {
 
     var LaunchCrumbsView = Epoxy.View.extend({
         template: 'tpl-launch-crumbs',
-
         events: {
             'click [data-js-switch-mode]': 'onClickSwitchMode',
         },
-
         initialize: function(options) {
             this.collection = new LaunchCrumbCollection();
             this.listenTo(this.collection, 'add', this.onAddCrumb);
-            this.listenTo(this.collection, 'fail:load', function() {
+            this.listenTo(this.collection, 'lost:launch', function(launchModel) {
                 // config.router.show404Page();
                 console.log('fail load crumbs item')
             });
