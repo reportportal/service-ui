@@ -908,7 +908,7 @@ define(['util'], function () {
             openFile: "Open the file in a new window",
             logLevel: "Log level",
             ticketNotFound: "Issue not found:",
-            ticketStatusProblem: "issue doesn't exist or no connection to the External System",
+            ticketStatusProblem: "Issue doesn't exist or no connection to the External System",
             summary: "Summary:",
             status: "Status:",
             prevTestItem: "Previous Test Item",
