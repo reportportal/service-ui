@@ -241,9 +241,9 @@ define(function(require, exports, module) {
                     return '';
                 },
                 loadbug: function() {
-                    var configuration = self.appModel.get('configuration');
+                    var externalSystem = self.appModel.getArr('externalSystem');
                     var issue = self.getIssue();
-                    if (!configuration && !configuration.externalSystem && !configuration.externalSystem.length) {
+                    if (externalSystem && !externalSystem.length) {
                         return Localization.launches.configureTBSLoad;
                     }
                     if (!issue || !issue.issue_type) {

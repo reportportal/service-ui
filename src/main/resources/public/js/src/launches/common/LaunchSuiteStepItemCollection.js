@@ -286,7 +286,7 @@ define(function (require, exports, module) {
             var params = this.getParamsFilter();
             if(this.launchModel) {
                 path = Urls.getGridUrl('suit');
-                params.push('filter.eq.launch=' + this.launchModel.get('id'));
+                !this.launchModel.get('failLoad') && params.push('filter.eq.launch=' + this.launchModel.get('id'));
                 if(this.parentModel) {
                     this.noChildFilter && params.push('filter.in.path=' + this.parentModel.get('id'));
                     !this.noChildFilter && params.push('filter.eq.parent=' + this.parentModel.get('id'));

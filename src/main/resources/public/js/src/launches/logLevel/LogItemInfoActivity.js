@@ -27,6 +27,7 @@ define(function (require, exports, module) {
     var Util = require('util')
     var Service = require('coreService');
     var Moment = require('moment');
+    var Textile = require('textile');
 
     var LogItemInfoActivityItemModel = Epoxy.Model.extend({
         defaults: {
@@ -96,7 +97,7 @@ define(function (require, exports, module) {
             return resultMas.join(',');
         },
         getActionValueHtml: function(value) {
-            return value.replace('*IssueDescription:*',"<br>*IssueDescription:*").escapeScript();
+            return Textile(value.replace('*IssueDescription:*',"<br>*IssueDescription:*").escapeScript());
         }
     });
 
@@ -144,6 +145,7 @@ define(function (require, exports, module) {
         load: function() {
             $('[data-js-activity-container]', this.$el).html('');
             $('[data-js-activity-wrapper]', this.$el).addClass('load');
+            $('[data-js-activity-wrapper]', this.$el).removeClass('not-found');
             var self = this;
             Service.loadActivityItems(this.itemModel.get('id'))
                 .done(function(data) {
@@ -163,6 +165,7 @@ define(function (require, exports, module) {
                 $('[data-js-activity-wrapper]', self.$el).addClass('not-found');
                 return;
             } else {
+                $('[data-js-activity-wrapper]', self.$el).removeClass('not-found');
                 _.each(data, function(dataModel){
                     var model = new LogItemInfoActivityItemModel(dataModel);
                     $activityContainer.append((new LogItemInfoActivityItemView({model: model})).$el);

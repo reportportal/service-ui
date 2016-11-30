@@ -129,6 +129,7 @@ define(function (require, exports, module) {
             this.externalSystems = appModel.getArr('externalSystem');
             if(!this.externalSystems.length) {
                 console.log('No bts found');
+                this.hide();
                 return;
             }
             this.itemModels = option.items;
