@@ -827,8 +827,7 @@ define(function(require, exports, module) {
         },
         applyMemberAction: function (e) {
             e.preventDefault();
-            var self = this,
-                el = $(e.currentTarget),
+            var el = $(e.currentTarget),
                 id = '' + el.data('id'),
                 index = -1,
                 member = _.find(this.members, function (m, i) {
@@ -838,7 +837,16 @@ define(function(require, exports, module) {
                         }
                         return valid;
                     }) || {};
-
+            this.doAction(member, index, el);
+        },
+        removeMember: function (index, el) {
+            var removeMember = this.members.splice(index, 1);
+            this.loadMembers();
+            this.trigger('user::action');
+            return removeMember;
+        },
+        doAction: function (member, index, el) {
+            var self = this;
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.unAssignMember,
                 bodyText: Util.replaceTemplate(Localization.dialog.unAssignMember, member.userId, this.projectId),
@@ -857,23 +865,6 @@ define(function(require, exports, module) {
                 }
             });
             modal.show();
-        },
-        removeMember: function(index, el){
-            var removeMember = this.members.splice(index, 1);
-            this.loadMembers();
-            this.trigger('user::action');
-            return removeMember;
-        },
-        doAction: function (member, index, el) {
-            var self = this;
-            Service.unAssignMember(member.userId, self.projectId)
-                .done(function () {
-                    Util.ajaxSuccessMessenger("unAssignMember");
-                    self.removeMember();
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "unAssignMember");
-                });
         },
         destroy: function () {
             this.members = null;
