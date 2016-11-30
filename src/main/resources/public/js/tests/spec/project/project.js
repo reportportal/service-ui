@@ -256,17 +256,17 @@ define(function (require, exports, module) {
         //     expect(btsView.systems.length).toEqual(1);
         // });
 
-        it('should re-render tab content according to selected system setup', function () {
-            btsView = new Project.BtsView({
-                holder: sandbox,
-                externalSystems: [system1, system2],
-                settings: config.forSettings,
-                access: true
-            }).render();
-            expect($("#project", sandbox)).toHaveValue(system1.project);
-            $("#" + system2.id, sandbox).click();
-            expect($("#project", sandbox)).toHaveValue(system2.project);
-        });
+        // it('should re-render tab content according to selected system setup', function () {
+        //     btsView = new Project.BtsView({
+        //         holder: sandbox,
+        //         externalSystems: [system1, system2],
+        //         settings: config.forSettings,
+        //         access: true
+        //     }).render();
+        //     expect($("#project", sandbox)).toHaveValue(system1.project);
+        //     $("#" + system2.id, sandbox).click();
+        //     expect($("#project", sandbox)).toHaveValue(system2.project);
+        // });
 
         it('should render "+" disabled if there are no bts defined yet', function () {
             btsView = new Project.BtsView({
