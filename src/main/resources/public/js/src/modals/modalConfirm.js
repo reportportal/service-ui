@@ -24,6 +24,7 @@ define(function (require, exports, module) {
 
     var ModalView = require('modals/_modalView');
     var Util = require('util');
+    var $ = require('jquery');
 
     var ModalConfirm = ModalView.extend({
         template: 'tpl-modal-confirm',
@@ -31,7 +32,7 @@ define(function (require, exports, module) {
 
         events: {
             'change [data-js-select]': 'onChangeCheckbox',
-            'click [data-js-ok]': 'onClickSuccess',
+            'click [data-js-ok]': 'onClickSuccess'
         },
 
         initialize: function(options) {
@@ -49,6 +50,19 @@ define(function (require, exports, module) {
         },
         render: function(options) {
             this.$el.html(Util.templates(this.template, options));
+            this.attachKeyActions();
+        },
+        attachKeyActions: function() {
+            var $submitBtn = $('[data-js-ok]', this.$el);
+            this.$el.on('keydown', function(e){
+                console.log(e);
+                if(e.ctrlKey && e.keyCode === 13){
+                    if(!$submitBtn.is(':disabled')){
+                        alert(1);
+                        //this.onClickSuccess();
+                    }
+                }
+            }.bind(this));
         },
         onChangeCheckbox: function(e) {
             if($(e.currentTarget).is(':checked')) {

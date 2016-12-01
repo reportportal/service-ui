@@ -1887,10 +1887,15 @@ define(function(require, exports, module) {
         },
 
         deleteInstance: function () {
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    var self = this;
-                    Service.deleteExternalSystem(this.model.get('id'))
+            var self = this;
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.deleteBts,
+                bodyText: Util.replaceTemplate(Localization.dialog.deleteBts, this.model.get('systemType'), this.model.get('project')),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
+                confirmFunction: function() {
+                    return Service.deleteExternalSystem(self.model.get('id'))
                         .done(function () {
                             self.systems.splice(self.systemAt, 1);
                             if (self.systems.length) {
@@ -1910,13 +1915,9 @@ define(function(require, exports, module) {
                         .fail(function (error) {
                             Util.ajaxFailMessenger(error, "deleteBts");
                         });
-                }.bind(this),
-                message: 'deleteBts',
-                format: [
-                    this.model.get('systemType'),
-                    this.model.get('project')
-                ]
+                }
             });
+            modal.show();
         },
 
         setPristineBTSForm: function (el) {
