@@ -55,6 +55,11 @@ define(function (require, exports, module) {
             this.$submitBtn = $('[data-js-ok]', this.$el);
             this.$confirmGroup = $('[data-js-confirm-group]', this.$el);
         },
+        onKeySuccess: function () {
+            if (!this.$submitBtn.hasClass('disabled')) {
+                this.submitChangePassword();
+            }
+        },
         validatePass: function (e, data) {
             var action;
             if (!data.valid) {

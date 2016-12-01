@@ -56,7 +56,11 @@ define(function (require, exports, module) {
             this.setupAnchors();
             this.setupValidation();
         },
-
+        onKeySuccess: function () {
+            if (!this.$submitInfo.hasClass('disabled')) {
+                this.submitEditInfo();
+            }
+        },
         validateUserInfo: function () {
             var action = (this.$email.data('valid') && this.$fullName.data('valid')
             && (this.$fullName.val() !== this.oldName || this.$email.val() !== this.oldEmail))
