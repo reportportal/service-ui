@@ -1515,7 +1515,17 @@ define(function(require, exports, module) {
             this.settings = options.settings;
             this.access = options.access;
             this.systems = options.externalSystems;
-            this.model = new BtsProperties(options.externalSystems[0]);
+            var modelData = null;
+            _.each(options.externalSystems, function(system) {
+                return _.each(config.forSettings.btsList, function(btsItem) {
+                    if(btsItem.name == system.systemType) {
+                        modelData = system;
+                        return false;
+                    }
+                })
+            })
+            // this.model = new BtsProperties(options.externalSystems[0]);
+            this.model = new BtsProperties(modelData);
             this.systemAt = 0;
         },
 
@@ -1533,7 +1543,8 @@ define(function(require, exports, module) {
             this.$instanceHead = $("#instanceHead", this.$el);
             this.$instanceBoby = $("#instanceBody", this.$el);
 
-            if(this.renderMultiSelector()) {
+            if(config.forSettings.btsList.length) {
+                this.renderMultiSelector()
                 this.renderInstance();
             } else {
                 $('button', this.$el).prop({disabled: 'disabled'});

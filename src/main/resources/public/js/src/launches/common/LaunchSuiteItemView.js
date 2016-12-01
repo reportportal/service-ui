@@ -26,6 +26,7 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
+    var Localization = require('localization');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var LaunchItemMenuView = require('launches/launchLevel/LaunchItemMenuView');
     var LaunchSuiteDefectsView = require('launches/common/LaunchSuiteDefectsView');
@@ -54,7 +55,7 @@ define(function (require, exports, module) {
             ':el': 'classes: {"select-state": select}',
             '[data-js-analize-label]': 'classes: {visible: isProcessing}',
             '[data-js-name-link]': 'attr: {href: url}, classes: {"not-link": not(url)}',
-            '[data-js-name]': 'text: name',
+            '[data-js-name]': 'text: name, attr: {title: nameTitle}',
             '[data-js-launch-number]': 'text: numberText',
             '[data-js-item-edit]': 'classes: {hide: hideEdit}',
             '[data-js-description]': 'text: description',
@@ -92,6 +93,15 @@ define(function (require, exports, module) {
                 deps: ['launch_owner'],
                 get: function() {
                     return this.model.validate.edit()
+                }
+            },
+            nameTitle: {
+               deps: ['url'],
+                get: function(url) {
+                    if(!url) {
+                        return Localization.launches.noItemsInside;
+                    }
+                    return '';
                 }
             },
             executionTotal: {

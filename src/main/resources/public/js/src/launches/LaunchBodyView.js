@@ -63,6 +63,7 @@ define(function (require, exports, module) {
             this.listenTo(this.collectionItems, 'change:log:item', this.onChangeLogItem);
             this.listenTo(this.collectionItems, 'set:log:item', this.onSetLogItem);
             this.listenTo(this.crumbs, 'change:path', this.onChangeItemCrumbs);
+            this.listenTo(this.crumbs, 'restore:path', this.onRestoreItemCrumbs);
             this.listenTo(this.multipleSelected, 'activate:true', this.onActivateMultipleSelect);
             this.listenTo(this.multipleSelected, 'activate:false', this.onDisableMultipleSelect);
         },
@@ -118,6 +119,9 @@ define(function (require, exports, module) {
                 .fail(function() {
                     config.router.show404Page();
                 })
+        },
+        onRestoreItemCrumbs: function() {
+            this.collectionItems.restorePath();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));

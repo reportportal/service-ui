@@ -159,6 +159,9 @@ define(function(require, exports, module) {
             this.appModel = new SingletonAppModel();
             this.userModel = new UserModel();
         },
+        restorePath: function() {
+            this.initComputeds();
+        },
         getIssue: function () {
             try {
                 return JSON.parse(this.get('issue'));
