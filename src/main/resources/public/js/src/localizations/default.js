@@ -84,8 +84,7 @@ define(['util'], function () {
             lockedTitle: "Role can't be changed, since user have ADMIN privileges",
             more: "more...",
             wrongCredentials: "user name or password is incorrect",
-            //wronglength: ''
-            wronglength: " Login must be to 128 characters.",
+            wronglength: "Login must be to 128 characters.",
             wrongcharacters: "Login should contain only any Latin, numeric characters, symbols: hyphen, underscore.",
             wrongsignin: "You need to sign in before continuing",
             wrongrelogin: "Can't get user info. Please relogin",
