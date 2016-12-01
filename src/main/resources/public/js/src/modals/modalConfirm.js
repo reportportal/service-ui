@@ -50,19 +50,6 @@ define(function (require, exports, module) {
         },
         render: function(options) {
             this.$el.html(Util.templates(this.template, options));
-            this.attachKeyActions();
-        },
-        attachKeyActions: function() {
-            var $submitBtn = $('[data-js-ok]', this.$el);
-            this.$el.on('keydown', function(e){
-                console.log(e);
-                if(e.ctrlKey && e.keyCode === 13){
-                    if(!$submitBtn.is(':disabled')){
-                        alert(1);
-                        //this.onClickSuccess();
-                    }
-                }
-            }.bind(this));
         },
         onChangeCheckbox: function(e) {
             if($(e.currentTarget).is(':checked')) {
@@ -71,6 +58,14 @@ define(function (require, exports, module) {
                 $('[data-js-ok]', this.$el).addClass('disabled');
             }
         },
+
+        onKeySuccess: function () {
+            var confirmBtn = $('[data-js-ok]',this.$el);
+            if (!confirmBtn.hasClass('disabled')) {
+                confirmBtn.trigger('click')
+            }
+        },
+
         onClickSuccess: function() {
             var self = this;
             if(!this.confirmFunction) {
@@ -83,7 +78,7 @@ define(function (require, exports, module) {
             }).fail(function(err) {
                 self.closeAsync && self.closeAsync.resolve(err);
             }).always(function() {
-                self.$modalWrapper && self.$modalWrapper.modal('hide');
+                self.hide();
             })
         }
     });
