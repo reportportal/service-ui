@@ -24,6 +24,10 @@
 %BTS_SETTINGS {
     #btsSettings {
         padding-top: 10px;
+        .no-bts-found {
+            padding-top: 10px;
+            display: inline-block;
+        }
 
         #instanceHead {
             margin-bottom: 20px;

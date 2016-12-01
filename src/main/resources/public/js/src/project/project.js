@@ -1395,6 +1395,7 @@ define(function(require, exports, module) {
                 var defaultBts = config.forSettings.btsList[0];
                 if (!defaultBts) {
                     console.log('no bts');
+                    return;
                 } else {
                     this.set({systemType: defaultBts.name})
                 }
@@ -1514,7 +1515,17 @@ define(function(require, exports, module) {
             this.settings = options.settings;
             this.access = options.access;
             this.systems = options.externalSystems;
-            this.model = new BtsProperties(options.externalSystems[0]);
+            var modelData = null;
+            _.each(options.externalSystems, function(system) {
+                return _.each(config.forSettings.btsList, function(btsItem) {
+                    if(btsItem.name == system.systemType) {
+                        modelData = system;
+                        return false;
+                    }
+                })
+            })
+            // this.model = new BtsProperties(options.externalSystems[0]);
+            this.model = new BtsProperties(modelData);
             this.systemAt = 0;
         },
 
@@ -1532,9 +1543,13 @@ define(function(require, exports, module) {
             this.$instanceHead = $("#instanceHead", this.$el);
             this.$instanceBoby = $("#instanceBody", this.$el);
 
-            this.renderMultiSelector();
-            this.renderInstance();
-
+            if(config.forSettings.btsList.length) {
+                this.renderMultiSelector()
+                this.renderInstance();
+            } else {
+                $('button', this.$el).prop({disabled: 'disabled'});
+                $('[data-js-no-bts-message]', this.$el).removeClass('hide');
+            }
             return this;
         },
 
@@ -1548,7 +1563,9 @@ define(function(require, exports, module) {
                     index: this.systemAt,
                     access: this.access
                 }));
+                return true;
             }
+            return false;
         },
 
         renderInstance: function () {
@@ -1577,7 +1594,7 @@ define(function(require, exports, module) {
         },
 
         systemWithMultipleProjects: function (system) {
-            return this.settings['bts' + system].multiple;
+            return (this.settings['bts' + system] && this.settings['bts' + system].multiple);
         },
 
         changeBts: function (e) {
