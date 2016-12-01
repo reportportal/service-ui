@@ -115,6 +115,9 @@ define(function (require, exports, module) {
             this.delegateEvents();
         },
 
+        onKeySuccess: function () {
+            this.submit();
+        },
         setupAnchors: function () {
             this.$actionBtn = $('[data-js-submit]', this.$el);
             this.$name = $("#mergeName", this.$el);

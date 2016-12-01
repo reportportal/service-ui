@@ -65,7 +65,7 @@ define(function (require, exports, module) {
             this.closeAsync && this.closeAsync.reject();
             this.destroy();
         },
-        onKeySuccess: function () {
+        onKeySuccess: function () { //should be overwritten in the child modal
            this.successClose();
         },
         showLoading: function() {

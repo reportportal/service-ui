@@ -44,7 +44,7 @@ define(function (require, exports, module) {
             var launchFilterCollection = new SingletonLaunchFilterCollection();
             var filterNames = _.map(launchFilterCollection.models, function(model) {
                 return model.get('name');
-            })
+            });
             this.render(options);
             var filterModel = options.filterModel;
             this.model = new Epoxy.Model({
@@ -66,6 +66,9 @@ define(function (require, exports, module) {
         },
         render: function(options) {
             this.$el.html(Util.templates(this.template, options));
+        },
+        onKeySuccess: function () {
+            $('[data-js-ok]', this.$el).focus().trigger('click');
         },
         onClickOk: function() {
             if ($('.has-error', this.$el).length) return;
