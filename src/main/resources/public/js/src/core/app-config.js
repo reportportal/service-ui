@@ -110,7 +110,7 @@ define(function (require, exports, module) {
             session: {},
 
             forms: {
-                nameRange: [4, 128],
+                nameRange: [1, 128],
                 fullNameRange: [3, 256],
                 passwordRange: [4, 25],
                 itemDescriptionMax: 1024,
