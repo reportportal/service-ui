@@ -659,6 +659,8 @@ define(['util'], function () {
 
             deleteBulk: 'Delete Test Items in bulk',
 
+            bredcrumbsLostLaunch: 'Original launch was lost',
+            bredcrumbsLostLaunchRestore: 'Restore path',
 
             issueTitle: "Issue title",
             components: "Components:",

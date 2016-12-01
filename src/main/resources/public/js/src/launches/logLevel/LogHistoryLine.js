@@ -54,9 +54,9 @@ define(function (require, exports, module) {
         },
         parse: function(data, itemId) {
             var self = this;
-            var answerData = _.map(data, function(item) {
+            var answerData = _.map(data, function(item, num) {
                 var answer = {launchNumber: item.launchNumber, active: false, parent_launch_status: item.launchStatus};
-                if(item.launchId == self.launchModel.get('id')) {
+                if(item.launchId == self.launchModel.get('id') || (num == 0 && self.launchModel.get('failLoad'))) {
                     answer.parent_launch_investigate = self.launchModel.getToInvestigate();
                     _.each(item.resources, function(resource) {
                         if(resource.id == itemId) {
