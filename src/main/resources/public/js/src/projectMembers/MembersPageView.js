@@ -26,13 +26,7 @@ define(function(require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var Components = require('core/components');
-    var urls = require('dataUrlResolver');
     var App = require('app');
-    var Localization = require('localization');
-    var Service = require('memberService');
-    var Scrollable = require('scrollable');
-    var SingletonAppModel = require('model/SingletonAppModel');
     var MembersTableView = require('projectMembers/MembersTableView');
 
     var config = App.getInstance();
@@ -43,7 +37,6 @@ define(function(require, exports, module) {
         templateHeader: 'tpl-project-members-header',
 
         initialize: function(options){
-            console.log('options: ', options);
             this.context = options.context;
             this.$header = this.context.getMainView().$header;
             this.$el = this.context.getMainView().$body;
@@ -52,7 +45,7 @@ define(function(require, exports, module) {
         render: function(){
             this.renderHeader();
             this.$el.html(Util.templates(this.template), {});
-            this.body = new MembersTableView();
+            this.body = new MembersTableView({});
             $('[data-js-members]', this.$el).append(this.body.$el)
         },
 

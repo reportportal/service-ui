@@ -4,7 +4,7 @@
             <div class="input-filter form-group">
                 <input type="text" class="rp-input-search favorites-name-filter form-control"
                        id="userFilter" name="userFilter"
-                       placeholder="" value="" />
+                       placeholder="" value="" data-js-members-search />
                 <i class="material-icons">search</i>
                 <div class="error-bottom">
                     <div class="help-inline"></div>
@@ -27,7 +27,7 @@
         </button>
     </div>
 </div>
-<div class="project-members-table rp-table-grid" data-js-members-table>
+<div class="project-members-table rp-table-grid show-from-now" data-js-members-table>
     <div class="row rp-grid-thead">
         <div class="rp-grid-th grid-cell name-grid-cell">
             <div class="table-wrapper">
@@ -53,10 +53,11 @@
         <div class="rp-grid-th grid-cell action-grid-cell">
             <div class="table-wrapper">
                 <div class="middle-wrapper">
-                    <span class="rp-grid-th-name"></span>
+                    <span class="rp-grid-th-name"><%= data.text.ui.action %></span>
                 </div>
             </div>
         </div>
     </div>
+    <div data-js-members-list></div>
 </div>
 <div data-js-members-paginate></div>
