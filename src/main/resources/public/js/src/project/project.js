@@ -596,7 +596,7 @@ define(function(require, exports, module) {
                 recipients = caseItem.find('input.recipients'),
                 remoteUsers = [],
                 users = this.getRecipients(index),
-                minimumInputLength = 1,
+                minimumInputLength = config.forms.filterUser,
                 resultFound = false,
                 self = this;
 

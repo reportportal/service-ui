@@ -1413,7 +1413,7 @@ define(['util'], function () {
             accountRole: "Account role",
             selectProject: "Select a project",
             symbolsForName: "3-256 symbols, Latin, Cyrillic, numeric characters, symbols: hyphen, underscore, dot, space.",
-            symbolsForLogin: "4-128 symbols, Latin, numeric characters, symbols: hyphen, underscore.",
+            symbolsForLogin: "1-128 symbols, Latin, numeric characters, symbols: hyphen, underscore.",
             symbolsForPass: "4-25 symbols.",
             passwordSize: 'Password should have size from "4" to "25".',
             passwordEmpty: "Password shouldn't be empty.",

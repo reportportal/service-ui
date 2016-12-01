@@ -1146,7 +1146,7 @@ define(function (require, exports, module) {
 
             if (widget.usersFilter) {
                 var selectedUsers = gadget && gadget.widgetOptions && gadget.widgetOptions.userRef,
-                    startSearch = 1;
+                    startSearch = config.forms.filterUser;
 
                 selectedUsers && this.model.set('users', selectedUsers);
                 this.$templateOptions.append(Util.templates(this.usersSelectorTpl, {
@@ -1158,8 +1158,8 @@ define(function (require, exports, module) {
                     self = this;
                 Editor.setupSelect2Tags(userTags, {
                     type: 'autocompleteUserUrl',
-                    min: 1,
-                    minimumInputLength: 1,
+                    min: startSearch,
+                    minimumInputLength: startSearch,
                     maximumInputLength: 256,
                     dropdownCssClass: 'hideNew',
                     mode: 'DEFAULT',
