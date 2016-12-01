@@ -55,7 +55,7 @@ define(function(require, exports, module) {
 
             this.collection = new MembersCollection();
             this.listenTo(this.collection, 'reset', this.renderMembersList);
-            this.listenTo(this.collection, 'remove', this.renderMembersList);
+            this.listenTo(this.collection, 'remove', function(){ console.log('on remove') ; this.updateMembers()}.bind(this));
             //this.context = options.context;
             //this.$el = options.$el;
             console.log(this.$el);
@@ -124,12 +124,12 @@ define(function(require, exports, module) {
                     this.paging.model.set(data.page);
                     this.paging.render();
                     console.log('this.collection: ', this.collection);
-                    this.collection.reset(data.content ? data.content : data);
+                    this.collection.parse(data.content ? data.content : data);
 
                     //this.$total.html(data.page.totalElements);
                 }.bind(this))
                 .fail(function (error) {
-                    this.collection.reset([]);
+                    this.collection.parse([]);
                     Util.ajaxFailMessenger(error, "loadMembers");
                 }.bind(this))
                 .always(function() {

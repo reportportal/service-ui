@@ -31,7 +31,15 @@ define(function (require, exports, module) {
     var config = App.getInstance();
 
     var MembersCollection = Backbone.Collection.extend({
-        model: MembersModel
+
+        model: MembersModel,
+
+        parse: function (response) {
+            _.each(response, function(member) {
+                member.assigned_projects && (member.assigned_projects = JSON.stringify(member.assigned_projects));
+            }, this)
+            this.reset(response);
+        }
     });
 
     return MembersCollection;

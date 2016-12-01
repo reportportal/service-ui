@@ -28,6 +28,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var urls = require('dataUrlResolver');
+    var CallService = require('callService');
 
     var config = App.getInstance();
 
@@ -73,6 +74,29 @@ define(function (require, exports, module) {
                     return Util.updateImagePath(urls.getAvatar() + userId);
                 }
             }
+        },
+        getAssignedProjects: function(){
+            try {
+                return JSON.parse(this.get('assigned_projects'));
+            } catch (err) {
+                return {};
+            }
+        },
+        setAssignedProjects: function(assigned_projects){
+            this.set({assigned_projects: JSON.stringify(assigned_projects)});
+        },
+        remove: function(projectId) {
+            var memberId = this.get('userId');
+            return CallService.call('PUT', urls.updateProjectUnassign(projectId), {userNames: [memberId]})
+                .done(function() {
+                    Util.ajaxSuccessMessenger("unAssignMember");
+                    if(this.collection) {
+                        this.collection.remove(this);
+                    }
+                }.bind(this))
+                .fail(function (error) {
+                    Util.ajaxFailMessenger(error, "unAssignMember");
+                })
         }
     });
 

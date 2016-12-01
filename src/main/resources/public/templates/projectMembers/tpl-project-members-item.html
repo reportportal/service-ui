@@ -23,15 +23,15 @@
 <div class="grid-cell role-grid-cell">
     <div class="member-select-role" data-js-select-roles>
         <button data-value="" type="button"
-                class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle % data.getColorClass && data.getColorClass(member) %"
+                class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
                 data-toggle="dropdown">
-            <span class="select-value"><%= data.roles[1] %></span>
+            <span class="select-value" data-js-selected-role></span>
             <span class="rp-caret"></span>
         </button>
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu" data-js-dropdown-roles>
             <% _.forEach(data.roles, function(val, key){ %>
             <li class="">
-                <a href="#" class="project-roles %= current === key ? 'active' : '' % %= isDisabled  %"
+                <a href="#" class="project-roles"
                    data-value="<%= key %>">
                     <%= val %>
                 </a>

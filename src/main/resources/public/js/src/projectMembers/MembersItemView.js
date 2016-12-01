@@ -29,6 +29,8 @@ define(function(require, exports, module) {
     var App = require('app');
     var Localization = require('localization');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var ModalConfirm = require('modals/modalConfirm');
+    var MemberService = require('projectMembers/MembersService');
 
     var config = App.getInstance();
 
@@ -44,9 +46,11 @@ define(function(require, exports, module) {
             '[data-js-member-login]': 'html: getLogin',
             '[data-js-member-you]': 'classes: {hide: not(isYou)}',
             '[data-js-member-admin]': 'classes: {hide: not(isAdmin)}',
-            '[data-js-member-unassign]': 'classes: {hide: cantUnAssigned}',
+            '[data-js-member-unassign]': 'classes: {disabled: cantUnAssigned}',
             '[data-js-select-roles]': 'classes: {hide: isAdmin}',
-            '[data-js-admin-role]': 'classes: {hide: not(isAdmin)}'
+            '[data-js-admin-role]': 'classes: {hide: not(isAdmin)}',
+            '[data-js-selected-role]': 'text: getProjectRole',
+            '[data-js-dropdown-roles]': 'updateRoleDropDown: assigned_projects',
         },
 
         computeds: {
@@ -67,11 +71,34 @@ define(function(require, exports, module) {
                 get: function(isAdmin, userId, assigned_projects) {
                     return this.isPersonalProjectOwner() || this.unassignedLock() //|| (!isAdmin || config.userModel.hasPermissions() || !this.unassignedLock());
                 }
+            },
+            getProjectRole: {
+                deps: ['assigned_projects'],
+                get: function(){
+                    var assignedProjects = this.model.getAssignedProjects(),
+                        projectId = this.appModel.get('projectId');
+                    return assignedProjects[projectId].projectRole;
+                }
+            }
+        },
+
+        bindingHandlers: {
+            updateRoleDropDown: {
+                set: function($el, value) {
+                    var assignedProjects = this.view.model.getAssignedProjects(),
+                        projectId = this.view.appModel.get('projectId'),
+                        role = assignedProjects[projectId].projectRole;
+                    _.each($('a', $el), function(a){
+                        var action = $(a).data('value') === role ? 'add' : 'remove';
+                        $(a)[action+'Class']('active');
+                    });
+                }
             }
         },
 
         events: {
             'click [data-js-login-time]': 'toggleTimeView',
+            'click [data-js-dropdown-roles] a': 'updateProjectRole',
             'click [data-js-member-unassign]': 'unAssignMember'
         },
 
@@ -99,18 +126,44 @@ define(function(require, exports, module) {
             return Util.isUnassignedLock(member, member.assigned_projects[projectId]);
         },
 
+        updateProjectRole: function (e) {
+            console.log('updateProjectRole');
+            e.preventDefault();
+            var $el = $(e.currentTarget);
+            if ($el.hasClass('active') || $el.hasClass('disabled')) {
+                return;
+            }
+
+            var newRole = $el.data('value'),
+                userId = this.model.get('userId'),
+                projectId = this.appModel.get('projectId'),
+                assignedProjects = this.model.getAssignedProjects();
+
+            assignedProjects[projectId].projectRole = newRole;
+
+            MemberService.updateMember(newRole, userId, projectId)
+                .done(function () {
+                    this.model.setAssignedProjects(assignedProjects);
+                    Util.ajaxSuccessMessenger('updateProjectRole', this.model.get('full_name') || this.model.get('userId'));
+                }.bind(this))
+                .fail(function (error) {
+                    Util.ajaxFailMessenger(error, "updateProjectRole");
+                });
+        },
+
         unAssignMember: function(e){
             e.preventDefault();
-            console.log('unAssignMember');
-            /*var self = this;
-            Service.unAssignMember(member.userId, self.projectId)
-                .done(function () {
-                    Util.ajaxSuccessMessenger("unAssignMember");
-                    self.removeMember();
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "unAssignMember");
-                });*/
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.unAssignMember,
+                bodyText: Util.replaceTemplate(Localization.dialog.unAssignMember, this.model.get('userId').escapeHtml(), this.appModel.get('projectId')),
+                okButtonDanger: true,
+                cancelButtonText: Localization.ui.cancel,
+                okButtonText: Localization.ui.unassign,
+            });
+            modal.show()
+                .done(function() {
+                    return this.model.remove(this.appModel.get('projectId'));
+                }.bind(this));
         },
 
         toggleTimeView: function(e){

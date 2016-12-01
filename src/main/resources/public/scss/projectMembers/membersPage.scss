@@ -63,6 +63,11 @@
         }
         .action-grid-cell {
             width: 18%;
+
+            .action-right {
+                text-align: right;
+                padding-right: 66px;
+            }
         }
 
         .member-wrap {
@@ -160,6 +165,15 @@
             width: 100%;
             max-width: 250px;
             position: relative;
+
+            .dropdown-menu {
+                &>li {
+                    a.active, a.active:hover {
+                        background: $COLOR--gray-91;
+                        cursor: default;
+                    }
+                }
+            }
         }
         .members-actions {
             text-align: right;
