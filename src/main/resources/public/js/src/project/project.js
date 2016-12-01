@@ -596,15 +596,16 @@ define(function(require, exports, module) {
                 recipients = caseItem.find('input.recipients'),
                 remoteUsers = [],
                 users = this.getRecipients(index),
+                minimumInputLength = 1,
                 resultFound = false,
                 self = this;
 
             if (getAnyway || !recipients.hasClass('select2-offscreen')) {
                 Util.setupSelect2WhithScroll(recipients, {
                     multiple: true,
-                    minimumInputLength: 3,
+                    minimumInputLength: minimumInputLength,
                     formatInputTooShort: function (input, min) {
-                        return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto
+                        return Localization.ui.minPrefix + minimumInputLength + Localization.ui.minSufixAuto
                     },
                     formatResultCssClass: function (state) {
                         if ((remoteUsers.length == 0 || _.indexOf(remoteUsers, state.text) < 0) && $('.users-typeahead.recipients:not(input)').eq(index).find('input').val() == state.text) {
@@ -643,7 +644,7 @@ define(function(require, exports, module) {
                                 results: []
                             };
 
-                        if (queryLength >= 3) {
+                        if (queryLength >= minimumInputLength) {
                             if (queryLength > 256) {
                                 self.validateRecipients();
                             } else {

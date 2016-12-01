@@ -579,7 +579,7 @@ define(function(require, exports, module) {
             Util.bootValidator(this.$memberFilter, [{
                 validator: 'minMaxNotRequired',
                 type: 'memberName',
-                min: 3,
+                min: 1,
                 max: 128
             }]);
 
