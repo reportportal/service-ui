@@ -162,6 +162,9 @@ define(function (require, exports, module) {
         },
 
         onClickMenuOpen: function () {
+            $('section.header [data-js-toogle-menu]').each(function (indx, element) {
+                $(element).toggleClass('hidden');
+            });
             $('body').toggleClass('menu-open');
         },
 

@@ -67,11 +67,26 @@
            width: 50px;
            height: 60px;
            padding: 20px 10px 20px 10px;
+           &.hidden {
+             display: none;
+           }
            .menu-icon-part {
              width: 100%;
              height: 3px;
              background: white;
              margin-bottom: 5px;
+           }
+         }
+         .button-menu-close {
+           position: relative;
+           width: 50px;
+           height: 60px;
+           padding: 5px 0;
+           &.hidden {
+             display: none;
+           }
+           .material-icons.close-menu {
+             font-size: 50px;
            }
          }
          .rp-logo {
