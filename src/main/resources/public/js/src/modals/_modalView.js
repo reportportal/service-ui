@@ -55,7 +55,6 @@ define(function (require, exports, module) {
         },
         attachKeyActions: function() {
             $(window).on('keydown.modal', function(e) {
-                console.log(e);
                 if((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
                     this.onKeySuccess();
                 }

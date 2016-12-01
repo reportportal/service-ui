@@ -71,7 +71,7 @@ define(function (require, exports, module) {
             this.applyBindings();
             this.setupAnchors();
             this.setupMarkItUp();
-            this.attachKeyActions();
+            //this.attachKeyActions();
         },
 
         isMultipleEdit: function(){
@@ -94,14 +94,10 @@ define(function (require, exports, module) {
             }
         },
 
-        attachKeyActions: function(){
-            this.$el.on('keydown', function(e){
-                if(e.ctrlKey && e.keyCode === 13){
-                    if(!this.$submitBtn.is(':disabled')){
-                        this.updateDefectType();
-                    }
-                }
-            }.bind(this))
+        onKeySuccess: function () {
+            if(!this.$submitBtn.is(':disabled')){
+                this.updateDefectType();
+            }
         },
 
         getIssueType: function(item){
