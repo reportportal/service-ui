@@ -911,7 +911,7 @@ define(['util'], function () {
             openFile: "Open the file in a new window",
             logLevel: "Log level",
             ticketNotFound: "Issue not found:",
-            ticketStatusProblem: "issue doesn't exist or no connection to the External System",
+            ticketStatusProblem: "Issue doesn't exist or no connection to the External System",
             summary: "Summary:",
             status: "Status:",
             prevTestItem: "Previous Test Item",
@@ -1639,6 +1639,7 @@ define(['util'], function () {
 
             msgDeleteItems: 'In case of delete the %%%, all related data will be deleted. Are you sure you want to delete %%%?',
             msgDeleteDefectType: "I am sure I want to remove custom defect type",
+            msgDeleteProject: "I am sure I want to delete project",
             msgResetColorsDefectType: "Are you sure you want to reset custom defect's colors to default?",
             msgMessageTop: "In case of delete custom defect, all investigated as <strong>'%%%'</strong> defects will be marked as <strong>'%%%'</strong>",
         },

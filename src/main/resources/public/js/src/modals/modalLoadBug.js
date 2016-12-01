@@ -142,6 +142,9 @@ define(function (require, exports, module) {
             this.listenTo(this.collection, 'add', this.onAddTicket);
             this.collection.add({});
         },
+        onKeySuccess: function () {
+            $('[data-js-load]', this.$el).trigger('click');
+        },
         onClickAddTicket: function() {
             this.collection.add({});
         },

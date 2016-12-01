@@ -38,7 +38,8 @@ define(function (require, exports, module) {
         Components = require('core/components'),
         Localization = require('localization'),
         SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection'),
-        SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+        SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection'),
+        ModalConfirm = require('modals/modalConfirm');
 
     require('jqueryUI');
     require('elasticColumns');
@@ -187,32 +188,34 @@ define(function (require, exports, module) {
         },
         deleteWidget: function (e) {
             e.preventDefault();
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    var self = this;
-                    var dash = this.navigationInfo.getCurrentDashboard();
-                    var grid = $('.grid-stack:first').data('gridstack');
-                    var id = this.getId();
-
-                    if (self.model && !_.isEmpty(self.model.attributes)) {
-                        var model = self.model.toJSON(),
-                            gadget = self.getGadgetType();
-                        if(gadget){
-                            config.trackingDispatcher.widgetRemoveType(gadget);
-                        }
-                        config.trackingDispatcher.widgetRemoveIsShared(model.isShared);
+            var self = this;
+            var dash = this.navigationInfo.getCurrentDashboard();
+            var grid = $('.grid-stack:first').data('gridstack');
+            var id = this.getId();
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.deletedWidget,
+                bodyText: Util.replaceTemplate(Localization.dialog.deletedWidget, this.getName()),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
+            });
+            modal.show().done(function() {
+                if (self.model && !_.isEmpty(self.model.attributes)) {
+                    var model = self.model.toJSON(),
+                        gadget = self.getGadgetType();
+                    if (gadget) {
+                        config.trackingDispatcher.widgetRemoveType(gadget);
                     }
+                    config.trackingDispatcher.widgetRemoveIsShared(model.isShared);
+                }
 
-                    dash.deleteWidget(id, function () {
-                        grid.remove_widget(self.$el);
-                        self.navigationInfo.trigger("dashboard::widget::deleted", {});
-                        self.destroy();
-                        dash.updateWidgets(grid.grid.nodes);
-                        Util.ajaxSuccessMessenger('deletedWidget');
-                    });
-                }.bind(this),
-                message: 'sureToRemoveWidget',
-                format: [Localization.ui.widgetSm, this.getName().escapeHtml()]
+                dash.deleteWidget(id, function () {
+                    grid.remove_widget(self.$el);
+                    self.navigationInfo.trigger("dashboard::widget::deleted", {});
+                    self.destroy();
+                    dash.updateWidgets(grid.grid.nodes);
+                    Util.ajaxSuccessMessenger('deletedWidget');
+                });
             });
         },
         editWidget: function (e) {

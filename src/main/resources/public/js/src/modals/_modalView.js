@@ -42,17 +42,31 @@ define(function (require, exports, module) {
                 .modal('show')
                 .click(function(e) {
                     var $target = $(e.target);
-                    if($target.is('[data-js-cancel]')) {
-                        self.$modalWrapper.modal('hide');
-                        self.closeAsync.reject();
+                    if ($target.is('[data-js-cancel]')) {
+                        self.hide();
+                    }
+                }).keydown(function(e) {
+                    if (e.keyCode === 27) {
+                        self.hide();
                     }
                 });
-
+            this.attachKeyActions();
             return this.closeAsync;
+        },
+        attachKeyActions: function() {
+            $(window).on('keydown.modal', function(e) {
+                if((e.ctrlKey && e.keyCode === 13) || (e.metaKey && e.keyCode === 13)) {
+                    this.onKeySuccess();
+                }
+            }.bind(this));
         },
         hide: function() {
             this.$modalWrapper && this.$modalWrapper.modal('hide');
             this.closeAsync && this.closeAsync.reject();
+            this.destroy();
+        },
+        onKeySuccess: function () { //should be overwritten in the child modal
+           this.successClose();
         },
         showLoading: function() {
             if(this.$modalWrapper){
@@ -67,8 +81,10 @@ define(function (require, exports, module) {
         successClose: function(data) {
             this.$modalWrapper && this.$modalWrapper.modal('hide');
             this.closeAsync && this.closeAsync.resolve(data);
+            this.destroy();
         },
         destroy: function() {
+            $(window).off('keydown.modal');
             this.undelegateEvents();
             this.stopListening();
             this.unbind();

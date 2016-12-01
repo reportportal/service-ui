@@ -39,6 +39,7 @@ define(function(require, exports, module) {
     var DefectTypeModel = require('defectType/DefectTypeModel');
     var SingletonAppModel = require('model/SingletonAppModel');
     var DemoDataSettingsView = require('DemoDataSettingsView');
+    var ModalConfirm = require('modals/modalConfirm');
 
     require('colorpicker');
 
@@ -1897,10 +1898,15 @@ define(function(require, exports, module) {
         },
 
         deleteInstance: function () {
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    var self = this;
-                    Service.deleteExternalSystem(this.model.get('id'))
+            var self = this;
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.deleteBts,
+                bodyText: Util.replaceTemplate(Localization.dialog.deleteBts, this.model.get('systemType'), this.model.get('project')),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
+                confirmFunction: function() {
+                    return Service.deleteExternalSystem(self.model.get('id'))
                         .done(function () {
                             self.systems.splice(self.systemAt, 1);
                             if (self.systems.length) {
@@ -1920,13 +1926,9 @@ define(function(require, exports, module) {
                         .fail(function (error) {
                             Util.ajaxFailMessenger(error, "deleteBts");
                         });
-                }.bind(this),
-                message: 'deleteBts',
-                format: [
-                    this.model.get('systemType'),
-                    this.model.get('project')
-                ]
+                }
             });
+            modal.show();
         },
 
         setPristineBTSForm: function (el) {
@@ -2260,60 +2262,20 @@ define(function(require, exports, module) {
 
             if (id === subType.toUpperCase() + '0') {
                 return;
-            };
-
-            var modalDialog = {
-                paramModal: {
-                    additionalClass: 'dialog-delete-defect-type',
-                    sizeModal: 'md',
-                    withConfirm: true,
-                    isFormatText: true
-                },
-                dialogHeader: {
-                    title: Localization.dialogHeader.titleDeleteDefectType
-                },
-                dialogBody: {
-                    txtMessageTop: updateMsgForModalDialog(Localization.dialog.msgMessageTop),
-                    txtMessage: Localization.dialog.msgDeleteDefectType
-                },
-                dialogFooter: {
-                    cancelButton: Localization.uiCommonElements.cancel,
-                    dangerButton: Localization.uiCommonElements.delete
-                }
-            };
-
-            this.deleteDialog = Util.getDialog({
-                name: this.confirmModal,
-                data: modalDialog,
+            }
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.titleDeleteDefectType,
+                bodyText: Util.replaceTemplate(Localization.dialog.msgMessageTop, fullNameSubType, nameParentType),
+                confirmText: Localization.dialog.msgDeleteDefectType,
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
             });
-
-            this.deleteDialog
-                .on('click', ".rp-btn-danger", function () {
-                    self.model.collection.remove(self.model);
-                    self.destroy();
-                    self.deleteDialog.modal("hide");
-                    Util.ajaxSuccessMessenger('deleteOneSubType');
-                })
-                .on('click', ".rp-btn-cancel", function () {
-                    // TODO
-                    // options.cancelCallback && options.cancelCallback();
-                })
-                .on('click', "input[type='checkbox'].confirm", function (event) {
-                    var elem = event.target;
-                    var btnDelete = $(elem).closest('.modal-body').find('.rp-btn-danger');
-                    if (elem.checked) {
-                        $(btnDelete.selector).removeAttr('disabled');
-                    } else {
-                        $(btnDelete.selector).attr("disabled", "disabled");
-                    }
-                })
-                .on('hidden.bs.modal', function () {
-                    $(this).data('modal', null);
-                    self.deleteDialog.off().remove();
-                    self.deleteDialog = null;
-                });
-
-            this.deleteDialog.modal("show");
+            modal.show().done(function () {
+                self.model.collection.remove(self.model);
+                self.destroy();
+                Util.ajaxSuccessMessenger('deleteOneSubType');
+            });
         },
         cancelItem: function (event) {
             event.preventDefault();
