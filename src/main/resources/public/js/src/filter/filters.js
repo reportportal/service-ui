@@ -320,7 +320,7 @@ define(function (require, exports, module) {
         initialize: function (options) {
             View.prototype.initialize.call(this, options);
             this.maxValueSize = options.maxValueSize || config.forms.tagsMax;
-            this.startSearch = 1;
+            this.startSearch = config.forms.filterUser;
         },
 
         tpl: 'tpl-filters-user',
