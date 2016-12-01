@@ -66,6 +66,8 @@ define(function(require, exports, module) {
 
     var config = App.getInstance();
 
+    Util.checkWidthScroll();
+
     config.mainScrollElement = Util.setupBaronScroll($('#main_content'));
     config.userModel = new UserModel;
     config.trackingDispatcher = TrackingDispatcher;
@@ -73,6 +75,7 @@ define(function(require, exports, module) {
 
     Util.setupWindowEvents();
     Util.setupBackTop();
+
 
     config.userModel.load();
     if('DEBUG_STATE') {

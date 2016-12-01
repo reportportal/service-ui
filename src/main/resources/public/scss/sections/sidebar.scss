@@ -100,7 +100,7 @@
               }
             }
 
-            &.active {
+            &.active, &.touchHover {
               border-top-color: $COLOR--black-two;
               background-color: $COLOR--black-two;
               color: #a3c644;
