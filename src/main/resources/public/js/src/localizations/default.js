@@ -651,6 +651,7 @@ define(['util'], function () {
             includeData: "Include data:",
             willBePostedTo: "Bug will be posted to",
             willBeLoadedTo: "Bug will be loaded to",
+            noItemsInside: 'No items inside',
 
             actionTitle: 'Select several items to processing',
             multiSelectError: 'You cannot perform operation to invalid items',
