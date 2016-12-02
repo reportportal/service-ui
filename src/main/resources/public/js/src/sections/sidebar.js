@@ -95,9 +95,10 @@ define(function (require, exports, module) {
         },
 
         closeMenu: function () {
-            $('section.header [data-js-toogle-menu]').each(function (indx, element) {
-                $(element).toggleClass('hidden');
-            });
+            if ($('body').hasClass('menu-open')) {
+                $('section.header .button-menu-close').addClass('hidden');
+                $('section.header .button-menu-open').removeClass('hidden');
+            }
             $('body').removeClass('menu-open');
         },
 
