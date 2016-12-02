@@ -40,6 +40,18 @@ define(function(require, exports, module) {
         tpl: 'tpl-project-members-shell',
         emptyMembersTpl: 'tpl-project-members-empty',
 
+        bindings: {
+            '[data-js-members-search]': 'attr: {placeholder: getPlaceHolder}'
+        },
+
+        computeds: {
+            getPlaceHolder: function(){
+                var grandAdmin = this.grandAdmin,
+                    projectId = this.appModel.get('projectId');
+                return grandAdmin ? projectId ? Localization.members.searchNameLogin : Localization.members.searchNameLoginEmail : Localization.members.searchName;
+            }
+        },
+
         initialize: function (options) {
             this.model = new Backbone.Model({
                 search: '',
@@ -64,6 +76,7 @@ define(function(require, exports, module) {
         },
 
         events: {
+            'validation::change [data-js-members-search]': 'onChangeFilterName',
             '[data-js-add-user]': 'showAddUser',
             '[data-js-invite-user]': 'showInviteUser',
             '[data-js-permissions]': 'showPermissionsModal'
@@ -76,7 +89,7 @@ define(function(require, exports, module) {
             Util.bootValidator(this.$searchFilter, [{
                 validator: 'minMaxNotRequired',
                 type: 'memberName',
-                min: 3,
+                min: 1, // need update after WS changes to config.forms.filterName
                 max: 128
             }]);
 
@@ -89,12 +102,11 @@ define(function(require, exports, module) {
             this.listenTo(this.paging, 'count', this.updateMembers);
 
             this.paging.ready.done(function(){
-                this.searchString = '';
-                if(this.paging.urlModel.get('filter.cnt.login')) {
-                    this.searchString = this.paging.urlModel.get('filter.cnt.login');
+                if(this.paging.urlModel.get('filter.cnt.name')) {
+                    this.model.set({search: this.paging.urlModel.get('filter.cnt.name')});
+                    this.$searchFilter.val(this.model.get('search'));
                 }
-                this.$searchFilter.val(this.searchString);
-                this.prevVal = this.searchString;
+                this.listenTo(this.model, 'change:search', this.onChangeModelSearch);
                 this.updateMembers();
             }.bind(this));
             return this;
@@ -137,9 +149,20 @@ define(function(require, exports, module) {
                 }.bind(this));
         },
 
+        onChangeModelSearch: function(){
+            this.paging.trigger('page', 1);
+        },
+
+        onChangeFilterName: function (e, data) {
+            if (data.valid) {
+                this.model.set({search: data.value});
+                this.paging.urlModel.set({'filter.cnt.name': data.value});
+            }
+        },
+
         getSearchQuery: function(){
             return {
-                search: encodeURIComponent(this.searchString),
+                search: encodeURIComponent(this.model.get('search')),
                 page: this.paging.model.get('number'),
                 size: this.paging.model.get('size')
             }
@@ -152,10 +175,13 @@ define(function(require, exports, module) {
         },
 
         renderMembersList: function() {
-            console.log('renderMembersList');
             this.clearMembers();
+            if(_.isEmpty(this.collection.models)){
+                this.renderEmptyMembers();
+                return;
+            }
             _.each(this.collection.models, function(model) {
-                var memberItem = new MembersItemView({model: model});
+                var memberItem = new MembersItemView({model: model, searchString: this.model.get('search')});
                 this.$membersList.append(memberItem.$el);
                 this.renderViews.push(memberItem);
             }, this);
