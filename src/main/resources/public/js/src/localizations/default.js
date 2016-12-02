@@ -1619,7 +1619,7 @@ define(['util'], function () {
             sureToRemoveWidget: "Are you sure you want to remove %%% <b>'%%%'</b>",
 
             launchEditor: "Edit launch",
-            itemEditor: "Edit test item",
+            itemEditor: "Edit item",
             defectEditor: 'Edit defect',
             choseDefectType: 'Choose Defect Type',
             commentForDefect: 'Leave Comment to Defect Type',
@@ -1628,7 +1628,7 @@ define(['util'], function () {
             postBug: "Post bug",
             loadBug: "Load bug",
             launchDetails: 'Launch Details',
-            testItemDetails: 'Test Item Details',
+            testItemDetails: 'Item Details',
             launchDescrPlaceholder: 'Enter Launch Description',
             testItemDescrPlaceholder: 'Enter Item Description',
             launchTagPlaceholder: 'Enter Tag Name',
