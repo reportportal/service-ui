@@ -244,9 +244,8 @@ define(function(require, exports, module) {
                     return '';
                 },
                 loadbug: function() {
-                    var externalSystem = self.appModel.getArr('externalSystem');
                     var issue = self.getIssue();
-                    if (externalSystem && !externalSystem.length) {
+                    if (!self.appModel.get('isBtsAdded')) {
                         return Localization.launches.configureTBSLoad;
                     }
                     if (!issue || !issue.issue_type) {
@@ -255,15 +254,8 @@ define(function(require, exports, module) {
                     return '';
                 },
                 postbug: function() {
-                    var configuration = self.appModel.get('configuration');
                     var issue = self.getIssue();
-                    if (configuration && configuration.externalSystem && configuration.externalSystem.length) {
-                        if (!_.any(configuration.externalSystem, function (bts) {
-                                return bts.fields && bts.fields.length;
-                            })) {
-                            return Localization.launches.configureTBS;
-                        }
-                    } else {
+                    if (!self.appModel.get('isBtsConfigure')) {
                         return Localization.launches.configureTBS;
                     }
                     if (!issue || !issue.issue_type) {

@@ -24,7 +24,7 @@
 
 $LAST_DATE_OF_UPDATE: "v=08.22.2016";
 
-@mixin font-face($fontFamily, $filePath, $fontStyle, $fontWeight) {
+@mixin font-face($fontFamily, $filePath, $fontStyle, $fontWeight, $noWoff2: false) {
     @font-face {
         font-family: $fontFamily;
         src: url("#{$filePath}.eot?#{$LAST_DATE_OF_UPDATE}"),
@@ -34,12 +34,19 @@ $LAST_DATE_OF_UPDATE: "v=08.22.2016";
             src: local('MaterialIconsRegular'),
                  local('MaterialIcons-Regular');
         }
-
-        src: local("☺"),
-             url("#{$filePath}.woff2?#{$LAST_DATE_OF_UPDATE}") format("woff2"),
-             url("#{$filePath}.woff?#{$LAST_DATE_OF_UPDATE}") format("woff"),
-             url("#{$filePath}.ttf?#{$LAST_DATE_OF_UPDATE}") format("truetype"),
-             url("#{$filePath}.svg?#{$LAST_DATE_OF_UPDATE}&##{$fontFamily}") format("svg");
+        @if ($noWoff2 == false) {
+          src: local("☺"),
+          url("#{$filePath}.woff2?#{$LAST_DATE_OF_UPDATE}") format("woff2"),
+          url("#{$filePath}.woff?#{$LAST_DATE_OF_UPDATE}") format("woff"),
+          url("#{$filePath}.ttf?#{$LAST_DATE_OF_UPDATE}") format("truetype"),
+          url("#{$filePath}.svg?#{$LAST_DATE_OF_UPDATE}&##{$fontFamily}") format("svg");
+        }
+        @if ($noWoff2 == true) {
+          src: local("☺"),
+          url("#{$filePath}.woff?#{$LAST_DATE_OF_UPDATE}") format("woff"),
+          url("#{$filePath}.ttf?#{$LAST_DATE_OF_UPDATE}") format("truetype"),
+          url("#{$filePath}.svg?#{$LAST_DATE_OF_UPDATE}&##{$fontFamily}") format("svg");
+        }
         font-style: $fontStyle;
         font-weight: $fontWeight;
     }
@@ -57,7 +64,7 @@ $LAST_DATE_OF_UPDATE: "v=08.22.2016";
 
 /* Font Report Portal */
 $urlFontReportPortal: '../fonts/font-ReportPortal/Report-Portal-Font';
-@include font-face('ReportPortal', $urlFontReportPortal, normal, normal);
+@include font-face('ReportPortal', $urlFontReportPortal, normal, normal, true);
 
 /* Font Material Icons */
 $urlFontMaterialIconsRegular: '../fonts/font-MaterialIconsRegular/MaterialIcons-Regular';
