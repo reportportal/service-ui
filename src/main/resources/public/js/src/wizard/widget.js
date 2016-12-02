@@ -1158,13 +1158,13 @@ define(function (require, exports, module) {
                     self = this;
                 Editor.setupSelect2Tags(userTags, {
                     type: 'autocompleteUserUrl',
-                    min: startSearch,
+                    min: 1,
                     minimumInputLength: startSearch,
                     maximumInputLength: 256,
-                    dropdownCssClass: 'hideNew',
+                    //dropdownCssClass: 'hideNew',
                     mode: 'DEFAULT',
                     noResizeSearch: true,
-                    noCreateNew: true,
+                    //noCreateNew: true,
                     startSearch: startSearch
                 });
             }
