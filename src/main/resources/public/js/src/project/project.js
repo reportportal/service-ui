@@ -603,7 +603,7 @@ define(function(require, exports, module) {
             if (getAnyway || !recipients.hasClass('select2-offscreen')) {
                 Util.setupSelect2WhithScroll(recipients, {
                     multiple: true,
-                    minimumInputLength: minimumInputLength,
+                    minimumInputLength: 1,
                     formatInputTooShort: function (input, min) {
                         return Localization.ui.minPrefix + minimumInputLength + Localization.ui.minSufixAuto
                     },
@@ -648,7 +648,7 @@ define(function(require, exports, module) {
                             if (queryLength > 256) {
                                 self.validateRecipients();
                             } else {
-                                if (queryLength == 256) {
+                                if (queryLength <= 256) {
                                     self.validateRecipients();
                                 }
                                 //query.term = query.term.replace(/[@#.?*+^$[\]\\(){}|-]/g, "\\$&");

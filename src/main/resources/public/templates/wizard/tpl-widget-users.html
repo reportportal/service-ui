@@ -7,7 +7,7 @@
             </span>
             <% var warning =
                 (data.id != 'tags'
-                    ? (data.text.ui.minPrefix + ' ' + data.startSearch + ' ' + data.text.ui.minSufix)
+                    ? (data.text.ui.minPrefix + ' ' + data.startSearch + ' ' + data.text.ui.minSufixAuto)
                     : data.text.ui.enterChars) %>
             <input style="width:100%;"
                 placeholder="<%= data.text.widgets.allMembers %>"
