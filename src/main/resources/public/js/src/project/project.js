@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -597,15 +597,16 @@ define(function(require, exports, module) {
                 recipients = caseItem.find('input.recipients'),
                 remoteUsers = [],
                 users = this.getRecipients(index),
+                minimumInputLength = config.forms.filterUser,
                 resultFound = false,
                 self = this;
 
             if (getAnyway || !recipients.hasClass('select2-offscreen')) {
                 Util.setupSelect2WhithScroll(recipients, {
                     multiple: true,
-                    minimumInputLength: 3,
+                    minimumInputLength: 1,
                     formatInputTooShort: function (input, min) {
-                        return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto
+                        return Localization.ui.minPrefix + minimumInputLength + Localization.ui.minSufixAuto
                     },
                     formatResultCssClass: function (state) {
                         if ((remoteUsers.length == 0 || _.indexOf(remoteUsers, state.text) < 0) && $('.users-typeahead.recipients:not(input)').eq(index).find('input').val() == state.text) {
@@ -644,11 +645,11 @@ define(function(require, exports, module) {
                                 results: []
                             };
 
-                        if (queryLength >= 3) {
+                        if (queryLength >= minimumInputLength) {
                             if (queryLength > 256) {
                                 self.validateRecipients();
                             } else {
-                                if (queryLength == 256) {
+                                if (queryLength <= 256) {
                                     self.validateRecipients();
                                 }
                                 //query.term = query.term.replace(/[@#.?*+^$[\]\\(){}|-]/g, "\\$&");

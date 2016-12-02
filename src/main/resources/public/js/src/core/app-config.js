@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -110,14 +110,15 @@ define(function (require, exports, module) {
             session: {},
 
             forms: {
-                nameRange: [4, 128],
+                nameRange: [1, 128],
                 fullNameRange: [3, 256],
                 passwordRange: [4, 25],
                 itemDescriptionMax: 1024,
                 tagsMin: 3,
                 tagsMax: 1024,
                 triggerMin: 3,
-                filterName: [3, 128]
+                filterName: [3, 128],
+                filterUser: 3
             },
 
             launchVerifyDelay: 3000,
