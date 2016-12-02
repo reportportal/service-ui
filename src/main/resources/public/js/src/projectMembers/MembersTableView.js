@@ -33,6 +33,8 @@ define(function(require, exports, module) {
     var MembersItemView = require('projectMembers/MembersItemView');
     var MemberService = require('projectMembers/MembersService');
     var MembersCollection = require('projectMembers/MembersCollection');
+    var ModalAddUser = require('modals/modalAddUser');
+    var ModalInviteUser = require('modals/modalInviteUser');
 
     var config = App.getInstance();
 
@@ -77,9 +79,9 @@ define(function(require, exports, module) {
 
         events: {
             'validation::change [data-js-members-search]': 'onChangeFilterName',
-            '[data-js-add-user]': 'showAddUser',
-            '[data-js-invite-user]': 'showInviteUser',
-            '[data-js-permissions]': 'showPermissionsModal'
+            'click [data-js-add-user]': 'showAddUser',
+            'click [data-js-invite-user]': 'showInviteUser',
+            'click [data-js-permissions]': 'showPermissionsModal'
         },
 
         render: function () {
@@ -135,10 +137,7 @@ define(function(require, exports, module) {
                     }
                     this.paging.model.set(data.page);
                     this.paging.render();
-                    console.log('this.collection: ', this.collection);
                     this.collection.parse(data.content ? data.content : data);
-
-                    //this.$total.html(data.page.totalElements);
                 }.bind(this))
                 .fail(function (error) {
                     this.collection.parse([]);
@@ -169,7 +168,6 @@ define(function(require, exports, module) {
         },
 
         renderEmptyMembers: function(){
-            console.log('renderEmptyMembers');
             this.clearMembers();
             this.$membersList.append(Util.templates(this.emptyMembersTpl, {}));
         },
@@ -195,13 +193,23 @@ define(function(require, exports, module) {
             this.renderViews = [];
         },
 
-        showInviteUser: function(){
+        showInviteUser: function(e){
+            e.preventDefault();
             console.log('showInviteUser');
+            e.preventDefault();
+            var modal = new ModalInviteUser({});
+            modal.show();
         },
-        showAddUser: function(){
-            console.log('showAddUser');
+
+        showAddUser: function(e){
+            e.preventDefault();
+            var modal = new ModalAddUser({});
+            this.listenToOnce(modal, 'add:user', this.updateMembers);
+            modal.show();
         },
-        showPermissionsModal: function(){
+
+        showPermissionsModal: function(e){
+            e.preventDefault();
             console.log('showPermissionsModal');
         },
 

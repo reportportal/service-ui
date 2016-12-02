@@ -1156,7 +1156,7 @@ define(['util'], function () {
             deleteUser: "Delete User",
             viewProjects: " View Projects",
             addNewUser: "Add new user",
-            inviteNewUser: "Invite new user",
+            inviteNewUser: "Invite user to the project",
             configPage: " project configuration page",
             projectMembers: "Members",
             assigned: "Assigned",
@@ -1204,7 +1204,7 @@ define(['util'], function () {
             title: "Members",
             addMember: "Add User",
             inviteMember: "Invite User",
-            addMemberToProject: "Add new member to the project",
+            addMemberToProject: "Add new user to the project",
             inviteMemberToProject: "Invite new member to the project",
             backToMembers: "Back to members",
             expired: "This invitation has expired or already used",
@@ -1227,7 +1227,7 @@ define(['util'], function () {
             registeredOn: "You have been successfully registered on",
             useInformation: "Please, use the following information to login:",
             lockedPermissionsTitle: "You do not have enough permissions to update this member",
-            invitationSent: "The invitation was sent by email",
+            invitationSent: "The invitation was sent on",
             titleAllMembers: "All Members",
             titleNameLoginEmail: "Name / Login / Email"
         },
@@ -1508,6 +1508,7 @@ define(['util'], function () {
             login: "Login",
             fullName: "Full Name",
             email: "Email",
+            loginOrEmail: 'Login or Email',
             password: "Password",
             confirmPassword: "Confirm password",
             genPassword: "Generate password",
@@ -1527,6 +1528,7 @@ define(['util'], function () {
             updateBts: 'Update BTS',
             projectNameIn: 'Project Name in',
             bugWillBeLoaded: 'Bug will be loaded to ',
+            copyLink: 'Copy Link'
         },
 
         wizard: {
