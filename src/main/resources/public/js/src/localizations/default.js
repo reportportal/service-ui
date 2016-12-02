@@ -643,6 +643,7 @@ define(['util'], function () {
             finishAgree: "I am sure I want to finish %%%",
             deleteAgree: "I am sure I want to delete %%%",
 
+            errorItem: 'Error Item',
             jiraCredentials: "Jira credentials:",
             tfsCredentials: "TFS credentials:",
             rallyCredentials: "Rally credentials:",
