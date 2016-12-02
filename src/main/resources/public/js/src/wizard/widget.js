@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1146,7 +1146,7 @@ define(function (require, exports, module) {
 
             if (widget.usersFilter) {
                 var selectedUsers = gadget && gadget.widgetOptions && gadget.widgetOptions.userRef,
-                    startSearch = 3;
+                    startSearch = config.forms.filterUser;
 
                 selectedUsers && this.model.set('users', selectedUsers);
                 this.$templateOptions.append(Util.templates(this.usersSelectorTpl, {
@@ -1158,13 +1158,13 @@ define(function (require, exports, module) {
                     self = this;
                 Editor.setupSelect2Tags(userTags, {
                     type: 'autocompleteUserUrl',
-                    min: 3,
-                    minimumInputLength: 3,
+                    min: 1,
+                    minimumInputLength: startSearch,
                     maximumInputLength: 256,
-                    dropdownCssClass: 'hideNew',
+                    //dropdownCssClass: 'hideNew',
                     mode: 'DEFAULT',
                     noResizeSearch: true,
-                    noCreateNew: true,
+                    //noCreateNew: true,
                     startSearch: startSearch
                 });
             }

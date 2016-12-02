@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1187,11 +1187,13 @@ define(function (require, exports, module) {
                     var link,
                         filterParams = new Components.RequestParameters(),
                         time = Moment.unix(e.point.startTime);
-                    FiltersService.loadFilterIntoRequestParams(filterParams, response[0]);
-                    filterParams.setTab(config.defaultTabId);
-                    filterParams.setSortInfo('start_time', 'DESC');
-                    filterParams.setFilters(filterParams.getFilters().concat([{id: 'filter.btw.start_time', value: time.format('x') + ',' + (parseInt(time.format('x')) + range)}]));
-                    link = urls.tabUrl(filterParams.toURLSting());
+                    if(!_.isEmpty(response)){
+                        FiltersService.loadFilterIntoRequestParams(filterParams, response[0]);
+                        filterParams.setTab(config.defaultTabId);
+                        filterParams.setSortInfo('start_time', 'DESC');
+                        filterParams.setFilters(filterParams.getFilters().concat([{id: 'filter.btw.start_time', value: time.format('x') + ',' + (parseInt(time.format('x')) + range)}]));
+                        link = urls.tabUrl(filterParams.toURLSting());
+                    }
                     if (link) {
                         setTimeout(function(){
                             document.location.hash = link;

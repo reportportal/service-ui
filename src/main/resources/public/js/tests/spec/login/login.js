@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -115,10 +115,11 @@ define(function (require, exports, module) {
             expect($('#errorText', sandbox).text().trim()).toEqual(Localization.ui.wrongcharacters);
         });
 
-        it('should show error message if login lesser than 4', function () {
+        it('should show error message if login more than 128', function () {
             renderForm();
             spyLogin();
-            $('#user_login', sandbox).val('111');
+            var login = '111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111';
+            $('#user_login', sandbox).val(login);
             $('#submit_user', sandbox).click();
             expect($('.js-loginerror', sandbox)).toBeVisible();
             expect($('#errorText', sandbox).text().trim()).toEqual(Localization.ui.wronglength);

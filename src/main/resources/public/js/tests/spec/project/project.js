@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -256,17 +256,17 @@ define(function (require, exports, module) {
         //     expect(btsView.systems.length).toEqual(1);
         // });
 
-        it('should re-render tab content according to selected system setup', function () {
-            btsView = new Project.BtsView({
-                holder: sandbox,
-                externalSystems: [system1, system2],
-                settings: config.forSettings,
-                access: true
-            }).render();
-            expect($("#project", sandbox)).toHaveValue(system1.project);
-            $("#" + system2.id, sandbox).click();
-            expect($("#project", sandbox)).toHaveValue(system2.project);
-        });
+        // it('should re-render tab content according to selected system setup', function () {
+        //     btsView = new Project.BtsView({
+        //         holder: sandbox,
+        //         externalSystems: [system1, system2],
+        //         settings: config.forSettings,
+        //         access: true
+        //     }).render();
+        //     expect($("#project", sandbox)).toHaveValue(system1.project);
+        //     $("#" + system2.id, sandbox).click();
+        //     expect($("#project", sandbox)).toHaveValue(system2.project);
+        // });
 
         it('should render "+" disabled if there are no bts defined yet', function () {
             btsView = new Project.BtsView({
