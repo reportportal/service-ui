@@ -232,7 +232,11 @@ define(function (require, exports, module) {
                 if(!this.launchModel) {
                     async.resolve('LAUNCH');
                 } else if(this.launchModel && !this.parentModel) {
-                    async.resolve('SUITE');
+                    if(!this.noChildFilter) {
+                        async.resolve('SUITE');
+                    } else {
+                        async.resolve('STEP');
+                    }
                 } else {
                     this.loadSuiteStepChildren()
                         .done(function(responce) {
