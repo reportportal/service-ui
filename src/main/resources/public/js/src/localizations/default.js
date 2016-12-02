@@ -1270,6 +1270,7 @@ define(['util'], function () {
             deleteLaunches: 'Launches where deleted',
             deleteTestItem: "Item was deleted",
             deleteTestItems: "Items where deleted",
+            submitKeys: "Defect link is added",
 
             editFilter: "Filter has been updated!",
             sharedFilter: "Filter name has been shared!",
