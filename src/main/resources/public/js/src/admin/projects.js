@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,8 @@ define(function (require, exports, module) {
     var ProjectInfo = require('projectinfo');
     var MemberService = require('memberService');
     var Widget = require('widgets');
+    var ModalConfirm = require('modals/modalConfirm');
+    var Localization = require('localization');
 
     // var Localization = require('localization');
 
@@ -333,14 +335,20 @@ define(function (require, exports, module) {
         },
         removeProject: function (e) {
             e.preventDefault();
+            var self = this;
             var el = $(e.currentTarget);
             var id = '' + el.data('id');
             var status = el.data('active');
 
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    var self = this;
-                    Service.deleteProject(id)
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.deleteProject,
+                bodyText: Util.replaceTemplate(Localization.dialog.deleteProject, id),
+                confirmText: Localization.dialog.msgDeleteProject,
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
+                confirmFunction: function () {
+                    return Service.deleteProject(id)
                         .done(function () {
                             var curProjects = config.userModel.get('projects');
                             delete curProjects[id];
@@ -351,10 +359,9 @@ define(function (require, exports, module) {
                         .fail(function (error) {
                             Util.ajaxFailMessenger(error, "deleteProject");
                         });
-                }.bind(this),
-                message: 'deleteProject',
-                format: [id]
+                }
             });
+            modal.show();
         },
         assignAdminToProject: function (e) {
             e.preventDefault();

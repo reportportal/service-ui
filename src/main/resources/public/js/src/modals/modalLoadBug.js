@@ -129,6 +129,7 @@ define(function (require, exports, module) {
             this.externalSystems = appModel.getArr('externalSystem');
             if(!this.externalSystems.length) {
                 console.log('No bts found');
+                this.hide();
                 return;
             }
             this.itemModels = option.items;
@@ -140,6 +141,9 @@ define(function (require, exports, module) {
             this.collection = new TicketCollection();
             this.listenTo(this.collection, 'add', this.onAddTicket);
             this.collection.add({});
+        },
+        onKeySuccess: function () {
+            $('[data-js-load]', this.$el).trigger('click');
         },
         onClickAddTicket: function() {
             this.collection.add({});

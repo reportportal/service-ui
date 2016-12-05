@@ -103,6 +103,8 @@ define(function (require, exports, module) {
         },
 
         destroy: function () {
+            this.request && this.request.abort();
+            clearTimeout(this.timeout);
             this.$el.html('');
             this.undelegateEvents();
             this.stopListening();

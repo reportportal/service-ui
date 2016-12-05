@@ -155,9 +155,12 @@ define(function(require, exports, module) {
         },
         initialize: function() {
             this.validate = this.getValidate();
-            this.listenTo(this, 'change:description change:tags', this.onChangeItemInfo);
+            this.listenTo(this, 'change:description change:tags', _.debounce(this.onChangeItemInfo, 10));
             this.appModel = new SingletonAppModel();
             this.userModel = new UserModel();
+        },
+        restorePath: function() {
+            this.initComputeds();
         },
         getIssue: function () {
             try {
@@ -241,30 +244,22 @@ define(function(require, exports, module) {
                     return '';
                 },
                 loadbug: function() {
-                    var configuration = self.appModel.get('configuration');
                     var issue = self.getIssue();
-                    if (!configuration && !configuration.externalSystem && !configuration.externalSystem.length) {
-                        return Localization.launches.configureTBSLoad;
-                    }
                     if (!issue || !issue.issue_type) {
                         return Localization.launches.noIssuesLoad
+                    }
+                    if (!self.appModel.get('isBtsAdded')) {
+                        return Localization.launches.configureTBSLoad;
                     }
                     return '';
                 },
                 postbug: function() {
-                    var configuration = self.appModel.get('configuration');
                     var issue = self.getIssue();
-                    if (configuration && configuration.externalSystem && configuration.externalSystem.length) {
-                        if (!_.any(configuration.externalSystem, function (bts) {
-                                return bts.fields && bts.fields.length;
-                            })) {
-                            return Localization.launches.configureTBS;
-                        }
-                    } else {
-                        return Localization.launches.configureTBS;
-                    }
                     if (!issue || !issue.issue_type) {
                         return Localization.launches.noIssues
+                    }
+                    if (!self.appModel.get('isBtsConfigure')) {
+                        return Localization.launches.configureTBS;
                     }
                     return '';
                 }

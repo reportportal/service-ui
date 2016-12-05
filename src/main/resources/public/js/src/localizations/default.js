@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -90,7 +90,7 @@ define(['util'], function () {
             lockedTitle: "Role can't be changed, since user have ADMIN privileges",
             more: "more...",
             wrongCredentials: "user name or password is incorrect",
-            wronglength: "Login must be between 4 and 128 characters.",
+            wronglength: "Login must be to 128 characters.",
             wrongcharacters: "Login should contain only any Latin, numeric characters, symbols: hyphen, underscore.",
             wrongsignin: "You need to sign in before continuing",
             wrongrelogin: "Can't get user info. Please relogin",
@@ -643,6 +643,7 @@ define(['util'], function () {
             finishAgree: "I am sure I want to finish %%%",
             deleteAgree: "I am sure I want to delete %%%",
 
+            errorItem: 'Error Item',
             jiraCredentials: "Jira credentials:",
             tfsCredentials: "TFS credentials:",
             rallyCredentials: "Rally credentials:",
@@ -651,6 +652,7 @@ define(['util'], function () {
             includeData: "Include data:",
             willBePostedTo: "Bug will be posted to",
             willBeLoadedTo: "Bug will be loaded to",
+            noItemsInside: 'No items inside',
 
             actionTitle: 'Select several items to processing',
             multiSelectError: 'You cannot perform operation to invalid items',
@@ -659,6 +661,8 @@ define(['util'], function () {
 
             deleteBulk: 'Delete Test Items in bulk',
 
+            bredcrumbsLostLaunch: 'Original launch was lost',
+            bredcrumbsLostLaunchRestore: 'Restore path',
 
             issueTitle: "Issue title",
             components: "Components:",
@@ -718,7 +722,7 @@ define(['util'], function () {
             forbiddenIsProcessing: 'Update of test item is forbidden for launch with Auto Analyze in progress',
             replaceComments: "Replace Comments to All Selected Items",
             noLaunchFound: "Launch is not found",
-            noItemFound: "Test item is not found",
+            noItemFound: "Item is not found",
             originalLaunchLost: "Original launch was lost",
             showPreconditionMethods: 'Collapse precondition methods',
             hidePreconditionMethods: 'Expand precondition methods',
@@ -908,7 +912,7 @@ define(['util'], function () {
             openFile: "Open the file in a new window",
             logLevel: "Log level",
             ticketNotFound: "Issue not found:",
-            ticketStatusProblem: "issue doesn't exist or no connection to the External System",
+            ticketStatusProblem: "Issue doesn't exist or no connection to the External System",
             summary: "Summary:",
             status: "Status:",
             prevTestItem: "Previous Test Item",
@@ -1115,7 +1119,8 @@ define(['util'], function () {
             linkToIssue: "Link to Issue",
             addNewIssues: "Add New Issues",
             btsInstances: "Bts Instances:",
-            btsAddNewInstance: "Add New Instance"
+            btsAddNewInstance: "Add New Instance",
+            btsNotFound: 'To configure Bug Tracking System, please deploy appropriate micro-service',
         },
 
         admin: {
@@ -1263,8 +1268,10 @@ define(['util'], function () {
             deletedWidget: "Widget has been removed!",
             dashboardDeletedUnsharedByOwner: "Dashboard has been removed",
             deleteLaunch: "Launch was deleted",
-            deleteLaunches: 'Launches was deleted',
-            deleteTestItem: "Test item was deleted",
+            deleteLaunches: 'Launches where deleted',
+            deleteTestItem: "Item was deleted",
+            deleteTestItems: "Items where deleted",
+            submitKeys: "Defect link is added",
 
             editFilter: "Filter has been updated!",
             sharedFilter: "Filter name has been shared!",
@@ -1429,14 +1436,14 @@ define(['util'], function () {
             dashboardNameDuplication: "This name is already in use",
             widgetNameDuplication: "This widget name is already in use",
             descriptionsSize: "Descriptions should have size not more than 1024",
-            loginSize: "Login should have size from '{0}' to '{1}'.",
+            loginSize: 'Login should have size to {1}.',//"Login should have size from '{0}' to '{1}'.",
             fullNameSize: "Full name should have size from '{0}' to '{1}'.",
             passwordSize: "Password should have size from '{0}' to '{1}'.",
             incorrectEmail: "Email is incorrect. Please enter correct email.",
             registeredEmail: "Entered email already exists in the system.",
             registeredLogin: "Entered login already exists in the system.",
             confirmPassword: "Password and confirm password do not match.",
-            memberNameLength: "Member name should have size from '3' to '128'",
+            memberNameLength: "Member name should have size from '1' to '128'",
             filterNameMax: "Filter name should have size up to '55'",
             fullNameRegex: "Only Latin, numbers symbols, underscore, dash, dot, space are possible",
             mergeNameLength: "Field name should have size from '3' to '256'",
@@ -1516,7 +1523,7 @@ define(['util'], function () {
             accountRole: "Account role",
             selectProject: "Select a project",
             symbolsForName: "3-256 symbols, Latin, Cyrillic, numeric characters, symbols: hyphen, underscore, dot, space.",
-            symbolsForLogin: "4-128 symbols, Latin, numeric characters, symbols: hyphen, underscore.",
+            symbolsForLogin: "1-128 symbols, Latin, numeric characters, symbols: hyphen, underscore.",
             symbolsForPass: "4-25 symbols.",
             passwordSize: 'Password should have size from "4" to "25".',
             passwordEmpty: "Password shouldn't be empty.",
@@ -1597,26 +1604,26 @@ define(['util'], function () {
             unableSelectForMerge: "Error: Unable to select launch for merge!",
             createNewDashboard: "Create new Dashboard",
             dashboardSettings: "Dashboard settings",
-            deleteFilter: "Are you sure you want to delete the filter <b>'%%%'</b>?",
-            deleteProject: "Are you sure you want to delete the project <b>'%%%'</b>",
-            deleteEmailRule: "Are you sure you want to remove notification rule",
+            deleteFilter: "Are you sure, you want to delete the filter <b>'%%%'</b>?",
+            deleteProject: "Are you sure, you want to delete the project <b>'%%%'</b>?",
+            deleteEmailRule: "Are you sure, you want to remove notification rule?",
             deleteEmailRuleBtn: 'Remove',
-            unAssignMember: "Are you sure you want to unassign user <b>'%%%'</b> from the project <b>'%%%'</b> ",
+            unAssignMember: "Are you sure, you want to unassign user <b>'%%%'</b> from the project <b>'%%%'</b>?",
             unAssignMemberBtn: "Unassign",
-            deleteUser: "Are you sure you want to delete user <b>'%%%'<b>",
-            changeRole: "Are you sure you want to change the account role for the <b>'%%%'</b>",
+            deleteUser: "Are you sure, you want to delete user <b>'%%%'<b>?",
+            changeRole: "Are you sure, you want to change the account role for the <b>'%%%'</b>?",
             changeRoleBtn: "Change",
-            deleteImage: "Are you sure you want to delete profile photo?",
-            deleteBts: "Are you sure you want to remove %%% project <b>'%%%'</b> from project settings",
-            dashboardDelete: "Are you sure you want to remove dashboard <b>'%%%'</b>",
-            deletedWidget: "Are you sure you want to remove widget <b>'%%%'</b>",
+            deleteImage: "Are you sure, you want to delete profile photo?",
+            deleteBts: "Are you sure, you want to remove %%% project <b>'%%%'</b> from project settings?",
+            dashboardDelete: "Are you sure, you want to remove dashboard <b>'%%%'</b>?",
+            deletedWidget: "Are you sure, you want to remove widget <b>'%%%'</b>?",
             deleteBtsBtn: "Remove",
             dashboardDeleteBtn: "Remove",
 
-            sureToRemoveWidget: "Are you sure you want to remove %%% <b>'%%%'</b>",
+            sureToRemoveWidget: "Are you sure, you want to remove %%% <b>'%%%'</b>?",
 
             launchEditor: "Edit launch",
-            itemEditor: "Edit test item",
+            itemEditor: "Edit item",
             defectEditor: 'Edit defect',
             choseDefectType: 'Choose Defect Type',
             commentForDefect: 'Leave Comment to Defect Type',
@@ -1625,19 +1632,20 @@ define(['util'], function () {
             postBug: "Post bug",
             loadBug: "Load bug",
             launchDetails: 'Launch Details',
-            testItemDetails: 'Test Item Details',
+            testItemDetails: 'Item Details',
             launchDescrPlaceholder: 'Enter Launch Description',
             testItemDescrPlaceholder: 'Enter Item Description',
             launchTagPlaceholder: 'Enter Tag Name',
             editFilter: "Edit filter",
             addFilter: "Add filter",
-            moveLaunch: 'Are you sure you want to move %%% to %%%?',
+            moveLaunch: 'Are you sure, you want to move %%% to %%%?',
 
             filterOptions: "Filter Options",
 
             msgDeleteItems: 'In case of delete the %%%, all related data will be deleted. Are you sure you want to delete %%%?',
-            msgDeleteDefectType: "I am sure I want to remove custom defect type",
-            msgResetColorsDefectType: "Are you sure you want to reset custom defect's colors to default?",
+            msgDeleteDefectType: "I am sure, I want to remove custom defect type",
+            msgDeleteProject: "I am sure, I want to delete project",
+            msgResetColorsDefectType: "Are you sure, you want to reset custom defect's colors to default?",
             msgMessageTop: "In case of delete custom defect, all investigated as <strong>'%%%'</strong> defects will be marked as <strong>'%%%'</strong>",
         },
 

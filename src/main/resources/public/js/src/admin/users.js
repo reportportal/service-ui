@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ define(function (require, exports, module) {
     var memberService = require('memberService');
     var Localization = require('localization');
     var CoreService = require('coreService');
+    var ModalConfirm = require('modals/modalConfirm');
 
     require('select2');
 
@@ -312,15 +313,25 @@ define(function (require, exports, module) {
 
         doAction: function (member, index, el) {
             var self = this;
-            Service.deleteUser(member.userId)
-                .done(function () {
-                    self.members.splice(index, 1);
-                    self.changeMembers();
-                    Util.ajaxSuccessMessenger("deleteMember", member.full_name || member.userId);
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "deleteMember");
-                });
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.deleteUser,
+                bodyText: Util.replaceTemplate(Localization.dialog.deleteUser, member.full_name || member.userId),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
+                confirmFunction: function() {
+                    return Service.deleteUser(member.userId)
+                        .done(function () {
+                            self.members.splice(index, 1);
+                            self.changeMembers();
+                            Util.ajaxSuccessMessenger("deleteMember", member.full_name || member.userId);
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error, "deleteMember");
+                        });
+                }
+            });
+            modal.show();
         },
 
         destroy: function () {

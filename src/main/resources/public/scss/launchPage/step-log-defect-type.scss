@@ -91,13 +91,24 @@
     }
     .ui-tooltip {
       width: 200px;
-      left: 50%;
+      right: 0;
       margin-left: -100px;
       top: 120%;
       text-align: center;
       visibility: hidden;
       opacity: 0;
       transition: visibility 0s linear 0s;
+
+      .ui-tooltip-message {
+        display: block;
+        text-align: left;
+
+        span {
+          text-transform: uppercase;
+          color: #777;
+          font-family: "OpenSansSemibold";
+        }
+      }
     }
   }
   .defect-type-description {

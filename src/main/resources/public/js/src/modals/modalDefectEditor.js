@@ -71,7 +71,7 @@ define(function (require, exports, module) {
             this.applyBindings();
             this.setupAnchors();
             this.setupMarkItUp();
-            this.attachKeyActions();
+            //this.attachKeyActions();
         },
 
         isMultipleEdit: function(){
@@ -94,14 +94,10 @@ define(function (require, exports, module) {
             }
         },
 
-        attachKeyActions: function(){
-            this.$el.on('keydown', function(e){
-                if(e.ctrlKey && e.keyCode === 13){
-                    if(!this.$submitBtn.is(':disabled')){
-                        this.updateDefectType();
-                    }
-                }
-            }.bind(this))
+        onKeySuccess: function () {
+            if(!this.$submitBtn.is(':disabled')){
+                this.updateDefectType();
+            }
         },
 
         getIssueType: function(item){
@@ -179,7 +175,7 @@ define(function (require, exports, module) {
                 replaceComments = this.$replaceComments.is(':checked');
             _.forEach(this.items, function (item) {
                 var issue = item.getIssue();
-                if((replaceComments && this.isMultipleEdit() && comment) || (!this.isMultipleEdit() && comment)){
+                if((replaceComments && this.isMultipleEdit()) || (!this.isMultipleEdit())){
                     issue.comment = comment;
                 }
                 issue.issue_type = selectedIssue || this.getIssueType(item);
@@ -198,7 +194,7 @@ define(function (require, exports, module) {
                     Util.ajaxSuccessMessenger("updateDefect");
                     _.forEach(self.items, function (item) {
                         var issue = item.getIssue();
-                        if((replaceComments && this.isMultipleEdit() && comment) || (!this.isMultipleEdit() && comment)){
+                        if((replaceComments && this.isMultipleEdit()) || (!this.isMultipleEdit())){
                             issue.comment = comment;
                         }
                         issue.issue_type = selectedIssue || this.getIssueType(item);

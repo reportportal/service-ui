@@ -54,9 +54,9 @@ define(function (require, exports, module) {
         },
         parse: function(data, itemId) {
             var self = this;
-            var answerData = _.map(data, function(item) {
+            var answerData = _.map(data, function(item, num) {
                 var answer = {launchNumber: item.launchNumber, active: false, parent_launch_status: item.launchStatus};
-                if(item.launchId == self.launchModel.get('id')) {
+                if(item.launchId == self.launchModel.get('id') || (num == 0 && self.launchModel.get('failLoad'))) {
                     answer.parent_launch_investigate = self.launchModel.getToInvestigate();
                     _.each(item.resources, function(resource) {
                         if(resource.id == itemId) {
@@ -178,14 +178,19 @@ define(function (require, exports, module) {
             this.listenTo(this.collection, 'hover:false', this.onOutItem);
             this.render();
             var self = this;
-            this.load = this.collection.load(this.collectionItems.getInfoLog().item)
-                .always(function() {
-                    self.trigger('load:history');
-                    var activeModels = self.collection.where({active: true});
-                    if(activeModels.length == 1) {
-                        self.trigger('activate:item', activeModels[0]);
-                    }
-                });
+            var itemId = this.collectionItems.getInfoLog().item;
+            var itemModel = this.collectionItems.get(itemId);
+            if (itemModel) {
+                this.load = this.collection.load(itemId)
+                    .always(function() {
+                        self.trigger('load:history');
+                        var activeModels = self.collection.where({active: true});
+                        if(activeModels.length == 1) {
+                            self.trigger('activate:item', activeModels[0]);
+                        }
+                    });
+            }
+
             this.listenTo(this.collection, 'activate', function(model) {
                 self.trigger('activate:item', model);
             })

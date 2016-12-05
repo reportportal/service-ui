@@ -176,7 +176,7 @@ define(function (require, exports, module) {
                     self.compareAction = null;
                     self.collectionItems.load(true);
                     var parentModel = self.collectionItems.parentModel || self.collectionItems.launchModel;
-                    parentModel.updateData(true);
+                    parentModel && parentModel.updateData(true);
                     self.reset();
                 })
             },
@@ -232,9 +232,8 @@ define(function (require, exports, module) {
         },
         onUnCheckItem: function(model) {
             var commonModel = this.collectionItems.get(model.get('id'));
-            if(commonModel) {
-                commonModel.set({select: false});
-            } else {
+            model.set({invalidMessage: ''});
+            if(!commonModel) {
                 this.collection.remove(model);
                 this.checkStatus();
             }
@@ -253,6 +252,7 @@ define(function (require, exports, module) {
             });
             if(answer) {
                 this.$el.removeClass('invalid-state');
+                this.currentAction = '';
             } else {
                 var processBtn = $('[data-js-proceed]', this.$el),
                     action = _.every(this.collection.toJSON(), function(m){ return m.invalidMessage; }) ? 'addClass' : 'removeClass';

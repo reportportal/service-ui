@@ -66,15 +66,18 @@ define(function (require, exports, module) {
                 var self = this;
                 this.model.collection.getTicketInfo(this.model.get('ticketId'), this.model.get('systemId'))
                     .done(function(data) {
-                        $('[data-js-tooltip-message]', self.$el).html('<strong>' + Localization.logs.summary +
-                            '</strong> ' + data.summary +' <br>' +
-                            '<strong>' + Localization.logs.status + '</strong> ' +
+                        if (data.summary.length > 200) {
+                            $('.ui-tooltip',self.$el).width(432);
+                        }
+                        $('[data-js-tooltip-message]', self.$el).html('<span>' + Localization.logs.summary +
+                            '</span><br>' + data.summary +' <br><br>' +
+                            '<span>' + Localization.logs.status + '</span><br>' +
                             ((data.status === 'Closed' || data.status === 'Resolved')?'<s>' + data.status + '</s>' : data.status)
                         );
                     })
                     .fail(function() {
-                        $('[data-js-tooltip-message]', self.$el).html('<strong>'+ Localization.logs.ticketNotFound
-                            +'</strong>' + Localization.logs.ticketStatusProblem);
+                        $('[data-js-tooltip-message]', self.$el).html('<span> '+ Localization.logs.ticketNotFound
+                            +'</span><br>' + Localization.logs.ticketStatusProblem);
                     })
                     .always(function() {
                         $('[data-js-preloader]', self.$el).addClass('hide');

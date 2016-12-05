@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,6 +66,8 @@ define(function(require, exports, module) {
 
     var config = App.getInstance();
 
+    Util.checkWidthScroll();
+
     config.mainScrollElement = Util.setupBaronScroll($('#main_content'));
     config.userModel = new UserModel;
     config.trackingDispatcher = TrackingDispatcher;
@@ -73,6 +75,7 @@ define(function(require, exports, module) {
 
     Util.setupWindowEvents();
     Util.setupBackTop();
+
 
     config.userModel.load();
     if('DEBUG_STATE') {

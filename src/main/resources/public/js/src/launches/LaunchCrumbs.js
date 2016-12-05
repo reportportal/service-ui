@@ -38,11 +38,13 @@ define(function (require, exports, module) {
             id: '',
             name: '',
             url: '',
+            partUrl: '',
             level: '',
             type: 'FILTER',
             isProcessing: false,
             number: '',
             listView: false,
+            failLoad: false,
         },
         computeds: {
             fullName: {
@@ -63,7 +65,8 @@ define(function (require, exports, module) {
         },
         initialize: function() {
             this.ready = $.Deferred();
-            this.listenTo(this, 'change:id', this.updateData);
+            var self = this;
+            this.listenTo(this, 'change:id', this.onChangeId);
             this.updateData();
         },
         getToInvestigate: function() {
@@ -76,41 +79,48 @@ define(function (require, exports, module) {
             }
             return 0;
         },
+        onChangeId: function() {
+            this.ready && this.ready.resolve();
+            this.ready = $.Deferred();
+            this.updateData();
+        },
         updateData: function(force) {
             var self = this;
             if(this.get('level') == 'filter') {
                 if(this.get('id') == 'all') {
                     this.set({name: 'All'});
-                    this.ready.resolve();
                 } else {
                     var launchFilterCollection = new SingletonLaunchFilterCollection();
                     launchFilterCollection.ready.done(function() {
                         var filterModel = launchFilterCollection.get(self.get('id'));
-                        self.set({name: filterModel.get('name')});
-                        self.ready.resolve();
+                        self.set({name: filterModel.get('name'), failLoad: false});
                     })
                 }
+                this.ready.resolve();
             } else {
                 if (!force) {
                     if(this.collection.cacheModel && this.collection.cacheModel.get('id') == this.get('id')) {
                         this.set(this.collection.cacheModel.toJSON());
                         this.ready.resolve();
-                        return;
+                        return ;
                     }
                     if(this.collection.lastLogItem && this.collection.lastLogItem == this.get('id')) {
                         this.ready.resolve();
-                        return;
+                        return ;
                     }
                 }
                 var url = Urls.getProjectBase() + '/' + this.get('level') + '/' + this.get('id');
                 call('GET', url)
                     .done(function(data) {
                         data.type = data.type || 'LAUNCH';
+                        data.failLoad = false;
                         self.set(data);
                         self.ready.resolve();
                     })
                     .fail(function() {
-                        self.trigger('fail:load');
+                        self.set({failLoad: true});
+                        self.ready.resolve();
+                        // self.trigger('fail:load');
                     })
             }
         }
@@ -118,6 +128,13 @@ define(function (require, exports, module) {
 
     var LaunchCrumbCollection = Backbone.Collection.extend({
         model: LaunchCrumbModel,
+        updateUrlModels: function() {
+            var url = '';
+            _.each(this.models, function(model) {
+                url += model.get('partUrl');
+                model.set({url: url});
+            })
+        },
         update: function(newPath, cacheModel) {
             this.cacheModel = cacheModel;
             var async = $.Deferred();
@@ -125,56 +142,95 @@ define(function (require, exports, module) {
             _.each(this.models, function(model) {
                 currentPath.push(model.get('id'));
             });
-            var url = '';
+
             for(var i = 0; i < Math.max(newPath.length, currentPath.length); i++) {
                 if(newPath[i]) {
                     var listView = false;
+                    var partUrl = '';
                     var level = 'item';
                     var splitId = newPath[i].split('|');
                     var currentNewPath = splitId[0];
                     if(i == 0) {
                         level = 'filter';
-                        url = (new FilterModel({id: newPath[0]})).get('url');
+                        partUrl = (new FilterModel({id: newPath[0]})).get('url');
                     } else {
-                        url += '/' + currentNewPath;
+                        partUrl += '/' + currentNewPath;
                         if (splitId[1]) {
-                            url += '|' + splitId[1] + '?' + decodeURIComponent(splitId[1]);
+                            partUrl += '|' + splitId[1] + '?' + decodeURIComponent(splitId[1]);
                             listView = true;
                         }
                         level = (i == 1) ? 'launch' :'item';
                     }
                     if(currentPath[i]) {
-                        this.get(currentPath[i]).set({id: currentNewPath, level: level, url: url, listView: listView});
+                        this.get(currentPath[i]).set({id: currentNewPath, level: level, partUrl: partUrl, listView: listView});
                     } else {
-                        this.add({id: currentNewPath, level: level, url: url, listView: listView});
+                        this.add({id: currentNewPath, level: level, partUrl: partUrl, listView: listView});
                     }
                 } else {
                     this.remove(currentPath[i]);
                 }
             }
+            this.updateUrlModels();
             var lastModel = this.models[this.models.length - 1];
             var launchModel = null;
             var parentModel = null;
             if(this.models.length <= 1) {
                 // launch level
+                this.trigger('lost:launch', false);
                 async.resolve(launchModel, parentModel);
-            } else if (this.models.length >= 2) {
+            } else {
                 var self = this;
-                this.models[1].ready.done(function() { // launch model
+                this.models[1].ready.always(function() { // launch model
                     launchModel = self.models[1];
                     if(self.models.length > 2) {
-                        lastModel.ready.done(function() { // item model
+                        lastModel.ready.always(function() { // item model
                             parentModel = lastModel;
-                            async.resolve(launchModel, parentModel);
+                            if(!launchModel.get('failLoad')) {
+                                self.trigger('lost:launch', false);
+                                if(lastModel.get('failLoad')) {
+                                    async.reject(2);
+                                }else {
+                                    async.resolve(launchModel, parentModel);
+                                }
+                            } else {
+                                if(!lastModel.get('failLoad')) {
+                                    self.checkLostLaunch(async, launchModel, parentModel);
+                                } else {
+                                    async.reject(1);
+                                }
+                            }
                         })
                     } else {
-                        async.resolve(launchModel, parentModel);
+                        if (launchModel.get('failLoad')) {
+                            async.reject(1);
+                        } else {
+                            async.resolve(launchModel, parentModel);
+                        }
                     }
                 })
             }
-
             return async.promise();
-        }
+        },
+        checkLostLaunch: function(async, launchModel, parentModel) {
+            var self = this;
+            $.when.apply(this, _.map(this.models, function(model) { return model.ready; })).always(function() {
+                var failModels = self.where({failLoad: true});
+                if(failModels.length == 1 && failModels[0].get('level') == 'launch' && self.models.length > 2) {
+                    self.models[1].set('id', self.models[2].get('launchId')).ready
+                        .done(function() {
+                            var newPartUrl = self.models[1].get('partUrl').split('|');
+                            newPartUrl[0] = '/' + self.models[1].get('id');
+                            self.models[1].set({partUrl: newPartUrl.join('|')});
+                            self.updateUrlModels();
+                            async.resolve(self.models[1], parentModel);
+                            self.trigger('lost:launch', true);
+                        })
+                        .fail(function() {
+                            async.reject(1);
+                        })
+                }
+            })
+        },
     });
     var LaunchCrumbView = Epoxy.View.extend({
         tagName: 'li',
@@ -189,9 +245,10 @@ define(function (require, exports, module) {
         initialize: function() {
             this.render();
             this.listenTo(this.model, 'remove', this.onRemove);
+            this.listenTo(this.model, 'change:failLoad', this.render);
         },
         render: function() {
-            this.$el.html(Util.templates(this.template, {}))
+            this.$el.html(Util.templates(this.template, {failLoad: this.model.get('failLoad')}))
         },
         onRemove: function() {
             this.destroy();
@@ -208,17 +265,21 @@ define(function (require, exports, module) {
 
     var LaunchCrumbsView = Epoxy.View.extend({
         template: 'tpl-launch-crumbs',
-
         events: {
             'click [data-js-switch-mode]': 'onClickSwitchMode',
+            'click [data-js-restore-lost-path]': 'onClickRestorePath',
         },
-
         initialize: function(options) {
+            var self = this;
+            this.lastModel = null;
             this.collection = new LaunchCrumbCollection();
             this.listenTo(this.collection, 'add', this.onAddCrumb);
-            this.listenTo(this.collection, 'fail:load', function() {
-                // config.router.show404Page();
-                console.log('fail load crumbs item')
+            this.listenTo(this.collection, 'lost:launch', function(active) {
+                if (active) {
+                    $('[data-js-crumbs-container]',self.$el).addClass('lost-path');
+                }else {
+                    $('[data-js-crumbs-container]', this.$el).removeClass('lost-path');
+                }
             });
             this.render();
         },
@@ -234,15 +295,25 @@ define(function (require, exports, module) {
             this.collection.update(partPath, this.cacheModel)
                 .done(function(launchModel, parentModel) {
                     $('#breadCrumbs', self.$el).removeClass('load');
+                    self.lastModel = parentModel;
                     self.trigger('change:path', launchModel, parentModel, optionsURL);
-                });
+                })
+                .fail(function(error) {
+                    self.trigger('fail:load', error);
+                })
         },
-        setLogItem: function(itemModel) {
-            if(this.collection.lastLogItem) {
-                this.collection.remove(this.collection.lastLogItem);
+        setLogItem: function(itemModel, itemId) {
+            if (itemModel) {
+                if(this.collection.lastLogItem) {
+                    this.collection.remove(this.collection.lastLogItem);
+                }
+                this.collection.lastLogItem = itemModel.get('id');
+                this.collection.add(itemModel.toJSON());
+            } else {
+                this.collection.lastLogItem = itemId;
+                this.collection.add({id: itemId, failLoad: true});
             }
-            this.collection.lastLogItem = itemModel.get('id');
-            this.collection.add(itemModel.toJSON());
+
         },
         onAddCrumb: function(model) {
             $('[data-js-crumbs-container]', this.$el).append((new LaunchCrumbView({
@@ -252,6 +323,13 @@ define(function (require, exports, module) {
         onClickSwitchMode: function() {
             $('[data-js-crumbs-container]',this.$el).toggleClass('min-size');
         },
+        onClickRestorePath: function() {
+            var splitHash = window.location.hash.split('?');
+            var options = (splitHash[1]) ? '?' + splitHash[1] : '';
+            config.router.navigate(this.lastModel.get('url') + options, {trigger: false});
+            this.trigger('restore:path');
+            $('[data-js-crumbs-container]', this.$el).removeClass('lost-path');
+        },
         destroy: function () {
             this.$el.html('');
             this.undelegateEvents();
@@ -260,6 +338,11 @@ define(function (require, exports, module) {
             delete this;
         },
     });
+
+
+    // update error:
+    // 1 - launch not found;
+    // 2 - item not found
 
 
     return LaunchCrumbsView;

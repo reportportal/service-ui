@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,12 +65,21 @@
         top: 0;
         left: 0;
         bottom: 0;
-        right: -17px;
-        overflow-y: scroll;
+        right: 0;
+        overflow: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
-        &::-webkit-scrollbar {
-            width: 16px;
+    }
+}
+.no-zero-scroll {
+    .baron__root {
+        & > *:first-child{
+            right: -17px;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            &::-webkit-scrollbar {
+                width: 16px;
+            }
         }
     }
 }

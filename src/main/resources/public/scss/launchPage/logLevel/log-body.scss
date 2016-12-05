@@ -29,6 +29,14 @@
       display: inline-block;
     }
   }
+  &.not-found {
+    .launch-log-preloader {
+      display: none;
+    }
+    .launch-log-not-found {
+      display: block;
+    }
+  }
   .history-line-block {
     position: absolute;
     left: 15px;

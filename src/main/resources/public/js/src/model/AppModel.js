@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,12 +21,40 @@
 define(function(require, exports, module) {
     'use strict';
 
-    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
 
-    var AppModel = Backbone.Model.extend({
+    var AppModel = Epoxy.Model.extend({
         defaults: {
             projectId: null,
-            type: ''
+            type: '',
+            externalSystem: '[]',
+        },
+        computeds: {
+            isBtsAdded: {
+                deps: ['externalSystem'],
+                get: function() {
+                    var externalSystems = this.getArr('externalSystem');
+                    if (externalSystems && !externalSystems.length) {
+                        return false;
+                    }
+                    return true;
+                }
+            },
+            isBtsConfigure: {
+                deps: ['isBtsAdded'],
+                get: function(isBtsAdded) {
+                    if(!isBtsAdded) {
+                        return false;
+                    }
+                    var externalSystems = this.getArr('externalSystem');
+                    if(!_.any(externalSystems, function (bts) {
+                            return bts.fields && bts.fields.length;
+                        })) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
         },
         initialize: function(){
 

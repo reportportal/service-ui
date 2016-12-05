@@ -60,7 +60,6 @@ define(function (require, exports, module) {
             var async = $.Deferred();
             this.launchModel = launchModel;
             this.parentModel = parentModel;
-
             var optionsURL = optionsURL || '';
             var filterData = this.calculateFilterOptions(optionsURL); // set this.logOptions
             var self = this;
@@ -79,7 +78,6 @@ define(function (require, exports, module) {
                             async.reject(activeFilter);
                         })
                 })
-
             } else {
                 filterData.temp = true;
                 var activeFilter = new FilterModel(filterData);
@@ -98,6 +96,11 @@ define(function (require, exports, module) {
             }
             return async.promise();
         },
+        restorePath: function() {
+            _.each(this.models, function(model) {
+                model.restorePath();
+            })
+        },
         getPathByLogItemId: function(logItemId) {
             var options = this.getParamsFilter();
             options.push('log.item=' + logItemId);
@@ -114,7 +117,6 @@ define(function (require, exports, module) {
             this.activateChangeParamsTrigger();
             this.load();
         },
-
         setLogItem: function(logItemId) {
             if(!this.get(logItemId)) {
                 console.log('log item not found');
@@ -229,6 +231,8 @@ define(function (require, exports, module) {
             if(typesMas.length == 0) {
                 if(!this.launchModel) {
                     async.resolve('LAUNCH');
+                } else if (this.noChildFilter) {
+                    async.resolve('STEP');
                 } else if(this.launchModel && !this.parentModel) {
                     async.resolve('SUITE');
                 } else {
@@ -286,7 +290,7 @@ define(function (require, exports, module) {
             var params = this.getParamsFilter();
             if(this.launchModel) {
                 path = Urls.getGridUrl('suit');
-                params.push('filter.eq.launch=' + this.launchModel.get('id'));
+                !this.launchModel.get('failLoad') && params.push('filter.eq.launch=' + this.launchModel.get('id'));
                 if(this.parentModel) {
                     this.noChildFilter && params.push('filter.in.path=' + this.parentModel.get('id'));
                     !this.noChildFilter && params.push('filter.eq.parent=' + this.parentModel.get('id'));

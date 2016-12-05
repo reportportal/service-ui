@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -810,7 +810,7 @@ define([
                 {
                     validator: 'matchRegex',
                     type: 'issueLinkRegex',
-                    pattern: config.patterns.urlT,
+                    pattern: config.patterns.inputLink,
                     arg: 'i'
                 }
             ]);

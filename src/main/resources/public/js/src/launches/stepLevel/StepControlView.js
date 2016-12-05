@@ -27,6 +27,7 @@ define(function (require, exports, module) {
     var InfoPanelView = require('launches/common/InfoPanelView');
     var App = require('app');
     var Localization = require('localization');
+    var SingletonAppModel = require('model/SingletonAppModel');
 
     var config = App.getInstance();
 
@@ -39,7 +40,9 @@ define(function (require, exports, module) {
 
         bindings: {
             '[data-js-history]': 'attr: {href:getHistoryHref, style: validateForHistoryBtn}',
-            '[data-js-multi-action="remove"]': 'attr: {disabled: not(activeMultiDelete), title: multipleDeleteTooltip}'
+            '[data-js-multi-action="remove"]': 'attr: {disabled: not(activeMultiDelete), title: multipleDeleteTooltip}',
+            '[data-js-multi-action="loadbug"]': 'attr: {disabled: any(loadBugTooltip), title: loadBugTooltip}',
+            '[data-js-multi-action="postbug"]': 'attr: {disabled: any(postBugTooltip), title: postBugTooltip}',
         },
 
         computeds: {
@@ -59,6 +62,18 @@ define(function (require, exports, module) {
                     return '';
                 }
                 return Localization.launches.launchNotInProgress;
+            },
+            loadBugTooltip: function() {
+                if (!this.appModel.get('isBtsAdded')) {
+                    return Localization.launches.configureTBSLoad;
+                }
+                return '';
+            },
+            postBugTooltip: function() {
+                if (!this.appModel.get('isBtsConfigure')) {
+                    return Localization.launches.configureTBS;
+                }
+                return '';
             }
         },
 
@@ -68,6 +83,7 @@ define(function (require, exports, module) {
             this.launchModel = options.launchModel;
             this.parentModel = options.parentModel;
             this.collectionItems =  options.collectionItems;
+            this.appModel = new SingletonAppModel();
             this.render();
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-refine-entities]', this.$el),

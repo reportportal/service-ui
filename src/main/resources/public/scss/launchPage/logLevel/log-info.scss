@@ -44,6 +44,12 @@
           opacity: 1;
         }
       }
+
+      .tickets-container {
+        .ui-tooltip {
+          left: 99px;
+        }
+      }
     }
     .launch-log-item-issue {
       padding: 15px;

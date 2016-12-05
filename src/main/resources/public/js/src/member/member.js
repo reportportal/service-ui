@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@ define(function(require, exports, module) {
     var Service = require('memberService');
     var Scrollable = require('scrollable');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var ModalConfirm = require('modals/modalConfirm');
 
     require('validate');
 
@@ -579,7 +580,7 @@ define(function(require, exports, module) {
             Util.bootValidator(this.$memberFilter, [{
                 validator: 'minMaxNotRequired',
                 type: 'memberName',
-                min: 3,
+                min: 1,
                 max: 128
             }]);
 
@@ -836,16 +837,9 @@ define(function(require, exports, module) {
                         }
                         return valid;
                     }) || {};
-
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    this.doAction(member, index, el);
-                }.bind(this),
-                message: this.memberAction,
-                format: [member.full_name || member.userId, this.projectId]
-            });
+            this.doAction(member, index, el);
         },
-        removeMember: function(index, el){
+        removeMember: function (index, el) {
             var removeMember = this.members.splice(index, 1);
             this.loadMembers();
             this.trigger('user::action');
@@ -853,14 +847,24 @@ define(function(require, exports, module) {
         },
         doAction: function (member, index, el) {
             var self = this;
-            Service.unAssignMember(member.userId, self.projectId)
-                .done(function () {
-                    Util.ajaxSuccessMessenger("unAssignMember");
-                    self.removeMember();
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "unAssignMember");
-                });
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.unAssignMember,
+                bodyText: Util.replaceTemplate(Localization.dialog.unAssignMember, member.userId, this.projectId),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.dialog.unAssignMemberBtn,
+                confirmFunction: function() {
+                    return Service.unAssignMember(member.userId, self.projectId)
+                        .done(function () {
+                            Util.ajaxSuccessMessenger("unAssignMember");
+                            self.removeMember();
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error, "unAssignMember");
+                        });
+                }
+            });
+            modal.show();
         },
         destroy: function () {
             this.members = null;

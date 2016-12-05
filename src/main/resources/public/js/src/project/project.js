@@ -3,7 +3,7 @@
  * 
  * 
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  * 
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,6 +39,7 @@ define(function(require, exports, module) {
     var DefectTypeModel = require('defectType/DefectTypeModel');
     var SingletonAppModel = require('model/SingletonAppModel');
     var DemoDataSettingsView = require('DemoDataSettingsView');
+    var ModalConfirm = require('modals/modalConfirm');
 
     require('colorpicker');
 
@@ -596,15 +597,16 @@ define(function(require, exports, module) {
                 recipients = caseItem.find('input.recipients'),
                 remoteUsers = [],
                 users = this.getRecipients(index),
+                minimumInputLength = config.forms.filterUser,
                 resultFound = false,
                 self = this;
 
             if (getAnyway || !recipients.hasClass('select2-offscreen')) {
                 Util.setupSelect2WhithScroll(recipients, {
                     multiple: true,
-                    minimumInputLength: 3,
+                    minimumInputLength: 1,
                     formatInputTooShort: function (input, min) {
-                        return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto
+                        return Localization.ui.minPrefix + minimumInputLength + Localization.ui.minSufixAuto
                     },
                     formatResultCssClass: function (state) {
                         if ((remoteUsers.length == 0 || _.indexOf(remoteUsers, state.text) < 0) && $('.users-typeahead.recipients:not(input)').eq(index).find('input').val() == state.text) {
@@ -643,11 +645,11 @@ define(function(require, exports, module) {
                                 results: []
                             };
 
-                        if (queryLength >= 3) {
+                        if (queryLength >= minimumInputLength) {
                             if (queryLength > 256) {
                                 self.validateRecipients();
                             } else {
-                                if (queryLength == 256) {
+                                if (queryLength <= 256) {
                                     self.validateRecipients();
                                 }
                                 //query.term = query.term.replace(/[@#.?*+^$[\]\\(){}|-]/g, "\\$&");
@@ -1394,6 +1396,7 @@ define(function(require, exports, module) {
                 var defaultBts = config.forSettings.btsList[0];
                 if (!defaultBts) {
                     console.log('no bts');
+                    return;
                 } else {
                     this.set({systemType: defaultBts.name})
                 }
@@ -1513,7 +1516,17 @@ define(function(require, exports, module) {
             this.settings = options.settings;
             this.access = options.access;
             this.systems = options.externalSystems;
-            this.model = new BtsProperties(options.externalSystems[0]);
+            var modelData = null;
+            _.each(options.externalSystems, function(system) {
+                return _.each(config.forSettings.btsList, function(btsItem) {
+                    if(btsItem.name == system.systemType) {
+                        modelData = system;
+                        return false;
+                    }
+                })
+            })
+            // this.model = new BtsProperties(options.externalSystems[0]);
+            this.model = new BtsProperties(modelData);
             this.systemAt = 0;
         },
 
@@ -1531,9 +1544,13 @@ define(function(require, exports, module) {
             this.$instanceHead = $("#instanceHead", this.$el);
             this.$instanceBoby = $("#instanceBody", this.$el);
 
-            this.renderMultiSelector();
-            this.renderInstance();
-
+            if(config.forSettings.btsList.length) {
+                this.renderMultiSelector()
+                this.renderInstance();
+            } else {
+                $('button', this.$el).prop({disabled: 'disabled'});
+                $('[data-js-no-bts-message]', this.$el).removeClass('hide');
+            }
             return this;
         },
 
@@ -1547,7 +1564,9 @@ define(function(require, exports, module) {
                     index: this.systemAt,
                     access: this.access
                 }));
+                return true;
             }
+            return false;
         },
 
         renderInstance: function () {
@@ -1577,7 +1596,7 @@ define(function(require, exports, module) {
         },
 
         systemWithMultipleProjects: function (system) {
-            return this.settings['bts' + system].multiple;
+            return (this.settings['bts' + system] && this.settings['bts' + system].multiple);
         },
 
         changeBts: function (e) {
@@ -1880,10 +1899,15 @@ define(function(require, exports, module) {
         },
 
         deleteInstance: function () {
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    var self = this;
-                    Service.deleteExternalSystem(this.model.get('id'))
+            var self = this;
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.deleteBts,
+                bodyText: Util.replaceTemplate(Localization.dialog.deleteBts, this.model.get('systemType'), this.model.get('project')),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
+                confirmFunction: function() {
+                    return Service.deleteExternalSystem(self.model.get('id'))
                         .done(function () {
                             self.systems.splice(self.systemAt, 1);
                             if (self.systems.length) {
@@ -1903,13 +1927,9 @@ define(function(require, exports, module) {
                         .fail(function (error) {
                             Util.ajaxFailMessenger(error, "deleteBts");
                         });
-                }.bind(this),
-                message: 'deleteBts',
-                format: [
-                    this.model.get('systemType'),
-                    this.model.get('project')
-                ]
+                }
             });
+            modal.show();
         },
 
         setPristineBTSForm: function (el) {
@@ -2243,60 +2263,20 @@ define(function(require, exports, module) {
 
             if (id === subType.toUpperCase() + '0') {
                 return;
-            };
-
-            var modalDialog = {
-                paramModal: {
-                    additionalClass: 'dialog-delete-defect-type',
-                    sizeModal: 'md',
-                    withConfirm: true,
-                    isFormatText: true
-                },
-                dialogHeader: {
-                    title: Localization.dialogHeader.titleDeleteDefectType
-                },
-                dialogBody: {
-                    txtMessageTop: updateMsgForModalDialog(Localization.dialog.msgMessageTop),
-                    txtMessage: Localization.dialog.msgDeleteDefectType
-                },
-                dialogFooter: {
-                    cancelButton: Localization.uiCommonElements.cancel,
-                    dangerButton: Localization.uiCommonElements.delete
-                }
-            };
-
-            this.deleteDialog = Util.getDialog({
-                name: this.confirmModal,
-                data: modalDialog,
+            }
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.titleDeleteDefectType,
+                bodyText: Util.replaceTemplate(Localization.dialog.msgMessageTop, fullNameSubType, nameParentType),
+                confirmText: Localization.dialog.msgDeleteDefectType,
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
             });
-
-            this.deleteDialog
-                .on('click', ".rp-btn-danger", function () {
-                    self.model.collection.remove(self.model);
-                    self.destroy();
-                    self.deleteDialog.modal("hide");
-                    Util.ajaxSuccessMessenger('deleteOneSubType');
-                })
-                .on('click', ".rp-btn-cancel", function () {
-                    // TODO
-                    // options.cancelCallback && options.cancelCallback();
-                })
-                .on('click', "input[type='checkbox'].confirm", function (event) {
-                    var elem = event.target;
-                    var btnDelete = $(elem).closest('.modal-body').find('.rp-btn-danger');
-                    if (elem.checked) {
-                        $(btnDelete.selector).removeAttr('disabled');
-                    } else {
-                        $(btnDelete.selector).attr("disabled", "disabled");
-                    }
-                })
-                .on('hidden.bs.modal', function () {
-                    $(this).data('modal', null);
-                    self.deleteDialog.off().remove();
-                    self.deleteDialog = null;
-                });
-
-            this.deleteDialog.modal("show");
+            modal.show().done(function () {
+                self.model.collection.remove(self.model);
+                self.destroy();
+                Util.ajaxSuccessMessenger('deleteOneSubType');
+            });
         },
         cancelItem: function (event) {
             event.preventDefault();

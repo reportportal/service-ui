@@ -105,16 +105,19 @@ define(function (require, exports, module) {
             this.$description.trigger('validate');
 
             Util.setupSelect2Tags(this.$tags);
-            var self = this;
-            this.$tags.on('change', function () {
-                self.highlightCommonTags();
-            });
-            this.highlightCommonTags();
+            // var self = this;
+            // this.$tags.on('change', function () {
+            //     self.highlightCommonTags();
+            // });
+            // this.highlightCommonTags();
 
             this.validate();
             this.delegateEvents();
         },
 
+        onKeySuccess: function () {
+            this.submit();
+        },
         setupAnchors: function () {
             this.$actionBtn = $('[data-js-submit]', this.$el);
             this.$name = $("#mergeName", this.$el);
@@ -130,17 +133,17 @@ define(function (require, exports, module) {
             this.$actionBtn[actionClass + 'Class']('disabled');
         },
 
-        highlightCommonTags: function () {
-            var tags = $('.select2-search-choice > div', this.$el),
-                commonTags = this.commonTags || [];
-            _.forEach(tags, function (tag) {
-                var el = $(tag),
-                    val = el.text();
-                if (_.contains(commonTags, val)) {
-                    el.closest('.select2-search-choice').addClass('common-tag');
-                }
-            }, this);
-        },
+        // highlightCommonTags: function () {
+        //     var tags = $('.select2-search-choice > div', this.$el),
+        //         commonTags = this.commonTags || [];
+        //     _.forEach(tags, function (tag) {
+        //         var el = $(tag),
+        //             val = el.text();
+        //         if (_.contains(commonTags, val)) {
+        //             el.closest('.select2-search-choice').addClass('common-tag');
+        //         }
+        //     }, this);
+        // },
 
         submit: function () {
             if (!$(".has-error", this.$el).length) {

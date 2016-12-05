@@ -24,6 +24,7 @@ define(function (require, exports, module) {
 
     var ModalView = require('modals/_modalView');
     var Util = require('util');
+    var $ = require('jquery');
 
     var ModalConfirm = ModalView.extend({
         template: 'tpl-modal-confirm',
@@ -31,7 +32,7 @@ define(function (require, exports, module) {
 
         events: {
             'change [data-js-select]': 'onChangeCheckbox',
-            'click [data-js-ok]': 'onClickSuccess',
+            'click [data-js-ok]': 'onClickSuccess'
         },
 
         initialize: function(options) {
@@ -57,6 +58,14 @@ define(function (require, exports, module) {
                 $('[data-js-ok]', this.$el).addClass('disabled');
             }
         },
+
+        onKeySuccess: function () {
+            var confirmBtn = $('[data-js-ok]',this.$el);
+            if (!confirmBtn.hasClass('disabled')) {
+                confirmBtn.trigger('click')
+            }
+        },
+
         onClickSuccess: function() {
             var self = this;
             if(!this.confirmFunction) {
@@ -69,7 +78,7 @@ define(function (require, exports, module) {
             }).fail(function(err) {
                 self.closeAsync && self.closeAsync.resolve(err);
             }).always(function() {
-                self.$modalWrapper && self.$modalWrapper.modal('hide');
+                self.hide();
             })
         }
     });
