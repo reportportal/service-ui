@@ -245,21 +245,21 @@ define(function(require, exports, module) {
                 },
                 loadbug: function() {
                     var issue = self.getIssue();
-                    if (!self.appModel.get('isBtsAdded')) {
-                        return Localization.launches.configureTBSLoad;
-                    }
                     if (!issue || !issue.issue_type) {
                         return Localization.launches.noIssuesLoad
+                    }
+                    if (!self.appModel.get('isBtsAdded')) {
+                        return Localization.launches.configureTBSLoad;
                     }
                     return '';
                 },
                 postbug: function() {
                     var issue = self.getIssue();
-                    if (!self.appModel.get('isBtsConfigure')) {
-                        return Localization.launches.configureTBS;
-                    }
                     if (!issue || !issue.issue_type) {
                         return Localization.launches.noIssues
+                    }
+                    if (!self.appModel.get('isBtsConfigure')) {
+                        return Localization.launches.configureTBS;
                     }
                     return '';
                 }
