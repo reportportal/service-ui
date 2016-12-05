@@ -64,6 +64,7 @@ define(function (require, exports, module) {
             this.listenTo(this.collectionItems, 'set:log:item', this.onSetLogItem);
             this.listenTo(this.crumbs, 'change:path', this.onChangeItemCrumbs);
             this.listenTo(this.crumbs, 'restore:path', this.onRestoreItemCrumbs);
+            this.listenTo(this.crumbs, 'fail:load', this.onFailCrumbs);
             this.listenTo(this.multipleSelected, 'activate:true', this.onActivateMultipleSelect);
             this.listenTo(this.multipleSelected, 'activate:false', this.onDisableMultipleSelect);
         },
@@ -118,6 +119,23 @@ define(function (require, exports, module) {
         onRestoreItemCrumbs: function() {
             this.collectionItems.restorePath();
         },
+        onFailCrumbs: function(error) {
+            $('[data-js-preloader-launch-body]', this.$el).removeClass('rp-display-block');
+            switch(error) {
+                case 1: { // launch not found
+                    $('[data-js-launch-not-found]', this.$el).addClass('rp-display-block');
+                    this.trigger('change:level', 'SUITE');
+                    this.currentLevel = 'SUITE';
+                    break;
+                }
+                case 2: {
+                    $('[data-js-item-not-found]', this.$el).addClass('rp-display-block');
+                    this.trigger('change:level', 'SUITE');
+                    this.currentLevel = 'SUITE';
+                    break;
+                }
+            }
+        },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
@@ -127,6 +145,8 @@ define(function (require, exports, module) {
             this.body && this.body.destroy();
             this.control && this.stopListening(this.control) && this.control.destroy();
             $('[data-js-preloader-launch-body]', this.$el).addClass('rp-display-block');
+            $('[data-js-launch-not-found]', this.$el).removeClass('rp-display-block');
+            $('[data-js-item-not-found]', this.$el).removeClass('rp-display-block');
             this.crumbs.update(partPath, optionsURL);
         },
         onChangePathId: function() {

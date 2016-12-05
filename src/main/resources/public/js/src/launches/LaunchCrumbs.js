@@ -187,13 +187,25 @@ define(function (require, exports, module) {
                             parentModel = lastModel;
                             if(!launchModel.get('failLoad')) {
                                 self.trigger('lost:launch', false);
-                                async.resolve(launchModel, parentModel);
+                                if(lastModel.get('failLoad')) {
+                                    async.reject(2);
+                                }else {
+                                    async.resolve(launchModel, parentModel);
+                                }
                             } else {
-                                self.checkLostLaunch(async, launchModel, parentModel);
+                                if(!lastModel.get('failLoad')) {
+                                    self.checkLostLaunch(async, launchModel, parentModel);
+                                } else {
+                                    async.reject(1);
+                                }
                             }
                         })
                     } else {
-                        async.resolve(launchModel, parentModel);
+                        if (launchModel.get('failLoad')) {
+                            async.reject(1);
+                        } else {
+                            async.resolve(launchModel, parentModel);
+                        }
                     }
                 })
             }
@@ -214,7 +226,7 @@ define(function (require, exports, module) {
                             self.trigger('lost:launch', true);
                         })
                         .fail(function() {
-                            console.log('launch not found');
+                            async.reject(1);
                         })
                 }
             })
@@ -233,6 +245,7 @@ define(function (require, exports, module) {
         initialize: function() {
             this.render();
             this.listenTo(this.model, 'remove', this.onRemove);
+            this.listenTo(this.model, 'change:failLoad', this.render);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {failLoad: this.model.get('failLoad')}))
@@ -284,7 +297,10 @@ define(function (require, exports, module) {
                     $('#breadCrumbs', self.$el).removeClass('load');
                     self.lastModel = parentModel;
                     self.trigger('change:path', launchModel, parentModel, optionsURL);
-                });
+                })
+                .fail(function(error) {
+                    self.trigger('fail:load', error);
+                })
         },
         setLogItem: function(itemModel, itemId) {
             if (itemModel) {
@@ -322,6 +338,11 @@ define(function (require, exports, module) {
             delete this;
         },
     });
+
+
+    // update error:
+    // 1 - launch not found;
+    // 2 - item not found
 
 
     return LaunchCrumbsView;

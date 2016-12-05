@@ -37,7 +37,16 @@
   font-size: 17px;
   color: $COLOR--gray-47;
   display: none;
+  p {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 5px;
+  }
   @media(max-width: $SCREEN_XS_MAX) {
     font-size: 14px;
+    p {
+      text-align: center;
+      font-size: 12px;
+    }
   }
 }

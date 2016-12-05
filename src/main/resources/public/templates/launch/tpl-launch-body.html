@@ -6,4 +6,14 @@
 <div class="preloader" data-js-preloader-launch-body>
     <i class="material-icons loader-animation">refresh</i>
 </div>
+<div class="no-result-found" data-js-launch-not-found>
+    <i class="rp-icons rp-icons-warning"></i>
+    <span><%= data.text.launches.noLaunchFound %></span>
+    <p><%- data.text.failMessages.gridData %></p>
+</div>
+<div class="no-result-found" data-js-item-not-found>
+    <i class="rp-icons rp-icons-warning"></i>
+    <span><%= data.text.launches.noItemFound %></span>
+    <p><%- data.text.failMessages.gridData %></p>
+</div>
 <div class="launch-body-wrapper" data-js-info-container></div>
