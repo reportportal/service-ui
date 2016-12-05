@@ -722,7 +722,7 @@ define(['util'], function () {
             forbiddenIsProcessing: 'Update of test item is forbidden for launch with Auto Analyze in progress',
             replaceComments: "Replace Comments to All Selected Items",
             noLaunchFound: "Launch is not found",
-            noItemFound: "Test item is not found",
+            noItemFound: "Item is not found",
             originalLaunchLost: "Original launch was lost",
             showPreconditionMethods: 'Collapse precondition methods',
             hidePreconditionMethods: 'Expand precondition methods',
