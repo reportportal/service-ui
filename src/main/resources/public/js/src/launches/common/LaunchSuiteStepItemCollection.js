@@ -231,12 +231,10 @@ define(function (require, exports, module) {
             if(typesMas.length == 0) {
                 if(!this.launchModel) {
                     async.resolve('LAUNCH');
+                } else if (this.noChildFilter) {
+                    async.resolve('STEP');
                 } else if(this.launchModel && !this.parentModel) {
-                    if(!this.noChildFilter) {
-                        async.resolve('SUITE');
-                    } else {
-                        async.resolve('STEP');
-                    }
+                    async.resolve('SUITE');
                 } else {
                     this.loadSuiteStepChildren()
                         .done(function(responce) {

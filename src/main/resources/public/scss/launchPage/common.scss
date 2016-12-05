@@ -129,6 +129,17 @@
     }
 
   }
+  @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+    .rp-table-row {
+      background-color: $COLOR--white-default;
+      &:hover {
+        background-color: $COLOR--white-default;
+      }
+      .item-edit-icon, .edit-defect {
+        opacity: 1;
+      }
+    }
+  }
 }
 .launch-suite-step-items {
   &.load {
