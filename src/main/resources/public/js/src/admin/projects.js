@@ -341,7 +341,7 @@ define(function (require, exports, module) {
             var status = el.data('active');
 
             var modal = new ModalConfirm({
-                headerText: Localization.dialogHeader.unAssignMember,
+                headerText: Localization.dialogHeader.deleteProject,
                 bodyText: Util.replaceTemplate(Localization.dialog.deleteProject, id),
                 confirmText: Localization.dialog.msgDeleteProject,
                 cancelButtonText: Localization.ui.cancel,
