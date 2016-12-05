@@ -34,6 +34,10 @@ define(function (require, exports, module) {
             this.closeAsync = $.Deferred();
             $('.rp-modal-dialog, .modal-backdrop').remove();
             this.$modalWrapper = $(Util.templates(this.templateWrapper, {}));
+            if(this.className){
+                this.$modalWrapper.addClass(this.className);
+                this.$el.removeClass(this.className).addClass('modal-content-wrapper');
+            }
             $('body').append(this.$modalWrapper);
             $('[data-js-modal-content]', this.$modalWrapper).html(this.$el);
             Util.setupBaronScroll($('[data-js-scroll-container]', this.$modalWrapper));
