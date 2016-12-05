@@ -37,7 +37,8 @@ define(function (require, exports, module) {
             'click .main-menu a': 'closeMenu',
             'click .user-menu a': 'closeMenu',
             'click [data-js-sidebar-close]': 'closeMenu',
-            'click [data-js-administrate-page-link]': 'setLastActivePage'
+            'click [data-js-administrate-page-link]': 'setLastActivePage',
+            'click [data-js-logout]': 'onClickLogout',
         },
 
         initialize: function (options) {
@@ -104,6 +105,11 @@ define(function (require, exports, module) {
 
         clearActives: function () {
             $("a.active", this.$el).removeClass('active');
+        },
+        onClickLogout: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            config.userModel.logout();
         },
 
         destroy: function () {
