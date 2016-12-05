@@ -97,12 +97,7 @@ define(function (require, exports, module) {
         },
         onSetLogItem: function(logItemId) {
             var logItemModel = this.collectionItems.get(logItemId);
-            if (logItemModel) {
-                this.crumbs.setLogItem(logItemModel);
-            } else {
-                console.log("Page not found")
-            }
-
+            this.crumbs.setLogItem(logItemModel, logItemId);
         },
         onDrillItem: function(itemModel) {
             this.crumbs.cacheItem(itemModel);

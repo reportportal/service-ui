@@ -235,7 +235,7 @@ define(function (require, exports, module) {
             this.listenTo(this.model, 'remove', this.onRemove);
         },
         render: function() {
-            this.$el.html(Util.templates(this.template, {}))
+            this.$el.html(Util.templates(this.template, {failLoad: this.model.get('failLoad')}))
         },
         onRemove: function() {
             this.destroy();
@@ -286,12 +286,18 @@ define(function (require, exports, module) {
                     self.trigger('change:path', launchModel, parentModel, optionsURL);
                 });
         },
-        setLogItem: function(itemModel) {
-            if(this.collection.lastLogItem) {
-                this.collection.remove(this.collection.lastLogItem);
+        setLogItem: function(itemModel, itemId) {
+            if (itemModel) {
+                if(this.collection.lastLogItem) {
+                    this.collection.remove(this.collection.lastLogItem);
+                }
+                this.collection.lastLogItem = itemModel.get('id');
+                this.collection.add(itemModel.toJSON());
+            } else {
+                this.collection.lastLogItem = itemId;
+                this.collection.add({id: itemId, failLoad: true});
             }
-            this.collection.lastLogItem = itemModel.get('id');
-            this.collection.add(itemModel.toJSON());
+
         },
         onAddCrumb: function(model) {
             $('[data-js-crumbs-container]', this.$el).append((new LaunchCrumbView({

@@ -643,6 +643,7 @@ define(['util'], function () {
             finishAgree: "I am sure I want to finish %%%",
             deleteAgree: "I am sure I want to delete %%%",
 
+            errorItem: 'Error Item',
             jiraCredentials: "Jira credentials:",
             tfsCredentials: "TFS credentials:",
             rallyCredentials: "Rally credentials:",
@@ -1269,6 +1270,7 @@ define(['util'], function () {
             deleteLaunches: 'Launches where deleted',
             deleteTestItem: "Item was deleted",
             deleteTestItems: "Items where deleted",
+            submitKeys: "Defect link is added",
 
             editFilter: "Filter has been updated!",
             sharedFilter: "Filter name has been shared!",
@@ -1618,7 +1620,7 @@ define(['util'], function () {
             sureToRemoveWidget: "Are you sure you want to remove %%% <b>'%%%'</b>",
 
             launchEditor: "Edit launch",
-            itemEditor: "Edit test item",
+            itemEditor: "Edit item",
             defectEditor: 'Edit defect',
             choseDefectType: 'Choose Defect Type',
             commentForDefect: 'Leave Comment to Defect Type',
@@ -1627,7 +1629,7 @@ define(['util'], function () {
             postBug: "Post bug",
             loadBug: "Load bug",
             launchDetails: 'Launch Details',
-            testItemDetails: 'Test Item Details',
+            testItemDetails: 'Item Details',
             launchDescrPlaceholder: 'Enter Launch Description',
             testItemDescrPlaceholder: 'Enter Item Description',
             launchTagPlaceholder: 'Enter Tag Name',

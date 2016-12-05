@@ -42,18 +42,24 @@ define(function (require, exports, module) {
             this.onChangeLogItem();
         },
         onChangeLogItem: function() {
+            $('[data-js-log-item-container]',this.$el).removeClass('not-found');
             $('[data-js-log-item-container]',this.$el).addClass('load');
             this.history && this.off(this.history);
             this.history && this.history.destroy();
             this.historyItem && this.historyItem.destroy();
             this.logsItem && this.logsItem.destroy();
-            this.history = new LogHistoryLine({
-                el: $('[data-js-history-line]', this.$el),
-                collectionItems: this.collectionItems,
-                launchModel: this.launchModel,
-            });
-            this.listenTo(this.history, 'load:history', this.onLoadHistory);
-            this.listenTo(this.history, 'activate:item', this.selectHistoryItem);
+            if (!this.collectionItems.get(this.collectionItems.getInfoLog().item)) {
+                $('[data-js-log-item-container]',this.$el).addClass('not-found');
+                $('[data-js-log-item-container]',this.$el).removeClass('load');
+            } else {
+                this.history = new LogHistoryLine({
+                    el: $('[data-js-history-line]', this.$el),
+                    collectionItems: this.collectionItems,
+                    launchModel: this.launchModel,
+                });
+                this.listenTo(this.history, 'load:history', this.onLoadHistory);
+                this.listenTo(this.history, 'activate:item', this.selectHistoryItem);
+            }
         },
         onLoadHistory: function() {
             $('[data-js-log-item-container]',this.$el).removeClass('load');
