@@ -20,67 +20,70 @@
  */
 
 .modal-launches-merge {
-  .modal-body {
-    min-height: 470px;
-    padding: 30px 12px 0 12px;
+  .modal-content-wrapper {
+    .modal-body {
+      min-height: 470px;
+      padding: 30px 12px 0 12px;
 
-    .fields {
-      margin-top: 18px;
+      .fields {
+        margin-top: 18px;
 
-      .rp-form-group {
-        clear: both;
-        border: 0;
-        outline: 0;
-        padding: 0 0 0 12px;
+        .rp-form-group {
+          clear: both;
+          border: 0;
+          outline: 0;
+          padding: 0 0 0 12px;
 
-        &.has-error {
-          margin-bottom: 6px;
+          &.has-error {
+            margin-bottom: 6px;
 
-          .rp-input-default, .rp-input-default:focus {
-            color: #393939;
-            box-shadow: 0 0 2px 0 rgba(255,49,33,.7);
-            border: 1px solid #ff3222;
+            .rp-input-default, .rp-input-default:focus {
+              color: #393939;
+              box-shadow: 0 0 2px 0 rgba(255,49,33,.7);
+              border: 1px solid #ff3222;
+            }
           }
-        }
 
-        &.extended {
-          padding-left: 130px;
-          width: 480px;
+          &.extended {
+            padding-left: 130px;
+            width: 480px;
 
-          .rp-input-default {
+            .rp-input-default {
+              float: left;
+              margin-bottom: 20px;
+              margin-right: 5px;
+            }
+          }
+
+          .field-caption {
+            display: block;
             float: left;
-            margin-bottom: 20px;
-            margin-right: 5px;
+            width: 90px;
+            line-height: 30px;
+            text-align: right;
+            font-size: 13px;
+            color: $COLOR--charcoal-grey;
           }
-        }
 
-        .field-caption {
-          display: block;
-          float: left;
-          width: 90px;
-          line-height: 30px;
-          text-align: right;
-          font-size: 13px;
-          color: $COLOR--charcoal-grey;
-        }
+          .rp-input-default, .select2-container {
+            width: 350px;
+            margin-left: 28px;
+          }
+          textarea {
+            min-height: 70px;
+          }
 
-        .rp-input-default, .select2-container {
-          width: 350px;
-          margin-left: 28px;
-        }
-        textarea {
-          min-height: 70px;
-        }
-
-        .help-inline {
-          margin-left: 118px;
+          .help-inline {
+            margin-left: 118px;
+          }
         }
       }
     }
-  }
-  &.load {
-    .preloader {
-      display: block;
+    &.load {
+      .preloader {
+        display: block;
+      }
     }
   }
+
 }

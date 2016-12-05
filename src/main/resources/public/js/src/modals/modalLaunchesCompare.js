@@ -70,7 +70,14 @@ define(function (require, exports, module) {
                     height: config.defaultWidgetHeight
                 }
             });
-            this.widget.render();
+            this.$el.animate({
+                opacity: 1,
+            }, 2000);
+            var self = this;
+            setTimeout(function () {
+                self.widget.render();
+            }, 500);
+
         },
 
         render: function() {

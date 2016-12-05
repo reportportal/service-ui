@@ -20,18 +20,26 @@
  */
 
 .modal-launches-compare {
-  .modal-body {
-    min-height: 420px;
-    .preloader {
-      padding-top: 170px;
+  .modal-dialog {
+    @media (min-width: 915px) {
+      width: 900px;
     }
-    .panel-body {
-      height: 410px;
-    }
-  }
-  &.load {
-    .preloader {
-      display: block;
+    .modal-content-wrapper {
+      opacity: 0;
+      .modal-body {
+        min-height: 420px;
+        .preloader {
+          padding-top: 170px;
+        }
+        .panel-body {
+          height: 410px;
+        }
+      }
+      &.load {
+        .preloader {
+          display: block;
+        }
+      }
     }
   }
 }

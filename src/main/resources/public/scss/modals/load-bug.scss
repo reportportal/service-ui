@@ -19,38 +19,40 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 .modal-load-bug {
-  .modal-body {
-    padding: 40px 10px 10px 10px;
-  }
-  .load-items-container {
-    padding: 17px 9px 10px 20px;
-    .bts-description {
-      display: block;
-      margin-bottom: 15px;
-      color: $COLOR--gray-60;
+  .modal-content-wrapper {
+    .modal-body {
+      padding: 40px 10px 10px 10px;
     }
-    .bts-label {
-      width: 430px;
-    }
-    .link-label {
-      width: 320px;
-    }
-    .issue-label {
-      width: 120px;
-      margin-left: 7px;
-    }
-    .remove-row {
-      margin: 31px 0 0 3px;
-      display: inline-block;
-      vertical-align: top;
-      cursor: pointer;
-      color: $COLOR--gray-60;
-      &:hover {
-        color: $COLOR--gray-47;
+    .load-items-container {
+      padding: 17px 9px 10px 20px;
+      .bts-description {
+        display: block;
+        margin-bottom: 15px;
+        color: $COLOR--gray-60;
+      }
+      .bts-label {
+        width: 430px;
+      }
+      .link-label {
+        width: 320px;
+      }
+      .issue-label {
+        width: 120px;
+        margin-left: 7px;
+      }
+      .remove-row {
+        margin: 31px 0 0 3px;
+        display: inline-block;
+        vertical-align: top;
+        cursor: pointer;
+        color: $COLOR--gray-60;
+        &:hover {
+          color: $COLOR--gray-47;
+        }
       }
     }
-  }
-  .add-button {
-    margin: 5px 0 20px 21px;
+    .add-button {
+      margin: 5px 0 20px 21px;
+    }
   }
 }
