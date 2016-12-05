@@ -155,7 +155,7 @@ define(function(require, exports, module) {
         },
         initialize: function() {
             this.validate = this.getValidate();
-            this.listenTo(this, 'change:description change:tags', this.onChangeItemInfo);
+            this.listenTo(this, 'change:description change:tags', _.debounce(this.onChangeItemInfo, 10));
             this.appModel = new SingletonAppModel();
             this.userModel = new UserModel();
         },
