@@ -35,6 +35,7 @@ define(function(require, exports, module) {
     var MembersCollection = require('projectMembers/MembersCollection');
     var ModalAddUser = require('modals/modalAddUser');
     var ModalInviteUser = require('modals/modalInviteUser');
+    var ModalPermissionsMap = require('modals/modalPermissionsMap');
 
     var config = App.getInstance();
 
@@ -196,7 +197,6 @@ define(function(require, exports, module) {
         showInviteUser: function(e){
             e.preventDefault();
             console.log('showInviteUser');
-            e.preventDefault();
             var modal = new ModalInviteUser({});
             modal.show();
         },
@@ -211,6 +211,8 @@ define(function(require, exports, module) {
         showPermissionsModal: function(e){
             e.preventDefault();
             console.log('showPermissionsModal');
+            var modal = new ModalPermissionsMap({});
+            modal.show();
         },
 
         destroy: function(){

@@ -132,11 +132,10 @@ define(function (require, exports, module) {
         },
         inviteUser: function (type) {
             var userData = this.getUserData();
-            console.log('inviteUser: ', userData);
             this.showSuccess();
             return;
             if (userData) {
-                MembersService.addMember(userData)
+                MembersService.inviteMember(userData)
                     .done(function (data) {
                         this.trigger('add:user');
                         this.successClose();

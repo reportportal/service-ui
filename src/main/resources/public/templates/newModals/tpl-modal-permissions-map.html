@@ -1,0 +1,424 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.project.permissionsMap}); %>
+<div class="modal-body">
+    <div class="table-responsive">
+        <table class="table table-hover table-striped table-condensed table_permissions"
+               id="permissionsTable">
+            <thead class="">
+            <tr>
+                <th rowspan="2"><%= data.text.permissionMap.actionRole %></th>
+                <th rowspan="2"><%= data.text.ui.admin %></th>
+                <th rowspan="2"><%= data.text.ui.manager %></th>
+                <th rowspan="2"><%= data.text.ui.lead %></th>
+                <th colspan="2"><%= data.text.ui.member %></th>
+                <th colspan="2"><%= data.text.ui.customer %></th>
+            </tr>
+            <tr>
+                <th><%= data.text.permissionMap.owner %></th>
+                <th><%= data.text.permissionMap.notOwner %></th>
+                <th><%= data.text.permissionMap.owner %></th>
+                <th><%= data.text.permissionMap.notOwner %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><%= data.text.permissionMap.accessToManagementSystem %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.createProject %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.deleteProject %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.updateSettings %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.seeSettings %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <%= data.text.ui.create %>
+                    <strong><%= data.text.permissionMap.internal %></strong>
+                    <%= data.text.permissionMap.user %>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td>
+                    <%= data.text.admin.invite %>
+                    <strong><%= data.text.permissionMap.internal %>
+                    </strong><%= data.text.permissionMap.user %>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                    <span class="to-power">*</span>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                    <span class="to-power">*</span>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td>
+                    <%= data.text.permissionMap.unSlashAssign %>
+                    <strong><%= data.text.permissionMap.internal %></strong>
+                    <%= data.text.permissionMap.userToFrom %>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                    <span class="to-power">**</span>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                    <span class="to-power">**</span>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.changeUserRole %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                    <span class="to-power">*</span>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                    <span class="to-power">*</span>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td>
+                    <%= data.text.ui.del %>
+                    <strong><%= data.text.permissionMap.internal %></strong>
+                    <%= data.text.permissionMap.user %>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.seeMembers %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td>
+                    <%= data.text.permissionMap.editOwnAccount1 %>
+                    <span class="to-power">***</span>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.deleteLaunch %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.forceFinishLaunch %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.startAnalysis %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.deleteTestItem %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.moveToDebug %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.mergeLaunches %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center"></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.workWithFiltersEtc %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.readData %></td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="text-center success">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-xs-12 text-left"><%= data.text.permissionMap.oneAttention %></div>
+    <div class="col-xs-12 text-left"><%= data.text.permissionMap.twoAttention %></div>
+    <div class="col-xs-12 text-left"><%= data.text.permissionMap.threeAttention %></div>
+</div>
+<div class="modal-footer hide">
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.cancel %>
+    </button>
+    <button class="rp-btn rp-btn-submit" type="button" data-js-load>
+        <%= data.text.ui.add %>
+    </button>
+</div>
