@@ -70,9 +70,7 @@ define(function (require, exports, module) {
                     height: config.defaultWidgetHeight
                 }
             });
-            this.$el.animate({
-                opacity: 1,
-            }, 2000);
+            container.css('opacity', 1);
             var self = this;
             setTimeout(function () {
                 self.widget.render();

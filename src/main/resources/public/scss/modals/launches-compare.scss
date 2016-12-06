@@ -25,16 +25,20 @@
       width: 900px;
     }
     .modal-content-wrapper {
-      opacity: 0;
       .modal-body {
         min-height: 420px;
         .preloader {
           padding-top: 170px;
         }
-        .panel-body {
-          height: 410px;
+        div[data-js-widget-content] {
+          opacity: 0;
+          transition: opacity 2s ease;
+          .panel-body {
+            height: 410px;
+          }
         }
       }
+
       &.load {
         .preloader {
           display: block;
