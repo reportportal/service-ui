@@ -33,7 +33,28 @@
       padding-right: 2px;
     }
   }
-
+  .back-to-top {
+    position: absolute;
+    right: 0;
+    top: -55px;
+    width: 129px;
+    height: 30px;
+    font-size: 14px;
+    text-align: left;
+    display: none;
+    color: $COLOR--gray-47;
+    a {
+      cursor: pointer;
+    }
+    i {
+      font-size: 19px;
+      vertical-align: top;
+      margin-right: 2px;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: block;
+    }
+  }
   .breadcrumbs {
     display: inline-block;
     float: right;
