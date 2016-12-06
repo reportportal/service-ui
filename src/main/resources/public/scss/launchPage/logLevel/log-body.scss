@@ -21,8 +21,7 @@
 .launch-log-body {
   position: relative;
   margin: 0 -15px;
-  padding: 0 15px;
-  border-top: 1px solid $COLOR--gray-91;
+  padding: 80px 15px 0 15px;
   &.load {
     border-top: none;
     .launch-log-preloader {
@@ -43,16 +42,10 @@
     right: 15px;
     top: 0;
   }
-  .item-info-block {
-    margin-top: 80px;
-  }
   @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
-    padding: 0 10px;
+    padding: 10px 10px 0 10px;
     .log-grid {
       margin: 0 5px;
-    }
-    .item-info-block {
-      margin-top: 10px;
     }
   }
   @media(max-width: 720px) {
