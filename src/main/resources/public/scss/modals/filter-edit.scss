@@ -20,35 +20,37 @@
  */
 
 .modal-filter-edit {
-  .modal-body {
-    padding: 36px 20px 21px 29px;
-    .name-label {
-      width: 320px;
-    }
-    .share-label {
-      width: 100px;
-      margin-left: 8px;
-    }
-    .description-label {
-      width: 430px;
-      textarea {
-        height: 68px;
+  .modal-content-wrapper {
+    .modal-body {
+      padding: 36px 20px 21px 29px;
+      .name-label {
+        width: 320px;
       }
-    }
-    & > label{
-      font-weight: normal;
-      position: relative;
-      color: $COLOR--charcoal-grey;
-      vertical-align: top;
-      span:first-child {
-        display: block
+      .share-label {
+        width: 100px;
+        margin-left: 8px;
       }
-      input, textarea, .rp-switcher-big {
-        width: 100%;
-        margin-top: 6px;
+      .description-label {
+        width: 430px;
+        textarea {
+          height: 68px;
+        }
       }
-      .help-inline {
-        padding-top: 5px;
+      & > label{
+        font-weight: normal;
+        position: relative;
+        color: $COLOR--charcoal-grey;
+        vertical-align: top;
+        span:first-child {
+          display: block
+        }
+        input, textarea, .rp-switcher-big {
+          width: 100%;
+          margin-top: 6px;
+        }
+        .help-inline {
+          padding-top: 5px;
+        }
       }
     }
   }

@@ -1,4 +1,4 @@
-<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.dialog.defectEditor}) %>
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.dialogHeader.titleEditDefectType}) %>
 <div class="modal-body">
     <div class="inline-editor pr-defect-editor">
         <div class="container-fluid rp-form-group">
@@ -48,8 +48,10 @@
                 <span><%= data.text.launches.replaceComments %></span>
             </label>
             <% } %>
-            <span class="hot-keys"><%= data.text.ui.escToCancel %></span>
-            <span class="hot-keys"><%= data.text.ui.ctrlEnterToSubmit %></span>
+            <div class="hot-keys-wrapper">
+                <span class="hot-keys"><%= data.text.ui.escToCancel %></span>
+                <span class="hot-keys"><%= data.text.ui.ctrlEnterToSubmit %></span>
+            </div>
         </div>
     </div>
 </div>

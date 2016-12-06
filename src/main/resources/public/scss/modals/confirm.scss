@@ -20,15 +20,17 @@
  */
 
 .modal-confirm {
-  .modal-body {
-    padding: 35px 20px 20px 20px;
-    p{
-      line-height: 22px;
-      font-size: 14px;
-    }
-    .confirm-block {
-      font-family: OpenSansSemibold;
-      margin-top: 12px;
+  .modal-content-wrapper {
+    .modal-body {
+      padding: 35px 20px 20px 20px;
+      p{
+        line-height: 22px;
+        font-size: 14px;
+      }
+      .confirm-block {
+        font-family: OpenSansSemibold;
+        margin-top: 12px;
+      }
     }
   }
 }
