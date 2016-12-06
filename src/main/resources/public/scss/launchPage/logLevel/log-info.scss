@@ -45,8 +45,20 @@
       }
 
       .tickets-container {
+        padding-right: 420px;
         .ui-tooltip {
           left: 99px;
+        }
+        @media (max-width: 990px) {
+          padding-right: 160px;
+        }
+        @media (max-width: 500px) {
+          padding-right: 0;
+        }
+      }
+      @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+        .edit-defect {
+          opacity: 1;
         }
       }
     }
