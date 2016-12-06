@@ -24,6 +24,8 @@
     .modal-body {
       padding: 40px 10px 25px 10px;
       h2 {
+        text-overflow: ellipsis;
+        overflow: hidden;
         font-size: 16px;
         margin: 15px 20px;
       }
