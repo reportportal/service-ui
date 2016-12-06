@@ -70,7 +70,7 @@ define(function (require, exports, module) {
                     height: config.defaultWidgetHeight
                 }
             });
-            container.css('opacity', 1);
+            this.$el.addClass('ready');
             var self = this;
             setTimeout(function () {
                 self.widget.render();
@@ -84,4 +84,4 @@ define(function (require, exports, module) {
     });
 
     return ModalLaunchesCompare;
-})
+});
