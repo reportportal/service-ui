@@ -31,6 +31,24 @@
     .rp-btn {
       margin-left: 8px;
     }
+    .arrow-buttons {
+      overflow: hidden;
+      margin: 0 2px 0 10px;
+      display: block;
+      float: left;
+      .rp-btn {
+        float: left;
+        display: block;
+        margin: 0;
+        &:last-child {
+          margin-left: -1px;
+          &.disabled {
+            border-left: none;
+            margin-left: 0;
+          }
+        }
+      }
+    }
   }
   .counter {
       position: absolute;
