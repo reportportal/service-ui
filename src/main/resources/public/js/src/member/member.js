@@ -48,13 +48,13 @@ define(function(require, exports, module) {
         },
         render: function () {
             this.header = new Header({action: this.subContext, holder: this.context.getMainView().$header}).render();
-            $("#headerBar").append(Util.templates(this.permissionsMapTpl, {
+            /*$("#headerBar").append(Util.templates(this.permissionsMapTpl, {
                 btnVisible: {
                     btnPermissionMap: true,
                     btnProjectSettings: false,
                     btnProjectMembers: false
                 }
-            }));
+            }));*/
 
             $("#headerBar [data-js-show-permissions-map]").click(this.onClickShowPermissionsMap);
 
@@ -72,7 +72,7 @@ define(function(require, exports, module) {
             this.renderPageView();
             return this;
         },
-        permissionsMapTpl: 'tpl-permissions-map',
+        //permissionsMapTpl: 'tpl-permissions-map',
         membersNavigationTpl: 'tpl-members-navigation',
         events: {
             'click .tab': 'updateRoute',

@@ -121,14 +121,23 @@
             color: $COLOR--topaz;
         }
     }
-    @media (max-width: 700px) {
+    @media (max-width: 699px) {
+        padding: 10px;
+        .right-block, .left-block, .first, .last {
+            display: none;
+        }
         ul {
-            margin-top: 50px;
             padding: 0;
+            height: 42px;
             li {
-                margin: 0;
-                padding: 0 4px;
-                font-size: 12px;
+                padding: 15px 10px 4px 10px;
+                font-size: 14px;
+                &.more {
+                    padding: 15px 5px 4px 5px;
+                }
+                &.previous, &.next {
+                    padding: 15px 5px 4px 5px;
+                }
             }
         }
     }

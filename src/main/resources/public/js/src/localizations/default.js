@@ -1161,7 +1161,7 @@ define(['util'], function () {
             deleteUser: "Delete User",
             viewProjects: " View Projects",
             addNewUser: "Add new user",
-            inviteNewUser: "Invite new user",
+            inviteNewUser: "Invite user to the project",
             configPage: " project configuration page",
             projectMembers: "Members",
             assigned: "Assigned",
@@ -1203,12 +1203,13 @@ define(['util'], function () {
         },
 
         members: {
+            projectMembers: 'Project members',
             registration: "Registration",
             completeToRegister: "Complete the form to register on the Report Portal",
             title: "Members",
-            addMember: "Add member",
-            inviteMember: "Invite member",
-            addMemberToProject: "Add new member to the project",
+            addMember: "Add User",
+            inviteMember: "Invite User",
+            addMemberToProject: "Add new user to the project",
             inviteMemberToProject: "Invite new member to the project",
             backToMembers: "Back to members",
             expired: "This invitation has expired or already used",
@@ -1223,7 +1224,7 @@ define(['util'], function () {
             unAssign: "Unassign",
             assignTitle: "Add member to the project",
             assign: "Assign",
-            permissionsMap: "Permission map",
+            permissionsMap: "Permission Map",
             assignedMembers: "Project members",
             assignProjectTitle: "Assign member to the project",
             linkTo: "Link to",
@@ -1231,9 +1232,10 @@ define(['util'], function () {
             registeredOn: "You have been successfully registered on",
             useInformation: "Please, use the following information to login:",
             lockedPermissionsTitle: "You do not have enough permissions to update this member",
-            invitationSent: "The invitation was sent by email",
+            invitationSent: "The invitation was sent on",
             titleAllMembers: "All Members",
-            titleNameLoginEmail: "Name / Login / Email"
+            titleNameLoginEmail: "Name / Login / Email",
+            enterLoginEmail: 'Enter Login or Email'
         },
 
         comparators: {
@@ -1514,6 +1516,7 @@ define(['util'], function () {
             login: "Login",
             fullName: "Full Name",
             email: "Email",
+            loginOrEmail: 'Login or Email',
             password: "Password",
             confirmPassword: "Confirm password",
             genPassword: "Generate password",
@@ -1533,6 +1536,7 @@ define(['util'], function () {
             updateBts: 'Update BTS',
             projectNameIn: 'Project Name in',
             bugWillBeLoaded: 'Bug will be loaded to ',
+            copyLink: 'Copy Link'
         },
 
         wizard: {
@@ -1696,9 +1700,9 @@ define(['util'], function () {
             moveToDebug: "Move launch to debug/default mode",
             mergeLaunches: "Merge launches",
             workWithFiltersEtc: "Work with filters, widgets, dashboards (create, edit, delete, share)",
-            oneAttention: "*  Action can be done for a user with similar and lower role only (E.g. Lead cannot change role for a Project Manager).",
-            twoAttention: "**  Action can be done for a user with similar and lower role only (E.g. Lead cannot assign/unassign a Project Manager) and for user with Administrator account role.",
-            threeAttention: "***  Action can be done for a Internal user."
+            oneAttention: "Action can be done for a user with similar and lower role only (E.g. Lead cannot change role for a Project Manager).",
+            twoAttention: "Action can be done for a user with similar and lower role only (E.g. Lead cannot assign/unassign a Project Manager) and for user with Administrator account role.",
+            threeAttention: "Action can be done for a Internal user."
         }
 
     };
