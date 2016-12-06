@@ -32,7 +32,7 @@ define(function (require, exports, module) {
     var LaunchPage = require('launches/LaunchPage');
     var Project = require('project');
     var ProjectInfo = require('projectinfo');
-    var Member = require('member');
+    var Member = require('projectMembers/MembersPageView');
     var Profile = require('userProfile/UserProfilePage');
 
     // Administrate modules
