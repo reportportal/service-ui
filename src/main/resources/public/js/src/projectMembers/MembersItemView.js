@@ -46,11 +46,12 @@ define(function(require, exports, module) {
             '[data-js-member-login]': 'html: getLogin',
             '[data-js-member-you]': 'classes: {hide: not(isYou)}',
             '[data-js-member-admin]': 'classes: {hide: not(isAdmin)}',
-            '[data-js-member-unassign]': 'classes: {disabled: cantUnAssigned}',
+            '[data-js-member-unassign]': 'classes: {disabled: not(canUnAssign)}, attr: {disabled: not(canUnAssign)}',
             '[data-js-select-roles]': 'classes: {hide: isAdmin}',
             '[data-js-admin-role]': 'classes: {hide: not(isAdmin)}',
             '[data-js-selected-role]': 'text: getProjectRole',
             '[data-js-dropdown-roles]': 'updateRoleDropDown: assigned_projects',
+            '[data-js-button-roles] ': 'classes: {disabled: not(canChangeRole)}, attr: {disabled: not(canChangeRole)}'
         },
 
         computeds: {
@@ -66,10 +67,16 @@ define(function(require, exports, module) {
                     return this.searchString ? Util.textWrapper(userId, this.searchString) : userId;
                 }
             },
-            cantUnAssigned: {
+            canUnAssign: {
                 deps: ['isAdmin', 'userId', 'assigned_projects'],
                 get: function(isAdmin, userId, assigned_projects) {
-                    return this.isPersonalProjectOwner() || this.unassignedLock() //|| (!isAdmin || config.userModel.hasPermissions() || !this.unassignedLock());
+                    return !this.isPersonalProjectOwner() && !this.unassignedLock() && !isAdmin && config.userModel.hasPermissions();
+                }
+            },
+            canChangeRole: {
+                deps: ['isAdmin'],
+                get: function(isAdmin) {
+                    return this.validateForPermissions();
                 }
             },
             getProjectRole: {
@@ -116,7 +123,6 @@ define(function(require, exports, module) {
         isPersonalProjectOwner: function(){
             var project = this.appModel.get('projectId'),
                 isPersonalProject = this.appModel.isPersonalProject();
-            console.log('isPersonalProject: ', isPersonalProject && (project === this.model.get('userId') + '_personal'))
             return isPersonalProject && (project === this.model.get('userId') + '_personal');
         },
 
@@ -127,7 +133,6 @@ define(function(require, exports, module) {
         },
 
         updateProjectRole: function (e) {
-            console.log('updateProjectRole');
             e.preventDefault();
             var $el = $(e.currentTarget);
             if ($el.hasClass('active') || $el.hasClass('disabled')) {
@@ -149,6 +154,10 @@ define(function(require, exports, module) {
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, "updateProjectRole");
                 });
+        },
+
+        validateForPermissions: function(){
+            return this.model.get('isAdmin') || config.userModel.hasPermissions();
         },
 
         unAssignMember: function(e){

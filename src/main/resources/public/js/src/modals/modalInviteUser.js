@@ -17,8 +17,6 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
-
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
@@ -28,7 +26,6 @@ define(function (require, exports, module) {
     var Util = require('util');
     var MembersService = require('projectMembers/MembersService');
     var SingletonAppModel = require('model/SingletonAppModel');
-    var urls = require('dataUrlResolver');
     var Localization = require('localization');
 
     require('validate');
@@ -41,7 +38,9 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-load]': 'onClickInvite',
             'click [data-js-ok]': 'onClickOk',
-            'click [data-js-select-role-dropdown] a': 'selectRole'
+            'click [data-js-select-role-dropdown] a': 'selectRole',
+            'focus [data-js-invite-link]': 'selectLink',
+            'click [data-js-copy-link]': 'copyLink'
         },
         bindings: {
             '[data-js-user]': 'value: user',
@@ -71,6 +70,7 @@ define(function (require, exports, module) {
             }));
             this.setupAnchors();
             this.setupValidation();
+            this.setupUserSearch();
         },
         setupAnchors: function(){
             this.$form = $('[data-js-invite-user-form]', this.$el);
@@ -78,6 +78,47 @@ define(function (require, exports, module) {
             this.$okBtn = $('[ data-js-ok]', this.$el);
             this.$cancelBtn = $('[data-js-cancel]', this.$el);
             this.$successFrom = $('[data-js-success-from]', this.$el);
+            this.$usersField = $('[data-js-user]', this.$el);
+            this.$inviteLink = $('[data-js-invite-link]', this.$el);
+        },
+        setupUserSearch:function() {
+            var self = this;
+            Util.setupSelect2WhithScroll(this.$usersField, {
+                multiple: false,
+                min: 1,
+                minimumInputLength: 1,
+                maximumInputLength: 256,
+                allowClear: true,
+                placeholder: Localization.members.enterLoginEmail,
+                initSelection: function (element, callback) {
+                    callback({id: element.val(), text: element.val()});
+                },
+                createSearchChoice: function (term, data) {
+                    return {
+                        id: term,
+                        text: term
+                    }
+                },
+                query: function (query) {
+                    MembersService.getSearchUser({search: query.term})
+                        .done(function (response) {
+                            var data = {results: []}
+                            _.each(response.content, function (item) {
+                                data.results.push({
+                                    id: item.email,
+                                    text: item.userId
+                                });
+                            });
+                            query.callback(data);
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error);
+                        });
+                }
+            });
+            self.$usersField.on('change', function () {
+                self.$usersField.valid && _.isFunction(self.$usersField.valid) && self.$usersField.valid();
+            });
         },
         setupValidation: function () {
             var self = this;
@@ -90,12 +131,14 @@ define(function (require, exports, module) {
                 label: $('[data-js-invite-user-form-group]'),
                 rules: {
                     user: {
-                        required: true
+                        required: true,
+                        email: true
                     }
                 },
                 messages: {
                     user: {
-                        required: Localization.validation.requiredDefault
+                        required: Localization.validation.requiredDefault,
+                        email: Localization.validation.incorrectEmail,
                     }
                 },
                 ignore: 'input[id^="s2id"]',
@@ -103,7 +146,6 @@ define(function (require, exports, module) {
                     error.appendTo($('[data-js-invite-user-form-error]', element.closest('[data-js-invite-user-form-group]')));
                 },
                 highlight: function (element, errorClass) {
-                    console.log($(element).closest('[data-js-invite-user-form-group]'));
                     $(element).closest('[data-js-invite-user-form-group]').addClass(errorClass);
                 },
                 unhighlight: function (element, errorClass) {
@@ -121,24 +163,33 @@ define(function (require, exports, module) {
             btn.attr('value', val);
             $('.select-value', btn).text(link.text());
         },
+        selectLink: function(e){
+            e.preventDefault();
+            $(e.currentTarget).select();
+        },
+        copyLink: function(e){
+            e.preventDefault();
+            this.$inviteLink.select();
+            try {
+                document.execCommand('copy');
+            } catch (err) {}
+        },
         getUserData: function(){
             var user = this.model.toJSON();
 
             return {
                 default_project: user.default_project,
                 email: user.user,
-                projectRole: user.projectRole
+                role: user.projectRole
             }
         },
         inviteUser: function (type) {
             var userData = this.getUserData();
-            this.showSuccess();
-            return;
             if (userData) {
                 MembersService.inviteMember(userData)
                     .done(function (data) {
                         this.trigger('add:user');
-                        this.successClose();
+                        this.showSuccess(data);
                         Util.ajaxSuccessMessenger(type);
                     }.bind(this))
                     .fail(function (error) {
@@ -146,7 +197,8 @@ define(function (require, exports, module) {
                     });
             }
         },
-        showSuccess: function(){
+        showSuccess: function(data){
+            this.$inviteLink.val(data.backLink);
             this.$inviteBtn.addClass('hide');
             this.$cancelBtn.addClass('hide');
             this.$okBtn.removeClass('hide');

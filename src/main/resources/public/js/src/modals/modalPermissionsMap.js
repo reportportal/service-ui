@@ -17,13 +17,8 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
-
     var $ = require('jquery');
-    var _ = require('underscore');
     var ModalView = require('modals/_modalView');
-    var Backbone = require('backbone');
-    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
 
     var ModalPermissionsMap = ModalView.extend({

@@ -44,7 +44,8 @@ define(function(require, exports, module) {
         emptyMembersTpl: 'tpl-project-members-empty',
 
         bindings: {
-            '[data-js-members-search]': 'attr: {placeholder: getPlaceHolder}'
+            '[data-js-members-search]': 'attr: {placeholder: getPlaceHolder}',
+            '[data-js-add-user]': 'classes: {hide: not(showAddMemberBtn)}'
         },
 
         computeds: {
@@ -52,17 +53,20 @@ define(function(require, exports, module) {
                 var grandAdmin = this.grandAdmin,
                     projectId = this.appModel.get('projectId');
                 return grandAdmin ? projectId ? Localization.members.searchNameLogin : Localization.members.searchNameLoginEmail : Localization.members.searchName;
-            }
+            },
+            showAddMemberBtn: function(){
+                return this.isGrandAdmin;
+            },
         },
 
         initialize: function (options) {
+            this.isGrandAdmin = options.grandAdmin;
             this.model = new Backbone.Model({
                 search: '',
                 empty: false,
                 notFound: false,
             });
             this.renderViews = [];
-
             this.appModel = new SingletonAppModel();
             if(options.project){
                 this.appModel.set(options.project); //need for members on admin page
@@ -70,10 +74,7 @@ define(function(require, exports, module) {
 
             this.collection = new MembersCollection();
             this.listenTo(this.collection, 'reset', this.renderMembersList);
-            this.listenTo(this.collection, 'remove', function(){ console.log('on remove') ; this.updateMembers()}.bind(this));
-            //this.context = options.context;
-            //this.$el = options.$el;
-            console.log(this.$el);
+            this.listenTo(this.collection, 'remove', this.updateMembers);
             this.pageType = 'PaginateProjectMembers_' + this.memberAction + '_' + this.projectId;
             this.render();
         },
@@ -122,16 +123,13 @@ define(function(require, exports, module) {
         },
 
         updateMembers: function(){
-            console.log('updateMembers')
             this.paging.render();
             this.loadMembers();
         },
 
         loadMembers: function(){
-            console.log('loadMembers')
             MemberService.getMembers(this.appModel.get('projectId'), this.getSearchQuery())
                 .done(function (data) {
-                    console.log('loadMembers done: ', data);
                     if(data.page.totalPages < data.page.number && data.page.totalPages != 0){
                         this.paging.trigger('page', data.page.totalPages);
                         return;
@@ -196,7 +194,6 @@ define(function(require, exports, module) {
 
         showInviteUser: function(e){
             e.preventDefault();
-            console.log('showInviteUser');
             var modal = new ModalInviteUser({});
             modal.show();
         },
@@ -210,7 +207,6 @@ define(function(require, exports, module) {
 
         showPermissionsModal: function(e){
             e.preventDefault();
-            console.log('showPermissionsModal');
             var modal = new ModalPermissionsMap({});
             modal.show();
         },

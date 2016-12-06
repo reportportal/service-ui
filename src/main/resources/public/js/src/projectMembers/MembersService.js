@@ -97,6 +97,10 @@ define(function(require, exports, module) {
         return call('GET', urls.validateRegisterBidUrl(id));
     };
 
+    var getSearchUser = function (options) {
+        return call('GET', urls.searchUsersUrl(options))
+    };
+
     return {
         assignMember: assignMember,
         getMembers: getMembers,
@@ -108,7 +112,8 @@ define(function(require, exports, module) {
         addMember: addMember,
         inviteMember: inviteMember,
         validateRegisterBid: validateRegisterBid,
-        registerUser: registerUser
+        registerUser: registerUser,
+        getSearchUser: getSearchUser
     }
 
 });

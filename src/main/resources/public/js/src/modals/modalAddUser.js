@@ -17,8 +17,6 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
-
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
@@ -30,7 +28,6 @@ define(function (require, exports, module) {
     var SingletonAppModel = require('model/SingletonAppModel');
     var urls = require('dataUrlResolver');
     var Localization = require('localization');
-    var MembersModel = require('projectMembers/MembersModel');
 
     require('validate');
 
@@ -139,7 +136,6 @@ define(function (require, exports, module) {
                     error.appendTo($('[data-js-add-user-form-error]', element.closest('[data-js-add-user-form-group]')));
                 },
                 highlight: function (element, errorClass) {
-                    console.log($(element).closest('[data-js-add-user-form-group]'));
                     $(element).closest('[data-js-add-user-form-group]').addClass(errorClass);
                 },
                 unhighlight: function (element, errorClass) {

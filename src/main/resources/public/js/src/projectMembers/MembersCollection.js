@@ -24,11 +24,7 @@ define(function (require, exports, module) {
 
     var $ = require('jquery');
     var Backbone = require('backbone');
-    var Util = require('util');
-    var App = require('app');
     var MembersModel = require('projectMembers/MembersModel');
-
-    var config = App.getInstance();
 
     var MembersCollection = Backbone.Collection.extend({
 
