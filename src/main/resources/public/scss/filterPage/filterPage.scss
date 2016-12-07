@@ -83,7 +83,9 @@
   }
   .rp-table-row {
     padding: 10px 0;
-    word-wrap: break-word;
+    a, span, p {
+      word-wrap: break-word;
+    }
     & > div {
       padding-top: 5px;
       padding-bottom: 5px;
@@ -139,6 +141,7 @@
   .name-grid-cell {
     width: 30%;
     .filter-edit {
+      display: inline;
       vertical-align: top;
       opacity: 0;
       width: 0;
