@@ -5,6 +5,21 @@
       .container-fluid {
         margin: 0;
         padding: 0;
+        @media (max-width: 768px) {
+          padding-left: 100px;
+          .rp-defect-type-label {
+            position: absolute;
+            margin-left: -100px;
+          }
+          .rp-defect-type-btn-group {
+            max-width: none;
+            width: 100%;
+            .rp-defects-menu {
+              width: 100%;
+            }
+          }
+        }
+
       }
 
       .text-editor {
