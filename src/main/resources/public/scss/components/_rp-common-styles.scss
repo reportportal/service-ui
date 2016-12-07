@@ -829,7 +829,10 @@ body.menu-open {
     padding-bottom: 50px;
   }
   @media (max-width: 550px) {
-    padding-bottom: 150px;
+    padding-bottom: 162px;
+  }
+  @media (max-width: 380px) {
+    padding-bottom: 158px;
   }
 }
 
