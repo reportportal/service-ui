@@ -83,4 +83,9 @@
       }
     }
   }
+  @media (max-width: $SCREEN_XS_MAX) {
+    #dynamic-content {
+      padding: 0 15px 67px 15px;
+    }
+  }
 }

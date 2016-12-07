@@ -517,20 +517,20 @@ define(function (require, exports, module) {
         },
 
         setupBackTop: function () {
-            $('body').on('click', '#back-top', function () {
+            $('body').on('click', '[global-back-top]', function () {
                 config.mainScrollElement.animate({
                     scrollTop: 0
                 }, 100);
                 return false;
             });
             $.subscribe('scroll:greater:than:100', function () {
-                var backTop = $('#back-top');
+                var backTop = $('[global-back-top]');
                 if (backTop.length && !backTop.is(':visible')) {
                     backTop.show();
                 }
             });
             $.subscribe('scroll:less:than:100', function () {
-                var backTop = $('#back-top');
+                var backTop = $('[global-back-top]');
                 if (backTop.length && backTop.is(':visible')) {
                     backTop.fadeOut();
                 }
