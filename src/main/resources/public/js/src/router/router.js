@@ -104,6 +104,10 @@ define(function(require, exports, module) {
             ':project/dashboard/:id?*queryString': 'openDashboard',
             ':project/launches/:filterId(/*path)': 'openLaunch',
 
+            ':project/newdashboard': 'openNewDashboard',
+            ':project/newdashboard/:id': 'openNewDashboard',
+            ':project/newdashboard/:id?*queryString': 'openNewDashboard',
+
             ':project(/)': 'openDashboard',
             '*invalidRoute': "show404Page"
         },
@@ -159,6 +163,9 @@ define(function(require, exports, module) {
         }),
         openDashboard: testRoute.checkTest('insidePage', function(project, id, queryString){
             Context.openRouted(project, 'dashboard', id, queryString);
+        }),
+        openNewDashboard: testRoute.checkTest('insidePage', function(project, id, queryString){
+            Context.openRouted(project, 'newdashboard', id, queryString);
         }),
         openAdminPage: testRoute.checkTest('insidePage', function (page, queryString) {
             page = page || 'projects';

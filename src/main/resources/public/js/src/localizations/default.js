@@ -543,6 +543,7 @@ define(['util'], function () {
         },
 
         dashboard: {
+            allDashboards: 'All Dashboards',
             addNewDashboard: "Add new Dashboard",
             maxAdded: "Max amount of dashboards were added",
             dashboardShared: 'Dashboard is shared by',
