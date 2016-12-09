@@ -235,8 +235,9 @@ define(function(require, exports, module) {
                     self.set({token: responce.token_type + ' ' + responce.access_token});
                     self.loginSuccess();
                 })
-                .fail(function (response) {
+                .fail(function (error) {
                     self.clearSession();
+                    Util.ajaxFailMessenger(error, 'defaults');
                 });
         },
         // don't touch
