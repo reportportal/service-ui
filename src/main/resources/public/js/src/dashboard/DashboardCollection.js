@@ -31,22 +31,58 @@ define(function (require, exports, module) {
 
         initialize: function() {
             this.ready = $.Deferred();
+            this.update();
+        },
+        update: function() {
+            this.reset([]);
+            var self = this;
+            this.getDashboards().always(function() {
+                self.getSharedDashboards().always(function() {
+                    self.ready.resolve();
+                })
+            })
+        },
+        getDashboards: function() {
+            var async = $.Deferred();
             var self = this;
             Service.getProjectDashboards()
                 .done(function(data) {
-                    self.reset(data, {parse: true});
-                    self.ready.resolve();
+                    self.add(self.parse(data));
+                    async.resolve();
                 })
                 .fail(function(data) {
-                    self.ready.reject(data);
+                    async.reject(data);
+                });
+            return async.promise();
+        },
+        getSharedDashboards: function() {
+            var async = $.Deferred();
+            var self = this;
+            Service.getSharedDashboards()
+                .done(function(data) {
+                    self.add(self.parseShared(data));
+                    async.resolve();
                 })
+                .fail(function(data) {
+                    async.reject(data);
+                });
+            return async.promise();
         },
         parse: function(data) {
             _.each(data, function(item) {
                item.widgets = JSON.stringify(item.widgets);
             });
             return data;
-        }
+        },
+        parseShared: function(data) {
+            var widgetsData = [];
+            _.each(data, function(value, key) {
+                value.isShared = true;
+                value.id = key;
+                widgetsData.push(value);
+            });
+            return widgetsData;
+        },
 
     });
 

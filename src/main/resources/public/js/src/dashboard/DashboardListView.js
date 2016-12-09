@@ -24,6 +24,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var Localization = require('localization');
     var DashboardListItemView = require('dashboard/DashboardListItemView');
+    var DashboardShareCollection
 
     var config = App.getInstance();
 
@@ -40,9 +41,10 @@ define(function (require, exports, module) {
             this.listenTo(this.myDashboardCollection, 'reset', this.renderMyDashboards);
             this.listenTo(this.sharedDashboardCollectoin, 'reset', this.renderSharedDashboards);
             this.collection.ready.done(function() {
-                self.listenTo(self.collection, 'all', self.changeCollection);
+                self.listenTo(self.collection, 'change:owner', self.changeCollection);
                 self.changeCollection();
             })
+
         },
         changeCollection: function() {
             var myDashboards = [];

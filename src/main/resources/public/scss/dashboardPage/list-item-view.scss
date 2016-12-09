@@ -22,15 +22,19 @@
 .dashboard-list-item-view {
   float: left;
   width: 25%;
-  height: 240px;
-  margin-top: 15px;
+  margin: 15px 0;
   .dashboard-content {
     margin: 0 8px;
     height: 100%;
     border: 1px solid $COLOR--gray-91;
     background: $COLOR--white-four;
+    cursor: pointer;
+    &:hover {
+      box-shadow: 0 0 20px 0 $COLOR--gray-91;
+    }
   }
   .name-wrapper {
+    position: relative;
     width: 100%;
     height: 47px;
     border-bottom: 1px solid $COLOR--gray-91;
@@ -44,6 +48,59 @@
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+    }
+    .icons-block {
+      position: absolute;
+      right: 0;
+      top: 0;
+      i {
+        float: right;
+        color: $COLOR--gray-60;
+        font-size: 20px;
+        line-height: 21px;
+        margin: 13px 3px;
+        width: 20px;
+        cursor: pointer;
+        opacity: 0;
+        &.close-icon {
+          font-size: 24px;
+          margin-right: 10px;
+        }
+        &:hover {
+          color: $COLOR--black;
+        }
+      }
+    }
+  }
+  .description-wrapper {
+    position: relative;
+    width: 100%;
+    height: 145px;
+  }
+  .icons-wrapper {
+    width: 100%;
+    height: 40px;
+    border-top: 1px solid $COLOR--gray-91;
+    background:$COLOR--white;
+    color: $COLOR--charcoal-grey;
+    padding: 11px 15px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    i {
+      font-size: 17px;
+      line-height: 13px;
+      vertical-align: top;
+      margin-top: 3px;
+    }
+  }
+  &:hover {
+    .name-wrapper {
+      .icons-block {
+        i {
+          opacity: 1;
+        }
+      }
     }
   }
 }

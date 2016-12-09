@@ -22,6 +22,8 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
     var Service = require('coreService');
+    var Localization = require('localization');
+    var Util = require('util');
 
     var config = App.getInstance();
 
@@ -29,10 +31,45 @@ define(function (require, exports, module) {
         defaults: {
             isShared: false,
             name: '',
+            description: '',
             owner: '',
             widgets: '[]',
 
             activate: false,
+        },
+        computeds: {
+            isMy: {
+                deps: ['owner'],
+                get: function(owner) {
+                    return owner == config.userModel.get('name');
+                }
+            },
+            sharedTitle: {
+                deps: ['isMy', 'owner'],
+                get: function(isMy, owner) {
+                    if(isMy) {
+                        return Localization.dashboard.dashboardShared;
+                    }
+                    return Localization.dashboard.dashboardSharedBy + ' ' + owner;
+                }
+            }
+        },
+        initialize: function() {
+            this.listenTo(this, 'change:isShared change:description change:name', _.debounce(this.onChangeData, 10)) ;
+        },
+        onChangeData: function() {
+            var data = {
+                name: this.get('name'),
+                share: this.get('isShared'),
+                // description: this.get('description'),
+            };
+            Service.updateDashboard(this.get('id'), data)
+                .done(function (data) {
+
+                })
+                .fail(function (error) {
+                    Util.ajaxFailMessenger(error, 'updateDashboard');
+                });
         },
         getWidgets: function () {
             try {

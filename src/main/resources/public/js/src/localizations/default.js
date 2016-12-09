@@ -546,8 +546,10 @@ define(['util'], function () {
             allDashboards: 'All Dashboards',
             addNewDashboard: "Add new Dashboard",
             maxAdded: "Max amount of dashboards were added",
-            dashboardShared: 'Dashboard is shared by',
+            dashboardShared: 'Dashboard is shared',
+            dashboardSharedBy: 'Dashboard is shared by',
             dashboardName: "Dashboard Name",
+            namePlaceholder: 'Enter Dashboard Name',
             shared: "Shared:",
             sharedSelect: "Select shared Dashboard",
             sharedNoFound: "No shared dashboards found!",
@@ -588,7 +590,8 @@ define(['util'], function () {
             maxWidgetsAdded: "Max amount of widgets were added to the dashboard",
             nameNewDashboard: 'Enter New Dashboard Name',
             tHeadTitleOwners: 'Owners',
-            tHeadTitleDashboardName: 'Dashboard Name'
+            tHeadTitleDashboardName: 'Dashboard Name',
+            description: 'Description',
         },
 
         favorites: {
@@ -1596,9 +1599,11 @@ define(['util'], function () {
             moveToDebug: 'Move to debug',
             moveToAllLaunches: 'Move to all launches',
             editLaunch: 'Edit Launch',
+            editDashboard: 'Dashboard Settings',
             editTestItem: 'Edit Test Item',
             changePassword: "Change Password",
-            editUserInfo: 'Edit Personal Information'
+            editUserInfo: 'Edit Personal Information',
+            addDashboard: 'Add New Dashboard',
         },
 
         dialog: {

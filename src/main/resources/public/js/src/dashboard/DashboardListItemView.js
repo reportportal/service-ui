@@ -22,6 +22,7 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
+    var ModalEditDashboard = require('modals/modalEditDashboard');
     var Localization = require('localization');
 
     var config = App.getInstance();
@@ -30,14 +31,35 @@ define(function (require, exports, module) {
         className: 'dashboard-list-item-view',
         template: 'tpl-dashboard-list-item',
 
+        events: {
+            'click [data-js-edit]': 'onClickEdit',
+        },
+
         bindings: {
             '[data-js-name]': 'text: name',
+            '[data-js-share-icon]': 'classes: {hide: not(isMy)}, attr: {title: sharedTitle}',
+            '[data-js-global-icon]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
+            '[data-js-icon-description]': 'text: sharedTitle',
+            '[data-js-shared-container]': 'classes: {hide: not(isShared)}',
+            '[data-js-edit]': 'classes: {hide: not(isMy)}',
+            '[data-js-remove]': 'classes: {hide: not(isMy)}',
         },
+
         initialize: function(options) {
             this.render();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onClickEdit: function() {
+            var self = this;
+            (new ModalEditDashboard({
+                dashboardCollection: this.model.collection,
+                dashboardModel: this.model,
+                mode: 'edit',
+            })).show().done(function(newModel) {
+                self.model.set(newModel.toJSON());
+            })
         },
 
         destroy: function () {
