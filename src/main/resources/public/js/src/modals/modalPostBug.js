@@ -23,6 +23,7 @@ define(function (require, exports, module) {
 
     var $ = require('jquery');
     var _ = require('underscore');
+    var ModalView = require('modals/_modalView');
     var Components = require('core/components');
     var Util = require('util');
     var SingletonAppModel = require('model/SingletonAppModel');
@@ -35,58 +36,38 @@ define(function (require, exports, module) {
 
     var config = App.getInstance();
 
+    var ModalPostBug = ModalView.extend({
+        contentBody: 'tpl-modal-post-bug',
+        fieldsTpl: 'tpl-dynamic-fields',
+        authTpl: 'tpl-bts-auth-type',
 
-    var PostBug = Components.DialogShell.extend({
+        className: 'modal-post-bug',
+
+        events: {
+            'click .option-selector': 'handleDropDown',
+            'click .auth-type': 'handleDropDown',
+            'click [data-js-post]': 'submit',
+            'keyup .required-value': 'clearRequiredError',
+            'click .project-name': 'updateFieldSet'
+        },
 
         initialize: function (options) {
-
             this.appModel = new SingletonAppModel();
-            options['headerTxt'] = 'postBug';
-            options['actionTxt'] = 'submit';
-            options['actionStatus'] = true;
-            Components.DialogShell.prototype.initialize.call(this, options);
-
             this.items = options.items;
             this.selected = 1;
             var externalSystems = this.appModel.getArr('externalSystem');
             this.systems = _.sortBy(externalSystems, 'project');
             this.settings = config.forSettings;
             this.systemSettings = this.settings['bts' + externalSystems[0].systemType];
-            this.user ={}; // only bts field use  WTF?
+            this.user = {}; // only bts field use  WTF?
             this.systemType = externalSystems[0].systemType;
             this.systemAuth = externalSystems[0].systemAuth;
             this.setUserBts();
-        },
-        show: function() {
             this.render();
-            this.async = $.Deferred();
-            return this.async;
         },
-
-        setupAnchors: function () {
-            this.$dynamicContent = $("#dynamicContent", this.$el);
-            this.$includesBlock = $("#includesBlock", this.$el);
-            this.$includeLogs = $("#include_logs", this.$includesBlock);
-            this.$includeData = $("#include_data", this.$includesBlock);
-            this.$includeComments = $("#include_comments", this.$includesBlock);
-            this.$postToUrl = $("#postToUrl", this.$el);
-
-            this.$credentialsLink = $("#credentialsLink", this.$el);
-            this.$collapseCredentials = $("#collapseCredentials", this.$el);
-            this.$authorizationType = $("#authorizationType", this.$el);
-
-            this.$requiredFieldsWarning = $("#requiredFields", this.$el);
-            this.$credentialsSoftWarning = $("#credentialsSoft", this.$el);
-            this.$credentialsWrongWarning = $("#credentialsWrong", this.$el);
-        },
-
-        contentBody: 'tpl-bts-post-bug',
-        fieldsTpl: 'tpl-dynamic-fields',
-        authTpl: 'tpl-bts-auth-type',
 
         render: function () {
-            Components.DialogShell.prototype.render.call(this, {isBeta: true});
-            this.$content.html(Util.templates(this.contentBody, {
+            this.$el.html(Util.templates(this.contentBody, {
                 selected: this.selected,
                 source: Util.getExternalSystem(true),
                 systems: this.systems,
@@ -95,7 +76,6 @@ define(function (require, exports, module) {
                 showCredentialsSoft: this.settings['bts' + this.systemType].canUseRPAuthorization,
                 current: this.user.bts.current
             }));
-            $('#contentModal .row:first-child').css({paddingTop: '15px'}); //TODO rewrite
 
             this.setupAnchors();
             Util.switcheryInitialize(this.$includesBlock);
@@ -106,6 +86,65 @@ define(function (require, exports, module) {
             this.delegateEvents();
             return this;
         },
+
+        setupAnchors: function () {
+            this.$dynamicContent = $("#dynamicContent", this.$el);
+            this.$includesBlock = $("#includesBlock", this.$el);
+            this.$includeLogs = $("#include_logs", this.$includesBlock);
+            this.$includeData = $("#include_data", this.$includesBlock);
+            this.$includeComments = $("#include_comments", this.$includesBlock);
+            this.$postToUrl = $("#postToUrl", this.$el);
+            this.$actionBtn = $("[data-js-ok]", this.$el);
+            this.$credentialsLink = $("#credentialsLink", this.$el);
+            this.$collapseCredentials = $("#collapseCredentials", this.$el);
+            this.$authorizationType = $("#authorizationType", this.$el);
+            this.$requiredFieldsWarning = $("#requiredFields", this.$el);
+            this.$credentialsSoftWarning = $("#credentialsSoft", this.$el);
+            this.$credentialsWrongWarning = $("#credentialsWrong", this.$el);
+        },
+
+        setUserBts: function () {
+            if (!this.user.bts) {
+                this.user.bts = {
+                    hash: {},
+                    current: null
+                };
+                this.user.bts.current = this.systems[0];
+                this.updateHash();
+            } else {
+                if (!this.user.bts.current) {
+                    this.user.bts.current = this.systems[0];
+                } else {
+                    this.user.bts.current = _.find(this.systems, {id: this.user.bts.current.id});
+                }
+            }
+        },
+
+        updateHash: function () {
+            if (!this.user.bts.hash[this.user.bts.current.id]) {
+                this.user.bts.hash[this.user.bts.current.id] = {
+                    type: this.systemType,
+                    id: this.user.bts.current.id,
+                    submits: 0
+                };
+            }
+        },
+
+        updateFieldSet: function (e) {
+            e.preventDefault();
+            if ($(e.currentTarget).parent().hasClass('active')) return;
+            Util.dropDownHandler(e);
+            this.user.bts.current = _.find(this.systems, {id: $(e.currentTarget).attr('id')});
+            this.updateHash();
+            this.renderFields();
+            this.renderCredentials();
+            this.$postToUrl.text(this.user.bts.current.url);
+            this.$requiredFieldsWarning.hide();
+
+            this.$credentialsLink.removeClass('collapsed');
+            this.$collapseCredentials.addClass('in');
+        },
+
         renderFields: function () {
             this.$dynamicContent.html(Util.templates(this.fieldsTpl, {
                 collection: this.user.bts.current.fields,
@@ -136,63 +175,8 @@ define(function (require, exports, module) {
             this.$authorizationType.html(Util.templates(this.authTpl, data));
         },
 
-        updateFieldSet: function (e) {
-            e.preventDefault();
-            if ($(e.currentTarget).parent().hasClass('active')) return;
-            Util.dropDownHandler(e);
-            this.user.bts.current = _.find(this.systems, {id: $(e.currentTarget).attr('id')});
-            this.updateHash();
-            this.renderFields();
-            this.renderCredentials();
-            this.$postToUrl.text(this.user.bts.current.url);
-            this.$requiredFieldsWarning.hide();
-
-            this.$credentialsLink.removeClass('collapsed');
-            this.$collapseCredentials.addClass('in');
-        },
-
-        events: function () {
-            return _.extend({}, Components.DialogShell.prototype.events, {
-                'click .option-selector': 'handleDropDown',
-                'click .auth-type': 'handleDropDown',
-                'keyup .required-value': 'clearRequiredError',
-                'click .project-name': 'updateFieldSet'
-            });
-        },
-
-        handleCredentials: function (e) {
-            Util.dropDownHandler(e);
-            var type = $(e.currentTarget).parent().attr('id');
-            if (this.systemAuth !== type) {
-                this.systemAuth = type;
-                this.renderCredentials();
-            }
-        },
-
-        handleDropDown: function (e) {
-            Util.dropDownHandler(e);
-        },
-
-        clearRequiredError: function (e) {
-            var $el = $(e.currentTarget);
-            if ($el.val()) {
-                $el.closest('.rp-form-group').removeClass('has-error');
-                $el.closest('.has-error').removeClass('has-error');
-
-                var allFiled = true;
-                $('#basicBlock input').each(function () {
-                    if (!$(this).val()) {
-                        allFiled = false;
-                    }
-                });
-
-                if (allFiled) {
-                    this.$credentialsWrongWarning.hide();
-                }
-            }
-            if (!$(".has-error", this.$dynamicContent).length) {
-                this.$requiredFieldsWarning.hide();
-            }
+        onKeySuccess: function () {
+            this.submit();
         },
 
         submit: function () {
@@ -202,20 +186,25 @@ define(function (require, exports, module) {
                     if (error.status !== 401) {
                         self.parseError(error);
                     }
-                    self.$loader.hide();
+                    self.hideLoading();
                 };
             if (data) {
-                this.$loader.show();
+                this.showLoading();
                 this.inSubmit = true;
                 Service.postBugToBts(data, this.user.bts.current.id)
                     .done(function (response) {
                         var issues = self.bindTicketToIssues(self.items, response);
                         Service.updateDefect({issues: issues})
                             .done(function () {
+                                _.each(self.items, function (item) {
+                                    _.each(issues, function (issue) {
+                                        if (item.id == issue.test_item_id) {
+                                            self.addIssuesToItem(item, issue.issue.externalSystemIssues);
+                                        }
+                                    });
+                                });
                                 Util.ajaxSuccessMessenger("addTicket");
-                                self.trigger("defect::updated");
-                                self.done();
-                                self.async.resolve();
+                                self.successClose();
                             })
                             .fail(function (error) {
                                 errorHandler(error);
@@ -227,18 +216,9 @@ define(function (require, exports, module) {
                         errorHandler(error);
                     })
                     .always(function () {
-                        this.inSubmit = false;
+                        self.inSubmit = false;
                     });
             }
-        },
-
-        persistCredentials: function () {
-            var currentHash = this.user.bts.hash[this.user.bts.current.id];
-            currentHash.submits += 1;
-            var data = {username: currentHash.username, id: currentHash.id};
-            if (currentHash.domain) data.domain = currentHash.domain;
-
-            Storage.setBtsCredentials(data);
         },
 
         bindTicketToIssues: function (items, response) {
@@ -247,9 +227,9 @@ define(function (require, exports, module) {
                 var defectBadge = $('.inline-editor .rp-defect-type-dropdown .pr-defect-type-badge'),
                     chosenIssue = defectBadge.length > 0 ? defectBadge.data('id') : null,
                     issue = {
-                        issue_type: chosenIssue ? chosenIssue : item.issue.issue_type,
-                        comment: item.issue.comment,
-                        externalSystemIssues: item.issue.externalSystemIssues || []
+                        issue_type: chosenIssue ? chosenIssue : JSON.parse(item.get('issue')).issue_type,
+                        comment: item.get('issue').comment,
+                        externalSystemIssues: item.getIssue().externalSystemIssues || []
                     };
 
                 if ($('#replaceComments').prop('checked')) {
@@ -272,31 +252,41 @@ define(function (require, exports, module) {
             return issues;
         },
 
-        setUserBts: function () {
-            if (!this.user.bts) {
-                this.user.bts = {
-                    hash: {},
-                    current: null
-                };
-                this.user.bts.current = this.systems[0];
-                this.updateHash();
-            } else {
-                if (!this.user.bts.current) {
-                    this.user.bts.current = this.systems[0];
-                } else {
-                    this.user.bts.current = _.find(this.systems, {id: this.user.bts.current.id});
-                }
+        addIssuesToItem: function(item, issues) {
+            var self = this;
+            var curIssue = item.getIssue();
+            if(!curIssue.externalSystemIssues) {
+                curIssue.externalSystemIssues = [];
             }
+            var newIds = _.map(issues, function(issue) {
+                return issue.ticketId;
+            });
+
+            var newExternalSystemIssues = [];  // remove not unic item
+            _.each(curIssue.externalSystemIssues, function(externalItem) {
+                if(!_.contains(newIds, externalItem.ticketId)){
+                    newExternalSystemIssues.push(externalItem);
+                }
+            }, this);
+
+            _.each(issues, function(issue) {
+                newExternalSystemIssues.push({
+                    systemId: self.user.bts.current.id,
+                    ticketId: issue.ticketId,
+                    url: issue.url,
+                })
+            }, this);
+            curIssue.externalSystemIssues = newExternalSystemIssues;
+            item.setIssue(curIssue);
         },
 
-        updateHash: function () {
-            if (!this.user.bts.hash[this.user.bts.current.id]) {
-                this.user.bts.hash[this.user.bts.current.id] = {
-                    type: this.systemType,
-                    id: this.user.bts.current.id,
-                    submits: 0
-                };
-            }
+        persistCredentials: function () {
+            var currentHash = this.user.bts.hash[this.user.bts.current.id];
+            currentHash.submits += 1;
+            var data = {username: currentHash.username, id: currentHash.id};
+            if (currentHash.domain) data.domain = currentHash.domain;
+
+            Storage.setBtsCredentials(data);
         },
 
         parseError: function (error) {
@@ -314,6 +304,7 @@ define(function (require, exports, module) {
                         this.$credentialsWrongWarning.html(bodyText[0]).show();
                         this.validateBtsHomeLink();
                     } else {
+                        console.log(error.responseText);
                         this.$credentialsWrongWarning.text(this.$credentialsWrongWarning.data('general') + error.responseText).show();
                     }
                 } catch (e) {
@@ -323,93 +314,6 @@ define(function (require, exports, module) {
             }
             this.$el.modal('hide');
             Util.ajaxFailMessenger(null, 'postTicketToBts');
-        },
-
-        validateBtsHomeLink: function () {
-            if (Util.getExternalSystem() === config.btsEnum.jira) {
-                var link = $("a", this.$credentialsWrongWarning),
-                    abstractLink = document.createElement('a');
-
-                abstractLink.href = this.user.bts.current.url;
-
-                var abstractRoot = abstractLink.protocol + "//" + abstractLink.host,
-                    currentUrl = link.attr('href');
-                link.attr('href', abstractRoot + currentUrl);
-                link.attr('target', '_blank');
-            }
-        },
-
-        highlightCredentials: function (direction, el) {
-            var action = direction ? 'add' : 'remove';
-            if (el) {
-                el.closest(".rp-form-group")[action + "Class"]('has-error');
-            } else {
-                $("#authorizationType .col-sm-12", this.$collapseCredentials)[action + "Class"]('has-error');
-            }
-            direction && this.$credentialsSoftWarning.hide();
-        },
-
-        validateCredentials: function () {
-            var valid = false,
-                currentHash = this.user.bts.hash[this.user.bts.current.id],
-                clearBasic = function () {
-                    delete currentHash.username;
-                    delete currentHash.password;
-                    delete currentHash.domain;
-                }.bind(this);
-            this.$authorizationType.find('.has-error').removeClass('has-error');
-            switch (this.systemAuth) {
-                case 'BASIC':
-                case 'NTLM':
-                    delete currentHash.accessKey;
-                    var inputs = $(".form-control", this.$authorizationType),
-                        allEmpty = _.every(inputs, function (inp) {
-                            return !inp.value;
-                        }),
-                        allFilled = _.every(inputs, function (inp) {
-                            return inp.value;
-                        });
-                    if (allFilled || (allEmpty && currentHash.type != "JIRA")) {
-                        valid = true;
-                        if (allEmpty) clearBasic();
-                        if (inputs[0].value) {
-                            _.forEach(inputs, function (input) {
-                                if (input.id === 'password' && input.value === this.settings.defaultPassword) {
-                                    return;
-                                }
-                                currentHash[input.id] = input.value;
-                            }.bind(this));
-                        }
-                    } else {
-                        clearBasic();
-                        _.forEach(inputs, function (input) {
-                            if (!input.value) {
-                                $(input).closest('.col-sm-12').addClass('has-error');
-                            } else {
-                                $(input).closest('.col-sm-12').removeClass('has-error');
-                            }
-                        });
-                        this.$credentialsWrongWarning.text(this.$credentialsWrongWarning.data('fill')).show();
-                    }
-                    break;
-                case 'APIKEY':
-                    clearBasic();
-                    var apiKey = $("#accessKey", this.$authorizationType);
-                    if (apiKey.val().length) {
-                        currentHash.accessKey = apiKey.val();
-                        valid = true;
-                    } else {
-                        apiKey.parent().addClass('has-error');
-                        this.$credentialsWrongWarning.text(this.$credentialsWrongWarning.data('fill')).show();
-                    }
-                default :
-                    break;
-
-            }
-            if (valid) {
-                this.$credentialsWrongWarning.hide();
-            }
-            return valid;
         },
 
         getData: function () {
@@ -491,6 +395,69 @@ define(function (require, exports, module) {
             return result;
         },
 
+        validateCredentials: function () {
+            var valid = false,
+                currentHash = this.user.bts.hash[this.user.bts.current.id],
+                clearBasic = function () {
+                    delete currentHash.username;
+                    delete currentHash.password;
+                    delete currentHash.domain;
+                }.bind(this);
+            this.$authorizationType.find('.has-error').removeClass('has-error');
+            switch (this.systemAuth) {
+                case 'BASIC':
+                case 'NTLM':
+                    delete currentHash.accessKey;
+                    var inputs = $(".form-control", this.$authorizationType),
+                        allEmpty = _.every(inputs, function (inp) {
+                            return !inp.value;
+                        }),
+                        allFilled = _.every(inputs, function (inp) {
+                            return inp.value;
+                        });
+                    if (allFilled || (allEmpty && currentHash.type != "JIRA")) {
+                        valid = true;
+                        if (allEmpty) clearBasic();
+                        if (inputs[0].value) {
+                            _.forEach(inputs, function (input) {
+                                if (input.id === 'password' && input.value === this.settings.defaultPassword) {
+                                    return;
+                                }
+                                currentHash[input.id] = input.value;
+                            }.bind(this));
+                        }
+                    } else {
+                        clearBasic();
+                        _.forEach(inputs, function (input) {
+                            if (!input.value) {
+                                $(input).closest('.col-sm-12').addClass('has-error');
+                            } else {
+                                $(input).closest('.col-sm-12').removeClass('has-error');
+                            }
+                        });
+                        this.$credentialsWrongWarning.text(this.$credentialsWrongWarning.data('fill')).show();
+                    }
+                    break;
+                case 'APIKEY':
+                    clearBasic();
+                    var apiKey = $("#accessKey", this.$authorizationType);
+                    if (apiKey.val().length) {
+                        currentHash.accessKey = apiKey.val();
+                        valid = true;
+                    } else {
+                        apiKey.parent().addClass('has-error');
+                        this.$credentialsWrongWarning.text(this.$credentialsWrongWarning.data('fill')).show();
+                    }
+                default :
+                    break;
+
+            }
+            if (valid) {
+                this.$credentialsWrongWarning.hide();
+            }
+            return valid;
+        },
+
         getLinks: function () {
             var backLink = {},
                 location = window.location.href;
@@ -518,8 +485,7 @@ define(function (require, exports, module) {
             this.user = null;
             Components.DialogShell.prototype.destroy.call(this);
         }
-
     });
 
-    return PostBug;
-})
+    return ModalPostBug;
+});

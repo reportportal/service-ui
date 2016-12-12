@@ -32,10 +32,16 @@ common elements:
 
 */
 
-
-
-
 .rp-modal-dialog {
+  .modal-dialog {
+    width: 600px;
+    margin: 10px auto;
+    @media (max-width: 620px) {
+      margin: 10px;
+      width: auto;
+    }
+  }
+
   .modal-content {
     border-radius: 0;
     border: none;
