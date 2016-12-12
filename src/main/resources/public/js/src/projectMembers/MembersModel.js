@@ -85,7 +85,7 @@ define(function (require, exports, module) {
         setAssignedProjects: function(assigned_projects){
             this.set({assigned_projects: JSON.stringify(assigned_projects)});
         },
-        remove: function(projectId) {
+        unAssign: function(projectId) {
             var memberId = this.get('userId');
             return CallService.call('PUT', urls.updateProjectUnassign(projectId), {userNames: [memberId]})
                 .done(function() {
@@ -96,7 +96,21 @@ define(function (require, exports, module) {
                 }.bind(this))
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, "unAssignMember");
-                })
+                });
+        },
+        delete: function(){
+            var memberId = this.get('userId'),
+                fullName = this.get('full_name');
+            return CallService.call('DELETE', urls.modifyUserUrl(memberId))
+                .done(function() {
+                    Util.ajaxSuccessMessenger("deleteMember", fullName || memberId);
+                    if(this.collection) {
+                        this.collection.remove(this);
+                    }
+                }.bind(this))
+                .fail(function (error) {
+                    Util.ajaxFailMessenger(error, "deleteMember");
+                });
         }
     });
 

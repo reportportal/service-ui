@@ -50,9 +50,7 @@ define(function(require, exports, module) {
 
         computeds: {
             getPlaceHolder: function(){
-                var grandAdmin = this.grandAdmin,
-                    projectId = this.appModel.get('projectId');
-                return grandAdmin ? projectId ? Localization.members.searchNameLogin : Localization.members.searchNameLoginEmail : Localization.members.searchName;
+                return Localization.members.searchName;
             },
             showAddMemberBtn: function(){
                 return this.isGrandAdmin;
@@ -75,7 +73,7 @@ define(function(require, exports, module) {
             this.collection = new MembersCollection();
             this.listenTo(this.collection, 'reset', this.renderMembersList);
             this.listenTo(this.collection, 'remove', this.updateMembers);
-            this.pageType = 'PaginateProjectMembers_' + this.memberAction + '_' + this.projectId;
+            this.pageType = 'PaginateProjectMembers_unAssignMember_' + this.projectId;
             this.render();
         },
 
@@ -213,6 +211,11 @@ define(function(require, exports, module) {
 
         destroy: function(){
             this.clearMembers();
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            this.$el.html('');
+            delete this;
         }
     });
 

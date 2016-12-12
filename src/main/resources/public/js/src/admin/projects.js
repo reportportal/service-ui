@@ -29,15 +29,13 @@ define(function (require, exports, module) {
     var App = require('app');
     var urls = require('dataUrlResolver');
     var Service = require('adminService');
-    var Member = require('member');
+    var MembersTableView = require('projectMembers/MembersTableView');
     var Projects = require('project');
     var ProjectInfo = require('projectinfo');
     var MemberService = require('memberService');
     var Widget = require('widgets');
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
-
-    // var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -405,7 +403,6 @@ define(function (require, exports, module) {
         bodyTpl: 'tpl-admin-project-body',
         shellTpl: 'tpl-admin-content-shell',
         permissionsTpl: 'tpl-permissions-map',
-        membersNavigationTpl: 'tpl-members-navigation',
 
         render: function () {
             this.$el.html(Util.templates(this.shellTpl));
@@ -424,14 +421,11 @@ define(function (require, exports, module) {
                     id: this.id,
                     query: this.query,
                     btnVisible: {
-                        btnPermissionMap: true,
                         btnProjectSettings: true,
                         btnProjectMembers: true
                     }
                 }));
             }
-
-            this.$header.find('[data-js-show-permissions-map]').click(this.onClickShowPermissionsMap.bind(this));
             this.$header.find('.tab').click(this.updateRoute.bind(this));
 
             this.$body.html(Util.templates(this.bodyTpl, {
@@ -443,18 +437,6 @@ define(function (require, exports, module) {
             this.$settings = $("#projectSettings", this.$body);
 
             this.$users = $("#projectUsers", this.$body);
-
-            this.$users.html(Util.templates(this.membersNavigationTpl, {
-                canManage: true,
-                query: this.query,
-                projectId: this.id,
-                adminPage: true
-            }));
-
-            this.$assignedMembers = $("#assignedMembers", this.$body);
-            this.$addMember = $("#addMember", this.$body);
-            this.$inviteMember = $("#inviteMember", this.$body);
-            this.$assignMember = $("#assignMember", this.$body);
 
             if (this.id) {
                 config.project = {projectId: this.id};
@@ -508,7 +490,6 @@ define(function (require, exports, module) {
             } else {
                 this.settingsBlock.update(this.query);
             }
-            this.$header.find('#headerBar').find('li.tab-permissions-map').hide();
         },
 
         removeSettings: function () {
@@ -520,54 +501,12 @@ define(function (require, exports, module) {
         },
 
         renderUsers: function () {
-            var usersView = this.getUsersView(this.query);
             this.destroyUsersBlock();
-            this.usersBlock = new usersView(this.getMembersDataObject()).render();
-            this.$header.find('#headerBar').find('li.tab-permissions-map').show();
-        },
-
-        getMembersDataObject: function () {
-            var data = {
-                container: this.membersTab,
-                isDefaultProject: this.id === config.demoProjectName
-            };
-
-            if (this.fullMembers) {
-                data.projectId = this.id;
-                data.project = {type: config.project.configuration.entryType, projectId: this.id};
-                data.user = config.userModel.toJSON();
-                data.roles = config.projectRoles;
-                data.memberAction = 'unAssignMember';
-                data.projectRoleIndex = config.projectRoles.length + 1;
-                data.grandAdmin = true;
-            }
-            return data;
-        },
-
-        getUsersView: function (query) {
-            this.fullMembers = false;
-            this.membersTab = null;
-
-            switch (query) {
-                case "add":
-                    this.membersTab = this.$addMember;
-                    return Member.MembersAdd;
-                    break;
-                case "invite":
-                    this.membersTab = this.$inviteMember;
-                    return Member.MembersInvite;
-                    break;
-                case "assign":
-                    this.fullMembers = true;
-                    this.membersTab = this.$assignMember;
-                    return Member.MembersViewAssign;
-                    break;
-                default:
-                    this.fullMembers = true;
-                    this.membersTab = this.$assignedMembers;
-                    return Member.MembersView;
-                    break;
-            }
+            this.usersBlock = new MembersTableView({
+                projectId: this.id,
+                grandAdmin: true
+            });
+            $('[data-js-project-members]', this.$el).append(this.usersBlock.$el);
         },
 
         setupAddProject: function () {
@@ -591,12 +530,6 @@ define(function (require, exports, module) {
             'click .tab': 'updateRoute',
             'click .rp-nav-tabs .disabled': 'stopPropagation',
             'click #create-project': 'createProject',
-        },
-
-        onClickShowPermissionsMap: function (e) {
-            e.preventDefault();
-            Util.getDialog({name: 'tpl-permissions-map-modal'})
-                .modal('show');
         },
 
         createProject: function () {
@@ -658,9 +591,6 @@ define(function (require, exports, module) {
 
         resetMembersView: function () {
             this.usersBlock && this.usersBlock.destroy();
-            $(".active", this.$users).removeClass('active');
-            $("li:first", this.$users).addClass('active');
-            this.$assignedMembers.addClass('active');
         },
 
         destroyUsersBlock: function () {

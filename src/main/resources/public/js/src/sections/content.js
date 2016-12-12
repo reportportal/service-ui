@@ -26,10 +26,11 @@ define(function (require, exports, module) {
     var Util = require('util');
 
     // Main modules
-    var Dashboard = require('dashboard');
+    var Dashboard = require('dashboard/dashboard-view');
     var Favorites = require('favorites');
     var Launch = require('launch');
     var LaunchPage = require('launches/LaunchPage');
+    var DashboardPage = require('dashboard/DashboardPage');
     var Project = require('project');
     var ProjectInfo = require('projectinfo');
     var Member = require('projectMembers/MembersPageView');
@@ -37,7 +38,7 @@ define(function (require, exports, module) {
 
     // Administrate modules
     var Projects = require('projects');
-    var Users = require('users');
+    var Users = require('adminUsers/UsersPageView');
     var Settings = require('settings');
 
     var Content = Backbone.View.extend({
@@ -112,6 +113,9 @@ define(function (require, exports, module) {
             switch (name) {
                 case "dashboard":
                     return Dashboard;
+                    break;
+                case "newdashboard":
+                    return DashboardPage;
                     break;
                 case "filters":
                     return Favorites;

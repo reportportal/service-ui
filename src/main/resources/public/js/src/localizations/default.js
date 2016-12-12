@@ -362,6 +362,7 @@ define(['util'], function () {
             totalTestCases: "Total test cases",
             pieIssues: "Issues",
             addNewWidget: "Add new Widget",
+            addSharedWidget: 'Add Shared Widget',
             deleteWidget: "Delete Widget",
             refreshWidget: "Refresh Widget",
             saveWidget: "Save Widget",
@@ -544,17 +545,22 @@ define(['util'], function () {
         },
 
         dashboard: {
+            allDashboards: 'All Dashboards',
             addNewDashboard: "Add new Dashboard",
             maxAdded: "Max amount of dashboards were added",
-            dashboardShared: 'Dashboard is shared by',
+            dashboardShared: 'Dashboard is shared',
+            dashboardSharedBy: 'Dashboard is shared by',
             dashboardName: "Dashboard Name",
+            namePlaceholder: 'Enter Dashboard Name',
             shared: "Shared:",
             sharedSelect: "Select shared Dashboard",
             sharedNoFound: "No shared dashboards found!",
             project: "Project:",
             noDashboard: "Dashboard not found!",
+            noDashboardSearch: 'No Dashboard found for',
+            checkQuery: 'Check your query and try again',
             dashboardEmpty: "Dashboard list is empty!",
-            clickToAdd: "Click 'Add dashboard' button to create dashboard",
+            clickToAdd: "Click 'Add new Dashboard' button to create dashboard",
             addDashboard: "Add dashboard",
             editDashboard: "edit dashboard",
             titleEditDashboard: "Click to edit dashboard name",
@@ -588,7 +594,8 @@ define(['util'], function () {
             maxWidgetsAdded: "Max amount of widgets were added to the dashboard",
             nameNewDashboard: 'Enter New Dashboard Name',
             tHeadTitleOwners: 'Owners',
-            tHeadTitleDashboardName: 'Dashboard Name'
+            tHeadTitleDashboardName: 'Dashboard Name',
+            description: 'Description',
         },
 
         favorites: {
@@ -1160,11 +1167,12 @@ define(['util'], function () {
             lastLogin: "Last login",
             projectsRoles: "Projects and Roles",
             deleteUser: "Delete User",
-            viewProjects: " View Projects",
+            viewProjects: " View Projects and Roles",
             addNewUser: "Add new user",
             inviteNewUser: "Invite user to the project",
             configPage: " project configuration page",
             projectMembers: "Members",
+            enterProjectName: 'Enter Project Name',
             assigned: "Assigned",
             add: "Add",
             invite: "Invite",
@@ -1200,7 +1208,8 @@ define(['util'], function () {
             searchByName: "Search by Name",
             TLS: 'TLS',
             SSL: 'SSL',
-            emailError: 'Test connection was failed:'
+            emailError: 'Test connection was failed:',
+            addUserProject: 'Add User to Project'
         },
 
         members: {
@@ -1421,7 +1430,7 @@ define(['util'], function () {
             filterDescriptionMaxLength: "Filter description length should have size to %%%.",
             filterNameDuplication: "This name is already in use. Please choose something else.",
             filterStaticsDigitsOnly: "This filter accepts only digits.",
-            dashboardNameLength: "Dashboard name should have size from '3' to '128'",
+            dashboardNameLength: "Dashboard name should have size from %%% to %%%",
             widgetNameLength: "Widget name should have size from '3' to '128'",
             projectNameLength: "Project name should have size from '1' to '55'",
             countCantBeEmpty: "Items count can not be empty",
@@ -1596,9 +1605,11 @@ define(['util'], function () {
             moveToDebug: 'Move to debug',
             moveToAllLaunches: 'Move to all launches',
             editLaunch: 'Edit Launch',
+            editDashboard: 'Dashboard Settings',
             editTestItem: 'Edit Test Item',
             changePassword: "Change Password",
-            editUserInfo: 'Edit Personal Information'
+            editUserInfo: 'Edit Personal Information',
+            addDashboard: 'Add New Dashboard',
         },
 
         dialog: {
@@ -1617,7 +1628,7 @@ define(['util'], function () {
             changeRoleBtn: "Change",
             deleteImage: "Are you sure, you want to delete profile photo?",
             deleteBts: "Are you sure, you want to remove %%% project <b>'%%%'</b> from project settings?",
-            dashboardDelete: "Are you sure, you want to remove dashboard <b>'%%%'</b>?",
+            dashboardDelete: "Are you sure want to delete dashboard <b>'%%%'</b>?",
             deletedWidget: "Are you sure, you want to remove widget <b>'%%%'</b>?",
             deleteBtsBtn: "Remove",
             dashboardDeleteBtn: "Remove",

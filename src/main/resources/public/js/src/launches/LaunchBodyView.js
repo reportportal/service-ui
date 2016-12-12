@@ -268,6 +268,8 @@ define(function (require, exports, module) {
         destroy: function () {
             this.stickyHeader && this.stickyHeader.destroy();
             this.multipleSelected.destroy();
+            this.control && this.control.destroy();
+            this.body && this.body.destroy();
             this.$el.html('');
             this.undelegateEvents();
             this.stopListening();

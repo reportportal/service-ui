@@ -86,7 +86,7 @@ require.config({
         'widgets': 'widget/widgets',
         'favorites': 'favorites/favorites',
         // 'filters': 'filter/filters',
-        'dashboard': 'dashboard/dashboard-view',
+        // 'dashboard': 'dashboard/dashboard-view',
         'context': 'context',
 
         'dataUrlResolver': 'core/data-url-resolver',

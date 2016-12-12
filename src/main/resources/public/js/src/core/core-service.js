@@ -80,7 +80,8 @@ define([
     };
 
     var deleteDashboard = function (id, isShared) {
-        var url = isShared ? urls.favoritesByResourceId(id) : urls.dashboardById(id);
+        // var url = isShared ? urls.favoritesByResourceId(id) : urls.dashboardById(id);
+        var url = urls.dashboardById(id);
         return call('DELETE', url);
     };
 
