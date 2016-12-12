@@ -40,4 +40,18 @@
     position: relative;
     overflow: hidden;
   }
+  .error-bottom {
+    position: absolute;
+  }
+  .search-block {
+    display: none;
+  }
+  &.search {
+    .search-block {
+      display: block;
+    }
+    .no-search-block {
+      display: none;
+    }
+  }
 }

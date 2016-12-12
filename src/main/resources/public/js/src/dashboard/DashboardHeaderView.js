@@ -29,6 +29,11 @@ define(function (require, exports, module) {
     var DashboardHeaderView = Epoxy.View.extend({
         className: 'dashboard-header',
         template: 'tpl-dashboard-header',
+
+        events: {
+            'click [data-js-add-dashboard]': 'onClickAddDashboard',
+        },
+
         initialize: function(options) {
             this.render();
             this.mainBreadcrumbs = new MainBreadcrumbsComponent({
@@ -40,6 +45,11 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onClickAddDashboard: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.collection.createNewDashboard();
         },
 
         destroy: function () {

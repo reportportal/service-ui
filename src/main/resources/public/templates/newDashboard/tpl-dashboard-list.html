@@ -9,5 +9,25 @@
 </div>
 <h1><%- data.text.dashboard.myDashboards %></h1>
 <div class="dashboard-container" data-js-my-dashboards-container></div>
+<div class="no-result-found" data-js-dashboard-not-found>
+    <div class="no-search-block">
+        <span><%= data.text.dashboard.noDashboard %></span>
+        <p><%- data.text.dashboard.clickToAdd %></p>
+    </div>
+    <div class="search-block">
+        <span><%= data.text.dashboard.noDashboardSearch %>'<span data-js-search-text></span>'</span>
+        <p><%- data.text.dashboard.checkQuery %></p>
+    </div>
+</div>
 <h1><%- data.text.dashboard.shareDashboard %></h1>
 <div class="dashboard-container" data-js-shared-dashboards-container></div>
+<div class="no-result-found" data-js-shared-dashboard-not-found>
+    <div class="no-search-block">
+        <span><%= data.text.dashboard.noDashboard %></span>
+        <p><%- data.text.dashboard.sharedNoFound %></p>
+    </div>
+    <div class="search-block">
+        <span><%= data.text.dashboard.noDashboardSearch %>'<span data-js-search-text></span>'</span>
+        <p><%- data.text.dashboard.checkQuery %></p>
+    </div>
+</div>

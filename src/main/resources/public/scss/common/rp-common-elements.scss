@@ -54,3 +54,26 @@
     }
   }
 }
+
+.form-group {
+  .help-inline {
+    display: none;
+    color: $COLOR--orange-red;
+    font-size: 12px;
+    line-height: 12px;
+  }
+  .error-bottom {
+    display: none;
+  }
+  &.has-error {
+    .error-bottom {
+      display: block;
+    }
+  }
+
+  &.has-error {
+    .help-inline {
+      display: inline-block;
+    }
+  }
+}

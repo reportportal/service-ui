@@ -31,7 +31,19 @@ define(function (require, exports, module) {
     var DashboardListView = Epoxy.View.extend({
         className: 'dashboard-list-view',
         template: 'tpl-dashboard-list',
-        initialize: function(options) {
+        events: {
+            'validation::change [data-js-filter-name]': 'onChangeDashboardName',
+        },
+        bindings: {
+            '[data-js-search-text]': 'text: search',
+            ':el': 'classes: {search: any(search)}',
+        },
+        initialize: function() {
+            this.model = new (Epoxy.Model.extend({
+                defaults: {
+                    search: '',
+                }
+            }));
             this.render();
             this.myDashboardCollection = new Backbone.Collection();
             this.myDashboardViews = [];
@@ -41,26 +53,45 @@ define(function (require, exports, module) {
             this.listenTo(this.myDashboardCollection, 'reset', this.renderMyDashboards);
             this.listenTo(this.sharedDashboardCollectoin, 'reset', this.renderSharedDashboards);
             this.collection.ready.done(function() {
-                self.listenTo(self.collection, 'change:owner', self.changeCollection);
+                self.listenTo(self.collection, 'change:owner add reset', self.changeCollection);
                 self.changeCollection();
             })
 
         },
         changeCollection: function() {
+            $('[data-js-dashboard-not-found]', this.$el).removeClass('rp-display-block');
+            $('[data-js-shared-dashboard-not-found]', this.$el).removeClass('rp-display-block');
             var myDashboards = [];
             var sharedDashboards = [];
+            var self = this;
             _.each(this.collection.models, function(model) {
-                if (model.get('owner') == config.userModel.get('name')) {
-                    myDashboards.push(model);
-                } else {
-                    sharedDashboards.push(model);
+                if((self.model.get('search') && ~model.get('name').indexOf(self.model.get('search'))) || !self.model.get('search')) {
+                    if (model.get('owner') == config.userModel.get('name')) {
+                        myDashboards.push(model);
+                    } else {
+                        sharedDashboards.push(model);
+                    }
                 }
             })
             this.myDashboardCollection.reset(myDashboards);
             this.sharedDashboardCollectoin.reset(sharedDashboards);
+            if(!myDashboards.length) $('[data-js-dashboard-not-found]', this.$el).addClass('rp-display-block');
+            if(!sharedDashboards.length) $('[data-js-shared-dashboard-not-found]', this.$el).addClass('rp-display-block');
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+            Util.bootValidator($('[data-js-filter-name]', this.$el), [{
+                validator: 'minMaxNotRequired',
+                type: 'dashboardName',
+                min: 3,
+                max: 128
+            }]);
+        },
+        onChangeDashboardName: function (e, data) {
+            if (data.valid) {
+                this.model.set({search: data.value});
+                this.changeCollection();
+            }
         },
         renderMyDashboards: function() {
             _.each(this.myDashboardViews, function(view) { view.destroy(); })

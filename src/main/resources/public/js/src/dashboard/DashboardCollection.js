@@ -19,10 +19,13 @@ define(function (require, exports, module) {
 
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Backbone = require('backbone');
     var App = require('app');
     var DashboardModel = require('dashboard/DashboardModel');
     var Service = require('coreService');
+    var ModalEditDashboard = require('modals/modalEditDashboard');
+    var Util = require('util');
 
     var config = App.getInstance();
 
@@ -32,12 +35,45 @@ define(function (require, exports, module) {
         initialize: function() {
             this.ready = $.Deferred();
             this.update();
+            var self = this;
+            this.ready.done(function() {
+                self.listenTo(self, 'add', self.onAddDashboard);
+                self.listenTo(self, 'remove', self.onRemoveDashboard);
+            })
+        },
+        onAddDashboard: function(model) {
+            var dashboard = {
+                name: model.get('name'),
+                share: model.get('isShared'),
+                // description: model.get('description'),
+            }
+            Service.addOwnDashboard(dashboard)
+                .done(function (data) {
+                    model.set({id: data.id});
+                    Util.ajaxSuccessMessenger('dashboardAdded');
+                })
+                .fail(function (request) {
+                    Util.ajaxFailMessenger(request, 'dashboardAdded');
+                });
+        },
+        onRemoveDashboard: function(model) {
+            var self = this;
+            return Service.deleteDashboard(model.get('id'))
+                .done(function () {
+                    Util.ajaxSuccessMessenger('dashboardDelete');
+                    config.trackingDispatcher.dashboardDel(!model.get('isMy'));
+                })
+                .fail(function (error) {
+                    self.update();
+                    Util.ajaxFailMessenger(error, 'dashboardDelete');
+                });
         },
         update: function() {
             this.reset([]);
             var self = this;
-            this.getDashboards().always(function() {
-                self.getSharedDashboards().always(function() {
+            this.getDashboards().done(function(dashboards) {
+                self.getSharedDashboards().done(function(sharedDashboards) {
+                    self.reset(dashboards.concat(sharedDashboards));
                     self.ready.resolve();
                 })
             })
@@ -47,8 +83,7 @@ define(function (require, exports, module) {
             var self = this;
             Service.getProjectDashboards()
                 .done(function(data) {
-                    self.add(self.parse(data));
-                    async.resolve();
+                    async.resolve(self.parse(data));
                 })
                 .fail(function(data) {
                     async.reject(data);
@@ -60,8 +95,7 @@ define(function (require, exports, module) {
             var self = this;
             Service.getSharedDashboards()
                 .done(function(data) {
-                    self.add(self.parseShared(data));
-                    async.resolve();
+                    async.resolve(self.parseShared(data));
                 })
                 .fail(function(data) {
                     async.reject(data);
@@ -83,6 +117,18 @@ define(function (require, exports, module) {
             });
             return widgetsData;
         },
+        createNewDashboard: function() {
+            var self = this;
+            (new ModalEditDashboard({
+                dashboardCollection: this,
+                dashboardModel: (new DashboardModel),
+                mode: 'save',
+            })).show().done(function(newModel) {
+                var data = newModel.toJSON();
+                data.owner = config.userModel.get('name');
+                self.add(data);
+            })
+        }
 
     });
 

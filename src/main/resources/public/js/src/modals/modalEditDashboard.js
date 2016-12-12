@@ -52,13 +52,13 @@ define(function (require, exports, module) {
             });
             Util.bootValidator($('[data-js-name-input]', this.$el), [{
                 validator: 'minMaxRequired',
-                type: 'filterName',
+                type: 'dashboardName',
                 min: 3,
                 max: 128
-            }, {validator: 'noDuplications', type: 'filterName', source: dashboardNames}]);
+            }, {validator: 'noDuplications', type: 'dashboardName', source: dashboardNames}]);
             Util.bootValidator($('[data-js-description]', this.$el), {
                 validator: 'maxRequired',
-                type: 'filterDescription',
+                type: '',
                 max: 256
             });
         },

@@ -30,6 +30,8 @@ define(function (require, exports, module) {
     var DashboardBodyView = Epoxy.View.extend({
         className: 'dashboard-body',
         template: 'tpl-dashboard-body',
+        events: {
+        },
         initialize: function(options) {
             this.$el.addClass('load');
             this.render();

@@ -22,28 +22,8 @@
 /*-------------------------------------*/
 /* COMMON STYLES FOR - 'rp-form-group' */
 
-.form-group {
-    .help-inline {
-        display: none;
-        color: $COLOR--orange-red;
-        font-size: 12px;
-        line-height: 12px;
-    }
 
-    &.has-error {
-        .help-inline {
-            display: inline-block;
-        }
-    }
-}
-.error-bottom {
-    display: none;
-}
-.has-error {
-    .error-bottom {
-        display: block;
-    }
-}
+
 
 /* validator */
 .error-hint {

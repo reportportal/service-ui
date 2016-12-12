@@ -23,6 +23,7 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
     var ModalEditDashboard = require('modals/modalEditDashboard');
+    var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
 
     var config = App.getInstance();
@@ -33,6 +34,7 @@ define(function (require, exports, module) {
 
         events: {
             'click [data-js-edit]': 'onClickEdit',
+            'click [data-js-remove]': 'onClickRemove',
         },
 
         bindings: {
@@ -61,12 +63,25 @@ define(function (require, exports, module) {
                 self.model.set(newModel.toJSON());
             })
         },
+        onClickRemove: function() {
+            var self = this;
+            (new ModalConfirm({
+                headerText: Localization.dialogHeader.dashboardDelete,
+                bodyText: Util.replaceTemplate(Localization.dialog.dashboardDelete, this.model.get('name')),
+                okButtonDanger: true,
+                cancelButtonText: Localization.ui.cancel,
+                okButtonText: Localization.ui.delete,
+            })).show().done(function() {
+                self.model.collection.remove(self.model);
+                self.destroy();
+            })
+        },
 
         destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
-            delete this;
+            this.$el.remove();
         },
     });
 
