@@ -30,6 +30,9 @@
     display: inline-block;
     font-size: 40px;
   }
+  @media(max-width: $SCREEN_XS_MAX) {
+    padding: 3px 0;
+  }
 }
 .no-result-found {
   text-align: center;
@@ -44,9 +47,33 @@
   }
   @media(max-width: $SCREEN_XS_MAX) {
     font-size: 14px;
+    padding: 15px 0;
     p {
       text-align: center;
       font-size: 12px;
+    }
+  }
+}
+
+.form-group {
+  .help-inline {
+    display: none;
+    color: $COLOR--orange-red;
+    font-size: 12px;
+    line-height: 12px;
+  }
+  .error-bottom {
+    display: none;
+  }
+  &.has-error {
+    .error-bottom {
+      display: block;
+    }
+  }
+
+  &.has-error {
+    .help-inline {
+      display: inline-block;
     }
   }
 }

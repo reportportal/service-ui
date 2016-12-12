@@ -162,10 +162,6 @@ define(function (require, exports, module) {
         },
 
         onClickMenuOpen: function () {
-            if (!$('body').hasClass('menu-open')) {
-                $('section.header .button-menu-close').removeClass('hidden');
-                $('section.header .button-menu-open').addClass('hidden');
-            }
             $('body').toggleClass('menu-open');
         },
 

@@ -70,7 +70,12 @@ define(function (require, exports, module) {
                     height: config.defaultWidgetHeight
                 }
             });
-            this.widget.render();
+            this.$el.addClass('ready');
+            var self = this;
+            setTimeout(function () {
+                self.widget.render();
+            }, 500);
+
         },
 
         render: function() {
@@ -79,4 +84,4 @@ define(function (require, exports, module) {
     });
 
     return ModalLaunchesCompare;
-})
+});

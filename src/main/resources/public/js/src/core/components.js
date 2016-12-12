@@ -238,6 +238,9 @@ define(function (require, exports, module) {
         initialize: function (options) {
             this.model = options.model;
             this.minPaging = options.minMode || false;
+            this.showPageCount = 0;
+            $(window).on('resize.' + this.cid, this.onResizeWindow.bind(this));
+            this.onResizeWindow();
         },
 
         tpl: "tpl-components-paging",
@@ -257,13 +260,14 @@ define(function (require, exports, module) {
                     objectsOnPage: size,
                     minPaging: this.minPaging,
                 };
+            var halfShowPageCount = parseInt(this.showPageCount/2);
             if (totalPages > 1) {
                 var pages;
                 // should be 10 page links
-                if (totalPages <= 10)                   pages = _.range(1, totalPages + 1);
-                else if (currentPage <= 5)              pages = _.range(1, 11);
-                else if (currentPage >= totalPages - 5) pages = _.range(totalPages - 9, totalPages + 1);
-                else                                    pages = _.range(currentPage - 4, currentPage + 6);
+                if (totalPages <= this.showPageCount)                   pages = _.range(1, totalPages + 1);
+                else if (currentPage <= halfShowPageCount)              pages = _.range(1, this.showPageCount+1);
+                else if (currentPage >= totalPages - halfShowPageCount) pages = _.range(totalPages - (this.showPageCount - 1), totalPages + 1);
+                else                                    pages = _.range(currentPage - (halfShowPageCount-1), currentPage + halfShowPageCount + 1);
 
                 model = _.extend({
                     showControls: true,
@@ -285,6 +289,20 @@ define(function (require, exports, module) {
             this.pageSize = $("[data-js-per-page-input]", this.$el);
             this.pageSizeStatic = $("[data-js-per-page]", this.$el);
             return this;
+        },
+        onResizeWindow: function() {
+            var newShowPageCount = 10;
+            if($( window ).width() < 700) {
+                newShowPageCount = 5;
+            }
+            if (newShowPageCount != this.showPageCount) {
+                if(!this.showPageCount) {
+                    this.showPageCount = newShowPageCount;
+                } else {
+                    this.showPageCount = newShowPageCount;
+                    this.render();
+                }
+            }
         },
 
         first: function (e) {
@@ -366,6 +384,10 @@ define(function (require, exports, module) {
                 count && this.trigger('count', value);
             }
             this.pageSize.val("");
+        },
+        destroy: function() {
+            $(window).off('resize.' + this.cid);
+            RemovableView.prototype.destroy.call(this);
         }
     });
     

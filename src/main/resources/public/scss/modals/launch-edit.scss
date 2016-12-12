@@ -20,23 +20,27 @@
  */
 
 .modal-launch-edit {
-  .modal-body {
-    padding: 40px 10px 25px 10px;
-    h2 {
-      font-size: 16px;
-      margin: 15px 20px;
-    }
-    .fields {
-      margin: 0 20px;
-      width: 430px;
-      max-width: 90%;
-    }
-    label {
-      width: 100%;
-    }
-    textarea {
-      height: 67px;
-      resize: none;
+  .modal-content-wrapper {
+    .modal-body {
+      padding: 40px 10px 25px 10px;
+      h2 {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        font-size: 16px;
+        margin: 15px 20px;
+      }
+      .fields {
+        margin: 0 20px;
+        width: 430px;
+        max-width: 90%;
+      }
+      label {
+        width: 100%;
+      }
+      textarea {
+        height: 67px;
+        resize: none;
+      }
     }
   }
 }

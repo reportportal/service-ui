@@ -20,18 +20,34 @@
  */
 
 .modal-launches-compare {
-  .modal-body {
-    min-height: 420px;
-    .preloader {
-      padding-top: 170px;
+  .modal-dialog {
+    @media (min-width: 915px) {
+      width: 900px;
     }
-    .panel-body {
-      height: 410px;
-    }
-  }
-  &.load {
-    .preloader {
-      display: block;
+    .modal-content-wrapper {
+      .modal-body {
+        min-height: 420px;
+        .preloader {
+          padding-top: 170px;
+        }
+        .widget-content {
+          opacity: 0;
+          transition: opacity 2s ease;
+          .panel-body {
+            height: 410px;
+          }
+        }
+      }
+      &.ready {
+        .widget-content {
+          opacity: 1;
+        }
+      }
+      &.load {
+        .preloader {
+          display: block;
+        }
+      }
     }
   }
 }

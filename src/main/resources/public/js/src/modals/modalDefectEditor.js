@@ -71,7 +71,6 @@ define(function (require, exports, module) {
             this.applyBindings();
             this.setupAnchors();
             this.setupMarkItUp();
-            //this.attachKeyActions();
         },
 
         isMultipleEdit: function(){

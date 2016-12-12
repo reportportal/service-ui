@@ -31,6 +31,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var Components = require('core/components');
     var Util = require('util');
+    var MainBreadcrumbsComponent = require('components/MainBreadcrumbsComponent');
     var CoreService = require('coreService');
     var FilterCollection = require('filters/FilterCollection');
     var ModalConfirm = require('modals/modalConfirm');
@@ -89,7 +90,7 @@ define(function (require, exports, module) {
         }
     });
 
-    var FilterPage = Epoxy.View.extend({
+    var FavoritesPage = Epoxy.View.extend({
         initialize: function(options) {
             this.model = new Backbone.Model({
                 search: '',
@@ -121,9 +122,12 @@ define(function (require, exports, module) {
         },
         render: function() {
             var defectTypeCollection = new SingletonDefectTypeCollection();
+            this.mainBreadcrumbs = new MainBreadcrumbsComponent({
+                data: [{name: Localization.favorites.msgFavoriteFilters, link: ''}]
+            });
+            this.$header.html(this.mainBreadcrumbs.$el);
             defectTypeCollection.ready.done(function() {
                 this.$el.html(Util.templates(this.template, {}));
-                this.$header.html(Util.templates(this.templateHeader), {});
                 this.$filterName = $('[data-js-filter-name]', this.$el);
                 this.$filterList = $('[data-js-filter-list]', this.$el);
                 this.$filterPaginate = $('[data-js-filter-paginate]', this.$el);
@@ -231,12 +235,14 @@ define(function (require, exports, module) {
             config.router.navigate(newFilter.get('url'), {trigger: true});
         },
         destroy: function() {
+            this.mainBreadcrumbs && this.mainBreadcrumbs.destroy();
             this.undelegateEvents();
             this.stopListening();
+            this.unbind();
         },
     });
 
     return {
-        ContentView: FilterPage,
+        ContentView: FavoritesPage,
     }
 });
