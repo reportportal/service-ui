@@ -1,0 +1,278 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.rp-admin-all-users {
+    .all-users-actions {
+        @extend %CLEAR_FIX;
+
+        .all-users-filter {
+            padding: 20px 0;
+            float: left;
+            width: 100%;
+            max-width: 310px;
+
+            .rp-input-search-wrap {
+                .input-filter {
+                    margin: 0;
+                }
+            }
+        }
+        .all-users-buttons {
+            padding: 20px 0;
+            float: right;
+
+            .rp-btn {
+                float: right;
+                margin-left: 10px;
+            }
+        }
+    }
+    .all-users-table {
+        .rp-grid-thead {
+            border-top: 1px solid $COLOR--gray-91;
+            .users-actions {
+                text-align: center;
+            }
+        }
+        .user-row {
+            padding: 10px 0;
+            background-color: transparent;
+            background-image: linear-gradient(to top, transparent, transparent), linear-gradient(to top, $COLOR--gray-91, $COLOR--gray-91);
+            background-position: left top, 88% top;
+            background-repeat: repeat, repeat-y;
+            background-size: auto, 1px;
+            background-clip: padding-box, content-box;
+            &:hover {
+                background-color: transparent;
+                background-image: linear-gradient(to top, $COLOR--tealish-opacity, $COLOR--tealish-opacity), linear-gradient(to top, $COLOR--gray-91, $COLOR--gray-91);
+
+                .user-wrap {
+                    .user-info {
+                        .make-admin {
+                            display: inline-block;
+                        }
+                    }
+                }
+            }
+            .grid-cell {
+                padding-bottom: 10px;
+                padding-top: 10px;
+            }
+        }
+        .name-grid-cell {
+            width: 35%;
+        }
+        .login-grid-cell {
+            width: 20%;
+        }
+        .role-grid-cell {
+            width: 33%;
+        }
+        .action-grid-cell {
+            width: 12%;
+            padding-right: 15px;
+        }
+
+        .user-wrap {
+            @extend %CLEAR_FIX;
+
+            .user-avatar {
+                float: left;
+                max-width: 40px;
+                min-height: 50px;
+                img {
+                    width: 100%;
+                    height: auto;
+                }
+            }
+            .user-info {
+                margin: 0 0 0 55px;
+                font-size: 13px;
+
+                .user-you, .user-admin, .make-admin {
+                    display: inline-block;
+                    margin: 0;
+                    font-size: 10px;
+                    color: $COLOR--white-default;
+                    line-height: 12px;
+                    font-weight: 400;
+                    position: relative;
+                    top: -10px;
+                    display: inline-block;
+                    padding: 0 6px 2px;
+                    white-space: nowrap;
+                    border-radius: 100px;
+                    text-transform: lowercase;
+                    letter-spacing: .6px;
+                    &:hover, :active {
+                        text-decoration: none;
+                    }
+                }
+                .user-admin {
+                    background: $COLOR--orange-red;
+                    &.notlink {
+                        cursor: default;
+                    }
+                }
+                .user-you {
+                    background: $COLOR--dark-pastel-green;
+                }
+                .make-admin {
+                    background: $COLOR--gray-47;
+                    display: none;
+                }
+                .user-name, .user-login {
+                    margin: 0;
+                    padding: 0;
+                    font-weight: normal;
+                    text-transform: capitalize;
+                    display: inline-block;
+                    max-width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .user-login {
+                    text-transform: none;
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .login-time {
+            font-size: 13px;
+            display: inline-block;
+
+            .from-now {
+                display: none;
+            }
+            &:hover {
+                .exact-time {
+                    display: none;
+                }
+                .from-now {
+                    display: inline-block;
+                }
+            }
+        }
+        &.show-from-now {
+            .login-time {
+                line-height: 1.5;
+                font-size: 13px;
+
+                .exact-time {
+                    display: none;
+                }
+                .from-now {
+                    display: inline-block;
+                }
+                &:hover {
+                    .exact-time {
+                        display: inline-block;
+                    }
+                    .from-now {
+                        display: none;
+                    }
+                }
+            }
+        }
+        .users-actions {
+            text-align: center;
+            .remove-user {
+                display: inline-block;
+                color: $COLOR--gray-60;
+                padding-top: 5px;
+
+                .rp-icons-delete{
+                    width: 20px;
+                    height: 20px;
+                    font-size: 18px;
+                    line-height: 20px;
+                }
+            }
+        }
+        .users-project-roles {
+
+        }
+        .user-projects-list {
+            margin: 0 15% 0 38%;
+            float: left;
+            width: 45%;
+            .user-projects-table {
+                background: $COLOR--white-default;
+                border: 1px solid $COLOR--gray-80;
+                border-radius: 2px;
+                position: relative;
+                top: -30px;
+                .user-projects-row {
+                    margin: 0;
+                    padding: 10px 0;
+                    border: none;
+                    border-top: 1px solid $COLOR--gray-91;
+                    background: none;
+                    &:hover {
+                        background: none;
+                    }
+                    &:first-child {
+                        border: none;
+                    }
+                }
+                .grid-cell {
+                    padding: 0 15px;
+                }
+
+                .project-name-cell {
+                    width: 38%;
+                }
+                .project-role-cell {
+                    width: 36%;
+                }
+                .project-action-cell {
+                    width: 26%;
+                    text-align: right;
+                }
+                .project-name {
+                    padding: 6px 0;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
+                .project-select {
+                    .select2-container .select2-choice .select2-chosen {
+                        padding: 0;
+                    }
+                }
+                .user-select-role {
+                    width: 100%;
+                    max-width: 250px;
+                    position: relative;
+
+                    .dropdown-menu {
+                        &>li {
+                            a.active, a.active:hover {
+                                background: $COLOR--gray-91;
+                                cursor: default;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

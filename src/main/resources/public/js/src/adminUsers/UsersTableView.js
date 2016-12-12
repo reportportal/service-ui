@@ -29,59 +29,48 @@ define(function(require, exports, module) {
     var Components = require('core/components');
     var App = require('app');
     var Localization = require('localization');
-    var SingletonAppModel = require('model/SingletonAppModel');
-    var MembersItemView = require('projectMembers/MembersItemView');
-    var MemberService = require('projectMembers/MembersService');
+    var UsersItemView = require('adminUsers/UsersItemView');
     var MembersCollection = require('projectMembers/MembersCollection');
+    var AdminService = require('adminService');
     var ModalAddUser = require('modals/modalAddUser');
     var ModalInviteUser = require('modals/modalInviteUser');
-    var ModalPermissionsMap = require('modals/modalPermissionsMap');
 
     var config = App.getInstance();
 
-    var MembersTableView = Epoxy.View.extend({
-        tpl: 'tpl-project-members-shell',
+    var UsersTableView = Epoxy.View.extend({
+
+        tpl: 'tpl-users-shell',
         emptyMembersTpl: 'tpl-project-members-empty',
 
         bindings: {
-            '[data-js-members-search]': 'attr: {placeholder: getPlaceHolder}',
-            '[data-js-add-user]': 'classes: {hide: not(showAddMemberBtn)}'
+            '[data-js-users-search]': 'attr: {placeholder: getPlaceHolder}',
         },
 
         computeds: {
             getPlaceHolder: function(){
-                return Localization.members.searchName;
-            },
-            showAddMemberBtn: function(){
-                return this.isGrandAdmin;
-            },
+                return Localization.members.searchNameLoginEmail;
+            }
         },
 
         initialize: function (options) {
-            this.isGrandAdmin = options.grandAdmin;
             this.model = new Backbone.Model({
                 search: '',
                 empty: false,
                 notFound: false,
             });
             this.renderViews = [];
-            this.appModel = new SingletonAppModel();
-            if(options.project){
-                this.appModel.set(options.project); //need for members on admin page
-            }
 
             this.collection = new MembersCollection();
-            this.listenTo(this.collection, 'reset', this.renderMembersList);
-            this.listenTo(this.collection, 'remove', this.updateMembers);
-            this.pageType = 'PaginateProjectMembers_unAssignMember_' + this.projectId;
+            this.listenTo(this.collection, 'reset', this.renderUsersList);
+            this.listenTo(this.collection, 'remove', this.updateUsers);
+            this.pageType = 'PaginateAdminMembers';
             this.render();
         },
 
         events: {
-            'validation::change [data-js-members-search]': 'onChangeFilterName',
+            'validation::change [data-js-users-search]': 'onChangeFilterName',
             'click [data-js-add-user]': 'showAddUser',
-            'click [data-js-invite-user]': 'showInviteUser',
-            'click [data-js-permissions]': 'showPermissionsModal'
+            'click [data-js-invite-user]': 'showInviteUser'
         },
 
         render: function () {
@@ -100,8 +89,8 @@ define(function(require, exports, module) {
                 model: new Backbone.Model(),
                 pageType: this.pageType
             });
-            this.listenTo(this.paging, 'page', this.updateMembers);
-            this.listenTo(this.paging, 'count', this.updateMembers);
+            this.listenTo(this.paging, 'page', this.updateUsers);
+            this.listenTo(this.paging, 'count', this.updateUsers);
 
             this.paging.ready.done(function(){
                 if(this.paging.urlModel.get('filter.cnt.name')) {
@@ -109,24 +98,24 @@ define(function(require, exports, module) {
                     this.$searchFilter.val(this.model.get('search'));
                 }
                 this.listenTo(this.model, 'change:search', this.onChangeModelSearch);
-                this.updateMembers();
+                this.updateUsers();
             }.bind(this));
             return this;
         },
 
         setupAnchors: function(){
-            this.$membersList = $('[data-js-members-list]', this.$el);
-            this.$pagingBlock = $('[data-js-members-paginate]', this.$el);
-            this.$searchFilter = $('[data-js-members-search]', this.$el);
+            this.$usersList = $('[data-js-users-list]', this.$el);
+            this.$pagingBlock = $('[data-js-users-paginate]', this.$el);
+            this.$searchFilter = $('[data-js-users-search]', this.$el);
         },
 
-        updateMembers: function(){
+        updateUsers: function(){
             this.paging.render();
-            this.loadMembers();
+            this.loadUsers();
         },
 
-        loadMembers: function(){
-            MemberService.getMembers(this.appModel.get('projectId'), this.getSearchQuery())
+        loadUsers: function(){
+            AdminService.getSearchUser(this.getSearchQuery())
                 .done(function (data) {
                     if(data.page.totalPages < data.page.number && data.page.totalPages != 0){
                         this.paging.trigger('page', data.page.totalPages);
@@ -138,10 +127,7 @@ define(function(require, exports, module) {
                 }.bind(this))
                 .fail(function (error) {
                     this.collection.parse([]);
-                    Util.ajaxFailMessenger(error, "loadMembers");
-                }.bind(this))
-                .always(function() {
-                    $('#filter-page',this.$el).removeClass('load');
+                    Util.ajaxFailMessenger(error, "loadUsers");
                 }.bind(this));
         },
 
@@ -164,53 +150,51 @@ define(function(require, exports, module) {
             }
         },
 
-        renderEmptyMembers: function(){
-            this.clearMembers();
-            this.$membersList.append(Util.templates(this.emptyMembersTpl, {}));
+        renderEmptyUsers: function(){
+            this.clearUsers();
+            this.$usersList.append(Util.templates(this.emptyMembersTpl, {}));
         },
 
-        renderMembersList: function() {
-            this.clearMembers();
+        renderUsersList: function() {
+            this.clearUsers();
             if(_.isEmpty(this.collection.models)){
-                this.renderEmptyMembers();
+                this.renderEmptyUsers();
                 return;
             }
-            _.each(this.collection.models, function(model) {
-                var memberItem = new MembersItemView({model: model, searchString: this.model.get('search')});
-                this.$membersList.append(memberItem.$el);
-                this.renderViews.push(memberItem);
+            _.each(this.collection.models, function(user) {
+                var userItem = new UsersItemView({model: user, searchString: this.model.get('search')});
+                this.$usersList.append(userItem.$el);
+                this.renderViews.push(userItem);
             }, this);
         },
 
-        clearMembers: function(){
+        clearUsers: function(){
             _.each(this.renderViews, function(view) {
                 view.destroy();
             });
-            this.$membersList.html('');
+            this.$usersList.html('');
             this.renderViews = [];
         },
 
         showInviteUser: function(e){
             e.preventDefault();
-            var modal = new ModalInviteUser({});
+            var modal = new ModalInviteUser({
+                type: 'users'
+            });
             modal.show();
         },
 
         showAddUser: function(e){
             e.preventDefault();
-            var modal = new ModalAddUser({});
-            this.listenToOnce(modal, 'add:user', this.updateMembers);
-            modal.show();
-        },
-
-        showPermissionsModal: function(e){
-            e.preventDefault();
-            var modal = new ModalPermissionsMap({});
+            var modal = new ModalAddUser({
+                type: 'users'
+            });
+            this.listenToOnce(modal, 'add:user', this.updateUsers);
             modal.show();
         },
 
         destroy: function(){
-            this.clearMembers();
+            this.clearUsers();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
@@ -219,6 +203,6 @@ define(function(require, exports, module) {
         }
     });
 
-    return MembersTableView;
+    return UsersTableView;
 
 });

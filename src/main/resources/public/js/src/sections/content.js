@@ -37,7 +37,7 @@ define(function (require, exports, module) {
 
     // Administrate modules
     var Projects = require('projects');
-    var Users = require('users');
+    var Users = require('adminUsers/UsersPageView');
     var Settings = require('settings');
 
     var Content = Backbone.View.extend({

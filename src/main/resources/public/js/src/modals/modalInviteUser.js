@@ -25,6 +25,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var Util = require('util');
     var MembersService = require('projectMembers/MembersService');
+    var AdminService = require('adminService');
     var SingletonAppModel = require('model/SingletonAppModel');
     var Localization = require('localization');
 
@@ -44,9 +45,12 @@ define(function (require, exports, module) {
         },
         bindings: {
             '[data-js-user]': 'value: user',
-            '[data-js-user-project-role]': 'value: projectRole'
+            '[data-js-user-project]': 'value: default_project',
+            '[data-js-user-project-role]': 'value: projectRole',
+            '[data-js-user-project-role-text]': 'text: projectRole'
         },
-        initialize: function(option) {
+        initialize: function(options) {
+            this.type = options.type;
             this.appModel = new SingletonAppModel();
             this.model = new Epoxy.Model({
                 user: '',
@@ -66,11 +70,15 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {
                 roles: Util.getRolesMap(),
-                defaultProjectRole: config.defaultProjectRole,
+                isUsers: this.isUsers()
             }));
             this.setupAnchors();
             this.setupValidation();
             this.setupUserSearch();
+            this.setupProjectSearch();
+        },
+        isUsers: function(){
+            return this.type == 'users';
         },
         setupAnchors: function(){
             this.$form = $('[data-js-invite-user-form]', this.$el);
@@ -80,6 +88,7 @@ define(function (require, exports, module) {
             this.$successFrom = $('[data-js-success-from]', this.$el);
             this.$usersField = $('[data-js-user]', this.$el);
             this.$inviteLink = $('[data-js-invite-link]', this.$el);
+            this.$selectProject = $('[data-js-user-project]', this.$el);
         },
         setupUserSearch:function() {
             var self = this;
@@ -152,6 +161,20 @@ define(function (require, exports, module) {
                     $(element).closest('[data-js-invite-user-form-group]').removeClass(errorClass);
                 }
             });
+            if(this.isUsers()){
+                this.addProjectValidation();
+            }
+        },
+        addProjectValidation: function () {
+            this.$selectProject.rules('add', {
+                required: true,
+                messages: {
+                    required: Localization.validation.requiredDefault
+                }
+            });
+            this.$selectProject.on('change', function () {
+                this.$selectProject.valid && _.isFunction(this.$selectProject.valid) && this.$selectProject.valid();
+            }.bind(this));
         },
         selectRole: function (e) {
             e.preventDefault();
@@ -162,6 +185,39 @@ define(function (require, exports, module) {
             if (link.hasClass('disabled-option')) return;
             btn.attr('value', val);
             $('.select-value', btn).text(link.text());
+        },
+        setupProjectSearch:function() {
+            var self = this;
+            Util.setupSelect2WhithScroll(this.$selectProject, {
+                multiple: false,
+                min: config.forms.projectNameRange[0],
+                minimumInputLength: config.forms.projectNameRange[0],
+                maximumInputLength: config.forms.projectNameRange[1],
+                placeholder: Localization.admin.enterProjectName,
+                allowClear: true,
+                initSelection: function (element, callback) {
+                    callback({id: element.val(), text: element.val()});
+                },
+                query: function (query) {
+                    AdminService.getProjects(self.getSearchQuery(query.term))
+                        .done(function (response) {
+                            var data = {results: []}
+                            _.each(response.content, function (item) {
+                                data.results.push({
+                                    id: item.projectId,
+                                    text: item.projectId,
+                                });
+                            });
+                            query.callback(data);
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error);
+                        });
+                }
+            });
+        },
+        getSearchQuery: function(query){
+            return '?page.sort=name,asc&page.page=1&page.size=10&&filter.cnt.name=' + query;
         },
         selectLink: function(e){
             e.preventDefault();
@@ -178,7 +234,7 @@ define(function (require, exports, module) {
             var user = this.model.toJSON();
 
             return {
-                default_project: user.default_project,
+                default_project: this.isUsers() ? user.default_project : this.appModel.get('projectId'),
                 email: user.user,
                 role: user.projectRole
             }

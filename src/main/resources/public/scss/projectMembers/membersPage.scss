@@ -20,6 +20,9 @@
  */
 
 .rp-project-members {
+    &.members-admin {
+        margin: 0 -10px;
+    }
     .project-members-actions {
         @extend %CLEAR_FIX;
 
@@ -47,7 +50,7 @@
     }
     .project-members-table {
         .rp-grid-thead {
-            border-top: 2px solid $COLOR--gray-91;
+            border-top: 1px solid $COLOR--gray-91;
         }
         .rp-table-row {
             padding: 20px 0;

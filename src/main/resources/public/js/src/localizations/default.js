@@ -1159,11 +1159,12 @@ define(['util'], function () {
             lastLogin: "Last login",
             projectsRoles: "Projects and Roles",
             deleteUser: "Delete User",
-            viewProjects: " View Projects",
+            viewProjects: " View Projects and Roles",
             addNewUser: "Add new user",
             inviteNewUser: "Invite user to the project",
             configPage: " project configuration page",
             projectMembers: "Members",
+            enterProjectName: 'Enter Project Name',
             assigned: "Assigned",
             add: "Add",
             invite: "Invite",
@@ -1199,7 +1200,8 @@ define(['util'], function () {
             searchByName: "Search by Name",
             TLS: 'TLS',
             SSL: 'SSL',
-            emailError: 'Test connection was failed:'
+            emailError: 'Test connection was failed:',
+            addUserProject: 'Add User to Project'
         },
 
         members: {

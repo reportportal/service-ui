@@ -171,7 +171,7 @@ define(function(require, exports, module) {
             });
             modal.show()
                 .done(function() {
-                    return this.model.remove(this.appModel.get('projectId'));
+                    return this.model.unAssign(this.appModel.get('projectId'));
                 }.bind(this));
         },
 
@@ -182,7 +182,11 @@ define(function(require, exports, module) {
         },
 
         destroy: function(){
-
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            this.$el.html('');
+            delete this;
         }
     });
 

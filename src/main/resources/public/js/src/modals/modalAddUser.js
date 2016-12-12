@@ -25,6 +25,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var Util = require('util');
     var MembersService = require('projectMembers/MembersService');
+    var AdminService = require('adminService');
     var SingletonAppModel = require('model/SingletonAppModel');
     var urls = require('dataUrlResolver');
     var Localization = require('localization');
@@ -39,24 +40,30 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-load]': 'onClickLoad',
             'click [data-js-generate-password]': 'generatePassword',
-            'click [data-js-select-role-dropdown] a': 'selectRole'
+            'click [data-js-select-role-dropdown] a': 'selectRole',
+            'click [data-js-account-role-dropdown] a': 'selectAccount'
         },
         bindings: {
             '[data-js-user-login]': 'value: userId',
             '[data-js-user-password]': 'value: password',
             '[data-js-user-email]': 'value: email',
             '[data-js-user-full-name]': 'value: full_name',
-            '[data-js-user-project-role]': 'value: projectRole'
+            '[data-js-user-project]': 'value: default_project',
+            '[data-js-user-project-role]': 'value: projectRole',
+            '[data-js-user-project-role-text]': 'text: projectRole',
+            '[data-js-user-account-role]': 'value: accountRole',
+            '[data-js-user-account-role-text]': 'text: accountRole'
         },
-        initialize: function(option) {
+        initialize: function(options) {
+            this.type = options.type;
             this.appModel = new SingletonAppModel();
             this.model = new Epoxy.Model({
                 userId: '',
                 password: '',
                 email: '',
                 full_name: '',
-                accountRole: 'USER',
-                default_project: this.appModel.get('projectId'),
+                accountRole: config.defaultAccountRole,
+                default_project: '',
                 projectRole: config.defaultProjectRole
             });
             this.render();
@@ -69,14 +76,22 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {
                 roles: Util.getRolesMap(),
-                defaultProjectRole: config.defaultProjectRole,
+                isUsers: this.isUsers(),
+                accountRoles: config.accountRoles
             }));
             this.setupAnchors();
             this.setupValidation();
+            if(this.isUsers()){
+                this.setupProjectSearch();
+            }
+        },
+        isUsers: function(){
+            return this.type == 'users';
         },
         setupAnchors: function(){
             this.$password = $('[data-js-user-password]', this.$el);
             this.$form = $('[data-js-add-user-form]', this.$el);
+            this.$selectProject = $('[data-js-user-project]', this.$el);
         },
         setupValidation: function () {
             var self = this;
@@ -142,6 +157,53 @@ define(function (require, exports, module) {
                     $(element).closest('[data-js-add-user-form-group]').removeClass(errorClass);
                 }
             });
+            if(this.isUsers()){
+                this.addProjectValidation();
+            }
+        },
+        addProjectValidation: function () {
+            this.$selectProject.rules('add', {
+                required: true,
+                messages: {
+                    required: Localization.validation.requiredDefault
+                }
+            });
+            this.$selectProject.on('change', function () {
+                this.$selectProject.valid && _.isFunction(this.$selectProject.valid) && this.$selectProject.valid();
+            }.bind(this));
+        },
+        setupProjectSearch:function() {
+            var self = this;
+            Util.setupSelect2WhithScroll(this.$selectProject, {
+                multiple: false,
+                min: config.forms.projectNameRange[0],
+                minimumInputLength: config.forms.projectNameRange[0],
+                maximumInputLength: config.forms.projectNameRange[1],
+                placeholder: Localization.admin.enterProjectName,
+                allowClear: true,
+                initSelection: function (element, callback) {
+                    callback({id: element.val(), text: element.val()});
+                },
+                query: function (query) {
+                    AdminService.getProjects(self.getSearchQuery(query.term))
+                        .done(function (response) {
+                            var data = {results: []}
+                            _.each(response.content, function (item) {
+                                data.results.push({
+                                    id: item.projectId,
+                                    text: item.projectId,
+                                });
+                            });
+                            query.callback(data);
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error);
+                        });
+                }
+            });
+        },
+        getSearchQuery: function(query){
+            return '?page.sort=name,asc&page.page=1&page.size=10&&filter.cnt.name=' + query;
         },
         remoteValidation: function () {
             return {
@@ -162,6 +224,18 @@ define(function (require, exports, module) {
 
             if (link.hasClass('disabled-option')) return;
             btn.attr('value', val);
+            this.model.set('projectRole', val);
+            $('.select-value', btn).text(link.text());
+        },
+        selectAccount: function (e) {
+            e.preventDefault();
+            var link = $(e.target),
+                btn = link.closest('.open').find('.dropdown-toggle'),
+                val = (link.data('value')) ? link.data('value') : link.text();
+
+            if (link.hasClass('disabled-option')) return;
+            btn.attr('value', val);
+            this.model.set('accountRole', val);
             $('.select-value', btn).text(link.text());
         },
         generatePassword: function (e) {
@@ -185,11 +259,11 @@ define(function (require, exports, module) {
         getUserData: function(){
             var user = this.model.toJSON();
             return {
-                default_project: user.default_project,
+                default_project: this.isUsers() ? user.default_project : this.appModel.get('projectId'),
                 login: user.userId,
                 email: user.email,
                 projectRole: user.projectRole,
-                accountRole: user.accountRole,
+                accountRole: this.isUsers() ? user.accountRole : config.defaultAccountRole,
                 full_name: user.full_name,
                 password: user.password
             }
@@ -200,11 +274,13 @@ define(function (require, exports, module) {
                 MembersService.addMember(userData)
                     .done(function (data) {
                         this.trigger('add:user');
-                        this.successClose();
                         Util.ajaxSuccessMessenger(type);
                     }.bind(this))
                     .fail(function (error) {
                         Util.ajaxFailMessenger(error, type);
+                    })
+                    .always(function(){
+                        this.successClose();
                     });
             }
         }

@@ -118,7 +118,8 @@ define(function (require, exports, module) {
                 tagsMax: 1024,
                 triggerMin: 3,
                 filterName: [3, 128],
-                filterUser: 3
+                filterUser: 3,
+                projectNameRange: [3, 256],
             },
 
             launchVerifyDelay: 3000,
