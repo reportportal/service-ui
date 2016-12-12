@@ -42,7 +42,7 @@ define(function (require, exports, module) {
         className: 'modal-defect-editor',
 
         events: {
-            'keyup textarea': 'validateForSubmition',
+            'input textarea': 'validateForSubmition',
             'click [data-js-save]:not(.disabled)': 'updateDefectType',
             'click [data-js-select-issue]': 'selectIssueType',
             'click [data-js-close-editor]': 'closeEditor'
