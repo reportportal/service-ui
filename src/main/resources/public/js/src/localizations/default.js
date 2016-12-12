@@ -361,6 +361,7 @@ define(['util'], function () {
             totalTestCases: "Total test cases",
             pieIssues: "Issues",
             addNewWidget: "Add new Widget",
+            addSharedWidget: 'Add Shared Widget',
             deleteWidget: "Delete Widget",
             refreshWidget: "Refresh Widget",
             saveWidget: "Save Widget",

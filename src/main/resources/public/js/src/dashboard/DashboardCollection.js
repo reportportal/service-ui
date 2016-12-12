@@ -32,13 +32,14 @@ define(function (require, exports, module) {
     var DashboardCollection = Backbone.Collection.extend({
         model: DashboardModel,
 
-        initialize: function() {
+        initialize: function(options) {
             this.ready = $.Deferred();
-            this.update();
+            this.update(options.startId);
             var self = this;
             this.ready.done(function() {
                 self.listenTo(self, 'add', self.onAddDashboard);
                 self.listenTo(self, 'remove', self.onRemoveDashboard);
+                self.listenTo(self, 'change:active', self.onChangeActive);
             })
         },
         onAddDashboard: function(model) {
@@ -68,49 +69,55 @@ define(function (require, exports, module) {
                     Util.ajaxFailMessenger(error, 'dashboardDelete');
                 });
         },
-        update: function() {
+        update: function(startId) {
             this.reset([]);
             var self = this;
-            this.getDashboards().done(function(dashboards) {
-                self.getSharedDashboards().done(function(sharedDashboards) {
+            this.getDashboards(startId).done(function(dashboards) {
+                self.getSharedDashboards(startId).done(function(sharedDashboards) {
                     self.reset(dashboards.concat(sharedDashboards));
                     self.ready.resolve();
                 })
             })
         },
-        getDashboards: function() {
+        getDashboards: function(startId) {
             var async = $.Deferred();
             var self = this;
             Service.getProjectDashboards()
                 .done(function(data) {
-                    async.resolve(self.parse(data));
+                    async.resolve(self.parse(data, startId));
                 })
                 .fail(function(data) {
                     async.reject(data);
                 });
             return async.promise();
         },
-        getSharedDashboards: function() {
+        getSharedDashboards: function(startId) {
             var async = $.Deferred();
             var self = this;
             Service.getSharedDashboards()
                 .done(function(data) {
-                    async.resolve(self.parseShared(data));
+                    async.resolve(self.parseShared(data, startId));
                 })
                 .fail(function(data) {
                     async.reject(data);
                 });
             return async.promise();
         },
-        parse: function(data) {
+        parse: function(data, startId) {
             _.each(data, function(item) {
-               item.widgets = JSON.stringify(item.widgets);
+                if (item.id == startId) {
+                    item.active = true;
+                }
+                item.widgets = JSON.stringify(item.widgets);
             });
             return data;
         },
-        parseShared: function(data) {
+        parseShared: function(data, startId) {
             var widgetsData = [];
             _.each(data, function(value, key) {
+                if (key == startId) {
+                    value.active = true;
+                }
                 value.isShared = true;
                 value.id = key;
                 widgetsData.push(value);
@@ -128,6 +135,21 @@ define(function (require, exports, module) {
                 data.owner = config.userModel.get('name');
                 self.add(data);
             })
+        },
+        onChangeActive: function(model, active) {
+            if(active) {
+                _.each(this.models, function(itemModel) {
+                    if (model.get('id') != itemModel.get('id')) {
+                        itemModel.set({active: false});
+                    }
+                })
+            }
+        },
+        resetActive: function() {
+            _.each(this.models, function(model) {
+                model.set({active: false});
+            });
+            this.trigger('reset:active');
         }
 
     });

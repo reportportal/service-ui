@@ -35,6 +35,7 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-edit]': 'onClickEdit',
             'click [data-js-remove]': 'onClickRemove',
+            'click': 'onClickItem',
         },
 
         bindings: {
@@ -53,7 +54,8 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
-        onClickEdit: function() {
+        onClickEdit: function(e) {
+            e.stopPropagation();
             var self = this;
             (new ModalEditDashboard({
                 dashboardCollection: this.model.collection,
@@ -63,7 +65,8 @@ define(function (require, exports, module) {
                 self.model.set(newModel.toJSON());
             })
         },
-        onClickRemove: function() {
+        onClickRemove: function(e) {
+            e.stopPropagation();
             var self = this;
             (new ModalConfirm({
                 headerText: Localization.dialogHeader.dashboardDelete,
@@ -75,6 +78,9 @@ define(function (require, exports, module) {
                 self.model.collection.remove(self.model);
                 self.destroy();
             })
+        },
+        onClickItem: function() {
+            config.router.navigate(this.model.get('url'), {trigger: true});
         },
 
         destroy: function () {

@@ -38,6 +38,8 @@ define(function (require, exports, module) {
             this.$container = $('[data-js-dashboard-content]', this.$el);
             this.content = null;
             var self = this;
+            this.listenTo(this.collection, 'reset:active', this.activate);
+            this.listenTo(this.collection, 'change:active', this.onChangeActive);
             this.collection.ready
                 .done(function() {
                     self.$el.removeClass('load');
@@ -47,8 +49,13 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
+        onChangeActive: function(model, active) {
+            if(active) {
+                this.activate();
+            }
+        },
         activate: function() {
-            var activeDashboard = this.collection.where({activate: true});
+            var activeDashboard = this.collection.where({active: true});
             this.content && this.content.destroy();
             if (!activeDashboard.length) {
                 this.content = new DashboardListView({

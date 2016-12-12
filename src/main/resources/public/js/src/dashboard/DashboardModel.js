@@ -24,8 +24,10 @@ define(function (require, exports, module) {
     var Service = require('coreService');
     var Localization = require('localization');
     var Util = require('util');
+    var SingletonAppModel = require('model/SingletonAppModel');
 
     var config = App.getInstance();
+    var appModel = new SingletonAppModel();
 
     var DashboardModel = Epoxy.Model.extend({
         defaults: {
@@ -35,7 +37,7 @@ define(function (require, exports, module) {
             owner: '',
             widgets: '[]',
 
-            activate: false,
+            active: false,
         },
         computeds: {
             isMy: {
@@ -51,6 +53,12 @@ define(function (require, exports, module) {
                         return Localization.dashboard.dashboardShared;
                     }
                     return Localization.dashboard.dashboardSharedBy + ' ' + owner;
+                }
+            },
+            url: {
+                deps: ['id'],
+                get: function(id) {
+                    return '#' + appModel.get('projectId') + '/newdashboard/' + id;
                 }
             }
         },
