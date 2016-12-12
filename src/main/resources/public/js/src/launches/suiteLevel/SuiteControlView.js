@@ -83,6 +83,7 @@ define(function (require, exports, module) {
             $('[data-js-refresh]', this.$el).addClass('disabled');
             if (this.getBinding('activeMultiDelete')) {
                 $('[data-js-milti-delete]', this.$el).removeClass('disabled').attr({title: Localization.launches.deleteBulk});
+                $('[data-js-history]', this.$el).addClass('disabled');
             }
         },
         onClickMultiDelete: function() {
@@ -92,6 +93,7 @@ define(function (require, exports, module) {
             $('[data-js-refresh]', this.$el).removeClass('disabled');
             if (this.getBinding('activeMultiDelete')) {
                 $('[data-js-milti-delete]', this.$el).addClass('disabled').attr({title: Localization.launches.actionTitle});
+                $('[data-js-history]', this.$el).removeClass('disabled');
             }
         },
         onClickRefresh: function() {
