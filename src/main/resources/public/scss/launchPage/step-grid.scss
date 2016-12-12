@@ -80,6 +80,7 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
     }
     .rp-step-parents-line {
         padding: 10px 0;
+        background: $COLOR--white-four;
 
         .parents-line {
             padding: 0 10px;
@@ -89,7 +90,7 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
                 display: inline-block;
             }
             a {
-                color: $COLOR--windows-blue;
+                color: $COLOR--topaz;
             }
         }
     }
