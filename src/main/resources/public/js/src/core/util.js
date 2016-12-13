@@ -35,7 +35,7 @@ define(function (require, exports, module) {
 
     require('baron');
     require('cookie');
-    require('nicescroll');
+    // require('nicescroll');
     require('bootswitch');
     require('isLoading');
     require('select2');

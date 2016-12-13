@@ -25,15 +25,18 @@ define(function (require, exports, module) {
     var DashboardModel = require('dashboard/DashboardModel');
     var Service = require('coreService');
     var ModalEditDashboard = require('modals/modalEditDashboard');
+    var SingletonAppModel = require('model/SingletonAppModel');
     var Util = require('util');
 
     var config = App.getInstance();
+    var appModel = new SingletonAppModel();
 
     var DashboardCollection = Backbone.Collection.extend({
         model: DashboardModel,
 
         initialize: function(options) {
             this.ready = $.Deferred();
+            this.defaultPath = '#' + appModel.get('projectId') + '/newdashboard';
             this.update(options.startId);
             var self = this;
             this.ready.done(function() {

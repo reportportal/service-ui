@@ -11,7 +11,8 @@
   },
   "author": "me",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
     "cssnano": "^3.5.2",
