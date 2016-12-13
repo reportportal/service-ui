@@ -272,6 +272,7 @@ define(function (require, exports, module) {
         },
         addUser: function (type) {
             var userData = this.getUserData();
+            this.showLoading();
             if (userData) {
                 MembersService.addMember(userData)
                     .done(function (data) {
@@ -283,7 +284,7 @@ define(function (require, exports, module) {
                     })
                     .always(function(){
                         this.successClose();
-                    });
+                    }.bind(this));
             }
         }
     });
