@@ -218,7 +218,7 @@ define(function(require, exports, module) {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
-            this.$el.html('');
+            this.remove();
             delete this;
         }
     });

@@ -70,6 +70,7 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {
                 roles: Util.getRolesMap(),
+                canSelectRole: this.canSelectRole.bind(this),
                 isUsers: this.isUsers()
             }));
             this.setupAnchors();
@@ -79,6 +80,14 @@ define(function (require, exports, module) {
         },
         isUsers: function(){
             return this.type == 'users';
+        },
+        canSelectRole: function(role){
+            var user = config.userModel,
+                userRole = user.getRoleForCurrentProject(),
+                userRoleIndex = _.indexOf(config.projectRoles, userRole),
+                roleIndex = _.indexOf(config.projectRoles, role),
+                isAdmin = user.get('isAdmin');
+            return isAdmin || (user.hasPermissions() && userRoleIndex >= roleIndex);
         },
         setupAnchors: function(){
             this.$form = $('[data-js-invite-user-form]', this.$el);
