@@ -123,7 +123,7 @@ define(function (require, exports, module) {
         render: function() {
             var defectTypeCollection = new SingletonDefectTypeCollection();
             this.mainBreadcrumbs = new MainBreadcrumbsComponent({
-                data: [{name: Localization.favorites.msgFavoriteFilters, link: ''}]
+                data: [{name: Localization.favorites.title, link: ''}]
             });
             this.$header.html(this.mainBreadcrumbs.$el);
             defectTypeCollection.ready.done(function() {
