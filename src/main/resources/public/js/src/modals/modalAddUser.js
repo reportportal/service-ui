@@ -189,10 +189,12 @@ define(function (require, exports, module) {
                         .done(function (response) {
                             var data = {results: []}
                             _.each(response.content, function (item) {
-                                data.results.push({
-                                    id: item.projectId,
-                                    text: item.projectId,
-                                });
+                                if(item.projectId !== self.model.get('default_project')) {
+                                    data.results.push({
+                                        id: item.projectId,
+                                        text: item.projectId,
+                                    });
+                                }
                             });
                             query.callback(data);
                         })

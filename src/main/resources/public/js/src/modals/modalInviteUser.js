@@ -112,9 +112,10 @@ define(function (require, exports, module) {
                     callback({id: element.val(), text: element.val()});
                 },
                 createSearchChoice: function (term, data) {
-                    return {
-                        id: term,
-                        text: term
+                    if (_.filter(data, function (opt) {
+                            return opt.text.localeCompare(term) === 0;
+                        }).length === 0) {
+                        return {id: term, text: term};
                     }
                 },
                 query: function (query) {
@@ -122,10 +123,12 @@ define(function (require, exports, module) {
                         .done(function (response) {
                             var data = {results: []}
                             _.each(response.content, function (item) {
-                                data.results.push({
-                                    id: item.email,
-                                    text: item.userId
-                                });
+                                if(item.email !== self.model.get('user')){
+                                    data.results.push({
+                                        id: item.email,
+                                        text: item.userId
+                                    });
+                                }
                             });
                             query.callback(data);
                         })
@@ -207,15 +210,24 @@ define(function (require, exports, module) {
                 initSelection: function (element, callback) {
                     callback({id: element.val(), text: element.val()});
                 },
+                createSearchChoice: function (term, data) {
+                    if (_.filter(data, function (opt) {
+                            return opt.text.localeCompare(term) === 0;
+                        }).length === 0) {
+                        return {id: term, text: term};
+                    }
+                },
                 query: function (query) {
                     AdminService.getProjects(self.getSearchQuery(query.term))
                         .done(function (response) {
                             var data = {results: []}
                             _.each(response.content, function (item) {
-                                data.results.push({
-                                    id: item.projectId,
-                                    text: item.projectId,
-                                });
+                                if(item.projectId !== self.model.get('default_project')) {
+                                    data.results.push({
+                                        id: item.projectId,
+                                        text: item.projectId,
+                                    });
+                                }
                             });
                             query.callback(data);
                         })
