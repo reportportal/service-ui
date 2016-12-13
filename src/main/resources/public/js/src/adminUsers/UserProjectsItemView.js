@@ -30,6 +30,8 @@ define(function(require, exports, module) {
     var CallService = require('callService');
     var memberService = require('memberService');
     var Urls = require('dataUrlResolver');
+    var ModalConfirm = require('modals/modalConfirm');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -66,7 +68,7 @@ define(function(require, exports, module) {
 
         events: {
             'click [data-js-dropdown-roles] a': 'updateProjectRole',
-            'click [data-js-unassign]': 'unAssign'
+            'click [data-js-unassign]': 'confirmUnassign'
         },
 
         initialize: function (options) {
@@ -106,10 +108,24 @@ define(function(require, exports, module) {
                 });
         },
 
-        unAssign: function(e) {
+        confirmUnassign: function(e){
             e.preventDefault();
+            var self = this;
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.unAssignMember,
+                bodyText: Util.replaceTemplate(Localization.dialog.unAssignMember, this.userModel.get('userId').escapeHtml(), this.model.get('projectId')),
+                okButtonDanger: true,
+                cancelButtonText: Localization.ui.cancel,
+                okButtonText: Localization.ui.unassign,
+                confirmFunction: function() {
+                    return self.unAssign()
+                }
+            });
+            modal.show();
+        },
 
-            CallService.call('PUT', Urls.updateProjectUnassign(this.model.get('projectId')), {userNames: [this.userModel.get('userId')]})
+        unAssign: function() {
+            return CallService.call('PUT', Urls.updateProjectUnassign(this.model.get('projectId')), {userNames: [this.userModel.get('userId')]})
                 .done(function() {
                     Util.ajaxSuccessMessenger("unAssignMember");
                     if(this.model.collection) {

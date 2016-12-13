@@ -225,7 +225,7 @@ define(function (require, exports, module) {
                                 if(item.projectId !== self.model.get('default_project')) {
                                     data.results.push({
                                         id: item.projectId,
-                                        text: item.projectId,
+                                        text: item.projectId
                                     });
                                 }
                             });
