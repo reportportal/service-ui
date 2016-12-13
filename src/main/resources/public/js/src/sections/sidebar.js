@@ -68,7 +68,8 @@ define(function (require, exports, module) {
         },
 
         setLastActivePage: function () {
-            this.userStorage.set('lastActiveURL', Backbone.history.getFragment());
+            var page = Backbone.history.getFragment();
+            (page == "user-profile") ? this.userStorage.set('lastActiveURL', this.projectUrl) : this.userStorage.set('lastActiveURL', page);
         },
 
         updateActiveLink: function () {
