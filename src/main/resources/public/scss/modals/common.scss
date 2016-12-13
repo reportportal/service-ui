@@ -94,6 +94,9 @@ common elements:
           width: 100%;
           margin-top: 6px;
         }
+        textarea.rp-input {
+          overflow-x: hidden;
+        }
         .help-inline {
           padding-top: 5px;
         }
