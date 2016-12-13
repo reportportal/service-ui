@@ -2325,6 +2325,11 @@ define(function(require, exports, module) {
                     changeRow.removeClass('show-content');
                     changeRow.addClass('hide-content');
                     e.color.setColor(currentColor);
+                    $(this).find('.colorpicker-current-color > span')
+                        .on('click touchstart mousedown', function(){
+                            var selection = window.getSelection();
+                            selection.selectAllChildren(this);
+                        });
                     $(this).find('.colorpicker-current-color > span').html(e.color.toHex());
                 })
                 .on('hidePicker', function () {
