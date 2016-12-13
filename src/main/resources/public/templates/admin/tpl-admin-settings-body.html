@@ -1,4 +1,4 @@
-<div class="form-horizontal email-settings" id="email-settings">
+<div class="form-horizontal rp-email-settings email-settings" id="email-settings">
     <div class="rp-form-group clearfix">
         <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col obligatory-field" for="host">
             <%= data.text.admin.host %>
@@ -79,7 +79,7 @@
             </label>
             <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
                 <input type="text" class="rp-input-default rp-width-100 form-control" id="username"
-                       value="<%- data.emailConfig.username || '' %>"/>
+                       value="<%- data.emailConfig.username || '' %>" data-js-username>
                 <div class="error-bottom">
                     <div class="help-inline"></div>
                 </div>
@@ -91,7 +91,7 @@
                 data.text.admin.password %></label>
             <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
                 <input type="password" class="rp-input-default rp-width-100 form-control" id="password"
-                       value="<%- data.emailConfig.password || '' %>"/>
+                       value="<%- data.emailConfig.password || '' %>" data-js-password>
                 <div class="error-bottom">
                     <div class="help-inline"></div>
                 </div>

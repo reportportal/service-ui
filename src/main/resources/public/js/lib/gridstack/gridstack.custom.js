@@ -626,10 +626,7 @@
                     widget.chart.update();
                 }
             }                
-            var scroll = $('div.panel-body', node.el).getNiceScroll();
-            if(scroll){
-                scroll.resize();
-            }    
+
             
         };
         

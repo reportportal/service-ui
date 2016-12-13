@@ -46,7 +46,7 @@ define(function(require, exports, module) {
             '[data-js-member-login]': 'html: getLogin',
             '[data-js-member-you]': 'classes: {hide: not(isYou)}',
             '[data-js-member-admin]': 'classes: {hide: not(isAdmin)}',
-            '[data-js-member-unassign]': 'classes: {disabled: not(canUnAssign)}, attr: {disabled: not(canUnAssign)}',
+            '[data-js-member-unassign]': 'classes: {disabled: not(canUnAssign)}, attr: {disabled: not(canUnAssign), title: getUnAssignTitle}',
             '[data-js-select-roles]': 'classes: {hide: isAdmin}',
             '[data-js-admin-role]': 'classes: {hide: not(isAdmin)}',
             '[data-js-selected-role]': 'text: getProjectRole',
@@ -61,6 +61,25 @@ define(function(require, exports, module) {
                     return this.searchString ? Util.textWrapper(fullName, this.searchString) : fullName;
                 }
             },
+            getUnAssignTitle: {
+                deps: ['isYou', 'userId', 'assigned_projects'],
+                get: function(isYou, userId, assigned_projects){
+                    var members = Localization.members
+                    if(this.isPersonalProjectOwner()){
+                        return members.unAssignTitlePersonal;
+                    }
+                    else if(isYou){
+                        return members.unAssignTitleYou;
+                    }
+                    else if(!this.validateForPermissions()){
+                        return members.unAssignTitleNoPermission;
+                    }
+                    else if(this.unassignedLock()){
+                        return members.unAssignTitleExternal;
+                    }
+                    return members.unAssignTitle;
+                }
+            },
             getLogin: {
                 deps: ['userId'],
                 get: function(userId) {
@@ -68,15 +87,15 @@ define(function(require, exports, module) {
                 }
             },
             canUnAssign: {
-                deps: ['isAdmin', 'userId', 'assigned_projects'],
-                get: function(isAdmin, userId, assigned_projects) {
-                    return !this.isPersonalProjectOwner() && !this.unassignedLock() && !isAdmin && config.userModel.hasPermissions();
+                deps: ['isYou', 'userId', 'assigned_projects'],
+                get: function(isYou, userId, assigned_projects) {
+                    return !this.isPersonalProjectOwner() && !this.unassignedLock() && !isYou && this.validateForPermissions();
                 }
             },
             canChangeRole: {
-                deps: ['isAdmin'],
-                get: function(isAdmin) {
-                    return this.validateForPermissions();
+                deps: ['isYou', 'assigned_projects'],
+                get: function(isYou, assigned_projects) {
+                    return !isYou && this.validateForPermissions();
                 }
             },
             getProjectRole: {
@@ -157,7 +176,13 @@ define(function(require, exports, module) {
         },
 
         validateForPermissions: function(){
-            return this.model.get('isAdmin') || config.userModel.hasPermissions();
+            var userRole = config.userModel.getRoleForCurrentProject(),
+                assignedProjects = this.model.getAssignedProjects(),
+                projectId = this.appModel.get('projectId'),
+                role = assignedProjects[projectId].projectRole,
+                userRoleIndex = _.indexOf(config.projectRoles, userRole),
+                memberRoleIndex = _.indexOf(config.projectRoles, role);
+            return config.userModel.get('isAdmin') || (config.userModel.hasPermissions() && userRoleIndex >= memberRoleIndex);
         },
 
         unAssignMember: function(e){
@@ -185,7 +210,7 @@ define(function(require, exports, module) {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
-            this.$el.html('');
+            this.remove();
             delete this;
         }
     });

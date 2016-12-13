@@ -45,7 +45,8 @@ define(function(require, exports, module) {
 
         bindings: {
             '[data-js-members-search]': 'attr: {placeholder: getPlaceHolder}',
-            '[data-js-add-user]': 'classes: {hide: not(showAddMemberBtn)}'
+            '[data-js-add-user]': 'classes: {hide: not(showAddMemberBtn)}',
+            '[data-js-invite-user]': 'classes: {disabled: not(canInviteUser)}, attr: {disabled: not(canInviteUser)}'
         },
 
         computeds: {
@@ -55,6 +56,9 @@ define(function(require, exports, module) {
             showAddMemberBtn: function(){
                 return this.isGrandAdmin;
             },
+            canInviteUser: function(){
+                return config.userModel.get('isAdmin') || config.userModel.hasPermissions();
+            }
         },
 
         initialize: function (options) {

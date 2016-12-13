@@ -128,7 +128,6 @@ define(function (require, exports, module) {
             var btn = link.closest('.open').find('.dropdown-toggle');
             var val = (link.data('value')) ? link.data('value') : link.text();
             var id = btn.attr('id');
-
             if (id === 'authorizationEnabled') {
                 val = (val === 'ON');
                 var blockAction = val ? 'show' : 'hide';
@@ -137,10 +136,18 @@ define(function (require, exports, module) {
                     self.model.set('authEnabled', true);
                 } else {
                     self.model.set('authEnabled', false);
+                    this.resetAuth();
                 }
             }
             this.model.set(id, val);
             $('.select-value', btn).text(link.text());
+        },
+        resetAuth: function(){
+            this.model.set('username', '');
+            $('[data-js-username]', this.$el).val('');
+            this.model.set('password', '');
+            $('[data-js-password]', this.$el).val('');
+
         },
         submitEmailSettings: function () {
             var self = this;
@@ -238,7 +245,6 @@ define(function (require, exports, module) {
             $('.form-control').each(function () {
                 var $this = $(this);
                 var id = $this.attr('id');
-
                 self.set(id, $this.val());
             });
             var data = {

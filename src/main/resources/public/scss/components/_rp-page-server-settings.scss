@@ -17,7 +17,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 /*---------------------------------*/
 /* STYLE FOR GENERAL SETTINGS PAGE */
 
@@ -50,6 +50,27 @@
     }
 }
 
+.rp-email-settings {
+    padding-top: 30px;
+    padding-bottom: 20px;
+
+    .tls-enabled {
+        position: relative;
+        top: -4px;
+        .rp-checkbox-wrap {
+            margin-left: 30px;
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+    }
+    .email-server-error {
+        .alert-danger {
+            font-size: 12px;
+        }
+    }
+}
+
 /*-----------------*/
 /* FOR USUAL USERS */
 
@@ -68,7 +89,7 @@
 /* FOR ADMINISTRATORS USERS  */
 
 %DYNAMIC_CONTENT {
-    #dynamicContent {
+    #dynamic-content {
         @extend %EMAIL_SETTINGS_ADMIN;
     }
 }

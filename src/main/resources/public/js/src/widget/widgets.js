@@ -828,7 +828,11 @@ define(function (require, exports, module) {
             return '';
         },
         renderItemName: function(name, path, id){
-            return '<a class="rp-blue-link-undrl" target="_blank" title="' + name + '" href="#' + config.project.projectId + '/launches/all/' + path.join('/') + '/log-for-' + id + '">' + name + '</a><br />';
+            var url = this.getItemUrl(path, id);
+            return '<a class="rp-blue-link-undrl" target="_blank" title="' + name + '" href="' + url +'">' + name + '</a><br />';
+        },
+        getItemUrl: function(path, id){
+            return '#' + config.project.projectId + '/launches/' + this.param.filter_id + '/' + path.join('/') + '?log.item=' + id;
         },
         getItemsInfo: function (items) {
             if(items.length){
@@ -1186,7 +1190,7 @@ define(function (require, exports, module) {
                 var self = this;
                 this.chart[type].dispatch.on("elementClick", function (e) {
                     if ($('.fullscreen-close').is(':visible')) {
-                        $('#dynamic-content').getNiceScroll().remove();
+                        // $('#dynamic-content').getNiceScroll().remove();
                         $.fullscreen.exit();
                     }
                     if(self.param.isTimeline){
@@ -1481,7 +1485,7 @@ define(function (require, exports, module) {
         },
         redirectTo: function (e) {
             if ($('.fullscreen-close').is(':visible')) {
-                $('#dynamic-content').getNiceScroll().remove();
+                // $('#dynamic-content').getNiceScroll().remove();
                 $('.fullscreen-close').trigger('click');
             }
             var o = {series: {}};
@@ -2682,7 +2686,7 @@ define(function (require, exports, module) {
                 this.chart[type].dispatch.on("elementClick", function (e) {
                     nv.tooltip.cleanup();
                     if ($('.fullscreen-close').is(':visible')) {
-                        $('#dynamic-content').getNiceScroll().remove();
+                        // $('#dynamic-content').getNiceScroll().remove();
                         $('.fullscreen-close').trigger('click');
                     }
                     var key = e.label,

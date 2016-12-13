@@ -448,7 +448,7 @@ define(function (require, exports, module) {
                 })
                 .off('fscreenclose')
                 .on('fscreenclose', function () {
-                    $(content).getNiceScroll().remove();
+                    // $(content).getNiceScroll().remove();
                     _.each(self.context.widgets, function (w) {
                         if (w.charts) {
                             _.each(w.charts, function (c) {

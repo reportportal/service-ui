@@ -101,10 +101,12 @@ define(function (require, exports, module) {
         activateMultiple: function() {
             $('[data-js-refresh], [data-js-history-view]', this.$el).addClass('disabled');
             $('[data-js-multi-button]', this.$el).removeClass('disabled').attr({title: Localization.ui.actions});
+            $('[data-js-history]', this.$el).addClass('disabled');
         },
         disableMultiple: function() {
             $('[data-js-refresh], [data-js-history-view]', this.$el).removeClass('disabled');
             $('[data-js-multi-button]', this.$el).addClass('disabled').attr({title: Localization.launches.actionTitle});
+            $('[data-js-history]', this.$el).removeClass('disabled');
         },
         onClickMultiAction: function(e) {
             this.trigger('multi:action', $(e.currentTarget).data('js-multi-action'));

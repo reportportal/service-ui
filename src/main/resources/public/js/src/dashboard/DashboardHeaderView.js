@@ -21,12 +21,10 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var MainBreadcrumbsComponent = require('components/MainBreadcrumbsComponent');
-    var SingletonAppModel = require('model/SingletonAppModel');
     var App = require('app');
     var Localization = require('localization');
 
     var config = App.getInstance();
-    var appModel = new SingletonAppModel();
 
     var DashboardHeaderView = Epoxy.View.extend({
         className: 'dashboard-header',
@@ -38,11 +36,10 @@ define(function (require, exports, module) {
 
         initialize: function(options) {
             this.render();
-            this.mainPath = '#' + appModel.get('projectId') + '/newdashboard';
             this.listenModel = null;
             this.mainBreadcrumbs = new MainBreadcrumbsComponent({
                 data: [
-                    {name: Localization.dashboard.allDashboards, link: this.mainPath}
+                    {name: Localization.dashboard.allDashboards, link: this.collection.defaultPath}
                 ]
             });
             $('[data-js-main-breadcrumbs]', this.$el).append(this.mainBreadcrumbs.$el);
@@ -68,7 +65,7 @@ define(function (require, exports, module) {
         },
         changeActive: function() {
             var activeDashboard = this.collection.where({active: true});
-            var breadcrumbsData = [{name: Localization.dashboard.allDashboards, link: this.mainPath}];
+            var breadcrumbsData = [{name: Localization.dashboard.allDashboards, link: this.collection.defaultPath}];
             this.listenModel && this.stopListening(this.listenModel);
             if(activeDashboard.length) {
                 this.listenModel = activeDashboard[0];

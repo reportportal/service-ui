@@ -49,7 +49,6 @@ define(function(require, exports, module) {
         },
 
         initialize: function (options) {
-            console.log('UserProjectsView init')
             this.renderViews = [];
             this.collection = new UserProjectsCollection();
             this.listenTo(this.collection, 'reset', this.renderProjectsList);
@@ -70,7 +69,6 @@ define(function(require, exports, module) {
         },
 
         loadProjects: function(){
-            console.log('loadProjects');
             this.toggleLoader('show');
             CoreService.getUserAssignedProjects(this.model.get('userId'))
                 .done(function (data) {
@@ -97,7 +95,6 @@ define(function(require, exports, module) {
 
         toggleLoader: function(type){
             var action = type == 'hide' ? 'add' : 'remove';
-            console.log(action);
             this.$loader[action+'Class']('hide');
         },
 
