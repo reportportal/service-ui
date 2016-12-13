@@ -30,6 +30,9 @@
     line-height: 30px;
     color: $COLOR--black;
     text-transform: uppercase;
+    margin-right: 5px;
+    padding-right: 10px;
+    position: relative;
     a {
       color: $COLOR--topaz;
       cursor: pointer;
@@ -44,6 +47,15 @@
       span {
         display: inline;
       }
+      &:after {
+        display: none;
+      }
+    }
+    &:after {
+      content: '/';
+      position: absolute;
+      right: 0;
+      top: 0;
     }
   }
 }

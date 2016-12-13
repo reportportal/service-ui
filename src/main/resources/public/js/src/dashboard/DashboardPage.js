@@ -32,7 +32,7 @@ define(function (require, exports, module) {
         initialize: function(options) {
             this.contextName = options.contextName; // for context check
             this.context = options.context;
-            this.collection = new DashboardCollection();
+            this.collection = new DashboardCollection({startId: options.subContext});
             this.header = new DashboardHeaderView({
                 collection: this.collection,
             });
@@ -41,6 +41,17 @@ define(function (require, exports, module) {
             });
             this.context.getMainView().$header.html(this.header.$el);
             this.context.getMainView().$body.html(this.body.$el);
+        },
+        update: function(options) {
+            if (options.subContext) {
+                if (this.collection.get(options.subContext)) {
+                    this.collection.get(options.subContext).set({active: true});
+                } else {
+                    console.log('dashboard not found');
+                }
+            } else {
+                this.collection.resetActive();
+            }
         },
         render: function() {
             return this;

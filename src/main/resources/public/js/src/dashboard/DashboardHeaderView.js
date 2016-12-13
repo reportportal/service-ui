@@ -36,12 +36,19 @@ define(function (require, exports, module) {
 
         initialize: function(options) {
             this.render();
+            this.listenModel = null;
             this.mainBreadcrumbs = new MainBreadcrumbsComponent({
                 data: [
-                    {name: Localization.dashboard.allDashboards, link: ''}
+                    {name: Localization.dashboard.allDashboards, link: this.collection.defaultPath}
                 ]
-            })
+            });
             $('[data-js-main-breadcrumbs]', this.$el).append(this.mainBreadcrumbs.$el);
+            var self = this;
+            this.collection.ready.done(function() {
+                self.listenTo(self.collection, 'change:active', self.onChangeActive);
+                self.listenTo(self.collection, 'reset:active', self.changeActive);
+                self.changeActive();
+            })
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
@@ -50,6 +57,25 @@ define(function (require, exports, module) {
             e.preventDefault();
             e.stopPropagation();
             this.collection.createNewDashboard();
+        },
+        onChangeActive: function(model, active) {
+            if (active) {
+                this.changeActive();
+            }
+        },
+        changeActive: function() {
+            var activeDashboard = this.collection.where({active: true});
+            var breadcrumbsData = [{name: Localization.dashboard.allDashboards, link: this.collection.defaultPath}];
+            this.listenModel && this.stopListening(this.listenModel);
+            if(activeDashboard.length) {
+                this.listenModel = activeDashboard[0];
+                breadcrumbsData.push({name: this.listenModel.get('name'), link: ''});
+                var self = this;
+                this.listenTo(this.listenModel, 'change:name', function(model, name) {
+                    self.mainBreadcrumbs.collection.models[1].set({name: name});
+                })
+            }
+            this.mainBreadcrumbs.collection.reset(breadcrumbsData);
         },
 
         destroy: function () {

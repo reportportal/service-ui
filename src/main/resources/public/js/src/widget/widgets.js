@@ -1190,7 +1190,7 @@ define(function (require, exports, module) {
                 var self = this;
                 this.chart[type].dispatch.on("elementClick", function (e) {
                     if ($('.fullscreen-close').is(':visible')) {
-                        $('#dynamic-content').getNiceScroll().remove();
+                        // $('#dynamic-content').getNiceScroll().remove();
                         $.fullscreen.exit();
                     }
                     if(self.param.isTimeline){
@@ -1485,7 +1485,7 @@ define(function (require, exports, module) {
         },
         redirectTo: function (e) {
             if ($('.fullscreen-close').is(':visible')) {
-                $('#dynamic-content').getNiceScroll().remove();
+                // $('#dynamic-content').getNiceScroll().remove();
                 $('.fullscreen-close').trigger('click');
             }
             var o = {series: {}};
@@ -2686,7 +2686,7 @@ define(function (require, exports, module) {
                 this.chart[type].dispatch.on("elementClick", function (e) {
                     nv.tooltip.cleanup();
                     if ($('.fullscreen-close').is(':visible')) {
-                        $('#dynamic-content').getNiceScroll().remove();
+                        // $('#dynamic-content').getNiceScroll().remove();
                         $('.fullscreen-close').trigger('click');
                     }
                     var key = e.label,
