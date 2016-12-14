@@ -61,7 +61,12 @@ define(function (require, exports, module) {
         },
         onClickInvite: function() {
             if(this.$form.valid()) {
-                this.inviteUser();
+                if(Util.validateEmail(this.model.get('user'))){
+                    this.inviteUser();
+                }
+                else {
+                    this.assignUser();
+                }
             }
         },
         onClickOk: function(){
@@ -100,7 +105,8 @@ define(function (require, exports, module) {
             this.$selectProject = $('[data-js-user-project]', this.$el);
         },
         setupUserSearch:function() {
-            var self = this;
+            var self = this,
+                remoteUsers = [];
             Util.setupSelect2WhithScroll(this.$usersField, {
                 multiple: false,
                 min: 1,
@@ -111,11 +117,22 @@ define(function (require, exports, module) {
                 initSelection: function (element, callback) {
                     callback({id: element.val(), text: element.val()});
                 },
+                formatResultCssClass: function (state) {
+                    if ((remoteUsers.length == 0 || _.indexOf(remoteUsers, state.text) < 0) && $('.select2-input.select2-active').val() == state.text) {
+                        return 'exact-match';
+                    }
+                },
                 createSearchChoice: function (term, data) {
                     if (_.filter(data, function (opt) {
                             return opt.text.localeCompare(term) === 0;
                         }).length === 0) {
-                        return {id: term, text: term};
+                        if(Util.validateEmail(term)){
+                            return {
+                                id: term,
+                                text: term
+                            };
+                        }
+                        return null;
                     }
                 },
                 query: function (query) {
@@ -123,9 +140,10 @@ define(function (require, exports, module) {
                         .done(function (response) {
                             var data = {results: []}
                             _.each(response.content, function (item) {
-                                if(item.email !== self.model.get('user')){
+                                if(item.userId !== self.model.get('user')){
+                                    remoteUsers.push(item);
                                     data.results.push({
-                                        id: item.email,
+                                        id: item.userId,
                                         text: item.userId
                                     });
                                 }
@@ -153,13 +171,12 @@ define(function (require, exports, module) {
                 rules: {
                     user: {
                         required: true,
-                        email: true
+                        //email: true
                     }
                 },
                 messages: {
                     user: {
-                        required: Localization.validation.requiredDefault,
-                        email: Localization.validation.incorrectEmail,
+                        required: Localization.validation.requiredDefault
                     }
                 },
                 ignore: 'input[id^="s2id"]',
@@ -253,25 +270,47 @@ define(function (require, exports, module) {
         },
         getUserData: function(){
             var user = this.model.toJSON();
-
             return {
                 default_project: this.isUsers() ? user.default_project : this.appModel.get('projectId'),
                 email: user.user,
                 role: user.projectRole
             }
         },
-        inviteUser: function (type) {
+        assignUser: function(){
             var userData = this.getUserData();
             if (userData) {
-                MembersService.inviteMember(userData)
-                    .done(function (data) {
+                var data = {};
+                data[userData.email] = userData.role;
+                this.showLoading();
+                MembersService.assignMember(data, userData.default_project)
+                    .done(function () {
+                        Util.ajaxSuccessMessenger("assignMember", userData.user);
                         this.trigger('add:user');
-                        this.showSuccess(data);
-                        Util.ajaxSuccessMessenger(type);
+                        this.successClose();
                     }.bind(this))
                     .fail(function (error) {
-                        Util.ajaxFailMessenger(error, type);
-                    });
+                        Util.ajaxFailMessenger(error, "assignMember");
+                    })
+                    .always(function(){
+                        this.hideLoading();
+                    }.bind(this));
+            }
+        },
+        inviteUser: function () {
+            var userData = this.getUserData();
+            if (userData) {
+                this.showLoading();
+                MembersService.inviteMember(userData)
+                    .done(function (data) {
+                        this.showSuccess(data);
+                        Util.ajaxSuccessMessenger('inviteMember');
+                    }.bind(this))
+                    .fail(function (error) {
+                        Util.ajaxFailMessenger(error, 'inviteMember');
+                    })
+                    .always(function(){
+                        this.hideLoading();
+                    }.bind(this));
             }
         },
         showSuccess: function(data){
