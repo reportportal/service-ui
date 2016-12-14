@@ -73,6 +73,12 @@ define(function (require, exports, module) {
                 this.addUser();
             }
         },
+        onKeySuccess: function () {
+            $('[data-js-load]', this.$el).focus();
+            if(this.$form.valid()) {
+                this.addUser();
+            }
+        },
         render: function() {
             this.$el.html(Util.templates(this.template, {
                 roles: Util.getRolesMap(),
@@ -269,18 +275,19 @@ define(function (require, exports, module) {
             }
         },
         addUser: function (type) {
+            var self = this;
             var userData = this.getUserData();
             if (userData) {
                 MembersService.addMember(userData)
                     .done(function (data) {
-                        this.trigger('add:user');
+                        self.trigger('add:user');
                         Util.ajaxSuccessMessenger(type);
                     }.bind(this))
                     .fail(function (error) {
                         Util.ajaxFailMessenger(error, type);
                     })
                     .always(function(){
-                        this.successClose();
+                        self.successClose();
                     });
             }
         }
