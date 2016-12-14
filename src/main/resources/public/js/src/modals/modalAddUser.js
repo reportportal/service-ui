@@ -73,6 +73,12 @@ define(function (require, exports, module) {
                 this.addUser();
             }
         },
+        onKeySuccess: function () {
+            $('[data-js-load]', this.$el).focus();
+            if(this.$form.valid()) {
+                this.addUser();
+            }
+        },
         render: function() {
             this.$el.html(Util.templates(this.template, {
                 roles: Util.getRolesMap(),
