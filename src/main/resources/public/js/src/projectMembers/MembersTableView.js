@@ -125,6 +125,7 @@ define(function(require, exports, module) {
         },
 
         updateMembers: function(){
+            console.log('updateMembers');
             this.paging.render();
             this.loadMembers();
         },
@@ -197,6 +198,7 @@ define(function(require, exports, module) {
         showInviteUser: function(e){
             e.preventDefault();
             var modal = new ModalInviteUser({});
+            this.listenToOnce(modal, 'add:user', this.updateMembers);
             modal.show();
         },
 
@@ -218,7 +220,7 @@ define(function(require, exports, module) {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
-            this.$el.html('');
+            this.remove();
             delete this;
         }
     });

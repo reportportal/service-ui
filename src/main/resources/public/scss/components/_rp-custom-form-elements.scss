@@ -574,6 +574,15 @@ label.rp-radio-wrap:hover input[type="radio"]:not(:checked) + span:before {
 
                     font-family: $OpenSansRegular;
                     @include setFontStyle(13px, 13px, #464547, false);
+                    &.disabled-option {
+                        color: $COLOR--gray-60;
+                        background: transparent;
+                        box-shadow: none;
+                        cursor: not-allowed;
+                        &:hover {
+                            background: transparent;
+                        }
+                    }
                 }
             }
         }

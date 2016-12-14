@@ -35,14 +35,15 @@
                 <div class="rp-custom-col invite-user-field">
                     <div class="rp-btn-group rp-width-100">
                         <button data-js-user-project-role id="projectRole" name="projectRole" type="button"
-                                class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
+                                class="rp-btn-group rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
                                 data-toggle="dropdown" value="">
                             <span class="select-value" data-js-user-project-role-text></span>
                             <span class="rp-caret"></span>
                         </button>
                         <ul class="dropdown-menu" data-js-select-role-dropdown>
                             <% _.each(data.roles, function(role){ %>
-                            <li><a href="#" data-value="<%= role %>"><%= role.split('_').join(' ') %></a></li>
+                            <% var isDisabled = !data.canSelectRole(role.split(' ').join('_')) ? 'disabled-option' : '' %>
+                            <li><a href="#" data-value="<%= role %>" class="<%= isDisabled %>"><%= role.split('_').join(' ') %></a></li>
                             <% }); %>
                         </ul>
                     </div>

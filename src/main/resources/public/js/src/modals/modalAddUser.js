@@ -195,10 +195,12 @@ define(function (require, exports, module) {
                         .done(function (response) {
                             var data = {results: []}
                             _.each(response.content, function (item) {
-                                data.results.push({
-                                    id: item.projectId,
-                                    text: item.projectId,
-                                });
+                                if(item.projectId !== self.model.get('default_project')) {
+                                    data.results.push({
+                                        id: item.projectId,
+                                        text: item.projectId
+                                    });
+                                }
                             });
                             query.callback(data);
                         })
@@ -275,20 +277,20 @@ define(function (require, exports, module) {
             }
         },
         addUser: function (type) {
-            var self = this;
             var userData = this.getUserData();
+            this.showLoading();
             if (userData) {
                 MembersService.addMember(userData)
                     .done(function (data) {
-                        self.trigger('add:user');
+                        this.trigger('add:user');
                         Util.ajaxSuccessMessenger(type);
                     }.bind(this))
                     .fail(function (error) {
                         Util.ajaxFailMessenger(error, type);
                     })
                     .always(function(){
-                        self.successClose();
-                    });
+                        this.successClose();
+                    }.bind(this));
             }
         }
     });
