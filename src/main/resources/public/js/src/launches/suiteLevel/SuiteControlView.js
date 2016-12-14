@@ -39,14 +39,14 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-history]': 'attr: {href:getHistoryHref, style: validateForHistoryBtn}',
+            '[data-js-history]': 'classes: {hide: not(validateForHistoryBtn)}',
         },
 
         computeds: {
             validateForHistoryBtn: function(){
                 var interrupted = config.launchStatus.interrupted,
                     showBtn = this.parentModel.get('status') !== interrupted && this.launchModel.get('status') !== interrupted && !_.isEmpty(this.collectionItems.models);
-                return 'display: ' + ( !showBtn ? 'none' : 'inline-block' );
+                return showBtn;
             },
             activeMultiDelete: function() {
                 return !(this.launchModel.get('status') == config.launchStatus.inProgress)
@@ -106,7 +106,9 @@ define(function (require, exports, module) {
         },
         onClickHistory: function(e){
             e.preventDefault();
-            config.router.navigate(this.getHistoryLink(), {trigger: true});
+            if(!$(e.currentTarget).hasClass('disabled')){
+                config.router.navigate(this.getHistoryLink(), {trigger: true});
+            }
         },
         destroy: function () {
             this.filterEntities && this.filterEntities.destroy();

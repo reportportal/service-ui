@@ -39,7 +39,7 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-history]': 'attr: {href:getHistoryHref, style: validateForHistoryBtn}',
+            '[data-js-history]': 'classes: {hide: not(validateForHistoryBtn)}',
             '[data-js-multi-action="remove"]': 'attr: {disabled: not(activeMultiDelete), title: multipleDeleteTooltip}',
             '[data-js-multi-action="loadbug"]': 'attr: {disabled: any(loadBugTooltip), title: loadBugTooltip}',
             '[data-js-multi-action="postbug"]': 'attr: {disabled: any(postBugTooltip), title: postBugTooltip}',
@@ -49,7 +49,7 @@ define(function (require, exports, module) {
             validateForHistoryBtn: function(){
                 var interrupted = config.launchStatus.interrupted,
                     showBtn = this.parentModel.get('status') !== interrupted && this.launchModel.get('status') !== interrupted && !this.collectionItems.validateForAllCases() && !_.isEmpty(this.collectionItems.models);
-                return 'display: ' + ( !showBtn ? 'none' : 'inline-block' );
+                return showBtn;
             },
             getHistoryHref: function(){
                 return this.getHistoryLink();
@@ -121,7 +121,9 @@ define(function (require, exports, module) {
         },
         onClickHistory: function(e){
             e.preventDefault();
-            config.router.navigate(this.getHistoryLink(), {trigger: true});
+            if(!$(e.currentTarget).hasClass('disabled')){
+                config.router.navigate(this.getHistoryLink(), {trigger: true});
+            }
         },
         destroy: function () {
             this.filterEntities && this.filterEntities.destroy();
