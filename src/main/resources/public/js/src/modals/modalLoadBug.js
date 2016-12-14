@@ -162,7 +162,7 @@ define(function (require, exports, module) {
                     systemId: this.currentBts.id,
                     issues: issues,
                     testItemIds: this.testItemsIds,
-                }
+                };
                 Service.loadBugs(data)
                     .done(function (response) {
                         Util.ajaxSuccessMessenger("submitKeys");
@@ -203,7 +203,6 @@ define(function (require, exports, module) {
             })
             curIssue.externalSystemIssues = newExternalSystemIssues;
             itemModel.setIssue(curIssue);
-
         },
         onAddTicket: function(model) {
             $('[data-js-load-items-container]', this.$el).append((new TicketView({model: model})).$el);
@@ -233,4 +232,4 @@ define(function (require, exports, module) {
     });
 
     return ModalLoadBug;
-})
+});

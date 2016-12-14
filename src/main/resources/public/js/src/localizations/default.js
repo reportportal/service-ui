@@ -56,6 +56,7 @@ define(['util'], function () {
             ctrlEnterToSubmit: '<strong>Ctrl + Enter</strong> to Submit',
             loading: "Loading",
             load: 'Load',
+            post: 'Post',
             gallery: "Gallery",
             build: "Build",
             error: "Error",
