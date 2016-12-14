@@ -46,7 +46,7 @@ define(function(require, exports, module) {
             '[data-js-user-avatar]': 'attr: {src: imagePath}',
             '[data-js-user-name]': 'html: getFullName',
             '[data-js-user-login]': 'html: getLogin',
-            '[data-js-user-email]': 'html: getEmail',
+            '[data-js-user-email]': 'html: getEmail, attr: {href: getEmailLink}',
             '[data-js-user-you]': 'classes: {hide: not(isYou)}',
             '[data-js-user-admin]': 'classes: {hide: not(isAdmin), notlink: isYou}',
             '[data-js-make-admin]': 'classes: {hide: hideMakeAdmin}'
@@ -69,6 +69,12 @@ define(function(require, exports, module) {
                 deps: ['email'],
                 get: function(email) {
                     return this.wrapSearchResult(email);
+                }
+            },
+            getEmailLink: {
+                deps: ['email'],
+                get: function(email){
+                    return 'mailto: ' + email;
                 }
             },
             canDelete: {
@@ -105,13 +111,16 @@ define(function(require, exports, module) {
 
         showUserProjects: function(e){
             e.preventDefault();
+            var $el = $(e.currentTarget);
             if(!this.userProjectsView){
+                $el.addClass('active');
                 this.userProjectsView = new UserProjectsView({
                     model: this.model
                 });
                 $('[data-js-user-projects]', this.$el).html(this.userProjectsView.$el);
             }
             else {
+                $el.removeClass('active');
                 this.userProjectsView.destroy();
                 this.userProjectsView = null;
             }
