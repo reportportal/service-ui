@@ -832,7 +832,7 @@ define(function (require, exports, module) {
             return '<a class="rp-blue-link-undrl" target="_blank" title="' + name + '" href="' + url +'">' + name + '</a><br />';
         },
         getItemUrl: function(path, id){
-            return '#' + config.project.projectId + '/launches/' + this.param.filter_id + '/' + path.join('/') + '?log.item=' + id;
+            return '#' + config.project.projectId + '/launches/all/' + path.join('/') + '?log.item=' + id;
         },
         getItemsInfo: function (items) {
             if(items.length){
