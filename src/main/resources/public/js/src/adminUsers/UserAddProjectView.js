@@ -110,10 +110,13 @@ define(function(require, exports, module) {
                         .done(function (response) {
                             var data = {results: []}
                             _.each(response.content, function (item) {
-                                data.results.push({
-                                    id: item.projectId,
-                                    text: item.projectId,
-                                });
+                                var userProjects = _.keys(self.userModel.getAssignedProjects());
+                                if(!_.contains(userProjects, item.projectId)) {
+                                    data.results.push({
+                                        id: item.projectId,
+                                        text: item.projectId,
+                                    });
+                                }
                             });
                             query.callback(data);
                         })

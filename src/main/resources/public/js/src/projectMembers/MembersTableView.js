@@ -125,7 +125,6 @@ define(function(require, exports, module) {
         },
 
         updateMembers: function(){
-            console.log('updateMembers');
             this.paging.render();
             this.loadMembers();
         },

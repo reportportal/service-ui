@@ -33,6 +33,7 @@ define(function (require, exports, module) {
         events: {
         },
         initialize: function(options) {
+            this.onShowAsync = $.Deferred();
             this.$el.addClass('load');
             this.render();
             this.$container = $('[data-js-dashboard-content]', this.$el);
@@ -48,6 +49,9 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onShow: function() {
+            this.onShowAsync.resolve();
         },
         onChangeActive: function(model, active) {
             if(active) {
@@ -67,6 +71,10 @@ define(function (require, exports, module) {
                 })
             }
             this.$container.html(this.content.$el);
+            var self = this;
+            this.onShowAsync.done(function() {
+                self.content.onShow && self.content.onShow();
+            })
         },
 
         destroy: function () {

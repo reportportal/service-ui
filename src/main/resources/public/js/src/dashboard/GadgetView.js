@@ -76,6 +76,9 @@ define(function (require, exports, module) {
                 self.destroy();
             })
         },
+        activateGadget: function() {
+            this.update();
+        },
         getDataForGridStack: function() {
             return [this.el, this.model.get('x'), this.model.get('y'), this.model.get('width'), this.model.get('height')];
         },
