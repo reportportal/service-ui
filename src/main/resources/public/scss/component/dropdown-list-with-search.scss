@@ -21,40 +21,99 @@
 
 .select2-container {
 
-  .select2-choice {
-    background-image: none;
-    border-color: $COLOR--gray-80;
-    border-radius: 0;
-    box-shadow: none;
-    height: auto;
-    min-height: 30px;
-    margin-right: -1px;
+    .select2-choice {
+        background-image: none;
+        border-color: $COLOR--gray-80;
+        border-radius: 0;
+        box-shadow: none;
+        height: auto;
+        min-height: 30px;
+        margin-right: -1px;
 
-    .select2-chosen {
-      max-width: 190px;
-      margin-right: 30px;
-      box-shadow: none;
-      padding: 2px 5px;
+        .select2-chosen {
+            max-width: 190px;
+            margin-right: 30px;
+            box-shadow: none;
+            padding: 2px 5px;
+        }
+
+        .select2-arrow {
+            width: 30px;
+            border: none;
+            background: 0 0;
+
+            b {
+                background: 0 0;
+                display: inline-block;
+                width: 0;
+                height: 0;
+                margin-left: 10px;
+                margin-top: 2px;
+                vertical-align: middle;
+                border-top: 4px solid;
+                border-right: 4px solid transparent;
+                border-left: 4px solid transparent;
+                background-position: 2px 1px;
+            }
+        }
+    }
+}
+
+.select2-results {
+    /*.select2-highlighted {
+      background: $COLOR--tealish-opacity;
+    }*/
+
+    .select2-result-unselectable,
+    .select2-disabled {
+        .select2-result-label {
+            cursor: not-allowed;
+        }
     }
 
-    .select2-arrow {
-      width: 30px;
-      border: none;
-      background: 0 0;
+    .user-search-result-wrap {
+        white-space: normal;
+        //color: $COLOR--charcoal-grey;
+        @extend %CLEAR_FIX;
 
-      b {
-        background: 0 0;
-        display: inline-block;
-        width: 0;
-        height: 0;
-        margin-left: 10px;
-        margin-top: 2px;
-        vertical-align: middle;
-        border-top: 4px solid;
-        border-right: 4px solid transparent;
-        border-left: 4px solid transparent;
-        background-position: 2px 1px;
-      }
+        div {
+            white-space: normal;
+        }
+        .user-avatar {
+            float: left;
+            max-width: 24px;
+            min-height: 34px;
+            img {
+                width: 100%;
+                height: auto;
+            }
+        }
+        .user-search-info {
+            margin: 0 0 0 34px;
+            font-size: 13px;
+            padding-right: 24px;
+            position: relative;
+
+            .user-search-name, .user-search-login {
+                margin: 0;
+                padding: 0;
+                font-weight: normal;
+                text-transform: capitalize;
+                display: inline-block;
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .user-search-login {
+                font-weight: bold;
+            }
+            .material-icons {
+                position: absolute;
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%);
+                font-size: 24px;
+            }
+        }
     }
-  }
 }

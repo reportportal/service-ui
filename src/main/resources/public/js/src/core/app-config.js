@@ -99,6 +99,7 @@ define(function (require, exports, module) {
             historyItemsToLoad: 30,
             defaultHistoryDepth: 10,
             defaultTabId: 'allCases',
+            autocompletePageSize: 10,
 
             contextName: null,
             preferences: null,
