@@ -64,10 +64,8 @@ define(function (require, exports, module) {
             };
             this.$el.html(Util.templates(this.tpl, param)).show();
             this.updateActiveLink();
-            console.log(this.$el.height());
-            //if (this.$el.height() < 450) {
-                Util.setupBaronScroll(this.$el.find('[data-js-scroll-container]'));
-            //}
+            Util.setupBaronScroll(this.$el.find('[data-js-scroll-container]'));
+
             return this;
         },
 
