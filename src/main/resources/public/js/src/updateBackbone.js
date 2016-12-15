@@ -72,6 +72,7 @@ define(function (require, exports, module) {
                     bindEvent.call(self, match[1], match[2], function (e) {
                         if ($(e.currentTarget).not('.disabled, [disabled="disabled"]').length) {
                             method.call(self, e);
+                            $(e.currentTarget).removeClass(CLASSNAME);
                         }
                     });
                 })(method);
