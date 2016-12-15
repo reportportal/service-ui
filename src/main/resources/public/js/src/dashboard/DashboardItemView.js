@@ -26,7 +26,10 @@ define(function (require, exports, module) {
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
     var Widget = require('widgets');
+    var GadgetCollection = require('dashboard/GadgetCollection');
+    var GadgetView = require('dashboard/GadgetView');
 
+    require('gridstackUi');
     var config = App.getInstance();
 
     var DashboardItemView = Epoxy.View.extend({
@@ -42,89 +45,68 @@ define(function (require, exports, module) {
         },
 
         initialize: function(options) {
-            this.widgetsView = [];
+            this.gadgetViews = [];
+            this.gadgetCollection = new GadgetCollection(this.model);
+            this.listenTo(this.gadgetCollection, 'add', this.onAddGadget);
+            this.listenTo(this.gadgetCollection, 'remove:view', this.onRemoveGadget);
             this.render();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
             this.activateGridStack();
         },
-        createWidget: function (w) {
-            var user = config.userModel;
-            var widgets = this.model.get('widgets');
-            var self = this;
-            var navigationInfo = new (Epoxy.Model.extend({
-                getCurrentDashboard: function() {
-                    return self.model;
-                }
-            }));
-            var $container = $('[data-js-grid-stack]', this.$el);
-            var currWidget = w;
-            var widgetId = currWidget.widgetId;
-            var widgetSize = currWidget.widgetSize;
-            var wisgetPosition = currWidget.widgetPosition;
-            var widgetHeight = (widgetSize && !_.isEmpty(widgetSize) && widgetSize[1]) ? widgetSize[1] : config.defaultWidgetHeight;
-            var widgetWidth = (widgetSize && !_.isEmpty(widgetSize) && widgetSize[0]) ? widgetSize[0] : config.defaultWidgetWidth;
-            var widget = new Widget.WidgetView({
-                    container: $container,
-                    id: widgetId,
-                    navigationInfo: navigationInfo,
-                    width: widgetWidth,
-                    height: widgetHeight,
-                    top: wisgetPosition[1],
-                    left: wisgetPosition[0],
-                    context: this.context
-                }).render();
-            // this.widgets.push(widget);
-            var grid = $container.data('gridstack');
-            if (grid) {
-                grid.add_widget(widget.$el, wisgetPosition[0], wisgetPosition[1], widgetWidth, widgetHeight);
-                widget.loadWidget();
-            }
-        },
-        createWidgets: function() {
-            this.widgetsView = [];
-            var self = this;
-            var widgets = this.model.getWidgets();
-            widgets.sort(function (a, b) {
-                var posA = a.widgetPosition[1], posB = b.widgetPosition[1];
-                return posA - posB;
-            });
-            _.each(widgets, function(widget) {
-                self.createWidget(widget);
-                // $('[data-js-grid-stack]', self.$el).append($el);
-            })
-            return this.widgetsView;
-        },
         activateGridStack: function() {
-            var gridStack = $('[data-js-grid-stack]', this.$el);
+            var $gridStack = $('[data-js-grid-stack]', this.$el);
+            $gridStack.gridstack({
+                cellHeight: config.widgetGridCellHeight,
+                verticalMargin: config.widgetGridVerticalMargin,
+                draggable: {
+                    handle: '[data-js-drag-handle]'
+                },
+                resizable: {
+                    handles: 'se, sw'
+                }
+            });
+            this.gridStack = $gridStack.data('gridstack')
+            this.createGadgets();
+            var self = this;
+            $gridStack.on('change', function (e, items) {
+                _.each(items, function(item) {
+                    var id = item.el.data('id');
+                    if(!id) return;
+                    var gadgetModel = self.gadgetCollection.get(id);
+                    if(!gadgetModel) return;
+                    gadgetModel.set({
+                        x: item.x,
+                        y: item.y,
+                        width: item.width,
+                        height: item.height,
+                    });
+                })
+            });
+            // $gridStack.on('resizestart', function (event, ui) {
+            //     var element = $(event.target);
+            //     element.css('visibility', 'hidden');
+            // });
+            // $gridStack.on('resizestop', function (event, ui) {
+            //     var element = $(event.target);
+            //     element.css('visibility', 'visible');
+            // });
 
-            var options = {
-                    cell_height: config.widgetGridCellHeight,
-                    vertical_margin: config.widgetGridVerticalMargin,
-                    handle: '.drag-handle',
-                    // widgets: this.createWidgets(),
-                    draggable: {
-                        containment: gridStack,
-                        handle: '.drag-handle'
-                    },
-                    resizable: {
-                        handles: 'se, sw'
-                    }
-                };
-            gridStack.gridstack(options);
-            gridStack.on('change', function (e, items) {
-                console.dir(items);
-            });
-            gridStack.on('resizestart', function (event, ui) {
-                var element = $(event.target);
-                element.css('visibility', 'hidden');
-            });
-            gridStack.on('resizestop', function (event, ui) {
-                var element = $(event.target);
-                element.css('visibility', 'visible');
-            });
-            this.createWidgets();
+        },
+        onAddGadget: function(gadgetModel) {
+            var view = new GadgetView({model: gadgetModel});
+            this.gridStack.addWidget.apply(this.gridStack, view.getDataForGridStack());
+            this.gadgetViews.push(view);
+            view.update();
+        },
+        onRemoveGadget: function(view) {
+            this.gridStack.removeWidget(view.el);
+        },
+        createGadgets: function() {
+            this.gadgetCollection.add(this.model.getWidgets(), {parse: true});
+            this.scrollerAnimate = new ScrollerAnimate(this.gadgetViews);
+            console.dir(this.scrollerAnimate.scrollMap);
         },
         onClickEdit: function(e) {
             e.preventDefault();
@@ -163,6 +145,53 @@ define(function (require, exports, module) {
             this.$el.remove();
         },
     });
+
+    function ScrollerAnimate(blocks){
+        this.blocks = blocks;
+        this.scrollMap = [];
+        this.documentHeight = 0;
+
+        this._createScrollMap = function(){
+            this.scrollMap = [];
+            this.documentHeight = document.documentElement.clientHeight;
+            for(var i = 0; i < this.blocks.length; i++){
+                this.scrollMap.push({
+                    scrollStart: this.blocks[i].el.offsetTop,
+                    scrollEnd: this.blocks[i].el.offsetTop + this.blocks[i].el.offsetHeight
+                });
+            }
+        };
+
+        this.activateScroll = function(scrollTop){
+            var scrollBottom = scrollTop + this.documentHeight;
+            var showBlockIndexs = [];
+            for(var i = 0; i < this.scrollMap.length; i++){
+                if((this.scrollMap[i].scrollStart <= scrollBottom && scrollTop < this.scrollMap[i].scrollStart)
+                    || (this.scrollMap[i].scrollEnd <= scrollBottom && scrollTop < this.scrollMap[i].scrollEnd)
+                    || (this.scrollMap[i].scrollEnd > scrollBottom && scrollTop >= this.scrollMap[i].scrollStart)){
+                    showBlockIndexs.push(i);
+                    if(!this.blocks[i].activate){
+                        if(this.blocks[i].changeScroll(scrollTop, scrollBottom - this.scrollMap[i].scrollStart)){
+                            this.blocks[i].activate = true;
+                        }
+                    }
+                }
+            }
+            // return middle block index
+            if(showBlockIndexs.length != 2) return showBlockIndexs[parseInt(showBlockIndexs.length/2)];
+            var middleScreen = scrollBottom - this.documentHeight/2,
+                blockSeparate = this.scrollMap[showBlockIndexs[0]].scrollEnd;
+            if(blockSeparate > middleScreen) return showBlockIndexs[0];
+            return showBlockIndexs[1];
+        };
+
+        this.resize = function(){
+            this._createScrollMap();
+            this.activateScroll(config.mainScrollElement.scrollTop());
+        }
+
+        this._createScrollMap();
+    }
 
 
     return DashboardItemView;
