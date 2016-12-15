@@ -64,6 +64,8 @@ define(function (require, exports, module) {
             };
             this.$el.html(Util.templates(this.tpl, param)).show();
             this.updateActiveLink();
+            Util.setupBaronScroll(this.$el.find('[data-js-scroll-container]'));
+
             return this;
         },
 
