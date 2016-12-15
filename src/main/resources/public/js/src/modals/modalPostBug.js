@@ -176,7 +176,7 @@ define(function (require, exports, module) {
         },
 
         onKeySuccess: function () {
-            this.submit();
+            $('[data-js-post]', this.$el).trigger('click');
         },
 
         submit: function () {
@@ -463,14 +463,14 @@ define(function (require, exports, module) {
                 location = window.location.href;
             if (this.items.length > 1) {
                 _.forEach(this.items, function (item) {
-                    backLink[item.id] = location + '/log-for-' + item.id;
+                    backLink[item.id] = location + '&log.item=' + item.id;
                 });
             } else {
                 var id = this.items[0].id;
-                if (location.indexOf('/log-for-') > 0) {
+                if (location.indexOf('&log.item=') > 0) {
                     backLink[id] = location;
                 } else {
-                    backLink[id] = location + '/log-for-' + id;
+                    backLink[id] = location + '&log.item=' + id;
                 }
             }
             return backLink;
