@@ -41,7 +41,7 @@ define(function (require, exports, module) {
         SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection'),
         ModalConfirm = require('modals/modalConfirm');
 
-    require('jqueryUI');
+    // require('jqueryUI');
     require('elasticColumns');
     require('select2');
 

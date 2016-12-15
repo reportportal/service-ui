@@ -21,7 +21,6 @@ module.exports = function (grunt) {
 
         'css/daterangepicker-bs3.css',
         'css/nvd3/nv.d3.min.css',
-        'css/gridstack/gridstack.css',
         'css/select2.css',
         'css/markitup.css',
         'css/magnific-popup.css',

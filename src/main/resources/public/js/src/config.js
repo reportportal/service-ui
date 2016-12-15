@@ -24,8 +24,10 @@ require.config({
         'application': 'application',
         'jquery': '../lib/jquery-latest',
         'jqueryUI': '../lib/jquery-ui',
+        'jquery-ui': '../lib/jQuery-ui',
         'bootstrap': '../lib/bootstrap.min',
         'underscore': '../lib/lodash.min',
+        'lodash': '../lib/lodash.min',
         'backbone': '../lib/backbone',
         'backbone-epoxy': '../lib/backbone-epoxy',
         'backbone-filter': '../lib/backbone-route-filter',
@@ -61,6 +63,7 @@ require.config({
         'daterangepicker': '../lib/daterangepicker',
         'readmore-js': '../lib/readmore',
         'gridstack': '../lib/gridstack/gridstack.custom',
+        'gridstackUi': '../lib/gridstack/gridstack.jQueryUI',
         'validate': '../lib/jquery.validate',
         'd3': '../lib/d3/d3.v3.min',
         'd3Tip': '../lib/d3/d3.tip.custom',
@@ -125,6 +128,7 @@ require.config({
     },
     'shim': {
         'jqueryUI': ['jquery'],
+
         'slick': {
             deps: ['jquery'],
             exports: 'jQuery.fn.slick'
@@ -141,7 +145,8 @@ require.config({
         'customScroll': ['jquery'],
         'select2': ['jquery'],
         'daterangepicker': ['jquery'],
-        'gridstack': ['jquery', 'jqueryUI', 'underscore'],
+        'gridstack': ['jquery', 'underscore'],
+        'gridstackUi': ['gridstack'],
         'validate': { deps : ['jquery'] },
         'elasticColumns': ['jquery'],
         'nvd3': {deps: ['d3'], exports : 'nv'},
