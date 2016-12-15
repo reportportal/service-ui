@@ -86,7 +86,7 @@ define(function (require, exports, module) {
             if (this.currentHash === "#administrate") {
                 this.currentHash += "/projects";
             }
-            this.$el.find('a[href^="' + this.currentHash + '"]', this.$el).addClass('active touchHover');
+            this.$el.find('a[href^="' + this.currentHash + '"]', this.$el).addClass('active');
         },
 
         getLastActive: function () {
@@ -104,7 +104,6 @@ define(function (require, exports, module) {
 
         clearActives: function () {
             $("a.active", this.$el).removeClass('active');
-            $("a.touchHover", this.$el).removeClass('touchHover');
         },
         onClickLogout: function(e) {
             e.preventDefault();
