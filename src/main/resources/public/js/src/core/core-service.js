@@ -167,6 +167,9 @@ define([
     var loadWidget = function (url) {
         return call('GET', url);
     };
+    var loadDashboardWidget = function(widgetId) {
+        return call('GET', urls.getProjectBase() + '/widget/' + widgetId);
+    }
 
     var updateDefaultProject = function (project) {
         return call('PUT', urls.userUrl(), {default_project: project}, null, true);
@@ -404,6 +407,7 @@ define([
         getTestItemInfo: getTestItemInfo,
         getTestItemsInfo: getTestItemsInfo,
         getLaunchItem: getLaunchItem,
+        loadDashboardWidget: loadDashboardWidget,
 
         updateProject: updateProject,
         updateEmailProjectSettings: updateEmailProjectSettings,

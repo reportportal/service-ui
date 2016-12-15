@@ -40,7 +40,8 @@ define(function(require, exports, module) {
 
     require('../lib/outdatedbrowser');
     require('cookie');
-    require('jqueryUI');
+    require('jquery-ui/widgets/tooltip');
+    // require('jqueryUI');
     $.widget.bridge('uitooltip', $.ui.tooltip);
     require('bootstrap');
     require('jaddons');

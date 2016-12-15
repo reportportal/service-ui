@@ -51,18 +51,18 @@
             .users-actions {
                 text-align: center;
             }
+            .user-row-inner {
+                margin-right: 80px;
+                @extend %CLEAR_FIX;
+            }
         }
         .user-row {
             padding: 10px 0;
             background-color: transparent;
-            background-image: linear-gradient(to top, transparent, transparent), linear-gradient(to top, $COLOR--gray-91, $COLOR--gray-91);
-            background-position: left top, 88% top;
-            background-repeat: repeat, repeat-y;
-            background-size: auto, 1px;
-            background-clip: padding-box, content-box;
+            min-height: 50px;
+
             &:hover {
                 background-color: transparent;
-                background-image: linear-gradient(to top, $COLOR--tealish-opacity, $COLOR--tealish-opacity), linear-gradient(to top, $COLOR--gray-91, $COLOR--gray-91);
 
                 .user-wrap {
                     .user-info {
@@ -72,23 +72,29 @@
                     }
                 }
             }
+            .user-row-inner {
+                margin-right: 80px;
+                border-right: 1px solid $COLOR--gray-91;
+                @extend %CLEAR_FIX;
+            }
             .grid-cell {
                 padding-bottom: 10px;
                 padding-top: 10px;
             }
         }
         .name-grid-cell {
-            width: 35%;
+            width: 40%;
         }
         .login-grid-cell {
-            width: 20%;
+            width: 25%;
         }
         .role-grid-cell {
-            width: 33%;
+            width: 35%;
         }
         .action-grid-cell {
-            width: 12%;
+            width: 80px;
             padding-right: 15px;
+            float: right;
         }
 
         .user-wrap {
@@ -139,7 +145,7 @@
                     background: $COLOR--gray-47;
                     display: none;
                 }
-                .user-name, .user-login {
+                .user-name, .user-login, .user-email {
                     margin: 0;
                     padding: 0;
                     font-weight: normal;
@@ -148,6 +154,11 @@
                     max-width: 100%;
                     overflow: hidden;
                     text-overflow: ellipsis;
+                }
+                .user-email {
+                    a {
+                        color: $COLOR--windows-blue;
+                    }
                 }
                 .user-login {
                     text-transform: none;
@@ -159,6 +170,7 @@
         .login-time {
             font-size: 13px;
             display: inline-block;
+            padding-top: 22px;
 
             .from-now {
                 display: none;
@@ -198,9 +210,9 @@
             .remove-user {
                 display: inline-block;
                 color: $COLOR--gray-60;
-                padding-top: 5px;
+                padding-top: 20px;
 
-                .rp-icons-delete{
+                .rp-icons-delete {
                     width: 20px;
                     height: 20px;
                     font-size: 18px;
@@ -209,21 +221,28 @@
             }
         }
         .users-project-roles {
-
+            padding-top: 16px;
+            & > .rp-btn-default {
+                &.active {
+                    background: $COLOR--topaz;
+                }
+            }
+        }
+        .clear-for-projects-list {
+            width: 100%;
+            @extend %CLEAR_FIX;
         }
         .user-projects-list {
-            margin: 0 15% 0 38%;
-            float: left;
-            width: 45%;
+            margin: 0 70px 0 47%;
             .user-projects-table {
                 background: $COLOR--white-default;
                 border: 1px solid $COLOR--gray-80;
                 border-radius: 2px;
-                position: relative;
-                top: -30px;
+                margin-bottom: -16px;
+                transform: translateY(-22px);
                 .user-projects-row {
-                    margin: 0;
                     padding: 10px 0;
+                    margin: 0 10px;
                     border: none;
                     border-top: 1px solid $COLOR--gray-91;
                     background: none;
@@ -234,19 +253,26 @@
                         border: none;
                     }
                 }
-                .grid-cell {
-                    padding: 0 15px;
-                }
 
                 .project-name-cell {
                     width: 38%;
+                    padding: 0 15px 0 5px;
                 }
                 .project-role-cell {
-                    width: 36%;
+                    width: 37%;
+                    padding: 0 15px;
                 }
                 .project-action-cell {
-                    width: 26%;
+                    width: 25%;
+                    padding: 0 5px 0 15px;
                     text-align: right;
+                    .rp-btn-default {
+                        float: right;
+                        .rp-btn-val {
+                            width: 68px;
+                            text-align: center;
+                        }
+                    }
                 }
                 .project-name {
                     padding: 6px 0;
@@ -264,7 +290,7 @@
                     position: relative;
 
                     .dropdown-menu {
-                        &>li {
+                        & > li {
                             a.active, a.active:hover {
                                 background: $COLOR--gray-91;
                                 cursor: default;

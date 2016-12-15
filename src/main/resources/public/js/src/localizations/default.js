@@ -598,6 +598,7 @@ define(['util'], function () {
             description: 'Description',
         },
 
+
         favorites: {
             title: 'Filters',
             favoriteFilters: "Favorite filters",
