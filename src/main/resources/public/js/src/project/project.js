@@ -2324,6 +2324,7 @@ define(function(require, exports, module) {
                     currentPoint.css('backgroundColor', e.color.toHex());
                     $(this).find('.colorpicker-current-color > span').html(e.color.toHex());
                     currentColor = e.color.toHex();
+                    $(this).find('.colorpicker-hue > i').css('top', $(this).find('.colorpicker-hue').height() -  e.color.value.h * $(this).find('.colorpicker-hue').height());
                 })
                 .on('showPicker', function (e) {
                     changeRow.removeClass('show-content');

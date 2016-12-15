@@ -62,6 +62,35 @@
   }
 
   nav {
+    position: relative;
+    height: 100%;
+    height: -webkit-calc(100% - 60px);
+    height: -moz-calc(100% - 60px);
+    height: calc(100% - 60px);
+    overflow: hidden;
+
+    @media (max-height: 455px) {
+      &:not(.admin-side-bar) {
+        min-height: 455px;
+
+        .user-menu {
+          position: static;
+          margin-top: 45px;
+        }
+      }
+    }
+
+    @media (max-height: 410px) {
+      &.admin-side-bar {
+        min-height: 410px;
+
+        .user-menu {
+          position: static;
+          margin-top: 45px;
+        }
+      }
+    }
+
     ul {
       &.main-menu {
         position: relative;
