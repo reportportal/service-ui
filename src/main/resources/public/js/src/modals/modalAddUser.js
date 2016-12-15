@@ -49,10 +49,18 @@ define(function (require, exports, module) {
             '[data-js-user-email]': 'value: email',
             '[data-js-user-full-name]': 'value: full_name',
             '[data-js-user-project]': 'value: default_project',
-            '[data-js-user-project-role]': 'value: projectRole',
-            '[data-js-user-project-role-text]': 'text: projectRole',
+            '[data-js-user-project-role-text]': 'text: getProjectRole',
             '[data-js-user-account-role]': 'value: accountRole',
             '[data-js-user-account-role-text]': 'text: accountRole'
+        },
+        computeds: {
+            getProjectRole: {
+                deps: ['projectRole'],
+                get: function(projectRole) {
+                    var roles = Util.getRolesMap();
+                    return roles[projectRole];
+                }
+            }
         },
         initialize: function(options) {
             this.type = options.type;
@@ -231,9 +239,7 @@ define(function (require, exports, module) {
                 val = (link.data('value')) ? link.data('value') : link.text();
 
             if (link.hasClass('disabled-option')) return;
-            btn.attr('value', val);
             this.model.set('projectRole', val);
-            $('.select-value', btn).text(link.text());
         },
         selectAccount: function (e) {
             e.preventDefault();
@@ -276,17 +282,17 @@ define(function (require, exports, module) {
                 password: user.password
             }
         },
-        addUser: function (type) {
+        addUser: function () {
             var userData = this.getUserData();
             this.showLoading();
             if (userData) {
                 MembersService.addMember(userData)
                     .done(function (data) {
                         this.trigger('add:user');
-                        Util.ajaxSuccessMessenger(type);
+                        Util.ajaxSuccessMessenger('addMember');
                     }.bind(this))
                     .fail(function (error) {
-                        Util.ajaxFailMessenger(error, type);
+                        Util.ajaxFailMessenger(error, 'addMember');
                     })
                     .always(function(){
                         this.successClose();

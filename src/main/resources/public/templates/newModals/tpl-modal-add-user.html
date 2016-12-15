@@ -54,7 +54,7 @@
                         </button>
                         <ul class="dropdown-menu" data-js-account-role-dropdown>
                             <% _.each(data.accountRoles, function(role){ %>
-                            <li><a href="#" data-value="<%= role %>"><%= role.split('_').join(' ') %></a></li>
+                            <li><a href="#" data-value="<%= role %>"><%= role %></a></li>
                             <% }); %>
                         </ul>
                     </div>
@@ -85,8 +85,8 @@
                             <span class="rp-caret"></span>
                         </button>
                         <ul class="dropdown-menu" data-js-select-role-dropdown>
-                            <% _.each(data.roles, function(role){ %>
-                                <li><a href="#" data-value="<%= role %>"><%= role.split('_').join(' ') %></a></li>
+                            <% _.each(data.roles, function(val, key){ %>
+                                <li><a href="#" data-value="<%= key %>"><%= val %></a></li>
                             <% }); %>
                         </ul>
                     </div>

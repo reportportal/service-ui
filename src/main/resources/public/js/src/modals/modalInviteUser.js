@@ -46,8 +46,16 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-user]': 'value: user',
             '[data-js-user-project]': 'value: default_project',
-            '[data-js-user-project-role]': 'value: projectRole',
-            '[data-js-user-project-role-text]': 'text: projectRole'
+            '[data-js-user-project-role-text]': 'text: getProjectRole'
+        },
+        computeds: {
+            getProjectRole: {
+                deps: ['projectRole'],
+                get: function(projectRole) {
+                    var roles = Util.getRolesMap();
+                    return roles[projectRole];
+                }
+            }
         },
         initialize: function(options) {
             this.type = options.type;
@@ -212,8 +220,7 @@ define(function (require, exports, module) {
                 val = (link.data('value')) ? link.data('value') : link.text();
 
             if (link.hasClass('disabled-option')) return;
-            btn.attr('value', val);
-            $('.select-value', btn).text(link.text());
+            this.model.set('projectRole', val);
         },
         setupProjectSearch:function() {
             var self = this;
@@ -284,7 +291,7 @@ define(function (require, exports, module) {
                 this.showLoading();
                 MembersService.assignMember(data, userData.default_project)
                     .done(function () {
-                        Util.ajaxSuccessMessenger("assignMember", userData.user);
+                        Util.ajaxSuccessMessenger("assignMember", userData.email);
                         this.trigger('add:user');
                         this.successClose();
                     }.bind(this))

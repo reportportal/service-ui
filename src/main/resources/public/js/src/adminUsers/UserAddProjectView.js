@@ -17,9 +17,9 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
@@ -40,26 +40,33 @@ define(function(require, exports, module) {
 
         bindings: {
             '[data-js-project]': 'value: projectId',
-            '[data-js-project-role]': 'text: projectRole',
+            '[data-js-project-role]': 'text: getProjectRole',
             '[data-js-dropdown-roles]': 'updateRoleDropDown: projectRole',
             '[data-js-assign]': 'classes: {disabled: not(canAssign)}, attr: {disabled: not(canAssign)}',
         },
 
         computeds: {
             canAssign: {
-                deps: ['projectId','projectRole'],
-                get: function(projectId, projectRole){
+                deps: ['projectId', 'projectRole'],
+                get: function (projectId, projectRole) {
                     return projectId && projectRole;
                 }
-            }
+            },
+            getProjectRole: {
+                deps: ['projectRole'],
+                get: function (projectRole) {
+                    var roles = Util.getRolesMap();
+                    return roles[projectRole];
+                }
+            },
         },
 
         bindingHandlers: {
             updateRoleDropDown: {
-                set: function($el, role) {
-                    _.each($('a', $el), function(a){
+                set: function ($el, role) {
+                    _.each($('a', $el), function (a) {
                         var action = $(a).data('value') === role ? 'add' : 'remove';
-                        $(a)[action+'Class']('active');
+                        $(a)[action + 'Class']('active');
                     });
                 }
             }
@@ -88,12 +95,12 @@ define(function(require, exports, module) {
             this.setupProjectSearch();
         },
 
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$form = $('[data-js-assign-form]', this.$el);
             this.$selectProject = $('[data-js-project]', this.$el);
         },
 
-        setupProjectSearch:function() {
+        setupProjectSearch: function () {
             var self = this;
             Util.setupSelect2WhithScroll(this.$selectProject, {
                 multiple: false,
@@ -111,7 +118,7 @@ define(function(require, exports, module) {
                             var data = {results: []}
                             _.each(response.content, function (item) {
                                 var userProjects = _.keys(self.userModel.getAssignedProjects());
-                                if(!_.contains(userProjects, item.projectId)) {
+                                if (!_.contains(userProjects, item.projectId)) {
                                     data.results.push({
                                         id: item.projectId,
                                         text: item.projectId,
@@ -157,7 +164,7 @@ define(function(require, exports, module) {
             });
         },
 
-        getSearchQuery: function(query){
+        getSearchQuery: function (query) {
             return '?page.sort=name,asc&page.page=1&page.size=10&&filter.cnt.name=' + query;
         },
 
@@ -171,7 +178,7 @@ define(function(require, exports, module) {
             this.model.set('projectRole', newRole);
         },
 
-        assignToProject: function(e){
+        assignToProject: function (e) {
             e.preventDefault();
             var data = {};
             data[this.userModel.get('userId')] = this.model.get('projectRole');
@@ -185,7 +192,7 @@ define(function(require, exports, module) {
                 });
         },
 
-        destroy: function(){
+        destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
