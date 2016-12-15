@@ -41,6 +41,7 @@ define(function (require, exports, module) {
             });
             this.context.getMainView().$header.html(this.header.$el);
             this.context.getMainView().$body.html(this.body.$el);
+            this.body.onShow && this.body.onShow();
         },
         update: function(options) {
             if (options.subContext) {

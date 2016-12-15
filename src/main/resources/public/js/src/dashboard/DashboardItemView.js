@@ -50,6 +50,7 @@ define(function (require, exports, module) {
             this.listenTo(this.gadgetCollection, 'add', this.onAddGadget);
             this.listenTo(this.gadgetCollection, 'remove:view', this.onRemoveGadget);
             this.render();
+            this.scrollElement = config.mainScrollElement;
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
@@ -98,15 +99,26 @@ define(function (require, exports, module) {
             var view = new GadgetView({model: gadgetModel});
             this.gridStack.addWidget.apply(this.gridStack, view.getDataForGridStack());
             this.gadgetViews.push(view);
-            view.update();
         },
         onRemoveGadget: function(view) {
             this.gridStack.removeWidget(view.el);
         },
         createGadgets: function() {
             this.gadgetCollection.add(this.model.getWidgets(), {parse: true});
+        },
+        onShow: function() {
             this.scrollerAnimate = new ScrollerAnimate(this.gadgetViews);
-            console.dir(this.scrollerAnimate.scrollMap);
+            var self = this;
+            this.scrollElement
+                .off('scroll.dashboardPage')
+                .on("scroll.dashboardPage", function (e) {
+                    self.onScroll();
+                });
+            this.onScroll();
+        },
+        onScroll: function() {
+            var scrollTop = this.scrollElement.scrollTop();
+            this.scrollerAnimate.activateScroll(scrollTop);
         },
         onClickEdit: function(e) {
             e.preventDefault();
@@ -140,6 +152,7 @@ define(function (require, exports, module) {
 
         destroy: function () {
             this.undelegateEvents();
+            this.scrollElement.off('scroll.dashboardPage');
             this.stopListening();
             this.unbind();
             this.$el.remove();
@@ -171,9 +184,8 @@ define(function (require, exports, module) {
                     || (this.scrollMap[i].scrollEnd > scrollBottom && scrollTop >= this.scrollMap[i].scrollStart)){
                     showBlockIndexs.push(i);
                     if(!this.blocks[i].activate){
-                        if(this.blocks[i].changeScroll(scrollTop, scrollBottom - this.scrollMap[i].scrollStart)){
-                            this.blocks[i].activate = true;
-                        }
+                        this.blocks[i].activate = true;
+                        this.blocks[i].activateGadget();
                     }
                 }
             }
