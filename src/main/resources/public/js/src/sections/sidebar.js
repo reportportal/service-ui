@@ -64,6 +64,10 @@ define(function (require, exports, module) {
             };
             this.$el.html(Util.templates(this.tpl, param)).show();
             this.updateActiveLink();
+            console.log(this.$el.height());
+            //if (this.$el.height() < 450) {
+                Util.setupBaronScroll(this.$el.find('[data-js-scroll-container]'));
+            //}
             return this;
         },
 
@@ -84,7 +88,7 @@ define(function (require, exports, module) {
             if (this.currentHash === "#administrate") {
                 this.currentHash += "/projects";
             }
-            this.$el.find('a[href^="' + this.currentHash + '"]', this.$el).addClass('active');
+            this.$el.find('a[href^="' + this.currentHash + '"]', this.$el).addClass('active touchHover');
         },
 
         getLastActive: function () {
@@ -102,6 +106,7 @@ define(function (require, exports, module) {
 
         clearActives: function () {
             $("a.active", this.$el).removeClass('active');
+            $("a.touchHover", this.$el).removeClass('touchHover');
         },
         onClickLogout: function(e) {
             e.preventDefault();
