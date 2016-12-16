@@ -166,7 +166,12 @@
                 }
             }
         }
-
+        .user-title-mobile {
+            display: none;
+            font-size: 12px;
+            margin-right: 6px;
+            text-transform: uppercase;
+        }
         .login-time {
             font-size: 13px;
             display: inline-block;
@@ -299,6 +304,57 @@
                         }
                     }
                 }
+            }
+        }
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+        .all-users-actions {
+            display: none;
+        }
+        .all-users-table {
+            .rp-grid-thead {
+                display: none;
+            }
+            .action-grid-cell {
+                display: none;
+            }
+            .user-row {
+                .user-row-inner {
+                    margin: 0;
+                    border: none;
+                }
+                .grid-cell {
+                    padding-top: 8px;
+                    padding-bottom: 8px;
+                }
+            }
+            .name-grid-cell {
+                width: 100%;
+            }
+            .login-grid-cell {
+                width: 100%;
+            }
+            .role-grid-cell {
+                width: 100%;
+            }
+            .user-wrap {
+                .user-info {
+                    font-size: 15px;
+                    line-height: 1.0;
+                }
+            }
+            .users-project-roles {
+                display: none;
+            }
+            .user-projects-list {
+                display: none;
+            }
+            .login-time {
+                padding: 0;
+                font-size: 14px;
+            }
+            .user-title-mobile {
+                display: inline-block;
             }
         }
     }

@@ -500,11 +500,17 @@
            font-family: OswaldRegular,sans-serif;
            font-size: 20px;
            text-transform: uppercase;
+           @media (max-width: $SCREEN_XS_MAX){
+             margin: 0 15px;
+           }
          }
 
          .admin_header_controls {
            text-align: right;
            margin-right: 15px;
+           @media (max-width: $SCREEN_XS_MAX){
+             display: none;
+           }
 
            .backToProject {
              position: relative;
