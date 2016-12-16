@@ -41,7 +41,7 @@ define(function(require, exports, module) {
 
         bindings: {
             '[data-js-project]': 'text: projectId',
-            '[data-js-project-role]': 'text: projectRole',
+            '[data-js-project-role]': 'text: getProjectRole',
             '[data-js-dropdown-roles]': 'updateRoleDropDown: projectRole',
             '[data-js-unassign]': 'classes: {disabled: not(canUnAssign)}, attr: {disabled: not(canUnAssign)}',
         },
@@ -52,7 +52,14 @@ define(function(require, exports, module) {
                 get: function(){
                     return !this.isPersonalProjectOwner() && !this.unassignedLock();
                 }
-            }
+            },
+            getProjectRole: {
+                deps: ['projectRole'],
+                get: function (projectRole) {
+                    var roles = Util.getRolesMap();
+                    return roles[projectRole];
+                }
+            },
         },
 
         bindingHandlers: {

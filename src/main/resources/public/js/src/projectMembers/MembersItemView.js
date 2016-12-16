@@ -102,8 +102,9 @@ define(function(require, exports, module) {
                 deps: ['assigned_projects'],
                 get: function(){
                     var assignedProjects = this.model.getAssignedProjects(),
-                        projectId = this.appModel.get('projectId');
-                    return assignedProjects[projectId].projectRole;
+                        projectId = this.appModel.get('projectId'),
+                        roles = Util.getRolesMap();
+                    return roles[assignedProjects[projectId].projectRole];
                 }
             }
         },

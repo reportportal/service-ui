@@ -239,7 +239,8 @@
                 border: 1px solid $COLOR--gray-80;
                 border-radius: 2px;
                 margin-bottom: -16px;
-                transform: translateY(-22px);
+                position: relative;
+                top: -22px;
                 .user-projects-row {
                     padding: 10px 0;
                     margin: 0 10px;
