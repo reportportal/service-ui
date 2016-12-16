@@ -30,7 +30,7 @@ require.config({
         'lodash': '../lib/lodash.min',
         'backbone': '../lib/backbone',
         'backbone-epoxy': '../lib/backbone-epoxy',
-        'backbone-filter': '../lib/backbone-route-filter',
+        // 'backbone-filter': '../lib/backbone-route-filter',
         'jaddons': '../lib/jquery-addons',
         'cookie': '../lib/jquery.cookie',
         // 'nicescroll': '../lib/jquery.nicescroll',

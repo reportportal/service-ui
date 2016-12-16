@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.fullscreen {
+body.fullscreen {
   #main_content {
     .wrapper {
       padding-left: 0;
@@ -46,10 +46,6 @@
               #dynamic-content {
                 padding-top: 15px;
               }
-
-              .fullscreen-close {
-                display: block;
-              }
             }
 
           }
@@ -59,17 +55,10 @@
   }
 
   #contentHeader,
-  #pageSidebar,
-  .header,
+  section.sidebar,
+  section.header,
   #pageFooter,
   .uv-icon {
     display: none !important;
   }
-}
-
-.fullscreen-close {
-  display: none;
-  position: fixed;
-  right: 15px;
-  top: 10px;
 }

@@ -3,7 +3,7 @@
  *
  *
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,8 +18,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function(require, exports, module) {
+    'use strict';
 
-@import 'widget-view';
-@import 'launches-table';
-@import 'rp-panels-statistics';
-@import 'rp-panels-uniq-bugs';
+    var Epoxy = require('backbone-epoxy');
+
+    var WidgetModel = Epoxy.Model.extend({
+        defaults: {
+            content: {},
+            content_parameters: {},
+            filter_id: '',
+            isShared: false,
+            name: '',
+            owner: '',
+        },
+        computeds: {
+        },
+        initialize: function(){
+
+        },
+    });
+
+    return WidgetModel;
+})

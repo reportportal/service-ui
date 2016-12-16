@@ -38,6 +38,7 @@ define(function (require, exports, module) {
             widgets: '[]',
 
             active: false,
+            notLoad: false,
         },
         computeds: {
             isMy: {
@@ -79,6 +80,12 @@ define(function (require, exports, module) {
                     Util.ajaxFailMessenger(error, 'updateDashboard');
                 });
         },
+        update: function() {
+            var self = this;
+            return Service.getProjectDashboard(this.get('id')).done(function(data){
+                self.setWidgets(data.widgets);
+            })
+        },
         getWidgets: function () {
             try {
                 return JSON.parse(this.get('widgets'));
@@ -87,7 +94,7 @@ define(function (require, exports, module) {
             }
         },
         setWidgets: function (widgets) {
-            this.set({issue: JSON.stringify(widgets)});
+            this.set({widgets: JSON.stringify(widgets)});
         },
 
     });
