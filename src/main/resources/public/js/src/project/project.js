@@ -1925,6 +1925,7 @@ define(function(require, exports, module) {
                                     systemType: type
                                 });
                             }
+                            self.appModel.setArr('externalSystem', []);
                             self.systemAt = 0;
                             self.renderMultiSelector();
                             self.renderInstance();
