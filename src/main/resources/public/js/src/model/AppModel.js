@@ -41,7 +41,7 @@ define(function(require, exports, module) {
                 }
             },
             isBtsConfigure: {
-                deps: ['isBtsAdded'],
+                deps: ['isBtsAdded', 'externalSystem'],
                 get: function(isBtsAdded) {
                     if(!isBtsAdded) {
                         return false;
@@ -86,6 +86,9 @@ define(function(require, exports, module) {
                 return [];
             }
         },
+        setArr: function(field, array) {
+            this.set(field, JSON.stringify(array));
+        }
     });
 
     return AppModel;
