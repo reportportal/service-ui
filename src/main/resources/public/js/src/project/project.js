@@ -37,7 +37,6 @@ define(function(require, exports, module) {
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var DefectTypeModel = require('defectType/DefectTypeModel');
-    var SingletonAppModel = require('model/SingletonAppModel');
     var DemoDataSettingsView = require('DemoDataSettingsView');
     var ModalConfirm = require('modals/modalConfirm');
 
@@ -1516,6 +1515,7 @@ define(function(require, exports, module) {
             this.settings = options.settings;
             this.access = options.access;
             this.systems = options.externalSystems;
+            this.appModel = new SingletonAppModel();
             var modelData = null;
             _.each(options.externalSystems, function(system) {
                 return _.each(config.forSettings.btsList, function(btsItem) {
@@ -1851,6 +1851,7 @@ define(function(require, exports, module) {
                     self.$fieldsWrapper.show();
 
                     if (response.id) {
+                        self.externalId = response.id;
                         self.updateCredentials(externalSystemData, response.id);
                         self.systems.push(externalSystemData);
                         self.systemAt = self.systems.length - 1;
@@ -1859,6 +1860,8 @@ define(function(require, exports, module) {
                         _.merge(self.systems[self.systemAt], externalSystemData);
                         self.model.discardEdit();
                     }
+                    externalSystemData.id = self.externalId;
+                    self.appModel.setArr('externalSystem', [externalSystemData]);
                     self.renderInstance();
                     self.renderMultiSelector();
                     self.$tbsChangeWarning.hide();

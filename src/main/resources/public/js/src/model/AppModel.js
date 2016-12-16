@@ -86,6 +86,9 @@ define(function(require, exports, module) {
                 return [];
             }
         },
+        setArr: function(field, array) {
+            this.set(field, JSON.stringify(array));
+        }
     });
 
     return AppModel;
