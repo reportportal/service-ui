@@ -324,6 +324,7 @@ define(['util'], function () {
             fromMyFilters: "from my filters",
             fromShared: "from shared filters",
             selectFilter: "Select filter",
+            configureWidget: 'Configure widget',
             selectType: "Select widget type",
             widgetName: "Widget name",
             limitResults: "Limit of results",

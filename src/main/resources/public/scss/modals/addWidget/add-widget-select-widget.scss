@@ -19,19 +19,10 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'common';
-@import 'load-bug';
-@import 'post-bug';
-@import 'confirm';
-@import 'filter-edit';
-@import 'defect-editor';
-@import 'launches-compare';
-@import 'launches-merge';
-@import 'launch-edit';
-@import 'change-password';
-@import 'edit-user-info';
-@import 'add-user';
-@import 'invite-user';
-@import 'permissions-map';
-@import 'edit-dashboard';
-@import 'addWidget/main';
+.modal-add-widget-select-widget {
+  .buttons-block {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}

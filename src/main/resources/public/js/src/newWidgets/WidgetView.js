@@ -63,7 +63,7 @@ define(function(require, exports, module) {
             this.defectTypes.ready.done(function() {
                 setTimeout(function() {
                     self.widget = (new view(widgetData)).render();
-                }, 100);
+                }, 1);
             });
 
             // this.widget = (new view(widgetData)).render();

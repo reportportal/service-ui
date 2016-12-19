@@ -44,7 +44,7 @@ define(function (require, exports, module) {
             '[data-js-shared]': 'classes: {hide: any(not(isShared), not(isMy))}',
             '[data-js-widget-type]': 'text: gadgetName',
             '[data-js-public]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
-            '[data-js-gadget-remove]': 'classes: {hide: not(isMy)}',
+            '[data-js-gadget-remove]': 'classes: {hide: not(isMyDashboard)}',
             '[data-js-gadget-edit]': 'classes: {hide: not(isMy)}',
         },
         initialize: function() {

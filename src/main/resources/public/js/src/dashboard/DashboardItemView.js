@@ -24,9 +24,11 @@ define(function (require, exports, module) {
     var App = require('app');
     var ModalEditDashboard = require('modals/modalEditDashboard');
     var ModalConfirm = require('modals/modalConfirm');
+    var ModalAddWidget = require('modals/modalAddWidget');
     var Localization = require('localization');
     var GadgetCollection = require('dashboard/GadgetCollection');
     var GadgetView = require('dashboard/GadgetView');
+    var WidgetConfig = require('widget/widgetsConfig');
 
     require('gridstackUi');
     require('fullscreen');
@@ -40,7 +42,8 @@ define(function (require, exports, module) {
             'click [data-js-edit]': 'onClickEdit',
             'click [data-js-remove]': 'onClickRemove',
             'click [data-js-full-screen]': 'onClickFullScreen',
-            'click [data-js-close-fullscreen]': 'onClickExitFullScreen'
+            'click [data-js-close-fullscreen]': 'onClickExitFullScreen',
+            'click [data-js-add-widget]': 'onClickAddWidget',
         },
 
         bindings: {
@@ -66,10 +69,14 @@ define(function (require, exports, module) {
             }
         },
         postInit: function() {
-            this.gadgetCollection = new GadgetCollection([], {dashboardModel: this.model});
-            this.listenTo(this.gadgetCollection, 'add', this.onAddGadget);
-            this.listenTo(this.gadgetCollection, 'remove:view', this.onRemoveGadget);
-            this.activateGridStack();
+            var self = this;
+            WidgetConfig.updateInstance().done(function() {
+                self.gadgetCollection = new GadgetCollection([], {dashboardModel: self.model});
+                self.listenTo(self.gadgetCollection, 'add', self.onAddGadget);
+                self.listenTo(self.gadgetCollection, 'remove:view', self.onRemoveGadget);
+                self.activateGridStack();
+            })
+
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
@@ -176,8 +183,15 @@ define(function (require, exports, module) {
                 collection.resetActive();
             })
         },
-        onClickExitFullScreen: function() {
+        onClickExitFullScreen: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             $.fullscreen.exit();
+        },
+        onClickAddWidget: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            (new ModalAddWidget()).show();
         },
         destroy: function () {
             $.fullscreen.exit();
