@@ -28,6 +28,7 @@ define(function (require, exports, module) {
     var AdminService = require('adminService');
     var SingletonAppModel = require('model/SingletonAppModel');
     var Localization = require('localization');
+    var Urls = require('dataUrlResolver');
 
     require('validate');
 
@@ -35,6 +36,7 @@ define(function (require, exports, module) {
 
     var ModalInviteUser = ModalView.extend({
         template: 'tpl-modal-invite-user',
+        userSearchTpl: 'tpl-user-search-result',
         className: 'modal-invite-user',
         events: {
             'click [data-js-load]': 'onClickInvite',
@@ -144,16 +146,21 @@ define(function (require, exports, module) {
                         return null;
                     }
                 },
+                formatResult: function(data)  {
+                    return self.getUserSearchResult(data);
+                },
                 query: function (query) {
                     MembersService.getSearchUser({search: query.term})
                         .done(function (response) {
-                            var data = {results: []}
+                            var data = {results: []};
                             _.each(response.content, function (item) {
                                 if(item.userId !== self.model.get('user')){
                                     remoteUsers.push(item);
                                     data.results.push({
                                         id: item.userId,
-                                        text: item.userId
+                                        text: item.userId,
+                                        name: item.full_name,
+                                        disabled: self.validateUserProject(item)
                                     });
                                 }
                             });
@@ -167,6 +174,14 @@ define(function (require, exports, module) {
             self.$usersField.on('change', function () {
                 self.$usersField.valid && _.isFunction(self.$usersField.valid) && self.$usersField.valid();
             });
+        },
+        getUserSearchResult: function(data){
+            return Util.templates(this.userSearchTpl, {user: data, imagePath: Util.updateImagePath(Urls.getAvatar() + data.id)});
+        },
+        validateUserProject: function(user){
+            var projectId = this.appModel.get('projectId'),
+                userProjects = _.keys(user.assigned_projects);
+            return _.contains(userProjects, projectId);
         },
         setupValidation: function () {
             var self = this;
@@ -263,7 +278,7 @@ define(function (require, exports, module) {
             });
         },
         getSearchQuery: function(query){
-            return '?page.sort=name,asc&page.page=1&page.size=10&&filter.cnt.name=' + query;
+            return '?page.sort=name,asc&page.page=1&page.size='+ config.autocompletePageSize +'&filter.cnt.name=' + query;
         },
         selectLink: function(e){
             e.preventDefault();
