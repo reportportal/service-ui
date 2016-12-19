@@ -36,6 +36,11 @@
       }
     }
   }
+  &.ui-draggable-disabled {
+    .gadget-header {
+      cursor: default;
+    }
+  }
   .gadget-header {
     position: relative;
     cursor: all-scroll;
@@ -99,6 +104,16 @@
       }
     }
   }
+  .gadget-body {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 60px;
+    bottom: 0;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
   .preloader {
     position: absolute;
     top: 50%;
@@ -110,6 +125,11 @@
     }
     .preloader {
       display: block;
+    }
+  }
+  &.hide-widget {
+    .gadget-body {
+      opacity: 0;
     }
   }
 }

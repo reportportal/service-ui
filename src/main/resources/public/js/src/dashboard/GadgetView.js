@@ -25,6 +25,8 @@ define(function (require, exports, module) {
     var App = require('app');
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
+    var WidgetModel = require('newWidgets/WidgetModel');
+    var WidgetView = require('newWidgets/WidgetView');
 
     var config = App.getInstance();
 
@@ -39,13 +41,17 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-name]': 'text: name',
             '[data-js-comment]': 'classes: {hide: not(description)}',
-            '[data-js-shared]': 'classes: {hide: not(isShared)}',
+            '[data-js-shared]': 'classes: {hide: any(not(isShared), not(isMy))}',
             '[data-js-widget-type]': 'text: gadgetName',
+            '[data-js-public]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
+            '[data-js-gadget-remove]': 'classes: {hide: not(isMy)}',
+            '[data-js-gadget-edit]': 'classes: {hide: not(isMy)}',
         },
-        initialize: function(options) {
+        initialize: function() {
             this.render();
             this.$el.addClass('load');
             this.$el.attr({'data-id': this.model.get('id')});
+            this.el.backboneView = this;// fir gridstack
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
@@ -53,13 +59,26 @@ define(function (require, exports, module) {
         onClickRefresh: function() {
             this.update();
         },
+        startResize: function() {
+            this.$el.addClass('hide-widget');
+        },
+        stopResize: function() {
+            this.widgetView && this.widgetView.resize();
+            this.$el.removeClass('hide-widget');
+        },
         update: function() {
             this.$el.addClass('load');
             var self = this;
             this.model.update()
                 .always(function() {
                     self.$el.removeClass('load')
+                    self.updateWidget();
                 })
+        },
+        updateWidget: function() {
+            this.widgetView && this.widgetView.destroy();
+            this.widgetView = new WidgetView({model: (new WidgetModel(this.model.get('widgetData')))});
+            $('[data-js-widget-container]', this.$el).html(this.widgetView.$el);
         },
         onClickRemove: function(e) {
             e.stopPropagation();

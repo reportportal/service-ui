@@ -1452,6 +1452,9 @@ define(function (require, exports, module) {
             }
             return [];
         },
+        updateChart: function() {
+            this.chart && this.chart.update();
+        },
         addResize: function(){
             var self = this,
                 update = function(e){

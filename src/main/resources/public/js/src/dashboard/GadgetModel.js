@@ -23,6 +23,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var Service = require('coreService');
     var WidgetsConfig = require('widget/widgetsConfig');
+    var Localization = require('localization');
 
     var widgetConfig = WidgetsConfig.getInstance();
     var config = App.getInstance();
@@ -39,6 +40,8 @@ define(function (require, exports, module) {
             gadget: '',
             owner: '',
             isShared: false,
+
+            widgetData: {},
         },
         computeds: {
             gadgetName: {
@@ -47,7 +50,22 @@ define(function (require, exports, module) {
                     if(!gadget) return '';
                     return widgetConfig.widgetTypes[gadget].gadget_name;
                 }
-            }
+            },
+            isMy: {
+                deps: ['owner'],
+                get: function(owner) {
+                    return owner == config.userModel.get('name');
+                }
+            },
+            sharedTitle: {
+                deps: ['isMy', 'owner'],
+                get: function(isMy, owner) {
+                    if(isMy) {
+                        return '';
+                    }
+                    return Localization.widgets.widgetSharedBy + ' ' + owner;
+                }
+            },
         },
         initialize: function() {
 
@@ -60,7 +78,8 @@ define(function (require, exports, module) {
                         name: data.name,
                         owner: data.owner,
                         isShared: data.isShared,
-                        gadget: data.content_parameters.gadget
+                        gadget: data.content_parameters.gadget,
+                        widgetData: data,
                     })
                 })
         }

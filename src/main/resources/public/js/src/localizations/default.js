@@ -591,6 +591,7 @@ define(['util'], function () {
             createDashboard: "Create Dashboard",
             shareDashboard: "Shared Dashboard",
             share: 'Share',
+            sharedBy: 'Dashbord is shared by',
             maxWidgetsAdded: "Max amount of widgets were added to the dashboard",
             nameNewDashboard: 'Enter New Dashboard Name',
             tHeadTitleOwners: 'Owners',

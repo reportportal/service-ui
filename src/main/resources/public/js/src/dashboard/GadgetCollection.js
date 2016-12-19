@@ -30,8 +30,8 @@ define(function (require, exports, module) {
 
     var GadgetCollection = Backbone.Collection.extend({
         model: GadgetModel,
-        initialize: function(dashboardModel) {
-            this.dashboardModel = dashboardModel;
+        initialize: function(data, options) {
+            this.dashboardModel = options.dashboardModel;
             this.listenTo(this, 'change:x change:y change:width change:height', _.debounce(this.onChangePosition, 10));
             this.listenTo(this, 'remove', this.onRemoveGadget);
         },
