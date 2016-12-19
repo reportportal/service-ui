@@ -77,6 +77,25 @@
             margin-left: 118px;
           }
         }
+
+        @media (max-width: 620px) {
+          .rp-form-group {
+            .field-caption {
+              float: none;
+              text-align: left;
+            }
+
+            .rp-input-default, .select2-container {
+              width: 100%;
+              margin-left: 0;
+            }
+
+            &.extended {
+              padding-left: 12px;
+              width: 100%;
+            }
+          }
+        }
       }
     }
     &.load {
@@ -85,5 +104,4 @@
       }
     }
   }
-
 }
