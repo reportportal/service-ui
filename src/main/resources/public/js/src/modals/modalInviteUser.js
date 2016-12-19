@@ -120,6 +120,7 @@ define(function (require, exports, module) {
                 min: 1,
                 minimumInputLength: 1,
                 maximumInputLength: 256,
+                dropdownCssClass: 'rp-select2-user-search',
                 allowClear: true,
                 placeholder: Localization.members.enterLoginEmail,
                 initSelection: function (element, callback) {
