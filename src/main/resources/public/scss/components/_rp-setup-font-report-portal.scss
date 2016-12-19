@@ -47,6 +47,12 @@ i {
 /* ICONS FOR LANDING PAGE */
 
 .rp-icons {
+    &.rp-icons-addnewprjct:before {
+        content: "\e92b";
+    }
+    &.rp-icons-logout:before {
+        content: "\e92a";
+    }
     &.rp-icons-live-visibility-landing {
         @include beforeContent("\e90a");
     }

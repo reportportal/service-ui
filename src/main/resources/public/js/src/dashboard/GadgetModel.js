@@ -57,6 +57,9 @@ define(function (require, exports, module) {
                     return owner == config.userModel.get('name');
                 }
             },
+            isMyDashboard: function() {
+                return this.collection.dashboardModel.get('isMy');
+            },
             sharedTitle: {
                 deps: ['isMy', 'owner'],
                 get: function(isMy, owner) {
