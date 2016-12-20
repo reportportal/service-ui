@@ -575,6 +575,8 @@ define(['util'], function () {
             remove: "Remove",
             exitFullscreen: "Exit full screen",
             fullscreen: "Full Screen",
+            nextStep: 'Next Step',
+            previousStep: 'Previous Step',
             saveWidget: "Please, save your filter to add widget.",
             widgetEmpty: "No widgets found!",
             clickToAddWidget: "Click 'Add Widget' button to create widget.",

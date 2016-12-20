@@ -20,6 +20,25 @@
  */
 
 .modal-add-widget-select-widget {
+  .widget-list {
+    position: relative;
+    width: 100%;
+    label {
+      width: 50%;
+      float: left;
+      padding: 10px 20px 0 8px;
+      height: 56px;
+      margin: 0;
+      //border-bottom: 1px solid gray;
+      box-shadow: inset 0 -1px 0 0 $COLOR--gray-91;
+      input:checked + span {
+        font-family: OpenSansSemiBold;
+      }
+      span {
+        color: $COLOR--charcoal-grey;
+      }
+    }
+  }
   .buttons-block {
     position: absolute;
     bottom: 0;

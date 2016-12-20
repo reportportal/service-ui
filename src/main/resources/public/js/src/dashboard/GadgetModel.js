@@ -51,6 +51,20 @@ define(function (require, exports, module) {
                     return widgetConfig.widgetTypes[gadget].gadget_name;
                 }
             },
+            gadgetDescription: {
+                deps: ['gadget'],
+                get: function(gadget) {
+                    if(!gadget) return '';
+                    return widgetConfig.widgetTypes[gadget].description;
+                }
+            },
+            gadgetPreviewImg: {
+                deps: ['gadget'],
+                get: function(gadget) {
+                    if(!gadget) return '';
+                    return 'img/popup/' + widgetConfig.widgetTypes[gadget].img;
+                }
+            },
             isMy: {
                 deps: ['owner'],
                 get: function(owner) {
@@ -58,7 +72,7 @@ define(function (require, exports, module) {
                 }
             },
             isMyDashboard: function() {
-                return this.collection.dashboardModel.get('isMy');
+                return this.collection && this.collection.dashboardModel.get('isMy');
             },
             sharedTitle: {
                 deps: ['isMy', 'owner'],
