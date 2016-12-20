@@ -1250,7 +1250,10 @@ define(['util'], function () {
             invitationSent: "The invitation was sent on",
             titleAllMembers: "All Members",
             titleNameLoginEmail: "Name / Login / Email",
-            enterLoginEmail: 'Enter Login or Email'
+            enterLoginEmail: 'Enter Login or Email',
+            alredyAdded: 'User has already assigned to the project',
+            invitePref: 'Invite',
+            sendInvite: 'Send invite via e-mail'
         },
 
         comparators: {

@@ -29,6 +29,7 @@ define(function (require, exports, module) {
     var SingletonAppModel = require('model/SingletonAppModel');
     var Localization = require('localization');
     var Urls = require('dataUrlResolver');
+    var UserSearchComponent = require('components/UserSearchComponent');
 
     require('validate');
 
@@ -36,7 +37,6 @@ define(function (require, exports, module) {
 
     var ModalInviteUser = ModalView.extend({
         template: 'tpl-modal-invite-user',
-        userSearchTpl: 'tpl-user-search-result',
         className: 'modal-invite-user',
         events: {
             'click [data-js-load]': 'onClickInvite',
@@ -115,73 +115,36 @@ define(function (require, exports, module) {
             this.$selectProject = $('[data-js-user-project]', this.$el);
         },
         setupUserSearch:function() {
-            var self = this,
-                remoteUsers = [];
-            Util.setupSelect2WhithScroll(this.$usersField, {
-                multiple: false,
-                min: 1,
-                minimumInputLength: 1,
-                maximumInputLength: 256,
-                dropdownCssClass: 'rp-select2-user-search',
-                allowClear: true,
-                placeholder: Localization.members.enterLoginEmail,
-                initSelection: function (element, callback) {
-                    callback({id: element.val(), text: element.val()});
-                },
-                formatResultCssClass: function (state) {
-                    if ((remoteUsers.length == 0 || _.indexOf(remoteUsers, state.text) < 0) && $('.select2-input.select2-active').val() == state.text) {
-                        return 'exact-match';
+            var self = this;
+            if(!this.isUsers()) {
+                UserSearchComponent.setupUserSearch(self.$usersField);
+                self.$usersField.on('change', function () {
+                    self.$usersField.valid && _.isFunction(self.$usersField.valid) && self.$usersField.valid();
+                });
+            }
+            else {
+                self.$usersField.addClass('rp-input-default rp-width-100 form-control');
+                self.$usersField.rules('add', {
+                    email: true,
+                    remote: this.remoteValidation(),
+                    messages: {
+                        email: Localization.validation.incorrectEmail,
+                        remote: Localization.validation.registeredEmail
                     }
-                },
-                createSearchChoice: function (term, data) {
-                    if (_.filter(data, function (opt) {
-                            return opt.text.localeCompare(term) === 0;
-                        }).length === 0) {
-                        if(Util.validateEmail(term)){
-                            return {
-                                id: term,
-                                text: term
-                            };
-                        }
-                        return null;
-                    }
-                },
-                formatResult: function(data)  {
-                    return self.getUserSearchResult(data);
-                },
-                query: function (query) {
-                    MembersService.getSearchUser({search: query.term})
-                        .done(function (response) {
-                            var data = {results: []};
-                            _.each(response.content, function (item) {
-                                if(item.userId !== self.model.get('user')){
-                                    remoteUsers.push(item);
-                                    data.results.push({
-                                        id: item.userId,
-                                        text: item.userId,
-                                        name: item.full_name,
-                                        disabled: self.validateUserProject(item)
-                                    });
-                                }
-                            });
-                            query.callback(data);
-                        })
-                        .fail(function (error) {
-                            Util.ajaxFailMessenger(error);
-                        });
+                });
+            }
+        },
+        remoteValidation: function () {
+            return {
+                type: "GET",
+                url:
+                    Urls.userInfoValidation(),
+                data: {},
+                dataFilter: function (response) {
+                    var data = JSON.parse(response);
+                    return !data.is;
                 }
-            });
-            self.$usersField.on('change', function () {
-                self.$usersField.valid && _.isFunction(self.$usersField.valid) && self.$usersField.valid();
-            });
-        },
-        getUserSearchResult: function(data){
-            return Util.templates(this.userSearchTpl, {user: data, imagePath: Util.updateImagePath(Urls.getAvatar() + data.id)});
-        },
-        validateUserProject: function(user){
-            var projectId = this.appModel.get('projectId'),
-                userProjects = _.keys(user.assigned_projects);
-            return _.contains(userProjects, projectId);
+            }
         },
         setupValidation: function () {
             var self = this;
@@ -194,8 +157,7 @@ define(function (require, exports, module) {
                 label: $('[data-js-invite-user-form-group]'),
                 rules: {
                     user: {
-                        required: true,
-                        //email: true
+                        required: true
                     }
                 },
                 messages: {
@@ -343,6 +305,7 @@ define(function (require, exports, module) {
             this.$okBtn.removeClass('hide');
             this.$form.addClass('hide');
             this.$successFrom.removeClass('hide');
+            $('[data-js-email]', this.$successFrom).text(this.model.get('user'));
         }
     });
 
