@@ -28,6 +28,8 @@ define(function (require, exports, module) {
     var Localization = require('localization');
     var GadgetCollection = require('dashboard/GadgetCollection');
     var GadgetView = require('dashboard/GadgetView');
+    var GadgetModel = require('dashboard/GadgetModel');
+    var WidgetModel = require('newWidgets/WidgetModel');
     var WidgetConfig = require('widget/widgetsConfig');
 
     require('gridstackUi');
@@ -191,7 +193,7 @@ define(function (require, exports, module) {
         onClickAddWidget: function(e) {
             e.preventDefault();
             e.stopPropagation();
-            (new ModalAddWidget()).show();
+            (new ModalAddWidget({model: new GadgetModel()})).show();
         },
         destroy: function () {
             $.fullscreen.exit();

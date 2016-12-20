@@ -73,7 +73,11 @@
         }
         &.rp-btn-icon-reverse {
             padding-left: 0;
-            padding-right: 24px;
+            padding-right: 30px;
+            i.material-icons:first-child, i.rp-icons:first-child {
+                left: auto;
+                right: 0;
+            }
         }
     }
     &.rp-button-dropdown {

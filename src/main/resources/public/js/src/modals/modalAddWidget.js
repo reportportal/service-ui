@@ -26,17 +26,35 @@ define(function (require, exports, module) {
     var ModalView = require('modals/_modalView');
     var Util = require('util');
     var $ = require('jquery');
-
-
+    var WidgetsConfig = require('widget/widgetsConfig');
 
     var SelectWidgetView = Epoxy.View.extend({
         className: 'modal-add-widget-select-widget',
         template: 'tpl-modal-add-widget-select-widget',
+        events: {
+            'change input[type="radio"]': 'onChangeType',
+            'click [data-js-next-step]': 'onClickNextStep',
+        },
+        bindings: {
+            '[data-js-next-step]': 'attr: {disabled: not(gadget)}',
+        },
         initialize: function() {
+            this.widgetConfig = WidgetsConfig.getInstance();
             this.render();
         },
         render: function() {
-            this.$el.html(Util.templates(this.template, {}))
+            this.$el.html(Util.templates(this.template, {widgets: this.widgetConfig.widgetTypes}))
+        },
+        onClickNextStep: function(e) {
+            e.preventDefault();
+            this.trigger('next');
+            console.log('trigger')
+        },
+        onChangeType: function() {
+            this.model.set({gadget: $('input:checked', this.$el).val()});
+        },
+        destroy: function() {
+
         }
     })
 
@@ -47,20 +65,26 @@ define(function (require, exports, module) {
         events: {
 
         },
-
-        computeds: {
-
+        bindings: {
+            '[data-js-widget-type]': 'text: gadgetName',
+            '[data-js-widget-description]': 'text: gadgetDescription',
+            '[data-js-widget-preview]': 'css: {"background-image": format("url($1)", gadgetPreviewImg)}',
         },
 
         initialize: function(options) {
+            if(!options.model) {
+                console.log('Model is not found');
+                return false;
+            }
             this.viewModel = new (Epoxy.Model.extend({
                 defaults: { step: 1 }
             }));
             this.render();
-            this.selectWidgetView = new SelectWidgetView();
+            this.selectWidgetView = new SelectWidgetView({model: this.model});
             $('[data-js-step-1]', this.$el).html(this.selectWidgetView.$el);
             this.listenTo(this.viewModel, 'change:step', this.setState);
             this.setState();
+            this.listenTo(this.selectWidgetView, 'next', this.nextState);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
@@ -74,12 +98,19 @@ define(function (require, exports, module) {
                     break;
                 case 2:
                     $('[data-js-step-1-title]', this.$el).addClass('visited');
-                    $('[data-js-step-2-title] [data-js-step-2]', this.$el).addClass('active');
+                    $('[data-js-step-2-title], [data-js-step-2]', this.$el).addClass('active');
                     break;
                 case 3:
                     $('[data-js-step-1-title], [data-js-step-2-title]', this.$el).addClass('visited');
-                    $('[data-js-step-3-title] [data-js-step-3]', this.$el).addClass('active');
+                    $('[data-js-step-3-title], [data-js-step-3]', this.$el).addClass('active');
                     break;
+            }
+        },
+        nextState: function() {
+            var curStep = this.viewModel.get('step');
+            console.log(curStep);
+            if(curStep < 3) {
+                this.viewModel.set('step', curStep + 1);
             }
         }
 
