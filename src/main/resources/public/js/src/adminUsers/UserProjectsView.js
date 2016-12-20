@@ -60,7 +60,6 @@ define(function(require, exports, module) {
 
         render: function () {
             this.$el.html(Util.templates(this.tpl, {}));
-            //this.renderProjectsList();
         },
 
         setupAnchors: function(){

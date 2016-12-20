@@ -112,6 +112,7 @@ define(function(require, exports, module) {
         },
 
         initialize: function (options) {
+            this.table = options.table;
             this.searchString = options.searchString || '';
             this.appModel = new SingletonAppModel();
             this.render();
@@ -124,6 +125,13 @@ define(function(require, exports, module) {
         showUserProjects: function(e){
             e.preventDefault();
             var $el = $(e.currentTarget);
+            _.each(this.table.renderViews, function(view){
+                if(view.userProjectsView && (view.model.get('userId') !== this.model.get('userId'))){
+                    $('[data-js-view-projects]', view.$el).removeClass('active');
+                    view.userProjectsView.destroy();
+                    view.userProjectsView = null;
+                }
+            }, this);
             if(!this.userProjectsView){
                 $el.addClass('active');
                 this.userProjectsView = new UserProjectsView({
