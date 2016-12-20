@@ -232,6 +232,20 @@
                     background: $COLOR--topaz;
                 }
             }
+            .users-project-mobile {
+                display: none;
+                p {
+                    padding: 0 0 16px;
+                    margin: 0;
+                    font-size: 14px;
+                    span {
+                        color: $COLOR--gray-47;
+                        font-size: 12px;
+                        text-transform: uppercase;
+                        margin-right: 6px;
+                    }
+                }
+            }
         }
         .clear-for-projects-list {
             width: 100%;
@@ -344,7 +358,13 @@
                 }
             }
             .users-project-roles {
-                display: none;
+                padding-top: 0;
+                .rp-btn.rp-btn-default {
+                    display: none;
+                }
+                .users-project-mobile {
+                    display: block;
+                }
             }
             .user-projects-list {
                 display: none;

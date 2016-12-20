@@ -85,6 +85,17 @@ define(function (require, exports, module) {
         setAssignedProjects: function(assigned_projects){
             this.set({assigned_projects: JSON.stringify(assigned_projects)});
         },
+        getProjectRole: function(project){
+            var projects = this.getAssignedProjects();
+            return projects ? projects[project].projectRole : null;
+        },
+        setProjectRole: function(project, role){
+            var projects = this.getAssignedProjects();
+            if(projects){
+                projects[project].projectRole = role;
+            }
+            this.setAssignedProjects(projects);
+        },
         unAssign: function(projectId) {
             var memberId = this.get('userId');
             return CallService.call('PUT', urls.updateProjectUnassign(projectId), {userNames: [memberId]})

@@ -1210,7 +1210,9 @@ define(['util'], function () {
             TLS: 'TLS',
             SSL: 'SSL',
             emailError: 'Test connection was failed:',
-            addUserProject: 'Add User to Project'
+            addUserProject: 'Add User to Project',
+            projectName: 'Project name',
+            projectRole: 'Project role'
         },
 
         members: {

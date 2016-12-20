@@ -36,7 +36,7 @@ define(function(require, exports, module) {
 
     var config = App.getInstance();
 
-    var MembersItemView = Epoxy.View.extend({
+    var UsersItemView = Epoxy.View.extend({
         tpl: 'tpl-users-item',
         className: 'row rp-table-row user-row',
 
@@ -49,7 +49,8 @@ define(function(require, exports, module) {
             '[data-js-user-email]': 'html: getEmail, attr: {href: getEmailLink}',
             '[data-js-user-you]': 'classes: {hide: not(isYou)}',
             '[data-js-user-admin]': 'classes: {hide: not(isAdmin), notlink: isYou}',
-            '[data-js-make-admin]': 'classes: {hide: hideMakeAdmin}'
+            '[data-js-make-admin]': 'classes: {hide: hideMakeAdmin}',
+            '[data-js-user-projects-mobile]': 'getUserProjects: assigned_projects',
         },
 
         computeds: {
@@ -87,6 +88,17 @@ define(function(require, exports, module) {
                 deps: ['isAdmin', 'isYou'],
                 get: function(isAdmin, isYou){
                     return isAdmin || isYou;
+                }
+            }
+        },
+
+        bindingHandlers: {
+            getUserProjects: {
+                set: function($el, assigned_projects) {
+                    var projects = this.view.model.getAssignedProjects();
+                    _.each(projects, function(val, project){
+                        $el.append('<p><span>' + Localization.admin.projectName + ':</span><strong>' + project + '</strong><br> <span>' + Localization.admin.projectRole + ':</span>' + val.projectRole + '</p>');
+                    });
                 }
             }
         },
@@ -191,6 +203,6 @@ define(function(require, exports, module) {
         }
     });
 
-    return MembersItemView;
+    return UsersItemView;
 
 });
