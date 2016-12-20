@@ -19,7 +19,10 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'widget-view';
-@import 'launches-table';
-@import 'rp-panels-statistics';
-@import 'rp-panels-uniq-bugs';
+.modal-add-widget-select-widget {
+  .buttons-block {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}

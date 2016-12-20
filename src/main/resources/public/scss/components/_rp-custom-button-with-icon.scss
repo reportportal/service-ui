@@ -71,6 +71,10 @@
             word-wrap: normal;
             white-space: nowrap;
         }
+        &.rp-btn-icon-reverse {
+            padding-left: 0;
+            padding-right: 24px;
+        }
     }
     &.rp-button-dropdown {
         padding-right: 35px;

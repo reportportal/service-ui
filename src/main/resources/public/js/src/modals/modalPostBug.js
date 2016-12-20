@@ -477,13 +477,11 @@ define(function (require, exports, module) {
         },
 
         destroy: function () {
-            this.items = null;
-            this.selected = null;
-            this.systems = null;
-            this.settings = null;
-            this.systemSettings = null;
-            this.user = null;
-            Components.DialogShell.prototype.destroy.call(this);
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            this.$el = null;
+            delete this;
         }
     });
 

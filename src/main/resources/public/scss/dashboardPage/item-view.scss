@@ -28,4 +28,74 @@
   .grid-stack {
     margin: 15px -7px;
   }
+  &.load {
+    .grid-stack {
+      display: none;
+    }
+    .preloader {
+      display: block;
+    }
+  }
+  .is-not-my-dashbord {
+    display: none;
+    font-size: 14px;
+    padding-top: 7px;
+    color: $COLOR--charcoal-grey;
+    i {
+      font-size: 20px;
+      vertical-align: top;
+      color: $COLOR--gray-60;
+    }
+  }
+  &.not-my {
+    .is-my-dashbord {
+      display: none;
+    }
+    .is-not-my-dashbord {
+      display: block;
+    }
+  }
+  .fullscreen-overflow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    i {
+      font-size: 22px;
+      box-shadow: 0 0 40px 30px $COLOR--white-default;
+      background: $COLOR--white-default;
+      cursor: pointer;
+      color: $COLOR--gray-60;
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      width: 24px;
+      height: 23px;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      &:hover {
+        color: $COLOR--gray-47;
+      }
+    }
+  }
+}
+body.fullscreen {
+  .dashboard-item-view {
+    position: relative;
+    margin-top: -15px;
+    .buttons-container {
+      display: none;
+    }
+    .fullscreen-overflow {
+      display: block;
+      &:hover {
+        i {
+          opacity: 1;
+        }
+      }
+    }
+  }
 }

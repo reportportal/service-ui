@@ -123,6 +123,7 @@ define(function (require, exports, module) {
                 }
                 value.isShared = true;
                 value.id = key;
+                value.notLoad = true;
                 widgetsData.push(value);
             });
             return widgetsData;

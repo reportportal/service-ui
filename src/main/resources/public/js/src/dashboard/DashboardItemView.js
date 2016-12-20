@@ -24,12 +24,14 @@ define(function (require, exports, module) {
     var App = require('app');
     var ModalEditDashboard = require('modals/modalEditDashboard');
     var ModalConfirm = require('modals/modalConfirm');
+    var ModalAddWidget = require('modals/modalAddWidget');
     var Localization = require('localization');
-    var Widget = require('widgets');
     var GadgetCollection = require('dashboard/GadgetCollection');
     var GadgetView = require('dashboard/GadgetView');
+    var WidgetConfig = require('widget/widgetsConfig');
 
     require('gridstackUi');
+    require('fullscreen');
     var config = App.getInstance();
 
     var DashboardItemView = Epoxy.View.extend({
@@ -39,22 +41,45 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-edit]': 'onClickEdit',
             'click [data-js-remove]': 'onClickRemove',
+            'click [data-js-full-screen]': 'onClickFullScreen',
+            'click [data-js-close-fullscreen]': 'onClickExitFullScreen',
+            'click [data-js-add-widget]': 'onClickAddWidget',
         },
 
         bindings: {
+            ':el': 'classes: {"not-my": not(isMy)}',
+            '[data-js-owner-name]': 'text: owner',
         },
 
         initialize: function(options) {
             this.gadgetViews = [];
-            this.gadgetCollection = new GadgetCollection(this.model);
-            this.listenTo(this.gadgetCollection, 'add', this.onAddGadget);
-            this.listenTo(this.gadgetCollection, 'remove:view', this.onRemoveGadget);
-            this.render();
             this.scrollElement = config.mainScrollElement;
+            this.onShowAsync = $.Deferred();
+            this.render();
+            var self = this;
+            if(this.model.get('notLoad')) {
+                this.$el.addClass('load');
+                this.model.update().done(function() {
+                    self.$el.removeClass('load');
+                    self.postInit();
+                    self.applyBindings();
+                })
+            } else {
+                this.postInit();
+            }
+        },
+        postInit: function() {
+            var self = this;
+            WidgetConfig.updateInstance().done(function() {
+                self.gadgetCollection = new GadgetCollection([], {dashboardModel: self.model});
+                self.listenTo(self.gadgetCollection, 'add', self.onAddGadget);
+                self.listenTo(self.gadgetCollection, 'remove:view', self.onRemoveGadget);
+                self.activateGridStack();
+            })
+
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
-            this.activateGridStack();
         },
         activateGridStack: function() {
             var $gridStack = $('[data-js-grid-stack]', this.$el);
@@ -66,7 +91,9 @@ define(function (require, exports, module) {
                 },
                 resizable: {
                     handles: 'se, sw'
-                }
+                },
+                disableDrag: !this.model.get('isMy'),
+                disableResize: !this.model.get('isMy'),
             });
             this.gridStack = $gridStack.data('gridstack')
             this.createGadgets();
@@ -85,15 +112,19 @@ define(function (require, exports, module) {
                     });
                 })
             });
-            // $gridStack.on('resizestart', function (event, ui) {
-            //     var element = $(event.target);
-            //     element.css('visibility', 'hidden');
-            // });
-            // $gridStack.on('resizestop', function (event, ui) {
-            //     var element = $(event.target);
-            //     element.css('visibility', 'visible');
-            // });
+            $gridStack.on('resizestart', function (event, ui) {
+                var view = event.target.backboneView;
+                view && view.startResize();
+            });
+            $gridStack.on('resizestop', function (event, ui) {
+                var view = event.target.backboneView;
+                view && view.stopResize();
+            });
 
+        },
+        onClickFullScreen: function(e) {
+            e.preventDefault();
+            $('body').fullscreen({toggleClass: 'fullscreen'});
         },
         onAddGadget: function(gadgetModel) {
             var view = new GadgetView({model: gadgetModel});
@@ -105,16 +136,19 @@ define(function (require, exports, module) {
         },
         createGadgets: function() {
             this.gadgetCollection.add(this.model.getWidgets(), {parse: true});
+            var self = this;
+            this.onShowAsync.done(function() {
+                self.scrollerAnimate = new ScrollerAnimate(self.gadgetViews);
+                self.scrollElement
+                    .off('scroll.dashboardPage')
+                    .on("scroll.dashboardPage", function (e) {
+                        self.onScroll();
+                    });
+                self.onScroll();
+            })
         },
         onShow: function() {
-            this.scrollerAnimate = new ScrollerAnimate(this.gadgetViews);
-            var self = this;
-            this.scrollElement
-                .off('scroll.dashboardPage')
-                .on("scroll.dashboardPage", function (e) {
-                    self.onScroll();
-                });
-            this.onScroll();
+            this.onShowAsync.resolve();
         },
         onScroll: function() {
             var scrollTop = this.scrollElement.scrollTop();
@@ -149,8 +183,18 @@ define(function (require, exports, module) {
                 collection.resetActive();
             })
         },
-
+        onClickExitFullScreen: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $.fullscreen.exit();
+        },
+        onClickAddWidget: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            (new ModalAddWidget()).show();
+        },
         destroy: function () {
+            $.fullscreen.exit();
             this.undelegateEvents();
             this.scrollElement.off('scroll.dashboardPage');
             this.stopListening();

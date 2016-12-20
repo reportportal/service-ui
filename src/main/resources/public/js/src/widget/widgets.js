@@ -1452,6 +1452,9 @@ define(function (require, exports, module) {
             }
             return [];
         },
+        updateChart: function() {
+            this.chart && this.chart.update();
+        },
         addResize: function(){
             var self = this,
                 update = function(e){
@@ -1484,10 +1487,10 @@ define(function (require, exports, module) {
             }
         },
         redirectTo: function (e) {
-            if ($('.fullscreen-close').is(':visible')) {
+            // if ($('.fullscreen-close').is(':visible')) {
                 // $('#dynamic-content').getNiceScroll().remove();
-                $('.fullscreen-close').trigger('click');
-            }
+                // $('.fullscreen-close').trigger('click');
+            // }
             var o = {series: {}};
             if (!_.has(e, 'pointIndex')) {
                 var svg = d3.select('#' + this.id + ' svg'),
