@@ -23,11 +23,20 @@
     padding-right: 75px;
     padding-top: 33px;
 
-    .bug_fields {
+    .bts-fields {
       padding-left: 39px;
       margin-bottom: 31px;
-    }
 
+      .rp-form-group {
+        .bts-field-label {
+          width: 150px;
+        }
+        .bts-field-input {
+          width: 280px;
+          margin-left: 20px;
+        }
+      }
+    }
     .include_data {
       margin-bottom: 16px;
       .rp-form-title {
@@ -43,6 +52,15 @@
 
           &:last-child {
             margin-right: 0;
+          }
+
+          .rp-control-label {
+            width: 100%;
+            text-align: left;
+          }
+
+          .rp-switcher-big {
+            width: 100%;
           }
         }
       }

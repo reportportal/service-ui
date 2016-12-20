@@ -38,6 +38,24 @@
     }
 
     #instanceBody {
+      #fieldsWrapper {
+        .group-title-block {
+          margin-bottom: 4px;
+
+          .inputs-caption {
+            float: left;
+            margin-left: 300px;
+          }
+
+          .checkboxes-caption {
+            float: left;
+            margin-left: 243px;
+          }
+        }
+        .bts-fields {
+          margin-left: 120px;
+        }
+      }
       #fieldsLoader {
         display: none;
         position: relative;
@@ -47,10 +65,6 @@
           width: 100%;
         }
       }
-    }
-
-    .rp-form-group {
-
     }
 
     label {
@@ -187,10 +201,6 @@
 
     .span-empty {
       min-height: 8px;
-    }
-
-    .group-title-block {
-      margin-bottom: 5px;
     }
 
     #accessKeyBlock {
