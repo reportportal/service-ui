@@ -33,49 +33,28 @@ define(function(require, exports, module) {
 
     var ServerSettingsPageView = Epoxy.View.extend({
 
-        tpl: 'tpl-server-settings-body',
-        headerTpl: 'tpl-server-settings-header',
+        tpl: 'tpl-server-settings-shell',
+
+        bindings: {
+            '[data-js-users-search]': 'attr: {placeholder: getPlaceHolder}',
+        },
+
+        computeds: {},
 
         initialize: function (options) {
-            this.$el = options.el;
-            this.$header = options.header;
+
         },
 
         render: function () {
             this.$el.html(Util.templates(this.tpl));
-            this.renderHeader();
-            this.renderBody();
             return this;
         },
 
-        renderHeader: function(){
-            this.$header.html(Util.templates(this.headerTpl), {});
-        },
-
-        renderBody: function () {
-            if (this.body) {
-                this.body.destroy();
-                this.body = null;
-            }
-            this.body = new ServerSettingsTabsView({});
-            $('[data-js-settings]', this.$el).append(this.body.$el);
-        },
-
-        update: function () {
-            if (this.body) {
-                this.body.destroy();
-                this.body = null;
-            }
-            this.renderBody();
-        },
-
         destroy: function(){
-
-            this.body && this.body.destroy();
-            this.$el.html('');
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
+            this.remove();
             delete this;
         }
     });
