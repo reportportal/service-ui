@@ -1545,7 +1545,7 @@ define(function(require, exports, module) {
             this.$instanceBoby = $("#instanceBody", this.$el);
 
             if(config.forSettings.btsList.length) {
-                this.renderMultiSelector()
+                this.renderMultiSelector();
                 this.renderInstance();
             } else {
                 $('button', this.$el).prop({disabled: 'disabled'});
@@ -2335,7 +2335,8 @@ define(function(require, exports, module) {
                     changeRow.addClass('hide-content');
                     e.color.setColor(currentColor);
                     $(this).find('.colorpicker-current-color > span')
-                        .on('click touchstart mousedown', function(){
+                        .on('click touchstart mousedown', function(e){
+                            e.stopPropagation();
                             var selection = window.getSelection();
                             selection.selectAllChildren(this);
                         });

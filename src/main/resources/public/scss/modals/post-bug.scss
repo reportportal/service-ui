@@ -23,9 +23,30 @@
     padding-right: 75px;
     padding-top: 33px;
 
-    .bug_fields {
+    .bts-fields {
       padding-left: 39px;
       margin-bottom: 31px;
+
+      .rp-form-group {
+        .bts-field-label {
+          width: 150px;
+        }
+        .bts-field-input {
+          width: 280px;
+          margin-left: 20px;
+        }
+      }
+    }
+
+    .required-fields-error {
+      margin-left: 210px;
+      .rp-form-group {
+        margin-bottom: 0;
+
+        .help-inline {
+          margin-top: 0;
+        }
+      }
     }
 
     .include_data {
@@ -43,6 +64,15 @@
 
           &:last-child {
             margin-right: 0;
+          }
+
+          .rp-control-label {
+            width: 100%;
+            text-align: left;
+          }
+
+          .rp-switcher-big {
+            width: 100%;
           }
         }
       }
@@ -64,14 +94,26 @@
         }
 
         .dropdown {
-          padding-right: 15px;
-          width: 297px;
+          display: block;
+          width: 280px;
+          margin-left: 17px;
         }
       }
 
       .credentials {
         .rp-form-group {
           padding-left: 40px;
+
+          .rp-control-label {
+            width: 150px;
+          }
+          .bts-property {
+            margin-left: 18px;
+            width: 280px;
+          }
+          textarea {
+            height: 50px;
+          }
         }
       }
     }

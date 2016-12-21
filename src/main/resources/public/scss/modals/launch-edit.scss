@@ -22,21 +22,57 @@
 .modal-launch-edit {
   .modal-content-wrapper {
     .modal-body {
-      padding: 40px 10px 25px 10px;
+      padding: 30px 10px 15px 10px;
       h2 {
         text-overflow: ellipsis;
         overflow: hidden;
-        font-size: 16px;
-        margin: 15px 20px;
+        color: $COLOR--charcoal-grey;
+        font-family: 'OpenSansSemibold',sans-serif;
+        font-size: 14px;
+        margin: 20px 8px;;
       }
       .fields {
-        margin: 0 20px;
-        width: 430px;
-        max-width: 90%;
-      }
-      label {
+        margin: 0;
         width: 100%;
+        margin-left: 18px;
+        padding-top: 2px;
+
+        & > label {
+          width: 100%;
+
+          & > span {
+            display: block;
+            float: left;
+            margin-right: 30px;
+            min-width: 80px;
+            text-align: right;
+            line-height: 30px;
+          }
+
+          & > textarea,
+          & > div.rp-input {
+            margin-top: 0;
+            width: 350px;
+          }
+        }
+
+        @media (max-width: 620px) {
+          & > label {
+            padding-right: 40px;
+
+            & > span {
+              float: none;
+              text-align: left;
+            }
+
+            & > textarea,
+            & > div.rp-input {
+              width: 100%;
+            }
+          }
+        }
       }
+
       textarea {
         height: 67px;
         resize: none;

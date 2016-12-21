@@ -78,7 +78,8 @@ define(function (require, exports, module) {
             }));
 
             this.setupAnchors();
-            Util.switcheryInitialize(this.$includesBlock);
+            //Util.switcheryInitialize(this.$includesBlock);
+            $('[data-js-is-included]', this.$includesBlock).attr('checked', 'checked');
 
             this.renderFields();
             this.renderCredentials();
@@ -87,12 +88,14 @@ define(function (require, exports, module) {
             return this;
         },
 
+
+
         setupAnchors: function () {
             this.$dynamicContent = $("#dynamicContent", this.$el);
             this.$includesBlock = $("#includesBlock", this.$el);
-            this.$includeLogs = $("#include_logs", this.$includesBlock);
-            this.$includeData = $("#include_data", this.$includesBlock);
-            this.$includeComments = $("#include_comments", this.$includesBlock);
+            this.$includeLogs = $("#include_logs > [data-js-is-included]", this.$includesBlock);
+            this.$includeData = $("#include_data > [data-js-is-included]", this.$includesBlock);
+            this.$includeComments = $("#include_comments > [data-js-is-included]", this.$includesBlock);
             this.$postToUrl = $("#postToUrl", this.$el);
             this.$actionBtn = $("[data-js-ok]", this.$el);
             this.$credentialsLink = $("#credentialsLink", this.$el);
@@ -387,11 +390,10 @@ define(function (require, exports, module) {
                 // todo find out why you have to configure system with accessKey BUT submit with token???
                 result['token'] = currentHash.accessKey;
             }
-
             var includes = this.selected === 1;
-            result['include_logs'] = includes ? this.$includeLogs.bootstrapSwitch('state') : false;
-            result['include_data'] = includes ? this.$includeData.bootstrapSwitch('state') : false;
-            result['include_comments'] = includes ? this.$includeComments.bootstrapSwitch('state') : false;
+            result['include_logs'] = includes ? this.$includeLogs.is(':checked') : false;
+            result['include_data'] = includes ? this.$includeData.is(':checked') : false;
+            result['include_comments'] = includes ? this.$includeComments.is(':checked') : false;
             return result;
         },
 

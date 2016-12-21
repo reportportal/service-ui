@@ -37,8 +37,8 @@
             </div>
 
     <% } %>
-    <div id="dynamicContent" class="bug_fields"></div>
-    <div id="requiredFields">
+    <div id="dynamicContent" class="bts-fields"></div>
+    <div id="requiredFields" class="required-fields-error">
         <div class="rp-form-group">
             <div class="help-inline rp-display-block">
                 <%= data.text.launches.fillAllRequired %>
@@ -46,36 +46,48 @@
         </div>
     </div>
 
-
     <div id="staticContent">
         <% if(data.selected === 1){ %>
-            <div class="rp-form-group include_data" id="includesBlock">
-                <div class="rp-form-title">
-                    <span><%= data.text.launches.includeData %></span>
+        <div class="rp-form-group include_data" id="includesBlock">
+            <div class="rp-form-title">
+                <span><%= data.text.launches.includeData %></span>
+            </div>
+            <div class="rp-form-group">
+                <div class="switch-field">
+                    <label class="rp-control-label m-bottom-10">
+                        <%= data.text.launches.includeScreenshots %>
+                    </label>
+                    <label class="rp-switcher-big" id="include_data">
+                        <span class="turn-on"><%= data.text.ui.on %></span>
+                        <span class="turn-off"><%= data.text.ui.off %></span>
+                        <input type="checkbox" data-js-is-included>
+                        <div class="slider"></div>
+                    </label>
                 </div>
-                <div class="rp-form-group">
-                    <div class="rp-padding-0">
-                        <div class="switch-field">
-                            <label class="rp-control-label m-bottom-10">
-                                <%= data.text.launches.includeScreenshots %>
-                            </label>
-                            <input id="include_data" type="checkbox" class="js-switch" checked="checked" />
-                        </div>
-                        <div class="switch-field">
-                            <label class="rp-control-label m-bottom-10">
-                                <%= data.text.launches.includeLogs %>
-                            </label>
-                            <input id="include_logs" type="checkbox" class="js-switch" checked="checked" />
-                        </div>
-                        <div class="switch-field">
-                            <label class="rp-control-label m-bottom-10">
-                                <%= data.text.launches.includeComments %>
-                            </label>
-                            <input id="include_comments" type="checkbox" class="js-switch" checked="checked" />
-                        </div>
-                    </div>
+                <div class="switch-field">
+                    <label class="rp-control-label m-bottom-10">
+                        <%= data.text.launches.includeLogs %>
+                    </label>
+                    <label class="rp-switcher-big" id="include_logs">
+                        <span class="turn-on"><%= data.text.ui.on %></span>
+                        <span class="turn-off"><%= data.text.ui.off %></span>
+                        <input type="checkbox" data-js-is-included>
+                        <div class="slider"></div>
+                    </label>
+                </div>
+                <div class="switch-field">
+                    <label class="rp-control-label m-bottom-10">
+                        <%= data.text.launches.includeComments %>
+                    </label>
+                    <label class="rp-switcher-big" id="include_comments">
+                        <span class="turn-on"><%= data.text.ui.on %></span>
+                        <span class="turn-off"><%= data.text.ui.off %></span>
+                        <input type="checkbox" data-js-is-included>
+                        <div class="slider"></div>
+                    </label>
                 </div>
             </div>
+        </div>
         <% } %>
         <div class="rp-form-group panel-group credentials-section" id="accordion" role="tablist"
              aria-multiselectable="true">

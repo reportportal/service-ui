@@ -50,6 +50,18 @@
           color: $COLOR--gray-47;
         }
       }
+
+      @media (max-width: 620px) {
+        .ticket-row-view {
+          .link-label {
+            width: 100%;
+          }
+
+          .issue-label {
+            margin-left: 0;
+          }
+        }
+      }
     }
     .add-button {
       margin: 5px 0 20px 21px;
