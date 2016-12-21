@@ -37,6 +37,18 @@
         }
       }
     }
+
+    .required-fields-error {
+      margin-left: 210px;
+      .rp-form-group {
+        margin-bottom: 0;
+
+        .help-inline {
+          margin-top: 0;
+        }
+      }
+    }
+
     .include_data {
       margin-bottom: 16px;
       .rp-form-title {
@@ -82,14 +94,26 @@
         }
 
         .dropdown {
-          padding-right: 15px;
-          width: 297px;
+          display: block;
+          width: 280px;
+          margin-left: 17px;
         }
       }
 
       .credentials {
         .rp-form-group {
           padding-left: 40px;
+
+          .rp-control-label {
+            width: 150px;
+          }
+          .bts-property {
+            margin-left: 18px;
+            width: 280px;
+          }
+          textarea {
+            height: 50px;
+          }
         }
       }
     }

@@ -1,39 +1,35 @@
-<div class="container-fluid">
-    <div class="row">
-        <div class="bts-instance-wrapper col-md-12 col-sm-12 col-xs-12">
-            <ul role="tablist" class="nav-tabs-bts-instances clearfix">
-                <li class="bts-instance-title">
+<div class="bts-instance-wrapper">
+    <ul role="tablist" class="nav-tabs-bts-instances clearfix">
+        <li class="bts-instance-title">
                     <span>
                         <%= data.text.bts.btsInstances %>
                     </span>
-                </li>
-                <% _.forEach(data.systems, function(system, index) { %>
-                    <li class="bts-name-project <%= index === data.index ? 'active' : '' %>">
-                        <a class="tab bts-instance" data-index="<%= index %>" id="<%= system.id || '' %>" href="#" >
-                            <%= system.project %>
-                        </a>
-                    </li>
-                <% }); %>
-                <% if(!data.systems.length) { %>
-                    <li class="bts-name-project active">
-                        <a class="tab bts-instance"><%= data.text.project.newProject %></a>
-                    </li>
-                <% } %>
-                <li class="bts-name-project bts-name-new-project <%= !data.systems.length || !data.access ? 'disabled' : '' %>">
-                    <a class="tab bts-instance close-add">
-                        <%= data.text.project.newProject %>
-                        <span class="close-add-action">
+        </li>
+        <% _.forEach(data.systems, function(system, index) { %>
+        <li class="bts-name-project <%= index === data.index ? 'active' : '' %>">
+            <a class="tab bts-instance" data-index="<%= index %>" id="<%= system.id || '' %>" href="#">
+                <%= system.project %>
+            </a>
+        </li>
+        <% }); %>
+        <% if(!data.systems.length) { %>
+        <li class="bts-name-project active">
+            <a class="tab bts-instance"><%= data.text.project.newProject %></a>
+        </li>
+        <% } %>
+        <li class="bts-name-project bts-name-new-project <%= !data.systems.length || !data.access ? 'disabled' : '' %>">
+            <a class="tab bts-instance close-add">
+                <%= data.text.project.newProject %>
+                <span class="close-add-action">
                             <i class="material-icons">clear</i>
                         </span>
-                    </a>
-                </li>
-                <li class="bts-instance-action col-md-5 <%= !data.systems.length || !data.access ? 'disabled' : '' %>">
-                    <a href="#" class="tab bts-instance add-new rp-link rp-link-with-icon">
-                        <i class="material-icons">add</i>
-                        <span><%= data.text.bts.btsAddNewInstance %></span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
+            </a>
+        </li>
+        <li class="bts-instance-action <%= !data.systems.length || !data.access ? 'disabled' : '' %>">
+            <a href="#" class="tab bts-instance add-new rp-link rp-link-with-icon">
+                <i class="material-icons">add</i>
+                <span><%= data.text.bts.btsAddNewInstance %></span>
+            </a>
+        </li>
+    </ul>
 </div>

@@ -10,11 +10,9 @@
                 <% var isDisabled = data.disabled.indexOf(field.id) !== -1 ? 'disabled="disabled"' : ''; %>
                 <% if(field.definedValues && field.definedValues.length){ %>
                     <% if(field.fieldType === 'array') { %>
-                        <div class="to-100-width">
                             <div class="b-users-typeahead">
                                 <input class="rp-input-default rp-width-100 users-typeahead default-value" data-name="<%= field.fieldName %>" id="<%= field.id %>" value="<%= field.value ? field.value.join(',') : '' %>" <%= notAllowed %>>
                             </div>
-                        </div>
                     <% }else{ %>
                         <% if(field.definedValues.length > 10){ %>
                             <% var id = field.value ? field.value[0] : ''; %>
@@ -26,7 +24,7 @@
                             </select>
                         <% } else { %>
                         <% var value = field.value ? field.value[0] : (field.definedValues[0].valueName || ''); %>
-                        <div class="rp-width-100">
+
                             <button <%= notAllowed %> id="<%- field.id %>"
                                 data-id="<%- field.id.replaceAll('.', '') %>"
                                 data-toggle="dropdown" data-name="<%= field.fieldName %>"
@@ -42,7 +40,7 @@
                                     </li>
                                 <% }) %>
                             </ul>
-                        </div>
+
                         <% } %>
                     <% } %>
                 <% }else{ %>

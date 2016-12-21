@@ -1545,7 +1545,7 @@ define(function(require, exports, module) {
             this.$instanceBoby = $("#instanceBody", this.$el);
 
             if(config.forSettings.btsList.length) {
-                this.renderMultiSelector()
+                this.renderMultiSelector();
                 this.renderInstance();
             } else {
                 $('button', this.$el).prop({disabled: 'disabled'});

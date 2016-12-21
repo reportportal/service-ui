@@ -21,26 +21,216 @@
 /*------------------------------*/
 /* STYLE FOR BTS SETTINGS PAGE */
 
-%BTS_SETTINGS {
-  #btsSettings {
-    padding-top: 10px;
-        .no-bts-found {
-            padding-top: 10px;
-            display: inline-block;
-        }
+.bts-settings {
+  padding-top: 10px;
 
-    #instanceHead {
+  .bts-selector {
+    margin-left: 142px;
+    margin-bottom: 15px;
+
+    .rp-control-label {
+      float: left;
+    }
+
+    .rp-btn-group {
+      float: left;
+      margin-left: 34px;
+      width: 310px;
+    }
+
+    .no-bts-found {
+      padding-top: 10px;
+      display: block;
+    }
+  }
+
+  .tbs-change-warning-block {
+    margin: 0;
+    #tbsChangeWarning {
+      display: none;
+      padding-bottom: 20px;
+    }
+  }
+  .bts-instance {
+    .instance-head {
       margin-bottom: 20px;
+
+      .bts-instance-wrapper {
+        margin-left: 85px;
+
+        .nav-tabs-bts-instances {
+          border-bottom: solid 1px #e9e9e9;
+          width: 600px;
+
+          .activated .close-add {
+            display: inline-block !important;
+          }
+
+          li {
+            position: relative;
+            float: left;
+
+            &.bts-instance-title {
+              & > span {
+                opacity: 0.9;
+                font-size: 12px;
+                color: $COLOR--gray-47;
+                font-weight: 600;
+                text-transform: uppercase;
+              }
+            }
+
+            &.bts-name-project {
+              margin-left: 20px;
+
+              a {
+                opacity: 0.6;
+                font-size: 14px;
+                cursor: pointer;
+                font-weight: 600;
+                text-transform: uppercase;
+                color: $COLOR--gray-47;
+                text-decoration: none;
+              }
+            }
+
+            &.active {
+              &:before {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: -10px;
+                right: -10px;
+                height: 1px;
+                background-color: $COLOR--topaz;
+              }
+
+              a {
+                color: $COLOR--topaz;
+                opacity: 0.9;
+              }
+            }
+
+            &.bts-instance-action {
+              float: right;
+
+              &.disabled {
+                a {
+                  color: $COLOR--gray-60;
+                  cursor: not-allowed;
+                }
+              }
+              a {
+                color: $COLOR--topaz;
+                font-weight: normal;
+                font-size: 13px;
+                text-transform: capitalize;
+                text-decoration: none;
+                opacity: 1;
+                margin: 0;
+
+                i {
+                  &.material-icons {
+                    font-size: 13px;
+                    line-height: 20px;
+                    width: 25px;
+                  }
+                }
+              }
+            }
+
+            span,
+            a {
+              position: relative;
+              font-family: $OpenSansRegular;
+              line-height: 30px;
+            }
+          }
+        }
+      }
 
       .close-add {
         display: none;
       }
     }
 
-    #instanceBody {
-      #fieldsWrapper {
+    .instance-body {
+      .bts-properties {
+        padding-left: 145px;
+
+        .rp-form-group {
+
+          &.has-error {
+            .bts-property,
+            .bts-property:focus {
+              color: #393939;
+              box-shadow: 0 0 2px 0 rgba(255, 49, 33, 0.7);
+              border: 1px solid #ff3222;
+            }
+          }
+          .rp-control-label {
+            width: 125px;
+            float: left;
+          }
+          .bts-property {
+            margin-left: 30px;
+            width: 310px;
+            float: left;
+          }
+          .help-inline {
+            clear: both;
+            margin-left: 154px;
+            margin-top: 38px;
+          }
+          .bts-properties-controls {
+            float: left;
+            margin-left: 20px;
+
+            a {
+              margin-top: 5px;
+            }
+          }
+        }
+
+        #authorizationType {
+          textarea {
+            overflow: auto;
+            resize: vertical;
+            height: 50px;
+            max-height: 200px;
+            font-family: $OpenSansRegular;
+            font-size: 13px;
+            line-height: 18px;
+            color: #393939;
+            padding: 5px 11px 5px 11px;
+          }
+        }
+      }
+
+      .submit-properties {
+        display: block;
+        overflow: hidden;
+        width: 610px;
+        padding-bottom: 15px;
+      }
+
+      .bts-fields-wrapper {
+        .title-block-wrapper {
+          margin-left: 100px;
+          margin-bottom: 12px;
+
+          h4 {
+            .common-title {
+              margin: 0 0 4px 0;
+              padding-left: 10px;
+            }
+          }
+        }
+
         .group-title-block {
           margin-bottom: 4px;
+          text-transform: uppercase;
+          font-size: 12px;
 
           .inputs-caption {
             float: left;
@@ -54,6 +244,19 @@
         }
         .bts-fields {
           margin-left: 120px;
+
+          .bts-field-input {
+            position: relative;
+
+            .dropdown-menu {
+              width: 100%;
+            }
+          }
+        }
+
+        .fields-controls {
+          display: block;
+          width: 610px;
         }
       }
       #fieldsLoader {
@@ -66,148 +269,34 @@
         }
       }
     }
+  }
 
-    label {
-      &.obligatory-field {
-        &:after {
-          position: absolute;
-          margin-left: 2px;
-        }
+  .mobile-disabling-cover {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    top: 0;
+  }
+
+  label {
+    &.obligatory-field {
+      &:after {
+        position: absolute;
+        margin-left: 2px;
       }
     }
+  }
 
-    .bts-instance-wrapper {
-      .nav-tabs-bts-instances {
-        border-bottom: solid 1px #e9e9e9;
+  .span-empty {
+    min-height: 8px;
+  }
 
-        .activated .close-add {
-          display: inline-block !important;
-        }
-
-        li {
-          position: relative;
-          float: left;
-
-          &.bts-instance-title {
-            & > span {
-              opacity: 0.9;
-              font-size: 12px;
-              color: $COLOR--gray-47;
-              font-weight: 600;
-              text-transform: uppercase;
-            }
-          }
-
-          &.bts-name-project {
-            margin-left: 20px;
-
-            a {
-              opacity: 0.6;
-              font-size: 14px;
-              cursor: pointer;
-              font-weight: 600;
-              text-transform: uppercase;
-              color: $COLOR--gray-47;
-              text-decoration: none;
-            }
-          }
-
-          &.active {
-            &:before {
-              content: '';
-              position: absolute;
-              bottom: -1px;
-              left: -10px;
-              right: -10px;
-              height: 1px;
-              background-color: $COLOR--topaz;
-            }
-
-            a {
-              color: $COLOR--topaz;
-              opacity: 0.9;
-            }
-          }
-
-          &.bts-instance-action {
-            float: right;
-
-            &.disabled {
-              a {
-                color: $COLOR--gray-60;
-                cursor: not-allowed;
-              }
-            }
-            a {
-              color: $COLOR--topaz;
-              font-weight: normal;
-              font-size: 13px;
-              text-transform: capitalize;
-              text-decoration: none;
-              opacity: 1;
-              margin: 0;
-
-              i {
-                &.material-icons {
-                  font-size: 13px;
-                  line-height: 20px;
-                  width: 25px;
-                }
-              }
-            }
-          }
-
-          span,
-          a {
-            position: relative;
-            font-family: $OpenSansRegular;
-            line-height: 30px;
-          }
-        }
-      }
-    }
-
-    .tbs-change-warning-block {
-      margin: 0;
-      #tbsChangeWarning {
-        display: none;
-        padding-bottom: 20px;
-      }
-    }
-
-    .title-block-wrapper {
-      margin-bottom: 12px;
-
-      h4 {
-        .common-title {
-          margin: 0 0 4px 0;
-          padding-left: 10px;
-        }
-      }
-    }
-
-    #authorizationType {
-      textarea {
-        overflow: auto;
-        resize: vertical;
-        max-height: 200px;
-        font-family: $OpenSansRegular;
-        font-size: 13px;
-        line-height: 18px;
-        color: #393939;
-        padding: 5px 11px 5px 11px;
-      }
-    }
-
-    .span-empty {
-      min-height: 8px;
-    }
-
-    #accessKeyBlock {
-      .rp-control-label {
-        vertical-align: top;
-        padding-top: 8px;
-      }
+  #accessKeyBlock {
+    .rp-control-label {
+      vertical-align: top;
+      padding-top: 8px;
     }
   }
 }
@@ -224,12 +313,6 @@
   display: inline-block;
 }
 
-#authorizationType {
-  textarea {
-    height: 50px;
-  }
-}
-
 #cancelBtsProperties,
 #cancelFields,
 #credentialsWrong,
@@ -240,44 +323,227 @@
   display: none;
 }
 
-#submitPropertiesBlock, .col-sm-12.p-bottom-15 {
-  padding-bottom: 15px;
-}
-
-/*----------------*/
-
-/*----------------*/
-/* INCLUDE STYLES */
-
-/* FOR USUAL USERS */
-#dynamic-content {
-  @extend %BTS_SETTINGS;
-}
-
-/* FOR ADMINISTRATORS USERS */
-#dynamicContent {
-  @extend %BTS_SETTINGS;
-}
-
 /*-----------------------------------*/
 /* STYLES OF DYNAMIC WIDTH OF SCREEN */
 
 /* xs - 767px */
 @media (max-width: $SCREEN_XS_MAX) {
-  #btsSettings {
-    #dynamicFields + .fields-controls {
-      padding: 0;
+  .bts-settings {
+    position: relative;
+
+    .bts-selector {
+      width: 100%;
+      margin-left: 0;
+      margin-bottom: 5px;
+
+      .rp-control-label {
+        width: 100%;
+        margin-bottom: 13px;
+      }
+      .rp-btn-group {
+        width: 100%;
+        margin-left: 0;
+
+        .rp-btn {
+          color: $COLOR--charcoal-grey;
+          background-color: $COLOR--gray-91;
+          border-color: $COLOR--gray-80;
+          box-shadow: none;
+          cursor: no-drop;
+        }
+      }
     }
 
-    .rp-padding-right-30 {
-      padding-right: 30px;
+    .bts-instance {
+      .instance-head {
+        margin-bottom: 14px;
+
+        .bts-instance-wrapper {
+          margin-left: 0;
+          .nav-tabs-bts-instances {
+            width: 100%;
+
+            .bts-instance-title {
+              height: 30px;
+              background-color: #f9f9f9;
+              width: 100%;
+              padding-left: 10px;
+              margin-bottom: 20px;
+
+              &:after {
+                clear: both;
+              }
+            }
+
+            .bts-name-project {
+              margin-left: 0 !important;
+
+              &.active {
+                width: 103px;
+                height: 30px;
+                background-color: #e9e9e9;
+                text-align: center;
+
+                &:before {
+                  display: none;
+                }
+
+                .bts-instance {
+                  width: 65px;
+                  height: 19px;
+                  font-family: "OpenSansSemibold";
+                  font-size: 14px;
+                }
+              }
+            }
+
+            .bts-instance-action {
+              display: none;
+            }
+          }
+        }
+      }
+
+      .instance-body {
+        .bts-block {
+          .bts-properties {
+            padding-left: 0;
+
+            .rp-form-group {
+              margin-bottom: 10px;
+              &:last-child {
+                margin-bottom: 0;
+              }
+              .rp-control-label {
+                width: 100%;
+                margin-bottom: 14px;
+              }
+              .bts-property {
+                margin-left: 0;
+                width: 100%;
+              }
+              .bts-properties-controls {
+                display: none;
+              }
+            }
+          }
+
+          & > .clearfix {
+            display: none;
+          }
+
+          .bts-fields-wrapper {
+            &:first-child {
+              display: none;
+            }
+
+            .title-block-wrapper {
+              margin-left: 0;
+              background-color: #f9f9f9;
+            }
+
+            .group-title-block {
+              display: none;
+            }
+
+            .bts-fields {
+              margin-left: 0;
+              .rp-form-group {
+                .bts-field-label {
+                  width: 100%;
+                }
+                .bts-field-input {
+                  margin-left: 0;
+                  width: calc(100% - 37px);
+                }
+                .bts-field-checkbox {
+                  margin-left: 13px;
+                }
+              }
+            }
+
+            .fields-controls {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+
+    .mobile-disabling-cover {
+      display: block;
+    }
+
+    .bts-property,
+    .bts-property > .rp-btn-with-dropdown,
+    .bts-field-input > .rp-input-default,
+    .bts-field-input > .rp-btn-with-dropdown {
+      color: $COLOR--charcoal-grey;
+      background-color: $COLOR--gray-91;
+      border-color: $COLOR--gray-80;
+      box-shadow: none;
+      cursor: no-drop;
+    }
+
+    .bts-field-checkbox {
+      .rp-checkbox-wrap {
+        span {
+          &:before {
+            box-shadow: none;
+            background-color: $COLOR--white;
+            border-color: $COLOR--gray-91;
+          }
+          &:after {
+            color: $COLOR--gray-60;
+          }
+        }
+      }
     }
   }
 }
 
 /* sm - 768px - 991px */
 @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+  .bts-settings {
+    width: 600px;
+    margin: 0 auto;
 
+    .bts-selector {
+      margin-left: 20px;
+    }
+
+    .bts-instance {
+      .instance-head {
+        .bts-instance-wrapper {
+          margin-left: 0;
+        }
+      }
+
+      .instance-body {
+        .bts-block {
+          .bts-properties {
+            padding-left: 25px;
+          }
+          .bts-fields-wrapper {
+            .title-block-wrapper {
+              margin-left: 0;
+            }
+            .group-title-block {
+              .inputs-caption {
+                margin-left: 180px;
+              }
+            }
+            .bts-fields {
+              margin-left: 0;
+            }
+            .fields-controls {
+              width: 490px;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 /* md - 992px - 1199px */
@@ -287,7 +553,7 @@
 
 /* lg - 1200px */
 @media (min-width: $SCREEN_LG_MIN) {
-  #btsSettings {
+  .bts-settings {
     width: $WIDTH_LAYOUT_PAGE_SETTINGS;
     max-width: $MAX_WIDTH_LAYOUT_PAGE_SETTINGS;
     margin: 0 auto;
