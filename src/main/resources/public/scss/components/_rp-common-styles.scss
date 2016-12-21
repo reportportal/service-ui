@@ -109,10 +109,20 @@ mark {
 .rp-nav-left {
   float: left;
 }
+.rp-nav-left {
+  .rp-btn {
+    margin-right: 8px;
+  }
+}
 
 .float-right,
 .rp-nav-right {
   float: right;
+}
+.rp-nav-right {
+  .rp-btn {
+    margin-left: 8px;
+  }
 }
 
 /*-----------------------------------*/

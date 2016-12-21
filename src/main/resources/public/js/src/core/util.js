@@ -418,6 +418,7 @@ define(function (require, exports, module) {
                 $element.wrap(wrapHtml);
                 $rootElement = $element.parent('.baron_scroller').parent('.baron__root');
             }
+            var baron = null;
             if ($rootElement && $('body').hasClass('no-zero-scroll')) {
                 $rootElement.append('<div class="baron__track">' +
                     '<div class="baron__control baron__up">▲</div>' +
@@ -426,7 +427,7 @@ define(function (require, exports, module) {
                     '</div>' +
                     '<div class="baron__control baron__down">▼</div>' +
                     '</div>');
-                $rootElement.baron({
+                baron = $rootElement.baron({
                     cssGuru: true,
                     root: '.baron',
                     scroller: '.baron_scroller',
@@ -435,7 +436,11 @@ define(function (require, exports, module) {
                     draggingCls: '_dragging'
                 });
             }
-            return $element.parent('.baron_scroller');
+            var $scrollObject = $element.parent('.baron_scroller');
+            if($scrollObject.length){
+                $scrollObject.get(0).baron = baron;
+            }
+            return $scrollObject;
         },
         setupBaronScrollSize: function ($scrollElem, options) {
             var $contentBlock = $scrollElem.children();
@@ -453,6 +458,8 @@ define(function (require, exports, module) {
             if (options && options.changeWidth) {
                 $overflowBlock.width($contentBlock.width());
             }
+            var baron = $scrollElem.get(0).baron;
+            baron && baron.update();
 
         },
         setupSelect2WhithScroll: function (el, options) {

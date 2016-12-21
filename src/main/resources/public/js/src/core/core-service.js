@@ -49,6 +49,7 @@ define([
 
     var getPreferences = function () {
         return call('GET', urls.getPreferences());
+        return call('GET', urls.getPreferences())
     };
 
     var getProfileImage = function (url) {

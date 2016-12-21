@@ -24,7 +24,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var ModalEditDashboard = require('modals/modalEditDashboard');
     var ModalConfirm = require('modals/modalConfirm');
-    var ModalAddWidget = require('modals/modalAddWidget');
+    var ModalAddWidget = require('modals/addWidget/modalAddWidget');
     var Localization = require('localization');
     var GadgetCollection = require('dashboard/GadgetCollection');
     var GadgetView = require('dashboard/GadgetView');

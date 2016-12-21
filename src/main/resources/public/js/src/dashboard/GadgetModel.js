@@ -65,6 +65,13 @@ define(function (require, exports, module) {
                     return 'img/popup/' + widgetConfig.widgetTypes[gadget].img;
                 }
             },
+            gadgetIsFilter: {
+                deps: ['gadget'],
+                get: function(gadget) {
+                    if(!gadget) return false;
+                    return !widgetConfig.widgetTypes[gadget].noFilters;
+                }
+            },
             isMy: {
                 deps: ['owner'],
                 get: function(owner) {

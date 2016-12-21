@@ -75,6 +75,12 @@ define(function(require, exports, module) {
                     return owner != config.userModel.get('name');
                 }
             },
+            sharedByTitle: {
+                deps: ['owner'],
+                get: function(owner) {
+                    return Localization.filters.sharedBy + ' ' + owner;
+                }
+            },
 
             isLaunchString: {
                 deps: ['isLaunch'],
