@@ -36,7 +36,7 @@ define(function(require, exports, module) {
 
     var config = App.getInstance();
 
-    var MembersItemView = Epoxy.View.extend({
+    var UsersItemView = Epoxy.View.extend({
         tpl: 'tpl-users-item',
         className: 'row rp-table-row user-row',
 
@@ -49,7 +49,8 @@ define(function(require, exports, module) {
             '[data-js-user-email]': 'html: getEmail, attr: {href: getEmailLink}',
             '[data-js-user-you]': 'classes: {hide: not(isYou)}',
             '[data-js-user-admin]': 'classes: {hide: not(isAdmin), notlink: isYou}',
-            '[data-js-make-admin]': 'classes: {hide: hideMakeAdmin}'
+            '[data-js-make-admin]': 'classes: {hide: hideMakeAdmin}',
+            '[data-js-user-projects-mobile]': 'getUserProjects: assigned_projects',
         },
 
         computeds: {
@@ -91,6 +92,17 @@ define(function(require, exports, module) {
             }
         },
 
+        bindingHandlers: {
+            getUserProjects: {
+                set: function($el, assigned_projects) {
+                    var projects = this.view.model.getAssignedProjects();
+                    _.each(projects, function(val, project){
+                        $el.append('<p><span>' + Localization.admin.projectName + ':</span><strong>' + project + '</strong><br> <span>' + Localization.admin.projectRole + ':</span>' + val.projectRole + '</p>');
+                    });
+                }
+            }
+        },
+
         events: {
             'click [data-js-login-time]': 'toggleTimeView',
             'click [data-js-view-projects]': 'showUserProjects',
@@ -100,6 +112,7 @@ define(function(require, exports, module) {
         },
 
         initialize: function (options) {
+            this.table = options.table;
             this.searchString = options.searchString || '';
             this.appModel = new SingletonAppModel();
             this.render();
@@ -112,6 +125,13 @@ define(function(require, exports, module) {
         showUserProjects: function(e){
             e.preventDefault();
             var $el = $(e.currentTarget);
+            _.each(this.table.renderViews, function(view){
+                if(view.userProjectsView && (view.model.get('userId') !== this.model.get('userId'))){
+                    $('[data-js-view-projects]', view.$el).removeClass('active');
+                    view.userProjectsView.destroy();
+                    view.userProjectsView = null;
+                }
+            }, this);
             if(!this.userProjectsView){
                 $el.addClass('active');
                 this.userProjectsView = new UserProjectsView({
@@ -191,6 +211,6 @@ define(function(require, exports, module) {
         }
     });
 
-    return MembersItemView;
+    return UsersItemView;
 
 });

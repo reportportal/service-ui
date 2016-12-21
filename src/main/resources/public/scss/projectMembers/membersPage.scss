@@ -145,9 +145,6 @@
         }
         &.show-from-now {
             .login-time {
-                line-height: 1.5;
-                font-size: 13px;
-
                 .exact-time {
                     display: none;
                 }
@@ -170,20 +167,81 @@
             position: relative;
 
             .dropdown-menu {
-                &>li {
+                & > li {
                     a.active, a.active:hover {
                         background: $COLOR--gray-91;
                         cursor: default;
                     }
                 }
             }
+            .member-role-mobile {
+                display: none;
+            }
         }
         .members-actions {
             text-align: right;
             padding-right: 5px;
         }
+        .member-title-mobile {
+            display: none;
+            font-size: 12px;
+            margin-right: 6px;
+            text-transform: uppercase;
+        }
     }
     .project-empty-members {
 
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+        .project-members-actions {
+            display: none;
+        }
+        .project-members-table {
+            .rp-grid-thead {
+                display: none;
+            }
+            .rp-table-row {
+                padding: 14px 0;
+            }
+            .grid-cell {
+                padding: 6px 15px;
+            }
+            .name-grid-cell {
+                width: 100%;
+            }
+            .login-grid-cell {
+                width: 100%;
+            }
+            .role-grid-cell {
+                width: 100%;
+            }
+            .action-grid-cell {
+                display: none;
+            }
+            .member-wrap {
+                .member-info {
+                    font-size: 15px;
+                }
+            }
+            .login-time {
+                padding: 0;
+                font-size: 14px;
+            }
+            .member-title-mobile {
+                font-size: 12px;
+                display: inline-block;
+            }
+            .member-select-role {
+                font-size: 14px;
+
+                .rp-btn-with-dropdown {
+                    display: none;
+
+                }
+                .member-role-mobile {
+                    display: block;
+                }
+            }
+        }
     }
 }

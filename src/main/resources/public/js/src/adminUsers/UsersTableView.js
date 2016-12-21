@@ -162,7 +162,7 @@ define(function(require, exports, module) {
                 return;
             }
             _.each(this.collection.models, function(user) {
-                var userItem = new UsersItemView({model: user, searchString: this.model.get('search')});
+                var userItem = new UsersItemView({model: user, searchString: this.model.get('search'), table: this});
                 this.$usersList.append(userItem.$el);
                 this.renderViews.push(userItem);
             }, this);

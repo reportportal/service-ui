@@ -50,6 +50,7 @@ define(function(require, exports, module) {
             '[data-js-select-roles]': 'classes: {hide: isAdmin}',
             '[data-js-admin-role]': 'classes: {hide: not(isAdmin)}',
             '[data-js-selected-role]': 'text: getProjectRole',
+            '[data-js-member-role-mobile]': 'text: getProjectRole',
             '[data-js-dropdown-roles]': 'updateRoleDropDown: assigned_projects',
             '[data-js-button-roles] ': 'classes: {disabled: not(canChangeRole)}, attr: {disabled: not(canChangeRole)}'
         },

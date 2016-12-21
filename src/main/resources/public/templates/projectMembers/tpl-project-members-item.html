@@ -15,6 +15,7 @@
     </div>
 </div>
 <div class="grid-cell login-grid-cell">
+    <div class="member-title-mobile"><%= data.text.admin.lastLogin %>:</div>
     <div class="login-time show-time" data-js-login-time>
         <span class="from-now" data-js-time-from-now></span>
         <span class="exact-time" data-js-time-exact></span>
@@ -38,6 +39,10 @@
             </li>
             <% }); %>
         </ul>
+        <div class="member-role-mobile">
+            <div class="member-title-mobile"><%= data.text.project.projectRole %>:</div>
+            <span data-js-member-role-mobile></span>
+        </div>
     </div>
     <div data-js-admin-role class="admin-role">
         <%= data.text.admin.privileges %>

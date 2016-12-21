@@ -573,8 +573,11 @@ define(['util'], function () {
             settingsButton: "Settings",
             refresh: "Refresh",
             remove: "Remove",
+            addFilter: 'Add Filter',
             exitFullscreen: "Exit full screen",
             fullscreen: "Full Screen",
+            nextStep: 'Next Step',
+            previousStep: 'Previous Step',
             saveWidget: "Please, save your filter to add widget.",
             widgetEmpty: "No widgets found!",
             clickToAddWidget: "Click 'Add Widget' button to create widget.",
@@ -976,6 +979,7 @@ define(['util'], function () {
             shared: "Shared:",
             noInfoFilter: 'No info matches this filter',
             notSaveDescription: 'Filter is not saved',
+            sharedBy: 'Filter is shared by',
             sharedDescription: 'Filter is shared',
             globalDescription: 'Filter is shared by other user',
         },
@@ -1212,7 +1216,9 @@ define(['util'], function () {
             TLS: 'TLS',
             SSL: 'SSL',
             emailError: 'Test connection was failed:',
-            addUserProject: 'Add User to Project'
+            addUserProject: 'Add User to Project',
+            projectName: 'Project name',
+            projectRole: 'Project role'
         },
 
         members: {
@@ -1252,7 +1258,10 @@ define(['util'], function () {
             invitationSent: "The invitation was sent on",
             titleAllMembers: "All Members",
             titleNameLoginEmail: "Name / Login / Email",
-            enterLoginEmail: 'Enter Login or Email'
+            enterLoginEmail: 'Enter Login or Email',
+            alredyAdded: 'User has already assigned to the project',
+            invitePref: 'Invite',
+            sendInvite: 'Send invite via e-mail'
         },
 
         comparators: {
@@ -1604,6 +1613,7 @@ define(['util'], function () {
             deletedWidget: 'DELETE WIDGET',
             deleteBts: 'Delete Project',
             unAssignMember: 'UNASSIGN MEMBER',
+            unAssignUser: 'UNASSIGN USER',
             changeRole: 'CHANGE ROLE',
             sureToRemoveWidget: 'REMOVE WIDGET',
             titleEditDefectType: 'Edit Defect Type',
@@ -1628,7 +1638,8 @@ define(['util'], function () {
             deleteProject: "Are you sure you want to delete the project <b>'%%%'</b>?",
             deleteEmailRule: "Are you sure you want to remove notification rule?",
             deleteEmailRuleBtn: 'Remove',
-            unAssignMember: "Are you sure you want to unassign user <b>'%%%'</b> from the project <b>'%%%'</b>?",
+            unAssignMember: "Are you sure you want to unassign member <b>'%%%'</b> from the project <b>'%%%'</b>?",
+            unAssignUser: "Are you sure you want to unassign user <b>'%%%'</b> from the project <b>'%%%'</b>?",
             unAssignMemberBtn: "Unassign",
             deleteUser: "Are you sure you want to delete user <b>'%%%'<b>?",
             changeRole: "Are you sure you want to change the account role for the <b>'%%%'</b>?",

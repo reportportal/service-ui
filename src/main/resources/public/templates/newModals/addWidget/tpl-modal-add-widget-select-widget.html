@@ -1,7 +1,8 @@
-<div data-js-widget-list></div>
-<div class="buttons-block">
-    <a class="rp-btn rp-btn-default rp-button-with-icon rp-btn-icon-reverse" data-js-next-step>
-        <i class="material-icons">keyboard_arrow_right</i>
-        <span class="rp-btn-val hidden-sm hidden-xs">Next Error</span>
-    </a>
+<div class="widget-list">
+    <% _.each(data.widgets, function(value, key) { %>
+    <label>
+        <input class="rp-input-radio" type="radio" name="widget-type" value="<%- key %>">
+        <span><%- value.gadget_name %></span>
+    </label>
+    <% }) %>
 </div>

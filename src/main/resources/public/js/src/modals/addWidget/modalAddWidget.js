@@ -26,39 +26,43 @@ define(function (require, exports, module) {
     var ModalView = require('modals/_modalView');
     var Util = require('util');
     var $ = require('jquery');
+    var WidgetsConfig = require('widget/widgetsConfig');
+    var SelectWidgetView = require('modals/addWidget/SelectWidgetView');
+    var ConfigureWidgetView = require('modals/addWidget/ConfigureWidgetView');
 
 
-
-    var SelectWidgetView = Epoxy.View.extend({
-        className: 'modal-add-widget-select-widget',
-        template: 'tpl-modal-add-widget-select-widget',
-        initialize: function() {
-            this.render();
-        },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {}))
-        }
-    })
 
     var ModalAddWidget = ModalView.extend({
         template: 'tpl-modal-add-widget',
         className: 'modal-add-widget',
 
         events: {
-
+            'click [data-js-previous-first-step]': 'onClickFirstStep',
+            'click [data-js-next-second-step]': 'onClickSecondStep',
+            'click [data-js-next-last-step]': 'onClickLastStep',
+            'click [data-js-previous-second-step]': 'onClickSecondStep',
+            'click [data-js-add-widget]': 'onClickAddWidget',
         },
-
-        computeds: {
-
+        bindings: {
+            '[data-js-widget-type]': 'text: gadgetName',
+            '[data-js-widget-description]': 'text: gadgetDescription',
+            '[data-js-widget-preview]': 'css: {"background-image": format("url($1)", gadgetPreviewImg)}',
+            '[data-js-next-second-step]': 'attr: {disabled: not(gadget)}',
         },
 
         initialize: function(options) {
+            if(!options.model) {
+                console.log('Model is not found');
+                return false;
+            }
             this.viewModel = new (Epoxy.Model.extend({
                 defaults: { step: 1 }
             }));
             this.render();
-            this.selectWidgetView = new SelectWidgetView();
+            this.selectWidgetView = new SelectWidgetView({model: this.model});
             $('[data-js-step-1]', this.$el).html(this.selectWidgetView.$el);
+            this.configureWidgetView = new ConfigureWidgetView({model: this.model});
+            $('[data-js-step-2]', this.$el).html(this.configureWidgetView.$el);
             this.listenTo(this.viewModel, 'change:step', this.setState);
             this.setState();
         },
@@ -68,19 +72,36 @@ define(function (require, exports, module) {
         setState: function() {
             $('[data-js-step-1-title], [data-js-step-2-title], [data-js-step-3-title]', this.$el).removeClass('active visited');
             $('[data-js-step-1], [data-js-step-2], [data-js-step-3]', this.$el).removeClass('active');
+            $('[data-js-next-second-step], [data-js-previous-first-step],[data-js-next-last-step], [data-js-previous-second-step],[data-js-add-widget]', this.$el).addClass('hide');
             switch(this.viewModel.get('step')) {
                 case 1:
                     $('[data-js-step-1-title], [data-js-step-1]', this.$el).addClass('active');
+                    $('[data-js-next-second-step]', this.$el).removeClass('hide');
                     break;
                 case 2:
                     $('[data-js-step-1-title]', this.$el).addClass('visited');
-                    $('[data-js-step-2-title] [data-js-step-2]', this.$el).addClass('active');
+                    $('[data-js-step-2-title], [data-js-step-2]', this.$el).addClass('active');
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).removeClass('hide');
+                    this.configureWidgetView.activate();
                     break;
                 case 3:
                     $('[data-js-step-1-title], [data-js-step-2-title]', this.$el).addClass('visited');
-                    $('[data-js-step-3-title] [data-js-step-3]', this.$el).addClass('active');
+                    $('[data-js-step-3-title], [data-js-step-3]', this.$el).addClass('active');
+                    $('[data-js-previous-second-step],[data-js-add-widget]', this.$el).removeClass('hide');
                     break;
             }
+        },
+        onClickFirstStep: function() {
+            this.viewModel.set('step', 1);
+        },
+        onClickSecondStep: function() {
+            this.viewModel.set('step', 2);
+        },
+        onClickLastStep: function() {
+            this.viewModel.set('step', 3);
+        },
+        onClickAddWidget: function() {
+
         }
 
     });
