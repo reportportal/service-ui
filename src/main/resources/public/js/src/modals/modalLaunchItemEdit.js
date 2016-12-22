@@ -128,6 +128,9 @@ define(function (require, exports, module) {
 
             });
         },
+        onKeySuccess: function() {
+            $('[data-js-save]', this.$el).focus().trigger('click');
+        },
         isEditLaunch: function(){
             return this.itemModel.get('type') == 'LAUNCH';
         },
@@ -151,4 +154,4 @@ define(function (require, exports, module) {
     });
 
     return ModalLaunchEdit;
-})
+});
