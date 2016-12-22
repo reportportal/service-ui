@@ -23,6 +23,24 @@
     padding-right: 75px;
     padding-top: 33px;
 
+    .project-selector-field {
+      padding-left: 39px;
+
+      & > .rp-control-label {
+        width: 150px;
+        span {
+          display: inline !important;
+        }
+      }
+      .btn-group {
+        margin-left: 20px;
+        width: 280px;
+      }
+      .label-post-to {
+        margin-left: 20px;
+      }
+    }
+
     .bts-fields {
       padding-left: 39px;
       margin-bottom: 31px;

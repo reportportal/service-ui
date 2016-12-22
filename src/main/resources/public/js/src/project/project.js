@@ -2335,7 +2335,7 @@ define(function(require, exports, module) {
                     changeRow.addClass('hide-content');
                     e.color.setColor(currentColor);
                     $(this).find('.colorpicker-current-color > span')
-                        .on('click touchstart mousedown', function(e){
+                        .on('click', function(e){
                             e.stopPropagation();
                             var selection = window.getSelection();
                             selection.selectAllChildren(this);
