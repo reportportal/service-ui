@@ -81,7 +81,20 @@ define(function(require, exports, module) {
                     return Localization.filters.sharedBy + ' ' + owner;
                 }
             },
-
+            isAskSorting: {
+                deps: ['selection_parameters', 'newSelectionParameters'],
+                get: function() {
+                    var params = this.getParametersObj();
+                    return params.is_asc;
+                }
+            },
+            sortingColumn: {
+                deps: ['selection_parameters', 'newSelectionParameters'],
+                get: function() {
+                    var params = this.getParametersObj();
+                    return params.sorting_column;
+                }
+            },
             isLaunchString: {
                 deps: ['isLaunch'],
                 get: function(showOnLaunches){

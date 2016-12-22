@@ -28,13 +28,19 @@ define(function (require, exports, module) {
     var CoreService = require('coreService');
     var FilterModel = require('filters/FilterModel');
     var FilterItem = require('modals/addWidget/FilterSearchItemView');
+    var FilterSearchEditView = require('modals/addWidget/FilterSearchEditView');
 
     var FilterCollection = Backbone.Collection.extend({
         model: FilterModel,
+        initialize: function(options) {
+            this.mainModel = options.mainModel;
+        },
         parse: function(data) {
+            var self = this;
             return _.map(data, function(itemData) {
                 itemData.entities = JSON.stringify(itemData.entities);
                 itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
+                itemData.active = !!(itemData.id == self.mainModel.get('filter_id'));
                 return itemData;
             })
         }
@@ -46,13 +52,14 @@ define(function (require, exports, module) {
         events: {
             'validation::change [data-js-filter-name]': 'onChangeFilterName',
             'click [data-js-add-filter]': 'onClickAddFilter',
+
         },
         bindings: {
             ':el': 'classes: {hide: not(gadgetIsFilter)}'
         },
         initialize: function() {
             this.firstActivate = true,
-            this.collection = new FilterCollection();
+            this.collection = new FilterCollection({mainModel: this.model});
             this.renderViews = [];
             this.render();
             this.viewModel = new Epoxy.Model({
@@ -63,7 +70,7 @@ define(function (require, exports, module) {
                 pageSize: 10,
                 totalPage: 1,
             }),
-            Util.bootValidator($('[data-js-filter-name]', this.$el), [{
+            Util.hintValidator($('[data-js-filter-name]', this.$el), [{
                 validator: 'minMaxNotRequired',
                 type: 'filterName',
                 min: 3,
@@ -73,18 +80,50 @@ define(function (require, exports, module) {
             this.listenTo(this.viewModel, 'change:search', _.debounce(this.updateFilters, 500));
             this.listenTo(this.collection, 'add', this.onAddCollectionItems);
             this.listenTo(this.collection, 'reset', this.onResetCollectionItems);
-            this.baronScroll = Util.setupBaronScroll($('[data-js-filter-list]', this.$el));
+            this.listenTo(this.collection, 'change:active', this.onSelectFilter);
+            this.listenTo(this.collection, 'edit', this.onEditFilter);
+
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}))
+        },
+        onSelectFilter: function(filterModel) {
+            this.model.set({filter_id: filterModel.get('id')});
+        },
+        onEditFilter: function(model) {
+            this.editFilterView && this.editFilterView.destroy();
+            this.editFilterView = new FilterSearchEditView({model: model});
+            $('[data-js-filter-edit-container]', this.$el).html(this.editFilterView.$el);
+            var self = this;
+            this.editFilterView.getReadyState()
+                .always(function() {
+                    self.editFilterView.destroy();
+                })
+                .done(function(entity) {
+                    console.dir(entity);
+                })
+            this.editFilterView.activate();
         },
         activate: function() {
             if(!this.firstActivate) { return; }
             this.firstActivate = false;
             var self = this;
             this.load().always(function() {
-                Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 300});
+                self.baronScroll = Util.setupBaronScroll($('[data-js-filter-list-scroll]', self.$el));
+                Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 400});
+                self.baronScroll.on('scroll', function(e) {
+                    var elem = self.baronScroll.get(0);
+                    if(elem.scrollHeight - elem.scrollTop  < elem.offsetHeight*2){
+                        self.addLoadData();
+                    }
+                })
             })
+        },
+        addLoadData: function() {
+            if(this.viewModel.get('currentPage') < this.viewModel.get('totalPage') && !this.$el.hasClass('load')) {
+                this.viewModel.set('currentPage', this.viewModel.get('currentPage') + 1);
+                this.load();
+            }
         },
         onChangeFilterName: function (e, data) {
             if (data.valid) {
@@ -97,7 +136,7 @@ define(function (require, exports, module) {
         onResetCollectionItems: function() {
             _.each(this.renderViews, function(view) {
                 view.destroy();
-            })
+            });
             this.renderViews = [];
             _.each(this.collection.models, function(model) {
                 this.renderFilter(model);
@@ -110,6 +149,10 @@ define(function (require, exports, module) {
         },
         updateFilters: function() {
             this.collection.reset([]);
+            this.viewModel.set({
+                totalPage: 1,
+                currentPage: 1,
+            });
             this.load();
         },
         load: function() {

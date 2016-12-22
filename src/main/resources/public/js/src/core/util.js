@@ -1052,6 +1052,68 @@ define(function (require, exports, module) {
             el.closest('ul').find('.active').removeClass('active');
             el.addClass('active');
         },
+        hintValidator: function($el, options) {
+            var $holder = $el.closest(".form-group, .rp-form-group");
+            var $hintBlock = $('> .validate-hint', $holder);
+            var validators = [];
+
+            if (!_.isArray(options)) {
+                options = [options];
+            }
+            _.each(options, function (option) {
+                if (Validators[option.validator]) {
+                    validators.push({validate: Validators[option.validator], options: option});
+                }
+            });
+            var validate = function () {
+                var result = '';
+                _.each(validators, function (validator) {
+                    var val = validator.options.noTrim ? $el.val() : $el.val().trim();
+                    var message = validator.validate(val, validator.options, Util);
+                    if (message) {
+                        result = !result ? message + "</br>" : result;
+                    }
+                });
+                if(result) {
+                    $holder.addClass('validate-error');
+                } else {
+                    $holder.removeClass('validate-error');
+                }
+                $el.data('validate-error', result);
+                return result;
+            };
+            var showResult = function(result) {
+                if(result) {
+                    $hintBlock.html(result).addClass('show-hint');
+                }
+            };
+            var hideResult = function() {
+                $hintBlock.removeClass('show-hint');
+            };
+            $el.on('keyup', function (e) {
+                    if (e.keyCode && (e.keyCode === 9 || e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40)) {
+                        return;
+                    }
+                    var result = validate();
+                    if(result) {
+                        showResult(result);
+                    } else {
+                        hideResult();
+                    }
+                })
+                .on('paste', function () {
+                    $(this).trigger('keyup');
+                })
+                .on('focus', function () {
+                    $(this).trigger('keyup');
+                })
+                .on('validate', function() {
+                    validate();
+                })
+                .on('blur', function () {
+                    hideResult();
+                })
+        },
 
         bootValidator: function ($el, options, extraOptions) {
             $el.data('valid', true).data('was', $el.val());

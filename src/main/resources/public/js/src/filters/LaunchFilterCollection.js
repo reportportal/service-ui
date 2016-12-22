@@ -41,7 +41,7 @@ define(function(require, exports, module) {
             this.listenTo(this, 'remove', this.onRemoveFilter);
             this.listenTo(this, 'change:temp', this.onChangeTemp);
 
-            this.listenTo(this, 'change', this.onChangeLaunchFilter);
+            // this.listenTo(this, 'change', this.onChangeLaunchFilter);
             this.ready = $.Deferred();
         },
         onAddFilter: function(model) {

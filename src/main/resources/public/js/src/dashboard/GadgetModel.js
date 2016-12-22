@@ -41,6 +41,7 @@ define(function (require, exports, module) {
             owner: '',
             isShared: false,
 
+            filter_id: '',
             widgetData: {},
         },
         computeds: {
@@ -70,6 +71,13 @@ define(function (require, exports, module) {
                 get: function(gadget) {
                     if(!gadget) return false;
                     return !widgetConfig.widgetTypes[gadget].noFilters;
+                }
+            },
+            gadgetIsFilterFill: {
+                deps: ['gadget', 'gadgetIsFilter', 'filter_id'],
+                get: function(gadget, gadgetIsFilter, filter_id) {
+                    if(!gadgetIsFilter) return true;
+                    return !!filter_id;
                 }
             },
             isMy: {

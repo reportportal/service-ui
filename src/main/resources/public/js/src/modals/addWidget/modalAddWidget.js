@@ -48,6 +48,7 @@ define(function (require, exports, module) {
             '[data-js-widget-description]': 'text: gadgetDescription',
             '[data-js-widget-preview]': 'css: {"background-image": format("url($1)", gadgetPreviewImg)}',
             '[data-js-next-second-step]': 'attr: {disabled: not(gadget)}',
+            '[data-js-next-last-step]': 'attr: {disabled: not(gadgetIsFilterFill)}'
         },
 
         initialize: function(options) {

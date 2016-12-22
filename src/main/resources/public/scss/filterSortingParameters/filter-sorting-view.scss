@@ -19,8 +19,14 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'add-widget';
-@import 'add-widget-select-widget';
-@import 'add-widget-search-filter';
-@import 'add-widget-search-filter-item';
-@import 'add-widget-search-edit-filter';
+.filter-sorting-view {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  i {
+    vertical-align: middle;
+  }
+  .dropdown-toggle {
+    color: $COLOR--windows-blue;
+  }
+}

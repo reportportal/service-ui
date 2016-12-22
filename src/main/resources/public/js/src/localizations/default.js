@@ -146,6 +146,7 @@ define(['util'], function () {
             backForm: 'Back to Form',
             today: 'Today',
             yesterday: 'Yesterday',
+            sortBy: 'Sort by',
             days: [
                 "Sunday",
                 "Monday",
@@ -989,6 +990,7 @@ define(['util'], function () {
             share: 'Share',
             description: 'Description',
             descriptionPlaceholder: 'Enter Filter Description',
+            edit: "Edit Filter"
         },
 
         project: {

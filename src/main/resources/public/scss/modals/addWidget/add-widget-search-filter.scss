@@ -22,7 +22,6 @@
 .modal-add-widget-filter-search {
   .filter-search-header {
     background: $COLOR--white-four;
-    overflow: hidden;
     width: 100%;
     height: 50px;
     padding: 10px;
@@ -33,6 +32,11 @@
     }
     .rp-btn {
       float: right;
+    }
+  }
+  &.load {
+    .preloader {
+      display: block;
     }
   }
 }

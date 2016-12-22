@@ -22,36 +22,39 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
-    var SingletonAppModel = require('model/SingletonAppModel');
-    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
-    var App = require('app');
-    var Components = require('core/components');
     var Util = require('util');
-    var MainBreadcrumbsComponent = require('components/MainBreadcrumbsComponent');
-    var CoreService = require('coreService');
-    var FilterCollection = require('filters/FilterCollection');
-    var ModalConfirm = require('modals/modalConfirm');
-    var Localization = require('localization');
 
-    var config = App.getInstance();
-    var appModel = new SingletonAppModel();
 
     var FilterSearchItem = Epoxy.View.extend({
         className: 'modal-add-widget-filter-search-item',
         template: 'tpl-modal-add-widget-filter-search-item',
+        events: {
+            'click [data-js-filter-edit]': 'onClickFilterEdit',
+        },
         bindings: {
             '[data-js-filter-name]': 'text: name',
             '[data-js-filter-options]': 'html: optionsString',
             '[data-js-filter-shared]': 'classes: {hide: any(not(isShared), notMyFilter)}',
             '[data-js-filter-not-my]': 'classes: {hide: not(notMyFilter)}, attr: {title: sharedByTitle}',
             '[data-js-filter-edit]': 'classes: {hide: notMyFilter}',
+            '[data-js-filter-select]': 'checked: active',
         },
         initialize: function() {
             this.render();
+            var self = this;
+            if(this.model.get('active')) {
+                setTimeout(function() {
+                    $('[data-js-filter-select]', self.$el)[0].checked = true;
+                })
+
+            }
+        },
+        onClickFilterEdit: function(e) {
+            e.stopPropagation();
+            this.model.trigger('edit', this.model);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
