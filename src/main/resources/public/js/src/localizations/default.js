@@ -1143,6 +1143,7 @@ define(['util'], function () {
             settings: "Settings",
             serverSettings: "Server Settings",
             emailSettings: "E-mail server",
+            githubSettings: 'Authorization Configuration',
             host: "Host",
             port: "Port",
             username: "Username",
@@ -1216,7 +1217,13 @@ define(['util'], function () {
             emailError: 'Test connection was failed:',
             addUserProject: 'Add User to Project',
             projectName: 'Project name',
-            projectRole: 'Project role'
+            projectRole: 'Project role',
+            enableGuestAccount: 'Enable Guest Account',
+            activateGitHubAuth: 'Activate GitHub Authorization',
+            gitHubClientId: 'Client ID',
+            gitHubClientSecret: 'Client Secret',
+            gitHubOrgName: 'Organization Name',
+            addGitHubOrg: 'Add GitHub Organization'
         },
 
         members: {

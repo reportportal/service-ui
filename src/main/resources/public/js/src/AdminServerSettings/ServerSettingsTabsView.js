@@ -28,6 +28,8 @@ define(function(require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var ServerSettingsTabsView = require('adminServerSettings/ServerSettingsTabsView');
+    var EmailSettings = require('adminServerSettings/EmailServerSettingsView');
+    var GitHubSettings = require('adminServerSettings/GitHubServerSettingsView');
 
     var config = App.getInstance();
 
@@ -41,16 +43,87 @@ define(function(require, exports, module) {
 
         computeds: {},
 
-        initialize: function (options) {
+        events: {
+            'click [data-js-tab-action]': 'updateTabs'
+        },
 
+        initialize: function (options) {
+            this.tab = options.action || "email";
+            //console.log('tab: ', this.tab);
+            this.render();
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.tpl));
-            return this;
+            this.$el.html(Util.templates(this.tpl, {tab: this.tab}));
+            this.setupAnchors();
+            this.renderTabContent();
         },
 
+        update: function(tab, silent){
+            this.tab = tab || "email";
+            if (!silent) {
+                $('[data-action=' + this.tab + ']', this.$el).tab('show');
+            }
+            this.renderTabContent();
+        },
+
+        updateTabs: function (e) {
+            var $el = $(e.currentTarget),
+                tab = $el.data('js-tab-action');
+            config.router.navigate($el.attr('href'), {
+                silent: true
+            });
+            this.update(tab, true);
+        },
+
+        renderTabContent: function(){
+            this.tabView && this.tabView.destroy();
+
+            var viewTab = this.getTabView(this.tab),
+                currentContent = $('[data-js-tab-content="' + this.tab + '"]', this.$el);
+
+            this.tabView = new viewTab();
+            $('[data-js-tab-content]', this.$el).hide();
+            $('[data-js-tab-action]', this.$el).closest('li.active').removeClass('active');
+            $('[data-js-tab-action="' + this.tab + '"]', this.$el).closest('li').addClass('active');
+            currentContent.append(this.tabView.$el);
+            currentContent.show();
+            //console.log(this.tab);
+            //console.log('renderTabContent: ', this.tabView.$el);
+        },
+
+        getTabView: function(tab) {
+            switch (tab) {
+                case 'github':
+                    return GitHubSettings;
+                    break;
+                default :
+                    return EmailSettings;
+            }
+        },
+
+        setupAnchors: function () {
+
+        },
+
+        /*emailRender: function () {
+            if (!this.emailSettingsView) {
+                this.emailSettingsView = new EmailServerSettingsView({
+                    container: this.$emailHolder
+                }).render();
+            }
+        },
+
+        githubRender: function () {
+            if (!this.githubSettingsView) {
+                this.githubSettingsView = new GitHubAuthSettingsView({
+                    container: this.$githubHolder
+                }).render();
+            }
+        },*/
+
         destroy: function(){
+            this.tabView && this.tabView.destroy();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
@@ -59,8 +132,6 @@ define(function(require, exports, module) {
         }
     });
 
-    return {
-        ContentView: ServerSettingsPageView
-    };
+    return ServerSettingsPageView;
 
 });
