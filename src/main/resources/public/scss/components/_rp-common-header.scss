@@ -28,39 +28,19 @@
     padding: 0 15px;
     background-color: #2b2b2b;
     letter-spacing: 0.5px;
-    // min-height: 60px;
-    // max-height: 60px;
-}
-
-#topHeader ul.navbar-nav.rp-navbar-left > li:first-child {
-    padding-right: 30px;
-}
-
-@media (max-width: 768px) {
-    .header {
-        padding: 0 20px 0 10px;
+    @media (max-width: $SCREEN_XS_MAX) {
+        padding: 0;
     }
 }
-
-#topHeader > * {
-    padding-left: 0;
-    padding-right: 0;
-    font-family: $OswaldRegular;
-}
-
-.rp-header-nav > li > a {
-    color: #565656;
-    background-color: inherit !important;
-    padding-bottom: 5px;
-}
-
 #topHeader {
     min-height: 30px;
     margin-bottom: 0;
     padding: 16px 0px 11px 0px;
     box-sizing: content-box;
     color: #fff;
-
+    @media (max-width: $SCREEN_XS_MAX) {
+        padding: 0;
+    }
     & > .admin_header {
         font-size: 20px;
         text-transform: uppercase;
@@ -127,6 +107,24 @@
         }
     }
 }
+
+#topHeader ul.navbar-nav.rp-navbar-left > li:first-child {
+    padding-right: 30px;
+}
+
+#topHeader > * {
+    padding-left: 0;
+    padding-right: 0;
+    font-family: $OswaldRegular;
+}
+
+.rp-header-nav > li > a {
+    color: #565656;
+    background-color: inherit !important;
+    padding-bottom: 5px;
+}
+
+
 
 #topHeader #members a {
     padding: 6px 0 0 0;
@@ -236,36 +234,17 @@
     padding-left: 0;
     padding-right: 20px;
     font-size: 16px;
-}
-
-#topHeader .rp-header-nav.rp-navbar-right > li.dropdown > a.dropdown-toggle {
-    padding-right: 2px;
+    &.dropdown-toggle {
+        padding-right: 2px;
+    }
 }
 
 #topHeader .rp-header-nav.rp-navbar-left > li.dropdown > a.dropdown-toggle {
-    /*padding-right: 20px;*/
     padding: 0px;
 }
 #topHeader .rp-header-nav.rp-navbar-left > li.dropdown > a.dropdown-toggle > span {
     margin-right: 10px;
 }
-
-/*
-#topHeader .rp-header-nav.rp-navbar-left > li.dropdown > a:after {
-    content: "";
-    position: absolute;
-    top: -2px;
-    right: 0;
-    display: block;
-    width: 1px;
-    height: 29px;
-    background-color: #575658;
-}
-*/
-
-// .rp-header-nav.rp-navbar-right a.dropdown-toggle .fa {
-//     font-size: 20px;
-// }
 
 .rp-header-nav > li.dropdown {
     padding-bottom: 0;
@@ -279,11 +258,6 @@
 #topHeader .rp-header-nav.rp-navbar-right > li.dropdown .dropdown-toggle {
     font-size: 14px;
 }
-
-/* .rp-header-nav > li.dropdown > .dropdown-menu {
-    top: 44px;
-    padding: 0;
-} */
 
 .rp-header-nav > li > .dropdown-menu {
     border-radius: 0;
@@ -436,6 +410,84 @@
                 padding: 0;
             }
         }
+        @media (max-width: $SCREEN_XS_MAX) {
+            position: relative;
+            box-shadow: none;
+            border-top: none;
+            background: $COLOR--greyish-brown;
+            height: 50px;
+            #settings, #members {
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding: 14px 12px;
+                a {
+                    margin: 0;
+                    padding: 0;
+                    font-size: 24px;
+                }
+            }
+            #members {
+                right: 48px;
+                padding: 17px 8px;
+                a {
+                    font-size: 18px;
+                }
+            }
+            #projectSelector {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: 0;
+                padding: 0;
+                height: 50px;
+                .dropdown-toggle {
+                    padding-top: 15px;
+                    padding-left: 9px;
+                    padding-right: 96px;
+                }
+                .baron__root {
+                    top: 50px;
+                    width: 100% !important;
+                    &.open {
+                        border: none;
+                    }
+                }
+                &:after {
+                    display: none;
+                }
+                .dropdown-menu {
+                    background: #666666;
+                    border-bottom: 1px solid #757575;
+                    border-top: 1px solid #757575;
+                    li {
+                        height: 50px;
+                        background: #666666;
+                        border-bottom: 1px solid #757575;
+                        overflow: hidden;
+                        &:last-child {
+                            border-bottom: none;
+                        }
+                        a {
+                            color: white;
+                            line-height: 50px;
+                            padding: 0 !important;
+                            text-align: left;
+                            text-indent: 10px;
+                            font-size: 16px;
+                        }
+                        &.active {
+                            background: $COLOR--black-three;
+                            a {
+                                background: none;
+                                color: $COLOR--booger;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -475,9 +527,13 @@
             }
         }
     }
+    @media (max-width: $SCREEN_XS_MAX) {
+        .rp-projects-block {
+
+        }
+    }
+
 }
-
-
 
 #topHeader #projectSelector .baron__root {
     position: absolute;
@@ -499,5 +555,37 @@
         top: 0;
         max-height: none;
         margin: 0;
+    }
+}
+
+.mobile-main-header {
+    .button-menu-open {
+        position: relative;
+        width: 50px;
+        height: 60px;
+        padding: 20px 10px 20px 10px;
+        .menu-icon-part {
+            width: 100%;
+            height: 3px;
+            background: white;
+            margin-bottom: 5px;
+        }
+    }
+    .rp-logo {
+        width: 130px;
+        height: 29px;
+        background-size: 100%;
+        background-image: url("../img/landing/logo_small.png");
+        position: absolute;
+        top: 16px;
+        left: 50%;
+        margin-left: -65px;
+    }
+}
+body.menu-open {
+    #topHeader {
+        #navbar-header-collapse {
+            border-left: 1px solid white;
+        }
     }
 }

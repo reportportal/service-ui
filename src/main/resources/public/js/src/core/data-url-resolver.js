@@ -54,7 +54,10 @@ define(['app'], function (App) {
         var idsString = ids.join(',');
         return getProjectBase() + "/filter/filters?ids=" + idsString;
     };
-    var saveFilter = function () {
+    var saveFilter = function (query) {
+        if(query) {
+            return getProjectBase() + '/filter' + query;
+        }
         return getProjectBase() + '/filter';
     };
     var filterById = function (id) {
@@ -102,9 +105,20 @@ define(['app'], function (App) {
     var tabUrl = function (filtersUrl) {
         return launchesBase() + "/all?" + filtersUrl;
     };
-    var getMerge = function () {
-        return getProjectBase() + '/launch/merge';
+
+    var getLaunchBase = function() {
+        return getProjectBase() + '/launch';
     };
+    var getLaunchMerge = function () {
+        return getLaunchBase() + '/merge';
+    };
+    var getLaunchUpdate = function() {
+        return getLaunchBase() + '/update';
+    };
+    var getLaunchStop = function() {
+        return getLaunchBase() + '/stop';
+    };
+
     var queryByTags = function (tags) {
         return getProjectBase() + '/launch/tags?filter.cnt.tags=' + encodeURI(tags);
     };
@@ -238,8 +252,8 @@ define(['app'], function (App) {
     var historyGrid = function (ids, depth) {
         return itemBase() + "/history?ids=" + ids.toString() + "&history_depth=" + depth;
     };
-    var historyGridUrl = function (ids, depth, tadId) {
-        return window.location.hash + "/history?ids=" + ids.join(',') + "&history_depth=" + depth + '&tab.id=' + tadId;
+    var historyGridUrl = function (ids, depth) {
+        return window.location.hash + "/history?ids=" + ids.join(',') + "&history_depth=" + depth;
     };
     var adminProjectRoot = function () {
         return config.apiVersion + "project";
@@ -356,6 +370,14 @@ define(['app'], function (App) {
     var getFile = function () {
         return getProjectBase() + '/data/';
     };
+    var getFileById = function(dataId) {
+        var token = config.userModel.get('token');
+        var params = '';
+        if(token) {
+            params = '?access_token=' + token.split(' ')[1];
+        }
+        return getProjectBase() + '/data/' + dataId + params;
+    };
     var uploadPhoto = function () {
         return config.apiVersion + 'data/photo';
     };
@@ -433,6 +455,9 @@ define(['app'], function (App) {
         }
         return getProjectBase() + "/" + type;
     };
+    var getLogsUrl = function() {
+        return getProjectBase() + "/log";
+    };
 
     var getLaunchItemUrl = function(type, id){
         return getGridUrl(type) + '/' + id;
@@ -480,6 +505,7 @@ define(['app'], function (App) {
         updateFilter: updateFilter,
         filtersBase: filtersBase,
         launchesBase: launchesBase,
+        getLaunchStop: getLaunchStop,
         userDebugBade: userDebugBade,
         updateLaunchUrl: updateLaunchUrl,
         deleteLaunchUrl: deleteLaunchUrl,
@@ -489,7 +515,10 @@ define(['app'], function (App) {
         launchMatchUrl: launchMatchUrl,
         launchFinishUrl: launchFinishUrl,
         tabUrl: tabUrl,
-        getMerge: getMerge,
+
+        getLaunchBase: getLaunchBase,
+        getMerge: getLaunchMerge,
+        getLaunchUpdate: getLaunchUpdate,
         queryByTags: queryByTags,
         queryByLaunchName: queryByLaunchName,
         userAutoCompleteUrl: userAutoCompleteUrl,
@@ -562,6 +591,7 @@ define(['app'], function (App) {
 
         uploadPhoto: uploadPhoto,
         getFile: getFile,
+        getFileById: getFileById,
         generateUUID: generateUUID,
         exportLaunchUrl: exportLaunchUrl,
 
@@ -569,6 +599,7 @@ define(['app'], function (App) {
         postDefectTypes: postDefectTypes,
         
         getGridUrl: getGridUrl,
+        getLogsUrl: getLogsUrl,
         getLaunchItemUrl: getLaunchItemUrl,
 
         userByEmail:userByEmail,

@@ -1,19 +1,20 @@
 <div class="modal fade dialog-shell rp-modal-dialog" id="customDialogModal" tabindex="-1" role="dialog" aria-labelledby="customDialogModal" aria-hidden="true">
     <div class="modal-dialog modal-<%= data.size %>">
         <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="col-lg-10 col-md-10 col-sm-10 col-xs-10 break-link">
-                    <%= data.text.dialog[data.headerTxt] %>
-                    <% if(data.isBeta) { %>
-                    <span class="label label-above label-success"><%= data.text.project.beta %></span>
-                    <% } %>
-                </h2>
-                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 panel-action">
-                    <sapn class="close-pop-up" data-js-close data-dismiss="modal">
-                        <i class="material-icons">clear</i>
-                    </span>
-                </div>
-            </div>
+            <%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.dialog[data.headerTxt]}) %>
+            <!--<div class="modal-header">-->
+                <!--<h2 class="col-lg-10 col-md-10 col-sm-10 col-xs-10 break-link">-->
+                    <!--<%= data.text.dialog[data.headerTxt] %>-->
+                    <!--<% if(data.isBeta) { %>-->
+                    <!--<span class="label label-above label-success"><%= data.text.project.beta %></span>-->
+                    <!--<% } %>-->
+                <!--</h2>-->
+                <!--<div class="col-lg-2 col-md-2 col-sm-2 col-xs-2 panel-action">-->
+                    <!--<sapn class="close-pop-up" data-js-close data-dismiss="modal">-->
+                        <!--<i class="material-icons">clear</i>-->
+                    <!--</span>-->
+                <!--</div>-->
+            <!--</div>-->
             <div class="modal-body clearfix" id="contentModal"></div>
             <div class="modal-footer">
                 <div class="pull-right" id="buttonsModal"></div>

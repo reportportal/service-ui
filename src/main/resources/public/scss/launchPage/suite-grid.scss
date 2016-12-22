@@ -1,0 +1,182 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$launch-name-cell-width: 32%;
+$launch-time-cell-width: 9%;
+$launch-number-cell-width: 7%;
+$launch-select-cell-width: 2%;
+$launch-counter-cell-width: (100 - $launch-name-cell-width - $launch-time-cell-width -$launch-number-cell-width*4 - $launch-select-cell-width) / 4;
+
+
+$launch-min-name-cell-width: 30%;
+$launch-min-time-cell-width: 10%;
+$launch-min-number-cell-width: 7%;
+$launch-min-select-cell-width: 2%;
+$launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min-time-cell-width -$launch-min-number-cell-width*4 - $launch-min-select-cell-width) / 4;
+.suit-grid {
+  .grid-cell {
+    &.name-grid-cell {
+      padding-left: 20px;
+      width: $launch-name-cell-width;
+      &.rp-grid-th {
+        .text-overflow {
+         // padding-left: 25px;
+        }
+      }
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      &.name-grid-cell {
+        padding-left: 10px;
+      }
+    }
+    &.time-grid-cell {
+      width: $launch-time-cell-width;
+    }
+    &.counter-grid-cell {
+      width: $launch-counter-cell-width;
+    }
+    &.number-grid-cell {
+      width: $launch-number-cell-width;
+      text-align: left;
+    }
+    &.select-grid-cell {
+      width: $launch-select-cell-width;
+      text-align: center;
+      padding: 0;
+      .rp-checkbox-wrap span {
+        height: 11px;
+      }
+    }
+    .mobile-title {
+      display: none;
+      color: $COLOR--gray-47;
+      font-size: 12px;
+      font-family: "OpenSansSemibold", sans-serif;
+      text-transform: uppercase;
+      padding: 10px 0 2px 0;
+      margin: 0;
+    }
+    @media (max-width: 1150px) {
+      &.name-grid-cell {
+        width: $launch-min-name-cell-width;
+      }
+      &.time-grid-cell {
+        width: $launch-min-time-cell-width;
+      }
+      &.counter-grid-cell {
+        width: $launch-min-counter-cell-width;
+      }
+      &.number-grid-cell {
+        width: $launch-min-number-cell-width;
+      }
+      &.select-grid-cell {
+        width: $launch-min-select-cell-width;
+      }
+    }
+  }
+  @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+    .rp-grid-thead {
+      display: none;
+    }
+    .rp-table-row {
+      padding-top: 20px;
+      padding-bottom: 0;
+      border-bottom-color: $COLOR--gray-80;
+      //&:nth-child(odd) {
+      //  background: $COLOR--white-four;
+      //}
+    }
+    .grid-cell {
+      padding: 0;
+      &.select-grid-cell, &.time-grid-cell {
+        display: none;
+      }
+      .mobile-title {
+        display: block;
+      }
+      &.name-grid-cell {
+        width: 100%;
+        padding-bottom: 10px;
+        .rp-grid-tags > li {
+          width: 100%;
+          margin: 0 0px 15px 0px;
+        }
+        .mobile-time {
+          display: inline;
+        }
+        &.launch-name-cell {
+          padding-left: 0;
+          .btn-group {
+            display: none;
+          }
+          .name-grid-overflow {
+            padding-left: 10px;
+          }
+        }
+      }
+      &.number-grid-cell, &.counter-grid-cell {
+        width: 25%;
+        height: 62px;
+        text-align: center;
+        a {
+          font-size: 16px;
+          position: relative;
+        }
+        svg {
+          display: none;
+        }
+        &:before {
+          content: '';
+          position: absolute;
+          top: -1px;
+          left: -2px;
+          right: 1px;
+          bottom: 0px;
+          border: 1px solid $COLOR--gray-91;
+        }
+        &.last-child {
+          &:before {
+            right:-2px;
+          }
+        }
+      }
+      &.counter-grid-cell {
+        .mobile-title {
+          color: $COLOR--charcoal-grey;
+          font-family: "OpenSansSemibold", sans-serif;
+          font-size: 13px;
+        }
+        i {
+          position: relative;
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          margin-right: 5px;
+        }
+        &.last-child a{
+          font-family: OpenSansRegular;
+        }
+      }
+    }
+
+  }
+}

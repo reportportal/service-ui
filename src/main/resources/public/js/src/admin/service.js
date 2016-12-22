@@ -65,7 +65,7 @@ define(function (require, exports, module) {
 
     var getSearchUser = function (options) {
         return call('GET', Urls.searchUsersUrl(options))
-    }
+    };
 
     var loadProjectDetailsWidgets = function (project, id, interval) {
         return call('GET', Urls.projectDetailsWidgets(project, id, interval));

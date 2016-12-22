@@ -1,0 +1,233 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+#filter-page {
+  margin: 0 -15px -15px -15px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  &.load {
+    .preloader {
+      display: block;
+    }
+  }
+  .filter-header {
+    height: 70px;
+    margin-bottom: 0;
+    display: table;
+    width: 100%;
+    & > div {
+      display: table-cell;
+      vertical-align: middle;
+      height: 100%;
+      float: none;
+    }
+    .input-filter {
+      margin-top: 0;
+      margin-bottom: 0;
+      .error-bottom {
+        position: absolute;
+        top: 30px;
+      }
+    }
+  }
+  .no-filters-exist, .no-filters-found {
+    position: relative;
+    width: 100%;
+    color: $COLOR--gray-47;
+    text-align: center;
+  }
+  .no-filters-exist {
+    height: 350px;
+    .no-filter-img {
+      background: url(../img/filters/no-filters.png) center no-repeat;
+      width: 213px;
+      height: 133px;
+      margin: 10px auto;
+    }
+    h3 {
+      font-size: 17px;
+      margin-top: 10px;
+      margin-bottom: 17px;
+    }
+    p {
+      font-size: 13px;
+    }
+  }
+  .no-filters-found {
+    height: 120px;
+    overflow: hidden;
+    h3 {
+      font-size: 17px;
+      margin-top: 28px;
+      i {
+        margin-right: 7px;
+      }
+    }
+  }
+  .rp-table-row {
+    padding: 10px 0;
+    a, span, p {
+      word-wrap: break-word;
+    }
+    & > div {
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+    i {
+      font-size: 18px;
+      vertical-align: middle;
+      color: $COLOR--gray-60;
+      cursor: pointer;
+      margin: 0 10px;
+      &:hover {
+        color: $COLOR--black;
+      }
+      &.disabled {
+        cursor: default;
+        opacity: 0.5;
+        &:hover {
+          color: $COLOR--gray-60;
+        }
+      }
+    }
+    &:hover {
+      .filter-edit {
+        opacity: 1;
+      }
+    }
+    &.not-owner {
+      .filter-edit, .filter-edit-mobile {
+        display: none;
+      }
+    }
+  }
+
+  .switcher-block {
+    border-right: 1px solid $COLOR--gray-91;
+    .rp-switcher, span {
+      vertical-align: middle;
+    }
+  }
+  .switcher-text{
+    display: inline-block;
+    width: 30px;
+  }
+  .mobile-title {
+    .rp-link, .rp-link + span {
+      font-size: 16px;
+      line-height: 16px;
+    }
+    i {
+      vertical-align: bottom;
+    }
+  }
+  .name-grid-cell {
+    width: 30%;
+    .filter-edit {
+      display: inline;
+      vertical-align: top;
+      opacity: 0;
+      width: 0;
+    }
+    .description-item {
+      font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+      padding-top: 2px;
+    }
+  }
+  .option-grid-cell {
+    width: 30%;
+  }
+  .owner-grid-cell {
+    width: 13%;
+  }
+  .icons-grid-cell {
+    width: 8%;
+    text-align: center;
+  }
+  .display-launch-grid-cell {
+    width: 11%
+  }
+  @media (max-width: 992px) {
+    .name-grid-cell, .owner-grid-cell, .icons-grid-cell, .display-launch-grid-cell {
+      width: 100%;
+    }
+    .option-grid-cell {
+      width: 80%;
+    }
+  }
+
+}
+@media (max-width: 992px) {
+  #filter-page {
+    .filter-header{
+      height: auto;
+      border-bottom: 1px solid $COLOR--gray-91;
+      & > div {
+        display: block;
+        padding-top: 14px;
+        padding-bottom: 16px;
+        float: left;
+      }
+      .search-description {
+        display: none;
+      }
+      .input-filter {
+        .error-bottom {
+          position: relative;
+          top: 0;
+          margin-top: 5px;
+        }
+      }
+    }
+    .no-filters-exist {
+      .no-filter-img {
+        margin: 0 auto;
+      }
+      h3 {
+        margin-top: 6px;
+        margin-bottom: 13px;
+      }
+      p {
+        width: 195px;
+        margin: 0 auto;
+        font-size: 14px;
+        line-height: 29px;
+      }
+      .rp-btn {
+        margin-top: 9px;
+      }
+    }
+    .rp-table-row {
+      padding: 22px 0;
+      font-size: 12px;
+      i {
+        font-size: 21px;
+      }
+      .description {
+        color: $COLOR--gray-47;
+        padding-right: 10px;
+        text-transform: uppercase;
+      }
+      .icons-grid-cell {
+        text-align: left;
+      }
+    }
+  }
+}

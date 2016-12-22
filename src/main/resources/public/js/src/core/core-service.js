@@ -49,6 +49,7 @@ define([
 
     var getPreferences = function () {
         return call('GET', urls.getPreferences());
+        return call('GET', urls.getPreferences())
     };
 
     var getProfileImage = function (url) {
@@ -80,7 +81,8 @@ define([
     };
 
     var deleteDashboard = function (id, isShared) {
-        var url = isShared ? urls.favoritesByResourceId(id) : urls.dashboardById(id);
+        // var url = isShared ? urls.favoritesByResourceId(id) : urls.dashboardById(id);
+        var url = urls.dashboardById(id);
         return call('DELETE', url);
     };
 
@@ -140,7 +142,9 @@ define([
     var getSharedWidgetData = function (id) {
         return call('GET', urls.widgetById(id));
     };
-
+    var saveFilter = function(query) {
+        return call('GET', urls.saveFilter(query));
+    };
     var getOwnFilters = function () {
         return call('GET', urls.ownFilters());
     };
@@ -164,6 +168,9 @@ define([
     var loadWidget = function (url) {
         return call('GET', url);
     };
+    var loadDashboardWidget = function(widgetId) {
+        return call('GET', urls.getProjectBase() + '/widget/' + widgetId);
+    }
 
     var updateDefaultProject = function (project) {
         return call('PUT', urls.userUrl(), {default_project: project}, null, true);
@@ -389,6 +396,8 @@ define([
         loadHistory: loadHistory,
         loadActivityItems: loadActivityItems,
 
+        saveFilter: saveFilter,
+
         saveWidget: saveWidget,
         updateWidget: updateWidget,
         addWidgetToDashboard: addWidgetToDashboard,
@@ -399,6 +408,7 @@ define([
         getTestItemInfo: getTestItemInfo,
         getTestItemsInfo: getTestItemsInfo,
         getLaunchItem: getLaunchItem,
+        loadDashboardWidget: loadDashboardWidget,
 
         updateProject: updateProject,
         updateEmailProjectSettings: updateEmailProjectSettings,

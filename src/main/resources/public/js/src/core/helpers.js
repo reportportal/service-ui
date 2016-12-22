@@ -29,7 +29,7 @@ define(function (require, exports, module) {
     var Moment = require('moment');
     var Localization = require('localization');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
-    var Filters = require('filters');
+    var Filters = require('filter/filters');
 
     var config = App.getInstance();
 

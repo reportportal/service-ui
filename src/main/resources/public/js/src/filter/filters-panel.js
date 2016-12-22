@@ -25,10 +25,10 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
-    var Filters = require('filters');
+    var Filters = require('filter/filters');
     var FilterResolver = require('filtersResolver');
     var Service = require('filtersService');
-    var Components = require('components');
+    var Components = require('core/components');
     var Storage = require('storageService');
     var App = require('app');
     var CoreService = require('coreService');

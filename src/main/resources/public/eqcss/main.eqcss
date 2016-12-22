@@ -1,5 +1,5 @@
 
-@element ".filter-table-panel" and (min-width: 768px) {
+@element ".launches-table-panel" and (min-width: 768px) {
     $this .si-sort{
         padding-left: 27px;
     }
@@ -13,13 +13,13 @@
      }
 }
 
-@element ".filter-table-panel" and (max-width: 767px) {
+@element ".launches-table-panel" and (max-width: 767px) {
 
     $this .hidden-xs{
         display: none !important;
     }
 
-    $this .pr-grid-defect-stats {
+    $this .launch-suite-defects {
         display: none;
     }
 

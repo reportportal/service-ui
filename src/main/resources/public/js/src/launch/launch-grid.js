@@ -24,7 +24,7 @@ define(function (require, exports, module) {
 
     var $ = require('jquery');
     var Backbone = require('backbone');
-    var Components = require('components');
+    var Components = require('core/components');
     var Util = require('util');
     var Urls = require('dataUrlResolver');
     var App = require('app');
@@ -1185,7 +1185,6 @@ define(function (require, exports, module) {
         },
 
         editDefect: function (e) {
-            e.preventDefault();
             var that = this,
                 $el = $(e.currentTarget),
                 id = $el.data('id'),

@@ -60,7 +60,7 @@ define(function(require, exports, module) {
             this.user.ready.done(function(){
                 self.listenTo(self.user, 'change:auth', self.onChangeUserAuth.bind(self));
             });
-            this.route(/^(.*)\/launches\/all(.*)$/, "openLaunches");
+            this.route(/^(.*)\/oldlaunches\/all(.*)$/, "openLaunches");
             this.route(/^(.*)\/userdebug\/all(.*)$/, "openUserDebug");
         },
         onChangeUserAuth: function(model, auth){
@@ -102,16 +102,21 @@ define(function(require, exports, module) {
             ':project/dashboard': 'openDashboard',
             ':project/dashboard/:id': 'openDashboard',
             ':project/dashboard/:id?*queryString': 'openDashboard',
+            ':project/launches/:filterId(/*path)': 'openLaunch',
 
-            //':project(/)': 'openProject',
+            ':project/newdashboard': 'openNewDashboard',
+            ':project/newdashboard/:id': 'openNewDashboard',
+            ':project/newdashboard/:id?*queryString': 'openNewDashboard',
+
             ':project(/)': 'openDashboard',
             '*invalidRoute': "show404Page"
         },
         show404Page: function(route){
             // make sure it is not a value for dynamic .route
-            if(route && route.indexOf('launches/all') === -1 && route.indexOf('userdebug/all') === -1) {
-                Context.openInvalid(route);
-            }
+            // if(route && route.indexOf('launches/all') === -1 && route.indexOf('userdebug/all') === -1) {
+            //     Context.openInvalid(route);
+            // }
+            Context.openInvalid(route);
         },
         openParallax: function() {
             this.landingController.showParallax();
@@ -147,6 +152,9 @@ define(function(require, exports, module) {
         openMembersDefault: testRoute.checkTest('insidePage', function(project){
             Context.openRouted(project, 'members', 'assigned', null);
         }),
+        openLaunch: testRoute.checkTest('insidePage', function(project) {
+            Context.openRouted(project, 'newlaunches', arguments);
+        }),
         registerUser: function(queryString){
             Context.openRegister(queryString);
         },
@@ -155,6 +163,9 @@ define(function(require, exports, module) {
         }),
         openDashboard: testRoute.checkTest('insidePage', function(project, id, queryString){
             Context.openRouted(project, 'dashboard', id, queryString);
+        }),
+        openNewDashboard: testRoute.checkTest('insidePage', function(project, id, queryString){
+            Context.openRouted(project, 'newdashboard', id, queryString);
         }),
         openAdminPage: testRoute.checkTest('insidePage', function (page, queryString) {
             page = page || 'projects';
@@ -171,7 +182,7 @@ define(function(require, exports, module) {
         }),
         openAdminPageDetails: testRoute.checkTest('insidePage', function (id, queryString) {
             Context.openAdmin("project-details", id, null, queryString);
-        })
+        }),
     });
 
     return {

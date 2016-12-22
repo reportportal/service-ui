@@ -1,0 +1,61 @@
+
+    <div class="grid-cell name-grid-cell">
+        <div class="visible-md visible-lg visible-xl">
+            <a class="rp-link" data-js-filter-link></a><span data-js-filter-name></span>&nbsp;&nbsp;<i class="filter-edit material-icons" data-js-filter-edit>edit</i>
+            <p class="description-item" data-js-description></p>
+        </div>
+        <div class="mobile-title visible-sm visible-xs">
+            <div class="row">
+                <div class="col-xs-10">
+                    <a class="rp-link" data-js-filter-link></a>
+                    <span  data-js-filter-name></span>
+                    <i class="material-icons filter-edit-mobile" data-js-filter-edit>edit</i>
+                </div>
+                <div class="col-xs-2" >
+                    <i class="rp-icons rp-icons-delete" data-js-remove></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid-cell option-grid-cell">
+            <span class="" data-js-filter-options></span>
+    </div>
+    <div class="grid-cell owner-grid-cell">
+        <div class="visible-md visible-lg">
+            <span class="" data-js-owner></span>
+        </div>
+        <div class="visible-sm visible-xs">
+            <span class="description"><%- data.text.favorites.fOwner %>: </span>
+            <span class="" data-js-owner></span>
+        </div>
+    </div>
+    <div class="grid-cell icons-grid-cell">
+        <div class="text-center visible-md visible-lg" data-js-filter-shared>
+            <i class="material-icons" data-js-filter-shared-icon>check</i>
+        </div>
+        <div class="visible-sm visible-xs" data-js-filter-shared>
+            <span class="description"><%- data.text.favorites.fShared %>: </span>
+            <i class="material-icons" data-js-filter-shared-icon>check</i>
+        </div>
+    </div>
+    <div class="grid-cell display-launch-grid-cell switcher-block">
+        <div class="text-center visible-md visible-lg">
+            <label class="rp-switcher">
+                <input type="checkbox" data-js-switch-to-launch>
+                <div class="slider"></div>
+            </label>
+            <span class="switcher-text" data-js-switch-to-launch-text></span>
+        </div>
+        <div class="visible-sm visible-xs">
+            <span class="description"><%- data.text.favorites.fDisplayOnLaunches %>: </span>
+            <label class="rp-switcher rp-switcher-sm">
+                <input type="checkbox" data-js-switch-to-launch-mobile>
+                <div class="slider"></div>
+            </label>
+        </div>
+    </div>
+    <div class="grid-cell icons-grid-cell visible-md visible-lg">
+        <div class="md-text-center">
+            <i class="rp-icons rp-icons-delete" data-js-remove></i>
+        </div>
+    </div>

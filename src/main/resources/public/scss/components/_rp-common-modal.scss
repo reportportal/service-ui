@@ -21,32 +21,32 @@
 
 /* modal */
 
-.modal-footer {
-    background-color: #eeeeee;
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
-    border-top: medium none;
-}
+//.modal-footer {
+//    background-color: #eeeeee;
+//    border-bottom-left-radius: 6px;
+//    border-bottom-right-radius: 6px;
+//    border-top: medium none;
+//}
 
-.modal-header,
-.modal-body,
-.modal-footer {
-    padding: 15px 20px;
-}
+//.modal-header,
+//.modal-body,
+//.modal-footer {
+//    padding: 15px 20px;
+//}
 
 .modal-body.filter-name .form-group {
     overflow: visible;
     position: relative;
 }
 
-.modal-header {
-    border-bottom: medium none;
-}
+//.modal-header {
+//    border-bottom: medium none;
+//}
 
-.modal-header h4,
-.modal-body h4 {
-    font-weight: bold;
-}
+//.modal-header h4,
+//.modal-body h4 {
+//    font-weight: bold;
+//}
 
 .has-error.error-holder {
     color: #a94442;
@@ -257,46 +257,6 @@
             display: inline-block;
             width: 130px;
             position: relative;
-        }
-
-        .select2-container {
-            width: 200px;
-
-            .select2-choice {
-                background-image: none;
-                border-color: $COLOR--gray-80;
-                border-radius: 0;
-                box-shadow: none;
-                height: auto;
-                min-height: 30px;
-                margin-right: -1px;
-
-                .select2-chosen {
-                    margin-right: 30px;
-                    box-shadow: none;
-                    padding: 2px 5px;
-                }
-
-                .select2-arrow {
-                    width: 30px;
-                    border: none;
-                    background: 0 0;
-
-                    b {
-                        background: 0 0;
-                        display: inline-block;
-                        width: 0;
-                        height: 0;
-                        margin-left: 10px;
-                        margin-top: 2px;
-                        vertical-align: middle;
-                        border-top: 4px solid;
-                        border-right: 4px solid transparent;
-                        border-left: 4px solid transparent;
-                        background-position: 2px 1px;
-                    }
-                }
-            }
         }
 
         #templateOptions .criteria-holder-dropdown .checkbox .radio-label {
@@ -867,10 +827,10 @@ output {
     box-shadow: none;
 }
 
-.warning_modal,
-.modal-content .modal-body > p {
-    padding: 10px 18px 0;
-}
+//.warning_modal,
+//.modal-content .modal-body > p {
+//    padding: 10px 18px 0;
+//}
 
 .compare-content .panel-body,
 .widget-content .panel-body {
@@ -893,42 +853,42 @@ output {
 
 
 /*--- MODALS ---*/
-.modal-content,
-.modal-header.panel-heading {
-    border-radius: 0;
-}
-
-.modal-header,
-.modal-header.panel-heading {
-    background-color: #999;
-}
-
-.modal-header .modal-title,
-.modal-header h4 {
-    font-family: "OswaldRegular", sans-serif;
-    font-size: 17px;
-    font-weight: normal;
-    text-transform: uppercase;
-    color: #fff;
-}
-
-.modal-header h4 {
-    margin: 0;
-}
-
-.modal-content .btn {
-    border: none;
-    font-family: "OpenSansRegular", sans-serif;
-}
-
-.modal-content .btn.btn-primary {
-    background-color: #a3c644;
-}
-
-.modal-content .modal-footer {
-    border-top: 1px solid #ddd;
-    background-color: #efefef;
-}
+//.modal-content,
+//.modal-header.panel-heading {
+//    border-radius: 0;
+//}
+//
+//.modal-header,
+//.modal-header.panel-heading {
+//    background-color: #999;
+//}
+//
+//.modal-header .modal-title,
+//.modal-header h4 {
+//    font-family: "OswaldRegular", sans-serif;
+//    font-size: 17px;
+//    font-weight: normal;
+//    text-transform: uppercase;
+//    color: #fff;
+//}
+//
+//.modal-header h4 {
+//    margin: 0;
+//}
+//
+//.modal-content .btn {
+//    border: none;
+//    font-family: "OpenSansRegular", sans-serif;
+//}
+//
+//.modal-content .btn.btn-primary {
+//    background-color: #a3c644;
+//}
+//
+//.modal-content .modal-footer {
+//    border-top: 1px solid #ddd;
+//    background-color: #efefef;
+//}
 
 #dialogShellLoader,
 .submitticket-loader {
@@ -973,133 +933,131 @@ output {
 /*--------*/
 /* MIXINS */
 
-%textRight {
-    text-align: right;
-}
-
-%modalHeader {
-    border-bottom: 1px solid #e9e9e9;
-    background-color: #fff;
-    margin: -10px 0 0 0;
-    padding: 10px 0 18px 0;
-    overflow: hidden;
-    text-transform: uppercase;
-
-    h2 {
-        font-family: $OswaldRegular;
-        font-size: 16px;
-        line-height: 30px;
-        color: #1a9cb0;
-        margin: 0;
-        padding: 0;
-        padding-left: 10px;
-    }
-
-    .panel-action {
-        padding-right: 0;
-
-        .close-pop-up {
-            float: right;
-            cursor: pointer;
-            margin-right: 10px;
-            color: #999999;
-        }
-
-        i.rp-icons {
-            width: 13px;
-            height: 13px;
-            font-size: 13px;
-            line-height: 13px;
-            text-align: center;
-        }
-
-        i.material-icons {
-            width: 20px;
-            height: 20px;
-            font-size: 20px;
-            line-height: 20px;
-            text-align: center;
-        }
-    }
-}
-
-%modalBody {
-    padding: 40px 20px 40px 20px;
-
-    .merge-form {
-        padding: 10px 15px 0;
-    }
-
-    p {
-        padding: 2px 0;
-        font-size: 14px;
-        line-height: 20px;
-    }
-
-    .param-content {
-        padding: 12px;
-    }
-
-    h5 {
-        line-height: 1.4;
-    }
-
-    input {
-        &.rp-input-checkbox {
-            & + span.font-bold {
-                font-family: $OpenSansSemibold;
-            }
-        }
-    }
-}
-
-%modalFooter {
-    padding: 0 10px;
-    border-top: none;
-    background-color: #fff;
-
-    .rp-btn-cancel {
-        margin-right: 10px;
-    }
-}
-
-%modalBackdrop {
-    background-color: rgba(70, 69, 71, 0.3);
-
-    &.fade.in {
-        opacity: .8;
-    }
-}
+//%textRight {
+//    text-align: right;
+//}
+//
+//%modalHeader {
+//    border-bottom: 1px solid #e9e9e9;
+//    background-color: #fff;
+//    margin: -10px 0 0 0;
+//    padding: 10px 0 18px 0;
+//    overflow: hidden;
+//    text-transform: uppercase;
+//
+//    h2 {
+//        font-family: $OswaldRegular;
+//        font-size: 16px;
+//        line-height: 30px;
+//        color: #1a9cb0;
+//        margin: 0;
+//        padding: 0;
+//        padding-left: 10px;
+//    }
+//
+//    .panel-action {
+//        padding-right: 0;
+//
+//        .close-pop-up {
+//            float: right;
+//            cursor: pointer;
+//            margin-right: 10px;
+//            color: #999999;
+//        }
+//
+//        i.rp-icons {
+//            width: 13px;
+//            height: 13px;
+//            font-size: 13px;
+//            line-height: 13px;
+//            text-align: center;
+//        }
+//
+//        i.material-icons {
+//            width: 20px;
+//            height: 20px;
+//            font-size: 20px;
+//            line-height: 20px;
+//            text-align: center;
+//        }
+//    }
+//}
+//
+//%modalBody {
+//    padding: 40px 20px 40px 20px;
+//
+//    .merge-form {
+//        padding: 10px 15px 0;
+//    }
+//
+//    p {
+//        padding: 2px 0;
+//        font-size: 14px;
+//        line-height: 20px;
+//    }
+//
+//    .param-content {
+//        padding: 12px;
+//    }
+//
+//    h5 {
+//        line-height: 1.4;
+//    }
+//
+//    input {
+//        &.rp-input-checkbox {
+//            & + span.font-bold {
+//                font-family: $OpenSansSemibold;
+//            }
+//        }
+//    }
+//}
+//
+//%modalFooter {
+//    padding: 0 10px;
+//    border-top: none;
+//    background-color: #fff;
+//
+//    .rp-btn-cancel {
+//        margin-right: 10px;
+//    }
+//}
+//
+//%modalBackdrop {
+//    background-color: rgba(70, 69, 71, 0.3);
+//
+//    &.fade.in {
+//        opacity: .8;
+//    }
+//}
 
 /*--------------------*/
 /* CONNECT ALL MIXINS */
-
-.rp-modal-dialog {
-    .modal-dialog {
-        /*margin-top: 270px;*/
-
-        .modal-content {
-            padding: 20px 10px;
-
-            .modal-header {
-                @extend %modalHeader;
-            }
-            .modal-body {
-                @extend %modalBody;
-            }
-            .modal-footer {
-                @extend %modalFooter;
-            }
-        }
-    }
-    &.min-padding {
-        .modal-content {
-            .modal-body {
-                padding: 20px 10px;
-            }
-        }
-    }
-    & + .modal-backdrop {
-        @extend %modalBackdrop;
-    }
-}
+//
+//.rp-modal-dialog {
+//    .modal-dialog {
+//
+//        .modal-content {
+//
+//            .modal-header {
+//                @extend %modalHeader;
+//            }
+//            .modal-body {
+//                @extend %modalBody;
+//            }
+//            .modal-footer {
+//                @extend %modalFooter;
+//            }
+//        }
+//    }
+//    &.min-padding {
+//        .modal-content {
+//            .modal-body {
+//                padding: 20px 10px;
+//            }
+//        }
+//    }
+//    & + .modal-backdrop {
+//        @extend %modalBackdrop;
+//    }
+//}

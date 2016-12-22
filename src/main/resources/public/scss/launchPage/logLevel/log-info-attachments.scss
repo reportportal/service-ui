@@ -1,0 +1,324 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+.launch-log-info-attachments {
+  .not-found-message {
+    display: none;
+  }
+  .gallery-preview {
+    position: relative;
+    .swipe-gallery-component {
+      width: 100%;
+      height: 80px;
+      & > .ul_overflow {
+        width: 80%;
+        margin: 0 auto;
+        li {
+          width: 100%;
+          height: 100%;
+          .gallery-preview {
+            width: 16.6%;
+            height: 100%;
+            float: left;
+
+            &.active {
+              .gallery-image img{
+                border: 2px solid $COLOR--charcoal-grey;
+                cursor: default;
+              }
+            }
+          }
+          .gallery-image {
+            background-size: contain;
+            margin: 16px auto 0 auto;
+            width: 106px;
+            height: 48px;
+
+            cursor: pointer;
+            text-align: center;
+            &:before {
+              content: "";
+              display: inline-block;
+              height: 100%;
+              vertical-align: middle;
+            }
+            img {
+              max-width: 100%;
+              max-height: 100%;
+              display: inline-block;
+              vertical-align: middle;
+              border: 1px solid $COLOR--dark-pastel-green;
+            }
+          }
+          &.load {
+            .preloader {
+              padding: 18px 0px;
+              display: block;
+            }
+            .attachment-list {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+    .arrow_left, .arrow_right {
+      font-size: 24px;
+      margin-top: -14px;
+    }
+    .arrow_left {
+      left: 40px;
+    }
+    .arrow_right {
+      right: 40px;
+    }
+    @media(max-width: 950px) {
+      .swipe-gallery-component {
+        & > .ul_overflow {
+          position: absolute;
+          width: auto;
+          height: 100%;
+          left: 20px;
+          right: 20px;
+        }
+      }
+      .arrow_left {
+        left: 5px;
+      }
+      .arrow_right {
+        right: 5px;
+      }
+    }
+    @media(max-width: 820px) {
+      .swipe-gallery-component {
+        height: 123px;
+        margin-top: 5px;
+        & > .ul_overflow {
+          position: relative;
+          margin: 0 auto;
+          width: 350px;
+          left: auto;
+          right: auto;
+          li {
+            text-align: center;
+            .gallery-preview {
+              float: none;
+              display: inline-block;
+              min-width: 115px;
+              .gallery-image {
+                margin-top: 5px;
+              }
+            }
+          }
+        }
+      }
+    }
+    @media(max-width: 420px) {
+      .swipe-gallery-component {
+        height: 156px;
+        & > .ul_overflow {
+          width: 300px;
+          li {
+
+            .gallery-preview {
+              min-width: 95px;
+              height: 70px;
+              .gallery-image {
+                width: 100%;
+                height: 100%;
+              }
+            }
+          }
+        }
+      }
+      .arrow_left, .arrow_right {
+        display: none;
+      }
+    }
+  }
+  .gallery-main {
+    &>.swipe-gallery-component {
+      height: 365px;
+      &:before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 30px;
+        right: 30px;
+        height: 1px;
+        background: $COLOR--gray-91;
+      }
+    }
+    .ul_overflow {
+      width: 650px;
+      margin: 0 auto;
+      & > ul {
+        & > li {
+          width: 100%;
+          height: 100%;
+          &.hide-content {
+            .item-content {
+              opacity: 0;
+            }
+          }
+        }
+      }
+    }
+    .main-image {
+      width: 630px;
+      height: 300px;
+      overflow: hidden;
+      margin: 20px auto 0 auto;
+      border: 1px solid $COLOR--dark-pastel-green;
+      text-align: center;
+      img {
+        max-height: 100%;
+        max-width: 100%;
+      }
+    }
+    .gallery-image-rotate {
+      position: absolute;
+      right: 11px;
+      font-size: 20px;
+      bottom: 14px;
+      cursor: pointer;
+      color: $COLOR--gray-60;
+      &:hover {
+        color: $COLOR--charcoal-grey;
+      }
+    }
+    .arrow_left, .arrow_right {
+      font-size: 43px;
+      margin-top: -38px;
+      left: 50%;
+    }
+    .arrow_left {
+      margin-left: -378px;
+    }
+    .arrow_right {
+      margin-left: 333px;
+    }
+    @media(max-width: 950px) {
+      &>.swipe-gallery-component {
+        position: fixed;
+        z-index: 110;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100%;
+        &:before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.95);
+        }
+        .item-content {
+          height: 100%;
+          padding: 40px 10px;
+
+          .main-image {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            border: none;
+            &:before {
+              content: '';
+              position: relative;
+              display: inline-block;
+              height: 100%;
+              vertical-align: middle;
+            }
+            img {
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+    }
+    @media(max-width: 750px) {
+      .ul_overflow {
+        width: 100%;
+      }
+      .arrow_left, .arrow_right {
+        display: none;
+      }
+    }
+  }
+  .gallery-main-head {
+    display: none;
+    text-align: center;
+    color: $COLOR--white-default;
+    &.activate {
+      display: none;
+    }
+    @media(max-width: 950px) {
+      position: fixed;
+      z-index: 110;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 40px;
+      font-size: 15px;
+      line-height: 46px;
+      &.activate {
+        display: block;
+      }
+      i {
+        position: absolute;
+        right: 0;
+        top: 0;
+        font-size: 23px;
+        padding: 8px 10px 10px 10px;
+        width: 43px;
+        cursor: pointer;
+      }
+    }
+
+  }
+  .arrow_left, .arrow_right {
+    position: absolute;
+    top: 50%;
+    color: $COLOR--gray-60;
+    cursor: pointer;
+    &.disabled {
+      cursor: default;
+      color: $COLOR--gray-80;
+    }
+  }
+  &.load {
+    .gallery-container {
+      display: none;
+    }
+    .preloader {
+      display: block;
+    }
+  }
+  &.not-found {
+    .gallery-container {
+      display: none;
+    }
+    .no-result-found {
+      display: block;
+    }
+  }
+}

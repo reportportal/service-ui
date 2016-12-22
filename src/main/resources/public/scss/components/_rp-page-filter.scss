@@ -21,116 +21,35 @@
 
 /* filters page */
 
-.b-favorites-name-filter {
-    margin-top: 7px;
-    width: 90%;
-    position: relative;
-}
+//.b-favorites-name-filter {
+//    margin-top: 7px;
+//    width: 90%;
+//    position: relative;
+//}
 
 // .b-favorites-name-filter .fa {
 //     top: 0;
 // }
 
-.b-favorites-name-filter .filter-hint {
-    position: absolute;
-    width: 100%;
-    padding: 6px 12px;
-    z-index: 1;
-    display: none;
-}
+//.b-favorites-name-filter .filter-hint {
+//    position: absolute;
+//    width: 100%;
+//    padding: 6px 12px;
+//    z-index: 1;
+//    display: none;
+//}
+//
+//
+//
+//.filter-shader-status {
+//    i {
+//        &.material-icons {
+//            font-size: 18px;
+//            line-height: 18px;
+//            width: 18px;
+//            height: 18px;
+//        }
+//    }
+//}
 
-.filter-option-select {
-    width: 50px;
-    display: table-cell;
-    background: transparent;
-    vertical-align: top;
-}
-
-.filter-option-input {
-    display: table-cell;
-    vertical-align: top;
-    width: auto;
-    min-width: 166px;
-    position: relative;
-    float: none !important;
-}
-
-.filter-option-select .dropdown-toggle {
-    min-width: initial !important;
-    height: 30px;
-    border: 1px solid $COLOR--gray-80;
-    border-right: none;
-    padding: 5px 6px 6px;
-    font-size: 12px;
-    width: 50px;
-    vertical-align: top;
-}
-
-.filter-shader-status {
-    i {
-        &.material-icons {
-            font-size: 18px;
-            line-height: 18px;
-            width: 18px;
-            height: 18px;
-        }
-    }
-}
-
-.rp-border-last-child>div>div:last-child {
-    border-left: 1px solid $COLOR--gray-80;
-}
-
-.rp-table-title {
-    display: inline-block;
-    background-image: none;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.42857;
-    margin-bottom: 0;
-    padding: 7px 0 8px;
-    text-align: left;
-    vertical-align: middle;
-    white-space: normal;
-    word-break: break-all;
-}
-
-.filter-link-to-launches.rp-table-title {
-    white-space:pre-wrap;
-}
-
-.rp-icons-style .action-link i {
-    position: relative;
-    font-size: 18px;
-    line-height: 18px;
-}
-
-#dynamic-content .filter-actions ul.rp-icons-style li:first-child {
-    margin-left: -30px;
-}
-
-
-.rp-icons-style li {
-    a {
-        color: $COLOR--charcoal-grey;
-        background-color: inherit!important;
-        cursor: pointer;
-        outline: 0;
-
-        &:focus,
-        &:hover {
-            color: $COLOR--gray-47;
-        }
-    }
-
-    &.active a {
-        color: $COLOR--windows-blue;
-    }
-}
-#pagingHolder .col-md-2 {
-    margin-top: 10px;
-}
 /* end filters page */

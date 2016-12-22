@@ -1,0 +1,197 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+define(function (require, exports, module) {
+    'use strict';
+
+    var Epoxy = require('backbone-epoxy');
+    var Util = require('util');
+    var $ = require('jquery');
+    var CoreService = require('coreService');
+    var FilterModel = require('filters/FilterModel');
+    var FilterItem = require('modals/addWidget/FilterSearchItemView');
+    var FilterSearchEditView = require('modals/addWidget/FilterSearchEditView');
+
+    var FilterCollection = Backbone.Collection.extend({
+        model: FilterModel,
+        initialize: function(options) {
+            this.mainModel = options.mainModel;
+        },
+        parse: function(data) {
+            var self = this;
+            return _.map(data, function(itemData) {
+                itemData.entities = JSON.stringify(itemData.entities);
+                itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
+                itemData.active = !!(itemData.id == self.mainModel.get('filter_id'));
+                return itemData;
+            })
+        }
+    });
+
+    var FilterSearchView = Epoxy.View.extend({
+        className: 'modal-add-widget-filter-search',
+        template: 'tpl-modal-add-widget-filter-search',
+        events: {
+            'validation::change [data-js-filter-name]': 'onChangeFilterName',
+            'click [data-js-add-filter]': 'onClickAddFilter',
+
+        },
+        bindings: {
+            ':el': 'classes: {hide: not(gadgetIsFilter)}'
+        },
+        initialize: function() {
+            this.firstActivate = true,
+            this.collection = new FilterCollection({mainModel: this.model});
+            this.renderViews = [];
+            this.render();
+            this.viewModel = new Epoxy.Model({
+                search: '',
+                empty: false,
+                notFound: false,
+                currentPage: 1,
+                pageSize: 10,
+                totalPage: 1,
+            }),
+            Util.hintValidator($('[data-js-filter-name]', this.$el), [{
+                validator: 'minMaxNotRequired',
+                type: 'filterName',
+                min: 3,
+                max: 128
+            }]);
+
+            this.listenTo(this.viewModel, 'change:search', _.debounce(this.updateFilters, 500));
+            this.listenTo(this.collection, 'add', this.onAddCollectionItems);
+            this.listenTo(this.collection, 'reset', this.onResetCollectionItems);
+            this.listenTo(this.collection, 'change:active', this.onSelectFilter);
+            this.listenTo(this.collection, 'edit', this.onEditFilter);
+
+        },
+        render: function() {
+            this.$el.html(Util.templates(this.template, {}))
+        },
+        onSelectFilter: function(filterModel) {
+            this.model.set({filter_id: filterModel.get('id')});
+        },
+        onEditFilter: function(model) {
+            this.editFilterView && this.editFilterView.destroy();
+            this.editFilterView = new FilterSearchEditView({model: model});
+            $('[data-js-filter-edit-container]', this.$el).html(this.editFilterView.$el);
+            var self = this;
+            this.editFilterView.getReadyState()
+                .always(function() {
+                    self.editFilterView.destroy();
+                })
+                .done(function(entity) {
+                    console.dir(entity);
+                })
+            this.editFilterView.activate();
+        },
+        activate: function() {
+            if(!this.firstActivate) { return; }
+            this.firstActivate = false;
+            var self = this;
+            this.load().always(function() {
+                self.baronScroll = Util.setupBaronScroll($('[data-js-filter-list-scroll]', self.$el));
+                Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 400});
+                self.baronScroll.on('scroll', function(e) {
+                    var elem = self.baronScroll.get(0);
+                    if(elem.scrollHeight - elem.scrollTop  < elem.offsetHeight*2){
+                        self.addLoadData();
+                    }
+                })
+            })
+        },
+        addLoadData: function() {
+            if(this.viewModel.get('currentPage') < this.viewModel.get('totalPage') && !this.$el.hasClass('load')) {
+                this.viewModel.set('currentPage', this.viewModel.get('currentPage') + 1);
+                this.load();
+            }
+        },
+        onChangeFilterName: function (e, data) {
+            if (data.valid) {
+                this.viewModel.set({search: data.value});
+            }
+        },
+        onAddCollectionItems: function(model) {
+            this.renderFilter(model);
+        },
+        onResetCollectionItems: function() {
+            _.each(this.renderViews, function(view) {
+                view.destroy();
+            });
+            this.renderViews = [];
+            _.each(this.collection.models, function(model) {
+                this.renderFilter(model);
+            }, this)
+        },
+        renderFilter: function(model) {
+            var filterItem = new FilterItem({model: model});
+            $('[data-js-filter-list]', this.$el).append(filterItem.$el);
+            this.renderViews.push(filterItem);
+        },
+        updateFilters: function() {
+            this.collection.reset([]);
+            this.viewModel.set({
+                totalPage: 1,
+                currentPage: 1,
+            });
+            this.load();
+        },
+        load: function() {
+            this.$el.addClass('load');
+            var self = this;
+            return CoreService.saveFilter(this.getQueryString({
+                search: encodeURIComponent(this.viewModel.get('search')),
+                page: this.viewModel.get('currentPage'),
+                size: this.viewModel.get('pageSize')
+            }))
+                .always(function() {
+                    self.$el.removeClass('load');
+                })
+                .done(function(data) {
+                    self.viewModel.set({
+                        totalPage: data.page.totalPages,
+                        currentPage: data.page.number,
+                    });
+                    if(data.content.length) {
+                        self.viewModel.set({empty: false, notFound: false});
+                    } else if(!self.model.get('search')) {
+                        self.viewModel.set({empty: true, notFound: false});
+                    } else {
+                        self.viewModel.set({empty: false, notFound: true});
+                    }
+                    self.collection.add(data.content, {parse: true});
+                });
+        },
+        getQueryString: function(query){
+            if(!query) query = {};
+            if(!query.page) query.page = 1;
+            if(!query.size) query.size = 10;
+            var url = '?page.sort=name&page.page=' + query.page + '&page.size=' + query.size;
+            if(query.search) {
+                url += '&filter.cnt.name=' + query.search;
+            }
+            return url;
+        },
+    });
+
+    return FilterSearchView;
+});

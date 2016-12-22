@@ -1,0 +1,47 @@
+<div class="grid-cell action-grid-cell">
+    <div class="users-actions">
+        <a class="remove-user" href="#delete-user" title="<%= data.text.admin.deleteUser %>" data-js-delete-user>
+            <i class="rp-icons rp-icons-delete"></i>
+        </a>
+    </div>
+</div>
+<div class="user-row-inner">
+    <div class="grid-cell name-grid-cell">
+        <div class="user-wrap">
+            <div class="user-avatar">
+                <img data-js-user-avatar src=""/>
+            </div>
+            <div class="user-info">
+                <div class="user-info-wrap">
+                    <p class="user-name" data-js-user-name></p>
+                    <p class="user-you" data-js-user-you><%= data.text.ui.you %></p>
+                    <a class="user-admin" href="#remove-admin" data-js-user-admin><%= data.text.ui.admin %></a>
+                    <a class="make-admin" href="#make-admin" data-js-make-admin><%= data.text.ui.makeAdmin %></a>
+                    <br>
+                    <p class="user-login" data-js-user-login></p>
+                    <br>
+                    <p class="user-email"><a href="" class="rp-link" data-js-user-email></a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="grid-cell login-grid-cell">
+        <div class="user-title-mobile"><%= data.text.admin.lastLogin %>:</div>
+        <div class="login-time show-time" data-js-login-time>
+            <span class="from-now" data-js-time-from-now></span>
+            <span class="exact-time" data-js-time-exact></span>
+        </div>
+    </div>
+    <div class="grid-cell role-grid-cell">
+        <div class="users-project-roles">
+            <a href="#viewProejcts" class="rp-btn rp-btn-default rp-button-with-icon" data-js-view-projects
+               title="<%= data.text.admin.viewProjects %>">
+                <i class="rp-icons rp-icons-eye"></i>
+                <span class="hidden-sm hidden-xs rp-btn-val"><%= data.text.admin.viewProjects %></span>
+            </a>
+            <div class="users-project-mobile" data-js-user-projects-mobile></div>
+        </div>
+    </div>
+    <div class="clear-for-projects-list"></div>
+    <div data-js-user-projects></div>
+</div>

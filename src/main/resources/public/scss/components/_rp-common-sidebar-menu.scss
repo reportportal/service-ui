@@ -26,18 +26,20 @@
     position: fixed;
     box-shadow: none;
     width: 90px;
-    left: 0px;
-    top: 0px;
-    bottom: 0px;
+    left: 0;
+    top: 0;
+    bottom: 0;
     min-height: 100%;
     background: #464547;
     color: #b4b4b4;
     z-index: 100;
-
+    .user-menu {
+        display: none;
+    }
     .logo {
         display: inline-block;
         box-sizing: border-box;
-        padding: 16px 0px 0px 0px;
+        padding: 16px 0 0 0;
         border-bottom: 1px solid #353536;
         text-align: center;
         font-weight: bold;
@@ -64,8 +66,8 @@
             &.main-menu {
                 position: relative;
                 width: 100%;
-                margin: 0px;
-                padding: 0px;
+                margin: 0;
+                padding: 0;
 
                 li {
                     position: relative;
@@ -86,8 +88,7 @@
                         font-size: 11px;
                         line-height: 16px;
                         min-height: 77px;
-                        padding: 0px;
-                        padding-top: 20px;
+                        padding: 20px 0 0;
                         box-shadow: none;
 
                         &#settingsSection {
@@ -169,59 +170,18 @@
 /*-----------------------------------*/
 /* STYLES FOR DIFFERENT SCREEN WIDTH */
 
-/* xs - 767px */
-@media (max-width: $SCREEN_XS_MAX) {
+/* sm - 768px - 991px */
+@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
     .sidebar {
-        left: -250px;
-        width: 250px;
-
-        .logo {
-            height: 82px;
-            background: #313131;
-            padding: 24px 0 0;
-
-            .sprite {
-                margin-right: 0;
-            }
-        }
-
-        nav {
-            ul {
-                &.main-menu {
-                    li {
-                        border-top: none;
-                        border-bottom: 1px solid #353536;
-
-                        a {
-                            padding: 15px 0 15px 20px;
-                            min-height: 20px;
-                            text-align: left;
-
-                            &#settingsSection {
-                                padding: 15px 0 15px 20px;
-                            }
-
-                            i {
-                                width: auto;
-                            }
-
-                            span {
-                                padding-top: 2px;
-                                font-size: 16px;
-                                line-height: 16px;
-                                padding-left: 10px;
-                            }
-                        }
-                    }
-                }
+        width: 60px;
+        nav ul.main-menu li a{
+            padding-top: 18px;
+            min-height: 56px;
+            span {
+                display: none;
             }
         }
     }
-}
-
-/* sm - 768px - 991px */
-@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
-
 }
 
 /* md - 992px - 1199px */
@@ -233,10 +193,72 @@
 @media (min-width: $SCREEN_LG_MIN) {
 
 }
-
-@media (min-width: 768px) {
+/* xs - 767px */
+@media (max-width: $SCREEN_XS_MAX) {
     .sidebar {
-        left: 0!important;
+        left: -200px;
+        width: 200px;
+        &:before {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 60px;
+            background: #2b2b2b;
+        }
+        .logo {
+            display: none;
+        }
+        .user-menu {
+            display: block;
+            position: absolute;
+            width: 100%;
+            bottom: 0;
+        }
+        nav {
+            ul {
+                &.main-menu {
+                    li {
+                        border-top: none;
+                        border-bottom: 1px solid #353536;
+
+                        a {
+                            padding: 12px 0 12px 12px;
+                            min-height: 20px;
+                            text-align: left;
+                            &#settingsSection {
+                                padding: 15px 0 15px 20px;
+                            }
+
+                            i {
+                                width: auto;
+                                vertical-align: middle;
+                            }
+
+                            span {
+                                padding-top: 2px;
+                                font-size: 12px;
+                                line-height: 16px;
+                                padding-left: 14px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+body.menu-open {
+    @media (max-width: $SCREEN_XS_MAX) {
+        .sidebar {
+            .sidebar-close {
+                position: absolute;
+                left: 100%;
+                top: 0;
+                height: 100%;
+                width: 1000px;
+                background: transparent;
+            }
+        }
     }
 }
 

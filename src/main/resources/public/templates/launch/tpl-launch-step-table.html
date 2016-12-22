@@ -1,0 +1,57 @@
+<% function getItemHtml(name, shortName) {
+return '<div class="table-wrapper">' +
+    '<div class="middle-wrapper">' +
+        '<span class="text-overflow">' +
+                        '<div class="filter-icon-wrapper">' +
+                            '<i class="rp-icons rp-icons-filter"></i>' +
+                        '</div>&nbsp;' +
+                        '<span class="long-size">' + name + '</span>' +
+                        '<span class="short-size" title="' + name + '">' + shortName + '</span>&nbsp;' +
+                        '<div class="sort-icon-wrapper">' +
+                            '<i class="material-icons">keyboard_arrow_up</i>' +
+                            '<i class="material-icons">keyboard_arrow_down</i>' +
+                        '</div>' +
+                    '</span>' +
+        '</div>' +
+    '</div>';
+} %>
+
+
+
+<div class="rp-table-grid step-grid rp-odd-even rp-table-hover" data-js-table-container>
+    <div class="row rp-grid-thead hidden-xs" data-js-fixed-header>
+        <div class="grid-cell time-grid-cell rp-grid-th add-collapse-methods-btn" data-sorter="type" data-filter="type">
+           <label class="rp-switcher" data-js-collapse-label title="Expand precondition methods">
+               <input type="checkbox" data-js-collapse-input>
+               <div class="slider"></div>
+           </label>
+           <%= getItemHtml(data.text.launchesHeaders.type, data.text.launchesHeaders.type_short) %>
+        </div>
+        <div class="grid-cell name-grid-cell rp-grid-th" data-sorter="name" data-filter="name">
+            <%= getItemHtml(data.text.launchesHeaders.name, data.text.launchesHeaders.name_short) %>
+        </div>
+        <div class="grid-cell status-grid-cell rp-grid-th" data-sorter="status" data-filter="status">
+            <%= getItemHtml(data.text.launchesHeaders.status, data.text.launchesHeaders.status_short) %>
+        </div>
+        <div class="grid-cell time-grid-cell rp-grid-th" data-sorter="start_time" data-filter="start_time">
+            <%= getItemHtml(data.text.launchesHeaders.start_time, data.text.launchesHeaders.start_time_short) %>
+        </div>
+        <div class="grid-cell type-grid-cell rp-grid-th" data-sorter="issue$issue_type" data-filter="issue$issue_type">
+            <%= getItemHtml(data.text.launchesHeaders.issue, data.text.launchesHeaders.issue_short) %>
+        </div>
+        <div class="grid-cell select-grid-cell rp-grid-th">
+            <div class="table-wrapper">
+                <div class="middle-wrapper">
+                    <label class="rp-checkbox-wrap">
+                        <input class="rp-input-checkbox" type="checkbox" data-js-select-all>
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+

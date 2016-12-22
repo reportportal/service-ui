@@ -63,6 +63,20 @@ define(function (require, exports, module) {
             }
             return defect;
         },
+        getDefectByLocator: function(locator) {
+            var defects = this.where({locator: locator});
+            if(defects.length >= 1) {
+                return defects[0];
+            }
+            return null;
+        },
+        getMainColorByType: function(type) {
+            var mainDefect = this.findWhere({typeRef: type.toUpperCase(), mainType: true});
+            if(mainDefect) {
+                return mainDefect.get('color');
+            }
+            return this.Util.getDefaultColor(type);
+        },
         checkForSubDefects: function(){
             return this.length > 5;
         },

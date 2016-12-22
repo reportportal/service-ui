@@ -23,7 +23,7 @@ define(function (require, exports, module) {
     'use strict';
 
     var Backbone = require('backbone');
-    var Components = require('components');
+    var Components = require('core/components');
     var DefectEditor = require('defectEditor');
     var Util = require('util');
     var App = require('app');
@@ -33,7 +33,7 @@ define(function (require, exports, module) {
     var MarkitupSettings = require('markitupset');
     var Textile = require('textile');
     var Service = require('coreService');
-    var Filter = require('filters');
+    var Filter = require('filter/filters');
     var Moment = require('moment');
 
     var config = App.getInstance();

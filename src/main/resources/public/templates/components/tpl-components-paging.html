@@ -1,21 +1,38 @@
-<div class="pagingtoolbar text-center row">
+<% if (!data.minPaging) { %>
+<div class="pagination-component row">
     <% if (data.showControls) { %>
-    <ul class="clearfix pagination pagination-sm">
-        <li class="<% if(!data.hasPrevious) { %>disabled<% } %>"><a class="first" href="#">«</a></li>
-        <li class="<% if(!data.hasPrevious) { %>disabled<% } %>"><a class="previous" href="#"><%= data.text.ui.previous %></a></li>
+    <ul class="clearfix">
+        <li class="first <% if(!data.hasPrevious) { %>disabled<% } %>"><i class="rp-icons rp-icons-left"></i> </li>
+        <li class="previous <% if(!data.hasPrevious) { %>disabled<% } %>"><i class="material-icons">keyboard_arrow_left</i></li>
+        <% if(data.pages[0] != 1) {%>
+        <li class="more">...</li>
+        <% } %>
         <% _.each(data.pages, function(page, index, all){ %>
-        <li class="<% if(data.active === page)  { %>active<% } %>"><a class="page" href="#"><%= page %></a></li>
+        <li class="<% if(data.active === page)  { %>active<% } else { %> page <% } %>"><%= page %></li>
         <% }); %>
-        <li class="<% if(!data.hasNext) { %>disabled<% } %>"><a class="next" href="#"><%= data.text.ui.next %></a></li>
-        <li class="<% if(!data.hasNext) { %>disabled<% } %>"><a class="last" href="#">»</a></li>
+        <% if(data.pages[data.pages.length-1]*data.objectsOnPage < data.totalElements) {%>
+        <li class="more">...</li>
+        <% } %>
+        <li class="next <% if(!data.hasNext) { %>disabled<% } %>"><i class="material-icons">keyboard_arrow_right</i></li>
+        <li class="last <% if(!data.hasNext) { %>disabled<% } %>"><i class="rp-icons rp-icons-right"></i></li>
     </ul>
     <% } %>
-    <span class="text-muted">
-        <p class="pull-right text-right col-md-2 form-inline">
-            <input type="text"  class="input-sm form-control" id="pageSize" maxlength="3" style="display: none; width: 45px">
-            <a class="itemsPerPage rp-blue-link-undrl" href="#"><%= data.objectsOnPage %></a> per page</p>
-        <p class="text-left col-md-2">
-            <%= data.from %> - <% if(data.to < data.totalElements) { %><%= data.to %><% } else { %><%= data.totalElements %><% } %> of <%= data.totalElements %>
-        </p>
-    </span>
+    <div class="left-block">
+        <%= data.from %> - <% if(data.to < data.totalElements) { %><%= data.to %><% } else { %><%= data.totalElements %><% } %> of <%= data.totalElements %>
+    </div>
+    <div class="right-block">
+        <input type="text" maxlength="3" data-js-per-page-input>
+        <span class="per-page" data-js-per-page><%= data.objectsOnPage %></span>
+        <span> per page</span>
+    </div>
+
 </div>
+<% } else { %>
+<div class="pagination-min-component">
+    <ul class="min-paging">
+        <li class="previous <% if(!data.hasPrevious) { %>disabled<% } %>"><i class="material-icons">keyboard_arrow_left</i></li>
+        <span class="min-paging-text"><span><%= data.active %></span>of<span><%= data.totalPages %></span></span>
+        <li class="next <% if(!data.hasNext) { %>disabled<% } %>"><i class="material-icons">keyboard_arrow_right</i></li>
+    </ul>
+</div>
+<% } %>

@@ -1,0 +1,34 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.dialogHeader.editUserInfo}) %>
+<div class="modal-body">
+    <div class="rp-edit-user-info">
+        <div class="rp-form-group">
+            <label class="rp-control-label col-sm-3 col-xs-12"><%= data.text.userProfile.userName %></label>
+            <div class="col-sm-7 col-xs-12">
+                <input data-js-full-name class="form-control rp-input-default" type="text"
+                       placeholder="<%= data.text.userProfile.enter %> <%= data.text.userProfile.userName %>"
+                       value="">
+                <div class="help-inline"></div>
+            </div>
+        </div>
+        <div class="rp-form-group">
+            <label class="rp-control-label col-sm-3 col-xs-12"><%= data.text.userProfile.email %></label>
+            <div class="col-sm-7 col-xs-12">
+                <input data-js-user-email class="form-control rp-input-default" type="text"
+                       placeholder="<%= data.text.userProfile.enter %> <%= data.text.userProfile.email %>"
+                       value="">
+                <div class="help-inline"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.cancel %>
+    </button>
+    <button class="rp-btn rp-btn-submit disabled" type="button" data-js-ok>
+        <%= data.text.ui.submit %>
+    </button>
+</div>
+
+
+

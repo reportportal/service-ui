@@ -22,12 +22,13 @@
 
 define(function(require, exports, module) {
     var $ = require('jquery');
-    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
     var Service = require('coreService');
     var Storage = require('storageService');
     var SingletonURLParamsModel = require('model/SingletonURLParamsModel');
+    var SingletonAppModel = require('model/SingletonAppModel');
     require('cookie');
     require('base64');
 
@@ -37,7 +38,7 @@ define(function(require, exports, module) {
         if(!instance) instance = new UserModel;
         return instance
     };
-    var UserModel = Backbone.Model.extend({
+    var UserModel = Epoxy.Model.extend({
 
         defaults: {
             auth: false,
@@ -57,12 +58,21 @@ define(function(require, exports, module) {
             lastInsideHash: null,
             token: 'Basic dWk6dWltYW4=',
         },
+        computeds: {
+            isAdmin: {
+                deps: ['userRole'],
+                get: function(userRole) {
+                    return userRole === config.accountRolesEnum.administrator;
+                }
+            }
+        },
 
         initialize: function () {
             this.ready = $.Deferred();
             this.listenTo(this, 'change:lastInsideHash', this.onChangeLastInsideHash);
             this.set({'token': this.getToken()});
             this.listenTo(this, 'change:token', this.onChangeToken);
+            this.appModel = new SingletonAppModel();
 
             // this.loadSession();
             // this.isLogin = false;
@@ -160,7 +170,6 @@ define(function(require, exports, module) {
                 userRole: response.userRole,
                 photo_loaded: response.photo_loaded,
                 image: config.apiVersion + 'data/photo?' + response.userId + '?at=' + Date.now(),
-            //
                 user_login: response.userId
             }
         },
@@ -214,12 +223,6 @@ define(function(require, exports, module) {
                     Util.ajaxFailMessenger(error, 'updateDefaultProject');
                 });
         },
-
-        // makeBaseAuth: function (login, pass) {
-        //     var tok = login + ':' + pass;
-        //     var hash = Base64.encode(tok);
-        //     return "Basic " + hash;
-        // },
         login: function (login, pass) {
             login = login.toLowerCase();
             var self = this;
@@ -251,7 +254,7 @@ define(function(require, exports, module) {
 
         hasPermissions: function (incomingProjectRole) {
 
-            var project = this.get('projects')[config.project.projectId];
+            var project = this.get('projects')[this.appModel.get('projectId')];
 
             if (Util.isAdmin(config.userModel.toJSON())) {
                 return true;
@@ -271,6 +274,14 @@ define(function(require, exports, module) {
                 permission = projectRoleIndex >= incomingProjectRoleIndex;
             }
             return permission;
+        },
+        getRoleForCurrentProject: function() {
+            var project = this.get('projects')[this.appModel.get('projectId')];
+            var role = '';
+            if(project) {
+                role = project.projectRole
+            }
+            return role;
         },
 
 

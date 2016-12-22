@@ -1,0 +1,135 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+.gadget-view {
+  position: absolute !important;
+  .gadget-wrapper {
+    position: absolute;
+    background: $COLOR--white-default;
+    border: 1px solid $COLOR--gray-91;
+    top: 0;
+    left: 7px;
+    right: 7px;
+    bottom: 0;
+    &:hover {
+      .action-block {
+        opacity: 1;
+      }
+    }
+  }
+  &.ui-draggable-disabled {
+    .gadget-header {
+      cursor: default;
+    }
+  }
+  .gadget-header {
+    position: relative;
+    cursor: all-scroll;
+    width: 100%;
+    height: 60px;
+    background: $COLOR--white;
+    border: 1px solid $COLOR--gray-91;
+    .info-block {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      left: 15px;
+      right: 120px;
+      padding-top: 10px;
+      font-family: "OpenSansSemibold", sans-serif;
+      h2 {
+        color: $COLOR--charcoal-grey;
+        margin: 0;
+        display: inline-block;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 80%;
+        line-height: 20px;
+      }
+      i {
+        font-size: 19px;
+        color: $COLOR--gray-47;
+        padding: 0 5px;
+        vertical-align: top;
+        &.comment-icon{
+          font-size: 16px;
+          margin-top: 2px;
+        }
+      }
+      p {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 100%;
+        color: $COLOR--gray-47;
+        font-size: 12px;
+        padding: 0;
+        line-height: 14px;
+      }
+    }
+    .action-block {
+      float: right;
+      margin-right: 15px;
+      opacity: 0;
+      i {
+        float: right;
+        font-size: 22px;
+        margin: 17px 3px;
+        cursor: pointer;
+        color: $COLOR--gray-60;
+        &:hover {
+          color: $COLOR--gray-47;
+        }
+      }
+    }
+  }
+  .gadget-body {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 60px;
+    bottom: 0;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  .preloader {
+    position: absolute;
+    top: 50%;
+    margin-top: -37px;
+  }
+  &.load {
+    .gadget-header, .gadget-body {
+      display: none;
+    }
+    .preloader {
+      display: block;
+    }
+  }
+  &.hide-widget {
+    .gadget-body {
+      opacity: 0;
+    }
+  }
+}

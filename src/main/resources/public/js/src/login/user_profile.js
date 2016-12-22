@@ -24,7 +24,7 @@ define(function (require, exports, module) {
 
     var $ = require('jquery');
     var Backbone = require('backbone');
-    var Components = require('components');
+    var Components = require('core/components');
     var Util = require('util');
     var App = require('app');
     var Service = require('coreService');
@@ -146,7 +146,7 @@ define(function (require, exports, module) {
         previewPhoto: function (e) {
             var file = e.currentTarget.files[0],
                 self = this;
-            
+
             if (file) {
                 if (this.validateFileExtension(file)) {
                     var reader = new FileReader();
