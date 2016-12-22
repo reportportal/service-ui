@@ -268,8 +268,9 @@ define(function (require, exports, module) {
 
             forAdminSettings: {
                 protocol: [
-                    {value: 'SMTP', name: 'SMTP'}
-                ]
+                    {value: 'smtp', name: 'SMTP'}
+                ],
+                defaultProtocol: 'smtp'
             },
 
             widgetCriteria: {
