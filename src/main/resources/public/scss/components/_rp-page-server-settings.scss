@@ -50,35 +50,6 @@
     }
 }
 
-.rp-email-settings {
-    padding-top: 30px;
-    padding-bottom: 20px;
-    .email-enabled-settings {
-        margin-bottom: 6px;
-        .tls-enabled {
-            position: relative;
-            top: -4px;
-            .rp-checkbox-wrap {
-                margin-left: 30px;
-                &:first-child {
-                    margin-left: 0;
-                }
-            }
-        }
-    }
-    .email-server-error {
-        .test-connection-alert {
-            font-size: 12px;
-            line-height: 1.5;
-            .connection-error-title {
-                color: $COLOR--failed;
-                font-size: 13px;
-                font-weight: 600;
-            }
-        }
-    }
-}
-
 /*-----------------*/
 /* FOR USUAL USERS */
 
