@@ -1516,17 +1516,17 @@ define(function(require, exports, module) {
             this.access = options.access;
             this.systems = options.externalSystems;
             this.appModel = new SingletonAppModel();
-            var modelData = null;
+            var modelsData = [];
             _.each(options.externalSystems, function(system) {
                 return _.each(config.forSettings.btsList, function(btsItem) {
                     if(btsItem.name == system.systemType) {
-                        modelData = system;
+                        modelsData.push(system);
                         return false;
                     }
                 })
             })
             // this.model = new BtsProperties(options.externalSystems[0]);
-            this.model = new BtsProperties(modelData);
+            this.model = new BtsProperties(modelsData[0]);
             this.systemAt = 0;
         },
 

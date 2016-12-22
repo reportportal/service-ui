@@ -1674,8 +1674,8 @@ define(['util'], function () {
             filterOptions: "Filter Options",
 
             msgDeleteItems: 'In case of delete the %%%, all related data will be deleted. Are you sure you want to delete %%%?',
-            msgDeleteDefectType: "I am sure, I want to remove custom defect type",
-            msgDeleteProject: "I am sure, I want to delete project",
+            msgDeleteDefectType: "I am sure I want to remove custom defect type",
+            msgDeleteProject: "I am sure I want to delete project",
             msgResetColorsDefectType: "Are you sure you want to reset custom defect's colors to default?",
             msgMessageTop: "In case of delete custom defect, all investigated as <strong>'%%%'</strong> defects will be marked as <strong>'%%%'</strong>",
         },
