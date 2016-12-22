@@ -260,7 +260,11 @@ define([
                 .done(function () {
                     var issue = getDefaultIssue();
                     if (this.item.issue.issue_type !== issue.issue_type) {
-                        config.trackingDispatcher.defectStateChange(this.item.issue.issue_type, issue.issue_type);
+                        var oldDefectModel = this.navigationInfo.defectTypes.findWhere({locator: this.item.issue.issue_type});
+                        var newDefectModel = this.navigationInfo.defectTypes.findWhere({locator: issue.issue_type});
+                        if(oldDefectModel && newDefectModel) {
+                            config.trackingDispatcher.defectStateChange(oldDefectModel.get('typeRef'), newDefectModel.get('typeRef'));
+                        }
                     }
                     config.commentAnchor = this.item.id;
                     this.navigationInfo.trigger(this.defectCallBack);
