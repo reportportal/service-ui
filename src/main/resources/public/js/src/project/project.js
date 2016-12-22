@@ -1516,17 +1516,17 @@ define(function(require, exports, module) {
             this.access = options.access;
             this.systems = options.externalSystems;
             this.appModel = new SingletonAppModel();
-            var modelData = null;
+            var modelsData = [];
             _.each(options.externalSystems, function(system) {
                 return _.each(config.forSettings.btsList, function(btsItem) {
                     if(btsItem.name == system.systemType) {
-                        modelData = system;
+                        modelsData.push(system);
                         return false;
                     }
                 })
             })
             // this.model = new BtsProperties(options.externalSystems[0]);
-            this.model = new BtsProperties(modelData);
+            this.model = new BtsProperties(modelsData[0]);
             this.systemAt = 0;
         },
 
@@ -2335,7 +2335,7 @@ define(function(require, exports, module) {
                     changeRow.addClass('hide-content');
                     e.color.setColor(currentColor);
                     $(this).find('.colorpicker-current-color > span')
-                        .on('click touchstart mousedown', function(e){
+                        .on('click', function(e){
                             e.stopPropagation();
                             var selection = window.getSelection();
                             selection.selectAllChildren(this);
@@ -2820,52 +2820,19 @@ define(function(require, exports, module) {
         },
         showModalResetColors: function () {
             var self = this;
-            var modalDialog = {
-                paramModal: {
-                    additionalClass: 'dialog-reset-colors',
-                    sizeModal: 'md',
-                    withConfirm: false
-                },
-                dialogHeader: {
-                    title: Localization.dialogHeader.titleEditDefectType
-                },
-                dialogBody: {
-                    txtMessage: Localization.dialog.msgResetColorsDefectType
-                },
-                dialogFooter: {
-                    cancelButton: Localization.uiCommonElements.cancel,
-                    dangerButton: Localization.uiCommonElements.reset
-                }
-            };
-
-            this.modalConfirmReset = Util.getDialog({
-                name: this.confirmModal,
-                data: modalDialog
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.titleEditDefectType,
+                bodyText: Localization.dialog.msgResetColorsDefectType,
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.uiCommonElements.reset,
             });
-
-            this.modalConfirmReset
-                .on('click', ".rp-btn-danger", function () {
-                    self.resetColors();
-                    self.modalConfirmReset.modal("hide");
-                    Util.ajaxSuccessMessenger('changedColorDefectTypes');
-                })
-                .on('click', "input[type='checkbox'].confirm", function (event) {
-                    var elem = event.target;
-                    var btnDelete = $(elem).closest('.modal-body').find('.rp-btn-danger');
-                    if (elem.checked) {
-                        $(btnDelete.selector).removeAttr('disabled');
-                    } else {
-                        $(btnDelete.selector).attr("disabled", "disabled");
-                    }
-                })
-                .on('hidden.bs.modal', function () {
-                    $(this).data('modal', null);
-                    self.modalConfirmReset.off().remove();
-                    self.modalConfirmReset = null;
-                });
-
-            this.modalConfirmReset.modal("show");
+            modal.show().done(function() {
+                self.resetColors();
+                Util.ajaxSuccessMessenger('changedColorDefectTypes');
+            });
         },
+
         resetColors: function () {
             this.defectTypes.trigger('resetColors');
         },
