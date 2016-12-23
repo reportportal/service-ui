@@ -198,6 +198,13 @@ $borderRadius100: 100px;
                 background: $COLOR--reseted;
                 .history-col-content {
                     display: none;
+                    &.empty-item-col {
+                        display: block;
+                        color: $COLOR--gray-80;
+                        .rp-icons {
+                            margin-bottom: 6px;
+                        }
+                    }
                 }
             }
             &.history-status-NOT_FOUND {
