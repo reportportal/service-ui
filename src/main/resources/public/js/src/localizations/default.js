@@ -990,7 +990,8 @@ define(['util'], function () {
             share: 'Share',
             description: 'Description',
             descriptionPlaceholder: 'Enter Filter Description',
-            edit: "Edit Filter"
+            edit: "Edit Filter",
+            addNew: 'Add New Filter'
         },
 
         project: {

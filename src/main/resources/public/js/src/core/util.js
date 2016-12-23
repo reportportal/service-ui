@@ -1077,6 +1077,7 @@ define(function (require, exports, module) {
                 if(result) {
                     $holder.addClass('validate-error');
                 } else {
+                    triggerDebounce();
                     $holder.removeClass('validate-error');
                 }
                 $el.data('validate-error', result);
@@ -1090,6 +1091,9 @@ define(function (require, exports, module) {
             var hideResult = function() {
                 $hintBlock.removeClass('show-hint');
             };
+            var triggerDebounce = _.debounce(function() {
+                $el.trigger('validation:success');
+            }, 500)
             $el.on('keyup', function (e) {
                     if (e.keyCode && (e.keyCode === 9 || e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40)) {
                         return;

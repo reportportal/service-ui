@@ -29,11 +29,22 @@ define(function (require, exports, module) {
     var FilterModel = require('filters/FilterModel');
     var FilterItem = require('modals/addWidget/FilterSearchItemView');
     var FilterSearchEditView = require('modals/addWidget/FilterSearchEditView');
+    var FilterSearchAddView = require('modals/addWidget/FilterSearchAddView');
 
     var FilterCollection = Backbone.Collection.extend({
         model: FilterModel,
         initialize: function(options) {
             this.mainModel = options.mainModel;
+            this.listenTo(this, 'change:active', this.onChangeActive);
+        },
+        onChangeActive: function(model, active) {
+            if(active) {
+                _.each(this.models, function(curModel) {
+                    if(curModel != model) {
+                        curModel.set({active: false});
+                    }
+                })
+            }
         },
         parse: function(data) {
             var self = this;
@@ -50,9 +61,8 @@ define(function (require, exports, module) {
         className: 'modal-add-widget-filter-search',
         template: 'tpl-modal-add-widget-filter-search',
         events: {
-            'validation::change [data-js-filter-name]': 'onChangeFilterName',
+            'validation:success [data-js-filter-name]': 'onChangeFilterName',
             'click [data-js-add-filter]': 'onClickAddFilter',
-
         },
         bindings: {
             ':el': 'classes: {hide: not(gadgetIsFilter)}'
@@ -90,19 +100,35 @@ define(function (require, exports, module) {
         onSelectFilter: function(filterModel) {
             this.model.set({filter_id: filterModel.get('id')});
         },
+        onClickAddFilter: function(e) {
+            e.preventDefault();
+            this.$el.addClass('hide-content');
+            this.stopListening(this.addFilterView);
+            this.addFilterView && this.addFilterView.destroy();
+            this.addFilterView = new FilterSearchAddView({gadgetModel: this.model});
+            this.listenTo(this.addFilterView, 'change:filter', this.onSelectFilter);
+            this.addFilterView.activate();
+            $('[data-js-filter-add-container]', this.$el).html(this.addFilterView.$el);
+            var self = this;
+            this.addFilterView.getReadyState()
+                .always(function() {
+                    self.addFilterView.destroy();
+                    var activeSelectFilter = self.collection.findWhere({active: 'on'});
+                    activeSelectFilter && activeSelectFilter.set({active: false});
+                    self.$el.removeClass('hide-content');
+                })
+        },
         onEditFilter: function(model) {
+            this.$el.addClass('hide-content');
             this.editFilterView && this.editFilterView.destroy();
-            this.editFilterView = new FilterSearchEditView({model: model});
+            this.editFilterView = new FilterSearchEditView({model: model, gadgetModel: this.model});
             $('[data-js-filter-edit-container]', this.$el).html(this.editFilterView.$el);
             var self = this;
             this.editFilterView.getReadyState()
                 .always(function() {
                     self.editFilterView.destroy();
+                    self.$el.removeClass('hide-content');
                 })
-                .done(function(entity) {
-                    console.dir(entity);
-                })
-            this.editFilterView.activate();
         },
         activate: function() {
             if(!this.firstActivate) { return; }
@@ -110,7 +136,7 @@ define(function (require, exports, module) {
             var self = this;
             this.load().always(function() {
                 self.baronScroll = Util.setupBaronScroll($('[data-js-filter-list-scroll]', self.$el));
-                Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 400});
+                Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 350});
                 self.baronScroll.on('scroll', function(e) {
                     var elem = self.baronScroll.get(0);
                     if(elem.scrollHeight - elem.scrollTop  < elem.offsetHeight*2){
@@ -125,10 +151,8 @@ define(function (require, exports, module) {
                 this.load();
             }
         },
-        onChangeFilterName: function (e, data) {
-            if (data.valid) {
-                this.viewModel.set({search: data.value});
-            }
+        onChangeFilterName: function (e) {
+            this.viewModel.set({search: $(e.currentTarget).val()});
         },
         onAddCollectionItems: function(model) {
             this.renderFilter(model);

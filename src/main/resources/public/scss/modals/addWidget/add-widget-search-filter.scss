@@ -29,6 +29,9 @@
       margin: 0;
       width: 245px;
       float: left;
+      input {
+        background: $COLOR--white-default;
+      }
     }
     .rp-btn {
       float: right;
@@ -37,6 +40,11 @@
   &.load {
     .preloader {
       display: block;
+    }
+  }
+  &.hide-content {
+    .filter-search-header, .filter-list-wrapper {
+      display: none;
     }
   }
 }
