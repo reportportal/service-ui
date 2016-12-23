@@ -55,7 +55,7 @@ define(function (require, exports, module) {
                 callback({id: element.val(), text: element.val()});
             },
             formatResultCssClass: function (state) {
-                if ((remoteUsers.length == 0 || _.indexOf(remoteUsers, state.text) < 0) && $('.select2-input.select2-active').val() == state.text) {
+                if (remoteUsers.length == 0) {
                     return 'no-exact-match-user';
                 }
             },

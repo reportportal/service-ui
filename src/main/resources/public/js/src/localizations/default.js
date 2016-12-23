@@ -748,6 +748,7 @@ define(['util'], function () {
             launchFinished: 'Launch is finished',
             launchIsDeleting: 'The launch is in the removal process!',
             noItemInLaunch: 'No Item<br> in Launch',
+            emptyItem: 'Item is Empty',
             severalItems: 'There’re several items with the same names, descriptions and tags',
             multipleSelectHeader: 'YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:',
         },
@@ -990,7 +991,8 @@ define(['util'], function () {
             share: 'Share',
             description: 'Description',
             descriptionPlaceholder: 'Enter Filter Description',
-            edit: "Edit Filter"
+            edit: "Edit Filter",
+            addNew: 'Add New Filter'
         },
 
         project: {
@@ -1289,7 +1291,7 @@ define(['util'], function () {
 
         successMessages: {
             defaults: "Completed successfully!",
-            unAssignMember: "Member has been unassigned from project!",
+            unAssignMember: "User has been unassigned from project!",
 
             deleteUser: "User has been deleted from system!",
             deleteFilter: "Filter was deleted",
@@ -1621,8 +1623,7 @@ define(['util'], function () {
             dashboardDelete: 'DELETE DASHBOARD',
             deletedWidget: 'DELETE WIDGET',
             deleteBts: 'Delete Project',
-            unAssignMember: 'UNASSIGN MEMBER',
-            unAssignUser: 'UNASSIGN USER',
+            unAssignMember: 'UNASSIGN USER',
             changeRole: 'CHANGE ROLE',
             sureToRemoveWidget: 'REMOVE WIDGET',
             titleEditDefectType: 'Edit Defect Type',
@@ -1647,8 +1648,7 @@ define(['util'], function () {
             deleteProject: "Are you sure you want to delete the project <b>'%%%'</b>?",
             deleteEmailRule: "Are you sure you want to remove notification rule?",
             deleteEmailRuleBtn: 'Remove',
-            unAssignMember: "Are you sure you want to unassign member <b>'%%%'</b> from the project <b>'%%%'</b>?",
-            unAssignUser: "Are you sure you want to unassign user <b>'%%%'</b> from the project <b>'%%%'</b>?",
+            unAssignMember: "Are you sure you want to unassign user <b>'%%%'</b> from the project <b>'%%%'</b>?",
             unAssignMemberBtn: "Unassign",
             deleteUser: "Are you sure you want to delete user <b>'%%%'<b>?",
             changeRole: "Are you sure you want to change the account role for the <b>'%%%'</b>?",

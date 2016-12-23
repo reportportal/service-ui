@@ -119,8 +119,8 @@ define(function(require, exports, module) {
             e.preventDefault();
             var self = this;
             var modal = new ModalConfirm({
-                headerText: Localization.dialogHeader.unAssignUser,
-                bodyText: Util.replaceTemplate(Localization.dialog.unAssignUser, this.userModel.get('userId').escapeHtml(), this.model.get('projectId')),
+                headerText: Localization.dialogHeader.unAssignMember,
+                bodyText: Util.replaceTemplate(Localization.dialog.unAssignMember, this.userModel.get('userId').escapeHtml(), this.model.get('projectId')),
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.unassign,

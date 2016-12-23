@@ -56,7 +56,7 @@ define(function(require, exports, module) {
             }
         },
         onRemoveFilter: function(model) {
-            if(model.get('owner')) {
+            if(!model.get('temp') && model.get('owner')) {
                 call('PUT', Urls.getPreferences(), {filters: this.getFiltersId()});
             }
         },
