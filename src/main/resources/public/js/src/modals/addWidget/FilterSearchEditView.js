@@ -55,10 +55,6 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
-        activate: function() {
-            // var $scrollEl = Util.setupBaronScroll($('[data-js-entities-container]', this.$el));
-            // Util.setupBaronScrollSize($scrollEl);
-        },
         onClick: function(e) {
             e.stopPropagation();
         },
