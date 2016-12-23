@@ -38,8 +38,10 @@ define(function(require, exports, module) {
         template: 'tpl-email-server-settings',
 
         bindings: {
-            '[data-js-sever-host]': 'value: host',
-            '[data-js-sever-protocol-name]': 'text: getProtocol',
+            '[data-js-server-enable]': 'checked: enableEmailServer',
+            '[data-js-server-config]': 'classes: {hide: not(enableEmailServer)}',
+            '[data-js-server-host]': 'value: host',
+            '[data-js-server-protocol-name]': 'text: getProtocol',
             '[data-js-server-port]': 'value: port',
             '[dats-js-server-auth-name]': 'text: getAuth',
             '[dats-js-server-auth-config]': 'classes: {hide: not(authEnabled)}',
@@ -81,7 +83,7 @@ define(function(require, exports, module) {
                 .done(function (data) {
                     //console.log('getSettings: ', data);
                     this.serverSettings = data;
-                    this.model.set(data.serverEmailConfig);
+                    this.model.set(_.extend({enableEmailServer: !!data.serverEmailConfig}, data.serverEmailConfig));
                     this.render(data);
                     this.bindValidators();
                 }.bind(this));

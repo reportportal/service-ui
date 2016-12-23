@@ -1224,6 +1224,7 @@ define(['util'], function () {
             addUserProject: 'Add User to Project',
             projectName: 'Project name',
             projectRole: 'Project role',
+            enableEmailServer: 'Enable Email Server',
             enableGuestAccount: 'Enable Guest Account',
             activateGitHubAuth: 'Activate GitHub Authorization',
             gitHubClientId: 'Client ID',

@@ -1,74 +1,59 @@
 <div class="form-horizontal rp-email-settings email-settings">
     <div class="rp-form-group clearfix">
-        <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col obligatory-field" for="host">
-            <%= data.text.admin.host %>
+        <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col" for="email_server_enabled">
+            <%= data.text.admin.enableEmailServer %>
         </label>
         <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-            <input type="text" id="host" class="rp-input-default rp-width-100 form-control" data-js-sever-host>
-            <div class="error-bottom">
-                <div class="help-inline"></div>
-            </div>
+            <label class="rp-switcher-big">
+                <span class="turn-on"><%= data.text.ui.on %></span>
+                <span class="turn-off"><%= data.text.ui.off %></span>
+                <input id="email_server_enabled" type="checkbox" data-js-server-enable>
+                <div class="slider"></div>
+            </label>
         </div>
         <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
     </div>
-    <div class="rp-form-group clearfix protocol">
-        <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col" for="protocol">
-            <%= data.text.admin.protocol %>
-        </label>
-        <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-            <div class="rp-btn-group btn-group rp-width-100">
-                <button type="button" id="protocol" class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle" data-toggle="dropdown" data-js-select-prop data-id="protocol">
-                    <span class="select-value" data-js-sever-protocol-name></span>
-                    <span class="rp-caret"></span>
-                </button>
-                <ul class="dropdown-menu" data-js-prop-dropdown>
-                    <% _.each(data.settings.protocol, function(c) { %>
+    <div data-js-server-config class="hide">
+        <div class="rp-form-group clearfix">
+            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col obligatory-field" for="host">
+                <%= data.text.admin.host %>
+            </label>
+            <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
+                <input type="text" id="host" class="rp-input-default rp-width-100 form-control" data-js-server-host>
+                <div class="error-bottom">
+                    <div class="help-inline"></div>
+                </div>
+            </div>
+            <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
+        </div>
+        <div class="rp-form-group clearfix protocol">
+            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col" for="protocol">
+                <%= data.text.admin.protocol %>
+            </label>
+            <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
+                <div class="rp-btn-group btn-group rp-width-100">
+                    <button type="button" id="protocol" class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
+                            data-toggle="dropdown" data-js-select-prop data-id="protocol">
+                        <span class="select-value" data-js-server-protocol-name></span>
+                        <span class="rp-caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" data-js-prop-dropdown>
+                        <% _.each(data.settings.protocol, function(c) { %>
                         <li>
                             <a href="#" data-value="<%= c.value %>"><%= c.name %></a>
                         </li>
-                    <% }) %>
-                </ul>
+                        <% }) %>
+                    </ul>
+                </div>
             </div>
+            <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
         </div>
-        <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
-    </div>
-    <div class="rp-form-group clearfix">
-        <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col obligatory-field" for="port">
-            <%= data.text.admin.port %>
-        </label>
-        <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-            <input type="text" class="rp-input-default rp-width-100 form-control" id="port" data-js-server-port>
-            <div class="error-bottom">
-                <div class="help-inline"></div>
-            </div>
-        </div>
-        <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
-    </div>
-    <div class="rp-form-group clearfix">
-        <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col">
-            <%= data.text.admin.authorization %>
-        </label>
-        <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-            <div class="rp-btn-group btn-group rp-width-100">
-                <button type="button" class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle" data-toggle="dropdown" data-js-select-prop data-id="authEnabled">
-                    <span class="select-value" dats-js-server-auth-name></span>
-                    <span class="rp-caret"></span>
-                </button>
-                <ul class="dropdown-menu" data-js-prop-dropdown>
-                    <li><a href="#"><%= data.text.ui.on %></a></li>
-                    <li><a href="#"><%= data.text.ui.off %></a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
-    </div>
-    <div class="auth" dats-js-server-auth-config>
         <div class="rp-form-group clearfix">
-            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col" for="username">
-                <%= data.text.admin.username %>
+            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col obligatory-field" for="port">
+                <%= data.text.admin.port %>
             </label>
             <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                <input type="text" class="rp-input-default rp-width-100 form-control" id="username" data-js-server-username>
+                <input type="text" class="rp-input-default rp-width-100 form-control" id="port" data-js-server-port>
                 <div class="error-bottom">
                     <div class="help-inline"></div>
                 </div>
@@ -76,33 +61,70 @@
             <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
         </div>
         <div class="rp-form-group clearfix">
-            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col" for="password">
-                <%= data.text.admin.password %>
+            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col">
+                <%= data.text.admin.authorization %>
             </label>
             <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                <input type="password" class="rp-input-default rp-width-100 form-control" id="password" data-js-sever-password>
-                <div class="error-bottom">
-                    <div class="help-inline"></div>
+                <div class="rp-btn-group btn-group rp-width-100">
+                    <button type="button" class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
+                            data-toggle="dropdown" data-js-select-prop data-id="authEnabled">
+                        <span class="select-value" dats-js-server-auth-name></span>
+                        <span class="rp-caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" data-js-prop-dropdown>
+                        <li><a href="#"><%= data.text.ui.on %></a></li>
+                        <li><a href="#"><%= data.text.ui.off %></a></li>
+                    </ul>
                 </div>
             </div>
             <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
         </div>
-    </div>
-    <div class="rp-form-group clearfix email-enabled-settings">
-        <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col"></label>
-        <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-            <div class="tls-enabled">
-                <label class="rp-checkbox-wrap" for="tls">
-                    <input data-js-tls-enabled class="rp-input-checkbox" type="checkbox" id="tls" data-js-server-tls>
-                    <span><%= data.text.admin.TLS %></span>
+        <div class="auth" dats-js-server-auth-config>
+            <div class="rp-form-group clearfix">
+                <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col" for="username">
+                    <%= data.text.admin.username %>
                 </label>
-                <label class="rp-checkbox-wrap" for="ssl">
-                    <input data-js-ssl-enabled class="rp-input-checkbox" type="checkbox" id="ssl" data-js-server-ssl>
-                    <span><%= data.text.admin.SSL %></span>
+                <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
+                    <input type="text" class="rp-input-default rp-width-100 form-control" id="username"
+                           data-js-server-username>
+                    <div class="error-bottom">
+                        <div class="help-inline"></div>
+                    </div>
+                </div>
+                <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
+            </div>
+            <div class="rp-form-group clearfix">
+                <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col" for="password">
+                    <%= data.text.admin.password %>
                 </label>
+                <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
+                    <input type="password" class="rp-input-default rp-width-100 form-control" id="password"
+                           data-js-sever-password>
+                    <div class="error-bottom">
+                        <div class="help-inline"></div>
+                    </div>
+                </div>
+                <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
             </div>
         </div>
-        <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
+        <div class="rp-form-group clearfix email-enabled-settings">
+            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col"></label>
+            <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
+                <div class="tls-enabled">
+                    <label class="rp-checkbox-wrap" for="tls">
+                        <input data-js-tls-enabled class="rp-input-checkbox" type="checkbox" id="tls"
+                               data-js-server-tls>
+                        <span><%= data.text.admin.TLS %></span>
+                    </label>
+                    <label class="rp-checkbox-wrap" for="ssl">
+                        <input data-js-ssl-enabled class="rp-input-checkbox" type="checkbox" id="ssl"
+                               data-js-server-ssl>
+                        <span><%= data.text.admin.SSL %></span>
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
+        </div>
     </div>
     <div class="rp-form-group clearfix email-server-error hide" data-js-server-connection-error>
         <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col"></label>

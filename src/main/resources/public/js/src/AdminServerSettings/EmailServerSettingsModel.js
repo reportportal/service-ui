@@ -34,8 +34,8 @@ define(function (require, exports, module) {
 
     var EmailServerSettingsModel = Epoxy.Model.extend({
         defaults: {
+            enableEmailServer: false,
             authEnabled: false,
-            //debug: false,
             host: '',
             port: '',
             protocol: config.forAdminSettings.defaultProtocol,
@@ -56,7 +56,7 @@ define(function (require, exports, module) {
                 protocol: this.get('protocol'),
                 username: this.get('authEnabled') ? this.get('username') : ''
             };
-            return data;
+            return this.get('enableEmailServer') ? data : {};
         }
     });
 

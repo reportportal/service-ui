@@ -5,29 +5,31 @@
                 <%= data.text.admin.enableGuestAccount %>
             </label>
             <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                <div class="rp-btn-group btn-group rp-width-100"></div>
+                <label class="rp-switcher-big">
+                    <span class="turn-on"><%= data.text.ui.on %></span>
+                    <span class="turn-off"><%= data.text.ui.off %></span>
+                    <input id="enableGuestAccount" type="checkbox" data-js-guest-enable>
+                    <div class="slider"></div>
+                </label>
             </div>
             <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
         </div>
+        <div></div>
         <div class="rp-form-group clearfix">
             <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col" for="gitHubAuthEnabled">
                 <%= data.text.admin.activateGitHubAuth %>
             </label>
             <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                <div class="rp-btn-group btn-group rp-width-100">
-                    <button type="button" class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle" data-toggle="dropdown" data-value="OFF" id="gitHubAuthEnabled">
-                        <span class="select-value"></span>
-                        <span class="rp-caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#"><%= data.text.ui.on %></a></li>
-                        <li><a href="#"><%= data.text.ui.off %></a></li>
-                    </ul>
-                </div>
+                <label class="rp-switcher-big">
+                    <span class="turn-on"><%= data.text.ui.on %></span>
+                    <span class="turn-off"><%= data.text.ui.off %></span>
+                    <input id="gitHubAuthEnabled" type="checkbox" data-js-github-enable>
+                    <div class="slider"></div>
+                </label>
             </div>
             <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
         </div>
-        <div data-js-github-settings-form>
+        <div data-js-github-config class="hide">
             <div class="rp-form-group clearfix">
                 <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col obligatory-field"
                        for="clientId">

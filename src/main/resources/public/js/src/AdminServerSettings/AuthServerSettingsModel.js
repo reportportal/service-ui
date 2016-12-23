@@ -17,9 +17,9 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
@@ -30,28 +30,21 @@ define(function(require, exports, module) {
 
     var config = App.getInstance();
 
-    var GitHubServerSettingsView = Epoxy.View.extend({
-
-        template: 'tpl-github-auth-settings',
-
-        initialize: function(options){
-            this.render();
+    var GitHubAuthSettingsModel = Epoxy.Model.extend({
+        defaults: {
+            enableGuestAccount: false,
+            gitHubAuthEnabled: false,
+            clientId : "clientId",
+            clientSecret : "clientId",
+            organizations : []
         },
 
-        render: function(){
-            //console.log('render GitHubServerSettingsView');
-            this.$el.html(Util.templates(this.template, {}));
+        getOrganizations: function() {
         },
-
-        destroy: function(){
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            this.remove();
-            delete this;
+        setOrganizations: function(){
         }
     });
 
-    return GitHubServerSettingsView;
+    return GitHubAuthSettingsModel;
 
 });
