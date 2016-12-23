@@ -29,19 +29,13 @@ define(function(require, exports, module) {
     var App = require('app');
     var ServerSettingsTabsView = require('adminServerSettings/ServerSettingsTabsView');
     var EmailSettings = require('adminServerSettings/EmailServerSettingsView');
-    var GitHubSettings = require('adminServerSettings/GitHubServerSettingsView');
+    var AuthHubSettings = require('adminServerSettings/AuthServerSettingsView');
 
     var config = App.getInstance();
 
     var ServerSettingsPageView = Epoxy.View.extend({
 
         tpl: 'tpl-server-settings-shell',
-
-        bindings: {
-            '[data-js-users-search]': 'attr: {placeholder: getPlaceHolder}',
-        },
-
-        computeds: {},
 
         events: {
             'click [data-js-tab-action]': 'updateTabs'
@@ -95,7 +89,7 @@ define(function(require, exports, module) {
         getTabView: function(tab) {
             switch (tab) {
                 case 'github':
-                    return GitHubSettings;
+                    return AuthHubSettings;
                     break;
                 default :
                     return EmailSettings;
@@ -105,22 +99,6 @@ define(function(require, exports, module) {
         setupAnchors: function () {
 
         },
-
-        /*emailRender: function () {
-            if (!this.emailSettingsView) {
-                this.emailSettingsView = new EmailServerSettingsView({
-                    container: this.$emailHolder
-                }).render();
-            }
-        },
-
-        githubRender: function () {
-            if (!this.githubSettingsView) {
-                this.githubSettingsView = new GitHubAuthSettingsView({
-                    container: this.$githubHolder
-                }).render();
-            }
-        },*/
 
         destroy: function(){
             this.tabView && this.tabView.destroy();

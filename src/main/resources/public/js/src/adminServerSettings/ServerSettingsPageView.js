@@ -39,6 +39,7 @@ define(function(require, exports, module) {
         initialize: function (options) {
             this.$el = options.el;
             this.$header = options.header;
+            this.action = options.action;
         },
 
         render: function () {
@@ -49,7 +50,7 @@ define(function(require, exports, module) {
         },
 
         renderHeader: function(){
-            this.$header.html(Util.templates(this.headerTpl), {});
+            this.$header.html(Util.templates(this.headerTpl));
         },
 
         renderBody: function () {
@@ -57,7 +58,9 @@ define(function(require, exports, module) {
                 this.body.destroy();
                 this.body = null;
             }
-            this.body = new ServerSettingsTabsView({});
+            this.body = new ServerSettingsTabsView({
+                action: this.action
+            });
             $('[data-js-settings]', this.$el).append(this.body.$el);
         },
 
