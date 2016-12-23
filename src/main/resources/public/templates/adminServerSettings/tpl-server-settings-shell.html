@@ -4,13 +4,13 @@
             <%= data.text.admin.emailSettings %>
         </a>
     </li>
-    <li class="<%= data.tab === 'github' ? 'active' : '' %>">
-        <a href="#administrate/settings/github" class="tab" data-js-tab-action="github">
-            <%= data.text.admin.githubSettings %>
+    <li class="<%= data.tab === 'auth' ? 'active' : '' %>">
+        <a href="#administrate/settings/auth" class="tab" data-js-tab-action="auth">
+            <%= data.text.admin.authSettings %>
         </a>
     </li>
 </ul>
 <div class="tab-content setting-content-wrapper">
     <div class="tab-pane <%= data.tab === 'email' ? 'active' : '' %>" data-js-tab-content="email"></div>
-    <div class="tab-pane <%= data.tab === 'github' ? 'active' : '' %>" data-js-tab-content="github"></div>
+    <div class="tab-pane <%= data.tab === 'auth' ? 'active' : '' %>" data-js-tab-content="auth"></div>
 </div>

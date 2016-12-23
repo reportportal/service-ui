@@ -1149,7 +1149,7 @@ define(['util'], function () {
             settings: "Settings",
             serverSettings: "Server Settings",
             emailSettings: "E-mail server",
-            githubSettings: 'Authorization Configuration',
+            authSettings: 'Authorization Configuration',
             host: "Host",
             port: "Port",
             username: "Username",
