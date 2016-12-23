@@ -1637,6 +1637,7 @@ define(['util'], function () {
             changePassword: "Change Password",
             editUserInfo: 'Edit Personal Information',
             addDashboard: 'Add New Dashboard',
+            regenerateUUID: 'REGENERATE UUID'
         },
 
         dialog: {
