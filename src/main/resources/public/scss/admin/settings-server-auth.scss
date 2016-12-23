@@ -19,4 +19,16 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.rp-github-settings {}
+.rp-auth-server-settings {
+    padding-top: 10px;
+
+    .auth-settings-line {
+        border-bottom: 1px solid $COLOR--skipped;
+        margin: 30px 15px;
+    }
+    .rp-switcher-big {
+        display: block;
+        width: 100px;
+        margin-bottom: 0;
+    }
+}

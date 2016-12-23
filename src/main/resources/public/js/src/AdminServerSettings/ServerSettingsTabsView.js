@@ -43,7 +43,7 @@ define(function(require, exports, module) {
 
         initialize: function (options) {
             this.tab = options.action || "email";
-            console.log('tab: ', this.tab);
+            //console.log('tab: ', this.tab);
             this.render();
         },
 
@@ -82,8 +82,8 @@ define(function(require, exports, module) {
             $('[data-js-tab-action="' + this.tab + '"]', this.$el).closest('li').addClass('active');
             currentContent.append(this.tabView.$el);
             currentContent.show();
-            console.log(this.tab);
-            console.log('renderTabContent: ', this.tabView.$el);
+            //console.log(this.tab);
+            //console.log('renderTabContent: ', this.tabView.$el);
         },
 
         getTabView: function(tab) {
