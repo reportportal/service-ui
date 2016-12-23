@@ -55,6 +55,9 @@ define(function (require, exports, module) {
                     self.hide();
                 });
         },
+        onKeySuccess: function () {
+          return;
+        },
         createChart: function (response) {
             var gadget = 'launches_comparison_chart',
                 container = $('[data-js-widget-content]', this.$el),

@@ -410,7 +410,7 @@ define(function (require, exports, module) {
                 case 'BASIC':
                 case 'NTLM':
                     delete currentHash.accessKey;
-                    var inputs = $(".form-control", this.$authorizationType),
+                    var inputs = $(".bts-property", this.$authorizationType),
                         allEmpty = _.every(inputs, function (inp) {
                             return !inp.value;
                         }),
@@ -432,9 +432,9 @@ define(function (require, exports, module) {
                         clearBasic();
                         _.forEach(inputs, function (input) {
                             if (!input.value) {
-                                $(input).closest('.col-sm-12').addClass('has-error');
+                                $(input).closest('.rp-form-group').addClass('has-error');
                             } else {
-                                $(input).closest('.col-sm-12').removeClass('has-error');
+                                $(input).closest('.rp-form-group').removeClass('has-error');
                             }
                         });
                         this.$credentialsWrongWarning.text(this.$credentialsWrongWarning.data('fill')).show();
@@ -477,14 +477,6 @@ define(function (require, exports, module) {
             }
             return backLink;
         },
-
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            this.$el = null;
-            delete this;
-        }
     });
 
     return ModalPostBug;

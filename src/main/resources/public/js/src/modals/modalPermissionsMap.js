@@ -29,6 +29,9 @@ define(function (require, exports, module) {
         },
         render: function(){
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onKeySuccess: function () {
+            return;
         }
     });
 

@@ -64,7 +64,7 @@ define(['util'], function () {
             yes: "Yes",
             no: "No",
             finish: 'Finish',
-            move: 'move',
+            move: 'Move',
             restore: "Restore",
             settings: "Settings",
             members: "Members",
@@ -1678,7 +1678,7 @@ define(['util'], function () {
             launchTagPlaceholder: 'Enter Tag Name',
             editFilter: "Edit filter",
             addFilter: "Add filter",
-            moveLaunch: ' move %%% to %%%?',
+            moveLaunch: 'Are you sure you want to move %%% to %%%?',
 
             filterOptions: "Filter Options",
 
