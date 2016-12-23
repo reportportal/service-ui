@@ -938,9 +938,6 @@ define(function (require, exports, module) {
                 self = this;
 
             if (!$el.hasClass('disabled')) {
-                console.log($el.data('name'));
-                console.log($el.data('id'));
-                console.log(this.navigationInfo.isLaunches());
                 var typeItems = (this.navigationInfo.isLaunches()) ? Localization.ui.launch : Localization.ui.item;
 
                 var modal = new ModalConfirm({
