@@ -35,10 +35,11 @@ define(function (require, exports, module) {
         if(items[0].get('type') != 'LAUNCH') {
             typeItems = (items.length > 1) ? Localization.ui.items : Localization.ui.item;
         }
+        var itemName = (items.length > 1) ? typeItems : typeItems + ' \'' + items[0].get('name').bold() + '\'';
         var modal = new ModalConfirm({
             headerText: Localization.ui.delete +' '+ typeItems,
-            bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, typeItems, typeItems),
-            confirmText: Util.replaceTemplate(Localization.launches.deleteAgree, typeItems),
+            bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, typeItems, itemName),
+            confirmText: Util.replaceTemplate(Localization.launches.deleteAgree, itemName),
             cancelButtonText: Localization.ui.cancel,
             okButtonText: Localization.ui.delete,
             confirmFunction: function() {

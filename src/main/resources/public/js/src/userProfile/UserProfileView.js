@@ -24,6 +24,7 @@ define(function (require, exports, module) {
     var Service = require('coreService');
     var Localization = require('localization');
     var ModalChangePassword = require('modals/modalChangePassword');
+    var ModalRegenerateUUID = require('modals/modalRegenerateUUID');
     var ModalEditUserInfo = require('modals/modalEditUserInfo');
     var ModalConfirm = require('modals/modalConfirm');
     var RegenerateUUIDTooltipView = require('tooltips/RegenerateUUIDTooltipView');
@@ -108,16 +109,10 @@ define(function (require, exports, module) {
             }, el, el);
         },
         updateToken: function () {
-            this.modalToken = new Components.DialogWithCallBack({
-                headerTxt: 'regenerateUUID',
-                actionTxt: 'ok',
-                actionStatus: true,
-                contentTpl: 'tpl-uuid-warning',
-                callback: function () {
-                    this.modalToken.$loader.show();
-                    this.generateApiToken();
-                }.bind(this)
-            }).render();
+            var self = this;
+            (new ModalRegenerateUUID()).show().done(function(){
+                return self.generateApiToken();
+            });
         },
         showChangePass: function () {
             var modal = new ModalChangePassword({
