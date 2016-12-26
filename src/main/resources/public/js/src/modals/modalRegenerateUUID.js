@@ -18,22 +18,32 @@ define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var ModalView = require('modals/_modalView');
+    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
 
-    var ModalPermissionsMap = ModalView.extend({
-        template: 'tpl-modal-permissions-map',
-        className: 'modal-permissions-map',
-        initialize: function(option) {
+
+    var ModalRegenerateUUID = ModalView.extend({
+        tpl: 'tpl-modal-regenerate-uuid',
+        className: 'modal-regenerate-UUID',
+        events: {
+            'click [data-js-ok]': 'onConfirm'
+        },
+
+        initialize: function() {
             this.render();
         },
-        render: function(){
-            this.$el.html(Util.templates(this.template, {}));
+
+        render: function() {
+            this.$el.html(Util.templates(this.tpl));
         },
-        onKeySuccess: function () {
-            return;
+
+        onConfirm: function () {
+            this.successClose();
         }
     });
 
-    return ModalPermissionsMap;
+    return ModalRegenerateUUID;
 });

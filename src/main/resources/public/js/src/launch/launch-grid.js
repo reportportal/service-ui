@@ -39,6 +39,7 @@ define(function (require, exports, module) {
     var Moment = require('moment');
     var d3 = require('d3');
     var nvd3 = require('nvd3');
+    var ModalConfirm = require('modals/modalConfirm');
 
     require('bootstrap');
 
@@ -937,32 +938,19 @@ define(function (require, exports, module) {
                 self = this;
 
             if (!$el.hasClass('disabled')) {
-                if (!this.warningDialog) {
-                    this.warningDialog = {};
-                }
-                this.warningDialog['deleteDialog'] = Util.getDialog({
-                    name: this.deleteLaunchTpl,
-                    data: {
-                        name: $el.data('name'),
-                        type: this.navigationInfo.isLaunches() ? 'deleteLaunch' : 'deleteTestItem'
-                    }
-                });
-                this.warningDialog['submitButton'] = $(".rp-btn-danger", this.deleteDialog);
+                var typeItems = (this.navigationInfo.isLaunches()) ? Localization.ui.launch : Localization.ui.item;
 
-                this.warningDialog.deleteDialog
-                    .on('click', ".rp-btn-danger", function (e) {
-                        self.deleteLaunch(id);
-                        self.warningDialog.deleteDialog.modal("hide");
-                    })
-                    .on('change', "#deleteConfirm", function (e) {
-                        self.warningDialog.submitButton.prop('disabled', !$(this).is(':checked'));
-                    })
-                    .on('hidden.bs.modal', function () {
-                        $(this).data('modal', null);
-                        self.warningDialog.submitButton = null;
-                        self.warningDialog.deleteDialog.remove();
-                    });
-                this.warningDialog.deleteDialog.modal("show");
+                var modal = new ModalConfirm({
+                    headerText: Localization.ui.delete + ' ' + typeItems,
+                    bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, typeItems,typeItems + ' \'' + $el.data('name').bold() + '\''),
+                    confirmText: Util.replaceTemplate(Localization.launches.deleteAgree, typeItems +  ' \'' + $el.data('name') + '\''),
+                    cancelButtonText: Localization.ui.cancel,
+                    okButtonText: Localization.ui.delete,
+                });
+
+                modal.show().done(function () {
+                    return self.deleteLaunch(id);
+                });
             }
             else {
                 e.stopPropagation();

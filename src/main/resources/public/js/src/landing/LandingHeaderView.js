@@ -84,11 +84,11 @@ define(function(require, exports, module) {
         onClickMenuItem: function(e) {
             $(".js-navbar", this.$el).removeClass("in");
             var $link = $(e.target);
-            if($link.attr('href')){
+            if($link.attr('href')) {
                 e.preventDefault();
-                if($link.attr('href') == '#documentation'){
+                if ($link.attr('href') == '#documentation') {
                     this.trigger('clickDocumentation')
-                }else{
+                } else{
                     this.trigger('clickMenu', $link.attr('href'));
                 }
             }
