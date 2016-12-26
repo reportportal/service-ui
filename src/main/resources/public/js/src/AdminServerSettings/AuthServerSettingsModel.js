@@ -30,7 +30,7 @@ define(function (require, exports, module) {
 
     var config = App.getInstance();
 
-    var GitHubAuthSettingsModel = Epoxy.Model.extend({
+    var AuthSettingsModel = Epoxy.Model.extend({
         defaults: {
             enableGuestAccount: false,
             gitHubAuthEnabled: false,
@@ -45,6 +45,6 @@ define(function (require, exports, module) {
         }
     });
 
-    return GitHubAuthSettingsModel;
+    return AuthSettingsModel;
 
 });
