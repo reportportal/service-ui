@@ -186,6 +186,7 @@ define(['util'], function () {
             forkUs: 'Fork us on GitHub',
             chatSlack: 'Chat with us on Slack',
             textCopyright: "&copy; 2016 Report Portal. All Rights Reserved.",
+            textSocial: 'Keep in touch with us:',
             menu: {
                 news: "News",
                 support: "Support",
