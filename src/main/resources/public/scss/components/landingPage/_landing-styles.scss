@@ -503,6 +503,9 @@
         color: #fff;
         background-color: #666;
         transition: all 0.5s ease-in-out;
+        @media(max-width: 950px) {
+            bottom: 95px;
+        }
         .controls {
             text-align: center;
         }
@@ -643,6 +646,12 @@
             & > .baron_scroller {
                 width: auto;
             }
+        }
+        @media(max-width: 950px) {
+            bottom: 95px;
+        }
+        @media(max-width: 400px) {
+            bottom: 115px;
         }
     }
 }
@@ -1839,6 +1848,7 @@ line.vlinehist {
 .documentation .b-footer {
     position: fixed;
     bottom: 0;
+    width: 100%;
 }
 
 .documentation .b-content h2 + p,
