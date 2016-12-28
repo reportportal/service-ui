@@ -30,11 +30,17 @@
         margin-top: -101px;
         width: 50px;
         height: 202px;
-        z-index: 2000;
+        z-index: 1299;
+        &:hover {
+            &:before {
+                opacity: 1;
+            }
+        }
         &:before {
             content: ' ';
             position: absolute;
             opacity: 0.4;
+            transition: opacity 0.5s ease;
             top: 0;
             left: 0;
             right: 0;
