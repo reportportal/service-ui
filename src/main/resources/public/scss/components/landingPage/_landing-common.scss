@@ -23,6 +23,113 @@
     padding: 0;
     background-color: #fff;
     font-family: "OpenSansRegular", sans-serif;
+    .social-block {
+        position: fixed;
+        left: 0;
+        top: 50%;
+        margin-top: -101px;
+        width: 50px;
+        height: 202px;
+        z-index: 2000;
+        &:before {
+            content: ' ';
+            position: absolute;
+            opacity: 0.4;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 2px;
+            background: $COLOR--booger;
+        }
+        a {
+            position:relative;
+            display: block;
+            width: 100%;
+            height: 20%;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.8;
+            &:hover {
+                opacity: 1;
+            }
+        }
+    }
+    .gh-icon {
+        background-image: url(../img/social-icons/gh.svg);
+    }
+    .fb-icon {
+        background-image: url(../img/social-icons/fb.svg);
+    }
+    .tw-icon {
+        background-image: url(../img/social-icons/twitter.svg);
+    }
+    .vk-icon {
+        background-image: url(../img/social-icons/vk.svg);
+    }
+    .yt-icon {
+        background-image: url(../img/social-icons/youtube.svg);
+    }
+    .b-footer {
+        font-family: "OpenSansSemibold", sans-serif;
+        color: $COLOR--gray-80;
+        span {
+            opacity: 0.7;
+            &.separate {
+                margin: 0 13px;
+                width: 1px;
+                height: 20px;
+                display: inline-block;
+                vertical-align: top;
+                background: $COLOR--gray-80;
+            }
+        }
+        .left-block {
+            float: left;
+            margin-left: 40px;
+        }
+        .right-block {
+            float: right;
+            margin-right: 40px;
+            a {
+                position: relative;
+                display: inline-block;
+                width: 20px;
+                height: 25px;
+                background-repeat: no-repeat;
+                background-position: center;
+                opacity: 0.7;
+                vertical-align: top;
+                margin-top: -3px;
+                margin-left: 20px;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+    }
+    @media(max-width: 950px) {
+        .b-footer {
+            .left-block, .right-block {
+                float: none;
+                margin: 10px auto;
+                text-align: center;
+            }
+        }
+    }
+    @media(max-width: 530px) {
+        .b-footer {
+            font-size: 12px;
+            span.separate {
+                margin: 0 5px;
+            }
+            .right-block {
+                a {
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
 }
 
 .landing-page.documentation {
