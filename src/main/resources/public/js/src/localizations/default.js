@@ -147,6 +147,8 @@ define(['util'], function () {
             today: 'Today',
             yesterday: 'Yesterday',
             sortBy: 'Sort by',
+            name: 'Name',
+            description: 'Description',
             days: [
                 "Sunday",
                 "Monday",
@@ -399,6 +401,9 @@ define(['util'], function () {
             productBug: 'Product Bug',
             systemIssue: 'System Issue',
             investigated: 'Investigated',
+
+            namePlaceholder: 'Enter widget name',
+            descriptionPlaceholder: 'Enter widget description',
 
             launchMode: "Launch Mode",
             timelineMode: 'Timeline Mode',

@@ -1,14 +1,14 @@
 <form class="rp-form">
-    <label class="form-group">
-        <span>Filter name</span>
-        <input class="rp-input" placeholder="Enter Filter Name" type="text" data-js-name-input>
+    <label>
+        <span><%= data.text.ui.name %></span>
+        <input class="rp-input" placeholder="<%= data.text.widgets.namePlaceholder %>" type="text" data-js-name-input>
         <span class="validate-hint"></span>
     </label>
     <label>
-        <span>Description</span>
-        <textarea class="rp-input" placeholder="Enter Filter Description" data-js-description></textarea>
+        <span><%= data.text.ui.description %></span>
+        <textarea class="rp-input" placeholder="<%= data.text.widgets.descriptionPlaceholder %>" data-js-description></textarea>
     </label>
-    <label class="share-label modal-field form-group">
+    <label>
         <span><%= data.text.filter.share %></span>
         <label class="rp-switcher-big">
             <span class="turn-on"><%= data.text.ui.on %></span>

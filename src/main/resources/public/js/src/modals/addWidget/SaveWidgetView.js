@@ -32,9 +32,18 @@ define(function (require, exports, module) {
     var SaveWidgetView = Epoxy.View.extend({
         className: 'modal-add-widget-save-widget',
         template: 'tpl-modal-add-widget-save-widget',
-        initialize: function() {
 
+        bindings: {
+            '[data-js-name-input]': 'value: name',
+            '[data-js-description]': 'value: description',
+            '[data-js-is-shared]': 'checked: isShared',
+        },
+        initialize: function() {
             this.render();
+            Util.hintValidator($('[data-js-name-input]', this.$el), [
+                {validator: 'minMaxRequired', type: 'widgetName', min: 3, max: 128},
+                {validator: 'noDuplications', type: 'widgetName', source: data}
+            ])
         },
         activate: function() {
 

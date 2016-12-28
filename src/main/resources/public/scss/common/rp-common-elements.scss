@@ -100,14 +100,19 @@
   }
 }
 
-form.rp-form {
+.rp-form {
   width: 415px;
-  label {
+  & > label {
     width: 100%;
-    span {
+    font-weight: normal;
+    display: inline-block;
+    margin-bottom: 15px;
+    & > span {
       &:first-child {
         display: block;
+        line-height: 30px;
         width: 26%;
+        min-height: 1px;
         padding-right: 20px;
         float: left;
         text-align: right;
@@ -117,8 +122,31 @@ form.rp-form {
         & + input, & + textarea {
           width: 74%;
         }
+        & + textarea {
+          height: 60px;
+          padding-top: 10px;
+        }
       }
-
+    }
+    .rp-switcher-big {
+      width: 100px;
+    }
+    .validate-hint {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: auto;
+      left: 0;
+      z-index: 100;
+      padding: 10px 11px;
+      font-size: 12px;
+      width: 100%;
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      &.show-hint {
+        display: block;
+      }
     }
   }
 }
