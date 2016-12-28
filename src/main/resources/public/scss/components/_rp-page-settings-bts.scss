@@ -49,9 +49,10 @@
     #tbsChangeWarning {
       display: none;
       padding-bottom: 20px;
+      margin-left: 300px;
     }
   }
-  .bts-instance {
+  .bts-instance-container {
     .instance-head {
       margin-bottom: 20px;
 
@@ -204,6 +205,12 @@
             color: #393939;
             padding: 5px 11px 5px 11px;
           }
+
+          .rp-form-group.has-error {
+            textarea {
+              margin-bottom: 8px;
+            }
+          }
         }
       }
 
@@ -354,7 +361,13 @@
       }
     }
 
-    .bts-instance {
+    .tbs-change-warning-block {
+      #tbsChangeWarning {
+        margin-left: 0;
+      }
+    }
+
+    .bts-instance-container {
       .instance-head {
         margin-bottom: 14px;
 
@@ -427,7 +440,11 @@
               }
               .bts-property {
                 margin-left: 0;
+                margin-bottom: 8px;
                 width: 100%;
+              }
+              span.help-inline {
+                margin-left: 0;
               }
               .bts-properties-controls {
                 display: none;
@@ -519,7 +536,13 @@
       margin-left: 20px;
     }
 
-    .bts-instance {
+    .tbs-change-warning-block {
+      #tbsChangeWarning {
+        margin-left: 179px;
+      }
+    }
+
+    .bts-instance-container {
       .instance-head {
         .bts-instance-wrapper {
           margin-left: 0;
@@ -546,6 +569,9 @@
             .fields-controls {
               width: 490px;
             }
+          }
+          .submit-properties {
+            width: 490px;
           }
         }
       }
