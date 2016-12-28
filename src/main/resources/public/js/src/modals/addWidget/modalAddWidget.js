@@ -47,8 +47,9 @@ define(function (require, exports, module) {
             '[data-js-widget-type]': 'text: gadgetName',
             '[data-js-widget-description]': 'text: gadgetDescription',
             '[data-js-widget-preview]': 'css: {"background-image": format("url($1)", gadgetPreviewImg)}',
-            '[data-js-next-second-step]': 'attr: {disabled: not(gadget)}',
-            '[data-js-next-last-step]': 'attr: {disabled: not(gadgetIsFilterFill)}'
+            '[data-js-next-second-step]': 'attr: {disabled: any(not(gadget), disableNavigate)}',
+            '[data-js-next-last-step]': 'attr: {disabled: any(not(gadgetIsFilterFill), disableNavigate)}',
+            '[data-js-previous-first-step]': 'attr: {disabled:  disableNavigate}'
         },
 
         initialize: function(options) {
@@ -57,7 +58,7 @@ define(function (require, exports, module) {
                 return false;
             }
             this.viewModel = new (Epoxy.Model.extend({
-                defaults: { step: 1 }
+                defaults: { step: 1, disableNavigate: false }
             }));
             this.render();
             this.selectWidgetView = new SelectWidgetView({model: this.model});
@@ -65,10 +66,18 @@ define(function (require, exports, module) {
             this.configureWidgetView = new ConfigureWidgetView({model: this.model});
             $('[data-js-step-2]', this.$el).html(this.configureWidgetView.$el);
             this.listenTo(this.viewModel, 'change:step', this.setState);
+            this.listenTo(this.configureWidgetView, 'disable:navigation', this.onChangeDisableNavigation);
             this.setState();
+            this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
+        },
+        onChangeModel: function(model) {
+            console.dir(model.changed);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onChangeDisableNavigation: function(state) {
+            this.viewModel.set({disableNavigate: state});
         },
         setState: function() {
             $('[data-js-step-1-title], [data-js-step-2-title], [data-js-step-3-title]', this.$el).removeClass('active visited');
@@ -99,7 +108,9 @@ define(function (require, exports, module) {
             this.viewModel.set('step', 2);
         },
         onClickLastStep: function() {
-            this.viewModel.set('step', 3);
+            if(this.configureWidgetView.validate()) {
+                this.viewModel.set('step', 3);
+            }
         },
         onClickAddWidget: function() {
 

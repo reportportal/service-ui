@@ -53,7 +53,6 @@ define(function (require, exports, module) {
         }
         return null;
     };
-
     var minMaxRequired = function (val, options, Util) {
         var length = val.length;
         if (length === 0 || validateForMinMax(length, options)) {
@@ -69,11 +68,11 @@ define(function (require, exports, module) {
         return null;
     };
 
-    var minMaxNumberRequired = function (val, options) {
+    var minMaxNumberRequired = function (val, options, Util) {
         var integerVal = isInt(val),
             intVal = parseInt(val);
-        if (!integerVal || (intVal < options.min || intVal > options.max)) {
-            return Localization.validation[options.type + "Length"];
+        if (!val.length || !integerVal || (intVal < options.min || intVal > options.max)) {
+            return Util.replaceTemplate(Localization.validation[options.type + "Length"], options.min, options.max);
         }
         return null;
     };

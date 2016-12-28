@@ -41,8 +41,11 @@ define(function (require, exports, module) {
             owner: '',
             isShared: false,
 
+            // widgetData
             filter_id: '',
-            widgetData: {},
+            itemsCount: 50,
+            widgetOptions: '{}',
+            content_fields: '[]',
         },
         computeds: {
             gadgetName: {
@@ -114,6 +117,26 @@ define(function (require, exports, module) {
                         widgetData: data,
                     })
                 })
+        },
+        getWidgetOptions: function() {
+            try {
+                return JSON.parse(this.get('widgetOptions'));
+            } catch (err) {
+                return {};
+            }
+        },
+        setWidgetOptions: function(options) {
+            this.set({widgetOptions: JSON.stringify(options)});
+        },
+        getContentFields: function() {
+            try {
+                return JSON.parse(this.get('content_fields'));
+            } catch (err) {
+                return [];
+            }
+        },
+        setContentFields: function(options) {
+            this.set({content_fields: JSON.stringify(options)});
         }
     });
 

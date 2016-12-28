@@ -83,6 +83,8 @@ define(function (require, exports, module) {
             }
         }
     });
+
+    //SIMPLE VIEWS
     var InputEntityView = Epoxy.View.extend({
         className: 'filter-option-input',
         template: 'tpl-entity-input',
@@ -482,6 +484,22 @@ define(function (require, exports, module) {
         }
     });
 
+
+    // CUSTOMIZE VIEWS
+    var UserTagEntityView = Epoxy.View.extend({
+        initialize: function() {
+            this.$el = (new TagEntityView({
+                model: this.model,
+                type: 'userAutoCompleteUrl',
+                startSearch: config.forms.triggerMin,
+                warning: 'At least  3  symbols required.',
+            })).$el
+        }
+    })
+
+
+
+    //  ENTITY VIEWS
     var EntityBaseView = Epoxy.View.extend({
         template: 'tpl-entity-base',
         events: {
@@ -525,11 +543,8 @@ define(function (require, exports, module) {
     });
     var EntityUserTagView = EntityBaseView.extend({
         onRender: function () {
-            this.$content.append((new TagEntityView({
-                model: this.model,
-                type: 'userAutoCompleteUrl',
-                startSearch: config.forms.triggerMin,
-                warning: 'At least  3  symbols required.',
+            this.$content.append((new UserTagEntityView({
+                model: this.model
             })).$el);
         }
     });
@@ -708,6 +723,10 @@ define(function (require, exports, module) {
         EntityTimeRangeModel: EntityTimeRangeModel,
         EntityInvalidModel: EntityInvalidModel,
         EntitySelectModel: EntitySelectModel,
-        EntityDropDownModel: EntityDropDownModel
+        EntityDropDownModel: EntityDropDownModel,
+
+        Model: Model,
+        UserTagEntityView: UserTagEntityView,
+        TagEntityView: TagEntityView,
     };
 });

@@ -31,6 +31,7 @@ define(function(require, exports, module) {
     var Components = require('core/components');
     var ModalFilterEdit = require('modals/modalFilterEdit');
     var App = require('app');
+    var Urls = require('dataUrlResolver');
 
     var config = App.getInstance();
     var call = CallService.call;
@@ -111,6 +112,7 @@ define(function(require, exports, module) {
 
             this.listenTo(this, 'change:id', this.computedsUrl);
             this.listenTo(appModel, 'change:projectId', this.computedsUrl.bind(this));
+            this.listenTo(this, 'change:temp', this.onChangeTemp);
             this.computedsUrl();
         },
         getEntitiesObj: function() {
@@ -194,6 +196,20 @@ define(function(require, exports, module) {
                 });
             }, 'update')
         },
+        onChangeTemp: function(model, temp) {
+            if(temp || this.collection) {
+                return;
+            }
+            var data = model.getDataFromServer();
+            data.type = 'launch';
+            call('POST', Urls.saveFilter(), {elements: [data]})
+                .done(function(data) {
+                    Util.ajaxSuccessMessenger('savedFilter');
+                })
+                .fail(function(error) {
+                    Util.ajaxFailMessenger(error, 'savedFilter');
+                })
+        },
         saveFilter: function() {
             var self = this;
             if (this.get('temp')) {
@@ -228,37 +244,6 @@ define(function(require, exports, module) {
                 .done(function(dataModel) {
                     callback(dataModel)
                 });
-
-            // this.modal = new Components.DialogWithCallBack({
-            //     headerTxt: 'editFilter',
-            //     actionTxt: actionTxt,
-            //     actionStatus: true,
-            //     contentTpl: 'tpl-filters-tab-editor',
-            //     data: this.toJSON(),
-            //     callback: function (done) {
-            //         if ($(".has-error", this.modal.$content).length) return;
-            //         var name = $("#tabName", this.modal.$content).val();
-            //         var shared = $("#tabShared", this.modal.$content).is(':checked');
-            //         callback(name, shared);
-            //         done();
-            //     }.bind(this),
-            //     afterRenderCallback: function () {
-            //         Util.switcheryInitialize(this.$content);
-            //     },
-            //     destroyCallback: function () {
-            //         this.copyInProcess = false;
-            //     }.bind(this),
-            //     shownCallback: function () {
-            //         var $name = $("#tabName", this.modal.$content);
-            //         Util.bootValidator($name, {
-            //             validator: 'minMaxRequired',
-            //             type: 'filterName',
-            //             min: 3,
-            //             max: 55
-            //         });
-            //         $name.focus();
-            //     }.bind(this)
-            // }).render();
         },
 
         remove: function() {
