@@ -42,7 +42,7 @@ define(function (require, exports, module) {
             this.render();
             Util.hintValidator($('[data-js-name-input]', this.$el), [
                 {validator: 'minMaxRequired', type: 'widgetName', min: 3, max: 128},
-                {validator: 'noDuplications', type: 'widgetName', source: data}
+                {validator: 'noDuplications', type: 'widgetName', source: []}
             ])
         },
         activate: function() {

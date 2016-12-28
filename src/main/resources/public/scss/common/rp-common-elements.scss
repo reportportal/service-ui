@@ -103,6 +103,7 @@
 .rp-form {
   width: 415px;
   & > label {
+    position: relative;
     width: 100%;
     font-weight: normal;
     display: inline-block;
@@ -135,17 +136,23 @@
       display: none;
       position: absolute;
       top: 100%;
-      right: auto;
-      left: 0;
+      width: 74%;
+      right: 0;
       z-index: 100;
       padding: 10px 11px;
       font-size: 12px;
-      width: 100%;
       background-color: #fff;
       border: 1px solid rgba(0, 0, 0, 0.2);
       box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
       &.show-hint {
         display: block;
+      }
+    }
+    &.validate-error {
+      & > span {
+        & + input, & + textarea {
+          border-color: $COLOR--orange-red;
+        }
       }
     }
   }
