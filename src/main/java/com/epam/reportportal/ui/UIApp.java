@@ -17,7 +17,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 package com.epam.reportportal.ui;
 
@@ -27,6 +27,7 @@ import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletCont
 import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
 import org.springframework.boot.web.servlet.ErrorPage;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -47,11 +48,14 @@ public class UIApp extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		/* do not cache htmls */
+		registry.addResourceHandler("*.html", "*.htm").addResourceLocations("classpath:/public/").setCacheControl(CacheControl.noCache());
+
+		/* non-expiring cache for other statics */
+		registry.addResourceHandler("/**").addResourceLocations("classpath:/public/").setCachePeriod(Integer.MAX_VALUE);
+
 		if (!registry.hasMappingForPattern("/webjars/**")) {
 			registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-		}
-		if (!registry.hasMappingForPattern("/**")) {
-			registry.addResourceHandler("/**").addResourceLocations("classpath:/public/");
 		}
 	}
 

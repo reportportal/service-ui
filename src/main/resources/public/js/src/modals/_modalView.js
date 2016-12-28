@@ -88,6 +88,7 @@ define(function (require, exports, module) {
             this.destroy();
         },
         destroy: function() {
+            this.onDestroy && this.onDestroy();
             $(window).off('keydown.modal');
             this.undelegateEvents();
             this.stopListening();

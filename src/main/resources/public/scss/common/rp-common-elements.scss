@@ -99,3 +99,26 @@
     }
   }
 }
+
+form.rp-form {
+  width: 415px;
+  label {
+    width: 100%;
+    span {
+      &:first-child {
+        display: block;
+        width: 26%;
+        padding-right: 20px;
+        float: left;
+        text-align: right;
+        & + input, & + textarea, & + label {
+          float: left;
+        }
+        & + input, & + textarea {
+          width: 74%;
+        }
+      }
+
+    }
+  }
+}
