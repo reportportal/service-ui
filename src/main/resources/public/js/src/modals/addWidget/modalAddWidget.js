@@ -29,6 +29,7 @@ define(function (require, exports, module) {
     var WidgetsConfig = require('widget/widgetsConfig');
     var SelectWidgetView = require('modals/addWidget/SelectWidgetView');
     var ConfigureWidgetView = require('modals/addWidget/ConfigureWidgetView');
+    var SaveWidgetView = require('modals/addWidget/SaveWidgetView');
 
 
 
@@ -65,6 +66,8 @@ define(function (require, exports, module) {
             $('[data-js-step-1]', this.$el).html(this.selectWidgetView.$el);
             this.configureWidgetView = new ConfigureWidgetView({model: this.model});
             $('[data-js-step-2]', this.$el).html(this.configureWidgetView.$el);
+            this.saveWidget = new SaveWidgetView({model: this.model});
+            $('[data-js-step-3]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.viewModel, 'change:step', this.setState);
             this.listenTo(this.configureWidgetView, 'disable:navigation', this.onChangeDisableNavigation);
             this.setState();
@@ -114,6 +117,11 @@ define(function (require, exports, module) {
         },
         onClickAddWidget: function() {
 
+        },
+        onDestroy: function() {
+            this.selectWidgetView && this.selectWidgetView.destroy();
+            this.configureWidgetView && this.configureWidgetView.destroy();
+            this.saveWidget && this.saveWidget.destroy();
         }
 
     });
