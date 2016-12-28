@@ -54,6 +54,9 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {name: this.curWidget.limit.name || Localization.widgets.items}))
+        },
+        validate: function() {
+            return !$('[data-js-limit-input]', this.$el).data('validate-error')
         }
     });
 
