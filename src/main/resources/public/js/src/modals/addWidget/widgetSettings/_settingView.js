@@ -19,11 +19,29 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'swipe-gallery';
-@import 'select2-container';
-@import 'main-breadcrumbs';
+define(function (require, exports, module) {
+    'use strict';
 
-@import 'switcher-big';
-@import 'dropdown-menu';
-@import 'user-search-select2-dropdown';
-@import 'drop-down-component';
+    var Epoxy = require('backbone-epoxy');
+    var Util = require('util');
+    var $ = require('jquery');
+
+
+
+    var SettingView = Epoxy.View.extend({
+        validate: function() {
+            return true;
+        },
+        destroy: function() {
+            this.onDestroy && this.onDestroy();
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            this.$el.remove();
+            this.unActive = true;
+        }
+
+    });
+
+    return SettingView;
+});

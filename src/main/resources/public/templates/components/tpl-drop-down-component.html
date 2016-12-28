@@ -1,0 +1,21 @@
+<button type="button" class="rp-btn rp-btn-with-dropdown dropdown-toggle" data-toggle="dropdown" >
+    <span class="select-value" data-js-select-value><%- data.placeholder %></span>
+    <span class="rp-caret"></span>
+    <div class="validate-hint-wrapper">
+        <div class="validate-hint" data-js-hint-message></div>
+    </div>
+</button>
+<ul class="dropdown-menu">
+    <% _.each(data.data, function(item) { %>
+    <li>
+        <% if(data.multiple) {%>
+        <label class="checkbox rp-checkbox-wrap" data-js-label>
+            <input class="criteria-option rp-input-checkbox" type="checkbox" data-value="<%- item.value %>", data-name="<%- item.name %>">
+            <span><%- item.name %></span>
+        </label>
+        <% } else {%>
+        <a href="#" data-value="<%- item.value %>"><%- item.name %></a>
+        <% } %>
+    </li>
+    <% }) %>
+</ul>
