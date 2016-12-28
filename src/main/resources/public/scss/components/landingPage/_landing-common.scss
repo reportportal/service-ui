@@ -136,6 +136,11 @@
             }
         }
     }
+    &.documentation {
+        .social-block {
+            display: none;
+        }
+    }
 }
 
 .landing-page.documentation {
