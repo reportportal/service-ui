@@ -5,7 +5,7 @@
         <label class="rp-control-label obligatory-field" for="username">
             <%= data.text.bts.userName %>
         </label>
-        <input type="text" class="rp-input-default bts-property required-value" id="username"
+        <input type="text" class="rp-input-default form-control bts-property required-value" id="username"
                value="<%- data.username || '' %>" <%= notAllowed %> />
         <span class="help-inline"></span>
     </div>
@@ -13,7 +13,7 @@
         <label class="rp-control-label obligatory-field" for="password">
             <%= data.text.bts.password %>
         </label>
-        <input type="password" class="rp-input-default bts-property required-value" id="password" <%= notAllowed %>
+        <input type="password" class="rp-input-default form-control bts-property required-value" id="password" <%= notAllowed %>
         value="<%- data.hasPassword ? data.defaultPassword : '' %>" />
         <span class="help-inline"></span>
     </div>
