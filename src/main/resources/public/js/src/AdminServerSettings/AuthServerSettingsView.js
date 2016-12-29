@@ -27,6 +27,7 @@ define(function(require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
+    var AdminService = require('adminService');
     var AuthServerSettingsModel = require('adminServerSettings/AuthServerSettingsModel');
 
     var config = App.getInstance();
@@ -34,7 +35,7 @@ define(function(require, exports, module) {
     var AuthServerSettingsView = Epoxy.View.extend({
 
         bindings: {
-            '[data-js-guest-enable]': 'checked: enableGuestAccount',
+            //'[data-js-guest-enable]': 'checked: enableGuestAccount',
             '[data-js-github-enable]': 'checked: gitHubAuthEnabled',
             '[data-js-github-config]': 'classes: {hide: not(gitHubAuthEnabled)}'
         },
@@ -43,12 +44,24 @@ define(function(require, exports, module) {
 
         initialize: function(options){
             this.model = new AuthServerSettingsModel();
-            this.render();
+            this.getAuthSettings();
         },
 
         render: function(){
             //console.log('render GitHubServerSettingsView');
             this.$el.html(Util.templates(this.template, {}));
+            //this.bindValidators();
+        },
+
+        getAuthSettings: function (callback) {
+            //console.log('getAuthSettings');
+            AdminService.getAuthSettings()
+                .done(function (data) {
+                    console.log('getAuthSettings: ', data);
+                    this.settings = data;
+                    this.model.set(data.authSettings);
+                    this.render(data);
+                }.bind(this));
         },
 
         destroy: function(){

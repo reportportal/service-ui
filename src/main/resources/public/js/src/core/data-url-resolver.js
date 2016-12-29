@@ -270,6 +270,10 @@ define(['app'], function (App) {
         return config.apiVersion + "/settings/" + id;
     };
 
+    var adminAuthSettings = function(){
+        return 'uat/settings/default/oauth/github';
+    };
+
     var adminProjects = function (data) {
         return adminProjectRoot() + "/list" + (data ? data : '');
     };
@@ -605,6 +609,7 @@ define(['app'], function (App) {
         userByEmail:userByEmail,
         postDemoDataUrl: postDemoDataUrl,
         getExternalSystems: getExternalSystems,
+        adminAuthSettings: adminAuthSettings
 
     };
 });

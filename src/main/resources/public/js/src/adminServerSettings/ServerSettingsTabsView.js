@@ -88,7 +88,7 @@ define(function(require, exports, module) {
 
         getTabView: function(tab) {
             switch (tab) {
-                case 'github':
+                case 'auth':
                     return AuthSettings;
                     break;
                 default :

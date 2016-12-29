@@ -79,6 +79,15 @@ define(function (require, exports, module) {
         return call('PUT', Urls.setAdminSettings(id), data);
     };
 
+    var getAuthSettings = function (data) {
+        console.log('getAuthSettings');
+        return call('GET', Urls.adminAuthSettings(data));
+    };
+
+    var setAuthSettings = function (data) {
+        return call('PUT', Urls.adminAuthSettings(data));
+    };
+
     var loadProjectInfo = function (id, value) {
         //console.log(Urls.detailsIntervalCall(id, value));
         return call('GET', Urls.detailsIntervalCall(id, value));
@@ -115,6 +124,8 @@ define(function (require, exports, module) {
         getAllUser: getAllUser,
         getSearchUser: getSearchUser,
         loadProjectInfo: loadProjectInfo,
-        loadProjectDetailsWidgets: loadProjectDetailsWidgets
+        loadProjectDetailsWidgets: loadProjectDetailsWidgets,
+        getAuthSettings: getAuthSettings,
+        setAuthSettings: setAuthSettings
     }
 });
