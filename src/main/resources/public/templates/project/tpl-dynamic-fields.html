@@ -24,7 +24,7 @@
                             </select>
                         <% } else { %>
                         <% var value = field.value ? field.value[0] : (field.definedValues[0].valueName || ''); %>
-
+                        <div class="rp-btn-group rp-width-100">
                             <button <%= notAllowed %> id="<%- field.id %>"
                                 data-id="<%- field.id.replaceAll('.', '') %>"
                                 data-toggle="dropdown" data-name="<%= field.fieldName %>"
@@ -40,7 +40,7 @@
                                     </li>
                                 <% }) %>
                             </ul>
-
+                        </div>
                         <% } %>
                     <% } %>
                 <% }else{ %>

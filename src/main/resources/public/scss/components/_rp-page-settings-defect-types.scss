@@ -180,6 +180,7 @@
 
                         /* STYLE FOR ERROR */
                         & + p {
+                            font-size: 12px;
                             @extend %MSG_ERR_STYLE;
                         }
                     }

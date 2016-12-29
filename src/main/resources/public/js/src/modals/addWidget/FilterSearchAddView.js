@@ -29,6 +29,10 @@ define(function (require, exports, module) {
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
     var FilterSortingView = require('filterSelectionParameters/FilterSortingView');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+    var FilterModel = require('filters/FilterModel');
+    var App = require('app');
+
+    var config = App.getInstance();
 
 
     var FilterSearchAddView = Epoxy.View.extend({
@@ -50,7 +54,10 @@ define(function (require, exports, module) {
         activate: function() {
             var self = this;
             this.launchFilterCollection.ready.done(function() {
-                self.model = self.launchFilterCollection.generateTempModel();
+                self.model = new FilterModel({
+                    temp: true,
+                    owner: config.userModel.get('name'),
+                });
                 var filterNames = _.map(self.launchFilterCollection.models, function(model) {
                     return model.get('name');
                 });
@@ -95,8 +102,7 @@ define(function (require, exports, module) {
                     newSelectionParameters: '',
                 });
                 // for right work listeners
-                this.model.set({temp: false}, {silent: false});
-                this.model.collection.saveFilter(this.model);
+                this.model.set({temp: false});
                 this.async.resolve();
             }
         },

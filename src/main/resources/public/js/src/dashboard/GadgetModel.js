@@ -31,8 +31,8 @@ define(function (require, exports, module) {
     var GadgetModel = Epoxy.Model.extend({
         defaults: {
             id: '',
-            width: 1,
-            height: 1,
+            width: config.defaultWidgetWidth,
+            height: config.defaultWidgetHeight,
             x: 0,
             y: 0,
             name: '',
@@ -41,8 +41,12 @@ define(function (require, exports, module) {
             owner: '',
             isShared: false,
 
+            // widgetData
             filter_id: '',
-            widgetData: {},
+            itemsCount: 50,
+            widgetDescription: '',
+            widgetOptions: '{}',
+            content_fields: '[]',
         },
         computeds: {
             gadgetName: {
@@ -87,7 +91,10 @@ define(function (require, exports, module) {
                 }
             },
             isMyDashboard: function() {
-                return this.collection && this.collection.dashboardModel.get('isMy');
+                if (!this.collection) {
+                    return true;
+                }
+                return this.collection.dashboardModel.get('isMy');
             },
             sharedTitle: {
                 deps: ['isMy', 'owner'],
@@ -114,6 +121,26 @@ define(function (require, exports, module) {
                         widgetData: data,
                     })
                 })
+        },
+        getWidgetOptions: function() {
+            try {
+                return JSON.parse(this.get('widgetOptions'));
+            } catch (err) {
+                return {};
+            }
+        },
+        setWidgetOptions: function(options) {
+            this.set({widgetOptions: JSON.stringify(options)});
+        },
+        getContentFields: function() {
+            try {
+                return JSON.parse(this.get('content_fields'));
+            } catch (err) {
+                return [];
+            }
+        },
+        setContentFields: function(options) {
+            this.set({content_fields: JSON.stringify(options)});
         }
     });
 

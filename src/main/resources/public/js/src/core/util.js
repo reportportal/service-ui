@@ -1053,7 +1053,7 @@ define(function (require, exports, module) {
             el.addClass('active');
         },
         hintValidator: function($el, options) {
-            var $holder = $el.closest(".form-group, .rp-form-group");
+            var $holder = $el.closest(".form-group, .rp-form-group, label");
             var $hintBlock = $('> .validate-hint', $holder);
             var validators = [];
 

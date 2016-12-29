@@ -69,6 +69,9 @@ define(function (require, exports, module) {
             });
             this.render();
         },
+        onKeySuccess: function() {
+            $('[data-js-load]', this.$el).trigger('click');
+        },
         onClickInvite: function() {
             if(this.$form.valid()) {
                 if(Util.validateEmail(this.model.get('user'))){
