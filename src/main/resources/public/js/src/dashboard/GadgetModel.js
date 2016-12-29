@@ -31,8 +31,8 @@ define(function (require, exports, module) {
     var GadgetModel = Epoxy.Model.extend({
         defaults: {
             id: '',
-            width: 1,
-            height: 1,
+            width: config.defaultWidgetWidth,
+            height: config.defaultWidgetHeight,
             x: 0,
             y: 0,
             name: '',
@@ -44,6 +44,7 @@ define(function (require, exports, module) {
             // widgetData
             filter_id: '',
             itemsCount: 50,
+            widgetDescription: '',
             widgetOptions: '{}',
             content_fields: '[]',
         },
@@ -90,7 +91,10 @@ define(function (require, exports, module) {
                 }
             },
             isMyDashboard: function() {
-                return this.collection && this.collection.dashboardModel.get('isMy');
+                if (!this.collection) {
+                    return true;
+                }
+                return this.collection.dashboardModel.get('isMy');
             },
             sharedTitle: {
                 deps: ['isMy', 'owner'],

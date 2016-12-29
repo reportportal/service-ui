@@ -35,7 +35,7 @@ define(function (require, exports, module) {
 
         bindings: {
             '[data-js-name-input]': 'value: name',
-            '[data-js-description]': 'value: description',
+            '[data-js-description]': 'value: widgetDescription',
             '[data-js-is-shared]': 'checked: isShared',
         },
         initialize: function() {
@@ -44,6 +44,9 @@ define(function (require, exports, module) {
                 {validator: 'minMaxRequired', type: 'widgetName', min: 3, max: 128},
                 {validator: 'noDuplications', type: 'widgetName', source: []}
             ])
+        },
+        validate: function() {
+            return !$('[data-js-name-input]', this.$el).trigger('validate').data('validate-error');
         },
         activate: function() {
 

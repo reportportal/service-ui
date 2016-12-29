@@ -65,6 +65,7 @@ define(function (require, exports, module) {
         },
         initialize: function() {
             this.listenTo(this, 'change:isShared change:description change:name', _.debounce(this.onChangeData, 10)) ;
+            this.listenTo(this, 'change:widgets', this.onChangeWidgets);
         },
         onChangeData: function() {
             var data = {
@@ -86,6 +87,28 @@ define(function (require, exports, module) {
                 self.setWidgets(data.widgets);
             })
         },
+        addWidget: function(model) {
+            var widgets = this.getWidgets();
+            var self = this;
+            var widgetData = {
+                widgetId: model.get('id'),
+                widgetPosition: [model.get('x'), model.get('y')],
+                widgetSize: [model.get('width'), model.get('height')],
+            };
+            return Service.addWidgetToDashboard(widgetData, this.get('id'))
+                .done(function() {
+                    widgets.push(widgetData);
+                    self.setWidgets(widgets, true);
+                    self.trigger('add:widget', model);
+                });
+
+        },
+        onChangeWidgets: function() {
+            Service.updateDashboard(this.get('id'), {updateWidgets: this.getWidgets()})
+                .fail(function(error) {
+                    Util.ajaxFailMessenger(error, 'updateDashboard');
+                })
+        },
         getWidgets: function () {
             try {
                 return JSON.parse(this.get('widgets'));
@@ -93,8 +116,8 @@ define(function (require, exports, module) {
                 return [];
             }
         },
-        setWidgets: function (widgets) {
-            this.set({widgets: JSON.stringify(widgets)});
+        setWidgets: function (widgets, silent) {
+            this.set({widgets: JSON.stringify(widgets)}, {silent: (silent || false)});
         },
 
     });
