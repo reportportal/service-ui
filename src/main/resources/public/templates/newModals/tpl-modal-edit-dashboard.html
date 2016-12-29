@@ -1,24 +1,25 @@
 <%= data.includeTemplate('_tpl-modal-header', {headerText: ((data.mode == 'save')?data.text.dialogHeader.addDashboard:data.text.dialogHeader.editDashboard)}) %>
 <div class="modal-body">
-    <label class="name-label form-group">
-        <span><%= data.text.dashboard.dashboardName %></span>
-        <input class="rp-input form-control" placeholder="<%= data.text.dashboard.namePlaceholder %>" type="text" data-js-name-input>
-        <span class="help-inline"></span>
-    </label>
-    <label class="share-label">
-        <span><%= data.text.dashboard.share %></span>
-        <label class="rp-switcher-big">
-            <span class="turn-on"><%= data.text.ui.on %></span>
-            <span class="turn-off"><%= data.text.ui.off %></span>
-            <input type="checkbox" data-js-is-shared>
-            <div class="slider"></div>
+    <form class="rp-form">
+        <label>
+            <span><%= data.text.ui.name %></span>
+            <input class="rp-input" placeholder="<%= data.text.dashboard.namePlaceholder %>" type="text" data-js-name-input>
+            <span class="validate-hint"></span>
         </label>
-    </label>
-    <label class="description-label form-group">
-        <span><%= data.text.dashboard.description %></span>
-        <textarea class="rp-input form-control" placeholder="<%= data.text.filter.descriptionPlaceholder %>" data-js-description></textarea>
-        <span class="help-inline"></span>
-    </label>
+        <label>
+            <span><%= data.text.ui.description %></span>
+            <textarea class="rp-input" placeholder="<%= data.text.dashboard.descriptionPlaceholder %>" data-js-description></textarea>
+        </label>
+        <div class="rp-field">
+            <span><%= data.text.filter.share %></span>
+            <label class="rp-switcher-big">
+                <span class="turn-on"><%= data.text.ui.on %></span>
+                <span class="turn-off"><%= data.text.ui.off %></span>
+                <input type="checkbox" data-js-is-shared>
+                <div class="slider"></div>
+            </label>
+        </div>
+    </form>
 
 
 </div>

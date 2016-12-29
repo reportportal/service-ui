@@ -54,8 +54,6 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickAddDashboard: function(e) {
-            e.preventDefault();
-            e.stopPropagation();
             this.collection.createNewDashboard();
         },
         onChangeActive: function(model, active) {

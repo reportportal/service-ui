@@ -36,7 +36,7 @@ define(function (require, exports, module) {
 
         initialize: function(options) {
             this.ready = $.Deferred();
-            this.defaultPath = '#' + appModel.get('projectId') + '/newdashboard';
+            this.defaultPath = '#' + appModel.get('projectId') + '/dashboard';
             this.update(options.startId);
             var self = this;
             this.ready.done(function() {

@@ -59,7 +59,7 @@ define(function (require, exports, module) {
             url: {
                 deps: ['id'],
                 get: function(id) {
-                    return '#' + appModel.get('projectId') + '/newdashboard/' + id;
+                    return '#' + appModel.get('projectId') + '/dashboard/' + id;
                 }
             }
         },

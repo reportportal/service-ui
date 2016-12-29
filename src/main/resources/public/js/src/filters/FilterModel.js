@@ -202,9 +202,11 @@ define(function(require, exports, module) {
             }
             var data = model.getDataFromServer();
             data.type = 'launch';
+            var self = this;
             call('POST', Urls.saveFilter(), {elements: [data]})
                 .done(function(data) {
                     Util.ajaxSuccessMessenger('savedFilter');
+                    self.set({id: data[0].id});
                 })
                 .fail(function(error) {
                     Util.ajaxFailMessenger(error, 'savedFilter');

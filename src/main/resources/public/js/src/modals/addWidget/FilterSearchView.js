@@ -130,10 +130,9 @@ define(function (require, exports, module) {
             this.addFilterView.getReadyState()
                 .always(function() {
                     self.addFilterView.destroy();
-                    var activeSelectFilter = self.collection.findWhere({active: 'on'});
-                    activeSelectFilter && activeSelectFilter.set({active: false});
                     self.$el.removeClass('hide-content');
                     self.trigger('disable:navigation', false);
+                    self.updateFilters();
                 })
                 .fail(function() {
                     self.model.set({filter_id: ''});
@@ -204,7 +203,11 @@ define(function (require, exports, module) {
                 totalPage: 1,
                 currentPage: 1,
             });
-            this.load();
+            var self = this;
+            this.load()
+                .done(function() {
+                    Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 330});
+                })
         },
         load: function() {
             this.$el.addClass('load');
