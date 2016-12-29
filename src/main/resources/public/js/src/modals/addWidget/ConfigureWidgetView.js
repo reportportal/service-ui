@@ -25,24 +25,40 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
-    var WidgetsConfig = require('widget/widgetsConfig');
-    var FilterSearchView = require('modals/addWidget/FilterSearchView')
+    var FilterSearchView = require('modals/addWidget/FilterSearchView');
+    var WidgetSettingsView = require('modals/addWidget/WidgetSettingsView');
+
 
     var ConfigureWidgetView = Epoxy.View.extend({
         className: 'modal-add-widget-configure-widget',
         template: 'tpl-modal-add-widget-configure-widget',
         initialize: function() {
-            this.widgetConfig = WidgetsConfig.getInstance();
+
             this.render();
             this.filterSearch = new FilterSearchView({model: this.model});
             $('[data-js-filter-search]', this.$el).html(this.filterSearch.$el);
+            this.listenTo(this.filterSearch, 'disable:navigation', this.onChangeDisableNavigation);
+            this.widgetCriteria = new WidgetSettingsView({model: this.model});
+            $('[data-js-enter-criteria]', this.$el).html(this.widgetCriteria.$el);
+        },
+        onChangeDisableNavigation: function(state) {
+            this.trigger('disable:navigation', state);
+            if(state) {
+                $('[data-js-enter-criteria]', this.$el).addClass('hide');
+            } else {
+                $('[data-js-enter-criteria]', this.$el).removeClass('hide');
+            }
         },
         activate: function() {
             this.filterSearch.activate();
+            this.widgetCriteria.activate();
+        },
+        validate: function() {
+            return this.widgetCriteria.validate();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}))
-        }
+        },
     });
 
     return ConfigureWidgetView;

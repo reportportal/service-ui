@@ -42,7 +42,15 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {widgets: this.widgetConfig.widgetTypes}))
         },
         onChangeType: function() {
-            this.model.set({gadget: $('input:checked', this.$el).val()});
+
+            this.model.set({
+                gadget: $('input:checked', this.$el).val(),
+                filter_id: '',
+                itemsCount: 50,
+                widgetDescription: '',
+                widgetOptions: '{}',
+                content_fields: '[]',
+            });
         },
         destroy: function() {
 

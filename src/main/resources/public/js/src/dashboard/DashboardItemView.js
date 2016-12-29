@@ -77,11 +77,16 @@ define(function (require, exports, module) {
                 self.listenTo(self.gadgetCollection, 'add', self.onAddGadget);
                 self.listenTo(self.gadgetCollection, 'remove:view', self.onRemoveGadget);
                 self.activateGridStack();
+                self.listenTo(self.model, 'add:widget', self.onAddNewGadget);
             })
 
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onAddNewGadget: function(model) {
+            this.gadgetCollection.add(model);
+            this.updateScroll();
         },
         activateGridStack: function() {
             var $gridStack = $('[data-js-grid-stack]', this.$el);
@@ -113,6 +118,7 @@ define(function (require, exports, module) {
                         height: item.height,
                     });
                 })
+                self.updateScroll();
             });
             $gridStack.on('resizestart', function (event, ui) {
                 var view = event.target.backboneView;
@@ -138,6 +144,9 @@ define(function (require, exports, module) {
         },
         createGadgets: function() {
             this.gadgetCollection.add(this.model.getWidgets(), {parse: true});
+            this.updateScroll();
+        },
+        updateScroll: function() {
             var self = this;
             this.onShowAsync.done(function() {
                 self.scrollerAnimate = new ScrollerAnimate(self.gadgetViews);
@@ -193,7 +202,7 @@ define(function (require, exports, module) {
         onClickAddWidget: function(e) {
             e.preventDefault();
             e.stopPropagation();
-            (new ModalAddWidget({model: new GadgetModel()})).show();
+            (new ModalAddWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
         },
         destroy: function () {
             $.fullscreen.exit();

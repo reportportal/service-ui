@@ -34,6 +34,7 @@ define(function (require, exports, module) {
             this.dashboardModel = options.dashboardModel;
             this.listenTo(this, 'change:x change:y change:width change:height', _.debounce(this.onChangePosition, 10));
             this.listenTo(this, 'remove', this.onRemoveGadget);
+            this.listenTo(this, 'add', this.onAddGadget);
         },
         onChangePosition: function() {
             var gadgetsData = [];
@@ -44,16 +45,16 @@ define(function (require, exports, module) {
                     widgetSize: [model.get('width'), model.get('height')],
                 })
             });
-            Service.updateDashboard(this.dashboardModel.get('id'), {updateWidgets: gadgetsData})
-                .fail(function(error) {
-                    Util.ajaxFailMessenger(error, 'updateDashboard');
-                })
+            this.dashboardModel.setWidgets(gadgetsData);
         },
         onRemoveGadget: function(model) {
             Service.updateDashboard(this.dashboardModel.get('id'), {deleteWidget: model.get('id')})
                 .fail(function(error) {
                     Util.ajaxFailMessenger(error, 'updateDashboard');
                 })
+        },
+        onAddGadget: function(model) {
+
         },
         parse: function(gadgetData) {
             return _.map(gadgetData, function(gadget) {

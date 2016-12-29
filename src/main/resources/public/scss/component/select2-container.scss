@@ -35,13 +35,13 @@
             margin-right: 30px;
             box-shadow: none;
             padding: 2px 5px;
-        }
 
+        }
         .select2-arrow {
             width: 30px;
             border: none;
             background: 0 0;
-
+            color: $COLOR--charcoal-grey;
             b {
                 background: 0 0;
                 display: inline-block;
@@ -55,6 +55,41 @@
                 border-left: 4px solid transparent;
                 background-position: 2px 1px;
             }
+        }
+        &:hover {
+            border-color: $COLOR--gray-47;
+        }
+    }
+
+}
+.rp-select2-separate-block.select2-drop {
+    background: $COLOR--white-default;
+    border: 1px solid $COLOR--gray-80;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+    margin-top: 4px;
+
+    .select2-search {
+        padding: 8px;
+    }
+    .select2-results {
+
+        .select2-highlighted {
+            background: $COLOR--tealish-opacity;
+            .select2-result-label {
+                color: $COLOR--charcoal-grey;
+            }
+        }
+        .select2-disabled, .select2-result-unselectable {
+            background: $COLOR--white-default;
+
+            .select2-result-label {
+                cursor: not-allowed;
+                color: $COLOR--gray-60;
+            }
+        }
+        .select2-result-label {
+            padding: 8px 15px;
+            color: $COLOR--charcoal-grey;
         }
     }
 }

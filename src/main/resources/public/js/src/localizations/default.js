@@ -147,6 +147,8 @@ define(['util'], function () {
             today: 'Today',
             yesterday: 'Yesterday',
             sortBy: 'Sort by',
+            name: 'Name',
+            description: 'Description',
             days: [
                 "Sunday",
                 "Monday",
@@ -200,6 +202,7 @@ define(['util'], function () {
             forkUs: 'Fork us on GitHub',
             chatSlack: 'Chat with us on Slack',
             textCopyright: "&copy; 2016 Report Portal. All Rights Reserved.",
+            textSocial: 'Keep in touch with us:',
             menu: {
                 news: "News",
                 support: "Support",
@@ -341,7 +344,10 @@ define(['util'], function () {
             sharedBy: "shared by",
             widgetSharedBy: "Widget is shared by",
             noData: "No Data Available.",
+            selectLaunch: 'Select launch',
+            chooseFilter: 'Choose filter from the list below',
             limit: "Items count",
+            items: 'Items',
             launchesCount: "Launches count",
             enterRecipients: "enter recipients",
             bug: "bug",
@@ -395,6 +401,9 @@ define(['util'], function () {
             productBug: 'Product Bug',
             systemIssue: 'System Issue',
             investigated: 'Investigated',
+
+            namePlaceholder: 'Enter widget name',
+            descriptionPlaceholder: 'Enter widget description',
 
             launchMode: "Launch Mode",
             timelineMode: 'Timeline Mode',
@@ -1465,6 +1474,7 @@ define(['util'], function () {
             launchesCantBeEmpty: 'Select launch to create widget',
             countWrongAmount: "Items count is out of range",
             countWrongAmountSize: "Items count should have size ",
+            itemsSizeLength: 'Items count should have size %%% to %%%',
             selectAtLeastOneCriteria: "Select at least one criteria option",
             selectAtLeastOneAction: "Select at least one actions option",
             selectAllOptionsForWidget: "Select all options to add new widget",

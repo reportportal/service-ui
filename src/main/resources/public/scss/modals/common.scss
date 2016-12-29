@@ -82,25 +82,25 @@ common elements:
         margin: 0;
         padding: 10px;
       }
-      label{
-        font-weight: normal;
-        position: relative;
-        color: $COLOR--charcoal-grey;
-        vertical-align: top;
-        span:first-child {
-          display: block
-        }
-        button, .rp-input {
-          width: 100%;
-          margin-top: 6px;
-        }
-        textarea.rp-input {
-          overflow-x: hidden;
-        }
-        .help-inline {
-          padding-top: 5px;
-        }
-      }
+      //label{
+      //  font-weight: normal;
+      //  position: relative;
+      //  color: $COLOR--charcoal-grey;
+      //  vertical-align: top;
+      //  span:first-child {
+      //    display: block
+      //  }
+      //  button, .rp-input {
+      //    width: 100%;
+      //    margin-top: 6px;
+      //  }
+      //  textarea.rp-input {
+      //    overflow-x: hidden;
+      //  }
+      //  .help-inline {
+      //    padding-top: 5px;
+      //  }
+      //}
     }
     .modal-footer {
       border: none;

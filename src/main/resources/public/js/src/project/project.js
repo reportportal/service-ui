@@ -1877,8 +1877,18 @@ define(function(require, exports, module) {
         },
 
         handleBtsFailure: function (error) {
-            var response = JSON.parse(error.responseText);
+            var response;
             var message = this.$externalSystemWarning.data('casual');
+
+            try {
+                response = JSON.parse(error.responseText); // expect JSON format
+            } catch(e) {
+
+            }
+            if (error.status == 404) {
+                message = 'Impossible interact with external system. External system with type JIRA is not deployed or not available';
+            }
+
             if (error.status == 403) {
                 message = Localization.failMessages.noPermissions;
             } else if (error.responseText && error.responseText.indexOf(this.settings.projectNotFoundPattern) !== -1) {

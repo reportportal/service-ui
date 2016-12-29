@@ -29,7 +29,11 @@ define(function (require, exports, module) {
     var WidgetsConfig = require('widget/widgetsConfig');
     var SelectWidgetView = require('modals/addWidget/SelectWidgetView');
     var ConfigureWidgetView = require('modals/addWidget/ConfigureWidgetView');
+    var SaveWidgetView = require('modals/addWidget/SaveWidgetView');
+    var Service = require('coreService');
+    var App = require('app');
 
+    var config = App.getInstance();
 
 
     var ModalAddWidget = ModalView.extend({
@@ -47,8 +51,9 @@ define(function (require, exports, module) {
             '[data-js-widget-type]': 'text: gadgetName',
             '[data-js-widget-description]': 'text: gadgetDescription',
             '[data-js-widget-preview]': 'css: {"background-image": format("url($1)", gadgetPreviewImg)}',
-            '[data-js-next-second-step]': 'attr: {disabled: not(gadget)}',
-            '[data-js-next-last-step]': 'attr: {disabled: not(gadgetIsFilterFill)}'
+            '[data-js-next-second-step]': 'attr: {disabled: any(not(gadget), disableNavigate)}',
+            '[data-js-next-last-step]': 'attr: {disabled: any(not(gadgetIsFilterFill), disableNavigate)}',
+            '[data-js-previous-first-step]': 'attr: {disabled:  disableNavigate}'
         },
 
         initialize: function(options) {
@@ -56,19 +61,32 @@ define(function (require, exports, module) {
                 console.log('Model is not found');
                 return false;
             }
+            this.model.set({owner: config.userModel.get('name')});
+            this.dashboardModel = options.dashboardModel;
+            this.widgetConfig = WidgetsConfig.getInstance();
             this.viewModel = new (Epoxy.Model.extend({
-                defaults: { step: 1 }
+                defaults: { step: 1, disableNavigate: false }
             }));
             this.render();
             this.selectWidgetView = new SelectWidgetView({model: this.model});
             $('[data-js-step-1]', this.$el).html(this.selectWidgetView.$el);
             this.configureWidgetView = new ConfigureWidgetView({model: this.model});
             $('[data-js-step-2]', this.$el).html(this.configureWidgetView.$el);
+            this.saveWidget = new SaveWidgetView({model: this.model});
+            $('[data-js-step-3]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.viewModel, 'change:step', this.setState);
+            this.listenTo(this.configureWidgetView, 'disable:navigation', this.onChangeDisableNavigation);
             this.setState();
+            this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
+        },
+        onChangeModel: function(model) {
+            console.dir(model.changed);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onChangeDisableNavigation: function(state) {
+            this.viewModel.set({disableNavigate: state});
         },
         setState: function() {
             $('[data-js-step-1-title], [data-js-step-2-title], [data-js-step-3-title]', this.$el).removeClass('active visited');
@@ -89,6 +107,7 @@ define(function (require, exports, module) {
                     $('[data-js-step-1-title], [data-js-step-2-title]', this.$el).addClass('visited');
                     $('[data-js-step-3-title], [data-js-step-3]', this.$el).addClass('active');
                     $('[data-js-previous-second-step],[data-js-add-widget]', this.$el).removeClass('hide');
+                    this.saveWidget.activate();
                     break;
             }
         },
@@ -99,10 +118,49 @@ define(function (require, exports, module) {
             this.viewModel.set('step', 2);
         },
         onClickLastStep: function() {
-            this.viewModel.set('step', 3);
+            if(this.configureWidgetView.validate()) {
+                this.viewModel.set('step', 3);
+            }
         },
         onClickAddWidget: function() {
+            if(this.saveWidget.validate()) {
+                this.$el.addClass('load');
+                var self = this;
+                var curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
+                var contentParameters = {};
+                if (!_.contains(['unique_bug_table', 'activity_stream', 'launches_table'], this.model.get('gadget'))) {
+                    contentParameters.metadata_fields = ['name', 'number', 'start_time'];
+                }
+                if (this.model.get('gadget') == 'most_failed_test_cases') {
+                    contentParameters.metadata_fields = ['name', 'start_time'];
+                }
+                contentParameters.type = curWidget.widget_type;
+                contentParameters.gadget = this.model.get('gadget');
+                contentParameters.itemsCount = this.model.get('itemsCount');
+                contentParameters.content_fields = this.model.getContentFields();
+                contentParameters.widgetOptions = this.model.getWidgetOptions();
+                Service.saveWidget({
+                    filter_id: this.model.get('filter_id'),
+                    name: this.model.get('name'),
+                    share: this.model.get('isShared'),
+                    // description: this.model.get('widgetDescription'),
+                    content_parameters: contentParameters
+                })
+                    .done(function (data) {
+                        self.model.set({id: data.id});
+                        self.dashboardModel.addWidget(self.model);
 
+                        self.successClose(data.id);
+                    })
+                    .fail(function (error) {
+                        Util.ajaxFailMessenger(null, 'widgetSave');
+                    });
+            }
+        },
+        onDestroy: function() {
+            this.selectWidgetView && this.selectWidgetView.destroy();
+            this.configureWidgetView && this.configureWidgetView.destroy();
+            this.saveWidget && this.saveWidget.destroy();
         }
 
     });

@@ -25,6 +25,7 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
+    var WidgetsConfig = require('widget/widgetsConfig');
     var CoreService = require('coreService');
     var FilterModel = require('filters/FilterModel');
     var FilterItem = require('modals/addWidget/FilterSearchItemView');
@@ -68,6 +69,7 @@ define(function (require, exports, module) {
             ':el': 'classes: {hide: not(gadgetIsFilter)}'
         },
         initialize: function() {
+            this.widgetConfig = WidgetsConfig.getInstance();
             this.firstActivate = true,
             this.collection = new FilterCollection({mainModel: this.model});
             this.renderViews = [];
@@ -90,25 +92,40 @@ define(function (require, exports, module) {
             this.listenTo(this.viewModel, 'change:search', _.debounce(this.updateFilters, 500));
             this.listenTo(this.collection, 'add', this.onAddCollectionItems);
             this.listenTo(this.collection, 'reset', this.onResetCollectionItems);
-            this.listenTo(this.collection, 'change:active', this.onSelectFilter);
+            this.listenTo(this.collection, 'change:active', this.onSelectFilterCheck);
             this.listenTo(this.collection, 'edit', this.onEditFilter);
 
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}))
         },
+        setFilterModel: function(model) {
+            this.selectFilterView && this.selectFilterView.destroy();
+            if(model) {
+                $('[data-js-select-filter-block]', this.$el).removeClass('empty-state');
+                this.selectFilterView = new FilterItem({model: model});
+                $('[data-js-select-filter-container]', this.$el).html(this.selectFilterView.$el);
+            } else {
+                $('[data-js-select-filter-block]', this.$el).addClass('empty-state');
+            }
+
+        },
+        onSelectFilterCheck: function(model, active) {
+            active && this.onSelectFilter(model);
+        },
         onSelectFilter: function(filterModel) {
             this.model.set({filter_id: filterModel.get('id')});
+            this.setFilterModel(filterModel);
         },
         onClickAddFilter: function(e) {
             e.preventDefault();
             this.$el.addClass('hide-content');
-            this.stopListening(this.addFilterView);
-            this.addFilterView && this.addFilterView.destroy();
+            this.addFilterView && this.stopListening(this.addFilterView) &&  this.addFilterView.destroy();
             this.addFilterView = new FilterSearchAddView({gadgetModel: this.model});
             this.listenTo(this.addFilterView, 'change:filter', this.onSelectFilter);
             this.addFilterView.activate();
             $('[data-js-filter-add-container]', this.$el).html(this.addFilterView.$el);
+            this.trigger('disable:navigation', true);
             var self = this;
             this.addFilterView.getReadyState()
                 .always(function() {
@@ -116,6 +133,11 @@ define(function (require, exports, module) {
                     var activeSelectFilter = self.collection.findWhere({active: 'on'});
                     activeSelectFilter && activeSelectFilter.set({active: false});
                     self.$el.removeClass('hide-content');
+                    self.trigger('disable:navigation', false);
+                })
+                .fail(function() {
+                    self.model.set({filter_id: ''});
+                    self.setFilterModel(null);
                 })
         },
         onEditFilter: function(model) {
@@ -123,27 +145,32 @@ define(function (require, exports, module) {
             this.editFilterView && this.editFilterView.destroy();
             this.editFilterView = new FilterSearchEditView({model: model, gadgetModel: this.model});
             $('[data-js-filter-edit-container]', this.$el).html(this.editFilterView.$el);
+            this.trigger('disable:navigation', true);
             var self = this;
             this.editFilterView.getReadyState()
                 .always(function() {
                     self.editFilterView.destroy();
                     self.$el.removeClass('hide-content');
+                    self.trigger('disable:navigation', false);
                 })
         },
         activate: function() {
             if(!this.firstActivate) { return; }
-            this.firstActivate = false;
-            var self = this;
-            this.load().always(function() {
-                self.baronScroll = Util.setupBaronScroll($('[data-js-filter-list-scroll]', self.$el));
-                Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 350});
-                self.baronScroll.on('scroll', function(e) {
-                    var elem = self.baronScroll.get(0);
-                    if(elem.scrollHeight - elem.scrollTop  < elem.offsetHeight*2){
-                        self.addLoadData();
-                    }
+            var curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
+            if(!curWidget.noFilters) {
+                this.firstActivate = false;
+                var self = this;
+                this.load().always(function () {
+                    self.baronScroll = Util.setupBaronScroll($('[data-js-filter-list-scroll]', self.$el));
+                    Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 330});
+                    self.baronScroll.on('scroll', function (e) {
+                        var elem = self.baronScroll.get(0);
+                        if (elem.scrollHeight - elem.scrollTop < elem.offsetHeight * 2) {
+                            self.addLoadData();
+                        }
+                    })
                 })
-            })
+            }
         },
         addLoadData: function() {
             if(this.viewModel.get('currentPage') < this.viewModel.get('totalPage') && !this.$el.hasClass('load')) {
