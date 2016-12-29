@@ -1894,7 +1894,7 @@ define(function(require, exports, module) {
             } else if (error.responseText && error.responseText.indexOf(this.settings.projectNotFoundPattern) !== -1) {
                 message = this.$externalSystemWarning.data('noproject').replace('%%%', this.model.get('project'));
             }
-            if (error.status == 400 && response.error_code == 4032) {
+            if ((error.status == 400 || error.status == 409) && response.error_code == 4032) {
                 message = response.message;
             }
             this.$externalSystemWarning.text(message).show();
