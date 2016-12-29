@@ -30,7 +30,10 @@ define(function (require, exports, module) {
     var SelectWidgetView = require('modals/addWidget/SelectWidgetView');
     var ConfigureWidgetView = require('modals/addWidget/ConfigureWidgetView');
     var SaveWidgetView = require('modals/addWidget/SaveWidgetView');
+    var Service = require('coreService');
+    var App = require('app');
 
+    var config = App.getInstance();
 
 
     var ModalAddWidget = ModalView.extend({
@@ -58,6 +61,9 @@ define(function (require, exports, module) {
                 console.log('Model is not found');
                 return false;
             }
+            this.model.set({owner: config.userModel.get('name')});
+            this.dashboardModel = options.dashboardModel;
+            this.widgetConfig = WidgetsConfig.getInstance();
             this.viewModel = new (Epoxy.Model.extend({
                 defaults: { step: 1, disableNavigate: false }
             }));
@@ -101,6 +107,7 @@ define(function (require, exports, module) {
                     $('[data-js-step-1-title], [data-js-step-2-title]', this.$el).addClass('visited');
                     $('[data-js-step-3-title], [data-js-step-3]', this.$el).addClass('active');
                     $('[data-js-previous-second-step],[data-js-add-widget]', this.$el).removeClass('hide');
+                    this.saveWidget.activate();
                     break;
             }
         },
@@ -116,7 +123,39 @@ define(function (require, exports, module) {
             }
         },
         onClickAddWidget: function() {
+            if(this.saveWidget.validate()) {
+                this.$el.addClass('load');
+                var self = this;
+                var curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
+                var contentParameters = {};
+                if (!_.contains(['unique_bug_table', 'activity_stream', 'launches_table'], this.model.get('gadget'))) {
+                    contentParameters.metadata_fields = ['name', 'number', 'start_time'];
+                }
+                if (this.model.get('gadget') == 'most_failed_test_cases') {
+                    contentParameters.metadata_fields = ['name', 'start_time'];
+                }
+                contentParameters.type = curWidget.widget_type;
+                contentParameters.gadget = this.model.get('gadget');
+                contentParameters.itemsCount = this.model.get('itemsCount');
+                contentParameters.content_fields = this.model.getContentFields();
+                contentParameters.widgetOptions = this.model.getWidgetOptions();
+                Service.saveWidget({
+                    filter_id: this.model.get('filter_id'),
+                    name: this.model.get('name'),
+                    share: this.model.get('isShared'),
+                    // description: this.model.get('widgetDescription'),
+                    content_parameters: contentParameters
+                })
+                    .done(function (data) {
+                        self.model.set({id: data.id});
+                        self.dashboardModel.addWidget(self.model);
 
+                        self.successClose(data.id);
+                    })
+                    .fail(function (error) {
+                        Util.ajaxFailMessenger(null, 'widgetSave');
+                    });
+            }
         },
         onDestroy: function() {
             this.selectWidgetView && this.selectWidgetView.destroy();

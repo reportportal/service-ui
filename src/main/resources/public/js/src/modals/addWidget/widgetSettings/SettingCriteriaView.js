@@ -41,6 +41,11 @@ define(function (require, exports, module) {
             this.widgetConfig = WidgetsConfig.getInstance();
             this.curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
             if (this.curWidget.noCriteria || !this.curWidget.criteria) {
+                if (this.curWidget.staticCriteria) {
+                    this.onChangeSelectCriteria(_.map(this.curWidget.staticCriteria, function(val, key) {
+                        return key;
+                    }))
+                }
                 this.destroy();
                 return false;
             }

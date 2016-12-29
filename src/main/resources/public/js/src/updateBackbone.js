@@ -27,6 +27,16 @@ define(function (require, exports, module) {
     var _ = require('underscore');
     require('../lib/modernizr-custom');
 
+    Backbone.View.prototype.destroy = function() {
+        this.onDestroy && this.onDestroy();
+        this.undelegateEvents();
+        this.stopListening();
+        this.unbind();
+    };
+
+
+    // overwrite click events
+
     var delegateEventSplitter = /^(\S+)\s*(.*)$/;
     var CLASSNAME = 'touchHover';
     var DATANAME = 'notouch';

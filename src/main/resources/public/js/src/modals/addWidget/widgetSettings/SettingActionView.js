@@ -59,8 +59,22 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {}))
         },
-        onChangeSelectAction: function(content_fields) {
-            this.model.setContentFields(content_fields);
+        onChangeSelectAction: function(actions) {
+            var values = [];
+            _.each(actions, function(item) {
+                values = values.concat(item.split(','));
+            });
+            var options = this.model.getWidgetOptions();
+            options.actionType = values;
+            this.model.setWidgetOptions(options);
+        },
+        validate: function() {
+            var options = this.model.getWidgetOptions();
+            if(!options.actionType) {
+                this.selectAction.setErrorState(Localization.validation.selectAtLeastOneAction);
+                return false;
+            }
+            return true;
         },
         onDestroy: function() {
             this.selectCriteria && this.selectCriteria.destroy();
