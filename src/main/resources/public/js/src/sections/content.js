@@ -77,6 +77,7 @@ define(function (require, exports, module) {
         },
 
         setupPageView: function (options) {
+            console.log('setupPageView: ', options);
             if (this.isAdminPage) {
                 this.page = options.page;
                 var PageView = this.getViewForAdministratePage(options);
@@ -153,6 +154,7 @@ define(function (require, exports, module) {
             } else if (options.page === 'settings') {
                 return Settings.ContentView;
             } else {
+                return Projects.ContentView;
                 var key = options.page + '-' + options.action;
                 switch (key) {
                     case "projects-add":

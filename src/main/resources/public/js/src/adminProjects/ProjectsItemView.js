@@ -84,7 +84,7 @@ define(function(require, exports, module) {
             getProjectDetailsUrl: {
                 deps: ['projectId'],
                 get: function(projectId){
-                    return '#administrate/project-details/' + projectId;
+                    return '#administrate/projects/' + projectId + '/project-details';
                 }
             },
             openProjectUrl: {
