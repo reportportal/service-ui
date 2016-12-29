@@ -43,9 +43,12 @@
 
     .bts-fields {
       padding-left: 39px;
-      margin-bottom: 31px;
 
       .rp-form-group {
+        &:last-child {
+          margin-bottom: 0;
+        }
+
         .bts-field-label {
           width: 150px;
         }
@@ -58,6 +61,7 @@
 
     .required-fields-error {
       margin-left: 210px;
+      margin-top: 10px;
       .rp-form-group {
         margin-bottom: 0;
 
@@ -69,6 +73,7 @@
 
     .include_data {
       margin-bottom: 16px;
+      margin-top: 30px;
       .rp-form-title {
         padding-left: 19px;
       }
@@ -126,14 +131,23 @@
             width: 150px;
           }
           .bts-property {
+            display: inline-block;
             margin-left: 18px;
             width: 280px;
           }
           textarea {
             height: 50px;
           }
+
+          &.has-error {
+
+          }
         }
       }
+    }
+
+    .credentials-error-block {
+      padding-left: 208px;
     }
   }
 
