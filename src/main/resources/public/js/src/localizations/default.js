@@ -1194,6 +1194,7 @@ define(['util'], function () {
             creationDate: 'Creation date',
             name: "Name",
             lastLaunchDate: "Last launch date",
+            actions: 'Actions',
             projectName: "Project name",
             projectRole: "Project role",
             cantUnAssignFromDefault: "The user cannot be unassigned from Default_Project",
