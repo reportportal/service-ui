@@ -40,6 +40,7 @@ define(function (require, exports, module) {
 
         bindings: {
             '[data-js-name]': 'text: name',
+            '[data-js-description]': 'text: description',
             '[data-js-share-icon]': 'classes: {hide: not(isMy)}, attr: {title: sharedTitle}',
             '[data-js-global-icon]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
             '[data-js-icon-description]': 'text: sharedTitle',

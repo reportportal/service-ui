@@ -1,0 +1,27 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.widgets.editWidget}) %>
+<div class="modal-body">
+    <div class="info-block">
+        <div class="preview-block">
+            <h2 data-js-widget-type></h2>
+            <p data-js-widget-description></p>
+            <div class="widget-preview" data-js-widget-preview></div>
+        </div>
+    </div>
+    <div class="action-block">
+        <div class="settings-block">
+            <div class="clearfix" data-js-widget-filter></div>
+            <div class="clearfix" data-js-widget-settings></div>
+            <div class="separate"></div>
+            <div data-js-widget-save></div>
+        </div>
+        <div data-js-filter-search></div>
+        <div class="edit-filter-buttons rp-nav-right">
+            <button class="rp-btn rp-btn-cancel" data-js-cancel-filter><%- data.text.ui.cancel %></button>
+            <button class="rp-btn rp-btn-submit" data-js-save-filter><%- data.text.ui.submit %></button>
+        </div>
+    </div>
+    <div class="buttons-block rp-nav-right">
+        <button class="rp-btn rp-btn-cancel" data-js-cancel><%- data.text.ui.cancel %></button>
+        <button class="rp-btn rp-btn-submit" data-js-save><%- data.text.ui.save %></button>
+    </div>
+</div>

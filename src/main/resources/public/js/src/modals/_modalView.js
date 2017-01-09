@@ -55,6 +55,7 @@ define(function (require, exports, module) {
                     }
                 });
             this.attachKeyActions();
+            this.onShow && this.onShow();
             return this.closeAsync;
         },
         attachKeyActions: function() {
