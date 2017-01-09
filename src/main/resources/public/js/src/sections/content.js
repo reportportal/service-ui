@@ -77,7 +77,6 @@ define(function (require, exports, module) {
         },
 
         setupPageView: function (options) {
-            console.log('setupPageView: ', options);
             if (this.isAdminPage) {
                 this.page = options.page;
                 var PageView = this.getViewForAdministratePage(options);
@@ -146,26 +145,12 @@ define(function (require, exports, module) {
         },
 
         getViewForAdministratePage: function (options) {
-            console.log(options);
             if (options.page === 'users') {
                 return Users.ContentView;
-            } else if (options.page === 'project-details') {
-                return Projects.ProjectDetails;
             } else if (options.page === 'settings') {
                 return Settings.ContentView;
             } else {
                 return Projects.ContentView;
-                var key = options.page + '-' + options.action;
-                switch (key) {
-                    case "projects-add":
-                    case "projects-settings":
-                    case "projects-members":
-                        return Projects.Project;
-                        break;
-                    default:
-                        return Projects.ContentView;
-                        break;
-                }
             }
         },
 

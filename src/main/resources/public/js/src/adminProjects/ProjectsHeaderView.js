@@ -27,6 +27,7 @@ define(function(require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
+    var Localization = require('localization');
     var MainBreadcrumbsComponent = require('components/MainBreadcrumbsComponent');
 
     var config = App.getInstance();
@@ -34,9 +35,85 @@ define(function(require, exports, module) {
     var ProjectsHeaderView = Epoxy.View.extend({
         tpl: 'tpl-projects-header',
 
+        bindings: {
+            '[data-js-project-buttons]': 'classes: {hide: showProjectBtns}',
+            '[data-js-project-status-intervals]': 'classes: {hide: showIntervalBtns}, updateIntervalBtns: queryString',
+            '[data-js-add-project-button]': 'classes: {hide: showAddProject}',
+            '[data-js-project-settings]': 'classes: {disabled: showSettingsBtn}, attr: {href: getSettingsLink}',
+            '[data-js-project-members]': 'classes: {disabled: showMembersBtn}, attr: {href: getMembersLink}',
+        },
+
+        computeds: {
+            showIntervalBtns: {
+                deps: ['id', 'action'],
+                get: function(id, action){
+                    if(id){
+                        if(action){
+                            return true;
+                        }
+                        return false;
+                    }
+                    return true;
+                }
+            },
+            showProjectBtns: {
+                deps: ['id', 'action'],
+                get: function(id, action){
+                    return !(id && action);
+                }
+            },
+            showAddProject: {
+                deps: ['id', 'action'],
+                get: function(id, action){
+                    return !(!id && !action);
+                }
+            },
+            showSettingsBtn: {
+                deps: ['action'],
+                get: function(action){
+                    return action == 'settings';
+                }
+            },
+            showMembersBtn: {
+                deps: ['action'],
+                get: function(action){
+                    return action == 'members';
+                }
+            },
+            getSettingsLink: {
+                deps: ['id'],
+                get: function(id){
+                    return '#administrate/projects/' + id + '/settings';
+                }
+            },
+            getMembersLink: {
+                deps: ['id'],
+                get: function(id){
+                    return '#administrate/projects/' + id + '/members';
+                }
+            }
+        },
+
+        bindingHandlers: {
+            updateIntervalBtns: {
+                set: function($el, value) {
+                    var interval = value ? +value.split('=')[1] : 3;
+                    $('[data-js-project-interval]', $el).removeClass('disabled');
+                    $('[data-js-project-interval="'+interval+'"]', $el).addClass('disabled');
+                }
+            }
+        },
+
         initialize: function (options) {
+            this.model = new Epoxy.Model();
+            this.model.set({
+                page: options.page,
+                id: options.id,
+                action: options.action,
+                queryString: options.queryString
+            });
             this.mainBreadcrumbs = new MainBreadcrumbsComponent({
-                data: options.data
+                data: this.getHeaderData()
             });
             this.render();
         },
@@ -50,9 +127,21 @@ define(function(require, exports, module) {
             $('[data-js-main-breadcrumbs]', this.$el).append(this.mainBreadcrumbs.$el);
         },
 
-        renderHeader: function(){
-            console.log('renderHeader');
-            this.$header.html(Util.templates(this.headerTpl));
+        getHeaderData: function(){
+            var page = this.model.get('page'),
+                id = this.model.get('id'),
+                action = this.model.get('action'),
+                url = '#administrate/' + page,
+                data = [{name: Localization.admin.titleAllProjects, link: url}];
+            if(this.id){
+                url +='/' + id
+                data.push({name: id, link: url});
+                if(action && (action !== 'project-details')){
+                    url +='/' +action;
+                    data.push({name: Localization.admin['title' + action.capitalize()], link: url});
+                }
+            }
+            return data;
         },
 
         addProject: function(e){

@@ -32,6 +32,7 @@ define(function(require, exports, module) {
     var Project = require('project');
     var ProjectsOld = require('projects');
     var ProjectsTabsView = require('adminProjects/ProjectsTabsView');
+    var AdminService = require('adminService');
     var ProjectsHeaderView = require('adminProjects/ProjectsHeaderView');
 
     var config = App.getInstance();
@@ -46,7 +47,8 @@ define(function(require, exports, module) {
             this.page = options.page;
             this.id = options.id;
             this.action = options.action;
-            console.log('ProjectsPageView: ', options);
+            this.queryString = options.queryString;
+            //console.log('ProjectsPageView: ', options);
         },
 
         events: {
@@ -63,28 +65,39 @@ define(function(require, exports, module) {
         renderHeader: function(){
             this.destroyHeader();
             this.header = new ProjectsHeaderView({
-                data: this.getHeaderData()
+                page: this.page,
+                id: this.id,
+                action: this.action,
+                queryString: this.queryString
             });
             this.$header.append(this.header.$el);
         },
 
-        getHeaderData: function(){
-            var url = '#administrate/' + this.page,
-                data = [{name: Localization.admin.titleAllProjects, link: url}];
+        renderBody: function () {
+            this.destroyBody();
             if(this.id){
-                url +='/' + this.id
-                data.push({name: this.id, link: url});
-                if(this.action && (this.action !== 'project-details')){
-                    url +='/' +this.action;
-                    data.push({name: Localization.admin['title' + this.action.capitalize()], link: url});
-                }
+                AdminService.getProjectInfo()
+                    .done(function (data) {
+                        config.project = data;
+                        this.renderProject();
+                    }.bind(this))
+                    .fail(function (error) {
+                        Util.ajaxFailMessenger(error, 'projectLoad');
+                    });
             }
-            return data;
+            else {
+                this.renderProjectsList();
+            }
         },
 
-        renderBody: function () {
-            console.log('renderBody');
-            this.destroyBody();
+        renderProjectsList: function(){
+            this.body = new ProjectsTabsView({
+                action: this.action || 'internal'
+            });
+            $('[data-js-admin-projects]', this.$el).append(this.body.$el);
+        },
+
+        renderProject: function(){
             var key = this.page + '-' + this.action;
             switch (key) {
                 case "projects-settings":
@@ -101,7 +114,7 @@ define(function(require, exports, module) {
                     });
                     $('[data-js-admin-projects]', this.$el).append(this.body.$el);
                     break;
-                case "projects-project-details":
+                default:
                     this.body = new ProjectsOld.ProjectDetails({
                         contextName: this.page,
                         context: {},
@@ -110,16 +123,9 @@ define(function(require, exports, module) {
                         adminPage: true
                     }).render();
                     break;
-                default:
-                    this.action = this.action || 'internal';
-                    this.body = new ProjectsTabsView({
-                        action: this.action
-                    });
-                    $('[data-js-admin-projects]', this.$el).append(this.body.$el);
-                    break;
             }
         },
-        
+
         update: function () {
             this.renderHeader();
             this.renderBody();

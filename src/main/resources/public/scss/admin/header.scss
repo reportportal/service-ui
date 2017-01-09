@@ -25,4 +25,11 @@
         float: left;
         width: 60%;
     }
+    .admin-header-menu {
+        float: right;
+        width: 40%;
+        .project-buttons {
+            text-align: right;
+        }
+    }
 }

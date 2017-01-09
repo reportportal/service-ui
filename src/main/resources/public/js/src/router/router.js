@@ -84,8 +84,8 @@ define(function(require, exports, module) {
             'documentation/:id': 'openDocumentation',
             'user-profile': 'userProfile',
             'registration?*queryString': 'registerUser',
-            'administrate/project-details/:id?*queryString': 'openAdminPageDetails',
-            'administrate/project-details/:id': 'openAdminPageDetails',
+            'administrate/:page/:id?*queryString': 'openAdminResource',
+            'administrate/:page/:id': 'openAdminResource',
             'administrate/:page/:id/:action?*queryString': 'openAdminResource',
             'administrate/:page/:id/:action': 'openAdminResource',
             'administrate/:page/:id/:action/:userAction': 'openAdminUsersAction',
@@ -180,9 +180,9 @@ define(function(require, exports, module) {
         openAdminUsersAction: testRoute.checkTest('insidePage', function(page, id, action, query){
             Context.openAdmin(page, id, action, query);
         }),
-        openAdminPageDetails: testRoute.checkTest('insidePage', function (id, queryString) {
+        /*openAdminPageDetails: testRoute.checkTest('insidePage', function (id, queryString) {
             Context.openAdmin("project-details", id, null, queryString);
-        }),
+        }),*/
     });
 
     return {
