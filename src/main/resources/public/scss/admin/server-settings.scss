@@ -1,0 +1,81 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.rp-server-settings {
+
+    .rp-switcher-big {
+        display: block;
+        width: 100px;
+        margin-bottom: 0;
+    }
+
+    .rp-auth-server-settings {
+        padding-top: 10px;
+
+        .auth-settings-line {
+            border-bottom: 1px solid $COLOR--skipped;
+            margin: 30px 15px;
+        }
+        /*.delete-item {
+            display: none;
+        }*/
+        .addNewOrg {
+            .delete-item {
+                display: block;
+            }
+            .obligatory-field {
+                &:after {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .rp-email-settings {
+        padding-top: 30px;
+        padding-bottom: 20px;
+        .email-enabled-settings {
+            margin-bottom: 6px;
+            .tls-enabled {
+                position: relative;
+                top: -4px;
+                .rp-checkbox-wrap {
+                    margin-left: 30px;
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                }
+            }
+        }
+        .email-server-error {
+            .test-connection-alert {
+                font-size: 12px;
+                line-height: 1.5;
+                .connection-error-title {
+                    color: $COLOR--failed;
+                    font-size: 13px;
+                    font-weight: 600;
+                }
+            }
+        }
+    }
+
+}
