@@ -82,8 +82,6 @@ define(function(require, exports, module) {
             $('[data-js-tab-action="' + this.tab + '"]', this.$el).closest('li').addClass('active');
             currentContent.append(this.tabView.$el);
             currentContent.show();
-            //console.log(this.tab);
-            //console.log('renderTabContent: ', this.tabView.$el);
         },
 
         getTabView: function(tab) {

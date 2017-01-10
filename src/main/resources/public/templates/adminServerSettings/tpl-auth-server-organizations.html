@@ -1,0 +1,16 @@
+<div class="rp-form-group clearfix" data-js-org-row>
+    <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col">
+        <%= data.text.admin.gitHubOrgName %>
+    </label>
+    <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
+        <input data-js-org-name="<%- data.name %>" type="text" disabled class="rp-input-default rp-width-100 form-control" value="<%- data.name %>">
+        <div class="error-bottom">
+            <div class="help-inline"></div>
+        </div>
+    </div>
+    <div class="col-md-5 rp-custom-col hidden-xs hidden-sm">
+        <a href="#" class="delete-item" data-js-delete-org>
+            <i class="rp-icons rp-icons-cancel"></i>
+        </a>
+    </div>
+</div>

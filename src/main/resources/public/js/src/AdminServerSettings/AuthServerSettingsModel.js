@@ -32,17 +32,23 @@ define(function (require, exports, module) {
 
     var AuthSettingsModel = Epoxy.Model.extend({
         defaults: {
-            enableGuestAccount: false,
-            gitHubAuthEnabled: false,
-            clientId : "clientId",
-            clientSecret : "clientId",
+            //enableGuestAccount: false,
+            gitHubAuthEnabled: true,
+            clientId : "",
+            clientSecret : "",
             organizations : []
         },
 
-        getOrganizations: function() {
+        getOrganizations: function(){
+            try {
+                return JSON.parse(this.get('organizations'));
+            } catch (err) {
+                return [];
+            }
         },
-        setOrganizations: function(){
-        }
+        setOrganizations: function(organizations){
+            this.set({organizations: JSON.stringify(organizations)});
+        },
     });
 
     return AuthSettingsModel;

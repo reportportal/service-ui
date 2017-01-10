@@ -31,4 +31,17 @@
         width: 100px;
         margin-bottom: 0;
     }
+    /*.delete-item {
+        display: none;
+    }*/
+    .addNewOrg {
+        .delete-item {
+            display: block;
+        }
+        .obligatory-field {
+            &:after {
+                display: none;
+            }
+        }
+    }
 }

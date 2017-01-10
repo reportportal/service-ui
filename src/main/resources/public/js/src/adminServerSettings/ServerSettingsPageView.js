@@ -37,9 +37,10 @@ define(function(require, exports, module) {
         tpl: 'tpl-server-settings-body',
 
         initialize: function (options) {
+            console.log('ServerSettingsPageView options: ', options)
             this.$el = options.el;
             this.$header = options.header;
-            this.action = options.action;
+            this.action = options.id;
         },
 
         render: function () {

@@ -79,13 +79,16 @@ define(function (require, exports, module) {
         return call('PUT', Urls.setAdminSettings(id), data);
     };
 
-    var getAuthSettings = function (data) {
-        console.log('getAuthSettings');
-        return call('GET', Urls.adminAuthSettings(data));
+    var getAuthSettings = function () {
+        return call('GET', Urls.adminAuthSettings());
     };
 
     var setAuthSettings = function (data) {
-        return call('PUT', Urls.adminAuthSettings(data));
+        return call('PUT', Urls.adminAuthSettings(), data);
+    };
+
+    var deleteAuthSettings = function(data){
+        return call('DELETE', Urls.adminAuthSettings());
     };
 
     var loadProjectInfo = function (id, value) {
@@ -126,6 +129,7 @@ define(function (require, exports, module) {
         loadProjectInfo: loadProjectInfo,
         loadProjectDetailsWidgets: loadProjectDetailsWidgets,
         getAuthSettings: getAuthSettings,
-        setAuthSettings: setAuthSettings
+        setAuthSettings: setAuthSettings,
+        deleteAuthSettings: deleteAuthSettings,
     }
 });

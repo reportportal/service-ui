@@ -1347,6 +1347,9 @@ define(['util'], function () {
             registerMember: "Registration has been completed successfully",
             projectCreated: "The project '%%%' has been successfully created",
             setAdminSettings: "Email server settings have been updated",
+            deleteOrgOAuthSettings: 'GitHub organization has been deleted',
+            setOAuthSettings: "OAuth integration settings have been updated",
+            deleteOAuthSettings: 'OAuth integration settings were successfully removed',
             updateProjectRole: "Member '%%%' has been updated",
             updateEmailProjectSettings: 'Notification rule has been removed.',
             updateSubType: "Defect type was successfully updated",
@@ -1420,6 +1423,8 @@ define(['util'], function () {
             deleteProject: "Failed to delete project",
             updateProjectRole: "Failed to update project role",
             setAdminSettings: 'Failed to update email server settings',
+            setOAuthSettings: 'Failed to update OAuth integration settings',
+            deleteOAuthSettings: 'Failed to delete OAuth integration settings',
             deleteMember: "Failed to delete user",
             loadMembers: "Failed to load members",
             assignMember: "Failed to assigned member to the project",
@@ -1649,7 +1654,8 @@ define(['util'], function () {
             changePassword: "Change Password",
             editUserInfo: 'Edit Personal Information',
             addDashboard: 'Add New Dashboard',
-            regenerateUUID: 'REGENERATE UUID'
+            regenerateUUID: 'REGENERATE UUID',
+            deleteOrg: 'Delete GitHub organization'
         },
 
         dialog: {
@@ -1698,6 +1704,8 @@ define(['util'], function () {
             msgDeleteItems: 'In case of delete the %%%, all related data will be deleted. Are you sure you want to delete %%%?',
             msgDeleteDefectType: "I am sure I want to remove custom defect type",
             msgDeleteProject: "I am sure I want to delete project",
+            msgDeleteOrg: 'In case of delete the GitHub organization, users from this organization could not be able to login Report Portal. Are you sure, you want to delete selected organization?',
+            deleteOrg: 'I am sure I want to delete organization',
             msgResetColorsDefectType: "Are you sure you want to reset custom defect's colors to default?",
             msgMessageTop: "In case of delete custom defect, all investigated as <strong>'%%%'</strong> defects will be marked as <strong>'%%%'</strong>",
         },
