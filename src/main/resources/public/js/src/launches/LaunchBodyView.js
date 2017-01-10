@@ -210,6 +210,7 @@ define(function (require, exports, module) {
             });
             this.body = new LogBodyView({
                 el: $('[data-js-info-container]', this.$el),
+                context: this.context,
                 collectionItems: this.collectionItems,
                 launchModel: info.launchModel,
             })
@@ -231,6 +232,7 @@ define(function (require, exports, module) {
         renderStepLevel: function(info) {
             this.control = new StepControlView({
                 el: $('[data-js-controls-container]', this.$el),
+                context: this.context,
                 filterModel: info.filterModel,
                 launchModel: info.launchModel,
                 parentModel: (info.parentModel || info.launchModel),
@@ -244,6 +246,7 @@ define(function (require, exports, module) {
         },
         renderSuiteLevel: function(info) {
             this.control = new SuiteControlView({
+                context: this.context,
                 filterModel: info.filterModel,
                 launchModel: info.launchModel,
                 parentModel: (info.parentModel || info.launchModel),

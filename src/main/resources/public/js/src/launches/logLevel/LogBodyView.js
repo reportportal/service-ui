@@ -34,12 +34,17 @@ define(function (require, exports, module) {
         template: 'tpl-launch-log-body',
 
         initialize: function(options) {
+            this.context = options.context;
             this.collectionItems = options.collectionItems;
             this.launchModel = options.launchModel;
             this.render();
             this.listenTo(this.collectionItems, 'change:log:item', this.onChangeLogItem);
             this.listenTo(this.collectionItems, 'update:logs', this.onChangeLogItem);
             this.onChangeLogItem();
+
+            if (this.context === 'userdebug') {
+                this.$el.find('[data-js-log-item-container]').addClass('debug-mode');
+            }
         },
         onChangeLogItem: function() {
             $('[data-js-log-item-container]',this.$el).removeClass('not-found');
@@ -69,6 +74,7 @@ define(function (require, exports, module) {
             this.historyItem && this.historyItem.destroy();
             this.historyItem = new LogItemInfoView({
                 el: $('[data-js-item-info]', this.$el),
+                context: this.context,
                 itemModel: itemModel,
                 launchModel: this.launchModel,
             });
@@ -84,7 +90,7 @@ define(function (require, exports, module) {
         },
 
         render: function() {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, {context: this.context}));
         },
 
         destroy: function () {
