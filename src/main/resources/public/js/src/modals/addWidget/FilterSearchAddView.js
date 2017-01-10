@@ -56,6 +56,7 @@ define(function (require, exports, module) {
             this.launchFilterCollection.ready.done(function() {
                 self.model = new FilterModel({
                     temp: true,
+                    active: true,
                     owner: config.userModel.get('name'),
                 });
                 var filterNames = _.map(self.launchFilterCollection.models, function(model) {
@@ -75,6 +76,7 @@ define(function (require, exports, module) {
                 });
                 self.filterSorting = new FilterSortingView({model: self.model});
                 $('[data-js-filter-sorting]', self.$el).append(self.filterSorting.$el);
+                self.listenTo(self.model, 'change:id', self.onChangeId);
             });
         },
         render: function() {
@@ -103,8 +105,12 @@ define(function (require, exports, module) {
                 });
                 // for right work listeners
                 this.model.set({temp: false});
-                this.async.resolve();
+
             }
+        },
+        onChangeId: function() {
+            this.trigger('change:filter', this.model);
+            this.async.resolve();
         },
         getReadyState: function() {
             return this.async;

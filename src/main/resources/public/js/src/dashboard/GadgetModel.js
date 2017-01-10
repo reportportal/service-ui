@@ -113,13 +113,27 @@ define(function (require, exports, module) {
             var self = this;
             return Service.loadDashboardWidget(this.get('id'))
                 .done(function(data) {
-                    self.set({
+                    var modelData = {
                         name: data.name,
                         owner: data.owner,
                         isShared: data.isShared,
                         gadget: data.content_parameters.gadget,
                         widgetData: data,
-                    })
+                        filter_id: data.filter_id,
+                    };
+                    if(data.content_parameters) {
+                        if(data.content_parameters.content_fields) {
+                            modelData.content_fields = JSON.stringify(data.content_parameters.content_fields);
+                        }
+                        if(data.content_parameters.itemsCount) {
+                            modelData.itemsCount = data.content_parameters.itemsCount;
+                        }
+                        if(data.content_parameters.widgetOptions) {
+                            modelData.widgetOptions = JSON.stringify(data.content_parameters.widgetOptions);
+                        }
+
+                    }
+                    self.set(modelData)
                 })
         },
         getWidgetOptions: function() {

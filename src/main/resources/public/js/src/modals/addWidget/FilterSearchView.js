@@ -105,10 +105,14 @@ define(function (require, exports, module) {
                 $('[data-js-select-filter-block]', this.$el).removeClass('empty-state');
                 this.selectFilterView = new FilterItem({model: model});
                 $('[data-js-select-filter-container]', this.$el).html(this.selectFilterView.$el);
+                this.selectedFilterModel = model;
             } else {
                 $('[data-js-select-filter-block]', this.$el).addClass('empty-state');
             }
 
+        },
+        getSelectedFilterModel: function() {
+            return this.selectedFilterModel;
         },
         onSelectFilterCheck: function(model, active) {
             active && this.onSelectFilter(model);
@@ -130,10 +134,9 @@ define(function (require, exports, module) {
             this.addFilterView.getReadyState()
                 .always(function() {
                     self.addFilterView.destroy();
-                    var activeSelectFilter = self.collection.findWhere({active: 'on'});
-                    activeSelectFilter && activeSelectFilter.set({active: false});
                     self.$el.removeClass('hide-content');
                     self.trigger('disable:navigation', false);
+                    self.updateFilters();
                 })
                 .fail(function() {
                     self.model.set({filter_id: ''});
@@ -204,7 +207,11 @@ define(function (require, exports, module) {
                 totalPage: 1,
                 currentPage: 1,
             });
-            this.load();
+            var self = this;
+            this.load()
+                .done(function() {
+                    Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 330});
+                })
         },
         load: function() {
             this.$el.addClass('load');
@@ -242,6 +249,9 @@ define(function (require, exports, module) {
             }
             return url;
         },
+        onDestroy: function() {
+            this.$el.remove();
+        }
     });
 
     return FilterSearchView;

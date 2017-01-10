@@ -25,6 +25,7 @@ define(function (require, exports, module) {
     var ModalEditDashboard = require('modals/modalEditDashboard');
     var ModalConfirm = require('modals/modalConfirm');
     var ModalAddWidget = require('modals/addWidget/modalAddWidget');
+    var modalAddSharedWidget = require('modals/addSharedWidget/modalAddSharedWidget');
     var Localization = require('localization');
     var GadgetCollection = require('dashboard/GadgetCollection');
     var GadgetView = require('dashboard/GadgetView');
@@ -46,6 +47,7 @@ define(function (require, exports, module) {
             'click [data-js-full-screen]': 'onClickFullScreen',
             'click [data-js-close-fullscreen]': 'onClickExitFullScreen',
             'click [data-js-add-widget]': 'onClickAddWidget',
+            'click [data-js-add-shared-widget]': 'onClickAddSharedWidget',
         },
 
         bindings: {
@@ -76,6 +78,7 @@ define(function (require, exports, module) {
                 self.gadgetCollection = new GadgetCollection([], {dashboardModel: self.model});
                 self.listenTo(self.gadgetCollection, 'add', self.onAddGadget);
                 self.listenTo(self.gadgetCollection, 'remove:view', self.onRemoveGadget);
+                self.listenTo(self.gadgetCollection, 'remove', self.checkEmptyDashboard);
                 self.activateGridStack();
                 self.listenTo(self.model, 'add:widget', self.onAddNewGadget);
             })
@@ -85,6 +88,7 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onAddNewGadget: function(model) {
+            this.checkEmptyDashboard();
             this.gadgetCollection.add(model);
             this.updateScroll();
         },
@@ -142,7 +146,15 @@ define(function (require, exports, module) {
         onRemoveGadget: function(view) {
             this.gridStack.removeWidget(view.el);
         },
+        checkEmptyDashboard: function() {
+            if(!this.model.getWidgets().length) {
+                this.$el.addClass('not-found');
+            } else {
+                this.$el.removeClass('not-found');
+            }
+        },
         createGadgets: function() {
+            this.checkEmptyDashboard();
             this.gadgetCollection.add(this.model.getWidgets(), {parse: true});
             this.updateScroll();
         },
@@ -203,6 +215,11 @@ define(function (require, exports, module) {
             e.preventDefault();
             e.stopPropagation();
             (new ModalAddWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
+        },
+        onClickAddSharedWidget: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            (new modalAddSharedWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
         },
         destroy: function () {
             $.fullscreen.exit();

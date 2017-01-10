@@ -202,9 +202,11 @@ define(function(require, exports, module) {
             }
             var data = model.getDataFromServer();
             data.type = 'launch';
+            var self = this;
             call('POST', Urls.saveFilter(), {elements: [data]})
                 .done(function(data) {
                     Util.ajaxSuccessMessenger('savedFilter');
+                    self.set({id: data[0].id});
                 })
                 .fail(function(error) {
                     Util.ajaxFailMessenger(error, 'savedFilter');
@@ -244,6 +246,16 @@ define(function(require, exports, module) {
                 .done(function(dataModel) {
                     callback(dataModel)
                 });
+        },
+        load: function() {
+            var self = this;
+            return call('GET', Urls.getFilters([this.get('id')]))
+                .done(function(data) {
+                    var itemData = data[0];
+                    itemData.entities = JSON.stringify(itemData.entities);
+                    itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
+                    self.set(itemData);
+                })
         },
 
         remove: function() {

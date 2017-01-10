@@ -37,6 +37,9 @@ define(function (require, exports, module) {
             this.listenTo(this, 'add', this.onAddGadget);
         },
         onChangePosition: function() {
+            this.dashboardModel.setWidgets(this.getGadgetsData());
+        },
+        getGadgetsData: function() {
             var gadgetsData = [];
             _.each(this.models, function(model) {
                 gadgetsData.push({
@@ -45,9 +48,10 @@ define(function (require, exports, module) {
                     widgetSize: [model.get('width'), model.get('height')],
                 })
             });
-            this.dashboardModel.setWidgets(gadgetsData);
+            return gadgetsData;
         },
         onRemoveGadget: function(model) {
+            this.dashboardModel.setWidgets(this.getGadgetsData());
             Service.updateDashboard(this.dashboardModel.get('id'), {deleteWidget: model.get('id')})
                 .fail(function(error) {
                     Util.ajaxFailMessenger(error, 'updateDashboard');
