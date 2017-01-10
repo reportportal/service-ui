@@ -71,8 +71,10 @@ define(function (require, exports, module) {
             var data = {
                 name: this.get('name'),
                 share: this.get('isShared'),
-                // description: this.get('description'),
             };
+            if(this.get('description')) {
+                data.description = this.get('description');
+            }
             Service.updateDashboard(this.get('id'), data)
                 .done(function (data) {
 

@@ -1056,6 +1056,9 @@ define(function (require, exports, module) {
             var $holder = $el.closest(".form-group, .rp-form-group, label");
             var $hintBlock = $('> .validate-hint', $holder);
             var validators = [];
+            if (options && options.max) {
+                $el.attr('maxLength', options.max);
+            }
 
             if (!_.isArray(options)) {
                 options = [options];

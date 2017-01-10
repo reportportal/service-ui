@@ -76,6 +76,14 @@
     position: relative;
     width: 100%;
     height: 145px;
+    overflow: hidden;
+    p {
+      position: absolute;
+      bottom: 15px;
+      margin: 0;
+      left: 15px;
+      right: 15px;
+    }
   }
   .icons-wrapper {
     width: 100%;

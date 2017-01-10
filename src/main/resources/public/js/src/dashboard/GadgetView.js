@@ -27,6 +27,7 @@ define(function (require, exports, module) {
     var Localization = require('localization');
     var WidgetModel = require('newWidgets/WidgetModel');
     var WidgetView = require('newWidgets/WidgetView');
+    var ModalEditWidget = require('modals/addWidget/modalEditWidget');
 
     var config = App.getInstance();
 
@@ -36,6 +37,7 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-gadget-refresh]': 'onClickRefresh',
             'click [data-js-gadget-remove]': 'onClickRemove',
+            'click [data-js-gadget-edit]': 'onClickGadgetEdit',
         },
 
         bindings: {
@@ -51,7 +53,7 @@ define(function (require, exports, module) {
             this.render();
             this.$el.addClass('load');
             this.$el.attr({'data-id': this.model.get('id')});
-            this.el.backboneView = this;// fir gridstack
+            this.el.backboneView = this;// for gridstack
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
@@ -97,6 +99,15 @@ define(function (require, exports, module) {
         },
         activateGadget: function() {
             this.update();
+        },
+        onClickGadgetEdit: function() {
+            var self = this;
+            (new ModalEditWidget({
+                model: this.model
+            })).show()
+                .done(function() {
+                    self.update();
+                })
         },
         getDataForGridStack: function() {
             return [this.el, this.model.get('x'), this.model.get('y'), this.model.get('width'), this.model.get('height')];

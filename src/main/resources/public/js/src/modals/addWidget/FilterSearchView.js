@@ -105,10 +105,14 @@ define(function (require, exports, module) {
                 $('[data-js-select-filter-block]', this.$el).removeClass('empty-state');
                 this.selectFilterView = new FilterItem({model: model});
                 $('[data-js-select-filter-container]', this.$el).html(this.selectFilterView.$el);
+                this.selectedFilterModel = model;
             } else {
                 $('[data-js-select-filter-block]', this.$el).addClass('empty-state');
             }
 
+        },
+        getSelectedFilterModel: function() {
+            return this.selectedFilterModel;
         },
         onSelectFilterCheck: function(model, active) {
             active && this.onSelectFilter(model);
@@ -245,6 +249,9 @@ define(function (require, exports, module) {
             }
             return url;
         },
+        onDestroy: function() {
+            this.$el.remove();
+        }
     });
 
     return FilterSearchView;

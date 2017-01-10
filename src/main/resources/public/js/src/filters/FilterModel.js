@@ -248,6 +248,16 @@ define(function(require, exports, module) {
                     callback(dataModel)
                 });
         },
+        load: function() {
+            var self = this;
+            return call('GET', Urls.getFilters([this.get('id')]))
+                .done(function(data) {
+                    var itemData = data[0];
+                    itemData.entities = JSON.stringify(itemData.entities);
+                    itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
+                    self.set(itemData);
+                })
+        },
 
         remove: function() {
             var self = this;
