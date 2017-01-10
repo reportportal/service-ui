@@ -42,6 +42,7 @@ define(function (require, exports, module) {
         },
 
         destroy: function () {
+            this.$el.empty();
             this.clearActives();
             this.undelegateEvents();
             this.unbind();

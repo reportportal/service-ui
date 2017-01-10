@@ -116,7 +116,7 @@ define(function (require, exports, module) {
             }));
         },
         isDebug: function(){
-            return this.getBinding('mode') === 'DEBUG';
+            return this.model.get('mode') === 'DEBUG';
         },
         startAnalyzeAction: function (e) {
             e.preventDefault();
