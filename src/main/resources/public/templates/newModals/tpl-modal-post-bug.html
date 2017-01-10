@@ -46,9 +46,9 @@
         </div>
     </div>
 
-    <div id="staticContent">
-        <% if(data.selected === 1){ %>
-        <div class="rp-form-group include_data" id="includesBlock">
+    <div id="staticContent" class="static-content">
+        <% if(!data.isMultiply){ %>
+        <div class="rp-form-group include-data" id="includesBlock">
             <div class="rp-form-title">
                 <span><%= data.text.launches.includeData %></span>
             </div>
