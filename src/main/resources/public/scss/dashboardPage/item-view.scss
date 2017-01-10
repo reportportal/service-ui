@@ -36,6 +36,14 @@
       display: block;
     }
   }
+  &.not-found {
+    .preloader, .grid-stack {
+      display: none;
+    }
+    .no-result-found {
+      display: block;
+    }
+  }
   .is-not-my-dashbord {
     display: none;
     font-size: 14px;

@@ -99,16 +99,16 @@ define(function(require, exports, module) {
             ':project/members/:action': 'openMembers',
             ':project/settings': 'openSettings',
             ':project/settings/:tab': 'openSettings',
-            ':project/dashboard': 'openDashboard',
-            ':project/dashboard/:id': 'openDashboard',
-            ':project/dashboard/:id?*queryString': 'openDashboard',
+            ':project/olddashboard': 'openDashboard',
+            ':project/olddashboard/:id': 'openDashboard',
+            ':project/olddashboard/:id?*queryString': 'openDashboard',
             ':project/launches/:filterId(/*path)': 'openLaunch',
 
-            ':project/newdashboard': 'openNewDashboard',
-            ':project/newdashboard/:id': 'openNewDashboard',
-            ':project/newdashboard/:id?*queryString': 'openNewDashboard',
+            ':project/dashboard': 'openNewDashboard',
+            ':project/dashboard/:id': 'openNewDashboard',
+            ':project/dashboard/:id?*queryString': 'openNewDashboard',
 
-            ':project(/)': 'openDashboard',
+            ':project(/)': 'openNewDashboard',
             '*invalidRoute': "show404Page"
         },
         show404Page: function(route){

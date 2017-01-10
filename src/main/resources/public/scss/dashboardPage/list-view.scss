@@ -35,6 +35,25 @@
     border-top: 1px solid $COLOR--gray-91;
     border-bottom: 1px solid $COLOR--gray-91;
   }
+  .no-search-block {
+    padding-bottom: 60px;
+    .empty-dashboard-img {
+      background-image: url(../img/dashboard/empty-dashboard.png);
+      width: 182px;
+      height: 118px;
+      margin: 0 auto;
+    }
+    .empty-shared-dashboard-img {
+      background-image: url(../img/dashboard/empty-shared-dashboard.png);
+      width: 100px;
+      height: 80px;
+      margin: 0 auto 20px auto;
+    }
+    p {
+      margin: 13px 0 20px 0;
+    }
+  }
+
   .dashboard-container {
     margin: 0 -8px;
     position: relative;

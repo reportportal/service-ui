@@ -214,6 +214,10 @@
         }
       }
 
+      .reset-fields-warning {
+        margin-left: 300px;
+      }
+
       .submit-properties {
         display: block;
         overflow: hidden;
@@ -452,6 +456,10 @@
             }
           }
 
+          .reset-fields-warning {
+            margin-left: 0;
+          }
+
           & > .clearfix {
             display: none;
           }
@@ -569,6 +577,9 @@
             .fields-controls {
               width: 490px;
             }
+          }
+          .reset-fields-warning {
+            margin-left: 180px;
           }
           .submit-properties {
             width: 490px;

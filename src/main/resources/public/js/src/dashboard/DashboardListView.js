@@ -24,7 +24,6 @@ define(function (require, exports, module) {
     var App = require('app');
     var Localization = require('localization');
     var DashboardListItemView = require('dashboard/DashboardListItemView');
-    var DashboardShareCollection
 
     var config = App.getInstance();
 
@@ -32,7 +31,8 @@ define(function (require, exports, module) {
         className: 'dashboard-list-view',
         template: 'tpl-dashboard-list',
         events: {
-            'validation::change [data-js-filter-name]': 'onChangeDashboardName',
+            'validation:success [data-js-filter-name]': 'onChangeDashboardName',
+            'click [data-js-add-dashboard]': 'onClickAddDashboard',
         },
         bindings: {
             '[data-js-search-text]': 'text: search',
@@ -53,10 +53,25 @@ define(function (require, exports, module) {
             this.listenTo(this.myDashboardCollection, 'reset', this.renderMyDashboards);
             this.listenTo(this.sharedDashboardCollectoin, 'reset', this.renderSharedDashboards);
             this.collection.ready.done(function() {
-                self.listenTo(self.collection, 'change:owner add reset', self.changeCollection);
+                if (!self.collection.models.length) {
+                    $('[data-js-filter-name]', self.$el).prop({disabled: 'disabled'});
+                }
+                self.listenTo(self.collection, 'change:owner reset', self.changeCollection);
+                self.listenTo(self.collection, 'add', self.onAddCollection);
+                self.listenTo(self.collection, 'remove', self.onRemoveCollection);
                 self.changeCollection();
             })
 
+        },
+        onAddCollection: function() {
+            $('[data-js-filter-name]', this.$el).prop({disabled: null});
+            this.changeCollection();
+        },
+        onRemoveCollection: function(model) {
+            this.myDashboardCollection.remove(model);
+            if(!this.myDashboardCollection.models.length) {
+                this.changeCollection();
+            }
         },
         changeCollection: function() {
             $('[data-js-dashboard-not-found]', this.$el).removeClass('rp-display-block');
@@ -80,18 +95,19 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
-            Util.bootValidator($('[data-js-filter-name]', this.$el), [{
+            Util.hintValidator($('[data-js-filter-name]', this.$el), [{
                 validator: 'minMaxNotRequired',
                 type: 'dashboardName',
                 min: 3,
                 max: 128
             }]);
         },
-        onChangeDashboardName: function (e, data) {
-            if (data.valid) {
-                this.model.set({search: data.value});
-                this.changeCollection();
-            }
+        onClickAddDashboard: function() {
+            this.collection.createNewDashboard();
+        },
+        onChangeDashboardName: function (e) {
+            this.model.set({search: $(e.currentTarget).val()});
+            this.changeCollection();
         },
         renderMyDashboards: function() {
             _.each(this.myDashboardViews, function(view) { view.destroy(); })

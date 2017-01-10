@@ -40,23 +40,26 @@ define(function (require, exports, module) {
         },
 
         initialize: function(options) {
+            var dashboardModel = options.dashboardModel;
             var dashboardNames = _.map(options.dashboardCollection.models, function(model) {
-                return model.get('name');
+                if (dashboardModel.get('name') != model.get('name')) {
+                    return model.get('name');
+                }
             });
             this.render(options);
-            var dashboardModel = options.dashboardModel;
+
             this.model = new Epoxy.Model({
                 name: dashboardModel.get('name'),
                 isShared: dashboardModel.get('isShared'),
                 description: dashboardModel.get('description'),
             });
-            Util.bootValidator($('[data-js-name-input]', this.$el), [{
+            Util.hintValidator($('[data-js-name-input]', this.$el), [{
                 validator: 'minMaxRequired',
                 type: 'dashboardName',
                 min: 3,
                 max: 128
             }, {validator: 'noDuplications', type: 'dashboardName', source: dashboardNames}]);
-            Util.bootValidator($('[data-js-description]', this.$el), {
+            Util.hintValidator($('[data-js-description]', this.$el), {
                 validator: 'maxRequired',
                 type: '',
                 max: 256
@@ -66,7 +69,8 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, options));
         },
         onClickOk: function() {
-            if ($('.has-error', this.$el).length) return;
+            $('[data-js-name-input]', this.$el).trigger('validate');
+            if ($('.validate-error', this.$el).length) return;
             this.successClose(this.model);
         }
 

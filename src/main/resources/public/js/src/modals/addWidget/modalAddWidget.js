@@ -139,13 +139,16 @@ define(function (require, exports, module) {
                 contentParameters.itemsCount = this.model.get('itemsCount');
                 contentParameters.content_fields = this.model.getContentFields();
                 contentParameters.widgetOptions = this.model.getWidgetOptions();
-                Service.saveWidget({
+                var data = {
                     filter_id: this.model.get('filter_id'),
                     name: this.model.get('name'),
                     share: this.model.get('isShared'),
-                    // description: this.model.get('widgetDescription'),
                     content_parameters: contentParameters
-                })
+                };
+                if (this.model.get('widgetDescription')) {
+                    data.description = this.model.get('widgetDescription');
+                }
+                Service.saveWidget(data)
                     .done(function (data) {
                         self.model.set({id: data.id});
                         self.dashboardModel.addWidget(self.model);
