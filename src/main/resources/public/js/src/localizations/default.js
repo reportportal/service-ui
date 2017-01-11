@@ -1171,6 +1171,7 @@ define(['util'], function () {
             inviteUser: 'Invite User',
             projects: "Projects",
             addProject: "Add project",
+            addNewProject: 'Add new project',
             addProjectTitle: "Assign project to the member",
             addNewProject: "Add new project",
             activeProjects: "Active projects",

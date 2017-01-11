@@ -109,6 +109,16 @@
     display: inline-block;
     margin-bottom: 15px;
     & > span {
+      &.required {
+        position: relative;
+        &:after {
+          content: '*';
+          position: absolute;
+          right: 10px;
+          top: -4px;
+          color: $COLOR--pale-red;
+        }
+      }
       &:first-child {
         display: block;
         line-height: 30px;

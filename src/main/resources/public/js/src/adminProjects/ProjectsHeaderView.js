@@ -29,6 +29,7 @@ define(function(require, exports, module) {
     var App = require('app');
     var Localization = require('localization');
     var MainBreadcrumbsComponent = require('components/MainBreadcrumbsComponent');
+    var ModalAddProject = require('modals/modalAddProject');
 
     var config = App.getInstance();
 
@@ -97,8 +98,13 @@ define(function(require, exports, module) {
         bindingHandlers: {
             updateIntervalBtns: {
                 set: function($el, value) {
-                    var interval = value ? +value.split('=')[1] : 3;
-                    $('[data-js-project-interval]', $el).removeClass('disabled');
+                    var interval = value ? +value.split('=')[1] : 3,
+                        id = this.view.model.get('id'),
+                        bns = $('[data-js-project-interval]', $el);
+                    _.each(bns, function(b){
+                        $(b).removeClass('disabled');
+                        $(b).attr('href', '#administrate/projects/' + id + '?interval=' + $(b).data('js-project-interval'));
+                    });
                     $('[data-js-project-interval="'+interval+'"]', $el).addClass('disabled');
                 }
             }
@@ -119,7 +125,7 @@ define(function(require, exports, module) {
         },
 
         events: {
-            '[data-js-add-project]': 'addProject'
+            'click [data-js-add-project]': 'addProject'
         },
 
         render: function () {
@@ -145,7 +151,13 @@ define(function(require, exports, module) {
         },
 
         addProject: function(e){
+            console.log('addProject');
             e.preventDefault();
+            var modal = new ModalAddProject({
+                //type: 'users'
+            });
+            //this.listenToOnce(modal, 'add:user', this.updateUsers);
+            modal.show();
         },
 
         destroy: function(){
