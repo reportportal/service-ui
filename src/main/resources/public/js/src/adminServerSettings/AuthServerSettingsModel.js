@@ -33,10 +33,10 @@ define(function (require, exports, module) {
     var AuthSettingsModel = Epoxy.Model.extend({
         defaults: {
             //enableGuestAccount: false,
-            gitHubAuthEnabled: true,
+            gitHubAuthEnabled: false,
             clientId : "",
             clientSecret : "",
-            organizations : []
+            organizations : ''
         },
 
         getOrganizations: function(){
@@ -48,7 +48,7 @@ define(function (require, exports, module) {
         },
         setOrganizations: function(organizations){
             this.set({organizations: JSON.stringify(organizations)});
-        },
+        }
     });
 
     return AuthSettingsModel;

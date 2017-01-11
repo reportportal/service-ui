@@ -85,7 +85,6 @@ define(function(require, exports, module) {
         },
 
         render: function(){
-            console.log('render GitHubServerSettingsView');
             this.$el.html(Util.templates(this.template, {}));
             this.setupAnchors();
             this.bindValidators();
@@ -93,27 +92,29 @@ define(function(require, exports, module) {
         },
 
         setupAnchors: function(){
-            this.$addOrg = $('[data-js-add-org]', this.$el);
+            this.$addOrg = $('[data-js-add-org-btn]', this.$el);
             this.$addOrgForm = $('[data-js-add-org-form]', this.$el);
             this.$addOrgField = $('[data-js-new-org]', this.$el);
+            this.$clientId = $('[data-js-client-id]', this.$el);
+            this.$clientSecret = $('[data-js-client-secret]', this.$el);
         },
 
         bindValidators: function(){
-            Util.bootValidator($('[data-js-client-id]', this.$el), [
+            Util.hintValidator(this.$clientId, [
                 {
                     validator: 'required'
                 }
             ]);
-            Util.bootValidator($('[data-js-client-secret]', this.$el), [
+            Util.hintValidator(this.$clientSecret, [
                 {
                     validator: 'required'
                 }
             ]);
-            /*Util.bootValidator($('[data-js-new-org]', this.$el), [
+            Util.hintValidator(this.$addOrgField, [
                 {
                     validator: 'required'
                 }
-            ]);*/
+            ]);
         },
 
         updateModel: function(settings){
@@ -135,6 +136,7 @@ define(function(require, exports, module) {
             this.$addOrg.removeClass('hide');
             this.$addOrgForm.addClass('hide');
             this.$addOrgField.val('');
+            this.$addOrgField.closest('[data-js-add-org-row]').removeClass('validate-error');
         },
 
         confirmDeleteOrg: function(e){
@@ -166,8 +168,9 @@ define(function(require, exports, module) {
         deleteAuthSettings: function(){
             AdminService.deleteAuthSettings()
                 .done(function(data){
+                    this.updateModel(this.model.defaults);
                     Util.ajaxSuccessMessenger('deleteOAuthSettings');
-                })
+                }.bind(this))
                 .fail(function(error){
                     Util.ajaxFailMessenger(error, 'deleteOAuthSettings');
                 });
@@ -199,9 +202,17 @@ define(function(require, exports, module) {
                 });
         },
 
-        submitAuthSettings: function(){
+        submitAuthSettings: function(e){
+            e.preventDefault();
             var gitHubAuthEnabled = this.model.get('gitHubAuthEnabled');
             if(gitHubAuthEnabled){
+                this.$clientId.trigger('validate');
+                this.$clientSecret.trigger('validate');
+                var orgs = this.model.getOrganizations();
+                if(!(orgs && _.isEmpty(orgs)) && !this.$addOrgForm.hasClass('hide')){
+                    this.$addOrgField.trigger('validate');
+                }
+                if ($('.validate-error', this.$el).length) return;
                 this.updateAuthSettings();
             }
             else {
@@ -212,6 +223,7 @@ define(function(require, exports, module) {
         getAuthSettings: function () {
             AdminService.getAuthSettings()
                 .done(function (data) {
+                    this.model.set('gitHubAuthEnabled', true);
                     this.updateModel(data);
                 }.bind(this))
                 .fail(function(error){

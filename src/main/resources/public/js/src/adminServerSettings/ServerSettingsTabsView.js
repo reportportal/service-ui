@@ -43,7 +43,6 @@ define(function(require, exports, module) {
 
         initialize: function (options) {
             this.tab = options.action || "email";
-            //console.log('tab: ', this.tab);
             this.render();
         },
 
