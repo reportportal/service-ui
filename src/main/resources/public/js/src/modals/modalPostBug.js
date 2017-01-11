@@ -461,18 +461,28 @@ define(function (require, exports, module) {
 
         getLinks: function () {
             var backLink = {},
-                location = window.location.href;
+                backlinkFirstPart = window.location.protocol + '//' + window.location.host + '/ui/#' + this.appModel.get('projectId') + '/launches/all',
+                backlinkMiddlePart;
             if (this.items.length > 1) {
                 _.forEach(this.items, function (item) {
-                    backLink[item.id] = location + '&log.item=' + item.id;
+                    backlinkMiddlePart = '/' + item.get('launchId');
+
+                    for (var key in item.get('path_names')) {
+                        backlinkMiddlePart += '/' + key;
+                    }
+
+                    backLink[item.id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + item.id;
                 });
             } else {
                 var id = this.items[0].id;
-                if (location.indexOf('&log.item=') > 0) {
-                    backLink[id] = location;
-                } else {
-                    backLink[id] = location + '&log.item=' + id;
+
+                backlinkMiddlePart = '/' + this.items[0].get('launchId');
+
+                for (var key in this.items[0].get('path_names')) {
+                    backlinkMiddlePart += '/' + key;
                 }
+
+                backLink[id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + id;
             }
             return backLink;
         },

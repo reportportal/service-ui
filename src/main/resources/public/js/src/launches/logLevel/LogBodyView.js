@@ -71,6 +71,11 @@ define(function (require, exports, module) {
         },
 
         selectHistoryItem: function(itemModel) {
+            _.each(this.collectionItems.models, function (model) {
+                if (model.id === itemModel.id) {
+                    itemModel.set('path_names', model.get('path_names'));
+                }
+            });
             this.historyItem && this.historyItem.destroy();
             this.historyItem = new LogItemInfoView({
                 el: $('[data-js-item-info]', this.$el),
@@ -86,7 +91,6 @@ define(function (require, exports, module) {
                 mainPath: this.collectionItems.getPathByLogItemId(itemModel.get('id')),
                 options: this.collectionItems.getInfoLog(),
             })
-
         },
 
         render: function() {
