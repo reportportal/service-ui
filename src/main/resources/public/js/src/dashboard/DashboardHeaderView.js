@@ -78,6 +78,7 @@ define(function (require, exports, module) {
 
         destroy: function () {
             this.mainBreadcrumbs && this.mainBreadcrumbs.destroy();
+            this.$el.empty();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();

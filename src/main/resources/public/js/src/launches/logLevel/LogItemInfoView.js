@@ -112,7 +112,8 @@ define(function (require, exports, module) {
         },
 
         initialize: function (options) {
-            this.appModel = new SingletonAppModel()
+            this.context = options.context;
+            this.appModel = new SingletonAppModel();
             this.viewModel = options.itemModel;
             this.launchModel = options.launchModel;
             this.model = new (Epoxy.Model.extend({
@@ -187,7 +188,7 @@ define(function (require, exports, module) {
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, {context: this.context}));
         },
 
         destroy: function () {

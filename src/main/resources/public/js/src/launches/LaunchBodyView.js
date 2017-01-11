@@ -47,13 +47,15 @@ define(function (require, exports, module) {
 
     var LaunchBodyView = Epoxy.View.extend({
         template: 'tpl-launch-body',
-        initialize: function() {
+        initialize: function(options) {
+            this.context = options.context;
             this.render();
             this.crumbs = new LaunchCrumbs({
                 el: $('[data-js-crumbs]', this.$el),
+                context: this.context
             });
             this.currentLevel = '';
-            this.collectionItems = new LaunchSuiteStepItemCollection();
+            this.collectionItems = new LaunchSuiteStepItemCollection({context: options.context});
             this.multipleSelected = new LaunchMultipleSelect({
                 el: $('[data-js-multiple-selected]', this.$el),
                 collectionItems: this.collectionItems,
@@ -208,6 +210,7 @@ define(function (require, exports, module) {
             });
             this.body = new LogBodyView({
                 el: $('[data-js-info-container]', this.$el),
+                context: this.context,
                 collectionItems: this.collectionItems,
                 launchModel: info.launchModel,
             })
@@ -229,6 +232,7 @@ define(function (require, exports, module) {
         renderStepLevel: function(info) {
             this.control = new StepControlView({
                 el: $('[data-js-controls-container]', this.$el),
+                context: this.context,
                 filterModel: info.filterModel,
                 launchModel: info.launchModel,
                 parentModel: (info.parentModel || info.launchModel),
@@ -242,6 +246,7 @@ define(function (require, exports, module) {
         },
         renderSuiteLevel: function(info) {
             this.control = new SuiteControlView({
+                context: this.context,
                 filterModel: info.filterModel,
                 launchModel: info.launchModel,
                 parentModel: (info.parentModel || info.launchModel),
@@ -257,7 +262,9 @@ define(function (require, exports, module) {
         renderLaunchLevel: function(filterModel) {
             this.control = new LaunchControlView({
                 el: $('[data-js-controls-container]', this.$el),
-                collectionItems: this.collectionItems
+                collectionItems: this.collectionItems,
+                context: this.context,
+                filterModel: filterModel
             });
             this.body = new LaunchTableView({
                 el: $('[data-js-info-container]', this.$el),

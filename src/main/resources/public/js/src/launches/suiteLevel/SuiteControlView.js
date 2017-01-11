@@ -58,6 +58,7 @@ define(function (require, exports, module) {
 
         template: 'tpl-launch-suite-control',
         initialize: function(options) {
+            this.context = options.context;
             this.filterModel = options.filterModel;
             this.parentModel = options.parentModel;
             this.launchModel = options.launchModel;
@@ -77,7 +78,7 @@ define(function (require, exports, module) {
             }
         },
         render: function() {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, {context: this.context}));
         },
         activateMultiple: function() {
             $('[data-js-refresh]', this.$el).addClass('disabled');

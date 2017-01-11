@@ -107,9 +107,9 @@ define(function(require, exports, module) {
             },
         },
 
-        initialize: function() {
+        initialize: function(options) {
+            this.context = options.context;
             this.listenTo(this, 'change:name change:isShared change:description change:entities change:selection_parameters', this.onChangeFilterInfo);
-
             this.listenTo(this, 'change:id', this.computedsUrl);
             this.listenTo(appModel, 'change:projectId', this.computedsUrl.bind(this));
             this.listenTo(this, 'change:temp', this.onChangeTemp);
@@ -131,7 +131,7 @@ define(function(require, exports, module) {
                     var data = JSON.parse(this.get('newSelectionParameters'));
                     return data;
                 }
-                var data =  JSON.parse(this.get('selection_parameters'));
+                var data = JSON.parse(this.get('selection_parameters'));
                 return data;
             } catch(err) {
                 return {};
@@ -154,7 +154,8 @@ define(function(require, exports, module) {
             return data;
         },
         computedsUrl: function() {
-            this.set({url: '#' + appModel.get('projectId') + '/launches/' + this.get('id')});
+            var contextUrlPart = (this.context == 'userdebug') ? '/userdebug/' : '/launches/';
+            this.set({url: '#' + appModel.get('projectId') + contextUrlPart + this.get('id')});
         },
         onChangeFilterInfo: function() {
             if(!this.get('temp')) {

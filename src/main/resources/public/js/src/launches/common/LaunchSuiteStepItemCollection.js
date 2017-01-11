@@ -44,7 +44,7 @@ define(function (require, exports, module) {
     var LaunchSuiteStepItemCollection = Backbone.Collection.extend({
         model: LaunchSuiteStepItemModel,
 
-        initialize: function () {
+        initialize: function (options) {
             // this.appendData = lastModelCrumbs.toJSON();
             // this.level = lastModelCrumbs.get('level');
             this.listenTo(this, 'remove', this.onRemove);
@@ -53,6 +53,7 @@ define(function (require, exports, module) {
             this.pagingTotalPages = 1;
             this.pagingSize = this.userStorage.get('launchPageSize') || 50;
             this.noChildFilter = false;
+            this.context = options.context;
         },
         update: function(launchModel, parentModel, optionsURL) {
             this.pagingPage = 1;
@@ -286,7 +287,7 @@ define(function (require, exports, module) {
         },
         load: function(dynamicPge) {  // double load page if content = []
             var self = this;
-            var path = Urls.getGridUrl('launch');
+            var path = Urls.getGridUrl('launch', (this.context == 'userdebug'));
             var params = this.getParamsFilter();
             if(this.launchModel) {
                 path = Urls.getGridUrl('suit');

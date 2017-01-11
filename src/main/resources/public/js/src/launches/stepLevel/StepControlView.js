@@ -79,6 +79,7 @@ define(function (require, exports, module) {
 
         template: 'tpl-launch-step-control',
         initialize: function(options) {
+            this.context = options.context;
             this.filterModel = options.filterModel;
             this.launchModel = options.launchModel;
             this.parentModel = options.parentModel;
@@ -96,7 +97,7 @@ define(function (require, exports, module) {
             });
         },
         render: function() {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, {context: this.context}));
         },
         activateMultiple: function() {
             $('[data-js-refresh], [data-js-history-view]', this.$el).addClass('disabled');

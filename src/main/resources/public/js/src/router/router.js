@@ -61,7 +61,7 @@ define(function(require, exports, module) {
                 self.listenTo(self.user, 'change:auth', self.onChangeUserAuth.bind(self));
             });
             this.route(/^(.*)\/oldlaunches\/all(.*)$/, "openLaunches");
-            this.route(/^(.*)\/userdebug\/all(.*)$/, "openUserDebug");
+            //this.route(/^(.*)\/userdebug\/all(.*)$/, "openUserDebug");
         },
         onChangeUserAuth: function(model, auth){
             if(auth){
@@ -103,6 +103,7 @@ define(function(require, exports, module) {
             ':project/olddashboard/:id': 'openDashboard',
             ':project/olddashboard/:id?*queryString': 'openDashboard',
             ':project/launches/:filterId(/*path)': 'openLaunch',
+            ':project/userdebug/:filterId(/*path)': 'openUserDebug',
 
             ':project/dashboard': 'openNewDashboard',
             ':project/dashboard/:id': 'openNewDashboard',
@@ -137,8 +138,8 @@ define(function(require, exports, module) {
         openLaunches: testRoute.checkTest('insidePage', function(project, path){
             Context.openRouted(project, 'launches', 'all', path);
         }),
-        openUserDebug: testRoute.checkTest('insidePage', function(project, path){
-            Context.openRouted(project, 'userdebug', 'all', path);
+        openUserDebug: testRoute.checkTest('insidePage', function(project){
+            Context.openRouted(project, 'userdebug', arguments);
         }),
         openFilters: testRoute.checkTest('insidePage', function(project, queryString){
             Context.openRouted(project, 'filters', null, queryString);

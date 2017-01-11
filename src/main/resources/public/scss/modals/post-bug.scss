@@ -70,84 +70,86 @@
         }
       }
     }
+    .static-content {
+      padding-top: 30px;
+      padding-bottom: 15px;
 
-    .include_data {
-      margin-bottom: 16px;
-      margin-top: 30px;
-      .rp-form-title {
-        padding-left: 19px;
-      }
-      .rp-form-group {
-        padding-left: 150px;
-
-        .switch-field {
-          width: 99px;
-          float: left;
-          margin-right: 21px;
-
-          &:last-child {
-            margin-right: 0;
-          }
-
-          .rp-control-label {
-            width: 100%;
-            text-align: left;
-          }
-
-          .rp-switcher-big {
-            width: 100%;
-          }
+      .include-data {
+        margin-bottom: 16px;
+        .rp-form-title {
+          padding-left: 19px;
         }
-      }
-    }
-
-    .credentials-section {
-
-      .rp-form-title {
-        padding-left: 19px;
-      }
-
-      .auth-type-selector {
-        margin-top: 6px;
-        margin-bottom: 17px;
-
-        label {
-          text-align: left;
-          padding-left: 68px;
-        }
-
-        .dropdown {
-          display: block;
-          width: 280px;
-          margin-left: 17px;
-        }
-      }
-
-      .credentials {
         .rp-form-group {
-          padding-left: 40px;
+          padding-left: 150px;
 
-          .rp-control-label {
-            width: 150px;
-          }
-          .bts-property {
-            display: inline-block;
-            margin-left: 18px;
-            width: 280px;
-          }
-          textarea {
-            height: 50px;
-          }
+          .switch-field {
+            width: 99px;
+            float: left;
+            margin-right: 21px;
 
-          &.has-error {
+            &:last-child {
+              margin-right: 0;
+            }
 
+            .rp-control-label {
+              width: 100%;
+              text-align: left;
+            }
+
+            .rp-switcher-big {
+              width: 100%;
+            }
           }
         }
       }
-    }
 
-    .credentials-error-block {
-      padding-left: 208px;
+      .credentials-section {
+        .rp-form-title {
+          padding-left: 19px;
+        }
+
+        .auth-type-selector {
+          margin-top: 6px;
+          margin-bottom: 17px;
+
+          label {
+            text-align: left;
+            padding-left: 68px;
+          }
+
+          .dropdown {
+            display: block;
+            width: 280px;
+            margin-left: 17px;
+          }
+        }
+
+        .credentials {
+          .rp-form-group {
+            padding-left: 40px;
+
+            .rp-control-label {
+              width: 150px;
+            }
+            .bts-property {
+              display: inline-block;
+              margin-left: 18px;
+              width: 280px;
+            }
+            textarea {
+              height: 50px;
+            }
+
+            &.has-error {
+
+            }
+          }
+        }
+      }
+
+      .credentials-error-block {
+        padding-left: 208px;
+      }
     }
   }
 

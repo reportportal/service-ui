@@ -128,6 +128,10 @@ define(function (require, exports, module) {
 
     var LaunchCrumbCollection = Backbone.Collection.extend({
         model: LaunchCrumbModel,
+        
+        initialize: function (models, options) {
+            this.context = options.context;
+        },
         updateUrlModels: function() {
             var url = '';
             _.each(this.models, function(model) {
@@ -152,7 +156,7 @@ define(function (require, exports, module) {
                     var currentNewPath = splitId[0];
                     if(i == 0) {
                         level = 'filter';
-                        partUrl = (new FilterModel({id: newPath[0]})).get('url');
+                        partUrl = (new FilterModel({id: newPath[0], context: this.context})).get('url');
                     } else {
                         partUrl += '/' + currentNewPath;
                         if (splitId[1]) {
@@ -271,8 +275,9 @@ define(function (require, exports, module) {
         },
         initialize: function(options) {
             var self = this;
+            this.context = options.context;
             this.lastModel = null;
-            this.collection = new LaunchCrumbCollection();
+            this.collection = new LaunchCrumbCollection([],{context: this.context});
             this.listenTo(this.collection, 'add', this.onAddCrumb);
             this.listenTo(this.collection, 'lost:launch', function(active) {
                 if (active) {

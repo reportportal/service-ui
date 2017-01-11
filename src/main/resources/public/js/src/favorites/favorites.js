@@ -235,6 +235,7 @@ define(function (require, exports, module) {
             config.router.navigate(newFilter.get('url'), {trigger: true});
         },
         destroy: function() {
+            this.$header.empty();
             this.mainBreadcrumbs && this.mainBreadcrumbs.destroy();
             this.undelegateEvents();
             this.stopListening();

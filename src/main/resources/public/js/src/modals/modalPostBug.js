@@ -54,7 +54,7 @@ define(function (require, exports, module) {
         initialize: function (options) {
             this.appModel = new SingletonAppModel();
             this.items = options.items;
-            this.selected = 1;
+            this.isMultiply = (this.items.length > 1);
             var externalSystems = this.appModel.getArr('externalSystem');
             this.systems = _.sortBy(externalSystems, 'project');
             this.settings = config.forSettings;
@@ -68,7 +68,7 @@ define(function (require, exports, module) {
 
         render: function () {
             this.$el.html(Util.templates(this.contentBody, {
-                selected: this.selected,
+                isMultiply: this.isMultiply,
                 source: Util.getExternalSystem(true),
                 systems: this.systems,
                 authorizationTypes: this.settings['bts' + this.systemType].authorizationType,
@@ -390,10 +390,9 @@ define(function (require, exports, module) {
                 // todo find out why you have to configure system with accessKey BUT submit with token???
                 result['token'] = currentHash.accessKey;
             }
-            var includes = this.selected === 1;
-            result['include_logs'] = includes ? this.$includeLogs.is(':checked') : false;
-            result['include_data'] = includes ? this.$includeData.is(':checked') : false;
-            result['include_comments'] = includes ? this.$includeComments.is(':checked') : false;
+            result['include_logs'] = this.isMultiply ? false : this.$includeLogs.is(':checked');
+            result['include_data'] = this.isMultiply ? false : this.$includeData.is(':checked');
+            result['include_comments'] = this.isMultiply ? false : this.$includeComments.is(':checked');
             return result;
         },
 

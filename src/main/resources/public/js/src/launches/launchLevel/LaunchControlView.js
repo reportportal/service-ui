@@ -23,6 +23,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var Localization = require('localization');
     var Service = require('coreService');
+    var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
 
     var config = App.getInstance();
 
@@ -39,12 +40,23 @@ define(function (require, exports, module) {
         template: 'tpl-launch-launch-control',
         initialize: function(options) {
             this.collectionItems = options.collectionItems;
+            this.filterModel = options.filterModel;
+            this.context = options.context;
             this.model = new (Epoxy.Model.extend({
                 defaults: {
                     refreshItems: 0,
                 }
-            }))
+            }));
             this.render();
+
+            if (this.context == 'userdebug') {
+                this.filterEntities = new FilterEntitiesView({
+                    el: $('[data-js-refine-entities]', this.$el),
+                    filterLevel: 'launch',
+                    model: this.filterModel,
+                });
+            }
+
             if(config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.customer) {
                 $('[data-js-multi-action="changemode"]', this.$el).addClass('hide');
             }
@@ -52,7 +64,7 @@ define(function (require, exports, module) {
             this.onResetCollectionItems();
         },
         render: function() {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, {context: this.context}));
         },
         onResetCollectionItems: function() {
             this.model.set({refreshItems: 0});
