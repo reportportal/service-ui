@@ -1862,7 +1862,7 @@ define(function(require, exports, module) {
                         externalSystemData.id = self.systems[self.systemAt].id;
                     }
 
-                    self.appModel.setArr('externalSystem', [externalSystemData]);
+                    self.appModel.setArr('externalSystem', self.systems);
                     self.renderInstance();
                     self.renderMultiSelector();
                     self.$tbsChangeWarning.hide();
