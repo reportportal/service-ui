@@ -22,6 +22,9 @@
   position: relative;
   margin: 0 -15px;
   padding: 80px 15px 0 15px;
+  &.debug-mode {
+    padding-top: 10px;
+  }
   &.load {
     border-top: none;
     .launch-log-preloader {

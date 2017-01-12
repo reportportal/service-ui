@@ -54,6 +54,7 @@ define(function(require, exports, module) {
         },
 
         destroy: function(){
+            this.$header.empty();
             this.body && this.body.destroy();
             this.undelegateEvents();
             this.stopListening();

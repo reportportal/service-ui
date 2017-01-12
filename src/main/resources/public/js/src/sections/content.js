@@ -30,6 +30,7 @@ define(function (require, exports, module) {
     var Favorites = require('favorites');
     var Launch = require('launch');
     var LaunchPage = require('launches/LaunchPage');
+    var LaunchDebugPage = require('launches/LaunchDebugPage');
     var DashboardPage = require('dashboard/DashboardPage');
     var Project = require('project');
     var ProjectInfo = require('projectinfo');
@@ -58,7 +59,6 @@ define(function (require, exports, module) {
             if (this.isAdminPage) {
                 this.$container = $("#dynamic-content", this.$el);
             }
-
             this.setupPageView(options);
             return this;
         },
@@ -122,7 +122,7 @@ define(function (require, exports, module) {
                     break;
                 case "launches":
                 case "userdebug":
-                    return Launch;
+                    return LaunchDebugPage;
                     break;
                 case "newlaunches":
                     return LaunchPage;

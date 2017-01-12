@@ -247,6 +247,10 @@ define(function (require, exports, module) {
             this.addFastFilter('user', this.model.get('owner'));
         },
         addFastFilter: function(filterId, value) {
+            if (this.model.get('mode') === 'DEBUG') {
+                this.filterModel.trigger('add_entity', filterId, value);
+                return;
+            }
             if(this.filterModel.get('id') == 'all') {
                 var launchFilterCollection = new SingletonLaunchFilterCollection();
                 var tempFilterModel = launchFilterCollection.generateTempModel();

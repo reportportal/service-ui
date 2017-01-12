@@ -99,7 +99,7 @@ define(function(require, exports, module) {
                 .done(function(data) {
                     self.reset(_.map(data, function(item){
                         item.isLaunch = true;
-                        item.type = 'launch',
+                        item.type = 'launch';
                         item.entities = JSON.stringify(item.entities);
                         item.selection_parameters = JSON.stringify(item.selection_parameters);
                         return item;
@@ -146,4 +146,4 @@ define(function(require, exports, module) {
     });
 
     return LaunchFilterCollection;
-})
+});

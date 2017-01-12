@@ -110,6 +110,7 @@ define(function (require, exports, module) {
             config.router.navigate(filterModel.get('url'), {trigger: false});
         },
         destroy: function () {
+            this.$el.empty();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
