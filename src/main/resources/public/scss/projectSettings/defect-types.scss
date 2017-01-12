@@ -27,6 +27,10 @@
         width: 90%;
         max-width: 800px;
         margin: 0 auto;
+        @media (max-width: $SCREEN_XS_MAX) {
+            width: 100%;
+            max-width: 100%;
+        }
 
         .form-group {
             margin-bottom: 30px;
@@ -37,6 +41,9 @@
                 margin: 0;
                 overflow: hidden;
                 border-bottom: solid 1px $COLOR--skipped;
+                @media (max-width: $SCREEN_XS_MAX) {
+                    display: none;
+                }
 
                 span {
                     @include setFontStyle(12px, 12px, $COLOR--gray-47, uppercase);
@@ -73,6 +80,9 @@
                     @extend %CLEAR_FIX;
 
                     .dt-body-item {
+                        @media (max-width: $SCREEN_XS_MAX) {
+                            margin: 10px -15px;
+                        }
 
                         &.dt-row-first {
                             margin-bottom: 0px;
@@ -102,6 +112,10 @@
                             font-family: $OpenSansRegular;
                             margin-left: 60px;
                             margin-top: 6px;
+                            @media (max-width: $SCREEN_XS_MAX) {
+                                margin-left: 0px;
+                                margin-top: 0px;
+                            }
                         }
 
                         .shortening-difect-id {
@@ -137,10 +151,23 @@
                                 min-height: 67px;
                             }
                         }
+                        .dt-edit-cell {
+                            @media (max-width: $SCREEN_XS_MAX) {
+                                display: none;
+                            }
+                        }
+                        .dt-diagramm-cell {
+                            @media (max-width: $SCREEN_XS_MAX) {
+                                display: none;
+                            }
+                        }
                     }
 
                     .controll-panel {
                         @extend %CLEAR_FIX;
+                        @media (max-width: $SCREEN_XS_MAX) {
+                            display: none;
+                        }
 
                         margin-bottom: 40px;
                         padding-top: 6px;
@@ -248,6 +275,12 @@
                     height: 30px;
                     background-color: $COLOR--white-four;
                     margin-bottom: 12px;
+                    @media (max-width: $SCREEN_XS_MAX) {
+                        margin: 10px 0;
+                        &:first-child {
+                            margin: 0 0 10px;
+                        }
+                    }
 
                     span {
                         @include setFontStyle(12px, 12px, $COLOR--gray-47, uppercase);
@@ -271,12 +304,11 @@
                 }
 
                 .dt-form-group-footer {
+                    @media (max-width: $SCREEN_XS_MAX) {
+                        display: none;
+                    }
                     a {
                         display: inline-block;
-                    }
-
-                    &.b-defects-reset-color {
-                        text-align: right;
                     }
                 }
             }

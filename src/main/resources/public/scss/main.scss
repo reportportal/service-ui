@@ -102,7 +102,6 @@
 @import 'components/rp-page-settings-notifications';
 @import 'components/rp-page-settings-bts';
 @import 'components/rp-page-settings-general';
-@import 'components/rp-page-settings-defect-types';
 
 @import 'components/rp-page-members';
 @import 'components/rp-page-members-assigned';
@@ -118,7 +117,6 @@
 
 @import 'components/rp-fullscreen';
 
-@import 'components/projectSettings/rp-project-settings';
 @import 'components/admin/rp-admin';
 /*--------------------------------------------------------*/
 @import 'lib/main';
@@ -149,3 +147,5 @@
 @import 'filterSortingParameters/main';
 
 @import 'bts/main';
+
+@import 'projectSettings/main';

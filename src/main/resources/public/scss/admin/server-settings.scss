@@ -24,7 +24,18 @@
     .rp-auth-server-settings {
         padding-top: 10px;
         padding-bottom: 20px;
-
+        position: relative;
+        .mobile-disabling-cover {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            @media (max-width: $SCREEN_XS_MAX) {
+                display: block;
+            }
+        }
         .auth-settings-line {
             border-bottom: 1px solid $COLOR--skipped;
             margin: 30px 15px;
@@ -53,6 +64,20 @@
     .rp-email-settings {
         padding-top: 10px;
         padding-bottom: 20px;
+        position: relative;
+
+        .mobile-disabling-cover {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            @media (max-width: $SCREEN_XS_MAX) {
+                display: block;
+            }
+        }
+
         .tls-enabled {
             position: relative;
             top: -4px;
@@ -123,7 +148,7 @@
             }
         }
     }
-    @media (max-width: $SCREEN_SM_MAX) {
+    @media (max-width: $SCREEN_XS_MAX) {
         .rp-form {
             width: 100%;
             .rp-field {
@@ -135,15 +160,14 @@
                     &.required {
                         position: relative;
                         &:after {
-                            position: inherit;
-                            left: 4px;
-                            top: -2px;
+                            display: none;
                         }
                     }
                     & + input, & + textarea {
                         width: 100%;
                         pointer-events: none;
                         tab-index: -1;
+                        background-color: $COLOR--gray-91;
                     }
                     & + .rp-field-item {
                         width: 100%;
@@ -151,6 +175,11 @@
                 }
                 .delete-item {
                     display: none;
+                }
+                .rp-btn {
+                    pointer-events: none;
+                    tab-index: -1;
+                    background-color: $COLOR--gray-91;
                 }
                 .rp-btn-submit {
                     display: none;
