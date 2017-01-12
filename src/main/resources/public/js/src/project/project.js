@@ -1846,7 +1846,6 @@ define(function(require, exports, module) {
 
             Service[call](externalSystemData)
                 .done(function (response) {
-
                     self.setupValidityState();
                     self.$fieldsWrapper.show();
 
@@ -1856,11 +1855,13 @@ define(function(require, exports, module) {
                         self.systems.push(externalSystemData);
                         self.systemAt = self.systems.length - 1;
                         self.renderMultiSelector();
+                        externalSystemData.id = self.externalId;
                     } else {
                         _.merge(self.systems[self.systemAt], externalSystemData);
                         self.model.discardEdit();
+                        externalSystemData.id = self.systems[self.systemAt].id;
                     }
-                    externalSystemData.id = self.externalId;
+
                     self.appModel.setArr('externalSystem', [externalSystemData]);
                     self.renderInstance();
                     self.renderMultiSelector();
