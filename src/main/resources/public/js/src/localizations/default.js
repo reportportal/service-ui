@@ -1023,6 +1023,7 @@ define(['util'], function () {
             unAssign: "Unassign",
             removeUser: "Remove user from team",
             unassignMember: "Unassign - Remove user from team",
+            settings: "Settings",
             settingsFor: "Settings for",
             name: "Name",
             launchesNames: "Launch Names",
