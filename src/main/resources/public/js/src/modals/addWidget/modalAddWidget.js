@@ -122,6 +122,11 @@ define(function (require, exports, module) {
                 this.viewModel.set('step', 3);
             }
         },
+        onKeySuccess: function () {
+            if ($('[data-js-add-widget]:not(.hide)', this.$el).length) {
+                $('[data-js-add-widget]:not(.hide)', this.$el).focus().trigger('click');
+            }
+        },
         onClickAddWidget: function() {
             if(this.saveWidget.validate()) {
                 this.$el.addClass('load');

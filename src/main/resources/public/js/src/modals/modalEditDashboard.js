@@ -68,6 +68,9 @@ define(function (require, exports, module) {
         render: function(options) {
             this.$el.html(Util.templates(this.template, options));
         },
+        onKeySuccess: function () {
+            $('[data-js-ok]', this.$el).focus().trigger('click');
+        },
         onClickOk: function() {
             $('[data-js-name-input]', this.$el).trigger('validate');
             if ($('.validate-error', this.$el).length) return;
