@@ -27,6 +27,7 @@ define(function(require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
+    var UsersHeaderView = require('adminUsers/UsersHeaderView');
     var UsersTableView = require('adminUsers/UsersTableView');
 
     var config = App.getInstance();
@@ -34,7 +35,6 @@ define(function(require, exports, module) {
     var UsersPageView = Epoxy.View.extend({
 
         template: 'tpl-users-body',
-        templateHeader: 'tpl-users-header',
 
         initialize: function(options){
             this.context = options.context;
@@ -65,10 +65,12 @@ define(function(require, exports, module) {
         },
 
         renderHeader: function(){
-            this.$header.html(Util.templates(this.templateHeader), {});
+            this.header = new UsersHeaderView();
+            this.$header.append(this.header.$el);
         },
 
         destroy: function(){
+            this.header && this.header.destroy();
             this.body && this.body.destroy();
             this.$el.html('');
             this.undelegateEvents();

@@ -27,39 +27,36 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
-    var urls = require('dataUrlResolver');
-    var CallService = require('callService');
+    var adminService = require('adminService');
 
     var config = App.getInstance();
 
-    var EmailServerSettingsModel = Epoxy.Model.extend({
+    var ProjectsModel = Epoxy.Model.extend({
         defaults: {
-            authEnabled: false,
-            //debug: false,
-            host: '',
-            port: '',
-            protocol: config.forAdminSettings.defaultProtocol,
-            sslEnabled: false,
-            starTlsEnabled: false,
-            username: '',
-            password: ''
+            creationDate: 0,
+            entryType: '',
+            launchesQuantity: 0,
+            usersQuantity: 0,
+            projectId: ''
         },
-
-        getEmailServerSettings: function() {
-            var data = {
-                authEnabled: this.get('authEnabled'),
-                starTlsEnabled: this.get('starTlsEnabled'),
-                sslEnabled: this.get('sslEnabled'),
-                host: $.trim(this.get('host')),
-                password: this.get('authEnabled') ? this.get('password'): '',
-                port: $.trim(this.get('port')),
-                protocol: this.get('protocol'),
-                username: this.get('authEnabled') ? this.get('username') : ''
-            };
-            return data;
+        delete: function(){
+            var id = this.get('projectId')
+            return adminService.deleteProject(id)
+                .done(function () {
+                    var curProjects = config.userModel.get('projects');
+                    delete curProjects[id];
+                    config.userModel.set('projects', curProjects);
+                    if(this.collection) {
+                        this.collection.remove(this);
+                    }
+                    Util.ajaxSuccessMessenger("deleteProject");
+                }.bind(this))
+                .fail(function (error) {
+                    Util.ajaxFailMessenger(error, "deleteProject");
+                });
         }
     });
 
-    return EmailServerSettingsModel;
+    return ProjectsModel;
 
 });

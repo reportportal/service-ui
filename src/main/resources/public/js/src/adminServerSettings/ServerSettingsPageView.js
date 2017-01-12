@@ -27,6 +27,7 @@ define(function(require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
+    var ServerSettingsHeaderView = require('adminServerSettings/ServerSettingsHeaderView');
     var ServerSettingsTabsView = require('adminServerSettings/ServerSettingsTabsView');
 
     var config = App.getInstance();
@@ -34,11 +35,11 @@ define(function(require, exports, module) {
     var ServerSettingsPageView = Epoxy.View.extend({
 
         tpl: 'tpl-server-settings-body',
-        headerTpl: 'tpl-server-settings-header',
 
         initialize: function (options) {
             this.$el = options.el;
             this.$header = options.header;
+            this.action = options.action;
         },
 
         render: function () {
@@ -49,7 +50,8 @@ define(function(require, exports, module) {
         },
 
         renderHeader: function(){
-            this.$header.html(Util.templates(this.headerTpl), {});
+            this.header = new ServerSettingsHeaderView();
+            this.$header.append(this.header.$el);
         },
 
         renderBody: function () {
@@ -57,7 +59,9 @@ define(function(require, exports, module) {
                 this.body.destroy();
                 this.body = null;
             }
-            this.body = new ServerSettingsTabsView({});
+            this.body = new ServerSettingsTabsView({
+                action: this.action
+            });
             $('[data-js-settings]', this.$el).append(this.body.$el);
         },
 
@@ -70,7 +74,7 @@ define(function(require, exports, module) {
         },
 
         destroy: function(){
-
+            this.header && this.header.destroy();
             this.body && this.body.destroy();
             this.$el.html('');
             this.undelegateEvents();

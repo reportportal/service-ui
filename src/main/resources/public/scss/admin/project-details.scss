@@ -19,4 +19,11 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.rp-server-settings {}
+.rp-admin-project-details {
+    position: relative;
+    .project-intervals {
+        position: absolute;
+        right: 0;
+        top: -48px;
+    }
+}

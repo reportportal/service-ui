@@ -29,19 +29,13 @@ define(function(require, exports, module) {
     var App = require('app');
     var ServerSettingsTabsView = require('adminServerSettings/ServerSettingsTabsView');
     var EmailSettings = require('adminServerSettings/EmailServerSettingsView');
-    var GitHubSettings = require('adminServerSettings/GitHubServerSettingsView');
+    var AuthSettings = require('adminServerSettings/AuthServerSettingsView');
 
     var config = App.getInstance();
 
-    var ServerSettingsPageView = Epoxy.View.extend({
+    var ServerSettingsTabsView = Epoxy.View.extend({
 
         tpl: 'tpl-server-settings-shell',
-
-        bindings: {
-            '[data-js-users-search]': 'attr: {placeholder: getPlaceHolder}',
-        },
-
-        computeds: {},
 
         events: {
             'click [data-js-tab-action]': 'updateTabs'
@@ -49,7 +43,6 @@ define(function(require, exports, module) {
 
         initialize: function (options) {
             this.tab = options.action || "email";
-            //console.log('tab: ', this.tab);
             this.render();
         },
 
@@ -88,14 +81,12 @@ define(function(require, exports, module) {
             $('[data-js-tab-action="' + this.tab + '"]', this.$el).closest('li').addClass('active');
             currentContent.append(this.tabView.$el);
             currentContent.show();
-            //console.log(this.tab);
-            //console.log('renderTabContent: ', this.tabView.$el);
         },
 
         getTabView: function(tab) {
             switch (tab) {
-                case 'github':
-                    return GitHubSettings;
+                case 'auth':
+                    return AuthSettings;
                     break;
                 default :
                     return EmailSettings;
@@ -105,22 +96,6 @@ define(function(require, exports, module) {
         setupAnchors: function () {
 
         },
-
-        /*emailRender: function () {
-            if (!this.emailSettingsView) {
-                this.emailSettingsView = new EmailServerSettingsView({
-                    container: this.$emailHolder
-                }).render();
-            }
-        },
-
-        githubRender: function () {
-            if (!this.githubSettingsView) {
-                this.githubSettingsView = new GitHubAuthSettingsView({
-                    container: this.$githubHolder
-                }).render();
-            }
-        },*/
 
         destroy: function(){
             this.tabView && this.tabView.destroy();
@@ -132,6 +107,6 @@ define(function(require, exports, module) {
         }
     });
 
-    return ServerSettingsPageView;
+    return ServerSettingsTabsView;
 
 });

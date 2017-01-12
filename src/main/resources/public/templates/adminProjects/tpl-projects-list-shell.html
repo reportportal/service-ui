@@ -1,0 +1,75 @@
+<div class="rp-projects-list-header">
+    <div class="projects-list-search">
+        <div class="form-group projects-search">
+            <input type="text" value="" placeholder="<%= data.text.admin.searchByName %>" name="nameFilter"
+                   id="nameFilter" class="favorites-name-filter rp-input-search" data-js-filter-projects>
+            <i class="material-icons">search</i>
+            <div style="display:none;" class="error-hint help-inline"></div>
+        </div>
+    </div>
+    <div class="sort-projects-list">
+        <label class="form_label sort-label" for="sortDirection">
+            <%= data.text.admin.sortBy %>
+        </label>
+        <div class="rp-btn-group" id="sortDirection" data-js-sort-block>
+            <button type="button" class="rp-btn rp-btn-default-revers active asc" data-type="name">
+                <%= data.text.admin.name %>
+                <i class="material-icons arrow_up">keyboard_arrow_up</i>
+                <i class="material-icons arrow_down">keyboard_arrow_down</i>
+            </button>
+            <button type="button" class="rp-btn rp-btn-default-revers" data-type="creationDate">
+                <%= data.text.admin.creationDate %>
+                <i class="material-icons arrow_up">keyboard_arrow_up</i>
+                <i class="material-icons arrow_down">keyboard_arrow_down</i>
+            </button>
+        </div>
+    </div>
+    <div class="change-projects-view">
+        <ul class="rp-nav rp-nav-right projects-view-switcher" role="group">
+            <li>
+                <button class="projects-view projects-view-tile rp-btn rp-btn-default active"
+                        data-js-view-type="list">
+                    <i class="material-icons">view_module</i>
+                </button>
+            </li>
+            <li>
+                <button class="projects-view projects-view-table rp-btn rp-btn-default"
+                        data-js-view-type="table">
+                    <i class="material-icons">view_list</i>
+                </button>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="rp-projects-list-body">
+    <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+        <li class="<%= (!data.tab || data.tab === 'internal') ? 'active' : '' %>">
+            <a href="#administrate/projects/internal" class="tab" data-js-tab-action="internal">
+                <%= data.text.admin.internalProjects %> <span data-js-internal-qty></span>
+            </a>
+        </li>
+        <li class="<%= (data.tab === 'personal') ? 'active' : '' %>">
+            <a href="#administrate/projects/personal" class="tab" data-js-tab-action="personal">
+                <%= data.text.admin.personalProjects %> <span data-js-personal-qty></span>
+            </a>
+        </li>
+    </ul>
+    <div class="nav-tabs-mobile">
+        <div class="dropdown">
+            <button type="button" class="rp-btn rp-btn-with-dropdown dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                <span class="select-value" data-js-selected-tab></span>
+                <span class="rp-caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#administrate/projects/internal" data-js-tab-action="internal"><%=
+                    data.text.admin.internalProjects %></a></li>
+                <li><a href="#administrate/projects/personal" data-js-tab-action="personal"><%=
+                    data.text.admin.personalProjects %></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane" data-js-tab-content="internal"></div>
+        <div role="tabpanel" class="tab-pane" data-js-tab-content="personal"></div>
+    </div>
+</div>

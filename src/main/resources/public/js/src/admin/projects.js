@@ -627,10 +627,10 @@ define(function (require, exports, module) {
 
         render: function () {
             this.$el.html(Util.templates(this.bodyTpl, {}));
-            this.$header.html(Util.templates(this.headerTpl, {
+            /*this.$header.html(Util.templates(this.headerTpl, {
                 projectId: this.id,
                 interval: this.interval
-            }));
+            }));*/
             this.$content = $("#contentTarget", this.$el);
             this.$content.html(Util.templates(this.tpl));
             this.$interval = $(".btn-group:first", this.$el);

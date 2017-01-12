@@ -30,19 +30,27 @@ define(function (require, exports, module) {
 
     var config = App.getInstance();
 
-    var GitHubAuthSettingsModel = Epoxy.Model.extend({
+    var AuthSettingsModel = Epoxy.Model.extend({
         defaults: {
-            clientId : "clientId",
-            clientSecret : "clientId",
-            organizations : []
+            //enableGuestAccount: false,
+            gitHubAuthEnabled: false,
+            clientId : "",
+            clientSecret : "",
+            organizations : ''
         },
 
-        getOrganizations: function() {
+        getOrganizations: function(){
+            try {
+                return JSON.parse(this.get('organizations'));
+            } catch (err) {
+                return [];
+            }
         },
-        setOrganizations: function(){
+        setOrganizations: function(organizations){
+            this.set({organizations: JSON.stringify(organizations)});
         }
     });
 
-    return GitHubAuthSettingsModel;
+    return AuthSettingsModel;
 
 });

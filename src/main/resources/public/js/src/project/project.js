@@ -78,7 +78,7 @@ define(function(require, exports, module) {
     });
 
     var Header = Components.BaseView.extend({
-        tpl: 'tpl-projects-header',
+        tpl: 'tpl-project-settings-header',
         initialize: function (options) {
             this.$el = options.header;
         },

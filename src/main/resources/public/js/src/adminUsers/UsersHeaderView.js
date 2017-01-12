@@ -27,23 +27,34 @@ define(function(require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
+    var Localization = require('localization');
+    var MainBreadcrumbsComponent = require('components/MainBreadcrumbsComponent');
 
     var config = App.getInstance();
 
-    var GitHubServerSettingsView = Epoxy.View.extend({
+    var UsersHeaderView = Epoxy.View.extend({
 
-        template: 'tpl-github-auth-settings',
+        tpl: 'tpl-users-header',
 
-        initialize: function(options){
+        initialize: function (options) {
+            this.mainBreadcrumbs = new MainBreadcrumbsComponent({
+                data: this.getHeaderData()
+            });
             this.render();
         },
 
-        render: function(){
-            //console.log('render GitHubServerSettingsView');
-            this.$el.html(Util.templates(this.template, {}));
+        render: function () {
+            this.$el.html(Util.templates(this.tpl));
+            $('[data-js-main-breadcrumbs]', this.$el).append(this.mainBreadcrumbs.$el);
+        },
+
+        getHeaderData: function(){
+            var data = [{name: Localization.admin.users, link: '#administrate/users'}];
+            return data;
         },
 
         destroy: function(){
+            this.mainBreadcrumbs && this.mainBreadcrumbs.destroy();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
@@ -52,6 +63,6 @@ define(function(require, exports, module) {
         }
     });
 
-    return GitHubServerSettingsView;
+    return UsersHeaderView;
 
 });
