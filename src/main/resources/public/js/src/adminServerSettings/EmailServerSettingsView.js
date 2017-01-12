@@ -17,9 +17,9 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
@@ -29,6 +29,7 @@ define(function(require, exports, module) {
     var App = require('app');
     var AdminService = require('adminService');
     var EmailServerSettingsModel = require('adminServerSettings/EmailServerSettingsModel');
+    var DropDownComponent = require('components/DropDownComponent');
     var Localization = require('localization');
 
     var config = App.getInstance();
@@ -41,9 +42,9 @@ define(function(require, exports, module) {
             '[data-js-server-enable]': 'checked: enableEmailServer',
             '[data-js-server-config]': 'classes: {hide: not(enableEmailServer)}',
             '[data-js-server-host]': 'value: host',
-            '[data-js-server-protocol-name]': 'text: getProtocol',
+            //'[data-js-server-protocol-name]': 'text: getProtocol',
             '[data-js-server-port]': 'value: port',
-            '[dats-js-server-auth-name]': 'text: getAuth',
+            //'[dats-js-server-auth-name]': 'text: getAuth',
             '[dats-js-server-auth-config]': 'classes: {hide: not(authEnabled)}',
             '[data-js-server-username]': 'value: username',
             '[data-js-server-password]': 'value: password',
@@ -51,29 +52,28 @@ define(function(require, exports, module) {
             '[data-js-server-ssl]': 'checked: sslEnabled'
         },
 
-        computeds: {
-            getProtocol: {
-                deps: ['protocol'],
-                get: function(protocol){
-                    var p = _.find(config.forAdminSettings.protocol, function(prot){ return prot.value === protocol; });
-                    return p.name;
-                }
-            },
-            getAuth: {
-                deps: ['authEnabled'],
-                get: function(authEnabled){
-                    var text = Localization.ui;
-                    return authEnabled ? text.on : text.off;
-                }
-            }
-        },
+        /*computeds: {
+         getProtocol: {
+         deps: ['protocol'],
+         get: function(protocol){
+         var p = _.find(config.forAdminSettings.protocol, function(prot){ return prot.value === protocol; });
+         return p.name;
+         }
+         },
+         getAuth: {
+         deps: ['authEnabled'],
+         get: function(authEnabled){
+         var text = Localization.ui;
+         return authEnabled ? text.on : text.off;
+         }
+         }
+         },*/
 
         events: {
-            'click [data-js-submit-server-settings]': 'submitEmailSettings',
-            'click [data-js-prop-dropdown] a': 'selectProp'
+            'click [data-js-submit-server-settings]': 'submitEmailSettings'
         },
 
-        initialize: function(options){
+        initialize: function (options) {
             this.model = new EmailServerSettingsModel();
             this.getSettings();
         },
@@ -81,7 +81,6 @@ define(function(require, exports, module) {
         getSettings: function (callback) {
             AdminService.getAdminSettings('default')
                 .done(function (data) {
-                    //console.log('getSettings: ', data);
                     this.serverSettings = data;
                     this.model.set(_.extend({enableEmailServer: !!data.serverEmailConfig}, data.serverEmailConfig));
                     this.render(data);
@@ -89,19 +88,19 @@ define(function(require, exports, module) {
                 }.bind(this));
         },
 
-        render: function(data){
-            //console.log('render EmailServerSettingsView: ');
+        render: function (data) {
             this.$el.html(Util.templates(this.template, {
                 emailConfig: data.serverEmailConfig,
                 settings: config.forAdminSettings
             }));
             this.applyBindings();
             this.setupAnchors();
+            this.setupSelectDropDown();
             this.bindValidators();
         },
 
-        setupAnchors: function(){
-            this.$host = $('[data-js-sever-host]', this.$el);
+        setupAnchors: function () {
+            this.$host = $('[data-js-server-host]', this.$el);
             this.$port = $('[data-js-server-port]', this.$el);
             this.$user = $('[data-js-server-user]', this.$el);
             this.$password = $('[data-js-server-password]', this.$el);
@@ -109,24 +108,41 @@ define(function(require, exports, module) {
             this.$errorMessage = $('[data-js-server-connection-message]', this.$el);
         },
 
-        selectProp: function (e) {
-            e.preventDefault();
-            var link = $(e.target),
-                val = (link.data('value')) ? link.data('value') : link.text(),
-                btn = link.closest('.open').find('[data-js-select-prop]'),
-                id = btn.data('id');
+        setupSelectDropDown: function () {
+            var settings = config.forAdminSettings,
+                defaultAuth = [Localization.ui.on, Localization.ui.off];
 
-            if (id === 'authEnabled') {
-                val = (val === 'ON');
-                if(!val){
-                    this.resetAuth();
-                }
+            this.selectProtocol = new DropDownComponent({
+                data: settings.protocol,
+                multiple: false,
+                defaultValue: this.model.get('protocol'),
+            });
+            $('[data-js-server-protocol]', this.$el).html(this.selectProtocol.$el);
+            this.listenTo(this.selectProtocol, 'change', this.onChangeProtocol);
+
+            this.authEnabled = new DropDownComponent({
+                data: [{name: defaultAuth[0], value: defaultAuth[0]}, {name: defaultAuth[1], value: defaultAuth[1]}],
+                multiple: false,
+                defaultValue: this.model.get('authEnabled') ? defaultAuth[0] : defaultAuth[1],
+            });
+            $('[data-js-server-auth]', this.$el).html(this.authEnabled.$el);
+            this.listenTo(this.authEnabled, 'change', this.onChangeAuth);
+        },
+
+        onChangeProtocol: function (val) {
+            this.model.set('protocol', val);
+        },
+
+        onChangeAuth: function (val) {
+            val = (val === 'ON');
+            if (!val) {
+                this.resetAuth();
             }
-            this.model.set(id, val);
+            this.model.set('authEnabled', val);
         },
 
         bindValidators: function () {
-            Util.bootValidator(this.$host, [
+            Util.hintValidator(this.$host, [
                 {
                     validator: 'required'
                 },
@@ -136,7 +152,7 @@ define(function(require, exports, module) {
                     pattern: config.patterns.hostandIP
                 }
             ]);
-            Util.bootValidator(this.$port, [
+            Util.hintValidator(this.$port, [
                 {
                     validator: 'required'
                 },
@@ -146,44 +162,55 @@ define(function(require, exports, module) {
                     type: 'host',
                     max: 65535
                 }
-            ], {
-                userFilterDelay: 100
-            });
+            ]);
         },
 
-        resetAuth: function(){
+        resetAuth: function () {
             this.model.set('username', '');
             this.$user.val('');
             this.model.set('password', '');
             this.$password.val('');
         },
 
-        submitEmailSettings: function () {
-            var noErrors = true;
-            var externalSystemData = this.model.getEmailServerSettings();
+        deleteEmailSettings: function(){
+            AdminService.deleteEmailSettings('default')
+                .done(function(data){
+                    this.updateModel(this.model.defaults);
+                    Util.ajaxSuccessMessenger('deleteOAuthSettings');
+                }.bind(this))
+                .fail(function(error){
+                    Util.ajaxFailMessenger(error, 'deleteOAuthSettings');
+                });
+        },
 
-            $('.has-error').each(function () {
-                var $this = $(this);
-                var formControl = $this.find('.form-control');
-
-                if (formControl.attr('id') == 'port' || formControl.attr('id') == 'host') {
-                    noErrors = false;
-                }
-            });
-
-            if (noErrors) {
-                this.toggleErrorMessage('hide');
-                AdminService.setAdminSettings(externalSystemData, 'default')
-                    .done(function (response) {
-                        Util.ajaxSuccessMessenger('setAdminSettings');
-                    })
-                    .fail(function (error) {
-                        this.toggleErrorMessage('show', error);
-                    }.bind(this));
+        submitEmailSettings: function(e){
+            e.preventDefault();
+            var enableEmailServer = this.model.get('enableEmailServer');
+            if(!enableEmailServer){
+                this.deleteEmailSettings();
+            }
+            else {
+                this.updateEmailSettings();
             }
         },
 
-        toggleErrorMessage: function(action, response) {
+        updateEmailSettings: function () {
+            this.$host.trigger('validate');
+            this.$port.trigger('validate');
+            if ($('.validate-error', this.$el).length) return;
+
+            var externalSystemData = this.model.getEmailServerSettings();
+            this.toggleErrorMessage('hide');
+            AdminService.setAdminSettings(externalSystemData, 'default')
+                .done(function (response) {
+                    Util.ajaxSuccessMessenger('setAdminSettings');
+                })
+                .fail(function (error) {
+                    this.toggleErrorMessage('show', error);
+                }.bind(this));
+        },
+
+        toggleErrorMessage: function (action, response) {
             var message = Localization.failMessages.setAdminSettings,
                 error = '';
             if (action == 'show') {
@@ -205,7 +232,9 @@ define(function(require, exports, module) {
             }
         },
 
-        destroy: function(){
+        destroy: function () {
+            this.selectProtocol && this.selectProtocol.destroy();
+            this.authEnabled && this.authEnabled.destroy();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();

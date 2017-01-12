@@ -75,8 +75,24 @@ define(function (require, exports, module) {
         return call('GET', Urls.getAdminSettings(data));
     };
 
+    var deleteEmailSettings = function (data) {
+        return call('DELETE', Urls.getAdminSettings(data));
+    };
+
     var setAdminSettings = function (data, id) {
         return call('PUT', Urls.setAdminSettings(id), data);
+    };
+
+    var getAuthSettings = function () {
+        return call('GET', Urls.adminAuthSettings());
+    };
+
+    var setAuthSettings = function (data) {
+        return call('PUT', Urls.adminAuthSettings(), data);
+    };
+
+    var deleteAuthSettings = function(data){
+        return call('DELETE', Urls.adminAuthSettings());
     };
 
     var loadProjectInfo = function (id, value) {
@@ -111,10 +127,14 @@ define(function (require, exports, module) {
         deleteProject: deleteProject,
         getAdminSettings: getAdminSettings,
         setAdminSettings: setAdminSettings,
+        deleteEmailSettings: deleteEmailSettings,
         getProjectNames: getProjectNames,
         getAllUser: getAllUser,
         getSearchUser: getSearchUser,
         loadProjectInfo: loadProjectInfo,
-        loadProjectDetailsWidgets: loadProjectDetailsWidgets
+        loadProjectDetailsWidgets: loadProjectDetailsWidgets,
+        getAuthSettings: getAuthSettings,
+        setAuthSettings: setAuthSettings,
+        deleteAuthSettings: deleteAuthSettings,
     }
 });

@@ -102,13 +102,23 @@
 
 .rp-form {
   width: 415px;
-  & > label, & > .rp-field {
+  & > label, .rp-field {
     position: relative;
     width: 100%;
     font-weight: normal;
     display: inline-block;
     margin-bottom: 15px;
     & > span {
+      &.required {
+        position: relative;
+        &:after {
+          content: '*';
+          position: absolute;
+          right: 10px;
+          top: -4px;
+          color: $COLOR--pale-red;
+        }
+      }
       &:first-child {
         display: block;
         line-height: 30px;

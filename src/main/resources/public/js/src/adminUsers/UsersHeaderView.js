@@ -27,65 +27,42 @@ define(function(require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
-    var ServerSettingsHeaderView = require('adminServerSettings/ServerSettingsHeaderView');
-    var ServerSettingsTabsView = require('adminServerSettings/ServerSettingsTabsView');
+    var Localization = require('localization');
+    var MainBreadcrumbsComponent = require('components/MainBreadcrumbsComponent');
 
     var config = App.getInstance();
 
-    var ServerSettingsPageView = Epoxy.View.extend({
+    var UsersHeaderView = Epoxy.View.extend({
 
-        tpl: 'tpl-server-settings-body',
+        tpl: 'tpl-users-header',
 
         initialize: function (options) {
-            this.$el = options.el;
-            this.$header = options.header;
-            this.action = options.action;
+            this.mainBreadcrumbs = new MainBreadcrumbsComponent({
+                data: this.getHeaderData()
+            });
+            this.render();
         },
 
         render: function () {
             this.$el.html(Util.templates(this.tpl));
-            this.renderHeader();
-            this.renderBody();
-            return this;
+            $('[data-js-main-breadcrumbs]', this.$el).append(this.mainBreadcrumbs.$el);
         },
 
-        renderHeader: function(){
-            this.header = new ServerSettingsHeaderView();
-            this.$header.append(this.header.$el);
-        },
-
-        renderBody: function () {
-            if (this.body) {
-                this.body.destroy();
-                this.body = null;
-            }
-            this.body = new ServerSettingsTabsView({
-                action: this.action
-            });
-            $('[data-js-settings]', this.$el).append(this.body.$el);
-        },
-
-        update: function () {
-            if (this.body) {
-                this.body.destroy();
-                this.body = null;
-            }
-            this.renderBody();
+        getHeaderData: function(){
+            var data = [{name: Localization.admin.users, link: '#administrate/users'}];
+            return data;
         },
 
         destroy: function(){
-            this.header && this.header.destroy();
-            this.body && this.body.destroy();
-            this.$el.html('');
+            this.mainBreadcrumbs && this.mainBreadcrumbs.destroy();
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
+            this.remove();
             delete this;
         }
     });
 
-    return {
-        ContentView: ServerSettingsPageView
-    };
+    return UsersHeaderView;
 
 });

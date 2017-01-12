@@ -1,135 +1,50 @@
-<div class="form-horizontal email-settings rp-auth-server-settings" id="auth-settings">
-    <form id="externalAuthFrom" name="externalAuthFrom">
-        <div class="rp-form-group clearfix">
-            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col" for="enableGuestAccount">
-                <%= data.text.admin.enableGuestAccount %>
+<div class="rp-auth-server-settings">
+    <form class="rp-form">
+        <div class="rp-field">
+            <span><%= data.text.admin.activateGitHubAuth %></span>
+            <label class="rp-switcher-big">
+                <span class="turn-on">ON</span>
+                <span class="turn-off">OFF</span>
+                <input type="checkbox" data-js-github-enable>
+                <div class="slider"></div>
             </label>
-            <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                <label class="rp-switcher-big">
-                    <span class="turn-on"><%= data.text.ui.on %></span>
-                    <span class="turn-off"><%= data.text.ui.off %></span>
-                    <input id="enableGuestAccount" type="checkbox" data-js-guest-enable>
-                    <div class="slider"></div>
-                </label>
-            </div>
-            <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
         </div>
-        <div class="auth-settings-line"></div>
-        <div class="rp-form-group clearfix">
-            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col" for="gitHubAuthEnabled">
-                <%= data.text.admin.activateGitHubAuth %>
+        <div data-js-github-config>
+            <label class="rp-field">
+                <span class="required"><%= data.text.admin.gitHubClientId %></span>
+                <input type="text" class="rp-input" data-js-client-id>
+                <span class="validate-hint"></span>
             </label>
-            <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                <label class="rp-switcher-big">
-                    <span class="turn-on"><%= data.text.ui.on %></span>
-                    <span class="turn-off"><%= data.text.ui.off %></span>
-                    <input id="gitHubAuthEnabled" type="checkbox" data-js-github-enable>
-                    <div class="slider"></div>
-                </label>
-            </div>
-            <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
-        </div>
-        <div data-js-github-config class="hide">
-            <div class="rp-form-group clearfix">
-                <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col obligatory-field"
-                       for="clientId">
-                    <%= data.text.admin.gitHubClientId %>
-                </label>
-                <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                    <input type="text" class="rp-input-default rp-width-100 form-control" id="clientId" name="clientId"
-                           value="<%- '' %>">
-                    <div class="error-bottom">
-                        <div class="help-inline"></div>
-                    </div>
-                </div>
-                <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
-            </div>
-            <div class="rp-form-group clearfix">
-                <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col obligatory-field"
-                       for="clientSecret">
-                    <%= data.text.admin.gitHubClientSecret %>
-                </label>
-                <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                    <input type="text" class="rp-input-default rp-width-100 form-control" id="clientSecret"
-                           name="clientSecret"
-                           value="<%- '' %>">
-                    <div class="error-bottom">
-                        <div class="help-inline"></div>
-                    </div>
-                </div>
-                <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
-            </div>
-            <% if(_.isEmpty(data.organizations)){ %>
-            <div class="rp-form-group clearfix">
-                <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col obligatory-field"
-                       for="emptyOrg">
-                    <%= data.text.admin.gitHubOrgName %>
-                </label>
-                <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                    <input type="text" class="rp-input-default rp-width-100 form-control" id="emptyOrg" name="emptyOrg"
-                           value="<%- data.emailConfig || '' %>"/>
-                    <div class="error-bottom">
-                        <div class="help-inline"></div>
-                    </div>
-                </div>
-                <div class="col-md-5 rp-custom-col hidden-xs hidden-sm"></div>
-            </div>
-            <% } else { %>
-            <% _.each(data.organizations, function(org){ %>
-            <div class="rp-form-group clearfix">
-                <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col">
-                    <%= data.text.admin.gitHubOrgName %>
-                </label>
-                <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                    <input data-js-org-name type="text" disabled class="rp-input-default rp-width-100 form-control"
-                           value="<%- org %>">
-                    <div class="error-bottom">
-                        <div class="help-inline"></div>
-                    </div>
-                </div>
-                <div class="col-md-5 rp-custom-col hidden-xs hidden-sm">
-                    <a href="#" class="delete-item" data-js-remove-org>
+            <label class="rp-field">
+                <span class="required"><%= data.text.admin.gitHubClientSecret %></span>
+                <input type="text" class="rp-input" data-js-client-secret>
+                <span class="validate-hint"></span>
+            </label>
+            <div data-js-onganizations></div>
+            <div data-js-add-org-form class="add-new-org-form">
+                <label class="rp-field" data-js-add-org-row>
+                    <span class="required"><%= data.text.admin.gitHubOrgName %></span>
+                    <input type="text" class="rp-input" data-js-new-org>
+                    <span class="validate-hint"></span>
+                    <a href="delete-organization" class="delete-item" data-js-remove-add-new-org>
                         <i class="rp-icons rp-icons-cancel"></i>
                     </a>
-                </div>
-            </div>
-            <% }); %>
-            <% } %>
-            <div class="rp-form-group clearfix" data-js-add-org-field style="display: none">
-                <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col obligatory-field" for="newOrg">
-                    <%= data.text.admin.gitHubOrgName %>
                 </label>
-                <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                    <input type="text" class="rp-input-default rp-width-100 form-control" id="newOrg" value="">
-                    <div class="error-bottom">
-                        <div class="help-inline"></div>
-                    </div>
-                </div>
-                <div class="col-md-5 rp-custom-col hidden-xs hidden-sm">
-                    <a href="#" class="delete-item" data-js-remove-add-new-org>
-                        <i class="rp-icons rp-icons-cancel"></i>
-                    </a>
-                </div>
             </div>
-            <div class="rp-form-group clearfix">
-                <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col"></label>
-                <div class="col-md-3 col-sm-9 rp-custom-col">
+            <div class="add-new-org-btn">
+                <label class="rp-field">
+                    <span></span>
                     <button type="button" class="rp-btn rp-btn-default rp-button-with-icon" data-js-add-org-btn>
                         <i class="material-icons">add</i>
                         <span class="rp-btn-val"><%= data.text.admin.addGitHubOrg %></span>
                     </button>
-                </div>
-                <div class="col-md-6 hidden-sm hidden-xs rp-custom-col"></div>
+                </label>
             </div>
         </div>
-        <div class="rp-form-group clearfix">
-            <div class="col-md-3 hidden-sm hidden-xs rp-custom-col"></div>
-            <div class="col-md-4 col-sm-12 col-xs-12 rp-custom-col button-panel clearfix">
-                <button type="submit" class="rp-btn rp-btn-submit float-right" data-js-submit-github-settings>
-                    <%= data.text.ui.submit %>
-                </button>
-            </div>
-            <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+        <div class="rp-field">
+            <button type="button" class="rp-btn rp-btn-submit" data-js-submit-auth-settings>
+                <%= data.text.ui.submit %>
+            </button>
         </div>
     </form>
 </div>

@@ -17,9 +17,9 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
@@ -27,39 +27,30 @@ define(function(require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
-    var AuthServerSettingsModel = require('adminServerSettings/AuthServerSettingsModel');
 
     var config = App.getInstance();
 
-    var AuthServerSettingsView = Epoxy.View.extend({
-
-        bindings: {
-            '[data-js-guest-enable]': 'checked: enableGuestAccount',
-            '[data-js-github-enable]': 'checked: gitHubAuthEnabled',
-            '[data-js-github-config]': 'classes: {hide: not(gitHubAuthEnabled)}'
+    var AuthSettingsModel = Epoxy.Model.extend({
+        defaults: {
+            //enableGuestAccount: false,
+            gitHubAuthEnabled: false,
+            clientId : "",
+            clientSecret : "",
+            organizations : ''
         },
 
-        template: 'tpl-auth-server-settings',
-
-        initialize: function(options){
-            this.model = new AuthServerSettingsModel();
-            this.render();
+        getOrganizations: function(){
+            try {
+                return JSON.parse(this.get('organizations'));
+            } catch (err) {
+                return [];
+            }
         },
-
-        render: function(){
-            //console.log('render GitHubServerSettingsView');
-            this.$el.html(Util.templates(this.template, {}));
-        },
-
-        destroy: function(){
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            this.remove();
-            delete this;
+        setOrganizations: function(organizations){
+            this.set({organizations: JSON.stringify(organizations)});
         }
     });
 
-    return AuthServerSettingsView;
+    return AuthSettingsModel;
 
 });

@@ -84,15 +84,19 @@ define(function(require, exports, module) {
             'documentation/:id': 'openDocumentation',
             'user-profile': 'userProfile',
             'registration?*queryString': 'registerUser',
-            'administrate/project-details/:id?*queryString': 'openAdminPageDetails',
-            'administrate/project-details/:id': 'openAdminPageDetails',
-            'administrate/:page/:id/:action?*queryString': 'openAdminResource',
-            'administrate/:page/:id/:action': 'openAdminResource',
-            'administrate/:page/:id/:action/:userAction': 'openAdminUsersAction',
+            'administrate/project-details/:id?*queryString': 'openAdminProjectDetails',
+            'administrate/project-details/:id': 'openAdminProjectDetails',
+            'administrate/project-details/:id/:action': 'openAdminProjectDetails',
+            //'administrate/:page/:id?*queryString': 'openAdminResource',
+            //'administrate/:page/:id': 'openAdminResource',
+            //'administrate/:page/:id/:action?*queryString': 'openAdminResource',
+            //'administrate/:page/:id/:action': 'openAdminResource',
+            //'administrate/:page/:id/:action/:userAction': 'openAdminUsersAction',
             'administrate': 'openAdminPage',
             'administrate/:page': 'openAdminPage',
             'administrate/:page?*queryString': 'openAdminPage',
             'administrate/:page/:action': 'openAdminPageAction',
+            'administrate/:page/:action?*queryString': 'openAdminPageAction',
             ':project/filters?*queryString': 'openFilters',
             ':project/filters': 'openFilters',
             ':project/members': 'openMembersDefault',
@@ -172,8 +176,8 @@ define(function(require, exports, module) {
             page = page || 'projects';
             Context.openAdmin(page, null, null, queryString);
         }),
-        openAdminPageAction: testRoute.checkTest('insidePage', function (page, action) {
-            Context.openAdmin(page, undefined, action);
+        openAdminPageAction: testRoute.checkTest('insidePage', function (page, action, queryString) {
+            Context.openAdmin(page, undefined, action, queryString);
         }),
         openAdminResource: testRoute.checkTest('insidePage', function (page, id, action, query) {
             Context.openAdmin(page, id, action, query);
@@ -181,8 +185,8 @@ define(function(require, exports, module) {
         openAdminUsersAction: testRoute.checkTest('insidePage', function(page, id, action, query){
             Context.openAdmin(page, id, action, query);
         }),
-        openAdminPageDetails: testRoute.checkTest('insidePage', function (id, queryString) {
-            Context.openAdmin("project-details", id, null, queryString);
+        openAdminProjectDetails: testRoute.checkTest('insidePage', function (id, action, queryString) {
+            Context.openAdmin("project-details", id, action, queryString);
         }),
     });
 

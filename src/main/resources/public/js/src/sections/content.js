@@ -38,7 +38,7 @@ define(function (require, exports, module) {
     var Profile = require('userProfile/UserProfilePage');
 
     // Administrate modules
-    var Projects = require('projects');
+    var Projects = require('adminProjects/ProjectsPageView');
     var Users = require('adminUsers/UsersPageView');
     var Settings = require('adminServerSettings/ServerSettingsPageView');
 
@@ -147,22 +147,10 @@ define(function (require, exports, module) {
         getViewForAdministratePage: function (options) {
             if (options.page === 'users') {
                 return Users.ContentView;
-            } else if (options.page === 'project-details') {
-                return Projects.ProjectDetails;
             } else if (options.page === 'settings') {
                 return Settings.ContentView;
             } else {
-                var key = options.page + '-' + options.action;
-                switch (key) {
-                    case "projects-add":
-                    case "projects-settings":
-                    case "projects-members":
-                        return Projects.Project;
-                        break;
-                    default:
-                        return Projects.List;
-                        break;
-                }
+                return Projects.ContentView;
             }
         },
 

@@ -42,6 +42,7 @@ define(function(require, exports, module) {
     var MembersTableView = Epoxy.View.extend({
         tpl: 'tpl-project-members-shell',
         emptyMembersTpl: 'tpl-project-members-empty',
+        className: 'rp-project-members',
 
         bindings: {
             '[data-js-members-search]': 'attr: {placeholder: getPlaceHolder}',
