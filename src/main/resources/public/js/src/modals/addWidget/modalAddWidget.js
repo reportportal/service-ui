@@ -123,8 +123,16 @@ define(function (require, exports, module) {
             }
         },
         onKeySuccess: function () {
-            if ($('[data-js-add-widget]:not(.hide)', this.$el).length) {
-                $('[data-js-add-widget]:not(.hide)', this.$el).focus().trigger('click');
+            switch (1) {
+                case ($('[data-js-add-widget]:not(.hide)', this.$el).length):
+                    $('[data-js-add-widget]:not(.hide)', this.$el).focus().trigger('click');
+                    break;
+                case ($('[data-js-next-second-step]:not(.hide)', this.$el).length):
+                    $('[data-js-next-second-step]:not(.hide)', this.$el).focus().trigger('click');
+                    break;
+                case ($('[data-js-next-last-step]:not(.hide)', this.$el).length):
+                    $('[data-js-next-last-step]:not(.hide)', this.$el).focus().trigger('click');
+                    break;
             }
         },
         onClickAddWidget: function() {
