@@ -24,6 +24,9 @@
     margin: 0 -15px;
     border-bottom: 1px solid $COLOR--gray-91;
     @extend %CLEAR_FIX;
+    @media (max-width: $SCREEN_SM_MAX) {
+        display: none;
+    }
 
     .projects-list-search {
         width: 25%;
@@ -117,6 +120,19 @@
 .rp-projects-list-body {
     padding: 0;
 
+    .nav-tabs-mobile {
+        display: none;
+        padding: 15px 0;
+    }
+    @media (max-width: $SCREEN_SM_MAX) {
+        .nav-tabs.nav-tabs-custom {
+            display: none;
+        }
+        .nav-tabs-mobile {
+            display: block;
+        }
+    }
+
     .tab-content {
         margin: 0 -15px;
     }
@@ -143,14 +159,15 @@
                 max-width: 100%;
                 position: relative;
                 &.nameLabel {
-                    padding-right: 40px;
+                    padding-right: 34px;
                     .new-label {
                         position: absolute;
-                        top: 1px;
+                        top: 0;
                         right: 0;
-                        padding: 0.3em .6em .2em;
-                        font-size: 75%;
-                        font-weight: bold;
+                        padding: 1px 5px 3px;
+                        font: bold 10px $OpenSansRegular;
+                        text-transform: lowercase;
+                        border-radius: 100px;
                         line-height: 1;
                         color: $COLOR--white-default;
                         text-align: center;

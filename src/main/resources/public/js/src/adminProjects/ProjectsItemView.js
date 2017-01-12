@@ -84,7 +84,7 @@ define(function(require, exports, module) {
             getProjectDetailsUrl: {
                 deps: ['projectId'],
                 get: function(projectId){
-                    return '#administrate/projects/' + projectId;
+                    return '#administrate/project-details/' + projectId;
                 }
             },
             openProjectUrl: {
@@ -96,13 +96,13 @@ define(function(require, exports, module) {
             getSettingsUrl: {
                 deps: ['projectId'],
                 get: function(projectId){
-                    return '#administrate/projects/' + projectId + '/settings';
+                    return '#administrate/project-details/' + projectId + '/settings';
                 }
             },
             getMembersUrl: {
                 deps: ['projectId'],
                 get: function(projectId){
-                    return '#administrate/projects/' + projectId + '/members';
+                    return '#administrate/project-details/' + projectId + '/members';
                 }
             },
             isNew: {

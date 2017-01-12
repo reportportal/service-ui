@@ -38,25 +38,12 @@ define(function(require, exports, module) {
 
         bindings: {
             '[data-js-project-buttons]': 'classes: {hide: showProjectBtns}',
-            '[data-js-project-status-intervals]': 'classes: {hide: showIntervalBtns}, updateIntervalBtns: queryString',
             '[data-js-add-project-button]': 'classes: {hide: showAddProject}',
             '[data-js-project-settings]': 'classes: {disabled: showSettingsBtn}, attr: {href: getSettingsLink}',
             '[data-js-project-members]': 'classes: {disabled: showMembersBtn}, attr: {href: getMembersLink}',
         },
 
         computeds: {
-            showIntervalBtns: {
-                deps: ['id', 'action'],
-                get: function(id, action){
-                    if(id){
-                        if(action){
-                            return true;
-                        }
-                        return false;
-                    }
-                    return true;
-                }
-            },
             showProjectBtns: {
                 deps: ['id', 'action'],
                 get: function(id, action){
@@ -84,28 +71,13 @@ define(function(require, exports, module) {
             getSettingsLink: {
                 deps: ['id'],
                 get: function(id){
-                    return '#administrate/projects/' + id + '/settings';
+                    return '#administrate/project-details/' + id + '/settings';
                 }
             },
             getMembersLink: {
                 deps: ['id'],
                 get: function(id){
-                    return '#administrate/projects/' + id + '/members';
-                }
-            }
-        },
-
-        bindingHandlers: {
-            updateIntervalBtns: {
-                set: function($el, value) {
-                    var interval = value ? +value.split('=')[1] : 3,
-                        id = this.view.model.get('id'),
-                        bns = $('[data-js-project-interval]', $el);
-                    _.each(bns, function(b){
-                        $(b).removeClass('disabled');
-                        $(b).attr('href', '#administrate/projects/' + id + '?interval=' + $(b).data('js-project-interval'));
-                    });
-                    $('[data-js-project-interval="'+interval+'"]', $el).addClass('disabled');
+                    return '#administrate/project-details/' + id + '/members';
                 }
             }
         },
@@ -138,11 +110,11 @@ define(function(require, exports, module) {
                 id = this.model.get('id'),
                 action = this.model.get('action'),
                 url = '#administrate/' + page,
-                data = [{name: Localization.admin.titleAllProjects, link: url}];
+                data = [{name: Localization.admin.titleAllProjects, link:  '#administrate/projects',}];
             if(this.id){
                 url +='/' + id
                 data.push({name: id, link: url});
-                if(action && (action !== 'project-details')){
+                if(action){
                     url +='/' +action;
                     data.push({name: Localization.admin['title' + action.capitalize()], link: url});
                 }
@@ -151,12 +123,8 @@ define(function(require, exports, module) {
         },
 
         addProject: function(e){
-            console.log('addProject');
             e.preventDefault();
-            var modal = new ModalAddProject({
-                //type: 'users'
-            });
-            //this.listenToOnce(modal, 'add:user', this.updateUsers);
+            var modal = new ModalAddProject();
             modal.show();
         },
 

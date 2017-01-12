@@ -31,5 +31,14 @@
         .project-buttons {
             text-align: right;
         }
+
+    }
+    @media (max-width: $SCREEN_SM_MAX) {
+        .admin-breadcrumbs {
+            width: 100%;
+        }
+        .admin-header-menu {
+            display: none;
+        }
     }
 }

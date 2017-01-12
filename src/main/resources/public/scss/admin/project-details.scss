@@ -19,8 +19,11 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'header';
-@import 'all-users';
-@import 'server-settings';
-@import 'projects-list';
-@import 'project-details';
+.rp-admin-project-details {
+    position: relative;
+    .project-intervals {
+        position: absolute;
+        right: 0;
+        top: -48px;
+    }
+}

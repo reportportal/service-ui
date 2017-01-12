@@ -28,6 +28,7 @@ define(function(require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var ProjectsList = require('adminProjects/ProjectsListView');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -45,7 +46,6 @@ define(function(require, exports, module) {
 
         initialize: function (options) {
             this.tab = options.action;
-            console.log('tab: ', this.tab);
             this.model = new Epoxy.Model({
                 search: config.defaultProjectsSettings.search,
                 sort: config.defaultProjectsSettings.sorting,
@@ -63,9 +63,6 @@ define(function(require, exports, module) {
 
         update: function(tab, silent){
             this.tab = tab || "internal";
-            if (!silent) {
-                $('[data-action=' + this.tab + ']', this.$el).tab('show');
-            }
             this.renderTabContent();
         },
 
@@ -83,9 +80,14 @@ define(function(require, exports, module) {
                 this.tabView.destroy();
                 this.clearSearch();
             }
-            console.log('renderTabContent');
             this.tabView = this.getProjectsView();
-            $('[data-js-'+this.tab+'-content]', this.$el).append(this.tabView.$el)
+            var currentContent = $('[data-js-tab-content="' + this.tab + '"]', this.$el);
+            $('[data-js-tab-content]', this.$el).hide();
+            $('[data-js-selected-tab]', this.$el).text(this.tab === 'internal' ? Localization.admin.internalProjects : Localization.admin.personalProjects);
+            $('[data-js-tab-action]', this.$el).closest('li.active').removeClass('active');
+            $('[data-js-tab-action="' + this.tab + '"]', this.$el).closest('li').addClass('active');
+            currentContent.append(this.tabView.$el);
+            currentContent.show();
         },
 
         fillContent: function (options) {
@@ -106,7 +108,6 @@ define(function(require, exports, module) {
         },
 
         getProjectsView: function () {
-            console.log('getProjectsView: ', this.tab);
             return new ProjectsList({
                 projectsType: this.tab,
                 total: $('[data-js-'+this.tab+'-qty]', this.$el),

@@ -30,7 +30,7 @@ define(function(require, exports, module) {
     var Localization = require('localization');
     var MembersTableView = require('projectMembers/MembersTableView');
     var Project = require('project');
-    var ProjectsOld = require('projects');
+    var ProjectsDetailsView = require('adminProjects/ProjectsDetailsView');
     var ProjectsTabsView = require('adminProjects/ProjectsTabsView');
     var AdminService = require('adminService');
     var ProjectsHeaderView = require('adminProjects/ProjectsHeaderView');
@@ -48,7 +48,6 @@ define(function(require, exports, module) {
             this.id = options.id;
             this.action = options.action;
             this.queryString = options.queryString;
-            //console.log('ProjectsPageView: ', options);
         },
 
         events: {
@@ -75,7 +74,7 @@ define(function(require, exports, module) {
 
         renderBody: function () {
             this.destroyBody();
-            if(this.id){
+            if(this.page == 'project-details'){
                 AdminService.getProjectInfo()
                     .done(function (data) {
                         config.project = data;
@@ -91,6 +90,7 @@ define(function(require, exports, module) {
         },
 
         renderProjectsList: function(){
+            console.log('renderProjectsList: ', this.action)
             this.body = new ProjectsTabsView({
                 action: this.action || 'internal'
             });
@@ -98,16 +98,16 @@ define(function(require, exports, module) {
         },
 
         renderProject: function(){
-            var key = this.page + '-' + this.action;
+            var key = this.action;
             switch (key) {
-                case "projects-settings":
+                case "settings":
                     this.body = new Project.SettingsView({
                         holder: $('[data-js-admin-projects]', this.$el),
                         projectId: this.id,
                         adminPage: true
                     }).render();
                     break;
-                case "projects-members":
+                case "members":
                     this.body = new MembersTableView({
                         projectId: this.id,
                         grandAdmin: true
@@ -115,11 +115,12 @@ define(function(require, exports, module) {
                     $('[data-js-admin-projects]', this.$el).append(this.body.$el);
                     break;
                 default:
-                    this.body = new ProjectsOld.ProjectDetails({
+                    this.body = new ProjectsDetailsView({
                         contextName: this.page,
                         context: {},
                         el: $('[data-js-admin-projects]', this.$el),
-                        projectId: this.id,
+                        id: this.id,
+                        queryString: this.queryString,
                         adminPage: true
                     }).render();
                     break;

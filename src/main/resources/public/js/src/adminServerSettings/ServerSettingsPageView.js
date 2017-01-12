@@ -39,7 +39,7 @@ define(function(require, exports, module) {
         initialize: function (options) {
             this.$el = options.el;
             this.$header = options.header;
-            this.action = options.id;
+            this.action = options.action;
         },
 
         render: function () {
