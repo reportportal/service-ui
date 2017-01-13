@@ -123,15 +123,17 @@ define(function (require, exports, module) {
             }
         },
         onKeySuccess: function () {
-            switch (1) {
-                case ($('[data-js-add-widget]:not(.hide)', this.$el).length):
-                    $('[data-js-add-widget]:not(.hide)', this.$el).focus().trigger('click');
-                    break;
-                case ($('[data-js-next-second-step]:not(.hide)', this.$el).length):
+            switch (this.viewModel.get('step')) {
+                case 1:
                     $('[data-js-next-second-step]:not(.hide)', this.$el).focus().trigger('click');
                     break;
-                case ($('[data-js-next-last-step]:not(.hide)', this.$el).length):
-                    $('[data-js-next-last-step]:not(.hide)', this.$el).focus().trigger('click');
+                case 2:
+                    if (($('[data-js-next-last-step]:not(.hide)', this.$el).length)) {
+                        $('[data-js-next-last-step]:not(.hide)', this.$el).focus().trigger('click');
+                    }
+                    break;
+                case 3:
+                    $('[data-js-add-widget]:not(.hide)', this.$el).focus().trigger('click');
                     break;
             }
         },
