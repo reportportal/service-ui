@@ -24,7 +24,22 @@
 %GENERAL_SETTINGS {
     #generalSettings {
         padding-top: 10px;
+        position: relative;
 
+        .mobile-disabling-cover {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            @media (max-width: $SCREEN_XS_MAX) {
+                display: block;
+            }
+        }
+        @media (max-width: $SCREEN_XS_MAX) {
+            margin: 0 -15px;
+        }
         .rp-form-group {
             label {
                 &.obligatory-field {
@@ -32,6 +47,18 @@
                         position: absolute;
                         margin-left: 2px;
                     }
+                }
+            }
+            .rp-btn-submit {
+                @media (max-width: $SCREEN_XS_MAX) {
+                    display: none;
+                }
+            }
+            .rp-btn, .rp-input {
+                @media (max-width: $SCREEN_XS_MAX) {
+                    pointer-events: none;
+                    tab-index: -1;
+                    background-color: $COLOR--gray-91;
                 }
             }
         }

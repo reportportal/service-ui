@@ -1545,7 +1545,7 @@ define(['util'], function () {
             defectUniq: "Full name and Short name set should be unique",
             defectShortName: "Short name should have size from '1' to '4'",
             defectColor: "Select color for defect type",
-            postfixLength: "'Postfix should have size from '{0}' to '{1}'"
+            postfixLength: "'Postfix should have size from %%% to %%%"
         },
 
         forms: {

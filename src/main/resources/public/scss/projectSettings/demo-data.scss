@@ -43,17 +43,36 @@
             }
         }
     }
-    .demo-data-form {
-        margin: 0 0 24px;
-        label {
-            display: block;
-            margin: 8px 0;
-            padding: 0;
-            text-align: left;
-        }
-        input {
-            width: 100%;
-            max-width: 320px;
+    .rp-form {
+        width: 100%;
+        .demo-data-form {
+            margin: 0 0 24px;
+            position: relative;
+            label.rp-field {
+                display: block;
+                padding: 0;
+                &> span {
+                    &:first-child {
+                        display: block;
+                        width: 100%;
+                        float: none;
+                        text-align: left;
+                        margin: 8px 0;
+                        line-height: 13px;
+                    }
+                }
+                input.rp-input {
+                    width: 100%;
+                    max-width: 320px;
+                    float: none;
+                }
+                .validate-hint {
+                    width: 100%;
+                    max-width: 320px;
+                    left: 0;
+                }
+            }
+
         }
     }
     .demo-data-submit-mobile {

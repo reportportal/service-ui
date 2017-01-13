@@ -752,7 +752,7 @@ define(function(require, exports, module) {
         },
 
         onChangeLaunchNames: function (value, eci) {
-            var launches = (value) ? value.trim().split(',') : [];
+            var launches = _.map(value, function(i){ return i.id;})//(value) ? value.trim().split(',') : [];
 
             var emailCase = _.findWhere(this.model.get('emailCases'), {
                 id: eci.data('email-case-id')
@@ -1040,7 +1040,8 @@ define(function(require, exports, module) {
                         self.$launchContainer.eq(index).select2('positionDropdown');
                     })
                     .on('change', function () {
-                        self.onChangeLaunchNames($(this).val(), $(this).closest('.email-case-item'));
+                        var values = self.$launchContainer.eq(index).select2('data')
+                        self.onChangeLaunchNames(values, $(this).closest('.email-case-item'));
                     }).select2("data", launches);
             }
 
@@ -1394,7 +1395,7 @@ define(function(require, exports, module) {
             if (!modelData) {
                 var defaultBts = config.forSettings.btsList[0];
                 if (!defaultBts) {
-                    console.log('no bts');
+                    //console.log('no bts');
                     return;
                 } else {
                     this.set({systemType: defaultBts.name})
