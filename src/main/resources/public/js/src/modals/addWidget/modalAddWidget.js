@@ -122,6 +122,21 @@ define(function (require, exports, module) {
                 this.viewModel.set('step', 3);
             }
         },
+        onKeySuccess: function () {
+            switch (this.viewModel.get('step')) {
+                case 1:
+                    $('[data-js-next-second-step]:not(.hide)', this.$el).focus().trigger('click');
+                    break;
+                case 2:
+                    if (($('[data-js-next-last-step]:not(.hide)', this.$el).length)) {
+                        $('[data-js-next-last-step]:not(.hide)', this.$el).focus().trigger('click');
+                    }
+                    break;
+                case 3:
+                    $('[data-js-add-widget]:not(.hide)', this.$el).focus().trigger('click');
+                    break;
+            }
+        },
         onClickAddWidget: function() {
             if(this.saveWidget.validate()) {
                 this.$el.addClass('load');

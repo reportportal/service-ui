@@ -39,8 +39,11 @@
     }
 
     .no-bts-found {
-      padding-top: 10px;
       display: block;
+      padding-top: 10px;
+      margin-left: 160px;
+      width: 310px;
+      clear: both;
     }
   }
 
@@ -362,6 +365,11 @@
           box-shadow: none;
           cursor: no-drop;
         }
+      }
+
+      .no-bts-found {
+        margin-left: 0;
+        width: 100%;
       }
     }
 

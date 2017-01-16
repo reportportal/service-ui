@@ -71,6 +71,10 @@ define(function (require, exports, module) {
         },
 
         selectHistoryItem: function(itemModel) {
+            var itemModelFromCollection = this.collectionItems.get(itemModel.id);
+            if (itemModelFromCollection) {
+                itemModel.set('path_names', itemModelFromCollection.get('path_names'));
+            }
             this.historyItem && this.historyItem.destroy();
             this.historyItem = new LogItemInfoView({
                 el: $('[data-js-item-info]', this.$el),
@@ -86,7 +90,6 @@ define(function (require, exports, module) {
                 mainPath: this.collectionItems.getPathByLogItemId(itemModel.get('id')),
                 options: this.collectionItems.getInfoLog(),
             })
-
         },
 
         render: function() {
