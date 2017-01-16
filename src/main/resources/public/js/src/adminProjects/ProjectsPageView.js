@@ -90,7 +90,6 @@ define(function(require, exports, module) {
         },
 
         renderProjectsList: function(){
-            console.log('renderProjectsList: ', this.action)
             this.body = new ProjectsTabsView({
                 action: this.action || 'internal'
             });
