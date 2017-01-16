@@ -63,6 +63,7 @@ define(function (require, exports, module) {
         },
         initialize: function() {
             this.render();
+            this.listenTo(this.model, 'remove', this.destroy);
         },
         template: 'tpl-favorite-item',
         render: function() {
@@ -96,7 +97,7 @@ define(function (require, exports, module) {
                 search: '',
                 empty: false,
                 notFound: false,
-            }),
+            });
             this.renderViews = [];
             this.collection = new FilterCollection();
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
@@ -220,7 +221,7 @@ define(function (require, exports, module) {
             });
             this.renderViews = [];
             _.each(this.collection.models, function(model) {
-                var filterItem = new FilterItem({model: model});
+                var filterItem = new FilterItem({model: model, collection: this.collection});
                 this.$filterList.append(filterItem.$el);
                 this.renderViews.push(filterItem);
             }, this);
