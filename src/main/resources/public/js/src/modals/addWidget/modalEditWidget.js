@@ -116,7 +116,9 @@ define(function (require, exports, module) {
                 this.$el.removeClass('select-filter-edit-state');
             }
         },
-
+        onKeySuccess: function() {
+            $('[data-js-save]', this.$el).focus().trigger('click');
+        },
         onClickSaveWidget: function() {
             if(this.saveWidget.validate()) {
                 this.$el.addClass('load');
