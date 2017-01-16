@@ -263,15 +263,19 @@ define(['app'], function (App) {
     };
 
     var getAdminSettings = function (id) {
-        return config.apiVersion + "/settings/" + id;
+        return config.apiVersion + "settings/" + id;
     };
 
     var setAdminSettings = function (id) {
-        return config.apiVersion + "/settings/" + id;
+        return config.apiVersion + "settings/" + id +'/email';
+    };
+
+    var deleteEmailSettings = function(id){
+        return config.apiVersion + "settings/" + id +'/email';
     };
 
     var adminAuthSettings = function(){
-        return 'uat/settings/default/oauth/github';
+        return '/uat/settings/default/oauth/github';
     };
 
     var adminProjects = function (data) {
@@ -387,6 +391,9 @@ define(['app'], function (App) {
     };
     var generateUUID = function () {
         return config.apiVersion + 'user/uuid';
+    };
+    var updateGitHubProfile  = function(){
+        return '/uat/sso/me/github/synchronize';
     };
     var totalAllCasesLink = function (id) {
         return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.type=STEP';
@@ -567,6 +574,7 @@ define(['app'], function (App) {
         adminProject: adminProject,
         getAdminSettings: getAdminSettings,
         setAdminSettings: setAdminSettings,
+        deleteEmailSettings: deleteEmailSettings,
         projectDetailsWidgets: projectDetailsWidgets,
         addMemberUrl: addMemberUrl,
         userUrl: userUrl,
@@ -597,6 +605,7 @@ define(['app'], function (App) {
         getFile: getFile,
         getFileById: getFileById,
         generateUUID: generateUUID,
+        updateGitHubProfile: updateGitHubProfile,
         exportLaunchUrl: exportLaunchUrl,
 
         getDefectTypes: getDefectTypes,

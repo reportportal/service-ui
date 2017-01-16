@@ -28,6 +28,7 @@ define(function (require, exports, module) {
     var ModalEditUserInfo = require('modals/modalEditUserInfo');
     var ModalConfirm = require('modals/modalConfirm');
     var RegenerateUUIDTooltipView = require('tooltips/RegenerateUUIDTooltipView');
+    var ModalForceUpdate = require('modals/modalForceUpdate');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
     var Util = require('util');
@@ -70,6 +71,7 @@ define(function (require, exports, module) {
             'click [data-js-remove-photo]': 'removePhoto',
             'click [data-js-input-token]': 'selectToken',
             'click [data-js-update-token]': 'updateToken',
+            'click [data-js-force-update]': 'forceUpdate'
         },
         render: function() {
             this.model.ready.done(function () {
@@ -112,6 +114,26 @@ define(function (require, exports, module) {
             var self = this;
             (new ModalRegenerateUUID()).show().done(function(){
                 return self.generateApiToken();
+            });
+        },
+        forceUpdate: function(e){
+            e.preventDefault();
+            var type = this.model.get('account_type');
+            if(type.toLowerCase() === 'github'){
+                Service.gitHubForceUpdate()
+                    .done(function(data){
+                        this.showForceUpdateModal(data);
+                    }.bind(this))
+                    .fail(function(error){
+                        Util.ajaxFailMessenger(error, 'forceUpdateGitHub');
+                    }.bind(this));
+            }
+        },
+        showForceUpdateModal: function(data){
+            var self = this,
+                msg = data && data.msg ? data.msg : Localization.userProfile.infoSynchronized;
+            (new ModalForceUpdate({model: self.model, msg: msg})).show().done(function(){
+                self.model.logout();
             });
         },
         showChangePass: function () {

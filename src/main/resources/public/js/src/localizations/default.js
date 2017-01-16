@@ -513,8 +513,10 @@ define(['util'], function () {
             projectAndRoles: "Assigned on project",
             regenerateUUID: "Regenerate UUID",
             updateDataFromUPSA: "Update data from UPSA",
+            updateUserDataFrom: "Update data from",
             reloginRequired: "relogin is required",
             forceUpdate: "Force update",
+            infoSynchronized: 'Information for user has been successfully synchronized',
             UUID: "UUID",
             msgUUIDTop: "In order to provide security for your own domain password, you can use a user token, named UUID - to verify your account to be able to log with agent.",
             msgUUIDMid: "For more information visit 'Agent Parameters' page",
@@ -1450,14 +1452,17 @@ define(['util'], function () {
             deletePhoto: "Failed to delete photo",
             clearExternalSystem: "Failed to clear current BTS setup",
             mergeLaunches: "Failed to merge selected launches",
-            forceUpdateUserRoles: "Error when update data from UPSA: ",
+            forceUpdateUserRoles: "Error when update data from UPSA",
+            forceUpdateGitHub: "Error when update data from GitHub",
             updateUuid: "Error when regenerate UUID: ",
             loadHistory: "Failed to load history for current item",
             loadActivityItems: "Failed to load activity items",
             loadNavigationStep: "Failed to load",
             sessionExpired: 'Your session has been expired',
             getItemInfo: 'Failed to load info for item',
-            dublPostFix: 'Postfix already used or not align with already existing data. Please use another one'
+            dublPostFix: 'Postfix already used or not align with already existing data. Please use another one',
+            serverNotConfigured: 'Email server is not configured',
+            impossibleInvite: 'Impossible to invite user due to email server configuration is broken or switched-off'
         },
 
         infoMessages: {
