@@ -293,8 +293,20 @@ define(function (require, exports, module) {
                         this.showSuccess(data);
                         Util.ajaxSuccessMessenger('inviteMember');
                     }.bind(this))
-                    .fail(function (error) {
-                        Util.ajaxFailMessenger(error, 'inviteMember');
+                    .fail(function (responce) {
+                        var messages = Localization.failMessages,
+                            error;
+                        if (responce) {
+                            try {
+                                error = JSON.parse(responce.responseText);
+                            } catch (e) {}
+                        }
+                        if(error && (error.error_code == 40305 || error.message.indexOf(messages.serverNotConfigured) >=0)){
+                            Util.ajaxFailMessenger(null, 'inviteMember', messages.impossibleInvite);
+                        }
+                        else {
+                            Util.ajaxFailMessenger(responce, 'inviteMember');
+                        }
                     })
                     .always(function(){
                         this.hideLoading();

@@ -1456,7 +1456,9 @@ define(['util'], function () {
             loadNavigationStep: "Failed to load",
             sessionExpired: 'Your session has been expired',
             getItemInfo: 'Failed to load info for item',
-            dublPostFix: 'Postfix already used or not align with already existing data. Please use another one'
+            dublPostFix: 'Postfix already used or not align with already existing data. Please use another one',
+            serverNotConfigured: 'Email server is not configured',
+            impossibleInvite: 'Impossible to invite user due to email server configuration is broken or switched-off'
         },
 
         infoMessages: {

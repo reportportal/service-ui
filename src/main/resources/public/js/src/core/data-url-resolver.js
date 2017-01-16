@@ -263,15 +263,19 @@ define(['app'], function (App) {
     };
 
     var getAdminSettings = function (id) {
-        return config.apiVersion + "/settings/" + id;
+        return config.apiVersion + "settings/" + id;
     };
 
     var setAdminSettings = function (id) {
-        return config.apiVersion + "/settings/" + id;
+        return config.apiVersion + "settings/" + id +'/email';
+    };
+
+    var deleteEmailSettings = function(id){
+        return config.apiVersion + "settings/" + id +'/email';
     };
 
     var adminAuthSettings = function(){
-        return 'uat/settings/default/oauth/github';
+        return '/uat/settings/default/oauth/github';
     };
 
     var adminProjects = function (data) {
@@ -567,6 +571,7 @@ define(['app'], function (App) {
         adminProject: adminProject,
         getAdminSettings: getAdminSettings,
         setAdminSettings: setAdminSettings,
+        deleteEmailSettings: deleteEmailSettings,
         projectDetailsWidgets: projectDetailsWidgets,
         addMemberUrl: addMemberUrl,
         userUrl: userUrl,

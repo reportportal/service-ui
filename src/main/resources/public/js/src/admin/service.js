@@ -76,11 +76,11 @@ define(function (require, exports, module) {
     };
 
     var deleteEmailSettings = function (data) {
-        return call('DELETE', Urls.getAdminSettings(data));
+        return call('DELETE', Urls.deleteEmailSettings(data));
     };
 
     var setAdminSettings = function (data, id) {
-        return call('PUT', Urls.setAdminSettings(id), data);
+        return call('POST', Urls.setAdminSettings(id), data);
     };
 
     var getAuthSettings = function () {

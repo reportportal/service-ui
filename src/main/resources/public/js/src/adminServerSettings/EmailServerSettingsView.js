@@ -175,7 +175,10 @@ define(function (require, exports, module) {
         deleteEmailSettings: function(){
             AdminService.deleteEmailSettings('default')
                 .done(function(data){
-                    this.updateModel(this.model.defaults);
+                    this.model.set(this.model.defaults);
+                    this.resetAuth();
+                    this.selectProtocol.activateItem(config.forAdminSettings.defaultProtocol);
+                    this.authEnabled.activateItem(Localization.ui.off);
                     Util.ajaxSuccessMessenger('deleteOAuthSettings');
                 }.bind(this))
                 .fail(function(error){
