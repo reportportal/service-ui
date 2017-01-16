@@ -308,6 +308,10 @@ define([
         return call('PUT', urls.generateUUID());
     };
 
+    var gitHubForceUpdate = function(data){
+        return call('POST', urls.updateGitHubProfile());
+    };
+
     var searchLaunches = function (query) {
         return call('GET', urls.queryByLaunchName(query.term));
     };
@@ -434,6 +438,8 @@ define([
 
         deletePhoto: deletePhoto,
         generateUUID: generateUUID,
+        gitHubForceUpdate: gitHubForceUpdate,
+
         deleteLaunch: deleteLaunch,
         deleteTestItem: deleteTestItem,
         

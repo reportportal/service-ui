@@ -392,6 +392,9 @@ define(['app'], function (App) {
     var generateUUID = function () {
         return config.apiVersion + 'user/uuid';
     };
+    var updateGitHubProfile  = function(){
+        return '/uat/sso/me/github/synchronize';
+    };
     var totalAllCasesLink = function (id) {
         return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.type=STEP';
     };
@@ -602,6 +605,7 @@ define(['app'], function (App) {
         getFile: getFile,
         getFileById: getFileById,
         generateUUID: generateUUID,
+        updateGitHubProfile: updateGitHubProfile,
         exportLaunchUrl: exportLaunchUrl,
 
         getDefectTypes: getDefectTypes,

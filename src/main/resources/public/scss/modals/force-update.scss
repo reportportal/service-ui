@@ -19,23 +19,13 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'common';
-@import 'load-bug';
-@import 'post-bug';
-@import 'confirm';
-@import 'filter-edit';
-@import 'defect-editor';
-@import 'launches-compare';
-@import 'launches-merge';
-@import 'launch-edit';
-@import 'change-password';
-@import 'edit-user-info';
-@import 'add-user';
-@import 'invite-user';
-@import 'permissions-map';
-@import 'edit-dashboard';
-@import 'regenerate-UUID';
-@import 'addWidget/main';
-@import 'addSharedWidget/main';
-@import 'add-project';
-@import 'force-update';
+.modal-force-update {
+  .modal-body {
+    padding-left: 15px;
+    margin-top: 30px;
+    p {
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+}
