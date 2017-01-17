@@ -288,8 +288,19 @@ define(function (require, exports, module) {
             if (userData) {
                 MembersService.addMember(userData)
                     .done(function (data) {
+                        if(data.warning){
+                            var messages = Localization.failMessages;
+                            if(data.warning.indexOf(messages.serverNotConfigured) >=0){
+                                Util.ajaxFailMessenger(null, 'addUserWithoutEmail');
+                            }
+                            else {
+                                Util.ajaxFailMessenger(null, 'addMember', data.warning);
+                            }
+                        }
+                        else {
+                            Util.ajaxSuccessMessenger('addMember');
+                        }
                         this.trigger('add:user');
-                        Util.ajaxSuccessMessenger('addMember');
                     }.bind(this))
                     .fail(function (error) {
                         Util.ajaxFailMessenger(error, 'addMember');
