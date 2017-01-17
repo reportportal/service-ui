@@ -23,6 +23,9 @@
     .modal-body {
       padding: 40px 10px 10px 10px;
     }
+    label {
+      font-weight: normal;
+    }
     .load-items-container {
       padding: 17px 9px 10px 20px;
       .bts-description {
@@ -32,6 +35,8 @@
       }
       .bts-label {
         width: 430px;
+        position: relative;
+
       }
       .link-label {
         width: 320px;
