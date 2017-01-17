@@ -55,13 +55,12 @@ define(function (require, exports, module) {
             this.appModel = new SingletonAppModel();
             this.items = options.items;
             this.isMultiply = (this.items.length > 1);
-            var externalSystems = this.appModel.getArr('externalSystem');
-            this.systems = _.sortBy(externalSystems, 'project');
+            this.systems = this.appModel.getArr('externalSystem');
             this.settings = config.forSettings;
-            this.systemSettings = this.settings['bts' + externalSystems[0].systemType];
+            this.systemSettings = this.settings['bts' + this.systems[0].systemType];
             this.user = {}; // only bts field use  WTF?
-            this.systemType = externalSystems[0].systemType;
-            this.systemAuth = externalSystems[0].systemAuth;
+            this.systemType = this.systems[0].systemType;
+            this.systemAuth = this.systems[0].systemAuth;
             this.setUserBts();
             this.render();
         },
