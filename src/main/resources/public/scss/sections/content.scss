@@ -83,9 +83,16 @@
       }
     }
   }
-  @media (max-width: $SCREEN_XS_MAX) {
-    #dynamic-content {
-      padding: 0 15px 67px 15px;
+}
+
+@media (max-width: $SCREEN_XS_MAX) {
+  .rp-main-panel {
+    &.settings-page {
+      padding-top: 0;
+
+      .panel-heading {
+        display: none;
+      }
     }
   }
 }
