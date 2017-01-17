@@ -25,6 +25,21 @@
         padding-top: 10px;
         padding-bottom: 20px;
         position: relative;
+
+        .rp-form {
+          .rp-field {
+            .github-auth-state-mobile {
+              display: none;
+              width: 100%;
+              height: 30px;
+              clear: both;
+              border: solid 1px $COLOR--gray-80;
+              background-color: $COLOR--gray-91;
+              padding: 5px 0 0 9px;
+            }
+          }
+        }
+
         .mobile-disabling-cover {
             position: absolute;
             left: 0;
@@ -66,19 +81,19 @@
         padding-bottom: 20px;
         position: relative;
 
-      .rp-form {
-        .rp-field {
-          .email-server-state-mobile {
-            display: none;
-            width: 100%;
-            height: 30px;
-            clear: both;
-            border: solid 1px $COLOR--gray-80;
-            background-color: $COLOR--gray-91;
-            padding: 5px 0 0 9px;
+        .rp-form {
+          .rp-field {
+            .email-server-state-mobile {
+              display: none;
+              width: 100%;
+              height: 30px;
+              clear: both;
+              border: solid 1px $COLOR--gray-80;
+              background-color: $COLOR--gray-91;
+              padding: 5px 0 0 9px;
+            }
           }
         }
-      }
 
         .mobile-disabling-cover {
             position: absolute;
@@ -163,7 +178,7 @@
         }
     }
     @media (max-width: $SCREEN_XS_MAX) {
-        .rp-email-settings {
+        .rp-email-settings, .rp-auth-server-settings {
             .rp-form {
             width: 100%;
             .rp-field {
@@ -187,6 +202,9 @@
                 & + .rp-field-item {
                   width: 100%;
                 }
+              }
+              .github-auth-state-mobile {
+                display: block;
               }
               .email-server-state-mobile {
                 display: block;

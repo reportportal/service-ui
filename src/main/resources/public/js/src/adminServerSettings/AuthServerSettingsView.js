@@ -42,6 +42,7 @@ define(function(require, exports, module) {
         bindings: {
             //'[data-js-guest-enable]': 'checked: enableGuestAccount',
             '[data-js-github-enable]': 'checked: gitHubAuthEnabled',
+            '[data-js-github-enable-mobile]': 'html: getGitHubAuthState',
             '[data-js-github-config]': 'classes: {hide: not(gitHubAuthEnabled)}',
             '[data-js-client-id]': 'value: clientId',
             '[data-js-client-secret]': 'value: clientSecret',
@@ -51,6 +52,15 @@ define(function(require, exports, module) {
         },
 
         computeds: {
+            getGitHubAuthState: {
+                deps: ['gitHubAuthEnabled'],
+                get: function(gitHubAuthEnabled) {
+                    if (gitHubAuthEnabled) {
+                        return 'ON';
+                    }
+                    return 'OFF';
+                }
+            },
             showAddOrg: {
                 deps: ['organizations'],
                 get: function(organizations){
