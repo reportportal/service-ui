@@ -9742,7 +9742,7 @@ nv.models.pieChart = function() {
             if (!data || !data.length) {
                 var noDataText = container.selectAll('.nv-noData').data([noData]);
 
-                container.attr('width', '100%').attr('viewBox', '-30 40 200 100').attr('preserveAspectRatio', 'xMinYMid meet')
+                container.attr('width', '100%').attr('viewBox', '-30 40 200 100').attr('preserveAspectRatio', 'xMidYMid meet')
                 noDataText.enter().append('text')
                     .attr('class', 'nvd3 nv-noData')
                     .attr('dy', '-.7em')

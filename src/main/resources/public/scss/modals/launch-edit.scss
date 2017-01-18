@@ -76,6 +76,18 @@
         }
       }
 
+      .warning-block {
+        margin-top: 16px;
+        margin-left: 10px;
+        .warning {
+          color: $COLOR--failed;
+        }
+        .warning-message {
+          font-size: 12px;
+          padding-left: 2px;
+        }
+      }
+
       textarea {
         height: 67px;
         resize: none;

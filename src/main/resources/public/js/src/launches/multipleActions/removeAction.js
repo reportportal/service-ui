@@ -32,10 +32,17 @@ define(function (require, exports, module) {
     var RemoveAction = function(options) {
         var items = options.items;
         var typeItems = (items.length > 1) ? Localization.ui.launches : Localization.ui.launch;
+        var itemNumber;
+
         if(items[0].get('type') != 'LAUNCH') {
             typeItems = (items.length > 1) ? Localization.ui.items : Localization.ui.item;
+            itemNumber = '';
+        } else {
+            itemNumber = ' #' + items[0].get('number').toString().bold();
         }
-        var itemName = (items.length > 1) ? typeItems : typeItems + ' \'' + items[0].get('name').bold() + '\'';
+
+        var itemName = (items.length > 1) ? typeItems : typeItems + ' \'' + items[0].get('name').bold() + itemNumber + '\'';
+
         var modal = new ModalConfirm({
             headerText: Localization.ui.delete +' '+ typeItems,
             bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, typeItems, itemName),
