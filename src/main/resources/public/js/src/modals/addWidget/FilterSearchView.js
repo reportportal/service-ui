@@ -103,7 +103,7 @@ define(function (require, exports, module) {
             this.selectFilterView && this.selectFilterView.destroy();
             if(model) {
                 $('[data-js-select-filter-block]', this.$el).removeClass('empty-state');
-                this.selectFilterView = new FilterItem({model: model});
+                this.selectFilterView = new FilterItem({model: model, searchModel: this.viewModel});
                 $('[data-js-select-filter-container]', this.$el).html(this.selectFilterView.$el);
                 this.selectedFilterModel = model;
             } else {
@@ -197,7 +197,7 @@ define(function (require, exports, module) {
             }, this)
         },
         renderFilter: function(model) {
-            var filterItem = new FilterItem({model: model});
+            var filterItem = new FilterItem({model: model, searchModel: this.viewModel});
             $('[data-js-filter-list]', this.$el).append(filterItem.$el);
             this.renderViews.push(filterItem);
         },

@@ -58,7 +58,7 @@ define(function (require, exports, module) {
 
         initialize: function(options) {
             if(!options.model) {
-                console.log('Model is not found');
+                //console.log('Model is not found');
                 return false;
             }
             this.model.set({owner: config.userModel.get('name')});
@@ -80,7 +80,7 @@ define(function (require, exports, module) {
             this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
         },
         onChangeModel: function(model) {
-            console.dir(model.changed);
+            //console.dir(model.changed);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));

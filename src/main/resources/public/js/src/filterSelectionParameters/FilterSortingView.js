@@ -52,7 +52,7 @@ define(function (require, exports, module) {
         initialize: function() {
             this.render();
             this.collection = new Backbone.Collection([
-                {name: Localization.launchesHeaders.name, active: false, id: 'name'},
+                {name: Localization.launches.launchName, active: false, id: 'name'},
                 {name: Localization.launchesHeaders.start_time, active: false, id: 'start_time'},
                 {name: Localization.launchesHeaders.total, active: false, id: 'statistics$executions$total'},
                 {name: Localization.launchesHeaders.passed, active: false, id: 'statistics$executions$passed'},

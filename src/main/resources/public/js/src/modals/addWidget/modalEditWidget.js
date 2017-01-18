@@ -54,7 +54,7 @@ define(function (require, exports, module) {
 
         initialize: function(options) {
             if(!options.model) {
-                console.log('Model is not found');
+                //console.log('Model is not found');
                 return false;
             }
             this.originalModel = options.model;
@@ -71,7 +71,7 @@ define(function (require, exports, module) {
             this.listenTo(this.selectedFilterView, 'edit', this.onEditFilter);
         },
         onChangeModel: function(model) {
-            console.dir(model.changed);
+            //console.dir(model.changed);
         },
         onEditFilter: function(filterModel) {
             this.$el.addClass('filter-edit-state');

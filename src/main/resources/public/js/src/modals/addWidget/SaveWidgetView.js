@@ -43,7 +43,12 @@ define(function (require, exports, module) {
             Util.hintValidator($('[data-js-name-input]', this.$el), [
                 {validator: 'minMaxRequired', type: 'widgetName', min: 3, max: 128},
                 {validator: 'noDuplications', type: 'widgetName', source: []}
-            ])
+            ]);
+            Util.hintValidator($('[data-js-description]', this.$el), {
+                validator: 'maxRequired',
+                type: '',
+                max: 256
+            });
         },
         validate: function() {
             return !$('[data-js-name-input]', this.$el).trigger('validate').data('validate-error');

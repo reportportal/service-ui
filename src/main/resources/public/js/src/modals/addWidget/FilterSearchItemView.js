@@ -35,14 +35,24 @@ define(function (require, exports, module) {
             'click [data-js-filter-edit]': 'onClickFilterEdit',
         },
         bindings: {
-            '[data-js-filter-name]': 'text: name',
+            '[data-js-filter-name]': 'html: getName',
             '[data-js-filter-options]': 'html: optionsString',
             '[data-js-filter-shared]': 'classes: {hide: any(not(isShared), notMyFilter)}',
             '[data-js-filter-not-my]': 'classes: {hide: not(notMyFilter)}, attr: {title: sharedByTitle}',
             '[data-js-filter-edit]': 'classes: {hide: notMyFilter}',
             '[data-js-filter-select]': 'checked: active',
         },
-        initialize: function() {
+        computeds: {
+            getName: {
+                deps: ['name'],
+                get: function(name){
+                    var search = this.searchModel ? this.searchModel.get('search') : null;
+                    return search ? Util.textWrapper(name, search) : name;
+                }
+            }
+        },
+        initialize: function(options) {
+            this.searchModel = options.searchModel;
             this.render();
             var self = this;
             if(this.model.get('active')) {

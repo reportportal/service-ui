@@ -53,9 +53,12 @@ define(function (require, exports, module) {
         onRemoveGadget: function(model) {
             this.dashboardModel.setWidgets(this.getGadgetsData());
             Service.updateDashboard(this.dashboardModel.get('id'), {deleteWidget: model.get('id')})
+                .done(function(){
+                    Util.ajaxSuccessMessenger('deletedWidget');
+                })
                 .fail(function(error) {
                     Util.ajaxFailMessenger(error, 'updateDashboard');
-                })
+                });
         },
         onAddGadget: function(model) {
 
