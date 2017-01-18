@@ -61,14 +61,16 @@ define(function (require, exports, module) {
             this.model = options.model.clone();
             this.widgetConfig = WidgetsConfig.getInstance();
             this.render();
-            this.selectedFilterView = new SelectedFilterView({ model: this.model });
-            $('[data-js-widget-filter]', this.$el).html(this.selectedFilterView.$el);
             this.widgetSettingsView = new WidgetSettingsView({model: this.model});
             $('[data-js-widget-settings]', this.$el).html(this.widgetSettingsView.$el);
             this.saveWidget = new SaveWidgetView({model: this.model});
             $('[data-js-widget-save]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
-            this.listenTo(this.selectedFilterView, 'edit', this.onEditFilter);
+            if(this.model.get('filter_id')){
+                this.selectedFilterView = new SelectedFilterView({ model: this.model });
+                $('[data-js-widget-filter]', this.$el).html(this.selectedFilterView.$el);
+                this.listenTo(this.selectedFilterView, 'edit', this.onEditFilter);
+            }
         },
         onChangeModel: function(model) {
             //console.dir(model.changed);
@@ -137,11 +139,13 @@ define(function (require, exports, module) {
                 contentParameters.content_fields = this.model.getContentFields();
                 contentParameters.widgetOptions = this.model.getWidgetOptions();
                 var data = {
-                    filter_id: this.model.get('filter_id'),
                     name: this.model.get('name'),
                     share: this.model.get('isShared'),
                     content_parameters: contentParameters
                 };
+                if(this.model.get('filter_id')){
+                    data.filter_id = this.model.get('filter_id');
+                }
                 if (this.model.get('widgetDescription')) {
                     data.description = this.model.get('widgetDescription');
                 }
