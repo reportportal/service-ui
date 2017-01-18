@@ -53,6 +53,25 @@ define(function (require, exports, module) {
         bindings: {
             ':el': 'classes: {"not-my": not(isMy)}',
             '[data-js-owner-name]': 'text: owner',
+            '[data-js-add-widget]': 'classes: {disabled: not(validateForAddWidget)}, attr: {title: getAddBtnTitle}',
+            '[data-js-add-shared-widget]': 'classes: {disabled: not(validateForAddWidget)}, attr: {title: getAddBtnTitle}'
+        },
+
+        computeds: {
+            validateForAddWidget: {
+                deps: ['widgets'],
+                get: function(widgets) {
+                    widgets = this.model.getWidgets();
+                    return widgets.length < config.maxWidgetsOnDashboard;
+                }
+            },
+            getAddBtnTitle: {
+                deps: ['widgets'],
+                get: function(widgets){
+                    widgets = this.model.getWidgets();
+                    return widgets.length >= config.maxWidgetsOnDashboard ? Localization.dashboard.maxWidgetsAdded : '';
+                }
+            }
         },
 
         initialize: function(options) {
