@@ -42,11 +42,12 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {widgets: this.widgetConfig.widgetTypes}))
         },
         onChangeType: function() {
+            var gadgetType = $('input:checked', this.$el).val();
 
             this.model.set({
-                gadget: $('input:checked', this.$el).val(),
+                gadget: gadgetType,
                 filter_id: '',
-                itemsCount: 50,
+                itemsCount: this.widgetConfig.widgetTypes[gadgetType].limit.def,
                 widgetDescription: '',
                 widgetOptions: '{}',
                 content_fields: '[]',
