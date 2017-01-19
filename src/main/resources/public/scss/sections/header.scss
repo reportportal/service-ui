@@ -343,6 +343,7 @@
 
 
            .dropdown { // #projectSelector
+             height: 25px;
              padding-bottom: 0;
              font-size: 16px;
 
@@ -354,10 +355,12 @@
                text-transform: uppercase;
                text-decoration: none;
 
+
                .selected-project {
                  white-space: nowrap;
                  max-width: 300px;
                  font-weight: 500;
+                 line-height: 25px;
                  text-overflow: ellipsis;
                  overflow: hidden;
                  display: inline-block;
