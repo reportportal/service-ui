@@ -94,6 +94,14 @@
       }
     }
   }
+  .filter-list-wrapper {
+    .filter-no-data {
+      padding: 10px 10px 0;
+      &> i.rp-icons-warning {
+        color: $COLOR--gray-80;
+      }
+    }
+  }
   &.load {
     .preloader {
       display: block;

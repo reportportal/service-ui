@@ -34,22 +34,22 @@ define(function (require, exports, module) {
 
     var FilterCollection = Backbone.Collection.extend({
         model: FilterModel,
-        initialize: function(options) {
+        initialize: function (options) {
             this.mainModel = options.mainModel;
             this.listenTo(this, 'change:active', this.onChangeActive);
         },
-        onChangeActive: function(model, active) {
-            if(active) {
-                _.each(this.models, function(curModel) {
-                    if(curModel != model) {
+        onChangeActive: function (model, active) {
+            if (active) {
+                _.each(this.models, function (curModel) {
+                    if (curModel != model) {
                         curModel.set({active: false});
                     }
                 })
             }
         },
-        parse: function(data) {
+        parse: function (data) {
             var self = this;
-            return _.map(data, function(itemData) {
+            return _.map(data, function (itemData) {
                 itemData.entities = JSON.stringify(itemData.entities);
                 itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
                 itemData.active = !!(itemData.id == self.mainModel.get('filter_id'));
@@ -68,10 +68,10 @@ define(function (require, exports, module) {
         bindings: {
             ':el': 'classes: {hide: not(gadgetIsFilter)}'
         },
-        initialize: function() {
+        initialize: function () {
             this.widgetConfig = WidgetsConfig.getInstance();
             this.firstActivate = true,
-            this.collection = new FilterCollection({mainModel: this.model});
+                this.collection = new FilterCollection({mainModel: this.model});
             this.renderViews = [];
             this.render();
             this.viewModel = new Epoxy.Model({
@@ -82,12 +82,12 @@ define(function (require, exports, module) {
                 pageSize: 10,
                 totalPage: 1,
             }),
-            Util.hintValidator($('[data-js-filter-name]', this.$el), [{
-                validator: 'minMaxNotRequired',
-                type: 'filterName',
-                min: 3,
-                max: 128
-            }]);
+                Util.hintValidator($('[data-js-filter-name]', this.$el), [{
+                    validator: 'minMaxNotRequired',
+                    type: 'filterName',
+                    min: 3,
+                    max: 128
+                }]);
 
             this.listenTo(this.viewModel, 'change:search', _.debounce(this.updateFilters, 500));
             this.listenTo(this.collection, 'add', this.onAddCollectionItems);
@@ -96,12 +96,12 @@ define(function (require, exports, module) {
             this.listenTo(this.collection, 'edit', this.onEditFilter);
 
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}))
         },
-        setFilterModel: function(model) {
+        setFilterModel: function (model) {
             this.selectFilterView && this.selectFilterView.destroy();
-            if(model) {
+            if (model) {
                 $('[data-js-select-filter-block]', this.$el).removeClass('empty-state');
                 this.selectFilterView = new FilterItem({model: model, searchModel: this.viewModel});
                 $('[data-js-select-filter-container]', this.$el).html(this.selectFilterView.$el);
@@ -111,20 +111,20 @@ define(function (require, exports, module) {
             }
 
         },
-        getSelectedFilterModel: function() {
+        getSelectedFilterModel: function () {
             return this.selectedFilterModel;
         },
-        onSelectFilterCheck: function(model, active) {
+        onSelectFilterCheck: function (model, active) {
             active && this.onSelectFilter(model);
         },
-        onSelectFilter: function(filterModel) {
+        onSelectFilter: function (filterModel) {
             this.model.set({filter_id: filterModel.get('id')});
             this.setFilterModel(filterModel);
         },
-        onClickAddFilter: function(e) {
+        onClickAddFilter: function (e) {
             e.preventDefault();
             this.$el.addClass('hide-content');
-            this.addFilterView && this.stopListening(this.addFilterView) &&  this.addFilterView.destroy();
+            this.addFilterView && this.stopListening(this.addFilterView) && this.addFilterView.destroy();
             this.addFilterView = new FilterSearchAddView({gadgetModel: this.model});
             this.listenTo(this.addFilterView, 'change:filter', this.onSelectFilter);
             this.addFilterView.activate();
@@ -132,18 +132,18 @@ define(function (require, exports, module) {
             this.trigger('disable:navigation', true);
             var self = this;
             this.addFilterView.getReadyState()
-                .always(function() {
+                .always(function () {
                     self.addFilterView.destroy();
                     self.$el.removeClass('hide-content');
                     self.trigger('disable:navigation', false);
                     self.updateFilters();
                 })
-                .fail(function() {
+                .fail(function () {
                     self.model.set({filter_id: ''});
                     self.setFilterModel(null);
                 })
         },
-        onEditFilter: function(model) {
+        onEditFilter: function (model) {
             this.$el.addClass('hide-content');
             this.editFilterView && this.editFilterView.destroy();
             this.editFilterView = new FilterSearchEditView({model: model, gadgetModel: this.model});
@@ -151,16 +151,18 @@ define(function (require, exports, module) {
             this.trigger('disable:navigation', true);
             var self = this;
             this.editFilterView.getReadyState()
-                .always(function() {
+                .always(function () {
                     self.editFilterView.destroy();
                     self.$el.removeClass('hide-content');
                     self.trigger('disable:navigation', false);
                 })
         },
-        activate: function() {
-            if(!this.firstActivate) { return; }
+        activate: function () {
+            if (!this.firstActivate) {
+                return;
+            }
             var curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
-            if(!curWidget.noFilters) {
+            if (!curWidget.noFilters) {
                 this.firstActivate = false;
                 var self = this;
                 this.load().always(function () {
@@ -175,8 +177,8 @@ define(function (require, exports, module) {
                 })
             }
         },
-        addLoadData: function() {
-            if(this.viewModel.get('currentPage') < this.viewModel.get('totalPage') && !this.$el.hasClass('load')) {
+        addLoadData: function () {
+            if (this.viewModel.get('currentPage') < this.viewModel.get('totalPage') && !this.$el.hasClass('load')) {
                 this.viewModel.set('currentPage', this.viewModel.get('currentPage') + 1);
                 this.load();
             }
@@ -184,24 +186,24 @@ define(function (require, exports, module) {
         onChangeFilterName: function (e) {
             this.viewModel.set({search: $(e.currentTarget).val()});
         },
-        onAddCollectionItems: function(model) {
+        onAddCollectionItems: function (model) {
             this.renderFilter(model);
         },
-        onResetCollectionItems: function() {
-            _.each(this.renderViews, function(view) {
+        onResetCollectionItems: function () {
+            _.each(this.renderViews, function (view) {
                 view.destroy();
             });
             this.renderViews = [];
-            _.each(this.collection.models, function(model) {
+            _.each(this.collection.models, function (model) {
                 this.renderFilter(model);
-            }, this)
+            }, this);
         },
-        renderFilter: function(model) {
+        renderFilter: function (model) {
             var filterItem = new FilterItem({model: model, searchModel: this.viewModel});
             $('[data-js-filter-list]', this.$el).append(filterItem.$el);
             this.renderViews.push(filterItem);
         },
-        updateFilters: function() {
+        updateFilters: function () {
             this.collection.reset([]);
             this.viewModel.set({
                 totalPage: 1,
@@ -209,47 +211,48 @@ define(function (require, exports, module) {
             });
             var self = this;
             this.load()
-                .done(function() {
+                .done(function () {
                     Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 330});
                 })
         },
-        load: function() {
+        load: function () {
             this.$el.addClass('load');
             var self = this;
             return CoreService.saveFilter(this.getQueryString({
-                search: encodeURIComponent(this.viewModel.get('search')),
-                page: this.viewModel.get('currentPage'),
-                size: this.viewModel.get('pageSize')
-            }))
-                .always(function() {
+                    search: encodeURIComponent(this.viewModel.get('search')),
+                    page: this.viewModel.get('currentPage'),
+                    size: this.viewModel.get('pageSize')
+                }))
+                .always(function () {
                     self.$el.removeClass('load');
                 })
-                .done(function(data) {
+                .done(function (data) {
                     self.viewModel.set({
                         totalPage: data.page.totalPages,
                         currentPage: data.page.number,
                     });
-                    if(data.content.length) {
+                    if (data.content.length) {
                         self.viewModel.set({empty: false, notFound: false});
-                    } else if(!self.model.get('search')) {
+                    } else if (!self.model.get('search')) {
                         self.viewModel.set({empty: true, notFound: false});
                     } else {
                         self.viewModel.set({empty: false, notFound: true});
                     }
                     self.collection.add(data.content, {parse: true});
+                    $('[data-js-filter-empty]', self.$el)[ (data.content.length ? 'add' : 'remove') + 'Class']('hide');
                 });
         },
-        getQueryString: function(query){
-            if(!query) query = {};
-            if(!query.page) query.page = 1;
-            if(!query.size) query.size = 10;
+        getQueryString: function (query) {
+            if (!query) query = {};
+            if (!query.page) query.page = 1;
+            if (!query.size) query.size = 10;
             var url = '?page.sort=name&page.page=' + query.page + '&page.size=' + query.size;
-            if(query.search) {
+            if (query.search) {
                 url += '&filter.cnt.name=' + query.search;
             }
             return url;
         },
-        onDestroy: function() {
+        onDestroy: function () {
             this.$el.remove();
         }
     });
