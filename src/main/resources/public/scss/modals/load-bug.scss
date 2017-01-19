@@ -21,38 +21,87 @@
 .modal-load-bug {
   .modal-content-wrapper {
     .modal-body {
-      padding: 40px 10px 10px 10px;
+      padding: 30px 10px 10px 10px;
     }
     label {
       font-weight: normal;
     }
     .load-items-container {
-      padding: 17px 9px 10px 20px;
-      .bts-description {
-        display: block;
-        margin-bottom: 15px;
-        color: $COLOR--gray-60;
-      }
+      padding: 17px 9px 10px 12px;
+
       .bts-label {
-        width: 430px;
+        width: 100%;
+        margin-bottom: 0;
         position: relative;
 
+        & > span {
+          padding-top: 6px;
+          display: block;
+          float: left;
+        }
+        .rp-btn-with-dropdown {
+          width: 350px;
+          margin-left: 21px;
+        }
       }
-      .link-label {
-        width: 320px;
-      }
-      .issue-label {
-        width: 120px;
-        margin-left: 7px;
-      }
-      .remove-row {
-        margin: 31px 0 0 3px;
-        display: inline-block;
-        vertical-align: top;
-        cursor: pointer;
+
+      .bts-description {
+        display: block;
+        margin: 4px 0 0 117px;
+        font-size: 12px;
         color: $COLOR--gray-60;
-        &:hover {
-          color: $COLOR--gray-47;
+      }
+
+      .items-container {
+        margin-top: 18px;
+
+        .ticket-row-view {
+          margin-bottom: 13px;
+
+          .link-label {
+            width: 360px;
+            float: left;
+
+            .row-title {
+              display: block;
+              float: left;
+              margin-left: 12px;
+              margin-top: 6px;
+            }
+
+            .rp-input {
+              margin-left: 30px;
+              display: block;
+              float: left;
+              width: 240px;
+            }
+
+            .help-inline {
+              margin-left: 118px;
+            }
+          }
+
+          .issue-label {
+            float: left;
+            width: 100px;
+            margin-left: 7px;
+
+            .help-inline {
+              margin-top: 4px;
+            }
+          }
+
+          .remove-row {
+            margin: 5px 0 0 7px;
+            display: inline-block;
+            font-size: 19px;
+            vertical-align: top;
+            cursor: pointer;
+            color: $COLOR--gray-60;
+            &:hover {
+              color: $COLOR--gray-47;
+            }
+          }
         }
       }
 
@@ -68,8 +117,9 @@
         }
       }
     }
+
     .add-button {
-      margin: 5px 0 20px 21px;
+      margin: 5px 0 10px 130px;
     }
   }
 }

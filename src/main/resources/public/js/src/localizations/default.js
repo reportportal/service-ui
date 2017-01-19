@@ -1152,6 +1152,7 @@ define(['util'], function () {
             issueId: "Issue ID",
             linkToIssue: "Link to Issue",
             addNewIssues: "Add New Issues",
+            addNewIssue: "Add New Issue",
             btsInstances: "Bts Instances:",
             btsAddNewInstance: "Add New Instance",
             btsNotFound: 'To configure Bug Tracking System, please deploy appropriate micro-service',
