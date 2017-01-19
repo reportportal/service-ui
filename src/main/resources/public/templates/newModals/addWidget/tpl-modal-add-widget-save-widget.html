@@ -8,13 +8,13 @@
         <span><%= data.text.ui.description %></span>
         <textarea class="rp-input" placeholder="<%= data.text.widgets.descriptionPlaceholder %>" data-js-description></textarea>
     </label>
-    <label>
+    <div class="rp-field">
         <span><%= data.text.filter.share %></span>
-        <label class="rp-switcher-big">
+        <label class="rp-switcher-big" data-js-shared-control>
             <span class="turn-on"><%= data.text.ui.on %></span>
             <span class="turn-off"><%= data.text.ui.off %></span>
             <input type="checkbox" data-js-is-shared>
             <div class="slider"></div>
         </label>
-    </label>
+    </div>
 </form>

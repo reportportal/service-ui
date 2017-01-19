@@ -37,8 +37,20 @@ define(function (require, exports, module) {
             '[data-js-name-input]': 'value: name',
             '[data-js-description]': 'value: widgetDescription',
             '[data-js-is-shared]': 'checked: isShared',
+            '[data-js-shared-control]': 'classes: {disabled: offSharedSwitch}'
         },
-        initialize: function() {
+        computeds: {
+            offSharedSwitch: {
+                get: function(){
+                    return this.dashboardModel && this.dashboardModel.get('isShared');
+                },
+            }
+        },
+        initialize: function(options) {
+            this.dashboardModel = options.dashboardModel;
+            if(this.dashboardModel && this.dashboardModel.get('isShared')){
+                this.model.set('isShared', true);
+            }
             this.render();
             Util.hintValidator($('[data-js-name-input]', this.$el), [
                 {validator: 'minMaxRequired', type: 'widgetName', min: 3, max: 128},

@@ -49,7 +49,7 @@ define(function (require, exports, module) {
         },
         bindings: {
             '[data-js-widget-type]': 'text: gadgetName',
-            '[data-js-widget-description]': 'text: gadgetDescription',
+            '[data-js-widget-description]': 'html: gadgetDescription',
             '[data-js-widget-preview]': 'css: {"background-image": format("url($1)", gadgetPreviewImg)}',
             '[data-js-next-second-step]': 'attr: {disabled: any(not(gadget), disableNavigate)}',
             '[data-js-next-last-step]': 'attr: {disabled: any(not(gadgetIsFilterFill), disableNavigate)}',
@@ -72,7 +72,7 @@ define(function (require, exports, module) {
             $('[data-js-step-1]', this.$el).html(this.selectWidgetView.$el);
             this.configureWidgetView = new ConfigureWidgetView({model: this.model});
             $('[data-js-step-2]', this.$el).html(this.configureWidgetView.$el);
-            this.saveWidget = new SaveWidgetView({model: this.model});
+            this.saveWidget = new SaveWidgetView({model: this.model, dashboardModel: this.dashboardModel});
             $('[data-js-step-3]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.viewModel, 'change:step', this.setState);
             this.listenTo(this.configureWidgetView, 'disable:navigation', this.onChangeDisableNavigation);

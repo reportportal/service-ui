@@ -48,7 +48,7 @@ define(function (require, exports, module) {
         },
         bindings: {
             '[data-js-widget-type]': 'text: gadgetName',
-            '[data-js-widget-description]': 'text: gadgetDescription',
+            '[data-js-widget-description]': 'html: gadgetDescription',
             '[data-js-widget-preview]': 'css: {"background-image": format("url($1)", gadgetPreviewImg)}',
         },
 
@@ -63,7 +63,7 @@ define(function (require, exports, module) {
             this.render();
             this.widgetSettingsView = new WidgetSettingsView({model: this.model});
             $('[data-js-widget-settings]', this.$el).html(this.widgetSettingsView.$el);
-            this.saveWidget = new SaveWidgetView({model: this.model});
+            this.saveWidget = new SaveWidgetView({model: this.model, dashboardModel: this.dashboardModel});
             $('[data-js-widget-save]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
             if(this.model.get('filter_id')){
