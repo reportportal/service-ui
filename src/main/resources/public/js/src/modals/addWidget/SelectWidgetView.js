@@ -42,15 +42,32 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {widgets: this.widgetConfig.widgetTypes}))
         },
         onChangeType: function() {
-
+            var gadget = $('input:checked', this.$el).val(),
+                curWidget = this.widgetConfig.widgetTypes[gadget];
             this.model.set({
-                gadget: $('input:checked', this.$el).val(),
+                gadget: gadget,
                 filter_id: '',
-                itemsCount: 50,
+                itemsCount: curWidget.limit.def,
                 widgetDescription: '',
                 widgetOptions: '{}',
                 content_fields: '[]',
             });
+            if (curWidget.criteria && !curWidget.noCriteria) {
+                var defaultCriteria = _.map(curWidget.criteria, function (value, key) {
+                    if(typeof value == 'object') {
+                        return value.keys.join(',');
+                    }
+                    return key;
+                });
+                this.model.setContentFields(defaultCriteria);
+            }
+            if(curWidget.actions){
+                var defaultActions = [];
+                _.each(curWidget.actions, function (a) {
+                    Array.prototype.push.apply(defaultActions, a.actions);
+                });
+                this.model.setWidgetOptions({actionType: defaultActions});
+            }
         },
         destroy: function() {
 

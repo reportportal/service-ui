@@ -48,10 +48,20 @@ define(function (require, exports, module) {
             var actionData = _.map(this.curWidget.actions, function (value) {
                 return {name: value.text, value: value.actions.join(',')};
             });
+            var curWidgetOpt = this.model.getWidgetOptions(),
+                curActions = curWidgetOpt.actionType || [],
+                defActions = [];
+            _.each(curActions, function(action){
+                var def = _.find(actionData, function(d){ return _.contains(d.value.split(','), action);});
+                if(def){
+                    defActions.push(def.value);
+                }
+            });
             this.selectAction = new DropDownComponent({
                 data: actionData,
                 placeholder: Localization.wizard.actionSelectTitle,
                 multiple: true,
+                defaultValue: _.uniq(defActions),
             });
             $('[data-js-select-action-container]', this.$el).html(this.selectAction.$el);
             this.listenTo(this.selectAction, 'change', this.onChangeSelectAction);
