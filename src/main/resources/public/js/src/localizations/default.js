@@ -1343,6 +1343,7 @@ define(['util'], function () {
             removeLaunchFilter: "Filter has been removed from launch tabs",
             savedLaunchFilter: "Filter has been saved",
             savedLaunchFilters: "Filters have been saved",
+            savedFilter: "Filter has been created",
             saveWidget: "Widget has been saved successfully",
             dashboardAdded: "Dashboard has been added",
             dashboardUpdated: "Dashboard has been updated",

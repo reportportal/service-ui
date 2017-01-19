@@ -37,6 +37,9 @@ button {
             box-shadow: none;
             //cursor: no-drop;
             cursor: default;
+            &:active {
+                pointer-events: none;
+            }
             &:hover {
                 box-shadow: none;
             }

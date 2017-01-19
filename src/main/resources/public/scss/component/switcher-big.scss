@@ -36,6 +36,18 @@
   height: 30px;
   border: 1px solid $COLOR--gray-80;
   cursor: pointer;
+  &.disabled {
+    pointer-events: none;
+    .turn-on {
+      background-color: #bed379;
+    }
+    .turn-off {
+      background-color: $COLOR--gray-80;
+    }
+    input {
+      pointer-events: none;
+    }
+  }
   input {
     display: none;
   }

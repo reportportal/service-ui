@@ -48,30 +48,32 @@ define(function (require, exports, module) {
         },
         bindings: {
             '[data-js-widget-type]': 'text: gadgetName',
-            '[data-js-widget-description]': 'text: gadgetDescription',
+            '[data-js-widget-description]': 'html: gadgetDescription',
             '[data-js-widget-preview]': 'css: {"background-image": format("url($1)", gadgetPreviewImg)}',
         },
 
         initialize: function(options) {
             if(!options.model) {
-                console.log('Model is not found');
+                //console.log('Model is not found');
                 return false;
             }
             this.originalModel = options.model;
             this.model = options.model.clone();
             this.widgetConfig = WidgetsConfig.getInstance();
             this.render();
-            this.selectedFilterView = new SelectedFilterView({ model: this.model });
-            $('[data-js-widget-filter]', this.$el).html(this.selectedFilterView.$el);
             this.widgetSettingsView = new WidgetSettingsView({model: this.model});
             $('[data-js-widget-settings]', this.$el).html(this.widgetSettingsView.$el);
-            this.saveWidget = new SaveWidgetView({model: this.model});
+            this.saveWidget = new SaveWidgetView({model: this.model, dashboardModel: this.dashboardModel});
             $('[data-js-widget-save]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
-            this.listenTo(this.selectedFilterView, 'edit', this.onEditFilter);
+            if(this.model.get('filter_id')){
+                this.selectedFilterView = new SelectedFilterView({ model: this.model });
+                $('[data-js-widget-filter]', this.$el).html(this.selectedFilterView.$el);
+                this.listenTo(this.selectedFilterView, 'edit', this.onEditFilter);
+            }
         },
         onChangeModel: function(model) {
-            console.dir(model.changed);
+            //console.dir(model.changed);
         },
         onEditFilter: function(filterModel) {
             this.$el.addClass('filter-edit-state');
@@ -137,11 +139,13 @@ define(function (require, exports, module) {
                 contentParameters.content_fields = this.model.getContentFields();
                 contentParameters.widgetOptions = this.model.getWidgetOptions();
                 var data = {
-                    filter_id: this.model.get('filter_id'),
                     name: this.model.get('name'),
                     share: this.model.get('isShared'),
                     content_parameters: contentParameters
                 };
+                if(this.model.get('filter_id')){
+                    data.filter_id = this.model.get('filter_id');
+                }
                 if (this.model.get('widgetDescription')) {
                     data.description = this.model.get('widgetDescription');
                 }

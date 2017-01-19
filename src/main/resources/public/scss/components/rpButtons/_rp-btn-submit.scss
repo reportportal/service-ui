@@ -24,6 +24,11 @@
             false
         );
 
+        &.rp-btn-add {
+            width: 70px;
+            text-align: center;
+        }
+
         &:hover {
             @include rpBtnStyle(
                 $COLOR--white-default,

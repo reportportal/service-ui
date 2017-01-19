@@ -105,7 +105,8 @@
         height: 140px;
         margin-top: 25px;
         background-color: $COLOR--white-default;
-        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center center;
       }
     }
   }

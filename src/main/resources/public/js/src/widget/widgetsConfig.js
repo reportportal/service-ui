@@ -31,6 +31,7 @@ define(function (require, exports, module) {
     var config = function(){
 
         return {
+            defaultWidgetImg: 'no_chart.png',
             widgetTypes: {
                 'old_line_chart': {
                     gadget_name: Localization.widgets.statisticsLineChart,

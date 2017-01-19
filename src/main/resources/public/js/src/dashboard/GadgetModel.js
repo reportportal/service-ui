@@ -66,7 +66,7 @@ define(function (require, exports, module) {
             gadgetPreviewImg: {
                 deps: ['gadget'],
                 get: function(gadget) {
-                    if(!gadget) return '';
+                    if(!gadget) return 'img/popup/' + widgetConfig.defaultWidgetImg;
                     return 'img/popup/' + widgetConfig.widgetTypes[gadget].img;
                 }
             },

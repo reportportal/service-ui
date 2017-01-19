@@ -39,6 +39,25 @@
   .label-wrapper {
     padding: 10px 10px 0 10px;
     width: 100%;
+    &.rp-form {
+      label {
+        &> span {
+          &:first-child {
+            float: none;
+            width: 100%;
+            text-align: left;
+            & + input {
+              float: none;
+              width: 100%;
+            }
+          }
+        }
+        .validate-hint {
+          width: 100%;
+          left: 0;
+        }
+      }
+    }
   }
   .name-label {
     margin-bottom: 10px;
@@ -48,7 +67,7 @@
   .edit-block {
     width: 100%;
     padding: 0 10px 20px 10px;
-    //border-bottom: 1px solid $COLOR--gray-91;
+    border-bottom: 1px solid $COLOR--gray-91;
     .filter-entity-wrapper {
       min-width: 190px;
       width: 190px;
@@ -76,6 +95,13 @@
     .sorting-wrapper {
       margin-bottom: 20px;
       clear: both;
+      .filter-sorting-view {
+        .dropdown-toggle {
+          &> span {
+            text-transform: capitalize;
+          }
+        }
+      }
     }
   }
   .entities-container {
