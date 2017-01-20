@@ -36,7 +36,7 @@
           margin-bottom: 0;
         }
 
-        & > span {
+        & > .field-title {
           display: block;
           float: left;
           margin-right: 30px;
@@ -50,8 +50,9 @@
           display: block;
           width: 350px;
         }
-        .help-inline {
-          padding-top: 0px;
+        .validate-hint {
+          width: 350px;
+          margin-left: 110px;
         }
       }
       .description-label {
@@ -68,7 +69,7 @@
       
       @media (max-width: 620px) {
         & > .modal-field {
-          & > span {
+          & > .field-title {
             float: none;
             text-align: left;
           }
