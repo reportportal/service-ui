@@ -43,11 +43,16 @@ define(function (require, exports, module) {
         },
         initialize: function() {
             this.render();
-
+            this.setTooltip();
+            this.listenTo(this.model, 'change', this.update);
+        },
+        setTooltip: function () {
             if (this.model.get('description')) {
                 Util.appendTooltip(this.model.get('description'), $('[data-js-filter-comment]', this.$el), this.$el);
             }
-
+        },
+        update: function () {
+            this.setTooltip();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));

@@ -25,6 +25,21 @@
         padding-top: 10px;
         padding-bottom: 20px;
         position: relative;
+
+        .rp-form {
+          .rp-field {
+            .github-auth-state-mobile {
+              display: none;
+              width: 100%;
+              height: 30px;
+              clear: both;
+              border: solid 1px $COLOR--gray-80;
+              background-color: $COLOR--gray-91;
+              padding: 5px 0 0 9px;
+            }
+          }
+        }
+
         .mobile-disabling-cover {
             position: absolute;
             left: 0;
@@ -65,6 +80,20 @@
         padding-top: 10px;
         padding-bottom: 20px;
         position: relative;
+
+        .rp-form {
+          .rp-field {
+            .email-server-state-mobile {
+              display: none;
+              width: 100%;
+              height: 30px;
+              clear: both;
+              border: solid 1px $COLOR--gray-80;
+              background-color: $COLOR--gray-91;
+              padding: 5px 0 0 9px;
+            }
+          }
+        }
 
         .mobile-disabling-cover {
             position: absolute;
@@ -149,50 +178,61 @@
         }
     }
     @media (max-width: $SCREEN_XS_MAX) {
-        .rp-form {
+        .rp-email-settings, .rp-auth-server-settings {
+            .rp-form {
             width: 100%;
             .rp-field {
-                & > span {
-                    &:first-child {
-                        width: 100%;
-                        text-align: left;
-                    }
-                    &.required {
-                        position: relative;
-                        &:after {
-                            display: none;
-                        }
-                    }
-                    & + input, & + textarea {
-                        width: 100%;
-                        pointer-events: none;
-                        tab-index: -1;
-                        background-color: $COLOR--gray-91;
-                    }
-                    & + .rp-field-item {
-                        width: 100%;
-                    }
+              & > span {
+                &:first-child {
+                  width: 100%;
+                  text-align: left;
                 }
-                .delete-item {
+                &.required {
+                  position: relative;
+                  &:after {
                     display: none;
+                  }
                 }
-                .rp-btn {
-                    pointer-events: none;
-                    tab-index: -1;
-                    background-color: $COLOR--gray-91;
+                & + input, & + textarea {
+                  width: 100%;
+                  pointer-events: none;
+                  tab-index: -1;
+                  background-color: $COLOR--gray-91;
                 }
-                .rp-btn-submit {
-                    display: none;
+                & + .rp-field-item {
+                  width: 100%;
                 }
-                .validate-hint {
-                    width: 100%;
-                }
+              }
+              .github-auth-state-mobile {
+                display: block;
+              }
+              .email-server-state-mobile {
+                display: block;
+              }
+              .rp-switcher-big {
+                display: none;
+              }
+              .delete-item {
+                display: none;
+              }
+              .rp-btn {
+                pointer-events: none;
+                tab-index: -1;
+                background-color: $COLOR--gray-91;
+              }
+              .rp-btn-submit {
+                display: none;
+              }
+              .validate-hint {
+                width: 100%;
+              }
             }
 
             .add-new-org-form, .add-new-org-btn {
-                display: none;
+              display: none;
             }
+          }
         }
-    }
 
+    }
 }

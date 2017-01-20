@@ -40,6 +40,7 @@ define(function (require, exports, module) {
 
         bindings: {
             '[data-js-server-enable]': 'checked: enableEmailServer',
+            '[data-js-server-enable-mobile]': 'html: getState',
             '[data-js-server-config]': 'classes: {hide: not(enableEmailServer)}',
             '[data-js-server-host]': 'value: host',
             //'[data-js-server-protocol-name]': 'text: getProtocol',
@@ -52,22 +53,33 @@ define(function (require, exports, module) {
             '[data-js-server-ssl]': 'checked: sslEnabled'
         },
 
-        /*computeds: {
-         getProtocol: {
-         deps: ['protocol'],
-         get: function(protocol){
-         var p = _.find(config.forAdminSettings.protocol, function(prot){ return prot.value === protocol; });
-         return p.name;
-         }
-         },
-         getAuth: {
-         deps: ['authEnabled'],
-         get: function(authEnabled){
-         var text = Localization.ui;
-         return authEnabled ? text.on : text.off;
-         }
-         }
-         },*/
+        computeds: {
+            getState: {
+                deps: ['enableEmailServer'],
+                get: function (enableEmailServer) {
+                    if (enableEmailServer) {
+                        return 'ON';
+                    }
+                    return 'OFF';
+                }
+            }
+            // getProtocol: {
+            //     deps: ['protocol'],
+            //     get: function (protocol) {
+            //         var p = _.find(config.forAdminSettings.protocol, function (prot) {
+            //             return prot.value === protocol;
+            //         });
+            //         return p.name;
+            //     }
+            // },
+            // getAuth: {
+            //     deps: ['authEnabled'],
+            //     get: function (authEnabled) {
+            //         var text = Localization.ui;
+            //         return authEnabled ? text.on : text.off;
+            //     }
+            // }
+        },
 
         events: {
             'click [data-js-submit-server-settings]': 'submitEmailSettings'

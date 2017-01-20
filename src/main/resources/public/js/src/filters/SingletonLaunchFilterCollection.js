@@ -30,7 +30,7 @@ define(function (require, exports, module) {
             instance = new LaunchFilterCollection();
         }
         return instance;
-    }
+    };
 
     return getInstance;
 });
