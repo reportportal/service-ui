@@ -1056,14 +1056,14 @@ define(function (require, exports, module) {
             var $holder = $el.closest(".form-group, .rp-form-group, label");
             var $hintBlock = $('> .validate-hint', $holder);
             var validators = [];
-            if (options && options.max) {
-                $el.attr('maxLength', options.max);
-            }
 
             if (!_.isArray(options)) {
                 options = [options];
             }
             _.each(options, function (option) {
+                if (option.max) {
+                    $el.attr('maxLength', option.max);
+                }
                 if (Validators[option.validator]) {
                     validators.push({validate: Validators[option.validator], options: option});
                 }

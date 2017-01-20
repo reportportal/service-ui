@@ -52,13 +52,13 @@ define(function (require, exports, module) {
                 isShared: filterModel.get('isShared'),
                 description: filterModel.get('description'),
             });
-            Util.bootValidator($('[data-js-name-input]', this.$el), [{
+            Util.hintValidator($('[data-js-name-input]', this.$el), [{
                 validator: 'minMaxRequired',
                 type: 'filterName',
                 min: 3,
                 max: 128
             }, {validator: 'noDuplications', type: 'filterName', source: filterNames}]);
-            Util.bootValidator($('[data-js-description]', this.$el), {
+            Util.hintValidator($('[data-js-description]', this.$el), {
                 validator: 'maxRequired',
                 type: 'filterDescription',
                 max: 256
