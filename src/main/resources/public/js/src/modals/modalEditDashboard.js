@@ -25,6 +25,7 @@ define(function (require, exports, module) {
     var ModalView = require('modals/_modalView');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var UserModel = require('model/UserModel');
 
     var ModalEditDashboard = ModalView.extend({
         template: 'tpl-modal-edit-dashboard',
@@ -41,8 +42,9 @@ define(function (require, exports, module) {
 
         initialize: function(options) {
             var dashboardModel = options.dashboardModel;
+            var currentUserName = (dashboardModel.get('owner') === '') ? (new UserModel().get('name')) : dashboardModel.get('owner');
             var dashboardNames = _.map(options.dashboardCollection.models, function(model) {
-                if (dashboardModel.get('name') != model.get('name')) {
+                if (dashboardModel.get('name') != model.get('name') && currentUserName === model.get('owner')) {
                     return model.get('name');
                 }
             });
