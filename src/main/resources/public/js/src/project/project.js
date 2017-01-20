@@ -2833,7 +2833,7 @@ define(function(require, exports, module) {
         showModalResetColors: function () {
             var self = this;
             var modal = new ModalConfirm({
-                headerText: Localization.dialogHeader.titleEditDefectType,
+                headerText: Localization.dialogHeader.titleResetDefectColors,
                 bodyText: Localization.dialog.msgResetColorsDefectType,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonDanger: true,
