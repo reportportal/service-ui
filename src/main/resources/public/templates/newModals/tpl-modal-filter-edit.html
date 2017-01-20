@@ -1,18 +1,18 @@
 <%= data.includeTemplate('_tpl-modal-header', {headerText: ((data.mode == 'save')?data.text.dialog.addFilter:data.text.dialog.editFilter)}) %>
 <div class="modal-body">
     <label class="name-label modal-field form-group">
-        <span><%= data.text.filter.name %></span>
+        <span class="field-title"><%= data.text.filter.name %></span>
         <input class="rp-input form-control" placeholder="<%= data.text.filter.namePlaceholder %>" type="text" data-js-name-input>
-        <span class="help-inline"></span>
+        <span class="validate-hint"></span>
     </label>
 
     <label class="description-label modal-field">
-        <span><%= data.text.filter.description %></span>
+        <span class="field-title"><%= data.text.filter.description %></span>
         <textarea class="rp-input form-control" placeholder="<%= data.text.filter.descriptionPlaceholder %>" data-js-description></textarea>
-        <span class="help-inline"></span>
+        <!--<span class="help-inline"></span>-->
     </label>
     <label class="share-label modal-field form-group">
-        <span><%= data.text.filter.share %></span>
+        <span class="field-title"><%= data.text.filter.share %></span>
         <label class="rp-switcher-big">
             <span class="turn-on"><%= data.text.ui.on %></span>
             <span class="turn-off"><%= data.text.ui.off %></span>
