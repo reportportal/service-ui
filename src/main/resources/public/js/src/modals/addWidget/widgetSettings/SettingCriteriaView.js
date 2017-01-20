@@ -44,7 +44,7 @@ define(function (require, exports, module) {
                 if (this.curWidget.staticCriteria) {
                     this.onChangeSelectCriteria(_.map(this.curWidget.staticCriteria, function(val, key) {
                         return key;
-                    }))
+                    }));
                 }
                 this.destroy();
                 return false;
