@@ -4,31 +4,31 @@
     <h4><%= data.text.launches.mergeLaunchesModalTitle %></h4>
     <div class="fields">
         <div class="rp-form-group name">
-            <span class="field-caption"><%= data.text.launches.launchName %>:</span>
+            <span class="field-caption"><%= data.text.launches.launchName %></span>
             <input type="text" id="mergeName" class="rp-input-default" value="<%- data.name %>">
             <span class="help-inline"></span>
         </div>
         <div class="rp-form-group owner">
-            <span class="field-caption"><%= data.text.forms.owner %>:</span>
+            <span class="field-caption"><%= data.text.forms.owner %></span>
             <input type="text" class="rp-input-default" value="<%- data.owner %>" disabled="disabled">
         </div>
         <div class="rp-form-group description">
-            <span class="field-caption"><%= data.text.forms.description %>:</span>
+            <span class="field-caption"><%= data.text.forms.description %></span>
             <textarea id="mergeDescription" class="rp-input-default" rows="3" data-js-description><%= data.description
                     %></textarea>
             <span class="help-inline"></span>
         </div>
         <div class="rp-form-group tags">
-            <span class="field-caption"><%= data.text.forms.tags %>:</span>
+            <span class="field-caption"><%= data.text.forms.tags %></span>
             <input type="text" class="rp-input-default" id="mergeTags" data-warning="<%= data.text.ui.enterChars %>"
                     placeholder="" value="<%= data.tags.join(',') %>"/>
         </div>
         <div class="rp-form-group start-time">
-            <span class="field-caption"><%= data.text.forms.startTime %>:</span>
+            <span class="field-caption"><%= data.text.forms.startTime %></span>
             <input type="text" class="rp-input-default" value="<%- data.dateFormat(data.startTime) %>" disabled="disabled">
         </div>
         <div class="rp-form-group end-time">
-            <span class="field-caption"><%= data.text.forms.endTime %>:</span>
+            <span class="field-caption"><%= data.text.forms.endTime %></span>
             <input type="text" class="rp-input-default" value="<%- data.dateFormat(data.endTime) %>" disabled="disabled">
         </div>
         <div class="rp-form-group extended">

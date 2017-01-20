@@ -110,8 +110,9 @@ define(function (require, exports, module) {
             this.changeCollection();
         },
         renderMyDashboards: function() {
-            _.each(this.myDashboardViews, function(view) { view.destroy(); })
+            _.each(this.myDashboardViews, function(view) { view.destroy(); });
             this.myDashboardViews = [];
+            this.myDashboardCollection.models = this.sortDashboardCollectionByASC(this.myDashboardCollection.models);
             var self = this;
             _.each(this.myDashboardCollection.models, function(model) {
                 var view = new DashboardListItemView({model: model})
@@ -122,12 +123,18 @@ define(function (require, exports, module) {
         renderSharedDashboards: function() {
             _.each(this.sharedDashboardViews, function(view) { view.destroy(); })
             this.sharedDashboardViews = [];
+            this.sharedDashboardCollectoin.models = this.sortDashboardCollectionByASC(this.sharedDashboardCollectoin.models);
             var self = this;
             _.each(this.sharedDashboardCollectoin.models, function(model) {
-                var view = new DashboardListItemView({model: model})
+                var view = new DashboardListItemView({model: model});
                 self.sharedDashboardViews.push(view);
                 $('[data-js-shared-dashboards-container]', self.$el).append(view.$el);
             })
+        },
+        sortDashboardCollectionByASC: function (collection) {
+            return _.sortBy(collection, function (item) {
+                return item.get('name').toUpperCase();
+            });
         },
 
         destroy: function () {

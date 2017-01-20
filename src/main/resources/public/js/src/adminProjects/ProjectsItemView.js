@@ -187,6 +187,7 @@ define(function(require, exports, module) {
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteProject,
                 bodyText: Util.replaceTemplate(Localization.dialog.deleteProject, this.model.get('projectId')),
+                confirmText: Localization.dialog.msgDeleteProject,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonDanger: true,
                 okButtonText: Localization.ui.delete,

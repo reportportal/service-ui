@@ -60,6 +60,9 @@ define(function (require, exports, module) {
                 this.$container = $("#dynamic-content", this.$el);
             }
             this.setupPageView(options);
+            if (this.pageView.contextName === 'settings') {
+                this.$el.find('.rp-main-panel').addClass('settings-page');
+            }
             return this;
         },
 
@@ -74,6 +77,8 @@ define(function (require, exports, module) {
             } else {
                 this.pageView.update(options);
             }
+
+            (this.pageView.contextName === 'settings') ? this.$el.find('.rp-main-panel').addClass('settings-page') : this.$el.find('.rp-main-panel').removeClass('settings-page');
         },
 
         setupPageView: function (options) {

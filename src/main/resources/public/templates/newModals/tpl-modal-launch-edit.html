@@ -14,14 +14,12 @@
             <input class="rp-input" type="text" placeholder="<%= data.text.dialog.launchTagPlaceholder %>" data-js-tags>
         </label>
     </div>
-    <!--<div class="well">
-        <h3 class="title-no-data text-center">
-            <i class="rp-icons rp-icons-warning"></i>
-            <span class="warning">
-                        <small><%= data.text.launches.disclaimerChangeDescription %></small>
-                    </span>
-        </h3>
-    </div>-->
+    <% if (data.isEditLaunch) { %>
+        <div class="warning-block">
+            <div class="warning"><i class="rp-icons rp-icons-warning"></i> Warning!</div>
+            <div class="warning-message"><%= data.text.launches.disclaimerChangeDescription %></div>
+        </div>
+    <% } %>
 </div>
 <div class="modal-footer">
     <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
