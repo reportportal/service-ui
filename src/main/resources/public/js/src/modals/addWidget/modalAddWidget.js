@@ -53,7 +53,8 @@ define(function (require, exports, module) {
             '[data-js-widget-preview]': 'css: {"background-image": format("url($1)", gadgetPreviewImg)}',
             '[data-js-next-second-step]': 'attr: {disabled: any(not(gadget), disableNavigate)}',
             '[data-js-next-last-step]': 'attr: {disabled: any(not(gadgetIsFilterFill), disableNavigate)}',
-            '[data-js-previous-first-step]': 'attr: {disabled:  disableNavigate}'
+            '[data-js-previous-first-step]': 'attr: {disabled:  disableNavigate}',
+            '[data-js-add-widget]': 'attr: {disabled: any(not(name),disableNavigate)}'
         },
 
         initialize: function(options) {
@@ -76,6 +77,7 @@ define(function (require, exports, module) {
             $('[data-js-step-3]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.viewModel, 'change:step', this.setState);
             this.listenTo(this.configureWidgetView, 'disable:navigation', this.onChangeDisableNavigation);
+            this.listenTo(this.saveWidget, 'disable:navigation', this.onChangeDisableNavigation);
             this.setState();
             this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
         },

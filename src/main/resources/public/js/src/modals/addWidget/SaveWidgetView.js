@@ -67,9 +67,18 @@ define(function (require, exports, module) {
                 type: '',
                 max: 256
             });
+            this.listenTo(this.model, 'change:name', this.onChangeName);
         },
         isSharedDashboard: function(){
             return this.dashboardModel && this.dashboardModel.get('isShared');
+        },
+        onChangeName: function(){
+            if(this.validate()){
+                this.trigger('disable:navigation', false);
+            }
+            else {
+                this.trigger('disable:navigation', true);
+            }
         },
         validate: function() {
             return !$('[data-js-name-input]', this.$el).trigger('validate').data('validate-error');
