@@ -1006,7 +1006,8 @@ define(['util'], function () {
             description: 'Description',
             descriptionPlaceholder: 'Enter Filter Description',
             edit: "Edit Filter",
-            addNew: 'Add New Filter'
+            addNew: 'Add New Filter',
+            filterName: 'Filter Name'
         },
 
         project: {

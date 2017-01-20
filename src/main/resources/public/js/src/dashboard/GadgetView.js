@@ -28,6 +28,7 @@ define(function (require, exports, module) {
     var WidgetModel = require('newWidgets/WidgetModel');
     var WidgetView = require('newWidgets/WidgetView');
     var ModalEditWidget = require('modals/addWidget/modalEditWidget');
+    var SimpleTooltipView = require('tooltips/SimpleTooltipView');
 
     var config = App.getInstance();
 
@@ -57,6 +58,17 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+            this.appendTooltip();
+        },
+        appendTooltip: function(){
+            var description =  this.model.get('description'),
+                el = $('[data-js-comment]', this.$el);
+            if(description){
+                Util.appendTooltip(function() {
+                    var tooltip = new SimpleTooltipView({message: description});
+                    return tooltip.$el.html();
+                }, el, el);
+            }
         },
         onClickRefresh: function() {
             this.update();
