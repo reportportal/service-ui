@@ -515,7 +515,7 @@ define(['util'], function () {
             updateDataFromUPSA: "Update data from UPSA",
             updateUserDataFrom: "Update data from",
             reloginRequired: "relogin is required",
-            forceUpdate: "Force update",
+            forceUpdate: "Force Update",
             infoSynchronized: 'Information for user has been successfully synchronized',
             UUID: "UUID",
             msgUUIDTop: "In order to provide security for your own domain password, you can use a user token, named UUID - to verify your account to be able to log with agent.",
