@@ -41,6 +41,7 @@ define(function (require, exports, module) {
             var self = this;
             this.filterModel = new FilterModel({
                 id: this.model.get('filter_id'),
+                temp: true,
                 active: true,
             });
             this.$el.addClass('load');
