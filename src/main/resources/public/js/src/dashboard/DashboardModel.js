@@ -86,7 +86,7 @@ define(function (require, exports, module) {
         update: function() {
             var self = this;
             return Service.getProjectDashboard(this.get('id')).done(function(data){
-                self.setWidgets(data.widgets);
+                self.setWidgets(data.widgets, true);
             })
         },
         addWidget: function(model) {
