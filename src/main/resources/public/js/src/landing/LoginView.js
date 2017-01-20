@@ -57,7 +57,17 @@ define(function(require, exports, module) {
             'click #submit_change:not(.disabled)': 'submitChangePass'
         },
         bindings: {
-            '[data-js-build-versions]': 'html: fullServicesHtml'
+            '[data-js-build-versions]': 'html: fullServicesHtml',
+            '[data-js-github-login]': 'classes: {hide: validateGitHubAuth}',
+            '[data-js-github-login-btn]': 'attr: {disabled: validateGitHubAuth}'
+        },
+        computeds: {
+            validateGitHubAuth: {
+                deps: ['authExtensions'],
+                get: function(authExtensions){
+                    return !_.contains(authExtensions, 'github');
+                }
+            }
         },
         initialize: function (options) {
             this.user = new UserModel();

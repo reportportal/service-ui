@@ -29,7 +29,8 @@ define(function(require, exports, module) {
     var RegistryInfoModel = Backbone.Model.extend({
         defaults: {
             uiBuildVersion: '',
-            fullServicesHtml: ''
+            fullServicesHtml: '',
+            authExtensions: []
         },
         initialize: function(){
             this.ready = $.Deferred();
@@ -39,6 +40,9 @@ define(function(require, exports, module) {
                 .done(function(data){
                     if(data && data.UI && data.UI.build) {
                         self.set({uiBuildVersion: data.UI.build.version})
+                    }
+                    if(data && data.UAT && data.UAT.auth_extensions){
+                        self.set({authExtensions: data.UAT.auth_extensions});
                     }
                     var fullServicesHtml = '';
                     _.each(data, function(service) {
