@@ -65,6 +65,10 @@ define(function (require, exports, module) {
             this.render();
         },
 
+        handleDropDown: function (e) {
+            Util.dropDownHandler(e);
+        },
+
         render: function () {
             this.$el.html(Util.templates(this.contentBody, {
                 isMultiply: this.isMultiply,
