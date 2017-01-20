@@ -27,6 +27,7 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var FilterSearchView = require('modals/addWidget/FilterSearchView');
     var WidgetSettingsView = require('modals/addWidget/WidgetSettingsView');
+    var Localization = require('localization');
 
 
     var SaveWidgetView = Epoxy.View.extend({
@@ -36,14 +37,19 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-name-input]': 'value: name',
             '[data-js-description]': 'value: widgetDescription',
-            '[data-js-is-shared]': 'checked: isShared',
-            '[data-js-shared-control]': 'classes: {disabled: offSharedSwitch}'
+            '[data-js-is-shared]': 'checked: isShared, disabled: offSharedSwitcher',
+            '[data-js-shared-control]': 'classes: {disabled: offSharedSwitcher}, attr: {title: titleForSharedSwitcher}'
         },
         computeds: {
-            offSharedSwitch: {
+            offSharedSwitcher: {
                 get: function(){
-                    return this.dashboardModel && this.dashboardModel.get('isShared');
-                },
+                    return this.isSharedDashboard();
+                }
+            },
+            titleForSharedSwitcher: {
+                get: function(){
+                    return this.isSharedDashboard() ? Localization.wizard.widgetOnSharedDashboard : '';
+                }
             }
         },
         initialize: function(options) {
@@ -61,6 +67,9 @@ define(function (require, exports, module) {
                 type: '',
                 max: 256
             });
+        },
+        isSharedDashboard: function(){
+            return this.dashboardModel && this.dashboardModel.get('isShared');
         },
         validate: function() {
             return !$('[data-js-name-input]', this.$el).trigger('validate').data('validate-error');
