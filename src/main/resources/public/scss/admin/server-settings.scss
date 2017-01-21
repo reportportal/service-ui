@@ -128,6 +128,7 @@
                     font-weight: 600;
                 }
             }
+
         }
     }
 
@@ -179,6 +180,10 @@
     }
     @media (max-width: $SCREEN_XS_MAX) {
         .rp-email-settings, .rp-auth-server-settings {
+            .email-server-error,
+            .email-server-btn {
+                display: none;
+            }
             .rp-form {
             width: 100%;
             .rp-field {
