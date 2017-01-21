@@ -64,6 +64,7 @@
           margin-bottom: 13px;
 
           .link-label {
+            position: relative;
             width: 360px;
             float: left;
 
@@ -81,19 +82,17 @@
               width: 240px;
             }
 
-            .help-inline {
-              margin-left: 118px;
+            .validate-hint {
+              width: 240px;
+              margin-left: 117px;
             }
           }
 
           .issue-label {
+            position: relative;
             float: left;
             width: 100px;
             margin-left: 7px;
-
-            .help-inline {
-              margin-top: 4px;
-            }
           }
 
           .remove-row {
