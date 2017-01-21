@@ -79,6 +79,7 @@ define(function (require, exports, module) {
                 MembersService.getSearchUser({search: query.term})
                     .done(function (response) {
                         var data = {results: []};
+                        remoteUsers = [];
                         _.each(response.content, function (item) {
                             remoteUsers.push(item);
                             data.results.push({

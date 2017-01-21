@@ -141,7 +141,7 @@ define(function(require, exports, module) {
                         ? 'submitForgotPassRestricted'
                         : 'submitForgotPass';
 
-                    if (error.responseText.indexOf('40010') > -1) {
+                    if (error.responseText.indexOf('40010') > -1 || error.responseText.indexOf(Localization.failMessages.serverNotConfigured) > -1) {
                         type = 'submitForgotPassBrokenConf';
                     };
 
