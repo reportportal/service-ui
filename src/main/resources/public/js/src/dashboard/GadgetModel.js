@@ -134,9 +134,6 @@ define(function (require, exports, module) {
 
                     }
                     self.set(modelData)
-                })
-                .fail(function(error){
-                    //console.log('fail: ', error);
                 });
         },
         getWidgetOptions: function() {

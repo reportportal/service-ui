@@ -35,6 +35,7 @@ define(function (require, exports, module) {
     var GadgetView = Epoxy.View.extend({
         className: 'gadget-view grid-stack-item',
         template: 'tpl-gadget-view',
+        errorTpl: 'tpl-gadget-unable-load',
         events: {
             'click [data-js-gadget-refresh]': 'onClickRefresh',
             'click [data-js-gadget-remove]': 'onClickRemove',
@@ -84,15 +85,38 @@ define(function (require, exports, module) {
             this.$el.addClass('load');
             var self = this;
             this.model.update()
-                .always(function() {
-                    self.$el.removeClass('load')
+                .done(function(){
                     self.updateWidget();
+                })
+                .fail(function(error){
+                    self.onLoadDataError(error);
+                })
+                .always(function() {
+                    self.$el.removeClass('load');
                 })
         },
         updateWidget: function() {
             this.widgetView && this.widgetView.destroy();
+            if(!this.model.get('gadget')){
+                this.onLoadDataError();
+                return;
+            }
             this.widgetView = new WidgetView({model: (new WidgetModel(this.model.get('widgetData')))});
             $('[data-js-widget-container]', this.$el).html(this.widgetView.$el);
+        },
+        onLoadDataError: function(error){
+            var message = Localization.widgets.unableLoadData;
+            if(error && error.status == 404){
+                message = Localization.widgets.widgetNotFound;
+            }
+            else {
+                var owner = this.model.get('owner'),
+                    isShared = this.model.get('isShared');
+                if(!isShared && (owner !== config.userModel.get('name'))){
+                    message = Localization.widgets.unsharedWidget;
+                }
+            }
+            $('[data-js-widget-container]', this.$el).html(Util.templates(this.errorTpl, {message: message}));
         },
         onClickRemove: function(e) {
             e.stopPropagation();

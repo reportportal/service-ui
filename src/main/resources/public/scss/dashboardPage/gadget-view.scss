@@ -113,6 +113,18 @@
     overflow: hidden;
     opacity: 1;
     transition: opacity 0.5s ease;
+    .gadget-no-data-error {
+      position: absolute;
+      font-family: $OpenSansSemibold;
+      font-size: 18px;
+      line-height: 18px;
+      padding: 0;
+      text-align: center;
+      top: 50%;
+      left: 0;
+      right: 0;
+      transform: translateY(-50%);
+    }
   }
   .preloader {
     position: absolute;
