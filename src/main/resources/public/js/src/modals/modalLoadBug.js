@@ -63,13 +63,13 @@ define(function (require, exports, module) {
             this.render();
             this.listenTo(this.model.collection, 'add remove', this.onChangeCollection);
             this.onChangeCollection();
-            Util.bootValidator($('[data-js-issue-input]', this.$el), {
+            Util.hintValidator($('[data-js-issue-input]', this.$el), {
                 validator: 'minMaxRequired',
                 type: 'issueId',
                 min: 1,
                 max: 128
             });
-            Util.bootValidator($('[data-js-link-input]', this.$el), [{
+            Util.hintValidator($('[data-js-link-input]', this.$el), [{
                 validator: 'matchRegex',
                 type: 'issueLinkRegex',
                 pattern: config.patterns.urlT,
@@ -151,7 +151,7 @@ define(function (require, exports, module) {
         onClickLoad: function() {
             var self = this;
             $('.form-control', this.$el).trigger('validate');
-            if (!$('.has-error', this.$el).length) {
+            if (!$('.validate-error', this.$el).length) {
                 var issues = _.map(this.collection.models, function(model) {
                     return {
                         ticketId: model.get('ticketId'),
