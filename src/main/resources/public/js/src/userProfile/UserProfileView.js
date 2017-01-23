@@ -324,17 +324,17 @@ define(function (require, exports, module) {
                             '<p>rp.uuid = ' + this.apiTokenModel.get('apiToken') + '</p>' +
                             '<p>rp.launch = ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
                             '<p>rp.project = ' + this.model.get('defaultProject') + '</p>' +
-                            '<p>rp.keystore.resource = reportportal-client-v2.jks</p>' +
-                            '<p>rp.keystore.password = reportportal</p>' +
                             '</div>' +
                             '<h1>'+Localization.userProfile.notRequired+'</h1>' +
-                            '<div class="options"'+
+                            '<div class="options">'+
                             '<p>rp.enable = true</p>' +
                             '<p>rp.tags = TAG1;TAG2</p>' +
                             '<p>rp.convertimage = true</p>' +
                             '<p>rp.mode = DEFAULT</p>' +
                             '<p>rp.skipped.issue = true</p>' +
                             '<p>rp.batch.size.logs = 20</p>' +
+                            '<p>rp.keystore.resource = reportportal-client-v2.jks</p>' +
+                            '<p>rp.keystore.password = reportportal</p>' +
                             '</div>';
                         break;
                 }

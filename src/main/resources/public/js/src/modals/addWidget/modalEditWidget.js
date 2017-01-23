@@ -73,7 +73,7 @@ define(function (require, exports, module) {
             }
         },
         onChangeModel: function(model) {
-            //console.dir(model.changed);
+            console.dir(model.changed);
         },
         onEditFilter: function(filterModel) {
             this.$el.addClass('filter-edit-state');

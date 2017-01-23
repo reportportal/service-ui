@@ -515,7 +515,7 @@ define(['util'], function () {
             updateDataFromUPSA: "Update data from UPSA",
             updateUserDataFrom: "Update data from",
             reloginRequired: "relogin is required",
-            forceUpdate: "Force update",
+            forceUpdate: "Force Update",
             infoSynchronized: 'Information for user has been successfully synchronized',
             UUID: "UUID",
             msgUUIDTop: "In order to provide security for your own domain password, you can use a user token, named UUID - to verify your account to be able to log with agent.",
@@ -1006,7 +1006,8 @@ define(['util'], function () {
             description: 'Description',
             descriptionPlaceholder: 'Enter Filter Description',
             edit: "Edit Filter",
-            addNew: 'Add New Filter'
+            addNew: 'Add New Filter',
+            filterName: 'Filter Name'
         },
 
         project: {
@@ -1322,8 +1323,8 @@ define(['util'], function () {
             deleteMember: "User '%%%' was deleted",
             deleteProject: "Project was deleted",
             dashboardDelete: "Dashboard has been deleted!",
-            deletedWidget: "Widget has been removed!",
-            dashboardDeletedUnsharedByOwner: "Dashboard has been removed",
+            deletedWidget: "Widget has been deleted!",
+            dashboardDeletedUnsharedByOwner: "Dashboard has been deleted",
             deleteLaunch: "Launch was deleted",
             deleteLaunches: 'Launches were deleted',
             deleteTestItem: "Item was deleted",

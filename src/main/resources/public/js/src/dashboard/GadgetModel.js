@@ -117,7 +117,7 @@ define(function (require, exports, module) {
                         name: data.name,
                         owner: data.owner,
                         isShared: data.isShared,
-                        gadget: data.content_parameters.gadget,
+                        gadget: data.content_parameters && data.content_parameters.gadget,
                         widgetData: data,
                         filter_id: data.filter_id,
                     };
@@ -134,7 +134,7 @@ define(function (require, exports, module) {
 
                     }
                     self.set(modelData)
-                })
+                });
         },
         getWidgetOptions: function() {
             try {
