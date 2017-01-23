@@ -1452,10 +1452,12 @@ li {
     position: absolute;
     right: -15px;
     font-size: 24px;
+    top: -8px;
   }
 
   &.collapsed:after {
     content: "+";
+    top: -6px;
   }
 }
 
