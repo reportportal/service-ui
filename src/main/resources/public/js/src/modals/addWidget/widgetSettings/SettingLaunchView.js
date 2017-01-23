@@ -59,8 +59,13 @@ define(function (require, exports, module) {
             this.model.setWidgetOptions(curOptions);
         },
         activate: function() {
-            var self = this;
-            Util.setupSelect2WhithScroll($('[data-js-data-launch-input]', this.$el), {
+            var self = this,
+                curOptions = this.model.getWidgetOptions(),
+                field = $('[data-js-data-launch-input]', this.$el);
+            if(curOptions.launchNameFilter){
+                field.val(curOptions.launchNameFilter);
+            }
+            Util.setupSelect2WhithScroll(field, {
                 min: 1,
                 minimumInputLength: 3,
                 maximumInputLength: 256,
@@ -89,6 +94,16 @@ define(function (require, exports, module) {
                         });
                 }
             });
+            field.on('change', function () {
+                field.trigger('validate');
+            });
+            Util.hintValidator(field, {
+                validator: 'required'
+            });
+
+        },
+        validate: function(){
+            return !$('[data-js-data-launch-input]', this.$el).trigger('validate').data('validate-error');
         }
     });
 

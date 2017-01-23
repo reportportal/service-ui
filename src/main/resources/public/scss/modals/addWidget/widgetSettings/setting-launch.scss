@@ -24,9 +24,12 @@
   float: left;
   margin: 17px 10px 0 10px;
   position: relative;
-  .select2-container {
+  .select-launch-control {
     display: inline-block;
     margin-left: 8px;
     width: 215px;
+    .validate-hint {
+      width: 100%;
+    }
   }
 }
