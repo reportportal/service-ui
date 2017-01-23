@@ -20,6 +20,12 @@
  */
 .modal-load-bug {
   .modal-content-wrapper {
+    .modal-header {
+      .beta-badge {
+        top: 0;
+        left: 75px;
+      }
+    }
     .modal-body {
       padding: 30px 10px 10px 10px;
     }
