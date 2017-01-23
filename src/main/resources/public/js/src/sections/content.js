@@ -27,7 +27,7 @@ define(function (require, exports, module) {
 
     // Main modules
     var Dashboard = require('dashboard/dashboard-view');
-    var Favorites = require('favorites');
+    var Favorites = require('favorites/favorites');
     var Launch = require('launch');
     var LaunchPage = require('launches/LaunchPage');
     var LaunchDebugPage = require('launches/LaunchDebugPage');
