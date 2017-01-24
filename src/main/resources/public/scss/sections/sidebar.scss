@@ -145,8 +145,7 @@
             }
 
             i {
-              margin: 0 auto;
-              margin-bottom: 6px;
+              margin: 0 auto 6px;
               width: 100%;
             }
 
@@ -280,6 +279,24 @@
       position: absolute;
       width: 100%;
       bottom: 0;
+      li {
+        a {
+          i {
+            vertical-align: middle;
+            margin: -5px auto 0;
+            font-size: 24px;
+
+            &.rp-icons-logout {
+              margin-top: -4px;
+            }
+          }
+          span {
+            line-height: 16px;
+            padding-left: 6px;
+            margin-top: -8px;
+          }
+        }
+      }
     }
     nav {
       ul {
@@ -299,13 +316,16 @@
               i {
                 width: auto;
                 vertical-align: middle;
+                &.rp-icons-settings-left-menu {
+                  margin-left: -6px;
+                }
               }
 
               span {
                 padding-top: 2px;
                 font-size: 12px;
                 line-height: 16px;
-                padding-left: 14px;
+                padding-left: 10px;
               }
             }
           }
