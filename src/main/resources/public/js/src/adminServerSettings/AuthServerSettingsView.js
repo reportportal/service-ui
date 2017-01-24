@@ -73,11 +73,13 @@ define(function(require, exports, module) {
         bindingHandlers: {
             updateOrganizations: {
                 set: function($el, val){
-                    var org = this.view.model.getOrganizations();
+                    var orgs = this.view.model.getOrganizations(),
+                        action = orgs.length > 1 ? 'remove' : 'add';
                     $el.empty();
-                    _.each(org, function(item){
+                    _.each(orgs, function(item){
                         $el.append(Util.templates(this.view.orgTpl, {name: item}));
                     }, this);
+                    $('[data-js-delete-org]', this.$el)[action+'Class']('hide');
                 }
             }
         },
