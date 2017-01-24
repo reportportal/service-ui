@@ -49,8 +49,8 @@ define(function (require, exports, module) {
             var dashboard = {
                 name: model.get('name'),
                 share: model.get('isShared'),
-                // description: model.get('description'),
-            }
+                description: model.get('description')
+            };
             Service.addOwnDashboard(dashboard)
                 .done(function (data) {
                     model.set({id: data.id});
