@@ -60,7 +60,7 @@ define(function (require, exports, module) {
                 deps: ['gadget'],
                 get: function(gadget) {
                     if(!gadget) return '';
-                    return widgetConfig.widgetTypes[gadget].description;
+                    return widgetConfig.widgetTypes[gadget].description.escapeScript();
                 }
             },
             gadgetPreviewImg: {

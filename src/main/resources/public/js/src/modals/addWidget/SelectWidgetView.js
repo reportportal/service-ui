@@ -53,12 +53,18 @@ define(function (require, exports, module) {
                 content_fields: '[]',
             });
             if (curWidget.criteria && !curWidget.noCriteria) {
-                var defaultCriteria = _.map(curWidget.criteria, function (value, key) {
-                    if(typeof value == 'object') {
-                        return value.keys.join(',');
-                    }
-                    return key;
-                });
+                var defaultCriteria = [];
+                if(curWidget.defaultCriteria){
+                    defaultCriteria = curWidget.defaultCriteria;
+                }
+                else {
+                    defaultCriteria = _.map(curWidget.criteria, function (value, key) {
+                        if(typeof value == 'object') {
+                            return value.keys.join(',');
+                        }
+                        return key;
+                    });
+                }
                 this.model.setContentFields(defaultCriteria);
             }
             if(curWidget.actions){

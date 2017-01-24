@@ -47,18 +47,21 @@
         <ul class="user-menu">
             <li class="col-xs-6 col-sm-12">
                 <a href="#user-profile" class="mem-set user-id">
+                    <i class="material-icons">person</i>
                     <span class="custom-padding"><%= data.text.topMenu.profile %></span>
                 </a>
             </li>
             <% if(data.isAdmin) { %>
             <li class="col-xs-6 col-sm-12">
                 <a href="#administrate" id="administrate" class="admin-section" data-js-administrate-page-link>
+                    <i class="material-icons">tune</i>
                     <span class="custom-padding"><%= data.text.topMenu.administrate %></span>
                 </a>
             </li>
             <% } %>
             <li class="col-xs-6 col-sm-12">
                 <a href="" data-js-logout>
+                    <i class="rp-icons rp-icons-logout fsize-23"></i>
                     <span class="custom-padding"><%= data.text.topMenu.logout %></span>
                 </a>
             </li>

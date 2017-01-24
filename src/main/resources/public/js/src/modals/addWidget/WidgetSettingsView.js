@@ -35,7 +35,7 @@ define(function (require, exports, module) {
 
 
     var WidgetCriteriaView = Epoxy.View.extend({
-        className: 'modal-add-widget-criteria-list',
+        className: 'modal-add-widget-criteria-list rp-form',
         events: {
         },
         bindings: {
