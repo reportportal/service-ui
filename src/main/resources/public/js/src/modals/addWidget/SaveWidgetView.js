@@ -25,10 +25,8 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
-    var FilterSearchView = require('modals/addWidget/FilterSearchView');
-    var WidgetSettingsView = require('modals/addWidget/WidgetSettingsView');
+    var SelectDashboardView = require('modals/addWidget/SelectDashboardView');
     var Localization = require('localization');
-
 
     var SaveWidgetView = Epoxy.View.extend({
         className: 'modal-add-widget-save-widget',
@@ -37,23 +35,11 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-name-input]': 'value: name',
             '[data-js-description]': 'value: widgetDescription',
-            '[data-js-is-shared]': 'checked: isShared, disabled: offSharedSwitcher',
-            '[data-js-shared-control]': 'classes: {disabled: offSharedSwitcher}, attr: {title: titleForSharedSwitcher}'
-        },
-        computeds: {
-            offSharedSwitcher: {
-                get: function(){
-                    return this.isSharedDashboard();
-                }
-            },
-            titleForSharedSwitcher: {
-                get: function(){
-                    return this.isSharedDashboard() ? Localization.wizard.widgetOnSharedDashboard : '';
-                }
-            }
+            '[data-js-is-shared]': 'checked: isShared'
         },
         initialize: function(options) {
             this.dashboardModel = options.dashboardModel;
+            this.isNoDashboard = options.isNoDashboard;
             if(this.dashboardModel && this.dashboardModel.get('isShared')){
                 this.model.set('isShared', true);
             }
@@ -68,6 +54,17 @@ define(function (require, exports, module) {
                 max: 256
             });
             this.listenTo(this.model, 'change:name', this.onChangeName);
+            if(this.isNoDashboard){
+                this.selectDashboard = new SelectDashboardView();
+                $('[data-js-dashboards-list]', this.$el).removeClass('hide').append(this.selectDashboard.$el);
+                this.listenTo(this.selectDashboard, 'change::dashboard', this.onChangeDashboard);
+            }
+            this.updateSharedSwitcher();
+        },
+        onChangeDashboard: function(model){
+            this.dashboardModel = model;
+            this.updateSharedSwitcher();
+            this.trigger('change::dashboard', this.dashboardModel);
         },
         isSharedDashboard: function(){
             return this.dashboardModel && this.dashboardModel.get('isShared');
@@ -80,14 +77,28 @@ define(function (require, exports, module) {
                 this.trigger('disable:navigation', true);
             }
         },
+        updateSharedSwitcher: function(){
+            if(this.isSharedDashboard()){
+                this.model.set('isShared', true);
+                $('[data-js-is-shared]', this.$el).prop('disabled', true);
+                $('[data-js-shared-control]', this.$el).addClass('disabled').attr('title', Localization.wizard.widgetOnSharedDashboard);
+            }
+            else {
+                this.model.set('isShared', false);
+                $('[data-js-is-shared]', this.$el).prop('disabled', false);
+                $('[data-js-shared-control]', this.$el).removeClass('disabled').attr('title', '');
+            }
+        },
         validate: function() {
-            return !$('[data-js-name-input]', this.$el).trigger('validate').data('validate-error');
+            return !$('[data-js-name-input]', this.$el).trigger('validate').data('validate-error') && this.dashboardModel;
         },
         activate: function() {
-
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}))
+        },
+        destroy: function(){
+            this.selectDashboard && this.selectDashboard.destroy();
         }
     });
 

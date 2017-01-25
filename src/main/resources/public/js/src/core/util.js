@@ -1079,10 +1079,8 @@ define(function (require, exports, module) {
                 });
                 if(result) {
                     $holder.addClass('validate-error');
-                    showResult(result);
                 } else {
                     triggerDebounce();
-                    hideResult();
                     $holder.removeClass('validate-error');
                 }
                 $el.data('validate-error', result);
@@ -1104,6 +1102,11 @@ define(function (require, exports, module) {
                         return;
                     }
                     var result = validate();
+                    if(result) {
+                        showResult(result);
+                    } else {
+                        hideResult();
+                    }
                 })
                 .on('paste', function () {
                     $(this).trigger('keyup');

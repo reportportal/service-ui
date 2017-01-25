@@ -239,6 +239,9 @@ define(function (require, exports, module) {
                         self.viewModel.set({empty: false, notFound: true});
                     }
                     self.collection.add(data.content, {parse: true});
+                    if(self.model.get('filter_id')){
+                        self.setFilterModel(self.collection.get(self.model.get('filter_id')));
+                    }
                     $('[data-js-filter-empty]', self.$el)[ (data.content.length ? 'add' : 'remove') + 'Class']('hide');
                 });
         },

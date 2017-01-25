@@ -26,6 +26,8 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
+    var ModalAddWidget = require('modals/addWidget/modalAddWidget');
+    var GadgetModel = require('dashboard/GadgetModel');
     var Util = require('util');
     var App = require('app');
 
@@ -38,6 +40,7 @@ define(function (require, exports, module) {
             'click [data-js-discard-filter]': 'onClickDiscard',
             'click [data-js-save-filter]': 'onClickSave',
             'click [data-js-clone-filter]': 'onClickClone',
+            'click [data-js-add-widget]': 'onClickAddWidget'
         },
         bindings: {
             '[data-js-filter-not-save-descr]': 'classes: {hide: all(not(temp), not(newEntities), not(newSelectionParameters))}',
@@ -83,6 +86,11 @@ define(function (require, exports, module) {
         },
         onClickSave: function() {
             this.model.saveFilter();
+        },
+        onClickAddWidget: function(e){
+            e.preventDefault();
+            e.stopPropagation();
+            (new ModalAddWidget({model: new GadgetModel(), filter_id: this.model.get('id'), isNoDashboard: true})).show();
         },
         destroy: function () {
             this.filterEntities.destroy();

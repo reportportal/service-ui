@@ -505,7 +505,8 @@ define(['util'], function () {
             haveInvalidCriteria: 'You have <strong>%%% invalid $$$</strong> with deleted defect types.',
             invalidCriteria: 'Invalid criterion',
             criteria: 'criteria',
-            criterion: 'criterion'
+            criterion: 'criterion',
+            saveWidgetDashboard: 'Save Widget on Dashboard'
         },
 
         userProfile: {
