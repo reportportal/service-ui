@@ -134,25 +134,40 @@ define(function(require, exports, module) {
             if(hash == 'null') return false;
             return hash;
         },
+        isValidNotEmptyJSON: function (src) {
+            if (!src.length) {
+                return false;
+            }
+            var filtered = src;
+            filtered = filtered.replace(/\\["\\\/bfnrtu]/g, '@');
+            filtered = filtered.replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']');
+            filtered = filtered.replace(/(?:^|:|,)(?:\s*\[)+/g, '');
+
+            return (/^[\],:{}\s]*$/.test(filtered));
+        },
         load: function(){
             var self = this;
-
             this.updateInfo()
-                .done(function(){
-                    self.updateProjects()
-                        .done(function(){
-                            self.set({
-                                'lastInsideHash': self.getAnonymousHash() || self.getLastInsideHashStorage() ||
-                                self.getDefaultProjectHash()
-                            });
-                            self.set({auth: true});
+                .done(function(response, textStatus, jqXHR){
+                    if (self.isValidNotEmptyJSON(jqXHR.responseText)) {
+                        self.updateProjects()
+                            .done(function(){
+                                self.set({
+                                    'lastInsideHash': self.getAnonymousHash() || self.getLastInsideHashStorage() ||
+                                    self.getDefaultProjectHash()
+                                });
+                                self.set({auth: true});
 
-                            self.ready.resolve();
-                        })
-                        .fail(function(){
-                            self.set(self.defaults);
-                            self.ready.resolve();
-                        })
+                                self.ready.resolve();
+                            })
+                            .fail(function(){
+                                self.set(self.defaults);
+                                self.ready.resolve();
+                            })
+                    } else {
+                        self.clearSession();
+                        Util.ajaxFailMessenger(null, 'defaults');
+                    }
                 })
                 .fail(function(){
                     self.set(self.defaults);

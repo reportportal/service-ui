@@ -36,6 +36,7 @@ define(function (require, exports, module) {
             '[data-js-is-shared]': 'checked: isShared',
             '[data-js-description]': 'value: description',
         },
+
         events: {
             'click [data-js-ok]': 'onClickOk',
         },
@@ -60,7 +61,7 @@ define(function (require, exports, module) {
                 type: 'dashboardName',
                 min: 3,
                 max: 128
-            }, {validator: 'noDuplications', type: 'dashboardName', source: dashboardNames}]);
+            }, {validator: 'noDuplications', type: 'dashboardName', source: dashboardNames, isCaseSensitive: true}]);
             Util.hintValidator($('[data-js-description]', this.$el), {
                 validator: 'maxRequired',
                 type: '',

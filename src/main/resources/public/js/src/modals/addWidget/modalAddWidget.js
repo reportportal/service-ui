@@ -158,7 +158,7 @@ define(function (require, exports, module) {
                 contentParameters.widgetOptions = this.model.getWidgetOptions();
                 var data = {
                     filter_id: this.model.get('filter_id'),
-                    name: this.model.get('name'),
+                    name: this.model.get('name').trim(),
                     share: this.model.get('isShared'),
                     content_parameters: contentParameters
                 };

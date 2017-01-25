@@ -19,6 +19,12 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 .modal-post-bug {
+  .modal-header {
+    .beta-badge {
+      top: 0;
+      left: 75px;
+    }
+  }
   .modal-body {
     padding-right: 75px;
     padding-top: 33px;

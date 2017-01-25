@@ -40,13 +40,24 @@ define(function (require, exports, module) {
 
         bindings: {
             '[data-js-name]': 'text: name',
-            '[data-js-description]': 'text: description',
+            '[data-js-description]': 'text: displayingDescription',
             '[data-js-share-icon]': 'classes: {hide: not(isMy)}, attr: {title: sharedTitle}',
             '[data-js-global-icon]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
             '[data-js-icon-description]': 'text: sharedTitle',
             '[data-js-shared-container]': 'classes: {hide: not(isShared)}',
             '[data-js-edit]': 'classes: {hide: not(isMy)}',
             '[data-js-remove]': 'classes: {hide: not(isMy)}',
+        },
+        computeds: {
+            displayingDescription: {
+                deps: ['description'],
+                get: function (description) {
+                    if (description === null) {
+                        return '';
+                    }
+                    return description;
+                }
+            }
         },
 
         initialize: function(options) {

@@ -73,10 +73,25 @@
                 font-size: 16px;
                 text-transform: uppercase;
                 margin: 0 110px 8px 0;
+                span {
+                    overflow: hidden;
+                    max-width: calc(100% - 20px);
+                    display: inline-block;
+                    text-overflow: ellipsis;
+                }
             }
             .user-info-name {
                 font-size: 14px;
                 margin: 0 0 9px;
+                .user-edit {
+                    width: 100%;
+                    span {
+                        overflow: hidden;
+                        max-width: 100%;
+                        display: inline-block;
+                        text-overflow: ellipsis;
+                    }
+                }
             }
             .user-info-mail {
                 font-size: 14px;
@@ -91,6 +106,7 @@
                 display:  inline-block;
                 position: relative;
                 padding: 0 26px 0 0;
+
                 i {
                     display: none;
                     position: absolute;

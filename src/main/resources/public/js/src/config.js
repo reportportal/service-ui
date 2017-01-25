@@ -87,7 +87,7 @@ require.config({
         'defectEditor': 'defect/defect-editor',
         'mainview': 'main-view',
         'widgets': 'widget/widgets',
-        'favorites': 'favorites/favorites',
+        //'favorites': 'favorites/favorites',
         // 'filters': 'filter/filters',
         // 'dashboard': 'dashboard/dashboard-view',
         'context': 'context',

@@ -34,62 +34,11 @@ define(function (require, exports, module) {
     var MainBreadcrumbsComponent = require('components/MainBreadcrumbsComponent');
     var CoreService = require('coreService');
     var FilterCollection = require('filters/FilterCollection');
-    var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
+    var FavoritesItem = require('favorites/FavoritesItemView');
 
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
-
-    var FilterItem = Epoxy.View.extend({
-        className: 'row rp-table-row',
-        events: {
-            'click [data-js-remove]': 'onClickRemove',
-            'click [data-js-filter-edit]': 'onClickEdit',
-            'click [data-js-filter-shared]': 'onClickEdit',
-        },
-        bindings: {
-            ':el': 'classes: {"not-owner": notMyFilter}',
-            '[data-js-filter-link]': 'text: name, attr: {href: url}, classes: {hide: not(isLaunch)}',
-            '[data-js-filter-name]': 'text: name, classes: {hide: isLaunch}',
-            '[data-js-description]': 'text: description',
-            '[data-js-filter-options]': 'html: optionsString',
-            '[data-js-owner]': 'text: owner',
-            '[data-js-filter-shared]': 'classes: {hide: not(isShared)}, attr: {disabled: notMyFilter}',
-            '[data-js-switch-to-launch]': 'checked: isLaunch',
-            '[data-js-switch-to-launch-mobile]': 'checked: isLaunch',
-            '[data-js-switch-to-launch-text]': 'text: isLaunchString',
-            '[data-js-remove]': 'attr: {disabled: notMyFilter}, classes: {disabled: notMyFilter}',
-            '[data-js-filter-shared-icon]': 'classes: {disabled: notMyFilter}',
-        },
-        initialize: function() {
-            this.render();
-            this.listenTo(this.model, 'remove', this.destroy);
-        },
-        template: 'tpl-favorite-item',
-        render: function() {
-            this.$el.html(Util.templates(this.template, {}));
-        },
-        onClickRemove: function() {
-            var self = this;
-            var modal = new ModalConfirm({
-                headerText: Localization.dialogHeader.deleteFilter,
-                bodyText: Util.replaceTemplate(Localization.dialog.deleteFilter, this.model.get('name').escapeHtml()),
-                okButtonDanger: true,
-                cancelButtonText: Localization.ui.cancel,
-                okButtonText: Localization.ui.delete,
-            });
-            modal.show()
-                .done(function() {
-                    return self.model.remove();
-                });
-        },
-        onClickEdit: function() {
-            this.model.editMainInfo();
-        },
-        destroy: function() {
-            this.remove();
-        }
-    });
 
     var FavoritesPage = Epoxy.View.extend({
         initialize: function(options) {
@@ -221,7 +170,7 @@ define(function (require, exports, module) {
             });
             this.renderViews = [];
             _.each(this.collection.models, function(model) {
-                var filterItem = new FilterItem({model: model, collection: this.collection});
+                var filterItem = new FavoritesItem({model: model, collection: this.collection});
                 this.$filterList.append(filterItem.$el);
                 this.renderViews.push(filterItem);
             }, this);
