@@ -156,6 +156,9 @@
                     &.markItUpButton11 {
                         a {
                             @include beforeContent("\e931");
+                            &:before {
+                                margin-top: 1px;
+                            }
                         }
                     }
 
@@ -202,6 +205,10 @@
                     &.markItUpButton15 {
                         a {
                             @include beforeContent("\e949");
+                            &:before {
+                                font-size: 11px;
+                                margin-top: 2px;
+                            }
                         }
                     }
 
@@ -209,11 +216,10 @@
                     &.markItUpButton16 {
                         a {
                             @include beforeContent("\e932");
-
                             &:before {
                                 top: 10px;
-                                font-size: 16px;
-                                line-height: 16px;
+                                font-size: 15px;
+                                line-height: 15px;
                             }
                         }
                     }

@@ -33,7 +33,7 @@ define(function (require, exports, module) {
         defaults: {
             isShared: false,
             name: '',
-            description: '',
+            description: null,
             owner: '',
             widgets: '[]',
 

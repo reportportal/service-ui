@@ -29,7 +29,13 @@ define(function (require, exports, module) {
     var regexes = {};
 
     var noDuplications = function (val, options) {
-        if (options.source.indexOf(val) !== -1 || options.source.indexOf(val.toLowerCase()) !== -1) {
+        var condition;
+        if (options.isCaseSensitive) {
+            condition = options.source.indexOf(val) !== -1;
+        } else {
+            condition = options.source.indexOf(val.toLowerCase()) !== -1
+        }
+        if (condition) {
             return Localization.validation[options.type + "Duplication"];
         }
     };
