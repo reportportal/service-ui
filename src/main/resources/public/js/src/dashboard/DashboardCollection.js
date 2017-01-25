@@ -136,6 +136,7 @@ define(function (require, exports, module) {
                 mode: 'save',
             })).show().done(function(newModel) {
                 var data = newModel.toJSON();
+                data.name = data.name.trim();
                 data.owner = config.userModel.get('name');
                 self.add(data);
             })
