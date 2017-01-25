@@ -70,8 +70,11 @@ define(function (require, exports, module) {
         onKeySuccess: function () {
             $('[data-js-ok]', this.$el).focus().trigger('click');
         },
+        validate: function(){
+            return !($('[data-js-description]', this.$el).trigger('validate').data('validate-error') || $('[data-js-name-input]', this.$el).trigger('validate').data('validate-error'));
+        },
         onClickOk: function() {
-            if ($('.has-error', this.$el).length) return;
+            if (!this.validate()) return;
             this.successClose(this.model);
         }
 
