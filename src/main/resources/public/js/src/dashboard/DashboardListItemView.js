@@ -39,7 +39,7 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-name]': 'text: name',
+            '[data-js-name]': 'html: getName',
             '[data-js-description]': 'text: displayingDescription',
             '[data-js-share-icon]': 'classes: {hide: not(isMy)}, attr: {title: sharedTitle}',
             '[data-js-global-icon]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
@@ -56,6 +56,12 @@ define(function (require, exports, module) {
                         return '';
                     }
                     return description;
+                }
+            },
+            getName: {
+                deps: ['name', 'search'],
+                get: function(name, search){
+                    return (search ? Util.textWrapper(name, search) : name).escapeScript();
                 }
             }
         },

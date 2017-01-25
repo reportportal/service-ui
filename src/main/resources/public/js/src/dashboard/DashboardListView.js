@@ -115,10 +115,10 @@ define(function (require, exports, module) {
             this.myDashboardCollection.models = this.sortDashboardCollectionByASC(this.myDashboardCollection.models);
             var self = this;
             _.each(this.myDashboardCollection.models, function(model) {
-                var view = new DashboardListItemView({model: model})
+                var view = new DashboardListItemView({model: model, viewModel: self.model})
                 self.myDashboardViews.push(view);
                 $('[data-js-my-dashboards-container]', self.$el).append(view.$el);
-            })
+            });
         },
         renderSharedDashboards: function() {
             _.each(this.sharedDashboardViews, function(view) { view.destroy(); })
