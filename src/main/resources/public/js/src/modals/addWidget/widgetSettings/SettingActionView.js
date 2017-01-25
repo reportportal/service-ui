@@ -80,7 +80,7 @@ define(function (require, exports, module) {
         },
         validate: function() {
             var options = this.model.getWidgetOptions();
-            if(!options.actionType) {
+            if(!options.actionType || _.isEmpty(options.actionType)) {
                 this.selectAction.setErrorState(Localization.validation.selectAtLeastOneAction);
                 return false;
             }

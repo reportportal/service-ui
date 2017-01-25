@@ -90,7 +90,10 @@ define(function (require, exports, module) {
             }
         },
         validate: function() {
-            return !$('[data-js-name-input]', this.$el).trigger('validate').data('validate-error') && this.dashboardModel;
+            if(this.isNoDashboard){
+                return !$('[data-js-name-input]', this.$el).trigger('validate').data('validate-error') && this.dashboardModel;
+            }
+            return !$('[data-js-name-input]', this.$el).trigger('validate').data('validate-error');
         },
         activate: function() {
         },
