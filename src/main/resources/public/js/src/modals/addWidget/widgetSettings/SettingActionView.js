@@ -77,6 +77,7 @@ define(function (require, exports, module) {
             var options = this.model.getWidgetOptions();
             options.actionType = values;
             this.model.setWidgetOptions(options);
+            this.validate();
         },
         validate: function() {
             var options = this.model.getWidgetOptions();

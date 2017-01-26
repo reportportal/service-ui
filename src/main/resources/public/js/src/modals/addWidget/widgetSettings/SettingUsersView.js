@@ -62,7 +62,12 @@ define(function (require, exports, module) {
         },
         onChangeValue: function(model, value) {
             var curOptions = this.model.getWidgetOptions();
-            curOptions.userRef = value.split(',');
+            if(value){
+                curOptions.userRef = value.split(',');
+            }
+            else {
+                delete curOptions.userRef;
+            }
             this.model.setWidgetOptions(curOptions);
         }
     });

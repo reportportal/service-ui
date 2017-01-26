@@ -78,6 +78,7 @@ define(function (require, exports, module) {
                 });
             }
             this.model.setContentFields(values);
+            this.validate();
         },
         validate: function() {
             if(!this.model.getContentFields().length) {
