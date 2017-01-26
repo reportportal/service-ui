@@ -57,7 +57,7 @@ define(function (require, exports, module) {
                 type: 'filterName',
                 min: 3,
                 max: 128
-            }, {validator: 'noDuplications', type: 'filterName', source: filterNames}]);
+            }, {validator: 'noDuplications', type: 'filterName', source: filterNames, isCaseSensitive: true}]);
             Util.hintValidator($('[data-js-description]', this.$el), {
                 validator: 'maxRequired',
                 type: 'filterDescription',

@@ -80,7 +80,7 @@ define(function (require, exports, module) {
             var sharedDashboards = [];
             var self = this;
             _.each(this.collection.models, function(model) {
-                if((self.model.get('search') && ~model.get('name').indexOf(self.model.get('search'))) || !self.model.get('search')) {
+                if((self.model.get('search') && ~model.get('name').toLowerCase().indexOf(self.model.get('search').toLowerCase())) || !self.model.get('search')) {
                     if (model.get('owner') == config.userModel.get('name')) {
                         myDashboards.push(model);
                     } else {

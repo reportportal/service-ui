@@ -234,7 +234,7 @@ define(function (require, exports, module) {
             if (!value) {
                 return '';
             }
-            var regex = new RegExp(search, 'ig');
+            var regex = new RegExp(search.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'ig');
             return value.replace(regex, '<mark>$&</mark>');
         },
         replaceOccurrences: function (occurenceArr) {
