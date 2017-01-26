@@ -27,12 +27,13 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
-
     var App = require('app');
     var Util = require('util');
     var Service = require('coreService');
+    var SingletonAppModel = require('model/SingletonAppModel');
 
     var config = App.getInstance();
+    var appModel = new SingletonAppModel();
 
     var ModalLaunchesMerge = ModalView.extend({
         template: 'tpl-modal-launches-merge',
@@ -161,6 +162,7 @@ define(function (require, exports, module) {
                     .done(function (response) {
                         self.successClose(response, self.lastLaunch);
                         Util.ajaxSuccessMessenger('mergeLaunches');
+                        config.router.navigate('#' + appModel.get('projectId') + '/launches/all/' + response.id, {trigger: true});
                     })
                     .fail(function (response) {
                         Util.ajaxFailMessenger(response, 'mergeLaunches');
