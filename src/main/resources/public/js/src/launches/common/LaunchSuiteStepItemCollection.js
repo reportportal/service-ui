@@ -82,6 +82,10 @@ define(function (require, exports, module) {
             } else {
                 filterData.temp = true;
                 var activeFilter = new FilterModel(filterData);
+
+                if(!filterData.selection_parameters){
+                    activeFilter.set('selection_parameters', '{"is_asc": true, "sorting_column": "start_time"}');
+                }
                 if(parentModel && !parentModel.get('has_childs')){
                     self.reset([{type: 'LOG'}]);
                     async.resolve(activeFilter);
