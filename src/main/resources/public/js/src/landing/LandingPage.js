@@ -56,15 +56,28 @@ define(function(require, exports, module) {
 
         initialize: function(){
             this.model = new LendingModel();
+            this.scrollElement = config.mainScrollElement;
             this.render();
             this.listenTo(this.landingHeader, 'clickMenu', this.onClickMenu);
             this.listenTo(this.landingHeader, 'clickDocumentation', this.onClickDocumentation);
             this.currentShow = '';
-            this.scrollElement = config.mainScrollElement;
         },
         render: function() {
             this.$el.html(Util.templates(this.tpl));
             this.landingHeader = new LandingHeader({el: $('header.b-header', this.$el), model: this.model});
+            this.socialBlockHandler();
+        },
+
+        socialBlockHandler: function () {
+            var self = this;
+            var socialBlock = $('[data-js-social-block]', self.$el);
+            $(this.scrollElement).scroll(function () {
+                if ($(this).scrollTop() >= (self.$el.height() - $(this).height() - 30)) {
+                    socialBlock.addClass('hide');
+                } else {
+                    socialBlock.removeClass('hide');
+                }
+            });
         },
         
         showLoginBlock: function(){
