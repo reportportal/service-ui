@@ -36,7 +36,7 @@
                         position: relative;
                         display: block;
                         height: 34px;
-                        width: 20px;
+                        width: 21px;
 
                         &:before {
                             position: absolute;
@@ -76,8 +76,8 @@
                     &.markItUpButton16 {
                         a:before {
                             @extend %FontFamilyReportPortal;
-                            font-size: 12px;
-                            line-height: 12px;
+                            font-size: 10px;
+                            line-height: 14px;
                             left: 4px;
                         }
                     }
@@ -157,7 +157,7 @@
                         a {
                             @include beforeContent("\e931");
                             &:before {
-                                margin-top: 1px;
+                                font-size: 10px;
                             }
                         }
                     }
@@ -169,7 +169,7 @@
 
                             &:before {
                                 top: 10px;
-                                font-size: 14px;
+                                font-size: 12px;
                                 line-height: 14px;
                             }
                         }
@@ -182,7 +182,7 @@
 
                             &:before {
                                 top: 10px;
-                                font-size: 14px;
+                                font-size: 12px;
                                 line-height: 14px;
                             }
                         }
@@ -194,8 +194,8 @@
                             @include beforeContent("\e946");
 
                             &:before {
-                                top: 12px;
-                                font-size: 10px;
+                                top: 13px;
+                                font-size: 9px;
                                 line-height: 10px;
                             }
                         }
@@ -203,11 +203,11 @@
 
                     // .rp-icons-quote
                     &.markItUpButton15 {
+                        margin-left: 3px;
                         a {
                             @include beforeContent("\e949");
                             &:before {
-                                font-size: 11px;
-                                margin-top: 2px;
+                                font-size: 10px;
                             }
                         }
                     }
@@ -218,7 +218,7 @@
                             @include beforeContent("\e932");
                             &:before {
                                 top: 10px;
-                                font-size: 15px;
+                                font-size: 14px;
                                 line-height: 15px;
                             }
                         }

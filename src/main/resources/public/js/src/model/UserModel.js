@@ -169,7 +169,11 @@ define(function(require, exports, module) {
                         Util.ajaxFailMessenger(null, 'defaults');
                     }
                 })
-                .fail(function(){
+                .fail(function(response){
+                    if (!self.isValidNotEmptyJSON(response.responseText) && self.getToken() !== 'Basic dWk6dWltYW4=') {
+                        self.clearSession();
+                        Util.ajaxFailMessenger(null, 'defaults');
+                    }
                     self.set(self.defaults);
                     setTimeout(function() { self.ready.resolve(); });
                 });
