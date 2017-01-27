@@ -66,7 +66,8 @@ define(function (require, exports, module) {
             'click [data-js-add-filter]': 'onClickAddFilter',
         },
         bindings: {
-            ':el': 'classes: {hide: not(gadgetIsFilter)}'
+            ':el': 'classes: {hide: not(gadgetIsFilter)}',
+            '[data-js-seach-query]': 'text: search'
         },
         initialize: function () {
             this.widgetConfig = WidgetsConfig.getInstance();
@@ -239,7 +240,11 @@ define(function (require, exports, module) {
                         self.viewModel.set({empty: false, notFound: true});
                     }
                     self.collection.add(data.content, {parse: true});
-                    $('[data-js-filter-empty]', self.$el)[ (data.content.length ? 'add' : 'remove') + 'Class']('hide');
+                    if(self.model.get('filter_id')){
+                        self.setFilterModel(self.collection.get(self.model.get('filter_id')));
+                    }
+                    $('[data-js-select-filter-block]', self.$el)[(!data.content.length ? 'add' : 'remove') + 'Class']('hide');
+                    $('[data-js-filter-empty]', self.$el)[(data.content.length ? 'add' : 'remove') + 'Class']('hide');
                 });
         },
         getQueryString: function (query) {

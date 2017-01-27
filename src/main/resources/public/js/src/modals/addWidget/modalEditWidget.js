@@ -122,7 +122,7 @@ define(function (require, exports, module) {
             $('[data-js-save]', this.$el).focus().trigger('click');
         },
         onClickSaveWidget: function() {
-            if(this.saveWidget.validate()) {
+            if(this.saveWidget.validate() && this.widgetSettingsView.validate()) {
                 this.$el.addClass('load');
                 var self = this;
                 var curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];

@@ -77,10 +77,11 @@ define(function (require, exports, module) {
             var options = this.model.getWidgetOptions();
             options.actionType = values;
             this.model.setWidgetOptions(options);
+            this.validate();
         },
         validate: function() {
             var options = this.model.getWidgetOptions();
-            if(!options.actionType) {
+            if(!options.actionType || _.isEmpty(options.actionType)) {
                 this.selectAction.setErrorState(Localization.validation.selectAtLeastOneAction);
                 return false;
             }

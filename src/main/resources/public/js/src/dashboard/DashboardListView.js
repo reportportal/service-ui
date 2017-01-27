@@ -80,7 +80,7 @@ define(function (require, exports, module) {
             var sharedDashboards = [];
             var self = this;
             _.each(this.collection.models, function(model) {
-                if((self.model.get('search') && ~model.get('name').indexOf(self.model.get('search'))) || !self.model.get('search')) {
+                if((self.model.get('search') && ~model.get('name').toLowerCase().indexOf(self.model.get('search').toLowerCase())) || !self.model.get('search')) {
                     if (model.get('owner') == config.userModel.get('name')) {
                         myDashboards.push(model);
                     } else {
@@ -115,10 +115,10 @@ define(function (require, exports, module) {
             this.myDashboardCollection.models = this.sortDashboardCollectionByASC(this.myDashboardCollection.models);
             var self = this;
             _.each(this.myDashboardCollection.models, function(model) {
-                var view = new DashboardListItemView({model: model})
+                var view = new DashboardListItemView({model: model, viewModel: self.model})
                 self.myDashboardViews.push(view);
                 $('[data-js-my-dashboards-container]', self.$el).append(view.$el);
-            })
+            });
         },
         renderSharedDashboards: function() {
             _.each(this.sharedDashboardViews, function(view) { view.destroy(); })

@@ -31,6 +31,7 @@ define(function (require, exports, module) {
     var ConfigureWidgetView = require('modals/addWidget/ConfigureWidgetView');
     var SaveWidgetView = require('modals/addWidget/SaveWidgetView');
     var Service = require('coreService');
+    var Urls = require('dataUrlResolver');
     var App = require('app');
 
     var config = App.getInstance();
@@ -64,6 +65,8 @@ define(function (require, exports, module) {
             }
             this.model.set({owner: config.userModel.get('name')});
             this.dashboardModel = options.dashboardModel;
+            this.isNoDashboard = options.isNoDashboard;
+            options.filter_id && this.model.set('filter_id', options.filter_id);
             this.widgetConfig = WidgetsConfig.getInstance();
             this.viewModel = new (Epoxy.Model.extend({
                 defaults: { step: 1, disableNavigate: false }
@@ -73,11 +76,12 @@ define(function (require, exports, module) {
             $('[data-js-step-1]', this.$el).html(this.selectWidgetView.$el);
             this.configureWidgetView = new ConfigureWidgetView({model: this.model});
             $('[data-js-step-2]', this.$el).html(this.configureWidgetView.$el);
-            this.saveWidget = new SaveWidgetView({model: this.model, dashboardModel: this.dashboardModel});
+            this.saveWidget = new SaveWidgetView({model: this.model, dashboardModel: this.dashboardModel, isNoDashboard: this.isNoDashboard});
             $('[data-js-step-3]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.viewModel, 'change:step', this.setState);
             this.listenTo(this.configureWidgetView, 'disable:navigation', this.onChangeDisableNavigation);
             this.listenTo(this.saveWidget, 'disable:navigation', this.onChangeDisableNavigation);
+            this.listenTo(this.saveWidget, 'change::dashboard', this.onChangeDashboard);
             this.setState();
             this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
         },
@@ -124,6 +128,9 @@ define(function (require, exports, module) {
                 this.viewModel.set('step', 3);
             }
         },
+        onChangeDashboard: function(model){
+            this.dashboardModel = model;
+        },
         onKeySuccess: function () {
             switch (this.viewModel.get('step')) {
                 case 1:
@@ -169,7 +176,9 @@ define(function (require, exports, module) {
                     .done(function (data) {
                         self.model.set({id: data.id});
                         self.dashboardModel.addWidget(self.model);
-
+                        if(self.isNoDashboard){
+                            config.router.navigate(Urls.redirectToDashboard(self.dashboardModel.get('id')), {trigger: true});
+                        }
                         self.successClose(data.id);
                     })
                     .fail(function (error) {

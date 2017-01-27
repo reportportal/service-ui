@@ -46,9 +46,7 @@ define(function(require, exports, module) {
             '[data-js-github-config]': 'classes: {hide: not(gitHubAuthEnabled)}',
             '[data-js-client-id]': 'value: clientId',
             '[data-js-client-secret]': 'value: clientSecret',
-            '[data-js-onganizations]': 'updateOrganizations: organizations',
-            '[data-js-add-org-form]': 'classes: {hide: showAddOrg, addNewOrg: showAddOrg}',
-            '[data-js-add-org-btn]': 'classes: {disabled: not(showAddOrg)}'
+            '[data-js-onganizations]': 'updateOrganizations: organizations'
         },
 
         computeds: {
@@ -73,13 +71,11 @@ define(function(require, exports, module) {
         bindingHandlers: {
             updateOrganizations: {
                 set: function($el, val){
-                    var orgs = this.view.model.getOrganizations(),
-                        action = orgs.length > 1 ? 'remove' : 'add';
+                    var orgs = this.view.model.getOrganizations();
                     $el.empty();
                     _.each(orgs, function(item){
                         $el.append(Util.templates(this.view.orgTpl, {name: item}));
                     }, this);
-                    $('[data-js-delete-org]', this.$el)[action+'Class']('hide');
                 }
             }
         },
@@ -118,11 +114,6 @@ define(function(require, exports, module) {
                 }
             ]);
             Util.hintValidator(this.$clientSecret, [
-                {
-                    validator: 'required'
-                }
-            ]);
-            Util.hintValidator(this.$addOrgField, [
                 {
                     validator: 'required'
                 }
@@ -218,18 +209,19 @@ define(function(require, exports, module) {
             e.preventDefault();
             var gitHubAuthEnabled = this.model.get('gitHubAuthEnabled');
             if(gitHubAuthEnabled){
-                this.$clientId.trigger('validate');
-                this.$clientSecret.trigger('validate');
-                var orgs = this.model.getOrganizations();
-                if(!(orgs && _.isEmpty(orgs)) && !this.$addOrgForm.hasClass('hide')){
-                    this.$addOrgField.trigger('validate');
+                if(this.validate()) {
+                    this.updateAuthSettings();
                 }
-                if ($('.validate-error', this.$el).length) return;
-                this.updateAuthSettings();
             }
             else {
                 this.deleteAuthSettings();
             }
+        },
+
+        validate: function(){
+            this.$clientId.trigger('validate');
+            this.$clientSecret.trigger('validate');
+            return !(this.$clientId.data('validate-error') || this.$clientSecret.data('validate-error'));
         },
 
         getAuthSettings: function () {

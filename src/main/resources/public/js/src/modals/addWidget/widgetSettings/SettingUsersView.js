@@ -54,9 +54,20 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {}))
         },
+        activate: function(){
+            var curOptions = this.model.getWidgetOptions();
+            if(curOptions.userRef){
+                this.usersModel.set('value', curOptions.userRef.join(','));
+            }
+        },
         onChangeValue: function(model, value) {
             var curOptions = this.model.getWidgetOptions();
-            curOptions.userRef = value.split(',');
+            if(value){
+                curOptions.userRef = value.split(',');
+            }
+            else {
+                delete curOptions.userRef;
+            }
             this.model.setWidgetOptions(curOptions);
         }
     });

@@ -96,9 +96,21 @@
   }
   .filter-list-wrapper {
     .filter-no-data {
-      padding: 10px 10px 0;
-      &> i.rp-icons-warning {
-        color: $COLOR--gray-80;
+      padding: 26px 10px 20px;
+      text-align: center;
+      font-size: 13px;
+      color: $COLOR--gray-47;
+      border-bottom:  1px solid $COLOR--gray-91;
+      .no-data-warning {
+        font-size: 14px;
+        font-weight: 600;
+        font-family: $OpenSansSemibold;
+        &> i.rp-icons-warning {
+          color: $COLOR--gray-80;
+        }
+        span {
+          font-family: $OpenSansRegular;
+        }
       }
     }
   }

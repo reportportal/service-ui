@@ -22,8 +22,11 @@
             <i class="material-icons loader-animation">refresh</i>
         </div>
         <div data-js-filter-empty class="hide filter-no-data">
+            <p class="no-data-warning">
                 <i class="rp-icons rp-icons-warning"></i>
-                <span class="warning"><%= data.text.wizard.ownFiltersAbsent %></span>
+                <%= data.text.wizard.ownFiltersAbsent %> "<span data-js-seach-query></span>"
+            </p>
+            <p><%= data.text.ui.checkQuery %></p>
         </div>
     </div>
 </div>

@@ -46,7 +46,6 @@ define(function (require, exports, module) {
                 curWidget = this.widgetConfig.widgetTypes[gadget];
             this.model.set({
                 gadget: gadget,
-                filter_id: '',
                 itemsCount: curWidget.limit.def,
                 widgetDescription: '',
                 widgetOptions: '{}',
