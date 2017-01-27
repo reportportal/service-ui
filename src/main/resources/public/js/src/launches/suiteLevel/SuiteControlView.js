@@ -40,6 +40,7 @@ define(function (require, exports, module) {
 
         bindings: {
             '[data-js-history]': 'classes: {hide: not(validateForHistoryBtn)}',
+            '[data-js-refresh-counter]': 'text: refreshItems, classes: {hide: not(refreshItems)}'
         },
 
         computeds: {
@@ -64,6 +65,12 @@ define(function (require, exports, module) {
             this.launchModel = options.launchModel;
             this.collectionItems =  options.collectionItems;
             this.render();
+            this.model = new (Epoxy.Model.extend({
+                defaults: {
+                    refreshItems: 0,
+                }
+            }));
+            this.listenTo(this.collectionItems, 'change:description change:tags', this.increaseRefreshItemsCount);
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-refine-entities]', this.$el),
                 filterLevel: 'suit',
@@ -99,6 +106,48 @@ define(function (require, exports, module) {
         },
         onClickRefresh: function() {
             this.collectionItems.load();
+            this.model.set({refreshItems: 0});
+        },
+        increaseRefreshItemsCount: function (model) {
+            if (this.isAnyFilterEnabled() && this.isFilteredAttrChanged(model)) {
+                this.model.set({refreshItems: this.model.get('refreshItems') + 1});
+            }
+        },
+        isFilteredAttrChanged: function(model) {
+            var self = this;
+            var isFilteredAttrChanged = false;
+            _.each(this.getFilterEntities(), function (filter) {
+                _.each(self.getChangedAttrs(model), function (changedAttrVal, changedAttrKey) {
+                    if (_.isMatch(filter, {filtering_field: changedAttrKey})) {
+                        isFilteredAttrChanged = true;
+                    }
+                })
+            });
+            return isFilteredAttrChanged;
+        },
+        getFilterEntities: function() {
+            if (this.filterModel.get('newEntities') !== '') {
+                return JSON.parse(this.filterModel.get('newEntities'));
+            } else {
+                return JSON.parse(this.filterModel.get('entities'));
+            }
+        },
+        getChangedAttrs: function (model) {
+            var changedAttrs = model.changedAttributes();
+            if (changedAttrs.issue) {
+                if (JSON.parse(changedAttrs.issue).issue_type !== JSON.parse(model.previousAttributes().issue).issue_type) {
+                    changedAttrs.issue$issue_type = JSON.parse(changedAttrs.issue).issue_type;
+                }
+                if (JSON.parse(changedAttrs.issue).comment !== JSON.parse(model.previousAttributes().issue).comment) {
+                    changedAttrs.issue$issue_comment = JSON.parse(changedAttrs.issue).comment;
+                }
+                delete changedAttrs.issue;
+            }
+            return changedAttrs;
+        },
+        isAnyFilterEnabled: function () {
+            return !((this.filterModel.get('newEntities') === '' && this.filterModel.get('entities') === '[]') ||
+            (this.filterModel.get('newEntities') === '[]' && this.filterModel.get('entities') === '[]'));
         },
         getHistoryLink: function(){
             var currentPath = window.location.hash;
