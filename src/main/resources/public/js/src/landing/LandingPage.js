@@ -70,7 +70,7 @@ define(function(require, exports, module) {
 
         socialBlockHandler: function () {
             var self = this;
-            var socialBlock = $('[data-js-social-block]', self.$el);
+            var socialBlock = $('[data-js-social-block]', this.$el);
             $(this.scrollElement).scroll(function () {
                 if ($(this).scrollTop() >= (self.$el.height() - $(this).height() - 30)) {
                     socialBlock.addClass('hide');
