@@ -24,6 +24,8 @@
     .modal-body {
       padding: 35px 20px 20px 20px;
       p{
+        -ms-word-wrap: break-word;
+        word-wrap: break-word;
         line-height: 22px;
         font-size: 14px;
       }
