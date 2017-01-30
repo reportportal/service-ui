@@ -65,17 +65,20 @@ define(function(require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.tpl));
             this.landingHeader = new LandingHeader({el: $('header.b-header', this.$el), model: this.model});
+            this.setupAnchors();
             this.socialBlockHandler();
+        },
+        setupAnchors: function(){
+            this.socialBlock = $('[data-js-social-block]', this.$el);
         },
 
         socialBlockHandler: function () {
             var self = this;
-            var socialBlock = $('[data-js-social-block]', this.$el);
             $(this.scrollElement).scroll(function () {
                 if ($(this).scrollTop() >= (self.$el.height() - $(this).height() - 30)) {
-                    socialBlock.addClass('hide');
+                    self.socialBlock.addClass('hide');
                 } else {
-                    socialBlock.removeClass('hide');
+                    self.socialBlock.removeClass('hide');
                 }
             });
         },
@@ -155,6 +158,7 @@ define(function(require, exports, module) {
         },
         onClickMenu: function(href) {
             this.showParallax();
+            this.socialBlock.removeClass('hide');
             config.router.navigate('', {trigger: false});
             var $scrollElement = $(href);
             if($scrollElement){
