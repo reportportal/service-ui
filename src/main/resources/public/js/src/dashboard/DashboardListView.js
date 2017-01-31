@@ -56,7 +56,7 @@ define(function (require, exports, module) {
                 if (!self.collection.models.length) {
                     $('[data-js-filter-name]', self.$el).prop({disabled: 'disabled'});
                 }
-                self.listenTo(self.collection, 'change:owner reset', self.changeCollection);
+                self.listenTo(self.collection, 'change:owner change:name reset', self.changeCollection);
                 self.listenTo(self.collection, 'add', self.onAddCollection);
                 self.listenTo(self.collection, 'remove', self.onRemoveCollection);
                 self.changeCollection();

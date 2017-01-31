@@ -49,6 +49,9 @@ define(function (require, exports, module) {
                 $('[data-js-enter-criteria]', this.$el).removeClass('hide');
             }
         },
+        getSelectedFilterModel: function() {
+            return this.filterSearch.getSelectedFilterModel();
+        },
         activate: function() {
             this.filterSearch.activate();
             this.widgetCriteria.activate();

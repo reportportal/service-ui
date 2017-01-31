@@ -1526,6 +1526,7 @@ define(function (require, exports, module) {
                 .useInteractiveGuideline(!self.isPreview)
                 .showControls(false)
                 .clipEdge(true)
+                .showLegend(!self.isPreview)
                 ;
 
             this.chart.xAxis
@@ -1655,6 +1656,7 @@ define(function (require, exports, module) {
                 .clipEdge(true)
                 .showXAxis(true)
                 .tooltips(self.isPreview ? false : true)
+                .showLegend(!self.isPreview)
                 ;
 
             this.chart.tooltipContent(tooltip);
@@ -2015,6 +2017,7 @@ define(function (require, exports, module) {
                 .showXAxis(true)
                 .yDomain([0,100])
                 .tooltips(self.isPreview ? false : true)
+                .showLegend(!self.isPreview)
                 ;
 
             this.chart.tooltipContent(tooltip);
@@ -2146,6 +2149,7 @@ define(function (require, exports, module) {
                 .barColor(this.colors)
                 .valueFormat(d3.format(',.2f'))
                 .showXAxis(true)
+                .showLegend(!self.isPreview)
                 ;
 
             this.chart.tooltipContent(tooltip);
@@ -2623,16 +2627,16 @@ define(function (require, exports, module) {
                 .y(function (d) {
                     return d.value
                 })
-                .margin({top: 30})
+                .margin({top: !self.isPreview ? 30 : 0})
                 .margin({left: 20})
                 .margin({right: 20})
                 .margin({bottom: 0})
                 .valueFormat(d3.format('f'))
-                .showLabels(true)
+                .showLabels(!self.isPreview)
                 .color(function (d) {
                     return d.data.color;
                 })
-                .title(title + ':')
+                .title(!self.isPreview ? title + ':' : '')
                 .titleOffset(-10)
                 .growOnHover(false)
                 .labelThreshold(0)
@@ -2644,7 +2648,7 @@ define(function (require, exports, module) {
                 .donut(true)
                 .donutRatio(0.4)
                 .tooltips(self.isPreview ? false : true)
-                .showLegend( !this.param.isShowLegend ? true : false )
+                .showLegend(!self.isPreview && !this.param.isShowLegend ? true : false )
                 ;
 
             d3.select(id)

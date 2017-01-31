@@ -269,7 +269,7 @@ define(function (require, exports, module) {
                     gadget_name: Localization.widgets.failedTestCasesTable,
                     widget_type: 'table',
                     gadget: 'most_failed_test_cases',
-                    img: 'filter_results.png',
+                    img: 'filter_results_failure.png',
                     description: Localization.widgets.failedTestCasesTableDescription,
                     noFilters: true,
                     launchesFilter: true,

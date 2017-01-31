@@ -33,7 +33,7 @@
       font-weight: normal;
     }
     .load-items-container {
-      padding: 17px 9px 10px 12px;
+      padding: 17px 9px 0 12px;
 
       .bts-label {
         width: 100%;
@@ -67,12 +67,12 @@
         margin-top: 18px;
 
         .ticket-row-view {
-          margin-bottom: 13px;
+          position: relative;
 
           .link-label {
             position: relative;
-            width: 360px;
-            float: left;
+            width: 100%;
+            margin-bottom: 5px;
 
             .row-title {
               display: block;
@@ -85,23 +85,43 @@
               margin-left: 30px;
               display: block;
               float: left;
-              width: 240px;
+              width: 350px;
             }
 
             .validate-hint {
-              width: 240px;
+              width: 350px;
               margin-left: 117px;
             }
           }
 
           .issue-label {
             position: relative;
-            float: left;
-            width: 100px;
-            margin-left: 7px;
+            width: 100%;
+
+            .row-title {
+              display: block;
+              float: left;
+              margin-left: 36px;
+              margin-top: 5px;;
+            }
+
+            .rp-input {
+              margin-left: 33px;
+              display: block;
+              float: left;
+              width: 350px;
+            }
+
+            .validate-hint {
+              width: 350px;
+              margin-left: 117px;
+            }
           }
 
           .remove-row {
+            position: absolute;
+            right: 45px;
+            top: 18px;
             margin: 5px 0 0 7px;
             display: inline-block;
             font-size: 19px;
@@ -129,7 +149,7 @@
     }
 
     .add-button {
-      margin: 5px 0 10px 130px;
+      margin: 0 0 10px 129px;
     }
   }
 }

@@ -30,6 +30,7 @@ define(function (require, exports, module) {
     var SelectWidgetView = require('modals/addWidget/SelectWidgetView');
     var ConfigureWidgetView = require('modals/addWidget/ConfigureWidgetView');
     var SaveWidgetView = require('modals/addWidget/SaveWidgetView');
+    var PreviewWidgetView = require('newWidgets/PreviewWidgetView');
     var Service = require('coreService');
     var Urls = require('dataUrlResolver');
     var App = require('app');
@@ -51,7 +52,6 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-widget-type]': 'text: gadgetName',
             '[data-js-widget-description]': 'html: gadgetDescription',
-            '[data-js-widget-preview]': 'css: {"background-image": format("url($1)", gadgetPreviewImg)}',
             '[data-js-next-second-step]': 'attr: {disabled: any(not(gadget), disableNavigate)}',
             '[data-js-next-last-step]': 'attr: {disabled: any(not(gadgetIsFilterFill), disableNavigate)}',
             '[data-js-previous-first-step]': 'attr: {disabled:  disableNavigate}',
@@ -84,9 +84,15 @@ define(function (require, exports, module) {
             this.listenTo(this.saveWidget, 'change::dashboard', this.onChangeDashboard);
             this.setState();
             this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
+            this.listenTo(this.model, 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount', _.debounce(this.onChangePreview, 10))
         },
         onChangeModel: function(model) {
-            //console.dir(model.changed);
+            // console.dir(model.changed);
+        },
+        onChangePreview: function() {
+            this.previewWidgetView && this.previewWidgetView.destroy();
+            this.previewWidgetView = new PreviewWidgetView({model: this.model, filterModel: this.configureWidgetView.getSelectedFilterModel()});
+            $('[data-js-widget-preview]', this.$el).html(this.previewWidgetView.$el);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
@@ -161,7 +167,9 @@ define(function (require, exports, module) {
                 contentParameters.type = curWidget.widget_type;
                 contentParameters.gadget = this.model.get('gadget');
                 contentParameters.itemsCount = this.model.get('itemsCount');
-                contentParameters.content_fields = this.model.getContentFields();
+                if(this.model.getContentFields().length) {
+                    contentParameters.content_fields = this.model.getContentFields();
+                }
                 contentParameters.widgetOptions = this.model.getWidgetOptions();
                 var data = {
                     filter_id: this.model.get('filter_id'),

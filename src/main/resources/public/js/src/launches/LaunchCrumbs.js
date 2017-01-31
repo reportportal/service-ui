@@ -244,12 +244,13 @@ define(function (require, exports, module) {
             '[data-js-name]': 'text: fullName',
             '[data-js-link]': 'text: fullName, attr: {href: url}',
             '[data-js-auto-analize]': 'classes: {visible: isProcessing}',
-            '[data-js-list-view-icon]': 'classes: {hide: not(listView)}'
+            '[data-js-list-view-icon]': 'classes: {hide: not(listView)}',
+            ':el': 'classes: {"fail-load": failLoad}'
         },
         initialize: function() {
             this.render();
             this.listenTo(this.model, 'remove', this.onRemove);
-            this.listenTo(this.model, 'change:failLoad', this.render);
+            // this.listenTo(this.model, 'change:failLoad', this.render);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {failLoad: this.model.get('failLoad')}))
