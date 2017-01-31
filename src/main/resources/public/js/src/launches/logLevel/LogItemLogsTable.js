@@ -107,6 +107,11 @@ define(function (require, exports, module) {
             this.listenTo(this.minPaging, 'page', this.onChangePage);
             this.listenTo(this.paging, 'count', this.onChangePageCount);
             this.setupStickyHeader();
+
+            var self = this;
+            $(window)
+                .off('resize.logItems')
+                .on('resize.logItems', _.debounce(self.resize.bind(self), 100))
         },
         setupStickyHeader: function() {
             this.destroyStickyHeader();
@@ -114,6 +119,12 @@ define(function (require, exports, module) {
         },
         destroyStickyHeader: function() {
             this.stickyHeader && this.stickyHeader.destroy();
+        },
+
+        resize: function() {
+            _.each(this.items, function(item) {
+                item.resize();
+            })
         },
 
         render: function() {
@@ -217,6 +228,7 @@ define(function (require, exports, module) {
         },
 
         destroy: function() {
+            $(window).off('resize.logItems');
             this.items = null;
             this.undelegateEvents();
             this.stopListening();

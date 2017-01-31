@@ -31,6 +31,7 @@ define(function (require, exports, module) {
     var SaveWidgetView = require('modals/addWidget/SaveWidgetView');
     var SelectedFilterView = require('modals/addWidget/SelectedFilterView');
     var FilterSearchView = require('modals/addWidget/FilterSearchView');
+    var GadgetModel = require('dashboard/GadgetModel');
     var Service = require('coreService');
     var App = require('app');
 
@@ -58,7 +59,7 @@ define(function (require, exports, module) {
                 return false;
             }
             this.originalModel = options.model;
-            this.model = options.model.clone();
+            this.model = this.originalModel.clone();
             this.widgetConfig = WidgetsConfig.getInstance();
             this.render();
             this.widgetSettingsView = new WidgetSettingsView({model: this.model});
@@ -146,8 +147,8 @@ define(function (require, exports, module) {
                 if(this.model.get('filter_id')){
                     data.filter_id = this.model.get('filter_id');
                 }
-                if (this.model.get('widgetDescription')) {
-                    data.description = this.model.get('widgetDescription');
+                if (this.model.get('description')) {
+                    data.description = this.model.get('description');
                 }
                 Service.updateWidget(data, this.model.get('id'))
                     .done(function (data) {

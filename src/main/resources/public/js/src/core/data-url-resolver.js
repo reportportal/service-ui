@@ -120,10 +120,10 @@ define(['app'], function (App) {
     };
 
     var queryByTags = function (tags) {
-        return getProjectBase() + '/launch/tags?filter.cnt.tags=' + encodeURI(tags);
+        return getProjectBase() + '/launch/tags?filter.cnt.tags=' + encodeURIComponent(tags);
     };
     var queryByLaunchName = function (name) {
-        return getProjectBase() + '/launch/names?filter.cnt.name=' + encodeURI(name);
+        return getProjectBase() + '/launch/names?filter.cnt.name=' + encodeURIComponent(name);
     };
     var userAutoCompleteUrl = function (term, mode) {
         return getProjectBase() + '/launch/owners?filter.cnt.user=' + encodeURI(term) + (mode ? '&mode=' + mode : '');

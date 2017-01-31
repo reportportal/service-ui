@@ -59,7 +59,6 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
-            this.appendTooltip();
         },
         appendTooltip: function(){
             var description =  this.model.get('description'),
@@ -103,6 +102,7 @@ define(function (require, exports, module) {
             }
             this.widgetView = new WidgetView({model: (new WidgetModel(this.model.get('widgetData')))});
             $('[data-js-widget-container]', this.$el).html(this.widgetView.$el);
+            this.appendTooltip();
         },
         onLoadDataError: function(error){
             var message = Localization.widgets.unableLoadData;

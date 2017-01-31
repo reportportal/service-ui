@@ -651,7 +651,6 @@ define(function(require, exports, module) {
                                 if (queryLength <= 256) {
                                     self.validateRecipients();
                                 }
-                                //query.term = query.term.replace(/[@#.?*+^$[\]\\(){}|-]/g, "\\$&");
                                 Service.getProjectUsersById(query.term)
                                     .done(function (response) {
                                         remoteUsers = [];
@@ -752,11 +751,10 @@ define(function(require, exports, module) {
         },
 
         onChangeLaunchNames: function (value, eci) {
-            var launches = _.map(value, function(i){ return i.id;})//(value) ? value.trim().split(',') : [];
-
-            var emailCase = _.findWhere(this.model.get('emailCases'), {
-                id: eci.data('email-case-id')
-            });
+            var launches = _.map(value, function(i){ return i.id;}),
+                emailCase = _.findWhere(this.model.get('emailCases'), {
+                    id: eci.data('email-case-id')
+                });
             emailCase.launchNames = launches;
 
             this.checkCases();
@@ -885,7 +883,6 @@ define(function(require, exports, module) {
                                 if (queryLength == 256) {
                                     self.validateTags(null, true);
                                 }
-                                //    self.hideFormsErrors($('this.$tagsContainer.eq(index)'));
                                 Service.searchTags(query)
                                     .done(function (response) {
                                         remoteTags = [];
@@ -1002,7 +999,6 @@ define(function(require, exports, module) {
                                 if (queryLength == 256) {
                                     self.toggleLaunchNamesErrors(false, false, self.$launchContainer.eq(index));
                                 }
-                                query.term = query.term.replace(/[@#.?*+^$[\]\\(){}|-]/g, "\\$&");
                                 Service.searchLaunches(query)
                                     .done(function (response) {
                                         remoteLaunches = [];

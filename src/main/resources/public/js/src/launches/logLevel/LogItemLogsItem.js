@@ -57,6 +57,10 @@ define(function (require, exports, module) {
             this.render();
         },
 
+        resize: function() {
+            this.activateAccordion();
+        },
+
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
@@ -64,6 +68,8 @@ define(function (require, exports, module) {
         activateAccordion: function() {
             if (this.$el.innerHeight() > 128) {
                 this.$el.addClass('show-accordion');
+            } else {
+                this.$el.removeClass('show-accordion');
             }
         }
     });

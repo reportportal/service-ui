@@ -34,7 +34,7 @@ define(function (require, exports, module) {
 
         bindings: {
             '[data-js-name-input]': 'value: name',
-            '[data-js-description]': 'value: widgetDescription',
+            '[data-js-description]': 'value: description',
             '[data-js-is-shared]': 'checked: isShared'
         },
         initialize: function(options) {
@@ -78,15 +78,17 @@ define(function (require, exports, module) {
             }
         },
         updateSharedSwitcher: function(){
-            if(this.isSharedDashboard()){
-                this.model.set('isShared', true);
-                $('[data-js-is-shared]', this.$el).prop('disabled', true);
-                $('[data-js-shared-control]', this.$el).addClass('disabled').attr('title', Localization.wizard.widgetOnSharedDashboard);
-            }
-            else {
-                this.model.set('isShared', false);
-                $('[data-js-is-shared]', this.$el).prop('disabled', false);
-                $('[data-js-shared-control]', this.$el).removeClass('disabled').attr('title', '');
+            if(this.dashboardModel){
+                if(this.isSharedDashboard()){
+                    this.model.set('isShared', true);
+                    $('[data-js-is-shared]', this.$el).prop('disabled', true);
+                    $('[data-js-shared-control]', this.$el).addClass('disabled').attr('title', Localization.wizard.widgetOnSharedDashboard);
+                }
+                else {
+                    this.model.set('isShared', false);
+                    $('[data-js-is-shared]', this.$el).prop('disabled', false);
+                    $('[data-js-shared-control]', this.$el).removeClass('disabled').attr('title', '');
+                }
             }
         },
         validate: function() {

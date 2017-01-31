@@ -115,6 +115,7 @@ define(function (require, exports, module) {
                 .done(function(data) {
                     var modelData = {
                         name: data.name,
+                        description: data.description,
                         owner: data.owner,
                         isShared: data.isShared,
                         gadget: data.content_parameters && data.content_parameters.gadget,
