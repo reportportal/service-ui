@@ -87,7 +87,7 @@ define(function (require, exports, module) {
             this.listenTo(this.model, 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount', _.debounce(this.onChangePreview, 10))
         },
         onChangeModel: function(model) {
-            console.dir(model.changed);
+            // console.dir(model.changed);
         },
         onChangePreview: function() {
             this.previewWidgetView && this.previewWidgetView.destroy();
@@ -167,7 +167,9 @@ define(function (require, exports, module) {
                 contentParameters.type = curWidget.widget_type;
                 contentParameters.gadget = this.model.get('gadget');
                 contentParameters.itemsCount = this.model.get('itemsCount');
-                contentParameters.content_fields = this.model.getContentFields();
+                if(this.model.getContentFields().length) {
+                    contentParameters.content_fields = this.model.getContentFields();
+                }
                 contentParameters.widgetOptions = this.model.getWidgetOptions();
                 var data = {
                     filter_id: this.model.get('filter_id'),
