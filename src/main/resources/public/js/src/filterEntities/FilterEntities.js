@@ -487,10 +487,10 @@ define(function (require, exports, module) {
 
     // CUSTOMIZE VIEWS
     var UserTagEntityView = Epoxy.View.extend({
-        initialize: function() {
+        initialize: function(options) {
             this.$el = (new TagEntityView({
                 model: this.model,
-                type: 'userAutoCompleteUrl',
+                type: options.type || 'userAutoCompleteUrl',
                 startSearch: config.forms.triggerMin,
                 warning: 'At least  3  symbols required.',
             })).$el

@@ -47,7 +47,7 @@ define(function (require, exports, module) {
             }
             this.render();
             this.usersModel = new Filters.Model({value: ''});
-            this.userView = new Filters.UserTagEntityView({model: this.usersModel});
+            this.userView = new Filters.UserTagEntityView({model: this.usersModel, type: 'autocompleteUserUrl'});
             $('[data-js-user-tags-container]', this.$el).html(this.userView.$el);
             this.listenTo(this.usersModel, 'change:value', this.onChangeValue);
         },
