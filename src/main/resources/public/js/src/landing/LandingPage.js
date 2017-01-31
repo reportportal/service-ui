@@ -66,21 +66,9 @@ define(function(require, exports, module) {
             this.$el.html(Util.templates(this.tpl));
             this.landingHeader = new LandingHeader({el: $('header.b-header', this.$el), model: this.model});
             this.setupAnchors();
-            this.socialBlockHandler();
         },
         setupAnchors: function(){
             this.socialBlock = $('[data-js-social-block]', this.$el);
-        },
-
-        socialBlockHandler: function () {
-            var self = this;
-            $(this.scrollElement).scroll(function () {
-                if ($(this).scrollTop() >= (self.$el.height() - $(this).height() - 30)) {
-                    self.socialBlock.addClass('hide');
-                } else {
-                    self.socialBlock.removeClass('hide');
-                }
-            });
         },
         
         showLoginBlock: function(){
@@ -154,6 +142,11 @@ define(function(require, exports, module) {
                 this.model.set({darkMenu: true});
             }else {
                 this.model.set({darkMenu: false});
+            }
+            if (scrollTop > (this.el.scrollHeight - this.scrollerAnimate.documentHeight - 30)) {
+                this.socialBlock.addClass('hide');
+            } else {
+                this.socialBlock.removeClass('hide');
             }
         },
         onClickMenu: function(href) {
