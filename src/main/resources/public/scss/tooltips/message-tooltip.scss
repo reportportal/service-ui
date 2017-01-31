@@ -21,8 +21,10 @@
 
 .message-tooltip {
   width: 200px;
-  color: $COLOR--gray-47;
-  font-family: 'OpenSansSemibold',sans-serif;
+  color: $COLOR--charcoal-grey;
+  font-family: $OpenSansRegular;
   font-size: 12px;
+  line-height: 1.43;
+  padding: 1px 5px 3px;
   word-wrap: break-word;
 }
