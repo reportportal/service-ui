@@ -28,6 +28,9 @@ define(function(require, exports, module) {
     var WidgetView = Epoxy.View.extend({
         className: 'widget-view',
         initialize: function(){
+            this.render();
+        },
+        render: function() {
             this.defectTypes = new SingletonDefectTypeCollection();
             var view = Widget.widgetService(this.model.get('content_parameters').gadget);
             var navigationInfo = {
@@ -62,16 +65,18 @@ define(function(require, exports, module) {
             var self = this;
             this.defectTypes.ready.done(function() {
                 setTimeout(function() {
+                    self.widget && self.widget.destroy();
                     self.widget = (new view(widgetData)).render();
                 }, 1);
             });
-
-            // this.widget = (new view(widgetData)).render();
-            // console.dir(view);
         },
         resize: function() {
             EQCSS.apply();
-            this.widget && this.widget.updateChart && this.widget.updateChart();
+            if(this.model.get('content_parameters').gadget == 'launch_statistics') {
+                this.render();
+            } else {
+                this.widget && this.widget.updateChart && this.widget.updateChart();
+            }
         },
         destroy: function() {
             this.widget && this.widget.destroy();
