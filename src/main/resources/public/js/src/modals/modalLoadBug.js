@@ -46,7 +46,7 @@ define(function (require, exports, module) {
        template: 'tpl-model-load-bug-item',
         className: 'ticket-row-view',
         events: {
-           'click [data-js-remove-row]': 'onClickRemove',
+            'click [data-js-remove-row]': 'onClickRemove',
             'blur [data-js-link-input]': 'onBlurLinkInput',
         },
         bindings: {
@@ -79,7 +79,7 @@ define(function (require, exports, module) {
         onBlurLinkInput: function() {
             var $link = $('[data-js-link-input]', this.$el);
             var $issue = $('[data-js-issue-input]', this.$el);
-            if (!$link.data('valid') || $.trim($issue.val())) return;
+            if ($link.parent().hasClass('validate-error') || $.trim($issue.val())) return;
             var autoValue = '';
             if (this.externalSystemType == 'JIRA') {
                 autoValue = $link.val().split('/');
