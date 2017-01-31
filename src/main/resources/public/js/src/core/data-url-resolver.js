@@ -63,7 +63,6 @@ define(['app'], function (App) {
     var filterById = function (id) {
         return saveFilter() + "/" + id;
     };
-    // todo - delete filterNames and filterNamesShared
     var filterNames = function () {
         return saveFilter() + '/names';
     };
