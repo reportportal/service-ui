@@ -42,6 +42,17 @@
     &.crumb {
       margin-left: 5px;
       margin-bottom: 10px;
+      .fail-load-container {
+        display: none;
+      }
+      &.fail-load {
+        .fail-load-container {
+          display: inline-block;
+        }
+        .success-load-container {
+          display: none;
+        }
+      }
       a {
         color: $COLOR--topaz;
         display: inline-block;
