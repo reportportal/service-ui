@@ -1188,6 +1188,7 @@ define(['util'], function () {
             activeProjects: "Active projects",
             notActiveProjects: "Not active projects",
             personalProjects: "Personal projects",
+            noProjectsFound: 'No projects found for',
             newProject: "new",
             usersQuantity: "members",
             usersQuantitySingular: "member",

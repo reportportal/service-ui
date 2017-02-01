@@ -32,8 +32,8 @@ define(function (require, exports, module) {
         return call('GET', Urls.adminProject(id));
     };
 
-    var getProjectInfo = function () {
-        return call('GET', Urls.getProject());
+    var getProjectInfo = function (id) {
+        return call('GET', Urls.getProject(id));
     };
 
     var getProjects = function (data) {
