@@ -214,7 +214,7 @@ define(['util'], function () {
 
         notFound: {
             oops: "Oops, this page was not found",
-            spelling: "You may have, mistyped the URL. Please check your spelling.",
+            spelling: "You may have mistyped the URL. Please check your spelling.",
             or: "or",
             permission: "You do not have permission to access this page. Please check the list of your available projects."
         },

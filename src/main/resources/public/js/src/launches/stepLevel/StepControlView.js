@@ -92,6 +92,7 @@ define(function (require, exports, module) {
                 }
             }));
             this.listenTo(this.collectionItems, 'change:issue change:description change:tags', this.increaseRefreshItemsCount);
+            this.listenTo(this.collectionItems, 'change:issue', this.updateParentModel);
             this.render();
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-refine-entities]', this.$el),
@@ -105,6 +106,9 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {context: this.context}));
+        },
+        updateParentModel: function () {
+            this.parentModel.updateData();
         },
         activateMultiple: function() {
             $('[data-js-refresh], [data-js-history-view]', this.$el).addClass('disabled');

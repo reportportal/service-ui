@@ -115,7 +115,7 @@ define(function (require, exports, module) {
                 },
                 'launch_statistics': {
                     gadget_name: Localization.widgets.executionIssueStatistics,
-                    img: 'launch_statistics_pie.png',
+                    img: 'launch_statistics_pie_double.png',
                     description: Localization.widgets.executionIssueStatisticsDescription,
                     widget_type: 'combine_pie_chart',
                     gadget: 'launch_statistics',

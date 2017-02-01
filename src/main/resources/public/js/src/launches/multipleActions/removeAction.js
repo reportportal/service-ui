@@ -46,7 +46,7 @@ define(function (require, exports, module) {
         var modal = new ModalConfirm({
             headerText: Localization.ui.delete +' '+ typeItems,
             bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, typeItems, itemName),
-            confirmText: Util.replaceTemplate(Localization.launches.deleteAgree, itemName),
+            confirmText: Util.replaceTemplate(Localization.launches.deleteAgree, typeItems),
             cancelButtonText: Localization.ui.cancel,
             okButtonText: Localization.ui.delete,
             confirmFunction: function() {
