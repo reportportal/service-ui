@@ -35,8 +35,13 @@ define(function (require, exports, module) {
             'click [data-js-add-dashboard]': 'onClickAddDashboard',
         },
         bindings: {
-            '[data-js-search-text]': 'text: search',
+            '[data-js-search-text]': 'text: trim(search)',
             ':el': 'classes: {search: any(search)}',
+        },
+        bindingFilters: {
+            trim: function(val) {
+                return $.trim(val);
+            }
         },
         initialize: function() {
             this.model = new (Epoxy.Model.extend({
