@@ -65,19 +65,10 @@ define(function(require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.tpl));
             this.landingHeader = new LandingHeader({el: $('header.b-header', this.$el), model: this.model});
-            this.socialBlockHandler();
+            this.setupAnchors();
         },
-
-        socialBlockHandler: function () {
-            var self = this;
-            var socialBlock = $('[data-js-social-block]', this.$el);
-            $(this.scrollElement).scroll(function () {
-                if ($(this).scrollTop() >= (self.$el.height() - $(this).height() - 30)) {
-                    socialBlock.addClass('hide');
-                } else {
-                    socialBlock.removeClass('hide');
-                }
-            });
+        setupAnchors: function(){
+            this.socialBlock = $('[data-js-social-block]', this.$el);
         },
         
         showLoginBlock: function(){
@@ -152,9 +143,15 @@ define(function(require, exports, module) {
             }else {
                 this.model.set({darkMenu: false});
             }
+            if (scrollTop > (this.el.scrollHeight - this.scrollerAnimate.documentHeight - 30)) {
+                this.socialBlock.addClass('hide');
+            } else {
+                this.socialBlock.removeClass('hide');
+            }
         },
         onClickMenu: function(href) {
             this.showParallax();
+            this.socialBlock.removeClass('hide');
             config.router.navigate('', {trigger: false});
             var $scrollElement = $(href);
             if($scrollElement){

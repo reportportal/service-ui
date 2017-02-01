@@ -116,16 +116,19 @@ define(function (require, exports, module) {
         initialize: function(options) {
             this.defectTypes = this.getDefectTypes();
             this.render();
+            this.listenTo(this.model, 'change:statistics', this.update);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
                 model: this.model.toJSON({computed: true}),
                 defectTypes: this.defectTypes
             }));
-
             this.loadDefectTooltip();
             this.loadDurationTooltip();
             this.loadExecutionsTooltip();
+        },
+        update: function () {
+            this.loadDefectTooltip();
         },
         getExecutionStats: function(stats, type){
             var exec = stats.executions,
