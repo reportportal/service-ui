@@ -60,8 +60,8 @@ define(function (require, exports, module) {
                 this.$container = $("#dynamic-content", this.$el);
             }
             this.setupPageView(options);
-            if (this.pageView.contextName === 'settings') {
-                this.$el.find('.rp-main-panel').addClass('settings-page');
+            if (this.pageView.contextName === 'settings' || this.isAdminPage) {
+                this.$el.find('.rp-main-panel').addClass('mobile-without-content-header');
             }
             return this;
         },
@@ -78,7 +78,9 @@ define(function (require, exports, module) {
                 this.pageView.update(options);
             }
 
-            (this.pageView.contextName === 'settings') ? this.$el.find('.rp-main-panel').addClass('settings-page') : this.$el.find('.rp-main-panel').removeClass('settings-page');
+            (this.isAdminPage || this.pageView.contextName === 'settings') ?
+                this.$el.find('.rp-main-panel').addClass('mobile-without-content-header') :
+                this.$el.find('.rp-main-panel').removeClass('mobile-without-content-header');
         },
 
         setupPageView: function (options) {
@@ -94,7 +96,6 @@ define(function (require, exports, module) {
                 this.$header = $('#contentHeader', this.$el);
                 this.$body = $('#dynamic-content', this.$el);
                 var self = this;
-
                 this.pageView = new PageView.ContentView({
                     contextName: options.contextName,
                     context: this.getAppProp(self),

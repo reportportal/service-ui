@@ -27,6 +27,16 @@
   margin: 0;
   padding: 15px 0 0 0;
 
+  @media (max-width: $SCREEN_XS_MAX) {
+    &.mobile-without-content-header {
+      padding-top: 0;
+
+      .panel-heading {
+        display: none;
+      }
+    }
+  }
+
   & > #contentHeader {
     border: none;
     border-radius: 0;
@@ -80,18 +90,6 @@
         background-color: #ffffff;
         margin: 0;
         padding: 10px 0;
-      }
-    }
-  }
-}
-
-@media (max-width: $SCREEN_XS_MAX) {
-  .rp-main-panel {
-    &.settings-page {
-      padding-top: 0;
-
-      .panel-heading {
-        display: none;
       }
     }
   }

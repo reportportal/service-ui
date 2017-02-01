@@ -515,7 +515,16 @@
            font-size: 20px;
            text-transform: uppercase;
            @media (max-width: $SCREEN_XS_MAX){
+             font-size: 14px;
              margin: 0 15px;
+           }
+
+           .header-crumb {
+             display: none;
+
+             @media (max-width: $SCREEN_XS_MAX){
+               display: inline;
+             }
            }
          }
 

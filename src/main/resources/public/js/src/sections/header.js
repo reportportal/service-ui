@@ -26,9 +26,9 @@ define(function (require, exports, module) {
     var Util = require('util');
     var UserModel = require('model/UserModel');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
-
     var SingletonAppModel = require('model/SingletonAppModel');
     var App = require('app');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -49,7 +49,7 @@ define(function (require, exports, module) {
             this.tpl = options.tpl;
             this.lastURL = options.lastURL;
             this.currentPage = options.currentPage;
-
+            this.isAdminPage = options.isAdminPage;
             this.appModel = new SingletonAppModel();
             this.project = this.appModel.attributes;
             this.canDebug = Util.isAdmin() || !Util.isCustomer();
@@ -57,6 +57,30 @@ define(function (require, exports, module) {
             this.userStorage = new SingletonUserStorage();
 
             this.listenTo(config.router, "route", this.updateActiveLink);
+        },
+
+        update: function (options) {
+            if(this.currentPage !== options.contextName) {
+                if (options.contextName === 'project-details') {
+                    this.$el.find('[data-js-admin-header-crumb]').html(' / ' + this.getCrumbPart('projects'));
+                    return;
+                }
+                this.$el.find('[data-js-admin-header-crumb]').html(' / ' + this.getCrumbPart(options.contextName));
+                this.currentPage = options.contextName;
+            }
+        },
+
+        getCrumbPart: function (page) {
+            switch (page) {
+                case 'projects':
+                    return Localization.admin.titleAllProjects;
+                    break;
+                case 'users':
+                    return Localization.admin.users;
+                case 'settings':
+                    return Localization.admin.serverSettings;
+                    break;
+            }
         },
 
         render: function () {
@@ -99,6 +123,14 @@ define(function (require, exports, module) {
                 self.scrollerProjects.removeClass('open');
                 self.blockHeightProjects.removeClass('open').height(0);
             });
+
+            if (this.isAdminPage) {
+                if (this.currentPage === 'project-details') {
+                    this.$el.find('[data-js-admin-header-crumb]').html(' / ' + this.getCrumbPart('projects'));
+                } else {
+                    this.$el.find('[data-js-admin-header-crumb]').html(' / ' + this.getCrumbPart(this.currentPage));
+                }
+            }
 
             return this;
         },
