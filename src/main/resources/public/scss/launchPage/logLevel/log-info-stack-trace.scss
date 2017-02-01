@@ -24,16 +24,47 @@
     .activity-preloader {
       display: block;
     }
+    .go-to-log {
+      display: none;
+    }
   }
   &.not-found {
     .no-result-found {
       display: block;
     }
+    .go-to-log {
+      display: none;
+    }
   }
   .stack-trace-item {
     background-color: $COLOR--light-red;
-    padding: 16px 40px 20px 16px;
+    padding: 16px 40px 40px 16px;
     line-height: 19px;
     word-wrap: break-word;
+  }
+  .go-to-log {
+    cursor: pointer;
+    display: inline-block;
+    color: $COLOR--windows-blue;
+    font-size: 13px;
+    bottom: 15px;
+    left: 16px;
+    position: absolute;
+    i {
+      vertical-align: middle;
+    }
+    .loader-action {
+      display: none;
+    }
+  }
+  &.load-go-to-log {
+    .go-to-log {
+      i {
+        display: none;
+      }
+      .loader-action {
+        display: inline-block;
+      }
+    }
   }
 }

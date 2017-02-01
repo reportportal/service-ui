@@ -113,6 +113,12 @@ define(function (require, exports, module) {
                 .off('resize.logItems')
                 .on('resize.logItems', _.debounce(self.resize.bind(self), 100))
         },
+        resetFilters: function() {
+            this.nameModel.set({value: ''});
+            this.selectModel.set({value: ''});
+            this.selectModel.trigger('changeState');
+            $('[data-js-attachments-filter]', this.$el).prop( "checked", false );
+        },
         setupStickyHeader: function() {
             this.destroyStickyHeader();
             this.stickyHeader = new StickyHeader({fixedBlock: $('[data-js-fixed-header]', this.$el), topMargin: 0, minWidthWindow: 720});
@@ -120,13 +126,11 @@ define(function (require, exports, module) {
         destroyStickyHeader: function() {
             this.stickyHeader && this.stickyHeader.destroy();
         },
-
         resize: function() {
             _.each(this.items, function(item) {
                 item.resize();
             })
         },
-
         render: function() {
             this.$el.html(Util.templates(this.template), {});
             $('[data-js-select-filter]', this.$el).html((new this.selectModel.view({model: this.selectModel})).$el);
@@ -165,7 +169,7 @@ define(function (require, exports, module) {
             })
         },
         onChangePage: function(page) {
-            this.collection.setPaging(page);
+            return this.collection.setPaging(page);
         },
         onChangePageCount: function(count) {
             this.collection.setPaging(1, count);
@@ -225,6 +229,23 @@ define(function (require, exports, module) {
                 $container.append(item.$el);
                 self.items.push(item);
             })
+        },
+        goToLog: function(logId) {
+            if (this.collection.get(logId)) {
+                this.collection.get(logId).trigger('scrollTo');
+                this.trigger('goToLog:end');
+            } else {
+                var self = this;
+                this.collection.findLogPage(logId)
+                    .done(function(number) {
+                        self.resetFilters();
+                        self.onChangePage(number);
+                        self.listenToOnce(self.collection, 'loading:false', function() {
+                            self.collection.get(logId) && self.collection.get(logId).trigger('scrollTo');
+                            self.trigger('goToLog:end');
+                        });
+                    })
+            }
         },
 
         destroy: function() {

@@ -37,10 +37,11 @@ define(function (require, exports, module) {
             this.listenTo(this.filterModel, 'change:newSelectionParameters change:newEntities', this.onChangeFilter);
             this.pagingPage = options.pagingPage || 1;
             this.pagingSize = options.pagingSize || 50;
+            this.loadDebounce = _.debounce(this.load.bind(this), 10);
         },
         onChangeFilter:function() {
             this.pagingPage = 1;
-            this.load();
+            this.loadDebounce();
             this.trigger('change:options', this.getParamsForUrl());
         },
         load: function() {
@@ -56,14 +57,16 @@ define(function (require, exports, module) {
                 .always(function() {
                     self.trigger('loading:false')
                 });
+            return this.request;
         },
         setPaging: function(curPage, size) {
             this.pagingPage = curPage;
             if(size) {
                 this.pagingSize = size;
             }
-            this.load();
+            var async = this.loadDebounce();
             this.trigger('change:options', this.getParamsForUrl());
+            return async;
         },
 
         getParamsForRequest: function() {
@@ -82,6 +85,16 @@ define(function (require, exports, module) {
             })
             answer = answer.concat(filterOptions);
             return answer;
+        },
+        findLogPage: function(logId) {
+            var async = $.Deferred();
+            var path = Urls.getLogsUrl() + '/' + logId + '/page?filter.eq.item='+ this.itemModel.get('id') + '&page.size=' + this.pagingSize;
+            call('GET', path)
+                .done(function(data) {
+                    async.resolve(data.number);
+                })
+                .fail(function() { async.reject(); });
+            return async;
         }
     })
 

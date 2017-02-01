@@ -383,6 +383,7 @@ define(function (require, exports, module) {
         initialize: function() {
             this.render();
             this.initState();
+            this.listenTo(this.model, 'changeState', this.initState);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));
@@ -414,9 +415,7 @@ define(function (require, exports, module) {
             var checkedValue = this.model.get('value').split(',');
             _.each($('.rp-input-checkbox', this.$el), function(checkbox) {
                 var $checkbox = $(checkbox);
-                if(_.contains(checkedValue, $checkbox.data('value'))) {
-                    $checkbox.prop('checked', true);
-                }
+                $checkbox.prop('checked', _.contains(checkedValue, $checkbox.data('value')));
             });
             _.each($('.rp-input-checkbox[data-subtype]', this.$el), function(checkbox) {
                 var $checkbox = $(checkbox);

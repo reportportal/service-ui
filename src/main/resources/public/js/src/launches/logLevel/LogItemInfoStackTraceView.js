@@ -44,6 +44,7 @@ define(function (require, exports, module) {
 
         events: {
             'click [data-js-close]': 'onClickClose',
+            'click [data-js-go-to-log]': 'onClickGoToLog',
         },
 
         initialize: function(options) {
@@ -92,6 +93,13 @@ define(function (require, exports, module) {
         },
         onStopLoading: function() {
             $('[data-js-stack-trace-wrapper]', this.$el).removeClass('load');
+        },
+        onClickGoToLog: function() {
+            $('[data-js-stack-trace-wrapper]', this.$el).addClass('load-go-to-log');
+            this.trigger('goToLog', this.collection.models[0].get('id'))
+        },
+        endGoToLog: function() {
+            $('[data-js-stack-trace-wrapper]', this.$el).removeClass('load-go-to-log');
         },
         load: function() {
             this.collection.setPaging(1, 1); // call loading
