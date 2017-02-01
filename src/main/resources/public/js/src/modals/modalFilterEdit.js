@@ -25,6 +25,7 @@ define(function (require, exports, module) {
     var ModalView = require('modals/_modalView');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var Service = require('coreService');
 
     var ModalFilterEdit = ModalView.extend({
         template: 'tpl-modal-filter-edit',
@@ -40,18 +41,26 @@ define(function (require, exports, module) {
         },
 
         initialize: function(options) {
-            var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
-            var launchFilterCollection = new SingletonLaunchFilterCollection();
-            var filterNames = _.map(launchFilterCollection.models, function(model) {
-                return model.get('name');
-            });
-            this.render(options);
-            var filterModel = options.filterModel;
+            var filterNames = [],
+                self = this,
+                filterModel = options.filterModel;
             this.model = new Epoxy.Model({
                 name: filterModel.get('name'),
                 isShared: filterModel.get('isShared'),
                 description: filterModel.get('description'),
             });
+            this.render(options);
+            Service.getFilterNames()
+                .done(function(data){
+                    filterNames = _.map(data, function(filter) {
+                            return filter.name;
+                    });
+                })
+                .always(function(){
+                    self.addValidators(filterNames);
+                });
+        },
+        addValidators: function(filterNames){
             Util.hintValidator($('[data-js-name-input]', this.$el), [{
                 validator: 'minMaxRequired',
                 type: 'filterName',

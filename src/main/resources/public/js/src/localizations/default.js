@@ -602,6 +602,8 @@ define(['util'], function () {
             deletedSharedDashboard: "Dashboard has been deleted by owner!",
             noWidgetsInDashBoard: "Dashboard doesn't contain any widget.",
             selectDashboard: "Select dashboard",
+            firstDashboard: 'My first dashboard',
+            autoCreated: '* First dashboard was created automatically',
             dashboardsEmpty: "No dashboards found! Click 'Add new Dashboard' button to create dashboard.",
             deletedByOwner: "Deleted by owner",
             deletedDashboard: "Deleted dashboard",
@@ -953,6 +955,7 @@ define(['util'], function () {
             notFoundActivity: 'No activities to display',
             notFoundAttachments: 'No attachments to display',
             notFoundStackTrace: 'No Stack Trace to display',
+            goToLog: 'Go to Stack Trace in Log Message',
             nextError: 'Next Error',
         },
 

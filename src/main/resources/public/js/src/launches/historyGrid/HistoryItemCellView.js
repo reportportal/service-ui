@@ -96,7 +96,7 @@ define(function (require, exports, module) {
                         var objIssue = model.getIssue(),
                             issueType = this.view.defectsCollection.getDefectType(objIssue.issue_type),
                             data = {
-                                tickets: _.map(objIssue.tickets, function(t){ return t.ticketId; }).join(', '),
+                                tickets: _.map(objIssue.externalSystemIssues, function(t){ return t.ticketId; }).join(', '),
                                 comment: objIssue.comment ? Textile(objIssue.comment.setMaxLength(256)).escapeScript() : '',
                                 issueType: issueType,
                                 cls: Util.getDefectCls(issueType.typeRef.toLocaleLowerCase())

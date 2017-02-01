@@ -50,6 +50,7 @@ define(function (require, exports, module) {
             '[data-js-edit-filter]': 'attr: {disabled: any(temp, notMyFilter)}',
             '[data-js-clone-filter]': 'attr: {disabled: all(not(entities), not(newEntities))}',
             '[data-js-filter-not-my-descr]': 'classes: {hide: not(notMyFilter)}',
+            '[data-js-add-widget]': 'classes: {disabled: temp}'
         },
 
         initialize: function(options) {

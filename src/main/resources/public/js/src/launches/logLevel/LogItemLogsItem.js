@@ -24,6 +24,9 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var LogItemLogsItem = Epoxy.View.extend({
         className: 'rp-table-row',
@@ -55,10 +58,17 @@ define(function (require, exports, module) {
 
         initialize: function() {
             this.render();
+            this.listenTo(this.model, 'scrollTo', this.scrollTo);
         },
 
         resize: function() {
             this.activateAccordion();
+        },
+        scrollTo: function() {
+            config.mainScrollElement.animate(
+                {
+                    scrollTop: this.$el.offset().top
+                }, 500);
         },
 
         render: function() {

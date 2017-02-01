@@ -27,7 +27,9 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var DashboardCollection = require('dashboard/DashboardCollection');
+    var DashboardModel = require('dashboard/DashboardModel');
     var SelectDashboardItemView = require('modals/addWidget/SelectDashboardItemView');
+    var Localization = require('localization');
 
     var SelectDashboardView = Epoxy.View.extend({
         className: 'modal-add-widget-select-dashboard',
@@ -39,6 +41,7 @@ define(function (require, exports, module) {
             this.render();
         },
         render: function() {
+            this.destroyItems();
             this.$el.html(Util.templates(this.template, {}));
             var self = this;
             this.$el.addClass('load');
@@ -51,6 +54,11 @@ define(function (require, exports, module) {
             this.listenTo(this.collection, 'change:active', this.onChangeActive);
         },
         activate: function(){
+            $('[data-js-dashboard-items]', this.$el).removeClass('hide');
+            if(this.collection.isEmpty()){
+                this.collection.add({id: _.uniqueId(), name: Localization.dashboard.firstDashboard, owner: config.userModel.get('name')});
+                $('[data-js-auto-created]', this.$el).removeClass('hide');
+            }
             var active = this.collection.first();
             active.set('active', true);
             this.renderItems();
@@ -68,6 +76,7 @@ define(function (require, exports, module) {
                 view && view.destroy();
             });
             this.renderedItems = [];
+            $('[data-js-dashboard-items]', this.$el).empty();
         },
         setActiveDashboard: function(e){
             e.preventDefault();

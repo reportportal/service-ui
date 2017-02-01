@@ -148,7 +148,9 @@ define([
     var getOwnFilters = function () {
         return call('GET', urls.ownFilters());
     };
-
+    var getFilterNames = function(){
+        return call('GET', urls.filterNames());
+    };
     var getSharedFilters = function () {
         return call('GET', urls.sharedFilters());
     };
@@ -375,6 +377,7 @@ define([
         getSharedWidgetData: getSharedWidgetData,
         getOwnFilters: getOwnFilters,
         getSharedFilters: getSharedFilters,
+        getFilterNames: getFilterNames,
         getFilterData: getFilterData,
         createDashboard: createDashboard,
         deleteDashboard: deleteDashboard,
