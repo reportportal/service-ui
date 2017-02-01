@@ -87,7 +87,7 @@
                     width: 100%;
                     span {
                         overflow: hidden;
-                        max-width: 100%;
+                        max-width: calc(100% - 25px);
                         display: inline-block;
                         text-overflow: ellipsis;
                     }
@@ -96,24 +96,24 @@
             .user-info-mail {
                 font-size: 14px;
                 margin: 0 0 12px;
-                vertical-align: baseline;
                 .user-mail {
-                    color: $COLOR--windows-blue;
+                    color: $COLOR--gray-47;
                     text-decoration: none;
+                    overflow: hidden;
+                    word-wrap: break-word;
                 }
             }
             .user-edit {
                 display:  inline-block;
                 position: relative;
-                padding: 0 26px 0 0;
+                max-width: 100%;
 
                 i {
                     display: none;
-                    position: absolute;
-                    right: 0;
-                    top: 2px;
+                    position: static;
                     cursor: pointer;
                     font-size: 18px;
+                    vertical-align: top;
                     color: $COLOR--gray-60;
                 }
             }
