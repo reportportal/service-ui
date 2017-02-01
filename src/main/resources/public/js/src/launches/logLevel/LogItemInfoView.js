@@ -154,6 +154,13 @@ define(function (require, exports, module) {
                 itemModel: this.viewModel,
                 parentModel: this.model,
             });
+            this.listenTo(this.stackTrace, 'goToLog', this.goToLog);
+        },
+        goToLog: function(logId) {
+            this.trigger('goToLog', logId);
+        },
+        endGoToLog: function() {
+            this.stackTrace.endGoToLog();
         },
         onChangeLaunchProcessing: function() {
             this.viewModel.set({parent_launch_isProcessing: this.launchModel.get('isProcessing')});

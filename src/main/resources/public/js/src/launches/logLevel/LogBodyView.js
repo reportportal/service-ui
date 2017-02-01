@@ -75,14 +75,16 @@ define(function (require, exports, module) {
             if (itemModelFromCollection) {
                 itemModel.set('path_names', itemModelFromCollection.get('path_names'));
             }
-            this.historyItem && this.historyItem.destroy();
+
+            this.historyItem && this.stopListening(this.historyItem) && this.historyItem.destroy();
             this.historyItem = new LogItemInfoView({
                 el: $('[data-js-item-info]', this.$el),
                 context: this.context,
                 itemModel: itemModel,
                 launchModel: this.launchModel,
             });
-            this.logsItem && this.logsItem.destroy();
+            this.listenTo(this.historyItem, 'goToLog', this.goToLog);
+            this.logsItem && this.stopListening(this.logsItem) && this.logsItem.destroy();
             this.logsItem = new LogItemLogsTable({
                 el: $('[data-js-item-logs]', this.$el),
                 itemModel: itemModel,
@@ -90,8 +92,15 @@ define(function (require, exports, module) {
                 mainPath: this.collectionItems.getPathByLogItemId(itemModel.get('id')),
                 options: this.collectionItems.getInfoLog(),
             })
+            this.listenTo(this.logsItem, 'goToLog:end', this.onEndGoToLog);
         },
 
+        goToLog: function(logId) {
+            this.logsItem && this.logsItem.goToLog(logId);
+        },
+        onEndGoToLog: function() {
+            this.historyItem.endGoToLog();
+        },
         render: function() {
             this.$el.html(Util.templates(this.template, {context: this.context}));
         },
