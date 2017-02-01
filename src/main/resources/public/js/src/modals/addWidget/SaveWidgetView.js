@@ -54,11 +54,6 @@ define(function (require, exports, module) {
                 max: 256
             });
             this.listenTo(this.model, 'change:name', this.onChangeName);
-            if(this.isNoDashboard){
-                this.selectDashboard = new SelectDashboardView();
-                $('[data-js-dashboards-list]', this.$el).removeClass('hide').append(this.selectDashboard.$el);
-                this.listenTo(this.selectDashboard, 'change::dashboard', this.onChangeDashboard);
-            }
             this.updateSharedSwitcher();
         },
         onChangeDashboard: function(model){
@@ -98,6 +93,13 @@ define(function (require, exports, module) {
             return !$('[data-js-name-input]', this.$el).trigger('validate').data('validate-error');
         },
         activate: function() {
+            if(this.isNoDashboard){
+                if(!this.selectDashboard) {
+                    this.selectDashboard = new SelectDashboardView();
+                    $('[data-js-dashboards-list]', this.$el).removeClass('hide').append(this.selectDashboard.$el);
+                    this.listenTo(this.selectDashboard, 'change::dashboard', this.onChangeDashboard);
+                }
+            }
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}))
