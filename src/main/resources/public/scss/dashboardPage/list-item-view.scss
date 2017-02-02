@@ -119,4 +119,11 @@
   @media(max-width: 1200px) {
     width: 33.3%;
   }
+  @media(max-width: 900px) {
+    width: 50%;
+  }
+  @media(max-width: 550px) {
+    width: 100%;
+    margin: 7px 0;
+  }
 }

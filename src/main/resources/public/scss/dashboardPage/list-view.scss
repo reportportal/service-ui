@@ -73,4 +73,16 @@
       display: none;
     }
   }
+  @media (max-width: 767px) {
+    .filter-dashboard {
+      display: none;
+    }
+    h1 {
+      margin: 15px -5px 10px -5px;
+      border: none;
+    }
+    .dashboard-container {
+      margin: 0 -13px 30px -13px;
+    }
+  }
 }

@@ -21,6 +21,7 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var MainBreadcrumbsComponent = require('components/MainBreadcrumbsComponent');
+    var DashboardHeaderListItemView = require('dashboard/DashboardHeaderListItemView');
     var App = require('app');
     var Localization = require('localization');
 
@@ -47,11 +48,19 @@ define(function (require, exports, module) {
             this.collection.ready.done(function() {
                 self.listenTo(self.collection, 'change:active', self.onChangeActive);
                 self.listenTo(self.collection, 'reset:active', self.changeActive);
+                self.activateDashboardList();
                 self.changeActive();
             })
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        activateDashboardList: function() {
+            var self = this;
+            _.each(this.collection.models, function(model) {
+                var view = new DashboardHeaderListItemView({model: model});
+                $('[data-js-dashboard-list-mobile]', self.$el).append(view.$el);
+            })
         },
         onClickAddDashboard: function(e) {
             this.collection.createNewDashboard();
@@ -67,11 +76,15 @@ define(function (require, exports, module) {
             this.listenModel && this.stopListening(this.listenModel);
             if(activeDashboard.length) {
                 this.listenModel = activeDashboard[0];
+                $('[data-js-active-dashboard]', this.$el).text(this.listenModel.get('name'));
                 breadcrumbsData.push({name: this.listenModel.get('name'), link: ''});
                 var self = this;
                 this.listenTo(this.listenModel, 'change:name', function(model, name) {
                     self.mainBreadcrumbs.collection.models[1].set({name: name});
+                    $('[data-js-active-dashboard]', self.$el).text(name);
                 })
+            } else {
+                $('[data-js-active-dashboard]', this.$el).text(Localization.dashboard.allDashboards);
             }
             this.mainBreadcrumbs.collection.reset(breadcrumbsData);
         },

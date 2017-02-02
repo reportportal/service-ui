@@ -101,6 +101,14 @@
     margin: 15px 0;
     height: auto;
   }
+  @media (max-width: 767px) {
+    .grid-stack {
+      margin: 15px -15px;
+    }
+    .buttons-container {
+      display: none;
+    }
+  }
 }
 body.fullscreen {
   .dashboard-item-view {

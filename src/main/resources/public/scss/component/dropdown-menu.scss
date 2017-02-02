@@ -44,7 +44,7 @@
       padding: 6px 15px;
       text-decoration: none;
       text-transform: capitalize;
-      color: #464547;
+      color: $COLOR--COLOR--gray-47;
       white-space: nowrap;
       &:focus, &:hover {
         background: $COLOR--tealish-opacity;
@@ -55,6 +55,13 @@
         border-color: #cccccc;
         box-shadow: none;
         cursor: default;
+      }
+    }
+    &.active {
+      & > a, & > label, & > a:hover, & > label:hover {
+        cursor: default;
+        background: $COLOR--gray-91;
+        color: $COLOR--charcoal-grey;
       }
     }
   }
