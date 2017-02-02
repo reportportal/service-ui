@@ -26,6 +26,9 @@
   background-color: transparent;
   margin: 0;
   padding: 15px 0 0 0;
+  @media (max-width: 767px) {
+    padding: 0;
+  }
 
   @media (max-width: $SCREEN_XS_MAX) {
     &.mobile-without-content-header {

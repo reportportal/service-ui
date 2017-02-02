@@ -74,7 +74,7 @@ define(function (require, exports, module) {
             }
         },
         onChangeModel: function(model) {
-            console.dir(model.changed);
+            // console.dir(model.changed);
         },
         onEditFilter: function(filterModel) {
             this.$el.addClass('filter-edit-state');
@@ -137,7 +137,9 @@ define(function (require, exports, module) {
                 contentParameters.type = curWidget.widget_type;
                 contentParameters.gadget = this.model.get('gadget');
                 contentParameters.itemsCount = this.model.get('itemsCount');
-                contentParameters.content_fields = this.model.getContentFields();
+                if(this.model.getContentFields().length) {
+                    contentParameters.content_fields = this.model.getContentFields();
+                }
                 contentParameters.widgetOptions = this.model.getWidgetOptions();
                 var data = {
                     name: this.model.get('name'),

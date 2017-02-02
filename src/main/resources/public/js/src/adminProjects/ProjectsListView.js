@@ -40,6 +40,10 @@ define(function (require, exports, module) {
         template: 'tpl-projects-list',
         listHeadTpl: 'tpl-projects-list-head',
 
+        bindings: {
+            '[data-js-search-text]': 'text: search'
+        },
+
         initialize: function (options) {
             this.projectsType = options.projectsType;
             this.$total = options.total;
@@ -71,13 +75,16 @@ define(function (require, exports, module) {
             this.$loaderEl = $('[data-js-projects-loader]', this.$el);
             this.$projectsList = $('[data-js-projects-list]', this.$el);
             this.$pagingEl = $('[data-js-projects-paging]', this.$el);
+            this.$projectsContent = $('[data-js-projects-content]', this.$el);
+            this.$emptyContent = $('[data-js-projects-empty]', this.$el);
         },
 
         renderProjects: function () {
             if (_.isEmpty(this.collection.models)) {
-                this.renderEmptyUsers();
+                this.$emptyContent.removeClass('hide');
                 return;
             }
+            this.$projectsContent.removeClass('hide');
             this.updateList();
             _.each(this.collection.models, function (project) {
                 var projectItem = new ProjectsItemView({model: project, filterModel: this.model});
@@ -151,6 +158,8 @@ define(function (require, exports, module) {
         loadProjects: function () {
             var query = this.getQueryData();
             config.userModel.ready.done(function () {
+                this.$projectsContent.addClass('hide');
+                this.$emptyContent.addClass('hide');
                 this.toggleLoader('show');
                 AdminService.getProjects(query)
                     .done(function (data) {

@@ -1430,7 +1430,8 @@ li {
 /*--------incorrect form fields lightup-----------*/
 
 .has-error .form-control,
-.has-error .form-control:focus {
+.has-error .form-control:focus,
+.has-error .select2-container .select2-choice {
   color: #393939;
   box-shadow: 0 0 2px 0 rgba(255, 49, 33, .7);
   border: 1px solid $COLOR--orange-red;

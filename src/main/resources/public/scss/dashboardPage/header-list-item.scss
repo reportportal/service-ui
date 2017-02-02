@@ -19,41 +19,12 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.dashboard-header {
-  position: relative;
-  width: 100%;
-  .breadcrumbs {
-    padding-right: 200px;
-  }
-  & > .rp-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-  .dashboards-overflow-mobile {
-    display: none;
-  }
-  @media (max-width: 767px) {
-    background: $COLOR--white-default;
-    padding: 13px 10px;
-    margin-bottom: 15px;
-    & > .rp-btn, .breadcrumbs {
-      display: none;
-    }
-    .dashboards-overflow-mobile {
-      display: block;
-      position: relative;
-      .select-value {
-        line-height: 27px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: $COLOR--charcoal-grey;
-        font-family: "OpenSansSemibold", sans-serif;
-      }
-      .dropdown-menu {
-        width: 100%;
-      }
-    }
+.dashboard-header-list-item {
+  a {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: "OpenSansSemibold", sans-serif;
+    padding: 10px 15px;
   }
 }

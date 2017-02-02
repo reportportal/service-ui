@@ -75,7 +75,7 @@ define(function(require, exports, module) {
         renderBody: function () {
             this.destroyBody();
             if(this.page == 'project-details'){
-                AdminService.getProjectInfo()
+                AdminService.getProjectInfo(this.id)
                     .done(function (data) {
                         config.project = data;
                         this.renderProject();

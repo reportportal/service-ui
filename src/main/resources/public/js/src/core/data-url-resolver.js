@@ -92,8 +92,8 @@ define(['app'], function (App) {
         var userAttr = config.userModel.toJSON();
         return config.apiVersion + "project/" + (config.project.projectId || userAttr.defaultProject) + "/preference/" + userAttr.name;
     };
-    var getProject = function () {
-        return config.projectUrl + (config.project.projectId || config.userModel.get('defaultProject'));
+    var getProject = function (id) {
+        return config.projectUrl + (id || config.project.projectId || config.userModel.get('defaultProject'));
     };
     var launchesBase = function () {
         return "#" + config.project.projectId + "/launches";

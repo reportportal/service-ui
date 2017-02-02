@@ -136,12 +136,21 @@
     .tab-content {
         margin: 0 -15px;
     }
-    .projects-list-loader {
-        text-align: center;
-        padding-bottom: 20px;
-    }
     .projects-paging {
         padding: 0 20px;
+    }
+    .no-result-found {
+        display: block;
+        text-align: center;
+        padding: 10px 0 25px;
+        font-size: 13px;
+        color: $COLOR--gray-47;
+        .no-result-title {
+            font-size: 17px;
+        }
+        p {
+            margin: 5px 0;
+        }
     }
 
     .project-item {

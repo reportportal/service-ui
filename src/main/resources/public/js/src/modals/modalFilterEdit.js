@@ -52,8 +52,10 @@ define(function (require, exports, module) {
             this.render(options);
             Service.getFilterNames()
                 .done(function(data){
-                    filterNames = _.map(data, function(filter) {
-                            return filter.name;
+                    _.each(data, function(filter){
+                        if(filter.name !== self.model.get('name')){
+                            filterNames.push(filter.name);
+                        }
                     });
                 })
                 .always(function(){

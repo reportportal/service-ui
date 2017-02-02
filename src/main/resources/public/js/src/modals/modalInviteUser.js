@@ -64,7 +64,7 @@ define(function (require, exports, module) {
             this.appModel = new SingletonAppModel();
             this.model = new Epoxy.Model({
                 user: '',
-                default_project: this.appModel.get('projectId'),
+                default_project: '',
                 projectRole: config.defaultProjectRole
             });
             this.render();
@@ -214,13 +214,6 @@ define(function (require, exports, module) {
                 allowClear: true,
                 initSelection: function (element, callback) {
                     callback({id: element.val(), text: element.val()});
-                },
-                createSearchChoice: function (term, data) {
-                    if (_.filter(data, function (opt) {
-                            return opt.text.localeCompare(term) === 0;
-                        }).length === 0) {
-                        return {id: term, text: term};
-                    }
                 },
                 query: function (query) {
                     AdminService.getProjects(self.getSearchQuery(query.term))
