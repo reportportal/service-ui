@@ -162,6 +162,14 @@ define(function (require, exports, module) {
         endGoToLog: function() {
             this.stackTrace.endGoToLog();
         },
+        goToAttachment: function(logId) {
+            var self = this;
+            config.mainScrollElement.animate({ scrollTop: this.el.offsetTop}, 500, function() {
+                self.attachments.goToAttachments(logId);
+                self.model.set({attachments: true});
+            });
+
+        },
         onChangeLaunchProcessing: function() {
             this.viewModel.set({parent_launch_isProcessing: this.launchModel.get('isProcessing')});
         },
