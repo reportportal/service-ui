@@ -1294,6 +1294,7 @@ define(['util'], function () {
             lockedPermissionsTitle: "You do not have enough permissions to update this member",
             invitationSent: "The invitation was sent on",
             titleAllMembers: "All Members",
+            titleNameLogin: "Name / Login",
             titleNameLoginEmail: "Name / Login / Email",
             enterLoginEmail: 'Enter Login or Email',
             alredyAdded: 'User has already assigned to the project',
