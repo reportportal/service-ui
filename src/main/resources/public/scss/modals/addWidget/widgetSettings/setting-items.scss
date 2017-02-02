@@ -23,6 +23,10 @@
   float: left;
   margin: 17px 10px 0 10px;
   position: relative;
+  span {
+    min-width: 37px;
+    display: inline-block;
+  }
   .form-group {
     display: inline-block;
     margin-left: 8px;
