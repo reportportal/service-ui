@@ -859,6 +859,9 @@ nv.nearestValueIndex = function (values, searchVal, threshold) {
                 var tTop = tooltipTop(container);
                 break;
         }
+        if (top < 0) {
+            top = 0;
+        }
         container.style.left = left+'px';
         container.style.top = top+'px';
         container.style.opacity = 1;
