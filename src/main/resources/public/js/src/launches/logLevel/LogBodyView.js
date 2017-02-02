@@ -93,10 +93,14 @@ define(function (require, exports, module) {
                 options: this.collectionItems.getInfoLog(),
             })
             this.listenTo(this.logsItem, 'goToLog:end', this.onEndGoToLog);
+            this.listenTo(this.logsItem, 'goToAttachment', this.onGoToAttachment);
         },
 
         goToLog: function(logId) {
             this.logsItem && this.logsItem.goToLog(logId);
+        },
+        onGoToAttachment: function(logId) {
+            this.historyItem.goToAttachment(logId);
         },
         onEndGoToLog: function() {
             this.historyItem.endGoToLog();
