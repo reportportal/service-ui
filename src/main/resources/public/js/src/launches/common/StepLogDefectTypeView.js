@@ -225,7 +225,7 @@ define(function (require, exports, module) {
             if (issue && issue.externalSystemIssues) {
                 tickets = issue.externalSystemIssues;
             }
-            this.ticketCollection.reset(tickets)
+            this.ticketCollection.reset(tickets);
         },
         onClickEditDefect: function() {
             var defectEditor = new ModalDefectEditor({
