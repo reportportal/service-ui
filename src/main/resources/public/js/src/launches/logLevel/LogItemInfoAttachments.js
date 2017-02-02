@@ -279,6 +279,45 @@ define(function (require, exports, module) {
                 this.load();
             }
         },
+        goToAttachments: function(logId) {
+            if (this.activateAttachment(logId)) {
+                return true;
+            }
+            this.isLoad = true;
+            this.$main.addClass('load');
+            var self = this;
+            this.findLogPage(logId)
+                .done(function(number) {
+                    self.curPage = number;
+                })
+                .always(function() {
+                    self.load()
+                        .done(function() {
+                            self.activateAttachment(logId);
+                        })
+                });
+            // console.log(logId);
+        },
+        activateAttachment: function(logId) {
+            var curModel = this.currentLoadCollection.get(logId);
+            if(curModel) {
+                curModel.trigger('click:min:item', curModel);
+                curModel.trigger('change:active:slide', curModel);
+                return true;
+            }
+            return false;
+        },
+        findLogPage: function(logId) {
+            var async = $.Deferred();
+            var path = Urls.getLogsUrl() + '/' + logId + '/page?filter.eq.item='+ this.itemModel.get('id') +
+                '&page.size=' + PAGE_SIZE + '&filter.ex.binary_content=true';
+            call('GET', path)
+                .done(function(data) {
+                    async.resolve(data.number);
+                })
+                .fail(function() { async.reject(); });
+            return async;
+        },
         activateMainGallery: function() {
             if(!this.galleryMain) {
                 this.galleryMain = new SwipeGalleryComponent({
@@ -358,7 +397,7 @@ define(function (require, exports, module) {
                 notLoad: true,
             });
             var self = this;
-            itemsModel.load()
+            return itemsModel.load()
                 .done(function(data) {
                     self.model.set({totalElements: data.page.totalElements});
                     self.totalPages = data.page.totalPages;

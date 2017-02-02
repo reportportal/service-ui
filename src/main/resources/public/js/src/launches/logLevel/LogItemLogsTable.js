@@ -97,6 +97,7 @@ define(function (require, exports, module) {
             this.listenTo(this.collection, 'loading:true', this.onStartLoading);
             this.listenTo(this.collection, 'loading:false', this.onStopLoading);
             this.listenTo(this.collection, 'change:options', this.onChangeOptionsFilter);
+            this.listenTo(this.collection, 'click:attachment', this.onClickAttachments);
             this.collection.load();
             this.listenTo(this.collection, 'reset', this.onResetCollection);
             this.listenTo(this.selectModel, 'change:condition change:value', this.onChangeFilter);
@@ -229,6 +230,9 @@ define(function (require, exports, module) {
                 $container.append(item.$el);
                 self.items.push(item);
             })
+        },
+        onClickAttachments: function(model) {
+            this.trigger('goToAttachment', model.get('id'))
         },
         goToLog: function(logId) {
             if (this.collection.get(logId)) {

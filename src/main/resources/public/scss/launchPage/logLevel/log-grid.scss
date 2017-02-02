@@ -107,6 +107,7 @@
     }
     .attachment-grid-cell {
       img {
+        cursor: pointer;
         max-width: 100%;
         border: 1px solid $COLOR--gray-60;
       }

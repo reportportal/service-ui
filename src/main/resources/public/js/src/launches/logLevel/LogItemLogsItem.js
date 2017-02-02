@@ -34,6 +34,7 @@ define(function (require, exports, module) {
 
         events: {
             'click [data-js-toggle-open]': 'onClickOpen',
+            'click [data-js-image]': 'onClickImg'
         },
 
         bindings: {
@@ -65,14 +66,14 @@ define(function (require, exports, module) {
             this.activateAccordion();
         },
         scrollTo: function() {
-            config.mainScrollElement.animate(
-                {
-                    scrollTop: this.$el.offset().top
-                }, 500);
+            config.mainScrollElement.animate({ scrollTop: this.$el.offset().top}, 500);
         },
 
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onClickImg: function() {
+            this.model.trigger('click:attachment', this.model);
         },
 
         activateAccordion: function() {
