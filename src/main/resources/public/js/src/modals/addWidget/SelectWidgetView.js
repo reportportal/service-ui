@@ -64,6 +64,11 @@ define(function (require, exports, module) {
                         return key;
                     });
                 }
+                if(curWidget.staticCriteria){
+                    _.each(curWidget.staticCriteria, function(val, key){
+                        defaultCriteria.push(key);
+                    });
+                }
                 this.model.setContentFields(defaultCriteria);
             }
             if(curWidget.actions){

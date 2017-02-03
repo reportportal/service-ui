@@ -394,50 +394,8 @@ define(['app'], function (App) {
     var updateGitHubProfile  = function(){
         return '/uat/sso/me/github/synchronize';
     };
-    var totalAllCasesLink = function (id) {
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.type=STEP';
-    };
-    var passedAllCasesLink = function (id) {
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.status=PASSED&filter.in.type=STEP';
-    };
-    var failedAllCasesLink = function (id) {
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.status=FAILED&filter.in.type=STEP';
-    };
-    var skippedAllCasesLink = function (id) {
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.status=SKIPPED&filter.in.type=STEP';
-    };
-    var toInvestigateAllCasesLink = function (id, defects) {
-        var issueType = defects ? defects.join('%2C') : 'TO_INVESTIGATE';
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.issue$issue_type=' + issueType;
-    };
-    var systemIssueAllCasesLink = function (id, defects) {
-        var issueType = defects ? defects.join('%2C') : 'SYSTEM_ISSUE';
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.issue$issue_type=' + issueType;
-    };
-    var productBugsAllCasesLink = function (id, defects) {
-        var issueType = defects ? defects.join('%2C') : 'PRODUCT_BUG';
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.issue$issue_type=' + issueType;
-    };
-    var automationBugsAllCasesLink = function (id, defects) {
-        var issueType = defects ? defects.join('%2C') : 'AUTOMATION_BUG';
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.issue$issue_type=' + issueType;
-    };
-    var noDefectAllCasesLink = function (id, defects) {
-        var issueType = defects ? defects.join('%2C') : 'NO_DEFECT';
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.issue$issue_type=' + issueType;
-    };
-    var investigatedBugsAllCasesLink = function (id, defects) {
-        var issueType = defects ? defects.join('%2C') : 'SYSTEM_ISSUE%2CPRODUCT_BUG%2CAUTOMATION_BUG%2CNO_DEFECT';
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.issue$issue_type=' + issueType;
-    };
-    var goLauch = function (id) {
-        return '#' + config.project.projectId + '/launches/all/' + id;
-    };
     var exportLaunchUrl = function (id, format) {
         return config.apiVersion + config.project.projectId + '/launch/' + id + '/report?view=' + (format || 'xls');
-    };
-    var mostFailedLastLaunchUrl = function (id) {
-        return '#' + config.project.projectId + forAllCases() + id + sortingFilter();
     };
 
     var getDefectTypes = function(projectId){
@@ -484,19 +442,6 @@ define(['app'], function (App) {
         userLogin: userLogin,
 
         getRegistryInfo: getRegistryInfo,
-
-        totalAllCasesLink: totalAllCasesLink,
-        passedAllCasesLink: passedAllCasesLink,
-        failedAllCasesLink: failedAllCasesLink,
-        skippedAllCasesLink: skippedAllCasesLink,
-        toInvestigateAllCasesLink: toInvestigateAllCasesLink,
-        systemIssueAllCasesLink: systemIssueAllCasesLink,
-        productBugsAllCasesLink: productBugsAllCasesLink,
-        automationBugsAllCasesLink: automationBugsAllCasesLink,
-        noDefectAllCasesLink: noDefectAllCasesLink,
-        investigatedBugsAllCasesLink: investigatedBugsAllCasesLink,
-        goLauch: goLauch,
-        mostFailedLastLaunchUrl: mostFailedLastLaunchUrl,
         
         getAvatar: getAvatar,
         getProjectBase: getProjectBase,

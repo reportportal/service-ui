@@ -712,8 +712,8 @@ define(function (require, exports, module) {
                     items: data.items,
                     lastLaunch: {
                         id: data.lastLaunch.id,
-                        link: urls.mostFailedLastLaunchUrl(data.lastLaunch.id),
-                        name: this.param.launchName
+                        link: this.linkToRedirectService('total', data.lastLaunch.id),
+                        name: this.param.widgetOptions && this.param.widgetOptions.launchNameFilter.length ? this.param.widgetOptions.launchNameFilter[0] : ''
                     },
                     dateFormat: Util.dateFormat,
                     moment: Moment
@@ -817,7 +817,7 @@ define(function (require, exports, module) {
             var $listElement = $.parseHTML(Util.templates(this.tplList, _.extend(this.params, {methodUpdateImagePath: Util.updateImagePath})));
             Util.hoverFullTime($listElement);
             this.listContainer.append($listElement);
-            this.lastBugContainer = $('.rp-table-row:last-child div', this.listContainer).eq(1);
+            this.lastBugContainer = $('[data-js-bugs-item]:last', this.listContainer);
             this.currentBugIndex++;
             return true;
         },
@@ -973,7 +973,7 @@ define(function (require, exports, module) {
     var ActivityStreamPanel = BaseWidget.extend({
         initialize: function(options){
             BaseWidget.prototype.initialize.call(this, options);
-            this.isAutoRefresh = !_.isUndefined(options.isAutoRefresh) ? options.isAutoRefresh : true;
+            this.isAutoRefresh = false; //!_.isUndefined(options.isAutoRefresh) ? options.isAutoRefresh : true;
             this.isReverse = !_.isUndefined(options.isReverse) ? options.isReverse : true;
             this.projectId = options.projectId || config.project.projectId;
         },
@@ -1155,7 +1155,7 @@ define(function (require, exports, module) {
                     .done(function(responce){
                         var path = [responce.launchId].concat(_.keys(responce.path_names));
                         $.each($('[id="itemId-'+ikey+'"]'), function(){
-                            $(this).html(' ' + responce.name).wrap('<a class="rp-blue-link-undrl" target="_blank" href="#'+ self.projectId + '/launches/all/' + path.join('/') + '/log-for-' + ikey +'"></a>');
+                            $(this).html(' ' + responce.name).wrap('<a class="rp-blue-link-undrl" target="_blank" href="#'+ self.projectId + '/launches/all/' + path.join('/') + '?log.item=' + ikey +'"></a>');
                         });
                     })
                     .fail(function (error) {

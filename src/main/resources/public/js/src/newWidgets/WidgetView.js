@@ -54,6 +54,9 @@ define(function(require, exports, module) {
                 height: 100,
                 isTimeline: !!(this.model.get('content_parameters').widgetOptions && this.model.get('content_parameters').widgetOptions.timeline)
             }
+            if(this.model.get('content_parameters').widgetOptions){
+                param.widgetOptions = this.model.get('content_parameters').widgetOptions;
+            }
             var widgetData = {
                 container: this.$el,
                 context: null,
