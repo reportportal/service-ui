@@ -292,7 +292,7 @@ define(function (require, exports, module) {
         },
         onResizeWindow: function() {
             var newShowPageCount = 10;
-            if($( window ).width() < 700) {
+            if($( window ).width() < 930) {
                 newShowPageCount = 5;
             }
             if (newShowPageCount != this.showPageCount) {
