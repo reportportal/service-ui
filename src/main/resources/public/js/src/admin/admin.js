@@ -57,7 +57,9 @@ define(function (require, exports, module) {
                 lastURL: lastURL
             }).render();
             this.headerView = new Header({
+                isAdminPage: true,
                 tpl: 'tpl-admin-header',
+                currentPage: options.page,
                 lastURL: lastURL
             }).render();
             this.footerView = new Footer().render();
@@ -78,6 +80,7 @@ define(function (require, exports, module) {
 
         update: function (options) {
             this.contentView.update(options);
+            this.headerView.update(options);
         },
 
         destroy: function () {

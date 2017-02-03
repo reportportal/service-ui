@@ -247,7 +247,6 @@ define(function (require, exports, module) {
                         comment = item.issue.comment;
                     issue.comment = comment && (val.trim() === comment.trim()) ? comment : val;
                 }
-
                 issue.externalSystemIssues.push({
                     ticketId: response.id,
                     systemId: this.user.bts.current.id,
@@ -268,7 +267,7 @@ define(function (require, exports, module) {
                 return issue.ticketId;
             });
 
-            var newExternalSystemIssues = [];  // remove not unic item
+            var newExternalSystemIssues = [];  // remove not unique item
             _.each(curIssue.externalSystemIssues, function(externalItem) {
                 if(!_.contains(newIds, externalItem.ticketId)){
                     newExternalSystemIssues.push(externalItem);
@@ -277,7 +276,7 @@ define(function (require, exports, module) {
 
             _.each(issues, function(issue) {
                 newExternalSystemIssues.push({
-                    systemId: self.user.bts.current.id,
+                    systemId: issue.systemId,
                     ticketId: issue.ticketId,
                     url: issue.url,
                 })

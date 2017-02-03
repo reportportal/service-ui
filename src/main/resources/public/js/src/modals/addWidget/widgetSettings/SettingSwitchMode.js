@@ -45,6 +45,7 @@ define(function (require, exports, module) {
                 this.destroy();
                 return false;
             }
+            this.curWidget.mode.timeline = this.model.getWidgetOptions().timeline;
             this.render();
             this.$launchMode = $('[data-js-launch-mode]', this.$el);
             this.timelineMode = $('[data-js-timeline-mode]', this.$el)
@@ -58,7 +59,7 @@ define(function (require, exports, module) {
                 this.$launchMode.addClass('active');
                 this.timelineMode.removeClass('active');
                 var curOptions = this.model.getWidgetOptions();
-                curOptions.timeline = [];
+                delete curOptions.timeline;
                 this.model.setWidgetOptions(curOptions);
             }
         },

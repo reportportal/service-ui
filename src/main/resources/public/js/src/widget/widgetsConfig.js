@@ -115,7 +115,7 @@ define(function (require, exports, module) {
                 },
                 'launch_statistics': {
                     gadget_name: Localization.widgets.executionIssueStatistics,
-                    img: 'launch_statistics_pie_double.png',
+                    img: 'launch_statistics_pie.png',
                     description: Localization.widgets.executionIssueStatisticsDescription,
                     widget_type: 'combine_pie_chart',
                     gadget: 'launch_statistics',
@@ -184,7 +184,7 @@ define(function (require, exports, module) {
                 },
                 'cases_trend': {
                     gadget_name: Localization.widgets.growthTrendChart,
-                    img: 'growth_trend_chart.png',
+                    img: 'test-cases-growth-trend-chart.png',
                     description: Localization.widgets.growthTrendChartDescription,
                     widget_type: 'cases_trend_chart',
                     gadget: 'cases_trend',
@@ -286,7 +286,7 @@ define(function (require, exports, module) {
                 },
                 'bug_trend': {
                     gadget_name: Localization.widgets.failedTrendChart,
-                    img: 'failed-cases_growth_trend_chart.png',
+                    img: 'failed-cases-trend-chart.png',
                     description: Localization.widgets.failedTrendChartDescription,
                     widget_type: 'bug_trend',
                     gadget: 'bug_trend',

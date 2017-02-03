@@ -463,7 +463,7 @@ define(['util'], function () {
             statisticsTrendChartDescription: '- in "Launch Mode" shows the growth trend in the number of test cases with each selected statuses from run to run,<br> - in "Timeline Mode" shows sum, distributed by dates.',
 
             comparisonChart: "Different launches comparison chart",
-            comparisonChartDescription: "allows to compare statistics for different launches side by side.",
+            comparisonChartDescription: "allows to compare statistics for 2 last launches side by side.",
 
             durationChart: "Launches duration chart",
             durationChartDescription: "shows duration of the selected launches.",
@@ -1294,6 +1294,7 @@ define(['util'], function () {
             lockedPermissionsTitle: "You do not have enough permissions to update this member",
             invitationSent: "The invitation was sent on",
             titleAllMembers: "All Members",
+            titleNameLogin: "Name / Login",
             titleNameLoginEmail: "Name / Login / Email",
             enterLoginEmail: 'Enter Login or Email',
             alredyAdded: 'User has already assigned to the project',

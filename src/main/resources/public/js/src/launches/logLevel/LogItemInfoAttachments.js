@@ -279,16 +279,19 @@ define(function (require, exports, module) {
                 this.load();
             }
         },
+        goToAttachmentsPrev: function() {
+            this.isLoad = true;
+        },
         goToAttachments: function(logId) {
             if (this.activateAttachment(logId)) {
                 return true;
             }
-            this.isLoad = true;
             this.$main.addClass('load');
             var self = this;
             this.findLogPage(logId)
                 .done(function(number) {
                     self.curPage = number;
+                    self.totalPages = number;
                 })
                 .always(function() {
                     self.load()
@@ -393,6 +396,7 @@ define(function (require, exports, module) {
             this.$main.addClass('load');
             var itemsModel = new ItemAttachmentsModel({
                 pageNumber: this.curPage,
+                totalPages: this.totalPages,
                 itemId: this.itemModel.get('id'),
                 notLoad: true,
             });

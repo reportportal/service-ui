@@ -165,8 +165,9 @@ define(function (require, exports, module) {
         goToAttachment: function(logId) {
             var self = this;
             config.mainScrollElement.animate({ scrollTop: this.el.offsetTop}, 500, function() {
-                self.attachments.goToAttachments(logId);
+                self.attachments.goToAttachmentsPrev();
                 self.model.set({attachments: true});
+                self.attachments.goToAttachments(logId);
             });
 
         },

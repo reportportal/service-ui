@@ -63,11 +63,15 @@
 
       &:hover {
         background-color: transparent;
-
-        .user-wrap {
-          .user-info {
-            .make-admin {
-              display: inline-block;
+        @media (min-width: $SCREEN_SM_MIN) {
+          .user-wrap {
+            .user-info {
+              .user-name {
+                max-width: calc(100% - 80px);
+              }
+              .make-admin {
+                display: inline-block;
+              }
             }
           }
         }
