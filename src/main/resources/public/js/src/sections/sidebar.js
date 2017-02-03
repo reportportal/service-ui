@@ -53,6 +53,10 @@ define(function (require, exports, module) {
             this.userStorage = new SingletonUserStorage();
         },
 
+        setupAnchors: function () {
+            this.$bodyElement = $('body');
+        },
+
         render: function () {
             var param = {
                 projectUrl: this.projectUrl,
@@ -63,9 +67,16 @@ define(function (require, exports, module) {
                 lastURL: this.lastURL
             };
             this.$el.html(Util.templates(this.tpl, param)).show();
+            this.setupAnchors();
             this.updateActiveLink();
             Util.setupBaronScroll(this.$el.find('[data-js-scroll-container]'));
 
+            var self = this;
+            $(window).resize(function () {
+                if (window.innerWidth >= 768 && self.$bodyElement.hasClass('menu-open')) {
+                    self.closeMenu();
+                }
+            });
             return this;
         },
 
@@ -99,7 +110,7 @@ define(function (require, exports, module) {
         },
 
         closeMenu: function () {
-            $('body').removeClass('menu-open');
+            this.$bodyElement.removeClass('menu-open');
         },
 
         clearActives: function () {
