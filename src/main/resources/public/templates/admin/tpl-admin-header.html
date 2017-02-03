@@ -11,7 +11,8 @@
         <div class="rp-logo"></div>
     </div>
     <div class="navbar-collapse" id="navbar-header-collapse">
-        <h3 class="col-sm-4 admin_header"><%= data.text.admin.managementBoard %></h3>
+        <h3 class="col-sm-4 admin_header"><%= data.text.admin.managementBoard
+            %><span class="header-crumb" data-js-admin-header-crumb></span></h3>
         <div class="pull-right admin_header_controls">
             <% if (data.project) { %>
             <a id="backToProject" href="#<%- data.lastURL %>" class="backToProject">

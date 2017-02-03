@@ -108,7 +108,9 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {context: this.context}));
         },
         updateParentModel: function () {
-            this.parentModel.updateData();
+            _.each(this.parentModel.collection.models, function (model) {
+                model.updateData(true);
+            });
         },
         activateMultiple: function() {
             $('[data-js-refresh], [data-js-history-view]', this.$el).addClass('disabled');

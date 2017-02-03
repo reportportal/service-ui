@@ -414,11 +414,13 @@ define(function (require, exports, module) {
         onChangePage: function(page){
             this.model.set({number: page});
             this.pagingToSettings();
+            this.scrollToTop();
         },
         onChangeSize: function(size){
             if(size > 300) size = 300;
             this.model.set({number: 1, size: size});
             this.pagingToSettings();
+            this.scrollToTop();
         },
         setSettings: function(){
             if(this.urlModel.get('page.page') && this.urlModel.get('page.size')){
