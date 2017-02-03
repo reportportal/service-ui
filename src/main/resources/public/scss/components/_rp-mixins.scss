@@ -281,3 +281,18 @@
   }
 
 /* ------------------------------- */
+
+/* FOR AVATAR */
+
+  %AVATAR {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+    padding: 4px;
+    line-height: 1.4;
+    border: 1px solid $COLOR--gray-91;
+    background: $COLOR--white-default;
+    border-radius: 4px;
+  }
+
+/* -------------------------- */
