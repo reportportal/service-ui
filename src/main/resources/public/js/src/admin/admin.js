@@ -52,17 +52,13 @@ define(function (require, exports, module) {
         render: function (options) {
             config.currentProjectsSettings = {};
             var lastURL = this.userStorage.get('lastActiveURL') || config.userModel.get('defaultProject');
-            this.sidebarView = new Sidebar({
-                tpl: 'tpl-admin-side-bar',
-                lastURL: lastURL
-            }).render();
+
             this.headerView = new Header({
                 isAdminPage: true,
                 tpl: 'tpl-admin-header',
                 currentPage: options.page,
                 lastURL: lastURL
             }).render();
-            this.footerView = new Footer().render();
 
             this.contentView = new Content({
                 isAdminPage: true,
@@ -70,6 +66,13 @@ define(function (require, exports, module) {
                 el: this.$body,
                 queryString: options.queryString
             }).render(options);
+
+            this.footerView = new Footer().render();
+
+            this.sidebarView = new Sidebar({
+                tpl: 'tpl-admin-side-bar',
+                lastURL: lastURL
+            }).render();
             return this;
         },
 
