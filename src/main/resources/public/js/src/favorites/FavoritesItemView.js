@@ -52,7 +52,6 @@ define(function (require, exports, module) {
         },
         initialize: function() {
             this.render();
-            this.listenTo(this.model, 'remove', this.destroy);
         },
         template: 'tpl-favorite-item',
         render: function() {
@@ -69,6 +68,7 @@ define(function (require, exports, module) {
             });
             modal.show()
                 .done(function() {
+                    self.destroy();
                     return self.model.remove();
                 });
         },
