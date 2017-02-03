@@ -47,6 +47,10 @@ define(function(require, exports, module) {
 
                 },
             };
+            var launchName = '';
+            if (this.model.get('content_parameters').widgetOptions && this.model.get('content_parameters').widgetOptions.launchNameFilter) {
+                launchName = this.model.get('content_parameters').widgetOptions.launchNameFilter[0]
+            }
             var param = {
                 id: this.model.get('id'),
                 name: this.model.get('name'),
@@ -54,6 +58,7 @@ define(function(require, exports, module) {
                 gadget: this.model.get('content_parameters').gadget,
                 content_fields: this.model.get('content_parameters').content_fields,
                 filter_id: this.model.get('filter_id'),
+                launchName: launchName,
                 height: 100,
                 isTimeline: !!(this.model.get('content_parameters').widgetOptions && this.model.get('content_parameters').widgetOptions.timeline)
             }
