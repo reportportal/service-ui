@@ -35,13 +35,16 @@ define(function(require, exports, module) {
             var view = Widget.widgetService(this.model.get('content_parameters').gadget);
             var navigationInfo = {
                 getCurrentDashboard: function() {
-                    return null;
+                    return {};
                 }
             };
             _.extend(navigationInfo, Backbone.Events);
             var parent = {
                 canEdit: function() {
                     return true;
+                },
+                refresh: function() {
+
                 },
             };
             var param = {
