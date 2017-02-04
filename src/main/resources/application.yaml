@@ -5,9 +5,63 @@ server:
     min-response-size: 1024
     mime-types: text/html,text/xml,text/plain,text/css,application/javascript
 
+info:
+  build:
+    name: UI Service
+    description: ReportPortal User Interface
+    version: '@version@'
+    branch: '@branch@'
+
+spring:
+  application:
+    name: ui
+  profiles:
+    ## Default one is still Eureka
+    active: ${rp.profiles:eureka}
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        tags:
+          - urlprefix-${server.contextPath}
+          - traefik.frontend.rule=PathPrefixStrip:/ui
+        healthCheckPath: ${server.contextPath}${management.contextPath}/health
+        host-info: ${server.contextPath}${management.contextPath}/info
+        hostname: ${HOSTNAME:ui}
+        ip-address: ${HOSTNAME:10.200.10.1}
+        prefer-ip-address: true
 eureka:
   instance:
-    hostname: ${reportportal.eureka.instance.hostname:localhost}
+    hostname: ${HOSTNAME:localhost}
+    status-page-url-path: ${server.contextPath}${management.contextPath}/info
+    health-check-url-path: ${server.contextPath}${management.contextPath}/health
   client:
     serviceUrl:
       defaultZone: http://${reportportal.eureka.hostname:localhost}:8761/eureka/
+
+
+## Consul as service registry
+---
+spring:
+  profiles: eureka
+  cloud:
+    consul:
+      enabled: false
+      discovery:
+        register: false
+
+## Consul as service registry
+---
+spring:
+  profiles: consul
+  cloud:
+    consul:
+      enabled: true
+      discovery:
+        register: true
+eureka:
+  client:
+    register-with-eureka: false
+    enabled: false
+---

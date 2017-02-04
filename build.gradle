@@ -14,7 +14,7 @@ buildscript {
 
 
 plugins {
-    id "com.moowork.grunt" version "0.11"
+    id "com.moowork.grunt" version "1.1.1"
     id 'net.researchgate.release' version '2.4.1'
     id "com.jfrog.bintray" version "1.7"
 }
@@ -37,7 +37,7 @@ ext {
 
 dependencyManagement {
     imports {
-        mavenBom "org.springframework.cloud:spring-cloud-starter-parent:Camden.RELEASE"
+        mavenBom "org.springframework.cloud:spring-cloud-starter-parent:Camden.SR4"
 
     }
 }
@@ -51,12 +51,13 @@ targetCompatibility = 1.8
 description = 'EPAM Report portal. UI Service'
 
 dependencies {
-    compile 'org.springframework.cloud:spring-cloud-starter-config'
+//    compile 'org.springframework.cloud:spring-cloud-starter-config'
     /* required for spring-retry and pooling for config from registry-service */
     compile("org.springframework.retry:spring-retry")
     compile "org.aspectj:aspectjweaver:${aspectjVersion}"
 
     compile 'org.springframework.cloud:spring-cloud-starter-eureka'
+    compile 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
 
     compile 'io.springfox:springfox-swagger-ui:2.3.0'
@@ -99,7 +100,7 @@ task runJsTests(type: NodeTask) {
 
 idea {
     module {
-        //and some extra dirs that should be excluded by IDEA
+        //and some extra dirs that should be excluded by IDEAn
         excludeDirs += [file("${staticsInputDir}/node_modules"), file("${staticsInputDir}/compiled")];
 
     }
@@ -108,7 +109,7 @@ idea {
 
 processResources {
     exclude "**/public/*"
-    filesMatching('**/bootstrap.yaml') {
+    filesMatching('**/application*.yaml') {
         filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [version: project.property("version")])
     }
 }
