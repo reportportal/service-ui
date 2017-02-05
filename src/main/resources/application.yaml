@@ -24,24 +24,26 @@ spring:
       port: 8500
       discovery:
         tags:
-          - urlprefix-${server.contextPath}
-          - traefik.frontend.rule=PathPrefixStrip:/ui
-        healthCheckPath: ${server.contextPath}${management.contextPath}/health
-        host-info: ${server.contextPath}${management.contextPath}/info
+          - urlprefix-${server.contextPath:/}
+#          - urlprefix-/ui opts strip=/ui
+          - traefik.frontend.rule=PathPrefix:${server.contextPath:/}
+#          - traefik.frontend.rule=PathPrefixStrip:${server.contextPath}${management.contextPath}
+        healthCheckPath: ${management.contextPath:}/health
+        host-info: ${management.contextPath:}/info
         hostname: ${HOSTNAME:ui}
         ip-address: ${HOSTNAME:10.200.10.1}
         prefer-ip-address: true
 eureka:
   instance:
     hostname: ${HOSTNAME:localhost}
-    status-page-url-path: ${server.contextPath}${management.contextPath}/info
-    health-check-url-path: ${server.contextPath}${management.contextPath}/health
+    status-page-url-path: ${management.contextPath:}/info
+    health-check-url-path: ${management.contextPath:}/health
   client:
     serviceUrl:
       defaultZone: http://${reportportal.eureka.hostname:localhost}:8761/eureka/
 
 
-## Consul as service registry
+## Eureka as service registry
 ---
 spring:
   profiles: eureka

@@ -114,6 +114,14 @@ processResources {
     }
 }
 
+// The run task added by the application plugin
+// is also of type JavaExec.
+tasks.withType(JavaExec) {
+    // Assign all Java system properties from
+    // the command line to the JavaExec task.
+    systemProperties System.properties
+}
+
 
 
     //commented next 2 lines to skip tests
