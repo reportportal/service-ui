@@ -33,6 +33,9 @@ spring:
         hostname: ${HOSTNAME:ui}
         ip-address: ${HOSTNAME:10.200.10.1}
         prefer-ip-address: true
+      ## Disabled by default
+      enabled: false
+
 eureka:
   instance:
     hostname: ${HOSTNAME:localhost}
