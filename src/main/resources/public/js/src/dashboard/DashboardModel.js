@@ -76,8 +76,8 @@ define(function (require, exports, module) {
                 data.description = this.get('description');
             }
             Service.updateDashboard(this.get('id'), data)
-                .done(function (data) {
-
+                .done(function () {
+                    Util.ajaxSuccessMessenger('dashboardUpdated');
                 })
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, 'updateDashboard');
