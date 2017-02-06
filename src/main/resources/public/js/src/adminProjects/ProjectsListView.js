@@ -49,8 +49,6 @@ define(function (require, exports, module) {
             this.$total = options.total;
             this.renderViews = [];
             this.collection = new ProjectsCollection();
-            this.model.on('change:sort change:direction change:search', this.update.bind(this));
-            this.model.on('change:viewType', this.updateView.bind(this));
             this.listenTo(this.collection, 'reset', this.updateView.bind(this));
             this.listenTo(this.collection, 'remove', this.update.bind(this));
             this.render();

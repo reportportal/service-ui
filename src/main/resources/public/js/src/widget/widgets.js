@@ -730,7 +730,7 @@ define(function (require, exports, module) {
                     items: data.items,
                     lastLaunch: {
                         id: data.lastLaunch.id,
-                        link: this.linkToRedirectService('total', data.lastLaunch.id),
+                        link: this.linkToRedirectService(null, data.lastLaunch.id),
                         name: this.param.widgetOptions && this.param.widgetOptions.launchNameFilter.length ? this.param.widgetOptions.launchNameFilter[0] : ''
                     },
                     dateFormat: Util.dateFormat,

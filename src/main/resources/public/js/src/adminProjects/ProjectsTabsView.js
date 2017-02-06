@@ -52,6 +52,13 @@ define(function(require, exports, module) {
                 direction: config.defaultProjectsSettings.sortingDirection,
                 viewType: config.defaultProjectsSettings.listView
             });
+            var self = this;
+            this.model.on('change:sort change:direction change:search', function(){
+                self.update(self.tab);
+            });
+            this.model.on('change:viewType', function(){
+                self.tabView.updateView();
+            });
             this.render();
         },
 
@@ -72,13 +79,13 @@ define(function(require, exports, module) {
             config.router.navigate($el.attr('href'), {
                 silent: true
             });
+            this.clearSearch();
             this.update(tab, true);
         },
 
         renderTabContent: function(){
             if(this.tabView){
                 this.tabView.destroy();
-                this.clearSearch();
             }
             this.tabView = this.getProjectsView();
             var currentContent = $('[data-js-tab-content="' + this.tab + '"]', this.$el);
@@ -148,7 +155,7 @@ define(function(require, exports, module) {
         },
 
         clearSearch: function(){
-            this.model.set('search', config.defaultProjectsSettings.search);
+            this.model.set('search', config.defaultProjectsSettings.search, {silent: true});
             this.$searchString.val('');
         },
 

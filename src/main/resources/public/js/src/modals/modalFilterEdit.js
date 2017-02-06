@@ -32,12 +32,24 @@ define(function (require, exports, module) {
         className: 'modal-filter-edit',
 
         bindings: {
-            '[data-js-name-input]': 'value: name',
+            '[data-js-name-input]': 'value: updateName',
             '[data-js-is-shared]': 'checked: isShared',
             '[data-js-description]': 'value: description',
         },
         events: {
             'click [data-js-ok]': 'onClickOk',
+        },
+
+        computeds: {
+            updateName: {
+                deps: ['name'],
+                get: function(name){
+                    return name.trim();
+                },
+                set: function(value){
+                    this.model.set('name', value.trim());
+                }
+            }
         },
 
         initialize: function(options) {

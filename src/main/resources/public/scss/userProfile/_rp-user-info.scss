@@ -289,18 +289,6 @@
         }
       }
     }
-    .download-certif {
-      padding: 10px 0 0px;
-      font-size: 13px;
-      a {
-        color: $COLOR--topaz;
-        text-decoration: none;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-    }
     .user-config-container {
       border: 1px solid $COLOR--gray-80;
       height: 420px;

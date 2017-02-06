@@ -41,6 +41,7 @@
         max-width: 36px;
         padding: 2px;
         margin-right: 0.6em;
+        @extend %AVATAR;
       }
     }
     .activity-item-summary-wrap {

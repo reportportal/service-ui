@@ -65,11 +65,17 @@
         max-width: 36px;
         padding: 2px;
         margin-right: 0.6em;
+        @extend %AVATAR;
       }
     }
   }
   .uniq-bugs-item {
     width: 40%;
+    .bug-item {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   .uniq-bugs-date {
     .hoverFullTime {

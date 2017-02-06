@@ -90,6 +90,14 @@ define(function (require, exports, module) {
             } else {
                 this.postInit();
             }
+            var self = this;
+            this.model.on('change:isShared', function(model){
+                if(model.get('isShared')){
+                    _.each(self.gadgetViews, function(view){
+                        view.model.set('isShared', true);
+                    });
+                }
+            });
         },
         postInit: function() {
             var self = this;
@@ -158,7 +166,7 @@ define(function (require, exports, module) {
             $('body').fullscreen({toggleClass: 'fullscreen'});
         },
         onAddGadget: function(gadgetModel) {
-            var view = new GadgetView({model: gadgetModel});
+            var view = new GadgetView({model: gadgetModel, dashboardModel: this.model});
             this.gridStack.addWidget.apply(this.gridStack, view.getDataForGridStack());
             this.gadgetViews.push(view);
         },

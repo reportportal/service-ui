@@ -85,7 +85,6 @@ define(function (require, exports, module) {
         },
         getParams: function(){
             var params = this.model.toJSON();
-            params['certificateUrl'] = config.certificateUrl;
             params.image = Util.updateImagePath(params.image);
             params.apiToken = this.apiTokenModel.get('apiToken');
             return params;
