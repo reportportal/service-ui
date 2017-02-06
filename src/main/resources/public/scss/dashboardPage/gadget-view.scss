@@ -86,6 +86,10 @@
         font-size: 12px;
         padding: 0;
         line-height: 14px;
+        .timeline-label {
+          padding-left: 8px;
+          color: $COLOR--gray-60;
+        }
       }
     }
     .action-block {

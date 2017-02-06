@@ -89,7 +89,7 @@
                         <% if(item.userRef){ %>
                         <li title="Owner" class="rp-launch-owner owner">
                             <i class="material-icons">person</i>
-                            <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.in.user=<%- item.userRef %>" data-tag="<%- item.userRef %>"><%- item.userRef %></a>
+                            <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.in.user=<%- item.userRef %>" data-js-user-tag data-tag="<%- item.userRef %>"><%- item.userRef %></a>
                         </li>
                         <% } %>
                         <% var tags = item.tags %>
@@ -97,7 +97,7 @@
                         <li class="rp-launch-tags" data-js-tags-container>
                             <i class="rp-icons rp-icons-ticket"></i>
                             <% _.each(tags.split(','), function(tag){ %>
-                            <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.has.tags=<%- tag %>" data-tag="<%- tag %>" class="text-muted tag"><%- tag %></a>
+                            <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.has.tags=<%- tag %>" data-js-tag data-tag="<%- tag %>" class="text-muted tag"><%- tag %></a>
                             <% }); %>
                         </li>
                         <% } %>

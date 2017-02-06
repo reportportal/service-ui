@@ -553,6 +553,8 @@ define(function (require, exports, module) {
 
         events: {
             'mouseenter [data-js-launch-defect]': 'showDefectTooltip',
+            'click [data-js-tag]': 'onClickTag',
+            'click [data-js-user-tag]': 'onClickUserTag',
         },
 
         showDefectTooltip: function (e) {
@@ -562,6 +564,22 @@ define(function (require, exports, module) {
                 el.data('tooltip', 'tooltip');
                 this.createDefectTooltip(el, type);
             }
+        },
+        onClickTag: function(e) {
+            e.preventDefault();
+            var tagName = $(e.currentTarget).data('tag');
+            this.goToLaunchWithFilter('tags', tagName);
+        },
+        onClickUserTag: function(e) {
+            e.preventDefault();
+            var userName = $(e.currentTarget).data('tag');
+            this.goToLaunchWithFilter('user', userName);
+        },
+        goToLaunchWithFilter: function(filterName, filterValue) {
+            var launchFilterCollection = new SingletonLaunchFilterCollection();
+            var tempFilterModel = launchFilterCollection.generateTempModel();
+            config.router.navigate(tempFilterModel.get('url'), {trigger: true});
+            tempFilterModel.trigger('add_entity', filterName, filterValue);
         },
 
         renderDefects: function () {

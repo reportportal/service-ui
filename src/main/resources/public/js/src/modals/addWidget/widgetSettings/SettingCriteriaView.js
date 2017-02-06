@@ -25,6 +25,7 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
+    var _ = require('underscore');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
     var WidgetsConfig = require('widget/widgetsConfig');
     var DropDownComponent = require('components/DropDownComponent');
@@ -41,11 +42,11 @@ define(function (require, exports, module) {
             this.widgetConfig = WidgetsConfig.getInstance();
             this.curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
             if (this.curWidget.noCriteria || !this.curWidget.criteria) {
-                if (this.curWidget.staticCriteria) {
-                    this.onChangeSelectCriteria(_.map(this.curWidget.staticCriteria, function(val, key) {
-                        return key;
-                    }));
-                }
+                // if (this.curWidget.staticCriteria) {
+                //     this.onChangeSelectCriteria(_.map(this.curWidget.staticCriteria, function(val, key) {
+                //         return key;
+                //     }));
+                // }
                 this.destroy();
                 return false;
             }
@@ -82,7 +83,7 @@ define(function (require, exports, module) {
                     values.push(key);
                 });
             }
-            this.model.setContentFields(values);
+            this.model.setContentFields(_.uniq(values));
             this.validate();
         },
         validate: function() {

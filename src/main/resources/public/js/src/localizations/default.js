@@ -542,7 +542,6 @@ define(['util'], function () {
             email: 'Email',
             selectPhoto: "Select photo",
             savePhoto: "Save photo",
-            downloadCertificate: "Download certificate",
             rubyConfigTitle: 'COPY AND SAVE IT AS A REPORT_PORTAL.YML FILE',
             soapConfigTitle: 'SET THE FOLLOWS PROPERTIES INTO PROJECT PROPERTIES OR SET THEM TO SYSTEM VARIABLES',
             dotnetConfigTitle: 'FOLLOW INSTALLER INSTRUCTIONS',

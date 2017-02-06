@@ -30,6 +30,7 @@ define(function (require, exports, module) {
     var WidgetSettingsView = require('modals/addWidget/WidgetSettingsView');
     var SaveWidgetView = require('modals/addWidget/SaveWidgetView');
     var SelectedFilterView = require('modals/addWidget/SelectedFilterView');
+    var PreviewWidgetView = require('newWidgets/PreviewWidgetView');
     var FilterSearchView = require('modals/addWidget/FilterSearchView');
     var GadgetModel = require('dashboard/GadgetModel');
     var Service = require('coreService');
@@ -50,7 +51,6 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-widget-type]': 'text: gadgetName',
             '[data-js-widget-description]': 'html: gadgetDescription',
-            '[data-js-widget-preview]': 'css: {"background-image": format("url($1)", gadgetPreviewImg)}',
         },
 
         initialize: function(options) {
@@ -67,14 +67,37 @@ define(function (require, exports, module) {
             this.saveWidget = new SaveWidgetView({model: this.model, dashboardModel: this.dashboardModel});
             $('[data-js-widget-save]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
+            var filterReadyAsync = $.Deferred();
             if(this.model.get('filter_id')){
                 this.selectedFilterView = new SelectedFilterView({ model: this.model });
                 $('[data-js-widget-filter]', this.$el).html(this.selectedFilterView.$el);
                 this.listenTo(this.selectedFilterView, 'edit', this.onEditFilter);
+                this.selectedFilterView.getAsync().done(function() {
+                    filterReadyAsync.resolve();
+                })
+            } else {
+                filterReadyAsync.resolve();
             }
+            var self = this;
+            filterReadyAsync.done(function() {
+                self.listenTo(self.model, 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount', _.debounce(self.onChangePreview, 10));
+                self.onChangePreview();
+            })
         },
         onChangeModel: function(model) {
             // console.dir(model.changed);
+        },
+        onChangePreview: function() {
+            this.previewWidgetView && this.previewWidgetView.destroy();
+            var filterModel = null;
+            if (this.model.get('gadgetIsFilter')) {
+                filterModel = this.selectedFilterView.getSelectedFilterModel();
+                if (this.filterSelectView) {
+                    filterModel = this.filterSelectView.getSelectedFilterModel();
+                }
+            }
+            this.previewWidgetView = new PreviewWidgetView({model: this.model, filterModel: filterModel});
+            $('[data-js-widget-preview]', this.$el).html(this.previewWidgetView.$el);
         },
         onEditFilter: function(filterModel) {
             this.$el.addClass('filter-edit-state');
