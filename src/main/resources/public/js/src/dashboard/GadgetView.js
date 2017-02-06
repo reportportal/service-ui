@@ -50,6 +50,7 @@ define(function (require, exports, module) {
             '[data-js-public]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
             '[data-js-gadget-remove]': 'classes: {hide: not(isMyDashboard)}',
             '[data-js-gadget-edit]': 'classes: {hide: not(isMy)}',
+            '[data-js-timeline]': 'classes: {hide: not(isTimeline)}'
         },
         initialize: function() {
             this.render();

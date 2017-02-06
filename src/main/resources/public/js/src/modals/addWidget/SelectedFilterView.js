@@ -37,6 +37,7 @@ define(function (require, exports, module) {
             'click [data-js-filter-edit]': 'onClickFilterEdit',
         },
         initialize: function() {
+            this.async = $.Deferred();
             this.render();
             var self = this;
             this.filterModel = new FilterModel({
@@ -50,15 +51,22 @@ define(function (require, exports, module) {
                     self.$el.removeClass('load');
                     self.filterView = new FilterSearchItemView({ model: self.filterModel });
                     $('[data-js-filter-info]', self.$el).html(self.filterView.$el);
+                    self.async.resolve();
                 })
         },
         getFilterModel: function() {
             return this.filterModel;
         },
+        getAsync: function() {
+            return this.async;
+        },
         setFilterModel: function(model) {
             this.filterView && this.filterView.destroy();
             this.filterView = new FilterSearchItemView({ model: model });
             $('[data-js-filter-info]', this.$el).html(this.filterView.$el);
+        },
+        getSelectedFilterModel: function() {
+            return this.filterModel;
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
