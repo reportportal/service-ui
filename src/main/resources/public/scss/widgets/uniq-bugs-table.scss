@@ -57,8 +57,16 @@
     width: 20%;
     padding: 0 0 0 15px;
   }
+  .uniq-bugs-id {
+    .bugs-id {
+      @include textEllipsis('inline');
+    }
+  }
   .uniq-bugs-user {
     padding: 0 15px;
+    .owner-name {
+      @include textEllipsis('inline');
+    }
     .bugs-avatar {
       float: left;
       .avatar {
@@ -72,9 +80,7 @@
   .uniq-bugs-item {
     width: 40%;
     .bug-item {
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      @include textEllipsis();
     }
   }
   .uniq-bugs-date {
