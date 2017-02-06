@@ -194,10 +194,11 @@ define(function (require, exports, module) {
             return answer;
         },
         changeFilterOptions: function(model, value) {
-            this.activateChangeParamsTrigger();
             if(value != '' || !model.changed.entities) {
+                this.pagingPage = 1;
                 this.load();
             }
+            this.activateChangeParamsTrigger();
         },
         getInfoByCollection: function() {
             var async = $.Deferred();
