@@ -56,7 +56,7 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {name: this.curWidget.limit.name || Localization.widgets.items}))
         },
         validate: function() {
-            return !$('[data-js-limit-input]', this.$el).data('validate-error')
+            return !$('[data-js-limit-input]', this.$el).trigger('validate').data('validate-error')
         }
     });
 

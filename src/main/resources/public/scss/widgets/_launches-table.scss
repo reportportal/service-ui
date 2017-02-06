@@ -20,6 +20,7 @@
  */
 
 .launches-table-panel {
+  margin: -15px;
     .rp-grid-thead {
         background: $COLOR--white;
         border-bottom: solid 1px $COLOR--gray-91;
@@ -32,11 +33,8 @@
             padding: 0;
             position: relative;
             .rp-grid-th-name {
-                display: inline-block;
-                position: relative;
-                top: 50%;
-                transform: translateY(-50%);
-                font-family: $OpenSansSemibold;
+              font-family: $OpenSansSemibold;
+              @extend %VERTICAL_CENTER;
             }
         }
     }
@@ -110,8 +108,8 @@
     }
     .ftp-cols {
         padding: 0 15px 0 0;
-
-        .hoverFullTime {
+        .hoverFullTime,
+        .filter-tb-td {
             padding-top: 2px;
         }
     }

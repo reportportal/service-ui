@@ -35,7 +35,7 @@ define(function(require, exports, module) {
             var view = Widget.widgetService(this.model.get('content_parameters').gadget);
             var navigationInfo = {
                 getCurrentDashboard: function() {
-                    return null;
+                    return {};
                 }
             };
             _.extend(navigationInfo, Backbone.Events);
@@ -43,7 +43,14 @@ define(function(require, exports, module) {
                 canEdit: function() {
                     return true;
                 },
+                refresh: function() {
+
+                },
             };
+            var launchName = '';
+            if (this.model.get('content_parameters').widgetOptions && this.model.get('content_parameters').widgetOptions.launchNameFilter) {
+                launchName = this.model.get('content_parameters').widgetOptions.launchNameFilter[0]
+            }
             var param = {
                 id: this.model.get('id'),
                 name: this.model.get('name'),
@@ -51,8 +58,12 @@ define(function(require, exports, module) {
                 gadget: this.model.get('content_parameters').gadget,
                 content_fields: this.model.get('content_parameters').content_fields,
                 filter_id: this.model.get('filter_id'),
+                launchName: launchName,
                 height: 100,
                 isTimeline: !!(this.model.get('content_parameters').widgetOptions && this.model.get('content_parameters').widgetOptions.timeline)
+            }
+            if(this.model.get('content_parameters').widgetOptions){
+                param.widgetOptions = this.model.get('content_parameters').widgetOptions;
             }
             var widgetData = {
                 container: this.$el,

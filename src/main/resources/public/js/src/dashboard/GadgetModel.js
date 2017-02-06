@@ -105,6 +105,16 @@ define(function (require, exports, module) {
                     return Localization.widgets.widgetSharedBy + ' ' + owner;
                 }
             },
+            isTimeline: {
+                deps: ['widgetOptions'],
+                get: function(widgetOptions) {
+                    var options = this.getWidgetOptions();
+                    if( options.timeline && options.timeline.length ) {
+                        return true;
+                    }
+                    return false;
+                }
+            }
         },
         initialize: function() {
 

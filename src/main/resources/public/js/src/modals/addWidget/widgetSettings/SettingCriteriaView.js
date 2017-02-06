@@ -77,6 +77,11 @@ define(function (require, exports, module) {
                     values = values.concat(item.split(','));
                 });
             }
+            if (this.curWidget.staticCriteria) {
+                _.each(this.curWidget.staticCriteria, function(val, key){
+                    values.push(key);
+                });
+            }
             this.model.setContentFields(values);
             this.validate();
         },
