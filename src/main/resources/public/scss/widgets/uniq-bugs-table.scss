@@ -71,6 +71,11 @@
   }
   .uniq-bugs-item {
     width: 40%;
+    .bug-item {
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   .uniq-bugs-date {
     .hoverFullTime {

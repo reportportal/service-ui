@@ -67,6 +67,12 @@
     }
     .most-failed-name-col {
       width: 48%;
+      .over-name {
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
       .found-in-last {
         float: right;
         display: inline-block;
