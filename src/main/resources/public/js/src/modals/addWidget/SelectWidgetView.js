@@ -25,6 +25,7 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
+    var _ = require('underscore');
     var WidgetsConfig = require('widget/widgetsConfig');
 
     var SelectWidgetView = Epoxy.View.extend({
@@ -42,8 +43,8 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {widgets: this.widgetConfig.widgetTypes}))
         },
         onChangeType: function() {
-            var gadget = $('input:checked', this.$el).val(),
-                curWidget = this.widgetConfig.widgetTypes[gadget];
+            var gadget = $('input:checked', this.$el).val();
+            var curWidget = this.widgetConfig.widgetTypes[gadget];
             this.model.set({
                 gadget: gadget,
                 itemsCount: curWidget.limit.def,
@@ -51,8 +52,8 @@ define(function (require, exports, module) {
                 widgetOptions: '{}',
                 content_fields: '[]',
             });
+            var defaultCriteria = [];
             if (curWidget.criteria && !curWidget.noCriteria) {
-                var defaultCriteria = [];
                 if(curWidget.defaultCriteria){
                     defaultCriteria = curWidget.defaultCriteria;
                 }
@@ -64,13 +65,13 @@ define(function (require, exports, module) {
                         return key;
                     });
                 }
-                if(curWidget.staticCriteria){
-                    _.each(curWidget.staticCriteria, function(val, key){
-                        defaultCriteria.push(key);
-                    });
-                }
-                this.model.setContentFields(defaultCriteria);
             }
+            if(curWidget.staticCriteria){
+                _.each(curWidget.staticCriteria, function(val, key){
+                    defaultCriteria.push(key);
+                });
+            }
+            this.model.setContentFields(_.uniq(defaultCriteria));
             if(curWidget.actions){
                 var defaultActions = [];
                 _.each(curWidget.actions, function (a) {

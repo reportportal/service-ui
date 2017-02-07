@@ -25,10 +25,7 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
-    var Util = require('util');
     var App = require('app');
-    var urls = require('dataUrlResolver');
-    var CallService = require('callService');
 
     var config = App.getInstance();
 
@@ -38,6 +35,7 @@ define(function (require, exports, module) {
             authEnabled: false,
             host: '',
             port: '',
+            from: '',
             protocol: config.forAdminSettings.defaultProtocol,
             sslEnabled: false,
             starTlsEnabled: false,
@@ -53,6 +51,7 @@ define(function (require, exports, module) {
                 host: $.trim(this.get('host')),
                 password: this.get('authEnabled') ? this.get('password'): '',
                 port: $.trim(this.get('port')),
+                from: $.trim(this.get('from')),
                 protocol: this.get('protocol'),
                 username: this.get('authEnabled') ? this.get('username') : ''
             };

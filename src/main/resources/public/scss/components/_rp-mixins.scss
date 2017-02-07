@@ -239,6 +239,20 @@
     }
 
 /*---------------------*/
+
+/* TEXT ELLIPSIS */
+
+@mixin textEllipsis($elType) {
+  @if $elType == 'inline' {
+    display: inline-block;
+    max-width: 100%;
+  }
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --------------------------- */
+
 /* INSERTING OF BLOCKS */
 
     %CLEAR_FIX {
@@ -281,3 +295,18 @@
   }
 
 /* ------------------------------- */
+
+/* FOR AVATAR */
+
+  %AVATAR {
+    display: inline-block;
+    max-width: 100%;
+    height: auto;
+    padding: 4px;
+    line-height: 1.4;
+    border: 1px solid $COLOR--gray-91;
+    background: $COLOR--white-default;
+    border-radius: 4px;
+  }
+
+/* -------------------------- */

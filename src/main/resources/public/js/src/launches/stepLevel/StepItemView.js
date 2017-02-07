@@ -52,7 +52,7 @@ define(function (require, exports, module) {
             '[data-js-method-type]': 'text: showMethodType',
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
-            '[data-js-status-class]': 'classes: {danger: highlightedFailed, "select-state": select}',
+            '[data-js-status-class]': 'classes: {failed: highlightedFailed, "select-state": select, "collapse-method": validateForCollapsed}',
             '[data-js-select-item]': 'checked:select',
         },
         bindingHandlers: {
@@ -73,11 +73,23 @@ define(function (require, exports, module) {
             }
         },
         computeds: {
-            showMethodType: function(){
-                return Localization.testTableMethodTypes[this.getBinding('type')];
+            showMethodType: {
+                deps: ['type'],
+                get: function(type){
+                    return Localization.testTableMethodTypes[type];
+                }
             },
-            highlightedFailed: function(){
-                return this.getBinding('status') == 'FAILED';
+            highlightedFailed: {
+                deps: ['status'],
+                get: function(status){
+                    return status == 'FAILED';
+                }
+            },
+            validateForCollapsed: {
+                deps: ['status', 'type'],
+                get: function(status, type){
+                    return (type.indexOf('METHOD')>=0 || type.indexOf('CLASS')>=0) && status !== 'FAILED';
+                }
             }
         },
         initialize: function(options) {

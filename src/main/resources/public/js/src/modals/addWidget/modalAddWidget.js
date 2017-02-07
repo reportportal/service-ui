@@ -84,7 +84,7 @@ define(function (require, exports, module) {
             this.listenTo(this.saveWidget, 'change::dashboard', this.onChangeDashboard);
             this.setState();
             this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
-            this.listenTo(this.model, 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount', _.debounce(this.onChangePreview, 10))
+            this.listenTo(this.model, 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount', _.debounce(this.onChangePreview, 10));
         },
         onChangeModel: function(model) {
             // console.dir(model.changed);

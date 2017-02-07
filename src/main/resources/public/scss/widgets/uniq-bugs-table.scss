@@ -57,19 +57,31 @@
     width: 20%;
     padding: 0 0 0 15px;
   }
+  .uniq-bugs-id {
+    .bugs-id {
+      @include textEllipsis('inline');
+    }
+  }
   .uniq-bugs-user {
     padding: 0 15px;
+    .owner-name {
+      @include textEllipsis('inline');
+    }
     .bugs-avatar {
       float: left;
       .avatar {
         max-width: 36px;
         padding: 2px;
         margin-right: 0.6em;
+        @extend %AVATAR;
       }
     }
   }
   .uniq-bugs-item {
     width: 40%;
+    .bug-item {
+      @include textEllipsis('block');
+    }
   }
   .uniq-bugs-date {
     .hoverFullTime {

@@ -53,7 +53,6 @@ define(function (require, exports, module) {
             },
 
             projectUrl: '/api/v1/project/',
-            certificateUrl: 'certificate/reportportal-client-v2.jks',
             project: {},
             projectId: null,
             defaultProjectsSettings: {

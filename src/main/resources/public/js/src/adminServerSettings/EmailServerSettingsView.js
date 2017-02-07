@@ -43,11 +43,10 @@ define(function (require, exports, module) {
             '[data-js-server-enable-mobile]': 'html: getState',
             '[data-js-server-config]': 'classes: {hide: not(enableEmailServer)}',
             '[data-js-server-host]': 'value: host',
-            //'[data-js-server-protocol-name]': 'text: getProtocol',
             '[data-js-server-port]': 'value: port',
-            //'[dats-js-server-auth-name]': 'text: getAuth',
             '[dats-js-server-auth-config]': 'classes: {hide: not(authEnabled)}',
             '[data-js-server-username]': 'value: username',
+            '[data-js-server-sender]': 'value: from',
             '[data-js-server-password]': 'value: password',
             '[data-js-server-tls]': 'checked: starTlsEnabled',
             '[data-js-server-ssl]': 'checked: sslEnabled'
@@ -63,22 +62,6 @@ define(function (require, exports, module) {
                     return 'OFF';
                 }
             }
-            // getProtocol: {
-            //     deps: ['protocol'],
-            //     get: function (protocol) {
-            //         var p = _.find(config.forAdminSettings.protocol, function (prot) {
-            //             return prot.value === protocol;
-            //         });
-            //         return p.name;
-            //     }
-            // },
-            // getAuth: {
-            //     deps: ['authEnabled'],
-            //     get: function (authEnabled) {
-            //         var text = Localization.ui;
-            //         return authEnabled ? text.on : text.off;
-            //     }
-            // }
         },
 
         events: {
@@ -115,6 +98,7 @@ define(function (require, exports, module) {
             this.$host = $('[data-js-server-host]', this.$el);
             this.$port = $('[data-js-server-port]', this.$el);
             this.$user = $('[data-js-server-user]', this.$el);
+            this.$sender = $('[data-js-server-sender]', this.$el);
             this.$password = $('[data-js-server-password]', this.$el);
             this.$errorBlock = $('[data-js-server-connection-error]', this.$el);
             this.$errorMessage = $('[data-js-server-connection-message]', this.$el);
@@ -173,6 +157,10 @@ define(function (require, exports, module) {
                     min: 1,
                     type: 'host',
                     max: 65535
+                }
+            ]);
+            Util.hintValidator(this.$sender, [{
+                    validator: 'required'
                 }
             ]);
         },

@@ -8,7 +8,7 @@
     <div class="activity-item">
         <% if(item.actionType !== 'create_user'){ %>
         <div class="activity-avatar">
-            <img src="<%= data.methodUpdateImagePath(data.imageRoot() + item.userRef.split(' ').join('_')) %>" class="img-thumbnail avatar" alt="<%= item.userRef %>" />
+            <img src="<%= data.methodUpdateImagePath(data.imageRoot() + item.userRef.split(' ').join('_')) %>" class="avatar" alt="<%= item.userRef %>" />
         </div>
         <% } %>
         <div class="activity-item-summary-wrap">

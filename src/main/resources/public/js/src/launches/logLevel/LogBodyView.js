@@ -84,6 +84,7 @@ define(function (require, exports, module) {
                 launchModel: this.launchModel,
             });
             this.listenTo(this.historyItem, 'goToLog', this.goToLog);
+            this.listenTo(this.historyItem, 'change:issue', this.onChangeItemIssue);
             this.logsItem && this.stopListening(this.logsItem) && this.logsItem.destroy();
             this.logsItem = new LogItemLogsTable({
                 el: $('[data-js-item-logs]', this.$el),
@@ -95,7 +96,11 @@ define(function (require, exports, module) {
             this.listenTo(this.logsItem, 'goToLog:end', this.onEndGoToLog);
             this.listenTo(this.logsItem, 'goToAttachment', this.onGoToAttachment);
         },
-
+        onChangeItemIssue: function () {
+            _.each(this.launchModel.collection.models, function (model) {
+                model.updateData();
+            });
+        },
         goToLog: function(logId) {
             this.logsItem && this.logsItem.goToLog(logId);
         },

@@ -68,7 +68,7 @@ define(function (require, exports, module) {
             ]);
         },
         getProjectUrl: function (id, action) {
-            var url = '#administrate/projects/',
+            var url = '#administrate/project-details/',
                 tail = id ? id + '/' + action : action;
             return url + tail;
         },
