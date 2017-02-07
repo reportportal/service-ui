@@ -80,7 +80,7 @@
   .uniq-bugs-item {
     width: 40%;
     .bug-item {
-      @include textEllipsis();
+      @include textEllipsis('block');
     }
   }
   .uniq-bugs-date {
