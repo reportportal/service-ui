@@ -123,6 +123,7 @@ define(function (require, exports, module) {
         },
 
         destroy: function () {
+            $(window).unbind('resize');
             this.$el.html('');
             this.undelegateEvents();
             this.stopListening();
