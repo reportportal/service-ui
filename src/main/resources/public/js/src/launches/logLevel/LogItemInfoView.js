@@ -126,6 +126,7 @@ define(function (require, exports, module) {
             }));
             this.listenTo(this.model, 'change:stackTrace change:attachments change:itemDetails change:activity', this.onChangeTabModel);
             this.listenTo(this.launchModel, 'change:isProcessing', this.onChangeLaunchProcessing);
+            this.listenTo(this.viewModel, 'change:issue', this.onChangeIssue);
             this.onChangeLaunchProcessing();
             this.render();
             if(this.validateForIssue()){
@@ -170,6 +171,9 @@ define(function (require, exports, module) {
                 self.attachments.goToAttachments(logId);
             });
 
+        },
+        onChangeIssue: function () {
+            this.trigger('change:issue');
         },
         onChangeLaunchProcessing: function() {
             this.viewModel.set({parent_launch_isProcessing: this.launchModel.get('isProcessing')});
