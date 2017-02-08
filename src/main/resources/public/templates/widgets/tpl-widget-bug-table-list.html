@@ -1,6 +1,6 @@
 <div class="uniq-bugs-row">
     <div class="uniq-bugs-id">
-        <strong id="bugId-<%= data.item.bugId %>"><%= data.item.bugId %></strong>
+        <strong id="bugId-<%= data.item.bugId %>" class="bugs-id"><%= data.item.bugId %></strong>
     </div>
     <div class="uniq-bugs-item" data-js-bugs-item> </div>
     <div class="uniq-bugs-date">
@@ -24,7 +24,7 @@
                     class="avatar"
                     alt="<%= data.item.name %>"/>
             </div>
-            <strong><%- data.item.name.split('_').join(' ').capitalize() %></strong>
+            <strong class="owner-name"><%- data.item.name.split('_').join(' ').capitalize() %></strong>
         <% } %>
     </div>
 </div>

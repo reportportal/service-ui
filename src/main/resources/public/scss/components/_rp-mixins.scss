@@ -239,6 +239,20 @@
     }
 
 /*---------------------*/
+
+/* TEXT ELLIPSIS */
+
+@mixin textEllipsis($elType) {
+  @if $elType == 'inline' {
+    display: inline-block;
+    max-width: 100%;
+  }
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* --------------------------- */
+
 /* INSERTING OF BLOCKS */
 
     %CLEAR_FIX {
