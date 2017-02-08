@@ -27,15 +27,21 @@ define(function(require, exports, module) {
     var Service = require('coreService');
     var WidgetsConfig = require('widget/widgetsConfig');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var GadgetModel = require('dashboard/GadgetModel');
+    var WidgetModel = require('newWidgets/WidgetModel');
+    var WidgetView = require('newWidgets/WidgetView');
     var Moment = require('moment');
 
     var PreviewWidgetView = Epoxy.View.extend({
         className: 'preview-widget-view',
         initialize: function(options){
             this.filterModel = options.filterModel;
+            if(options.sharedWidgetModel) {
+                this.model =  new GadgetModel({gadget: options.sharedWidgetModel.get('gadget')});
+            }
             var gadget = this.model.get('gadget');
-            if(!this.filterModel || gadget == 'activity_stream' || gadget == 'launches_table' ||
-            gadget == 'unique_bug_table' || gadget == 'most_failed_test_cases') {
+            if((!this.filterModel && !options.sharedWidgetModel) || gadget == 'activity_stream' || gadget == 'launches_table' ||
+                gadget == 'unique_bug_table' || gadget == 'most_failed_test_cases') {
                 this.$el.css("background-image", "url("+ this.model.get('gadgetPreviewImg') +")");
                 return true;
             } else {
@@ -43,22 +49,37 @@ define(function(require, exports, module) {
                     '<i class="material-icons loader-animation">refresh</i>' +
                     '</div>')
             }
-            var filterOptions = this.filterModel.getOptions();
-            filterOptions.push('filter.!in.status=IN_PROGRESS');
-            filterOptions.push('page.page=1');
-            filterOptions.push('page.size=' + this.model.get('itemsCount'));
+            if(options.sharedWidgetModel) {
+                var self = this;
+                Service.getSharedWidgetData(options.sharedWidgetModel.get('id'))
+                    .done(function (data) {
+                        self.model.parseData(data);
+                        self.widgetView && self.widgetView.destroy();
+                        self.widgetView = new WidgetView({model: (new WidgetModel(self.model.get('widgetData'))), preview: true});
+                        self.$el.html(self.widgetView.$el);
+                    })
+                    .fail(function (error) {
+                        Util.ajaxFailMessenger(error, 'sharedWidgetData');
+                    });
+            } else {
+                var filterOptions = this.filterModel.getOptions();
+                filterOptions.push('filter.!in.status=IN_PROGRESS');
+                filterOptions.push('page.page=1');
+                filterOptions.push('page.size=' + this.model.get('itemsCount'));
 
-            var self = this;
-            this.request = Service.getWidgetData(this.filterModel.get('type'), filterOptions.join('&'))
-                .done(function (data) {
-                    // if (widget && widget.gadget === 'launches_comparison_chart') {
-                    //     data.content = widgetPreviewService.getComparisonLaunches(data, revert);
-                    // }
-                    self.renderWidgetPreview(data);
-                })
-                .fail(function (error) {
-                    // Util.ajaxFailMessenger(null, 'widgetPreviewData');
-                });
+                var self = this;
+                this.request = Service.getWidgetData(this.filterModel.get('type'), filterOptions.join('&'))
+                    .done(function (data) {
+                        // if (widget && widget.gadget === 'launches_comparison_chart') {
+                        //     data.content = widgetPreviewService.getComparisonLaunches(data, revert);
+                        // }
+                        self.renderWidgetPreview(data);
+                    })
+                    .fail(function (error) {
+                        // Util.ajaxFailMessenger(null, 'widgetPreviewData');
+                    });
+            }
+
         },
         parseWidgetPreviewData: function (data, model) {
             return widgetPreviewService.parseData(data, model);
@@ -70,7 +91,6 @@ define(function(require, exports, module) {
             }
             params.content_fields = _.uniq(content);
         },
-
         getDefaultCriteriaFields: function (widget, params) {
             params.content_fields = _.uniq(widget.defaultCriteria);
         },
@@ -148,7 +168,7 @@ define(function(require, exports, module) {
                 widget_id: this.model.get('gadget'),
                 criteria: this.model.getContentFields(),
                 mode: isTimeline ? 'timeline' : 'launch',
-            })
+            });
             var params = this.getContentParameters(oldWidgetModel);
             var view = Widget.widgetService(this.model.get('gadget'));
             var widget = {

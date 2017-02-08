@@ -76,9 +76,16 @@
       font-size: 17px;
       text-align: center;
       text-transform: uppercase;
-      margin: 4px 0;
+      margin: 4px 0 22px 0;
     }
-
+    &.load {
+      .preloader {
+        display: block;
+      }
+    }
+    .shared-widgets-list-wrapper {
+      border-top: 1px solid $COLOR--gray-91;
+    }
   }
   .buttons-block {
     position: absolute;
