@@ -2167,7 +2167,7 @@ define(function (require, exports, module) {
                 .barColor(this.colors)
                 .valueFormat(d3.format(',.2f'))
                 .showXAxis(true)
-                .showLegend(!self.isPreview)
+                .showLegend(false)
                 ;
 
             this.chart.tooltipContent(tooltip);
