@@ -23,6 +23,9 @@
 
 .bts-settings {
   padding-top: 10px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0 0 30px;
+  }
 
   .bts-selector {
     margin-left: 142px;
@@ -479,7 +482,8 @@
 
             .title-block-wrapper {
               margin-left: 0;
-              background-color: #f9f9f9;
+              padding: 0 10px;
+              background-color: $COLOR--white-four;
             }
 
             .group-title-block {
@@ -514,10 +518,10 @@
       display: block;
     }
 
-    .bts-property,
     .bts-property > .rp-btn-with-dropdown,
-    .bts-field-input > .rp-input-default,
-    .bts-field-input > .rp-btn-with-dropdown {
+    .bts-field-input .rp-input-default,
+    .bts-properties .rp-input-default,
+    .bts-field-input .rp-btn-with-dropdown {
       color: $COLOR--charcoal-grey;
       background-color: $COLOR--gray-91;
       border-color: $COLOR--gray-80;
