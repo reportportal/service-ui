@@ -67,22 +67,18 @@ define(function (require, exports, module) {
             this.saveWidget = new SaveWidgetView({model: this.model, dashboardModel: this.dashboardModel});
             $('[data-js-widget-save]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
-            var filterReadyAsync = $.Deferred();
+            this.filterReadyAsync = $.Deferred();
+            var self = this;
             if(this.model.get('filter_id')){
                 this.selectedFilterView = new SelectedFilterView({ model: this.model });
                 $('[data-js-widget-filter]', this.$el).html(this.selectedFilterView.$el);
                 this.listenTo(this.selectedFilterView, 'edit', this.onEditFilter);
                 this.selectedFilterView.getAsync().done(function() {
-                    filterReadyAsync.resolve();
+                    self.filterReadyAsync.resolve();
                 })
             } else {
-                filterReadyAsync.resolve();
+                this.filterReadyAsync.resolve();
             }
-            var self = this;
-            filterReadyAsync.done(function() {
-                self.listenTo(self.model, 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount', _.debounce(self.onChangePreview, 10));
-                self.onChangePreview();
-            })
         },
         onChangeModel: function(model) {
             // console.dir(model.changed);
@@ -119,6 +115,11 @@ define(function (require, exports, module) {
         },
         onShow: function() {
             this.widgetSettingsView.activate();
+            var self = this;
+            this.filterReadyAsync.done(function() {
+                self.listenTo(self.model, 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount', _.debounce(self.onChangePreview, 10));
+                self.onChangePreview();
+            })
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));

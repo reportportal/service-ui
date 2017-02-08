@@ -96,7 +96,7 @@ define(function (require, exports, module) {
             //'administrate/:page/:id': 'openAdminResource',
             //'administrate/:page/:id/:action?*queryString': 'openAdminResource',
             //'administrate/:page/:id/:action': 'openAdminResource',
-            //'administrate/:page/:id/:action/:userAction': 'openAdminUsersAction',
+            'administrate/project-details/:id/:action/:userAction': 'openAdminProjectDetails',
             'administrate': 'openAdminPage',
             'administrate/:page': 'openAdminPage',
             'administrate/:page?*queryString': 'openAdminPage',
