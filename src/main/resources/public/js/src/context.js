@@ -44,8 +44,6 @@ define(function (require, exports, module) {
 
         currentContext: null,
 
-        adminContext: 'admin',
-
         mainView: undefined,
 
         invalidView: null,
@@ -89,12 +87,11 @@ define(function (require, exports, module) {
         },
 
         openAdmin: function (page, id, action, queryString) {
-            this.currentContext = this.adminContext;
+            this.currentContext = page;
             if(id) {
                 appModel.set({projectId: id});
             }
             this.checkForContextChange(page);
-
             var data = {page: page, id: id, action: action, contextName: this.currentContext, queryString: queryString};
             this.currentProjectId = null;
             this.validateMainViewByContextName();
@@ -181,13 +178,13 @@ define(function (require, exports, module) {
         },
 
         validateMainViewForAdmin: function () {
-            if (this.mainView && this.mainView.contextName === this.adminContext) {
+            if (this.mainView && this.mainView.contextName === 'admin') {
                 this.destroyMainView();
             }
         },
 
         validateMainViewByContextName: function () {
-            if (this.mainView && this.mainView.contextName !== this.adminContext) {
+            if (this.mainView && this.mainView.contextName !== 'admin') {
                 this.destroyMainView();
             }
         },

@@ -103,7 +103,8 @@ define(function(require, exports, module) {
                     this.body = new Project.SettingsView({
                         holder: $('[data-js-admin-projects]', this.$el),
                         projectId: this.id,
-                        adminPage: true
+                        adminPage: true,
+                        tab: this.queryString
                     }).render();
                     break;
                 case "members":
