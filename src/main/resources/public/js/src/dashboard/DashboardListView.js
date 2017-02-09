@@ -106,6 +106,7 @@ define(function (require, exports, module) {
             this.collection.createNewDashboard();
         },
         onChangeDashboardName: function (e) {
+            $(e.currentTarget).val($(e.currentTarget).val().trim());
             this.model.set({search: $(e.currentTarget).val().trim()});
             this.changeCollection();
         },
