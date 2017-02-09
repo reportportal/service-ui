@@ -37,7 +37,9 @@ define(function (require, exports, module) {
             safeMessage: {
                 deps: ['message'],
                 get: function(message) {
-                    return message.escapeScript().replace(/ /g, '&nbsp;').replace(/\n/g, "<br/>");
+                    return message.escapeScript().replace(/\n */g, function(str) {
+                        return str.replace(/\n/g, '<br/>').replace(/ /g, '&nbsp;');
+                    });
                 }
             },
             timeString: {
