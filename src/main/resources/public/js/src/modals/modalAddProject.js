@@ -72,6 +72,9 @@ define(function (require, exports, module) {
                 tail = id ? id + '/' + action : action;
             return url + tail;
         },
+        onKeySuccess: function () {
+            $('[data-js-add]', this.$el).focus().trigger('click');
+        },
         addProject: function () {
             this.$project.trigger('validate');
             if($('.validate-error', this.$el).length){
