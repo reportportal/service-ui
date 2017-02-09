@@ -113,13 +113,15 @@ define(function (require, exports, module) {
         closeFilterEdit: function() {
             this.$el.removeClass('filter-edit-state');
         },
-        onShow: function() {
-            this.widgetSettingsView.activate();
+        onShown: function() {
             var self = this;
             this.filterReadyAsync.done(function() {
                 self.listenTo(self.model, 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount', _.debounce(self.onChangePreview, 10));
                 self.onChangePreview();
             })
+        },
+        onShow: function() {
+            this.widgetSettingsView.activate();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
