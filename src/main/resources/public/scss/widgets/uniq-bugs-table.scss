@@ -60,6 +60,7 @@
   .uniq-bugs-id {
     .bugs-id {
       @include textEllipsis('inline');
+      word-break: break-all;
     }
   }
   .uniq-bugs-user {

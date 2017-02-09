@@ -35,13 +35,8 @@ define(function (require, exports, module) {
             'click [data-js-add-dashboard]': 'onClickAddDashboard',
         },
         bindings: {
-            '[data-js-search-text]': 'text: trim(search)',
+            '[data-js-search-text]': 'text: search',
             ':el': 'classes: {search: any(search)}',
-        },
-        bindingFilters: {
-            trim: function(val) {
-                return $.trim(val);
-            }
         },
         initialize: function() {
             this.model = new (Epoxy.Model.extend({
@@ -111,7 +106,7 @@ define(function (require, exports, module) {
             this.collection.createNewDashboard();
         },
         onChangeDashboardName: function (e) {
-            this.model.set({search: $(e.currentTarget).val()});
+            this.model.set({search: $(e.currentTarget).val().trim()});
             this.changeCollection();
         },
         renderMyDashboards: function() {
