@@ -28,19 +28,20 @@
   height: 100%;
   .panel-body {
     padding: 0;
-  }
-  .statistics-panel {
-    padding: 0;
-    .statictic-block {
-      min-height: 20px;
-      h2 {
-        margin-top: 5px;
-        line-height: 20px;
+    .statistics-panel {
+      padding: 0;
+      .statictic-block {
+        min-height: 20px;
+        h2 {
+          margin-top: 5px;
+          line-height: 20px;
+        }
+        p {
+          display: none;
+        }
       }
-      p {
-        display: none;
-      }
-    }
 
+    }
   }
+
 }

@@ -45,6 +45,7 @@ define(function (require, exports, module) {
             number: '',
             listView: false,
             failLoad: false,
+            nextModelId: '',
         },
         computeds: {
             fullName: {
@@ -169,6 +170,9 @@ define(function (require, exports, module) {
                         this.get(currentPath[i]).set({id: currentNewPath, level: level, partUrl: partUrl, listView: listView});
                     } else {
                         this.add({id: currentNewPath, level: level, partUrl: partUrl, listView: listView});
+                    }
+                    if(i > 0) {
+                        this.models[i-1].set({nextModelId: currentNewPath});
                     }
                 } else {
                     this.remove(currentPath[i]);
@@ -302,7 +306,11 @@ define(function (require, exports, module) {
                 .done(function(launchModel, parentModel) {
                     $('#breadCrumbs', self.$el).removeClass('load');
                     self.lastModel = parentModel;
-                    self.trigger('change:path', launchModel, parentModel, optionsURL);
+                    self.trigger('change:path',
+                        launchModel,
+                        parentModel,
+                        optionsURL,
+                        self.collection.models[self.collection.models.length - 1].get('nextModelId'));
                 })
                 .fail(function(error) {
                     self.trigger('fail:load', error);
@@ -318,6 +326,10 @@ define(function (require, exports, module) {
             } else {
                 this.collection.lastLogItem = itemId;
                 this.collection.add({id: itemId, failLoad: true});
+            }
+            var models = this.collection.models;
+            if(models.length > 1) {
+                models[models.length -2].set({nextModelId: itemId});
             }
 
         },

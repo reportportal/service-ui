@@ -37,15 +37,6 @@
     margin: 0 0 36px;
     @extend %CLEAR_FIX;
 
-    &:hover {
-      .user-info-content {
-        .user-edit {
-          i {
-            display: inline-block;
-          }
-        }
-      }
-    }
     .user-profile-photo {
       float: left;
       width: 108px;
@@ -107,6 +98,13 @@
         display: inline-block;
         position: relative;
         max-width: 100%;
+        width: 100%;
+
+        &:hover {
+          i {
+            display: inline-block;
+          }
+        }
 
         i {
           display: none;
