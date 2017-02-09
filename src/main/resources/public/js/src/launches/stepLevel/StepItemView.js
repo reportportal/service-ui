@@ -96,6 +96,7 @@ define(function (require, exports, module) {
             this.noIssue = options.noIssue;
             this.filterModel = options.filterModel;
             this.render();
+            this.listenTo(this.model, 'scrollToAndHighlight', this.highlightItem);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
@@ -107,6 +108,14 @@ define(function (require, exports, module) {
             if(this.hasIssue() && !this.noIssue){
                 this.renderIssue();
             }
+        },
+        highlightItem: function() {
+            $('[data-js-status-class]',this.$el).prepend('<div class="highlight"></div>');
+            var self = this;
+            config.mainScrollElement.animate({ scrollTop: this.el.offsetTop}, 500, function() {
+                $('[data-js-status-class]',self.$el).addClass('hide-highlight');
+            });
+
         },
         renderDuration: function(){
             this.duration && this.duration.destroy();

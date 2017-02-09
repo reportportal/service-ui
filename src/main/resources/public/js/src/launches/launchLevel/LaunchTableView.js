@@ -70,6 +70,9 @@ define(function (require, exports, module) {
             this.onChangeSelectionParameters();
             this.setupStickyHeader();
         },
+        activateNextId: function(id) {
+            this.tableItems.activateNextId(id);
+        },
         onResetCollection: function() {
             var notSelectModels = this.collectionItems.where({select: false});
             if(notSelectModels.length) {
