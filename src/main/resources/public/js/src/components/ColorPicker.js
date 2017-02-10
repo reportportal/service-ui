@@ -30,8 +30,8 @@ define(function (require, exports, module) {
         className: 'colorpicker-spectrum',
         template: 'tpl-component-colorpicker',
 
-        initialize: function (defectModel) {
-            this.defectModel = defectModel;
+        initialize: function (initColor) {
+            this.initColor = initColor;
             this.render()
         },
 
@@ -44,7 +44,7 @@ define(function (require, exports, module) {
         config: function () {
             var self = this;
             return {
-                color: self.defectModel.get('color') || '#000000',
+                color: self.initColor || '#000000',
                 showInput: true,
                 allowEmpty: false,
                 showPalette: true,
@@ -62,13 +62,16 @@ define(function (require, exports, module) {
                 ],
 
                 show: function (color) {
-                    self.colorPicker.spectrum('set', self.defectModel.get('color'));
+                    self.colorPicker.spectrum('set', self.initColor);
                 },
 
                 hide: function (color) {
-                    self.defectModel.set('color', color.toHexString())
+                    self.trigger('change:color');
                 }
             };
+        },
+        getColor: function () {
+            return this.colorPicker.spectrum('get').toHexString();
         }
     });
 

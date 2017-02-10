@@ -2311,8 +2311,12 @@ define(function(require, exports, module) {
             return data;
         },
         initColorPicker: function (mainHolder) {
-            var colorPicker = new ColorPicker(this.editModel);
+            var colorPicker = new ColorPicker(this.editModel.get('color'));
+            var self = this;
             $('.holder-color-picker', this.$el).html(colorPicker.el);
+            this.listenTo(colorPicker, 'change:color', function () {
+                self.editModel.set('color', colorPicker.getColor());
+            })
         },
         liveValidate: function (e) {
             var subTypeEl = $(e.target).closest('.dt-body-item');
@@ -2395,6 +2399,7 @@ define(function(require, exports, module) {
             });
         },
         destroy: function () {
+            this.stopListening();
             this.$el.remove();
             Backbone.Events.off(null, null, this);
             Components.BaseView.prototype.destroy.call(this);
