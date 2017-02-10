@@ -26,6 +26,11 @@
   @media (max-width: $SCREEN_XS_MAX) {
     padding: 0 0 30px;
   }
+  .bts-general-settings {
+    @media (max-width: $SCREEN_XS_MAX) {
+      position: relative;
+    }
+  }
 
   .bts-selector {
     margin-left: 142px;
@@ -441,6 +446,7 @@
 
       .instance-body {
         .bts-block {
+          position: relative;
           .bts-properties {
             padding-left: 0;
 
