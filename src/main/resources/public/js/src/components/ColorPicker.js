@@ -31,7 +31,7 @@ define(function (require, exports, module) {
         template: 'tpl-component-colorpicker',
 
         initialize: function (initColor) {
-            this.initColor = initColor;
+            this.initColor = initColor || '#000000';
             this.render()
         },
 
@@ -44,7 +44,7 @@ define(function (require, exports, module) {
         config: function () {
             var self = this;
             return {
-                color: self.initColor || '#000000',
+                color: self.initColor,
                 showInput: true,
                 allowEmpty: false,
                 showPalette: true,
