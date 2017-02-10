@@ -121,8 +121,7 @@ require.config({
         "text": "../lib/text",
         'DemoDataSettingsView': 'project/DemoDataSettingsView',
 
-        "colorpicker": "../lib/colorpicker/bootstrap-colorpicker",
-        "colorpickerConfig": "../lib/colorpicker/bootstrap-colorpicker-cfg-custom",
+        "spectrum": "../lib/spectrum/spectrum",
 
         'templates': '../../compiled/templates/templates'
     },

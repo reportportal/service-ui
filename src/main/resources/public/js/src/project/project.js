@@ -33,14 +33,14 @@ define(function(require, exports, module) {
     var Helpers = require('helpers');
     var D3 = require('d3');
     var NVD3 = require('nvd3');
-    var colorPickerCustomCfg = require('colorpickerConfig');
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var DefectTypeModel = require('defectType/DefectTypeModel');
     var DemoDataSettingsView = require('DemoDataSettingsView');
     var ModalConfirm = require('modals/modalConfirm');
+    var ColorPicker = require('components/ColorPicker');
 
-    require('colorpicker');
+
 
     var config = App.getInstance();
 
@@ -2204,9 +2204,6 @@ define(function(require, exports, module) {
             'click .save-item': 'saveItem',
             'click .cancel-item': 'cancelItem',
             'focusout .rp-input': 'liveValidate',
-            'focus .rp-input': 'focusInput',
-            'focus .check-color-input': 'onFocusColor',
-            'click .check-color-input': 'onFocusColor'
         },
         initialize: function (options) {
             _.extend(this, options);
@@ -2259,7 +2256,7 @@ define(function(require, exports, module) {
                 $('[data-type="shortName"]', this.$el).focusout();
                 return;
             }
-
+            $('[data-js-colorpicker-holder]', this.$el).spectrum('hide');
             this.model.set(this.editModel.toJSON());
             this.el.html(Util.templates(this.static, this.setTemplateData()));
 
@@ -2313,53 +2310,9 @@ define(function(require, exports, module) {
 
             return data;
         },
-        onFocusColor: function() {
-            $('.check-color-picker', this.$el).colorpicker('show');
-        },
         initColorPicker: function (mainHolder) {
-            // this.off('initClrPicker:' + this.name, this.onHideColorPicker);
-
-            var elem = $('.check-color-picker', this.$el);
-            var currentPoint = $('.point-color-picker', this.$el);
-            var holderColorPicker = $('.holder-color-picker', this.$el);
-            var currentInput = holderColorPicker.find('input');
-            var currentColor = currentInput.val();
-            var changeRow = elem.find('.rp-toggle-content');
-            changeRow.removeClass('hide-content');
-            changeRow.addClass('show-content');
-
-            elem
-                .colorpicker(colorPickerCustomCfg)
-                .on('changeColor', function (e) {
-                    currentInput.val(e.color.toHex());
-                    currentInput.trigger('focusout');
-                    currentPoint.css('backgroundColor', e.color.toHex());
-                    $(this).find('.colorpicker-current-color > span').html(e.color.toHex());
-                    currentColor = e.color.toHex();
-                    $(this).find('.colorpicker-hue > i').css('top', $(this).find('.colorpicker-hue').height() -  e.color.value.h * $(this).find('.colorpicker-hue').height());
-                })
-                .on('showPicker', function (e) {
-                    changeRow.removeClass('show-content');
-                    changeRow.addClass('hide-content');
-                    e.color.setColor(currentColor);
-                    $(this).find('.colorpicker-current-color > span')
-                        .on('click', function(e){
-                            e.stopPropagation();
-                            var selection = window.getSelection();
-                            selection.selectAllChildren(this);
-                        });
-                    $(this).find('.colorpicker-current-color > span').html(e.color.toHex());
-                })
-                .on('hidePicker', function () {
-                    changeRow.removeClass('hide-content');
-                    changeRow.addClass('show-content');
-                });
-            elem.colorpicker('setValue', this.model.get('color'));
-        },
-        focusInput: function (e) {
-            var subTypeEl = $(e.target).closest('.dt-body-item');
-            var row = $(e.target).attr('data-type');
-            this.clearErrMessages([row], subTypeEl);
+            var colorPicker = new ColorPicker(this.editModel);
+            $('.holder-color-picker', this.$el).html(colorPicker.el);
         },
         liveValidate: function (e) {
             var subTypeEl = $(e.target).closest('.dt-body-item');
