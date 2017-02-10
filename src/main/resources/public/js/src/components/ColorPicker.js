@@ -30,8 +30,8 @@ define(function (require, exports, module) {
         className: 'colorpicker-spectrum',
         template: 'tpl-component-colorpicker',
 
-        initialize: function (initColor) {
-            this.initColor = initColor || '#000000';
+        initialize: function (options) {
+            this.initColor = options.initColor || '#000000';
             this.render()
         },
 
@@ -66,12 +66,17 @@ define(function (require, exports, module) {
                 },
 
                 hide: function (color) {
-                    self.trigger('change:color');
+                    self.trigger('change:color', color.toHexString());
                 }
             };
         },
+
         getColor: function () {
             return this.colorPicker.spectrum('get').toHexString();
+        },
+
+        setColor: function (color) {
+            this.colorPicker.spectrum('set', color);
         }
     });
 
