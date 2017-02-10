@@ -70,7 +70,7 @@ define(function(require, exports, module) {
                 context: null,
                 navigationInfo: navigationInfo,
                 parent: parent,
-                isPreview: options.preview || false,
+                isPreview: options && options.preview || false,
                 param: param,
             };
             var self = this;

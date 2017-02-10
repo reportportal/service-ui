@@ -1844,6 +1844,7 @@ define(function (require, exports, module) {
                 .showXAxis(true)
                 .yDomain([0,100])
                 .tooltips(self.isPreview ? false : true)
+                .showLegend(self.isPreview ? false : true)
                 ;
 
             this.chart.tooltipContent(tooltip);
@@ -2519,6 +2520,7 @@ define(function (require, exports, module) {
                 })
                 .interactive(false)
                 .useInteractiveGuideline(self.isPreview ? false : true)
+                // .showLegend(self.isPreview ? false : true)
                 ;
 
             this.chart.yAxis

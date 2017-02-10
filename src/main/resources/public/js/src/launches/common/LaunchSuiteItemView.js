@@ -199,7 +199,8 @@ define(function (require, exports, module) {
                 $('[data-js-label-ab]', self.$el).css({backgroundColor: defectCollection.getMainColorByType('automation_bug')});
                 $('[data-js-label-si]', self.$el).css({backgroundColor: defectCollection.getMainColorByType('system_issue')});
                 $('[data-js-label-ti]', self.$el).css({backgroundColor: defectCollection.getMainColorByType('to_investigate')});
-            })
+            });
+            this.listenTo(this.model, 'scrollToAndHighlight', this.highlightItem);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {type: this.model.get('type')}));
@@ -207,6 +208,14 @@ define(function (require, exports, module) {
             this.renderDefects();
 
             // this.renderStatistics();
+        },
+        highlightItem: function() {
+            this.$el.prepend('<div class="highlight"></div>');
+            var self = this;
+            config.mainScrollElement.animate({ scrollTop: this.el.offsetTop}, 500, function() {
+                self.$el.addClass('hide-highlight');
+            });
+
         },
         toggleStartTimeView: function (e) {
             this.model.collection.trigger('change:time:format')

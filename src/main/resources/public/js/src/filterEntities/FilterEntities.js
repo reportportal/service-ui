@@ -90,7 +90,7 @@ define(function (require, exports, module) {
         template: 'tpl-entity-input',
         events: {
             'click [data-js-clear-input]': 'onClickClearInput',
-            'keyup [data-js-input]': 'validateInput',
+            'keyup [data-js-input]': 'onKeyUp',
             'focus [data-js-input]': 'validateInput',
             'focusout [data-js-input]': 'hideValidate',
         },
@@ -111,6 +111,11 @@ define(function (require, exports, module) {
                 }
             }
         },
+        onKeyUp: function(e) {
+            if(this.validate($(e.currentTarget).val())) {
+                this.debounceChange();
+            }
+        },
         validateInput: function(e) {
             this.validate($(e.currentTarget).val());
         },
@@ -121,6 +126,9 @@ define(function (require, exports, module) {
             this.valid = true;
             this.listenTo(this.model, 'focus', this.onTriggerFocus);
             this.render();
+            this.debounceChange = _.debounce(function() {
+                $('[data-js-input]', this.$el).trigger('change');
+            }.bind(this), 800)
         },
         onTriggerFocus: function() {
             $('[data-js-input]', this.$el).focus();

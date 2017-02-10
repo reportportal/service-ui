@@ -105,7 +105,7 @@ define(function (require, exports, module) {
         onDrillItem: function(itemModel) {
             this.crumbs.cacheItem(itemModel);
         },
-        onChangeItemCrumbs: function(launchModel, parentModel, optionsURL) {
+        onChangeItemCrumbs: function(launchModel, parentModel, optionsURL, nextItemId) {
             var self = this;
             this.collectionItems.update(launchModel, parentModel, optionsURL)
                 .done(function() {
@@ -113,6 +113,7 @@ define(function (require, exports, module) {
                 })
                 .always(function() {
                     $('[data-js-preloader-launch-body]', self.$el).removeClass('rp-display-block');
+                    nextItemId && optionsURL && self.body && self.body.activateNextId && self.body.activateNextId(nextItemId)
                 })
                 .fail(function() {
                     config.router.show404Page();
@@ -142,7 +143,6 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         update: function(partPath, optionsURL) {
-            var self = this;
             this.multipleSelected.reset();
             this.body && this.body.destroy();
             this.control && this.stopListening(this.control) && this.control.destroy();
