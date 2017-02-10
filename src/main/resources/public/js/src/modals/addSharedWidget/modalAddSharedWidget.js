@@ -39,6 +39,7 @@ define(function (require, exports, module) {
     var SharedWidgetModel = Epoxy.Model.extend({
         defaults: {
             active: false,
+            added: false,
             id: '',
             name: '',
             owner: '',
@@ -112,16 +113,6 @@ define(function (require, exports, module) {
             $('[data-js-action-block]', this.$el).addClass('load');
             this.dashboardModel = options.dashboardModel;
             this.collection = new SharedWidgetCollection();
-            var self = this;
-            this.collection.load()
-                .done(function() {
-                    self.renderViews();
-                    self.baronScroll = Util.setupBaronScroll($('[data-js-widgets-list]', self.$el));
-                    Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 480});
-                })
-                .always(function() {
-                    $('[data-js-action-block]', self.$el).removeClass('load');
-                })
             this.listenTo(this.collection, 'change:active', this.onChangeActive);
         },
         render: function() {
@@ -132,10 +123,25 @@ define(function (require, exports, module) {
             var $container = $('[data-js-widgets-list]', this.$el);
             var self = this;
             _.each(this.collection.models, function(model) {
-                var view = new SharedWidgetItem({model: model});
+                if(_.find(self.dashboardModel.getWidgets(), function(w){ return w.widgetId === model.get('id'); })){
+                    model.set('added', true);
+                }
+                var view = new SharedWidgetItem({model: model, dashboardModel: self.dashboardModel});
                 self.renderedViews.push(view);
                 $container.append(view.$el);
-            })
+            });
+        },
+        onShown: function(){
+            var self = this;
+            this.collection.load()
+                .done(function() {
+                    self.renderViews();
+                })
+                .always(function() {
+                    $('[data-js-action-block]', self.$el).removeClass('load');
+                    self.baronScroll = Util.setupBaronScroll($('[data-js-widgets-list-scroll]', self.$el));
+                    Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 480});
+                });
         },
         destroyViews: function() {
             if (this.renderedViews && this.renderedViews.length) {

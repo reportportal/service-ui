@@ -102,7 +102,7 @@ define(function (require, exports, module) {
                     if(isMy) {
                         return '';
                     }
-                    return Localization.widgets.widgetSharedBy + ' ' + owner;
+                    return Localization.widgets.widgetCreatedBy + ' ' + owner;
                 }
             },
             isTimeline: {

@@ -344,6 +344,7 @@ define(['util'], function () {
             emptyShared: "No shared widgets found!",
             sharedBy: "shared by",
             widgetSharedBy: "Widget is shared by",
+            widgetCreatedBy: "Widget was created by",
             noData: "No Data Available.",
             selectLaunch: 'Select launch',
             chooseFilter: 'Choose filter from the list below',

@@ -9,7 +9,9 @@
     <div class="action-block" data-js-action-block>
         <h1><%- data.text.widgets.selectShared %></h1>
         <div class="shared-widgets-list-wrapper">
-            <div class="shared-widgets-list" data-js-widgets-list></div>
+            <div data-js-widgets-list-scroll>
+                <div class="shared-widgets-list" data-js-widgets-list></div>
+            </div>
         </div>
         <div class="preloader">
             <i class="material-icons loader-animation">refresh</i>
