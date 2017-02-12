@@ -60,6 +60,12 @@ define(function (require, exports, module) {
                 this.$el.addClass('not-found');
             }
         },
+        activateNextId: function(id) {
+            var activeItem = this.collection.get(id);
+            if (activeItem) {
+                activeItem.trigger('scrollToAndHighlight');
+            }
+        },
         onChangeTimeFormat: function(silent) {
             var timeFormat = this.userStorage.get('startTimeFormat');
             if (!silent) {

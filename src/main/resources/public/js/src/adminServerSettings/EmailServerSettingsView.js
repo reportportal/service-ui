@@ -159,10 +159,6 @@ define(function (require, exports, module) {
                     max: 65535
                 }
             ]);
-            Util.hintValidator(this.$sender, [{
-                    validator: 'required'
-                }
-            ]);
         },
 
         resetAuth: function () {

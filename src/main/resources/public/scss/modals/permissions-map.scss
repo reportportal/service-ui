@@ -19,10 +19,11 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 .modal-permissions-map {
-  .modal-content {
+
+  .modal-dialog {
     width: 900px;
     @media (max-width: $SCREEN_MD_MAX) {
-      width: 700px;
+      width: 800px;
     }
     @media (max-width: $SCREEN_SM_MAX) {
       width: 600px;

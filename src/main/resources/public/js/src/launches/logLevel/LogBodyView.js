@@ -92,13 +92,15 @@ define(function (require, exports, module) {
                 collectionItems: this.collectionItems,
                 mainPath: this.collectionItems.getPathByLogItemId(itemModel.get('id')),
                 options: this.collectionItems.getInfoLog(),
-            })
+            });
             this.listenTo(this.logsItem, 'goToLog:end', this.onEndGoToLog);
             this.listenTo(this.logsItem, 'goToAttachment', this.onGoToAttachment);
         },
         onChangeItemIssue: function () {
             _.each(this.launchModel.collection.models, function (model) {
-                model.updateData();
+                if (model.get('level')) {
+                    model.updateData(true);
+                }
             });
         },
         goToLog: function(logId) {

@@ -27,10 +27,10 @@ define(function(require, exports, module) {
 
     var WidgetView = Epoxy.View.extend({
         className: 'widget-view',
-        initialize: function(){
-            this.render();
+        initialize: function(options){
+            this.render(options);
         },
-        render: function() {
+        render: function(options) {
             this.defectTypes = new SingletonDefectTypeCollection();
             var view = Widget.widgetService(this.model.get('content_parameters').gadget);
             var navigationInfo = {
@@ -70,7 +70,7 @@ define(function(require, exports, module) {
                 context: null,
                 navigationInfo: navigationInfo,
                 parent: parent,
-                isPreview: false,
+                isPreview: options && options.preview || false,
                 param: param,
             };
             var self = this;

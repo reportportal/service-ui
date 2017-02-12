@@ -34,6 +34,14 @@ define(function (require, exports, module) {
             level: null, // INFO, ERROR,
         },
         computeds: {
+            safeMessage: {
+                deps: ['message'],
+                get: function(message) {
+                    return message.escapeScript().replace(/\n */g, function(str) {
+                        return str.replace(/\n/g, '<br/>').replace(/ /g, '&nbsp;');
+                    });
+                }
+            },
             timeString: {
                 deps: ['time'],
                 get: function(time) {

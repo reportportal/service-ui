@@ -148,7 +148,8 @@ define(function (require, exports, module) {
                         width: item.width,
                         height: item.height,
                     });
-                })
+                });
+                self.gadgetCollection.sort();
                 self.updateScroll();
             });
             $gridStack.on('resizestart', function (event, ui) {
@@ -182,7 +183,10 @@ define(function (require, exports, module) {
         },
         createGadgets: function() {
             this.checkEmptyDashboard();
-            this.gadgetCollection.add(this.model.getWidgets(), {parse: true});
+            this.gadgetCollection.add(this.model.getWidgets(), {silent: true, parse: true});
+            this.gadgetCollection.forEach(function(model){
+                this.onAddGadget(model);
+            }, this);
             this.updateScroll();
         },
         updateScroll: function() {

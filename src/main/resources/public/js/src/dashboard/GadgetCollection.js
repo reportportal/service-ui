@@ -63,6 +63,9 @@ define(function (require, exports, module) {
         onAddGadget: function(model) {
 
         },
+        comparator: function(a, b){
+            return a.get('y')-b.get('y');
+        },
         parse: function(gadgetData) {
             return _.map(gadgetData, function(gadget) {
                 return {

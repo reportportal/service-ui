@@ -38,7 +38,7 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-message]': 'text: message',
+            '[data-js-message]': 'html: safeMessage',
             '[data-js-time]': 'text: timeString',
             '[data-js-image]': 'attr: {src: imagePath}, classes: {hide: not(binary_content)}',
             ':el': 'levelClass: level'

@@ -24,6 +24,7 @@ module.exports = function (grunt) {
         'css/select2.css',
         'css/markitup.css',
         'css/magnific-popup.css',
+        'css/spectrum.css',
 
         'compiled/scss/main.css',
         'css/animate.min.css',

@@ -42,7 +42,11 @@ define(function (require, exports, module) {
             $('[data-js-modal-content]', this.$modalWrapper).html(this.$el);
             Util.setupBaronScroll($('[data-js-scroll-container]', this.$modalWrapper));
             $('.baron_scroller', this.$modalWrapper).attr('data-js-cancel', true);
+            var self = this;
             this.$modalWrapper
+                .on('shown.bs.modal', function () {
+                    self.onShown && self.onShown();
+                })
                 .modal('show')
                 .click(function(e) {
                     var $target = $(e.target);
@@ -55,7 +59,7 @@ define(function (require, exports, module) {
                     }
                 });
             this.attachKeyActions();
-            this.onShow && this.onShow();
+            self.onShow && self.onShow();
             return this.closeAsync;
         },
         attachKeyActions: function() {

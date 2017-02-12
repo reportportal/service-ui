@@ -1844,6 +1844,7 @@ define(function (require, exports, module) {
                 .showXAxis(true)
                 .yDomain([0,100])
                 .tooltips(self.isPreview ? false : true)
+                .showLegend(self.isPreview ? false : true)
                 ;
 
             this.chart.tooltipContent(tooltip);
@@ -2167,7 +2168,7 @@ define(function (require, exports, module) {
                 .barColor(this.colors)
                 .valueFormat(d3.format(',.2f'))
                 .showXAxis(true)
-                .showLegend(!self.isPreview)
+                .showLegend(false)
                 ;
 
             this.chart.tooltipContent(tooltip);
@@ -2519,6 +2520,7 @@ define(function (require, exports, module) {
                 })
                 .interactive(false)
                 .useInteractiveGuideline(self.isPreview ? false : true)
+                // .showLegend(self.isPreview ? false : true)
                 ;
 
             this.chart.yAxis
