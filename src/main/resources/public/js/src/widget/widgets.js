@@ -2520,7 +2520,7 @@ define(function (require, exports, module) {
                 })
                 .interactive(false)
                 .useInteractiveGuideline(self.isPreview ? false : true)
-                // .showLegend(self.isPreview ? false : true)
+                .showLegend(self.isPreview ? false : true)
                 ;
 
             this.chart.yAxis
