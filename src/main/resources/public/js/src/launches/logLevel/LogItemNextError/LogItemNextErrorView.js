@@ -80,17 +80,44 @@ define(function (require, exports, module) {
                             return false;
                         }
                     })
-                    if(lastErrorNumber >= 0 && lastErrorNumber < this.collection.models.length -2) {
-                        var logId = this.collection.models[lastErrorNumber + 1].get('id')
+                    if(lastErrorNumber >= 0 && lastErrorNumber <= this.collection.models.length -2) {
+                        var logId = this.collection.models[lastErrorNumber + 1].get('id');
+                        this.model.set({disable: false, load: true});
                         this.collectionLogs.findLogPage(logId)
                             .done(function(page) {
+                                self.model.set({disable: false, load: false});
                                 self.goToLog(page, logId);
                             })
+                    } else {
+                        this.model.set({disable: true, load: false});
                     }
                 } else {
-
+                    this.model.set({disable: false, load: true});
+                    this.findNextError()
+                        .done(function(page, logId) {
+                            self.model.set({disable: false, load: false});
+                            self.goToLog(page, logId);
+                        })
                 }
             }
+        },
+        findNextError: function(async, index) {
+            if(!async) {
+                async = $.Deferred();
+            }
+            if(typeof index == 'undefined') {
+                index = 0;
+            }
+            var self = this;
+            this.collectionLogs.findLogPage(this.collection.models[index].get('id'))
+                .done(function(page) {
+                    if(page <= self.pagingModel.get('number')) {
+                        self.findNextError(async, index+1);
+                    } else {
+                        async.resolve(page, self.collection.models[index].get('id'))
+                    }
+                });
+            return async;
         },
         goToLog: function(page, logId) {
             this.collectionLogs.setPaging(page);
