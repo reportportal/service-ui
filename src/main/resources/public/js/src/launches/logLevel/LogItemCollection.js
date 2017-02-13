@@ -88,7 +88,7 @@ define(function (require, exports, module) {
         },
         findLogPage: function(logId) {
             var async = $.Deferred();
-            var path = Urls.getLogsUrl() + '/' + logId + '/page?filter.eq.item='+ this.itemModel.get('id') + '&page.size=' + this.pagingSize;
+            var path = Urls.getLogsUrl() + '/' + logId + '/page?' + this.getParamsForRequest().join('&')
             call('GET', path)
                 .done(function(data) {
                     async.resolve(data.number);
