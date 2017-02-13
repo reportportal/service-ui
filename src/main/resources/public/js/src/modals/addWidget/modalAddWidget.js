@@ -177,8 +177,8 @@ define(function (require, exports, module) {
                     share: this.model.get('isShared'),
                     content_parameters: contentParameters
                 };
-                if (this.model.get('widgetDescription')) {
-                    data.description = this.model.get('widgetDescription');
+                if (this.model.get('description')) {
+                    data.description = this.model.get('description');
                 }
                 Service.saveWidget(data)
                     .done(function (data) {
