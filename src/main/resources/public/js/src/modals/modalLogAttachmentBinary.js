@@ -18,26 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function (require, exports, module) {
+    'use strict';
 
-@import 'common';
-@import 'load-bug';
-@import 'post-bug';
-@import 'confirm';
-@import 'filter-edit';
-@import 'defect-editor';
-@import 'launches-compare';
-@import 'launches-merge';
-@import 'launch-edit';
-@import 'change-password';
-@import 'edit-user-info';
-@import 'add-user';
-@import 'invite-user';
-@import 'permissions-map';
-@import 'edit-dashboard';
-@import 'regenerate-UUID';
-@import 'addWidget/main';
-@import 'addSharedWidget/main';
-@import 'add-project';
-@import 'force-update';
-@import 'log-attachment-image';
-@import 'log-attachment-binary';
+});

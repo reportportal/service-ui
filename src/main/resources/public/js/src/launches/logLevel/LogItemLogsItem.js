@@ -25,6 +25,7 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
+    var ModalLogAttachmentImage = require('modals/modalLogAttachmentImage');
 
     var config = App.getInstance();
 
@@ -73,7 +74,11 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickImg: function() {
-            this.model.trigger('click:attachment', this.model);
+            //this.model.trigger('click:attachment', this.model); // open's image in gallery.
+            var modal = new ModalLogAttachmentImage({
+                imageId: this.model.get('binary_content').id
+            });
+            modal.show();
         },
 
         activateAccordion: function() {
