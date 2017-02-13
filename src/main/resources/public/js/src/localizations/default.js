@@ -1093,6 +1093,7 @@ define(['util'], function () {
             postfixPlaceHolder: 'Enter Postfix',
             posfixUniq: 'Postfix already used or not align with already existing data. Please use another one',
             generationDataInProgress: 'Data generation is started. The process can take several minutes, please wait.',
+            generateDataMobile: 'You can generate data only on desktop view.',
             beta: "beta",
             aboutinfo: 'Detailed information about the project',
             unableLoadData: 'Unable to load data',
