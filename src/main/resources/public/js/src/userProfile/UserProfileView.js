@@ -332,8 +332,8 @@ define(function (require, exports, module) {
                             '<p>rp.mode = DEFAULT</p>' +
                             '<p>rp.skipped.issue = true</p>' +
                             '<p>rp.batch.size.logs = 20</p>' +
-                            '<p>rp.keystore.resource = reportportal-client-v2.jks</p>' +
-                            '<p>rp.keystore.password = reportportal</p>' +
+                            '<p>rp.keystore.resource = &lt;PATH_TO_YOUR_KEYSTORE&gt;</p>' +
+                            '<p>rp.keystore.password = &lt;PASSWORD_OF_YOUR_KEYSTORE&gt;</p>' +
                             '</div>';
                         break;
                 }
