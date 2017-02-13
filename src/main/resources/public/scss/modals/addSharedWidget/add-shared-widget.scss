@@ -85,6 +85,12 @@
     }
     .shared-widgets-list-wrapper {
       border-top: 1px solid $COLOR--gray-91;
+      .shared-widgets-empty {
+        color: $COLOR--gray-47;
+        font-size: 17px;
+        padding: 25px 0;
+        text-align: center;
+      }
     }
   }
   .buttons-block {

@@ -101,6 +101,7 @@ define(function (require, exports, module) {
                 .done(function() {
                     widgets.push(widgetData);
                     self.setWidgets(widgets, true);
+                    Util.ajaxSuccessMessenger('addedWidget');
                     self.trigger('add:widget', model);
                 });
 
