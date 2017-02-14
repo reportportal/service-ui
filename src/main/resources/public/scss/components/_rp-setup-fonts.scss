@@ -70,17 +70,9 @@ $urlFontReportPortal: '../fonts/font-ReportPortal/Report-Portal-Font';
 $urlFontMaterialIconsRegular: '../fonts/font-MaterialIconsRegular/MaterialIcons-Regular';
 @include font-face('MaterialIconsRegular', $urlFontMaterialIconsRegular, normal, 400);
 
-/* Font OswaldLight */
-$urlFontOswaldLight: '../fonts/font-OswaldLight/oswald-light';
-@include font-face('OswaldLight', $urlFontOswaldLight, normal, normal);
-
 /* Font OswaldRegular */
 $urlFontOswaldRegular: '../fonts/font-OswaldRegular/oswald-regular';
 @include font-face('OswaldRegular', $urlFontOswaldRegular, normal, normal);
-
-/* Font OswaldBold */
-$urlFontOswaldBold: '../fonts/font-OswaldBold/oswald-regular';
-@include font-face('OswaldBold', $urlFontOswaldBold, normal, normal);
 
 /* Font OpenSansRegular */
 $urlFontOpenSansRegular: '../fonts/font-OpenSansRegular/open-sans-regular';
@@ -94,10 +86,6 @@ $urlFontOpenSansSemibold: '../fonts/font-OpenSansSemibold/open-sans-semibold';
 $urlFontSlick: '../fonts/font-Slick/slick';
 @include font-face('Slick', $urlFontSlick, normal, normal);
 
-/* Font Montserrat */
-$urlFontMontserrat: '../fonts/font-Montserrat/Montserrat';
-@include font-face('FontMontserratRegular', $urlFontMontserrat, normal, 400);
-
 /* Font DroidSansMono */
 $urlFontReportPortal: '../fonts/droid-sans-mono/DroidSansMono-webfont';
 @include font-face('DroidSansMono', $urlFontReportPortal, normal, normal, true);
@@ -106,14 +94,10 @@ $urlFontReportPortal: '../fonts/droid-sans-mono/DroidSansMono-webfont';
 
 $ReportPortal: "ReportPortal", sans-serif;
 
-$OswaldLight: "OswaldLight", sans-serif;
 $OswaldRegular: "OswaldRegular", sans-serif;
-$OswaldBold: "OswaldBold", sans-serif;
 
 $OpenSansRegular: "OpenSansRegular", sans-serif;
 $OpenSansSemibold: "OpenSansSemibold", sans-serif;
-
-$FontMontserratRegular: "FontMontserratRegular", sans-serif;
 
 $FontMonacoMonospace: "Monaco", monospace;
 
