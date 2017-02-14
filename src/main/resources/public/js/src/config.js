@@ -108,6 +108,9 @@ require.config({
         'helpers': 'core/helpers',
         'storageService': 'core/storage-service',
         'register': 'register/register',
+
+        'simplemde': '../lib/markdown/simplemde.min',
+
         'textile': '../lib/textile',
         'markitup': '../lib/jquery.markitup.custom',
         'markitupset': '../lib/jquery.markitup.textile',

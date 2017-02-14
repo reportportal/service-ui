@@ -26,6 +26,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var Util = require('util');
     var Localization = require('localization');
+    var MarkdownEditor = require('components/MarkdownEditor');
 
     var config = App.getInstance();
 
@@ -60,6 +61,9 @@ define(function (require, exports, module) {
                 max: 1024
             });
             var self = this;
+            this.markdownEditor = new MarkdownEditor({value: this.viewModel.get('description')});
+            $('[data-js-markdown-container]', this.$el).html(this.markdownEditor.$el);
+            this.listenTo(this.markdownEditor, 'change', function(value) { self.viewModel.set({description: value}); })
             var remoteTags = [];
             var timeOut = null;
             Util.setupSelect2WhithScroll($('[data-js-tags]', this.$el), {
