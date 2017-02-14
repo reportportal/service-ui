@@ -33,6 +33,7 @@ define(function (require, exports, module) {
     var StickyHeader = require('core/StickyHeader');
     var LogItemLogsItem = require('launches/logLevel/LogItemLogsItem');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
+    var LogItemNextErrorView = require('launches/logLevel/LogItemNextError/LogItemNextErrorView')
 
     var config = App.getInstance();
 
@@ -93,6 +94,13 @@ define(function (require, exports, module) {
                 pagingPage: (startOptions['page.page'] && parseInt(startOptions['page.page'])),
                 pagingSize: (startOptions['page.size'] && parseInt(startOptions['page.size'])) || this.userStorage.get('launchLogPageCount'),
             });
+            this.nextErrorView = new LogItemNextErrorView({
+                filterModel: this.filterModel,
+                itemModel: this.itemModel,
+                collectionLogs: this.collection,
+                pagingModel: this.pagingModel,
+            });
+            $('[data-js-next-error-container]', this.$el).html(this.nextErrorView.$el);
             this.listenTo(this.collection, 'change:paging', this.onChangePaging);
             this.listenTo(this.collection, 'loading:true', this.onStartLoading);
             this.listenTo(this.collection, 'loading:false', this.onStopLoading);
