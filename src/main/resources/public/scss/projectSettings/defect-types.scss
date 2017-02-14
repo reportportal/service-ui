@@ -134,6 +134,9 @@
             .dt-point-wrap {
               position: relative;
               margin-top: 8px;
+              @media (max-width: $SCREEN_XS_MAX) {
+                margin-top: 2px;
+              }
             }
 
             & > div {
