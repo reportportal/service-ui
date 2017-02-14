@@ -98,6 +98,10 @@ $urlFontSlick: '../fonts/font-Slick/slick';
 $urlFontMontserrat: '../fonts/font-Montserrat/Montserrat';
 @include font-face('FontMontserratRegular', $urlFontMontserrat, normal, 400);
 
+/* Font DroidSansMono */
+$urlFontReportPortal: '../fonts/droid-sans-mono/DroidSansMono-webfont';
+@include font-face('DroidSansMono', $urlFontReportPortal, normal, normal, true);
+
 /*------------------------------*/
 
 $ReportPortal: "ReportPortal", sans-serif;
