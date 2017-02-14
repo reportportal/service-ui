@@ -46,11 +46,12 @@
     }
     .custom-preloader {
       width: 70px;
-      margin: 12px auto;
+
+      margin: 14px auto;
       div {
         background: $COLOR--white-default;
         float: left;
-        height: 4px;
+        height: 2px;
         margin-left: 10px;
         width: 11px;
         animation-name: log-item-custom-preloader;
@@ -67,7 +68,16 @@
           animation-delay: 0.5s;
         }
       }
+      @media (max-width: 992px) {
+        width: 100%;
+        margin: 10px auto;
+        div {
+          float: none;
+          margin: 1px auto;
+        }
+      }
     }
+
   }
 }
 
