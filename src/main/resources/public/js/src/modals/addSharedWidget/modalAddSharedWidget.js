@@ -121,6 +121,10 @@ define(function (require, exports, module) {
         renderViews: function() {
             this.destroyViews();
             var $container = $('[data-js-widgets-list]', this.$el);
+            if(this.collection.isEmpty()){
+                $('[data-js-widgets-empty]', this.$el).removeClass('hide');
+                return;
+            }
             var self = this;
             _.each(this.collection.models, function(model) {
                 if(_.find(self.dashboardModel.getWidgets(), function(w){ return w.widgetId === model.get('id'); })){

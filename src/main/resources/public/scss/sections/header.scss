@@ -143,7 +143,7 @@
              padding: 0;
              height: 50px;
              .dropdown-toggle {
-               padding-top: 15px;
+               padding-top: 10px;
                padding-left: 9px;
                padding-right: 96px;
              }
@@ -362,6 +362,11 @@
                text-transform: uppercase;
                text-decoration: none;
 
+               .material-icons {
+                 font-size: 27px;
+                 position: relative;
+                 top: 2px;
+               }
 
                .selected-project {
                  white-space: nowrap;
@@ -371,7 +376,7 @@
                  text-overflow: ellipsis;
                  overflow: hidden;
                  display: inline-block;
-                 margin-right: 10px;
+                 margin-right: 4px;
                  text-decoration: none;
                  text-shadow: 1px 2px 2px rgba(39, 39, 40, 0.4);
 

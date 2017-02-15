@@ -1,0 +1,94 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.log-item-next-error {
+  .next-error-button {
+    padding: 0 20px 0 10px;
+    i.material-icons:first-child {
+      left: auto;
+      right: 0;
+    }
+    i + .rp-btn-val {
+      padding: 0px 10px 0px 0px;
+      line-height: 27px;
+    }
+    .preloader-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: $COLOR--white-default;
+      display: none;
+    }
+    &.load {
+      .preloader-wrapper {
+        display: block;
+      }
+    }
+    .custom-preloader {
+      width: 70px;
+
+      margin: 14px auto;
+      div {
+        background: $COLOR--white-default;
+        float: left;
+        height: 2px;
+        margin-left: 10px;
+        width: 11px;
+        animation-name: log-item-custom-preloader;
+        animation-duration: 1s;
+        animation-iteration-count: infinite;
+        animation-direction: normal;
+        &.custom-preloader-1 {
+          animation-delay: 0s;
+        }
+        &.custom-preloader-2 {
+          animation-delay: 0.25s;
+        }
+        &.custom-preloader-3 {
+          animation-delay: 0.5s;
+        }
+      }
+      @media (max-width: 992px) {
+        width: 100%;
+        margin: 10px auto;
+        div {
+          float: none;
+          margin: 1px auto;
+        }
+      }
+    }
+
+  }
+}
+
+@keyframes log-item-custom-preloader {
+  0% {
+  }
+
+  50% {
+    background-color: $COLOR--topaz;
+  }
+
+  100% {
+  }
+}

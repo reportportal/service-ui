@@ -154,6 +154,7 @@ define(function (require, exports, module) {
                 isShared: data.isShared,
                 gadget: data.content_parameters && data.content_parameters.gadget,
                 widgetData: data,
+                widgetOptions: '{}',
                 filter_id: data.filter_id,
             };
             if(data.content_parameters) {

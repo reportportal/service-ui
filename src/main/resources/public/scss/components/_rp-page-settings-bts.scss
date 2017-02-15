@@ -65,10 +65,10 @@
   }
   .bts-instance-container {
     .instance-head {
-      margin-bottom: 20px;
 
       .bts-instance-wrapper {
         margin-left: 85px;
+        margin-bottom: 20px;
 
         .nav-tabs-bts-instances {
           border-bottom: solid 1px #e9e9e9;
@@ -356,7 +356,7 @@
     .bts-selector {
       width: 100%;
       margin-left: 0;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
 
       .rp-control-label {
         width: 100%;
@@ -382,6 +382,7 @@
     }
 
     .tbs-change-warning-block {
+      display: block;
       #tbsChangeWarning {
         margin-left: 0;
       }
@@ -389,9 +390,9 @@
 
     .bts-instance-container {
       .instance-head {
-        margin-bottom: 14px;
 
         .bts-instance-wrapper {
+          margin-bottom: 14px;
           margin-left: 0;
           .nav-tabs-bts-instances {
             width: 100%;
@@ -461,7 +462,7 @@
               }
               .bts-property {
                 margin-left: 0;
-                margin-bottom: 8px;
+                margin-bottom:0;
                 width: 100%;
               }
               span.help-inline {
@@ -499,6 +500,7 @@
             .bts-fields {
               margin-left: 0;
               .rp-form-group {
+                margin-bottom: 10px;
                 .bts-field-label {
                   width: 100%;
                 }

@@ -42,6 +42,18 @@
       }
 
     }
+    .nv-axislabel {
+      font-size: 11px;
+    }
+    .nv-multiBarWithLegend {
+      .nv-y.nv-axis {
+        .tick {
+          text {
+            font-size: 8px;
+          }
+        }
+      }
+    }
   }
 
 }

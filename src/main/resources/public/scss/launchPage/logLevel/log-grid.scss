@@ -20,6 +20,7 @@
  */
 
 .log-grid {
+  font-family: DroidSansMono, monospace;
   .message-grid-cell {
     width: 70%;
     span {
@@ -41,7 +42,7 @@
   .rp-table-row {
     position: relative;
     overflow: hidden;
-    padding: 15px 0;
+    padding: 10px 0;
     line-height: 18px;
     &.level-ERROR, &.level-TRACE, &.level-DEBUG {
       max-height: 130px;
