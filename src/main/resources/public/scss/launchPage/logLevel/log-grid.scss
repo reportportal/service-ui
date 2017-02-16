@@ -20,12 +20,8 @@
  */
 
 .log-grid {
-  font-family: DroidSansMono, monospace;
   .message-grid-cell {
     width: 70%;
-    span {
-      word-wrap: break-word;
-    }
     i {
       display: none;
     }
@@ -34,6 +30,7 @@
     width: 12%;
   }
   .time-grid-cell {
+    font-family: $FontMonacoMonospace;
     width: 18%;
   }
   .mobile-block {
@@ -139,7 +136,7 @@
   @media(max-width: 720px) {
     .message-grid-cell {
       width: 100%;
-      span {
+      & > div {
         padding-right: 25px;
         padding-bottom: 39px;
         display: inline-block;

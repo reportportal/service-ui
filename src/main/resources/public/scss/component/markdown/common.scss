@@ -25,7 +25,7 @@
   }
 }
 .markdown-viewer, .markdown-editor .CodeMirror .CodeMirror-code, .markdown-editor .editor-preview {
-  font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+  font-family: $FontMonacoMonospace;
   color: $COLOR--charcoal-grey;
   font-size: 12px;
   .cm-header-1, h1 {
