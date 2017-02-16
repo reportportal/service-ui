@@ -237,6 +237,17 @@ define(function (require, exports, module) {
                 $(elem.target).closest('.controls').find('input').val('');
             });
 
+            $('[data-js-show-serach]').click(function(e){
+                e.preventDefault();
+                $('[data-js-content-search]').show();
+                $('[data-js-content-dropdown]').hide();
+            });
+            $('[data-js-search-cancel]').click(function(e){
+                e.preventDefault();
+                $('[data-js-content-search]').hide();
+                $('[data-js-content-dropdown]').show();
+            });
+
             $('.sidenav').on('Show:section', function (e, id, open) {
                 _.each(questions, function (section, key) {
                     if (_.has(section, 'parentEl')) {
@@ -280,8 +291,6 @@ define(function (require, exports, module) {
                     e.preventDefault();
                     var link = $(this).attr('href');
                     config.router.navigate(link.replace('#', ''), {trigger: true});
-                    // window.open('/' + link);
-                    // console.log(link);
                     return;
                 })
             });
