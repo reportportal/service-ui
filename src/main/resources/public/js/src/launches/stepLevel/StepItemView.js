@@ -30,6 +30,7 @@ define(function (require, exports, module) {
     var ItemDurationView = require('launches/common/ItemDurationView');
     var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
+    var MarkdownViewer = require('components/markdown/MarkdownViewer');
 
     var config = App.getInstance();
 
@@ -44,7 +45,7 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-name-link]': 'attr: {href: url}',
             '[data-js-name]': 'text: name',
-            '[data-js-description]': 'text: description',
+            // '[data-js-description]': 'text: description',
             '[data-js-status]': 'text: status',
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
@@ -97,6 +98,10 @@ define(function (require, exports, module) {
             this.filterModel = options.filterModel;
             this.render();
             this.listenTo(this.model, 'scrollToAndHighlight', this.highlightItem);
+            var self = this;
+            this.markdownViewer = new MarkdownViewer({text: this.model.get('description')});
+            $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
+            this.listenTo(this.model, 'change:description', function(model, description){ self.markdownViewer.update(description); });
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {

@@ -38,9 +38,7 @@
                 </ul>
             </div>
         </div>
-        <div class="text-editor">
-            <textarea rows="3" id="textile" placeholder="<%= data.text.dialog.commentForDefect %>" class="" data-js-issue-comment><%- !data.isMultipleEdit ? data.getIssueComment(data.item) : '' %></textarea>
-        </div>
+        <div class="text-editor" data-js-issue-comment></div>
         <div class="rp-defect-editor-bottom">
             <% if(data.isMultipleEdit){ %>
             <label class="rp-checkbox-wrap replace-comments">
@@ -59,7 +57,7 @@
     <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
         <%= data.text.ui.cancel %>
     </button>
-    <button class="rp-btn rp-btn-submit" type="button" disabled data-js-save>
+    <button class="rp-btn rp-btn-submit" type="button" data-js-save>
         <%= data.text.ui.save %>
     </button>
 </div>

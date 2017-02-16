@@ -23,30 +23,21 @@ define(function (require, exports, module) {
 
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
-    var SimpleMDE = require('simplemde');
-    var Util = require('util');
+    var SingletonMarkdownObject = require('components/markdown/SingletonMarkdownObject');
+
 
 
     var MainBreadcrumbsComponent = Epoxy.View.extend({
-        className: 'markdown-editor',
-        template: 'tpl-markdown-editor',
+        className: 'markdown-viewer',
         events: {
         },
 
         initialize: function(options) {
-            this.render();
-            var self = this;
-            var simplemde = new SimpleMDE({
-                element: $('[data-js-text-area]', this.$el).get(0),
-                status: false,
-                toolbar: ['heading-1', 'heading-2', 'heading-3', 'clean-block', '|', 'bold', 'italic', 'strikethrough', '|', 'unordered-list', 'ordered-list', '|', 'image', 'link', '|', 'quote', 'code', '|', 'preview'],
-            });
-            simplemde.codemirror.on("change", function(){
-                self.trigger('change', simplemde.value());
-            });
+            this.simpleMDE = new SingletonMarkdownObject();
+            this.update(options.text.escapeScript());
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {}));
+        update: function(text) {
+            text && this.$el.html(this.simpleMDE.markdown(text.escapeScript()));
         },
     });
 

@@ -31,7 +31,7 @@ define(function (require, exports, module) {
     var StickyHeader = require('core/StickyHeader');
     var Markitup = require('markitup');
     var MarkitupSettings = require('markitupset');
-    var Textile = require('textile');
+    // var Textile = require('textile');
     var Service = require('coreService');
     var Filter = require('filter/filters');
     var Moment = require('moment');
