@@ -27,7 +27,8 @@ define(function (require, exports, module) {
     var Util = require('util')
     var Service = require('coreService');
     var Moment = require('moment');
-    var Textile = require('textile');
+    var MarkdownViewer = require('components/markdown/MarkdownViewer');
+    // var Textile = require('textile');
 
     var LogItemInfoActivityItemModel = Epoxy.Model.extend({
         defaults: {
@@ -97,7 +98,8 @@ define(function (require, exports, module) {
             return resultMas.join(',');
         },
         getActionValueHtml: function(value) {
-            return Textile(value.replace('*IssueDescription:*',"<br>*IssueDescription:*").escapeScript());
+            var markdownViewer = new MarkdownViewer({text: value});
+            return markdownViewer.$el.wrap('<p/>').parent().html();
         }
     });
 

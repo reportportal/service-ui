@@ -3,7 +3,7 @@
  *
  *
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,16 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function(require, exports, module) {
+    'use strict';
 
-@import 'swipe-gallery';
-@import 'select2-container';
-@import 'main-breadcrumbs';
+    var instance = null;
+    var SimpleMDE = require('simplemde');
+    var el = $('<div><textarea></textarea></div>');
+    var getInstance = function(){
+        if(!instance) { instance = new SimpleMDE({element: $('textarea', el).get(0) }) };
+        return instance;
+    };
 
-@import 'switcher-big';
-@import 'dropdown-menu';
-@import 'user-search-select2-dropdown';
-@import 'drop-down-component';
-@import 'beta-badge';
-@import 'colorPicker';
-@import 'markdown/MarkdownEditor';
-@import 'markdown/common';
+    return getInstance;
+});

@@ -84,15 +84,12 @@
           margin-top: 2px;
         }
       }
-      span {
-        display: none;
-      }
+
       .action-item {
         min-height: 1px;
         width: 47%;
-        word-wrap: break-word;
-        &:last-child {
-          font-family: OpenSansSemibold;
+        & > span {
+          display: none;
         }
       }
     }
@@ -158,19 +155,20 @@
         .action-item {
           width: 100%;
           margin-top: 10px;
+          & > span {
+            display: inline-block;
+            color: $COLOR--gray-47;
+            font-family: "OpenSansSemibold", sans-serif;
+            width: 50px;
+          }
         }
         .separate-items {
           display: none;
         }
-        span {
-          display: inline-block;
-          color: $COLOR--gray-47;
-          font-family: "OpenSansSemibold", sans-serif;
-          width: 50px;
-        }
-        p {
-          display: inline;
-        }
+
+        //p {
+        //  display: inline;
+        //}
       }
     }
   }

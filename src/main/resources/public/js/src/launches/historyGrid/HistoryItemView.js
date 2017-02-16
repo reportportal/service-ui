@@ -28,7 +28,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
     var HistoryItemCellView = require('launches/historyGrid/HistoryItemCellView');
-    var Localization = require('localization');
+    var MarkdownViewer = require('components/markdown/MarkdownViewer');
 
     var config = App.getInstance();
 
@@ -41,7 +41,6 @@ define(function (require, exports, module) {
         },
         bindings: {
             '[data-js-name]': 'text: name, attr: {href: getUrl}',
-            '[data-js-description]': 'html: description',
             '[data-js-tags-container]': 'getTags: tags'
         },
         computeds: {
@@ -81,6 +80,8 @@ define(function (require, exports, module) {
             this.renderedItems = [];
             this.render();
             this.applyBindings();
+            var markdownViewer = new MarkdownViewer({text: this.model.get('description')});
+            $('[data-js-description]', this.$el).html(markdownViewer.$el);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {

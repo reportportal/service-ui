@@ -27,6 +27,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var Localization = require('localization');
+    var MarkdownViewer = require('components/markdown/MarkdownViewer');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var LaunchItemMenuView = require('launches/launchLevel/LaunchItemMenuView');
     var LaunchSuiteDefectsView = require('launches/common/LaunchSuiteDefectsView');
@@ -58,7 +59,7 @@ define(function (require, exports, module) {
             '[data-js-name]': 'text: name, attr: {title: nameTitle}',
             '[data-js-launch-number]': 'text: numberText',
             '[data-js-item-edit]': 'classes: {hide: hideEdit}',
-            '[data-js-description]': 'text: description',
+            // '[data-js-description]': 'text: description',
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
             '[data-js-time-from-now]': 'text: startFromNow',
@@ -201,6 +202,9 @@ define(function (require, exports, module) {
                 $('[data-js-label-ti]', self.$el).css({backgroundColor: defectCollection.getMainColorByType('to_investigate')});
             });
             this.listenTo(this.model, 'scrollToAndHighlight', this.highlightItem);
+            this.markdownViewer = new MarkdownViewer({text: this.model.get('description')});
+            $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
+            this.listenTo(this.model, 'change:description', function(model, description){ self.markdownViewer.update(description); });
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {type: this.model.get('type')}));

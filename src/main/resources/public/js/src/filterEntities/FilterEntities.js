@@ -40,7 +40,7 @@ define(function (require, exports, module) {
         defaults: {
             value: '',
             valueMinLength: 0,
-            valueMaxLength: 20,
+            valueMaxLength: 18,
             valueOnlyDigits: true,
 
             required: false,

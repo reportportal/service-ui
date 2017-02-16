@@ -23,16 +23,20 @@
   .modal-content-wrapper {
     .modal-body {
       padding: 30px 10px 15px 10px;
-      h2 {
+      & > h2 {
         text-overflow: ellipsis;
         overflow: hidden;
         color: $COLOR--charcoal-grey;
         font-family: 'OpenSansSemibold',sans-serif;
         font-size: 14px;
-        margin: 20px 8px;;
+        line-height: 17px;
+        margin: 20px 8px;
       }
       label {
         font-weight: normal;
+      }
+      .markdown-editor {
+        max-width: 540px;
       }
       .fields {
         margin: 0;
@@ -41,36 +45,31 @@
         padding-top: 2px;
 
         & > label {
+          position: relative;
           width: 100%;
 
           & > span {
             display: block;
-            float: left;
-            margin-right: 30px;
-            min-width: 80px;
+            position: absolute;
+            left: 0;
             text-align: right;
             line-height: 30px;
           }
-
-          & > textarea,
-          & > div.rp-input {
-            margin-top: 0;
-            width: 350px;
+          & > .tags-wrapper {
+            position: relative;
+            width: 100%;
+            padding-right: 20px;
+            padding-left: 60px;
           }
         }
 
         @media (max-width: 620px) {
           & > label {
-            padding-right: 40px;
+            padding-right: 20px;
 
             & > span {
               float: none;
               text-align: left;
-            }
-
-            & > textarea,
-            & > div.rp-input {
-              width: 100%;
             }
           }
         }
@@ -86,11 +85,6 @@
           font-size: 12px;
           padding-left: 2px;
         }
-      }
-
-      textarea {
-        height: 67px;
-        resize: none;
       }
     }
   }
