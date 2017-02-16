@@ -61,8 +61,11 @@ define(function (require, exports, module) {
             this.currentLastPage = this.pagingModel.get('number');
             this.render();
             this.listenTo(this.filterModel, 'change:newSelectionParameters change:newEntities', this.onChangeFilter);
-            this.listenTo(this.pagingModel, 'change', this.onChangePaging);
-            this.onChangeFilter();
+            var self = this;
+            this.onChangeFilter()
+                .done(function() {
+                    self.listenTo(self.pagingModel, 'change', self.onChangePaging);
+                });
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
@@ -128,7 +131,7 @@ define(function (require, exports, module) {
         },
         onChangePaging: function(model) {
             var self = this;
-            if(model.changed.size) {
+            if(model.changed.size && this.collection.length) {
                 self.model.set({load: true});
                 this.checkLastLog()
                     .done(function() {
@@ -140,13 +143,14 @@ define(function (require, exports, module) {
             }
         },
         checkPage: function() {
-            if(this.pagingModel.get('number') >= this.currentLastPage) {
+            if(this.pagingModel.get('number') >= this.currentLastPage || !this.currentLastPage) {
                 this.model.set({disable: true});
             }else {
                 this.model.set({disable: false});
             }
         },
         onChangeFilter: function() {
+            var async = $.Deferred();
             var errorFilter = false;
             _.each(this.filterModel.getEntitiesObj(), function(field) {
                 if(field.filtering_field == 'level' && (~field.value.search(/ERROR/) || field.value == '')) {
@@ -167,10 +171,13 @@ define(function (require, exports, module) {
                                 self.model.set({load: false});
                                 self.checkPage();
                             });
-                    });
+                    })
+                    .always(function(){ async.resolve(); })
             } else {
                 this.model.set({disable: true, load: false});
+                async.resolve();
             }
+            return async;
         },
         checkLastLog: function() {
             var self = this
