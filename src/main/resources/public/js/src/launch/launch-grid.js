@@ -31,7 +31,7 @@ define(function (require, exports, module) {
     var Service = require('coreService');
     var Storage = require('storageService');
     var DefectEditor = require('defectEditor');
-    var Textile = require('textile');
+    // var Textile = require('textile');
     var StickyHeader = require('core/StickyHeader');
     var Editor = require('launchEditor');
     var Log = require('log');

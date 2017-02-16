@@ -1,0 +1,82 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.markdown-editor {
+  border: 1px solid $COLOR--gray-80;
+  &:hover {
+    border-color: $COLOR--gray-47;
+  }
+  &.focused {
+    border-color: $COLOR--topaz;
+  }
+  .CodeMirror-scroll {
+    max-height: 350px;
+  }
+  .CodeMirror-scroll, .CodeMirror {
+    min-height: 160px;
+  }
+  .editor-toolbar {
+    opacity: 1;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid $COLOR--gray-80;
+    background: $COLOR--white;
+    &:before {
+      margin-bottom: 5px;
+    }
+    &:after {
+      margin-top: 5px;
+    }
+    a{
+      line-height: 27px;
+      color: $COLOR--gray-47 !important;
+      &:before {
+        @extend %FontFamilyReportPortal;
+        font-size: 10px;
+        line-height: 14px;
+        left: 4px;
+      }
+      &.icon-header-1:before { content: '\e936'; }
+      &.icon-header-2:before { content: '\e937'; }
+      &.icon-header-3:before { content: '\e938'; }
+      &.icon-clean-block:before { content: '\e943'; }
+      &.icon-bold:before { content: '\e945'; }
+      &.icon-italic:before { content: '\e948'; }
+      &.icon-strikethrough:before { content: '\e950'; }
+      &.icon-unordered-list:before { content: '\e931'; }
+      &.icon-ordered-list:before { content: '\e942'; }
+      &.icon-image:before { content: '\e947'; }
+      &.icon-link:before { content: '\e946'; }
+      &.icon-quote:before { content: '\e949'; }
+      &.icon-code:before { content: '\e932'; }
+      &.icon-preview:before { content: '\e90a'; }
+    }
+    &:hover {
+      opacity: 1;
+    }
+    &.disabled-for-preview a:not(.no-disable) {
+      background: $COLOR--white;
+    }
+  }
+  .CodeMirror-wrap {
+    border: none;
+  }
+}

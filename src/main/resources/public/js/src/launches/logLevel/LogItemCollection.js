@@ -69,9 +69,9 @@ define(function (require, exports, module) {
             return async;
         },
 
-        getParamsForRequest: function() {
+        getParamsForRequest: function(notPage) {
             var answer = ['filter.eq.item='+this.itemModel.get('id')];
-            answer.push('page.page=' + this.pagingPage);
+            !notPage && answer.push('page.page=' + this.pagingPage);
             answer.push('page.size=' + this.pagingSize);
             answer = answer.concat(this.filterModel.getOptions());
             return answer;
@@ -82,13 +82,13 @@ define(function (require, exports, module) {
             answer.push('log.page.size=' + this.pagingSize);
             var filterOptions = _.map(this.filterModel.getOptions(), function(option) {
                 return 'log.' + option
-            })
+            });
             answer = answer.concat(filterOptions);
             return answer;
         },
         findLogPage: function(logId) {
             var async = $.Deferred();
-            var path = Urls.getLogsUrl() + '/' + logId + '/page?filter.eq.item='+ this.itemModel.get('id') + '&page.size=' + this.pagingSize;
+            var path = Urls.getLogsUrl() + '/' + logId + '/page?' + this.getParamsForRequest().join('&')
             call('GET', path)
                 .done(function(data) {
                     async.resolve(data.number);

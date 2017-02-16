@@ -25,6 +25,7 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
+    var MarkdownViewer = require('components/markdown/MarkdownViewer');
     var ModalLogAttachmentImage = require('modals/modalLogAttachmentImage');
     var ModalLogAttachmentBinary = require('modals/modalLogAttachmentBinary');
 
@@ -40,7 +41,7 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-message]': 'html: safeMessage',
+            // '[data-js-message]': 'html: safeMessage',
             '[data-js-time]': 'text: timeString',
             '[data-js-image]': 'attr: {src: imagePath}, classes: {hide: not(binary_content)}',
             ':el': 'levelClass: level'
@@ -62,6 +63,8 @@ define(function (require, exports, module) {
         initialize: function() {
             this.render();
             this.listenTo(this.model, 'scrollTo', this.scrollTo);
+            var markdownViewer = new MarkdownViewer({text: this.model.get('message')});
+            $('[data-js-message]', this.$el).html(markdownViewer.$el);
         },
 
         resize: function() {

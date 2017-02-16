@@ -1,10 +1,9 @@
-
 /*
  * Copyright 2016 EPAM Systems
  *
  *
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,41 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function(require, exports, module) {
+    'use strict';
 
-.preview-widget-view {
-  background-color: $COLOR--white-default;
-  background-repeat: no-repeat;
-  background-position: center center;
-  width: 100%;
-  height: 100%;
-  .panel-body {
-    padding: 0;
-    .statistics-panel {
-      padding: 0;
-      .statictic-block {
-        min-height: 20px;
-        h2 {
-          margin-top: 5px;
-          line-height: 20px;
-        }
-        p {
-          display: none;
-        }
-      }
+    var instance = null;
+    var SimpleMDE = require('simplemde');
+    var el = $('<div><textarea></textarea></div>');
+    var getInstance = function(){
+        if(!instance) { instance = new SimpleMDE({element: $('textarea', el).get(0) }) };
+        return instance;
+    };
 
-    }
-    .nv-axislabel {
-      font-size: 11px;
-    }
-    .nv-multiBarWithLegend {
-      .nv-y.nv-axis {
-        .tick {
-          text {
-            font-size: 8px;
-          }
-        }
-      }
-    }
-  }
-
-}
+    return getInstance;
+});

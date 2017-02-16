@@ -77,8 +77,16 @@
 
       .rp-defect-type-dropdown.btn {
         background: #fff;
-        border: solid 1px #cccccc;
+        border: solid 1px $COLOR--gray-80;
         padding: 5px 26px 5px 5px;
+        &:hover {
+          border-color: $COLOR--gray-47;
+        }
+        &:focus {
+          border-color: $COLOR--topaz;
+          outline: none;
+          box-shadow: none;
+        }
 
         .pr-defect-type-badge {
           color: #464547;

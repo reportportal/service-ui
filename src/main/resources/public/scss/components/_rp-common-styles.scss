@@ -1120,6 +1120,9 @@ textarea {
   border: 1px solid $COLOR--gray-80;
   font-size: 13px;
   color: $COLOR--gray-60;
+  &:hover {
+    border-color: $COLOR--gray-47;
+  }
 }
 
 .select2-container-multi .select2-choices .select2-search-field input {

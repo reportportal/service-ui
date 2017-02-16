@@ -32,6 +32,7 @@ define(function (require, exports, module) {
     var Localization = require('localization');
     var Markitup = require('markitup');
     var MarkitupSettings = require('markitupset');
+    var MarkdownEditor = require('components/markdown/MarkdownEditor');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
 
     var config = App.getInstance();
@@ -42,10 +43,10 @@ define(function (require, exports, module) {
         className: 'modal-defect-editor',
 
         events: {
-            'input textarea': 'validateForSubmition',
-            'click [data-js-save]:not(.disabled)': 'updateDefectType',
+            // 'input textarea': 'validateForSubmition',
+            'click [data-js-save]': 'updateDefectType',
             'click [data-js-select-issue]': 'selectIssueType',
-            'click [data-js-close-editor]': 'closeEditor'
+            // 'click [data-js-close-editor]': 'closeEditor'
         },
 
         initialize: function(option) {
@@ -70,7 +71,7 @@ define(function (require, exports, module) {
             }));
             this.applyBindings();
             this.setupAnchors();
-            this.setupMarkItUp();
+            this.setupMarkdownEditor();
         },
 
         isMultipleEdit: function(){
@@ -78,25 +79,12 @@ define(function (require, exports, module) {
         },
 
         setupAnchors: function () {
-            this.$submitBtn = $("[data-js-save]", this.$el);
-            this.$textarea = $("[data-js-issue-comment]", this.$el);
             this.$type = $("[data-js-issue-name]", this.$el);
             this.$replaceComments = $("[data-js-replace-comment]", this.$el);
         },
 
-        validateForSubmition: function (e) {
-            var item = this.items[0];
-            if (this.$textarea.val() !== (this.getIssueComment(item) || '') || (this.selectedIssue && this.selectedIssue !== this.getIssueType(item))) {
-                this.$submitBtn.prop('disabled', false);
-            } else {
-                this.$submitBtn.prop('disabled', true);
-            }
-        },
-
         onKeySuccess: function () {
-            if(!this.$submitBtn.is(':disabled')){
-                this.updateDefectType();
-            }
+            this.updateDefectType();
         },
 
         getIssueType: function(item){
@@ -147,31 +135,43 @@ define(function (require, exports, module) {
             $('[data-js-noissue-name]', this.$el).hide();
             $('[data-js-issue-title]', this.$el).show();
             $('[data-js-issue-title] i', this.$el).css('background', issueType.color);
-            this.validateForSubmition();
         },
-        setupMarkItUp: function(){
-            var link = _.filter(MarkitupSettings.markupSet, {name: 'Link'})[0];
-            link.openWith = '"[![Title]!]":';
-            link.closeWith = '[![Link:!:http://]!]';
-            link.placeHolder = ' ';
-
-            this.$textarea.markItUp(_.extend({
-                customPlaceholder: 'true',
-                afterInsert: function () {
-                    this.validateForSubmition();
-                }.bind(this)
-            }, MarkitupSettings));
-            this.$textarea.focus();
+        setupMarkdownEditor: function(){
+            this.markdownEditor = new MarkdownEditor({
+                value: (this.items.length != 1) ? '' : this.getIssueComment(this.items[0]),
+                placeholder: Localization.dialog.commentForDefect,
+            });
+            $("[data-js-issue-comment]", this.$el).html(this.markdownEditor.$el);
+        },
+        onShown: function() {
+            this.markdownEditor.update();
+            this.initState = {
+                comment: this.markdownEditor.getValue(),
+                selectedIssue: this.selectedIssue,
+                replaceComments: this.$replaceComments.is(':checked'),
+            }
+        },
+        isChanged: function() {
+            if (this.initState.comment === this.markdownEditor.getValue() &&
+            this.initState.selectedIssue === this.selectedIssue &&
+            this.initState.replaceComments === this.$replaceComments.is(':checked')) {
+                return false;
+            }
+            return true;
         },
         updateDefectType: function () {
             if (this.inProcess) {
                 return;
             }
+            if(!this.isChanged()) {
+                this.successClose();
+                return true;
+            }
             this.inProcess = true;
-            var comment = $.trim(this.$textarea.val()),
-                selectedIssue = this.selectedIssue,
-                issues = [],
-                replaceComments = this.$replaceComments.is(':checked');
+            var comment = this.markdownEditor.getValue();
+            var selectedIssue = this.selectedIssue;
+            var issues = []
+            var replaceComments = this.$replaceComments.is(':checked');
             _.forEach(this.items, function (item) {
                 var issue = item.getIssue();
                 if((replaceComments && this.isMultipleEdit()) || (!this.isMultipleEdit())){
@@ -199,7 +199,7 @@ define(function (require, exports, module) {
                         issue.issue_type = selectedIssue || this.getIssueType(item);
                         item.setIssue(issue);
                     }, self);
-                    this.hide();
+                    this.successClose();
                 }.bind(this))
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, "updateDefect");

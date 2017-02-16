@@ -353,6 +353,14 @@
              height: 25px;
              padding-bottom: 0;
              font-size: 16px;
+             &.open {
+               a.dropdown-toggle {
+                 .material-icons {
+                   transform: rotate(180deg);
+                   top: 1px;
+                 }
+               }
+             }
 
              a.dropdown-toggle {
                padding: 0;

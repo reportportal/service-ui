@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 EPAM Systems
  *
@@ -19,41 +18,29 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function (require, exports, module) {
+    'use strict';
 
-.preview-widget-view {
-  background-color: $COLOR--white-default;
-  background-repeat: no-repeat;
-  background-position: center center;
-  width: 100%;
-  height: 100%;
-  .panel-body {
-    padding: 0;
-    .statistics-panel {
-      padding: 0;
-      .statictic-block {
-        min-height: 20px;
-        h2 {
-          margin-top: 5px;
-          line-height: 20px;
-        }
-        p {
-          display: none;
-        }
-      }
+    var $ = require('jquery');
+    var Epoxy = require('backbone-epoxy');
+    var SingletonMarkdownObject = require('components/markdown/SingletonMarkdownObject');
 
-    }
-    .nv-axislabel {
-      font-size: 11px;
-    }
-    .nv-multiBarWithLegend {
-      .nv-y.nv-axis {
-        .tick {
-          text {
-            font-size: 8px;
-          }
-        }
-      }
-    }
-  }
 
-}
+
+    var MainBreadcrumbsComponent = Epoxy.View.extend({
+        className: 'markdown-viewer',
+        events: {
+        },
+
+        initialize: function(options) {
+            this.simpleMDE = new SingletonMarkdownObject();
+            this.update(options.text.escapeScript());
+        },
+        update: function(text) {
+            text && this.$el.html(this.simpleMDE.markdown(text.escapeScript()));
+        },
+    });
+
+
+    return MainBreadcrumbsComponent;
+});

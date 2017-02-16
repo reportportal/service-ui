@@ -22,9 +22,6 @@
 .log-grid {
   .message-grid-cell {
     width: 70%;
-    span {
-      word-wrap: break-word;
-    }
     i {
       display: none;
     }
@@ -33,6 +30,7 @@
     width: 12%;
   }
   .time-grid-cell {
+    font-family: $FontMonacoMonospace;
     width: 18%;
   }
   .mobile-block {
@@ -41,7 +39,7 @@
   .rp-table-row {
     position: relative;
     overflow: hidden;
-    padding: 15px 0;
+    padding: 10px 0;
     line-height: 18px;
     &.level-ERROR, &.level-TRACE, &.level-DEBUG {
       max-height: 130px;
@@ -138,7 +136,7 @@
   @media(max-width: 720px) {
     .message-grid-cell {
       width: 100%;
-      span {
+      & > div {
         padding-right: 25px;
         padding-bottom: 39px;
         display: inline-block;

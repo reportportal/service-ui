@@ -51,7 +51,8 @@ define(function (require, exports, module) {
                 set: function($el, status) {
                     var cellWidth = this.view.getCellWidth(),
                         statusCls = 'history-status-' + status;
-                    $el.addClass('col-md-' + cellWidth + ' history-col ' + statusCls);
+                    $el.css('width', cellWidth + '%');
+                    $el.addClass('history-col ' + statusCls);
 
                 }
             },
@@ -108,7 +109,7 @@ define(function (require, exports, module) {
             }
         },
         initialize: function (options) {
-            this.launchesSize = options.launchesSize;
+            this.cellWidth = options.cellWidth;
             this.$container = options.container;
             this.defectsCollection = new SingletonDefectTypeCollection();
             this.defectsCollection.ready.done(function () {
@@ -119,12 +120,10 @@ define(function (require, exports, module) {
             'mouseenter [data-tooltip-type]': 'showTooltip'
         },
         render: function () {
-            this.$container.append(this.$el.addClass().html(Util.templates(this.template, {
-                cellWidth: this.getCellWidth()
-            })));
+            this.$container.append(this.$el.addClass().html(Util.templates(this.template, {})));
         },
         getCellWidth: function () {
-            return this.launchesSize > 5 ? 1 : this.launchesSize <= 3 ? this.launchesSize <= 2 ? 4 : 3 : 2;
+            return this.cellWidth;
         },
         showTooltip: function (e) {
             var el = $(e.currentTarget),

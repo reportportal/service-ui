@@ -1258,7 +1258,7 @@ define(['util'], function () {
             gitHubClientSecret: 'Client Secret',
             gitHubOrgName: 'Organization Name',
             addGitHubOrg: 'Add GitHub Organization',
-            emailSender: 'Default sender address'
+            emailSender: 'Default sender name'
         },
 
         members: {
