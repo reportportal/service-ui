@@ -20,5 +20,17 @@
  */
 
 .modal-log-attachment-binary {
+  &.loading {
+    .preloader {
+      display: block;
+    }
+  }
+  .modal-dialog {
+    width: 95%;
 
+    .binary-holder {
+      width: 100%;
+      padding: 10px;
+    }
+  }
 }

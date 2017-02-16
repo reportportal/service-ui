@@ -25,6 +25,7 @@ module.exports = function (grunt) {
         'css/markitup.css',
         'css/magnific-popup.css',
         'css/spectrum.css',
+        'css/highlightJS/atom-one-light.css',
 
         'compiled/scss/main.css',
         'css/animate.min.css',
@@ -96,6 +97,14 @@ module.exports = function (grunt) {
             fonts: {
                 src: 'fonts/**',
                 dest: 'compiled/'
+            },
+            jsLib: {
+                files: [{
+                    cwd: rootPath,
+                    src: 'js/lib/**',
+                    dest: publicPath + '/',
+                    filter: 'isFile'
+                }]
             }
         },
         cssmin: {
@@ -393,6 +402,7 @@ module.exports = function (grunt) {
             'concat:production',
             'copy:mainProduction',
             'copy:certificate',
+            'copy:jsLib',
             'postcss:production',
             'cssmin',
             'sync:production',

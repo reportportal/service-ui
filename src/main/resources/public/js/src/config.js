@@ -51,7 +51,6 @@ require.config({
         'isLoading': '../lib/jquery.isLoading',
         'equalHeightRows': '../lib/grids',
         'popup': '../lib/jquery.magnific-popup',
-        'highlight': '../lib/highlight.pack',
 	    'lunr': '../lib/lunr',
         //'ace': '../lib/ace/ace.custom',
         //'aceDark': '../lib/ace/theme-dark',
