@@ -100,7 +100,6 @@ define(function (require, exports, module) {
         getActionValueHtml: function(value) {
             var markdownViewer = new MarkdownViewer({text: value});
             return markdownViewer.$el.wrap('<p/>').parent().html();
-            // return Textile(value.replace('*IssueDescription:*',"<br>*IssueDescription:*").escapeScript());
         }
     });
 

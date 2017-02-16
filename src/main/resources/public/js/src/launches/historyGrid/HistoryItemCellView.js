@@ -29,7 +29,7 @@ define(function (require, exports, module) {
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var LaunchSuiteDefectsHoverView = require('launches/common/LaunchSuiteDefectsHoverView');
     var SimpleTooltipView = require('tooltips/SimpleTooltipView');
-    var Textile = require('textile');
+    var MarkdownViewer = require('components/markdown/MarkdownViewer');
 
     var config = App.getInstance();
 
@@ -90,6 +90,10 @@ define(function (require, exports, module) {
             },
             getIssue: {
                 set: function ($el) {
+                    function getMarkdownHtml(value) {
+                        var markdownViewer = new MarkdownViewer({text: value});
+                        return markdownViewer.$el.wrap('<p/>').parent().html();
+                    }
                     var model = this.view.model,
                         issue = model.get('issue');
                     if (issue) {
@@ -98,7 +102,7 @@ define(function (require, exports, module) {
                             issueType = this.view.defectsCollection.getDefectType(objIssue.issue_type),
                             data = {
                                 tickets: _.map(objIssue.externalSystemIssues, function(t){ return t.ticketId; }).join(', '),
-                                comment: objIssue.comment ? Textile(objIssue.comment.setMaxLength(256)).escapeScript() : '',
+                                comment: objIssue.comment ? getMarkdownHtml(objIssue.comment.setMaxLength(256)) : '',
                                 issueType: issueType,
                                 cls: Util.getDefectCls(issueType.typeRef.toLocaleLowerCase())
                             };
