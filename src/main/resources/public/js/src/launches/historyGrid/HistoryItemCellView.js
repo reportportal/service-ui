@@ -29,7 +29,7 @@ define(function (require, exports, module) {
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var LaunchSuiteDefectsHoverView = require('launches/common/LaunchSuiteDefectsHoverView');
     var SimpleTooltipView = require('tooltips/SimpleTooltipView');
-    var Textile = require('textile');
+    var MarkdownViewer = require('components/markdown/MarkdownViewer');
 
     var config = App.getInstance();
 
@@ -51,7 +51,8 @@ define(function (require, exports, module) {
                 set: function($el, status) {
                     var cellWidth = this.view.getCellWidth(),
                         statusCls = 'history-status-' + status;
-                    $el.addClass('col-md-' + cellWidth + ' history-col ' + statusCls);
+                    $el.css('width', cellWidth + '%');
+                    $el.addClass('history-col ' + statusCls);
 
                 }
             },
@@ -89,6 +90,10 @@ define(function (require, exports, module) {
             },
             getIssue: {
                 set: function ($el) {
+                    function getMarkdownHtml(value) {
+                        var markdownViewer = new MarkdownViewer({text: value});
+                        return markdownViewer.$el.wrap('<p/>').parent().html();
+                    }
                     var model = this.view.model,
                         issue = model.get('issue');
                     if (issue) {
@@ -97,7 +102,7 @@ define(function (require, exports, module) {
                             issueType = this.view.defectsCollection.getDefectType(objIssue.issue_type),
                             data = {
                                 tickets: _.map(objIssue.externalSystemIssues, function(t){ return t.ticketId; }).join(', '),
-                                comment: objIssue.comment ? Textile(objIssue.comment.setMaxLength(256)).escapeScript() : '',
+                                comment: objIssue.comment ? getMarkdownHtml(objIssue.comment.setMaxLength(256)) : '',
                                 issueType: issueType,
                                 cls: Util.getDefectCls(issueType.typeRef.toLocaleLowerCase())
                             };
@@ -108,7 +113,7 @@ define(function (require, exports, module) {
             }
         },
         initialize: function (options) {
-            this.launchesSize = options.launchesSize;
+            this.cellWidth = options.cellWidth;
             this.$container = options.container;
             this.defectsCollection = new SingletonDefectTypeCollection();
             this.defectsCollection.ready.done(function () {
@@ -119,12 +124,10 @@ define(function (require, exports, module) {
             'mouseenter [data-tooltip-type]': 'showTooltip'
         },
         render: function () {
-            this.$container.append(this.$el.addClass().html(Util.templates(this.template, {
-                cellWidth: this.getCellWidth()
-            })));
+            this.$container.append(this.$el.addClass().html(Util.templates(this.template, {})));
         },
         getCellWidth: function () {
-            return this.launchesSize > 5 ? 1 : this.launchesSize <= 3 ? this.launchesSize <= 2 ? 4 : 3 : 2;
+            return this.cellWidth;
         },
         showTooltip: function (e) {
             var el = $(e.currentTarget),

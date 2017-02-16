@@ -86,10 +86,6 @@ $urlFontOpenSansSemibold: '../fonts/font-OpenSansSemibold/open-sans-semibold';
 $urlFontSlick: '../fonts/font-Slick/slick';
 @include font-face('Slick', $urlFontSlick, normal, normal);
 
-/* Font DroidSansMono */
-$urlFontReportPortal: '../fonts/droid-sans-mono/DroidSansMono-webfont';
-@include font-face('DroidSansMono', $urlFontReportPortal, normal, normal, true);
-
 /*------------------------------*/
 
 $ReportPortal: "ReportPortal", sans-serif;
@@ -99,6 +95,6 @@ $OswaldRegular: "OswaldRegular", sans-serif;
 $OpenSansRegular: "OpenSansRegular", sans-serif;
 $OpenSansSemibold: "OpenSansSemibold", sans-serif;
 
-$FontMonacoMonospace: "Monaco", monospace;
+$FontMonacoMonospace: Menlo, Monaco, Consolas, "Courier New", monospace;
 
 $MaterialIconsRegular: "MaterialIconsRegular", sans-serif;

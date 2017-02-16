@@ -196,10 +196,11 @@ define(function (require, exports, module) {
                 values: issueTypes,
                 value: 'All'
             }),
-            new Filters.EntityInputModel({
+            new Filters.EntityConditionInputModel({
                 id: 'issue$issue_comment',
                 valueMinLength: 3,
-                condition: 'in',
+                condition: 'cnt',
+                options: filterNameOptions(),
                 valueOnlyDigits: false,
             }),
             new Filters.EntityConditionTagModel({

@@ -5,13 +5,13 @@
     <h2 data-js-launch-name></h2>
     <div class="fields">
         <label class="form-group">
-            <span><%= data.text.forms.description %></span>
-            <textarea class="rp-input form-control" placeholder="<%= data.isEditLaunch ? data.text.dialog.launchDescrPlaceholder : data.text.dialog.testItemDescrPlaceholder %>" cols="60" rows="4" data-js-description></textarea>
-            <span class="help-inline"></span>
-        </label>
-        <label>
             <span><%= data.text.forms.tags %></span>
-            <input class="rp-input" type="text" placeholder="<%= data.text.dialog.launchTagPlaceholder %>" data-js-tags>
+            <div class="tags-wrapper">
+                <input class="rp-input" type="text" placeholder="<%= data.text.dialog.launchTagPlaceholder %>" data-js-tags>
+            </div>
+        </label>
+        <label class="form-group">
+            <div data-js-markdown-container></div>
         </label>
     </div>
     <% if (data.isEditLaunch) { %>

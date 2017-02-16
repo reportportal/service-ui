@@ -28,7 +28,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
     var HistoryItemCellView = require('launches/historyGrid/HistoryItemCellView');
-    var Localization = require('localization');
+    var MarkdownViewer = require('components/markdown/MarkdownViewer');
 
     var config = App.getInstance();
 
@@ -41,7 +41,6 @@ define(function (require, exports, module) {
         },
         bindings: {
             '[data-js-name]': 'text: name, attr: {href: getUrl}',
-            '[data-js-description]': 'html: description',
             '[data-js-tags-container]': 'getTags: tags'
         },
         computeds: {
@@ -81,6 +80,8 @@ define(function (require, exports, module) {
             this.renderedItems = [];
             this.render();
             this.applyBindings();
+            var markdownViewer = new MarkdownViewer({text: this.model.get('description')});
+            $('[data-js-description]', this.$el).html(markdownViewer.$el);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
@@ -90,10 +91,19 @@ define(function (require, exports, module) {
             this.renderItems();
         },
         getNameCellWidth: function(){
-            var launchesSize = this.launches.length,
-                cellWidth = launchesSize > 5 ? 1 : launchesSize <= 3 ? launchesSize <= 2 ? 4 : 3 : 2,
-                nameWidth = 12 - cellWidth*launchesSize;
-            return nameWidth;
+            var launchesSize = this.launches.length;
+            if(launchesSize > 10){
+                return 8;
+            }
+            else if (launchesSize > 5){
+                return 20;
+            }
+            else if (launchesSize >= 3 && launchesSize <= 5){
+                return 35;
+            }
+            else if(launchesSize <= 2){
+                return 50;
+            }
         },
         renderItems: function(){
             var items = this.model.get('launches');
@@ -114,6 +124,7 @@ define(function (require, exports, module) {
                 var item = new HistoryItemCellView({
                     launchesSize: this.launches.length,
                     container: this.$el,
+                    cellWidth: (100-this.getNameCellWidth())/(this.launches.length || 1),
                     model: new LaunchSuiteStepItemModel(oneItem)
                 });
                 this.renderedItems.push(item);

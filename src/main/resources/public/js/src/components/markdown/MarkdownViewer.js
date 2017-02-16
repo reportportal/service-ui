@@ -23,35 +23,24 @@ define(function (require, exports, module) {
 
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
-    var Util = require('util');
-    var Urls = require('dataUrlResolver');
+    var SingletonMarkdownObject = require('components/markdown/SingletonMarkdownObject');
 
-    var LogItemModel = Epoxy.Model.extend({
-        defaults: {
-            binary_content: null,
-            message: '',
-            time: 0,
-            level: null, // INFO, ERROR,
-        },
-        computeds: {
-            timeString: {
-                deps: ['time'],
-                get: function(time) {
-                    return Util.dateFormat(time)
-                }
-            },
-            imagePath: {
-                deps: ['binary_content'],
-                get: function(binary_content) {
-                    if(!binary_content) { return ''; }
-                    if(binary_content.content_type != 'image/png') {
-                        return 'img/launch/attachment.png'
-                    }
-                    return Urls.getFileById(binary_content.thumbnail_id);
-                }
-            }
-        },
-    })
 
-    return LogItemModel;
+
+    var MainBreadcrumbsComponent = Epoxy.View.extend({
+        className: 'markdown-viewer',
+        events: {
+        },
+
+        initialize: function(options) {
+            this.simpleMDE = new SingletonMarkdownObject();
+            this.update(options.text.escapeScript());
+        },
+        update: function(text) {
+            text && this.$el.html(this.simpleMDE.markdown(text.escapeScript()));
+        },
+    });
+
+
+    return MainBreadcrumbsComponent;
 });

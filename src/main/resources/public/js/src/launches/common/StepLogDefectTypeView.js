@@ -28,7 +28,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var Service = require('coreService');
     var Localization = require('localization');
-    var Textile = require('textile');
+    var MarkdownViewer = require('components/markdown/MarkdownViewer');
     var CoreService = require('coreService');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var ModalDefectEditor = require('modals/modalDefectEditor');
@@ -132,7 +132,7 @@ define(function (require, exports, module) {
             'click [data-js-edit-defect]': 'onClickEditDefect',
         },
         bindings: {
-            '[data-js-issue-comment]': 'html: issueComment',
+            // '[data-js-issue-comment]': 'html: issueComment',
             '[data-js-issue-name]': 'text: issueName',
             '[data-js-issue-color]': 'attr: {style: format("background-color: $1", issueColor)}',
             '[data-js-issue-title]': 'attr: {title: issueTitle}',
@@ -144,7 +144,7 @@ define(function (require, exports, module) {
                 get: function(issue) {
                     var issue = this.model.getIssue();
                     if (issue && issue.comment) {
-                        return Textile(issue.comment.replace('*IssueDescription:*',"<br>*IssueDescription:*")).replaceNewLines().escapeScript();
+                        return issue.comment;
                     }
                     return '';
                 }
@@ -191,15 +191,19 @@ define(function (require, exports, module) {
         },
         initialize: function(options) {
             this.defetTypesCollection = new SingletonDefectTypeCollection();
+            var self = this;
             this.defetTypesCollection.ready.done(function(){
-                this.render();
-                this.ticketsView = [];
-                this.ticketCollection = new TicketCollection();
-                this.listenTo(this.ticketCollection, 'reset', this.onResetTicketCollection);
-                this.listenTo(this.ticketCollection, 'remove', this.onRemoveTicket);
-                this.listenTo(this.model, 'change:issue', this.onChangeIssue);
-                this.onChangeIssue();
-            }.bind(this));
+                self.render();
+                self.ticketsView = [];
+                self.ticketCollection = new TicketCollection();
+                self.listenTo(self.ticketCollection, 'reset', self.onResetTicketCollection);
+                self.listenTo(self.ticketCollection, 'remove', self.onRemoveTicket);
+                self.listenTo(self.model, 'change:issue', self.onChangeIssue);
+                self.onChangeIssue();
+                self.markdownViewer = new MarkdownViewer({text: self.getBinding('issueComment')});
+                $('[data-js-issue-comment]', self.$el).html(self.markdownViewer.$el);
+                self.listenTo(self.model, 'change:issue', function(){ self.markdownViewer.update(self.getBinding('issueComment')); });
+            });
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
