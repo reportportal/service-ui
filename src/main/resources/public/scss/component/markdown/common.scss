@@ -58,6 +58,8 @@
 
 }
 .markdown-viewer, .markdown-editor .editor-preview {
+  word-wrap: break-word;
+  word-break: normal;
   pre {
     word-wrap: break-word;
     white-space: pre-wrap;
@@ -68,4 +70,10 @@
     border-radius: 0;
     padding: 10px;
   }
+  img {
+    width: 100%;
+  }
+}
+.markdown-viewer {
+  overflow: hidden;
 }
