@@ -33,19 +33,23 @@ define(function(require, exports, module) {
             this.parseURL();
         },
         parseURL: function(){
-            var hashSplit =  decodeURI(window.location.hash).split('?');
-            this.mainHash = hashSplit[0];
-            var paramsString = hashSplit[1];
-            if(!paramsString) {
-                this.clear({silent: true});
-                return false;
+            try {
+                var hashSplit =  decodeURI(window.location.hash).split('?');
+                this.mainHash = hashSplit[0];
+                var paramsString = hashSplit[1];
+                if(!paramsString) {
+                    this.clear({silent: true});
+                    return false;
+                }
+                var self = this;
+                var parameters = paramsString.split('&');
+                parameters.forEach(function(parameter){
+                    var splitParam = parameter.split('=');
+                    self.set(splitParam[0], splitParam[1], {silent: true});
+                });
+            } catch (err) {
+
             }
-            var self = this;
-            var parameters = paramsString.split('&');
-            parameters.forEach(function(parameter){
-                var splitParam = parameter.split('=');
-                self.set(splitParam[0], splitParam[1], {silent: true});
-            });
         },
         delaySet: function(data){
             var self = this;
