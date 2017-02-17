@@ -1682,7 +1682,8 @@ define(['util'], function () {
             editUserInfo: 'Edit Personal Information',
             addDashboard: 'Add New Dashboard',
             regenerateUUID: 'REGENERATE UUID',
-            deleteOrg: 'Delete GitHub organization'
+            deleteOrg: 'Delete GitHub organization',
+            logAttachment: 'ATTACHMENT'
         },
 
         dialog: {

@@ -26,8 +26,8 @@ define(function (require, exports, module) {
     var App = require('app');
     var Lunr = require('lunr');
     var Backbone = require('backbone');
+    var CodeBlockWithHighlight = require('components/CodeBlockWithHighlightComponent');
 
-    require('highlight');
     require('popup');
 
     var config = App.getInstance();
@@ -101,6 +101,9 @@ define(function (require, exports, module) {
                 });
                 docApi.initImgZoom();
             });
+            $('pre', $(".b-docs__wrapper")).each(function (i, item) {
+                docApi.highLightCode(item);
+            })
         },
         setMenuListener: function (item, question, questions) {
             var isChild = _.has(question, 'parentEl')
@@ -389,9 +392,21 @@ define(function (require, exports, module) {
             // $('.language-hljs').each(function () {
             //     $(this).closest('p').hide().siblings('pre').find('code').addClass($(this).text());
             // });
-
             $('code', el).each(function (i, block) {
-                hljs.highlightBlock(block);
+                var language,
+                    binaryContent = block.textContent;
+
+                if ($(block).is('[class*="language-"]')) {
+                    _.each($(block).attr('class').split(' '), function (className) {
+                        if (~className.indexOf('language-')) {
+                            language = className.split('language-')[1];
+                        }
+                    })
+                } else {
+                    language = 'xml';
+                }
+                var code = new CodeBlockWithHighlight({language: language, binaryContent: binaryContent});
+                $(block).parent().replaceWith(code.$el);
             });
         },
         isTag: function (el, tag) {
@@ -460,7 +475,7 @@ define(function (require, exports, module) {
         addTagToSection: function (elem, lunarData) {
             var currentId = lunarData.questions.length;
 
-            docApi.highLightCode(elem);
+            //docApi.highLightCode(elem);
             docApi.isTag(elem, 'H3')
                 ? docApi.addAnchor(elem, lunarData.questions[currentId - 1])
                 : '';
