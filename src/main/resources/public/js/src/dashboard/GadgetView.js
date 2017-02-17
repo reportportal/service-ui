@@ -55,7 +55,8 @@ define(function (require, exports, module) {
         initialize: function() {
             this.render();
             this.$el.addClass('load');
-            this.$el.attr({'data-id': this.model.get('id')});
+            this.$el.attr({'data-id': this.model.get('id'), 'data-gs-min-width': config.minWidgetWidth,
+                'data-gs-min-height': config.minWidgetHeight});
             this.el.backboneView = this;// for gridstack
         },
         render: function() {
