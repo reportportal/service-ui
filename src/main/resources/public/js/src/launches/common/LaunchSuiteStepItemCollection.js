@@ -136,7 +136,7 @@ define(function (require, exports, module) {
 
             this.filterModel = filterModel;
             this.listenTo(this.filterModel, 'change:newEntities', this.changeFilterOptions);
-            this.listenTo(this.filterModel, 'change:newSelectionParameters', this.load);
+            this.listenTo(this.filterModel, 'change:newSelectionParameters', this.changeSelectionParameters);
             this.activateChangeParamsTrigger();
             return this.load();
         },
@@ -193,6 +193,10 @@ define(function (require, exports, module) {
             }, this);
             answer.entities = JSON.stringify(filterEntities);
             return answer;
+        },
+        changeSelectionParameters: function() {
+            this.load();
+            this.activateChangeParamsTrigger();
         },
         changeFilterOptions: function(model, value) {
             if(value != '' || !model.changed.entities) {
