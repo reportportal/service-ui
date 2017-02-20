@@ -503,7 +503,7 @@
         color: #fff;
         background-color: #666;
         transition: all 0.5s ease-in-out;
-        @media(max-width: 950px) {
+        @media(max-width: $SCREEN_XS_MAX) {
           bottom: 95px;
           height: auto;
           padding: 0;
@@ -512,23 +512,7 @@
           min-height: auto;
         }
         .docs-controls-sidenav {
-          //height: auto;
 
-          /*&.collapsed {
-            display: block;
-            position: relative;
-            @media(max-width: 950px) {
-              //overflow: hidden;
-              //height: 0;
-            }
-          }
-          &.collapse {
-            display: block;
-            @media(max-width: 950px) {
-              //overflow: hidden;
-              height: auto;
-            }
-          }*/
         }
         .controls {
           .docs-controls {
@@ -550,7 +534,7 @@
             display: none;
             position: relative;
           }
-            @media(max-width: 950px) {
+            @media(max-width: $SCREEN_XS_MAX) {
               .docs-controls {
                 text-align: left;
                 display: none;
@@ -645,6 +629,11 @@
                       text-align: center;
                       overflow: hidden;
                     }
+                    &.open {
+                      .material-icons {
+                        transform: rotate(180deg) translateY(-4px);
+                      }
+                    }
                   }
                 }
               }
@@ -666,6 +655,10 @@
         height: auto;
         top: 60px;
         bottom: 0;
+      @media(max-width: $SCREEN_XS_MAX) {
+        position: relative;
+        top: 0;
+      }
     }
     .b-docs__nav ul.nav.sidenav {
         padding: 0;

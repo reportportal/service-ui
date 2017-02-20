@@ -544,12 +544,18 @@ define(function (require, exports, module) {
             docApi['content'] = $('.js-content .b-docs__wrapper', $documentation).html();
 
             $('.js-docnav').html(Util.templates('tpl-documentation-menu'));
-            Util.setupBaronScroll($('.js-docnav .nav.sidenav'));
             $('.js-content').html(Util.templates('tpl-documentation-content'));
             docApi.contentScroll = Util.setupBaronScroll($('.js-content .b-docs__wrapper'));
             // console.time('Load documentation time');
             docApi.lunarData = docApi.convertData(docApi.content);
             docApi.startDoc(anchor);
+            Util.setupBaronScroll($('.js-docnav .nav.sidenav'));
+            $('[data-js-content-dropdown-open]').click(function(){
+                $('[data-js-content-dropdown-open]').toggleClass('open');
+                Util.setupBaronScrollSize($('[data-js-content-nav] .nav.sidenav'), {maxHeight: 200});
+                $('[data-js-content-nav]').slideToggle();
+            });
+
             // console.timeEnd('Load documentation time');
         }
     };
