@@ -27,7 +27,8 @@ $borderRadius100: 100px;
     padding: 0;
     border: none;
     margin: 0 -15px;
-    overflow: auto;
+    overflow: hidden;
+    overflow-x: auto;
 
     .history-grid-table {
         display: table;

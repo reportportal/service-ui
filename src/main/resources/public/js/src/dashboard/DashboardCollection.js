@@ -145,7 +145,7 @@ define(function (require, exports, module) {
             if(active) {
                 _.each(this.models, function(itemModel) {
                     if (model.get('id') != itemModel.get('id')) {
-                        itemModel.set({active: false});
+                        itemModel.set({active: false}, {silent: true});
                     }
                 })
             }

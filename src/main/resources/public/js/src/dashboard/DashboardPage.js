@@ -44,14 +44,13 @@ define(function (require, exports, module) {
             this.body.onShow && this.body.onShow();
         },
         update: function(options) {
+            this.collection.resetActive();
             if (options.subContext) {
                 if (this.collection.get(options.subContext)) {
                     this.collection.get(options.subContext).set({active: true});
                 } else {
                     console.log('dashboard not found');
                 }
-            } else {
-                this.collection.resetActive();
             }
         },
         render: function() {
