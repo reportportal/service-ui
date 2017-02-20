@@ -175,6 +175,7 @@ define(function (require, exports, module) {
                     .always(function(){ async.resolve(); })
             } else {
                 this.model.set({disable: true, load: false});
+                this.collection.reset([]);
                 async.resolve();
             }
             return async;

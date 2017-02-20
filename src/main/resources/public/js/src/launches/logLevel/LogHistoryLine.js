@@ -29,7 +29,10 @@ define(function (require, exports, module) {
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var Util = require('util');
+    var App = require('app');
     var Localization = require('localization');
+
+    var config = App.getInstance();
 
     var LogHistoryLineCollection = Backbone.Collection.extend({
         model: LaunchSuiteStepItemModel,
@@ -45,25 +48,33 @@ define(function (require, exports, module) {
             })
             activeModel.set({active: true});
         },
-        load: function(itemId) {
+        load: function(itemId, historyId) {
             var self = this;
             return Service.loadHistory(itemId)
                 .done(function(data) {
-                    self.reset(self.parse(data, itemId));
+                    self.reset(self.parse(data, historyId));
                 })
         },
         parse: function(data, itemId) {
             var self = this;
             var answerData = _.map(data, function(item, num) {
                 var answer = {launchNumber: item.launchNumber, active: false, parent_launch_status: item.launchStatus};
+                _.each(item.resources, function(resource) {
+                    if(resource.id == itemId) {
+                        answer.active = true;
+                    }
+                });
                 if(item.launchId == self.launchModel.get('id') || (num == 0 && self.launchModel.get('failLoad'))) {
                     answer.parent_launch_investigate = self.launchModel.getToInvestigate();
-                    _.each(item.resources, function(resource) {
-                        if(resource.id == itemId) {
-                            answer = _.extend(answer, self.updateDataForModel(resource));
-                            answer.active = true;
-                        }
-                    })
+                    if(!answer.active) {
+                        answer = _.extend(answer, self.updateDataForModel(item.resources[0]));
+                    } else {
+                        _.each(item.resources, function(resource) {
+                            if(resource.id == itemId) {
+                                answer = _.extend(answer, self.updateDataForModel(resource));
+                            }
+                        })
+                    }
                 } else if(item.resources.length == 1){
                     answer = _.extend(answer, self.updateDataForModel(item.resources[0]));
                 } else if(item.resources.length == 0) {
@@ -181,12 +192,12 @@ define(function (require, exports, module) {
             var itemId = this.collectionItems.getInfoLog().item;
             var itemModel = this.collectionItems.get(itemId);
             if (itemModel) {
-                this.load = this.collection.load(itemId)
+                this.load = this.collection.load(itemId, this.collectionItems.getInfoLog().history || itemId)
                     .always(function() {
                         self.trigger('load:history');
                         var activeModels = self.collection.where({active: true});
                         if(activeModels.length == 1) {
-                            self.trigger('activate:item', activeModels[0]);
+                            self.trigger('activate:item', activeModels[0], true);
                         }
                     });
             }
