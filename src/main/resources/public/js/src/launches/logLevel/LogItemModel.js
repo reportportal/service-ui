@@ -44,7 +44,7 @@ define(function (require, exports, module) {
                 deps: ['binary_content'],
                 get: function(binary_content) {
                     if(!binary_content) { return ''; }
-                    if(binary_content.content_type != 'image/png') {
+                    if(!~binary_content.content_type.search('image/')) {
                         return 'img/launch/attachment.png'
                     }
                     return Urls.getFileById(binary_content.thumbnail_id);

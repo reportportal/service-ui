@@ -109,6 +109,7 @@ define(function (require, exports, module) {
         getPathByLogItemId: function(logItemId) {
             var options = this.getParamsFilter();
             options.push('log.item=' + logItemId);
+            this.logOptions.history && options.push('log.history=' + this.logOptions.history);
             var mainHash = window.location.hash.split('?')[0];
             return mainHash + '?' + options.join('&');
         },
@@ -122,20 +123,20 @@ define(function (require, exports, module) {
             this.activateChangeParamsTrigger();
             this.load();
         },
-        setLogItem: function(logItemId) {
+        setLogItem: function(logItemId, silent) {
             if(!this.get(logItemId)) {
                 console.log('log item not found');
                 return;
             }
-            this.logOptions = {item: logItemId}; // reset log settings
-            this.trigger('change:log:item', logItemId);
+            this.logOptions = {item: logItemId, history: logItemId}; // reset log settings
+            !silent && this.trigger('change:log:item', logItemId);
         },
         setSelfModels: function(filterModel) {
             this.stopListening(this.filterModel);
 
             this.filterModel = filterModel;
             this.listenTo(this.filterModel, 'change:newEntities', this.changeFilterOptions);
-            this.listenTo(this.filterModel, 'change:newSelectionParameters', this.load);
+            this.listenTo(this.filterModel, 'change:newSelectionParameters', this.changeSelectionParameters);
             this.activateChangeParamsTrigger();
             return this.load();
         },
@@ -193,6 +194,10 @@ define(function (require, exports, module) {
             answer.entities = JSON.stringify(filterEntities);
             return answer;
         },
+        changeSelectionParameters: function() {
+            this.load();
+            this.activateChangeParamsTrigger();
+        },
         changeFilterOptions: function(model, value) {
             if(value != '' || !model.changed.entities) {
                 this.pagingPage = 1;
@@ -216,6 +221,9 @@ define(function (require, exports, module) {
         },
         getInfoLog: function() {
             return this.logOptions;
+        },
+        setInfoLog: function(options) {
+            this.logOptions = options;
         },
         checkType: function(models) {
             var models = models || this.toJSON();

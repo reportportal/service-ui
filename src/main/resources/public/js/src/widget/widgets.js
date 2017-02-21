@@ -1477,7 +1477,14 @@ define(function (require, exports, module) {
             var self = this,
                 update = function(e){
                     if($(e.target).is($(window))) {
-                        self.chart && self.chart.update();
+                        if(self.charts && self.charts.length){
+                            _.each(self.charts, function(chart){
+                                chart && chart.update();
+                            });
+                        }
+                        else {
+                            self.chart && self.chart.update();
+                        }
                     }
                 },
                 resize  = _.debounce(update, 500);

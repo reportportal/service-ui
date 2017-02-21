@@ -20,6 +20,9 @@ define(function (require, exports, module) {
     var Util = require('util');
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var DashboardHeaderListItemView = Epoxy.View.extend({
         className: 'dashboard-header-list-item',
@@ -41,7 +44,7 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickDashboard: function() {
-            this.model.set({active: true});
+            config.router.navigate(this.model.get('url'), {trigger: true});
         },
 
         destroy: function () {

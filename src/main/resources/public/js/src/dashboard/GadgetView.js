@@ -53,10 +53,13 @@ define(function (require, exports, module) {
             '[data-js-timeline]': 'classes: {hide: not(isTimeline)}'
         },
         initialize: function() {
+            this.activate = false;
             this.render();
             this.$el.addClass('load');
-            this.$el.attr({'data-id': this.model.get('id')});
+            this.$el.attr({'data-id': this.model.get('id'), 'data-gs-min-width': config.minWidgetWidth,
+                'data-gs-min-height': config.minWidgetHeight});
             this.el.backboneView = this;// for gridstack
+            this.listenTo(this.model, 'update:timer', this.updateTimer);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
@@ -81,8 +84,8 @@ define(function (require, exports, module) {
             this.widgetView && this.widgetView.resize();
             this.$el.removeClass('hide-widget');
         },
-        update: function() {
-            this.$el.addClass('load');
+        update: function(silent) {
+            !silent && this.$el.addClass('load');
             var self = this;
             this.model.update()
                 .done(function(){
@@ -92,8 +95,11 @@ define(function (require, exports, module) {
                     self.onLoadDataError(error);
                 })
                 .always(function() {
-                    self.$el.removeClass('load');
+                    !silent && self.$el.removeClass('load');
                 })
+        },
+        updateTimer: function() {
+            this.activate && this.update(true);
         },
         updateWidget: function() {
             this.widgetView && this.widgetView.destroy();
@@ -135,6 +141,7 @@ define(function (require, exports, module) {
             })
         },
         activateGadget: function() {
+            this.activate = true;
             this.update();
         },
         onClickGadgetEdit: function() {

@@ -139,7 +139,7 @@ define(function (require, exports, module) {
                 deps: ['binary_content'],
                 get: function(binaryContent) {
                     if(binaryContent && binaryContent.thumbnail_id) {
-                        if(binaryContent.content_type != 'image/png') {
+                        if(!~binaryContent.content_type.search('image/')) {
                             return 'img/launch/attachment.png'
                         }
                         return Urls.getFileById(binaryContent.thumbnail_id);
@@ -151,7 +151,7 @@ define(function (require, exports, module) {
                 deps: ['binary_content'],
                 get: function(binaryContent) {
                     if(binaryContent && binaryContent.id) {
-                        if(binaryContent.content_type != 'image/png') {
+                        if(!~binaryContent.content_type.search('image/')) {
                             return 'img/launch/attachment-big.png'
                         }
                         return Urls.getFileById(binaryContent.id);

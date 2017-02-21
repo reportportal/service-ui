@@ -165,6 +165,7 @@ define(function (require, exports, module) {
         onClickFullScreen: function(e) {
             e.preventDefault();
             $('body').fullscreen({toggleClass: 'fullscreen'});
+            this.updateGadgetsTimer();
         },
         onAddGadget: function(gadgetModel) {
             var view = new GadgetView({model: gadgetModel, dashboardModel: this.model});
@@ -238,9 +239,20 @@ define(function (require, exports, module) {
             })
         },
         onClickExitFullScreen: function(e) {
+            clearTimeout(this.updateTimer);
             e.preventDefault();
             e.stopPropagation();
             $.fullscreen.exit();
+        },
+        updateGadgetsTimer: function() {
+            clearTimeout(this.updateTimer);
+            var self = this;
+            this.updateTimer = setTimeout(function() {
+                _.each(self.gadgetCollection.models, function(gadgetModel) {
+                    gadgetModel.trigger('update:timer');
+                });
+                self.updateGadgetsTimer();
+            }, 60000);
         },
         onClickAddWidget: function(e) {
             e.preventDefault();
@@ -253,6 +265,7 @@ define(function (require, exports, module) {
             (new modalAddSharedWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
         },
         destroy: function () {
+            clearTimeout(this.updateTimer);
             $.fullscreen.exit();
             this.undelegateEvents();
             this.scrollElement.off('scroll.dashboardPage');

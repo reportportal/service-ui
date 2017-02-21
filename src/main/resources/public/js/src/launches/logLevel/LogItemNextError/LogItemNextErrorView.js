@@ -131,15 +131,17 @@ define(function (require, exports, module) {
         },
         onChangePaging: function(model) {
             var self = this;
-            if(model.changed.size && this.collection.length) {
-                self.model.set({load: true});
-                this.checkLastLog()
-                    .done(function() {
-                        self.model.set({load: false});
-                        self.checkPage();
-                    })
-            } else {
-                this.checkPage();
+            if(this.collection.length) {
+                if(model.changed.size) {
+                    self.model.set({load: true});
+                    this.checkLastLog()
+                        .done(function() {
+                            self.model.set({load: false});
+                            self.checkPage();
+                        })
+                } else {
+                    this.checkPage();
+                }
             }
         },
         checkPage: function() {
@@ -175,6 +177,7 @@ define(function (require, exports, module) {
                     .always(function(){ async.resolve(); })
             } else {
                 this.model.set({disable: true, load: false});
+                this.collection.reset([]);
                 async.resolve();
             }
             return async;
