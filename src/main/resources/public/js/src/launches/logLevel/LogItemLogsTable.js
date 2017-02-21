@@ -125,8 +125,8 @@ define(function (require, exports, module) {
         resetFilters: function() {
             this.nameModel.set({value: ''});
             this.selectModel.set({value: ''});
-            this.selectModel.trigger('changeState');
             $('[data-js-attachments-filter]', this.$el).prop( "checked", false );
+            this.selectModel.trigger('changeState');
         },
         setupStickyHeader: function() {
             this.destroyStickyHeader();
@@ -249,9 +249,10 @@ define(function (require, exports, module) {
                 this.trigger('goToLog:end');
             } else {
                 var self = this;
-                this.collection.findLogPage(logId)
+                this.collection.findLogPage(logId, true)
                     .done(function(number) {
                         self.resetFilters();
+                        self.onChangeFilter();
                         self.onChangePage(number);
                         self.listenToOnce(self.collection, 'loading:false', function() {
                             self.collection.get(logId) && self.collection.get(logId).trigger('scrollTo');
