@@ -133,7 +133,7 @@ define(function (require, exports, module) {
                 disableDrag: !this.model.get('isMy'),
                 disableResize: !this.model.get('isMy'),
             });
-            this.gridStack = $gridStack.data('gridstack')
+            this.gridStack = $gridStack.data('gridstack');
             this.createGadgets();
             var self = this;
             $gridStack.on('change', function (e, items) {
@@ -270,6 +270,7 @@ define(function (require, exports, module) {
             clearTimeout(this.updateTimer);
             $.fullscreen.exit();
             this.undelegateEvents();
+            this.gridStack && this.gridStack.destroy();
             this.scrollElement.off('scroll.dashboardPage');
             this.stopListening();
             this.unbind();
