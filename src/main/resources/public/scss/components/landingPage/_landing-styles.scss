@@ -510,9 +510,10 @@
           position: relative;
           top: 0;
           min-height: auto;
-        }
-        .docs-controls-sidenav {
-
+          overflow: visible;
+          .docs-controls-sidenav {
+            display: none;
+          }
         }
         .controls {
           .docs-controls {
@@ -612,6 +613,23 @@
                   display: block;
                   height: 50px;
                   background: $COLOR--greyish-brown;
+                  .sidenav-mobile {
+                    width: 100%;
+                    margin: 0;
+                    border: none;
+                    li a {
+                      padding: 10px 15px;
+                      font-family: $OswaldRegular;
+                      font-size: 18px;
+                      font-weight: lighter;
+                      background-color: #666;
+                    }
+                  }
+                  &.open {
+                    .material-icons {
+                      transform: rotate(180deg) translateY(-4px);
+                    }
+                  }
                   .menu-title {
                     cursor: pointer;
                     display: inline-block;
@@ -628,11 +646,6 @@
                       height: 19px;
                       text-align: center;
                       overflow: hidden;
-                    }
-                    &.open {
-                      .material-icons {
-                        transform: rotate(180deg) translateY(-4px);
-                      }
                     }
                   }
                 }

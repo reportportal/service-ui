@@ -283,6 +283,7 @@ define(function (require, exports, module) {
                         ? section.$el.addClass('g-nav--scrolled')
                         : '';
                 });
+                $('[data-js-content-dropdown] [data-toggle="dropdown"]').parent().removeClass('open');
             });
         },
         reInitListeners: function (questions) {
@@ -549,12 +550,7 @@ define(function (require, exports, module) {
             // console.time('Load documentation time');
             docApi.lunarData = docApi.convertData(docApi.content);
             docApi.startDoc(anchor);
-            Util.setupBaronScroll($('.js-docnav .nav.sidenav'));
-            $('[data-js-content-dropdown-open]').click(function(){
-                $('[data-js-content-dropdown-open]').toggleClass('open');
-                Util.setupBaronScrollSize($('[data-js-content-nav] .nav.sidenav'), {maxHeight: 200});
-                $('[data-js-content-nav]').slideToggle();
-            });
+            Util.setupBaronScroll($('[data-js-content-nav] .nav.sidenav'));
 
             // console.timeEnd('Load documentation time');
         }
