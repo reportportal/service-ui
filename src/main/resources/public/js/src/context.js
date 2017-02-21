@@ -107,6 +107,7 @@ define(function (require, exports, module) {
         },
 
         openRouted: function (projectId, contextName, subContext, queryString) {
+            config.trackingDispatcher.pageView(contextName);
             this.currentContext = contextName;
             this.checkForContextChange(contextName);
             this.validateMainViewForAdmin();
