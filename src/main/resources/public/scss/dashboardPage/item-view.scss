@@ -20,6 +20,9 @@
  */
 
 .dashboard-item-view {
+  @media (max-width: 767px) {
+    margin-bottom: 40px;
+  }
   .buttons-container {
     padding: 20px 15px;
     margin: 0 -15px;
@@ -100,6 +103,9 @@
     padding: 15px;
     margin: 15px 0;
     height: auto;
+    @media (max-width: 767px) {
+      display: none;
+    }
   }
   @media (max-width: 767px) {
     .grid-stack {

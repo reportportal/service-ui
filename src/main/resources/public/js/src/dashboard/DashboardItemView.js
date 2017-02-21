@@ -158,7 +158,9 @@ define(function (require, exports, module) {
             });
             $gridStack.on('resizestop', function (event, ui) {
                 var view = event.target.backboneView;
-                view && view.stopResize();
+                setTimeout(function(){
+                    view && view.stopResize();
+                }, 300);
             });
 
         },
