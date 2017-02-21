@@ -135,6 +135,9 @@ define(function (require, exports, module) {
                 ],
                 placeholder: options.placeholder || '',
                 spellChecker: false,
+                // insertTexts: {
+                //     link: ['[](', ')']
+                // }
             });
 
             this.simplemde.codemirror.on("change", function(){

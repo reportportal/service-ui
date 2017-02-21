@@ -26,9 +26,12 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var App = require('app');
     var LogHistoryLine = require('launches/logLevel/LogHistoryLine');
     var LogItemInfoView = require('launches/logLevel/LogItemInfoView');
     var LogItemLogsTable = require('launches/logLevel/LogItemLogsTable');
+
+    var config = App.getInstance();
 
     var LogBodyView = Epoxy.View.extend({
         template: 'tpl-launch-log-body',
@@ -70,7 +73,12 @@ define(function (require, exports, module) {
             $('[data-js-log-item-container]',this.$el).removeClass('load');
         },
 
-        selectHistoryItem: function(itemModel) {
+        selectHistoryItem: function(itemModel, firstInit) {
+            var curOptions = this.collectionItems.getInfoLog();
+            curOptions['history'] = itemModel.get('id');
+            !firstInit && curOptions['page.page']
+            this.collectionItems.setInfoLog(curOptions);
+            !firstInit && config.router.navigate(this.collectionItems.getPathByLogItemId(curOptions.item), {trigger: false});
             var itemModelFromCollection = this.collectionItems.get(itemModel.id);
             if (itemModelFromCollection) {
                 itemModel.set('path_names', itemModelFromCollection.get('path_names'));
@@ -90,11 +98,11 @@ define(function (require, exports, module) {
                 el: $('[data-js-item-logs]', this.$el),
                 itemModel: itemModel,
                 collectionItems: this.collectionItems,
-                mainPath: this.collectionItems.getPathByLogItemId(itemModel.get('id')),
+                mainPath: this.collectionItems.getPathByLogItemId(curOptions.item),
                 options: this.collectionItems.getInfoLog(),
             });
             this.listenTo(this.logsItem, 'goToLog:end', this.onEndGoToLog);
-            this.listenTo(this.logsItem, 'goToAttachment', this.onGoToAttachment);
+            // this.listenTo(this.logsItem, 'goToAttachment', this.onGoToAttachment);
         },
         onChangeItemIssue: function () {
             _.each(this.launchModel.collection.models, function (model) {

@@ -105,7 +105,7 @@ define(function (require, exports, module) {
             this.listenTo(this.collection, 'loading:true', this.onStartLoading);
             this.listenTo(this.collection, 'loading:false', this.onStopLoading);
             this.listenTo(this.collection, 'change:options', this.onChangeOptionsFilter);
-            this.listenTo(this.collection, 'click:attachment', this.onClickAttachments);
+            // this.listenTo(this.collection, 'click:attachment', this.onClickAttachments);
             this.collection.load();
             this.listenTo(this.collection, 'reset', this.onResetCollection);
             this.listenTo(this.selectModel, 'change:condition change:value', this.onChangeFilter);
@@ -125,8 +125,8 @@ define(function (require, exports, module) {
         resetFilters: function() {
             this.nameModel.set({value: ''});
             this.selectModel.set({value: ''});
-            this.selectModel.trigger('changeState');
             $('[data-js-attachments-filter]', this.$el).prop( "checked", false );
+            this.selectModel.trigger('changeState');
         },
         setupStickyHeader: function() {
             this.destroyStickyHeader();
@@ -162,8 +162,9 @@ define(function (require, exports, module) {
                 var splitParam = param.split('=');
                 newLogOption[splitParam[0]] = splitParam[1];
             })
-            newLogOption.item = this.collectionItems.logOptions.item;
-            this.collectionItems.logOptions = newLogOption;
+            newLogOption.item = this.collectionItems.getInfoLog().item;
+            newLogOption.history = this.collectionItems.getInfoLog().history;
+            this.collectionItems.setInfoLog(newLogOption);
         },
         onStartLoading: function() {
             $('[data-js-logs-wrapper]', this.$el).addClass('load');
@@ -239,18 +240,19 @@ define(function (require, exports, module) {
                 self.items.push(item);
             })
         },
-        onClickAttachments: function(model) {
-            this.trigger('goToAttachment', model.get('id'))
-        },
+        // onClickAttachments: function(model) {
+        //     this.trigger('goToAttachment', model.get('id'))
+        // },
         goToLog: function(logId) {
             if (this.collection.get(logId)) {
                 this.collection.get(logId).trigger('scrollTo');
                 this.trigger('goToLog:end');
             } else {
                 var self = this;
-                this.collection.findLogPage(logId)
+                this.collection.findLogPage(logId, true)
                     .done(function(number) {
                         self.resetFilters();
+                        self.onChangeFilter();
                         self.onChangePage(number);
                         self.listenToOnce(self.collection, 'loading:false', function() {
                             self.collection.get(logId) && self.collection.get(logId).trigger('scrollTo');
