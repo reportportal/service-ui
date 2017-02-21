@@ -44,6 +44,7 @@ define(function (require, exports, module) {
                 launches: this.launches.toJSON()
             }));
             this.renderItems();
+            Util.setupBaronScrollSize($('[data-js-history-content]', this.$el));
         },
         renderItems: function() {
             var $itemsContainer = $('[data-js-history-content]', this.$el);
