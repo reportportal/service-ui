@@ -31,7 +31,10 @@ define(function(require, exports, module) {
 
     var TrackingDispatcher = {
         trackEvent: function(){
-            this.trigger('trackEvent', arguments);
+            this.trigger('track:event', arguments);
+        },
+        pageView: function() {
+            this.trigger('page:view', arguments);
         },
         trackSiteSearch: function(){
             this.trigger('trackSiteSearch', arguments);
