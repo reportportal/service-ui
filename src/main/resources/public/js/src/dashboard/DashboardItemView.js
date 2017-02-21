@@ -90,14 +90,6 @@ define(function (require, exports, module) {
             } else {
                 this.postInit();
             }
-            var self = this;
-            this.model.on('change:isShared', function(model){
-                if(model.get('isShared')){
-                    _.each(self.gadgetViews, function(view){
-                        view.model.set('isShared', true);
-                    });
-                }
-            });
         },
         postInit: function() {
             var self = this;
@@ -108,7 +100,8 @@ define(function (require, exports, module) {
                 self.listenTo(self.gadgetCollection, 'remove', self.checkEmptyDashboard);
                 self.activateGridStack();
                 self.listenTo(self.model, 'add:widget', self.onAddNewGadget);
-            })
+                self.listenTo(self.model, 'change:isShared', self.onShareDashboard);
+            });
 
         },
         render: function() {
@@ -118,6 +111,13 @@ define(function (require, exports, module) {
             this.checkEmptyDashboard();
             this.gadgetCollection.add(model);
             this.updateScroll();
+        },
+        onShareDashboard: function(){
+            if(this.model.get('isShared')){
+                _.each(this.gadgetViews, function(view){
+                    view.model.set('isShared', true);
+                }, this);
+            }
         },
         activateGridStack: function() {
             var $gridStack = $('[data-js-grid-stack]', this.$el);
