@@ -44,12 +44,16 @@ define(function (require, exports, module) {
             'change [data-js-collapse-input]': function(e) { this.onChangeCollapseInput($(e.currentTarget)); },
         },
         bindings: {
-            '[data-js-table-container]': 'classes: {"exact-driven": updateTimeFormat}'
+            '[data-js-table-container]': 'classes: {"exact-driven": updateTimeFormat}',
+            '[data-js-select-all]': 'attr: {disabled: validateIsProcessing}'
         },
         computeds: {
             updateTimeFormat: function(){
                 var timeFormat = this.userStorage.get('startTimeFormat');
                 return timeFormat == 'exact' ? true : false;
+            },
+            validateIsProcessing: function(){
+                return this.getBinding('isProcessing') || this.getBinding('launch_isProcessing');
             }
         },
         initialize: function(options) {

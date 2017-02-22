@@ -54,7 +54,7 @@ define(function (require, exports, module) {
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
             '[data-js-status-class]': 'classes: {failed: highlightedFailed, "select-state": select, "collapse-method": validateForCollapsed}',
-            '[data-js-select-item]': 'checked:select',
+            '[data-js-select-item]': 'checked:select, attr: {disabled: launch_isProcessing}',
         },
         bindingHandlers: {
             sortTags: {

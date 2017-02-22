@@ -23,6 +23,12 @@
   .defect-type-badge-overflow {
     display: inline-block;
     cursor: pointer;
+    &.disabled {
+      cursor: default;
+      .edit-defect {
+        cursor: default;
+      }
+    }
     .defect-type-badge {
       background: $COLOR--white-default;
       border-radius: 20px;
