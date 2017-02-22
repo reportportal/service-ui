@@ -106,7 +106,7 @@ require.config({
         'widgetWizard': 'wizard/widget',
         'helpers': 'core/helpers',
         'storageService': 'core/storage-service',
-        'register': 'register/register',
+        //'register': 'register/register',
 
         'simplemde': '../lib/markdown/simplemde.min',
 

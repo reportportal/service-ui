@@ -34,6 +34,7 @@ define(function(require, exports, module) {
     var ExternalService = require('externalServices/externalServices');
     var Urls = require('dataUrlResolver');
     var callService = require('callService');
+    var AnalyticsConnect = require('analytics/AnalyticsConnect');
 
 
     var call = callService.call;
@@ -73,9 +74,13 @@ define(function(require, exports, module) {
     config.userModel = new UserModel;
     config.trackingDispatcher = TrackingDispatcher;
     config.router = new Router.Router();
+    AnalyticsConnect.init();
 
     Util.setupWindowEvents();
     Util.setupBackTop();
+
+
+
 
 
     config.userModel.load();
