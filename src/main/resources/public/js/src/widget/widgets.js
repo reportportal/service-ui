@@ -1471,20 +1471,21 @@ define(function (require, exports, module) {
             return [];
         },
         updateChart: function() {
-            this.chart && this.chart.update();
+            var self = this;
+            if(self.charts && self.charts.length){
+                _.each(self.charts, function(chart){
+                    chart && chart.update();
+                });
+            }
+            else {
+                self.chart && self.chart.update();
+            }
         },
         addResize: function(){
             var self = this,
                 update = function(e){
                     if($(e.target).is($(window))) {
-                        if(self.charts && self.charts.length){
-                            _.each(self.charts, function(chart){
-                                chart && chart.update();
-                            });
-                        }
-                        else {
-                            self.chart && self.chart.update();
-                        }
+                        self.updateChart();
                     }
                 },
                 resize  = _.debounce(update, 500);
