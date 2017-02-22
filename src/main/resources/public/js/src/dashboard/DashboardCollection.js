@@ -65,7 +65,6 @@ define(function (require, exports, module) {
             return Service.deleteDashboard(model.get('id'))
                 .done(function () {
                     Util.ajaxSuccessMessenger('dashboardDelete');
-                    config.trackingDispatcher.dashboardDel(!model.get('isMy'));
                 })
                 .fail(function (error) {
                     self.update();

@@ -1407,7 +1407,7 @@ define(function (require, exports, module) {
                             .done(function (data) {
                                 makeAction(updatedList);
                                 var gadget = self.model.get('widget_template');
-                                config.trackingDispatcher.widgetAdded((!!gadget.gadget ? gadget.gadget : self.model.get('widget_id')));
+                                // config.trackingDispatcher.widgetAdded((!!gadget.gadget ? gadget.gadget : self.model.get('widget_id')));
                                 self.$widgetGlobalLoader.hide();
                             }).fail(errorHandler);
                     }

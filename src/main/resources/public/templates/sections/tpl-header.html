@@ -12,7 +12,7 @@
     <div class="navbar-collapse" id="navbar-header-collapse">
         <ul class="nav navbar-nav navbar-right rp-navbar-right rp-header-nav hidden-xs">
             <li class="dropdown">
-                <a href="#" class="dropdown-toggle hidden-xs rp-user-navigator" data-toggle="dropdown">
+                <a href="#" class="dropdown-toggle hidden-xs rp-user-navigator" data-toggle="dropdown" data-js-user-dropdown>
                     <div class="user-login-wrap float-left">
                         <% if (data.isAdmin) { %>
                             <div class="user-status">
@@ -33,7 +33,7 @@
                 </a>
                 <ul class="dropdown-menu rp-mobile-position clearfix" role="menu" id="userNavigator">
                     <li class="col-xs-6 col-sm-12">
-                        <a href="#user-profile" class="mem-set user-id">
+                        <a href="#user-profile" class="mem-set user-id" data-js-profile-page-link>
                             <span class="custom-padding"><%= data.text.topMenu.profile %></span>
                         </a>
                     </li>
@@ -54,7 +54,7 @@
         </ul>
         <ul class="nav navbar-nav rp-navbar-left rp-header-nav rp-projects-block">
             <li class="dropdown clearfix" id="projectSelector">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" data-js-project-dropdown>
                     <span class="selected-project" title="<%= data.text.topMenu.activeProjTitle %>">
                         <%- data.project.projectId %>
                     </span>
@@ -79,7 +79,7 @@
                     data-id="members"
                     title="<%= data.text.topMenu.members %>"
                     class="members">
-                    <a href="#<%- data.project.projectId %>/members" class="mem-set">
+                    <a href="#<%- data.project.projectId %>/members" class="mem-set" data-js-members-icon>
                         <i class="rp-icons rp-icons-all-users"></i>
                     </a>
                 </li>
@@ -88,7 +88,7 @@
                 data-id="settings"
                 title="<%= data.text.topMenu.settings %>"
                 class="settings">
-                <a href="#<%- data.project.projectId %>/settings" class="mem-set">
+                <a href="#<%- data.project.projectId %>/settings" class="mem-set" data-js-settings-icon>
                     <i class="material-icons">settings</i>
                 </a>
             </li>

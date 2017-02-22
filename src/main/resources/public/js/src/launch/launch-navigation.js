@@ -265,7 +265,6 @@ define(function (require, exports, module) {
         onRefresh: function (e) {
             e.preventDefault();
             this.navigationInfo.trigger('navigation::reload::table', {scrollTop: $('.fixed_header').hasClass('affix') ? $('body').getNiceScroll(0).newscrolly : 0});
-            config.trackingDispatcher.refreshGrid(this.navigationInfo.length);
             this.resetCounter();
         },
 
@@ -306,11 +305,7 @@ define(function (require, exports, module) {
             }
             var title = el.attr('title');
             if(!title) return;
-            if(~title.indexOf('Next')) {
-                config.trackingDispatcher.nextPreviousTest('Next');
-            }else if(~title.indexOf('Previous')) {
-                config.trackingDispatcher.nextPreviousTest('Previous');
-            }
+
         },
 
         showFor: function (button) {
@@ -1051,7 +1046,6 @@ define(function (require, exports, module) {
                 callback: function (response, lastLaunch) {
                     this.updateGrid(response, lastLaunch);
                     this.cancelMerge();
-                    config.trackingDispatcher.launchesMerge(this.launches.length);
                 }.bind(this)
             }).render();
         },

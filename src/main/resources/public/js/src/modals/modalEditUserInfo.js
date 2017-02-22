@@ -127,7 +127,7 @@ define(function (require, exports, module) {
                     }
                     self.isSubmit = false;
                     self.hide();
-                    config.trackingDispatcher.profileInfoEdit();
+                    // config.trackingDispatcher.profileInfoEdit();
                 })
                 .fail(function (error) {
                     var type = 'submitProfileInfo',

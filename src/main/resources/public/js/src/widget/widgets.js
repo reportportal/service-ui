@@ -182,7 +182,7 @@ define(function (require, exports, module) {
                 self.renderWidget(response);
                 var gadget = self.getGadgetType();
                 if(gadget){
-                    config.trackingDispatcher.widgetRefresh(gadget);
+                    // config.trackingDispatcher.widgetRefresh(gadget);
                 }
             });
         },
@@ -204,9 +204,9 @@ define(function (require, exports, module) {
                     var model = self.model.toJSON(),
                         gadget = self.getGadgetType();
                     if (gadget) {
-                        config.trackingDispatcher.widgetRemoveType(gadget);
+                        // config.trackingDispatcher.widgetRemoveType(gadget);
                     }
-                    config.trackingDispatcher.widgetRemoveIsShared(model.isShared);
+                    // config.trackingDispatcher.widgetRemoveIsShared(model.isShared);
                 }
 
                 dash.deleteWidget(id, function () {

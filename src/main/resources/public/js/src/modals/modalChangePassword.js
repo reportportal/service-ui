@@ -84,7 +84,7 @@ define(function (require, exports, module) {
             Service.submitPassChange(data)
                 .done(function () {
                     Util.ajaxSuccessMessenger('submitChangePass');
-                    config.trackingDispatcher.profilePasswordChanged();
+                    // config.trackingDispatcher.profilePasswordChanged();
                     self.hide();
                 })
                 .fail(function (error) {

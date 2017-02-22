@@ -46,7 +46,7 @@ define(function (require, exports, module) {
         statusTpl: 'tpl-launch-suite-item-status',
         events: {
             'click [data-js-name-link]': 'onClickName',
-            'click [data-js-launch-menu]:not(.rendered)': 'showItemMenu',
+            'click [data-js-launch-menu]': 'showItemMenu',
             'click [data-js-time-format]': 'toggleStartTimeView',
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
@@ -243,14 +243,17 @@ define(function (require, exports, module) {
                 model: this.model, el: $('[data-js-statistics-system-issue]', this.$el), type: 'system_issue'});
         },
         showItemMenu: function (e) {
-            var $link = $(e.currentTarget);
-            this.menu = new LaunchItemMenuView({
-                model: this.model
-            });
-            $link
-                .after(this.menu.$el)
-                .addClass('rendered')
-                .dropdown();
+            config.trackingDispatcher.trackEventNumber(24);
+            if(!$(e.currentTarget).hasClass('rendered')) {
+                var $link = $(e.currentTarget);
+                this.menu = new LaunchItemMenuView({
+                    model: this.model
+                });
+                $link
+                    .after(this.menu.$el)
+                    .addClass('rendered')
+                    .dropdown();
+            }
         },
         onClickTag: function(e) {
             var tag = $(e.currentTarget).data('js-tag');
@@ -274,6 +277,7 @@ define(function (require, exports, module) {
             }
         },
         onClickName: function(e) {
+            config.trackingDispatcher.trackEventNumber(23);
             e.preventDefault();
             var href = $(e.currentTarget).attr('href');
             if(href != '') {

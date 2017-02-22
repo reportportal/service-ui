@@ -425,7 +425,7 @@ define(function (require, exports, module) {
         },
         openFullscreenDashboard: function (event) {
             event.preventDefault();
-            config.trackingDispatcher.dashboardFullScreen(this.currentDashboard.get('isShared'));
+
 
             var self = this;
             var content = $('#dynamic-content');
@@ -559,7 +559,6 @@ define(function (require, exports, module) {
                         .done(function () {
                             self.trigger('onRemoveDashboard', id);
                             Util.ajaxSuccessMessenger('dashboardDelete');
-                            config.trackingDispatcher.dashboardDel(isShared);
                         })
                         .fail(function (error) {
                             Util.ajaxFailMessenger(error, 'dashboardDelete');
@@ -1234,7 +1233,6 @@ define(function (require, exports, module) {
                 .done(function (data) {
                     self.createNewDashboard(data, dashboard);
                     Util.ajaxSuccessMessenger('dashboardAdded');
-                    config.trackingDispatcher.dashboardAdd(shared);
                 })
                 .fail(function (request) {
                     if (request.status !== 401) {
@@ -1456,7 +1454,6 @@ define(function (require, exports, module) {
             Storage.setActiveDashboard(lastActive);
             config.router.navigate(Urls.redirectToDashboard(this.activeId), {trigger: false});
             if (this.activeId) {
-                config.trackingDispatcher.dashboardSwitched(dashboard.get('owner') !== config.userModel.get('name'));
             }
         },
 

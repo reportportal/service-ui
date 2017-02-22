@@ -23,6 +23,10 @@ define(function (require, exports, module) {
 
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var App = require('app');
+    var Localization = require('localization');
+
+    var config = App.getInstance();
 
 
     var FilterLabelView = Epoxy.View.extend({
@@ -48,8 +52,18 @@ define(function (require, exports, module) {
         },
         setTooltip: function () {
             if (this.model.get('description')) {
-                Util.appendTooltip(this.model.get('description'), $('[data-js-filter-comment]', this.$el), this.$el);
+                Util.appendTooltip(this.model.get('description'), $('[data-js-filter-comment]', this.$el), this.$el,
+                function() { config.trackingDispatcher.trackEventNumber(18); });
             }
+            Util.appendTooltip(Localization.launches.filterIsSharedByOtherUser, $('[data-js-filter-not-my]', this.$el), this.$el,
+                function() { config.trackingDispatcher.trackEventNumber(19); });
+            Util.appendTooltip(Localization.launches.filterIsShared, $('[data-js-filter-shared]', this.$el), this.$el,
+                function() { config.trackingDispatcher.trackEventNumber(20); });
+            Util.appendTooltip(Localization.filters.notSaveDescription, $('[data-js-filter-not-save]', this.$el), this.$el,
+                function() { config.trackingDispatcher.trackEventNumber(21); });
+
+
+
         },
         update: function () {
             this.setTooltip();
