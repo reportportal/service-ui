@@ -1,0 +1,52 @@
+<div class="row rp-table-row <%= (data.isCollapsedMethod ? 'collapse-method' : '') %>" data-js-status-class>
+    <div class="grid-cell time-grid-cell method-type-grid-cell">
+        <span class="text-muted" data-js-method-type></span>
+    </div>
+    <div class="grid-cell name-grid-cell">
+        <div class="name-grid-overflow">
+            <h5 class="rp-grid-name">
+                <a href="" data-js-name-link><span data-js-name></span><span data-js-launch-number></span></a>&nbsp;&nbsp;<i class="item-edit-icon material-icons" data-js-item-edit>edit</i>
+            </h5>
+            <ul class="rp-grid-tags">
+                <li class="rp-item-duration" >
+                    <span data-js-item-status></span>
+                    <span class="mobile-tag">&nbsp;&nbsp;|&nbsp;&nbsp;<span data-js-time-from-now></span></span>
+                </li>
+                <li title="Owner" class="rp-launch-owner owner" data-js-owner-block>
+                    <i class="material-icons">person</i>
+                    <a data-js-owner-name></a>
+                </li>
+                <li class="rp-launch-tags" data-js-tags-container>
+                    <i class="rp-icons rp-icons-ticket"></i>
+                    <span data-js-tags></span>
+                </li>
+                <li class="mobile-tag">
+                    <span>@</span><span data-js-method-type></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span data-js-status></span>
+                </li>
+            </ul>
+            <div class="rp-grid-description" data-js-description></div>
+        </div>
+    </div>
+    <div class="grid-cell status-grid-cell"><strong data-js-status></strong></div>
+    <div class="grid-cell time-grid-cell">
+        <div data-js-time-format class="pr-grid-show-time">
+            <span class="hidden-sm hidden-md hidden-lg"><b><%= data.text.launches.prefixStartTime %></b></span>
+            <span class="from-now" data-js-time-from-now></span>
+            <span class="exact-time" data-js-time-exact></span>
+        </div>
+    </div>
+    <!--<div class="grid-cell status-grid-cell" data-js-item-status></div>-->
+    <% if(!data.noIssue){ %>
+    <div class="grid-cell type-grid-cell" data-js-step-issue></div>
+    <div class="grid-cell select-grid-cell" data-js-select-cell>
+        <div class="table-wrapper">
+            <div class="middle-wrapper">
+                <label class="rp-checkbox-wrap">
+                    <input class="rp-input-checkbox" type="checkbox" data-js-select-item>
+                    <span></span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>

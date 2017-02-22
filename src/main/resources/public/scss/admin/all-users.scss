@@ -1,0 +1,390 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.rp-admin-all-users {
+  .all-users-actions {
+    @extend %CLEAR_FIX;
+
+    .all-users-filter {
+      padding: 20px 0;
+      float: left;
+      width: 100%;
+      max-width: 310px;
+
+      .rp-input-search-wrap {
+        .input-filter {
+          margin: 0;
+        }
+      }
+    }
+    .all-users-buttons {
+      padding: 20px 0;
+      float: right;
+
+      .rp-btn {
+        float: right;
+        margin-left: 10px;
+      }
+    }
+  }
+  .all-users-table {
+    .rp-grid-thead {
+      border-top: 1px solid $COLOR--gray-91;
+      .users-actions {
+        text-align: center;
+      }
+      .user-row-inner {
+        margin-right: 80px;
+        @extend %CLEAR_FIX;
+      }
+    }
+    .user-row {
+      padding: 10px 0;
+      background-color: transparent;
+      min-height: 50px;
+
+      &:hover {
+        background-color: transparent;
+        @media (min-width: $SCREEN_SM_MIN) {
+          .user-wrap {
+            .user-info {
+              .user-name {
+                max-width: calc(100% - 80px);
+              }
+              .make-admin {
+                display: inline-block;
+              }
+            }
+          }
+        }
+      }
+      .user-row-inner {
+        margin-right: 80px;
+        border-right: 1px solid $COLOR--gray-91;
+        @extend %CLEAR_FIX;
+      }
+      .grid-cell {
+        padding-bottom: 10px;
+        padding-top: 10px;
+      }
+    }
+    .name-grid-cell {
+      width: 40%;
+    }
+    .login-grid-cell {
+      width: 25%;
+    }
+    .role-grid-cell {
+      width: 35%;
+    }
+    .action-grid-cell {
+      width: 80px;
+      padding-right: 15px;
+      float: right;
+    }
+
+    .user-wrap {
+      @extend %CLEAR_FIX;
+
+      .user-avatar {
+        float: left;
+        max-width: 40px;
+        min-height: 50px;
+        img {
+          width: 100%;
+          height: auto;
+        }
+      }
+      .user-info {
+        margin: 0 0 0 55px;
+        font-size: 13px;
+
+        .user-you, .user-admin, .make-admin {
+          display: inline-block;
+          margin: 0;
+          font-size: 10px;
+          color: $COLOR--white-default;
+          line-height: 12px;
+          font-weight: 400;
+          position: relative;
+          top: -10px;
+          display: inline-block;
+          padding: 0 6px 2px;
+          white-space: nowrap;
+          border-radius: 100px;
+          text-transform: lowercase;
+          letter-spacing: .6px;
+          &:hover, :active {
+            text-decoration: none;
+          }
+        }
+        .user-admin {
+          background: $COLOR--orange-red;
+          &.notlink {
+            cursor: default;
+          }
+        }
+        .user-you {
+          background: $COLOR--dark-pastel-green;
+        }
+        .make-admin {
+          background: $COLOR--gray-47;
+          display: none;
+        }
+        .user-name, .user-login, .user-email {
+          margin: 0;
+          padding: 0;
+          font-weight: normal;
+          text-transform: capitalize;
+          display: inline-block;
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .user-email {
+          a {
+            color: $COLOR--windows-blue;
+          }
+        }
+        .user-login {
+          text-transform: none;
+          font-weight: 600;
+        }
+      }
+    }
+    .user-title-mobile {
+      display: none;
+      font-size: 12px;
+      margin-right: 6px;
+      text-transform: uppercase;
+    }
+    .login-time {
+      font-size: 13px;
+      display: inline-block;
+      padding-top: 22px;
+
+      .from-now {
+        display: none;
+      }
+      &:hover {
+        .exact-time {
+          display: none;
+        }
+        .from-now {
+          display: inline-block;
+        }
+      }
+    }
+    &.show-from-now {
+      .login-time {
+        line-height: 1.5;
+        font-size: 13px;
+
+        .exact-time {
+          display: none;
+        }
+        .from-now {
+          display: inline-block;
+        }
+        &:hover {
+          .exact-time {
+            display: inline-block;
+          }
+          .from-now {
+            display: none;
+          }
+        }
+      }
+    }
+    .users-actions {
+      text-align: center;
+      .remove-user {
+        display: inline-block;
+        color: $COLOR--gray-60;
+        padding-top: 20px;
+
+        .rp-icons-delete {
+          width: 20px;
+          height: 20px;
+          font-size: 18px;
+          line-height: 20px;
+        }
+      }
+    }
+    .users-project-roles {
+      padding-top: 16px;
+      & > .rp-btn-default {
+        &.active {
+          background: $COLOR--topaz;
+        }
+      }
+      .users-project-mobile {
+        display: none;
+        p {
+          overflow: hidden;
+          -ms-text-overflow: ellipsis;
+          text-overflow: ellipsis;
+          padding: 0 0 16px;
+          margin: 0;
+          font-size: 14px;
+
+          span {
+            white-space: nowrap;
+            color: $COLOR--gray-47;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-right: 6px;
+          }
+        }
+      }
+    }
+    .clear-for-projects-list {
+      width: 100%;
+      @extend %CLEAR_FIX;
+    }
+    .user-projects-list {
+      margin: 0 70px 0 47%;
+      .user-projects-table {
+        background: $COLOR--white-default;
+        border: 1px solid $COLOR--gray-80;
+        border-radius: 2px;
+        margin-bottom: -16px;
+        position: relative;
+        top: -22px;
+        .user-projects-row {
+          padding: 10px 0;
+          margin: 0 10px;
+          border: none;
+          border-top: 1px solid $COLOR--gray-91;
+          background: none;
+          &:hover {
+            background: none;
+          }
+          &:first-child {
+            border: none;
+          }
+        }
+
+        .project-name-cell {
+          width: 38%;
+          padding: 0 15px 0 5px;
+        }
+        .project-role-cell {
+          width: 37%;
+          padding: 0 15px;
+        }
+        .project-action-cell {
+          width: 25%;
+          padding: 0 5px 0 15px;
+          text-align: right;
+          .rp-btn-default {
+            float: right;
+            .rp-btn-val {
+              width: 68px;
+              text-align: center;
+            }
+          }
+        }
+        .project-name {
+          padding: 6px 0;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+        .project-select {
+          .select2-container .select2-choice .select2-chosen {
+            padding: 0;
+          }
+        }
+        .user-select-role {
+          width: 100%;
+          max-width: 250px;
+          position: relative;
+
+          .dropdown-menu {
+            & > li {
+              a.active, a.active:hover {
+                background: $COLOR--gray-91;
+                cursor: default;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    .all-users-actions {
+      display: none;
+    }
+    .all-users-table {
+      .rp-grid-thead {
+        display: none;
+      }
+      .action-grid-cell {
+        display: none;
+      }
+      .user-row {
+        .user-row-inner {
+          margin: 0;
+          border: none;
+        }
+        .grid-cell {
+          padding-top: 8px;
+          padding-bottom: 8px;
+        }
+      }
+      .name-grid-cell {
+        width: 100%;
+      }
+      .login-grid-cell {
+        width: 100%;
+      }
+      .role-grid-cell {
+        width: 100%;
+      }
+      .user-wrap {
+        .user-info {
+          font-size: 15px;
+          line-height: 1.0;
+        }
+      }
+      .users-project-roles {
+        padding-top: 0;
+        .rp-btn.rp-btn-default {
+          display: none;
+        }
+        .users-project-mobile {
+          display: block;
+        }
+      }
+      .user-projects-list {
+        display: none;
+      }
+      .login-time {
+        padding: 0;
+        font-size: 14px;
+      }
+      .user-title-mobile {
+        display: inline-block;
+      }
+    }
+  }
+}

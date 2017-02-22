@@ -1,0 +1,257 @@
+.modal-defect-editor {
+  .modal-content-wrapper {
+    .pr-defect-editor {
+      padding: 30px 15px 10px;
+      .container-fluid {
+        margin: 0;
+        padding: 0;
+        @media (max-width: 768px) {
+          padding-left: 100px;
+          .rp-defect-type-label {
+            position: absolute;
+            margin-left: -100px;
+          }
+          .rp-defect-type-btn-group {
+            max-width: none;
+            width: 100%;
+            .rp-defects-menu {
+              width: 100%;
+            }
+          }
+        }
+
+      }
+
+      .text-editor {
+        .markItUpHeader {
+          background-color: #f5f5f5;
+
+          @media (max-width: 615px)  {
+            .markItUpButton14 + .markItUpSeparator,
+            .markItUpButton15,
+            .markItUpButton16 {
+              display: none;
+            }
+          }
+          @media (max-width: 535px)  {
+            .markItUpButton12 + .markItUpSeparator,
+            .markItUpButton13,
+            .markItUpButton14 {
+              display: none;
+            }
+          }
+          @media (max-width: 455px)  {
+            .markItUpButton10 + .markItUpSeparator,
+            .markItUpButton11,
+            .markItUpButton12 {
+              display: none;
+            }
+          }
+          @media (max-width: 380px)  {
+            .markItUpButton1,
+            .markItUpButton2,
+            .markItUpButton3,
+            .markItUpButton4,
+            .markItUpButton5,
+            .markItUpButton6,
+            .markItUpButton7,
+            .markItUpButton7 + .markItUpSeparator {
+              display: none;
+            }
+
+            .markItUpButton8,
+            .markItUpButton9,
+            .markItUpButton10 {
+              border-right: solid 1px #cccccc;
+              margin: 0;
+              padding-left: 10px;
+              padding-right: 10px;
+            }
+
+            .markItUpButton8 {
+              padding-left: 0;
+            }
+          }
+        }
+      }
+
+      .rp-defect-type-dropdown.btn {
+        background: #fff;
+        border: solid 1px $COLOR--gray-80;
+        padding: 5px 26px 5px 5px;
+        &:hover {
+          border-color: $COLOR--gray-47;
+        }
+        &:focus {
+          border-color: $COLOR--topaz;
+          outline: none;
+          box-shadow: none;
+        }
+
+        .pr-defect-type-badge {
+          color: #464547;
+          position: relative;
+          padding: 0 10px 0 24px;
+          word-break: break-all;
+          display: inline-block;
+          border-radius: 100px;
+          background-color: #fff;
+          border: 1px solid #ccc;
+          font-family: OpenSansSemibold,sans-serif;
+          min-height: 20px;
+          line-height: 18px;
+
+           i {
+             display: inline-block;
+             width: 12px;
+             height: 12px;
+             margin: 0;
+             content: '';
+             position: absolute;
+             left: 6px;
+             top: 50%;
+             transform: translateY(-50%);
+             border-radius: 100px;
+           }
+        }
+
+        .caret {
+          position: absolute;
+          top: 50%;
+          margin-top: -1px;
+          right: 10px;
+          color: #000;
+        }
+      }
+      .open {
+        .rp-defect-type-dropdown {
+          .caret {
+            transform: rotate(180deg);
+          }
+        }
+
+      }
+      .rp-defect-type-label {
+        padding-top: 9px;
+      }
+      .rp-defect-row-first {
+        border-bottom: 1px solid #e9e9e9;
+        padding: 7px 3px 10px;
+        margin-bottom: 7px;
+      }
+      .rp-defect-type-btn-group {
+        float: right;
+        width: 100%;
+        max-width: 440px;
+        @media (max-width: 590px) {
+          max-width: none;
+        }
+      }
+      .rp-defect-type-dropdown {
+        width: 100%;
+        float: none;
+        text-align: left;
+        display: inline-block;
+      }
+      .rp-defects-menu {
+        width: 550px;
+        left: auto;
+        right: 0;
+        font-size: 13px;
+        padding: 8px 10px 10px;
+
+        @media (max-width: 590px) {
+          width: 100%;
+        }
+        .divider {
+          margin: 8px 0;
+          float: left;
+          width: 100%;
+          box-sizing: content-box;
+          display: none;
+        }
+      }
+      .rp-defect-row {
+        padding: 3px;
+        margin: 0 -15px;
+
+        label {
+          position: relative;
+          font-weight: normal;
+          display: inline-block;
+          font-size: 12px;
+          word-break: break-all;
+          -ms-text-overflow: ellipsis;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          padding: 2px 7px 0 21px;
+          min-height: 20px;
+          border: 1px solid transparent;
+          border-radius: 100px;
+          cursor: pointer;
+          margin: 0;
+
+          &:hover {
+            border-color: #ccc;
+          }
+
+          &.selected {
+            font-weight: 600;
+            cursor: default;
+            border-color: #ccc;
+          }
+          i {
+            display: block;
+            width: 12px;
+            height: 12px;
+            border-radius: 100px;
+            position: absolute;
+            left: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+          }
+        }
+      }
+
+      .rp-defect-row-first {
+        border-bottom: 1px solid #e9e9e9;
+        padding: 7px 3px 10px;
+        margin-bottom: 7px;
+      }
+      .rp-defect-editor-bottom {
+        padding: 5px 0 2px;
+        text-align: right;
+        .replace-comments {
+          float: left;
+          span {
+            font-size: 12px;
+          }
+        }
+        .hot-keys-wrapper {
+          @media (max-width: 590px) {
+            clear: both;
+            text-align: left;
+            span:first-child {
+              margin-left: 0;
+            }
+          }
+          .hot-keys {
+            color: #999;
+            font-size: 12px;
+            margin: 0 10px;
+          }
+        }
+
+      }
+    }
+    .modal-footer {
+      @media (max-width: 320px) {
+        text-align: center;
+
+        .rp-btn {
+          width: 120px;
+        }
+      }
+    }
+  }
+}

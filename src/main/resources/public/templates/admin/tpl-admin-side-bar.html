@@ -1,8 +1,9 @@
+<div class="sidebar-close" data-js-sidebar-close></div>
 <span class="logo">
     <i class="sprite sprite-logo"></i>
     <!-- <span><%= data.text.topMenu.reportPortal %></span> -->
 </span>
-<nav>
+<nav data-js-scroll-container class="admin-side-bar">
     <ul class="main-menu" id="adminBar">
         <li>
             <a href="#administrate/projects"
@@ -29,8 +30,31 @@
             </a>
         </li>
     </ul>
+    <ul class="user-menu">
+        <% if (data.lastURL) { %>
+            <li class="<%= isActive %> col-xs-6 col-sm-12">
+                <a href="#<%- data.lastURL %>" class="mem-set user-id">
+                    <i class="material-icons">chevron_left</i>
+                    <%= data.text.admin.backToProject %>
+                </a>
+            </li>
+        <% } %>
+        <li class="<%= isActive %> col-xs-6 col-sm-12">
+            <a href="#user-profile" class="mem-set user-id">
+                <i class="material-icons">person</i>
+                <span class="custom-padding"><%= data.text.topMenu.profile %></span>
+            </a>
+        </li>
+        <li class="<%= isActive %> col-xs-6 col-sm-12">
+            <a href="#login" id="logout" >
+                <i class="rp-icons rp-icons-logout fsize-23"></i>
+                <span class="custom-padding"><%= data.text.topMenu.logout %></span>
+            </a>
+        </li>
+    </ul>
 </nav>
-<a id="back-top" class="hidden-xs" title="Back to Top" style="display: none;">
+</nav>
+<a id="back-top" class="hidden-xs" title="<%= data.text.ui.backToTop %>" style="display: none;" global-back-top>
     <nobr>
         <span id="btt-span"><%= data.text.ui.backToTop %></span>
     </nobr>

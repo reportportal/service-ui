@@ -1,0 +1,30 @@
+<div class="grid-cell project-name-cell">
+    <div class="project-name" data-js-project></div>
+</div>
+<div class="grid-cell project-role-cell">
+    <div class="user-select-role">
+        <div class="rp-btn-group rp-width-100">
+            <button type="button" class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle" data-toggle="dropdown">
+                <span class="select-value" data-js-project-role></span>
+                <span class="rp-caret"></span>
+            </button>
+            <ul class="dropdown-menu" data-js-dropdown-roles>
+                <% _.each(data.roles, function(role, roleId){ %>
+                <li>
+                    <a href="#" class="roles-option" data-value="<%= roleId %>">
+                        <%= role %>
+                    </a>
+                </li>
+                <% }); %>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="grid-cell project-action-cell">
+    <div class="rp-btn rp-btn-default rp-button-with-icon" title="<%= data.text.members.unAssignTitle %>" data-js-unassign>
+        <i class="rp-icons rp-icons-unassign"></i>
+        <span class="hidden-md hidden-sm hidden-xs rp-btn-val">
+            <%= data.text.members.unAssign %>
+        </span>
+    </div>
+</div>

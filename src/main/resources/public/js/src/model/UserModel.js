@@ -22,12 +22,13 @@
 
 define(function(require, exports, module) {
     var $ = require('jquery');
-    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
     var Service = require('coreService');
     var Storage = require('storageService');
     var SingletonURLParamsModel = require('model/SingletonURLParamsModel');
+    var SingletonAppModel = require('model/SingletonAppModel');
     require('cookie');
     require('base64');
 
@@ -37,7 +38,7 @@ define(function(require, exports, module) {
         if(!instance) instance = new UserModel;
         return instance
     };
-    var UserModel = Backbone.Model.extend({
+    var UserModel = Epoxy.Model.extend({
 
         defaults: {
             auth: false,
@@ -57,12 +58,21 @@ define(function(require, exports, module) {
             lastInsideHash: null,
             token: 'Basic dWk6dWltYW4=',
         },
+        computeds: {
+            isAdmin: {
+                deps: ['userRole'],
+                get: function(userRole) {
+                    return userRole === config.accountRolesEnum.administrator;
+                }
+            }
+        },
 
         initialize: function () {
             this.ready = $.Deferred();
             this.listenTo(this, 'change:lastInsideHash', this.onChangeLastInsideHash);
             this.set({'token': this.getToken()});
             this.listenTo(this, 'change:token', this.onChangeToken);
+            this.appModel = new SingletonAppModel();
 
             // this.loadSession();
             // this.isLogin = false;
@@ -124,27 +134,46 @@ define(function(require, exports, module) {
             if(hash == 'null') return false;
             return hash;
         },
+        isValidNotEmptyJSON: function (src) {
+            if (!src.length) {
+                return false;
+            }
+            var filtered = src;
+            filtered = filtered.replace(/\\["\\\/bfnrtu]/g, '@');
+            filtered = filtered.replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, ']');
+            filtered = filtered.replace(/(?:^|:|,)(?:\s*\[)+/g, '');
+
+            return (/^[\],:{}\s]*$/.test(filtered));
+        },
         load: function(){
             var self = this;
-
             this.updateInfo()
-                .done(function(){
-                    self.updateProjects()
-                        .done(function(){
-                            self.set({
-                                'lastInsideHash': self.getAnonymousHash() || self.getLastInsideHashStorage() ||
-                                self.getDefaultProjectHash()
-                            });
-                            self.set({auth: true});
+                .done(function(response, textStatus, jqXHR){
+                    if (self.isValidNotEmptyJSON(jqXHR.responseText)) {
+                        self.updateProjects()
+                            .done(function(){
+                                self.set({
+                                    'lastInsideHash': self.getAnonymousHash() || self.getLastInsideHashStorage() ||
+                                    self.getDefaultProjectHash()
+                                });
+                                self.set({auth: true});
 
-                            self.ready.resolve();
-                        })
-                        .fail(function(){
-                            self.set(self.defaults);
-                            self.ready.resolve();
-                        })
+                                self.ready.resolve();
+                            })
+                            .fail(function(){
+                                self.set(self.defaults);
+                                self.ready.resolve();
+                            })
+                    } else {
+                        self.clearSession();
+                        Util.ajaxFailMessenger(null, 'defaults');
+                    }
                 })
-                .fail(function(){
+                .fail(function(response){
+                    if (!self.isValidNotEmptyJSON(response.responseText) && self.getToken() !== 'Basic dWk6dWltYW4=') {
+                        self.clearSession();
+                        Util.ajaxFailMessenger(null, 'defaults');
+                    }
                     self.set(self.defaults);
                     setTimeout(function() { self.ready.resolve(); });
                 });
@@ -160,7 +189,6 @@ define(function(require, exports, module) {
                 userRole: response.userRole,
                 photo_loaded: response.photo_loaded,
                 image: config.apiVersion + 'data/photo?' + response.userId + '?at=' + Date.now(),
-            //
                 user_login: response.userId
             }
         },
@@ -214,12 +242,6 @@ define(function(require, exports, module) {
                     Util.ajaxFailMessenger(error, 'updateDefaultProject');
                 });
         },
-
-        // makeBaseAuth: function (login, pass) {
-        //     var tok = login + ':' + pass;
-        //     var hash = Base64.encode(tok);
-        //     return "Basic " + hash;
-        // },
         login: function (login, pass) {
             login = login.toLowerCase();
             var self = this;
@@ -251,7 +273,7 @@ define(function(require, exports, module) {
 
         hasPermissions: function (incomingProjectRole) {
 
-            var project = this.get('projects')[config.project.projectId];
+            var project = this.get('projects')[this.appModel.get('projectId')];
 
             if (Util.isAdmin(config.userModel.toJSON())) {
                 return true;
@@ -271,6 +293,14 @@ define(function(require, exports, module) {
                 permission = projectRoleIndex >= incomingProjectRoleIndex;
             }
             return permission;
+        },
+        getRoleForCurrentProject: function() {
+            var project = this.get('projects')[this.appModel.get('projectId')];
+            var role = '';
+            if(project) {
+                role = project.projectRole
+            }
+            return role;
         },
 
 

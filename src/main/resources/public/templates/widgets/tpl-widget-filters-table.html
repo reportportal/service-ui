@@ -1,6 +1,6 @@
-<div class="filter-table-panel">
+<div class="launches-table-panel">
     <% if (data.items && !_.isEmpty(data.items)) { %>
-    <div class="container-fluid rp-margin-reset rp-odd-even rp-table-hover">
+    <div class="container-fluid">
         <div class="row rp-grid-thead hidden-xs">
             <div class="col-xs-12 col-sm-5 nopadding">
                 <div class="col-xs-12 col-sm-6">
@@ -71,41 +71,37 @@
                 </div>
             </div>
         </div>
-        <div class="rp-margin-reset">
         <% _.each(data.items, function(item){ %>
         <% var id = item.id, projectUrl = data.project.projectId; %>
         <div class="row rp-table-row" id="<%= id %>">
             <div class="col-xs-12 col-sm-5 nopadding">
                 <div class="col-xs-12 col-sm-6">
                     <h5 class="rp-grid-name">
-                        <a class="navigateable rp-blue-link-undrl" href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50/<%= id %>">
+                        <a class="navigateable rp-blue-link-undrl" href="#<%- projectUrl %>/launches/all/<%= id %>">
                             <%- item.name %>
+                            <%- (item.number) ? '#' + item.number : '' %>
                         </a>
-                        <%- (item.number) ? '#' + item.number : '' %>
                     </h5>
                     <% if(item.description){ %>
-                    <pre class="rp-grid-description nicescroll-it"><%- item.description %></pre>
+                    <div class="rp-grid-description nicescroll-it"><%- item.description %></div>
                     <% } %>
-                    <div class="rp-grid-tags tags">
-                        <small class="">
-                            <% if(item.userRef){ %>
-                         <span title="Owner" class="text-muted text-capitalize">
+                    <ul class="rp-grid-tags">
+                        <% if(item.userRef){ %>
+                        <li title="Owner" class="rp-launch-owner owner">
                             <i class="material-icons">person</i>
-                            <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.in.user=<%- item.userRef %>" data-tag="<%- item.userRef %>" class="text-muted tag"><%- item.userRef %></a>
-                        </span>
-                            <br class="visible-xs-block">
-                            <% } %>
-                            <% var tags = item.tags %>
-                            <% if(tags){ %>
-                        <span class="text-muted">
-                            <i class="material-icons">local_offer</i>
+                            <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.in.user=<%- item.userRef %>" data-js-user-tag data-tag="<%- item.userRef %>"><%- item.userRef %></a>
+                        </li>
+                        <% } %>
+                        <% var tags = item.tags %>
+                        <% if(tags){ %>
+                        <li class="rp-launch-tags" data-js-tags-container>
+                            <i class="rp-icons rp-icons-ticket"></i>
                             <% _.each(tags.split(','), function(tag){ %>
-                            <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.has.tags=<%- tag %>" data-tag="<%- tag %>" class="text-muted tag"><%- tag %></a>
+                            <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.has.tags=<%- tag %>" data-js-tag data-tag="<%- tag %>" class="text-muted tag"><%- tag %></a>
                             <% }); %>
-                        </span>
-                            <% } %>
-                        </small>
-                    </div>
+                        </li>
+                        <% } %>
+                    </ul>
                 </div>
                 <div class="col-xs-12 col-sm-2 ftp-cols">
                     <% if (item.status) { %>
@@ -212,12 +208,14 @@
                                 stats = 'product_bug',
                                 link = data.linkToRedirectService('productBug', id),
                                 value = product_bugs; %>
-                            <div class="pr-grid-defect-stats" data-defect-type="<%= stats %>" id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
-                                <a href="<%- link %>" class="pr-grid-defect-link">
-                                    <svg></svg>
-                                    <span class="pr-grid-defect-total" style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
-                                        <%= total %>
-                                    </span>
+                            <div class="launch-suite-defects" data-js-launch-defect data-defect-type="<%= stats %>" id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
+                                <a href="<%- link %>" class="chart-overflow">
+                                    <svg data-js-chart></svg>
+                                    <div class="total-overflow">
+                                        <span class="pr-grid-defect-total" style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
+                                            <%= total %>
+                                        </span>
+                                    </div>
                                 </a>
                             </div>
                             <span class="visible-xs cases-view ">
@@ -243,12 +241,14 @@
                                 stats = 'automation_bug',
                                 link = data.linkToRedirectService('automationBug', id),
                                 value = test_bugs; %>
-                            <div class="pr-grid-defect-stats" data-defect-type="<%= stats %>" id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
-                                <a href="<%- link %>" class="pr-grid-defect-link">
-                                    <svg></svg>
-                                    <span class="pr-grid-defect-total" style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
-                                        <%= total %>
-                                    </span>
+                            <div class="launch-suite-defects" data-js-launch-defect data-defect-type="<%= stats %>" id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
+                                <a href="<%- link %>" class="chart-overflow">
+                                    <svg data-js-chart></svg>
+                                    <div class="total-overflow">
+                                        <span class="pr-grid-defect-total" style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
+                                            <%= total %>
+                                        </span>
+                                    </div>
                                 </a>
                             </div>
                             <span class="visible-xs cases-view ">
@@ -274,12 +274,14 @@
                                 stats = 'system_issue',
                                 link = data.linkToRedirectService('systemIssue', id),
                                 value = system_issue; %>
-                            <div class="pr-grid-defect-stats" data-defect-type="<%= stats %>" id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
-                                <a href="<%- link %>" class="pr-grid-defect-link">
-                                    <svg></svg>
-                                    <span class="pr-grid-defect-total" style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
-                                        <%= total %>
-                                    </span>
+                            <div class="launch-suite-defects" data-js-launch-defect data-defect-type="<%= stats %>" id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
+                                <a href="<%- link %>" class="chart-overflow">
+                                    <svg data-js-chart></svg>
+                                    <div class="total-overflow">
+                                        <span style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
+                                            <%= total %>
+                                        </span>
+                                    </div>
                                 </a>
                             </div>
                             <span class="visible-xs cases-view ">
@@ -327,7 +329,6 @@
             </div>
         </div>
         <% }) %>
-        </div>
     </div>
     <% } else { %>
         <div class="no-data-error"><%= data.text.widgets.noData %></div>

@@ -32,8 +32,8 @@ define(function (require, exports, module) {
         return call('GET', Urls.adminProject(id));
     };
 
-    var getProjectInfo = function () {
-        return call('GET', Urls.getProject());
+    var getProjectInfo = function (id) {
+        return call('GET', Urls.getProject(id));
     };
 
     var getProjects = function (data) {
@@ -65,7 +65,7 @@ define(function (require, exports, module) {
 
     var getSearchUser = function (options) {
         return call('GET', Urls.searchUsersUrl(options))
-    }
+    };
 
     var loadProjectDetailsWidgets = function (project, id, interval) {
         return call('GET', Urls.projectDetailsWidgets(project, id, interval));
@@ -75,8 +75,24 @@ define(function (require, exports, module) {
         return call('GET', Urls.getAdminSettings(data));
     };
 
+    var deleteEmailSettings = function (data) {
+        return call('DELETE', Urls.deleteEmailSettings(data));
+    };
+
     var setAdminSettings = function (data, id) {
-        return call('PUT', Urls.setAdminSettings(id), data);
+        return call('POST', Urls.setAdminSettings(id), data);
+    };
+
+    var getAuthSettings = function () {
+        return call('GET', Urls.adminAuthSettings());
+    };
+
+    var setAuthSettings = function (data) {
+        return call('PUT', Urls.adminAuthSettings(), data);
+    };
+
+    var deleteAuthSettings = function(data){
+        return call('DELETE', Urls.adminAuthSettings());
     };
 
     var loadProjectInfo = function (id, value) {
@@ -111,10 +127,14 @@ define(function (require, exports, module) {
         deleteProject: deleteProject,
         getAdminSettings: getAdminSettings,
         setAdminSettings: setAdminSettings,
+        deleteEmailSettings: deleteEmailSettings,
         getProjectNames: getProjectNames,
         getAllUser: getAllUser,
         getSearchUser: getSearchUser,
         loadProjectInfo: loadProjectInfo,
-        loadProjectDetailsWidgets: loadProjectDetailsWidgets
+        loadProjectDetailsWidgets: loadProjectDetailsWidgets,
+        getAuthSettings: getAuthSettings,
+        setAuthSettings: setAuthSettings,
+        deleteAuthSettings: deleteAuthSettings,
     }
 });

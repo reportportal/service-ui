@@ -1,0 +1,127 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+.modal-permissions-map {
+
+  .modal-dialog {
+    width: 900px;
+    @media (max-width: $SCREEN_MD_MAX) {
+      width: 800px;
+    }
+    @media (max-width: $SCREEN_SM_MAX) {
+      width: 600px;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      width: 100%;
+    }
+
+  }
+  .modal-body {
+    margin: 0 -10px;
+    padding: 20px 0 0;
+  }
+  .rp-permissions-map {
+    border-top: 1px solid $COLOR--gray-91;
+    overflow: hidden;
+
+    .permissions-map-table {
+      width: 100%;
+      max-width: 100%;
+      border-spacing: 0;
+      border-collapse: collapse;
+      & > thead > tr > th {
+        vertical-align: middle;
+        padding: 4px 4px 5px;
+        box-shadow: inset 0 -1px 0 0 $COLOR--gray-91;
+        text-align: center;
+        background: $COLOR--white;
+
+        text-transform: uppercase;
+        font-size: 12px;
+        color: $COLOR--gray-47;
+        &.roles-th {
+          box-shadow: inset 0 -1px 0 0 $COLOR--gray-91;
+          border-left: 1px solid $COLOR--gray-91;
+        }
+      }
+      & > tbody > tr {
+        &:nth-of-type(even) {
+          background: $COLOR--white-four;
+        }
+        &:hover {
+          background: $COLOR--gray-91;
+        }
+        & > td {
+          text-align: center;
+          padding: 9px 10px 11px;
+          box-shadow: inset 0 -1px 0 0 $COLOR--gray-91;
+          width: 9%;
+
+          &:first-child {
+            text-align: right;
+            width: 37%;
+            padding-right: 15px;
+            font-size: 14px;
+          }
+          &.has-permission {
+            background: $COLOR--has-permission;
+            border-left: 1px solid #deebbc;
+            border-right: 1px solid #deebbc;
+            box-shadow: inset 0 -1px 0 0 #deebbc;
+            color: #7f993a;
+            .rp-icons-check {
+              font-size: 11px;
+              line-height: 11px;
+              width: 11px;
+              height: 11px;
+              position: relative;
+            }
+          }
+          .check-attention {
+            display: inline-block;
+            position: relative;
+            .attention {
+              position: absolute;
+              left: 100%;
+              margin-left: 6px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .permission-attention {
+    margin: 10px 15px;
+    span {
+      display: table-cell;
+    }
+    .attention {
+      padding-right: 4px;
+    }
+
+  }
+  .attention {
+    position: relative;
+    color: $COLOR--gray-47;
+    top: -6px;
+    letter-spacing: 1px;
+    display: inline-block;
+  }
+}

@@ -1,0 +1,16 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.dialogHeader.regenerateUUID}) %>
+<div class="modal-body">
+    <p class="warning">
+        <strong><%= data.text.userProfile.msgRegenMid %></strong>
+    </p>
+    <p><%= data.text.userProfile.msgRegenFoot %>.</p>
+
+</div>
+<div class="modal-footer">
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.cancel %>
+    </button>
+    <button class="rp-btn rp-btn-submit" type="button" data-js-ok>
+        <%= data.text.ui.ok %>
+    </button>
+</div>

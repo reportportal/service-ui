@@ -24,16 +24,14 @@ define(function (require, exports, module) {
 
     var $ = require('jquery');
     var Backbone = require('backbone');
-    var Util = require('util');
-    var Components = require('components');
     var App = require('app');
-    var Service = require('adminService');
-    var Main = require('mainview');
-    var Projects = require('projects');
-    var Users = require('users');
-    var Settings = require('settings');
     var UserModel = require('model/UserModel');
-    // var Localization = require('localization');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
+
+    var Header = require('sections/header');
+    var Content = require('sections/content');
+    var Sidebar = require('sections/sidebar');
+    var Footer = require('sections/footer');
 
     var config = App.getInstance();
 
@@ -41,44 +39,40 @@ define(function (require, exports, module) {
         initialize: function (options) {
             this.$el = options.el;
             this.contextName = 'admin';
-            this.setupAnchors();
+            this.$body = $("#mainContainer", this.$el);
             this.user = new UserModel();
+
+            this.userStorage = new SingletonUserStorage();
         },
 
         events: {
             'click #logout': 'onClickLogout'
         },
 
-        setupAnchors: function () {
-            this.$header = $("#topHeader", this.$el);
-            this.$body = $("#mainContainer", this.$el);
-            this.$side = $("#pageSidebar", this.$el);
-        },
-
-        sideBarTpl: 'tpl-admin-side-bar',
-        headerTpl: 'tpl-admin-header',
-
         render: function (options) {
             config.currentProjectsSettings = {};
-            this.$side.html(Util.templates(this.sideBarTpl, {
-                page: options.page
-            })).show();
-            // Util.setupScrollTracker();
-            var returnProject = config.project.projectId || config.userModel.get('defaultProject');
-            this.$header.html(Util.templates(this.headerTpl, {project: returnProject})).show();
-            this.footerView = new Main.Footer().render();
-            this.contentView = new ContentView({
+            var lastURL = this.userStorage.get('lastActiveURL') || config.userModel.get('defaultProject');
+
+            this.headerView = new Header({
+                isAdminPage: true,
+                tpl: 'tpl-admin-header',
+                currentPage: options.page,
+                lastURL: lastURL
+            }).render();
+
+            this.contentView = new Content({
+                isAdminPage: true,
+                contextName: this.contextName,
                 el: this.$body,
                 queryString: options.queryString
             }).render(options);
-            this.$side.on('click', '.main-menu a', function (e) {
-                e.preventDefault;
-                config.currentProjectsSettings.sorting = '';
-                config.currentProjectsSettings.search = '';
-                config.router.navigate($(e.currentTarget).attr('href'), {trigger: true});
-                // Backbone.history.loadUrl($(e.currentTarget).attr('href'));
-                // window.location.hash = $(e.currentTarget).attr('href');
-            });
+
+            this.footerView = new Footer().render();
+
+            this.sidebarView = new Sidebar({
+                tpl: 'tpl-admin-side-bar',
+                lastURL: lastURL
+            }).render();
             return this;
         },
 
@@ -88,83 +82,23 @@ define(function (require, exports, module) {
         },
 
         update: function (options) {
-            this.$side.html(Util.templates(this.sideBarTpl, {
-                page: options.page
-            }));
-            // Util.setupScrollTracker();
             this.contentView.update(options);
+            this.headerView.update(options);
         },
 
         destroy: function () {
             this.contentView.destroy();
-            this.$header.off().empty().hide();
-            this.$side.off().empty().hide();
+            this.contentView = null;
+            this.sidebarView.destroy();
+            this.sidebarView = null;
+            this.headerView.destroy();
+            this.headerView = null;
             this.footerView.destroy();
+            this.footerView = null;
+
+            this.undelegateEvents();
+            this.stopListening();
             this.$el && this.$el.off();
-        }
-    });
-
-    var ContentView = Backbone.View.extend({
-        initialize: function (options) {
-            this.$el = options.el;
-            this.page = options.page;
-            this.action = options.action;
-            this.queryString = options.queryString;
-        },
-
-        shellTpl: 'tpl-admin-body',
-        buttonsTpl: 'tpl-admin-menu',
-
-        render: function (options) {
-            this.$el.html(Util.templates(this.shellTpl));
-            this.$container = $("#dynamicContent", this.$el);
-            this.setupPageView(options);
-            return this;
-        },
-
-        update: function (options) {
-            if(this.page !== options.page || this.action !== options.action) {
-                this.pageView.destroy();
-                this.page = options.page;
-                this.action = options.action;
-                this.setupPageView(options);
-            } else {
-                this.pageView.update(options);
-            }
-        },
-
-        setupPageView: function (options) {
-            this.page = options.page;
-            var pageView = this.getViewForPage(options);
-            options['el'] = this.$container;
-            this.pageView = new pageView(options).render();
-        },
-
-        getViewForPage: function (options) {
-            if(options.page === 'users') {
-                return Users.ContentView;
-            } else if (options.page === 'project-details') {
-                return Projects.ProjectDetails;
-            } else if (options.page === 'settings') {
-                return Settings.ContentView;
-            } else {
-                var key = options.page+'-'+options.action;
-                switch (key) {
-                    case "projects-add":
-                    case "projects-settings":
-                    case "projects-members":
-                        return Projects.Project;
-                        break;
-                    default:
-                        return Projects.List;
-                        break;
-                }
-            }
-        },
-
-        destroy: function () {
-            this.pageView.destroy();
-            this.$el.off().empty();
         }
     });
 

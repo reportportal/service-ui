@@ -1,0 +1,52 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.launches.mergeLaunches}) %>
+<div class="modal-body">
+
+    <h4><%= data.text.launches.mergeLaunchesModalTitle %></h4>
+    <div class="fields">
+        <div class="rp-form-group name">
+            <span class="field-caption"><%= data.text.launches.launchName %></span>
+            <input type="text" id="mergeName" class="rp-input-default" value="<%- data.name %>">
+            <span class="help-inline"></span>
+        </div>
+        <div class="rp-form-group owner">
+            <span class="field-caption"><%= data.text.forms.owner %></span>
+            <input type="text" class="rp-input-default" value="<%- data.owner %>" disabled="disabled">
+        </div>
+        <div class="rp-form-group description">
+            <span class="field-caption"><%= data.text.forms.description %></span>
+            <textarea id="mergeDescription" class="rp-input-default" rows="3" data-js-description><%= data.description
+                    %></textarea>
+            <span class="help-inline"></span>
+        </div>
+        <div class="rp-form-group tags">
+            <span class="field-caption"><%= data.text.forms.tags %></span>
+            <input type="text" class="rp-input-default" id="mergeTags" data-warning="<%= data.text.ui.enterChars %>"
+                    placeholder="" value="<%= data.tags.join(',') %>"/>
+        </div>
+        <div class="rp-form-group start-time">
+            <span class="field-caption"><%= data.text.forms.startTime %></span>
+            <input type="text" class="rp-input-default" value="<%- data.dateFormat(data.startTime) %>" disabled="disabled">
+        </div>
+        <div class="rp-form-group end-time">
+            <span class="field-caption"><%= data.text.forms.endTime %></span>
+            <input type="text" class="rp-input-default" value="<%- data.dateFormat(data.endTime) %>" disabled="disabled">
+        </div>
+        <div class="rp-form-group extended">
+            <label class="rp-checkbox-wrap">
+                <input class="rp-input-checkbox" type="checkbox" id="extendWithOriginal" name="extendWithOriginal">
+                <span><%= data.text.launches.extendWithOriginal %></span>
+            </label>
+        </div>
+    </div>
+    <div class="preloader">
+        <i class="material-icons loader-animation">refresh</i>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.cancel %>
+    </button>
+    <button class="rp-btn rp-btn-submit" type="button" data-js-submit>
+        <%= data.text.ui.merge %>
+    </button>
+</div>

@@ -49,6 +49,7 @@ define([
 
     var getPreferences = function () {
         return call('GET', urls.getPreferences());
+        return call('GET', urls.getPreferences())
     };
 
     var getProfileImage = function (url) {
@@ -80,7 +81,8 @@ define([
     };
 
     var deleteDashboard = function (id, isShared) {
-        var url = isShared ? urls.favoritesByResourceId(id) : urls.dashboardById(id);
+        // var url = isShared ? urls.favoritesByResourceId(id) : urls.dashboardById(id);
+        var url = urls.dashboardById(id);
         return call('DELETE', url);
     };
 
@@ -140,11 +142,15 @@ define([
     var getSharedWidgetData = function (id) {
         return call('GET', urls.widgetById(id));
     };
-
+    var saveFilter = function(query) {
+        return call('GET', urls.saveFilter(query));
+    };
     var getOwnFilters = function () {
         return call('GET', urls.ownFilters());
     };
-
+    var getFilterNames = function(){
+        return call('GET', urls.filterNames());
+    };
     var getSharedFilters = function () {
         return call('GET', urls.sharedFilters());
     };
@@ -164,6 +170,9 @@ define([
     var loadWidget = function (url) {
         return call('GET', url);
     };
+    var loadDashboardWidget = function(widgetId) {
+        return call('GET', urls.getProjectBase() + '/widget/' + widgetId);
+    }
 
     var updateDefaultProject = function (project) {
         return call('PUT', urls.userUrl(), {default_project: project}, null, true);
@@ -301,6 +310,10 @@ define([
         return call('PUT', urls.generateUUID());
     };
 
+    var gitHubForceUpdate = function(data){
+        return call('POST', urls.updateGitHubProfile());
+    };
+
     var searchLaunches = function (query) {
         return call('GET', urls.queryByLaunchName(query.term));
     };
@@ -364,6 +377,7 @@ define([
         getSharedWidgetData: getSharedWidgetData,
         getOwnFilters: getOwnFilters,
         getSharedFilters: getSharedFilters,
+        getFilterNames: getFilterNames,
         getFilterData: getFilterData,
         createDashboard: createDashboard,
         deleteDashboard: deleteDashboard,
@@ -389,6 +403,8 @@ define([
         loadHistory: loadHistory,
         loadActivityItems: loadActivityItems,
 
+        saveFilter: saveFilter,
+
         saveWidget: saveWidget,
         updateWidget: updateWidget,
         addWidgetToDashboard: addWidgetToDashboard,
@@ -399,6 +415,7 @@ define([
         getTestItemInfo: getTestItemInfo,
         getTestItemsInfo: getTestItemsInfo,
         getLaunchItem: getLaunchItem,
+        loadDashboardWidget: loadDashboardWidget,
 
         updateProject: updateProject,
         updateEmailProjectSettings: updateEmailProjectSettings,
@@ -424,6 +441,8 @@ define([
 
         deletePhoto: deletePhoto,
         generateUUID: generateUUID,
+        gitHubForceUpdate: gitHubForceUpdate,
+
         deleteLaunch: deleteLaunch,
         deleteTestItem: deleteTestItem,
         

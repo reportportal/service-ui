@@ -21,11 +21,7 @@
 
 /*--- USER PROFILE ---*/
 
-#dynamic-content {
-    .pr-user-profile {
-        padding: 15px 0 0;
-        background: none !important;
-
+.pr-user-profile {
         .media,
         .media-body {
             overflow: inherit;
@@ -401,7 +397,6 @@
             }
         }
     }
-}
 
 /*--- END USER PROFILE ---*/
 

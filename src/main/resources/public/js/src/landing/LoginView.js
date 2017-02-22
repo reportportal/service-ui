@@ -57,7 +57,17 @@ define(function(require, exports, module) {
             'click #submit_change:not(.disabled)': 'submitChangePass'
         },
         bindings: {
-            '[data-js-build-versions]': 'html: fullServicesHtml'
+            '[data-js-build-versions]': 'html: fullServicesHtml',
+            '[data-js-github-login]': 'classes: {hide: validateGitHubAuth}',
+            '[data-js-github-login-btn]': 'attr: {disabled: validateGitHubAuth}'
+        },
+        computeds: {
+            validateGitHubAuth: {
+                deps: ['authExtensions'],
+                get: function(authExtensions){
+                    return !_.contains(authExtensions, 'github');
+                }
+            }
         },
         initialize: function (options) {
             this.user = new UserModel();
@@ -131,7 +141,7 @@ define(function(require, exports, module) {
                         ? 'submitForgotPassRestricted'
                         : 'submitForgotPass';
 
-                    if (error.responseText.indexOf('40010') > -1) {
+                    if (error.responseText.indexOf('40010') > -1 || error.responseText.indexOf(Localization.failMessages.serverNotConfigured) > -1) {
                         type = 'submitForgotPassBrokenConf';
                     };
 
@@ -169,8 +179,8 @@ define(function(require, exports, module) {
             this.$resetForm = $("#reset-form", this.$el);
             this.$form = $(".rp-form-group:first", this.$resetForm);
             this.$submitReset = $("#submit_change", this.$el);
-            // ui.ui.showLogin();
-            Util.confirmValidator({holder: this.$form, min: 4, max: 25, firstCheckLength: true});
+            var passwordRange = config.forms.passwordRange;
+            Util.confirmValidator({holder: this.$form, min: passwordRange[0], max: passwordRange[1], firstCheckLength: true});
             var self = this;
             this.$form.on('validation::change', function (e, data) {
                 var submitAction = data.valid ? 'remove' : 'add';
@@ -233,15 +243,18 @@ define(function(require, exports, module) {
         submitForm: function () {
             var checkLogin = /^[A-Za-z0-9_]/,
                 login = this.cutIfEmail(this.$login.val()),
-                pass = this.$pass.val();
+                pass = this.$pass.val(),
+                loginRange = config.forms.nameRange,
+                passwordRange = config.forms.passwordRange;
 
-            if (!checkLogin.test(login)) {
-                this.$login.focus();
-                this.showError(Localization.ui.wrongcharacters);
-                return false;
-            } else if (login.length > 128) {
+            if (login.length < loginRange[0] || login.length > loginRange[1]) {
                 this.$login.focus();
                 this.showError(Localization.ui.wronglength);
+                return false;
+            }
+            else if (!checkLogin.test(login)) {
+                this.$login.focus();
+                this.showError(Localization.ui.wrongcharacters);
                 return false;
             }
             if (!pass) {
@@ -249,7 +262,7 @@ define(function(require, exports, module) {
                 this.showError(Localization.forms.passwordEmpty);
                 return false;
             }
-            else if(pass.length < 4 || pass.length > 25){
+            else if(pass.length < passwordRange[0] || pass.length > passwordRange[1]){
                 this.$pass.focus();
                 this.showError(Localization.forms.passwordSize);
                 return false;

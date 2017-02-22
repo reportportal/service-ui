@@ -1,0 +1,41 @@
+<% if(!data.isCustomer){ %>
+    <% if(!_.isUndefined(data.item.mode)){ %>
+        <li>
+            <a data-js-switch-mode></a>
+        </li>
+    <% } %>
+<% } %>
+<li>
+    <a data-js-finish><%= data.text.launches.forceFinish %></a>
+</li>
+<% if(!data.isDebug){ %>
+    <li data-js-can-match>
+        <a data-js-can-match data-js-start-analyze data-type="match">
+            <%= data.text.launches.matchTitle %>
+        </a>
+    </li>
+<% } %>
+<% if(!data.isDebug){ %>
+    <li data-js-can-analyze>
+        <a data-js-can-analyze data-js-start-analyze data-analyze-type="analyze">
+            <%= data.text.ui.analyze %>
+        </a>
+    </li>
+<% } %>
+<li>
+    <a data-js-remove>
+        <%= data.text.ui.delete %>
+    </a>
+</li>
+<% if(data.exportFormats){ %>
+    <li role="separator" class="divider"></li>
+    <li class="rp-export-launch-group">
+        <span class="rp-export-label"><%= data.text.launches.export %>:</span>
+        <div class="rp-export-btn-group">
+            <% _.each(data.exportFormats, function(f){ %>
+            <a href="<%= data.updateImagePath(data.getExportUrl(data.item.id, f)) %>" download
+               data-js-can-export class="rp-btn rp-btn-default"><%= f %></a>
+            <% }); %>
+        </div>
+    </li>
+<% } %>

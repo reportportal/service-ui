@@ -56,15 +56,19 @@ define(function(require, exports, module) {
 
         initialize: function(){
             this.model = new LendingModel();
+            this.scrollElement = config.mainScrollElement;
             this.render();
             this.listenTo(this.landingHeader, 'clickMenu', this.onClickMenu);
             this.listenTo(this.landingHeader, 'clickDocumentation', this.onClickDocumentation);
             this.currentShow = '';
-            this.scrollElement = config.mainScrollElement;
         },
         render: function() {
             this.$el.html(Util.templates(this.tpl));
             this.landingHeader = new LandingHeader({el: $('header.b-header', this.$el), model: this.model});
+            this.setupAnchors();
+        },
+        setupAnchors: function(){
+            this.socialBlock = $('[data-js-social-block]', this.$el);
         },
         
         showLoginBlock: function(){
@@ -139,9 +143,15 @@ define(function(require, exports, module) {
             }else {
                 this.model.set({darkMenu: false});
             }
+            if (scrollTop > (this.el.scrollHeight - this.scrollerAnimate.documentHeight - 30)) {
+                this.socialBlock.addClass('hide');
+            } else {
+                this.socialBlock.removeClass('hide');
+            }
         },
         onClickMenu: function(href) {
             this.showParallax();
+            this.socialBlock.removeClass('hide');
             config.router.navigate('', {trigger: false});
             var $scrollElement = $(href);
             if($scrollElement){

@@ -1,0 +1,55 @@
+<% function getItemHtml(name, shortName) {
+return '<div class="table-wrapper">' +
+    '<div class="middle-wrapper">' +
+        '<span class="text-overflow">' +
+                        '<span class="long-size">' + name + '</span>' +
+                        '<span class="short-size" title="' + name + '">' + shortName + '</span>&nbsp;' +
+                        '<div class="sort-icon-wrapper">' +
+                            '<i class="material-icons">keyboard_arrow_up</i>' +
+                            '<i class="material-icons">keyboard_arrow_down</i>' +
+                        '</div>' +
+                    '</span>' +
+        '</div>' +
+    '</div>';
+} %>
+
+<div class="launch-log-items-wrapper" data-js-logs-wrapper>
+    <div class="filters-block">
+        <div class="filter-entity-wrapper" data-js-select-filter></div>
+        <label class="rp-checkbox-wrap attachments-filter">
+            <input class="rp-input-checkbox" type="checkbox" data-js-attachments-filter>
+            <span><%= data.text.logs.filterAttachments %></span>
+        </label>
+        <div class="min-paging" data-js-paginate-min-container></div>
+        <div class="rp-nav rp-nav-right" data-js-next-error-container></div>
+    </div>
+
+
+    <div class="rp-table-grid log-grid rp-odd-even rp-table-hover">
+        <div class="row rp-grid-thead fixed_table_header" data-js-fixed-header>
+            <div class="grid-cell message-grid-cell rp-grid-th">
+                <%= getItemHtml(data.text.launchesHeaders.message, data.text.launchesHeaders.message_short) %>
+                <div class="filter-name-block">
+                    <div data-js-name-filter></div>
+                    <i class="material-icons">search</i>
+                </div>
+            </div>
+            <div class="grid-cell attachment-grid-cell rp-grid-th">
+                <%= getItemHtml(data.text.launchesHeaders.attachment, data.text.launchesHeaders.attachment_short) %>
+            </div>
+            <div class="grid-cell time-grid-cell rp-grid-th" data-sorter="time">
+                <%= getItemHtml(data.text.launchesHeaders.time, data.text.launchesHeaders.time_short) %>
+            </div>
+        </div>
+        <div class="row" data-js-table-container></div>
+
+    </div>
+    <div data-js-paginate-container></div>
+    <div class="preloader launch-log-grid-preloader">
+        <i class="material-icons loader-animation">refresh</i>
+    </div>
+    <div class="no-result-found">
+        <i class="rp-icons rp-icons-warning"></i>
+        <span><%= data.text.ui.noResultsFound %></span>
+    </div>
+</div>

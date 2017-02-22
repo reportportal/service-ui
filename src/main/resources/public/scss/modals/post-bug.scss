@@ -1,0 +1,168 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+.modal-post-bug {
+  .modal-header {
+    .beta-badge {
+      top: 0;
+      left: 75px;
+    }
+  }
+  .modal-body {
+    padding-right: 75px;
+    padding-top: 33px;
+
+    .project-selector-field {
+      padding-left: 39px;
+
+      & > .rp-control-label {
+        width: 150px;
+        span {
+          display: inline !important;
+        }
+      }
+      .btn-group {
+        margin-left: 20px;
+        width: 280px;
+      }
+      .label-post-to {
+        margin-left: 20px;
+      }
+    }
+
+    .bts-fields {
+      padding-left: 39px;
+
+      .rp-form-group {
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .bts-field-label {
+          width: 150px;
+        }
+        .bts-field-input {
+          width: 280px;
+          margin-left: 20px;
+        }
+      }
+    }
+
+    .required-fields-error {
+      margin-left: 210px;
+      margin-top: 10px;
+      .rp-form-group {
+        margin-bottom: 0;
+
+        .help-inline {
+          margin-top: 0;
+        }
+      }
+    }
+    .static-content {
+      padding-top: 30px;
+      padding-bottom: 15px;
+
+      .include-data {
+        margin-bottom: 16px;
+        .rp-form-title {
+          padding-left: 19px;
+        }
+        .rp-form-group {
+          padding-left: 150px;
+
+          .switch-field {
+            width: 99px;
+            float: left;
+            margin-right: 21px;
+
+            &:last-child {
+              margin-right: 0;
+            }
+
+            .rp-control-label {
+              width: 100%;
+              text-align: left;
+            }
+
+            .rp-switcher-big {
+              width: 100%;
+            }
+          }
+        }
+      }
+
+      .credentials-section {
+        .rp-form-title {
+          padding-left: 19px;
+        }
+
+        .auth-type-selector {
+          margin-top: 6px;
+          margin-bottom: 17px;
+
+          label {
+            text-align: left;
+            padding-left: 68px;
+          }
+
+          .dropdown {
+            display: block;
+            width: 280px;
+            margin-left: 17px;
+          }
+        }
+
+        .credentials {
+          .rp-form-group {
+            padding-left: 40px;
+
+            .rp-control-label {
+              width: 150px;
+            }
+            .bts-property {
+              display: inline-block;
+              margin-left: 18px;
+              width: 280px;
+            }
+            textarea {
+              height: 50px;
+            }
+
+            &.has-error {
+
+            }
+          }
+        }
+      }
+
+      .credentials-error-block {
+        padding-left: 208px;
+      }
+    }
+  }
+
+  .modal-footer {
+    padding: 10px 8px;
+    .rp-btn {
+      min-width: 68px;
+    }
+  }
+}

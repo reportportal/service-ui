@@ -1,38 +1,32 @@
-<% var UsersDisabled = data.id ? '' : 'disabled'; %><ul class="rp-nav-right rp-nav-tabs" role="tablist">    <% if (data.btnVisible.btnPermissionMap != false ) { %>
-        <li class="tab-permissions-map float-right margin-left-10 rp-item-li-fix-height">
-            <button data-js-show-permissions-map
-                class="rp-btn rp-btn-default-revers rp-button-with-icon"
-                title="<%= data.text.project.openPermissionsMap %>">
-                <i class="material-icons">lock_open</i>
-                <span class="hidden-xs rp-btn-val"><%= data.text.members.permissionsMap %></span>
-            </button>
-        </li>
-    <% } %>    <% if (data.btnVisible.btnProjectSettings != false ) { %>
-        <li role="presentation"
-            class="tab-settings float-right margin-left-10 rp-item-li-fix-height <%= data.tab === 'settings' ? 'active' : '' %>">
-            <a href="#administrate/projects/<%= data.id %>/settings/general"
-                data-target="#projectSettings"
-                data-action="settings"
-                aria-controls="home"
-                role="tab"
-                data-toggle="tab"
-                class="rp-btn rp-btn-default-revers rp-button-with-icon tab">
-                <i class="material-icons">settings</i>
-                <span class="hidden-xs rp-btn-val"><%= data.text.ui.settings %></span>
-            </a>
-        </li>
-    <% } %>    <% if (data.btnVisible.btnProjectMembers != false ) { %>
-        <li role="presentation"
-            class="tab-members float-right margin-left-10 rp-item-li-fix-height <%= data.tab === 'members' ? 'active' : '' %> <%= UsersDisabled %>">
-            <a href="#administrate/projects/<%= data.id %>/members/assigned"
-                data-target="#projectUsers"
-                data-action="members"
-                aria-controls="profile"
-                role="tab"
-                data-toggle="tab"
-                class="rp-btn rp-btn-default-revers rp-button-with-icon tab <%= UsersDisabled %>">
-                <i class="rp-icons rp-icons-all-users"></i>
-                <span class="hidden-xs rp-btn-val"><%= data.text.admin.projectMembers %></span>
-            </a>
-        </li>
-    <% } %></ul>
+<% var UsersDisabled = data.id ? '' : 'disabled'; %>
+<ul class="rp-nav-right rp-nav-tabs" role="tablist">
+    <% if (data.btnVisible.btnProjectSettings != false ) { %>
+    <li role="presentation"
+        class="tab-settings float-right margin-left-10 rp-item-li-fix-height <%= data.tab === 'settings' ? 'active' : '' %>">
+        <a href="#administrate/projects/<%= data.id %>/settings/general"
+           data-target="#projectSettings"
+           data-action="settings"
+           aria-controls="home"
+           role="tab"
+           data-toggle="tab"
+           class="rp-btn rp-btn-default-revers rp-button-with-icon tab">
+            <i class="material-icons">settings</i>
+            <span class="hidden-xs rp-btn-val"><%= data.text.ui.settings %></span>
+        </a>
+    </li>
+    <% } %> <% if (data.btnVisible.btnProjectMembers != false ) { %>
+    <li role="presentation"
+        class="tab-members float-right margin-left-10 rp-item-li-fix-height <%= data.tab === 'members' ? 'active' : '' %> <%= UsersDisabled %>">
+        <a href="#administrate/projects/<%= data.id %>/members/assigned"
+           data-target="#projectUsers"
+           data-action="members"
+           aria-controls="profile"
+           role="tab"
+           data-toggle="tab"
+           class="rp-btn rp-btn-default-revers rp-button-with-icon tab <%= UsersDisabled %>">
+            <i class="rp-icons rp-icons-all-users"></i>
+            <span class="hidden-xs rp-btn-val"><%= data.text.admin.projectMembers %></span>
+        </a>
+    </li>
+    <% } %>
+</ul>

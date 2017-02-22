@@ -23,22 +23,17 @@ define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
-    var App = require('app');
-
-    var config = App.getInstance();
 
     var call = function (type, url, data, dataInHeader, cancelProtected) {
         var Util = require('util');
         var data = dataInHeader
             ? data
             : data ? JSON.stringify(data) : {};
-
         var settings = {
             type: type,
             url: url,
             data: data,
         };
-
         if(cancelProtected) {
             settings.beforeSend = function(req) {
                 req.persistant = true;

@@ -24,11 +24,12 @@ define(function(require, exports, module) {
 
     var $ = require('jquery');
     var Backbone = require('backbone');
-    var Components = require('components');
+    var Components = require('core/components');
     var Util = require('util');
     var App = require('app');
     var Service = require('memberService');
     var Main = require('mainview');
+    var Footer = require('sections/footer');
     var Localization = require('localization');
     var urls = require('dataUrlResolver');
     var UserModel = require('model/UserModel');
@@ -58,9 +59,8 @@ define(function(require, exports, module) {
 
         render: function (options) {
             this.$side.html(Util.templates(this.sideBarTpl, {})).show();
-            // Util.setupScrollTracker();
             this.$header.html(Util.templates(this.headerTpl)).show();
-            this.footerView = new Main.Footer().render();
+            this.footerView = new Footer().render();
             this.contentView = new ContentView({
                 el: this.$body,
                 id: this.id,

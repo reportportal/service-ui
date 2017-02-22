@@ -34,11 +34,14 @@ define(function (require, exports, module) {
         FiltersService = require('filtersService'),
         Moment = require('moment'),
         WidgetsConfig = require('widget/widgetsConfig'),
-        Components = require('components'),
+        SingletonAppModel = require('model/SingletonAppModel'),
+        Components = require('core/components'),
         Localization = require('localization'),
-        SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+        SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection'),
+        SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection'),
+        ModalConfirm = require('modals/modalConfirm');
 
-    require('jqueryUI');
+    // require('jqueryUI');
     require('elasticColumns');
     require('select2');
 
@@ -185,32 +188,34 @@ define(function (require, exports, module) {
         },
         deleteWidget: function (e) {
             e.preventDefault();
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    var self = this;
-                    var dash = this.navigationInfo.getCurrentDashboard();
-                    var grid = $('.grid-stack:first').data('gridstack');
-                    var id = this.getId();
-
-                    if (self.model && !_.isEmpty(self.model.attributes)) {
-                        var model = self.model.toJSON(),
-                            gadget = self.getGadgetType();
-                        if(gadget){
-                            config.trackingDispatcher.widgetRemoveType(gadget);
-                        }
-                        config.trackingDispatcher.widgetRemoveIsShared(model.isShared);
+            var self = this;
+            var dash = this.navigationInfo.getCurrentDashboard();
+            var grid = $('.grid-stack:first').data('gridstack');
+            var id = this.getId();
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.deletedWidget,
+                bodyText: Util.replaceTemplate(Localization.dialog.deletedWidget, this.getName()),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
+            });
+            modal.show().done(function() {
+                if (self.model && !_.isEmpty(self.model.attributes)) {
+                    var model = self.model.toJSON(),
+                        gadget = self.getGadgetType();
+                    if (gadget) {
+                        config.trackingDispatcher.widgetRemoveType(gadget);
                     }
+                    config.trackingDispatcher.widgetRemoveIsShared(model.isShared);
+                }
 
-                    dash.deleteWidget(id, function () {
-                        grid.remove_widget(self.$el);
-                        self.navigationInfo.trigger("dashboard::widget::deleted", {});
-                        self.destroy();
-                        dash.updateWidgets(grid.grid.nodes);
-                        Util.ajaxSuccessMessenger('deletedWidget');
-                    });
-                }.bind(this),
-                message: 'sureToRemoveWidget',
-                format: [Localization.ui.widgetSm, this.getName().escapeHtml()]
+                dash.deleteWidget(id, function () {
+                    grid.remove_widget(self.$el);
+                    self.navigationInfo.trigger("dashboard::widget::deleted", {});
+                    self.destroy();
+                    dash.updateWidgets(grid.grid.nodes);
+                    Util.ajaxSuccessMessenger('deletedWidget');
+                });
             });
         },
         editWidget: function (e) {
@@ -359,57 +364,68 @@ define(function (require, exports, module) {
         },
         linkToRedirectService: function (series, id) {
             var defectTypes = new SingletonDefectTypeCollection();
+            var appModel = new SingletonAppModel()
+            var project = '#' + appModel.get('projectId');
+            var filterId = this.param.filter_id;
+            var filterStatus = '';
+            var getLink = function(filters){
+                var arrLink = [project, 'launches/all'];
+                var filterForAll = '?page.page=1&page.size=50&page.sort=start_time&filter.eq.has_childs=false';
+                var params = [[id, filterForAll].join('')];
+                params.push(filters);
+                arrLink.push(params.join('&'));
+                return arrLink.join('/');
+            };
             var getDefects = function(seria){
                 var typeArr = seria.split(' '),
                     type = _.map(typeArr, function(t){ return t.toLowerCase();}).join('_'),
                     subDefects = defectTypes.toJSON();
                 return Util.getSubDefectsLocators(type, subDefects);
             };
-
             switch (series) {
                 case 'Total':
                 case 'total':
                 case 'Grow test cases':
                 case 'grow_test_cases':
-                    return urls.totalAllCasesLink(id);
+                    filterStatus = 'filter.in.type=STEP&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED';
                     break;
                 case 'Passed':
                 case 'passed':
-                    return urls.passedAllCasesLink(id);
+                    filterStatus = 'filter.in.type=STEP&filter.in.status=PASSED';
                     break;
                 case 'Failed':
                 case 'failed':
-                    return urls.failedAllCasesLink(id);
+                    filterStatus = 'filter.in.type=STEP&filter.in.status=FAILED';
                     break;
                 case 'Skipped':
                 case 'skipped':
-                    return urls.skippedAllCasesLink(id);
+                    filterStatus = 'filter.in.type=STEP&filter.in.status=SKIPPED';
                     break;
                 case 'To Investigate':
                 case 'to_investigate':
                 case 'toInvestigate':
-                    return urls.toInvestigateAllCasesLink(id, getDefects('To Investigate'));
+                    filterStatus = ['filter.in.issue$issue_type=', getDefects('To Investigate')].join('');
                     break;
                 case 'System Issue':
                 case 'systemIssue':
                 case 'system_issue':
-                    return urls.systemIssueAllCasesLink(id, getDefects('System Issue'));
+                    filterStatus = ['filter.in.issue$issue_type=', getDefects('System Issue')].join('');
                     break;
                 case 'Product Bug':
                 case 'productBug':
                 case 'product_bug':
-                    return urls.productBugsAllCasesLink(id, getDefects('Product Bug'));
+                    filterStatus = ['filter.in.issue$issue_type=', getDefects('Product Bug')].join('');
                     break;
                 case 'No Defect':
                 case 'noDefect':
                 case 'no_defect':
-                    return urls.noDefectAllCasesLink(id, getDefects('No Defect'));
+                    filterStatus = ['filter.in.issue$issue_type=', getDefects('No Defect')].join('');
                     break;
                 case 'Automation Bug':
                 case 'Auto Bug':
                 case 'automationBug':
                 case 'automation_bug':
-                    return urls.automationBugsAllCasesLink(id, getDefects('Automation Bug'));
+                    filterStatus = ['filter.in.issue$issue_type=', getDefects('Automation Bug')].join('');
                     break;
                 case 'Investigated':
                 case 'investigated':
@@ -418,19 +434,22 @@ define(function (require, exports, module) {
                     _.each(types, function(d){
                         defects = defects.concat(getDefects(d));
                     });
-                    return urls.investigatedBugsAllCasesLink(id, defects);
+                    filterStatus = ['filter.in.issue$issue_type=', defects].join('');
                     break;
                 case 'Duration':
                 case 'duration':
-                    return urls.goLauch(id);
+                    filterStatus = '';
                     break;
                 default :
                     var defect = _.find(defectTypes.toJSON(), function(d){ return d.locator == series; });
                     if (defect) {
-                        return urls.investigatedBugsAllCasesLink(id, [defect.locator]);
+                        filterStatus = ['filter.in.issue$issue_type=', defect.locator].join('');
                     }
-                    return '';
+                    else {
+                        filterStatus = '';
+                    }
             }
+            return encodeURI(getLink(filterStatus));
         },
         destroy: function () {
             if (this.context) {
@@ -520,7 +539,7 @@ define(function (require, exports, module) {
                 project: config.project,
                 getDefectColor: this.getDefectColor,
                 defectTypes: this.defectTypes,
-                linkToRedirectService: this.linkToRedirectService,
+                linkToRedirectService: this.linkToRedirectService.bind(this),
                 dateFormat: Util.dateFormat,
                 moment: Moment
             };
@@ -533,7 +552,9 @@ define(function (require, exports, module) {
         },
 
         events: {
-            'mouseenter .pr-grid-defect-stats': 'showDefectTooltip',
+            'mouseenter [data-js-launch-defect]': 'showDefectTooltip',
+            'click [data-js-tag]': 'onClickTag',
+            'click [data-js-user-tag]': 'onClickUserTag',
         },
 
         showDefectTooltip: function (e) {
@@ -544,11 +565,27 @@ define(function (require, exports, module) {
                 this.createDefectTooltip(el, type);
             }
         },
+        onClickTag: function(e) {
+            e.preventDefault();
+            var tagName = $(e.currentTarget).data('tag');
+            this.goToLaunchWithFilter('tags', tagName);
+        },
+        onClickUserTag: function(e) {
+            e.preventDefault();
+            var userName = $(e.currentTarget).data('tag');
+            this.goToLaunchWithFilter('user', userName);
+        },
+        goToLaunchWithFilter: function(filterName, filterValue) {
+            var launchFilterCollection = new SingletonLaunchFilterCollection();
+            var tempFilterModel = launchFilterCollection.generateTempModel();
+            config.router.navigate(tempFilterModel.get('url'), {trigger: true});
+            tempFilterModel.trigger('add_entity', filterName, filterValue);
+        },
 
         renderDefects: function () {
             _.each(this.items, function(launch){
                 var row = $('#'+launch.id, this.container),
-                    defectCell = $('.pr-grid-defect-stats', row);
+                    defectCell = $('[data-js-launch-defect]', row);
                 _.each(defectCell, function(cell){
                     var el = $(cell),
                         type = el.data('defectType'),
@@ -693,8 +730,8 @@ define(function (require, exports, module) {
                     items: data.items,
                     lastLaunch: {
                         id: data.lastLaunch.id,
-                        link: urls.mostFailedLastLaunchUrl(data.lastLaunch.id),
-                        name: this.param.launchName
+                        link: this.linkToRedirectService(null, data.lastLaunch.id),
+                        name: this.param.widgetOptions && this.param.widgetOptions.launchNameFilter.length ? this.param.widgetOptions.launchNameFilter[0] : ''
                     },
                     dateFormat: Util.dateFormat,
                     moment: Moment
@@ -798,7 +835,7 @@ define(function (require, exports, module) {
             var $listElement = $.parseHTML(Util.templates(this.tplList, _.extend(this.params, {methodUpdateImagePath: Util.updateImagePath})));
             Util.hoverFullTime($listElement);
             this.listContainer.append($listElement);
-            this.lastBugContainer = $('.rp-table-row:last-child div', this.listContainer).eq(1);
+            this.lastBugContainer = $('[data-js-bugs-item]:last', this.listContainer);
             this.currentBugIndex++;
             return true;
         },
@@ -809,7 +846,11 @@ define(function (require, exports, module) {
             return '';
         },
         renderItemName: function(name, path, id){
-            return '<a class="rp-blue-link-undrl" target="_blank" title="' + name + '" href="#' + config.project.projectId + '/launches/all/' + path.join('/') + '/log-for-' + id + '">' + name + '</a><br />';
+            var url = this.getItemUrl(path, id);
+            return '<a class="rp-blue-link-undrl" target="_blank" title="' + name + '" href="' + url +'">' + name + '</a><br />';
+        },
+        getItemUrl: function(path, id){
+            return '#' + config.project.projectId + '/launches/all/' + path.join('/') + '?log.item=' + id;
         },
         getItemsInfo: function (items) {
             if(items.length){
@@ -950,7 +991,7 @@ define(function (require, exports, module) {
     var ActivityStreamPanel = BaseWidget.extend({
         initialize: function(options){
             BaseWidget.prototype.initialize.call(this, options);
-            this.isAutoRefresh = !_.isUndefined(options.isAutoRefresh) ? options.isAutoRefresh : true;
+            this.isAutoRefresh = false; //!_.isUndefined(options.isAutoRefresh) ? options.isAutoRefresh : true;
             this.isReverse = !_.isUndefined(options.isReverse) ? options.isReverse : true;
             this.projectId = options.projectId || config.project.projectId;
         },
@@ -1132,7 +1173,7 @@ define(function (require, exports, module) {
                     .done(function(responce){
                         var path = [responce.launchId].concat(_.keys(responce.path_names));
                         $.each($('[id="itemId-'+ikey+'"]'), function(){
-                            $(this).html(' ' + responce.name).wrap('<a class="rp-blue-link-undrl" target="_blank" href="#'+ self.projectId + '/launches/all/' + path.join('/') + '/log-for-' + ikey +'"></a>');
+                            $(this).html(' ' + responce.name).wrap('<a class="rp-blue-link-undrl" target="_blank" href="#'+ self.projectId + '/launches/all/' + path.join('/') + '?log.item=' + ikey +'"></a>');
                         });
                     })
                     .fail(function (error) {
@@ -1167,7 +1208,7 @@ define(function (require, exports, module) {
                 var self = this;
                 this.chart[type].dispatch.on("elementClick", function (e) {
                     if ($('.fullscreen-close').is(':visible')) {
-                        $('#dynamic-content').getNiceScroll().remove();
+                        // $('#dynamic-content').getNiceScroll().remove();
                         $.fullscreen.exit();
                     }
                     if(self.param.isTimeline){
@@ -1181,19 +1222,24 @@ define(function (require, exports, module) {
         },
         redirectForTimeLine: function(e){
             var self = this,
-                range = 86400000;
-            Service.getFilterData([self.param.filter_id])
+                appModel = new SingletonAppModel(),
+                projectId = appModel.get('projectId'),
+                range = 86400000,
+                filterId = this.param.filter_id,
+                newFilter = 'New_filter',
+                linkArr = ['#'+projectId, 'launches', newFilter];
+            Service.getFilterData([filterId])
                 .done(function(response){
-                    var link,
-                        filterParams = new Components.RequestParameters(),
-                        time = Moment.unix(e.point.startTime);
-                    if(!_.isEmpty(response)){
-                        FiltersService.loadFilterIntoRequestParams(filterParams, response[0]);
-                        filterParams.setTab(config.defaultTabId);
-                        filterParams.setSortInfo('start_time', 'DESC');
-                        filterParams.setFilters(filterParams.getFilters().concat([{id: 'filter.btw.start_time', value: time.format('x') + ',' + (parseInt(time.format('x')) + range)}]));
-                        link = urls.tabUrl(filterParams.toURLSting());
-                    }
+                    var time = Moment.unix(e.point.startTime),
+                        dateFilter = {condition: 'btw', filtering_field: 'start_time', is_negative: false, value: time.format('x') + ',' + (parseInt(time.format('x')) + range)},
+                        filtersCollection = new SingletonLaunchFilterCollection(),
+                        newFilter = filtersCollection.generateTempModel(),
+                        entities = response[0].entities || [],
+                        link = newFilter.get('url');
+
+                    entities.push(dateFilter);
+                    newFilter.set('entities', JSON.stringify(entities));
+                    link += '?' + newFilter.getOptions().join('&');
                     if (link) {
                         setTimeout(function(){
                             document.location.hash = link;
@@ -1424,11 +1470,21 @@ define(function (require, exports, module) {
             }
             return [];
         },
+        updateChart: function() {
+            this.chart && this.chart.update();
+        },
         addResize: function(){
             var self = this,
                 update = function(e){
                     if($(e.target).is($(window))) {
-                        self.chart && self.chart.update();
+                        if(self.charts && self.charts.length){
+                            _.each(self.charts, function(chart){
+                                chart && chart.update();
+                            });
+                        }
+                        else {
+                            self.chart && self.chart.update();
+                        }
                     }
                 },
                 resize  = _.debounce(update, 500);
@@ -1456,10 +1512,10 @@ define(function (require, exports, module) {
             }
         },
         redirectTo: function (e) {
-            if ($('.fullscreen-close').is(':visible')) {
-                $('#dynamic-content').getNiceScroll().remove();
-                $('.fullscreen-close').trigger('click');
-            }
+            // if ($('.fullscreen-close').is(':visible')) {
+                // $('#dynamic-content').getNiceScroll().remove();
+                // $('.fullscreen-close').trigger('click');
+            // }
             var o = {series: {}};
             if (!_.has(e, 'pointIndex')) {
                 var svg = d3.select('#' + this.id + ' svg'),
@@ -1495,6 +1551,7 @@ define(function (require, exports, module) {
                 .useInteractiveGuideline(!self.isPreview)
                 .showControls(false)
                 .clipEdge(true)
+                .showLegend(!self.isPreview)
                 ;
 
             this.chart.xAxis
@@ -1624,6 +1681,7 @@ define(function (require, exports, module) {
                 .clipEdge(true)
                 .showXAxis(true)
                 .tooltips(self.isPreview ? false : true)
+                .showLegend(!self.isPreview)
                 ;
 
             this.chart.tooltipContent(tooltip);
@@ -1793,6 +1851,7 @@ define(function (require, exports, module) {
                 .showXAxis(true)
                 .yDomain([0,100])
                 .tooltips(self.isPreview ? false : true)
+                .showLegend(self.isPreview ? false : true)
                 ;
 
             this.chart.tooltipContent(tooltip);
@@ -1968,7 +2027,6 @@ define(function (require, exports, module) {
 
         render: function () {
             this.addSVG();
-
             var data = this.getChartData(),
                 self = this,
                 tooltip = this.tooltipContent();
@@ -1985,6 +2043,7 @@ define(function (require, exports, module) {
                 .showXAxis(true)
                 .yDomain([0,100])
                 .tooltips(self.isPreview ? false : true)
+                .showLegend(!self.isPreview)
                 ;
 
             this.chart.tooltipContent(tooltip);
@@ -2011,9 +2070,6 @@ define(function (require, exports, module) {
 
             this.addLaunchNameTip(vis, tip);
             this.addResize();
-            if ($('#myCompareLaunches').width() <= 0) {
-                this.redirectOnElementClick('multibar');
-            }
             if (self.isPreview) {
                 this.disabeLegendEvents();
             }
@@ -2119,6 +2175,7 @@ define(function (require, exports, module) {
                 .barColor(this.colors)
                 .valueFormat(d3.format(',.2f'))
                 .showXAxis(true)
+                .showLegend(false)
                 ;
 
             this.chart.tooltipContent(tooltip);
@@ -2470,6 +2527,7 @@ define(function (require, exports, module) {
                 })
                 .interactive(false)
                 .useInteractiveGuideline(self.isPreview ? false : true)
+                .showLegend(self.isPreview ? false : true)
                 ;
 
             this.chart.yAxis
@@ -2596,16 +2654,16 @@ define(function (require, exports, module) {
                 .y(function (d) {
                     return d.value
                 })
-                .margin({top: 30})
+                .margin({top: !self.isPreview ? 30 : 0})
                 .margin({left: 20})
                 .margin({right: 20})
                 .margin({bottom: 0})
                 .valueFormat(d3.format('f'))
-                .showLabels(true)
+                .showLabels(!self.isPreview)
                 .color(function (d) {
                     return d.data.color;
                 })
-                .title(title + ':')
+                .title(!self.isPreview ? title + ':' : '')
                 .titleOffset(-10)
                 .growOnHover(false)
                 .labelThreshold(0)
@@ -2617,7 +2675,7 @@ define(function (require, exports, module) {
                 .donut(true)
                 .donutRatio(0.4)
                 .tooltips(self.isPreview ? false : true)
-                .showLegend( !this.param.isShowLegend ? true : false )
+                .showLegend(!self.isPreview && !this.param.isShowLegend ? true : false )
                 ;
 
             d3.select(id)
@@ -2662,7 +2720,7 @@ define(function (require, exports, module) {
                 this.chart[type].dispatch.on("elementClick", function (e) {
                     nv.tooltip.cleanup();
                     if ($('.fullscreen-close').is(':visible')) {
-                        $('#dynamic-content').getNiceScroll().remove();
+                        // $('#dynamic-content').getNiceScroll().remove();
                         $('.fullscreen-close').trigger('click');
                     }
                     var key = e.label,

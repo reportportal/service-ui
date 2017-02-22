@@ -1,0 +1,155 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+.modal-load-bug {
+  .modal-content-wrapper {
+    .modal-header {
+      .beta-badge {
+        top: 0;
+        left: 75px;
+      }
+    }
+    .modal-body {
+      padding: 30px 10px 10px 10px;
+    }
+    label {
+      font-weight: normal;
+    }
+    .load-items-container {
+      padding: 17px 9px 0 12px;
+
+      .bts-label {
+        width: 100%;
+        margin-bottom: 0;
+        position: relative;
+
+        & > span {
+          padding-top: 6px;
+          display: block;
+          float: left;
+        }
+        .rp-btn-with-dropdown {
+          width: 350px;
+          margin-left: 21px;
+        }
+
+        .dropdown-menu {
+          width: 350px;
+          margin-left: 118px;
+        }
+      }
+
+      .bts-description {
+        display: block;
+        margin: 4px 0 0 117px;
+        font-size: 12px;
+        color: $COLOR--gray-60;
+      }
+
+      .items-container {
+        margin-top: 18px;
+
+        .ticket-row-view {
+          position: relative;
+
+          .link-label {
+            position: relative;
+            width: 100%;
+            margin-bottom: 5px;
+
+            .row-title {
+              display: block;
+              float: left;
+              margin-left: 12px;
+              margin-top: 6px;
+            }
+
+            .rp-input {
+              margin-left: 30px;
+              display: block;
+              float: left;
+              width: 350px;
+            }
+
+            .validate-hint {
+              width: 350px;
+              margin-left: 117px;
+            }
+          }
+
+          .issue-label {
+            position: relative;
+            width: 100%;
+
+            .row-title {
+              display: block;
+              float: left;
+              margin-left: 36px;
+              margin-top: 5px;;
+            }
+
+            .rp-input {
+              margin-left: 33px;
+              display: block;
+              float: left;
+              width: 350px;
+            }
+
+            .validate-hint {
+              width: 350px;
+              margin-left: 117px;
+            }
+          }
+
+          .remove-row {
+            position: absolute;
+            right: 45px;
+            top: 18px;
+            margin: 5px 0 0 7px;
+            display: inline-block;
+            font-size: 19px;
+            vertical-align: top;
+            cursor: pointer;
+            color: $COLOR--gray-60;
+            &:hover {
+              color: $COLOR--gray-47;
+            }
+          }
+        }
+      }
+
+      @media (max-width: 620px) {
+        .ticket-row-view {
+          .link-label {
+            width: 100%;
+          }
+
+          .issue-label {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+
+    .add-button {
+      margin: 0 0 10px 129px;
+    }
+  }
+}

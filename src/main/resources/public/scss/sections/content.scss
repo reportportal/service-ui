@@ -1,0 +1,99 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.rp-main-panel {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 15px 0 0 0;
+  @media (max-width: 767px) {
+    padding: 0;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    &.mobile-without-content-header {
+      padding-top: 0;
+
+      .panel-heading {
+        display: none;
+      }
+    }
+  }
+
+  & > #contentHeader {
+    border: none;
+    border-radius: 0;
+    background-color: transparent;
+    padding: 0;
+
+    #headerBar {
+      min-height: inherit;
+      margin: 0;
+      margin-bottom: 15px;
+      padding: 0;
+      background: transparent;
+    }
+  }
+
+  #dynamic-content {
+    position: relative;
+    padding: 0 15px 15px 15px;
+    background-color: #ffffff;
+  }
+
+  & > #dynamicContent {
+    position: relative;
+    padding: 0;
+
+    & > #contentHeader {
+      border: none;
+      border-radius: 0;
+      background-color: transparent;
+      min-height: inherit;
+      margin: 0;
+      padding: 0;
+
+      & > #headerBar {
+        min-height: inherit;
+        margin: 0;
+        margin-bottom: 15px;
+        padding: 0;
+        background: transparent;
+      }
+    }
+  }
+
+  #contentHeader {
+    #headerBar {
+      &.fixed_header {
+        border-top: solid 1px #e9e9e9;
+        border-bottom: solid 1px #e9e9e9;
+        border-left: none;
+        border-right: none;
+        background-color: #ffffff;
+        margin: 0;
+        padding: 10px 0;
+      }
+    }
+  }
+}

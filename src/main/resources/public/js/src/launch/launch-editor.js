@@ -25,7 +25,7 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
-    var Components = require('components');
+    var Components = require('core/components');
     var Service = require('coreService');
     var App = require('app');
 
@@ -330,7 +330,7 @@ define(function (require, exports, module) {
             return _.extend({}, Components.DialogShell.prototype.events, {
                 'validation::change #mergeName': 'validate',
                 'validation::change #mergeDescription': 'validate',
-                'shown.bs.modal': 'initScroll'
+                // 'shown.bs.modal': 'initScroll'
             });
         },
 

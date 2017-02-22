@@ -1,0 +1,388 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+.suit-grid, .step-grid, .log-grid {
+
+  .rp-table-row {
+    &.select-state {
+      background-color: $COLOR--gray-91;
+    }
+    &:hover {
+      .item-edit-icon, .edit-defect {
+        opacity: 1;
+      }
+    }
+  }
+
+  .rp-grid-thead {
+    .grid-cell {
+      .short-size {
+        display: none;
+      }
+      .text-overflow i {
+        display: inline;
+      }
+      .filter-icon-wrapper {
+        display: none;
+        width: 0;
+        margin-left: -3px;
+        opacity: 0;
+        i {
+          position: relative;
+          margin-left: -12px;
+          color: $COLOR--gray-60;
+          &:hover {
+            color: $COLOR--topaz
+          }
+          &:after {
+            position: absolute;
+            content: '';
+            top: -5px;
+            bottom: -5px;
+            left: -5px;
+            right: 0;
+          }
+        }
+      }
+      .sort-icon-wrapper {
+        display: none;
+        width: 0;
+        opacity: 0;
+        i {
+          margin-left: -3px;
+          &:first-child {
+            display: inline;
+          }
+          &:last-child {
+            display: none;
+          }
+        }
+      }
+      &:hover {
+        .filter-icon-wrapper, .sort-icon-wrapper {
+          opacity: 1;
+        }
+      }
+    }
+    @media (max-width: 1450px) {
+      .grid-cell {
+        .long-size{
+          display: none;
+        }
+        .short-size {
+          display: inline;
+        }
+      }
+    }
+  }
+
+  .grid-cell {
+    &.rp-grid-th {
+      cursor: default;
+      &[data-filter] {
+        .filter-icon-wrapper {
+          display: inline-block;
+        }
+      }
+      &[data-sorter] {
+        cursor: pointer;
+        .sort-icon-wrapper {
+          display: inline-block;
+          i {
+            line-height: 18px;
+            vertical-align: top;
+          }
+        }
+      }
+      &.sorting-desc, &.sorting-asc {
+        .sort-icon-wrapper {
+          opacity: 1;
+        }
+      }
+      &.sorting-desc .sort-icon-wrapper i {
+        &:first-child {
+          display: none;
+        }
+        &:last-child {
+          display: inline;
+        }
+      }
+    }
+
+  }
+  @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+    .rp-table-row {
+      background-color: $COLOR--white-default;
+      &:hover {
+        background-color: $COLOR--white-default;
+      }
+      .item-edit-icon, .edit-defect {
+        opacity: 1;
+      }
+    }
+  }
+}
+.launch-suite-step-items {
+  &.load {
+    .preloader {
+      display: block;
+    }
+    .pagination-component {
+      display: none;
+    }
+  }
+  &.not-found {
+    .pagination-component {
+      display: none;
+    }
+    .no-result-found {
+      display: block;
+    }
+  }
+  .item-edit-icon {
+    vertical-align: top;
+    font-size: 18px;
+    color: $COLOR--gray-60;
+    cursor: pointer;
+    width: 0px;
+    opacity: 0;
+    line-height: 16px;
+    &:hover {
+      color: $COLOR--black;
+    }
+  }
+  &.exact-driven {
+    .pr-grid-show-time {
+      &:hover {
+        .exact-time {
+          visibility: hidden;
+        }
+        .from-now {
+          visibility: visible;
+        }
+      }
+      .exact-time {
+        visibility: visible;
+      }
+      .from-now {
+        visibility: hidden;
+      }
+    }
+  }
+  .pr-grid-show-time {
+    &:hover {
+      .from-now {
+        visibility: hidden;
+      }
+      .exact-time {
+        visibility: visible;
+      }
+    }
+    .from-now {
+      position: absolute;
+      display: inline-block;
+    }
+    .exact-time {
+      visibility: hidden;
+      display: inline-block;
+    }
+  }
+  .grid-cell {
+    position: relative;
+    &.launch-name-cell {
+      .btn-group {
+        display: block;
+      }
+      .name-grid-overflow {
+        padding-left: 28px;
+      }
+    }
+  }
+  .name-grid-cell {
+    .btn-group {
+      position: absolute;
+      display: none;
+      top: 4px;
+      left: 12px;
+    }
+    h5 {
+      margin: 0;
+      font-size: 14px;
+      font-family: OpenSansSemiBold;
+      color: $COLOR--windows-blue;
+      a {
+        word-wrap: break-word;
+        &.not-link {
+          cursor: default;
+          color: $COLOR--gray-47;
+        }
+      }
+      .autoanalyze {
+        width: auto;
+        border-radius: 10px;
+        background: $COLOR--orange-red;
+        padding: 0 5px 1px 5px;
+        color: $COLOR--white-default;
+        margin-left: 5px;
+        font-size: 10px;
+        vertical-align: top;
+        line-height: 16px;
+        display: none;
+        animation: flash 2s infinite alternate;
+        &.visible {
+          display: inline-block;
+        }
+      }
+    }
+    .rp-grid-description {
+      margin: 10px 0 0 1px;
+    }
+
+    .rp-grid-tags {
+      margin-top: 13px;
+      font-size: 12px;
+      line-height: 18px;
+      & > li {
+        display: inline;
+        margin: 0 17px 2px 2px;
+        color: #999999;
+        a {
+          color: $COLOR--gray-60;
+          cursor: pointer;
+          &:hover {
+            color: $COLOR--charcoal-grey;
+          }
+        }
+        i {
+          vertical-align: top;
+          font-size: 18px;
+          &.rp-icons-ticket {
+            font-size: 12px;
+            margin-top: 2px;
+          }
+        }
+      }
+      .mobile-tag {
+        display: none;
+        span {
+          color: $COLOR--charcoal-grey;
+        }
+      }
+    }
+    @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+      h5 {
+        font-size: 15px;
+      }
+      .rp-grid-description {
+        font-size: 14px;
+        margin: 7px 0 0 0px;
+      }
+
+      .rp-grid-tags {
+        font-size: 14px;
+        .mobile-tag {
+          display: inline-block;
+        }
+        & > li {
+          i {
+            font-size: 24px;
+            line-height: 12px;
+            &.rp-icons-ticket {
+              font-size: 16px;
+              margin: 0 5px 0 4px;
+            }
+          }
+        }
+      }
+    }
+  }
+  .rp-item-duration {
+    vertical-align: top;
+    .duration-content {
+      position: relative;
+      display: inline-block;
+      padding-left: 18px;
+      line-height: 1;
+      color: $COLOR--charcoal-grey;
+      i {
+        position: absolute;
+        left: -1px;
+        top: 0;
+      }
+      .material-icons, .rp-icons {
+        top: -2px;
+        color: $COLOR--gray-60;
+        font-size: 16px;
+      }
+    }
+    .duration-error {
+      color: $COLOR--orange-red;
+      .material-icons, .rp-icons {
+        color: $COLOR--orange-red;
+      }
+      .duration-time {
+        text-decoration: underline;
+      }
+    }
+    .rp-icons-warning.rp-icons{
+      color: $COLOR--orange-red;
+      & + .duration-time {
+        &:after{
+          content: '-';
+          visibility: hidden;
+        }
+      }
+    }
+    @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+      .duration-content {
+        padding-left: 28px;
+        .material-icons, .rp-icons {
+          top: 0;
+          font-size: 22px;
+        }
+      }
+    }
+  }
+  .number-grid-cell {
+    color: $COLOR--windows-blue;
+    &.total-number {
+      a {
+        font-family: OpenSansSemiBold;
+      }
+    }
+    a {
+      cursor: pointer;
+    }
+  }
+  .counter-grid-cell {
+    .defect-to-investigate {
+      display: inline-block;
+      color: $COLOR--white-default;
+      font-family: OpenSansSemiBold;
+      background: $COLOR--to-investigate;
+      padding: 0 10px;
+      line-height: 19px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+  }
+}

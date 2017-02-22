@@ -1,0 +1,357 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*---------*/
+/* SIDEBAR */
+
+.sidebar {
+  position: fixed;
+  box-shadow: none;
+  width: 90px;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  min-height: 100%;
+  background: #464547;
+  color: #b4b4b4;
+  z-index: 100;
+  .user-menu {
+    display: none;
+  }
+  .logo {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 16px 0 0 0;
+    border-bottom: 1px solid #353536;
+    text-align: center;
+    font-weight: bold;
+    height: 60px;
+    width: 100%;
+    background: #313131;
+
+    .sprite {
+      display: inline-block;
+      background-image: url("../img/rp_logo.png");
+      background-repeat: no-repeat;
+      background-position: 0 0;
+    }
+
+    .sprite-logo {
+      width: 36px;
+      height: 34px;
+      background-position: -5px 0px;
+    }
+  }
+
+  nav {
+    position: relative;
+    height: 100%;
+    height: -webkit-calc(100% - 60px);
+    height: -moz-calc(100% - 60px);
+    height: calc(100% - 60px);
+    overflow: hidden;
+
+    @media (max-height: 455px) {
+      &:not(.admin-side-bar) {
+        min-height: 455px;
+
+        .user-menu {
+          position: static;
+          margin-top: 45px;
+        }
+      }
+    }
+
+    @media (max-height: 410px) {
+      &.admin-side-bar,
+      &.for-common-user {
+        min-height: 410px;
+
+        .user-menu {
+          position: static;
+          margin-top: 45px;
+        }
+      }
+    }
+
+    ul {
+      &.main-menu {
+        position: relative;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+
+        li {
+          position: relative;
+          display: inline-block;
+          width: 100%;
+          border-bottom: 1px solid #353536;
+          border-top: none;
+
+          a {
+            display: inline-block;
+            width: 100%;
+            font-family: $OswaldRegular;
+            border-top: 1px solid #535455;
+            text-align: center;
+            text-transform: uppercase;
+            object-fit: contain;
+            color: #e9e9e9;
+            font-size: 11px;
+            line-height: 16px;
+            min-height: 77px;
+            padding: 20px 0 0;
+            box-shadow: none;
+
+            &#settingsSection {
+              padding-top: 10px;
+
+              span {
+                padding-left: 8px;
+                padding-right: 8px;
+              }
+            }
+
+            &.active, &.touchHover {
+              border-top-color: $COLOR--black-two;
+              background-color: $COLOR--black-two;
+              color: #a3c644;
+              text-shadow: 1px 2px 2px rgba(39, 39, 40, 0.4);
+              text-decoration: none;
+            }
+
+            &:hover:not(.active)
+            &:focus:not(.active) {
+              color: $COLOR--white-default;
+              text-decoration: none;
+            }
+
+            i {
+              margin: 0 auto 6px;
+              width: 100%;
+            }
+
+            span {
+              display: inline-block;
+              letter-spacing: 0.6px;
+              text-shadow: 1px 2px 2px rgba(39, 39, 40, 0.4);
+            }
+          }
+
+          &:last-child,
+          &:last-child {
+            a {
+              border-bottom: 1px solid #535455;
+            }
+
+            a:active,
+            a.active {
+              border-bottom-color: $COLOR--black-two;
+            }
+          }
+        }
+      }
+      &.user-menu {
+         li {
+           clear: both;
+           display: inline-block;
+           width: 100%;
+           padding: 0;
+
+           a {
+             display: block;
+             width: 200px;
+             height: 45px;
+             padding: 15px 10px;
+             font-family: "OswaldRegular", sans-serif;
+             font-size: 13px;
+             letter-spacing: 0.2px;
+             color: $COLOR--gray-91;
+             text-shadow: 1px 2px 2px rgba(39, 39, 40, 0.4);
+             text-decoration: none;
+             background-color: $COLOR--charcoal-grey;
+             box-shadow: inset 0 1px 0 0 $COLOR--gunmetal;
+
+             &.active,
+             &:active {
+               border-top-color: $COLOR--black-two;
+               background-color: $COLOR--black-two;
+               color: #a3c644;
+               text-shadow: 1px 2px 2px rgba(39, 39, 40, 0.4);
+               text-decoration: none;
+             }
+
+             &:hover:not(.active)
+             &:focus:not(.active) {
+               color:$COLOR--white-default;
+               text-decoration: none;
+             }
+           }
+        }
+      }
+    }
+  }
+
+  #back-top {
+    position: fixed;
+    display: block;
+    width: 90px;
+    height: auto;
+    bottom: 10px;
+    top: auto;
+    text-align: center;
+    padding: 12px 0;
+    cursor: pointer;
+    color: inherit;
+    font-size: 12px;
+    line-height: 12px;
+    opacity: 0.7;
+
+    &:hover {
+      background: none;
+      color: #fff;
+      opacity: 1;
+    }
+  }
+}
+
+/*-----------------------------------*/
+/* STYLES FOR DIFFERENT SCREEN WIDTH */
+
+/* sm - 768px - 991px */
+@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+  .sidebar {
+    width: 60px;
+    nav ul.main-menu li a{
+      padding-top: 18px;
+      min-height: 56px;
+      span {
+        display: none;
+      }
+    }
+  }
+}
+
+/* md - 992px - 1199px */
+@media (min-width: $SCREEN_MD_MIN) and (max-width: $SCREEN_MD_MAX) {
+
+}
+
+/* lg - 1200px */
+@media (min-width: $SCREEN_LG_MIN) {
+
+}
+/* xs - 767px */
+@media (max-width: $SCREEN_XS_MAX) {
+  .sidebar {
+    left: -200px;
+    width: 200px;
+    &:before {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 60px;
+      background: #2b2b2b;
+    }
+    .logo {
+      display: none;
+    }
+    .user-menu {
+      display: block;
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      li {
+        a {
+          i {
+            vertical-align: middle;
+            margin: -5px auto 0;
+            font-size: 24px;
+
+            &.rp-icons-logout {
+              margin-top: -4px;
+            }
+          }
+          span {
+            line-height: 16px;
+            padding-left: 6px;
+            margin-top: -8px;
+          }
+        }
+      }
+    }
+    nav {
+      ul {
+        &.main-menu {
+          li {
+            border-top: none;
+            border-bottom: 1px solid #353536;
+
+            a {
+              padding: 12px 0 12px 12px;
+              min-height: 20px;
+              text-align: left;
+              &#settingsSection {
+                padding: 15px 0 15px 20px;
+              }
+
+              i {
+                width: auto;
+                vertical-align: middle;
+                &.rp-icons-settings-left-menu {
+                  margin-left: -6px;
+                }
+              }
+
+              span {
+                padding-top: 2px;
+                font-size: 12px;
+                line-height: 16px;
+                padding-left: 10px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+body.menu-open {
+  @media (max-width: $SCREEN_XS_MAX) {
+    .sidebar {
+      .sidebar-close {
+        position: absolute;
+        left: 100%;
+        top: 0;
+        height: 100%;
+        width: 1000px;
+        background: transparent;
+      }
+    }
+  }
+}
+
+/*-----------------------------------*/
+
+// font-size: 23px;
+// line-height: 23px;
+// padding: 5px 8px;
+

@@ -1,0 +1,21 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.admin.addProject}) %>
+<div class="modal-body">
+    <div class="rp-add-project-form">
+        <h4><%= data.text.admin.addNewProject %></h4>
+        <form class="rp-form">
+            <label class="rp-field">
+                <span class="required"><%= data.text.admin.projectName %></span>
+                <input type="text" class="rp-input" data-js-project-name>
+                <span class="validate-hint"></span>
+            </label>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.cancel %>
+    </button>
+    <button class="rp-btn rp-btn-submit" type="button" data-js-add>
+        <%= data.text.ui.add %>
+    </button>
+</div>

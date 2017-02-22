@@ -1,0 +1,265 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/* modal */
+.launches-header-block {
+  display: none;
+  position: relative;
+  background-color: #ffffff;
+  width: 100%;
+  margin-bottom: 15px;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  .filter-overflow {
+    position: relative;
+    overflow: hidden;
+    padding: 15px 15px 0 15px;
+  }
+  .filters-overflow-mobile {
+    display: none;
+  }
+  .filter-panel-overflow {
+    padding: 0 15px;
+    display: none;
+  }
+  .all-launches-overflow {
+    position:relative;
+    width: 175px;
+    height: 58px;
+    height: 58px;
+    display: block;
+    margin: -15px 30px 0 -15px;
+    padding-top: 15px;
+    float: left;
+    border-right: 2px solid $COLOR--gray-91;
+    text-align: center;
+    vertical-align: top;
+    &:after {
+      content: " ";
+      display: block;
+      position:absolute;
+      left: 0;
+      right: -2px;
+      height: 2px;
+      bottom: -2px;
+      background-color: $COLOR--gray-91;
+    }
+    .filter-item {
+      padding: 0 10px 0 10px;
+    }
+  }
+  .new-filter-button {
+    vertical-align: top;
+    margin-bottom: 5px;
+    margin-right: 27px;
+  }
+  .filters-list {
+    display: inline;
+  }
+  .filter-item {
+    height: 30px;
+    display: inline-block;
+    font-family: "OpenSansSemibold", sans-serif;
+    margin-bottom: 5px;
+    margin-right: 10px;
+    text-transform: uppercase;
+    padding: 0 23px 0 10px;
+    position: relative;
+    line-height: 28px;
+    border: 1px solid $COLOR--gray-91;
+    color: $COLOR--gray-47;
+    cursor: pointer;
+    overflow: hidden;
+    .obligatory-field, i {
+      vertical-align: top;
+      display: inline-block;
+    }
+    .filter-name {
+      display: inline-block;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    i {
+      position: relative;
+      font-size: 16px;
+      margin-top: 6px;
+      margin-left: 3px;
+      margin-right: 3px;
+      color: $COLOR--gray-47;
+    }
+    .comment-icon {
+      font-size: 15px;
+      margin-top: 8px;
+    }
+    .close-filter {
+      cursor: pointer;
+      display: none;
+      position: absolute;
+      top: 0px;
+      right: 1px;
+    }
+    &:hover, &:focus {
+      background: $COLOR--tealish-opacity;
+      color: $COLOR--charcoal-grey;
+    }
+    &.active {
+      cursor: default;
+      background: $COLOR--gray-91;
+      color: $COLOR--charcoal-grey;
+      .close-filter{
+        display: inline-block;
+      }
+    }
+  }
+  .filter-entities {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px;
+  }
+  .filter-block {
+    position: relative;
+    width: 100%;
+    float: left;
+    background-color: $COLOR--white-four;
+    border: solid 1px $COLOR--gray-91;
+    margin: 15px 0;
+
+    .filter-settings {
+      width: 100%;
+      padding: 10px;
+      background-color: $COLOR--gray-91;
+      overflow: hidden;
+      .description {
+        display: inline-block;
+        height: 30px;
+        overflow: hidden;
+        vertical-align: top;
+        line-height: 28px;
+        margin-right: 15px;
+        color: $COLOR--charcoal-grey;
+        i {
+          color: $COLOR--gray-47;
+          font-size: 16px;
+          vertical-align: top;
+          margin: 6px 5px 0 0;
+        }
+      }
+      .left-items {
+        height: 100%;
+        float: left;
+      }
+      .right-items {
+        height: 100%;
+        float: right;
+        .rp-btn {
+          margin-left: 8px;
+        }
+      }
+    }
+  }
+  &[data-js-state="SUITE"], &[data-js-state="STEP"] {
+    display: block;
+  }
+  &[data-js-state="LAUNCH"] {
+    display: block;
+    .filter-panel-overflow {
+      display: block;
+    }
+    .filter-overflow.padding-bottom {
+      padding-bottom: 15px;
+    }
+  }
+  &[data-js-state="LOG"], &[data-js-state="MULTIPLE"] {
+    display: none;
+  }
+  @media (max-width: 650px) {
+    .filters-overflow-mobile {
+      display: block;
+      position: relative;
+      margin: 15px 10px;
+      height: 30px;
+      .comment-icon {
+        display: none;
+      }
+      .rp-btn-with-dropdown {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 50px;
+        width: auto;
+      }
+    }
+    .filter-block {
+      margin: 0 -5px 10px -5px;
+      width: auto;
+      float: none;
+    }
+    .mobile-filter-add {
+      float: right;
+      width: 40px;
+    }
+    .filter-overflow {
+      display: none;
+    }
+    .select-value {
+      .filter-item{
+        .close-filter {
+          display: none;
+        }
+        &, &.active {
+          border: none;
+          background: none;
+          padding: 0;
+        }
+        .filter-name {
+          max-width: 180px;
+        }
+      }
+    }
+    .dropdown-menu {
+      .filter-item {
+        width: 100%;
+        height: 40px;
+        margin: 0;
+        padding: 0 10px;
+        border: none;
+        line-height: 40px;
+        overflow: hidden;
+        display: block;
+        i {
+          margin-top: 12px;
+        }
+        .close-filter{
+          margin-top: 0;
+          font-size: 20px;
+          padding: 9px;
+          width: 36px;
+        }
+        &:first-child {
+          .close-filter {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

@@ -21,9 +21,9 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
 
-    var DefectTypeModel = Backbone.Model.extend({
+    var DefectTypeModel = Epoxy.Model.extend({
         defaults: {
             color: '',
             locator: '',
@@ -31,6 +31,32 @@ define(function (require, exports, module) {
             shortName: '',
             typeRef: '',
             mainType: false
+        },
+        computeds: {
+            reverseColor: {
+                deps: ['lightColor'],
+                get: function(lightColor) {
+                    if(lightColor < 50) {
+                        return '#fff'
+                    }
+                    return '#464547'
+                }
+            },
+            lightColor: {
+                deps: ['color'],
+                get: function(color) {
+                    var result = /^#?([a-f\d]{1,2})([a-f\d]{1,2})([a-f\d]{1,2})$/i.exec(color);
+                    var rgb = result ? {
+                        r: parseInt(result[1], 16),
+                        g: parseInt(result[2], 16),
+                        b: parseInt(result[3], 16)
+                    } : null;
+                    if(!rgb) {
+                        return 0;
+                    }
+                    return (rgb.r * 0.8 + rgb.g + rgb.b * 0.2) / 510 * 100;
+                }
+            }
         },
         validate: function (attr, options) {
             var errors = [];
@@ -82,6 +108,7 @@ define(function (require, exports, module) {
             delete data['locator'];
             return data;
         }
+
     });
 
     return DefectTypeModel;

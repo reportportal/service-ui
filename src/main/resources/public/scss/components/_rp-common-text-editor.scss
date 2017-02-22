@@ -1,42 +1,6 @@
 /*-------------*/
 /* TEXT EDITOR */
 
-#gridWrapper {
-    .rp-table-hover {
-        .rp-table-row {
-            &.selected {
-                border: 1px solid #999;
-                border-bottom: none;
-                background-color: #e9e9e9 !important;
-            }
-            &.selected:last-child {
-                border-bottom: 1px solid #999;
-            }
-        }
-    }
-    .rp-margin-reset {
-        .rp-table-thead {
-            .rp-table-th {
-                padding-left: 0;
-            }
-        }
-    }
-}
-
-.rp-table-hover {
-    .rp-table-row {
-        &.selected + .rp-table-row,
-        &.selected + .method-collapsed .rp-table-row {
-            border-top: 1px solid #999;
-        }
-        &.selected:last-child {
-            border-bottom: 1px solid #999;
-        }
-    }
-}
-
-/*-------------*/
-
 .text-editor {
     position: relative;
     margin-top: 10px;
@@ -52,7 +16,7 @@
 
             .markItUpHeader {
                 padding: 0 10px;
-                height: 42px;
+                height: 34px;
                 border-bottom: 1px solid #ccc;
 
                 &:after {
@@ -71,14 +35,14 @@
                     a {
                         position: relative;
                         display: block;
-                        height: 42px;
-                        width: 25px;
+                        height: 34px;
+                        width: 21px;
 
                         &:before {
                             position: absolute;
                             width: 19px;
                             height: 19px;
-                            top: 14px;
+                            top: 10px;
                             color: #666;
                             text-indent: 0;
                             cursor: pointer;
@@ -112,8 +76,8 @@
                     &.markItUpButton16 {
                         a:before {
                             @extend %FontFamilyReportPortal;
-                            font-size: 12px;
-                            line-height: 12px;
+                            font-size: 10px;
+                            line-height: 14px;
                             left: 4px;
                         }
                     }
@@ -192,6 +156,9 @@
                     &.markItUpButton11 {
                         a {
                             @include beforeContent("\e931");
+                            &:before {
+                                font-size: 10px;
+                            }
                         }
                     }
 
@@ -201,8 +168,8 @@
                             @include beforeContent("\e942");
 
                             &:before {
-                                top: 13px;
-                                font-size: 14px;
+                                top: 10px;
+                                font-size: 12px;
                                 line-height: 14px;
                             }
                         }
@@ -214,8 +181,8 @@
                             @include beforeContent("\e947");
 
                             &:before {
-                                top: 13px;
-                                font-size: 14px;
+                                top: 10px;
+                                font-size: 12px;
                                 line-height: 14px;
                             }
                         }
@@ -227,8 +194,8 @@
                             @include beforeContent("\e946");
 
                             &:before {
-                                top: 16px;
-                                font-size: 10px;
+                                top: 13px;
+                                font-size: 9px;
                                 line-height: 10px;
                             }
                         }
@@ -236,8 +203,12 @@
 
                     // .rp-icons-quote
                     &.markItUpButton15 {
+                        margin-left: 3px;
                         a {
                             @include beforeContent("\e949");
+                            &:before {
+                                font-size: 10px;
+                            }
                         }
                     }
 
@@ -245,11 +216,10 @@
                     &.markItUpButton16 {
                         a {
                             @include beforeContent("\e932");
-
                             &:before {
-                                top: 13px;
-                                font-size: 16px;
-                                line-height: 16px;
+                                top: 10px;
+                                font-size: 14px;
+                                line-height: 15px;
                             }
                         }
                     }
@@ -258,7 +228,7 @@
                 ul {
                     .markItUpSeparator {
                         top: 0px;
-                        height: 42px;
+                        height: 34px;
                         margin: 0 15px 0 10px;
                     }
                 }

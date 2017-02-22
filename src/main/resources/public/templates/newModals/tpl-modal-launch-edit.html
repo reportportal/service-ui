@@ -1,0 +1,31 @@
+<% var dialogTitle = data.isEditLaunch ? data.text.dialog.launchEditor : data.text.dialog.itemEditor %>
+<%= data.includeTemplate('_tpl-modal-header', {headerText: dialogTitle}) %>
+<div class="modal-body">
+    <h4><%= data.isEditLaunch ? data.text.dialog.launchDetails : data.text.dialog.testItemDetails  %></h4>
+    <h2 data-js-launch-name></h2>
+    <div class="fields">
+        <label class="form-group">
+            <span><%= data.text.forms.tags %></span>
+            <div class="tags-wrapper">
+                <input class="rp-input" type="text" placeholder="<%= data.text.dialog.launchTagPlaceholder %>" data-js-tags>
+            </div>
+        </label>
+        <label class="form-group">
+            <div data-js-markdown-container></div>
+        </label>
+    </div>
+    <% if (data.isEditLaunch) { %>
+        <div class="warning-block">
+            <div class="warning"><i class="rp-icons rp-icons-warning"></i> Warning!</div>
+            <div class="warning-message"><%= data.text.launches.disclaimerChangeDescription %></div>
+        </div>
+    <% } %>
+</div>
+<div class="modal-footer">
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.cancel %>
+    </button>
+    <button class="rp-btn rp-btn-submit" type="button" data-js-save>
+        <%= data.text.ui.save %>
+    </button>
+</div>

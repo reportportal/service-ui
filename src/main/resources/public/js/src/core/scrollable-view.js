@@ -21,7 +21,7 @@
 
 define([
     'backbone',
-    'components'
+    'core/components'
 ], function (Backbone, Components) {
     'use strict';
 

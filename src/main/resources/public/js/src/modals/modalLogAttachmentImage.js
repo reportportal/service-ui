@@ -1,0 +1,63 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+define(function (require, exports, module) {
+    'use strict';
+
+    var $ = require('jquery');
+    var _ = require('underscore');
+    var ModalView = require('modals/_modalView');
+
+    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
+    var Util = require('util');
+    var Urls = require('dataUrlResolver');
+
+    var ModalLogAttachmentImage = ModalView.extend({
+        tpl: 'tpl-modal-log-attachment-image',
+        className: 'modal-log-attachment-image',
+
+        events: {
+            'click [data-js-image]': 'openImgInNewWindow'
+        },
+
+        initialize: function(options) {
+            this.imageSrc = Urls.getFileById(options.imageId);
+            this.render();
+        },
+
+        onShow: function () {
+            this.$modalWrapper.addClass('loading');
+        },
+
+        render: function() {
+            var self = this;
+            this.$el.html(Util.templates(this.tpl, {imageSrc: this.imageSrc}));
+            $('[data-js-image]', this.$el).load(function () {
+                self.$modalWrapper.removeClass('loading');
+            })
+        },
+        openImgInNewWindow: function () {
+            window.open(this.imageSrc);
+        }
+    });
+
+    return ModalLogAttachmentImage;
+});

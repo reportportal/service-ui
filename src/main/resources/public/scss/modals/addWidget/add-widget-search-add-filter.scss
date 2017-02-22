@@ -1,0 +1,111 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.modal-add-widget-filter-search-add {
+  position: relative;
+  width: 100%;
+  .filter-edit-header {
+    background: $COLOR--white-four;
+    overflow: hidden;
+    width: 100%;
+    height: 50px;
+    padding: 18px 10px;
+    h1 {
+      font-size: 12px;
+      text-transform: uppercase;
+      margin: 0;
+      font-family: OpenSansSemibold;
+      color: $COLOR--gray-47;
+    }
+  }
+  .label-wrapper {
+    padding: 10px 10px 0 10px;
+    width: 100%;
+    &.rp-form {
+      label {
+        &> span {
+          &:first-child {
+            float: none;
+            width: 100%;
+            text-align: left;
+            & + input {
+              float: none;
+              width: 100%;
+            }
+          }
+        }
+        .validate-hint {
+          width: 100%;
+          left: 0;
+        }
+      }
+    }
+  }
+  .name-label {
+    margin-bottom: 10px;
+    width: 100%;
+    position: relative;
+  }
+  .edit-block {
+    width: 100%;
+    padding: 0 10px 20px 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid $COLOR--gray-91;
+    .filter-entity-wrapper {
+      min-width: 190px;
+      width: 190px;
+      height: auto;
+      min-height: 55px;
+      .filter-option-input .select2-container {
+        height: auto;
+      }
+      .form-group .timerange {
+        width: 190px;
+      }
+      .form-group {
+        margin-bottom: 0;
+      }
+      .filter-entities-select {
+        width: 190px;
+        .rp-btn-with-dropdown {
+          width: 190px;
+        }
+      }
+    }
+    .filter-entities-choice {
+      margin-bottom: 10px;
+    }
+    .sorting-wrapper {
+      margin-bottom: 20px;
+      clear: both;
+      .filter-sorting-view {
+        .dropdown-toggle {
+          &> span {
+            text-transform: capitalize;
+          }
+        }
+      }
+    }
+  }
+  .entities-container {
+    width: 100%;
+  }
+}

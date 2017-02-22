@@ -1,0 +1,193 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.log-grid {
+  .message-grid-cell {
+    width: 70%;
+    i {
+      display: none;
+    }
+  }
+  .attachment-grid-cell {
+    width: 12%;
+  }
+  .time-grid-cell {
+    font-family: $FontMonacoMonospace;
+    width: 18%;
+  }
+  .mobile-block {
+    display: none;
+  }
+  .rp-table-row {
+    position: relative;
+    overflow: hidden;
+    padding: 10px 0;
+    line-height: 18px;
+    &.level-ERROR, &.level-TRACE, &.level-DEBUG {
+      max-height: 130px;
+    }
+    &.open {
+      max-height: 100%;
+      padding-bottom: 40px;
+      .accordion-block {
+        box-shadow: none !important;
+        i {
+          display: none;
+        }
+        i.little {
+          display: inline-block;
+        }
+      }
+    }
+    .accordion-block {
+      display: none;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      text-align: center;
+      font-size: 19px;
+      box-shadow: 0 0px 20px 15px white;
+      i {
+        position: relative;
+        color: $COLOR--gray-60;
+        padding: 0 75px 8px 55px;
+        width: 20px;
+        display: inline-block;
+        cursor: pointer;
+        &:before, &:after {
+          position: absolute;
+          content: '';
+          top: 7px;
+          width: 50px;
+          border-top: 2px dotted $COLOR--gray-60;
+        }
+        &:before {
+          left: 0px;
+        }
+        &:after {
+          right: 0px;
+        }
+        &:hover {
+          color: $COLOR--charcoal-grey;
+          &:after, &:before {
+            border-color: $COLOR--charcoal-grey;
+          }
+        }
+        &.little {
+          display: none;
+        }
+      }
+    }
+    &.show-accordion {
+      .accordion-block {
+        display: block;
+      }
+    }
+    .attachment-grid-cell {
+      img {
+        cursor: pointer;
+        max-width: 100%;
+        border: 1px solid $COLOR--gray-60;
+      }
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 5px;
+      display: block;
+    }
+    &.level-INFO:after {
+      background-color: $COLOR--windows-blue;
+    }
+    &.level-ERROR {
+      background-color: $COLOR--light-red;
+      .accordion-block {
+        background-color: $COLOR--light-red;
+        box-shadow: 0 0px 20px 15px $COLOR--light-red;
+      }
+      &:after {
+        background-color: $COLOR--orange-red;
+      }
+    }
+  }
+  @media(max-width: 720px) {
+    .message-grid-cell {
+      width: 100%;
+      & > div {
+        padding-right: 25px;
+        padding-bottom: 39px;
+        display: inline-block;
+        width: 100%;
+      }
+      i {
+        position: absolute;
+        top: 9px;
+        right: 5px;
+        padding: 10px;
+        cursor: pointer;
+      }
+    }
+    .time-grid-cell, .attachment-grid-cell {
+      display: none;
+    }
+    .rp-table-row {
+      &.show-accordion {
+        .message-grid-cell {
+          i {
+            display: block;
+          }
+        }
+      }
+      .accordion-block {
+        height: 50px;
+        i {
+          display: none !important;
+        }
+      }
+    }
+    .mobile-block {
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 34px;
+      left: 0;
+      bottom: 0;
+      margin: 8px 0;
+      padding: 0 17px;
+      span {
+        font-size: 14px;
+        line-height: 31px;
+        float: left;
+        word-spacing: 12px;
+      }
+      img {
+        max-height: 100%;
+        max-width: 70px;
+        float: right;
+      }
+    }
+  }
+}

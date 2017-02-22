@@ -1,0 +1,160 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+
+common elements:
+-  <h4></h4>
+
+-  <label>
+    <span> row name </span>
+    <input | textarea | button> row control </input | /textarea | /button>
+    <span class="help-inline"></span>
+   </label>
+
+*/
+
+.rp-modal-dialog {
+  .modal-dialog {
+    width: 600px;
+    margin: 10px auto;
+    @media (max-width: 620px) {
+      margin: 10px;
+      width: auto;
+    }
+  }
+
+  .modal-content {
+    border-radius: 0;
+    border: none;
+    padding: 10px;
+    .modal-header {
+      border-bottom: 1px solid $COLOR--gray-91;
+      padding: 9px 40px 17px 9px;
+      h2 {
+        text-transform: uppercase;
+        padding: 0;
+        margin: 0;
+        font-size: 17px;
+        font-family: OswaldRegular;
+        color: $COLOR--topaz;
+      }
+      .close-modal {
+        position: absolute;
+        top: 3px;
+        right: 3px;
+        font-size: 22px;
+        padding: 0 5px;
+        width: 30px;
+        height: 26px;
+        cursor: pointer;
+        color: $COLOR--gray-60;
+        &:hover {
+          color: $COLOR--gray-47;
+        }
+      }
+    }
+    .modal-body {
+      h4 {
+        font-size: 12px;
+        font-family: OpenSansSemibold;
+        text-transform: uppercase;
+        color: $COLOR--gray-47;
+        background-color: $COLOR--white-four;
+        margin: 0;
+        padding: 10px;
+      }
+      //label{
+      //  font-weight: normal;
+      //  position: relative;
+      //  color: $COLOR--charcoal-grey;
+      //  vertical-align: top;
+      //  span:first-child {
+      //    display: block
+      //  }
+      //  button, .rp-input {
+      //    width: 100%;
+      //    margin-top: 6px;
+      //  }
+      //  textarea.rp-input {
+      //    overflow-x: hidden;
+      //  }
+      //  .help-inline {
+      //    padding-top: 5px;
+      //  }
+      //}
+    }
+    .modal-footer {
+      border: none;
+      padding: 10px 6px;
+      .rp-btn {
+        min-width: 68px;
+        margin: 0 3px;
+      }
+    }
+  }
+
+  &.load {
+    .modal-loading {
+      display: block;
+    }
+    &.animate {
+      .modal-loading {
+        opacity: 1;
+      }
+    }
+  }
+  .modal-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.2);
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    .preloader {
+      display: block;
+      position: absolute;
+      top: 19%;
+      left: 0;
+      margin-top: -37px;
+      &:before {
+        content: " ";
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        display: block;
+        box-shadow: 0 0 66px 34px white;
+        top: 50%;
+        left: 50%;
+        border-radius: 50%;
+      }
+    }
+  }
+}
+.modal-backdrop {
+    background-color: rgba(70, 69, 71, 0.3);
+    &.fade.in {
+        opacity: .8;
+    }
+}

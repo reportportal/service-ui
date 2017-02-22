@@ -1,0 +1,22 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.headerText}) %>
+<div class="modal-body">
+    <p><%= data.bodyText %></p>
+    <% if(data.confirmText) { %>
+        <label class="rp-checkbox-wrap confirm-block">
+            <input class="rp-input-checkbox" type="checkbox" data-js-select>
+            <span><%= data.confirmText %></span>
+        </label>
+    <% } %>
+</div>
+<div class="modal-footer">
+    <% if(data.cancelButtonText) { %>
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.cancelButtonText %>
+    </button>
+    <% } %>
+    <% if(data.okButtonText) { %>
+    <button class="rp-btn <%= data.confirmText?'disabled':'' %> <%= (data.confirmText || data.okButtonDanger)?' rp-btn-danger':' rp-btn-submit' %>" type="button" data-js-ok>
+        <%= data.okButtonText %>
+    </button>
+    <% } %>
+</div>

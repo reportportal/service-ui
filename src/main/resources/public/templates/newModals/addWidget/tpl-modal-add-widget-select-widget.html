@@ -1,0 +1,10 @@
+<div class="widget-list">
+    <% _.each(data.widgets, function(value, key) { %>
+    <% if(!value.notShowOnWizard){ %>
+    <label>
+        <input class="rp-input-radio" type="radio" name="widget-type" value="<%- key %>">
+        <span><%- value.gadget_name %></span>
+    </label>
+    <% } %>
+    <% }) %>
+</div>

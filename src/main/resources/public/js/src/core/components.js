@@ -237,6 +237,10 @@ define(function (require, exports, module) {
 
         initialize: function (options) {
             this.model = options.model;
+            this.minPaging = options.minMode || false;
+            this.showPageCount = 0;
+            $(window).on('resize.' + this.cid, this.onResizeWindow.bind(this));
+            this.onResizeWindow();
         },
 
         tpl: "tpl-components-paging",
@@ -251,17 +255,19 @@ define(function (require, exports, module) {
                     from: totalElements === 0 ? 0 : (currentPage - 1) * size + 1,
                     to: totalPages === currentPage ? totalElements : size * currentPage,
                     totalElements: totalElements,
+                    totalPages: totalPages,
                     active: currentPage,
-                    objectsOnPage: size
+                    objectsOnPage: size,
+                    minPaging: this.minPaging,
                 };
-
+            var halfShowPageCount = parseInt(this.showPageCount/2);
             if (totalPages > 1) {
                 var pages;
                 // should be 10 page links
-                if (totalPages <= 10)                   pages = _.range(1, totalPages + 1);
-                else if (currentPage <= 5)              pages = _.range(1, 11);
-                else if (currentPage >= totalPages - 5) pages = _.range(totalPages - 9, totalPages + 1);
-                else                                    pages = _.range(currentPage - 4, currentPage + 6);
+                if (totalPages <= this.showPageCount)                   pages = _.range(1, totalPages + 1);
+                else if (currentPage <= halfShowPageCount)              pages = _.range(1, this.showPageCount+1);
+                else if (currentPage >= totalPages - halfShowPageCount) pages = _.range(totalPages - (this.showPageCount - 1), totalPages + 1);
+                else                                    pages = _.range(currentPage - (halfShowPageCount-1), currentPage + halfShowPageCount + 1);
 
                 model = _.extend({
                     showControls: true,
@@ -280,9 +286,23 @@ define(function (require, exports, module) {
             }
             this.$el.html(Util.templates(this.tpl, model));
 
-            this.pageSize = $("#pageSize", this.$el);
-            this.pageSizeStatic = $(".itemsPerPage:first", this.$el);
+            this.pageSize = $("[data-js-per-page-input]", this.$el);
+            this.pageSizeStatic = $("[data-js-per-page]", this.$el);
             return this;
+        },
+        onResizeWindow: function() {
+            var newShowPageCount = 10;
+            if($( window ).width() < 930) {
+                newShowPageCount = 5;
+            }
+            if (newShowPageCount != this.showPageCount) {
+                if(!this.showPageCount) {
+                    this.showPageCount = newShowPageCount;
+                } else {
+                    this.showPageCount = newShowPageCount;
+                    this.render();
+                }
+            }
         },
 
         first: function (e) {
@@ -322,15 +342,14 @@ define(function (require, exports, module) {
         },
 
         events: {
-            'click ul a': 'scrollToTop',
-            'click a.first': 'first',
-            'click a.previous': 'previous',
-            'click a.next': 'next',
-            'click a.last': 'last',
-            'click a.page': 'page',
-            'click a.itemsPerPage': 'showItemsPerPageControl',
-            'keyup #pageSize': 'onKeyUpPageSize',
-            'change #pageSize': 'hideItemsPerPageControl'
+            'click .first': 'first',
+            'click .previous': 'previous',
+            'click .next': 'next',
+            'click .last': 'last',
+            'click .page': 'page',
+            'click [data-js-per-page]': 'showItemsPerPageControl',
+            'keyup [data-js-per-page-input]': 'onKeyUpPageSize',
+            'change [data-js-per-page-input]': 'hideItemsPerPageControl'
         },
 
         scrollToTop: function (ev) {
@@ -338,7 +357,6 @@ define(function (require, exports, module) {
         },
 
         showItemsPerPageControl: function (e) {
-            e.preventDefault();
             $(e.currentTarget).hide();
             this.pageSize.val('').show().focus();
         },
@@ -366,6 +384,10 @@ define(function (require, exports, module) {
                 count && this.trigger('count', value);
             }
             this.pageSize.val("");
+        },
+        destroy: function() {
+            $(window).off('resize.' + this.cid);
+            RemovableView.prototype.destroy.call(this);
         }
     });
     
@@ -392,11 +414,13 @@ define(function (require, exports, module) {
         onChangePage: function(page){
             this.model.set({number: page});
             this.pagingToSettings();
+            this.scrollToTop();
         },
         onChangeSize: function(size){
             if(size > 300) size = 300;
             this.model.set({number: 1, size: size});
             this.pagingToSettings();
+            this.scrollToTop();
         },
         setSettings: function(){
             if(this.urlModel.get('page.page') && this.urlModel.get('page.size')){

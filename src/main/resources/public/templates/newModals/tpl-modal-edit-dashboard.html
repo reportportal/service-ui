@@ -1,0 +1,38 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: ((data.mode == 'save')?data.text.dialogHeader.addDashboard:data.text.dialogHeader.editDashboard)}) %>
+<div class="modal-body">
+    <form class="rp-form">
+        <label>
+            <span><%= data.text.ui.name %></span>
+            <input class="rp-input" placeholder="<%= data.text.dashboard.namePlaceholder %>" type="text"
+                   data-js-name-input>
+            <span class="validate-hint"></span>
+        </label>
+        <label>
+            <span><%= data.text.ui.description %></span>
+            <textarea class="rp-input" placeholder="<%= data.text.dashboard.descriptionPlaceholder %>" data-js-description></textarea>
+        </label>
+        <div class="rp-field">
+            <span><%= data.text.filter.share %></span>
+            <label class="rp-switcher-big">
+                <span class="turn-on"><%= data.text.ui.on %></span>
+                <span class="turn-off"><%= data.text.ui.off %></span>
+                <input type="checkbox" data-js-is-shared>
+                <div class="slider"></div>
+            </label>
+        </div>
+    </form>
+
+
+</div>
+</div>
+<div class="modal-footer">
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.cancel %>
+    </button>
+    <button class="rp-btn rp-btn-submit" type="button" data-js-ok>
+        <%= (data.mode == 'save')?data.text.ui.add:data.text.ui.update %>
+    </button>
+</div>
+
+
+

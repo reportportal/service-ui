@@ -1,0 +1,172 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.preloader {
+  position: relative;
+  width: 100%;
+  padding: 15px 0;
+  text-align: center;
+  display: none;
+  i {
+    color: #29d;
+    display: inline-block;
+    font-size: 40px;
+  }
+  @media(max-width: $SCREEN_XS_MAX) {
+    padding: 3px 0;
+  }
+}
+.no-result-found {
+  text-align: center;
+  padding: 25px 0;
+  font-size: 17px;
+  color: $COLOR--gray-47;
+  display: none;
+  p {
+    text-align: center;
+    font-size: 13px;
+    margin-top: 5px;
+  }
+  @media(max-width: $SCREEN_XS_MAX) {
+    font-size: 14px;
+    padding: 15px 0;
+    p {
+      text-align: center;
+      font-size: 12px;
+    }
+  }
+}
+
+.form-group {
+  .help-inline {
+    display: none;
+    color: $COLOR--orange-red;
+    font-size: 12px;
+    line-height: 12px;
+  }
+  .error-bottom {
+    display: none;
+  }
+  &.has-error {
+    .error-bottom {
+      display: block;
+    }
+  }
+
+  &.has-error {
+    .help-inline {
+      display: inline-block;
+    }
+  }
+  .validate-hint {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: auto;
+    left: 0;
+    z-index: 100;
+    padding: 10px 11px;
+    font-size: 12px;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    &.show-hint {
+      display: block;
+    }
+  }
+  &.validate-error {
+    input{
+      border-color: $COLOR--orange-red;
+    }
+  }
+}
+
+.rp-form {
+  width: 415px;
+  & > label, .rp-field {
+    position: relative;
+    width: 100%;
+    font-weight: normal;
+    display: inline-block;
+    margin-bottom: 15px;
+    & > span {
+      &.required {
+        position: relative;
+        &:after {
+          content: '*';
+          position: absolute;
+          right: 10px;
+          top: -4px;
+          color: $COLOR--pale-red;
+        }
+      }
+      &:first-child {
+        display: block;
+        line-height: 30px;
+        width: 26%;
+        min-height: 1px;
+        padding-right: 20px;
+        float: left;
+        text-align: right;
+        & + input, & + textarea, & + label {
+          float: left;
+        }
+        & + input, & + textarea {
+          width: 74%;
+        }
+        & + textarea {
+          height: 60px;
+          padding-top: 10px;
+        }
+      }
+    }
+    .rp-switcher-big {
+      width: 100px;
+    }
+    .validate-hint {
+      display: none;
+      position: absolute;
+      top: 100%;
+      width: 74%;
+      right: 0;
+      z-index: 100;
+      padding: 10px 11px;
+      font-size: 12px;
+      background-color: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.2);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+      &.show-hint {
+        display: block;
+      }
+    }
+    &.validate-error {
+      & > span {
+        & + input, & + textarea {
+          border-color: $COLOR--orange-red;
+        }
+      }
+      .select2-container .select2-choice {
+        border-color: $COLOR--orange-red;
+      }
+    }
+  }
+}

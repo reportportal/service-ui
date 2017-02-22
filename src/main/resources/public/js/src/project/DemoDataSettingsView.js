@@ -25,7 +25,7 @@ define(function(require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
-    var Components = require('components');
+    var Components = require('core/components');
     var App = require('app');
     var Service = require('coreService');
     var Localization = require('localization');
@@ -59,7 +59,7 @@ define(function(require, exports, module) {
         },
         initValidators: function () {
             var self = this;
-            Util.bootValidator(this.$postfixInput, [
+            Util.hintValidator(this.$postfixInput, [
                 {
                     type: 'postfix',
                     validator: 'minMaxRequired',
@@ -70,8 +70,6 @@ define(function(require, exports, module) {
         },
         validate: function(){
             this.$postfixInput.trigger('validate');
-            return this.$postfixInput.data('valid');
-
         },
         showFormError: function(error){
             var response = null,
@@ -109,9 +107,8 @@ define(function(require, exports, module) {
             this.$alertLoaderBlock[action]();
         },
         submitSettings: function (e) {
-            if (!this.validate()) {
-                return;
-            }
+            this.validate();
+            if ($('.validate-error', this.$el).length) return;
             this.hideFormError();
             var postfix = this.$postfixInput.val(),
                 data = {

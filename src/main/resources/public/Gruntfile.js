@@ -21,19 +21,16 @@ module.exports = function (grunt) {
 
         'css/daterangepicker-bs3.css',
         'css/nvd3/nv.d3.min.css',
-        'css/gridstack/gridstack.css',
         'css/select2.css',
         'css/markitup.css',
         'css/magnific-popup.css',
+        'css/spectrum.css',
+        'css/highlightJS/atom-one-light.css',
 
         'compiled/scss/main.css',
         'css/animate.min.css',
 
-        // TODO
-        // 'css/style.css',
-        // 'css/default.css',
-        // 'css/style-custom.css',
-        // 'css/epam-style.css',
+        'css/markdown/simplemde.min.css'
     ];
 
     grunt.initConfig({
@@ -102,6 +99,14 @@ module.exports = function (grunt) {
             fonts: {
                 src: 'fonts/**',
                 dest: 'compiled/'
+            },
+            jsLib: {
+                files: [{
+                    cwd: rootPath,
+                    src: 'js/lib/**',
+                    dest: publicPath + '/',
+                    filter: 'isFile'
+                }]
             }
         },
         cssmin: {
@@ -399,6 +404,7 @@ module.exports = function (grunt) {
             'concat:production',
             'copy:mainProduction',
             'copy:certificate',
+            'copy:jsLib',
             'postcss:production',
             'cssmin',
             'sync:production',

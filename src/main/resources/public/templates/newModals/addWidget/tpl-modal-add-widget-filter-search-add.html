@@ -1,0 +1,23 @@
+<div class="filter-edit-header">
+    <h1><%- data.text.filter.addNew %></h1>
+</div>
+<div class="label-wrapper rp-form">
+    <label>
+        <span><%= data.text.filter.filterName %></span>
+        <input class="rp-input form-control" placeholder="<%= data.text.filter.namePlaceholder %>" type="text" data-js-name-input>
+        <span class="validate-hint"></span>
+    </label>
+</div>
+
+<div class="edit-block clearfix">
+    <div class="entities-container clearfix" data-js-entities-container></div>
+    <div class="sorting-wrapper">
+        <span><%- data.text.ui.sortBy %>:</span>&nbsp;&nbsp;<span data-js-filter-sorting></span>
+    </div>
+
+    <div class="rp-nav-right">
+        <button class="rp-btn rp-btn-cancel" data-js-cancel-edit><%= data.text.ui.cancel %></button>
+        <button class="rp-btn rp-btn-submit rp-btn-add" data-js-ok-edit><%= data.text.ui.add %></button>
+    </div>
+</div>
+

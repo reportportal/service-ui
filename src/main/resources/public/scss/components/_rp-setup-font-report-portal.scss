@@ -47,6 +47,12 @@ i {
 /* ICONS FOR LANDING PAGE */
 
 .rp-icons {
+    &.rp-icons-addnewprjct:before {
+        content: "\e92b";
+    }
+    &.rp-icons-logout:before {
+        content: "\e92a";
+    }
     &.rp-icons-live-visibility-landing {
         @include beforeContent("\e90a");
     }
@@ -245,6 +251,25 @@ i {
     }
     &.rp-icons-strikethrough {
         @include beforeContent("\e950");
+    }
+
+    &.rp-icons-right {
+        @include beforeContent("\e925");
+    }
+    &.rp-icons-warning2 {
+        @include beforeContent("\e926");
+    }
+    &.rp-icons-add-dash {
+        @include beforeContent("\e927");
+    }
+    &.rp-icons-left {
+        @include beforeContent("\e928");
+    }
+    &.rp-icons-sorting {
+        @include beforeContent("\e929");
+    }
+    &.rp-icons-code {
+        @include beforeContent("\e932");
     }
 }
 

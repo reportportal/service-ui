@@ -1,0 +1,70 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.launch-log-info-stack-trace {
+  &.load {
+    .activity-preloader {
+      display: block;
+    }
+    .go-to-log {
+      display: none;
+    }
+  }
+  &.not-found {
+    .no-result-found {
+      display: block;
+    }
+    .go-to-log {
+      display: none;
+    }
+  }
+  .stack-trace-item {
+    background-color: $COLOR--light-red;
+    padding: 16px 40px 40px 16px;
+    line-height: 19px;
+    word-wrap: break-word;
+  }
+  .go-to-log {
+    cursor: pointer;
+    display: inline-block;
+    color: $COLOR--windows-blue;
+    font-size: 13px;
+    bottom: 15px;
+    left: 16px;
+    position: absolute;
+    i {
+      vertical-align: middle;
+    }
+    .loader-action {
+      display: none;
+    }
+  }
+  &.load-go-to-log {
+    .go-to-log {
+      i {
+        display: none;
+      }
+      .loader-action {
+        display: inline-block;
+      }
+    }
+  }
+}

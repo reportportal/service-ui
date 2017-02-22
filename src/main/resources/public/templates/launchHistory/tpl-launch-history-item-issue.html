@@ -1,0 +1,17 @@
+<div class="history-defect-badge no-stats <%= data.stats.cls %>" style="background: <%- data.stats.issueType.color %>" data-tooltip-type="issue" data-tooltip-content="<%- data.stats.issueType.longName %>">
+    <span><%- data.stats.issueType.shortName %></span>
+</div>
+<% if(data.stats.comment){ %>
+<div class="history-comment" data-tooltip-type="comment" data-tooltip-content="<%- data.stats.comment %>">
+    <span>
+        <i class="material-icons">chat</i>
+    </span>
+</div>
+<% } %>
+<% if(data.stats.tickets){ %>
+<div class="history-tickets" data-tooltip-type="tickets" data-tooltip-content="<%= data.stats.tickets %>">
+    <span>
+        <i class="rp-icons rp-icons-ticket icon-ticket"></i>
+    </span>
+</div>
+<% } %>

@@ -1,11 +1,23 @@
+
+#logFilter, #ScreenshotsFilter {
+    overflow: hidden;
+    padding: 5px 0;
+    position: relative;
+    z-index: 1;
+}
+
+#logFilter .my_button, #ScreenshotsFilter .my_button {
+    opacity: 0.5;
+}
+
+#logFilter .my_button.active, #ScreenshotsFilter .my_button.active {
+    opacity: 1;
+}
+
 .binary-file {
     color: #5e5e5e;
     font-size: 36px;
     width: 36px;
     height: 36px;
     display: inline-block;
-}
-
-#messageFilterWrapper {
-    margin-bottom: 15px;
 }

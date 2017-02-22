@@ -1,0 +1,21 @@
+<form class="rp-form">
+    <label>
+        <span><%= data.text.ui.name %></span>
+        <input class="rp-input" placeholder="<%= data.text.widgets.namePlaceholder %>" type="text" data-js-name-input>
+        <span class="validate-hint"></span>
+    </label>
+    <label>
+        <span><%= data.text.ui.description %></span>
+        <textarea class="rp-input" placeholder="<%= data.text.widgets.descriptionPlaceholder %>" data-js-description></textarea>
+    </label>
+    <label>
+        <span><%= data.text.filter.share %></span>
+        <label class="rp-switcher-big" data-js-shared-control>
+            <span class="turn-on"><%= data.text.ui.on %></span>
+            <span class="turn-off"><%= data.text.ui.off %></span>
+            <input type="checkbox" data-js-is-shared>
+            <div class="slider"></div>
+        </label>
+    </label>
+</form>
+<div data-js-dashboards-list></div>

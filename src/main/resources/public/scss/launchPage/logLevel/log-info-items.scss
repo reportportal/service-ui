@@ -1,0 +1,117 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+.launch-log-items-wrapper {
+  .filters-block {
+    width: 100%;
+    margin: 30px 0 17px 0;
+    height: 30px;
+    .filter-entity-wrapper {
+      float: left;
+      width: 300px;
+      margin: 0;
+      min-width: 0;
+      height: 30px;
+      display: block;
+      .form-group {
+        margin: 0;
+      }
+      .rp-btn-with-dropdown {
+        width: 220px;
+      }
+    }
+    .filter-name {
+      font-weight: normal;
+      font-size: 14px;
+      float: left;
+      line-height: 30px;
+    }
+    .remove-filter {
+      display: none;
+    }
+    .input-group {
+      width: 220px;
+      float: left;
+      margin-left: 10px;
+    }
+    .attachments-filter {
+      line-height: 30px;
+      padding-left: 20px;
+    }
+    @media(max-width: 780px) {
+      display: none;
+    }
+  }
+  .min-paging {
+    padding-left: 10px;
+    float: right;
+  }
+  .filter-name-block {
+    position: absolute;
+    top: 0;
+    left: 115px;
+    .form-group {
+      margin: 0;
+    }
+    .filter-name, .remove-filter, .clear-text{
+      display: none;
+    }
+    input {
+      background: none;
+      border: none !important;
+      border-bottom: 1px solid $COLOR--gray-80 !important;
+      box-shadow: none !important;
+      color: $COLOR--gray-47 !important;
+      padding: 0 25px 0 3px;
+      height: 22px;
+      display: block;
+      width: 200px;
+      margin-top: 13px;
+    }
+    i {
+      position: absolute;
+      top: 14px;
+      font-size: 21px;
+      right: 0;
+      color: $COLOR--gray-60;
+    }
+    .filter-hint {
+      font-size: 10px;
+      color: $COLOR--gray-60;
+      text-transform: none;
+    }
+  }
+  &.not-found {
+    .no-result-found {
+      display: block;
+    }
+    .rp-table-row, .pagination-component {
+      display: none;
+    }
+  }
+  &.load {
+    .launch-log-grid-preloader {
+      display: block;
+    }
+    .rp-table-row, .pagination-component, .no-result-found {
+      display: none;
+    }
+  }
+}

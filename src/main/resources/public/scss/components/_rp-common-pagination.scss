@@ -22,98 +22,146 @@
 /*------------*/
 /* PAGINATION */
 
-.pagingtoolbar {
-    padding-top: 15px;
+.pagination-min-component, .pagination-component {
+    ul {
+        li {
+            float: left;
+            cursor: pointer;
+            &.first, &.next, &.previous, &.last {
+                color: $COLOR--gray-60;
+            }
+            &:hover {
+                color: $COLOR--tealish;
+            }
+            &.disabled {
+                cursor: default;
+                color: $COLOR--gray-80;
+                &:hover {
+                    color: $COLOR--gray-80;
+                }
+            }
+        }
+    }
 }
-
-.pagination {
-    border-radius: 0;
-
-    & > li {
-        & > a,
-        & > span {
-            height: 31px;
-            min-width: 31px;
-            font-family: $OpenSansRegular;
-            font-size: 14px;
-            color: #666;
-        }
-    }
-
-    & > li > a,
-    & > li > span,
-    & > li > a:hover,
-    & > li > span:hover,
-    & > li > a:focus,
-    & > li > span:focus
-    & > .disabled > span,
-    & > .disabled > span:hover,
-    & > .disabled > span:focus,
-    & > .disabled > a,
-    & > .disabled > a:hover,
-    & > .disabled > a:focus,
-    & > .active > a,
-    & > .active > span,
-    & > .active > a:hover,
-    & > .active > span:hover,
-    & > .active > a:focus,
-    & > .active > span:focus {
-        border-color: #ccc;
-    }
-
-    & > .disabled {
-        & > span,
-        & > span:hover,
-        & > span:focus,
-        & > a,
-        & > a:hover,
-        & > a:focus {
-            background-color: #eee;
-            color: #ccc;
-        }
-    }
-
-    & > .active {
-        & > a,
-        & > span,
-        & > a:hover,
-        & > span:hover,
-        & > a:focus,
-        & > span:focus {
-            background-color: #eee;
-        }
-    }
-
-    & > .active > a,
-    & > .active > span,
-    & > .active > a:hover,
-    & > .active > span:hover,
-    & > .active > a:focus,
-    & > .active > span:focus,
-    & > li > a:hover,
-    & > li > span:hover,
-    & > li > a:focus,
-    & > li > span:focus {
-        color: #666;
-    }
-
-    &.pagination-sm {
-        & > li:first-child {
-            & > a,
-            & > span {
-                border-top-left-radius: 0;
-                border-bottom-left-radius: 0;
+.pagination-component {
+    position: relative;
+    text-align: center;
+    padding: 20px;
+    min-height: 60px;
+    color: $COLOR--gray-60;
+    ul {
+        position: relative;
+        display: inline-block;
+        height: 26px;
+        padding: 0 20px;
+        li {
+            position: relative;
+            display: inline-block;
+            font-size: 13px;
+            color: $COLOR--gray-47;
+            font-family: OpenSansSemibold;
+            padding: 0 6px;
+            height: 100%;
+            margin: 0 2px;
+            &.first, &.next, &.previous, &.last {
+                font-size: 19px;
+                i {
+                    vertical-align: top;
+                }
+            }
+            &.active {
+                color: $COLOR--topaz;
+                border-bottom: 2px solid $COLOR--topaz;
+                cursor: default;
+            }
+            &.more {
+                cursor: default;
+                color: $COLOR--gray-47;
+                line-height: 22px;
+            }
+            &.first:after, &.last:after {
+                content: ' ';
+                position: absolute;
+                width: 1px;
+                top: 1px;
+                bottom: 5px;
+                right: -5px;
+                background: $COLOR--gray-80;
+            }
+            &.last:after {
+                right: auto;
+                left: -5px;
             }
         }
     }
-
-    &.pagination-sm {
-        & > li:last-child {
-            & > a,
-            & > span {
-                border-top-right-radius: 0;
-                border-bottom-right-radius: 0;
+    .left-block {
+        position: absolute;
+        top: 21px;
+        left: 14px;
+        text-align: left;
+    }
+    .right-block {
+        position: absolute;
+        top: 21px;
+        right: 14px;
+        text-align: right;
+        .per-page {
+            cursor: pointer;
+            color: $COLOR--topaz;
+        }
+        input {
+            display: none;
+            border: 1px solid $COLOR--topaz;
+            text-align: right;
+            padding-right: 5px;
+            width: 40px;
+            margin-top: -3px;
+            height: 25px;
+            vertical-align: top;
+            color: $COLOR--topaz;
+        }
+    }
+    @media (max-width: 930px) {
+        padding: 10px;
+        .right-block, .left-block, .first, .last {
+            display: none;
+        }
+        ul {
+            padding: 0;
+            height: 42px;
+            li {
+                padding: 15px 10px 4px 10px;
+                font-size: 14px;
+                &.more {
+                    padding: 15px 5px 4px 5px;
+                }
+                &.previous, &.next {
+                    padding: 15px 5px 4px 5px;
+                }
             }
+        }
+    }
+}
+.pagination-min-component {
+    ul {
+        height: 30px;
+        font-size: 12px;
+        li {
+            float: left;
+        }
+        .min-paging-text {
+            line-height: 33px;
+            float: left;
+            font-family: OpenSansSemibold;
+            color: $COLOR--gray-60;
+            span {
+                padding: 0 9px;
+            }
+        }
+        i {
+            font-size: 20px;
+            line-height: 33px;
+            vertical-align: top;
         }
     }
 }

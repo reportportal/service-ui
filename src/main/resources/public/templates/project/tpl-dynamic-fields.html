@@ -2,22 +2,21 @@
 <% _.forEach(data.collection, function(field) { %>
         <div class="rp-form-group">
             <% var obligatoryField = field.required ? 'obligatory-field' : '';  %>
-            <label class="<%= data.popup ? 'col-sm-4' : 'col-md-3 col-sm-3' %> col-xs-12 rp-control-label rp-custom-col <%= obligatoryField %> <%= data.update ? 'custom-style-1' : 'custom-style-2' %>" for="<%- field.id %>">
+            <label
+                    class="bts-field-label rp-control-label <%= obligatoryField %> <%= data.update ? 'custom-style-1' : 'custom-style-2' %>" for="<%- field.id %>">
                 <%- field.fieldName %>
             </label>
-            <div class="<%= data.popup ? 'col-sm-8' : 'col-md-4 col-sm-7' %>  col-xs-10 rp-custom-col <%= data.update ? 'custom-style-1' : 'custom-style-2' %>">
+            <div class="bts-field-input <%= data.update ? 'custom-style-1' : 'custom-style-2' %>">
                 <% var isDisabled = data.disabled.indexOf(field.id) !== -1 ? 'disabled="disabled"' : ''; %>
                 <% if(field.definedValues && field.definedValues.length){ %>
                     <% if(field.fieldType === 'array') { %>
-                        <div class="btn-group input-group to-100-width">
                             <div class="b-users-typeahead">
                                 <input class="rp-input-default rp-width-100 users-typeahead default-value" data-name="<%= field.fieldName %>" id="<%= field.id %>" value="<%= field.value ? field.value.join(',') : '' %>" <%= notAllowed %>>
                             </div>
-                        </div>
                     <% }else{ %>
                         <% if(field.definedValues.length > 10){ %>
                             <% var id = field.value ? field.value[0] : ''; %>
-                            <select id="<%- field.id %>" data-id="<%- field.id.replaceAll('.', '') %>" class="btn-group input-group to-100-width">
+                            <select id="<%- field.id %>" data-id="<%- field.id.replaceAll('.', '') %>" class="to-100-width">
                                 <option value=""><%= data.text.ui.selectValue %></option>
                                 <% _.forEach(field.definedValues, function(option) { %>
                                     <option value="<%= option.valueId %>" <%= option.valueId === id ? 'selected' : '' %>><%= option.valueName %></option>
@@ -25,7 +24,6 @@
                             </select>
                         <% } else { %>
                         <% var value = field.value ? field.value[0] : (field.definedValues[0].valueName || ''); %>
-                        <!-- <div class="btn-group input-group to-100-width"> -->
                         <div class="rp-btn-group rp-width-100">
                             <button <%= notAllowed %> id="<%- field.id %>"
                                 data-id="<%- field.id.replaceAll('.', '') %>"
@@ -62,7 +60,7 @@
                 <% } %>
             </div>
             <% if(data.update){ %>
-                <div class="col-md-5 col-sm-2 col-xs-2 rp-custom-col">
+                <div class="bts-field-checkbox">
                     <label class="rp-checkbox-wrap">
                         <% var checked = field.checked || field.required || data.editable ? "checked=checked" : ""; %>
                         <% var disabled = field.required ? "disabled" : ""; %>

@@ -1,0 +1,247 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.rp-project-members {
+    &.members-admin {
+        margin: 0 -10px;
+    }
+    .project-members-actions {
+        @extend %CLEAR_FIX;
+
+        .project-members-filter {
+            padding: 20px 0;
+            float: left;
+            width: 100%;
+            max-width: 310px;
+
+            .rp-input-search-wrap {
+                .input-filter {
+                    margin: 0;
+                }
+            }
+        }
+        .project-members-buttons {
+            padding: 20px 0;
+            float: right;
+
+            .rp-btn {
+                float: right;
+                margin-left: 10px;
+            }
+        }
+    }
+    .project-members-table {
+        .rp-grid-thead {
+            border-top: 1px solid $COLOR--gray-91;
+        }
+        .rp-table-row {
+            padding: 20px 0;
+        }
+        .name-grid-cell {
+            width: 35%;
+        }
+        .login-grid-cell {
+            width: 20%;
+        }
+        .role-grid-cell {
+            width: 27%;
+        }
+        .action-grid-cell {
+            width: 18%;
+
+            .action-right {
+                text-align: right;
+                padding-right: 66px;
+            }
+        }
+
+        .member-wrap {
+            @extend %CLEAR_FIX;
+
+            .member-avatar {
+                float: left;
+                max-width: 40px;
+                min-height: 50px;
+                img {
+                    width: 100%;
+                    height: auto;
+                }
+            }
+            .member-info {
+                margin: 0 0 0 55px;
+                font-size: 13px;
+
+                .member-you, .member-admin {
+                    display: inline-block;
+                    margin: 0;
+                    font-size: 10px;
+                    color: $COLOR--white-default;
+                    line-height: 12px;
+                    font-weight: 400;
+                    position: relative;
+                    top: -10px;
+                    display: inline-block;
+                    padding: 0 6px 2px;
+                    white-space: nowrap;
+                    border-radius: 100px;
+                    text-transform: lowercase;
+                    letter-spacing: .6px;
+                }
+                .member-admin {
+                    background: $COLOR--orange-red;
+                }
+                .member-you {
+                    background: $COLOR--dark-pastel-green;
+                }
+                .member-name, .member-login {
+                    margin: 0;
+                    font-weight: normal;
+                    text-transform: capitalize;
+                    display: inline-block;
+                    max-width: 100%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .member-login {
+                    text-transform: none;
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .login-time {
+            font-size: 13px;
+            display: inline-block;
+
+            .from-now {
+                display: none;
+            }
+            &:hover {
+                .exact-time {
+                    display: none;
+                }
+                .from-now {
+                    display: inline-block;
+                }
+            }
+        }
+        &.show-from-now {
+            .login-time {
+                .exact-time {
+                    display: none;
+                }
+                .from-now {
+                    display: inline-block;
+                }
+                &:hover {
+                    .exact-time {
+                        display: inline-block;
+                    }
+                    .from-now {
+                        display: none;
+                    }
+                }
+            }
+        }
+        .member-select-role {
+            width: 100%;
+            max-width: 250px;
+            position: relative;
+
+            .dropdown-menu {
+                & > li {
+                    a.active, a.active:hover {
+                        background: $COLOR--gray-91;
+                        cursor: default;
+                    }
+                }
+            }
+            .member-role-mobile {
+                display: none;
+            }
+        }
+        .members-actions {
+            text-align: right;
+            padding-right: 5px;
+        }
+        .member-title-mobile {
+            display: none;
+            font-size: 12px;
+            margin-right: 6px;
+            text-transform: uppercase;
+        }
+    }
+    .project-empty-members {
+
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+        .project-members-actions {
+            display: none;
+        }
+        .project-members-table {
+            .rp-grid-thead {
+                display: none;
+            }
+            .rp-table-row {
+                padding: 14px 0;
+            }
+            .grid-cell {
+                padding: 6px 15px;
+            }
+            .name-grid-cell {
+                width: 100%;
+            }
+            .login-grid-cell {
+                width: 100%;
+            }
+            .role-grid-cell {
+                width: 100%;
+            }
+            .action-grid-cell {
+                display: none;
+            }
+            .member-wrap {
+                .member-info {
+                    font-size: 15px;
+                }
+            }
+            .login-time {
+                padding: 0;
+                font-size: 14px;
+            }
+            .member-title-mobile {
+                font-size: 12px;
+                display: inline-block;
+            }
+            .member-select-role {
+                font-size: 14px;
+
+                .rp-btn-with-dropdown {
+                    display: none;
+
+                }
+                .member-role-mobile {
+                    display: block;
+                }
+            }
+        }
+    }
+}

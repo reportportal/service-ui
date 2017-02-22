@@ -22,472 +22,178 @@
 define(function (require, exports, module) {
     'use strict';
 
+    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var SingletonAppModel = require('model/SingletonAppModel');
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var $ = require('jquery');
     var Backbone = require('backbone');
-    var Launch = require('launch');
-    var Components = require('components');
-    var Filter = require('filters');
-    var Helpers = require('helpers');
-    var Util = require('util');
-    var Service = require('filtersService');
-    var Localization = require('localization');
+    var Epoxy = require('backbone-epoxy');
     var App = require('app');
-    var urls = require('dataUrlResolver');
-    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var Components = require('core/components');
+    var Util = require('util');
+    var MainBreadcrumbsComponent = require('components/MainBreadcrumbsComponent');
+    var CoreService = require('coreService');
+    var FilterCollection = require('filters/FilterCollection');
+    var Localization = require('localization');
+    var FavoritesItem = require('favorites/FavoritesItemView');
 
     var config = App.getInstance();
+    var appModel = new SingletonAppModel();
 
-    var FavoriteModel = Backbone.Model.extend({
-        defaults: {
-            name: '',
-            id: '',
-            type: '',
-            owner: '',
-            shared: '',
-            entities: null,
-            selection_parameters: null
-        }
-    });
-
-    var FavoritesCollection = Backbone.Collection.extend({
-        model: FavoriteModel,
-
-        initialize: function (models, options) {
-            this.url = options.url;
-        },
-
-        parse: function (response) {
-            this.page = response.page;
-            return response.content;
-        }
-    });
-
-    var ContentView = Backbone.View.extend({
-        initialize: function (options) {
-            this.contextName = options.contextName;
-            this.context = options.context;
-            this.queryString = options.queryString;
-        },
-
-        render: function () {
-            if (this.$header && _.isFunction(this.$header.destroy)) {
-                this.$header.destroy();
-            }
-            this.$header = new Header({
-                header: this.context.getMainView().$header
-            }).render();
-            // do not call render method on body - since it is async data dependant and will do it after fetch
-            if (this.$body && _.isFunction(this.$body.destroy)) {
-                this.$body.destroy();
-            }
-            this.$body = new Body({
-                context: this.context,
-                queryString: this.queryString
+    var FavoritesPage = Epoxy.View.extend({
+        initialize: function(options) {
+            this.model = new Backbone.Model({
+                search: '',
+                empty: false,
+                notFound: false,
             });
-            return this;
-        },
-
-        update: function () {
-            this.render();
-        },
-
-        destroy: function () {
-            this.$header.destroy();
-            this.$body.destroy();
-            this.undelegateEvents();
-            this.unbind();
-            delete this;
-        }
-    });
-
-    var Header = Components.BaseView.extend({
-        initialize: function (options) {
-            this.$el = options.header;
-        },
-
-        tpl: 'tpl-favorites-header',
-
-        render: function () {
-            this.$el.html(Util.templates(this.tpl));
-            return this;
-        }
-    });
-
-    var Body = Components.BaseView.extend({
-        nameFilterEl: null,
-
-        initialize: function (options) {
-            this.$el = options.context.getMainView().$body;
+            this.renderViews = [];
+            this.collection = new FilterCollection();
+            this.launchFilterCollection = new SingletonLaunchFilterCollection();
+            this.listenTo(this.collection, 'reset', this.renderCollection);
+            this.listenTo(this.collection, 'remove', this.updateFilters);
             this.context = options.context;
-
-            this.baseRoute = urls.filtersBase();
-
-            this.collectionUrl = urls.saveFilter();
-            this.collection = new FavoritesCollection([], {url: this.collectionUrl});
-
-            this.requestParameters = new Components.RequestParameters({objectsType: 'objectsOnFavorites'});
-            this.requestParameters.loadObjectsCount('objectsOnFavorites');
-            this.requestParameters.clear('objectsOnFavorites');
-            this.requestParameters.setSortInfo('name', 'ASC');
-            options.queryString && this.requestParameters.apply(options.queryString);
-
-            this.filter = new Filter.Model({name: 'Name', id: 'filter.cnt.name', required: true});
-            this.filterToUrlRequestParams = new Components.RequestParameters();
-
-            this.defectTypeCollection = new SingletonDefectTypeCollection();
-
-            this.load();
+            this.$header = this.context.getMainView().$header;
+            this.$el = this.context.getMainView().$body;
         },
-
-        getRequestParameters: function () {
-            var params = this.requestParameters.toJSON({'filter.eq.is_link': false});
-            if (!params['page.size']) {
-                this.requestParameters.setPageSize(config.objectsOnFavorites);
-                params['page.size'] = config.objectsOnFavorites;
-            }
-            return params;
-        },
-
-        load: function () {
-            var params = {
-                url: this.collection.url,
-                success: this.onDataLoad.bind(this),
-                error: this.onDataLoadException.bind(this)
-            };
-            var data = this.getRequestParameters();
-            if (_.isObject(data) && !_.isEmpty(data)) {
-                params.data = data;
-            }
-            this.collection.fetch(params);
-        },
-
-        onDataLoad: function (collection, response) {
-            $(".alert").alert('close'); // close previous alerts
-            this.render();
-        },
-
-        onDataLoadException: function (collection, response) {
-            if (response && response.status === 401) {
-                Util.ajaxFailMessenger(response, "loadFilters");
-            } else {
-                Util.ajaxFailMessenger(null, "loadFilters");
-            }
-        },
-
-        onPage: function (page, size) {
-            this.requestParameters.setPage(page);
-            if (size) {
-                this.requestParameters.setPageSize(size);
-            }
-            config.router.navigate(this.baseRoute + "?" + this.requestParameters.toURLSting());
-            this.load();
-        },
-
-        getFilterUrl: function (filter) {
-            this.filterToUrlRequestParams.clear();
-            Service.loadFilterIntoRequestParams(this.filterToUrlRequestParams, filter);
-            return urls.tabUrl(this.filterToUrlRequestParams.toURLSting());
-        },
-
-        tpl: 'tpl-favorites-body',
-        tplAction: 'tpl-favorites-action-block',
-        tplFilterEdit: 'tpl-favorites-edit',
-
-        render: function () {
-            var self = this;
-            if (this.$el && this.$el.length > 0) {
-                this.defectTypeCollection.ready.done(function () {
-                    self.$el.html(Util.templates(self.tpl, {
-                        filters: self.collection.toJSON(),
-                        userName: config.userModel.get('name'),
-                        getLastKey: Helpers.getLastKey,
-                        getFilterOptions: Helpers.getFilterOptions,
-                        actionTpl: self.tplAction,
-                        userPrefs: config.preferences.filters || [],
-                        getFilterUrl: function (filter) {
-                            return self.getFilterUrl(filter);
-                        },
-                        util: Util
-                    }));
-                    $('.filter-link-to-launches').each(function() {
-                        var $this =  $(this);
-                        $this.text($.trim($this.text()))
-                    });
-                    self.paging = new Components.PagingToolbarConfigSave({
-                        el: $("#pagingHolder", self.$body),
-                        model: new Backbone.Model(self.collection.page),
-                        pageType: "objectsOnFavorites"
-                    });
-
-                    self.paging.render();
-                    self.paging.on('page', self.onPage, self);
-
-                    self.rebindMessageFilter();
-                })
-            }
-            return this;
-        },
-
-        rebindMessageFilter: function () {
-            //update filter name if it is present in request params
-            var nameFilter = _.find(this.requestParameters.getFilters(), function (item) {
-                return item.id === this.filter.get('id');
-            }, this);
-            if (this.nameFilterEl) {
-                this.nameFilterEl.off();
-                this.nameFilterEl = null;
-            }
-            this.nameFilterEl = $("#nameFilter", this.$el);
-            var restorationValue = nameFilter ? nameFilter.value : "";
-            this.nameFilterEl.val(restorationValue);
-            // validators setup
-            Util.bootValidator(this.nameFilterEl, [{
-                validator: 'minMaxNotRequired',
-                type: 'filterName',
-                min: 3,
-                max: 55
-            }]);
-            var self = this;
-            this.nameFilterEl.on('validation::change', function (e, state) {
-                self.filterApply(e, state);
-            });
-            this.nameFilterEl.focus().val("").val(restorationValue);
-        },
-
-        processAction: function (e) {
-            e.preventDefault();
-            var $el = $(e.currentTarget),
-                action = $el.data('action'),
-                filter = this.collection.get($el.data('target'));
-            if ($el.parent().hasClass('disabled')) {
-                return;
-            }
-            switch (action) {
-                case 'delete':
-                    this.deleteFilter(filter);
-                    break;
-                case 'edit':
-                    this.editFilter(filter);
-                    break;
-                case 'share':
-                    this.shareFilter(filter, $el.closest('.row'));
-                    break;
-                default :
-                    break;
-            }
-        },
-
+        template: 'tpl-favorite-page',
+        templateHeader: 'tpl-favorites-header',
         events: {
-            'click .action-link': 'processAction',
-            'click .mark-as-favorite': 'toFavorites',
-            'click .filter-link-to-launches': 'applyFilter'
+            'validation::change [data-js-filter-name]': 'onChangeFilterName',
+            'click [data-js-link-launch]': 'onClickLinkLaunch',
+            'click [data-js-add-filter]': 'onClickAddFilter',
         },
-
-        applyFilter: function (e) {
-            e.preventDefault();
-            var $el = $(e.currentTarget),
-                url = $el.attr('href'),
-                filter = this.collection.get($el.data('id'));
-            config.trackingDispatcher.filterClicked(filter.get('isShared'), $el.text());
-
-            // jump to launches page with selected tab opened
-            Util.updateLaunchesHref(url);
-            if (!config.preferences.filters || _.indexOf(config.preferences.filters, $el.data('id')) === -1) {
-                config.preferences.filters = config.preferences.filters || [];
-                var updated = config.preferences.filters.slice();
-                updated.push($el.data('id'));
-                Service.updateTabsPreferences({filters: updated, active: url}).done(function () {
-                    config.preferences.filters = updated;
-                    config.preferences.active = url;
-                    window.location.hash = url;
+        bindings: {
+            '[data-js-filter-name]': 'attr: {disabled: empty}',
+            '[data-js-empty-block]': 'classes: {hide: not(empty)}',
+            '[data-js-filter-paginate]': 'classes: {hide: any(empty, notFound)}',
+            '[data-js-not-found]': 'classes: {hide: not(notFound)}',
+            '[data-js-search-value]': 'text: search',
+        },
+        render: function() {
+            var defectTypeCollection = new SingletonDefectTypeCollection();
+            this.mainBreadcrumbs = new MainBreadcrumbsComponent({
+                data: [{name: Localization.favorites.title, link: ''}]
+            });
+            this.$header.html(this.mainBreadcrumbs.$el);
+            defectTypeCollection.ready.done(function() {
+                this.$el.html(Util.templates(this.template, {}));
+                this.$filterName = $('[data-js-filter-name]', this.$el);
+                this.$filterList = $('[data-js-filter-list]', this.$el);
+                this.$filterPaginate = $('[data-js-filter-paginate]', this.$el);
+                Util.bootValidator(this.$filterName, [{
+                    validator: 'minMaxNotRequired',
+                    type: 'filterName',
+                    min: 3,
+                    max: 128
+                }]);
+                this.paging = new Components.PagingToolbarSaveUser({
+                    el: this.$filterPaginate,
+                    model: new Backbone.Model(),
+                    pageType: 'filters'
                 });
-            } else {
-                window.location.hash = url;
-            }
-        },
-
-        toFavorites: function (e) {
-            e.preventDefault();
-            var $el = $(e.currentTarget),
-                id = $el.data("id"),
-                presentFilters = config.preferences.filters,
-                direction = 'add',
-                attrTitle = '',
-                self = this;
-            if (!presentFilters || !presentFilters.length) {
-                config.preferences["filters"] = [id];
-                presentFilters = config.preferences.filters;
-            } else {
-                var index = presentFilters.indexOf(id);
-                if (index !== -1) {
-                    presentFilters.splice(index, 1);
-                    direction = 'remove';
-                    attrTitle = Localization.favorites.addToTabs;
-                    this.validateForCurrentlyActiveFilterDeactivation(id);
-                } else {
-                    presentFilters.push(id);
-                    attrTitle = Localization.favorites.removeFromTabs;
-                }
-            }
-
-            $el.attr('title', attrTitle).parent().toggleClass('active');
-            $el.find('i.material-icons').toggleClass('show').toggleClass('hide');
-            Service.updateTabsPreferences({
-                filters: presentFilters,
-                active: config.preferences.active
-            }).done(function () {
-                Util.ajaxSuccessMessenger(direction + "LaunchFilter");
-                var isOn = direction === "add" ? "ON" : "Off";
-                var name = self.collection.get(id).get('name');
-                config.trackingDispatcher.filterFavoured(isOn, name);
-            });
-        },
-
-        validateForCurrentlyActiveFilterDeactivation: function (id) {
-            if (config.preferences.active && config.preferences.active.indexOf(id.toString()) !== -1) {
-                Util.clearLaunchesActiveFilter();
-            }
-        },
-
-        filterApply: function (e, state) {
-            if (state.valid && state.dirty) {
-                this.filter.set('value', state.value);
-                var params = state.value ? [this.filter.toJSON()] : [];
-                this.requestParameters.setFilters(params);
-                this.onPage(1);
-            }
-        },
-
-        editFilter: function (filter) {
-            this.modal = null;
-            this.modal = new Components.DialogWithCallBack({
-                headerTxt: 'filterOptions',
-                actionStatus: true,
-                contentTpl: this.tplFilterEdit,
-                data: filter.toJSON(),
-                callback: function (done) {
-                    if ($(".has-error", this.modal.$content).length) {
-                        return;
-                    };
-                    var $name = $("#filterName", this.modal.$content);
-                    if ($name.val() === $name.data('original')) {
-                        return;
-                    };
-
-                    Service.updateFilter($name.data('id'), $name.val())
-                        .done(function () {
-                            Util.ajaxSuccessMessenger("editFilter");
-                            this.onPage(this.requestParameters.getPage());
-                        }.bind(this))
-                        .fail(function (error) {
-                            if (error.status !== 401) {
-                                Util.ajaxFailMessenger(error, "editFilter");
-                            }
-                        })
-                        .always(function () {
-                            done();
-                        });
-
-                }.bind(this),
-                afterRenderCallback: function () {
-
-                    Util.switcheryInitialize(this.$content);
-                },
-                destroyCallback: function () {
-                    this.copyInProcess = false;
-                }.bind(this),
-                shownCallback: function () {
-                    var $name = $("#filterName", this.modal.$content);
-                    Util.bootValidator($name, {
-                        validator: 'minMaxRequired',
-                        type: 'filterName',
-                        min: 3,
-                        max: 55
-                    });
-                    $name.focus();
-                }.bind(this)
-            }).render();
-        },
-
-        deleteFilter: function (filter) {
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    var that = this;
-                    var id = filter.get('id');
-                    Service.deleteFilter(id)
-                        .done(function () {
-                            Util.ajaxSuccessMessenger("deleteFilter");
-                            var presentFilters = config.preferences.filters,
-                                index = presentFilters.indexOf(id);
-                            if (index !== -1) {
-                                that.validateForCurrentlyActiveFilterDeactivation(id);
-                                presentFilters.splice(index, 1);
-                                Service.updateTabsPreferences({
-                                    filters: presentFilters,
-                                    active: config.preferences.active
-                                }).done(function(){
-                                    //Util.ajaxSuccessMessenger("removeLaunchFilter");
-                                });
-                            }
-                            // make sure we are not left on the empty page
-                            var page = that.collection.length === 1 ? 1 : that.requestParameters.getPage();
-                            that.onPage(page);
-                        })
-                        .fail(function (error) {
-                            if (error.status !== 401) {
-                                Util.ajaxFailMessenger(error, "deleteFilter");
-                            }
-                        });
-                }.bind(this),
-                message: 'deleteFilter',
-                format: [filter.get('name')]
-            });
-        },
-
-        shareFilter: function (filter, row) {
-            var that = this;
-            var shared = !filter.get('isShared');
-
-            Service.shareFilter(filter.get('id'), shared)
-                .done(function () {
-                    that.onShareFilter(filter, row);
-                })
-                .fail(function (error) {
-                    if (error.status !== 401) {
-                        Util.ajaxFailMessenger(error, "shareFilter");
+                this.listenTo(this.paging, 'page', this.onPage);
+                this.listenTo(this.paging, 'count', this.onPageCount);
+                var self = this;
+                this.paging.ready.done(function(){
+                    self.searchString = '';
+                    if(self.paging.urlModel.get('filter.cnt.name')) {
+                        self.model.set({search: self.paging.urlModel.get('filter.cnt.name')});
+                        self.$filterName.val(self.model.get('search'));
                     }
+                    self.listenTo(self.model, 'change:search', self.onChangeModelSearch);
+                    self.updateFilters();
                 });
+                this.applyBindings();
+            }.bind(this));
+            return this;
         },
-
-        onShareFilter: function (filter, row) {
-            var shared = !filter.get('isShared');
-            // update local item status
-            filter.set('isShared', shared);
-
-            row.find(".filter-actions").html(Util.templates(this.tplAction, {
-                filter: filter.toJSON(),
-                userPrefs: config.preferences.filters || [],
-                isOwner: true
-            }));
-            // update shared icon visibility
-            var action = shared ? 'show' : 'hide';
-            row.find(".filter-shader-status")[action]();
-
-            // publish suitable message
-            var type = (shared) ? 'shared' : 'unshared';
-            Util.ajaxSuccessMessenger(type + "Filter");
-
-            var isOn = type === "shared" ? "ON" : "Off";
-            config.trackingDispatcher.filterShared(isOn, filter.get("name"));
-        }
+        onChangeModelSearch: function() {
+            this.paging.trigger('page', 1);
+        },
+        onChangeFilterName: function (e, data) {
+            if (data.valid) {
+                this.paging.urlModel.set({'filter.cnt.name': data.value});
+                this.model.set({search: data.value});
+                this.searchString = data.value;
+            }
+        },
+        onPage: function(page) {
+            this.changeFilters();
+        },
+        onPageCount: function(size) {
+            this.changeFilters();
+        },
+        changeFilters: function() {
+            // this.paging.render();
+            this.updateFilters();
+        },
+        updateFilters: function() {
+            $('#filter-page',this.$el).addClass('load');
+            this.collection.reset([]);
+            this.paging.$el.html('');
+            CoreService.saveFilter(this.getQueryString({
+                search: encodeURIComponent(this.model.get('search')),
+                page: this.paging.model.get('number'),
+                size: this.paging.model.get('size')
+            }))
+                .always(function() {
+                    $('#filter-page',this.$el).removeClass('load');
+                }.bind(this))
+                .done(function(data) {
+                    this.paging.model.set(data.page);
+                    this.paging.render();
+                    if(data.content.length) {
+                        this.model.set({empty: false, notFound: false});
+                    } else if(!this.model.get('search')) {
+                        this.model.set({empty: true, notFound: false});
+                    } else {
+                        this.model.set({empty: false, notFound: true});
+                    }
+                    this.collection.parse(data.content);
+                }.bind(this));
+        },
+        getQueryString: function(query){
+            if(!query) query = {};
+            if(!query.page) query.page = 1;
+            if(!query.size) query.size = 10;
+            var url = '?page.sort=name&page.page=' + query.page + '&page.size=' + query.size;
+            if(query.search) {
+                url += '&filter.cnt.name=' + query.search;
+            }
+            return url;
+        },
+        renderCollection: function() {
+            this.$filterList.html('');
+            _.each(this.renderViews, function(view) {
+                view.destroy();
+            });
+            this.renderViews = [];
+            _.each(this.collection.models, function(model) {
+                var filterItem = new FavoritesItem({model: model, collection: this.collection});
+                this.$filterList.append(filterItem.$el);
+                this.renderViews.push(filterItem);
+            }, this);
+        },
+        onClickLinkLaunch: function(e) {
+            e.preventDefault();
+            var launchPath = appModel.get('projectId') + '/launches/all';
+            config.router.navigate(launchPath, {trigger: true});
+        },
+        onClickAddFilter: function() {
+            var newFilter = this.launchFilterCollection.generateTempModel();
+            config.router.navigate(newFilter.get('url'), {trigger: true});
+        },
+        destroy: function() {
+            this.$header.empty();
+            this.mainBreadcrumbs && this.mainBreadcrumbs.destroy();
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+        },
     });
-
-    // todo 1: 'filter.eq.is_link': false/true is not on the UI any more, think about server cleanup
 
     return {
-        ContentView: ContentView,
-        FavoriteModel: FavoriteModel,
-        FavoritesCollection: FavoritesCollection,
-        Body: Body
+        ContentView: FavoritesPage,
     }
 });

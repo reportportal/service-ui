@@ -24,7 +24,7 @@
 
 $LAST_DATE_OF_UPDATE: "v=08.22.2016";
 
-@mixin font-face($fontFamily, $filePath, $fontStyle, $fontWeight) {
+@mixin font-face($fontFamily, $filePath, $fontStyle, $fontWeight, $noWoff2: false) {
     @font-face {
         font-family: $fontFamily;
         src: url("#{$filePath}.eot?#{$LAST_DATE_OF_UPDATE}"),
@@ -34,12 +34,19 @@ $LAST_DATE_OF_UPDATE: "v=08.22.2016";
             src: local('MaterialIconsRegular'),
                  local('MaterialIcons-Regular');
         }
-
-        src: local("☺"),
-             url("#{$filePath}.woff2?#{$LAST_DATE_OF_UPDATE}") format("woff2"),
-             url("#{$filePath}.woff?#{$LAST_DATE_OF_UPDATE}") format("woff"),
-             url("#{$filePath}.ttf?#{$LAST_DATE_OF_UPDATE}") format("truetype"),
-             url("#{$filePath}.svg?#{$LAST_DATE_OF_UPDATE}&##{$fontFamily}") format("svg");
+        @if ($noWoff2 == false) {
+          src: local("☺"),
+          url("#{$filePath}.woff2?#{$LAST_DATE_OF_UPDATE}") format("woff2"),
+          url("#{$filePath}.woff?#{$LAST_DATE_OF_UPDATE}") format("woff"),
+          url("#{$filePath}.ttf?#{$LAST_DATE_OF_UPDATE}") format("truetype"),
+          url("#{$filePath}.svg?#{$LAST_DATE_OF_UPDATE}&##{$fontFamily}") format("svg");
+        }
+        @if ($noWoff2 == true) {
+          src: local("☺"),
+          url("#{$filePath}.woff?#{$LAST_DATE_OF_UPDATE}") format("woff"),
+          url("#{$filePath}.ttf?#{$LAST_DATE_OF_UPDATE}") format("truetype"),
+          url("#{$filePath}.svg?#{$LAST_DATE_OF_UPDATE}&##{$fontFamily}") format("svg");
+        }
         font-style: $fontStyle;
         font-weight: $fontWeight;
     }
@@ -56,24 +63,16 @@ $LAST_DATE_OF_UPDATE: "v=08.22.2016";
 /* SETUP FONTS */
 
 /* Font Report Portal */
-$urlFontReportPortal: '../fonts/font-ReportPortal/report-portal';
-@include font-face('ReportPortal', $urlFontReportPortal, normal, normal);
+$urlFontReportPortal: '../fonts/font-ReportPortal/Report-Portal-Font';
+@include font-face('ReportPortal', $urlFontReportPortal, normal, normal, true);
 
 /* Font Material Icons */
 $urlFontMaterialIconsRegular: '../fonts/font-MaterialIconsRegular/MaterialIcons-Regular';
 @include font-face('MaterialIconsRegular', $urlFontMaterialIconsRegular, normal, 400);
 
-/* Font OswaldLight */
-$urlFontOswaldLight: '../fonts/font-OswaldLight/oswald-light';
-@include font-face('OswaldLight', $urlFontOswaldLight, normal, normal);
-
 /* Font OswaldRegular */
 $urlFontOswaldRegular: '../fonts/font-OswaldRegular/oswald-regular';
 @include font-face('OswaldRegular', $urlFontOswaldRegular, normal, normal);
-
-/* Font OswaldBold */
-$urlFontOswaldBold: '../fonts/font-OswaldBold/oswald-regular';
-@include font-face('OswaldBold', $urlFontOswaldBold, normal, normal);
 
 /* Font OpenSansRegular */
 $urlFontOpenSansRegular: '../fonts/font-OpenSansRegular/open-sans-regular';
@@ -87,21 +86,15 @@ $urlFontOpenSansSemibold: '../fonts/font-OpenSansSemibold/open-sans-semibold';
 $urlFontSlick: '../fonts/font-Slick/slick';
 @include font-face('Slick', $urlFontSlick, normal, normal);
 
-/* Font Montserrat */
-$urlFontMontserrat: '../fonts/font-Montserrat/Montserrat';
-@include font-face('FontMontserratRegular', $urlFontMontserrat, normal, 400);
-
 /*------------------------------*/
 
 $ReportPortal: "ReportPortal", sans-serif;
 
-$OswaldLight: "OswaldLight", sans-serif;
 $OswaldRegular: "OswaldRegular", sans-serif;
-$OswaldBold: "OswaldBold", sans-serif;
 
 $OpenSansRegular: "OpenSansRegular", sans-serif;
 $OpenSansSemibold: "OpenSansSemibold", sans-serif;
 
-$FontMontserratRegular: "FontMontserratRegular", sans-serif;
+$FontMonacoMonospace: Menlo, Monaco, Consolas, "Courier New", monospace;
 
 $MaterialIconsRegular: "MaterialIconsRegular", sans-serif;

@@ -1,0 +1,36 @@
+<div class="filter-dashboard">
+    <div class="input-filter form-group">
+        <input type="text" class="rp-input-search rp-input-sm form-control" data-js-filter-name placeholder="Search by Name" value="">
+        <i class="material-icons">search</i>
+        <div class="validate-hint"></div>
+    </div>
+</div>
+<h1><%- data.text.dashboard.myDashboards %></h1>
+<div class="dashboard-container" data-js-my-dashboards-container></div>
+<div class="no-result-found" data-js-dashboard-not-found>
+    <div class="no-search-block">
+        <div class="empty-dashboard-img"></div>
+        <span><%= data.text.dashboard.noDashboard %></span>
+        <p><%- data.text.dashboard.clickToAdd %></p>
+        <button class="rp-btn rp-btn-default rp-button-with-icon not-small" data-js-add-dashboard>
+            <i class="rp-icons rp-icons-add-dash"></i>
+            <span class="rp-btn-val"><%- data.text.dashboard.addNewDashboard %></span>
+        </button>
+    </div>
+    <div class="search-block">
+        <span><%= data.text.dashboard.noDashboardSearch %> '<span data-js-search-text></span>'</span>
+        <p><%= data.text.dashboard.checkQuery %></p>
+    </div>
+</div>
+<h1><%- data.text.dashboard.shareDashboards %></h1>
+<div class="dashboard-container" data-js-shared-dashboards-container></div>
+<div class="no-result-found" data-js-shared-dashboard-not-found>
+    <div class="no-search-block">
+        <div class="empty-shared-dashboard-img"></div>
+        <span><%= data.text.dashboard.noSharedDashboard %></span>
+    </div>
+    <div class="search-block">
+        <span><%= data.text.dashboard.noDashboardSearch %> '<span data-js-search-text></span>'</span>
+        <p><%= data.text.dashboard.checkQuery %></p>
+    </div>
+</div>

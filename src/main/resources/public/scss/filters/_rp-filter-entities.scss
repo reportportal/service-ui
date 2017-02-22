@@ -1,0 +1,175 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.filter-entity-wrapper {
+  min-width: 235px;
+  display: inline-block;
+  float: left;
+  height: 60px;
+  position: relative;
+  margin: 0 10px 10px 0;
+  .filter-entities-select {
+    width: 216px;
+    .rp-btn-with-dropdown {
+      width: 235px;
+    }
+    a.checkbox.value-selector{
+      &.sub-option {
+        label{
+          padding-left: 30px;
+        }
+      }
+      padding: 0;
+      label{
+        width: 100%;
+        padding: 6px 20px;
+      }
+    }
+  }
+  .filter-entities-dropdown {
+    width: 216px;
+  }
+  .remove-filter {
+    cursor: pointer;
+    i {
+      font-size: 15px;
+    }
+  }
+  .help-inline {
+    position: absolute;
+    top: 110%;
+    width: 100%;
+    left: 0;
+  }
+  label.filter-name {
+    font-weight: normal;
+  }
+  .filter-option-input .select2-container {
+    height: 30px;
+  }
+  .form-group {
+    position: relative;
+    .statistics-number {
+      padding: 5px 15px 5px 10px;
+    }
+    .timerange {
+      line-height: 28px;
+      white-space: nowrap;
+      cursor: pointer;
+      width: 235px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+  .filter-hint {
+    position: absolute;
+    top: 100%;
+    right: auto;
+    left: 0;
+    z-index: 100;
+    padding: 10px 11px;
+    font-size: 12px;
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  }
+  .filter-option-select {
+    width: 50px;
+    display: table-cell;
+    background: transparent;
+    vertical-align: top;
+  }
+
+  .filter-option-input {
+    display: table-cell;
+    vertical-align: top;
+    position: relative;
+    float: none !important;
+    input.invalid {
+      border-color: $COLOR--orange-red;
+      background-color: #fde1dc;
+    }
+  }
+
+  .filter-option-select .dropdown-toggle {
+    min-width: initial !important;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-right: none;
+    padding: 5px 6px 6px;
+    font-size: 12px;
+    width: 50px;
+    vertical-align: top;
+  }
+}
+.filter-entities-choice {
+  float: left;
+  padding-top: 23px;
+  margin-right: 100px;
+  ul.dropdown-menu.filters-criteria {
+    li > label {
+      line-height: 20px;
+      &.sub-option {
+        padding-left: 35px;
+      }
+    }
+    //a.checkbox {
+    //  font-size: 13px;
+    //  line-height: 30px;
+    //  label {
+    //    padding-left: 14px;
+    //    padding-right: 14px;
+    //  }
+    //  &.sub-option label {
+    //    padding-left: 35px;
+    //  }
+    //}
+  }
+}
+@media (max-width: 500px) {
+  .filter-entity-wrapper {
+    height: auto;
+    width: 193px;
+    min-width: 193px;
+    .filter-option-input .select2-container {
+      //width: 143px;
+      height: auto;
+    }
+    .form-group .timerange {
+      width: 193px;
+    }
+    .filter-entities-select {
+      width: 193px;
+      .rp-btn-with-dropdown {
+        width: 193px;
+      }
+    }
+  }
+
+  .filter-entities-choice {
+    margin-right: 0;
+    ul.dropdown-menu.filters-criteria {
+      right: 0;
+      left: auto;
+    }
+  }
+}

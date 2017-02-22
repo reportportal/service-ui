@@ -2,62 +2,52 @@
 <% if(data.systemAuth === "BASIC" || data.systemAuth === "NTLM") { %>
 <div id="basicBlock">
     <div class="rp-form-group">
-        <label class="<%= !data.post ? 'col-md-3 col-sm-3' : 'col-sm-4' %> col-xs-12 rp-control-label rp-custom-col obligatory-field" for="username">
+        <label class="rp-control-label obligatory-field" for="username">
             <%= data.text.bts.userName %>
         </label>
-        <div class="<%= !data.post ? 'col-md-4 col-sm-9' : 'col-sm-8' %> col-xs-12 rp-custom-col">
-            <input type="text" class="rp-input-default rp-width-100 form-control bts-property required-value" id="username" value="<%- data.username || '' %>" <%= notAllowed %> />
-            <span class="help-inline"></span>
-        </div>
-        <div class="col-md-<%= !data.post ? '5' : '0' %> hidden-sm hidden-xs rp-custom-col"></div>
+        <input type="text" class="rp-input-default form-control bts-property required-value" id="username"
+               value="<%- data.username || '' %>" <%= notAllowed %> />
+        <span class="help-inline"></span>
     </div>
     <div class="rp-form-group">
-        <label class="<%= !data.post ? 'col-md-3 col-sm-3' : 'col-sm-4' %> col-xs-12 rp-control-label rp-custom-col obligatory-field <%= data.post ? 'custom-padding' : '' %>" for="password">
+        <label class="rp-control-label obligatory-field" for="password">
             <%= data.text.bts.password %>
         </label>
-        <div class="<%= !data.post ? 'col-md-4 col-sm-9' : 'col-sm-8' %> col-xs-12 rp-custom-col">
-            <input type="password" class="rp-input-default form-control rp-width-100 bts-property required-value" id="password" <%= notAllowed %> value="<%- data.hasPassword ? data.defaultPassword : '' %>" />
-            <span class="help-inline"></span>
-        </div>
-        <div class="col-md-<%= !data.post ? '5' : '0' %> hidden-sm hidden-xs rp-custom-col"></div>
+        <input type="password" class="rp-input-default form-control bts-property required-value" id="password" <%= notAllowed %>
+        value="<%- data.hasPassword ? data.defaultPassword : '' %>" />
+        <span class="help-inline"></span>
     </div>
     <% if(data.systemAuth === "NTLM") { %>
     <div class="rp-form-group">
-        <label class="<%= !data.post ? 'col-md-3 col-sm-3' : 'col-sm-4' %> col-xs-12 rp-control-label rp-custom-col obligatory-field" for="domain">
+        <label class="rp-control-label obligatory-field" for="domain">
             <%= data.text.bts.domain %>
         </label>
-        <div class="<%= !data.post ? 'col-md-4 col-sm-9' : 'col-sm-8' %> col-xs-12 rp-custom-col">
-            <input type="text" class="rp-input-default form-control rp-width-100 bts-property" id="domain" value="<%- data.domain || '' %>" <%= notAllowed %> />
-            <span class="help-inline"></span>
-        </div>
-        <div class="col-md-<%= !data.post ? '5' : '0' %> hidden-sm hidden-xs rp-custom-col"></div>
+        <input type="text" class="rp-input-default bts-property" id="domain"
+               value="<%- data.domain || '' %>" <%= notAllowed %> />
+        <span class="help-inline"></span>
     </div>
     <% } %>
 </div>
 <% } else if(data.systemAuth === "APIKEY") { %>
 <div id="accessKeyBlock">
     <div class="rp-form-group">
-        <label class="<%= !data.post ? 'col-md-3 col-sm-3' : 'col-sm-4' %> col-xs-12 rp-control-label rp-custom-col obligatory-field" for="accessKey">
+        <label class="rp-control-label obligatory-field" for="accessKey">
             <%= data.text.bts.apiKey %>
         </label>
-        <div class="<%= !data.post ? 'col-md-4 col-sm-9' : 'col-sm-8' %> col-xs-12 rp-custom-col">
-            <textarea type="text" class="rp-input-default form-control rp-width-100 bts-property" id="accessKey" <%= notAllowed %> ><%- data.accessKey || '' %></textarea>
-            <span class="help-inline"></span>
-        </div>
-        <div class="col-md-<%= !data.post ? '5' : '0' %> hidden-sm hidden-xs rp-custom-col"></div>
+        <textarea type="text" class="rp-input-default bts-property" id="accessKey" <%= notAllowed %> ><%- data.accessKey
+        || '' %></textarea>
+        <span class="help-inline"></span>
     </div>
 </div>
 <% } else { %>
 <div id="oauthBlock">
     <div class="rp-form-group">
-        <label class="<%= !data.post ? 'col-md-3 col-sm-3' : 'col-sm-4' %> col-xs-12 rp-control-label rp-custom-col obligatory-field" for="accessKey">
+        <label class="rp-control-label obligatory-field" for="accessKey">
             <%= data.text.bts.oAuthToken %>
         </label>
-        <div class="<%= !data.post ? 'col-md-4 col-sm-9' : 'col-sm-8' %>  col-xs-12 rp-custom-col">
-            <input type="text" class="rp-input-default form-control rp-width-100 bts-property" id="accessKey" <%= notAllowed %> placeholder="xxxxxxxxx-xxxxxxxxx-xxxxxxx" value="<%- data.accessKey || '' %>" />
-            <span class="help-inline"></span>
-        </div>
-        <div class="col-md-<%= !data.post ? '5' : '0' %> hidden-sm hidden-xs rp-custom-col"></div>
+        <input type="text" class="rp-input-default bts-property" id="accessKey" <%= notAllowed %>
+        placeholder="xxxxxxxxx-xxxxxxxxx-xxxxxxx" value="<%- data.accessKey || '' %>" />
+        <span class="help-inline"></span>
     </div>
 </div>
 <% } %>

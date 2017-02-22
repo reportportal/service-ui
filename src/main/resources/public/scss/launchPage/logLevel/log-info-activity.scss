@@ -1,0 +1,175 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+.launch-log-info-activity {
+  //padding-bottom: 10px;
+  .activity-row {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 15px 15px 0 15px;
+    color: $COLOR--charcoal-grey;
+  }
+  .grid-cell {
+    float: left;
+    position: relative;
+    min-height: 1px;
+    span {
+      word-wrap: break-word;
+    }
+    &.name-cell {
+      width: 11%;
+      i {
+        font-size: 18px;
+        float: left;
+        padding-right: 22px;
+        color: $COLOR--gray-60;
+      }
+    }
+    &.action-cell, &.mobile-action-cell {
+      width: 15%;
+      font-family: OpenSansSemibold;
+    }
+    &.mobile-action-cell {
+      display: none;
+    }
+    &.time-cell {
+      width: 10%;
+      .moment-time {
+        position: absolute;
+        right: 30px;
+        left: 0;
+      }
+      .full-time {
+        opacity: 0;
+      }
+      &:hover {
+        .moment-time {
+          opacity: 0;
+        }
+        .full-time {
+          opacity: 1;
+        }
+      }
+    }
+    &.difference-cell {
+      width: 62%;
+      .action-row {
+        width: 100%;
+        overflow: hidden;
+        padding-bottom: 10px;
+      }
+      .separate-items {
+        width: 6%;
+        text-align: center;
+        i {
+          font-size: 15px;
+          margin-top: 2px;
+        }
+      }
+
+      .action-item {
+        min-height: 1px;
+        width: 47%;
+        & > span {
+          display: none;
+        }
+      }
+    }
+    &.separate-right {
+      padding-right: 30px;
+      &:after {
+        content: '';
+        position: absolute;
+        width: 1px;
+        top: 0;
+        right: 20px;
+        height: 23px;
+        background: $COLOR--gray-80;
+      }
+    }
+    .action-item, .separate-items {
+      float: left;
+    }
+  }
+  &.load {
+    .activity-preloader {
+      display: block;
+    }
+  }
+  &.not-found {
+    .no-result-found {
+      display: block;
+    }
+  }
+  @media(max-width: 1200px) {
+    .grid-cell {
+      &.name-cell, &.action-cell {
+        width: auto;
+        padding-right: 25px;
+        &:after {
+          right: 13px;
+        }
+      }
+      &.difference-cell {
+        margin-top: 10px;
+        width: 100%;
+      }
+      &.time-cell {
+        width: auto;
+        &:after {
+          display: none;
+        }
+      }
+    }
+  }
+  @media(max-width: $SCREEN_MAX_WIDTH_LAUNCHES_LOGS_TAB) {
+    .grid-cell {
+      &.action-cell {
+        display: none;
+      }
+      &.mobile-action-cell{
+        width: 100%;
+        display: block;
+        margin-top: 10px;
+      }
+      &.difference-cell {
+        margin-top: 0;
+        .action-item {
+          width: 100%;
+          margin-top: 10px;
+          & > span {
+            display: inline-block;
+            color: $COLOR--gray-47;
+            font-family: "OpenSansSemibold", sans-serif;
+            width: 50px;
+          }
+        }
+        .separate-items {
+          display: none;
+        }
+
+        //p {
+        //  display: inline;
+        //}
+      }
+    }
+  }
+}

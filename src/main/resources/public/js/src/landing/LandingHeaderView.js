@@ -43,7 +43,7 @@ define(function(require, exports, module) {
             'click .b-menu__link': 'onClickMenuItem',
             'click .navbar-toggle': 'onOpenMenuMobile',
             'click [data-js-show-login]': 'onClickShowLogin',
-            'keydown': 'keyDownHandler',
+            'keydown': 'keyDownHandler'
         },
         initialize: function(){
             this.render();
@@ -52,6 +52,7 @@ define(function(require, exports, module) {
             this.logo = $(".js-logo", this.$el);
             this.loginView = new LoginView({el: $('.js-loginblock', this.$el).get()});
             this.viewModel = new UserModel();
+            $('.b-menu__link', this.$el).on('touchend', this.onClickMenuItem.bind(this));
         },
         onClickShowLogin: function() {
             if(config.userModel.get('auth')){
@@ -84,11 +85,11 @@ define(function(require, exports, module) {
         onClickMenuItem: function(e) {
             $(".js-navbar", this.$el).removeClass("in");
             var $link = $(e.target);
-            if($link.attr('href')){
+            if($link.attr('href')) {
                 e.preventDefault();
-                if($link.attr('href') == '#documentation'){
+                if ($link.attr('href') == '#documentation') {
                     this.trigger('clickDocumentation')
-                }else{
+                } else{
                     this.trigger('clickMenu', $link.attr('href'));
                 }
             }

@@ -1,0 +1,75 @@
+<div class="sidebar-close" data-js-sidebar-close></div>
+<a href="#<%= data.projectUrl %>" class="logo">
+    <i class="sprite sprite-logo"></i>
+    <!-- <span>< % = data.text.topMenu.reportPortal % ></span> -->
+</a>
+<nav data-js-scroll-container <% if(!data.isAdmin) { %> class="for-common-user" <% }%> >
+
+        <ul class="main-menu">
+            <% if(false){ %>
+            <li>
+                <a href="#<%- data.projectUrl %>" id="info">
+                    <i class="rp-icons rp-icons-statusbar fsize-18"></i>
+                    <span><%= data.text.topMenu.status %></span>
+                </a>
+            </li>
+            <% } %>
+            <li>
+                <a href="#<%- data.projectUrl %>/dashboard" id="dashboard">
+                    <i class="rp-icons rp-icons-dashboard fsize-18"></i>
+                    <span><%= data.text.topMenu.dashboard %></span>
+                </a>
+            </li>
+            <li>
+                <%
+                var launchesUrl = '#' + data.projectUrl + '/launches/all';
+                %>
+                <a href="<%- launchesUrl %>" id="launches">
+                    <i class="rp-icons rp-icons-launches fsize-23"></i>
+                    <span><%= data.text.topMenu.launches %></span>
+                </a>
+            </li>
+            <li>
+                <a href="#<%- data.projectUrl %>/filters" id="filters">
+                    <i class="rp-icons rp-icons-filter fsize-20"></i>
+                    <span><%= data.text.topMenu.filters %></span>
+                </a>
+            </li>
+            <% if (data.canDebug) { %>
+            <li>
+                <a href="#<%- data.projectUrl %>/userdebug/all" id="userdebug">
+                    <i class="rp-icons rp-icons-eye fsize-17"></i>
+                    <span><%= data.text.topMenu.debug %></span>
+                </a>
+            </li>
+            <% } %>
+        </ul>
+        <ul class="user-menu">
+            <li class="col-xs-6 col-sm-12">
+                <a href="#user-profile" class="mem-set user-id">
+                    <i class="material-icons">person</i>
+                    <span class="custom-padding"><%= data.text.topMenu.profile %></span>
+                </a>
+            </li>
+            <% if(data.isAdmin) { %>
+            <li class="col-xs-6 col-sm-12">
+                <a href="#administrate" id="administrate" class="admin-section" data-js-administrate-page-link>
+                    <i class="material-icons">tune</i>
+                    <span class="custom-padding"><%= data.text.topMenu.administrate %></span>
+                </a>
+            </li>
+            <% } %>
+            <li class="col-xs-6 col-sm-12">
+                <a href="" data-js-logout>
+                    <i class="rp-icons rp-icons-logout fsize-23"></i>
+                    <span class="custom-padding"><%= data.text.topMenu.logout %></span>
+                </a>
+            </li>
+        </ul>
+
+</nav>
+<a id="back-top" class="hidden-xs" title="<%= data.text.ui.backToTop %>" style="display: none;" global-back-top>
+    <nobr>
+        <span id="btt-span"><%= data.text.ui.backToTop %></span>
+    </nobr>
+</a>

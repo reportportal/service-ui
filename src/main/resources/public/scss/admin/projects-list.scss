@@ -1,0 +1,489 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.rp-projects-list-header {
+    padding: 20px 0;
+    margin: 0 -15px;
+    border-bottom: 1px solid $COLOR--gray-91;
+    @extend %CLEAR_FIX;
+    @media (max-width: $SCREEN_SM_MAX) {
+        display: none;
+    }
+
+    .projects-list-search {
+        width: 25%;
+        float: left;
+        padding: 0 15px;
+
+        .projects-search {
+            margin: 0;
+            position: relative;
+        }
+    }
+    .sort-projects-list {
+        width: 50%;
+        float: left;
+        padding: 0 15px;
+
+        .sort-label {
+            max-width: none;
+            font-weight: normal;
+            padding: 0 16px 0 30px;
+            margin: 0;
+        }
+        .rp-btn.rp-btn-default-revers {
+            min-width: 120px;
+            border: 1px solid $COLOR--gray-80;
+            box-shadow: none;
+            color: $COLOR--charcoal-grey;
+            background: $COLOR--white-default;
+            &.active {
+                background: $COLOR--gray-91;
+                border: 1px solid $COLOR--gray-91;
+            }
+        }
+        button {
+            margin: 0;
+
+            &.active {
+                padding-right: 25px;
+
+                &.desc {
+                    .arrow_down {
+                        display: inline-block;
+                    }
+                    .arrow_up {
+                        display: none;
+                    }
+                }
+
+                .arrow_up {
+                    display: inline-block;
+                }
+            }
+
+            i {
+                &.material-icons {
+                    position: absolute;
+                    display: none;
+                    top: 9px;
+                    right: 8px;
+                }
+            }
+        }
+    }
+    .change-projects-view {
+        float: left;
+        width: 25%;
+        padding: 0 15px;
+
+        .projects-view-switcher {
+            padding: 0;
+            &>li {
+                float: left;
+            }
+
+            .projects-view {
+                width: 34px;
+                height: 24px;
+                font-size: 24px;
+                line-height: 24px;
+                min-width: 24px;
+                min-height: 24px;
+                padding: 1px;
+                margin: 0 0 0 10px;
+                box-shadow: none;
+                box-sizing: content-box;
+            }
+        }
+    }
+}
+
+.rp-projects-list-body {
+    padding: 0;
+
+    .nav-tabs-mobile {
+        display: none;
+        padding: 15px 0;
+    }
+    @media (max-width: $SCREEN_SM_MAX) {
+        .nav-tabs.nav-tabs-custom {
+            display: none;
+        }
+        .nav-tabs-mobile {
+            display: block;
+        }
+    }
+
+    .tab-content {
+        margin: 0 -15px;
+    }
+    .projects-paging {
+        padding: 0 20px;
+    }
+    .no-result-found {
+        display: block;
+        text-align: center;
+        padding: 10px 0 25px;
+        font-size: 13px;
+        color: $COLOR--gray-47;
+        .no-result-title {
+            font-size: 17px;
+        }
+        p {
+            margin: 5px 0;
+        }
+    }
+
+    .project-item {
+        margin: 0;
+
+        .project-name {
+            font: normal 15px $OswaldRegular;
+            text-transform: uppercase;
+            color: $COLOR--topaz;
+            .name {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                display: inline-block;
+                max-width: 100%;
+                position: relative;
+                &.nameLabel {
+                    padding-right: 34px;
+                    .new-label {
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        padding: 1px 5px 3px;
+                        font: bold 10px $OpenSansRegular;
+                        text-transform: lowercase;
+                        border-radius: 100px;
+                        line-height: 1;
+                        color: $COLOR--white-default;
+                        text-align: center;
+                        white-space: nowrap;
+                        vertical-align: baseline;
+                        background: $COLOR--dark-pastel-green;
+                    }
+                }
+            }
+        }
+
+        .project-info {
+            font-size: 15px;
+        }
+        .project-link-wrapper {
+            margin: 0;
+            @extend %CLEAR_FIX;
+        }
+        .project-link {
+            display: block;
+            font: normal 15px $OpenSansRegular;
+            text-align: center;
+            color: $COLOR--gray-60;
+            padding: 8px 10px;
+            width: 33.33333333%;
+            height: 40px;
+            float: left;
+
+            &.go-to-project {
+                i {
+                    font-size: 24px;
+                }
+            }
+            &.assign-to-project {
+                i {
+                    font-size: 24px;
+                }
+            }
+            i {
+                display: inline-block;
+                margin: 0 auto;
+                width: 20px;
+                height: 20px;
+                font-size: 20px;
+                line-height: 20px;
+                margin-top: 2px;
+
+                &.rp-icons-all-users {
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+
+    .projects-table-view {
+        margin: 0;
+
+        .rp-table-thead {
+            background: $COLOR--white;
+            margin: 0;
+            @extend %CLEAR_FIX;
+
+            .rp-table-th {
+                text-transform: uppercase;
+                padding: 16px 0;
+                color: $COLOR--gray-47;
+                font-weight: 600;
+                font-size: 12px;
+            }
+        }
+
+        .project-cols-group {
+            @extend %CLEAR_FIX;
+            margin-right: 80px;
+        }
+        @media (max-width: $SCREEN_SM_MAX) {
+            .project-cols-group {
+                margin: 0;
+            }
+        }
+        .grid-cell {
+            float: left;
+            min-height: 1px;
+            padding: 0 0 0 15px;
+        }
+        .project-name-col {
+            width: 32%;
+        }
+        .project-kpi-col {
+            width: 8%;
+        }
+        .project-members-col {
+            width: 12%;
+        }
+        .project-launches-col {
+            width: 12%;
+        }
+        .project-date-col {
+            width: 18%;
+        }
+        .project-actions-col {
+            width: 18%
+        }
+        .project-delete-col {
+            float: right;
+            width: 80px;
+        }
+
+        @media (max-width: $SCREEN_SM_MAX) {
+            .rp-table-thead {
+                display: none;
+            }
+            .grid-cell {
+                padding: 0;
+            }
+            .project-name-col,
+            .project-kpi-col,
+            .project-members-col,
+            .project-launches-col,
+            .project-date-col,
+            .project-actions-col {
+                width: 100%;
+            }
+            .project-delete-col {
+                position: absolute;
+                right: 0;
+                bottom: 10px;
+                width: 25%;
+                height: 40px;
+                .remove-project {
+                    margin-top: 6px;
+                }
+            }
+        }
+
+        .project-table-row {
+            position: relative;
+            padding: 10px 0;
+            border-bottom: 1px solid $COLOR--gray-91;
+            @extend %CLEAR_FIX;
+
+            .project-title-mobile {
+                display: none;
+                padding: 10px 15px;
+                h5 {
+                    margin: 0;
+                    font-size: 15px;
+                    line-height: inherit;
+                }
+            }
+            @media (max-width: $SCREEN_SM_MAX) {
+                .project-title-mobile {
+                    display: block;
+                    width: 50%;
+                    float: left;
+                }
+            }
+            .project-name {
+                margin: 13px 0 0;
+            }
+            .project-members,
+            .project-launches,
+            .project-date {
+                padding-top: 11px;
+            }
+            .projects-actions {
+                padding: 2px 8px;
+                border-left: 1px solid $COLOR--gray-91;
+                border-right: 1px solid $COLOR--gray-91;
+            }
+            @media (max-width: $SCREEN_SM_MAX) {
+                .project-name,
+                .project-members,
+                .project-launches,
+                .project-date {
+                    float: left;
+                    width: 50%;
+                    border: none;
+                    padding: 10px 15px;
+                    margin: 0;
+                }
+            }
+            @media (max-width: $SCREEN_SM_MAX) {
+                .projects-actions {
+                    width: 100%;
+                    border: none;
+                    .project-link {
+                        width: 25%;
+                    }
+                }
+            }
+            .remove-project {
+                text-align: center;
+                margin-top: 10px;
+
+                .project-link {
+                    float: none;
+                    width: auto;
+                    padding: 0;
+                    height: auto;
+                }
+            }
+        }
+    }
+
+    .projects-list-view {
+        margin: 0;
+        padding-right: 15px;
+        @extend %CLEAR_FIX;
+
+        .project-list-row {
+            float: left;
+            width: 25%;
+            padding: 0 0 15px 15px;
+            margin: 0;
+
+            .project-wrapper {
+                background: $COLOR--white;
+                border: 1px solid $COLOR--gray-91;
+                position: relative;
+
+                .remove-project {
+                    position: absolute;
+                    right: 10px;
+                    top: 10px;
+                    width: 22px;
+                    height: 22px;
+                    font-size: 22px;
+                    line-height: 22px;
+                    display: none;
+                    z-index: 5;
+                    cursor: pointer;
+                    i {
+                        color: $COLOR--gray-60;
+                    }
+                }
+                &:hover .remove-project {
+                    display: inline-block;
+                }
+
+                .project-name {
+                    margin: 0;
+                    padding: 12px 22px 8px 12px;
+                    border-bottom: 1px solid $COLOR--gray-91;
+                }
+
+                .project-info-wrapper {
+                    margin: 0;
+                    background: $COLOR--white-four;
+                    border-bottom: 1px solid $COLOR--gray-91;
+                    padding: 10px 0;
+                    @extend %CLEAR_FIX;
+
+                    .heartbeat-block {
+                        float: left;
+                        width: 45%;
+                        text-align: center;
+
+                        .health-icon {
+                            padding-top: 10px;
+
+                            i.rp-icons-heartbeat {
+                                font-size: 3.5vw;
+                                opacity: 1;
+                                color: $COLOR--gray-91;
+                            }
+                        }
+                    }
+                    .project-info-block {
+                        font-family: $OpenSansRegular;
+                        float: left;
+                        width: 55%;
+
+                        .project-info {
+                            padding: 0;
+                            margin: 3px 0;
+                            strong {
+                                margin-right: 5px;
+                            }
+                        }
+                    }
+                }
+
+                .project-link-wrapper {
+                    background: $COLOR--white;
+
+                    .go-to-members {
+                        border-right: 1px solid $COLOR--gray-91;
+                        border-left: 1px solid $COLOR--gray-91;
+                    }
+                }
+            }
+        }
+        @media (max-width: $SCREEN_XS_MAX) {
+            .project-list-row {
+                width: 100%;
+            }
+        }
+        @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+            .project-list-row {
+                width: 50%;
+            }
+        }
+        @media (min-width: $SCREEN_MD_MIN) and (max-width: $SCREEN_MD_MAX) {
+            .project-list-row {
+                width: 33.33333333%;
+            }
+        }
+    }
+}

@@ -3,7 +3,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <title>Report Portal</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="author" content="">    <!-- CSS -->
@@ -29,25 +29,23 @@
     <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
 </div>
 <div id="main_content" tabindex="0">
-<div class="wrapper js-wrapper">
-    <div class="color"></div>
-    <div class="content" id="bodyContainer">
-        <aside class="sidebar js-sidebar" id="pageSidebar" style="display: none;"></aside>
-        <div class="header js-header">
+    <div class="wrapper js-wrapper" id="bodyContainer">
+        <!--<div class="color"></div>-->
+        <section class="sidebar js-sidebar" id="pageSidebar" style="display: none;"></section>
+        <section class="header js-header">
             <div class="container">
                 <div class="row" id="topHeader" style="display: none;"></div>
             </div>
-        </div>
-        <div class="main-content js-main-content">
-            <div class="container  x-fluid">
-                <div class="row" id="topHeader" style="display: none;"></div>
+        </section>
+        <section class="content-wrapper">
+            <div class="content-layout container  x-fluid">
+                <!--<div class="row" id="topHeader" style="display: none;"></div>-->
                 <div class="row" id="mainContainer"></div>
             </div>
-        </div>
+            <div id="pageFooter" class="footer clearfix" style="display: none;"></div>
+        </section>
     </div>
-</div>
-<div class="flash-container"></div>
-<div id="pageFooter" class="footer clearfix" style="display: none;"></div>
+    <div class="flash-container"></div>
 </div>
 <script data-main="js/src/config" src="js/lib/require-min-2.1.14.js"></script>
 </body></html>

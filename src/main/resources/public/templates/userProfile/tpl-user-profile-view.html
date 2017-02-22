@@ -1,0 +1,113 @@
+<% var canEdit = data.account_type === "INTERNAL" %>
+<div class="content rp-user-profile row">
+    <div class="col-xs-12 col-md-6">
+        <h2 class="user-profile-title"><%= data.text.userProfile.personalInfo %></h2>
+        <div class="user-profile-info">
+            <div class="user-profile-photo <%= data.photo_loaded ? 'active' : '' %>">
+                <img class="user-avatar" data-js-user-img data-original="<%= data.image %>" src="<%= data.image %>" alt="<%= data.text.ui.avatar %>" />
+            </div>
+            <% if(canEdit){ %>
+            <div class="user-change-password">
+                <button type="button" class="rp-btn rp-btn-default" data-js-change-password>
+                    <%= data.text.login.changePassword %>
+                </button>
+            </div>
+            <% } else { %>
+            <div class="user-change-password" id="updateButtons">
+                <button type="button" class="rp-btn rp-btn-default" data-js-force-update>
+                    <%= data.text.userProfile.forceUpdate %>
+                </button>
+            </div>
+            <% } %>
+            <div class="user-info-content">
+                <div class="user-info-id"><span data-js-user-login></span></div>
+                <div class="user-info-name">
+                    <span class="user-edit">
+                        <span data-js-user-name><%= data.fullName %></span>
+                        <% if(canEdit){ %>
+                            <i title="<%= data.text.userProfile.editInfo %>" data-js-edit-info class="material-icons">edit</i>
+                        <% } %>
+                    </span>
+                </div>
+                <div class="user-info-mail">
+                    <span class="user-edit">
+                        <span data-js-user-email class="user-mail"></span>
+                        <% if(canEdit){ %>
+                            <i title="<%= data.text.userProfile.editInfo %>" data-js-edit-info class="material-icons">edit</i>
+                        <% } %>
+                    </span>
+                </div>
+                <% if(canEdit){ %>
+                <div class="user-edit-photo">
+                    <form  data-js-upload-photo-form>
+                        <div class="" data-js-edit-photo>
+                            <span class="rp-btn rp-btn-default user-upload-photo-btn">
+                                <%= data.text.userProfile.uploadPhoto %>
+                                <input data-js-select-photo type="file" name="file" accept="image/gif, image/jpeg, image/png" title="<%= data.text.userProfile.selectPhoto %>" />
+                            </span>
+                            <span class="user-remove-photo <%= data.photo_loaded ? 'active' : '' %>" data-js-remove-photo><%= data.text.userProfile.removePhoto %></span>
+                        </div>
+                        <div class="upload-photo-form" data-js-upload-block>
+                            <button data-js-submit-photo type="submit" class="rp-btn rp-btn-default">
+                                <%= data.text.userProfile.savePhoto %>
+                            </button>
+                        </div>
+                        <div data-js-photo-error class="photo-error-message"><%= data.text.validation.wrongImage %></div>
+                    </form>
+                </div>
+                <% } %>
+            </div>
+        </div>
+        <div class="user-projects-list">
+            <div class="user-projects-throw">
+                <div class="col-sm-8 col-xs-12">
+                    <h2><%= data.text.userProfile.projectAndRoles %> (<%= _.size(data.projects) %>)</h2>
+                </div>
+                <div class="col-sm-4 user-projects-roles"><%= data.text.userProfile.projectRole %></div>
+            </div>
+            <% _.each(data.projects, function(val, project){ %>
+                <div class="user-projects-row">
+                    <div class="col-sm-8 col-xs-12"><span class="project-name"><%- project %></span></div>
+                    <div class="col-sm-4 col-xs-12"><%= val.projectRole %></div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+    <div class="col-xs-12 col-md-6" data-js-block-is-token>
+        <h2 class="user-profile-title"><%= data.text.userProfile.uuidTitle %></h2>
+        <div class="user-uuid-form">
+            <label for="user_uuid" class="control-label user-uuid-label"><%= data.text.userProfile.UUID %></label>
+            <div class="user-uuid-button">
+                <button data-js-update-token type="button" class="rp-btn rp-btn-default">
+                    <%= data.text.userProfile.regenerateBtn %>
+                </button>
+            </div>
+            <div class="user-uuid-field" data-js-block-is-token>
+                <input type="text" value="<%= data.apiToken %>" size="40" readonly="readonly" name="user_uuid" id="user_uuid" class="form-control" data-js-input-token>
+            </div>
+            <div class="user-uuid-help-block">
+                <%= data.text.userProfile.msgUUIDTop %>
+            </div>
+        </div>
+        <div class="user-config-editor">
+            <h2 class="user-profile-title"><%= data.text.userProfile.configExamples %></h2>
+            <ul class="config-pills" data-js-config-tab>
+                <li class="active">
+                    <a href="#testng"><%= data.text.userProfile.testNG %></a>
+                </li>
+                <li>
+                    <a href="#ruby"><%= data.text.userProfile.ruby %></a>
+                </li>
+                <li>
+                    <a href="#soap"><%= data.text.userProfile.soapUI %></a>
+                </li>
+                <li>
+                    <a href="#.net"><%= data.text.userProfile.donNet %></a>
+                </li>
+            </ul>
+            <div class="user-config-container">
+                <div data-js-editor class="config-container"></div>
+            </div>
+        </div>
+    </div>
+</div>

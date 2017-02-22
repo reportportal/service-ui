@@ -22,7 +22,7 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var fixedClass = 'affix'
+    var fixedClass = 'fixed-block';
     var App = require('app');
     var config = App.getInstance();
 
@@ -31,7 +31,8 @@ define(function (require, exports, module) {
             console.log('StickyHeader: fixed block not defined');
             return;
         }
-        this.topMargin = (options.topMargin) ? options.topMargin : 0;
+        this.topMargin = options.topMargin || 0;
+        this.minWidthWindow = options.minWidthWindow || 0;
         this.originBlock = options.fixedBlock;
         this.clearOriginBlock();
         this.cloneBlock = this.originBlock.clone();
@@ -39,12 +40,16 @@ define(function (require, exports, module) {
         this.scrollTop = config.mainScrollElement.scrollTop();
 
         this.isShow = null;
+        this.activate = true;
+        this.checkWindowWidth($(window).width());
 
         this.originBlock.after(this.cloneBlock);
         this.sync();
 
         this.bindScrollChange = this.scrollChange.bind(this);
         this.bindResize = this.resize.bind(this);
+
+
 
         $.subscribe('scroll:change', this.bindScrollChange);
         $.subscribe('window:resize', this.bindResize);
@@ -53,18 +58,29 @@ define(function (require, exports, module) {
     };
 
     StickyHeader.prototype.scrollChange = function (e, data) {
-        this.scrollTop = data.top;
-        if (!this.isShow) {
-            this.sync();
+        if (this.activate) {
+            this.scrollTop = data.top;
+            if (!this.isShow) {
+                this.sync();
+            }
+            this.checkScroll();
         }
-        this.checkScroll();
     };
 
-    StickyHeader.prototype.resize = function () {
+    StickyHeader.prototype.resize = function (event, data) {
+        this.checkWindowWidth(data.width);
         this.sync();
         this.checkScroll();
     };
-
+    StickyHeader.prototype.checkWindowWidth = function(width) {
+        if(width < this.minWidthWindow) {
+            this.activate = false;
+            this.hide();
+            this.clearOriginBlock();
+        } else {
+            this.activate = true;
+        }
+    };
     StickyHeader.prototype.sync = function () {
         var showBlock = this.cloneBlock;
         if (!this.isShow) {
@@ -81,10 +97,12 @@ define(function (require, exports, module) {
     };
 
     StickyHeader.prototype.checkScroll = function (){
-        if (this.scrollTop >= this.originBlockTop) {
-            this.show();
-        } else {
-            this.hide();
+        if (this.activate) {
+            if (this.scrollTop >= this.originBlockTop) {
+                this.show();
+            } else {
+                this.hide();
+            }
         }
     };
 
@@ -110,7 +128,6 @@ define(function (require, exports, module) {
     };
 
     StickyHeader.prototype.updateClone = function () {
-        debugger;
         this.cloneBlock.remove();
         this.cloneBlock = this.originBlock.clone();
         this.cloneBlock.addClass(fixedClass).css({top: 0});

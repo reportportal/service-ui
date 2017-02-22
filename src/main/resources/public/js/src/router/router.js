@@ -17,9 +17,9 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
@@ -40,31 +40,36 @@ define(function(require, exports, module) {
             this.context = Context;
             this.user = new UserModel();
 
-            testRoute.addTest('insidePage', function(){
+            testRoute.addTest('insidePage', function () {
                 var async = $.Deferred();
                 self.user.isAuth()
-                    .done(function(){
+                    .done(function () {
                         self.landingController.hideLanding();
                         async.resolve();
                         self.user.set({lastInsideHash: window.location.hash});
                     })
-                    .fail(function(){
-                        self.user.set({lastInsideHash: window.location.hash});
-                        self.navigate('login', {trigger: true});
+                    .fail(function () {
+                        if(window.location.hash.indexOf('registration') >= 0) {
+                            self.navigate(window.location.hash, {trigger: true});
+                        }
+                        else {
+                            self.user.set({lastInsideHash: window.location.hash});
+                            self.navigate('login', {trigger: true});
+                        }
                     });
                 return async.promise();
             });
 
             this.landingController = new LandingController();
 
-            this.user.ready.done(function(){
+            this.user.ready.done(function () {
                 self.listenTo(self.user, 'change:auth', self.onChangeUserAuth.bind(self));
             });
-            this.route(/^(.*)\/launches\/all(.*)$/, "openLaunches");
-            this.route(/^(.*)\/userdebug\/all(.*)$/, "openUserDebug");
+            this.route(/^(.*)\/oldlaunches\/all(.*)$/, "openLaunches");
+            //this.route(/^(.*)\/userdebug\/all(.*)$/, "openUserDebug");
         },
-        onChangeUserAuth: function(model, auth){
-            if(auth){
+        onChangeUserAuth: function (model, auth) {
+            if (auth) {
                 outdatedBrowser({
                     bgColor: '#f25648;',
                     color: '#ffffff',
@@ -72,7 +77,7 @@ define(function(require, exports, module) {
                     languagePath: ''
                 });
                 this.navigate(model.get('lastInsideHash'), {trigger: true});
-            }else {
+            } else {
                 this.navigate('', {trigger: true});
                 Context.destroyViews();
             }
@@ -84,94 +89,110 @@ define(function(require, exports, module) {
             'documentation/:id': 'openDocumentation',
             'user-profile': 'userProfile',
             'registration?*queryString': 'registerUser',
-            'administrate/project-details/:id?*queryString': 'openAdminPageDetails',
-            'administrate/project-details/:id': 'openAdminPageDetails',
-            'administrate/:page/:id/:action?*queryString': 'openAdminResource',
-            'administrate/:page/:id/:action': 'openAdminResource',
-            'administrate/:page/:id/:action/:userAction': 'openAdminUsersAction',
+            'administrate/project-details/:id?*queryString': 'openAdminProjectDetails',
+            'administrate/project-details/:id': 'openAdminProjectDetails',
+            'administrate/project-details/:id/:action': 'openAdminProjectDetails',
+            //'administrate/:page/:id?*queryString': 'openAdminResource',
+            //'administrate/:page/:id': 'openAdminResource',
+            //'administrate/:page/:id/:action?*queryString': 'openAdminResource',
+            //'administrate/:page/:id/:action': 'openAdminResource',
+            'administrate/project-details/:id/:action/:userAction': 'openAdminProjectDetails',
             'administrate': 'openAdminPage',
             'administrate/:page': 'openAdminPage',
             'administrate/:page?*queryString': 'openAdminPage',
             'administrate/:page/:action': 'openAdminPageAction',
+            'administrate/:page/:action?*queryString': 'openAdminPageAction',
             ':project/filters?*queryString': 'openFilters',
             ':project/filters': 'openFilters',
             ':project/members': 'openMembersDefault',
             ':project/members/:action': 'openMembers',
             ':project/settings': 'openSettings',
             ':project/settings/:tab': 'openSettings',
-            ':project/dashboard': 'openDashboard',
-            ':project/dashboard/:id': 'openDashboard',
-            ':project/dashboard/:id?*queryString': 'openDashboard',
+            ':project/olddashboard': 'openDashboard',
+            ':project/olddashboard/:id': 'openDashboard',
+            ':project/olddashboard/:id?*queryString': 'openDashboard',
+            ':project/launches/:filterId(/*path)': 'openLaunch',
+            ':project/userdebug/:filterId(/*path)': 'openUserDebug',
 
-            //':project(/)': 'openProject',
-            ':project(/)': 'openDashboard',
+            ':project/dashboard': 'openNewDashboard',
+            ':project/dashboard/:id': 'openNewDashboard',
+            ':project/dashboard/:id?*queryString': 'openNewDashboard',
+
+            ':project(/)': 'openNewDashboard',
             '*invalidRoute': "show404Page"
         },
-        show404Page: function(route){
+        show404Page: function (route) {
             // make sure it is not a value for dynamic .route
-            if(route && route.indexOf('launches/all') === -1 && route.indexOf('userdebug/all') === -1) {
-                Context.openInvalid(route);
-            }
+            // if(route && route.indexOf('launches/all') === -1 && route.indexOf('userdebug/all') === -1) {
+            //     Context.openInvalid(route);
+            // }
+            Context.openInvalid(route);
         },
-        openParallax: function() {
+        openParallax: function () {
             this.landingController.showParallax();
             Context.destroyViews();
         },
-        openParallaxLogin: function(){
+        openParallaxLogin: function () {
             this.landingController.showParallax();
             this.landingController.openLogin();
             Context.destroyViews();
         },
-        openDocumentation: function(id) {
+        registerUser: function (queryString) {
+            Context.openRegister(queryString);
+        },
+        openDocumentation: function (id) {
             this.landingController.showDocumentation(id);
             Context.destroyViews();
         },
-        openProject: testRoute.checkTest('insidePage', function(project) {
+        openProject: testRoute.checkTest('insidePage', function (project) {
             Context.openRouted(project, 'info', null, null);
         }),
-        openLaunches: testRoute.checkTest('insidePage', function(project, path){
+        openLaunches: testRoute.checkTest('insidePage', function (project, path) {
             Context.openRouted(project, 'launches', 'all', path);
         }),
-        openUserDebug: testRoute.checkTest('insidePage', function(project, path){
-            Context.openRouted(project, 'userdebug', 'all', path);
+        openUserDebug: testRoute.checkTest('insidePage', function (project) {
+            Context.openRouted(project, 'userdebug', arguments);
         }),
-        openFilters: testRoute.checkTest('insidePage', function(project, queryString){
+        openFilters: testRoute.checkTest('insidePage', function (project, queryString) {
             Context.openRouted(project, 'filters', null, queryString);
         }),
-        userProfile: testRoute.checkTest('insidePage', function(){
+        userProfile: testRoute.checkTest('insidePage', function () {
             Context.openRouted(config.project.projectId, 'user-profile', null, null);
         }),
-        openMembers: testRoute.checkTest('insidePage', function(project, action){
+        openMembers: testRoute.checkTest('insidePage', function (project, action) {
             Context.openRouted(project, 'members', action, null);
         }),
-        openMembersDefault: testRoute.checkTest('insidePage', function(project){
+        openMembersDefault: testRoute.checkTest('insidePage', function (project) {
             Context.openRouted(project, 'members', 'assigned', null);
         }),
-        registerUser: function(queryString){
-            Context.openRegister(queryString);
-        },
-        openSettings: testRoute.checkTest('insidePage', function(project, tab){
+        openLaunch: testRoute.checkTest('insidePage', function (project) {
+            Context.openRouted(project, 'newlaunches', arguments);
+        }),
+        openSettings: testRoute.checkTest('insidePage', function (project, tab) {
             Context.openRouted(project, 'settings', tab, null);
         }),
-        openDashboard: testRoute.checkTest('insidePage', function(project, id, queryString){
+        openDashboard: testRoute.checkTest('insidePage', function (project, id, queryString) {
             Context.openRouted(project, 'dashboard', id, queryString);
+        }),
+        openNewDashboard: testRoute.checkTest('insidePage', function (project, id, queryString) {
+            Context.openRouted(project, 'newdashboard', id, queryString);
         }),
         openAdminPage: testRoute.checkTest('insidePage', function (page, queryString) {
             page = page || 'projects';
             Context.openAdmin(page, null, null, queryString);
         }),
-        openAdminPageAction: testRoute.checkTest('insidePage', function (page, action) {
-            Context.openAdmin(page, undefined, action);
+        openAdminPageAction: testRoute.checkTest('insidePage', function (page, action, queryString) {
+            Context.openAdmin(page, undefined, action, queryString);
         }),
         openAdminResource: testRoute.checkTest('insidePage', function (page, id, action, query) {
             Context.openAdmin(page, id, action, query);
         }),
-        openAdminUsersAction: testRoute.checkTest('insidePage', function(page, id, action, query){
+        openAdminUsersAction: testRoute.checkTest('insidePage', function (page, id, action, query) {
             Context.openAdmin(page, id, action, query);
         }),
-        openAdminPageDetails: testRoute.checkTest('insidePage', function (id, queryString) {
-            Context.openAdmin("project-details", id, null, queryString);
-        })
+        openAdminProjectDetails: testRoute.checkTest('insidePage', function (id, action, queryString) {
+            Context.openAdmin("project-details", id, action, queryString);
+        }),
     });
 
     return {

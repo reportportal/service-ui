@@ -64,20 +64,7 @@ $borderRadius100: 100px;
     padding: 0;
 }
 
-.rp-grid-thead {
-    background: #f5f5f5;
-    border-bottom: solid 1px #e9e9e9;
-}
 
-.rp-grid-th {
-    height: 50px;
-    text-transform: uppercase;
-    font-family: $OpenSansSemibold;
-    font-size: 12px;
-    color: #777777;
-    padding: 0;
-    position: relative;
-}
 
 .rp-grid-th-name {
     display: inline-block;
@@ -116,6 +103,7 @@ $borderRadius100: 100px;
     white-space: pre-wrap;
     background: none;
     border: none;
+    margin: 0 0 6px;
 }
 
 .rp-grid-description.nicescroll-it {
@@ -124,7 +112,7 @@ $borderRadius100: 100px;
 
 .rp-grid-tags {
     text-align: right;
-    margin: 0px 0 0 24px;
+    margin: 0 0 0 24px;
     .rp-launch-tags, .rp-launch-owner {
         display: inline-block;
         padding: 0 0 0 20px;
@@ -273,100 +261,7 @@ $borderRadius100: 100px;
 }
 
 
-.filter-table-panel {
-    .rp-grid-description,
-    .rp-grid-name {
-        padding: 0;
-    }
-    .rp-grid-tags {
-        margin-left: 0;
-    }
-}
-
-.info_section {
-    li {
-        position: relative;
-    }
-    li .defects-tooltip {
-        display: none;
-        top: 99%;
-        left: 0;
-    }
-    li:hover .defects-tooltip {
-        display: block;
-    }
-}
-
 /* --------------------------- */
-
-/* LAUNCH INFO PANEL */
-.info_section {
-    font-family: $OpenSansSemibold;
-    font-weight: 300; // TODO
-    border-bottom: 1px solid #e9e9e9;
-    font-size: 12px;
-    color: #464547;
-    margin: 0 -15px;
-    padding: 0;
-
-    li {
-        float: left;
-        margin: 0 10px;
-        padding: 5px 0;
-        list-style: none;
-    }
-
-    .progress-bar {
-        box-shadow: none;
-    }
-
-    .issues {
-        padding: 0 10px;
-        border-radius: 100px;
-        border: 1px solid #ccc;
-        background: #fff;
-        color: #1a9cb0;
-        font-family: $OpenSansSemibold;
-        height: 20px;
-        position: relative;
-        top: -1px;
-        right: -1px;
-    }
-}
-
-.info-section-issue {
-    display: inline-block;
-    position: relative;
-    height: 20px;
-    font-size: 13px;
-    border-radius: 100px;
-    border: 1px solid #ccc;
-    background: #f5f5f5;
-
-    span {
-        display: inline-block;
-    }
-}
-
-.issue-type {
-    text-transform: uppercase;
-    position: relative;
-    padding: 0 2px 0 24px;
-    height: 18px;
-    top: -1px;
-    font-family: $OpenSansSemibold;
-
-    i {
-        position: absolute;
-        left: 6px;
-        top: 3px;
-        width: 12px;
-        height: 12px;
-        border-radius: $borderRadius100;
-    }
-}
-
-/* ---------------------------- */
 
 #mainContainer {
     .rp-main-panel {
@@ -426,22 +321,6 @@ $borderRadius100: 100px;
     font-size: 14px;
 }
 
-.dropdown-menu.item-options {
-    min-width: 246px;
-    padding: 12px 0;
-
-    & > li {
-        & > a {
-            padding: 3px 15px;
-            font-size: 13px;
-            margin: 0;
-        }
-    }
-    .divider {
-        background: #e9e9e9;
-        margin: 10px 12px;
-    }
-}
 
 .rp-export-launch-group {
     .rp-export-label {
@@ -468,184 +347,3 @@ $borderRadius100: 100px;
 }
 
 /* ---------------------------------- */
-
-#mainContainer {
-    .rp-main-panel {
-        #dynamic-content {
-            padding-top: 0;
-        }
-    }
-}
-
-/* ---------------------------------- */
-
-/* HISTORY GRID */
-
-.rp-history-grid {
-    padding: 0;
-
-    &.rp-margin-reset {
-        border: none;
-        border-left: 1px solid #e9e9e9;
-    }
-    pre.shifted {
-        padding: 0 0 8px;
-        margin: -6px 0 0;
-    }
-    .row {
-        overflow: hidden;
-
-        .glyphicon {
-            font-size: 14px;
-            margin: 8px 0 0;
-        }
-        .badge {
-            margin: 4px 0;
-            vertical-align: inherit;
-        }
-    }
-}
-
-.history-row {
-    display: table-row;
-
-    .history-col:first-child {
-        border-left: none;
-    }
-
-}
-
-.rp-grid-thead {
-    .history-col {
-        padding: 0 4px;
-
-        &:first-child {
-            padding: 0 4px 0 15px;
-            border-left: none;
-        }
-    }
-}
-
-.history-col {
-    display: table-cell;
-    float: none;
-    height: 100%;
-    border: 1px solid #e9e9e9;
-    border-right: none;
-    border-top: none;
-    vertical-align: middle;
-
-    &.rp-empty {
-        color: #ccc;
-        line-height: 1.1;
-        background: #f5f5f5;
-
-        i {
-            font-size: 18px;
-        }
-    }
-
-    &.rp-warning {
-        background: #f5f9ec;
-        color: #777;
-
-        .history-col-content {
-            padding: 6px;
-
-            &:hover {
-                color: #464547;
-            }
-
-            .defects-tip-duration {
-                width: 240px;
-            }
-        }
-
-        i {
-            font-size: 22px;
-        }
-    }
-
-    [data-tooltip-type] {
-        .tooltip {
-            display: none;
-            @extend %centerBlock;
-        }
-        &:hover {
-            .tooltip {
-                display: block;
-            }
-        }
-    }
-}
-
-.history-col-content {
-    font-size: 12px;
-    position: relative;
-}
-
-.history-defect-badge {
-    display: inline-block;
-    border-radius: $borderRadius100;
-    padding: 0 10px;
-    font-family: $OpenSansSemibold;
-    margin: 2px 0;
-    position: relative;
-
-    &.no-stats {
-        padding-right: 10px;
-        &:after {
-            display: none;
-        }
-    }
-
-    &.nd > span, &.pb > span, &.si > span {
-        color: #fff;
-    }
-}
-
-.goToItem {
-    cursor: pointer;
-}
-.history-comment, .history-tickets {
-    display: inline-block;
-    color: #fff;
-    font-size: 16px;
-    margin: 0;
-    position: relative;
-    vertical-align: top;
-
-    &:hover {
-        &>span {
-            color: #464547;
-        }
-    }
-    &>span {
-        display: inline-block;
-        color: #777777;
-        font-size: 22px;
-
-    }
-}
-
-.history-defect-badge.no-stats,
-.history-comment,
-.history-tickets {
-    .defects-tip-duration {
-        width: 220px;
-    }
-}
-
-.history-row.rp-table-thead .history-col {
-    padding: 0 4px;
-}
-.history-row.rp-table-thead .history-col:first-child {
-    padding: 0 15px;
-}
-
-.history-col .tooltip-inner {
-    min-width: 120px;
-    word-break: normal;
-}
-
-/* -------------------------- */

@@ -54,13 +54,15 @@ define(['app'], function (App) {
         var idsString = ids.join(',');
         return getProjectBase() + "/filter/filters?ids=" + idsString;
     };
-    var saveFilter = function () {
+    var saveFilter = function (query) {
+        if(query) {
+            return getProjectBase() + '/filter' + query;
+        }
         return getProjectBase() + '/filter';
     };
     var filterById = function (id) {
         return saveFilter() + "/" + id;
     };
-    // todo - delete filterNames and filterNamesShared
     var filterNames = function () {
         return saveFilter() + '/names';
     };
@@ -90,8 +92,8 @@ define(['app'], function (App) {
         var userAttr = config.userModel.toJSON();
         return config.apiVersion + "project/" + (config.project.projectId || userAttr.defaultProject) + "/preference/" + userAttr.name;
     };
-    var getProject = function () {
-        return config.projectUrl + (config.project.projectId || config.userModel.get('defaultProject'));
+    var getProject = function (id) {
+        return config.projectUrl + (id || config.project.projectId || config.userModel.get('defaultProject'));
     };
     var launchesBase = function () {
         return "#" + config.project.projectId + "/launches";
@@ -102,14 +104,25 @@ define(['app'], function (App) {
     var tabUrl = function (filtersUrl) {
         return launchesBase() + "/all?" + filtersUrl;
     };
-    var getMerge = function () {
-        return getProjectBase() + '/launch/merge';
+
+    var getLaunchBase = function() {
+        return getProjectBase() + '/launch';
     };
+    var getLaunchMerge = function () {
+        return getLaunchBase() + '/merge';
+    };
+    var getLaunchUpdate = function() {
+        return getLaunchBase() + '/update';
+    };
+    var getLaunchStop = function() {
+        return getLaunchBase() + '/stop';
+    };
+
     var queryByTags = function (tags) {
-        return getProjectBase() + '/launch/tags?filter.cnt.tags=' + encodeURI(tags);
+        return getProjectBase() + '/launch/tags?filter.cnt.tags=' + encodeURIComponent(tags);
     };
     var queryByLaunchName = function (name) {
-        return getProjectBase() + '/launch/names?filter.cnt.name=' + encodeURI(name);
+        return getProjectBase() + '/launch/names?filter.cnt.name=' + encodeURIComponent(name);
     };
     var userAutoCompleteUrl = function (term, mode) {
         return getProjectBase() + '/launch/owners?filter.cnt.user=' + encodeURI(term) + (mode ? '&mode=' + mode : '');
@@ -238,8 +251,8 @@ define(['app'], function (App) {
     var historyGrid = function (ids, depth) {
         return itemBase() + "/history?ids=" + ids.toString() + "&history_depth=" + depth;
     };
-    var historyGridUrl = function (ids, depth, tadId) {
-        return window.location.hash + "/history?ids=" + ids.join(',') + "&history_depth=" + depth + '&tab.id=' + tadId;
+    var historyGridUrl = function (ids, depth) {
+        return window.location.hash + "/history?ids=" + ids.join(',') + "&history_depth=" + depth;
     };
     var adminProjectRoot = function () {
         return config.apiVersion + "project";
@@ -249,11 +262,19 @@ define(['app'], function (App) {
     };
 
     var getAdminSettings = function (id) {
-        return config.apiVersion + "/settings/" + id;
+        return config.apiVersion + "settings/" + id;
     };
 
     var setAdminSettings = function (id) {
-        return config.apiVersion + "/settings/" + id;
+        return config.apiVersion + "settings/" + id +'/email';
+    };
+
+    var deleteEmailSettings = function(id){
+        return config.apiVersion + "settings/" + id +'/email';
+    };
+
+    var adminAuthSettings = function(){
+        return '/uat/settings/default/oauth/github';
     };
 
     var adminProjects = function (data) {
@@ -356,56 +377,25 @@ define(['app'], function (App) {
     var getFile = function () {
         return getProjectBase() + '/data/';
     };
+    var getFileById = function(dataId) {
+        var token = config.userModel.get('token');
+        var params = '';
+        if(token) {
+            params = '?access_token=' + token.split(' ')[1];
+        }
+        return getProjectBase() + '/data/' + dataId + params;
+    };
     var uploadPhoto = function () {
         return config.apiVersion + 'data/photo';
     };
     var generateUUID = function () {
         return config.apiVersion + 'user/uuid';
     };
-    var totalAllCasesLink = function (id) {
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.type=STEP';
-    };
-    var passedAllCasesLink = function (id) {
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.status=PASSED&filter.in.type=STEP';
-    };
-    var failedAllCasesLink = function (id) {
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.status=FAILED&filter.in.type=STEP';
-    };
-    var skippedAllCasesLink = function (id) {
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.status=SKIPPED&filter.in.type=STEP';
-    };
-    var toInvestigateAllCasesLink = function (id, defects) {
-        var issueType = defects ? defects.join('%2C') : 'TO_INVESTIGATE';
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.issue$issue_type=' + issueType;
-    };
-    var systemIssueAllCasesLink = function (id, defects) {
-        var issueType = defects ? defects.join('%2C') : 'SYSTEM_ISSUE';
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.issue$issue_type=' + issueType;
-    };
-    var productBugsAllCasesLink = function (id, defects) {
-        var issueType = defects ? defects.join('%2C') : 'PRODUCT_BUG';
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.issue$issue_type=' + issueType;
-    };
-    var automationBugsAllCasesLink = function (id, defects) {
-        var issueType = defects ? defects.join('%2C') : 'AUTOMATION_BUG';
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.issue$issue_type=' + issueType;
-    };
-    var noDefectAllCasesLink = function (id, defects) {
-        var issueType = defects ? defects.join('%2C') : 'NO_DEFECT';
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.issue$issue_type=' + issueType;
-    };
-    var investigatedBugsAllCasesLink = function (id, defects) {
-        var issueType = defects ? defects.join('%2C') : 'SYSTEM_ISSUE%2CPRODUCT_BUG%2CAUTOMATION_BUG%2CNO_DEFECT';
-        return '#' + config.project.projectId + forAllCases() + id + allCasesSortingFilter() + 'filter.in.issue$issue_type=' + issueType;
-    };
-    var goLauch = function (id) {
-        return '#' + config.project.projectId + '/launches/all/' + id;
+    var updateGitHubProfile  = function(){
+        return '/uat/sso/me/github/synchronize';
     };
     var exportLaunchUrl = function (id, format) {
         return config.apiVersion + config.project.projectId + '/launch/' + id + '/report?view=' + (format || 'xls');
-    };
-    var mostFailedLastLaunchUrl = function (id) {
-        return '#' + config.project.projectId + forAllCases() + id + sortingFilter();
     };
 
     var getDefectTypes = function(projectId){
@@ -433,6 +423,9 @@ define(['app'], function (App) {
         }
         return getProjectBase() + "/" + type;
     };
+    var getLogsUrl = function() {
+        return getProjectBase() + "/log";
+    };
 
     var getLaunchItemUrl = function(type, id){
         return getGridUrl(type) + '/' + id;
@@ -449,19 +442,6 @@ define(['app'], function (App) {
         userLogin: userLogin,
 
         getRegistryInfo: getRegistryInfo,
-
-        totalAllCasesLink: totalAllCasesLink,
-        passedAllCasesLink: passedAllCasesLink,
-        failedAllCasesLink: failedAllCasesLink,
-        skippedAllCasesLink: skippedAllCasesLink,
-        toInvestigateAllCasesLink: toInvestigateAllCasesLink,
-        systemIssueAllCasesLink: systemIssueAllCasesLink,
-        productBugsAllCasesLink: productBugsAllCasesLink,
-        automationBugsAllCasesLink: automationBugsAllCasesLink,
-        noDefectAllCasesLink: noDefectAllCasesLink,
-        investigatedBugsAllCasesLink: investigatedBugsAllCasesLink,
-        goLauch: goLauch,
-        mostFailedLastLaunchUrl: mostFailedLastLaunchUrl,
         
         getAvatar: getAvatar,
         getProjectBase: getProjectBase,
@@ -480,6 +460,7 @@ define(['app'], function (App) {
         updateFilter: updateFilter,
         filtersBase: filtersBase,
         launchesBase: launchesBase,
+        getLaunchStop: getLaunchStop,
         userDebugBade: userDebugBade,
         updateLaunchUrl: updateLaunchUrl,
         deleteLaunchUrl: deleteLaunchUrl,
@@ -489,7 +470,10 @@ define(['app'], function (App) {
         launchMatchUrl: launchMatchUrl,
         launchFinishUrl: launchFinishUrl,
         tabUrl: tabUrl,
-        getMerge: getMerge,
+
+        getLaunchBase: getLaunchBase,
+        getMerge: getLaunchMerge,
+        getLaunchUpdate: getLaunchUpdate,
         queryByTags: queryByTags,
         queryByLaunchName: queryByLaunchName,
         userAutoCompleteUrl: userAutoCompleteUrl,
@@ -534,6 +518,7 @@ define(['app'], function (App) {
         adminProject: adminProject,
         getAdminSettings: getAdminSettings,
         setAdminSettings: setAdminSettings,
+        deleteEmailSettings: deleteEmailSettings,
         projectDetailsWidgets: projectDetailsWidgets,
         addMemberUrl: addMemberUrl,
         userUrl: userUrl,
@@ -562,18 +547,22 @@ define(['app'], function (App) {
 
         uploadPhoto: uploadPhoto,
         getFile: getFile,
+        getFileById: getFileById,
         generateUUID: generateUUID,
+        updateGitHubProfile: updateGitHubProfile,
         exportLaunchUrl: exportLaunchUrl,
 
         getDefectTypes: getDefectTypes,
         postDefectTypes: postDefectTypes,
         
         getGridUrl: getGridUrl,
+        getLogsUrl: getLogsUrl,
         getLaunchItemUrl: getLaunchItemUrl,
 
         userByEmail:userByEmail,
         postDemoDataUrl: postDemoDataUrl,
         getExternalSystems: getExternalSystems,
+        adminAuthSettings: adminAuthSettings
 
     };
 });

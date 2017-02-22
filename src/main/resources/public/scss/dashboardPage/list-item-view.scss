@@ -1,0 +1,132 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.dashboard-list-item-view {
+  float: left;
+  width: 25%;
+  margin: 15px 0;
+  .dashboard-content {
+    margin: 0 8px;
+    height: 100%;
+    border: 1px solid $COLOR--gray-91;
+    background: $COLOR--white-four;
+    cursor: pointer;
+    &:hover {
+      box-shadow: 0 0 20px 0 $COLOR--gray-91;
+    }
+  }
+  .name-wrapper {
+    position: relative;
+    width: 100%;
+    height: 47px;
+    border-bottom: 1px solid $COLOR--gray-91;
+    background:$COLOR--white;
+    p {
+      color: $COLOR--topaz;
+      font-size: 16px;
+      font-family: OswaldRegular;
+      line-height: 47px;
+      padding: 0 70px 0 13px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .icons-block {
+      position: absolute;
+      right: 0;
+      top: 0;
+      @media (max-width: $SCREEN_XS_MAX) {
+        display: none;
+      }
+      i {
+        float: right;
+        color: $COLOR--gray-60;
+        font-size: 20px;
+        line-height: 21px;
+        margin: 13px 3px;
+        width: 20px;
+        cursor: pointer;
+        opacity: 0;
+        &.close-icon {
+          font-size: 24px;
+          margin-right: 10px;
+        }
+        &:hover {
+          color: $COLOR--black;
+        }
+      }
+    }
+  }
+  .description-wrapper {
+    position: relative;
+    width: 100%;
+    height: 145px;
+    overflow: hidden;
+    p {
+      position: absolute;
+      bottom: 15px;
+      margin: 0;
+      left: 15px;
+      right: 15px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
+  .icons-wrapper {
+    width: 100%;
+    height: 40px;
+    border-top: 1px solid $COLOR--gray-91;
+    background:$COLOR--white;
+    color: $COLOR--charcoal-grey;
+    padding: 11px 15px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    div {
+      display: inline;
+    }
+    i {
+      font-size: 17px;
+      line-height: 13px;
+      vertical-align: top;
+      margin-top: 3px;
+    }
+  }
+  &:hover {
+    .name-wrapper {
+      .icons-block {
+        i {
+          opacity: 1;
+        }
+      }
+    }
+  }
+  @media(max-width: 1200px) {
+    width: 33.3%;
+  }
+  @media(max-width: 900px) {
+    width: 50%;
+  }
+  @media(max-width: 550px) {
+    width: 100%;
+    margin: 7px 0;
+  }
+}

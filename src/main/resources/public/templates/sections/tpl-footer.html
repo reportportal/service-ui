@@ -1,0 +1,46 @@
+<div class="back-to-top">
+    <a title="<%= data.text.ui.backToTop %>" global-back-top>
+        <i class="material-icons">arrow_upward</i>
+        <span><%= data.text.ui.backToTop %></span>
+    </a>
+</div>
+
+<ul class="breadcrumbs">
+    <li>
+        <a href="https://github.com/reportportal/reportportal" target="_blank">
+            <%= data.text.footer.forkUs %>
+        </a>
+    </li>
+    <li>
+        <a href="https://reportportal-slack-auto.herokuapp.com/" target="_blank">
+            <%= data.text.footer.chatSlack %>
+        </a>
+    </li>
+    <li>
+        <a href="mailto:SupportEPMC-TSTReportPortal@epam.com?subject=Report%20Portal%20Support">
+            <%= data.text.footer.contactUs %>
+        </a>
+    </li>
+    <li>
+        <a href="http://www.epam.com" target="_blank">
+            <%= data.text.footer.epam %>
+        </a>
+    </li>
+    <li>
+        <a href="#documentation" target="_blank">
+            <%= data.text.footer.docs %>
+        </a>
+    </li>
+    <li>
+        <a href="swagger-ui.html" target="_blank">
+            <%= data.text.footer.api %>
+        </a>
+    </li>
+</ul>
+<div class="pull-left">
+    <%= data.text.ui.build %>: <span id="buildVersion">XXXXXXX</span>
+</div>
+<div class="copyright pull-left">
+    &copy; <span class="footer-copy"><%= data.text.topMenu.reportPortal %></span>
+    2017 &nbsp; &nbsp;<%= data.text.ui.allRights %>
+</div>

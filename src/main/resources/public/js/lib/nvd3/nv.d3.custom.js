@@ -433,7 +433,7 @@ nv.nearestValueIndex = function (values, searchVal, threshold) {
         var data = null;
 
         var gravity = 'w'   //Can be 'n','s','e','w'. Determines how tooltip is positioned.
-            ,distance = 50   //Distance to offset tooltip from the mouse location.
+            ,distance = 20   //Distance to offset tooltip from the mouse location.
             ,snapDistance = 25   //Tolerance allowed before tooltip is moved from its current position (creates 'snapping' effect)
             ,   fixedTop = null //If not null, this fixes the top position of the tooltip.
             ,   classes = null  //Attaches additional CSS classes to the tooltip DIV that is created.
@@ -616,7 +616,7 @@ nv.nearestValueIndex = function (values, searchVal, threshold) {
                 top = Math.floor(top/snapDistance) * snapDistance;
             }
 
-            nv.tooltip.calcTooltipPosition([left,top], gravity, distance, container);
+            nv.tooltip.calcTooltipPosition([left,top], gravity, distance, container, chartContainer);
             return nvtooltip;
         }
 
@@ -859,6 +859,21 @@ nv.nearestValueIndex = function (values, searchVal, threshold) {
                 var tTop = tooltipTop(container);
                 break;
         }
+
+        // Do not allows tooltip go beyond widget's borders
+        if (parent && left + width > parent.offsetWidth) {
+            left = parent.offsetWidth - width - 1;
+        }
+        if (parent && top + height > parent.offsetHeight) {
+            top = parent.offsetHeight - height - 1;
+        }
+        if (left < 0) {
+            left = 0;
+        }
+        if (top < 0) {
+            top = 0;
+        }
+
         container.style.left = left+'px';
         container.style.top = top+'px';
         container.style.opacity = 1;
@@ -4900,10 +4915,9 @@ nv.models.ohlcBarChart = function() {
                         }
                         else {
                             // d.disabled = !d.disabled; custom
-                            var key = d.seriesId ? 'seriesId' : 'key';
                             for (var dd = 0; dd < data.length; dd++) {
                                 var serie = data[dd];
-                                if (serie[key] == d[key]) {
+                                if (serie.key == d.key) {
                                      serie.disabled = !d.disabled;
                                 }
                             }    
@@ -9743,6 +9757,7 @@ nv.models.pieChart = function() {
             if (!data || !data.length) {
                 var noDataText = container.selectAll('.nv-noData').data([noData]);
 
+                container.attr('width', '100%').attr('viewBox', '-30 40 200 100').attr('preserveAspectRatio', 'xMidYMid meet')
                 noDataText.enter().append('text')
                     .attr('class', 'nvd3 nv-noData')
                     .attr('dy', '-.7em')

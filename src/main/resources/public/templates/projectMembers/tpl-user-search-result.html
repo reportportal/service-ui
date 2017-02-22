@@ -1,0 +1,13 @@
+<div class="user-search-result-wrap" title="<%= data.user.disabled ? data.text.members.alredyAdded : '' %>">
+    <div class="user-avatar">
+        <img src="<%= data.imagePath %>">
+        <i class="material-icons">mail_outline</i>
+    </div>
+    <div class="user-search-info">
+        <p class="user-search-name"><%= data.user.name %></p>
+        <p class="user-search-login"><span class="invite-pref"><%= data.text.members.invitePref %></span><%= data.user.id %></p>
+        <p class="user-search-send-email"><%= data.text.members.sendInvite %></p>
+        <i class="material-icons user-add">add</i>
+        <i class="material-icons user-added">done</i>
+    </div>
+</div>

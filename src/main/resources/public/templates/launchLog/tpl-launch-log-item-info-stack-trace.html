@@ -1,0 +1,16 @@
+<div class="launch-log-info-stack-trace" data-js-stack-trace-wrapper>
+    <div class="preloader activity-preloader">
+        <i class="material-icons loader-animation">refresh</i>
+    </div>
+    <div data-js-stack-trace-container></div>
+    <span class="go-to-log" data-js-go-to-log>
+        <%= data.text.logs.goToLog %>
+        <i class="material-icons">keyboard_arrow_right</i>
+        <i class="material-icons loader-action loader-animation">refresh</i>
+    </span>
+    <div class="no-result-found">
+        <i class="rp-icons rp-icons-warning"></i>
+        <span><%= data.text.logs.notFoundStackTrace %></span>
+    </div>
+    <!--<i class="material-icons close-icon" data-js-close>clear</i>-->
+</div>

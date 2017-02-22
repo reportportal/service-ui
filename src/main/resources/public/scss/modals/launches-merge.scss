@@ -1,0 +1,108 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.modal-launches-merge {
+  .modal-content-wrapper {
+    .modal-body {
+      min-height: 470px;
+      padding: 30px 12px 0 12px;
+
+      .fields {
+        margin-top: 18px;
+
+        .rp-form-group {
+          clear: both;
+          border: 0;
+          outline: 0;
+          padding: 0 0 0 12px;
+
+          &.has-error {
+            margin-bottom: 6px;
+
+            .rp-input-default, .rp-input-default:focus {
+              color: #393939;
+              box-shadow: 0 0 2px 0 rgba(255,49,33,.7);
+              border: 1px solid #ff3222;
+            }
+          }
+
+          &.extended {
+            padding-left: 130px;
+            width: 480px;
+
+            .rp-input-default {
+              float: left;
+              margin-bottom: 20px;
+              margin-right: 5px;
+            }
+          }
+
+          .field-caption {
+            display: block;
+            float: left;
+            width: 90px;
+            line-height: 30px;
+            text-align: right;
+            font-size: 13px;
+            color: $COLOR--charcoal-grey;
+            text-transform: capitalize;
+          }
+
+          .rp-input-default, .select2-container {
+            width: 350px;
+            margin-left: 28px;
+          }
+          textarea {
+            min-height: 70px;
+          }
+
+          .help-inline {
+            margin-left: 118px;
+          }
+        }
+
+        @media (max-width: 620px) {
+          .rp-form-group {
+            .field-caption {
+              float: none;
+              text-align: left;
+            }
+
+            .rp-input-default, .select2-container {
+              width: 100%;
+              margin-left: 0;
+            }
+
+            &.extended {
+              padding-left: 12px;
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+    &.load {
+      .preloader {
+        display: block;
+      }
+    }
+  }
+}

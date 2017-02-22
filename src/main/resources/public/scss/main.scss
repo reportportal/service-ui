@@ -21,8 +21,9 @@
 
 @import 'outdatedbrowser';
 
-@import 'components/rp-mixins';
 @import 'components/rp-variables';
+@import 'components/rp-mixins';
+@import 'components/rp-animations';
 
 @import 'components/rp-setup-fonts';
 @import 'components/rp-setup-font-report-portal';
@@ -43,29 +44,28 @@
 @import 'components/rpButtons/rp-btn-with-dropdown';
 @import 'components/rpButtons/rp-btn-switch';
 
+@import 'common/rp-main-styles';
+@import 'common/rp-common-elements';
 @import 'components/rp-common-styles';
-@import 'components/rp-common-header';
-@import 'components/rp-common-footer';
+//@import 'components/rp-common-header';
+//@import 'components/rp-common-footer';
 @import 'components/rp-common-all-users-list';
 @import 'components/rp-common-pagination';
 @import 'components/rp-common-filter-tabs';
 @import 'components/rp-common-filter-inputs';
 @import 'components/rp-common-navigation-tabs';
-@import 'components/rp-common-sidebar-menu';
+//@import 'components/rp-common-sidebar-menu';
 @import 'components/rp-common-widgets';
-@import 'components/rp-common-launches-grid';
-@import 'components/rp-common-defects-editor';
+//@import 'components/rp-common-launches-grid';
+//@import 'components/rp-common-defects-editor';
 @import 'components/rp-common-text-editor';
 @import 'components/_rp-common-notification-flash-line';
-
 @import 'components/rp-common-modal';
 @import 'components/rp-common-modal-permissions-map';
 
 @import 'components/rp-custom-icons';
-
 @import 'components/rp-custom-form-elements';
 @import 'components/rp-custom-button-with-icon';
-@import 'components/rp-custom-breadcrumbs';
 @import 'components/rp-custom-nav';
 @import 'components/rp-custom-daterangepicker';
 @import 'components/rp-custom-bootstrap-colorpicker';
@@ -102,17 +102,12 @@
 @import 'components/rp-page-settings-notifications';
 @import 'components/rp-page-settings-bts';
 @import 'components/rp-page-settings-general';
-@import 'components/rp-page-settings-defect-types';
 
 @import 'components/rp-page-members';
 @import 'components/rp-page-members-assigned';
 @import 'components/rp-page-members-add';
 @import 'components/rp-page-members-invite';
 @import 'components/rp-page-members-assign';
-
-@import 'components/_rp-panels-uniq-bugs';
-@import 'components/_rp-panels-statistics';
-@import 'components/_rp-panels-filter-table';
 
 @import 'components/rp-page-logs';
 
@@ -122,7 +117,35 @@
 
 @import 'components/rp-fullscreen';
 
-@import 'components/projectSettings/rp-project-settings';
+/*--------------------------------------------------------*/
 
-@import 'components/admin/rp-admin';
+@import 'lib/main';
 
+@import 'sections/main';
+
+@import 'common/main';
+
+@import 'filterPage/main';
+@import 'launchPage/main';
+@import 'dashboardPage/main';
+
+@import 'component/main';
+
+@import 'modals/main';
+@import 'tooltips/main';
+
+@import 'filters/rp-filter-entities';
+
+@import 'userProfile/main';
+
+@import 'widgets/main';
+
+@import 'projectMembers/main';
+
+@import 'admin/main';
+
+@import 'filterSortingParameters/main';
+
+@import 'bts/main';
+
+@import 'projectSettings/main';

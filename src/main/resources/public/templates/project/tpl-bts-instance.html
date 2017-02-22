@@ -1,119 +1,122 @@
 <% var notAllowed = (!data.access) ? 'disabled="disabled"' : '' %>
-<div id="btsBlock">
-    <div id="propertiesWrapper">
+<div id="btsBlock" class="bts-block">
+    <div id="propertiesWrapper" class="bts-properties">
         <div class="rp-form-group clearfix">
-            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col obligatory-field" for="url">
+            <label class="rp-control-label obligatory-field" for="url">
                 <%= data.text.bts.linkTo %>
             </label>
-            <div class="col-md-4 col-sm-7 col-xs-12 rp-custom-col">
-                <input type="text" class="rp-input-default form-control rp-width-100 bts-property" id="url" value="<%- data.url || '' %>" <%= notAllowed %>>
-                <span class="help-inline"></span>
-            </div>
+            <input type="text" class="rp-input-default bts-property" id="url"
+                   value="<%- data.url || '' %>" <%= notAllowed %>>
+            <span class="help-inline"></span>
             <% if (data.access) { %>
-                <div class="col-md-5 col-sm-2 col-xs-12 rp-custom-col">
-                    <a href="javascript:void(0);"
-                        class="edit-item"
-                        id="editBtsProperties"
-                        alt="<%= data.text.ui.edit %>"
-                        title="<%= data.text.ui.edit %>">
-                        <i class="material-icons">edit</i>
-                    </a>
-                    <a href="javascript:void(0);"
-                        class="delete-item"
-                        id="deleteInstance"
-                        alt="<%= data.text.bts.removeProject %>"
-                        title="<%= data.text.bts.removeProject %>">
-                        <i class="rp-icons rp-icons-cancel"></i>
-                    </a>
-                </div>
-            <% }
-            else { %>
-                <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
+            <div class="bts-properties-controls">
+                <a href="javascript:void(0);"
+                   class="edit-item"
+                   id="editBtsProperties"
+                   alt="<%= data.text.ui.edit %>"
+                   title="<%= data.text.ui.edit %>">
+                    <i class="material-icons">edit</i>
+                </a>
+                <a href="javascript:void(0);"
+                   class="delete-item"
+                   id="deleteInstance"
+                   alt="<%= data.text.bts.removeProject %>"
+                   title="<%= data.text.bts.removeProject %>">
+                    <i class="rp-icons rp-icons-cancel"></i>
+                </a>
+            </div>
             <% } %>
-        </div>        <div class="rp-form-group clearfix">
-            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col obligatory-field" for="project">
+        </div>
+        <div class="rp-form-group clearfix">
+            <label class="rp-control-label obligatory-field" for="project">
                 <%= data.text.bts[data.projectType] %>
             </label>
-            <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                <input type="text" class="rp-input-default form-control rp-width-100 bts-property" id="project" value="<%- data.project || '' %>" <%= notAllowed %> />
-                <span class="help-inline"></span>
-            </div>
-            <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
-        </div>        <div class="rp-form-group clearfix">
-            <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col">
+            <input type="text" class="rp-input-default form-control rp-width-100 bts-property" id="project"
+                   value="<%- data.project || '' %>" <%= notAllowed %> />
+            <span class="help-inline"></span>
+        </div>
+        <div class="rp-form-group clearfix">
+            <label class="rp-control-label">
                 <%= data.text.bts.authorizationType %>
             </label>
-            <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                <div class="rp-btn-group input-group to-100-width">
-                    <button id="systemAuth" <%= notAllowed %> data-toggle="dropdown" class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle">
-                        <span class="select-value">
+            <div class="rp-btn-group bts-property input-group">
+                <button id="systemAuth"
+                <%= notAllowed %> data-toggle="dropdown" class="rp-btn rp-btn-with-dropdown rp-width-100
+                dropdown-toggle">
+                <span class="select-value">
                             <%= data.text.ui[data.systemAuth] %>
                         </span>
-                        <span class="rp-caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <% _.each(data.authorizationTypes, function(type) { %>
-                            <% var isActive = type.value === data.systemAuth ? 'active' : ''; %>
-                            <li id="<%= type.value %>" class="<%= isActive %>">
-                                <a href="#" class="auth-type"><%= type.name %></a>
-                            </li>
-                        <% }) %>
-                    </ul>
-                </div>
+                <span class="rp-caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <% _.each(data.authorizationTypes, function(type) { %>
+                    <% var isActive = type.value === data.systemAuth ? 'active' : ''; %>
+                    <li id="<%= type.value %>" class="<%= isActive %>">
+                        <a href="#" class="auth-type"><%= type.name %></a>
+                    </li>
+                    <% }) %>
+                </ul>
             </div>
-            <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
-        </div>        <div id="authorizationType" class="clearfix"></div>
-    </div>    <div class="clearfix">
+        </div>
+        <div id="authorizationType" class="clearfix"></div>
+    </div>
+    <div class="clearfix">
         <div class="btn-controls rp-form-group">
-            <div class="col-md-3 col-sm-3 hidden-xs rp-custom-col"></div>
-            <div class="col-md-9 col-sm-9 col-xs-12 rp-custom-col" id="resetFieldsWarning" >
+            <div class="reset-fields-warning" id="resetFieldsWarning">
                 <div class="err-hint"><%= data.text.bts.fieldsReset %></div>
             </div>
         </div>
-    </div>    <div class="rp-form-group clearfix">
-        <div class="col-md-7 col-sm-12 col-xs-12 rp-custom-col clearfix" id="submitPropertiesBlock">
+    </div>
+    <div class="rp-form-group clearfix">
+        <div class="submit-properties" id="submitPropertiesBlock">
             <button class="rp-btn rp-btn-submit float-right rp-btn-indent-left"
-                <%= notAllowed %>
-                id="submitBtsProperties">
-                <%= data.text.ui.submit %>
+            <%= notAllowed %>
+            id="submitBtsProperties">
+            <%= data.text.ui.submit %>
             </button>
             <button class="rp-btn rp-btn-cancel float-right rp-btn-indent-left"
-                <%= notAllowed %>
-                id="cancelBtsProperties">
-                <%= data.text.ui.cancel %>
+            <%= notAllowed %>
+            id="cancelBtsProperties">
+            <%= data.text.ui.cancel %>
             </button>
         </div>
-        <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
-    </div>    <div id="externalError" class="col-sm-12 alert alert-danger" data-casual="<%= data.text.bts.errorInteracting %>" data-noproject="<%= data.text.bts.projectNotFound %>"></div>    <div class="row" id="fieldsLoader">
+    </div>
+    <div id="externalError" class="alert alert-danger" data-casual="<%= data.text.bts.errorInteracting %>"
+         data-noproject="<%= data.text.bts.projectNotFound %>"></div>
+    <div id="fieldsLoader">
         <div class="loader">
             <i class="material-icons loader-animation">autorenew</i>
         </div>
-    </div>    <div id="fieldsWrapper" class="">
-        <div class="rp-form-group clearfix"><!--DO NOT REMOVE--></div>        <div class="rp-form-group clearfix title-block-wrapper">
-            <div class="col-md-12 col-sm-12 col-xs-12 rp-custom-col">
-                <h4 class="common-title"><%= data.text.bts.defaultProperties %></h4>
-            </div>
+    </div>
+    <div id="fieldsWrapper" class="bts-fields-wrapper">
+        <div class="rp-form-group clearfix"><!--DO NOT REMOVE--></div>
+        <div class="rp-form-group clearfix title-block-wrapper">
+            <h4 class="common-title"><%= data.text.bts.defaultProperties %></h4>
         </div>
         <div class="rp-form-group clearfix group-title-block">
-            <div class="col-md-3 col-sm-3 hidden-xs rp-custom-col"></div>
-            <div class="col-md-4 col-sm-7 col-xs-10 rp-custom-col">
+            <div class="inputs-caption">
                 <span class="title-block"><%= data.text.bts.defaultValue %></span>
             </div>
-            <div class="col-md-5 col-sm-2 col-xs-2 rp-custom-col">
+            <div class="checkboxes-caption">
                 <span class="title-block"><%= data.text.bts.showFields %></span>
             </div>
-        </div>        <div id="dynamicFields" class=""></div>        <div class="rp-form-group clearfix btn-controls fields-controls">
-            <div class="col-md-7 col-sm-10 col-xs-10 rp-custom-col">
-                <button class="rp-btn rp-btn-submit float-right rp-btn-indent-left" <%= notAllowed %> id="submitFields">
-                    <%= data.text.ui.submit %>
-                </button>
-                <button class="rp-btn rp-btn-cancel float-right rp-btn-indent-left" <%= notAllowed %> id="updateFields">
-                    <%= data.text.ui.update %>
-                </button>
-                <button class="rp-btn rp-btn-cancel float-right rp-btn-indent-left" <%= notAllowed %> id="cancelFields">
-                    <%= data.text.ui.cancel %>
-                </button>
-            </div>
-            <div class="col-md-5 col-sm-2 col-xs-2 rp-custom-col"></div>
         </div>
-    </div></div>
+        <div id="dynamicFields" class="bts-fields"></div>
+        <div class="rp-form-group clearfix btn-controls fields-controls">
+            <button class="rp-btn rp-btn-submit float-right rp-btn-indent-left"
+            <%= notAllowed %> id="submitFields">
+            <%= data.text.ui.submit %>
+            </button>
+            <button class="rp-btn rp-btn-cancel float-right rp-btn-indent-left"
+            <%= notAllowed %> id="updateFields">
+            <%= data.text.ui.update %>
+            </button>
+            <button class="rp-btn rp-btn-cancel float-right rp-btn-indent-left"
+            <%= notAllowed %> id="cancelFields">
+            <%= data.text.ui.cancel %>
+            </button>
+        </div>
+    </div>
+
+    <div class="mobile-disabling-cover"></div>
+</div>

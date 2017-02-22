@@ -1,0 +1,12 @@
+<div class="modal-header">
+    <h2><%= data.headerText %></h2>
+    <% if (data.isBeta) { %>
+        <div class="beta-badge"><%= data.text.project.beta %></div>
+    <% } %>
+    <span class="close-modal"
+          title="<%= data.text.uiCommonElements.close %>"
+          data-js-close
+          data-dismiss="modal">
+            <i class="material-icons">clear</i>
+        </span>
+</div>

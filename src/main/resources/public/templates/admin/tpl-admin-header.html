@@ -1,17 +1,29 @@
-<button type="button"
-    class="btn btn-default btn-toggle js-menu-toggle visible-xs button-position navbar-toggle">
-    <i class="material-icons">format_indent_increase</i>
-</button>
-<h3 class="col-sm-4 admin_header"><%= data.text.admin.managementBoard %></h3>
-<div class="pull-right admin_header_controls">
-    <% if (data.project) { %>
-        <a id="backToProject" href="#<%- data.project %>" class="">
-            <i class="material-icons">keyboard_arrow_left</i>
-            <%= data.text.admin.backToProject %>
-        </a>
-    <% } %>
-    <a id="logout" href="#login" class="">
-        <span class="custom-padding"><%= data.text.topMenu.logout %></span>
-        <i class="material-icons">power_settings_new</i>
-    </a>
-</div>
+<nav class="navbar rp-navbar-header" role="navigation">
+    <div class="navbar-header visible-xs mobile-main-header">
+        <div class="button-menu-open" data-js-toogle-menu>
+            <div class="menu-icon-part"></div>
+            <div class="menu-icon-part"></div>
+            <div class="menu-icon-part"></div>
+        </div>
+        <div class="button-menu-close hidden" data-js-toogle-menu>
+            <i class="material-icons close-menu" title="Menu close" data-js-filter-close>close</i>
+        </div>
+        <div class="rp-logo"></div>
+    </div>
+    <div class="navbar-collapse" id="navbar-header-collapse">
+        <h3 class="col-sm-4 admin_header"><%= data.text.admin.managementBoard
+            %><span class="header-crumb" data-js-admin-header-crumb></span></h3>
+        <div class="pull-right admin_header_controls">
+            <% if (data.project) { %>
+            <a id="backToProject" href="#<%- data.lastURL %>" class="backToProject">
+                <i class="material-icons">keyboard_arrow_left</i>
+                <%= data.text.admin.backToProject %>
+            </a>
+            <% } %>
+            <a id="logout" href="#login" class="logout">
+                <span class="custom-padding"><%= data.text.topMenu.logout %></span>
+                <i class="material-icons">power_settings_new</i>
+            </a>
+        </div>
+    </div>
+</nav>

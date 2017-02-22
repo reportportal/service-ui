@@ -1,0 +1,35 @@
+<div class="filter-search-header clearfix">
+    <div class="input-filter form-group">
+        <input type="text" class="rp-input-search favorites-name-filter rp-input-sm form-control" data-js-filter-name name="userFilter" placeholder="Search by Name" value="">
+        <i class="material-icons">search</i>
+        <div class="validate-hint">
+        </div>
+    </div>
+    <a href="#" class="rp-btn rp-btn-default rp-button-with-icon" data-js-add-filter>
+        <i class="rp-icons rp-icons-add-filter"></i>
+        <span class="rp-btn-val"><%- data.text.dashboard.addFilter %></span>
+    </a>
+
+</div>
+<div class="select-filter-wrapper empty-state" data-js-select-filter-block>
+    <span class="title"><%- data.text.widgets.chooseFilter %></span>
+    <div data-js-select-filter-container></div>
+</div>
+<div class="filter-list-wrapper">
+    <div class="filter-list" data-js-filter-list-scroll>
+        <div data-js-filter-list></div>
+        <div class="preloader">
+            <i class="material-icons loader-animation">refresh</i>
+        </div>
+        <div data-js-filter-empty class="hide filter-no-data">
+            <p class="no-data-warning">
+                <i class="rp-icons rp-icons-warning"></i>
+                <%= data.text.wizard.ownFiltersAbsent %> "<span data-js-seach-query></span>"
+            </p>
+            <p><%= data.text.ui.checkQuery %></p>
+        </div>
+    </div>
+</div>
+
+<div data-js-filter-edit-container></div>
+<div data-js-filter-add-container></div>

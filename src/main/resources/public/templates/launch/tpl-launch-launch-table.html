@@ -1,0 +1,65 @@
+<% function getItemHtml(name, shortName) {
+    return '<div class="table-wrapper">' +
+                '<div class="middle-wrapper">' +
+                    '<span class="text-overflow">' +
+                        '<div class="filter-icon-wrapper">' +
+                            '<i class="rp-icons rp-icons-filter"></i>' +
+                        '</div>&nbsp;' +
+                        '<span class="long-size">' + name + '</span>' +
+                        '<span class="short-size" title="' + name + '">' + shortName + '</span>&nbsp;' +
+                        '<div class="sort-icon-wrapper">' +
+                            '<i class="material-icons">keyboard_arrow_up</i>' +
+                            '<i class="material-icons">keyboard_arrow_down</i>' +
+                        '</div>' +
+                    '</span>' +
+                '</div>' +
+            '</div>';
+} %>
+
+
+
+<div class="rp-table-grid all-launches-grid suit-grid rp-odd-even rp-table-hover" data-js-table-container>
+    <div class="row rp-grid-thead" data-js-fixed-header>
+        <div class="grid-cell name-grid-cell rp-grid-th" data-sorter="name" data-filter="name">
+            <%= getItemHtml(data.text.launchesHeaders.name, data.text.launchesHeaders.name_short) %>
+        </div>
+        <div class="grid-cell time-grid-cell rp-grid-th" data-sorter="start_time" data-filter="start_time">
+            <%= getItemHtml(data.text.launchesHeaders.start_time, data.text.launchesHeaders.start_time_short) %>
+        </div>
+        <div class="grid-cell number-grid-cell rp-grid-th" data-sorter="statistics$executions$total" data-filter="statistics$executions$total">
+            <%= getItemHtml(data.text.launchesHeaders.total, data.text.launchesHeaders.total_short) %>
+        </div>
+        <div class="grid-cell number-grid-cell rp-grid-th" data-sorter="statistics$executions$passed" data-filter="statistics$executions$passed">
+            <%= getItemHtml(data.text.launchesHeaders.passed, data.text.launchesHeaders.passed_short) %>
+        </div>
+        <div class="grid-cell number-grid-cell rp-grid-th" data-sorter="statistics$executions$failed" data-filter="statistics$executions$failed">
+            <%= getItemHtml(data.text.launchesHeaders.failed, data.text.launchesHeaders.failed_short) %>
+        </div>
+        <div class="grid-cell number-grid-cell rp-grid-th" data-sorter="statistics$executions$skipped" data-filter="statistics$executions$skipped">
+            <%= getItemHtml(data.text.launchesHeaders.skipped, data.text.launchesHeaders.skipped_short) %>
+        </div>
+        <div class="grid-cell counter-grid-cell rp-grid-th" data-sorter="statistics$defects$product_bug$total" data-filter="statistics$defects$product_bug$total">
+            <%= getItemHtml(data.text.launchesHeaders.product_bug, data.text.launchesHeaders.product_bug_short) %>
+        </div>
+        <div class="grid-cell counter-grid-cell rp-grid-th" data-sorter="statistics$defects$automation_bug$total" data-filter="statistics$defects$automation_bug$total">
+            <%= getItemHtml(data.text.launchesHeaders.automation_bug, data.text.launchesHeaders.automation_bug_short) %>
+        </div>
+        <div class="grid-cell counter-grid-cell rp-grid-th" data-sorter="statistics$defects$system_issue$total" data-filter="statistics$defects$system_issue$total">
+            <%= getItemHtml(data.text.launchesHeaders.system_issue, data.text.launchesHeaders.system_issue_short) %>
+        </div>
+        <div class="grid-cell counter-grid-cell rp-grid-th" data-sorter="statistics$defects$to_investigate$total" data-filter="statistics$defects$to_investigate$total">
+            <%= getItemHtml(data.text.launchesHeaders.to_investigate, data.text.launchesHeaders.to_investigate_short) %>
+        </div>
+        <div class="grid-cell select-grid-cell rp-grid-th">
+            <div class="table-wrapper">
+                <div class="middle-wrapper">
+                    <label class="rp-checkbox-wrap">
+                        <input class="rp-input-checkbox" type="checkbox" data-js-select-all>
+                        <span></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

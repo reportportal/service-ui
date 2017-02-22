@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "grunt": "grunt",
+    "build": "grunt build",
     "server": "webpack-dev-server --config config-server.js",
     "tests": "karma start"
   },
   "author": "me",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
     "cssnano": "^3.5.2",

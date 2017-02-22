@@ -25,9 +25,9 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
-    var Components = require('components');
+    var Components = require('core/components');
     var LaunchGrid = require('launchgrid');
-    var Filters = require('filters');
+    var Filters = require('filter/filters');
     var Widgets = require('widgets');
     var FiltersPanel = require('filtersPanel');
     var urls = require('dataUrlResolver');
@@ -655,6 +655,7 @@ define(function (require, exports, module) {
         },
 
         renderExecutionsTooltip: function(){
+            console.log(this.stats);
             return Util.templates(this.execTipContent, {stats: this.stats});
         },
 
@@ -749,6 +750,7 @@ define(function (require, exports, module) {
         getRenderModel: function () {
             this.getDefects();
             this.getStats();
+            console.log(this.defects);
             var params = {
                     total: this.item.statistics.executions.total,
                     duration: Util.timeFormat(this.item.start_time, this.item.end_time),
@@ -1926,8 +1928,7 @@ define(function (require, exports, module) {
             case 'passed':
             case 'failed':
             case 'skipped':
-                var interrupted = type == 'failed' ? ',INTERRUPTED' : '',
-                    statusFilter = '&filter.in.status=' + type.toUpperCase() + interrupted + '&filter.in.type=STEP';
+                var statusFilter = '&filter.in.status=' + type.toUpperCase() + '&filter.in.type=STEP';
                 url = url + allCasesConstructor(item.id, item.owner, statusFilter);
                 break;
             case 'product_bug':

@@ -1,0 +1,243 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.rp-server-settings {
+
+    .rp-auth-server-settings {
+        padding-top: 10px;
+        padding-bottom: 20px;
+        position: relative;
+
+        .rp-form {
+          .rp-field {
+            .github-auth-state-mobile {
+              display: none;
+              width: 100%;
+              height: 30px;
+              clear: both;
+              border: solid 1px $COLOR--gray-80;
+              background-color: $COLOR--gray-91;
+              padding: 5px 0 0 9px;
+            }
+          }
+        }
+
+        .mobile-disabling-cover {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            @media (max-width: $SCREEN_XS_MAX) {
+                display: block;
+            }
+        }
+        .auth-settings-line {
+            border-bottom: 1px solid $COLOR--skipped;
+            margin: 30px 15px;
+        }
+        .add-new-org-form {
+            .delete-item {
+                display: none;
+            }
+            &.addNewOrg {
+                .delete-item {
+                    display: block;
+                }
+                /*.rp-field {
+                    & > span {
+                        &.required {
+                            &:after {
+                                display: none;
+                            }
+                        }
+                    }
+                }*/
+            }
+        }
+    }
+
+    .rp-email-settings {
+        padding-top: 10px;
+        padding-bottom: 20px;
+        position: relative;
+
+        .rp-form {
+          .rp-field {
+            .email-server-state-mobile {
+              display: none;
+              width: 100%;
+              height: 30px;
+              clear: both;
+              border: solid 1px $COLOR--gray-80;
+              background-color: $COLOR--gray-91;
+              padding: 5px 0 0 9px;
+            }
+          }
+        }
+
+        .mobile-disabling-cover {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            @media (max-width: $SCREEN_XS_MAX) {
+                display: block;
+            }
+        }
+
+        .tls-enabled {
+            position: relative;
+            top: -4px;
+            .rp-checkbox-wrap {
+                margin-left: 30px;
+                &:first-child {
+                    margin-left: 0;
+                }
+            }
+        }
+        .email-server-error {
+            margin-left: 45%;
+            .test-connection-alert {
+                font-size: 12px;
+                line-height: 1.5;
+                .connection-error-title {
+                    color: $COLOR--failed;
+                    font-size: 13px;
+                    font-weight: 600;
+                }
+            }
+
+        }
+    }
+
+    .rp-form {
+        width: 600px;
+
+        .rp-field {
+            position: relative;
+            margin-right: 40px;
+            & > span {
+                &:first-child {
+                    width: 45%;
+
+                }
+                &.required {
+                    position: relative;
+                    &:after {
+                        content: '*';
+                        position: absolute;
+                        right: 10px;
+                        top: -4px;
+                        color: red;
+                    }
+                }
+                & + input, & + textarea {
+                    width: 55%;
+                }
+                & + .rp-field-item {
+                    float: left;
+                    width: 55%;
+                    .drop-down-component {
+                        width: 100%;
+                    }
+                }
+            }
+            .validate-hint {
+                width: 55%;
+            }
+            .delete-item {
+                position: absolute;
+                left: 100%;
+                margin-left: 15px;
+                top: -2px;
+            }
+            .rp-btn-submit {
+                float: right;
+            }
+        }
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+        .rp-email-settings, .rp-auth-server-settings {
+            .email-server-error,
+            .email-server-btn {
+                display: none;
+            }
+            .rp-form {
+            width: 100%;
+            .rp-field {
+              & > span {
+                &:first-child {
+                  width: 100%;
+                  text-align: left;
+                }
+                &.required {
+                  position: relative;
+                  &:after {
+                    display: none;
+                  }
+                }
+                & + input, & + textarea {
+                  width: 100%;
+                  pointer-events: none;
+                  tab-index: -1;
+                  background-color: $COLOR--gray-91;
+                }
+                & + .rp-field-item {
+                  width: 100%;
+                }
+              }
+              .github-auth-state-mobile {
+                display: block;
+              }
+              .email-server-state-mobile {
+                display: block;
+              }
+              .rp-switcher-big {
+                display: none;
+              }
+              .delete-item {
+                display: none;
+              }
+              .rp-btn {
+                pointer-events: none;
+                tab-index: -1;
+                background-color: $COLOR--gray-91;
+              }
+              .rp-btn-submit {
+                display: none;
+              }
+              .validate-hint {
+                width: 100%;
+              }
+            }
+
+            .add-new-org-form, .add-new-org-btn {
+              display: none;
+            }
+          }
+        }
+
+    }
+}

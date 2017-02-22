@@ -1,0 +1,18 @@
+<div class="user-projects-table">
+    <div data-js-project-list></div>
+    <div data-js-loader class="preloader" style="display: block;">
+        <i class="material-icons loader-animation">refresh</i>
+    </div>
+    <div data-js-add-form></div>
+    <div class="row rp-table-row user-projects-row" data-js-add-project-row>
+        <div class="grid-cell project-name-cell">
+            <a class="rp-btn rp-btn-default rp-button-with-icon" href="#add-project"
+                 title="<%= data.text.admin.addProjectTitle %>" data-js-add-project>
+                <i class="material-icons">add</i>
+                <span class="hidden-md hidden-sm hidden-xs rp-btn-val">
+                    <%= data.text.admin.addUserProject %>
+                </span>
+            </a>
+        </div>
+    </div>
+</div>

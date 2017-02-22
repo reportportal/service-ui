@@ -25,7 +25,7 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
-    var Components = require('components');
+    var Components = require('core/components');
     var App = require('app');
     var Storage = require('storageService');
     var urls = require('dataUrlResolver');

@@ -1,0 +1,88 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.dashboard-list-view {
+  .filter-dashboard {
+    margin-top: 20px;
+    width: 310px;
+  }
+  h1 {
+    text-transform: uppercase;
+    font-size: 12px;
+    font-family: OpenSansSemibold;
+    margin: 20px -15px 0 -15px;
+    padding: 10px 15px;
+    color: $COLOR--gray-47;
+    background: $COLOR--white;
+    border-top: 1px solid $COLOR--gray-91;
+    border-bottom: 1px solid $COLOR--gray-91;
+  }
+  .no-search-block {
+    padding-bottom: 60px;
+    .empty-dashboard-img {
+      background-image: url(../img/dashboard/empty-dashboard.png);
+      width: 182px;
+      height: 118px;
+      margin: 0 auto;
+    }
+    .empty-shared-dashboard-img {
+      background-image: url(../img/dashboard/empty-shared-dashboard.png);
+      width: 100px;
+      height: 80px;
+      margin: 0 auto 20px auto;
+    }
+    p {
+      margin: 13px 0 20px 0;
+    }
+  }
+
+  .dashboard-container {
+    margin: 0 -8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .error-bottom {
+    position: absolute;
+  }
+  .search-block {
+    display: none;
+  }
+  &.search {
+    .search-block {
+      display: block;
+    }
+    .no-search-block {
+      display: none;
+    }
+  }
+  @media (max-width: 767px) {
+    .filter-dashboard {
+      display: none;
+    }
+    h1 {
+      margin: 15px -5px 10px -5px;
+      border: none;
+    }
+    .dashboard-container {
+      margin: 0 -13px 30px -13px;
+    }
+  }
+}

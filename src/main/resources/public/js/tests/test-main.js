@@ -27,7 +27,7 @@ require.config({
 
         app: 'core/app-config',
         jquery: '../lib/jquery-latest',
-        jqueryUI: '../lib/jquery-ui',
+        jqueryUI: '../lib/old-jquery-ui',
         'jaddons': '../lib/jquery-addons',
         underscore: '../lib/lodash.min',
         backbone: '../lib/backbone-min-my',
@@ -50,8 +50,8 @@ require.config({
         mainview: 'main-view',
         favorites: 'favorites/favorites',
         register: 'register/register',
-        filters: 'filter/filters',
-        components: 'core/components',
+        // filters: 'filter/filters',
+        //components: 'core/components',
         lazyload: '../lib/jquery.lazyload.min',
         daterangepicker: '../lib/daterangepicker',
         'readmore-js': '../lib/readmore',
@@ -125,9 +125,13 @@ require.config({
         'scrollable': 'core/scrollable-view',
         "text" : "../lib/text",
 
+        'SwipeGallery': '../lib/SwipeGallery',
+        'Hammer': '../lib/hammer',
+
         fakeData: '../tests/mocks/data',
         adminFakeData: '../tests/mocks/adminData',
-        jasminejQuery: '../tests/lib/jasmine-jquery.2.0.5'
+        jasminejQuery: '../tests/lib/jasmine-jquery.2.0.5',
+
     },
     shim: {
         'jquery': {
@@ -194,6 +198,10 @@ require.config({
 
         //
         // '../tests/spec/filter/filters-panel',
+        '../tests/spec/sections/header',
+        '../tests/spec/sections/sidebar',
+        '../tests/spec/sections/footer',
+        '../tests/spec/sections/content'
     ],
 
     // we have to kickoff jasmine, as it is asynchronous

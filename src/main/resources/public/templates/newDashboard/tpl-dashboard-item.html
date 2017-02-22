@@ -1,0 +1,42 @@
+<div class="buttons-container clearfix">
+    <div class="rp-nav-left">
+        <div class="is-not-my-dashbord">
+            <i class="material-icons">public</i>
+            <span><%- data.text.dashboard.sharedBy %></span>&nbsp;<span data-js-owner-name></span>
+        </div>
+        <a href="#" class="rp-btn rp-btn-default rp-button-with-icon is-my-dashbord" data-js-add-widget>
+            <i class="material-icons">add_circle</i>
+            <span class="hidden-sm hidden-xs rp-btn-val"><%- data.text.widgets.addNewWidget %></span>
+        </a>
+        <a href="#" class="rp-btn rp-btn-default rp-button-with-icon is-my-dashbord" data-js-add-shared-widget>
+            <i class="material-icons">add_circle_outline</i>
+            <span class="hidden-sm hidden-xs rp-btn-val"><%- data.text.widgets.addSharedWidget %></span>
+        </a>
+    </div>
+    <div class="rp-nav-right">
+        <a href="#" class="rp-btn rp-btn-default rp-button-with-icon is-my-dashbord" data-js-edit>
+            <i class="material-icons">edit</i>
+            <span class="hidden-sm hidden-xs rp-btn-val"><%- data.text.ui.edit %></span>
+        </a>
+        <a href="#" class="rp-btn rp-btn-default rp-button-with-icon" data-js-full-screen>
+            <i class="material-icons">zoom_out_map</i>
+            <span class="hidden-sm hidden-xs rp-btn-val"><%= data.text.dashboard.fullscreen %></span>
+        </a>
+        <a href="#" class="rp-btn rp-btn-default rp-button-with-icon is-my-dashbord" data-js-remove>
+            <i class="material-icons">clear</i>
+            <span class="hidden-sm hidden-xs rp-btn-val"><%= data.text.dashboard.remove %></span>
+        </a>
+    </div>
+</div>
+<div class="preloader">
+    <i class="material-icons loader-animation">refresh</i>
+</div>
+<div class="no-result-found">
+    <span><%= data.text.dashboard.widgetEmpty %></span>
+    <p></p>
+</div>
+<div class="grid-stack" data-js-grid-stack data-gs-width="12" data-gs-animate="yes"></div>
+<div class="fullscreen-overflow">
+    <i class="material-icons" data-js-close-fullscreen>close</i>
+</div>
+<a href="#" class="rp-btn wide-btn-add-widget is-my-dashbord" data-js-add-widget>+ <%= data.text.widgets.addNewWidget %></a>

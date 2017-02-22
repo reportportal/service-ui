@@ -1,0 +1,33 @@
+<ul class="info_section clearfix">
+    <li class="progress-block">
+        <div class="progress" data-js-executions>
+            <div data-js-passed-progress class="progress-bar"></div>
+            <div data-js-failed-progress class="progress-bar"></div>
+            <div data-js-skipped-progress class="progress-bar"></div>
+        </div>
+        <div class="hover-area" data-js-hover-element></div>
+    </li>
+    <li class="passed-block">
+        <span class="info-section-passed"><%= data.text.launchesHeaders.passed %> <span data-js-statistics-passed></span>%</span>
+    </li>
+    <li class="total-block">
+        <span class="info-section-total"><%= data.text.launchesHeaders.total %> <span data-js-statistics-total></span></span>
+    </li>
+    <li>
+        <span class="duration" data-js-duration>
+            <%= data.text.launches.prefixDuration %>
+            <span data-js-item-duration></span>
+        </span>
+        <div class="hover-area" data-js-hover-element></div>
+    </li>
+    <li class="br-block"></li>
+    <% _.each(data.defectTypes, function(defect, key){ %>
+    <li class="defect-block">
+        <span class="info-section-issue" data-js-defect-type="<%= defect.type %>">
+            <span class="issue-type"><i  style="background: <%= defect.color %>"></i><span><%= defect.shortName %></span></span>
+            <span class="issues" data-js-defect-<%= defect.type %>-total style="border-color: <%= defect.color %>"></span>
+            <div class="defect-hover" data-js-hover-element></div>
+        </span>
+    </li>
+    <% }); %>
+</ul>

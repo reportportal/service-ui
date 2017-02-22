@@ -1,0 +1,136 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+$step-name-cell-width: 37%;
+$step-time-cell-width: 12.5%;
+$step-status-cell-width: 8%;
+$step-select-cell-width: 2%;
+$step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - $step-status-cell-width - $step-select-cell-width);
+.step-grid {
+  .failed {
+    background: $COLOR--light-red;
+  }
+    .grid-cell {
+        &.name-grid-cell {
+            padding-left: 20px;
+            width: $step-name-cell-width;
+            &.rp-grid-th {
+                .text-overflow {
+                    //padding-left: 25px;
+                }
+            }
+        }
+
+        @media (min-width: $SCREEN_SM_MIN) {
+            &.method-type-grid-cell {
+                padding-left: 45px;
+            }
+        }
+        &.time-grid-cell {
+            width: $step-time-cell-width;
+        }
+        &.status-grid-cell {
+            width: $step-status-cell-width;
+        }
+        &.type-grid-cell {
+            width: $step-type-cell-width;
+        }
+        &.select-grid-cell {
+            width: $step-select-cell-width;
+            text-align: center;
+            padding: 0;
+            .rp-checkbox-wrap span {
+                height: 11px;
+            }
+        }
+        &.add-collapse-methods-btn {
+            padding-left: 44px;
+            .rp-switcher {
+                position: absolute;
+                left: 7px;
+                top: 50%;
+                margin-top: -6px;
+            }
+        }
+    }
+    &.hide-collapsed-methods {
+        .collapse-method {
+            overflow: hidden;
+            height: 0;
+            padding: 1px;
+            .grid-cell {
+                display: none;
+            }
+        }
+    }
+    .rp-step-parents-line {
+        padding: 10px 0;
+        background: $COLOR--white-four;
+
+        .parents-line {
+            padding: 0 10px;
+            font-size: 14px;
+
+            .parents-line-item {
+                padding: 0 5px;
+                display: inline-block;
+            }
+            a {
+                color: $COLOR--topaz;
+            }
+        }
+    }
+    @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+        .rp-grid-thead {
+            display: none;
+        }
+        .grid-cell {
+            &.time-grid-cell, &.status-grid-cell, &.select-grid-cell {
+                display: none;
+            }
+            &.name-grid-cell, &.type-grid-cell {
+                width: 100%;
+            }
+            &.name-grid-cell {
+                padding-bottom: 10px;
+                .rp-grid-tags > li {
+                    width: 100%;
+                    margin: 0 0px 15px 0px;
+                }
+                .mobile-time {
+                    display: inline;
+                }
+            }
+        }
+    }
+}
+
+.method-collapsed {
+    position: relative;
+    margin: 0 -15px;
+}
+
+.method-collapsed-toggle {
+    width: 100%;
+    padding: 0 15px;
+}
+
+

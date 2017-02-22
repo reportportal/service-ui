@@ -43,6 +43,7 @@
     // var(--system-issue);
     $COLOR--system-issue: #0274d1;
     //$COLOR_RGBA--system-issue: rgba(2, 116, 209, 1);
+    $COLOR--system-issue-disabled: lighten($COLOR--system-issue, 10%);
 
     // var(--to-investigate);
     $COLOR--to-investigate: #ffb743;
@@ -55,14 +56,21 @@
     // var(--passed);
     $COLOR--passed: #87b77b;
     //$COLOR_RGBA--passed: rgba(135, 183, 123, 1);
+    $COLOR--passed-disabled: lighten($COLOR--passed, 10%);
 
     // var(--failed);
     $COLOR--failed: #f36c4a;
     //$COLOR_RGBA--failed: rgba(243, 108, 74, 1);
+    $COLOR--failed-disabled: lighten($COLOR--failed, 10%);
 
     // var(--skipped);
     $COLOR--skipped: #bdc7cc;
     //$COLOR_RGBA--skipped: rgba(189, 199, 204, 1);
+    $COLOR--skipped-disabled: lighten($COLOR--skipped, 10%);
+
+    $COLOR--reseted: #f5f5f5;
+
+    $COLOR--light-yellow: #f5f9ec;
 
     // var(--charcoal-grey);
     $COLOR--charcoal-grey: #464547;
@@ -70,6 +78,7 @@
 
     // var(--tealish);
     $COLOR--tealish: #39c2d7;
+    $COLOR--tealish-opacity: rgba(57, 194, 215, 0.2);
 
     // var(--topaz);
     $COLOR--topaz: #1a9cb0;
@@ -85,6 +94,8 @@
 
     // var(--pale-red);
     $COLOR--pale-red: #d9534f;
+
+    $COLOR--light-red: #feecea;
 
     // var(--orange-red);
     $COLOR--orange-red: #ff3222;
@@ -116,11 +127,18 @@
     // var(--white-four);
     $COLOR--white-four: #f9f9f9;
 
+    $COLOR--violet: #c5cae9;
+    $COLOR--violet-disabled: lighten($COLOR--violet, 5%);
+
     // var(--light-red)
     $COLOR--light-red: #f5eaea;
-    
+
     // var(--light-yellow)
     $COLOR--light-yellow: #f5f9ec;
+
+    $COLOR--has-permission: rgba(163, 198, 68, 0.2);
+
+    $COLOR--yellow: #FAFA89;
 
 /*------------------------------------------------------------------*/
 /* COMMON CONSTANTS OF WIDTH FOR DYNAMIC GRID (FOR SCREEN CHANGING) */
@@ -142,3 +160,6 @@
     $MAX_WIDTH_LAYOUT_PAGE_SETTINGS: 1000px;
 
 /*-----------------------------*/
+
+$SCREEN_MAX_WIDTH_LAUNCHES: 900px;
+$SCREEN_MAX_WIDTH_LAUNCHES_LOGS_TAB: 640px;

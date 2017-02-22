@@ -1,0 +1,53 @@
+
+    <div class="grid-cell name-grid-cell name-cell <%= (data.type == 'LAUNCH') ? 'launch-name-cell' : '' %>">
+        <div class="btn-group" data-js-launch-edit>
+            <a class="item-menu" data-js-launch-menu data-toggle="dropdown" href="#">
+                <i class="rp-svg-icon svg-icon-menu-size-14"></i>
+            </a>
+        </div>
+        <div class="name-grid-overflow">
+            <h5 class="rp-grid-name">
+                <a href="" data-js-name-link><span data-js-name></span><span data-js-launch-number></span></a><span class="autoanalyze" data-js-analize-label><%= data.text.ui.analyze %></span>&nbsp;&nbsp;<i class="item-edit-icon material-icons" data-js-item-edit>edit</i>
+            </h5>
+            <ul class="rp-grid-tags">
+                <li class="rp-item-duration" >
+                    <span data-js-item-status></span>
+                    <span class="mobile-tag">| <span data-js-time-from-now></span></span>
+                </li>
+                <li title="Owner" class="rp-launch-owner owner" data-js-owner-block>
+                    <i class="material-icons">person</i>
+                    <a data-js-owner-name></a>
+                </li>
+                <li class="rp-launch-tags" data-js-tags-container>
+                    <i class="rp-icons rp-icons-ticket"></i>
+                    <span data-js-tags></span>
+                </li>
+            </ul>
+            <div class="rp-grid-description" data-js-description></div>
+        </div>
+    </div>
+    <div class="grid-cell time-grid-cell">
+        <div data-js-time-format class="pr-grid-show-time">
+            <span class="hidden-sm hidden-md hidden-lg"><b><%= data.text.launches.prefixStartTime %></b></span>
+            <span class="from-now" data-js-time-from-now></span>
+            <span class="exact-time" data-js-time-exact></span>
+        </div>
+    </div>
+    <div class="grid-cell number-grid-cell total-number"><p class="mobile-title"><%- data.text.launchesHeaders.total %></p><a data-js-statistics-total></a></div>
+    <div class="grid-cell number-grid-cell"><p class="mobile-title"><%- data.text.launchesHeaders.passed %></p><a data-js-statistics-passed></a></div>
+    <div class="grid-cell number-grid-cell"><p class="mobile-title"><%- data.text.launchesHeaders.failed %></p><a data-js-statistics-failed></a></div>
+    <div class="grid-cell number-grid-cell last-child"><p class="mobile-title"><%- data.text.launchesHeaders.skipped %></p><a data-js-statistics-skipped></a></div>
+    <div class="grid-cell counter-grid-cell"><p class="mobile-title"><i data-js-label-pb></i><%- data.text.launchesHeaders.product_bug_super_short %></p><div data-js-statistics-product-bug></div></div>
+    <div class="grid-cell counter-grid-cell"><p class="mobile-title"><i data-js-label-ab></i><%- data.text.launchesHeaders.automation_bug_super_short %></p><div data-js-statistics-automation-bug></div></div>
+    <div class="grid-cell counter-grid-cell"><p class="mobile-title"><i data-js-label-si></i><%- data.text.launchesHeaders.system_issue_super_short %></p><div data-js-statistics-system-issue></div></div>
+    <div class="grid-cell counter-grid-cell last-child"><p class="mobile-title"><i data-js-label-ti></i><%- data.text.launchesHeaders.to_investigate_super_short %></p><a class="defect-to-investigate" data-js-statistics-to-investigate></a></div>
+    <div class="grid-cell select-grid-cell">
+        <div class="table-wrapper">
+            <div class="middle-wrapper">
+                <label class="rp-checkbox-wrap">
+                    <input class="rp-input-checkbox" type="checkbox" data-js-select-item>
+                    <span></span>
+                </label>
+            </div>
+        </div>
+    </div>

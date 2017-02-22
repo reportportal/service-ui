@@ -24,17 +24,18 @@ define(function (require, exports, module) {
 
     var $ = require('jquery');
     var Backbone = require('backbone');
-    var Components = require('components');
+    var Components = require('core/components');
     var Util = require('util');
     var App = require('app');
     var Service = require('adminService');
     var Main = require('mainview');
     var urls = require('dataUrlResolver');
-    var Filter = require('filters');
+    // var Filter = require('filters');
     var Member = require('member');
     var memberService = require('memberService');
     var Localization = require('localization');
     var CoreService = require('coreService');
+    var ModalConfirm = require('modals/modalConfirm');
 
     require('select2');
 
@@ -44,6 +45,7 @@ define(function (require, exports, module) {
 
         initialize: function (options) {
             this.$el = options.el;
+            this.$header = options.header;
             this.action = options.action;
             this.queryString = options.queryString;
         },
@@ -67,7 +69,6 @@ define(function (require, exports, module) {
         render: function () {
 
             this.$el.html(Util.templates(this.shellTpl));
-            this.$header = $("#contentHeader", this.$el);
             this.$body = $("#contentBody", this.$el);
 
             this.header = new Header({
@@ -312,15 +313,25 @@ define(function (require, exports, module) {
 
         doAction: function (member, index, el) {
             var self = this;
-            Service.deleteUser(member.userId)
-                .done(function () {
-                    self.members.splice(index, 1);
-                    self.changeMembers();
-                    Util.ajaxSuccessMessenger("deleteMember", member.full_name || member.userId);
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "deleteMember");
-                });
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.deleteUser,
+                bodyText: Util.replaceTemplate(Localization.dialog.deleteUser, member.full_name || member.userId),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
+                confirmFunction: function() {
+                    return Service.deleteUser(member.userId)
+                        .done(function () {
+                            self.members.splice(index, 1);
+                            self.changeMembers();
+                            Util.ajaxSuccessMessenger("deleteMember", member.full_name || member.userId);
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error, "deleteMember");
+                        });
+                }
+            });
+            modal.show();
         },
 
         destroy: function () {

@@ -21,23 +21,74 @@
 define(function(require, exports, module) {
     'use strict';
 
-    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
 
-    var AppModel = Backbone.Model.extend({
+    var AppModel = Epoxy.Model.extend({
         defaults: {
             projectId: null,
-            type: ''
+            type: '',
+            externalSystem: '[]',
+        },
+        computeds: {
+            isBtsAdded: {
+                deps: ['externalSystem'],
+                get: function() {
+                    var externalSystems = this.getArr('externalSystem');
+                    if (externalSystems && !externalSystems.length) {
+                        return false;
+                    }
+                    return true;
+                }
+            },
+            isBtsConfigure: {
+                deps: ['isBtsAdded', 'externalSystem'],
+                get: function(isBtsAdded) {
+                    if(!isBtsAdded) {
+                        return false;
+                    }
+                    var externalSystems = this.getArr('externalSystem');
+                    if(!_.any(externalSystems, function (bts) {
+                            return bts.fields && bts.fields.length;
+                        })) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
         },
         initialize: function(){
 
         },
         isPersonalProject: function(){
-            return this.get('type') === 'PERSONAL';
+            if(!this.get('configuration')) {
+                return null;
+            }
+            return this.get('configuration').entryType === 'PERSONAL';
         },
         isInternalProject: function(){
-            return this.get('type') === 'INTERNAL';
+            if(!this.get('configuration')) {
+                return null;
+            }
+            return this.get('configuration').entryType === 'INTERNAL';
+        },
+        parse: function(data) {
+            data.externalSystem = '';
+            if(data.configuration && data.configuration.externalSystem) {
+                data.externalSystem = JSON.stringify(data.configuration.externalSystem);
+            }
+            this.set(data);
+        },
+        getArr: function(field) {
+            var string = this.get(field);
+            try {
+                return JSON.parse(string);
+            } catch(err) {
+                return [];
+            }
+        },
+        setArr: function(field, array) {
+            this.set(field, JSON.stringify(array));
         }
-
     });
 
     return AppModel;
