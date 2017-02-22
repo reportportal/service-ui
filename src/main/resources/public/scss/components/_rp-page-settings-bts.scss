@@ -309,6 +309,7 @@
     &.obligatory-field {
       &:after {
         position: absolute;
+        top: 8px;
         margin-left: 2px;
       }
     }

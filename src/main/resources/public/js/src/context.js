@@ -30,7 +30,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var Service = require('coreService');
     var Admin = require('admin');
-    var Register = require('register');
+    var Register = require('register/registerView');
     var NotFoundPage = require('pages/404');
 
     var SingletonAppModel = require('model/SingletonAppModel');
@@ -167,11 +167,11 @@ define(function (require, exports, module) {
 
         openRegister: function (id) {
             this.destroyViews();
-            this.mainView = new Register.RegisterView({
-                el: $("#bodyContainer"),
-                id: id,
+            this.mainView = new Register({
+                uuid: id,
                 context: this
-            }).render();
+            });
+            $("#mainContainer").html(this.mainView.el);
         },
 
         isSettingsPage: function (context) {
