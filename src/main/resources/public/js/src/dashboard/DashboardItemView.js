@@ -191,6 +191,10 @@ define(function (require, exports, module) {
                 this.onAddGadget(model);
             }, this);
             this.updateScroll();
+            var self = this;
+            this.$el.on('resize', function(){
+                self.scrollerAnimate.resize();
+            });
         },
         updateScroll: function() {
             var self = this;
@@ -271,6 +275,7 @@ define(function (require, exports, module) {
             $.fullscreen.exit();
             this.undelegateEvents();
             this.gridStack && this.gridStack.destroy();
+            this.$el.off('resize');
             this.scrollElement.off('scroll.dashboardPage');
             this.stopListening();
             this.unbind();
