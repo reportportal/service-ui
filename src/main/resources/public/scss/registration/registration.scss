@@ -30,6 +30,25 @@
   border-radius: 2px;
   box-shadow: 0 1px 3px 0 $COLOR--skipped;
 
+  @media (max-width: 1100px) {
+    left: -75px;
+  }
+  @media (max-width: 1050px) {
+    left: -95px;
+  }
+  @media (max-width: 1010px) {
+    left: 0px;
+    width: 320px;
+    height: 685px;
+  }
+
+  &.fail {
+    height: 735px;
+    @media (max-width: 1010px) {
+      height: 568px;
+    }
+  }
+
   .left-block {
     width: 50%;
     height: 100%;
@@ -38,6 +57,10 @@
     background-repeat: no-repeat;
     -webkit-background-size: contain;
     background-size: contain;
+
+    @media (max-width: 1010px) {
+      display: none;
+    }
   }
 
   .right-block {
@@ -47,6 +70,11 @@
     padding: 60px;
     background-color: $COLOR--white-default;
 
+    @media (max-width: 1010px) {
+      padding: 0;
+      width: 100%;
+    }
+
     .welcome-msg {
       display: block;
       width: 100%;
@@ -55,12 +83,35 @@
       color: #6f898d;;
       font-size: 24px;
       text-align: center;
+
       .welcome {
         font-size: 32px;
+      }
+
+      @media (max-width: 1010px) {
+        display: none;
+      }
+    }
+
+    .header-mobile {
+      display: none;
+      width: 100%;
+      height: 146px;
+      background-image: url('../../img/registration/header-mobile.png');
+      background-repeat: no-repeat;
+      -webkit-background-size: 100%;
+      background-size: 100%;
+
+      @media (max-width: 1010px) {
+        display: block;
       }
     }
 
     .registration-form {
+      @media (max-width: 1010px) {
+        padding: 30px 20px 0 20px;
+        width: 100%;
+      }
       .rp-field {
         position: relative;
         width: 100%;
@@ -120,18 +171,34 @@
       }
       .rp-checkbox-wrap {
         margin-bottom: 40px;
+
+        @media (max-width: 1010px) {
+          margin-bottom: 30px;
+        }
       }
       .buttons {
         width: 354px;
         margin: 0 auto;
+
+        @media (max-width: 1010px) {
+          width: 284px;
+        }
 
         .rp-btn {
           width: 160px;
           height: 40px;
           font-size: 16px;
 
+          @media (max-width: 1010px) {
+            width: 130px;
+          }
+
           &.rp-btn-cancel {
             margin-right: 30px;
+
+            @media (max-width: 1010px) {
+              margin-right: 20px;
+            }
           }
         }
       }
