@@ -21,13 +21,18 @@
 
 .invitation-fail {
   width: 1000px;
-  height: 726px;
+  height: 100%;
   margin: 0 auto;
   border-radius: 2px;
   box-shadow: 0 1px 3px 0 $COLOR--skipped;
-  img {
-    background-repeat: no-repeat;
-    -webkit-background-size: contain;
-    background-size: contain;
+  background-image: url('../../img/registration/invitation-fail.png');
+  background-repeat: no-repeat;
+  -webkit-background-size: contain;
+  background-size: contain;
+
+  @media (max-width: 1010px) {
+    left: 0px;
+    width: 320px;
+    background-image: url('../../img/registration/invitation-fail-mobile.png');
   }
 }

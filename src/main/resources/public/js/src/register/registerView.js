@@ -112,9 +112,9 @@ define(function(require, exports, module) {
                 });
         },
 
-        showExpiredPage: function(e){
+        showExpiredPage: function(e) {
             e && e.preventDefault();
-            $('#mainContainer',this.$el).append(Util.templates(this.messagesTpl));
+            this.$el.addClass('fail').append(Util.templates(this.messagesTpl));
         },
 
         isFormReady: function () {
