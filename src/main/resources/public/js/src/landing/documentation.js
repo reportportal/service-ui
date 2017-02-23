@@ -133,6 +133,9 @@ define(function (require, exports, module) {
                     navigate ? config.router.navigate(link) : '';
                 }
                 docApi.scrollTo('top');
+                if(!$(this).children('ul.nav').length || _.isEmpty($(this).children('ul.nav').children())){
+                    $('[data-js-content-dropdown]').parent().removeClass('open');
+                }
 
                 return;
             })
@@ -243,12 +246,15 @@ define(function (require, exports, module) {
             $('[data-js-show-serach]').click(function(e){
                 e.preventDefault();
                 $('[data-js-content-search]').show();
+                $(this).hide();
                 $('[data-js-content-dropdown]').hide();
             });
             $('[data-js-search-cancel]').click(function(e){
                 e.preventDefault();
                 $('[data-js-content-search]').hide();
+                $('[data-js-show-serach]').show();
                 $('[data-js-content-dropdown]').show();
+                $('[data-show-all]').trigger('click');
             });
 
             $('.sidenav').on('Show:section', function (e, id, open) {
@@ -286,7 +292,6 @@ define(function (require, exports, module) {
                         ? section.$el.addClass('g-nav--scrolled')
                         : '';
                 });
-                $('[data-js-content-dropdown] [data-toggle="dropdown"]').parent().removeClass('open');
             });
         },
         reInitListeners: function (questions) {
