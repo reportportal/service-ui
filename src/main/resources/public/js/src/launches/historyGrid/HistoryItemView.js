@@ -35,7 +35,7 @@ define(function (require, exports, module) {
 
     var HistoryItemView = Epoxy.View.extend({
         template: 'tpl-launch-history-item',
-        className: 'row history-grid-row',
+        className: 'history-grid-row',
         events: {
             'click [data-js-name]': 'onClickName'
         },

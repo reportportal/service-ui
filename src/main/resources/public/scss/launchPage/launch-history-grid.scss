@@ -28,12 +28,11 @@ $borderRadius100: 100px;
     border: none;
     margin: 0 -15px;
     position: relative;
-    width: 100%;
-    max-width: 100%;
 
     .history-grid-table {
         display: table;
         width: 100%;
+      height: 100%;
     }
     .history-grid-thead {
         display: table-row;
