@@ -306,7 +306,7 @@ define(function(require, exports, module) {
 
         logout: function () {
             Service.userLogout();
-            config.trackingDispatcher.userLoggedOut(Storage.getCurrentLogin());
+            // config.trackingDispatcher.userLoggedOut(Storage.getCurrentLogin());
             Util.clearXhrPool();
             config.project = {};
             this.clearSession();

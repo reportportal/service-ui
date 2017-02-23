@@ -226,7 +226,7 @@ define(function (require, exports, module) {
                     self.$imgSelector.wrap('<form></form>').parent().trigger('reset').children().unwrap('<form></form>');
                     Util.setProfileUrl();
                     Util.ajaxSuccessMessenger('submitUpload');
-                    config.trackingDispatcher.profilePhotoUploaded();
+                    // config.trackingDispatcher.profilePhotoUploaded();
                 } else if (xhr.readyState === 4 && xhr.status !== 200) {
                     Util.ajaxFailMessenger(null, 'submitUpload');
                 }

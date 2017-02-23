@@ -188,7 +188,7 @@ define(function (require, exports, module) {
                 .done(function () {
                     var itemIssue = this.getIssueType(this.items[0]);
                     if (selectedIssue && itemIssue !== selectedIssue) {
-                        config.trackingDispatcher.defectStateChange(itemIssue, selectedIssue);
+                        // config.trackingDispatcher.defectStateChange(itemIssue, selectedIssue);
                     }
                     Util.ajaxSuccessMessenger("updateDefect");
                     _.forEach(self.items, function (item) {
