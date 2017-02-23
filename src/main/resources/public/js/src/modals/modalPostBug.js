@@ -216,7 +216,7 @@ define(function (require, exports, module) {
                                 errorHandler(error);
                             });
                         self.persistCredentials();
-                        config.trackingDispatcher.jiraTicketPost(data.include_data, data.include_logs);
+                        // config.trackingDispatcher.jiraTicketPost(data.include_data, data.include_logs);
                     })
                     .fail(function (error) {
                         errorHandler(error);

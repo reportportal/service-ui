@@ -101,7 +101,7 @@ define(function (require, exports, module) {
                 $('[data-js-table-container]', this.$el).removeClass('hide-collapsed-methods');
             }
             if(!silent) {
-                config.trackingDispatcher.preconditionMethods(active ? 'ON' : 'OFF');
+                // config.trackingDispatcher.preconditionMethods(active ? 'ON' : 'OFF');
             }
             $('[data-js-collapse-label]', this.$el).attr('title', title);
         },

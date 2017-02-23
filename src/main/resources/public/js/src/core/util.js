@@ -197,7 +197,7 @@ define(function (require, exports, module) {
             };
             Object.defineProperty(Array.prototype, "equals", {enumerable: false});
         },
-        appendTooltip: function (content, $el, $parrent) {
+        appendTooltip: function (content, $el, $parrent, openCallback) {
             $el.uitooltip({
                 position: {
                     my: 'left top',
@@ -209,6 +209,13 @@ define(function (require, exports, module) {
                 hide: {effect: 'none', duration: 0},
                 items: ':not([disabled])',
                 content: content,
+                open: function( event, ui ) {
+                    setTimeout(function() {
+                        if($(event.currentTarget).attr('aria-describedby')) {
+                            openCallback && openCallback();
+                        }
+                    }, 500);
+                }
             });
             $('.ui-helper-hidden-accessible').remove();  // this block needs for voiseover osx only
         },

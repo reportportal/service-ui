@@ -154,6 +154,7 @@ define(function (require, exports, module) {
         },
         onClickName: function(e) {
             e.preventDefault();
+            config.trackingDispatcher.trackEventNumber(23);
             var href = $(e.currentTarget).attr('href');
             if(href != '') {
                 this.model.trigger('drill:item', this.model);

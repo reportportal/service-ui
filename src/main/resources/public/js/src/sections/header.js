@@ -39,10 +39,14 @@ define(function (require, exports, module) {
 
         events: {
             'click .user-projects a': 'changeProject',
-            'click #userNavigator a': 'trackClick',
             'click #logout': 'onClickLogout',
             'click [data-js-toogle-menu]': 'onClickMenuOpen',
-            'click [data-js-administrate-page-link]': 'setLastActivePage'
+            'click [data-js-administrate-page-link]': 'onClickAdminLink',
+            'click [data-js-members-icon]': 'onClickMembersIcon',
+            'click [data-js-settings-icon]': 'onClickSettingsIcon',
+            'click [data-js-user-dropdown]': 'onClickUserDropdown',
+            'click [data-js-profile-page-link]': 'onClickProfileLink',
+            'click [data-js-project-dropdown]': 'onClickProjectDropdown'
         },
 
         initialize: function (options) {
@@ -141,17 +145,29 @@ define(function (require, exports, module) {
         },
 
         onClickLogout: function (e) {
+            config.trackingDispatcher.trackEventNumber(9);
             e.preventDefault();
+            e.stopPropagation();
             this.userModel.logout();
         },
-
-        trackClick: function (e) {
-            var $link = $(e.currentTarget);
-            if ($link.hasClass('user-id')) {
-                config.trackingDispatcher.profilePage();
-            } else if ($link.hasClass('admin-section')) {
-                config.trackingDispatcher.adminPage();
-            }
+        onClickMembersIcon: function() {
+            config.trackingDispatcher.trackEventNumber(4);
+        },
+        onClickSettingsIcon: function() {
+            config.trackingDispatcher.trackEventNumber(5);
+        },
+        onClickUserDropdown: function() {
+            config.trackingDispatcher.trackEventNumber(6);
+        },
+        onClickProfileLink: function() {
+            config.trackingDispatcher.trackEventNumber(7);
+        },
+        onClickAdminLink: function() {
+            config.trackingDispatcher.trackEventNumber(8);
+            this.setLastActivePage();
+        },
+        onClickProjectDropdown: function() {
+            config.trackingDispatcher.trackEventNumber(10);
         },
 
         updateActiveLink: function () {
@@ -190,7 +206,7 @@ define(function (require, exports, module) {
             }
             config.userModel.updateDefaultProject(project);
             config.userModel.set('bts', null);
-            config.trackingDispatcher.projectChanged(project);
+            config.trackingDispatcher.trackEventNumber(11);
             config.router.navigate($el.attr('data-href'), {trigger: true});
         },
 
