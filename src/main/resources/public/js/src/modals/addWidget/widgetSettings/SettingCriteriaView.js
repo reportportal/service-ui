@@ -51,20 +51,37 @@ define(function (require, exports, module) {
                 return false;
             }
             this.render();
-            var criteriaData = _.map(this.curWidget.criteria, function (value, key) {
+            var criteriaData = this.getCriteriaData();
+            this.selectCriteria = new DropDownComponent({
+                data: criteriaData,
+                placeholder: Localization.widgets.selectCriteria,
+                multiple: (this.curWidget.criteriaSelectType == 'radio') ? false : true,
+                defaultValue: this.getDefaultValue(),
+            });
+            $('[data-js-select-criteria-container]', this.$el).html(this.selectCriteria.$el);
+            this.listenTo(this.selectCriteria, 'change', this.onChangeSelectCriteria);
+        },
+        getCriteriaData: function(){
+            return _.map(this.curWidget.criteria, function (value, key) {
                 if(typeof value == 'object') {
                     return {name: value.name, value: value.keys.join(',')}
                 }
                 return {name: value, value: key};
             });
-            this.selectCriteria = new DropDownComponent({
-                data: criteriaData,
-                placeholder: Localization.widgets.selectCriteria,
-                multiple: (this.curWidget.criteriaSelectType == 'radio') ? false : true,
-                defaultValue: this.model.getContentFields(),
-            });
-            $('[data-js-select-criteria-container]', this.$el).html(this.selectCriteria.$el);
-            this.listenTo(this.selectCriteria, 'change', this.onChangeSelectCriteria);
+        },
+        getDefaultValue: function(){
+            var gadget = this.model.get('gadget'),
+                contentFields = this.model.getContentFields();
+            if(gadget == 'launches_table'){
+                var criteriaData = this.getCriteriaData(),
+                    content = [];
+                _.each(contentFields, function(field){
+                    var criteria = _.find(criteriaData, function(c){ return c.value.indexOf(field)>=0; });
+                    criteria && content.push(criteria.value);
+                });
+                return _.uniq(content);
+            }
+            return contentFields;
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}))

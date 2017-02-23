@@ -643,7 +643,6 @@ define(function (require, exports, module) {
                 }
                 var amount = ids.length > 1 ? 's' : '';
                 $.when.apply($, ajaxCalls).done(function () {
-                    config.trackingDispatcher.tabSaved(ids.length || 1);
                     // save tabs order to preferences
                     self.updatePreferences();
                     Util.ajaxSuccessMessenger("savedLaunchFilter" + amount);
@@ -822,7 +821,6 @@ define(function (require, exports, module) {
                     }
                 }
                 this.navigationInfo.applyFilters(this.getFilters(), this.currentTab.id);
-                config.trackingDispatcher.filterTagClick(tag);
             },
 
             onFilterChange: function (immediately) {

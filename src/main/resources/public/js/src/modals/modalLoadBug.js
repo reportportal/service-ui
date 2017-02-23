@@ -166,7 +166,7 @@ define(function (require, exports, module) {
                 Service.loadBugs(data)
                     .done(function (response) {
                         Util.ajaxSuccessMessenger("submitKeys");
-                        config.trackingDispatcher.jiraTicketLoad(data.issues.length);
+                        // config.trackingDispatcher.jiraTicketLoad(data.issues.length);
                         _.each(self.itemModels, function(model) {
                             self.addIssuesToItem(model, data.issues);
                         })

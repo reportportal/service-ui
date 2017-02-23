@@ -76,7 +76,7 @@ define(function (require, exports, module) {
         selectHistoryItem: function(itemModel, firstInit) {
             var curOptions = this.collectionItems.getInfoLog();
             curOptions['history'] = itemModel.get('id');
-            !firstInit && (curOptions['page.page'] = 1);
+            !firstInit && curOptions['page.page']
             this.collectionItems.setInfoLog(curOptions);
             !firstInit && config.router.navigate(this.collectionItems.getPathByLogItemId(curOptions.item), {trigger: false});
             var itemModelFromCollection = this.collectionItems.get(itemModel.id);

@@ -56,9 +56,12 @@
       right: 120px;
       padding-top: 10px;
       font-family: "OpenSansSemibold", sans-serif;
+      @media (max-width: $SCREEN_SM_MAX) {
+        right: 15px
+      }
       h2 {
         color: $COLOR--charcoal-grey;
-        margin: 0;
+        margin: 0 4px 0 0;
         display: inline-block;
         font-size: 14px;
         overflow: hidden;
@@ -96,6 +99,9 @@
       float: right;
       margin-right: 15px;
       opacity: 0;
+      @media (max-width: $SCREEN_SM_MAX) {
+        display: none;
+      }
       i {
         float: right;
         font-size: 22px;
@@ -114,7 +120,6 @@
     left: 0;
     top: 60px;
     bottom: 0;
-    overflow: hidden;
     opacity: 1;
     transition: opacity 0.5s ease;
     .gadget-no-data-error {
@@ -128,6 +133,11 @@
       left: 0;
       right: 0;
       transform: translateY(-50%);
+    }
+    svg {
+      @media (max-width: $SCREEN_XS_MAX) {
+        pointer-events: none;
+      }
     }
   }
   .preloader {

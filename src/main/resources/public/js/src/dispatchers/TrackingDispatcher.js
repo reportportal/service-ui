@@ -23,178 +23,90 @@
 define(function(require, exports, module) {
     var Backbone = require('backbone');
 
-    var text = {
-        shared: "Shared",
-        own: "OWN",
-        notShared: "NotShared"
-    };
+    var eventTable = {
+        1: ['Sidebar', 'Click on Menu Bttn Dashboards', 'Transition on Dashboards Page'],
+        2: ['Sidebar', 'Click on Menu Bttn Filters', 'Transition on Filters Page'],
+        3: ['Sidebar', 'Click on Menu Bttn Debug', 'Transition on Debug Page'],
+        4: ['Header', 'Click on Menu Bttn Members', 'Transition on Members Page'],
+        5: ['Header', 'Click on Menu Bttn Settings', 'Transition on Settings Page'],
+        6: ['Header', 'Click on Profile Dropdown', 'Arise Dropdown Menu'],
+        7: ['Header', 'Click on Profile link on Dropdown', 'Transition on Profile Page'],
+        8: ['Header', 'Click on Administrate link on Dropdown', 'Transition to Administrate Mode'],
+        9: ['Header', 'Click on Logout link on Dropdown', 'Logout and transition on Landing Page'],
+        10: ['Header', 'Click on Project Dropdown', 'Arise Dropdown with list of Projects'],
+        11: ['Header', 'Click on Another Project Name', 'Transition to another project'],
+
+        12: ['Filter Launches', 'Click on Bttn Add Filters', 'Add New Filter'],
+        13: ['Filter Panel', 'Click on Bttn Discard', 'Discard Filter parameters'],
+        14: ['Filter Panel', 'Click on Bttn Clone', 'Clone Filter parameters'],
+        15: ['Filter Panel', 'Click on Bttn Edit', 'Edit Filter parameters/Arise modul "Edit Filter"'],
+        16: ['Filter Panel', 'Click on Bttn Save', 'Save Filter parameters'],
+        17: ['Filter Panel', 'Click on Bttn Add Widget', 'Add New Widget from Launches Page/Arise Modul "Add Widget"'],
+        18: ['Filter Launches', 'Hover on Icon Comment on Filter Tab', 'Arise Tooltip with comment from Filter Tab'],
+        19: ['Filter Launches', 'Hover on Icon Shared by other on Filter Tab', 'Arise Tooltip with "Filter is shared by other user" from Filter Tab'],
+        20: ['Filter Launches', 'Hover on Icon Shared on Filter Tab', 'Arise Tooltip with "Filter is shared" from Filter Tab'],
+        21: ['Filter Launches', 'Hover on Icon Star on Filter Tab', 'Arise Tooltip with "Filter is not saved: from Filter Tab'],
+        22: ['Launches', 'Click on All Launches', 'Transition to All Launches without filter'],
+        23: ['Launches', 'Click on Item Name', 'Transition to Item page'],
+        24: ['Launches', 'Click on Icon Menu near Launch Name', 'Arise Dropdown with single actions for this launch'],
+        25: ['Launches', 'Click on "Move to Debug" in Launch Menu', 'Arise Modul "Move to Debug"'],
+        26: ['Launches', 'Click on "Force Finish" in Launch Menu', 'Interrupt launch loading'],
+        27: ['Launches', 'Click on "Match Issues in Launch" in Launch Menu', 'Starts Matching'],
+        28: ['Launches', 'Click on "Analysis" in Launch Menu', 'Starts Analysing'],
+        29: ['Launches', 'Click on "Delete" in Launch Menu', 'Arise Modul "Delete Launch"'],
+        30: ['Launches', 'Click on "Export: PDF" in Launch Menu', 'Stars download of report in PDF'],
+        31: ['Launches', 'Click on "Export: XLS" in Launch Menu', 'Stars download of report in XLS'],
+        32: ['Launches', 'Click on "Export: HTML" in Launch Menu', 'Stars download of report in HTML'],
+        33: ['Launches', getActionLaunchTitle('NAME'), getDescriptionLaunchTitle('NAME')],
+        34: ['Launches', getActionTableFilter('NAME'), getDescriptionTableFilter()],
+        35: ['Launches', getActionLaunchTitle('START'), getDescriptionLaunchTitle('START')],
+        36: ['Launches', getActionTableFilter('START'), getDescriptionTableFilter()],
+        37: ['Launches', getActionLaunchTitle('TOTAL'), getDescriptionLaunchTitle('TOTAL')],
+        38: ['Launches', getActionTableFilter('TOTAL'), getDescriptionTableFilter()],
+        39: ['Launches', getActionLaunchTitle('PASSED'), getDescriptionLaunchTitle('PASSED')],
+        40: ['Launches', getActionTableFilter('PASSED'), getDescriptionTableFilter()],
+        41: ['Launches', getActionLaunchTitle('FAILED'), getDescriptionLaunchTitle('FAILED')],
+        42: ['Launches', getActionTableFilter('FAILED'), getDescriptionTableFilter()],
+        43: ['Launches', getActionLaunchTitle('SKIPPED'), getDescriptionLaunchTitle('SKIPPED')],
+        44: ['Launches', getActionTableFilter('SKIPPED'), getDescriptionTableFilter()],
+        45: ['Launches', getActionLaunchTitle('PRODUCT BUG'), getDescriptionLaunchTitle('PRODUCT BUG')],
+        46: ['Launches', getActionTableFilter('PRODUCT BUG'), getDescriptionTableFilter()],
+        47: ['Launches', getActionLaunchTitle('AUTO BUG'), getDescriptionLaunchTitle('AUTO BUG')],
+        48: ['Launches', getActionTableFilter('AUTO BUG'), getDescriptionTableFilter()],
+        49: ['Launches', getActionLaunchTitle('SYSTEM ISSUE'), getDescriptionLaunchTitle('SYSTEM ISSUE')],
+        50: ['Launches', getActionTableFilter('SYSTEM ISSUE'), getDescriptionTableFilter()],
+        51: ['Launches', getActionLaunchTitle('TO INVESTIGATE'), getDescriptionLaunchTitle('TO INVESTIGATE')],
+        52: ['Launches', getActionTableFilter('TO INVESTIGATE'), getDescriptionTableFilter()],
+    }
+
+
+    function getActionLaunchTitle(titleName) {
+        return 'Hover on Table title "' + titleName +'"';
+    }
+    function getDescriptionLaunchTitle(titleName) {
+        return 'Arise filter icon before Table title "' + titleName + '"';
+    }
+    function getActionTableFilter(titleName) {
+        return 'Click on Filter Icon before Table title "' + titleName + '"';
+    }
+    function getDescriptionTableFilter() {
+        return 'Arise new field in filter';
+    }
 
     var TrackingDispatcher = {
         trackEvent: function(){
-            this.trigger('trackEvent', arguments);
+            this.trigger('track:event', arguments);
         },
-        trackSiteSearch: function(){
-            this.trigger('trackSiteSearch', arguments);
+        pageView: function() {
+            this.trigger('page:view', arguments);
         },
-
-        userLoggedIn: function (login) {
-            this.trackEvent('"Nav", "Login", "Login " + login');
-        },
-        userLoggedOut: function (login) {
-            this.trackEvent('"Nav", "Logout", "Logout " + login');
-        },
-        projectChanged: function (project) {
-            this.trackEvent("Nav", "Project changed", "Project " + project);
-        },
-        adminPage: function () {
-            this.trackEvent("Nav", "Admin page", "Admin page visited ");
-        },
-        profilePage: function () {
-            this.trackEvent("Nav", "Profile page", "Profile page visited ");
-        },
-
-        profileInfoEdit: function () {
-            this.trackEvent("Profile", "Edit personal data", "Information updated");
-        },
-        profilePasswordChanged: function () {
-            this.trackEvent("Profile", "Change password", "Password changed");
-        },
-        profilePhotoUploaded: function () {
-            this.trackEvent("Profile", "Upload photo", "Photo uploaded");
-        },
-
-        logViewOpened: function (type, name) {
-            this.trackEvent("Test", "Log view opened", ["Log for " + type]);
-        },
-        logViewPaging: function (page, totalPages) {
-            this.trackEvent("Test", "Logs paged", "Pg:" + page + " / " + totalPages);
-        },
-        jiraTicketPost: function (screens, logs) {
-            this.trackEvent("Test", "Jira ticket post", "Pic: " + screens + " logs: " + logs);
-        },
-        jiraTicketLoad: function (num) {
-            this.trackEvent("Test", "Ticket load", "Number of tickets: " + num);
-        },
-        jiraTicketDelete: function () {
-            this.trackEvent("Test", "Ticket deleted", "Ticket deleted");
-        },
-        defectStateChange: function (was, is) {
-            this.trackEvent("Test", "Defect type changed", "Defect " + was +  "->" + is);
-        },
-        historyLineNavigation: function (diff) {
-            var direction = diff < 0 ? "forward" :  "back";
-            this.trackEvent("Test", "History line nav", "History "+ Math.abs(diff) + " steps " + direction);
-        },
-        testItemActivityExpanded: function (name) {
-            this.trackEvent("Test", "Test item activity expanded");
-        },
-        screenShotOpen: function () {
-            this.trackEvent("Test", "Screen shot opened");
-        },
-        logLevelIn: function (level) {
-            this.trackEvent("Test", "Log level", "Log level " + level);
-        },
-        searchLogMessage: function (string) {
-            this.trackSiteSearch("Test", "Message contains search", string);
-        },
-        nextPreviousTest: function(direction){
-            this.trackEvent("Test", "Next-Previous test case", "NxtPrv: " + direction);
-        },
-
-        logWithAttach: function () {
-            this.trackEvent("Log with attach", "Logs filtered by attach");
-        },
-        matchIssue: function (type) {
-            this.trackEvent("Match issue called", type);
-        },
-
-        filterClicked: function (isShared, name) {
-            this.trackEvent("Filters", "Filter name clicked", ["F.Click " + isShared, name]);
-        },
-        filterShared: function (isOn, name) {
-            this.trackEvent("Filters", "Filter shared", ["F.Shared " + isOn, name]);
-        },
-        filterFavoured: function (isOn, name) {
-            this.trackEvent("Filters", "Filter faved", ["F.Fav " + isOn, name]);
-        },
-
-        launchesMerge: function (count) {
-            this.trackEvent("Launch", "Merge Launch", "Merge " + count);
-        },
-        filterAdded: function (type, criteria) {
-            this.trackEvent("Launch", "Filter added", ["F.Add " + type, criteria]);
-        },
-        filterCndChanged: function (type) {
-            this.trackEvent("Launch", "Filter condition changed", type);
-        },
-        debugOn: function (status) {
-            this.trackEvent("Launch", "Debug ON " + status);
-        },
-        debugOff: function (status) {
-            this.trackEvent("Launch", "Debug OFF " + status);
-        },
-        filterTagClick: function (tag) {
-            this.trackEvent("Launch", "Filter tag click",  "Tag " + tag);
-        },
-        refreshGrid: function (level) {
-            this.trackEvent("Launches grid refresh", level);
-        },
-        listView: function (type, amount) {
-            this.trackEvent("Launch", "List view", "ListView " + type, amount);
-        },
-        historyView: function (depth) {
-            this.trackEvent("Launch", "HistoryView", "depth " + depth);
-        },
-        drillDown: function (level) {
-            this.trackEvent("Launch", "Drilldown", "lvl " + level);
-        },
-        tabSaved: function (amount) {
-            var type = amount > 1 ? 'Tab saved All' : 'Tab saved',
-                subType = amount > 1 ? 'Tab saved. All' : 'Tab saved. one';
-            this.trackEvent("Launch", type, subType, amount);
-        },
-        preconditionMethods: function(status) {
-            this.trackEvent("Launch", "Hide preconditions", "Hide pre: " + status);
-        },
-
-        dashboardSwitched: function (isShared) {
-            var type = isShared ? text.shared : text.own;
-            this.trackEvent("Dash", "Dash switched", "Dash open " + type);
-        },
-        dashboardDel: function (isShared) {
-            var type = isShared ? text.shared : text.own;
-            this.trackEvent("Dash", "Dash del", "Dash del " + type);
-        },
-        dashboardAdd: function (isShared) {
-            var type = isShared ? text.shared : text.notShared;
-            this.trackEvent("Dash", "Dash added", "Dash add " + type);
-        },
-        dashboardRefresh: function (isShared) {
-            // todo: implement when logic will be attached
-        },
-        dashboardExport: function (isShared) {
-            // todo: implement when logic will be attached
-        },
-        dashboardFullScreen: function (isShared) {
-            this.trackEvent("Dash", "Dash full screen", "Dash FULL is shared - " + isShared);
-        },
-
-        widgetAdded: function (type) {
-            this.trackEvent("Wdg", "Wdg added", "Wdg " + type);
-        },
-        widgetRemoveType: function (type) {
-            this.trackEvent("Wdg", "Wdg removed", "Wdg " + type);
-        },
-        widgetRemoveIsShared: function (isShared) {
-            var type = isShared ? text.shared : text.own;
-            this.trackEvent("Wdg", "Wdg removed", "Wdg " + type);
-        },
-        widgetRefresh: function (type) {
-            this.trackEvent("Wdg", "Wdgt refresh", "Wdgt refresh " + type);
-        },
-        widgetExport: function (type) {
-        // todo: implement when logic will be attached
-        },
+        trackEventNumber: function(num) {
+            if(!eventTable[num]) {
+                console.log('event "' + num + '" not found');
+                return;
+            }
+            this.trigger('track:event', eventTable[num]);
+        }
 
 
     };

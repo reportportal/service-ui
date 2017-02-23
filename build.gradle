@@ -71,6 +71,11 @@ jar {
     baseName "service-ui"
 }
 
+sourcesJar{
+    exclude '**/public/compiled'
+    exclude '**/public/node_modules'
+}
+
 grunt {
     workDir = file("${staticsInputDir}")
 }
@@ -107,7 +112,6 @@ idea {
 
     }
 }
-
 
 processResources {
     exclude "**/public/*"

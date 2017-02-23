@@ -1,15 +1,8 @@
-<div class="container-fluid combo-pie-widget">
-    <div class="row">
-        <% var isMore = data.stats.issues && data.stats.issues.length > 9, first = isMore ? 4 : 6, second = isMore ? 8 : 6; %>
-        <div class="col-md-<%= first %>">
-            <div class="combo-pie-part">
-                <svg id="<%= data.id %>-svg1" style="height: 100%"></svg>
-            </div>
-        </div>
-        <div class="col-md-<%= second %>">
-            <div class="combo-pie-part">
-                <svg id="<%= data.id %>-svg2" style="height: 100%"></svg>
-            </div>
-        </div>
+<div class="combo-pie-widget">
+    <div class="combo-pie-part">
+        <svg id="<%= data.id %>-svg1" style="height: 100%"></svg>
+    </div>
+    <div class="combo-pie-part">
+        <svg id="<%= data.id %>-svg2" style="height: 100%"></svg>
     </div>
 </div>

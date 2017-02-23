@@ -733,6 +733,7 @@ ul.rp-nav-left > li.title-holder {
   position: relative;
   width: 100%;
   height: 100%;
+  outline: none;
 
   &.wrapper {
     min-height: 100%;
@@ -1203,18 +1204,6 @@ textarea {
 
 /*--------------------------------*/
 
-.combo-pie-widget, .combo-pie-part {
-  position: relative;
-  height: 100%;
-}
-
-.combo-pie-widget > .row,
-.combo-pie-widget > .row > div[class*="col-"] {
-  height: 100%;
-  padding: 0;
-}
-
-/*--------------------------------*/
 
 /*------Widget wizard - Filters - table header--------*/
 .input-filter {

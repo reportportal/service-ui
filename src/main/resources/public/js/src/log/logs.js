@@ -121,9 +121,6 @@ define(function (require, exports, module) {
             var messageFilterParams = this.messageModel.value ? this.messageModel : null;
             var levelFilterParams = this.levelFilter.getParams();
             var screenFilterParams = this.screenShotsFilter.getParams();
-            messageFilterParams && config.trackingDispatcher.searchLogMessage(messageFilterParams.value);
-            levelFilterParams && config.trackingDispatcher.logLevelIn(levelFilterParams.value);
-            screenFilterParams && config.trackingDispatcher.logWithAttach();
             return [
                 messageFilterParams,
                 levelFilterParams,
@@ -402,7 +399,6 @@ define(function (require, exports, module) {
                 var active = $(".progress-bar.activeItem:first", this.historyWell),
                     steps = $(".progress-bar", this.historyWell),
                     diff = steps.index(active) - steps.index($el);
-                config.trackingDispatcher.historyLineNavigation(diff);
                 this.historyFilter.set('value', $el.data('id'));
                 this.applyState();
             }.bind(this));
@@ -509,7 +505,6 @@ define(function (require, exports, module) {
                 this.navigationInfo.trigger('match::issues::action');
                 this.navigationInfo.trigger("log::post::bug", {action: 'isProcessing'});
                 this.navigationInfo.trackForLaunchProcessing(Service['startLaunchMatch'](itemData.id), itemData.id);
-                config.trackingDispatcher.matchIssue(el.parent().find('.badge:first').text().trim());
             }
         },
 
@@ -549,7 +544,6 @@ define(function (require, exports, module) {
                 DefectEditor.removeTicket(badge, this.getCurrentHistoryItem(), row, function () {
                     this.reLoadDefect();
                 }.bind(this));
-                config.trackingDispatcher.jiraTicketDelete();
             }
         },
 
@@ -758,7 +752,7 @@ define(function (require, exports, module) {
                 // Sticker.updateKickOff(1);
             });
             this.$accordion.on('shown.bs.collapse', function () {
-                config.trackingDispatcher.testItemActivityExpanded(this.navigationInfo.last().get('name'));
+
             }.bind(this));
         },
 

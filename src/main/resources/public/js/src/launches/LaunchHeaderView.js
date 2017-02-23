@@ -32,6 +32,7 @@ define(function (require, exports, module) {
     var LaunchHeaderView = Epoxy.View.extend({
         events: {
             'click [data-js-add-filter]': 'onClickAddFilter',
+            'click [data-js-all-link]': 'onClickAllLink',
         },
 
         bindings: {
@@ -103,8 +104,12 @@ define(function (require, exports, module) {
             }, this)
         },
         onClickAddFilter: function() {
+            config.trackingDispatcher.trackEventNumber(12);
             var newFilter = this.launchFilterCollection.generateTempModel();
             config.router.navigate(newFilter.get('url'), {trigger: true});
+        },
+        onClickAllLink: function() {
+            config.trackingDispatcher.trackEventNumber(22);
         },
         onChangeIdFilter: function(filterModel) {
             config.router.navigate(filterModel.get('url'), {trigger: false});

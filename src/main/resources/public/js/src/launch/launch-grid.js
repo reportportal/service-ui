@@ -124,9 +124,6 @@ define(function (require, exports, module) {
         },
 
         onPage: function (page, size) {
-            if (this.navigationInfo.getLevelGridType() === 'log') {
-                config.trackingDispatcher.logViewPaging(page, this.collection.page['totalPages']);
-            }
             this.navigationInfo.trigger('reset::counter');
             this.navigationInfo.applyPaging(page, size);
             this.load();
@@ -425,7 +422,7 @@ define(function (require, exports, module) {
         },
 
         setPreconditionMethods: function (status) {
-            return config.trackingDispatcher.preconditionMethods(status);
+            return true
         },
 
         updateStatusMethodCollapsed: function (collapsed, status) {
@@ -992,7 +989,7 @@ define(function (require, exports, module) {
                         self.navigationInfo.trigger('navigation::reload::table', {});
                         Util.ajaxSuccessMessenger((data.mode == 'DEBUG') ? 'switchToDebug' : 'switchToAllLaunches');
                         var reportAction = (data.mode === 'DEBUG') ? 'debugOn' : 'debugOff';
-                        config.trackingDispatcher[reportAction](launch.get('status'));
+
                     })
                     .fail(function (error) {
                         Util.ajaxFailMessenger(error);
@@ -1032,17 +1029,13 @@ define(function (require, exports, module) {
                     status = el.attr('href').match(/\&filter.in.status=([^<]+)\&filter.in.type/),
                     result = type ? type[1]
                         : status ? status[1] : 'TOTAL';
-                config.trackingDispatcher.listView(result, el.text().trim());
+
             }
         },
 
         reportLogViewToTracker: function (el) {
             var href = el.attr('href');
-            if (href.indexOf('log-for-') !== -1) {
-                config.trackingDispatcher.logViewOpened(this.collection.get(el.data('id')).get('status'));
-            } else {
-                config.trackingDispatcher.drillDown(this.navigationInfo.length);
-            }
+
         },
 
         toggleStartTimeView: function () {
@@ -1229,7 +1222,7 @@ define(function (require, exports, module) {
         openGallery: function (e) {
             e.preventDefault();
             this.navigationInfo.trigger("open::gallery::at::index", $(e.currentTarget).data('slide-index'));
-            config.trackingDispatcher.screenShotOpen();
+
         },
 
         addTestItemsNav: function () {
@@ -1730,7 +1723,7 @@ define(function (require, exports, module) {
                 this.$el.append(Util.templates(this.loadButton));
             }
 
-            config.trackingDispatcher.historyView(launches.length);
+
 
             $('.nicescroll-it, .shifted', this.$el).each(function(){
 
