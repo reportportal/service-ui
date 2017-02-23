@@ -23,7 +23,7 @@
   position: relative;
   left: -45px;
   width: 1000px;
-  height: 735px;
+  height: 726px;
   margin: 20px auto 0 auto;
   -webkit-border-radius: 2px;
   -moz-border-radius: 2px;
@@ -39,7 +39,7 @@
   @media (max-width: 1010px) {
     left: 0px;
     width: 320px;
-    height: 685px;
+    height: 665px;
   }
 
   &.fail {
@@ -55,8 +55,8 @@
     float: left;
     background-image: url('../../img/registration/registration.png');
     background-repeat: no-repeat;
-    -webkit-background-size: contain;
-    background-size: contain;
+    -webkit-background-size: 100%;
+    background-size: 100%;
 
     @media (max-width: 1010px) {
       display: none;
@@ -136,11 +136,45 @@
 
         .rp-input {
           padding-left: 55px;
+          padding-right: 35px;
           margin-bottom: 5px;
           width: 100%;
           height: 38px;
           border: solid 1px $COLOR--gray-80;
           border-left: none;
+        }
+
+        .visability-toggler {
+          position: absolute;
+          top: 0;
+          right: 5px;
+          height: 38px;
+          width: 30px;
+          .shown {
+            display: none;
+            height: 100%;
+            width: 100%;
+            background-image: url('../../img/registration/pass-shown.png');
+            background-repeat: no-repeat;
+            background-position: center;
+          }
+          .hided {
+            display: block;
+            height: 100%;
+            width: 100%;
+            background-image: url('../../img/registration/pass-hided.png');
+            background-repeat: no-repeat;
+            background-position: center;
+          }
+
+          &.show {
+            .shown {
+              display: block;
+            }
+            .hided {
+              display: none;
+            }
+          }
         }
 
         .validate-hint {
@@ -160,7 +194,10 @@
         }
 
         &.confirm-pass-field {
-          margin-bottom: 10px;
+          margin-bottom: 50px;
+          @media (max-width: 1010px) {
+            margin-bottom: 30px;
+          }
         }
 
         &.validate-error {
@@ -169,13 +206,7 @@
           }
         }
       }
-      .rp-checkbox-wrap {
-        margin-bottom: 40px;
 
-        @media (max-width: 1010px) {
-          margin-bottom: 30px;
-        }
-      }
       .buttons {
         width: 354px;
         margin: 0 auto;
