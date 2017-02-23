@@ -297,12 +297,7 @@
   }
 
   .mobile-disabling-cover {
-    display: none;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    top: 0;
+    @extend %MOBILE_DISABLING_COVER;
   }
 
   label {
@@ -524,10 +519,6 @@
           }
         }
       }
-    }
-
-    .mobile-disabling-cover {
-      display: block;
     }
 
     .bts-property > .rp-btn-with-dropdown,

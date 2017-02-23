@@ -26,6 +26,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var HistoryItemView = require('launches/historyGrid/HistoryItemView');
     var App = require('app');
+    require('baron');
 
     var config = App.getInstance();
 
@@ -44,7 +45,7 @@ define(function (require, exports, module) {
                 launches: this.launches.toJSON()
             }));
             this.renderItems();
-            Util.setupBaronScrollSize($('[data-js-history-content]', this.$el));
+            $('[data-js-history-scroll]', this.$el).baron({direction: 'h'});
         },
         renderItems: function() {
             var $itemsContainer = $('[data-js-history-content]', this.$el);

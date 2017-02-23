@@ -241,6 +241,7 @@ define(function (require, exports, module) {
             this.body = new StepTableView({
                 el: $('[data-js-info-container]', this.$el),
                 filterModel: info.filterModel,
+                model: (info.parentModel || info.launchModel),
                 collectionItems: this.collectionItems,
             })
         },
