@@ -86,6 +86,9 @@
       }
     }
   }
+  .mobile-disabling-cover {
+    @extend %MOBILE_DISABLING_COVER;
+  }
 }
 
 

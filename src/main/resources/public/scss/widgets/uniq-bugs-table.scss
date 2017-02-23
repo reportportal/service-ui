@@ -21,6 +21,7 @@
 
 .uniq-bugs-table {
   margin: -15px -15px 0;
+  position: relative;
   .uniq-bugs-head {
     border-top: 1px solid $COLOR--gray-91;
     background: $COLOR--white;
@@ -89,6 +90,9 @@
       height: 34px;
       color: $COLOR--gray-60;
     }
+  }
+  .mobile-disabling-cover {
+    @extend %MOBILE_DISABLING_COVER;
   }
 }
 

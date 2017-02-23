@@ -20,6 +20,7 @@
  */
 
 .project-activity-panel {
+  position: relative;
   .activity-date-header {
     font: 13px/13px $OpenSansSemibold;
     color: $COLOR--gray-60;
@@ -63,6 +64,9 @@
         line-height: 15px;
       }
     }
+  }
+  .mobile-disabling-cover {
+    @extend %MOBILE_DISABLING_COVER;
   }
 }
 
