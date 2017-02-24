@@ -503,11 +503,174 @@
         color: #fff;
         background-color: #666;
         transition: all 0.5s ease-in-out;
-        @media(max-width: 950px) {
-            bottom: 95px;
+        @media(max-width: $SCREEN_XS_MAX) {
+          bottom: 95px;
+          height: auto;
+          padding: 0;
+          position: relative;
+          top: 0;
+          min-height: auto;
+          overflow: visible;
         }
         .controls {
+          @media(max-width: $SCREEN_XS_MAX) {
+            text-align: left;
+            position: relative;
+            height: 50px;
+            padding: 0 67px 0 15px;
+            background: $COLOR--greyish-brown;
+          }
+          .docs-controls {
             text-align: center;
+            .rp-icons-search {
+              display: none;
+            }
+            .all {
+              margin-left: 4px;
+              i {
+                display: none;
+              }
+            }
+            .search-cancel {
+              display: none;
+            }
+          }
+          .content-search-btn {
+            display: none;
+          }
+          .menu-title {
+            display: none;
+          }
+          .dropdown-menu {
+            margin-top: 10px;
+            display: block;
+            position: relative;
+            float: none;
+            width: 100%;
+            border: none;
+            box-shadow: none;
+            @media(max-width: $SCREEN_XS_MAX) {
+              display: none;
+            }
+            li a {
+              padding: 10px 15px;
+              font-family: $OswaldRegular;
+              font-size: 18px;
+              font-weight: lighter;
+            }
+          }
+          &.open {
+            .dropdown-menu {
+              position: absolute;
+              margin: 0;
+              display: none;
+              @media(max-width: $SCREEN_XS_MAX) {
+                width: 100%;
+                display: block;
+              }
+            }
+            .menu-title {
+              @media(max-width: $SCREEN_XS_MAX) {
+                .material-icons {
+                  transform: rotate(180deg) translateY(-4px);
+                }
+              }
+            }
+          }
+            @media(max-width: $SCREEN_XS_MAX) {
+              .docs-controls {
+                display: none;
+                .rp-icons-search {
+                  display: inline-block;
+                  position: absolute;
+                  left: 16px;
+                  top: 14px;
+                  font-size: 20px;
+                }
+                .all {
+                  position: absolute;
+                  right: 68px;
+                  top: 16px;
+                  width: 14px;
+                  height: 14px;
+                  margin: 0;
+                  i {
+                    display: inline-block;
+                    font-size: 17px;
+                  }
+                  span {
+                    display: none;
+                  }
+                }
+                .rp-input {
+                  width: 100%;
+                  background: transparent;
+                  border: none;
+                  border-bottom: 1px solid $COLOR--white-default;
+                  color: $COLOR--white-default;
+                  font-family: $OswaldRegular;
+                  font-weight: lighter;
+                  font-size: 16px;
+                  padding: 0 14px 0 36px;
+                  margin-top: 10px;
+                  &:focus {
+                    outline: none;
+                    box-shadow: none;
+                  }
+                }
+                .search-cancel {
+                  display: block;
+                  position: absolute;
+                  top: 12px;
+                  right: 10px;
+                  color: $COLOR--white-default;
+                  font-family: $OswaldRegular;
+                  font-weight: lighter;
+                  font-size: 18px;
+                }
+              }
+              .content-search-btn {
+                display: block;
+                position: absolute;
+                width: 50px;
+                height: 50px;
+                right: 0;
+                top: 0;
+                font-size: 24px;
+                text-align: center;
+                cursor: pointer;
+                .rp-icons {
+                  margin-top: 13px;
+                }
+              }
+              .menu-title {
+                cursor: pointer;
+                display: inline-block;
+                margin: 12px 20px 0;
+                color: $COLOR--white-default;
+                font-family: $OswaldRegular;
+                font-weight: lighter;
+                font-size: 18px;
+                vertical-align: middle;
+                .material-icons {
+                  font-size: 24px;
+                  display: inline-block;
+                  width: 24px;
+                  height: 19px;
+                  text-align: center;
+                  overflow: hidden;
+                }
+              }
+              .doc-menu-not-found {
+                position: absolute;
+                left: 0;
+                top: 100%;
+                width: 100%;
+                background: #666;
+                margin: 0;
+                padding: 12px;
+              }
+            }
         }
         .doc-menu-not-found {
           text-align: center;
@@ -520,11 +683,15 @@
           }
         }
     }
-    .b-docs__nav > .baron {
+    .b-docs__nav .baron {
         position: absolute;
         height: auto;
         top: 60px;
         bottom: 0;
+      @media(max-width: $SCREEN_XS_MAX) {
+        position: relative;
+        top: 0;
+      }
     }
     .b-docs__nav ul.nav.sidenav {
         padding: 0;
@@ -537,6 +704,9 @@
     .b-docs__nav ul.nav.sidenav > li {
         padding: 0;
         color: #fff;
+        font-family: $OswaldRegular;
+        font-size: 18px;
+        font-weight: lighter;
         background-color: #666;
         margin-bottom: 1px;
         overflow: hidden;
@@ -850,7 +1020,6 @@
         top: 104px;
         bottom: 0;
         height: 0;
-        opacity: 0;
         bottom: auto;
         padding: 0;
     }

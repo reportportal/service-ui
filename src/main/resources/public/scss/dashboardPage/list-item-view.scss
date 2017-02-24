@@ -53,6 +53,9 @@
       position: absolute;
       right: 0;
       top: 0;
+      @media (max-width: $SCREEN_XS_MAX) {
+        display: none;
+      }
       i {
         float: right;
         color: $COLOR--gray-60;

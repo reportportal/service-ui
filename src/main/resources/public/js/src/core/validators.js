@@ -103,7 +103,7 @@ define(function (require, exports, module) {
     };
     var validateForMax = function(length, options) {
         return length > options.max;
-    }
+    };
 
     var remoteEmail = function (val, options) {
         var dfd = $.Deferred();

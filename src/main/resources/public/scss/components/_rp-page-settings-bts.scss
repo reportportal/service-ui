@@ -297,18 +297,14 @@
   }
 
   .mobile-disabling-cover {
-    display: none;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    top: 0;
+    @extend %MOBILE_DISABLING_COVER;
   }
 
   label {
     &.obligatory-field {
       &:after {
         position: absolute;
+        top: 8px;
         margin-left: 2px;
       }
     }
@@ -523,10 +519,6 @@
           }
         }
       }
-    }
-
-    .mobile-disabling-cover {
-      display: block;
     }
 
     .bts-property > .rp-btn-with-dropdown,

@@ -54,7 +54,7 @@ define(function (require, exports, module) {
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
             '[data-js-status-class]': 'classes: {failed: highlightedFailed, "select-state": select, "collapse-method": validateForCollapsed}',
-            '[data-js-select-item]': 'checked:select',
+            '[data-js-select-item]': 'checked:select, attr: {disabled: launch_isProcessing}',
         },
         bindingHandlers: {
             sortTags: {
@@ -154,6 +154,7 @@ define(function (require, exports, module) {
         },
         onClickName: function(e) {
             e.preventDefault();
+            config.trackingDispatcher.trackEventNumber(23);
             var href = $(e.currentTarget).attr('href');
             if(href != '') {
                 this.model.trigger('drill:item', this.model);

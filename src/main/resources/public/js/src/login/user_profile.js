@@ -206,7 +206,6 @@ define(function (require, exports, module) {
                     self.$imgSelector.wrap('<form></form>').parent().trigger('reset').children().unwrap('<form></form>');
                     Util.setProfileUrl();
                     Util.ajaxSuccessMessenger('submitUpload');
-                    config.trackingDispatcher.profilePhotoUploaded();
                 } else if (xhr.readyState === 4 && xhr.status !== 200) {
                     Util.ajaxFailMessenger(null, 'submitUpload');
                 }
@@ -312,7 +311,6 @@ define(function (require, exports, module) {
                 .done(function () {
                     Util.ajaxSuccessMessenger('submitChangePass');
                     self.hideChangePass();
-                    config.trackingDispatcher.profilePasswordChanged();
                 })
                 .fail(function (error) {
                     var type = error.responseText.indexOf('40010') > -1 ? 'submitChangePassInvalid' : 'submitChangePass';
@@ -377,7 +375,6 @@ define(function (require, exports, module) {
                         config.userModel.set('image', userImage);
                     }
                     self.hideEditInfo();
-                    config.trackingDispatcher.profileInfoEdit();
                 })
                 .fail(function (error) {
                     var type = 'submitProfileInfo';

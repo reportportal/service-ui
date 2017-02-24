@@ -90,14 +90,6 @@ define(function (require, exports, module) {
             } else {
                 this.postInit();
             }
-            var self = this;
-            this.model.on('change:isShared', function(model){
-                if(model.get('isShared')){
-                    _.each(self.gadgetViews, function(view){
-                        view.model.set('isShared', true);
-                    });
-                }
-            });
         },
         postInit: function() {
             var self = this;
@@ -108,7 +100,8 @@ define(function (require, exports, module) {
                 self.listenTo(self.gadgetCollection, 'remove', self.checkEmptyDashboard);
                 self.activateGridStack();
                 self.listenTo(self.model, 'add:widget', self.onAddNewGadget);
-            })
+                self.listenTo(self.model, 'change:isShared', self.onShareDashboard);
+            });
 
         },
         render: function() {
@@ -118,6 +111,13 @@ define(function (require, exports, module) {
             this.checkEmptyDashboard();
             this.gadgetCollection.add(model);
             this.updateScroll();
+        },
+        onShareDashboard: function(){
+            if(this.model.get('isShared')){
+                _.each(this.gadgetViews, function(view){
+                    view.model.set('isShared', true);
+                }, this);
+            }
         },
         activateGridStack: function() {
             var $gridStack = $('[data-js-grid-stack]', this.$el);
@@ -133,7 +133,7 @@ define(function (require, exports, module) {
                 disableDrag: !this.model.get('isMy'),
                 disableResize: !this.model.get('isMy'),
             });
-            this.gridStack = $gridStack.data('gridstack')
+            this.gridStack = $gridStack.data('gridstack');
             this.createGadgets();
             var self = this;
             $gridStack.on('change', function (e, items) {
@@ -158,13 +158,16 @@ define(function (require, exports, module) {
             });
             $gridStack.on('resizestop', function (event, ui) {
                 var view = event.target.backboneView;
-                view && view.stopResize();
+                setTimeout(function(){
+                    view && view.stopResize();
+                }, 300);
             });
 
         },
         onClickFullScreen: function(e) {
             e.preventDefault();
             $('body').fullscreen({toggleClass: 'fullscreen'});
+            this.updateGadgetsTimer();
         },
         onAddGadget: function(gadgetModel) {
             var view = new GadgetView({model: gadgetModel, dashboardModel: this.model});
@@ -188,6 +191,10 @@ define(function (require, exports, module) {
                 this.onAddGadget(model);
             }, this);
             this.updateScroll();
+            var self = this;
+            this.$el.on('resize', function(){
+                self.scrollerAnimate.resize();
+            });
         },
         updateScroll: function() {
             var self = this;
@@ -238,9 +245,20 @@ define(function (require, exports, module) {
             })
         },
         onClickExitFullScreen: function(e) {
+            clearTimeout(this.updateTimer);
             e.preventDefault();
             e.stopPropagation();
             $.fullscreen.exit();
+        },
+        updateGadgetsTimer: function() {
+            clearTimeout(this.updateTimer);
+            var self = this;
+            this.updateTimer = setTimeout(function() {
+                _.each(self.gadgetCollection.models, function(gadgetModel) {
+                    gadgetModel.trigger('update:timer');
+                });
+                self.updateGadgetsTimer();
+            }, 60000);
         },
         onClickAddWidget: function(e) {
             e.preventDefault();
@@ -253,8 +271,11 @@ define(function (require, exports, module) {
             (new modalAddSharedWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
         },
         destroy: function () {
+            clearTimeout(this.updateTimer);
             $.fullscreen.exit();
             this.undelegateEvents();
+            this.gridStack && this.gridStack.destroy();
+            this.$el.off('resize');
             this.scrollElement.off('scroll.dashboardPage');
             this.stopListening();
             this.unbind();

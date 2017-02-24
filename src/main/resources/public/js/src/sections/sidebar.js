@@ -34,7 +34,7 @@ define(function (require, exports, module) {
         el: "#pageSidebar",
 
         events: {
-            'click .main-menu a': 'closeMenu',
+            'click .main-menu a': 'onClickSidebarLink',
             'click .user-menu a': 'closeMenu',
             'click [data-js-sidebar-close]': 'closeMenu',
             'click [data-js-administrate-page-link]': 'setLastActivePage',
@@ -108,7 +108,23 @@ define(function (require, exports, module) {
             }
             return lastActive;
         },
-
+        onClickSidebarLink: function(e) {
+            switch($(e.currentTarget).attr('id')) {
+                case 'dashboard': {
+                    config.trackingDispatcher.trackEventNumber(1);
+                    break;
+                }
+                case 'filters': {
+                    config.trackingDispatcher.trackEventNumber(2);
+                    break;
+                }
+                case 'userdebug': {
+                    config.trackingDispatcher.trackEventNumber(3);
+                    break;
+                }
+            }
+            this.closeMenu();
+        },
         closeMenu: function () {
             this.$bodyElement.removeClass('menu-open');
         },

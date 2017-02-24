@@ -86,9 +86,20 @@ define(function (require, exports, module) {
             answer = answer.concat(filterOptions);
             return answer;
         },
-        findLogPage: function(logId) {
+        findLogPage: function(logId, cleanFilters) {
             var async = $.Deferred();
-            var path = Urls.getLogsUrl() + '/' + logId + '/page?' + this.getParamsForRequest().join('&')
+            var path = Urls.getLogsUrl() + '/' + logId + '/page';
+            var params = this.getParamsForRequest();
+            if(cleanFilters) {
+                var newParams = [];
+                _.each(params, function(param) {
+                    if(!~param.search(/(binary_content|in\.level|cnt\.message)/)) {
+                        newParams.push(param);
+                    }
+                });
+                params = newParams;
+            }
+            path += '?' + params.join('&');
             call('GET', path)
                 .done(function(data) {
                     async.resolve(data.number);

@@ -27,11 +27,12 @@ $borderRadius100: 100px;
     padding: 0;
     border: none;
     margin: 0 -15px;
-    overflow: auto;
+    position: relative;
 
     .history-grid-table {
         display: table;
         width: 100%;
+      height: 100%;
     }
     .history-grid-thead {
         display: table-row;
@@ -75,7 +76,6 @@ $borderRadius100: 100px;
     }
     .history-grid-row {
         display: table-row;
-        overflow: hidden;
         border-bottom: solid 1px $COLOR--gray-91;
 
         .history-col {

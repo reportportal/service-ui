@@ -1,0 +1,207 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.registration {
+  position: relative;
+  left: -45px;
+  width: 1000px;
+  height: 735px;
+  margin: 20px auto 0 auto;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px 0 $COLOR--skipped;
+
+  @media (max-width: 1100px) {
+    left: -75px;
+  }
+  @media (max-width: 1050px) {
+    left: -95px;
+  }
+  @media (max-width: 1010px) {
+    left: 0px;
+    width: 320px;
+    height: 685px;
+  }
+
+  &.fail {
+    height: 727px;
+    @media (max-width: 1010px) {
+      height: 568px;
+    }
+  }
+
+  .left-block {
+    width: 50%;
+    height: 100%;
+    float: left;
+    background-image: url('../../img/registration/registration.png');
+    background-repeat: no-repeat;
+    -webkit-background-size: contain;
+    background-size: contain;
+
+    @media (max-width: 1010px) {
+      display: none;
+    }
+  }
+
+  .right-block {
+    width: 50%;
+    height: 100%;
+    float: left;
+    padding: 60px;
+    background-color: $COLOR--white-default;
+
+    @media (max-width: 1010px) {
+      padding: 0;
+      width: 100%;
+    }
+
+    .welcome-msg {
+      display: block;
+      width: 100%;
+      margin-bottom: 50px;
+      font-family: $OpenSansRegular, sans-serif;
+      color: #6f898d;;
+      font-size: 24px;
+      text-align: center;
+
+      .welcome {
+        font-size: 32px;
+      }
+
+      @media (max-width: 1010px) {
+        display: none;
+      }
+    }
+
+    .header-mobile {
+      display: none;
+      width: 100%;
+      height: 146px;
+      background-image: url('../../img/registration/header-mobile.png');
+      background-repeat: no-repeat;
+      -webkit-background-size: 100%;
+      background-size: 100%;
+
+      @media (max-width: 1010px) {
+        display: block;
+      }
+    }
+
+    .registration-form {
+      @media (max-width: 1010px) {
+        padding: 30px 20px 0 20px;
+        width: 100%;
+      }
+      .rp-field {
+        position: relative;
+        width: 100%;
+        margin-bottom: 20px;
+        font-weight: normal;
+
+        .icon-wrapper {
+          position: absolute;
+          width: 40px;
+          height: 38px;
+          background-color: #f6f6f6;
+          border: solid 1px #cccccc;
+          border-right: none;
+          text-align: center;
+
+          i {
+            margin: 8px auto 0 auto;
+            font-size: 20px;
+            color: #9ADBE6;
+          }
+        }
+
+        .rp-input {
+          padding-left: 55px;
+          margin-bottom: 5px;
+          width: 100%;
+          height: 38px;
+          border: solid 1px $COLOR--gray-80;
+          border-left: none;
+        }
+
+        .validate-hint {
+          top: 38px;
+          width: 100%;
+        }
+
+        .hint {
+          display: block;
+          width: 100%;
+          font-size: 12px;
+          color: $COLOR--gray-60;
+        }
+
+        &.email-field {
+          margin-bottom: 30px;
+        }
+
+        &.confirm-pass-field {
+          margin-bottom: 10px;
+        }
+
+        &.validate-error {
+          .icon-wrapper, .rp-input {
+            border-color: $COLOR--orange-red;
+          }
+        }
+      }
+      .rp-checkbox-wrap {
+        margin-bottom: 40px;
+
+        @media (max-width: 1010px) {
+          margin-bottom: 30px;
+        }
+      }
+      .buttons {
+        width: 354px;
+        margin: 0 auto;
+
+        @media (max-width: 1010px) {
+          width: 284px;
+        }
+
+        .rp-btn {
+          width: 160px;
+          height: 40px;
+          font-size: 16px;
+
+          @media (max-width: 1010px) {
+            width: 130px;
+          }
+
+          &.rp-btn-cancel {
+            margin-right: 30px;
+
+            @media (max-width: 1010px) {
+              margin-right: 20px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

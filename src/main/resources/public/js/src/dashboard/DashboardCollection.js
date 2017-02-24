@@ -65,7 +65,6 @@ define(function (require, exports, module) {
             return Service.deleteDashboard(model.get('id'))
                 .done(function () {
                     Util.ajaxSuccessMessenger('dashboardDelete');
-                    config.trackingDispatcher.dashboardDel(!model.get('isMy'));
                 })
                 .fail(function (error) {
                     self.update();
@@ -145,7 +144,7 @@ define(function (require, exports, module) {
             if(active) {
                 _.each(this.models, function(itemModel) {
                     if (model.get('id') != itemModel.get('id')) {
-                        itemModel.set({active: false});
+                        itemModel.set({active: false}, {silent: true});
                     }
                 })
             }

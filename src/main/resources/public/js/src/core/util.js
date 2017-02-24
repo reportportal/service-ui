@@ -80,23 +80,6 @@ define(function (require, exports, module) {
 
             return async.promise();
         },
-
-        parseUrl: function parseUrl() {
-            var parseUrl_result = {};
-            var parseUrl_url = decodeURI(window.location.href);
-            var parseUrl_paramsStr = parseUrl_url.split('?')[1];
-            if (typeof parseUrl_paramsStr != 'undefined') {
-                var parseUrl_params = parseUrl_paramsStr.split('&');
-                var nameVal = '';
-                for (var i = 0; i < parseUrl_params.length; i++) {
-                    nameVal = parseUrl_params[i].split('=');
-                    if (nameVal.length == 2) {
-                        parseUrl_result[nameVal[0]] = nameVal[1];
-                    }
-                }
-            }
-            return parseUrl_result;
-        },
         checkWidthScroll: function() {
             var div = document.createElement('div');
             div.style.overflowY = 'scroll';
@@ -214,7 +197,7 @@ define(function (require, exports, module) {
             };
             Object.defineProperty(Array.prototype, "equals", {enumerable: false});
         },
-        appendTooltip: function (content, $el, $parrent) {
+        appendTooltip: function (content, $el, $parrent, openCallback) {
             $el.uitooltip({
                 position: {
                     my: 'left top',
@@ -226,6 +209,13 @@ define(function (require, exports, module) {
                 hide: {effect: 'none', duration: 0},
                 items: ':not([disabled])',
                 content: content,
+                open: function( event, ui ) {
+                    setTimeout(function() {
+                        if($(event.currentTarget).attr('aria-describedby')) {
+                            openCallback && openCallback();
+                        }
+                    }, 500);
+                }
             });
             $('.ui-helper-hidden-accessible').remove();  // this block needs for voiseover osx only
         },

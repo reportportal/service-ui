@@ -64,15 +64,18 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickEdit: function() {
+            config.trackingDispatcher.trackEventNumber(15);
             this.model.editMainInfo();
         },
         onClickClone: function() {
+            config.trackingDispatcher.trackEventNumber(14);
             var newFilter = this.model.collection.generateTempModel({
                 newEntities: this.model.get('newEntities') || this.model.get('entities'),
             });
             config.router.navigate(newFilter.get('url'), {trigger: true});
         },
         onClickDiscard: function() {
+            config.trackingDispatcher.trackEventNumber(13);
             this.model.set({newEntities: '', newSelectionParameters: ''});
             this.createFilterEntities();
         },
@@ -86,11 +89,13 @@ define(function (require, exports, module) {
             // this.listenTo(this.filterEntities.collection, 'change', this.changeFilterEntities);
         },
         onClickSave: function() {
+            config.trackingDispatcher.trackEventNumber(16);
             this.model.saveFilter();
         },
         onClickAddWidget: function(e){
             e.preventDefault();
             e.stopPropagation();
+            config.trackingDispatcher.trackEventNumber(17);
             (new ModalAddWidget({model: new GadgetModel(), filter_id: this.model.get('id'), isNoDashboard: true})).show();
         },
         destroy: function () {

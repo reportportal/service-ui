@@ -26,6 +26,8 @@ define(function (require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
+    var ModalLogAttachmentImage = require('modals/modalLogAttachmentImage');
+    var ModalLogAttachmentBinary = require('modals/modalLogAttachmentBinary');
 
     var config = App.getInstance();
 
@@ -76,7 +78,24 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickImg: function() {
-            this.model.trigger('click:attachment', this.model);
+            var modal,
+                contentType = this.model.get('binary_content').content_type,
+                binaryId = this.model.get('binary_content').id;
+
+            //this.model.trigger('click:attachment', this.model); // open's image in gallery.
+            if (~contentType.indexOf('image/')) {
+                modal = new ModalLogAttachmentImage({
+                    imageId: binaryId,
+                });
+                modal.show();
+            } else {
+                var language = contentType.split('/')[1];
+                modal = new ModalLogAttachmentBinary({
+                    binaryId: binaryId,
+                    language: language
+                });
+                modal.show();
+            }
         },
 
         activateAccordion: function() {

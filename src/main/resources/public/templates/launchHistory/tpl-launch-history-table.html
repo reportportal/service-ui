@@ -1,20 +1,23 @@
 <div class="rp-history-grid">
-    <div class="history-grid-table" data-js-history-content>
-        <div class="row history-grid-thead">
-            <div class="history-col">
-                <div class="history-grid-th">
-                    <span class="history-grid-th-name"><%= data.text.launchesHeaders.name %></span>
+    <div data-js-history-scroll>
+        <div class="history-grid-table" data-js-history-content>
+            <div class="history-grid-thead">
+                <div class="history-col">
+                    <div class="history-grid-th">
+                        <span class="history-grid-th-name"><%= data.text.launchesHeaders.name %></span>
+                    </div>
                 </div>
-            </div>
-            <% _.forEach(data.launches, function(launch){ %>
-            <div class="history-col <% if(launch.launchStatus == 'IN_PROGRESS'){ %>in-progress<% } %>">
-                <div class="history-grid-th">
+                <% _.forEach(data.launches, function(launch){ %>
+                <div class="history-col <% if(launch.launchStatus == 'IN_PROGRESS'){ %>in-progress<% } %>">
+                    <div class="history-grid-th">
                     <span class="history-grid-th-name">
                         <%= data.text.launches.launchHash %><%= launch.launchNumber %>
                     </span>
+                    </div>
                 </div>
+                <% }); %>
             </div>
-            <% }); %>
         </div>
+        <br>
     </div>
 </div>

@@ -26,8 +26,8 @@ define(function (require, exports, module) {
     var App = require('app');
     var Lunr = require('lunr');
     var Backbone = require('backbone');
+    var CodeBlockWithHighlight = require('components/CodeBlockWithHighlightComponent');
 
-    require('highlight');
     require('popup');
 
     var config = App.getInstance();
@@ -101,6 +101,9 @@ define(function (require, exports, module) {
                 });
                 docApi.initImgZoom();
             });
+            $('pre', $(".b-docs__wrapper")).each(function (i, item) {
+                docApi.highLightCode(item);
+            })
         },
         setMenuListener: function (item, question, questions) {
             var isChild = _.has(question, 'parentEl')
@@ -130,6 +133,9 @@ define(function (require, exports, module) {
                     navigate ? config.router.navigate(link) : '';
                 }
                 docApi.scrollTo('top');
+                if(!$(this).children('ul.nav').length || _.isEmpty($(this).children('ul.nav').children())){
+                    $('[data-js-content-dropdown]').parent().removeClass('open');
+                }
 
                 return;
             })
@@ -237,6 +243,20 @@ define(function (require, exports, module) {
                 $(elem.target).closest('.controls').find('input').val('');
             });
 
+            $('[data-js-show-serach]').click(function(e){
+                e.preventDefault();
+                $('[data-js-content-search]').show();
+                $(this).hide();
+                $('[data-js-content-dropdown]').hide();
+            });
+            $('[data-js-search-cancel]').click(function(e){
+                e.preventDefault();
+                $('[data-js-content-search]').hide();
+                $('[data-js-show-serach]').show();
+                $('[data-js-content-dropdown]').show();
+                $('[data-show-all]').trigger('click');
+            });
+
             $('.sidenav').on('Show:section', function (e, id, open) {
                 _.each(questions, function (section, key) {
                     if (_.has(section, 'parentEl')) {
@@ -280,8 +300,6 @@ define(function (require, exports, module) {
                     e.preventDefault();
                     var link = $(this).attr('href');
                     config.router.navigate(link.replace('#', ''), {trigger: true});
-                    // window.open('/' + link);
-                    // console.log(link);
                     return;
                 })
             });
@@ -389,9 +407,21 @@ define(function (require, exports, module) {
             // $('.language-hljs').each(function () {
             //     $(this).closest('p').hide().siblings('pre').find('code').addClass($(this).text());
             // });
-
             $('code', el).each(function (i, block) {
-                hljs.highlightBlock(block);
+                var language,
+                    binaryContent = block.textContent;
+
+                if ($(block).is('[class*="language-"]')) {
+                    _.each($(block).attr('class').split(' '), function (className) {
+                        if (~className.indexOf('language-')) {
+                            language = className.split('language-')[1];
+                        }
+                    })
+                } else {
+                    language = 'xml';
+                }
+                var code = new CodeBlockWithHighlight({language: language, binaryContent: binaryContent});
+                $(block).parent().replaceWith(code.$el);
             });
         },
         isTag: function (el, tag) {
@@ -460,7 +490,7 @@ define(function (require, exports, module) {
         addTagToSection: function (elem, lunarData) {
             var currentId = lunarData.questions.length;
 
-            docApi.highLightCode(elem);
+            //docApi.highLightCode(elem);
             docApi.isTag(elem, 'H3')
                 ? docApi.addAnchor(elem, lunarData.questions[currentId - 1])
                 : '';
@@ -535,12 +565,13 @@ define(function (require, exports, module) {
             docApi['content'] = $('.js-content .b-docs__wrapper', $documentation).html();
 
             $('.js-docnav').html(Util.templates('tpl-documentation-menu'));
-            Util.setupBaronScroll($('.js-docnav .nav.sidenav'));
             $('.js-content').html(Util.templates('tpl-documentation-content'));
             docApi.contentScroll = Util.setupBaronScroll($('.js-content .b-docs__wrapper'));
             // console.time('Load documentation time');
             docApi.lunarData = docApi.convertData(docApi.content);
             docApi.startDoc(anchor);
+            Util.setupBaronScroll($('[data-js-content-nav] .nav.sidenav'));
+
             // console.timeEnd('Load documentation time');
         }
     };

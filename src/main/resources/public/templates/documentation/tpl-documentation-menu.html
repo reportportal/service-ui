@@ -1,6 +1,15 @@
 <div class="controls">
-    <input type="search" class="rp-input" id="search" placeholder="Search...">
-    <a class="all" data-show-all href="#">All</a>
+    <div class="docs-controls" data-js-content-search>
+        <i class="rp-icons rp-icons-search"></i>
+        <input type="search" class="rp-input" id="search" placeholder="Search...">
+        <a class="all" data-show-all><i class="material-icons">clear</i><span>All</span></a>
+        <a class="search-cancel" data-js-search-cancel>Cancel</a>
+    </div>
+    <div class="content-search-btn" data-js-show-serach><i class="rp-icons rp-icons-search"></i></div>
+    <a href="#" class="menu-title dropdown-toggle" data-toggle="dropdown" data-js-content-dropdown>
+        <span class="selected-project" title="Current active project">TABLE OF CONTENT</span>
+        <i class="material-icons">keyboard_arrow_down</i>
+    </a>
+    <ul class="nav sidenav dropdown-menu"></ul>
+    <p class="doc-menu-not-found">No result found</p>
 </div>
-<ul class="nav sidenav"></ul>
-<p class="doc-menu-not-found">No result found</p>

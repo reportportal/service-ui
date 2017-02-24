@@ -51,7 +51,6 @@ require.config({
         'isLoading': '../lib/jquery.isLoading',
         'equalHeightRows': '../lib/grids',
         'popup': '../lib/jquery.magnific-popup',
-        'highlight': '../lib/highlight.pack',
 	    'lunr': '../lib/lunr',
         //'ace': '../lib/ace/ace.custom',
         //'aceDark': '../lib/ace/theme-dark',
@@ -107,7 +106,7 @@ require.config({
         'widgetWizard': 'wizard/widget',
         'helpers': 'core/helpers',
         'storageService': 'core/storage-service',
-        'register': 'register/register',
+        //'register': 'register/register',
 
         'simplemde': '../lib/markdown/simplemde.min',
 

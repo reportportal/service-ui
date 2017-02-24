@@ -182,7 +182,7 @@ define(function (require, exports, module) {
                 self.renderWidget(response);
                 var gadget = self.getGadgetType();
                 if(gadget){
-                    config.trackingDispatcher.widgetRefresh(gadget);
+                    // config.trackingDispatcher.widgetRefresh(gadget);
                 }
             });
         },
@@ -204,9 +204,9 @@ define(function (require, exports, module) {
                     var model = self.model.toJSON(),
                         gadget = self.getGadgetType();
                     if (gadget) {
-                        config.trackingDispatcher.widgetRemoveType(gadget);
+                        // config.trackingDispatcher.widgetRemoveType(gadget);
                     }
-                    config.trackingDispatcher.widgetRemoveIsShared(model.isShared);
+                    // config.trackingDispatcher.widgetRemoveIsShared(model.isShared);
                 }
 
                 dash.deleteWidget(id, function () {
@@ -1471,13 +1471,21 @@ define(function (require, exports, module) {
             return [];
         },
         updateChart: function() {
-            this.chart && this.chart.update();
+            var self = this;
+            if(self.charts && self.charts.length){
+                _.each(self.charts, function(chart){
+                    chart && chart.update();
+                });
+            }
+            else {
+                self.chart && self.chart.update();
+            }
         },
         addResize: function(){
             var self = this,
                 update = function(e){
                     if($(e.target).is($(window))) {
-                        self.chart && self.chart.update();
+                        self.updateChart();
                     }
                 },
                 resize  = _.debounce(update, 500);

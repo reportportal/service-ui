@@ -158,6 +158,7 @@ define(function (require, exports, module) {
                 email: /^[a-z0-9._-]+@[a-z0-9_-]+?\.[a-z0-9]{2,}$/i,
                 emailInternal: "^((?!(@epam.com)).)*$",
                 emailWrong: /wrong email/i,
+                login: /^[0-9a-zA-Z-_]{1,128}$/,
                 fullName: /^[a-z0-9._-\s\u0400-\u04FF]{3,255}$/i,
                 originalPass: /^(.){4,25}$/,
                 onlyIntegers: /^\d+$/,

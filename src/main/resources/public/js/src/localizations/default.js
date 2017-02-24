@@ -1261,6 +1261,13 @@ define(['util'], function () {
             emailSender: 'Default sender name'
         },
 
+        registration: {
+            welcomeMsg: '<span class="welcome">Welcome,</span><br>complete the registration form',
+            loginHint: '1-128 symbols, Latin, numeric characters, symbols: hyphen, underscore',
+            nameHint: '3-256 symbols, Latin, Cyrillic, numeric characters, symbols: hyphen, underscore, dot, space',
+            passwordHint: '4-25 symbols'
+        },
+
         members: {
             projectMembers: 'Project members',
             registration: "Registration",
@@ -1543,6 +1550,7 @@ define(['util'], function () {
             confirmMinMax: "Password should have size from '4' to '25' symbols",
             confirmMatch: "Passwords do not match",
             fullNameInfoRegex: "Full name should have size from '3' to '256' symbols, Latin, Cyrillic, numeric characters, hyphen, underscore, dot, space.",
+            loginRegex: "Full name should have size from '1' to '128' symbols, Latin, numeric characters, hyphen, underscore.",
             originalPassRegex: "Password should have size from '4' to '25' symbols",
             hostMatchRegex: 'Check the entered data',
 
@@ -1682,7 +1690,8 @@ define(['util'], function () {
             editUserInfo: 'Edit Personal Information',
             addDashboard: 'Add New Dashboard',
             regenerateUUID: 'REGENERATE UUID',
-            deleteOrg: 'Delete GitHub organization'
+            deleteOrg: 'Delete GitHub organization',
+            logAttachment: 'ATTACHMENT'
         },
 
         dialog: {
