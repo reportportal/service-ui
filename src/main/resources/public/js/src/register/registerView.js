@@ -52,7 +52,9 @@ define(function(require, exports, module) {
         events: {
             'click [data-js-cancel]': 'resetForm',
             'click [data-js-register]': 'registerMember',
-            'click [data-js-show-password]': 'togglePassword',
+            'mousedown [data-js-toogle-visability]': 'showPass',
+            'mouseout [data-js-toogle-visability]': 'hidePass',
+            'mouseup [data-js-toogle-visability]': 'hidePass',
             'validation:success .rp-input': 'checkFields',
             'validation:success [data-js-login]' : 'checkForLoginUniqueness'
         },
@@ -170,14 +172,12 @@ define(function(require, exports, module) {
             ]);
         },
 
-        togglePassword: function(e){
-            var el = $(e.target);
-            if(el.prop('checked')){
-                this.$password.add(this.$confirmPassword).attr('type', 'text');
-            }
-            else {
-                this.$password.add(this.$confirmPassword).attr('type', 'password');
-            }
+        showPass: function (e) {
+            $(e.currentTarget).addClass('show').siblings('.rp-input').attr('type', 'text');
+        },
+
+        hidePass: function (e) {
+            $(e.currentTarget).removeClass('show').siblings('.rp-input').attr('type', 'password');
         },
 
         getData: function(){

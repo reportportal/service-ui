@@ -34,18 +34,23 @@ define(function (require, exports, module) {
 
             this.language = options.language;
             this.binaryContent = options.binaryContent;
+            this.isPlain = (this.language === 'plain');
 
             this.loadHighlightJS().done(function () {
-                self.loadLanguage(self.language).done(function () {
-                    hljs.registerLanguage(self.language, window['hljs_' + self.language]);
+                if (!self.isPlain) {
+                    self.loadLanguage(self.language).done(function () {
+                        hljs.registerLanguage(self.language, window['hljs_' + self.language]);
+                        self.render({binaryContent: self.binaryContent});
+                    });
+                } else {
                     self.render({binaryContent: self.binaryContent});
-                });
+                }
             });
         },
 
         render: function (options) {
             this.$el.html(Util.templates(this.template, {binaryContent: options.binaryContent}));
-            $('[data-js-code]', this.$el).addClass(this.language);
+            $('[data-js-code]', this.$el).addClass((this.isPlain) ? 'nohighlight' : this.language);
             hljs.highlightBlock($('[data-js-code]', this.$el)[0]);
         },
 

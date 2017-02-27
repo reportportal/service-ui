@@ -39,8 +39,10 @@ define(function (require, exports, module) {
         initialize: function(options) {
             var self = this;
 
+            this.supportedLanguages = ['xml', 'javascript', 'json', 'html', 'css', 'php'];
             this.binaryId = options.binaryId;
-            this.language = options.language;
+            this.language = (~this.supportedLanguages.indexOf(options.language)) ? options.language : 'plain';
+
             this.binarySource = Urls.getFileById(options.binaryId);
             this.loadData().done(function (response) {
                 var codeBlock = new CodeBlockWithHighlightComponent({
