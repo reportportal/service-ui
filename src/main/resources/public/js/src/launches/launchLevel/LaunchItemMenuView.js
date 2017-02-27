@@ -46,10 +46,11 @@ define(function (require, exports, module) {
             'click [data-js-finish]': 'finishLaunch',
             'click [data-js-switch-mode]': 'switchLaunchMode',
             'click [data-js-remove]': 'onClickRemove',
+            'click [data-js-export-format]': 'onClickExport'
         },
         bindings: {
             '[data-js-finish]': 'attr:{title: titleForceFinish, disabled: any(titleForceFinish)}',
-            '[data-js-can-export]': 'attr:{disabled:not(isExport)}',
+            '[data-js-export-format]': 'attr:{disabled:not(isExport)}',
             '[data-js-can-match]': 'attr:{disabled:not(isMatchIssues)}',
             '[data-js-can-analyze]': 'attr:{disabled:not(isAnalyze)}',
             '[data-js-switch-mode]': 'text:itemModeText, attr:{disabled:not(isChangeMode)}',
@@ -57,7 +58,11 @@ define(function (require, exports, module) {
         },
         initialize: function(options) {
             this.model = options.model;
-            this.exportFormats = ['pdf', 'xls', /*'xml',*/ 'html'];
+            this.exportFormats = {
+                'pdf': {name: 'PDF', code: 30},
+                'xls': {name: 'XLS', code: 31},
+                'html': {name: 'HTML', code: 32}
+            };
             this.render();
         },
         computeds: {
@@ -123,8 +128,10 @@ define(function (require, exports, module) {
             var self = this,
                 el = $(e.currentTarget),
                 id = this.model.get('id'),
-                type = el.data('analyze-type') === "analyze" ? "startLaunchAnalyze" : "startLaunchMatch";
+                isLaunchAnalyze = el.data('analyze-type') === "analyze",
+                type = isLaunchAnalyze ? "startLaunchAnalyze" : "startLaunchMatch";
             if (!el.hasClass('disabled')) {
+                config.trackingDispatcher.trackEventNumber(isLaunchAnalyze ? 28 : 27);
                 Service[type](id)
                     .done(function(response){
                         self.model.set('isProcessing', true);
@@ -139,18 +146,26 @@ define(function (require, exports, module) {
             }
         },
         finishLaunch: function(){
+            config.trackingDispatcher.trackEventNumber(26);
             var self = this;
             ForceFinish({items: [this.model]}).done(function() {
                 self.model.collection.load(true);
             });
         },
         onClickRemove: function() {
+            config.trackingDispatcher.trackEventNumber(29);
             var self = this;
             RemoveAction({items: [this.model]}).done(function() {
                 self.model.collection.load(true);
             });
         },
+        onClickExport: function(e){
+            var $el = $(e.currentTarget),
+                format = $el.data('js-export-format');
+            config.trackingDispatcher.trackEventNumber(this.exportFormats[format].code);
+        },
         switchLaunchMode: function () {
+            config.trackingDispatcher.trackEventNumber(25);
             var self = this;
             ChangeModeAction({items: [this.model]}).done(function() {
                 self.model.collection.load(true);

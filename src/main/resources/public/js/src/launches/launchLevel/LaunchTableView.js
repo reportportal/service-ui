@@ -33,6 +33,7 @@ define(function (require, exports, module) {
     var FilterModel = require('filters/FilterModel');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var StickyHeader = require('core/StickyHeader');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -42,6 +43,7 @@ define(function (require, exports, module) {
             'click .rp-grid-th[data-sorter]': 'onClickSorter',
             'click .rp-grid-th[data-filter] .rp-icons-filter': 'onClickFilter',
             'change [data-js-select-all]': 'onChangeSelectAll',
+            'mouseenter [data-js-launch-table-title]': 'onHoverTitle'
         },
         bindings: {
             '.launch-suite-step-items': 'classes: {"exact-driven": updateTimeFormat}'
@@ -86,6 +88,43 @@ define(function (require, exports, module) {
         destroyStickyHeader: function() {
             this.stickyHeader && this.stickyHeader.destroy();
         },
+        onHoverTitle: function(e){
+            var filterId = $(e.currentTarget).closest('.rp-grid-th').data('filter');
+            switch (filterId) {
+                case 'name':
+                    config.trackingDispatcher.trackEventNumber(33);
+                    break;
+                case 'start_time':
+                    config.trackingDispatcher.trackEventNumber(35);
+                    break;
+                case 'statistics$executions$total':
+                    config.trackingDispatcher.trackEventNumber(37);
+                    break;
+                case 'statistics$executions$passed':
+                    config.trackingDispatcher.trackEventNumber(39);
+                    break;
+                case 'statistics$executions$failed':
+                    config.trackingDispatcher.trackEventNumber(41);
+                    break;
+                case 'statistics$executions$skipped':
+                    config.trackingDispatcher.trackEventNumber(43);
+                    break;
+                case 'statistics$defects$product_bug$total':
+                    config.trackingDispatcher.trackEventNumber(45);
+                    break;
+                case 'statistics$defects$automation_bug$total':
+                    config.trackingDispatcher.trackEventNumber(47);
+                    break;
+                case 'statistics$defects$system_issue$total':
+                    config.trackingDispatcher.trackEventNumber(49);
+                    break;
+                case 'statistics$defects$to_investigate$total':
+                    config.trackingDispatcher.trackEventNumber(51);
+                    break;
+                default:
+                    break;
+            }
+        },
         onChangeSelectAll: function(e) {
             var value = false;
             if($(e.currentTarget).is(':checked')) {
@@ -109,6 +148,40 @@ define(function (require, exports, module) {
         onClickFilter: function(e) {
             e.stopPropagation();
             var filterId = $(e.currentTarget).closest('.rp-grid-th').data('filter');
+            switch (filterId) {
+                case 'name':
+                    config.trackingDispatcher.trackEventNumber(34);
+                    break;
+                case 'start_time':
+                    config.trackingDispatcher.trackEventNumber(36);
+                    break;
+                case 'statistics$executions$total':
+                    config.trackingDispatcher.trackEventNumber(38);
+                    break;
+                case 'statistics$executions$passed':
+                    config.trackingDispatcher.trackEventNumber(40);
+                    break;
+                case 'statistics$executions$failed':
+                    config.trackingDispatcher.trackEventNumber(42);
+                    break;
+                case 'statistics$executions$skipped':
+                    config.trackingDispatcher.trackEventNumber(44);
+                    break;
+                case 'statistics$defects$product_bug$total':
+                    config.trackingDispatcher.trackEventNumber(46);
+                    break;
+                case 'statistics$defects$automation_bug$total':
+                    config.trackingDispatcher.trackEventNumber(48);
+                    break;
+                case 'statistics$defects$system_issue$total':
+                    config.trackingDispatcher.trackEventNumber(50);
+                    break;
+                case 'statistics$defects$to_investigate$total':
+                    config.trackingDispatcher.trackEventNumber(52);
+                    break;
+                default:
+                    break;
+            }
             if(this.filterModel.get('id') == 'all') {
                 var launchFilterCollection = new SingletonLaunchFilterCollection();
                 var tempFilterModel = launchFilterCollection.generateTempModel();

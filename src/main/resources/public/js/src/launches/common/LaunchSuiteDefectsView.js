@@ -65,6 +65,10 @@ define(function (require, exports, module) {
             },
         },
 
+        events: {
+            'mouseenter [data-js-hover-defect]': 'onHoverDefectType'
+        },
+
         initialize: function(options) {
             this.type = options.type;
             this.defectsCollection = new SingletonDefectTypeCollection();
@@ -85,14 +89,22 @@ define(function (require, exports, module) {
                     type: self.type,
                     model: self.model
                 });
-                // Util.appendTooltip(function() {
-                //     var tooltip = new LaunchSuiteDefectsHoverView({
-                //         type: self.type,
-                //         model: self.model
-                //     });
-                //     return tooltip.$el.html();
-                // }, $hoverElement, $hoverElement);
                 this.applyBindings();
+            }
+        },
+        onHoverDefectType: function(e){
+            switch (this.type){
+                case ('product_bug'):
+                    config.trackingDispatcher.trackEventNumber(54);
+                    break;
+                case ('automation_bug'):
+                    config.trackingDispatcher.trackEventNumber(56);
+                    break;
+                case ('system_issue'):
+                    config.trackingDispatcher.trackEventNumber(58);
+                    break;
+                default:
+                    break;
             }
         },
         getDefectByType: function(){

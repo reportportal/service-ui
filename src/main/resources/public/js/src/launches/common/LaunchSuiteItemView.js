@@ -51,6 +51,7 @@ define(function (require, exports, module) {
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-owner-name]': 'onClickOwnerName',
+            'click [data-js-statistics-to-investigate]': 'onClickToInvestigate'
         },
         bindings: {
             ':el': 'classes: {"select-state": select}',
@@ -242,6 +243,9 @@ define(function (require, exports, module) {
             this.systemIssue = new LaunchSuiteDefectsView({
                 model: this.model, el: $('[data-js-statistics-system-issue]', this.$el), type: 'system_issue'});
         },
+        onClickToInvestigate: function(){
+            config.trackingDispatcher.trackEventNumber(60);
+        },
         showItemMenu: function (e) {
             config.trackingDispatcher.trackEventNumber(24);
             if(!$(e.currentTarget).hasClass('rendered')) {
@@ -286,6 +290,7 @@ define(function (require, exports, module) {
             }
         },
         onClickEdit: function() {
+            config.trackingDispatcher.trackEventNumber(53);
             var modal = new ModalLaunchItemEdit({
                 item: this.model,
             })

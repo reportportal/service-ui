@@ -1,6 +1,6 @@
 <div class="launch-suite-defect-hover">
     <div class="defect-title">
-        <<% if(!data.noLink){ %>a href="<%- data.total.url %>"<% } else { %>span<% } %> class="defect-row">
+        <<% if(!data.noLink){ %>a href="<%- data.total.url %>"<% } else { %>span<% } %> class="defect-row" data-js-defect-total>
            <span class="defect-name">
              <span class="defect-color" style="background: <%- data.total.color %>"></span>
                 <%= !data.noSubDefects ? data.text.infoLine.total : '' %> <%- data.total.name %>

@@ -54,9 +54,9 @@ define(function(require, exports, module) {
         27: ['Launches', 'Click on "Match Issues in Launch" in Launch Menu', 'Starts Matching'],
         28: ['Launches', 'Click on "Analysis" in Launch Menu', 'Starts Analysing'],
         29: ['Launches', 'Click on "Delete" in Launch Menu', 'Arise Modul "Delete Launch"'],
-        30: ['Launches', 'Click on "Export: PDF" in Launch Menu', 'Stars download of report in PDF'],
-        31: ['Launches', 'Click on "Export: XLS" in Launch Menu', 'Stars download of report in XLS'],
-        32: ['Launches', 'Click on "Export: HTML" in Launch Menu', 'Stars download of report in HTML'],
+        30: ['Launches', getExportTitle('PDF'), getExportDescription('PDF')],
+        31: ['Launches', getExportTitle('XLS'), getExportDescription('XLS')],
+        32: ['Launches', getExportTitle('HTML'), getExportDescription('HTML')],
         33: ['Launches', getActionLaunchTitle('NAME'), getDescriptionLaunchTitle('NAME')],
         34: ['Launches', getActionTableFilter('NAME'), getDescriptionTableFilter()],
         35: ['Launches', getActionLaunchTitle('START'), getDescriptionLaunchTitle('START')],
@@ -77,9 +77,22 @@ define(function(require, exports, module) {
         50: ['Launches', getActionTableFilter('SYSTEM ISSUE'), getDescriptionTableFilter()],
         51: ['Launches', getActionLaunchTitle('TO INVESTIGATE'), getDescriptionLaunchTitle('TO INVESTIGATE')],
         52: ['Launches', getActionTableFilter('TO INVESTIGATE'), getDescriptionTableFilter()],
+        53: ['Launches', 'Click on Edit Icon after launch name', 'Edit Launch/Arise Modul "Edit Launch"'],
+        54: ['Launches', 'Hover on Product Bug Circle', 'Arise Tooltip with "Total Product Bugs"'],
+        55: ['Launches', 'Click on Tooltip "Total Product Bugs"', 'Transition to inner level of launch with Product Bugs'],
+        56: ['Launches', 'Hover on Auto Bug Circle', 'Arise Tooltip with "Total Auto Bug"'],
+        57: ['Launches', 'Click on Tooltip "Total Auto Bug"', 'Transition to inner level of launch with Auto Bug'],
+        58: ['Launches', 'Hover on System Issue Circle', 'Arise Tooltip with "Total System Issue"'],
+        59: ['Launches', 'Click on Tooltip "Total System Issue"', 'Transition to inner level of launch with System Issue'],
+        60: ['Launches', 'Click on To Investigate Circle', 'Transition to inner level of launch with To Investigate']
     }
 
-
+    function getExportTitle(type){
+        return 'Click on "Export: ' + type + '" in Launch Menu';
+    }
+    function getExportDescription(type){
+        return 'Stars download of report in ' + type;
+    }
     function getActionLaunchTitle(titleName) {
         return 'Hover on Table title "' + titleName +'"';
     }
