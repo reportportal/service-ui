@@ -58,6 +58,12 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickClose: function() {
+            if(this.model.get('invalidMessage')){
+                config.trackingDispatcher.trackEventNumber(69);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(67);
+            }
             this.model.set({select: false, invalidMessage: ''});
         },
         destroy: function () {
@@ -274,6 +280,7 @@ define(function (require, exports, module) {
             this.onClickClose();
         },
         onClickProceed: function() {
+            config.trackingDispatcher.trackEventNumber(70);
             var invalidItems = _.filter(this.collection.models, function(model) {
                return model.get('invalidMessage') != ''
             });
@@ -283,6 +290,7 @@ define(function (require, exports, module) {
             this.setAction(this.currentAction);
         },
         onClickClose: function() {
+            config.trackingDispatcher.trackEventNumber(68);
             while(this.collection.models.length) {
                 this.collection.at(0).set({select: false});
             }
