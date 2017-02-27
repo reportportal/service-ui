@@ -92,6 +92,7 @@ define(function (require, exports, module) {
                 }
             }));
             this.listenTo(this.collectionItems, 'change:issue change:description change:tags', this.increaseRefreshItemsCount);
+            this.listenTo(this.collectionItems, 'loading', this.resetRefreshItems);
             this.listenTo(this.collectionItems, 'change:issue', this.updateParentModel);
             this.render();
             this.filterEntities = new FilterEntitiesView({
@@ -127,6 +128,9 @@ define(function (require, exports, module) {
         },
         onClickRefresh: function() {
             this.collectionItems.load();
+            this.resetRefreshItems();
+        },
+        resetRefreshItems: function() {
             this.model.set({refreshItems: 0});
         },
         increaseRefreshItemsCount: function (model) {

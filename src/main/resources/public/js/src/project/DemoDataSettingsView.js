@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
@@ -40,6 +40,7 @@ define(function(require, exports, module) {
         events: {
             'click [data-js-demo-data-submit]': 'submitSettings',
             'input [data-js-demo-data-postfix]': 'validate',
+            'keypress [data-js-demo-data-postfix]': 'onEnterActions',
         },
         tpl: 'tpl-project-settings-demo-data',
         render: function () {
@@ -48,12 +49,12 @@ define(function(require, exports, module) {
             this.initValidators();
             return this;
         },
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$submitSettings = $('[data-js-demo-data-submit]', this.$el);
             this.$postfixInput = $('[data-js-demo-data-postfix]', this.$el);
             this.$alertLoaderBlock = $('[data-js-demo-data-loader]', this.$el);
         },
-        toggleDisableForm: function(disable){
+        toggleDisableForm: function (disable) {
             this.$postfixInput.prop('disabled', disable);
             this.$submitSettings.prop('disabled', disable);
         },
@@ -68,10 +69,16 @@ define(function(require, exports, module) {
                 }
             ]);
         },
-        validate: function(){
+        validate: function () {
             this.$postfixInput.trigger('validate');
         },
-        showFormError: function(error){
+        onEnterActions: function (e) {
+            if (e.keyCode === 13) {
+                this.submitSettings();
+                return false;
+            }
+        },
+        showFormError: function (error) {
             var response = null,
                 message = '';
             if (error) {
@@ -80,12 +87,12 @@ define(function(require, exports, module) {
                 } catch (e) {
                     message = Localization.failMessages.defaults;
                 }
-                if(error.status === 409){
+                if (error.status === 409) {
                     message = Localization.project.posfixUniq;
                 }
                 else {
                     if (response && response.message) {
-                        if(response.message.indexOf("You couldn't create the duplicate") >=0){
+                        if (response.message.indexOf("You couldn't create the duplicate") >= 0) {
                             message = Localization.project.posfixUniq;
                         }
                         else {
@@ -98,12 +105,12 @@ define(function(require, exports, module) {
             form.addClass('has-error');
             $('.help-inline', form).text(message);
         },
-        hideFormError: function(){
+        hideFormError: function () {
             var form = this.$postfixInput.closest('.rp-form-group');
             form.removeClass('has-error');
             $('.help-inline', form).text('');
         },
-        toggleLoader: function(action){
+        toggleLoader: function (action) {
             this.$alertLoaderBlock[action]();
         },
         submitSettings: function (e) {
@@ -125,7 +132,7 @@ define(function(require, exports, module) {
                 }.bind(this))
                 .fail(function (error) {
                     this.showFormError(error);
-                    if(error.status === 409){
+                    if (error.status === 409) {
                         var message = Localization.project.posfixUniq;
                         Util.ajaxFailMessenger(null, 'dublPostFix');
                     }
@@ -133,7 +140,7 @@ define(function(require, exports, module) {
                         Util.ajaxFailMessenger(error);
                     }
                 }.bind(this))
-                .always(function(){
+                .always(function () {
                     this.toggleLoader('hide');
                     this.toggleDisableForm(false);
                 }.bind(this));

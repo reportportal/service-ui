@@ -244,7 +244,7 @@ define(function (require, exports, module) {
                     currentElement: 0,
                     totalElements: 0,
                 }
-            }))
+            }));
             this.render();
             this.isLoad = false;
             this.$main = $('[data-js-attachments-container]', this.$el);
@@ -361,15 +361,17 @@ define(function (require, exports, module) {
             this.collectionMain.reset([
                 this.currentLoadCollection.at(index).toJSON()
             ]);
-            if(this.currentLoadCollection.at(index + 1)) {
-                this.collectionMain.add(this.currentLoadCollection.at(index + 1).toJSON());
-            } else {
-                this.collectionMain.add({id: ''});
-            }
-            if(this.currentLoadCollection.at(index - 1)) {
-                this.collectionMain.add(this.currentLoadCollection.at(index - 1).toJSON());
-            }else {
-                this.collectionMain.add({id: ''});
+            if(this.currentLoadCollection.length > 1) {
+                if(this.currentLoadCollection.at(index + 1)) {
+                    this.collectionMain.add(this.currentLoadCollection.at(index + 1).toJSON());
+                } else {
+                    this.collectionMain.add({id: ''});
+                }
+                if(this.currentLoadCollection.at(index - 1)) {
+                    this.collectionMain.add(this.currentLoadCollection.at(index - 1).toJSON());
+                }else {
+                    this.collectionMain.add({id: ''});
+                }
             }
         },
         updateLoadItems: function() {
