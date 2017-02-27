@@ -65,7 +65,7 @@ define(function (require, exports, module) {
             '[data-js-owner-name]': 'text: owner',
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
-            '[data-js-select-item]': 'checked: select',
+            '[data-js-select-item]': 'checked: select, attr: {disabled: launch_isProcessing}',
             '[data-js-tags-container]': 'sortTags: tags',
             '[data-js-statistics-total]': 'text: executionTotal, attr: {href: executionTotalLink}',
             '[data-js-statistics-failed]': 'text: executionFailed, attr: {href: executionFailedLink}',

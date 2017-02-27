@@ -53,7 +53,7 @@ define(function (require, exports, module) {
                 return timeFormat == 'exact' ? true : false;
             },
             validateIsProcessing: function(){
-                return this.getBinding('isProcessing') || this.getBinding('launch_isProcessing');
+                return this.getBinding('isProcessing') || this.getBinding('launch_isProcessing') ||  this.getBinding('parent_launch_isProcessing');
             }
         },
         initialize: function(options) {
