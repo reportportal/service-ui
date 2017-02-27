@@ -70,6 +70,9 @@ define(function (require, exports, module) {
             this.onChangeSelectionParameters();
             this.setupStickyHeader();
         },
+        onShow: function() {
+            this.tableItems.onShow && this.tableItems.onShow();
+        },
         activateNextId: function(id) {
             this.tableItems.activateNextId(id);
         },

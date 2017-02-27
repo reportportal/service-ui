@@ -86,11 +86,20 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
+        onShow: function() {
+            this.activateAccordions();
+        },
+        activateAccordions: function() {
+            _.each(this.renderedItems, function(view) {
+                view.activateAccordion();
+            });
+        },
         onLoadingCollection: function(state) {
             if(state) {
                 this.$el.addClass('load').removeClass('not-found');
                 return;
             }
+            this.activateAccordions();
             this.$el.removeClass('load');
             if(!this.collection.models.length) {
                 this.$el.addClass('not-found');

@@ -73,6 +73,9 @@ define(function (require, exports, module) {
                 $('[data-js-select-all]', this.$el).prop('checked', false);
             }
         },
+        onShow: function() {
+            this.tableItems.onShow && this.tableItems.onShow();
+        },
         onClickSorter: function(e) {
             var sorter = $(e.currentTarget).data('sorter');
             var filterParams = this.filterModel.getParametersObj();

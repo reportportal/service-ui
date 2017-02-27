@@ -25,8 +25,12 @@ $step-status-cell-width: 8%;
 $step-select-cell-width: 2%;
 $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - $step-status-cell-width - $step-select-cell-width);
 .step-grid {
-  .failed {
+  .rp-table-row.failed, .rp-table-row.failed:hover {
     background: $COLOR--light-red;
+    .accordion-block {
+      background: $COLOR--light-red;
+      box-shadow: 0 0px 20px 15px $COLOR--light-red;
+    }
   }
     .grid-cell {
         &.name-grid-cell {

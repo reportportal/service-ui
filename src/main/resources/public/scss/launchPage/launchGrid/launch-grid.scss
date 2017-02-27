@@ -19,5 +19,13 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'launches-item-menu';
-@import "launch-grid";
+.launch-grid {
+  .grid-cell.name-grid-cell {
+    padding-left: 10px;
+    &.rp-grid-th {
+      .text-overflow {
+        padding-left: 29px;
+      }
+    }
+  }
+}

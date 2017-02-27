@@ -51,6 +51,7 @@ define(function (require, exports, module) {
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-owner-name]': 'onClickOwnerName',
+            'click [data-js-toggle-open]': 'onClickOpen',
         },
         bindings: {
             ':el': 'classes: {"select-state": select}',
@@ -290,6 +291,16 @@ define(function (require, exports, module) {
                 item: this.model,
             })
             modal.show();
+        },
+        onClickOpen: function() {
+            this.$el.toggleClass('open');
+        },
+        activateAccordion: function() {
+            if (this.$el.innerHeight() > 198) {
+                this.$el.addClass('show-accordion');
+            } else {
+                this.$el.removeClass('show-accordion');
+            }
         },
         destroy: function () {
             this.menu && this.menu.destroy();

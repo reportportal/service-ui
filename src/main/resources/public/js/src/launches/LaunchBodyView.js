@@ -243,7 +243,8 @@ define(function (require, exports, module) {
                 filterModel: info.filterModel,
                 model: (info.parentModel || info.launchModel),
                 collectionItems: this.collectionItems,
-            })
+            });
+            this.body.onShow && this.body.onShow();
         },
         renderSuiteLevel: function(info) {
             this.control = new SuiteControlView({
@@ -258,7 +259,8 @@ define(function (require, exports, module) {
                 el: $('[data-js-info-container]', this.$el),
                 filterModel: info.filterModel,
                 collectionItems: this.collectionItems,
-            })
+            });
+            this.body.onShow && this.body.onShow();
         },
         renderLaunchLevel: function(filterModel) {
             this.control = new LaunchControlView({
@@ -272,6 +274,7 @@ define(function (require, exports, module) {
                 filterModel: filterModel,
                 collectionItems: this.collectionItems,
             });
+            this.body.onShow && this.body.onShow();
         },
         destroy: function () {
             this.stickyHeader && this.stickyHeader.destroy();
