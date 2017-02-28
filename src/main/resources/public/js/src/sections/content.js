@@ -26,9 +26,7 @@ define(function (require, exports, module) {
     var Util = require('util');
 
     // Main modules
-    var Dashboard = require('dashboard/dashboard-view');
     var Favorites = require('favorites/favorites');
-    var Launch = require('launch');
     var LaunchPage = require('launches/LaunchPage');
     var LaunchDebugPage = require('launches/LaunchDebugPage');
     var DashboardPage = require('dashboard/DashboardPage');
@@ -118,19 +116,15 @@ define(function (require, exports, module) {
         getViewForPage: function (name) {
             switch (name) {
                 case "dashboard":
-                    return Dashboard;
-                    break;
-                case "newdashboard":
                     return DashboardPage;
                     break;
                 case "filters":
                     return Favorites;
                     break;
-                case "launches":
                 case "userdebug":
                     return LaunchDebugPage;
                     break;
-                case "newlaunches":
+                case "launches":
                     return LaunchPage;
                     break;
                 case "members":
