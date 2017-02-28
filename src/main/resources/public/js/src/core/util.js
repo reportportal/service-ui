@@ -124,8 +124,7 @@ define(function (require, exports, module) {
             };
             String.prototype.escapeScript = function () {
                 return this
-                    .replace(/<script[^>]*>/gi, ' <!-- ')
-                    .replace(/<\/script>/gi, ' --> ');
+                    .replace(/(?!<code>)*<script*>*(?!<\/code>)/gi, ' ');
             };
 
             String.prototype.replaceNewLines = function () {

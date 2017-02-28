@@ -37,8 +37,15 @@ define(function (require, exports, module) {
             this.update(options.text.escapeScript());
         },
         update: function(text) {
+            // var checkHTML = function(html) {
+            //
+            //     return ( doc.innerHTML === html );
+            // };
             if(text) {
-                this.$el.html(this.simpleMDE.markdown(text.escapeScript()));
+                var html = this.simpleMDE.markdown(text.escapeScript());
+                var doc = document.createElement('div');
+                doc.innerHTML = html;
+                this.$el.html(doc.innerHTML);
             } else {
                 this.$el.html('');
             }

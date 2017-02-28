@@ -28,4 +28,12 @@
   padding: 1px 5px 3px;
   word-wrap: break-word;
   //white-space: pre-wrap;
+  .defect-color {
+    width: 12px;
+    height: 12px;
+    float: left;
+    display: block;
+    border-radius: 50%;
+    margin: 3px 9px 0 4px;
+  }
 }

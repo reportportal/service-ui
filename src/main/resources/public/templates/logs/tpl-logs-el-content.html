@@ -1,8 +1,0 @@
-<div class="item <%- data.contentData.cls %>">
-    <a href="<%= data.contentData.src %>" target="_blank" title="<%= data.text.ui.clickOpenNewWindow %>"><%= data.buffer  %></a>
-    <div class="carousel-caption" title="<%= data.text.ui.jumpToMessage %>"
-         data-scroll-to="<% if(data.img.thumbnail_id) { %><%= data.img.thumbnail_id %><% } else { %><%= data.img.id %><% } %>">
-        <p><%- data.contentData.message %></p>
-        <span class="arrow"><span class="glyphicon glyphicon-chevron-down icon-white"></span></span>
-    </div>
-</div>

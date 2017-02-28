@@ -71,6 +71,7 @@ define(function (require, exports, module) {
                 }
             }));
             this.listenTo(this.collectionItems, 'change:description change:tags', this.increaseRefreshItemsCount);
+            this.listenTo(this.collectionItems, 'loading', this.resetRefreshItems);
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-refine-entities]', this.$el),
                 filterLevel: 'suit',
@@ -106,12 +107,15 @@ define(function (require, exports, module) {
         },
         onClickRefresh: function() {
             this.collectionItems.load();
-            this.model.set({refreshItems: 0});
+            this.resetRefreshItems();
         },
         increaseRefreshItemsCount: function (model) {
             if (this.isAnyFilterEnabled() && this.isFilteredAttrChanged(model)) {
                 this.model.set({refreshItems: this.model.get('refreshItems') + 1});
             }
+        },
+        resetRefreshItems: function() {
+            this.model.set({refreshItems: 0});
         },
         isFilteredAttrChanged: function(model) {
             var self = this;

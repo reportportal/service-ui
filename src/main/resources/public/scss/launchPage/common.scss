@@ -21,18 +21,6 @@
 
 
 .suit-grid, .step-grid, .log-grid {
-
-  .rp-table-row {
-    &.select-state {
-      background-color: $COLOR--gray-91;
-    }
-    &:hover {
-      .item-edit-icon, .edit-defect {
-        opacity: 1;
-      }
-    }
-  }
-
   .rp-grid-thead {
     .grid-cell {
       .short-size {

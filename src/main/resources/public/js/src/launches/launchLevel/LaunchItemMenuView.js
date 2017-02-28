@@ -25,7 +25,7 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var Editor = require('launchEditor');
+    // var Editor = require('launchEditor');
     var Urls = require('dataUrlResolver');
     var Service = require('coreService');
     var Localization = require('localization');

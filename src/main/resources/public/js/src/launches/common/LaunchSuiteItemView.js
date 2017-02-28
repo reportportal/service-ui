@@ -51,7 +51,8 @@ define(function (require, exports, module) {
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-owner-name]': 'onClickOwnerName',
-            'click [data-js-statistics-to-investigate]': 'onClickToInvestigate'
+            'click [data-js-statistics-to-investigate]': 'onClickToInvestigate',
+            'click [data-js-toggle-open]': 'onClickOpen'
         },
         bindings: {
             ':el': 'classes: {"select-state": select}',
@@ -206,6 +207,7 @@ define(function (require, exports, module) {
             this.markdownViewer = new MarkdownViewer({text: this.model.get('description')});
             $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
             this.listenTo(this.model, 'change:description', function(model, description){ self.markdownViewer.update(description); });
+            this.listenTo(this.model, 'change:description change:tags', this.activateAccordion);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {type: this.model.get('type')}));
@@ -295,6 +297,16 @@ define(function (require, exports, module) {
                 item: this.model,
             })
             modal.show();
+        },
+        onClickOpen: function() {
+            this.$el.toggleClass('open');
+        },
+        activateAccordion: function() {
+            if (this.$el.innerHeight() > 198) {
+                this.$el.addClass('show-accordion');
+            } else {
+                this.$el.removeClass('show-accordion');
+            }
         },
         destroy: function () {
             this.menu && this.menu.destroy();
