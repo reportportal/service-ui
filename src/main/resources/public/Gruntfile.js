@@ -107,6 +107,13 @@ module.exports = function (grunt) {
                     dest: publicPath + '/',
                     filter: 'isFile'
                 }]
+            },
+            swagger: {
+                files: [{
+                    cwd: rootPath,
+                    src: 'swagger-ui/**',
+                    dest: publicPath + '/'
+                }]
             }
         },
         cssmin: {
@@ -384,6 +391,7 @@ module.exports = function (grunt) {
             'concat:develop',
             'copy:main',
             'copy:mainDevelop',
+            'copy:swagger',
             'copy:certificate',
             'postcss:develop',
             'string-replace:jsDist',
@@ -405,6 +413,7 @@ module.exports = function (grunt) {
             'copy:mainProduction',
             'copy:certificate',
             'copy:jsLib',
+            'copy:swagger',
             'postcss:production',
             'cssmin',
             'sync:production',
