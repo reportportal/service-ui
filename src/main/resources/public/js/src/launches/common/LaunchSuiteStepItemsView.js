@@ -91,7 +91,7 @@ define(function (require, exports, module) {
         },
         activateAccordions: function() {
             _.each(this.renderedItems, function(view) {
-                view.activateAccordion();
+                view.activateAccordion && view.activateAccordion();
             });
         },
         onLoadingCollection: function(state) {

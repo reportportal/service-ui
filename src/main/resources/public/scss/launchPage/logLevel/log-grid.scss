@@ -21,15 +21,18 @@
 
 .log-grid {
   .message-grid-cell {
+    position: relative;
     width: 70%;
     i {
       display: none;
     }
   }
   .attachment-grid-cell {
+    position: relative;
     width: 12%;
   }
   .time-grid-cell {
+    position: relative;
     font-family: $FontMonacoMonospace;
     width: 18%;
   }
