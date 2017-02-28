@@ -206,6 +206,7 @@ define(function (require, exports, module) {
             this.markdownViewer = new MarkdownViewer({text: this.model.get('description')});
             $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
             this.listenTo(this.model, 'change:description', function(model, description){ self.markdownViewer.update(description); });
+            this.listenTo(this.model, 'change:description change:tags', this.activateAccordion);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {type: this.model.get('type')}));

@@ -23,6 +23,7 @@
   .rp-table-row {
     max-height: 200px;
     overflow: hidden;
+
     &.open {
       max-height: 100%;
       padding-bottom: 40px;
@@ -83,12 +84,23 @@
         display: block;
       }
     }
+    &.select-state {
+      background-color: $COLOR--gray-91;
+      .accordion-block {
+        background: $COLOR--gray-91;
+        box-shadow: 0 0 20px 15px $COLOR--gray-91;
+      }
+    }
     &:hover {
       background: $COLOR--tealish-light;
       .accordion-block {
         background: $COLOR--tealish-light;
         box-shadow: 0 0 20px 15px $COLOR--tealish-light;
       }
+      .item-edit-icon, .edit-defect {
+        opacity: 1;
+      }
     }
+
   }
 }
