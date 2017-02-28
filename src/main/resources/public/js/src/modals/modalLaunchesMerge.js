@@ -51,6 +51,8 @@ define(function (require, exports, module) {
             'click [data-js-submit]': 'submit',
             'change #mergeName': 'validate',
             'change #mergeDescription': 'validate',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
 
         walkThroughLaunches: function () {
@@ -146,8 +148,15 @@ define(function (require, exports, module) {
         //     }, this);
         // },
 
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(80);
+        },
+        onClickCancel: function(){
+            config.trackingDispatcher.trackEventNumber(81);
+        },
         submit: function () {
             if (!$(".has-error", this.$el).length) {
+                config.trackingDispatcher.trackEventNumber(82);
                 var data = {
                     tags: this.$tags.val().trim().split(','),
                     start_time: new Date().valueOf(),

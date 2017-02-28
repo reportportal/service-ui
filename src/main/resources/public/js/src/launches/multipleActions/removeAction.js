@@ -28,6 +28,9 @@ define(function (require, exports, module) {
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
     var Localization = require('localization');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var RemoveAction = function(options) {
         var items = options.items;
@@ -50,6 +53,7 @@ define(function (require, exports, module) {
             cancelButtonText: Localization.ui.cancel,
             okButtonText: Localization.ui.delete,
             confirmFunction: function() {
+                config.trackingDispatcher.trackEventNumber(79);
                 var ids = _.map(items, function(item) {
                     return item.get('id');
                 });
@@ -64,6 +68,15 @@ define(function (require, exports, module) {
                 }).fail(function(err) {
                     Util.ajaxFailMessenger(err, message);
                 })
+            }
+        });
+        modal.$el.on('click', function(e){
+            var $target = $(e.target);
+            if ($target.is('[data-js-close]') || $target.is('[data-js-close] i')) {
+                config.trackingDispatcher.trackEventNumber(77);
+            }
+            if($target.is('[data-js-cancel]')){
+                config.trackingDispatcher.trackEventNumber(78);
             }
         });
 

@@ -277,7 +277,9 @@ define(function (require, exports, module) {
             }
         },
         reset: function() {
-            this.onClickClose();
+            while(this.collection.models.length) {
+                this.collection.at(0).set({select: false});
+            }
         },
         onClickProceed: function() {
             config.trackingDispatcher.trackEventNumber(70);
@@ -291,9 +293,7 @@ define(function (require, exports, module) {
         },
         onClickClose: function() {
             config.trackingDispatcher.trackEventNumber(68);
-            while(this.collection.models.length) {
-                this.collection.at(0).set({select: false});
-            }
+            this.reset();
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));

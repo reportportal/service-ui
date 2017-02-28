@@ -91,11 +91,23 @@ define(function(require, exports, module) {
         64: ['Launches', 'Click on Bttn "Move to Debug" in list of actions', 'Arise Modal "Move to Debug"'],
         65: ['Launches', 'Click on Bttn "Force Finish" in list of actions', 'Force Finish'],
         66: ['Launches', 'Click on Bttn "Delete" in list of actions', 'Arise Modal "Delete Launch"'],
-
         67: ['Launches', 'Click on Close Icon on Tag of Launch', 'Remove launch from  selection'],
         68: ['Launches', 'Click on Close Icon of all selection', 'Unselect all launches'],
         69: ['Launches', 'Click on Close Icon on Error Tag of Launch', 'Remove launch from  selection'],
-        70: ['Launches', 'Click on Bttn "Proceed Valid Items"', 'Remove invalid launches from selection']
+        70: ['Launches', 'Click on Bttn "Proceed Valid Items"', 'Remove invalid launches from selection'],
+        71: ['Modal Launches', 'Click on Close Icon on Modal "Edit Launch"', 'Close modal "Edit Launch"'],
+        72: ['Modal Launches', 'Click on Bttn Cancel on Modal "Edit Launch"', 'Close modal "Edit Launch"'],
+        73: ['Modal Launches', 'Click on Bttn Save on Modal "Edit Launch"', 'Save changes "Edit Launch"'],
+        74: ['Modal Launches', 'Click on Close Icon on Modal "Move to Debug"', 'Close modal "Move to Debug"'],
+        75: ['Modal Launches', 'Click on Bttn Cancel on Modal "Move to Debug"', 'Close modal "Move to Debug"'],
+        76: ['Modal Launches', 'Click on Bttn Save on Modal "Move to Debug"', 'Save changes "Move to Debug"'],
+        77: ['Modal Launches', 'Click on Close Icon on Modal "Delete Launch"', 'Close modal "Delete Launch"'],
+        78: ['Modal Launches', 'Click on Bttn Cancel on Modal "Delete Launch"', 'Close modal "Delete Launch"'],
+        79: ['Modal Launches', 'Click on Bttn Delete on Modal "Delete Launch"', 'Delete launch mentioned in modal "Delete Launch"'],
+        80: ['Modal Launches', 'Click on Close Icon on Modal "Merge Launches"', 'Close modal "Merge Launches"'],
+        81: ['Modal Launches', 'Click on Bttn Cancel on Modal "Merge Launches"', 'Close modal "Merge Launches"'],
+        82: ['Modal Launches', 'Click on Bttn Merge on Modal "Merge Launches"', 'Merge launches mentioned in modal "Merge Launches"'],
+
     }
 
     function getExportTitle(type){

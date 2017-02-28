@@ -42,6 +42,8 @@ define(function (require, exports, module) {
 
         events: {
             'click [data-js-save]': 'onClickSave',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
 
         initialize: function (option) {
@@ -147,9 +149,16 @@ define(function (require, exports, module) {
         render: function () {
             this.$el.html(Util.templates(this.template, {isEditLaunch: this.isEditLaunch()}));
         },
+        onClickClose: function(e){
+            config.trackingDispatcher.trackEventNumber(71);
+        },
+        onClickCancel: function(e){
+            config.trackingDispatcher.trackEventNumber(72);
+        },
         onClickSave: function() {
             $('.form-control', this.$el).trigger('validate');
             if (!$('.has-error', this.$el).length) {
+                config.trackingDispatcher.trackEventNumber(73);
                 var tags = [];
                 if (this.viewModel.get('tagsString') != '') {
                     tags = this.viewModel.get('tagsString').split(',');
