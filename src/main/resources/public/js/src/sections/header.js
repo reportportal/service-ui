@@ -204,7 +204,7 @@ define(function (require, exports, module) {
             if ($el.parent().hasClass('active')) {
                 return;
             }
-            config.userModel.updateDefaultProject(project);
+            // config.userModel.updateDefaultProject(project);
             config.userModel.set('bts', null);
             config.trackingDispatcher.trackEventNumber(11);
             config.router.navigate($el.attr('data-href'), {trigger: true});

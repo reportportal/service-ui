@@ -113,7 +113,7 @@ define(function (require, exports, module) {
             ':project/dashboard/:id': 'openDashboard',
             ':project/dashboard/:id?*queryString': 'openDashboard',
 
-            ':project(/)': 'openNewDashboard',
+            ':project(/)': 'openDashboard',
             '*invalidRoute': "show404Page"
         },
         show404Page: function (route) {

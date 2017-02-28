@@ -70,6 +70,10 @@ $urlFontReportPortal: '../fonts/font-ReportPortal/Report-Portal-Font';
 $urlFontMaterialIconsRegular: '../fonts/font-MaterialIconsRegular/MaterialIcons-Regular';
 @include font-face('MaterialIconsRegular', $urlFontMaterialIconsRegular, normal, 400);
 
+/* Font OpenSansCondLight */
+$urlOpenSansCondLight: '../fonts/font-OpenSansCondensedLight/OpenSans-CondLight-webfont';
+@include font-face('OpenSansCondLight', $urlOpenSansCondLight, normal, normal, true);
+
 /* Font OswaldRegular */
 $urlFontOswaldRegular: '../fonts/font-OswaldRegular/oswald-regular';
 @include font-face('OswaldRegular', $urlFontOswaldRegular, normal, normal);
@@ -90,6 +94,7 @@ $urlFontSlick: '../fonts/font-Slick/slick';
 
 $ReportPortal: "ReportPortal", sans-serif;
 
+$OpenSansCondLight: "OpenSansCondLight", sans-serif;
 $OswaldRegular: "OswaldRegular", sans-serif;
 
 $OpenSansRegular: "OpenSansRegular", sans-serif;
