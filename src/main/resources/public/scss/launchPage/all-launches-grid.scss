@@ -84,6 +84,13 @@
         display: block;
       }
     }
+    &.failed {
+      background: $COLOR--light-red;
+      .accordion-block {
+        background: $COLOR--light-red;
+        box-shadow: 0 0px 20px 15px $COLOR--light-red;
+      }
+    }
     &.select-state {
       background-color: $COLOR--gray-91;
       .accordion-block {

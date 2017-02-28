@@ -182,6 +182,7 @@ define(function (require, exports, module) {
                     .done(function (data) {
                         self.originalModel.set(self.model.toJSON());
                         self.successClose(data.id);
+                        Util.ajaxSuccessMessenger('widgetSave');
                     })
                     .fail(function (error) {
                         Util.ajaxFailMessenger(null, 'widgetSave');
