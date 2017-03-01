@@ -26,6 +26,9 @@ define(function (require, exports, module) {
     var _ = require('underscore');
     var Util = require('util');
     var Epoxy = require('backbone-epoxy');
+    var App = require('app');
+
+    var config = App.getInstance();
 
 
     var FilterEntityChoiceView = Epoxy.View.extend({
@@ -38,14 +41,21 @@ define(function (require, exports, module) {
             ':el': 'classes: {hide: required}',
             '[data-js-check-visible]': 'checked: visible',
         },
-
-        initialize: function () {
+        initialize: function (options) {
+            this.filterLevel = options.filterLevel;
             this.render();
+            this.listenTo(this.model, 'change:visible', this.onSelectEntity);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
-
+        onSelectEntity: function(model){
+            if(model.get('visible') && !model.get('required')){
+                if(this.filterLevel == 'suit'){
+                    config.trackingDispatcher.trackEventNumber(97.2);
+                }
+            }
+        }
     });
 
     return FilterEntityChoiceView;

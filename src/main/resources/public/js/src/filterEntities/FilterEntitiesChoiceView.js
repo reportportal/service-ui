@@ -27,12 +27,17 @@ define(function (require, exports, module) {
     var Util = require('util');
     var Epoxy = require('backbone-epoxy');
     var FilterEntityChoiceView = require('filterEntities/FilterEntityChoiceView');
+    var App = require('app');
 
+    var config = App.getInstance();
 
     var FilterEntitiesChoiceView = Epoxy.View.extend({
         template: 'tpl-filter-entities-choice',
-
-        initialize: function () {
+        events: {
+            'click [data-toggle="dropdown"]': 'onClickMoreEntities'
+        },
+        initialize: function (options) {
+            this.filterLevel = options.filterLevel;
             this.render();
         },
         render: function() {
@@ -41,9 +46,15 @@ define(function (require, exports, module) {
             _.each(this.collection.models, function(model) {
                 this.$choiceList.append((new FilterEntityChoiceView({
                     model: model,
+                    filterLevel: this.filterLevel
                 })).$el);
             }, this)
         },
+        onClickMoreEntities: function(){
+            if(this.filterLevel == 'suit'){
+                config.trackingDispatcher.trackEventNumber(97.1);
+            }
+        }
 
     });
 

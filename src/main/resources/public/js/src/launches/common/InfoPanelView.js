@@ -113,6 +113,11 @@ define(function (require, exports, module) {
                 }
             }
         },
+        events: {
+            'mouseenter [data-js-hover-element]': 'onHoverExecutionStats',
+            'mouseenter [data-js-duration]': 'onHoverDuration',
+            'mouseenter [data-js-defect-type]': 'onHoverDefects'
+        },
         initialize: function(options) {
             this.defectTypes = this.getDefectTypes();
             this.render();
@@ -129,6 +134,32 @@ define(function (require, exports, module) {
         },
         update: function () {
             this.loadDefectTooltip();
+        },
+        onHoverExecutionStats: function(){
+            config.trackingDispatcher.trackEventNumber(89);
+        },
+        onHoverDuration: function(){
+            config.trackingDispatcher.trackEventNumber(90);
+        },
+        onHoverDefects: function(e){
+            var type = $(e.currentTarget).data('js-defect-type');
+            switch (type) {
+                case 'product_bug':
+                    config.trackingDispatcher.trackEventNumber(91);
+                    break;
+                case 'automation_bug':
+                    config.trackingDispatcher.trackEventNumber(92);
+                    break;
+                case 'system_issue':
+                    config.trackingDispatcher.trackEventNumber(93);
+                    break;
+                case 'to_investigate':
+                    config.trackingDispatcher.trackEventNumber(94);
+                    break;
+                case 'no_defect':
+                    config.trackingDispatcher.trackEventNumber(95);
+                    break;
+            }
         },
         getExecutionStats: function(stats, type){
             var exec = stats.executions,
