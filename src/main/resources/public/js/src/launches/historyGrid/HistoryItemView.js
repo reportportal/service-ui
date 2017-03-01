@@ -141,6 +141,7 @@ define(function (require, exports, module) {
         },
         onClickName: function(e) {
             e.preventDefault();
+            config.trackingDispatcher.trackEventNumber(133);
             var href = $(e.currentTarget).attr('href');
             if(href) {
                 config.router.navigate(href, {trigger: true});

@@ -113,14 +113,12 @@ define(function(require, exports, module) {
         80: ['Modal Launches', 'Click on Close Icon on Modal "Merge Launches"', 'Close modal "Merge Launches"'],
         81: ['Modal Launches', 'Click on Bttn Cancel on Modal "Merge Launches"', 'Close modal "Merge Launches"'],
         82: ['Modal Launches', 'Click on Bttn Merge on Modal "Merge Launches"', 'Merge launches mentioned in modal "Merge Launches"'],
-
         83: ['Suite', 'Click on Bread Crumb icon Plus/Minus', 'Show/Hide all names of items'],
         84: ['Suite', 'Click on Bread Crumb All', 'Transition to Launches Page'],
         85: ['Suite', 'Click on Bread Crumb Item name', 'Transition to Item'],
         86: ['Suite', 'Click on Bttn Delete', 'Delete selected Items'],
         87: ['Suite', 'Click on Bttn History', 'Transition to History View Page'],
         88: ['Suite', 'Click on Bttn Refresh', 'Refresh the page'],
-
         89: ['Suite', 'Hover on Status bar', getTooltipDescription()],
         90: ['Suite', 'Hover on Duration', getTooltipDescription()],
         91: ['Suite', 'Hover on Info line "PB"', getTooltipDescription()],
@@ -128,7 +126,6 @@ define(function(require, exports, module) {
         93: ['Suite', 'Hover on Info line "SI"', getTooltipDescription()],
         94: ['Suite', 'Hover on Info line "TI"', getTooltipDescription()],
         95: ['Suite', 'Hover on Info line "ND"', getTooltipDescription()],
-
         96: ['Suite', 'Enter parameters to refine by name', 'Refine by name'],
         97.1: ['Suite', 'Click on Refine bttn More', 'Arise dropdown with parameters'],
         97.2: ['Suite', 'Select parameters to refine', 'Show parameters fields to refine'],
@@ -139,7 +136,6 @@ define(function(require, exports, module) {
         102: ['Suite', 'Edit description in Modal "Edit Item"', 'Edit description'],
         103: ['Suite', 'Click on Bttn Cancel on Modal "Edit Item"', 'Close modal "Edit Item"'],
         104: ['Suite', 'Click on Bttn Save on Modal "Edit Item"', 'Save changes'],
-
         105: ['Suite', 'Click on icon "filter" on Name', '"Suite name" input becomes active'],
         106: ['Suite', 'Click on icon "sorting" on Name', 'Sort items by name'],
         107: ['Suite', 'Click on icon "filter" on Start time', 'Arises active "Start time" input'],
@@ -160,7 +156,6 @@ define(function(require, exports, module) {
         122: ['Suite', 'Click on icon "sorting" on System Issue', 'Sort items by System Issue'],
         123: ['Suite', 'Click on icon "filter" on To Investigate', 'Arises active "To Investigate" input'],
         124: ['Suite', 'Click on icon "sorting" on To Investigatee', 'Sort items by To Investigate'],
-
         125: ['Suite', 'Hover on PB Circle', 'Arise Tooltip with "Total Product Bugs"'],
         126.1: ['Suite', 'Click on PB Circle', 'Transition to PB list view'],
         126.2: ['Suite', 'Click on Tooltip "Total Product Bugs"', 'Transition to PB list view'],
@@ -169,8 +164,12 @@ define(function(require, exports, module) {
         128.2: ['Suite', 'Click on Tooltip "Auto Bug"', 'Transition to AB list view '],
         129: ['Suite', 'Hover on SI Circle', 'Arise Tooltip with "Total System Issue"'],
         130.1: ['Suite', 'Click on SI Circle', 'Transition to SI list view '],
-        130.2: ['Suite', 'Click on Tooltip "Total System Issue"', 'Transition to SI list view '],
+        130.2: ['Suite', 'Click on Tooltip "Total System Issue"', 'Transition to SI list view'],
         131: ['Suite', 'Click on TI tag', 'Transition to TI list view '],
+
+        132: ['History View', 'Select "history depth"', 'Show parameter of selected "history depth"'],
+        133: ['History View', 'Click on item', 'Transition to "Item"'],
+        134: ['History View', 'Hover on defect type tag', getTooltipDescription()],
 
 
     }

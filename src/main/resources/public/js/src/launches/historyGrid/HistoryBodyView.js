@@ -152,6 +152,7 @@ define(function (require, exports, module) {
         onChangeDepth: function(){
             var info = this.depthFilterModel.getInfo();
             this.depth = info.value;
+            config.trackingDispatcher.trackEventNumber(132);
             this.onRefreshGrid();
         },
         getItemsForLoad: function(){
