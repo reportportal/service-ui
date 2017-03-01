@@ -21,12 +21,19 @@
 
 .all-launches-grid {
   .rp-table-row {
-    max-height: 200px;
-    overflow: hidden;
+    padding: 0;
+    .overflow-wrapper {
+      position: relative;
+      padding: 13px 0;
+      max-height: 200px;
+      overflow: hidden;
+    }
 
     &.open {
-      max-height: 100%;
-      padding-bottom: 40px;
+      .overflow-wrapper {
+        max-height: 100%;
+        padding-bottom: 27px;
+      }
       .accordion-block {
         box-shadow: none !important;
         i {

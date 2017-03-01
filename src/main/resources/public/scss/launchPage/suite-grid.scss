@@ -124,9 +124,6 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
         }
         &.launch-name-cell {
           padding-left: 0;
-          .btn-group {
-            display: none;
-          }
           .name-grid-overflow {
             padding-left: 10px;
           }
