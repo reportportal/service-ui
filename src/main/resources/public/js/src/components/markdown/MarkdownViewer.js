@@ -47,6 +47,9 @@ define(function (require, exports, module) {
                         self.trigger('load');
                     }
                 });
+                $('a', doc).each(function() {
+                    $(this).attr({target: '_blank'});
+                });
                 this.$el.html(doc.innerHTML);
             } else {
                 this.$el.html('');
