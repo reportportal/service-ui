@@ -102,7 +102,7 @@
     margin-top: -10px;
     text-transform: uppercase;
     color: #97ca9b;
-    font-family: "OswaldRegular", sans-serif;
+    font-family: $OpenSansCondBold;
     font-size: 20px;
     font-weight: lighter;
 }
@@ -345,7 +345,7 @@
 }
 
 .b-leaves .b-leaf__info .b-leafinfo__header {
-    font-family: "OswaldRegular", sans-serif;
+    font-family: $OpenSansCondBold;
     font-weight: bolder;
     font-size: 20px;
     text-transform: uppercase;

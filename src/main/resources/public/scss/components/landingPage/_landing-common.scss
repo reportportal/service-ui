@@ -144,7 +144,7 @@
 }
 
 .landing-page.documentation {
-    font-family: "OswaldRegular", sans-serif;
+    font-family: $OpenSansCondBold;
 }
 /*
 .landing-page .b-main {
@@ -201,7 +201,7 @@ main {
     margin-top: 60px;
     margin-bottom: 30px;
     text-transform: uppercase;
-    font-family: "OswaldRegular", sans-serif;
+    font-family: $OpenSansCondBold;
     font-weight: bolder;
     font-size: 44px;
     color: #666666;
