@@ -62,7 +62,7 @@
 
         & > h5 {
             display: inline-block;
-            font-family: $OswaldRegular;
+          @include fontHeader;
             min-height: 30px;
             font-size: 16px;
             line-height: 30px;

@@ -1,10 +1,6 @@
-
+<div class="overflow-wrapper">
     <div class="grid-cell name-grid-cell name-cell <%= (data.type == 'LAUNCH') ? 'launch-name-cell' : '' %>">
-        <div class="btn-group" data-js-launch-edit>
-            <a class="item-menu" data-js-launch-menu data-toggle="dropdown" href="#">
-                <i class="rp-svg-icon svg-icon-menu-size-14"></i>
-            </a>
-        </div>
+
         <div class="name-grid-overflow">
             <h5 class="rp-grid-name">
                 <a href="" data-js-name-link><span data-js-name></span><span data-js-launch-number></span></a><span class="autoanalyze" data-js-analize-label><%= data.text.ui.analyze %></span>&nbsp;&nbsp;<i class="item-edit-icon material-icons" data-js-item-edit>edit</i>
@@ -55,3 +51,11 @@
         <i class="material-icons" data-js-toggle-open>keyboard_arrow_down</i>
         <i class="material-icons little" data-js-toggle-open>keyboard_arrow_up</i>
     </div>
+</div>
+<% if(data.type == 'LAUNCH') { %>
+<div class="btn-group" data-js-launch-edit>
+    <a class="item-menu" data-js-launch-menu data-toggle="dropdown" href="#">
+        <i class="rp-svg-icon svg-icon-menu-size-14"></i>
+    </a>
+</div>
+<% } %>

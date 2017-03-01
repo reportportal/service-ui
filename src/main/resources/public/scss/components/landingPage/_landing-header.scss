@@ -72,7 +72,7 @@
 
 .b-header .navbar-default .navbar-nav > li > a,
 .b-header .navbar-default .navbar-nav > .menu-item > a {
-  font-family: "OswaldRegular", sans-serif;
+  @include fontHeader;
   font-size: 18px;
   font-weight: lighter;
   text-transform: uppercase;

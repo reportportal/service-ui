@@ -20,12 +20,22 @@
  */
 
 .launch-grid {
+  .btn-group {
+    position: absolute;
+    top: 15px;
+    left: 10px;
+  }
   .grid-cell.name-grid-cell {
     padding-left: 10px;
     &.rp-grid-th {
       .text-overflow {
         padding-left: 29px;
       }
+    }
+  }
+  @media (max-width: 900px) {
+    .btn-group {
+      display: none;
     }
   }
 }

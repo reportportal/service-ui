@@ -105,6 +105,7 @@ define(function (require, exports, module) {
             $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
             this.listenTo(this.model, 'change:description', function(model, description){ self.markdownViewer.update(description); });
             this.listenTo(this.model, 'change:description change:tags change:issue', this.activateAccordion);
+            this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
@@ -147,6 +148,7 @@ define(function (require, exports, module) {
                 model: this.model,
                 el: $('[data-js-step-issue]', this.$el)
             });
+            this.listenTo(this.issueView, 'load:comment', this.activateAccordion);
         },
         onClickTag: function(e) {
             var tag = $(e.currentTarget).data('js-tag');
