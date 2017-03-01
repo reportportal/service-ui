@@ -63,8 +63,9 @@ define(function (require, exports, module) {
         initialize: function() {
             this.render();
             this.listenTo(this.model, 'scrollTo', this.scrollTo);
-            var markdownViewer = new MarkdownViewer({text: this.model.get('message')});
-            $('[data-js-message]', this.$el).html(markdownViewer.$el);
+            this.markdownViewer = new MarkdownViewer({text: this.model.get('message')});
+            $('[data-js-message]', this.$el).html(this.markdownViewer.$el);
+            this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
         },
 
         resize: function() {

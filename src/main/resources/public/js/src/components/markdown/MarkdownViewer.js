@@ -34,17 +34,19 @@ define(function (require, exports, module) {
 
         initialize: function(options) {
             this.simpleMDE = new SingletonMarkdownObject();
-            this.update(options.text.escapeScript());
+            this.update(options.text);
         },
         update: function(text) {
-            // var checkHTML = function(html) {
-            //
-            //     return ( doc.innerHTML === html );
-            // };
             if(text) {
                 var html = this.simpleMDE.markdown(text.escapeScript());
                 var doc = document.createElement('div');
+                var self = this;
                 doc.innerHTML = html;
+                $('img', doc).each(function() {
+                    this.onload = function() {
+                        self.trigger('load');
+                    }
+                });
                 this.$el.html(doc.innerHTML);
             } else {
                 this.$el.html('');

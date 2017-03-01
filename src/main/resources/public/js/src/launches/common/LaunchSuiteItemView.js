@@ -208,6 +208,7 @@ define(function (require, exports, module) {
             $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
             this.listenTo(this.model, 'change:description', function(model, description){ self.markdownViewer.update(description); });
             this.listenTo(this.model, 'change:description change:tags', this.activateAccordion);
+            this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {type: this.model.get('type')}));
