@@ -53,7 +53,7 @@ common elements:
         text-transform: uppercase;
         padding: 0;
         margin: 0;
-        font-family: OpenSansCondBold;
+        @include fontHeader;
         font-size: 18px;
         color: $COLOR--topaz;
       }

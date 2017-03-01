@@ -157,7 +157,8 @@
         margin: 0;
 
         .project-name {
-            font: normal 16px $OpenSansCondBold;
+            font-size: 16px;
+            @include fontHeader;
             text-transform: uppercase;
             color: $COLOR--topaz;
             .name {

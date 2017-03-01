@@ -59,7 +59,7 @@
        padding-left: 0;
        padding-right: 0;
        border: initial;
-       font-family: $OpenSansCondBold;
+       @include fontHeader;
 
        .mobile-main-header {
          .button-menu-open {
@@ -260,7 +260,7 @@
                    text-overflow: ellipsis;
                    white-space: nowrap;
                    color: $COLOR--white-default;
-                   font-family: $OpenSansCondBold;
+                   @include fontHeader;
                    font-size: 12px;
                    line-height: 14px;
                    text-shadow: 1px 2px 2px rgba(39,39,40,.4);
@@ -315,7 +315,7 @@
                  padding: 0;
 
                  a {
-                   font-family: $OpenSansCondBold;
+                   @include fontHeader;
                    font-size: 14px;
                    clear: both;
                    display: block;
@@ -439,7 +439,7 @@
                        text-overflow: ellipsis;
                        overflow: hidden;
                        line-height: 24px;
-                       font-family: $OpenSansCondBold;
+                       @include fontHeader;
                        font-size: 16px;
                        clear: both;
                        padding: 10px 19px;
@@ -524,7 +524,7 @@
          .admin_header {
            margin: 5px 15px;
            padding: 0;
-           font-family: $OpenSansCondBold;
+           @include fontHeader;
            font-size: 20px;
            text-transform: uppercase;
            @media (max-width: $SCREEN_XS_MAX){
@@ -550,7 +550,7 @@
 
            .backToProject {
              position: relative;
-             font-family: $OpenSansCondBold;
+             @include fontHeader;
              font-size: 13px;
              line-height: 30px;
              margin-right: 5px;

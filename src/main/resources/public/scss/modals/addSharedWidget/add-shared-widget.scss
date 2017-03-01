@@ -71,7 +71,7 @@
     position: relative;
     margin: 20px 0 40px 20px;
     h1 {
-      font-family: $OpenSansCondBold;
+      @include fontHeader;
       color: $COLOR--gray-47;
       font-size: 17px;
       text-align: center;

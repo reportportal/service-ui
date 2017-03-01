@@ -98,3 +98,8 @@ $OpenSansSemibold: "OpenSansSemibold", sans-serif;
 $FontMonacoMonospace: Menlo, Monaco, Consolas, "Courier New", monospace;
 
 $MaterialIconsRegular: "MaterialIconsRegular", sans-serif;
+
+@mixin fontHeader() {
+  font-family: $OpenSansCondBold;
+  letter-spacing: 1px;
+}
