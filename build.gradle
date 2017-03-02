@@ -54,17 +54,13 @@ description = 'EPAM Report portal. UI Service'
 
 dependencies {
 //    compile 'org.springframework.cloud:spring-cloud-starter-config'
-    /* required for spring-retry and pooling for config from registry-service */
+    /* required for spring-retry and pooling for config from registry-service and consul*/
     compile("org.springframework.retry:spring-retry")
     compile "org.aspectj:aspectjweaver:${aspectjVersion}"
 
     compile 'org.springframework.cloud:spring-cloud-starter-eureka'
     compile 'org.springframework.cloud:spring-cloud-starter-consul-discovery'
     compile 'org.springframework.boot:spring-boot-starter-actuator'
-
-    compile 'io.springfox:springfox-swagger-ui:2.3.0'
-
-
 }
 
 jar {
