@@ -240,7 +240,7 @@ define(function(require, exports, module) {
         },
 
         resetForm: function() {
-            $('.rp-field', this.$el).find('input:enabled').val('');
+            $('.rp-field', this.$el).removeClass('validate-error').find('input:enabled').val('');
         },
 
         destroy: function(){
