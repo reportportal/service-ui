@@ -70,9 +70,9 @@ $urlFontReportPortal: '../fonts/font-ReportPortal/Report-Portal-Font';
 $urlFontMaterialIconsRegular: '../fonts/font-MaterialIconsRegular/MaterialIcons-Regular';
 @include font-face('MaterialIconsRegular', $urlFontMaterialIconsRegular, normal, 400);
 
-/* Font OswaldRegular */
-$urlFontOswaldRegular: '../fonts/font-OswaldRegular/oswald-regular';
-@include font-face('OswaldRegular', $urlFontOswaldRegular, normal, normal);
+/* Font OpenSansCondLight */
+$urlOpenSansCondBold: '../fonts/font-OpenSansCondensedBold/OpenSans-CondBold-webfont';
+@include font-face('OpenSansCondBold', $urlOpenSansCondBold, normal, normal, true);
 
 /* Font OpenSansRegular */
 $urlFontOpenSansRegular: '../fonts/font-OpenSansRegular/open-sans-regular';
@@ -90,7 +90,7 @@ $urlFontSlick: '../fonts/font-Slick/slick';
 
 $ReportPortal: "ReportPortal", sans-serif;
 
-$OswaldRegular: "OswaldRegular", sans-serif;
+$OpenSansCondBold: "OpenSansCondBold", sans-serif;
 
 $OpenSansRegular: "OpenSansRegular", sans-serif;
 $OpenSansSemibold: "OpenSansSemibold", sans-serif;
@@ -98,3 +98,8 @@ $OpenSansSemibold: "OpenSansSemibold", sans-serif;
 $FontMonacoMonospace: Menlo, Monaco, Consolas, "Courier New", monospace;
 
 $MaterialIconsRegular: "MaterialIconsRegular", sans-serif;
+
+@mixin fontHeader() {
+  font-family: $OpenSansCondBold;
+  letter-spacing: 1px;
+}

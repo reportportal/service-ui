@@ -65,7 +65,7 @@ define(function (require, exports, module) {
             this.user.ready.done(function () {
                 self.listenTo(self.user, 'change:auth', self.onChangeUserAuth.bind(self));
             });
-            this.route(/^(.*)\/oldlaunches\/all(.*)$/, "openLaunches");
+            // this.route(/^(.*)\/oldlaunches\/all(.*)$/, "openLaunches");
             //this.route(/^(.*)\/userdebug\/all(.*)$/, "openUserDebug");
         },
         onChangeUserAuth: function (model, auth) {
@@ -91,36 +91,31 @@ define(function (require, exports, module) {
             'documentation/:id': 'openDocumentation',
             'user-profile': 'userProfile',
             'registration?*queryString': 'registerUser',
+
             'administrate/project-details/:id?*queryString': 'openAdminProjectDetails',
             'administrate/project-details/:id': 'openAdminProjectDetails',
             'administrate/project-details/:id/:action': 'openAdminProjectDetails',
-            //'administrate/:page/:id?*queryString': 'openAdminResource',
-            //'administrate/:page/:id': 'openAdminResource',
-            //'administrate/:page/:id/:action?*queryString': 'openAdminResource',
-            //'administrate/:page/:id/:action': 'openAdminResource',
             'administrate/project-details/:id/:action/:userAction': 'openAdminProjectDetails',
             'administrate': 'openAdminPage',
             'administrate/:page': 'openAdminPage',
             'administrate/:page?*queryString': 'openAdminPage',
             'administrate/:page/:action': 'openAdminPageAction',
             'administrate/:page/:action?*queryString': 'openAdminPageAction',
+
             ':project/filters?*queryString': 'openFilters',
             ':project/filters': 'openFilters',
             ':project/members': 'openMembersDefault',
             ':project/members/:action': 'openMembers',
             ':project/settings': 'openSettings',
             ':project/settings/:tab': 'openSettings',
-            ':project/olddashboard': 'openDashboard',
-            ':project/olddashboard/:id': 'openDashboard',
-            ':project/olddashboard/:id?*queryString': 'openDashboard',
             ':project/launches/:filterId(/*path)': 'openLaunch',
             ':project/userdebug/:filterId(/*path)': 'openUserDebug',
 
-            ':project/dashboard': 'openNewDashboard',
-            ':project/dashboard/:id': 'openNewDashboard',
-            ':project/dashboard/:id?*queryString': 'openNewDashboard',
+            ':project/dashboard': 'openDashboard',
+            ':project/dashboard/:id': 'openDashboard',
+            ':project/dashboard/:id?*queryString': 'openDashboard',
 
-            ':project(/)': 'openNewDashboard',
+            ':project(/)': 'openDashboard',
             '*invalidRoute': "show404Page"
         },
         show404Page: function (route) {
@@ -152,9 +147,6 @@ define(function (require, exports, module) {
         openProject: testRoute.checkTest('insidePage', function (project) {
             Context.openRouted(project, 'info', null, null);
         }),
-        openLaunches: testRoute.checkTest('insidePage', function (project, path) {
-            Context.openRouted(project, 'launches', 'all', path);
-        }),
         openUserDebug: testRoute.checkTest('insidePage', function (project) {
             Context.openRouted(project, 'userdebug', arguments);
         }),
@@ -171,16 +163,13 @@ define(function (require, exports, module) {
             Context.openRouted(project, 'members', 'assigned', null);
         }),
         openLaunch: testRoute.checkTest('insidePage', function (project) {
-            Context.openRouted(project, 'newlaunches', arguments);
+            Context.openRouted(project, 'launches', arguments);
         }),
         openSettings: testRoute.checkTest('insidePage', function (project, tab) {
             Context.openRouted(project, 'settings', tab, null);
         }),
         openDashboard: testRoute.checkTest('insidePage', function (project, id, queryString) {
             Context.openRouted(project, 'dashboard', id, queryString);
-        }),
-        openNewDashboard: testRoute.checkTest('insidePage', function (project, id, queryString) {
-            Context.openRouted(project, 'newdashboard', id, queryString);
         }),
         openAdminPage: testRoute.checkTest('insidePage', function (page, queryString) {
             page = page || 'projects';

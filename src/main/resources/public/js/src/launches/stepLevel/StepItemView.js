@@ -36,11 +36,13 @@ define(function (require, exports, module) {
 
     var StepItemView = Epoxy.View.extend({
         template: 'tpl-launch-step-item',
+        className: 'row rp-table-row',
         events: {
             'click [data-js-name-link]': 'onClickName',
             'click [data-js-time-format]': 'toggleStartTimeView',
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
+            'click [data-js-toggle-open]': 'onClickOpen',
         },
         bindings: {
             '[data-js-name-link]': 'attr: {href: url}',
@@ -53,7 +55,7 @@ define(function (require, exports, module) {
             '[data-js-method-type]': 'text: showMethodType',
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
-            '[data-js-status-class]': 'classes: {failed: highlightedFailed, "select-state": select, "collapse-method": validateForCollapsed}',
+            ':el': 'classes: {failed: highlightedFailed, "select-state": select, "collapse-method": validateForCollapsed}',
             '[data-js-select-item]': 'checked:select, attr: {disabled: launch_isProcessing}',
         },
         bindingHandlers: {
@@ -102,6 +104,8 @@ define(function (require, exports, module) {
             this.markdownViewer = new MarkdownViewer({text: this.model.get('description')});
             $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
             this.listenTo(this.model, 'change:description', function(model, description){ self.markdownViewer.update(description); });
+            this.listenTo(this.model, 'change:description change:tags change:issue', this.activateAccordion);
+            this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
@@ -115,10 +119,10 @@ define(function (require, exports, module) {
             }
         },
         highlightItem: function() {
-            $('[data-js-status-class]',this.$el).prepend('<div class="highlight"></div>');
+            this.$el.prepend('<div class="highlight"></div>');
             var self = this;
             config.mainScrollElement.animate({ scrollTop: this.el.offsetTop}, 500, function() {
-                $('[data-js-status-class]',self.$el).addClass('hide-highlight');
+                self.$el.addClass('hide-highlight');
             });
 
         },
@@ -144,6 +148,7 @@ define(function (require, exports, module) {
                 model: this.model,
                 el: $('[data-js-step-issue]', this.$el)
             });
+            this.listenTo(this.issueView, 'load:comment', this.activateAccordion);
         },
         onClickTag: function(e) {
             var tag = $(e.currentTarget).data('js-tag');
@@ -170,6 +175,16 @@ define(function (require, exports, module) {
                 item: this.model,
             })
             modal.show();
+        },
+        activateAccordion: function() {
+            if (this.$el.innerHeight() > 198) {
+                this.$el.addClass('show-accordion');
+            } else {
+                this.$el.removeClass('show-accordion');
+            }
+        },
+        onClickOpen: function() {
+            this.$el.toggleClass('open');
         },
         destroy: function () {
             this.issueView && this.issueView.destroy();

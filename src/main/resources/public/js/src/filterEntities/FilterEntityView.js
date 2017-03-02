@@ -25,18 +25,29 @@ define(function (require, exports, module) {
     var Util = require('util');
     var _ = require('underscore');
     var FilterEntities = require('filterEntities/FilterEntities');
+    var App = require('app');
 
+    var config = App.getInstance();
 
     var FilterEntityView = Epoxy.View.extend({
         className: 'filter-entity-wrapper',
-        initialize: function() {
+        initialize: function(options) {
+            this.filterLevel = options.filterLevel;
             this.render();
             this.listenTo(this.model, 'change:visible', this.onChangeVisible);
+            this.listenTo(this.model, 'change:value', this.onChangeValue);
         },
         onChangeVisible: function(model, visible) {
             if(!visible) {
                 model.set({value: model.defaults.value});
                 this.destroy();
+            }
+        },
+        onChangeValue: function(model){
+            if(model.get('id') == 'name' && model.get('value')){
+                if(this.filterLevel == 'suit'){
+                    config.trackingDispatcher.trackEventNumber(96);
+                }
             }
         },
         render: function() {

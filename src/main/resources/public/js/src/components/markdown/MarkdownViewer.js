@@ -34,11 +34,23 @@ define(function (require, exports, module) {
 
         initialize: function(options) {
             this.simpleMDE = new SingletonMarkdownObject();
-            this.update(options.text.escapeScript());
+            this.update(options.text);
         },
         update: function(text) {
             if(text) {
-                this.$el.html(this.simpleMDE.markdown(text.escapeScript()));
+                var html = this.simpleMDE.markdown(text.escapeScript());
+                var doc = document.createElement('div');
+                var self = this;
+                doc.innerHTML = html;
+                $('img', doc).each(function() {
+                    this.onload = function() {
+                        self.trigger('load');
+                    }
+                });
+                $('a', doc).each(function() {
+                    $(this).attr({target: '_blank'});
+                });
+                this.$el.html(doc.innerHTML);
             } else {
                 this.$el.html('');
             }

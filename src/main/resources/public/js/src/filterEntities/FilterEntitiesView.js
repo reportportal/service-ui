@@ -31,11 +31,13 @@ define(function (require, exports, module) {
     var Components = require('core/components');
     var FilterEntityView = require('filterEntities/FilterEntityView');
     var FilterEntitiesChoiceView = require('filterEntities/FilterEntitiesChoiceView');
+    var App = require('app');
+
+    var config = App.getInstance();
 
 
     var FilterEntitiesView = Components.RemovableView.extend({
         template: 'tpl-filter-entities',
-
         initialize: function (options) {  // this.model - filterModel
             this.filterLevel = options.filterLevel || 'launch';
             this.collection = new Backbone.Collection();
@@ -65,6 +67,7 @@ define(function (require, exports, module) {
             this.$entities = $('[data-js-entities]', this.$el);
             new FilterEntitiesChoiceView({
                 el: $('[data-js-entities-choice]', this.$el),
+                filterLevel: this.filterLevel,
                 collection: this.collection,
             });
             _.each(this.collection.where({required: true}), function(model) {
@@ -89,7 +92,7 @@ define(function (require, exports, module) {
             }
         },
         renderEntity: function(model) {
-            this.$entities.append((new FilterEntityView({model: model})).$el);
+            this.$entities.append((new FilterEntityView({model: model, filterLevel: this.filterLevel})).$el);
         },
         parseModelEntities: function() {
             _.each(this.model.getEntitiesObj(), function(entity) {

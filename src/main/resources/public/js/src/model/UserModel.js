@@ -228,20 +228,20 @@ define(function(require, exports, module) {
             this.set(this.defaults);
         },
 
-        updateDefaultProject: function (project, callback) {
-            var self = this;
-            config.project = {projectId: project};
-            Service.updateDefaultProject(project)
-                .done(function () {
-                    self.set('defaultProject', project);
-                    if (callback && _.isFunction(callback)) {
-                        callback();
-                    }
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, 'updateDefaultProject');
-                });
-        },
+        // updateDefaultProject: function (project, callback) {
+        //     var self = this;
+        //     config.project = {projectId: project};
+        //     Service.updateDefaultProject(project)
+        //         .done(function () {
+        //             self.set('defaultProject', project);
+        //             if (callback && _.isFunction(callback)) {
+        //                 callback();
+        //             }
+        //         })
+        //         .fail(function (error) {
+        //             Util.ajaxFailMessenger(error, 'updateDefaultProject');
+        //         });
+        // },
         login: function (login, pass) {
             login = login.toLowerCase();
             var self = this;

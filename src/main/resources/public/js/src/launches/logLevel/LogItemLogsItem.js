@@ -63,15 +63,23 @@ define(function (require, exports, module) {
         initialize: function() {
             this.render();
             this.listenTo(this.model, 'scrollTo', this.scrollTo);
-            var markdownViewer = new MarkdownViewer({text: this.model.get('message')});
-            $('[data-js-message]', this.$el).html(markdownViewer.$el);
+            this.markdownViewer = new MarkdownViewer({text: this.model.get('message')});
+            $('[data-js-message]', this.$el).html(this.markdownViewer.$el);
+            this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
         },
 
         resize: function() {
             this.activateAccordion();
         },
         scrollTo: function() {
-            config.mainScrollElement.animate({ scrollTop: this.$el.offset().top}, 500);
+            this.$el.removeClass('hide-highlight');
+            if(!$('.highlight', this.$el).length) {
+                this.$el.prepend('<div class="highlight"></div>');
+            }
+            var self = this;
+            config.mainScrollElement.animate({ scrollTop: this.el.offsetTop}, 500, function() {
+                self.$el.addClass('hide-highlight');
+            });
         },
 
         render: function() {

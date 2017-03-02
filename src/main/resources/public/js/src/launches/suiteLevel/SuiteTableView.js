@@ -28,6 +28,9 @@ define(function (require, exports, module) {
     var LaunchSuiteStepItemsView = require('launches/common/LaunchSuiteStepItemsView');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var StickyHeader = require('core/StickyHeader');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var SuiteTableView = Epoxy.View.extend({
         template: 'tpl-launch-suite-table',
@@ -38,12 +41,16 @@ define(function (require, exports, module) {
             'change [data-js-select-all]': 'onChangeSelectAll',
         },
         bindings: {
-            '.launch-suite-step-items': 'classes: {"exact-driven": updateTimeFormat}'
+            '.launch-suite-step-items': 'classes: {"exact-driven": updateTimeFormat}',
+            '[data-js-select-all]': 'attr: {disabled: validateIsProcessing}'
         },
         computeds: {
             updateTimeFormat: function(){
                 var timeFormat = this.userStorage.get('startTimeFormat');
                 return timeFormat == 'exact' ? true : false;
+            },
+            validateIsProcessing: function(){
+                return this.getBinding('isProcessing') || this.getBinding('launch_isProcessing') ||  this.getBinding('parent_launch_isProcessing');
             }
         },
         initialize: function(options) {
@@ -73,9 +80,44 @@ define(function (require, exports, module) {
                 $('[data-js-select-all]', this.$el).prop('checked', false);
             }
         },
+        onShow: function() {
+            this.tableItems.onShow && this.tableItems.onShow();
+        },
         onClickSorter: function(e) {
             var sorter = $(e.currentTarget).data('sorter');
             var filterParams = this.filterModel.getParametersObj();
+            switch(sorter){
+                case 'name':
+                    config.trackingDispatcher.trackEventNumber(106);
+                    break;
+                case 'start_time':
+                    config.trackingDispatcher.trackEventNumber(108);
+                    break;
+                case 'statistics$executions$total':
+                    config.trackingDispatcher.trackEventNumber(110);
+                    break;
+                case 'statistics$executions$passed':
+                    config.trackingDispatcher.trackEventNumber(112);
+                    break;
+                case 'statistics$executions$failed':
+                    config.trackingDispatcher.trackEventNumber(114);
+                    break;
+                case 'statistics$executions$skipped':
+                    config.trackingDispatcher.trackEventNumber(116);
+                    break;
+                case 'statistics$defects$product_bug$total':
+                    config.trackingDispatcher.trackEventNumber(118);
+                    break;
+                case 'statistics$defects$automation_bug$total':
+                    config.trackingDispatcher.trackEventNumber(120);
+                    break;
+                case 'statistics$defects$system_issue$total':
+                    config.trackingDispatcher.trackEventNumber(122);
+                    break;
+                case 'statistics$defects$to_investigate$total':
+                    config.trackingDispatcher.trackEventNumber(124);
+                    break;
+            }
             if(filterParams.sorting_column == sorter) {
                 filterParams.is_asc = !filterParams.is_asc;
             } else {
@@ -87,6 +129,38 @@ define(function (require, exports, module) {
         onClickFilter: function(e) {
             e.stopPropagation();
             var filterId = $(e.currentTarget).closest('.rp-grid-th').data('filter');
+            switch(filterId){
+                case 'name':
+                    config.trackingDispatcher.trackEventNumber(105);
+                    break;
+                case 'start_time':
+                    config.trackingDispatcher.trackEventNumber(107);
+                    break;
+                case 'statistics$executions$total':
+                    config.trackingDispatcher.trackEventNumber(109);
+                    break;
+                case 'statistics$executions$passed':
+                    config.trackingDispatcher.trackEventNumber(111);
+                    break;
+                case 'statistics$executions$failed':
+                    config.trackingDispatcher.trackEventNumber(113);
+                    break;
+                case 'statistics$executions$skipped':
+                    config.trackingDispatcher.trackEventNumber(115);
+                    break;
+                case 'statistics$defects$product_bug$total':
+                    config.trackingDispatcher.trackEventNumber(117);
+                    break;
+                case 'statistics$defects$automation_bug$total':
+                    config.trackingDispatcher.trackEventNumber(119);
+                    break;
+                case 'statistics$defects$system_issue$total':
+                    config.trackingDispatcher.trackEventNumber(121);
+                    break;
+                case 'statistics$defects$to_investigate$total':
+                    config.trackingDispatcher.trackEventNumber(123);
+                    break;
+            }
             if(this.filterModel.get('id') == 'all') {
                 var launchFilterCollection = new SingletonLaunchFilterCollection();
                 var tempFilterModel = launchFilterCollection.generateTempModel();

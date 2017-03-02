@@ -115,7 +115,7 @@
 #topHeader > * {
     padding-left: 0;
     padding-right: 0;
-    font-family: $OswaldRegular;
+  @include fontHeader;
 }
 
 .rp-header-nav > li > a {
@@ -362,7 +362,7 @@
                 .user-name {
                     padding: 0;
                     margin-top: 10px;
-                    font-family: $OswaldRegular;
+                  @include fontHeader;
                     font-size: 12px;
                     line-height: 12px;
                     text-shadow: 1px 2px 2px rgba(39, 39, 40, 0.4);
@@ -495,7 +495,7 @@
     .admin_header_controls {
         #backToProject {
             position: relative;
-            font-family: $OswaldRegular;
+          @include fontHeader;
             font-size: 13px;
             line-height: 30px;
             margin-right: 5px;

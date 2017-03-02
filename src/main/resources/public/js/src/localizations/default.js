@@ -1354,6 +1354,7 @@ define(['util'], function () {
             dashboardDelete: "Dashboard has been deleted!",
             deletedWidget: "Widget has been deleted!",
             addedWidget: 'Widget has been added',
+            widgetSave: "Widget has been updated!",
             dashboardDeletedUnsharedByOwner: "Dashboard has been deleted",
             deleteLaunch: "Launch was deleted",
             deleteLaunches: 'Launches were deleted',

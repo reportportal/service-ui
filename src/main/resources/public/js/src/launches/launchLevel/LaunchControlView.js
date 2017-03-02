@@ -31,6 +31,7 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-refresh]': 'onClickRefresh',
             'click [data-js-multi-action]': 'onClickMultiAction',
+            'click [data-js-multi-button]': 'onShowMultiActon'
         },
 
         bindings: {
@@ -107,8 +108,31 @@ define(function (require, exports, module) {
             $('[data-js-refresh]', this.$el).removeClass('disabled');
             $('[data-js-multi-button]', this.$el).addClass('disabled').attr({title: Localization.launches.actionTitle});
         },
+        onShowMultiActon: function(){
+            config.trackingDispatcher.trackEventNumber(61);
+        },
         onClickMultiAction: function(e) {
-            this.trigger('multi:action', $(e.currentTarget).data('js-multi-action'));
+            var type = $(e.currentTarget).data('js-multi-action');
+            switch (type) {
+                case 'merge':
+                    config.trackingDispatcher.trackEventNumber(62);
+                    break;
+                case 'compare':
+                    config.trackingDispatcher.trackEventNumber(63);
+                    break;
+                case 'changemode':
+                    config.trackingDispatcher.trackEventNumber(64);
+                    break;
+                case 'forcefinish':
+                    config.trackingDispatcher.trackEventNumber(65);
+                    break;
+                case 'remove':
+                    config.trackingDispatcher.trackEventNumber(66);
+                    break;
+                default:
+                    break;
+            }
+            this.trigger('multi:action', type);
         },
         onClickRefresh: function() {
             this.collectionItems.load();

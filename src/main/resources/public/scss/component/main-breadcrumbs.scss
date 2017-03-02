@@ -25,7 +25,7 @@
   margin-bottom: 15px;
   li {
     display: inline-block;
-    font-family: "OswaldRegular", sans-serif;
+    @include fontHeader;
     font-size: 16px;
     line-height: 30px;
     color: $COLOR--black;

@@ -26,6 +26,9 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var Localization = require('localization');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var LaunchSuiteDefectsTooltip = Epoxy.View.extend({
         template: 'tpl-launch-suite-defects-hover',
@@ -34,8 +37,43 @@ define(function (require, exports, module) {
             this.noLink = options.noLink;
             this.render();
         },
+        events: {
+            'click [data-js-defect-total]': 'onClickTotalStats'
+        },
         render: function() {
             this.$el.html(Util.templates(this.template, this.getData()));
+        },
+        onClickTotalStats: function(e){
+            if(this.model.get('type') == 'SUITE'){
+                switch (this.type){
+                    case ('product_bug'):
+                        config.trackingDispatcher.trackEventNumber(126.2);
+                        break;
+                    case ('automation_bug'):
+                        config.trackingDispatcher.trackEventNumber(128.2);
+                        break;
+                    case ('system_issue'):
+                        config.trackingDispatcher.trackEventNumber(130.2);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else {
+                switch (this.type){
+                    case ('product_bug'):
+                        config.trackingDispatcher.trackEventNumber(55);
+                        break;
+                    case ('automation_bug'):
+                        config.trackingDispatcher.trackEventNumber(57);
+                        break;
+                    case ('system_issue'):
+                        config.trackingDispatcher.trackEventNumber(59);
+                        break;
+                    default:
+                        break;
+                }
+            }
         },
         getData: function(){
             var defects = this.getDefectByType();

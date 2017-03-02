@@ -34,7 +34,7 @@
     width: 100%;
     top: -125px;
     text-align: center;
-    font-family: "OswaldRegular", sans-serif;
+  @include fontHeader;
     text-transform: uppercase;
 }
 
@@ -53,7 +53,7 @@
 
 .b-feature__header {
     text-transform: uppercase;
-    font-family: "OswaldRegular", sans-serif;
+  @include fontHeader;
     font-weight: bolder;
     font-size: 30px;
 }

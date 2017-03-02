@@ -203,6 +203,7 @@ define(function (require, exports, module) {
                 self.markdownViewer = new MarkdownViewer({text: self.getBinding('issueComment')});
                 $('[data-js-issue-comment]', self.$el).html(self.markdownViewer.$el);
                 self.listenTo(self.model, 'change:issue', function(){ self.markdownViewer.update(self.getBinding('issueComment')); });
+                self.listenTo(self.markdownViewer, 'load', function () { self.trigger('load:comment'); })
             });
         },
         render: function() {

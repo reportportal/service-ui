@@ -32,7 +32,7 @@
     height: 600px;
     ul {
       font-size: 17px;
-      font-family: OswaldRegular;
+      @include fontHeader;
       padding: 10px 0;
       li {
         padding: 10px 20px;

@@ -1,7 +1,7 @@
 <% function getItemHtml(name, shortName) {
     return '<div class="table-wrapper">' +
                 '<div class="middle-wrapper">' +
-                    '<span class="text-overflow">' +
+                    '<span class="text-overflow" data-js-launch-table-title="'+ name +'">' +
                         '<div class="filter-icon-wrapper">' +
                             '<i class="rp-icons rp-icons-filter"></i>' +
                         '</div>&nbsp;' +
@@ -18,7 +18,7 @@
 
 
 
-<div class="rp-table-grid all-launches-grid suit-grid rp-odd-even rp-table-hover" data-js-table-container>
+<div class="rp-table-grid all-launches-grid launch-grid suit-grid rp-odd-even rp-table-hover" data-js-table-container>
     <div class="row rp-grid-thead" data-js-fixed-header>
         <div class="grid-cell name-grid-cell rp-grid-th" data-sorter="name" data-filter="name">
             <%= getItemHtml(data.text.launchesHeaders.name, data.text.launchesHeaders.name_short) %>

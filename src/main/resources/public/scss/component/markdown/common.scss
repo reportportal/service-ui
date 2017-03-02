@@ -70,8 +70,19 @@
     border-radius: 0;
     padding: 10px;
   }
-  img {
+  img, iframe {
     max-width: 100%;
+  }
+  a {
+    color: $COLOR--topaz;
+  }
+  ul, ol {
+    padding-left: 15px;
+    margin-left: 15px;
+    margin-bottom: 10px;
+    li {
+      list-style: inherit;
+    }
   }
 }
 .markdown-viewer {

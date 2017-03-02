@@ -96,6 +96,7 @@ define(function (require, exports, module) {
             }
         },
         onClickMultiDelete: function() {
+            config.trackingDispatcher.trackEventNumber(86);
             this.trigger('multi:action', 'remove');
         },
         disableMultiple: function() {
@@ -106,6 +107,7 @@ define(function (require, exports, module) {
             }
         },
         onClickRefresh: function() {
+            config.trackingDispatcher.trackEventNumber(88);
             this.collectionItems.load();
             this.resetRefreshItems();
         },
@@ -161,6 +163,7 @@ define(function (require, exports, module) {
         onClickHistory: function(e){
             e.preventDefault();
             if(!$(e.currentTarget).hasClass('disabled')){
+                config.trackingDispatcher.trackEventNumber(87);
                 config.router.navigate(this.getHistoryLink(), {trigger: true});
             }
         },

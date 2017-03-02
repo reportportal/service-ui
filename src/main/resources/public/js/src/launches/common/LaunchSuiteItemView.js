@@ -51,6 +51,8 @@ define(function (require, exports, module) {
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-owner-name]': 'onClickOwnerName',
+            'click [data-js-statistics-to-investigate]': 'onClickToInvestigate',
+            'click [data-js-toggle-open]': 'onClickOpen'
         },
         bindings: {
             ':el': 'classes: {"select-state": select}',
@@ -64,7 +66,7 @@ define(function (require, exports, module) {
             '[data-js-owner-name]': 'text: owner',
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
-            '[data-js-select-item]': 'checked: select',
+            '[data-js-select-item]': 'checked: select, attr: {disabled: launch_isProcessing}',
             '[data-js-tags-container]': 'sortTags: tags',
             '[data-js-statistics-total]': 'text: executionTotal, attr: {href: executionTotalLink}',
             '[data-js-statistics-failed]': 'text: executionFailed, attr: {href: executionFailedLink}',
@@ -205,6 +207,8 @@ define(function (require, exports, module) {
             this.markdownViewer = new MarkdownViewer({text: this.model.get('description')});
             $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
             this.listenTo(this.model, 'change:description', function(model, description){ self.markdownViewer.update(description); });
+            this.listenTo(this.model, 'change:description change:tags', this.activateAccordion);
+            this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {type: this.model.get('type')}));
@@ -241,6 +245,14 @@ define(function (require, exports, module) {
             this.systemIssue && this.systemIssue.destroy();
             this.systemIssue = new LaunchSuiteDefectsView({
                 model: this.model, el: $('[data-js-statistics-system-issue]', this.$el), type: 'system_issue'});
+        },
+        onClickToInvestigate: function(){
+            if(this.model.get('type') == 'SUITE'){
+                config.trackingDispatcher.trackEventNumber(131);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(60);
+            }
         },
         showItemMenu: function (e) {
             config.trackingDispatcher.trackEventNumber(24);
@@ -286,10 +298,26 @@ define(function (require, exports, module) {
             }
         },
         onClickEdit: function() {
+            if(this.model.get('type') == 'SUITE'){
+                config.trackingDispatcher.trackEventNumber(98);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(53);
+            }
             var modal = new ModalLaunchItemEdit({
                 item: this.model,
             })
             modal.show();
+        },
+        onClickOpen: function() {
+            this.$el.toggleClass('open');
+        },
+        activateAccordion: function() {
+            if (this.$el.innerHeight() > 198) {
+                this.$el.addClass('show-accordion');
+            } else {
+                this.$el.removeClass('show-accordion');
+            }
         },
         destroy: function () {
             this.menu && this.menu.destroy();
