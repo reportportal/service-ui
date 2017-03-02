@@ -20,6 +20,7 @@
  */
 
 .invitation-fail {
+  position: relative;
   width: 1000px;
   height: 100%;
   margin: 0 auto;
@@ -31,8 +32,49 @@
   background-size: contain;
 
   @media (max-width: 1010px) {
-    left: 0px;
+    left: 0;
     width: 320px;
     background-image: url('../../img/registration/invitation-fail-mobile.png');
+  }
+
+  .logo-label {
+    position: absolute;
+    width: 141px;
+    height: 23px;
+    top: 31px;
+    left: 59px;
+    background-image: url('../../img/registration/logo.png');
+    background-repeat: no-repeat;
+    -webkit-background-size: 100%;
+    background-size: 100%;
+
+    @media (max-width: 1010px) {
+      top: 15px;
+      left: 20px;
+      width: 100px;
+      height: 17px;
+    }
+  }
+
+  .backlink {
+    position: absolute;
+    top: 400px;
+    left: 50%;
+    width: 50%;
+    text-align: center;
+    font-family: $OpenSansRegular, sans-serif;
+    font-size: 16px;
+    span {
+      color: #5d777a;
+    }
+    a {
+      color: #32b6ce;
+    }
+
+    @media (max-width: 1010px) {
+      top: 290px;
+      left: 0;
+      width: 100%;
+    }
   }
 }
