@@ -1,0 +1,15 @@
+<div class="header-mobile"></div>
+<span class="welcome-msg"><%= data.text.login.welcomeMsgForgotPass %></span>
+<form class="restore-form rp-form">
+    <label class="rp-field">
+        <div class="icon-wrapper"><i class="material-icons">email</i></div>
+        <input type="text" class="rp-input" placeholder="Enter email" data-js-email>
+        <span class="validate-hint"></span>
+    </label>
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel-restore-btn><%= data.text.ui.cancel
+        %>
+    </button>
+    <button class="rp-btn disabled rp-btn-login" type="button" data-js-change-pass-btn><%= data.text.login.sendEmail %>
+    </button>
+</form>
+

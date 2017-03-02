@@ -26,7 +26,7 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Context = require('context');
     var App = require('app');
-    var LandingController = require('landing/LandingController');
+    //var LandingController = require('landing/LandingController');
     var TestRoute = require('TestRoute');
     var UserModel = require('model/UserModel');
 
@@ -44,7 +44,7 @@ define(function (require, exports, module) {
                 var async = $.Deferred();
                 self.user.isAuth()
                     .done(function () {
-                        self.landingController.hideLanding();
+                        //self.landingController.hideLanding();
                         async.resolve();
                         self.user.set({lastInsideHash: window.location.hash});
                     })
@@ -60,7 +60,7 @@ define(function (require, exports, module) {
                 return async.promise();
             });
 
-            this.landingController = new LandingController();
+            //this.landingController = new LandingController();
 
             this.user.ready.done(function () {
                 self.listenTo(self.user, 'change:auth', self.onChangeUserAuth.bind(self));
@@ -79,12 +79,14 @@ define(function (require, exports, module) {
                 this.navigate(model.get('lastInsideHash'), {trigger: true});
             } else {
                 this.navigate('', {trigger: true});
-                Context.destroyViews();
+                //Context.destroyViews();
             }
         },
         routes: {
-            '': 'openParallax',
-            'login': 'openParallaxLogin',
+            // '': 'openParallax',
+            // 'login': 'openParallaxLogin',
+            '': 'openLogin',
+            'login': 'openLogin',
             'documentation': 'openDocumentation',
             'documentation/:id': 'openDocumentation',
             'user-profile': 'userProfile',
@@ -130,7 +132,7 @@ define(function (require, exports, module) {
         },
         openParallax: function () {
             this.landingController.showParallax();
-            Context.destroyViews();
+
         },
         openParallaxLogin: function () {
             this.landingController.showParallax();
@@ -139,6 +141,9 @@ define(function (require, exports, module) {
         },
         registerUser: function (queryString) {
             Context.openRegister(queryString);
+        },
+        openLogin: function () {
+            Context.openLogin();
         },
         openDocumentation: function (id) {
             this.landingController.showDocumentation(id);

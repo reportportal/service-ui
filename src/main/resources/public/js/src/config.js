@@ -69,7 +69,7 @@ require.config({
         'nvd3': '../lib/nvd3/nv.d3.custom',
         'profile': 'login/user_profile',
         'slick': '../lib/slick',
-        'landingPage': 'landing/LandingPage',
+        //'landingPage': 'landing/LandingPage',
         
         'landingDocs': 'landing/documentation',
         'log': 'log/logs',
