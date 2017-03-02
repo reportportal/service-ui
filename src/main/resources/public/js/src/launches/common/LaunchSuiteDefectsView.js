@@ -66,7 +66,8 @@ define(function (require, exports, module) {
         },
 
         events: {
-            'mouseenter [data-js-hover-defect]': 'onHoverDefectType'
+            'mouseenter [data-js-hover-defect]': 'onHoverDefectType',
+            'click [data-js-link]': 'onClickDefectType'
         },
 
         initialize: function(options) {
@@ -92,19 +93,60 @@ define(function (require, exports, module) {
                 this.applyBindings();
             }
         },
-        onHoverDefectType: function(e){
-            switch (this.type){
-                case ('product_bug'):
-                    config.trackingDispatcher.trackEventNumber(54);
-                    break;
-                case ('automation_bug'):
-                    config.trackingDispatcher.trackEventNumber(56);
-                    break;
-                case ('system_issue'):
-                    config.trackingDispatcher.trackEventNumber(58);
-                    break;
-                default:
-                    break;
+        onHoverDefectType: function(){
+            if(this.model.get('type') == 'SUITE'){
+                switch (this.type){
+                    case ('product_bug'):
+                        config.trackingDispatcher.trackEventNumber(125);
+                        break;
+                    case ('automation_bug'):
+                        config.trackingDispatcher.trackEventNumber(127);
+                        break;
+                    case ('system_issue'):
+                        config.trackingDispatcher.trackEventNumber(129);
+                        break;
+                }
+            }
+            else {
+                switch (this.type){
+                    case ('product_bug'):
+                        config.trackingDispatcher.trackEventNumber(54.1);
+                        break;
+                    case ('automation_bug'):
+                        config.trackingDispatcher.trackEventNumber(56.1);
+                        break;
+                    case ('system_issue'):
+                        config.trackingDispatcher.trackEventNumber(58.1);
+                        break;
+                }
+            }
+        },
+        onClickDefectType: function(e){
+            if(this.model.get('type') == 'SUITE'){
+                switch (this.type){
+                    case ('product_bug'):
+                        config.trackingDispatcher.trackEventNumber(126.1);
+                        break;
+                    case ('automation_bug'):
+                        config.trackingDispatcher.trackEventNumber(128.1);
+                        break;
+                    case ('system_issue'):
+                        config.trackingDispatcher.trackEventNumber(130.1);
+                        break;
+                }
+            }
+            else {
+                switch (this.type){
+                    case ('product_bug'):
+                        config.trackingDispatcher.trackEventNumber(54.2);
+                        break;
+                    case ('automation_bug'):
+                        config.trackingDispatcher.trackEventNumber(56.2);
+                        break;
+                    case ('system_issue'):
+                        config.trackingDispatcher.trackEventNumber(58.2);
+                        break;
+                }
             }
         },
         getDefectByType: function(){

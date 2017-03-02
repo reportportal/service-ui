@@ -247,7 +247,12 @@ define(function (require, exports, module) {
                 model: this.model, el: $('[data-js-statistics-system-issue]', this.$el), type: 'system_issue'});
         },
         onClickToInvestigate: function(){
-            config.trackingDispatcher.trackEventNumber(60);
+            if(this.model.get('type') == 'SUITE'){
+                config.trackingDispatcher.trackEventNumber(131);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(60);
+            }
         },
         showItemMenu: function (e) {
             config.trackingDispatcher.trackEventNumber(24);
@@ -293,7 +298,12 @@ define(function (require, exports, module) {
             }
         },
         onClickEdit: function() {
-            config.trackingDispatcher.trackEventNumber(53);
+            if(this.model.get('type') == 'SUITE'){
+                config.trackingDispatcher.trackEventNumber(98);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(53);
+            }
             var modal = new ModalLaunchItemEdit({
                 item: this.model,
             })

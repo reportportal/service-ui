@@ -251,6 +251,9 @@ define(function (require, exports, module) {
             '[data-js-list-view-icon]': 'classes: {hide: not(listView)}',
             ':el': 'classes: {"fail-load": failLoad}'
         },
+        events: {
+            'click [data-js-link]': 'onClickItem'
+        },
         initialize: function() {
             this.render();
             this.listenTo(this.model, 'remove', this.onRemove);
@@ -258,6 +261,14 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {failLoad: this.model.get('failLoad')}))
+        },
+        onClickItem: function(e){
+            if(this.model.get('id') == 'all'){
+                config.trackingDispatcher.trackEventNumber(84);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(85);
+            }
         },
         onRemove: function() {
             this.destroy();
@@ -339,6 +350,7 @@ define(function (require, exports, module) {
             })).$el);
         },
         onClickSwitchMode: function() {
+            config.trackingDispatcher.trackEventNumber(83);
             $('[data-js-crumbs-container]',this.$el).toggleClass('min-size');
         },
         onClickRestorePath: function() {

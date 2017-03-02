@@ -130,6 +130,7 @@ define(function (require, exports, module) {
             return this.cellWidth;
         },
         showTooltip: function (e) {
+            config.trackingDispatcher.trackEventNumber(134);
             var el = $(e.currentTarget),
                 type = el.data('tooltipType');
             if(!el.data('tooltip')){
