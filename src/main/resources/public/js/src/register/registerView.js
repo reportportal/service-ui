@@ -132,6 +132,8 @@ define(function(require, exports, module) {
         checkFields: function () {
             if (this.$confirmPassword.val() !== this.$password.val()) {
                 this.$confirmPassword.parent().addClass('validate-error').find('.validate-hint').addClass('show-hint').html(Localization.validation.confirmMatch);
+            } else {
+                this.$confirmPassword.parent().removeClass('validate-error').find('.validate-hint').removeClass('show-hint');
             }
             if (!this.isFormReady() || this.$confirmPassword.val() !== this.$password.val()) {
                 this.$register.addClass('disabled');
@@ -146,6 +148,12 @@ define(function(require, exports, module) {
                     validator: 'matchRegex',
                     type: 'loginRegex',
                     pattern: config.patterns.login
+                },
+                {
+                    validator: 'minMaxRequired',
+                    type: 'login',
+                    min: 1,
+                    max: 128
                 }
             ]);
             Util.hintValidator(this.$name, [
@@ -153,6 +161,12 @@ define(function(require, exports, module) {
                     validator: 'matchRegex',
                     type: 'fullNameInfoRegex',
                     pattern: config.patterns.fullName
+                },
+                {
+                    validator: 'minMaxRequired',
+                    type: 'userName',
+                    min: 3,
+                    max: 256
                 }
             ]);
             Util.hintValidator(this.$password, [
@@ -160,14 +174,25 @@ define(function(require, exports, module) {
                     validator: 'matchRegex',
                     type: 'originalPassRegex',
                     pattern: config.patterns.originalPass
+                },
+                {
+                    validator: 'minMaxRequired',
+                    type: 'password',
+                    min: 4,
+                    max: 25
                 }
-
             ]);
             Util.hintValidator(this.$confirmPassword, [
                 {
                     validator: 'matchRegex',
                     type: 'originalPassRegex',
                     pattern: config.patterns.originalPass
+                },
+                {
+                    validator: 'minMaxRequired',
+                    type: 'password',
+                    min: 4,
+                    max: 25
                 }
             ]);
         },
