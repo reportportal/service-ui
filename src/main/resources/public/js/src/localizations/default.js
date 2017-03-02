@@ -38,6 +38,7 @@ define(['util'], function () {
             check: "Check",
             add: "Add",
             ok: "Ok",
+            reset: "Reset",
             merge: "Merge",
             viewEmail: "View email",
             sendEmail: "Send email",
