@@ -52,7 +52,8 @@ define(function (require, exports, module) {
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-owner-name]': 'onClickOwnerName',
             'click [data-js-statistics-to-investigate]': 'onClickToInvestigate',
-            'click [data-js-toggle-open]': 'onClickOpen'
+            'click [data-js-toggle-open]': 'onClickOpen',
+            'click [data-js-select-item]': 'onClickSelect'
         },
         bindings: {
             ':el': 'classes: {"select-state": select}',
@@ -286,6 +287,14 @@ define(function (require, exports, module) {
                 tempFilterModel.trigger('add_entity', filterId, value);
             } else {
                 this.filterModel.trigger('add_entity', filterId, value);
+            }
+        },
+        onClickSelect: function(){
+            if(this.model.get('type') == 'SUITE'){
+                config.trackingDispatcher.trackEventNumber(100.1);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(61.2);
             }
         },
         onClickName: function(e) {

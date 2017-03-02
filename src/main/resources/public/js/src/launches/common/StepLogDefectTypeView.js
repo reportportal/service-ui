@@ -233,6 +233,7 @@ define(function (require, exports, module) {
             this.ticketCollection.reset(tickets);
         },
         onClickEditDefect: function() {
+            config.trackingDispatcher.trackEventNumber(150);
             var defectEditor = new ModalDefectEditor({
                 items: [this.model]
             });

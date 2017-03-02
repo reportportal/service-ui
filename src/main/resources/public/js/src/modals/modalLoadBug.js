@@ -123,6 +123,8 @@ define(function (require, exports, module) {
             'click [data-bts-select-item]': 'onClickBts',
             'click [data-js-add-ticket]': 'onClickAddTicket',
             'click [data-js-load]': 'onClickLoad',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
 
         initialize: function(option) {
@@ -146,12 +148,20 @@ define(function (require, exports, module) {
             $('[data-js-load]', this.$el).trigger('click');
         },
         onClickAddTicket: function() {
+            config.trackingDispatcher.trackEventNumber(177);
             this.collection.add({});
+        },
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(176);
+        },
+        onClickCancel: function(){
+            config.trackingDispatcher.trackEventNumber(178);
         },
         onClickLoad: function() {
             var self = this;
             $('.form-control', this.$el).trigger('validate');
             if (!$('.validate-error', this.$el).length) {
+                config.trackingDispatcher.trackEventNumber(179);
                 var issues = _.map(this.collection.models, function(model) {
                     return {
                         ticketId: model.get('ticketId'),

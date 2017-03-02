@@ -22,8 +22,12 @@ define(function (require, exports, module) {
     'use strict';
 
     var ModalPostBug = require('modals/modalPostBug');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var PostBugAction = function(options) {
+        config.trackingDispatcher.trackEventNumber(169);
         var items = options.items;
         var modal = (new ModalPostBug({
             items: items,

@@ -109,7 +109,7 @@ define(function (require, exports, module) {
             $('[data-js-multi-button]', this.$el).addClass('disabled').attr({title: Localization.launches.actionTitle});
         },
         onShowMultiActon: function(){
-            config.trackingDispatcher.trackEventNumber(61);
+            config.trackingDispatcher.trackEventNumber(61.3);
         },
         onClickMultiAction: function(e) {
             var type = $(e.currentTarget).data('js-multi-action');
@@ -128,8 +128,6 @@ define(function (require, exports, module) {
                     break;
                 case 'remove':
                     config.trackingDispatcher.trackEventNumber(66);
-                    break;
-                default:
                     break;
             }
             this.trigger('multi:action', type);

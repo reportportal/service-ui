@@ -48,7 +48,10 @@ define(function (require, exports, module) {
             'click .auth-type': 'handleDropDown',
             'click [data-js-post]': 'submit',
             'keyup .required-value': 'clearRequiredError',
-            'click .project-name': 'updateFieldSet'
+            'click .project-name': 'updateFieldSet',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-is-included]': 'onClickIncludeData',
+            'click [data-js-cancel]': 'onClickCancel'
         },
 
         initialize: function (options) {
@@ -90,8 +93,6 @@ define(function (require, exports, module) {
             this.delegateEvents();
             return this;
         },
-
-
 
         setupAnchors: function () {
             this.$dynamicContent = $("#dynamicContent", this.$el);
@@ -185,6 +186,28 @@ define(function (require, exports, module) {
             $('[data-js-post]', this.$el).trigger('click');
         },
 
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(170);
+        },
+
+        onClickCancel: function(){
+            config.trackingDispatcher.trackEventNumber(174);
+        },
+
+        onClickIncludeData: function(e){
+            var type = $(e.currentTarget).closest('.rp-switcher-big').attr('id');
+            switch (type) {
+                case 'include_logs':
+                    config.trackingDispatcher.trackEventNumber(172);
+                    break;
+                case 'include_comments':
+                    config.trackingDispatcher.trackEventNumber(173);
+                    break;
+                default:
+                    config.trackingDispatcher.trackEventNumber(171);
+            }
+        },
+
         submit: function () {
             var data = this.getData(),
                 self = this,
@@ -195,6 +218,7 @@ define(function (require, exports, module) {
                     self.hideLoading();
                 };
             if (data) {
+                config.trackingDispatcher.trackEventNumber(175);
                 this.showLoading();
                 this.inSubmit = true;
                 Service.postBugToBts(data, this.user.bts.current.id)

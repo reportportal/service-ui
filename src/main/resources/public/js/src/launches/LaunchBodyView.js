@@ -48,6 +48,7 @@ define(function (require, exports, module) {
     var LaunchBodyView = Epoxy.View.extend({
         template: 'tpl-launch-body',
         initialize: function(options) {
+            console.log('LaunchBodyView: ', options);
             this.context = options.context;
             this.render();
             this.crumbs = new LaunchCrumbs({
