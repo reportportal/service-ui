@@ -130,6 +130,7 @@ define(function (require, exports, module) {
         template: 'tpl-launch-step-log-defect-type',
         events: {
             'click [data-js-edit-defect]': 'onClickEditDefect',
+            'mouseenter [data-js-edit-defect]': 'onHoverDefect'
         },
         bindings: {
             // '[data-js-issue-comment]': 'html: issueComment',
@@ -190,6 +191,7 @@ define(function (require, exports, module) {
             },
         },
         initialize: function(options) {
+            this.pageType = options.pageType;
             this.defetTypesCollection = new SingletonDefectTypeCollection();
             var self = this;
             this.defetTypesCollection.ready.done(function(){
@@ -232,8 +234,18 @@ define(function (require, exports, module) {
             }
             this.ticketCollection.reset(tickets);
         },
+        onHoverDefect: function(){
+            if(this.pageType == 'logs'){
+                config.trackingDispatcher.trackEventNumber(191);
+            }
+        },
         onClickEditDefect: function() {
-            config.trackingDispatcher.trackEventNumber(150);
+            if(this.pageType == 'logs'){
+                config.trackingDispatcher.trackEventNumber(192);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(150);
+            }
             var defectEditor = new ModalDefectEditor({
                 items: [this.model]
             });

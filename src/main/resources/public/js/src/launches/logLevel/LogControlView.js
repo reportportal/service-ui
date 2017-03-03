@@ -26,11 +26,14 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var LogControlView = Epoxy.View.extend({
         events: {
-            'click [data-js-button-prev]': 'onClickNavigation',
-            'click [data-js-button-next]': 'onClickNavigation',
+            'click [data-js-button-prev]': 'onClickPrev',
+            'click [data-js-button-next]': 'onClickNext',
             'click [data-js-button-refresh]': 'onClickRefresh',
         },
 
@@ -65,6 +68,14 @@ define(function (require, exports, module) {
                 title: model.get('name'),
             }).data({id: model.get('id')});
         },
+        onClickPrev: function(e){
+            config.trackingDispatcher.trackEventNumber(186);
+            this.onClickNavigation(e);
+        },
+        onClickNext: function(e){
+            config.trackingDispatcher.trackEventNumber(187);
+            this.onClickNavigation(e);
+        },
         onClickNavigation: function(e) {
             e.preventDefault();
             var $nav = $(e.currentTarget);
@@ -72,6 +83,7 @@ define(function (require, exports, module) {
             this.updateNavButton($nav.data('id'));
         },
         onClickRefresh: function() {
+            config.trackingDispatcher.trackEventNumber(188);
             this.collectionItems.trigger('update:logs');
             // this.collectionItems.setLogItem(this.collectionItems.logOptions.item);
         },

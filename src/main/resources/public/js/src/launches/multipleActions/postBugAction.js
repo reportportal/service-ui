@@ -27,14 +27,13 @@ define(function (require, exports, module) {
     var config = App.getInstance();
 
     var PostBugAction = function(options) {
-        config.trackingDispatcher.trackEventNumber(169);
         var items = options.items;
         var modal = (new ModalPostBug({
             items: items,
+            from: options.from
         }));
         return modal.show();
     };
-
 
     return PostBugAction;
 });

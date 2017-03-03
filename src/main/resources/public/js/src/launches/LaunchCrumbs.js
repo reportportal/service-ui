@@ -240,6 +240,7 @@ define(function (require, exports, module) {
             })
         },
     });
+
     var LaunchCrumbView = Epoxy.View.extend({
         tagName: 'li',
         className: 'crumb',
@@ -254,7 +255,7 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-link]': 'onClickItem'
         },
-        initialize: function() {
+        initialize: function(options) {
             this.render();
             this.listenTo(this.model, 'remove', this.onRemove);
             // this.listenTo(this.model, 'change:failLoad', this.render);
@@ -263,11 +264,27 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {failLoad: this.model.get('failLoad')}))
         },
         onClickItem: function(e){
-            if(this.model.get('id') == 'all'){
-                config.trackingDispatcher.trackEventNumber(84);
-            }
-            else {
-                config.trackingDispatcher.trackEventNumber(85);
+            var collection = this.model.collection,
+                last = collection.last(),
+                type = last.get('type');
+            switch (type){
+                case 'LAUNCH':
+                case 'SUITE':
+                case 'TEST':
+                    if(this.model.get('id') == 'all'){
+                        config.trackingDispatcher.trackEventNumber(84);
+                    }
+                    else {
+                        config.trackingDispatcher.trackEventNumber(85);
+                    }
+                    break;
+                default:
+                    if(this.model.get('id') == 'all'){
+                        config.trackingDispatcher.trackEventNumber(184);
+                    }
+                    else {
+                        config.trackingDispatcher.trackEventNumber(185);
+                    }
             }
         },
         onRemove: function() {
@@ -281,7 +298,6 @@ define(function (require, exports, module) {
             delete this;
         },
     });
-
 
     var LaunchCrumbsView = Epoxy.View.extend({
         template: 'tpl-launch-crumbs',
@@ -346,11 +362,21 @@ define(function (require, exports, module) {
         },
         onAddCrumb: function(model) {
             $('[data-js-crumbs-container]', this.$el).append((new LaunchCrumbView({
-                model: model,
+                model: model
             })).$el);
         },
         onClickSwitchMode: function() {
-            config.trackingDispatcher.trackEventNumber(83);
+            var last = this.collection.last(),
+                type = last.get('type');
+            switch (type){
+                case 'LAUNCH':
+                case 'SUITE':
+                case 'TEST':
+                    config.trackingDispatcher.trackEventNumber(83);
+                    break;
+                default:
+                    config.trackingDispatcher.trackEventNumber(183);
+            }
             $('[data-js-crumbs-container]',this.$el).toggleClass('min-size');
         },
         onClickRestorePath: function() {

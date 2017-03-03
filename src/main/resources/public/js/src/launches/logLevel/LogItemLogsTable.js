@@ -41,8 +41,8 @@ define(function (require, exports, module) {
         template: 'tpl-launch-log-item-logs-table',
 
         events: {
-            'change [data-js-attachments-filter]': 'onChangeFilter',
-            'click .rp-grid-th[data-sorter]': 'onClickSorter',
+            'change [data-js-attachments-filter]': 'onChangeAttachments',
+            'click .rp-grid-th[data-sorter]': 'onClickSorter'
         },
 
         initialize: function(options) {
@@ -108,15 +108,17 @@ define(function (require, exports, module) {
             // this.listenTo(this.collection, 'click:attachment', this.onClickAttachments);
             this.collection.load();
             this.listenTo(this.collection, 'reset', this.onResetCollection);
-            this.listenTo(this.selectModel, 'change:condition change:value', this.onChangeFilter);
-            this.listenTo(this.nameModel, 'change:value', this.onChangeFilter);
+            this.listenTo(this.selectModel, 'change:condition change:value', this.onChangeSelect);
+            this.listenTo(this.nameModel, 'change:value', this.onChangeName);
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.onChangeSelectionParameters);
             this.onChangeSelectionParameters();
             this.listenTo(this.paging, 'page', this.onChangePage);
             this.listenTo(this.minPaging, 'page', this.onChangePage);
             this.listenTo(this.paging, 'count', this.onChangePageCount);
             this.setupStickyHeader();
-
+            $('[data-js-select-filter] [data-toggle="dropdown"]', this.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(204);
+            });
             var self = this;
             $(window)
                 .off('resize.logItems')
@@ -152,7 +154,31 @@ define(function (require, exports, module) {
                 el: $('[data-js-paginate-min-container]', this.$el),
                 model: this.pagingModel,
                 minMode: true,
-            })
+            });
+            $('[data-js-paginate-min-container]', this.$el).on('click', function(e){
+                var next = $(e.target).closest('.next'),
+                    prev = $(e.target).closest('.previous');
+                if(next.length && !next.hasClass('disabled')){
+                    config.trackingDispatcher.trackEventNumber(209);
+                }
+                else if(prev.length && !prev.hasClass('disabled')) {
+                    config.trackingDispatcher.trackEventNumber(208);
+                }
+            });
+        },
+        onChangeSelect: function(){
+            config.trackingDispatcher.trackEventNumber(205);
+            this.onChangeFilter();
+        },
+        onChangeAttachments: function(){
+            config.trackingDispatcher.trackEventNumber(206);
+            this.onChangeFilter();
+        },
+        onChangeName: function(model){
+            if(model.get('value')){
+                config.trackingDispatcher.trackEventNumber(210);
+            }
+            this.onChangeFilter();
         },
         onChangeOptionsFilter: function(newParams) {
             config.router.navigate(this.mainPath + '&' + newParams.join('&'), {trigger: false});
@@ -207,6 +233,11 @@ define(function (require, exports, module) {
         onClickSorter: function(e) {
             var sorter = $(e.currentTarget).data('sorter');
             var filterParams = this.filterModel.getParametersObj();
+            switch (sorter){
+                case 'time':
+                    config.trackingDispatcher.trackEventNumber(211);
+                    break;
+            }
             if(filterParams.sorting_column == sorter) {
                 filterParams.is_asc = !filterParams.is_asc;
             } else {

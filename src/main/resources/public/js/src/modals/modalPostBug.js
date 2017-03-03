@@ -55,6 +55,7 @@ define(function (require, exports, module) {
         },
 
         initialize: function (options) {
+            this.from = options.from;
             this.appModel = new SingletonAppModel();
             this.items = options.items;
             this.isMultiply = (this.items.length > 1);
@@ -187,24 +188,48 @@ define(function (require, exports, module) {
         },
 
         onClickClose: function(){
-            config.trackingDispatcher.trackEventNumber(170);
+            if(this.from == 'logs') {
+                config.trackingDispatcher.trackEventNumber(215);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(170);
+            }
         },
 
         onClickCancel: function(){
-            config.trackingDispatcher.trackEventNumber(174);
+            if(this.from == 'logs') {
+                config.trackingDispatcher.trackEventNumber(219);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(174);
+            }
         },
 
         onClickIncludeData: function(e){
             var type = $(e.currentTarget).closest('.rp-switcher-big').attr('id');
-            switch (type) {
-                case 'include_logs':
-                    config.trackingDispatcher.trackEventNumber(172);
-                    break;
-                case 'include_comments':
-                    config.trackingDispatcher.trackEventNumber(173);
-                    break;
-                default:
-                    config.trackingDispatcher.trackEventNumber(171);
+            if(this.from == 'logs') {
+                switch (type) {
+                    case 'include_logs':
+                        config.trackingDispatcher.trackEventNumber(217);
+                        break;
+                    case 'include_comments':
+                        config.trackingDispatcher.trackEventNumber(218);
+                        break;
+                    default:
+                        config.trackingDispatcher.trackEventNumber(216);
+                }
+            }
+            else {
+                switch (type) {
+                    case 'include_logs':
+                        config.trackingDispatcher.trackEventNumber(172);
+                        break;
+                    case 'include_comments':
+                        config.trackingDispatcher.trackEventNumber(173);
+                        break;
+                    default:
+                        config.trackingDispatcher.trackEventNumber(171);
+                }
             }
         },
 
@@ -218,7 +243,12 @@ define(function (require, exports, module) {
                     self.hideLoading();
                 };
             if (data) {
-                config.trackingDispatcher.trackEventNumber(175);
+                if(this.from == 'logs') {
+                    config.trackingDispatcher.trackEventNumber(220);
+                }
+                else {
+                    config.trackingDispatcher.trackEventNumber(175);
+                }
                 this.showLoading();
                 this.inSubmit = true;
                 Service.postBugToBts(data, this.user.bts.current.id)

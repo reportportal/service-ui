@@ -27,10 +27,10 @@ define(function (require, exports, module) {
         var items = options.items;
         var modal = (new ModalLoadBug({
             items: items,
+            from: options.from
         }));
         return modal.show();
     };
-
 
     return PostBugAction;
 });

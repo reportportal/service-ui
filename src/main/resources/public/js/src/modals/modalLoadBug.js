@@ -127,14 +127,15 @@ define(function (require, exports, module) {
             'click [data-js-cancel]': 'onClickCancel'
         },
 
-        initialize: function(option) {
+        initialize: function(options) {
+            this.from = options.from;
             this.externalSystems = appModel.getArr('externalSystem');
             if(!this.externalSystems.length) {
                 console.log('No bts found');
                 this.hide();
                 return;
             }
-            this.itemModels = option.items;
+            this.itemModels = options.items;
             this.testItemsIds = _.map(this.itemModels, function(model) {
                 return model.get('id');
             });
@@ -148,20 +149,40 @@ define(function (require, exports, module) {
             $('[data-js-load]', this.$el).trigger('click');
         },
         onClickAddTicket: function() {
-            config.trackingDispatcher.trackEventNumber(177);
+            if(this.from == 'logs') {
+                config.trackingDispatcher.trackEventNumber(222);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(177);
+            }
             this.collection.add({});
         },
         onClickClose: function(){
-            config.trackingDispatcher.trackEventNumber(176);
+            if(this.from == 'logs') {
+                config.trackingDispatcher.trackEventNumber(221);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(176);
+            }
         },
         onClickCancel: function(){
-            config.trackingDispatcher.trackEventNumber(178);
+            if(this.from == 'logs') {
+                config.trackingDispatcher.trackEventNumber(223);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(178);
+            }
         },
         onClickLoad: function() {
             var self = this;
             $('.form-control', this.$el).trigger('validate');
             if (!$('.validate-error', this.$el).length) {
-                config.trackingDispatcher.trackEventNumber(179);
+                if(this.from == 'logs') {
+                    config.trackingDispatcher.trackEventNumber(224);
+                }
+                else {
+                    config.trackingDispatcher.trackEventNumber(179);
+                }
                 var issues = _.map(this.collection.models, function(model) {
                     return {
                         ticketId: model.get('ticketId'),

@@ -137,11 +137,9 @@ define(function(require, exports, module) {
         98: ['Suite', 'Click on item icon "edit"', 'Arise Modal "Edit Item"'],
         99: ['Suite', 'Click on item icon "select all items"', 'Select/unselect all items'],
         100.1: ['Suite', 'Click on item icon "select one item"', 'Select/unselect one item'],
-
         100.2: ['Suite', 'Click on icon "close" on selected item', 'Remove item from  selection'],
         100.3: ['Suite', 'Click on icon "close" of all selection', 'Unselect all items'],
         100.4: ['Suite', 'Click on Bttn "Proceed Valid Items"', 'Remove invalid items from selection'],
-
         101: ['Suite', 'Click on Close Icon on Modal "Edit Item"', 'Close modal "Edit Item"'],
         102: ['Suite', 'Edit description in Modal "Edit Item"', 'Edit description'],
         103: ['Suite', 'Click on Bttn Cancel on Modal "Edit Item"', 'Close modal "Edit Item"'],
@@ -176,16 +174,13 @@ define(function(require, exports, module) {
         130.1: ['Suite', 'Click on SI Circle', 'Transition to SI list view '],
         130.2: ['Suite', 'Click on Tooltip "Total System Issue"', 'Transition to SI list view'],
         131: ['Suite', 'Click on TI tag', 'Transition to TI list view '],
-
         132: ['History View', 'Select "history depth"', 'Show parameter of selected "history depth"'],
         133: ['History View', 'Click on item', 'Transition to "Item"'],
         134: ['History View', 'Hover on defect type tag', getTooltipDescription()],
-
         135: ['Test', 'Enter parameters to refine by name', 'Refine by name'],
         136: ['Test', 'Click on Refine bttn More', 'Arise dropdown with parameters'],
         137: ['Test', 'Select parameters to refine', 'Show parameters fields to refine'],
         138: ['Test', 'Click on Method type switcher', 'Show/Hide method type'],
-
         139: ['Test', 'Click on icon "filter" Method type', 'Arises active "Method type" input'],
         140: ['Test', 'Click on icon "sorting" Method type', 'Sort items by Method type'],
         141: ['Test', 'Click on icon "filter" Name', '"Suite name" input becomes active'],
@@ -196,7 +191,6 @@ define(function(require, exports, module) {
         146: ['Test', 'Click on icon "sorting" Start time', 'Sort items by Start time'],
         147: ['Test', 'Click on icon "filter" Defect type', 'Arises active "Defect type" input'],
         148: ['Test', 'Click on icon "sorting" Defect type', 'Sort items by Defect type'],
-
         149: ['Test', 'Click on item icon "edit"', 'Arise Modal "Edit Item"'],
         150: ['Test', 'Click on icon "edit" of Defect type tag', 'Arise Modal "Edit Defect Type"'],
         151: ['Test', 'Click on item icon "select all items"', 'Select/unselect all items'],
@@ -205,12 +199,10 @@ define(function(require, exports, module) {
         154: ['Test', 'Edit description in Modal "Edit Item"', 'Edit description'],
         155: ['Test', 'Click on Bttn Cancel on Modal "Edit Item"', 'Close modal "Edit Item"'],
         156: ['Test', 'Click on Bttn Save on Modal "Edit Item"', 'Save changes'],
-
         157: ['Test', 'Click on Close Icon on Modal "Edit Defect Type"', 'Close modal "Edit Defect Type"'],
         158: ['Test', 'Edit description in Modal "Edit Defect Type"', 'Edit description'],
         159: ['Test', 'Click on Bttn Cancel on Modal "Edit Defect Type"', 'Close modal "Edit Defect Type"'],
         160: ['Test', 'Click on Bttn Save on Modal "Edit Defect Type"', 'Save changes'],
-
         161: ['Test', 'Click on icon "close" on selected item', 'Unselect item'],
         162: ['Test', 'Click on Bttn "Proceed Valid Items"', 'Remove invalid launches from selection'],
         163: ['Test', 'Click on Close Icon of all selection', 'Close panel with selected items'],
@@ -230,10 +222,57 @@ define(function(require, exports, module) {
         177: ['Test', 'Click on Bttn Add New Issue on Modal Load Bug', 'Add input in Modal Load Bug'],
         178: ['Test', 'Click on Bttn Cancel on Modal Load Bug', 'Close Modal Load Bug'],
         179: ['Test', 'Click on Bttn Load on Modal Load Bug', 'Load bug'],
-
         180: ['Test', 'Click on Icon Close on Modal Delete Item', 'Close Modal Delete Item'],
         181: ['Test', 'Click on Bttn Cancel on Modal Delete Item', 'Close Modal Delete Item'],
         182: ['Test', 'Click on Bttn Delete on Modal Delete Item', 'Delete item'],
+
+        183: ['Log', 'Click on Bread Crumb icon Plus/Minus', 'Show/Hide all names of items'],
+        184: ['Log', 'Click on Bread Crumb All', 'Transition to Launches Page'],
+        185: ['Log', 'Click on Bread Crumb Item name', 'Transition to Item'],
+        186: ['Log', 'Click on Bttn prev Method', 'Transition to prev Method Item'],
+        187: ['Log', 'Click on Bttn next Method', 'Transition to next Method Item'],
+        188: ['Log', 'Click on Bttn Refresh', 'Refresh page'],
+
+        189: ['Log', 'Hover on History execution tab', 'Arise tooltip'],
+        190: ['Log', 'Click on History execution tab', 'Transition to item log page'],
+        191: ['Log', 'Hover on Defect type tag', 'Arise icon Edit'],
+        192: ['Log', 'Click on Defect type tag', 'Arise Modal Edit Defect type'],
+        193: ['Log', 'Click on Bttn Post Bug', 'Arise Modal Post Bug'],
+        194: ['Log', 'Click on Bttn Load Bug', 'Arise Modal Load Bug'],
+        195: ['Log', 'Click on Bttn Match issues in launch', 'Begin autoanalysis'],
+
+        196: ['Log', 'Hover on Stack Trace tab', 'Tab becomes active'],
+        197: ['Log', 'Hover on Attachments tab', 'Tab becomes active'],
+        198: ['Log', 'Hover on Item Details tab', 'Tab becomes active'],
+        199: ['Log', 'Hover on History of Actions tab', 'Tab becomes active'],
+        200: ['Log', 'Click on Stack Trace tab', 'Open Stack Trace tab'],
+        201: ['Log', 'Click on Attachments tab', 'Open Attachments tab'],
+        202: ['Log', 'Click on Item Details tab', 'Open Item Details tab'],
+        203: ['Log', 'Click on History of Actions tab', 'Open History of Actions tab'],
+
+        204: ['Log', 'Click on Log level filter', 'Arise log level filter dropdown'],
+        205: ['Log', 'Select Log level filter in dropdown', 'Filter by selected parametr'],
+        206: ['Log', 'Click on checkbox Logs with attachments', 'Check/uncheck logs with attachments'],
+        207: ['Log', 'Click on Bttn Next Error', 'Transition to next error page'],
+        208: ['Log', 'Click on Bttn Previous Log message page', 'Transition to previous log message page'],
+        209: ['Log', 'Click on Bttn Next Log message page', 'Transition to next log message page'],
+
+        210: ['Log', 'Enter filter parameter in Log message input', 'Filter log messages by parameter'],
+        211: ['Log', 'Click on icon Sorting on Time in Log Message', 'Sort logs'],
+        212: ['Log', 'Click on Attachment in Log Message', 'Open Attachment'],
+        213: ['Log', 'Click on icon Expand in Log Message', 'Expand/close log'],
+        214: ['Log', 'Click on Go to Stack Trace link in Stack Trace tab', 'Open Stack Trace log message'],
+
+        215: ['Log', 'Click on Icon Close on Modal Post Bug', 'Close Modal Post Bug'],
+        216: ['Log', 'Click on Screenshots switcher on Modal Post Bug', 'On/off Screenshots in Modal Post Bug'],
+        217: ['Log', 'Click on Logs switcher on Modal Post Bug', 'On/off Logs in Modal Post Bug'],
+        218: ['Log', 'Click on Comment switcher on Modal Post Bug', 'On/off Comment in Modal Post Bug'],
+        219: ['Log', 'Click on Bttn Cancel on Modal Post Bug', 'Close Modal Post Bug'],
+        220: ['Log', 'Click on Bttn Post on Modal Post Bug', 'Post bug'],
+        221: ['Log', 'Click on Icon Close on Modal Load Bug', 'Close Modal Load Bug'],
+        222: ['Log', 'Click on Bttn Add New Issue on Modal Load Bug', 'Add imputs in Modal Load Bug'],
+        223: ['Log', 'Click on Bttn Cancel on Modal Load Bug', 'Close Modal Load Bug'],
+        224: ['Log', 'Click on Bttn Load on Modal Load Bug', 'Load bug'],
 
 
     }
