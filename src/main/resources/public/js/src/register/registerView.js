@@ -241,6 +241,9 @@ define(function(require, exports, module) {
 
         resetForm: function() {
             $('.rp-field', this.$el).removeClass('validate-error').find('input:enabled').val('');
+            $('.validate-hint', this.$el).each(function (i, item) {
+                $(item).removeClass('show-hint');
+            });
         },
 
         destroy: function(){
