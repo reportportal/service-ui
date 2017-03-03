@@ -561,7 +561,7 @@ define(['util'], function () {
 
         dashboard: {
             allDashboards: 'All Dashboards',
-            addNewDashboard: "Add new Dashboard",
+            addNewDashboard: "Add New Dashboard",
             maxAdded: "Max amount of dashboards were added",
             dashboardShared: 'Dashboard is shared',
             dashboardSharedBy: 'Dashboard is shared by',
@@ -620,6 +620,8 @@ define(['util'], function () {
             tHeadTitleOwners: 'Owners',
             tHeadTitleDashboardName: 'Dashboard Name',
             description: 'Description',
+            dashboardEmptyHeader: 'You have no Widgets on this dashboard',
+            dashboardEmptyText: 'Add your first Widget to analyse statistics',
         },
 
 
