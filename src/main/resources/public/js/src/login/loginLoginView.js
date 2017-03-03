@@ -44,7 +44,8 @@ define(function(require, exports, module) {
         },
 
         events: {
-            'click [data-js-login-btn]': 'login',
+            'click [data-js-login-btn]': 'onSubmitForm',
+            'submit [data-js-login-login-form]': 'onSubmitForm',
             'mousedown [data-js-toggle-visability]': 'showPassword',
             'mouseup [data-js-toggle-visability]': 'hidePassword',
             'mouseout [data-js-toggle-visability]': 'hidePassword',
@@ -125,7 +126,11 @@ define(function(require, exports, module) {
             $('.visability-toggler', this.$el).removeClass('show');
             this.$pass.attr('type', 'password');
         },
-
+        onSubmitForm: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.login();
+        },
         login: function () {
             $('.rp-field', this.$el).find('input').trigger('validate');
             if ($('.validate-error', this.$el).length) return;

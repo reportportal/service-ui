@@ -88,6 +88,7 @@ define(function (require, exports, module) {
         },
 
         openAdmin: function (page, id, action, queryString) {
+            this.prepareInsideView();
             this.currentContext = page;
             if(id) {
                 appModel.set({projectId: id});
@@ -109,6 +110,7 @@ define(function (require, exports, module) {
 
         openRouted: function (projectId, contextName, subContext, queryString) {
             config.trackingDispatcher.pageView(contextName);
+            this.prepareInsideView();
             this.currentContext = contextName;
             this.checkForContextChange(contextName);
             this.validateMainViewForAdmin();
@@ -167,20 +169,28 @@ define(function (require, exports, module) {
         },
 
         openRegister: function (id) {
-            this.destroyViews();
-            this.mainView = new Register({
+            this.prepareOutsideView();
+            this.outsideView = new Register({
                 uuid: id,
                 context: this
             });
-            $("#mainContainer").html(this.mainView.el);
+            $('[data-js-notapplication-container]').html(this.outsideView.$el);
         },
-
         openLogin: function () {
-            this.destroyViews();
-            this.mainView = new LoginView({
+            this.prepareOutsideView();
+            this.outsideView = new LoginView({
                 context: this
             });
-            $("#mainContainer").html(this.mainView.el);
+            $('[data-js-notapplication-container]').html(this.outsideView.$el);
+        },
+        prepareOutsideView: function() {
+            this.destroyViews();
+            this.outsideView && this.outsideView.destroy();
+            $('[data-js-application-container]').addClass('hide');
+        },
+        prepareInsideView: function() {
+            this.outsideView && this.outsideView.destroy();
+            $('[data-js-application-container]').removeClass('hide');
         },
 
         isSettingsPage: function (context) {
