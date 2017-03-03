@@ -26,7 +26,7 @@
   margin: 0 auto;
   border-radius: 2px;
   box-shadow: 0 1px 3px 0 $COLOR--skipped;
-  background-image: url('../../img/registration/invitation-fail.png');
+  background-image: url('../../img/registration/registration-fail.png');
   background-repeat: no-repeat;
   -webkit-background-size: contain;
   background-size: contain;
@@ -34,7 +34,7 @@
   @media (max-width: 1010px) {
     left: 0;
     width: 320px;
-    background-image: url('../../img/registration/invitation-fail-mobile.png');
+    background-image: url('../../img/registration/registration-fail-mobile.png');
   }
 
   .logo-label {
@@ -43,7 +43,7 @@
     height: 23px;
     top: 31px;
     left: 59px;
-    background-image: url('../../img/registration/logo.png');
+    background-image: url('../../img/rp-logo.svg');
     background-repeat: no-repeat;
     -webkit-background-size: 100%;
     background-size: 100%;
@@ -53,6 +53,36 @@
       left: 20px;
       width: 100px;
       height: 17px;
+    }
+  }
+
+  .caption {
+    position: absolute;
+    top: 250px;
+    left: 75%;
+    display: block;
+    width: 335px;
+    margin-bottom: 50px;
+    font-family: $OpenSansRegular, sans-serif;
+    color: #6f898d;;
+    font-size: 26px;
+    text-align: center;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+
+    .big {
+      font-size: 32px;
+    }
+
+    @media (max-width: 1010px) {
+      top: 180px;
+      left: 50%;
+      width: 240px;
+      font-size: 16px;
+      .big {
+        font-size: 24px;
+      }
     }
   }
 

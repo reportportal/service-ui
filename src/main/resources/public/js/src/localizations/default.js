@@ -239,9 +239,9 @@ define(['util'], function () {
             restorePassword: "Restore Password",
             emailToBegin: "Enter email to begin",
             forgotPassword: "Forgot password?",
-            welcomeMsg: '<span class="welcome">Welcome,</span><br>login to your account',
-            welcomeMsgForgotPass: '<span class="welcome">Forgot password?</span><br>enter your email to restore',
-            welcomeMsgResetPass: '<span class="welcome">Change password</span><br>enter new password and confirm it',
+            welcomeMsg: '<span class="big">Welcome,</span><br>login to your account',
+            welcomeMsgForgotPass: '<span class="big">Forgot password?</span><br>enter your email to restore',
+            welcomeMsgResetPass: '<span class="big">Change password</span><br>enter new password and confirm it',
             epamLogin: '< Epam login >',
             gitHubLogin: '<svg aria-hidden="true" height="28" version="1.1" viewBox="0 0 16 16" width="28"><path' +
             ' d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38' +
@@ -1275,7 +1275,9 @@ define(['util'], function () {
         },
 
         registration: {
-            welcomeMsg: '<span class="welcome">Welcome,</span><br>complete the registration form',
+            caption: 'It should only take a couple of minutes to get started',
+            failCaption: '<span class="big">Oops,</span><br>this invitation has expired or already used',
+            welcomeMsg: '<span class="big">Welcome,</span><br>complete the registration form',
             loginHint: '1-128 symbols, Latin, numeric characters, symbols: hyphen, underscore',
             nameHint: '3-256 symbols, Latin, Cyrillic, numeric characters, symbols: hyphen, underscore, dot, space',
             passwordHint: '4-25 symbols'

@@ -33,6 +33,32 @@
     @media (max-width: 1010px) {
       display: block;
     }
+
+    .logo-label {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      width: 100px;
+      height: 16px;
+      background-image: url(../../img/rp-logo.svg);
+      background-repeat: no-repeat;
+      -webkit-background-size: 100%;
+      background-size: 100%;
+    }
+
+    .welcome-msg {
+      display: block;
+      width: 100%;
+      padding-top: 60px;
+      font-family: $OpenSansRegular, sans-serif;
+      color: #6f898d;;
+      font-size: 16px;
+      text-align: center;
+
+      .big {
+        font-size: 24px;
+      }
+    }
   }
   .welcome-msg {
     display: block;
@@ -43,7 +69,7 @@
     font-size: 24px;
     text-align: center;
 
-    .welcome {
+    .big {
       font-size: 32px;
     }
 
