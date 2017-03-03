@@ -322,7 +322,11 @@ define(function (require, exports, module) {
             this.$el.toggleClass('open');
         },
         activateAccordion: function() {
-            if (this.$el.innerHeight() > 198) {
+            var innerHeight = 198;
+            if($(window).width() < 900) {
+                innerHeight = 318;
+            }
+            if (this.$el.innerHeight() > innerHeight) {
                 this.$el.addClass('show-accordion');
             } else {
                 this.$el.removeClass('show-accordion');

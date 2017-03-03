@@ -25,6 +25,9 @@ $step-status-cell-width: 8%;
 $step-select-cell-width: 2%;
 $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - $step-status-cell-width - $step-select-cell-width);
 .step-grid {
+  .accordion-arrow {
+    display: none;
+  }
     .grid-cell {
         &.name-grid-cell {
             padding-left: 20px;
@@ -99,6 +102,43 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
         .rp-grid-thead {
             display: none;
         }
+      .rp-table-row.row {
+        &.show-accordion {
+          .accordion-arrow {
+            position: absolute;
+            display: block;
+            top: -10px;
+            right: 5px;
+            padding: 10px;
+            cursor: pointer;
+          }
+        }
+        &.open {
+          .overflow-wrapper {
+            padding-bottom: 10px;
+            .accordion-block {
+              .mobile-open {
+                display: none;
+              }
+            }
+          }
+        }
+        .overflow-wrapper {
+          .accordion-block {
+            height: 30px;
+            .mobile-open {
+              position: absolute;
+              top: -50px;
+              right: 0;
+              left: 0;
+              bottom: 0;
+            }
+            i {
+              display: none !important;
+            }
+          }
+        }
+      }
         .grid-cell {
             &.time-grid-cell, &.status-grid-cell, &.select-grid-cell {
                 display: none;

@@ -40,7 +40,6 @@ module.exports = function (grunt) {
                     cwd: rootPath,
                     src: [
                         'img/**',
-                        'Images/**',
                         'css/**/*.css',
                         'eqcss/**/*.eqcss',
                         'js/lib/**/*.js',
@@ -56,7 +55,6 @@ module.exports = function (grunt) {
                     cwd: rootPath,
                     src: [
                         'img/**',
-                        'Images/**',
                         'eqcss/**/*.eqcss',
                         'compiled/**',
                         'epam/**'
@@ -87,10 +85,6 @@ module.exports = function (grunt) {
             main: {
                 src: 'templates/index.html',
                 dest: publicPath + '/index.html'
-            },
-            certificate: {
-                src: 'certificate/reportportal-client-v2.jks',
-                dest: publicPath + '/certificate/reportportal-client-v2.jks'
             },
             images: {
                 src: 'img/**',
@@ -181,10 +175,6 @@ module.exports = function (grunt) {
                 files: ['js/src/**/*.js'],
                 tasks: ['string-replace:jsDist']
             },
-            assemble: {
-                files: ['md/**/*.hbs', 'md/**/*.md'],
-                tasks: ['assemble:documentation']
-            },
             index: {
                 files: ['templates/index.html'],
                 tasks: ['copy:main']
@@ -255,25 +245,6 @@ module.exports = function (grunt) {
                 },
                 files: {
                     'compiled/scss/main.css': 'scss/main.scss'
-                }
-            }
-        },
-        assemble: {
-            options: {
-                flatten: true,
-                layoutdir: 'md/layout',
-                partials: ['./*.md'],
-                // plugins: ['grunt-assemble-navigation', 'grunt-assemble-anchors', 'grunt-reportportal-toc', 'grunt-reportportal-link'],
-                anchors: {
-                    template: 'md/md-template.js'
-                }
-            },
-            documentation: {
-                options: {
-                    layout: 'default.hbs'
-                },
-                files: {
-                    'compiled/': ['md/pages/*.hbs']
                 }
             }
         },
@@ -365,7 +336,6 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt, {
         pattern: [
             'grunt-*',
-            '!grunt-assemble-*',
             '!grunt-reportportal-*',
             '!grunt-legacy-util'
         ]
@@ -375,7 +345,6 @@ module.exports = function (grunt) {
         'compileResource',
         [
             'jst',
-            'assemble',
             'copy:images',
             'copy:fonts'
         ]
@@ -392,7 +361,6 @@ module.exports = function (grunt) {
             'copy:main',
             'copy:mainDevelop',
             'copy:swagger',
-            'copy:certificate',
             'postcss:develop',
             'string-replace:jsDist',
             'sync:main',
@@ -411,7 +379,6 @@ module.exports = function (grunt) {
             'string-replace:jsProd',
             'concat:production',
             'copy:mainProduction',
-            'copy:certificate',
             'copy:jsLib',
             'copy:swagger',
             'postcss:production',
