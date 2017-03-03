@@ -27,6 +27,8 @@ define(function(require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var Service = require('coreService');
+    var App = require('app');
+    var config = App.getInstance();
 
     var LoginRestoreView = Epoxy.View.extend({
         className:'login-restore-subpage',
