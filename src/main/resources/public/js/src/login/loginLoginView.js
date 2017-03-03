@@ -51,6 +51,7 @@ define(function(require, exports, module) {
             'validation:success .rp-input': 'checkLoginFields',
             'click [data-js-github-login-btn]': 'gitHubLogin',
             'click [data-js-forgot-pass]': 'onForgotPass',
+            'focus .rp-input': 'unHighlight'
         },
 
         computeds: {
@@ -78,7 +79,7 @@ define(function(require, exports, module) {
             this.$login = $('[data-js-login]', this.$el);
             this.$pass = $('[data-js-password]', this.$el);
             this.$loginBtn = $('[data-js-login-btn]', this.$el);
-            this.$loginForm = $('[data-js-login-form-wrapper]', this.$el);
+            this.$loginForm = $('[data-js-login-login-form]', this.$el);
         },
 
         bindValidators: function () {
@@ -144,12 +145,8 @@ define(function(require, exports, module) {
                     if (response.status == 403) {
                         self.showBlockMessage();
                         /* OAuth Spec says wrong creds is 400 */
-                    } else if (response.status == 400) {
-                        //self.showError(Localization.ui.wrongCredentials);
-                    } else if (response.status == 500 && JSON.parse(response.responseText).error_code === 5000) {
-                        $('.rp-field', self.$el).each(function (i, item) {
-                            $(item).addClass('validate-error');
-                        });
+                    } else if (response.status == 400 && JSON.parse(response.responseText).error_code === 4003) {
+                        self.$loginForm.addClass('bad-credentials');
                     }
                 });
         },
@@ -182,6 +179,10 @@ define(function(require, exports, module) {
 
         onForgotPass: function () {
           this.trigger('forgotPass');
+        },
+
+        unHighlight: function () {
+            this.$loginForm.removeClass('bad-credentials');
         },
 
         destroy: function(){
