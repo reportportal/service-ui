@@ -48,7 +48,7 @@ define(function(require, exports, module) {
             'submit [data-js-login-login-form]': 'onSubmitForm',
             'mousedown [data-js-toggle-visability]': 'showPassword',
             'mouseup [data-js-toggle-visability]': 'hidePassword',
-            'mouseout [data-js-toggle-visability]': 'hidePassword',
+            'mouseleave [data-js-toggle-visability]': 'hidePassword',
             'validation:success .rp-input': 'checkLoginFields',
             'click [data-js-github-login-btn]': 'gitHubLogin',
             'click [data-js-forgot-pass]': 'onForgotPass',
@@ -117,13 +117,13 @@ define(function(require, exports, module) {
             window.location = window.location.protocol + '//' + window.location.host + '/uat/sso/login/github';
         },
 
-        showPassword: function () {
-            $('.visability-toggler', this.$el).addClass('show');
+        showPassword: function (e) {
+            $(e.currentTarget).addClass('show');
             this.$pass.attr('type', 'text');
         },
 
-        hidePassword: function () {
-            $('.visability-toggler', this.$el).removeClass('show');
+        hidePassword: function (e) {
+            $(e.currentTarget).removeClass('show');
             this.$pass.attr('type', 'password');
         },
         onSubmitForm: function(e) {

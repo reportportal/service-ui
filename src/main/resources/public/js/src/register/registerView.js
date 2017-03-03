@@ -53,7 +53,7 @@ define(function(require, exports, module) {
             'click [data-js-cancel]': 'resetForm',
             'click [data-js-register]': 'registerMember',
             'mousedown [data-js-toogle-visability]': 'showPass',
-            'mouseout [data-js-toogle-visability]': 'hidePass',
+            'mouseleave [data-js-toogle-visability]': 'hidePass',
             'mouseup [data-js-toogle-visability]': 'hidePass',
             'validation:success .rp-input': 'checkFields',
             'validation:success [data-js-login]' : 'checkForLoginUniqueness'

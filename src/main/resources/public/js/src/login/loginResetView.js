@@ -39,7 +39,7 @@ define(function(require, exports, module) {
 
         events: {
             'mousedown [data-js-toogle-visability]': 'showPass',
-            'mouseout [data-js-toogle-visability]': 'hidePass',
+            'mouseleave [data-js-toogle-visability]': 'hidePass',
             'mouseup [data-js-toogle-visability]': 'hidePass',
             'validation:success .rp-input': 'checkFields',
             'click [data-js-reset-pass-btn]': 'submitChangePass'
