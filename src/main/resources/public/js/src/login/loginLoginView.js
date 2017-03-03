@@ -144,7 +144,7 @@ define(function(require, exports, module) {
             var self = this;
             this.user.login(login, pass)
                 .done(function () {
-                    $('.js-header, .js-sidebar').removeClass("hide");
+
                 })
                 .fail(function(response){
                     if (response.status == 403) {

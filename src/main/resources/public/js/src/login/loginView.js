@@ -47,7 +47,6 @@ define(function(require, exports, module) {
 
 
         initialize: function(options) {
-            $('.js-header, .js-sidebar').addClass("hide");
             this.viewModel = new SingletonRegistryInfoModel();
             this.render();
 
