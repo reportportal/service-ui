@@ -43,10 +43,10 @@ define(function (require, exports, module) {
         className: 'modal-defect-editor',
 
         events: {
-            // 'input textarea': 'validateForSubmition',
             'click [data-js-save]': 'updateDefectType',
             'click [data-js-select-issue]': 'selectIssueType',
-            // 'click [data-js-close-editor]': 'closeEditor'
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
 
         initialize: function(option) {
@@ -159,6 +159,12 @@ define(function (require, exports, module) {
             }
             return true;
         },
+        onClickClose: function(e){
+            config.trackingDispatcher.trackEventNumber(157);
+        },
+        onClickCancel: function(e){
+            config.trackingDispatcher.trackEventNumber(159);
+        },
         updateDefectType: function () {
             if (this.inProcess) {
                 return;
@@ -167,6 +173,7 @@ define(function (require, exports, module) {
                 this.successClose();
                 return true;
             }
+            config.trackingDispatcher.trackEventNumber(160);
             this.inProcess = true;
             var comment = this.markdownEditor.getValue();
             var selectedIssue = this.selectedIssue;
@@ -175,6 +182,7 @@ define(function (require, exports, module) {
             _.forEach(this.items, function (item) {
                 var issue = item.getIssue();
                 if((replaceComments && this.isMultipleEdit()) || (!this.isMultipleEdit())){
+                    config.trackingDispatcher.trackEventNumber(158);
                     issue.comment = comment;
                 }
                 issue.issue_type = selectedIssue || this.getIssueType(item);

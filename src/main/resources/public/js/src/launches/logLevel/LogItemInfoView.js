@@ -48,20 +48,36 @@ define(function (require, exports, module) {
 
         events: {
             'click [data-js-item-stack-trace-label]': function () {
-                this.toggleModelField('stackTrace')
+                config.trackingDispatcher.trackEventNumber(200);
+                this.toggleModelField('stackTrace');
             },
             'click [data-js-item-gallery-label]': function () {
+                config.trackingDispatcher.trackEventNumber(201);
                 this.toggleModelField('attachments')
             },
             'click [data-js-item-details-label]': function () {
+                config.trackingDispatcher.trackEventNumber(202);
                 this.toggleModelField('itemDetails')
             },
             'click [data-js-item-activity-label]': function () {
+                config.trackingDispatcher.trackEventNumber(203);
                 this.toggleModelField('activity')
             },
             'click [data-js-match]': 'onClickMatch',
             'click [data-js-post-bug]': 'onClickPostBug',
-            'click [data-js-load-bug]': 'onClickLoadBug'
+            'click [data-js-load-bug]': 'onClickLoadBug',
+            'mouseenter [data-js-item-stack-trace-label]': function(){
+                config.trackingDispatcher.trackEventNumber(196);
+            },
+            'mouseenter [data-js-item-gallery-label]': function(){
+                config.trackingDispatcher.trackEventNumber(197);
+            },
+            'mouseenter [data-js-item-details-label]': function(){
+                config.trackingDispatcher.trackEventNumber(198);
+            },
+            'mouseenter [data-js-item-activity-label]': function(){
+                config.trackingDispatcher.trackEventNumber(199);
+            }
         },
 
         bindings: {
@@ -132,6 +148,7 @@ define(function (require, exports, module) {
             if(this.validateForIssue()){
                 this.issueView = new StepLogDefectTypeView({
                     model: this.viewModel,
+                    pageType: 'logs',
                     el: $('[data-js-step-issue]', this.$el)
                 });
             }
@@ -182,12 +199,15 @@ define(function (require, exports, module) {
             return !!this.viewModel.get('issue');
         },
         onClickPostBug: function () {
-            PostBugAction({items: [this.viewModel]});
+            config.trackingDispatcher.trackEventNumber(193);
+            PostBugAction({items: [this.viewModel], from: 'logs'});
         },
         onClickLoadBug: function () {
-            LoadBugAction({items: [this.viewModel]});
+            config.trackingDispatcher.trackEventNumber(194);
+            LoadBugAction({items: [this.viewModel], from: 'logs'});
         },
         onClickMatch: function () {
+            config.trackingDispatcher.trackEventNumber(195);
             var self = this;
             call('POST', Urls.launchMatchUrl(this.viewModel.get('launchId')))
                 .done(function (response) {

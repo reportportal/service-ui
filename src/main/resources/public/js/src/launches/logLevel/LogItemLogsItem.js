@@ -57,6 +57,7 @@ define(function (require, exports, module) {
         },
 
         onClickOpen: function() {
+            config.trackingDispatcher.trackEventNumber(213);
             this.$el.toggleClass('open');
         },
 
@@ -86,6 +87,7 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickImg: function() {
+            config.trackingDispatcher.trackEventNumber(212);
             var modal,
                 contentType = this.model.get('binary_content').content_type,
                 binaryId = this.model.get('binary_content').id;

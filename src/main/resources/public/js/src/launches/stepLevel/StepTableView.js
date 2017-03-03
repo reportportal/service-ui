@@ -41,7 +41,7 @@ define(function (require, exports, module) {
             'click .rp-grid-th[data-filter] .rp-icons-filter': 'onClickFilter',
             'click [data-js-collapse-label]': 'clickCollapseInput',
             'change [data-js-select-all]': 'onChangeSelectAll',
-            'change [data-js-collapse-input]': function(e) { this.onChangeCollapseInput($(e.currentTarget)); },
+            'change [data-js-collapse-input]': 'onChangeCollapse',
         },
         bindings: {
             '[data-js-table-container]': 'classes: {"exact-driven": updateTimeFormat}',
@@ -93,6 +93,10 @@ define(function (require, exports, module) {
         clickCollapseInput: function(e) {
             e.stopPropagation();
         },
+        onChangeCollapse: function(e){
+            config.trackingDispatcher.trackEventNumber(138);
+            this.onChangeCollapseInput($(e.currentTarget));
+        },
         onChangeCollapseInput: function($el, silent) {
             var active = $el.is(':checked');
             this.userStorage.set('statusPreconditions', active);
@@ -103,9 +107,6 @@ define(function (require, exports, module) {
             } else {
                 $('[data-js-table-container]', this.$el).removeClass('hide-collapsed-methods');
             }
-            if(!silent) {
-                // config.trackingDispatcher.preconditionMethods(active ? 'ON' : 'OFF');
-            }
             $('[data-js-collapse-label]', this.$el).attr('title', title);
         },
         applyPreconditionsStatus: function(){
@@ -115,6 +116,7 @@ define(function (require, exports, module) {
         },
         onChangeSelectAll: function(e) {
             var value = false;
+            config.trackingDispatcher.trackEventNumber(151);
             if($(e.currentTarget).is(':checked')) {
                 value = true;
             }
@@ -125,6 +127,23 @@ define(function (require, exports, module) {
         onClickSorter: function(e) {
             var sorter = $(e.currentTarget).data('sorter');
             var filterParams = this.filterModel.getParametersObj();
+            switch (sorter) {
+                case 'type':
+                    config.trackingDispatcher.trackEventNumber(140);
+                    break;
+                case 'name':
+                    config.trackingDispatcher.trackEventNumber(142);
+                    break;
+                case 'status':
+                    config.trackingDispatcher.trackEventNumber(144);
+                    break;
+                case 'start_time':
+                    config.trackingDispatcher.trackEventNumber(146);
+                    break;
+                case 'issue$issue_type':
+                    config.trackingDispatcher.trackEventNumber(148);
+                    break;
+            }
             if(filterParams.sorting_column == sorter) {
                 filterParams.is_asc = !filterParams.is_asc;
             } else {
@@ -136,6 +155,23 @@ define(function (require, exports, module) {
         onClickFilter: function(e) {
             e.stopPropagation();
             var filterId = $(e.currentTarget).closest('.rp-grid-th').data('filter');
+            switch (filterId) {
+                case 'type':
+                    config.trackingDispatcher.trackEventNumber(139);
+                    break;
+                case 'name':
+                    config.trackingDispatcher.trackEventNumber(141);
+                    break;
+                case 'status':
+                    config.trackingDispatcher.trackEventNumber(143);
+                    break;
+                case 'start_time':
+                    config.trackingDispatcher.trackEventNumber(145);
+                    break;
+                case 'issue$issue_type':
+                    config.trackingDispatcher.trackEventNumber(147);
+                    break;
+            }
             if(this.filterModel.get('id') == 'all') {
                 var launchFilterCollection = new SingletonLaunchFilterCollection();
                 var tempFilterModel = launchFilterCollection.generateTempModel();

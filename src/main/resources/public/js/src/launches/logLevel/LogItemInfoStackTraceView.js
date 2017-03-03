@@ -95,6 +95,7 @@ define(function (require, exports, module) {
             $('[data-js-stack-trace-wrapper]', this.$el).removeClass('load');
         },
         onClickGoToLog: function() {
+            config.trackingDispatcher.trackEventNumber(214);
             $('[data-js-stack-trace-wrapper]', this.$el).addClass('load-go-to-log');
             this.trigger('goToLog', this.collection.models[0].get('id'))
         },

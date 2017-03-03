@@ -130,6 +130,7 @@ define(function (require, exports, module) {
         },
         onChangeSelectAll: function(e) {
             var value = false;
+            config.trackingDispatcher.trackEventNumber(61.1);
             if($(e.currentTarget).is(':checked')) {
                 value = true;
             }

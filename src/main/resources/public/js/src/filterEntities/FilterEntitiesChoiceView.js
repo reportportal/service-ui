@@ -54,6 +54,9 @@ define(function (require, exports, module) {
             if(this.filterLevel == 'suit'){
                 config.trackingDispatcher.trackEventNumber(97.1);
             }
+            else if(this.filterLevel == 'test'){
+                config.trackingDispatcher.trackEventNumber(136);
+            }
         }
 
     });

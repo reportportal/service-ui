@@ -22,15 +22,18 @@ define(function (require, exports, module) {
     'use strict';
 
     var ModalPostBug = require('modals/modalPostBug');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var PostBugAction = function(options) {
         var items = options.items;
         var modal = (new ModalPostBug({
             items: items,
+            from: options.from
         }));
         return modal.show();
     };
-
 
     return PostBugAction;
 });

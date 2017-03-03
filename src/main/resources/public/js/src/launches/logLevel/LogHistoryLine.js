@@ -104,6 +104,7 @@ define(function (require, exports, module) {
 
         events: {
             'click': 'onClickItem',
+            'mouseenter': 'onHoverItem'
         },
         bindings: {
             '[data-js-launch-number]': 'text: launchNumber',
@@ -160,9 +161,13 @@ define(function (require, exports, module) {
         },
         onClickItem: function() {
             if(!this.model.get('active') && this.isAction()){
+                config.trackingDispatcher.trackEventNumber(190);
                 this.model.trigger('activate', this.model);
                 this.model.trigger('hover:false');
             }
+        },
+        onHoverItem: function(){
+            config.trackingDispatcher.trackEventNumber(189);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));
