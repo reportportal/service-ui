@@ -44,6 +44,11 @@ define(function (require, exports, module) {
                 ]
             });
             $('[data-js-main-breadcrumbs]', this.$el).append(this.mainBreadcrumbs.$el);
+            this.mainBreadcrumbs.$el.on('click [data-js-link]', function(e){
+                if($(e.target).text() == Localization.dashboard.allDashboards){
+                    config.trackingDispatcher.trackEventNumber(279);
+                }
+            });
             var self = this;
             this.collection.ready.done(function() {
                 self.listenTo(self.collection, 'change:active', self.onChangeActive);
@@ -63,6 +68,7 @@ define(function (require, exports, module) {
             })
         },
         onClickAddDashboard: function(e) {
+            config.trackingDispatcher.trackEventNumber(260);
             this.collection.createNewDashboard();
         },
         onChangeActive: function(model, active) {

@@ -232,7 +232,6 @@ define(function(require, exports, module) {
         186: ['Log', 'Click on Bttn prev Method', 'Transition to prev Method Item'],
         187: ['Log', 'Click on Bttn next Method', 'Transition to next Method Item'],
         188: ['Log', 'Click on Bttn Refresh', 'Refresh page'],
-
         189: ['Log', 'Hover on History execution tab', 'Arise tooltip'],
         190: ['Log', 'Click on History execution tab', 'Transition to item log page'],
         191: ['Log', 'Hover on Defect type tag', 'Arise icon Edit'],
@@ -240,7 +239,6 @@ define(function(require, exports, module) {
         193: ['Log', 'Click on Bttn Post Bug', 'Arise Modal Post Bug'],
         194: ['Log', 'Click on Bttn Load Bug', 'Arise Modal Load Bug'],
         195: ['Log', 'Click on Bttn Match issues in launch', 'Begin autoanalysis'],
-
         196: ['Log', 'Hover on Stack Trace tab', 'Tab becomes active'],
         197: ['Log', 'Hover on Attachments tab', 'Tab becomes active'],
         198: ['Log', 'Hover on Item Details tab', 'Tab becomes active'],
@@ -249,20 +247,17 @@ define(function(require, exports, module) {
         201: ['Log', 'Click on Attachments tab', 'Open Attachments tab'],
         202: ['Log', 'Click on Item Details tab', 'Open Item Details tab'],
         203: ['Log', 'Click on History of Actions tab', 'Open History of Actions tab'],
-
         204: ['Log', 'Click on Log level filter', 'Arise log level filter dropdown'],
         205: ['Log', 'Select Log level filter in dropdown', 'Filter by selected parametr'],
         206: ['Log', 'Click on checkbox Logs with attachments', 'Check/uncheck logs with attachments'],
         207: ['Log', 'Click on Bttn Next Error', 'Transition to next error page'],
         208: ['Log', 'Click on Bttn Previous Log message page', 'Transition to previous log message page'],
         209: ['Log', 'Click on Bttn Next Log message page', 'Transition to next log message page'],
-
         210: ['Log', 'Enter filter parameter in Log message input', 'Filter log messages by parameter'],
         211: ['Log', 'Click on icon Sorting on Time in Log Message', 'Sort logs'],
         212: ['Log', 'Click on Attachment in Log Message', 'Open Attachment'],
         213: ['Log', 'Click on icon Expand in Log Message', 'Expand/close log'],
         214: ['Log', 'Click on Go to Stack Trace link in Stack Trace tab', 'Open Stack Trace log message'],
-
         215: ['Log', 'Click on Icon Close on Modal Post Bug', 'Close Modal Post Bug'],
         216: ['Log', 'Click on Screenshots switcher on Modal Post Bug', 'On/off Screenshots in Modal Post Bug'],
         217: ['Log', 'Click on Logs switcher on Modal Post Bug', 'On/off Logs in Modal Post Bug'],
@@ -281,7 +276,6 @@ define(function(require, exports, module) {
         244: ['Filters', 'Click on icon Delete on Filter Page', 'Arise Modal Delete filter'],
         245: ['Filters', 'Click on icon Edit on Filter name', 'Arise Modal Edite filter'],
         246: ['Filters', 'Click on icon Shared on Filter', 'Arise Modal Edite filter'],
-
         247: ['Filters', 'Click on icon Close on Modal Edit Filter', 'Close Modal Edit Filter'],
         248: ['Filters', 'Enter description in Modal Edit Filter', 'Description'],
         249: ['Filters', 'Click on Share on/off in Modal Edit Filter', 'Share/unshare Filter'],
@@ -291,6 +285,34 @@ define(function(require, exports, module) {
         253: ['Filters', 'Click on Bttn Cancel in Modal Delete Filter', 'Close Modal Delete Filter'],
         254: ['Filters', 'Click on Bttn Delete in Modal Delete Filter', 'Delete Filter'],
         255: ['Filters', 'Click on Bttn Add Filter on empty page', 'Transition to Launches Page'],
+
+        260: ['Dashboard', 'Click on Bttn Add New Dashboard', 'Arise Modal Add New Dashboard'],
+        261: ['Dashboard', 'Enter parameter for search', 'Show dashboards by parameter'],
+        262: ['Dashboard', 'Click on Dashboard name', 'Transition to Dashboard'],
+        263: ['Dashboard', 'Click on icon Settings on Dashboard tile', 'Arise Modal Edit Dashboard'],
+        264: ['Dashboard', 'Click on icon Close on Dashboard tile', 'Arise Modal Delete Dashboard'],
+        265: ['Dashboard', 'Click on Shared Dashboard name', 'Transition to Dashboard'],
+        266: ['Dashboard', 'Click on icon Close on Modal Add New Dashboard', 'Close Modal Add New Dashboard'],
+        267: ['Dashboard', 'Enter description in Modal Add New Dashboard', 'Description'],
+        268: ['Dashboard', 'Click on Share on/off in Modal Add New Dashboard', 'Share/unshare Dashboard'],
+        269: ['Dashboard', 'Click on Bttn Cancel in Modal Add New Dashboard', 'Close Modal Add New Dashboard'],
+        270: ['Dashboard', 'Click on Bttn Add in Modal Add New Dashboard', 'Add Dashboard'],
+        271: ['Dashboard', 'Click on icon Close on Modal Edit Dashboard', 'Close Modal Edit Dashboard'],
+        272: ['Dashboard', 'Enter description in Modal Edit Dashboard', 'Description'],
+        273: ['Dashboard', 'Click on Share on/off in Modal Edit Dashboard', 'Share/unshare Dashboard'],
+        274: ['Dashboard', 'Click on Bttn Cancel in Modal Edit Dashboard', 'Close Modal Edit Dashboard'],
+        275: ['Dashboard', 'Click on Bttn Update in Modal Edit Dashboard', 'Update Dashboard'],
+        276: ['Dashboard', 'Click on icon Close on Modal Delete Dashboard', 'Close Modal Delete Dashboard'],
+        277: ['Dashboard', 'Click on Bttn Cancel in Modal Delete Dashboard', 'Close Modal Delete Dashboard'],
+        278: ['Dashboard', 'Click on Bttn Delete in Modal Delete Dashboard', 'Delete Dashboard'],
+        279: ['Dashboard', 'Click on Bread Crumb All Dashboards', 'Transition to All Dashboards'],
+        280: ['Dashboard', 'Click on Bttn Add New Widget on Dashboard', 'Arise Modal Add New Widget'],
+        281: ['Dashboard', 'Click on Bttn Add Shared Widget on Dashboard', 'Arise Modal Add Shared Widget'],
+        282: ['Dashboard', 'Click on Bttn Edit on Dashboard', 'Arise Modal Edit Dashboard'],
+        283: ['Dashboard', 'Click on Bttn Full Screen on Dashboard', 'Full Screen of Dashboard'],
+        284: ['Dashboard', 'Click on Bttn Remove on Dashboard', 'Arise Modal Delete Dashboard'],
+
+        346: ['Dashboard', 'Click on Bttn Add New Dashboard on empty page', 'Arise Modal Add New Dashboard'],
 
 
     }

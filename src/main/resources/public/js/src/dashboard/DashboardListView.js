@@ -60,7 +60,8 @@ define(function (require, exports, module) {
                 self.listenTo(self.collection, 'add', self.onAddCollection);
                 self.listenTo(self.collection, 'remove', self.onRemoveCollection);
                 self.changeCollection();
-            })
+            });
+            this.listenTo(this.model, 'change:search', this.onChangeSearch);
 
         },
         onAddCollection: function() {
@@ -103,7 +104,11 @@ define(function (require, exports, module) {
             }]);
         },
         onClickAddDashboard: function() {
+            config.trackingDispatcher.trackEventNumber(346);
             this.collection.createNewDashboard();
+        },
+        onChangeSearch: function(){
+            config.trackingDispatcher.trackEventNumber(261);
         },
         onChangeDashboardName: function (e) {
             $(e.currentTarget).val($(e.currentTarget).val().trim());
