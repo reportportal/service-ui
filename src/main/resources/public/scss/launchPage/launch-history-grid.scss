@@ -82,9 +82,11 @@ $borderRadius100: 100px;
             &:first-child {
                 border-left: none;
                 padding-left: 15px;
+              max-width: 300px;
             }
             .rp-grid-name {
                 font-family: OpenSansSemiBold;
+              word-wrap: break-word;
                 a {
                     color: $COLOR--windows-blue;
                     text-decoration: none;
