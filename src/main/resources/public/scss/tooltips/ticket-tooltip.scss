@@ -19,8 +19,18 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'common';
-@import 'duration-tooltip';
-@import 'executions-tooltip';@import 'message-tooltip';
-@import 'regenerate-uuid-tooltip';
-@import 'ticket-tooltip';
+.ticket-tooltip {
+  width: 200px;
+  text-align: center;
+
+  .ui-tooltip-message {
+    display: block;
+    text-align: left;
+
+    span {
+      text-transform: uppercase;
+      color: #777;
+      font-family: "OpenSansSemibold";
+    }
+  }
+}

@@ -1,7 +1,7 @@
 <div class="overflow-wrapper">
     <div class="grid-cell name-grid-cell name-cell <%= (data.type == 'LAUNCH') ? 'launch-name-cell' : '' %>">
-
         <div class="name-grid-overflow">
+            <i class="accordion-arrow rp-icons rp-icons-expand" data-js-toggle-open></i>
             <h5 class="rp-grid-name">
                 <a href="" data-js-name-link><span data-js-name></span><span data-js-launch-number></span></a><span class="autoanalyze" data-js-analize-label><%= data.text.ui.analyze %></span>&nbsp;&nbsp;<i class="item-edit-icon material-icons" data-js-item-edit>edit</i>
             </h5>
@@ -29,6 +29,15 @@
             <span class="exact-time" data-js-time-exact></span>
         </div>
     </div>
+    <div class="accordion-block">
+        <div class="mobile-open" data-js-toggle-open></div>
+        <i class="material-icons" data-js-toggle-open>keyboard_arrow_down</i>
+        <i class="material-icons little" data-js-toggle-open>keyboard_arrow_up</i>
+    </div>
+</div>
+<div class="statistics-block">
+    <div class="grid-cell name-grid-cell"></div>
+    <div class="grid-cell time-grid-cell"></div>
     <div class="grid-cell number-grid-cell total-number"><p class="mobile-title"><%- data.text.launchesHeaders.total %></p><a data-js-statistics-total></a></div>
     <div class="grid-cell number-grid-cell"><p class="mobile-title"><%- data.text.launchesHeaders.passed %></p><a data-js-statistics-passed></a></div>
     <div class="grid-cell number-grid-cell"><p class="mobile-title"><%- data.text.launchesHeaders.failed %></p><a data-js-statistics-failed></a></div>
@@ -46,10 +55,6 @@
                 </label>
             </div>
         </div>
-    </div>
-    <div class="accordion-block">
-        <i class="material-icons" data-js-toggle-open>keyboard_arrow_down</i>
-        <i class="material-icons little" data-js-toggle-open>keyboard_arrow_up</i>
     </div>
 </div>
 <% if(data.type == 'LAUNCH') { %>
