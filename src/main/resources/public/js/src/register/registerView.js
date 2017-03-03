@@ -130,7 +130,7 @@ define(function(require, exports, module) {
         },
 
         checkFields: function () {
-            if (this.$confirmPassword.val() !== this.$password.val()) {
+            if (this.$confirmPassword.val() !== this.$password.val() && this.$confirmPassword.val() !== '') {
                 this.$confirmPassword.parent().addClass('validate-error').find('.validate-hint').addClass('show-hint').html(Localization.validation.confirmMatch);
             } else {
                 this.$confirmPassword.parent().removeClass('validate-error').find('.validate-hint').removeClass('show-hint');

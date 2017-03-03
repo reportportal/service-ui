@@ -112,7 +112,7 @@ define(function(require, exports, module) {
         },
 
         checkFields: function () {
-            if (this.$confirmPass.val() !== this.$pass.val()) {
+            if (this.$confirmPass.val() !== this.$pass.val() && this.$confirmPass.val() !== '') {
                 this.$confirmPass.parent().addClass('validate-error').find('.validate-hint').addClass('show-hint').html(Localization.validation.confirmMatch);
             } else {
                 this.$confirmPass.parent().removeClass('validate-error').find('.validate-hint').removeClass('show-hint');
