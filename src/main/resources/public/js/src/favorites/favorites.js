@@ -113,6 +113,7 @@ define(function (require, exports, module) {
         },
         onChangeFilterName: function (e, data) {
             if (data.valid) {
+                config.trackingDispatcher.trackEventNumber(240);
                 this.paging.urlModel.set({'filter.cnt.name': data.value});
                 this.model.set({search: data.value});
                 this.searchString = data.value;
@@ -180,7 +181,14 @@ define(function (require, exports, module) {
             var launchPath = appModel.get('projectId') + '/launches/all';
             config.router.navigate(launchPath, {trigger: true});
         },
-        onClickAddFilter: function() {
+        onClickAddFilter: function(e) {
+            var $target = $(e.currentTarget);
+            if($target.closest('[data-js-empty-block]').length){
+                config.trackingDispatcher.trackEventNumber(255);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(241);
+            }
             var newFilter = this.launchFilterCollection.generateTempModel();
             config.router.navigate(newFilter.get('url'), {trigger: true});
         },

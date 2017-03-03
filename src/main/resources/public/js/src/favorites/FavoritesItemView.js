@@ -28,13 +28,17 @@ define(function (require, exports, module) {
     var Util = require('util');
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var FavoritesItemView = Epoxy.View.extend({
         className: 'row rp-table-row',
         events: {
             'click [data-js-remove]': 'onClickRemove',
             'click [data-js-filter-edit]': 'onClickEdit',
-            'click [data-js-filter-shared]': 'onClickEdit',
+            'click [data-js-filter-shared]': 'onClickShared',
+            'click [data-js-filter-link]': 'onClickName'
         },
         bindings: {
             ':el': 'classes: {"not-owner": notMyFilter}',
@@ -52,12 +56,17 @@ define(function (require, exports, module) {
         },
         initialize: function() {
             this.render();
+            this.listenTo(this.model, 'change:isLaunch', this.onSwitchOnLaunches);
         },
         template: 'tpl-favorite-item',
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
+        onSwitchOnLaunches: function(){
+            config.trackingDispatcher.trackEventNumber(243);
+        },
         onClickRemove: function() {
+            config.trackingDispatcher.trackEventNumber(244);
             var self = this;
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteFilter,
@@ -71,9 +80,32 @@ define(function (require, exports, module) {
                     self.destroy();
                     return self.model.remove();
                 });
+            modal.$el.on('click', function(e){
+                var $target = $(e.target),
+                    isCancel = $target.is('[data-js-cancel]'),
+                    isDelete = $target.is('[data-js-ok]'),
+                    isClose = ($target.is('[data-js-close]') || $target.is('[data-js-close] i'));
+                if(isClose){
+                    config.trackingDispatcher.trackEventNumber(252);
+                }
+                else if(isCancel){
+                    config.trackingDispatcher.trackEventNumber(253);
+                }
+                else if(isDelete){
+                    config.trackingDispatcher.trackEventNumber(254);
+                }
+            });
+        },
+        onClickShared: function(){
+            config.trackingDispatcher.trackEventNumber(246);
+            this.model.editMainInfo();
         },
         onClickEdit: function() {
+            config.trackingDispatcher.trackEventNumber(245);
             this.model.editMainInfo();
+        },
+        onClickName: function(e){
+            config.trackingDispatcher.trackEventNumber(242);
         },
         destroy: function() {
             this.remove();

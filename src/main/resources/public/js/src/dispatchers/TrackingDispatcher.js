@@ -274,6 +274,24 @@ define(function(require, exports, module) {
         223: ['Log', 'Click on Bttn Cancel on Modal Load Bug', 'Close Modal Load Bug'],
         224: ['Log', 'Click on Bttn Load on Modal Load Bug', 'Load bug'],
 
+        240: ['Filters', 'Enter parameter for search', 'Show filters by parameter'],
+        241: ['Filters', 'Click on Bttn Add Filter', 'Transition to Launches Page'],
+        242: ['Filters', 'Click on Filter name', 'Transition to Launch Page'],
+        243: ['Filters', 'Click on Filter on/off switcher', 'Show/hide Filter on Launch Page'],
+        244: ['Filters', 'Click on icon Delete on Filter Page', 'Arise Modal Delete filter'],
+        245: ['Filters', 'Click on icon Edit on Filter name', 'Arise Modal Edite filter'],
+        246: ['Filters', 'Click on icon Shared on Filter', 'Arise Modal Edite filter'],
+
+        247: ['Filters', 'Click on icon Close on Modal Edit Filter', 'Close Modal Edit Filter'],
+        248: ['Filters', 'Enter description in Modal Edit Filter', 'Description'],
+        249: ['Filters', 'Click on Share on/off in Modal Edit Filter', 'Share/unshare Filter'],
+        250: ['Filters', 'Click on Bttn Cancel in Modal Edit Filter', 'Close Modal Edit Filter'],
+        251: ['Filters', 'Click on Bttn Update in Modal Edit Filter', 'Update Modal Edit Filter'],
+        252: ['Filters', 'Click on icon Close on Modal Delete Filter', 'Close Modal Delete Filter'],
+        253: ['Filters', 'Click on Bttn Cancel in Modal Delete Filter', 'Close Modal Delete Filter'],
+        254: ['Filters', 'Click on Bttn Delete in Modal Delete Filter', 'Delete Filter'],
+        255: ['Filters', 'Click on Bttn Add Filter on empty page', 'Transition to Launches Page'],
+
 
     }
 
