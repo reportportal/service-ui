@@ -31,6 +31,7 @@ define(function (require, exports, module) {
     var Service = require('coreService');
     var Admin = require('admin');
     var Register = require('register/registerView');
+    var LoginView = require('login/loginView');
     var NotFoundPage = require('pages/404');
 
     var SingletonAppModel = require('model/SingletonAppModel');
@@ -169,6 +170,14 @@ define(function (require, exports, module) {
             this.destroyViews();
             this.mainView = new Register({
                 uuid: id,
+                context: this
+            });
+            $("#mainContainer").html(this.mainView.el);
+        },
+
+        openLogin: function () {
+            this.destroyViews();
+            this.mainView = new LoginView({
                 context: this
             });
             $("#mainContainer").html(this.mainView.el);

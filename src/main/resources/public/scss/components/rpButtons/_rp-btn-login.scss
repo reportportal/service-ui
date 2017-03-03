@@ -24,8 +24,8 @@
     &:hover {
       @include rpBtnStyle(
           $COLOR--white-default,
-          #f48265,
-          #f48265,
+          darken( #f48265, 15% ),
+          darken( #f48265, 15% ),
           false
       );
     }
@@ -33,8 +33,8 @@
     &:active {
       @include rpBtnStyle(
           $COLOR--white-default,
-          #f48265,
-          #f48265,
+          darken( #f48265, 30% ),
+          darken( #f48265, 30% ),
           false
       );
     }
