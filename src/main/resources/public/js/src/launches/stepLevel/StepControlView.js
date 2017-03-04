@@ -124,9 +124,25 @@ define(function (require, exports, module) {
             $('[data-js-history]', this.$el).removeClass('disabled');
         },
         onClickMultiAction: function(e) {
-            this.trigger('multi:action', $(e.currentTarget).data('js-multi-action'));
+            var type = $(e.currentTarget).data('js-multi-action');
+            switch (type) {
+                case 'editdefect':
+                    config.trackingDispatcher.trackEventNumber(164);
+                    break;
+                case 'postbug':
+                    config.trackingDispatcher.trackEventNumber(165);
+                    break;
+                case 'loadbug':
+                    config.trackingDispatcher.trackEventNumber(166);
+                    break;
+                case 'remove':
+                    config.trackingDispatcher.trackEventNumber(167);
+                    break;
+            }
+            this.trigger('multi:action', type);
         },
         onClickRefresh: function() {
+            config.trackingDispatcher.trackEventNumber(169);
             this.collectionItems.load();
             this.resetRefreshItems();
         },
@@ -188,6 +204,7 @@ define(function (require, exports, module) {
         onClickHistory: function(e){
             e.preventDefault();
             if(!$(e.currentTarget).hasClass('disabled')){
+                config.trackingDispatcher.trackEventNumber(168);
                 config.router.navigate(this.getHistoryLink(), {trigger: true});
             }
         },

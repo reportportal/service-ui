@@ -43,6 +43,7 @@ define(function (require, exports, module) {
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-toggle-open]': 'onClickOpen',
+            'click [data-js-select-item]': 'onClickSelect'
         },
         bindings: {
             '[data-js-name-link]': 'attr: {href: url}',
@@ -171,10 +172,14 @@ define(function (require, exports, module) {
             }
         },
         onClickEdit: function() {
+            config.trackingDispatcher.trackEventNumber(149);
             var modal = new ModalLaunchItemEdit({
                 item: this.model,
             })
             modal.show();
+        },
+        onClickSelect: function(){
+            config.trackingDispatcher.trackEventNumber(152);
         },
         activateAccordion: function() {
             if (this.$el.innerHeight() > 198) {

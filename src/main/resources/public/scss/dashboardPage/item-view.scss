@@ -40,11 +40,28 @@
     }
   }
   &.not-found {
-    .preloader, .grid-stack {
+    .preloader, .grid-stack, .bottom-add-widget {
       display: none;
     }
     .no-result-found {
       display: block;
+    }
+  }
+  .no-result-found {
+    .empty-widgets-img {
+      background-image: url(../img/dashboard/empty-widgets.png);
+      width: 140px;
+      height: 98px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: OpenSansSemiBold;
+      font-size: 16px;
+      margin-top: 27px;
+    }
+    p {
+      margin-top: 15px;
+      margin-bottom: 20px
     }
   }
   .is-not-my-dashbord {

@@ -241,6 +241,7 @@ define(function (require, exports, module) {
                 headerText: Localization.dialogHeader.deleteImage,
                 bodyText: Localization.dialog.deleteImage,
                 cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
                 okButtonText: Localization.ui.delete,
                 confirmFunction: function() {
                     return CallService.call('DELETE', Urls.uploadPhoto()).done(function() {

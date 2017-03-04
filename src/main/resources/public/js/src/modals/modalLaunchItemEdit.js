@@ -149,6 +149,9 @@ define(function (require, exports, module) {
                 case 'SUITE':
                     config.trackingDispatcher.trackEventNumber(102);
                     break;
+                case 'TEST':
+                    config.trackingDispatcher.trackEventNumber(154);
+                    break;
                 default:
                     config.trackingDispatcher.trackEventNumber(71.2);
                     break;
@@ -165,6 +168,9 @@ define(function (require, exports, module) {
                 case 'SUITE':
                     config.trackingDispatcher.trackEventNumber(101);
                     break;
+                case 'TEST':
+                    config.trackingDispatcher.trackEventNumber(153);
+                    break;
                 default:
                     config.trackingDispatcher.trackEventNumber(71.1);
                     break;
@@ -174,6 +180,9 @@ define(function (require, exports, module) {
             switch (this.itemModel.get('type')) {
                 case 'SUITE':
                     config.trackingDispatcher.trackEventNumber(103);
+                    break;
+                case 'TEST':
+                    config.trackingDispatcher.trackEventNumber(155);
                     break;
                 default:
                     config.trackingDispatcher.trackEventNumber(72);
@@ -186,6 +195,9 @@ define(function (require, exports, module) {
                 switch (this.itemModel.get('type')) {
                     case 'SUITE':
                         config.trackingDispatcher.trackEventNumber(104);
+                        break;
+                    case 'TEST':
+                        config.trackingDispatcher.trackEventNumber(156);
                         break;
                     default:
                         config.trackingDispatcher.trackEventNumber(73);

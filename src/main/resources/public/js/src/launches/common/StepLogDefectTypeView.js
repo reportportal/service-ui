@@ -32,7 +32,7 @@ define(function (require, exports, module) {
     var CoreService = require('coreService');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var ModalDefectEditor = require('modals/modalDefectEditor');
-    var SimpleTooltipView = require('tooltips/SimpleTooltipView');
+    var LaunchStepTicketTooltipView = require('tooltips/LaunchStepTicketTooltipView');
 
     var config = App.getInstance();
 
@@ -54,6 +54,11 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+            this.tooltip = new LaunchStepTicketTooltipView();
+            var self = this;
+            Util.appendTooltip(function() {
+                return self.tooltip.$el;
+            }, this.$el, this.$el);
         },
         onClickRemove: function(e) {
             e.stopPropagation();
@@ -67,20 +72,17 @@ define(function (require, exports, module) {
                 this.model.collection.getTicketInfo(this.model.get('ticketId'), this.model.get('systemId'))
                     .done(function(data) {
                         if (data.summary.length > 200) {
-                            $('.ui-tooltip',self.$el).width(432);
+                            self.tooltip.$el.width(432);
                         }
-                        $('[data-js-tooltip-message]', self.$el).html('<span>' + Localization.logs.summary +
+                        self.tooltip.update.html('<span>' + Localization.logs.summary +
                             '</span><br>' + data.summary +' <br><br>' +
                             '<span>' + Localization.logs.status + '</span><br>' +
                             ((data.status === 'Closed' || data.status === 'Resolved')?'<s>' + data.status + '</s>' : data.status)
                         );
                     })
                     .fail(function() {
-                        $('[data-js-tooltip-message]', self.$el).html('<span> '+ Localization.logs.ticketNotFound
+                        self.tooltip.update('<span> '+ Localization.logs.ticketNotFound
                             +'</span><br>' + Localization.logs.ticketStatusProblem);
-                    })
-                    .always(function() {
-                        $('[data-js-preloader]', self.$el).addClass('hide');
                     })
             }
         },
@@ -130,6 +132,7 @@ define(function (require, exports, module) {
         template: 'tpl-launch-step-log-defect-type',
         events: {
             'click [data-js-edit-defect]': 'onClickEditDefect',
+            'mouseenter [data-js-edit-defect]': 'onHoverDefect'
         },
         bindings: {
             // '[data-js-issue-comment]': 'html: issueComment',
@@ -190,6 +193,7 @@ define(function (require, exports, module) {
             },
         },
         initialize: function(options) {
+            this.pageType = options.pageType;
             this.defetTypesCollection = new SingletonDefectTypeCollection();
             var self = this;
             this.defetTypesCollection.ready.done(function(){
@@ -232,7 +236,18 @@ define(function (require, exports, module) {
             }
             this.ticketCollection.reset(tickets);
         },
+        onHoverDefect: function(){
+            if(this.pageType == 'logs'){
+                config.trackingDispatcher.trackEventNumber(191);
+            }
+        },
         onClickEditDefect: function() {
+            if(this.pageType == 'logs'){
+                config.trackingDispatcher.trackEventNumber(192);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(150);
+            }
             var defectEditor = new ModalDefectEditor({
                 items: [this.model]
             });

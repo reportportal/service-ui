@@ -72,15 +72,6 @@
 @import 'components/rp-custom-bootstrap-colorpicker';
 @import 'components/rp-custom-baron';
 
-// @import 'components/landingPage/landing-analysis';
-@import 'components/landingPage/landing-common';
-@import 'components/landingPage/landing-features';
-@import 'components/landingPage/landing-header';
-@import 'components/landingPage/landing-styles';
-@import 'components/landingPage/landing-trees';
-@import 'components/landingPage/landing-watch';
-@import 'components/landingPage/landing-block-login';
-
 @import 'components/rp-page-register-success';
 
 @import 'components/rp-page-404';
@@ -150,3 +141,5 @@
 @import 'projectSettings/main';
 
 @import 'registration/main';
+
+@import 'loginPage/main';

@@ -48,10 +48,14 @@ define(function (require, exports, module) {
             'click .auth-type': 'handleDropDown',
             'click [data-js-post]': 'submit',
             'keyup .required-value': 'clearRequiredError',
-            'click .project-name': 'updateFieldSet'
+            'click .project-name': 'updateFieldSet',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-is-included]': 'onClickIncludeData',
+            'click [data-js-cancel]': 'onClickCancel'
         },
 
         initialize: function (options) {
+            this.from = options.from;
             this.appModel = new SingletonAppModel();
             this.items = options.items;
             this.isMultiply = (this.items.length > 1);
@@ -90,8 +94,6 @@ define(function (require, exports, module) {
             this.delegateEvents();
             return this;
         },
-
-
 
         setupAnchors: function () {
             this.$dynamicContent = $("#dynamicContent", this.$el);
@@ -185,6 +187,52 @@ define(function (require, exports, module) {
             $('[data-js-post]', this.$el).trigger('click');
         },
 
+        onClickClose: function(){
+            if(this.from == 'logs') {
+                config.trackingDispatcher.trackEventNumber(215);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(170);
+            }
+        },
+
+        onClickCancel: function(){
+            if(this.from == 'logs') {
+                config.trackingDispatcher.trackEventNumber(219);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(174);
+            }
+        },
+
+        onClickIncludeData: function(e){
+            var type = $(e.currentTarget).closest('.rp-switcher-big').attr('id');
+            if(this.from == 'logs') {
+                switch (type) {
+                    case 'include_logs':
+                        config.trackingDispatcher.trackEventNumber(217);
+                        break;
+                    case 'include_comments':
+                        config.trackingDispatcher.trackEventNumber(218);
+                        break;
+                    default:
+                        config.trackingDispatcher.trackEventNumber(216);
+                }
+            }
+            else {
+                switch (type) {
+                    case 'include_logs':
+                        config.trackingDispatcher.trackEventNumber(172);
+                        break;
+                    case 'include_comments':
+                        config.trackingDispatcher.trackEventNumber(173);
+                        break;
+                    default:
+                        config.trackingDispatcher.trackEventNumber(171);
+                }
+            }
+        },
+
         submit: function () {
             var data = this.getData(),
                 self = this,
@@ -195,6 +243,12 @@ define(function (require, exports, module) {
                     self.hideLoading();
                 };
             if (data) {
+                if(this.from == 'logs') {
+                    config.trackingDispatcher.trackEventNumber(220);
+                }
+                else {
+                    config.trackingDispatcher.trackEventNumber(175);
+                }
                 this.showLoading();
                 this.inSubmit = true;
                 Service.postBugToBts(data, this.user.bts.current.id)

@@ -79,11 +79,14 @@
         text-decoration: none !important;
       }
 
-      &:last-child:after,
-      &:nth-child(3):after {
+      &:last-child:after {
         content: "";
       }
-
+      @media (max-width: 550px) {
+        &:nth-child(3):after {
+          content: "";
+        }
+      }
       a {
         text-decoration: none;
         color: inherit;

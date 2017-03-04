@@ -52,7 +52,8 @@ define(function (require, exports, module) {
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-owner-name]': 'onClickOwnerName',
             'click [data-js-statistics-to-investigate]': 'onClickToInvestigate',
-            'click [data-js-toggle-open]': 'onClickOpen'
+            'click [data-js-toggle-open]': 'onClickOpen',
+            'click [data-js-select-item]': 'onClickSelect'
         },
         bindings: {
             ':el': 'classes: {"select-state": select}',
@@ -288,6 +289,14 @@ define(function (require, exports, module) {
                 this.filterModel.trigger('add_entity', filterId, value);
             }
         },
+        onClickSelect: function(){
+            if(this.model.get('type') == 'SUITE'){
+                config.trackingDispatcher.trackEventNumber(100.1);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(61.2);
+            }
+        },
         onClickName: function(e) {
             config.trackingDispatcher.trackEventNumber(23);
             e.preventDefault();
@@ -313,7 +322,11 @@ define(function (require, exports, module) {
             this.$el.toggleClass('open');
         },
         activateAccordion: function() {
-            if (this.$el.innerHeight() > 198) {
+            var innerHeight = 198;
+            if($(window).width() < 900) {
+                innerHeight = 318;
+            }
+            if (this.$el.innerHeight() > innerHeight) {
                 this.$el.addClass('show-accordion');
             } else {
                 this.$el.removeClass('show-accordion');

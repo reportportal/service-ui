@@ -73,6 +73,7 @@ define(function (require, exports, module) {
         onClickNextError: function(e) {
             var self = this;
             if(!$(e.currentTarget).hasClass('load')) {
+                config.trackingDispatcher.trackEventNumber(207);
                 var currentErrors = this.collectionLogs.where({level: 'ERROR'});
                 if(currentErrors.length) {
                     var lastErrorId = currentErrors[currentErrors.length - 1].get('id');

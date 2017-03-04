@@ -32,7 +32,7 @@ define(['app'], function (App) {
           return '/uat/sso/me'
     };
     var userLogin = function(data) {
-        return '/uat/sso/oauth/token?grant_type=password&username='+ data.login +'&password='+ data.password;
+        return '/uat/sso/oauth/token?grant_type=password&password='+ data.password + '&username='+ data.login;
     };
 
     var getRegistryInfo = function() {

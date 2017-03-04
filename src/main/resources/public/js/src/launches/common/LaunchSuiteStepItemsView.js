@@ -59,6 +59,10 @@ define(function (require, exports, module) {
             if(!this.collection.models.length) {
                 this.$el.addClass('not-found');
             }
+            var self = this;
+            $(window)
+                .off('resize.launchItems')
+                .on('resize.launchItems', _.debounce(self.activateAccordions.bind(self), 100))
         },
         activateNextId: function(id) {
             var activeItem = this.collection.get(id);
@@ -150,6 +154,7 @@ define(function (require, exports, module) {
             }
         },
         destroy: function () {
+            $(window).off('resize.launchItems');
             while(this.renderedItems.length) {
                 this.renderedItems.pop().destroy();
             }

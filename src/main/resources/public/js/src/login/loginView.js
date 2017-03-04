@@ -1,0 +1,127 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+define(function(require, exports, module) {
+    'use strict';
+
+    var $ = require('jquery');
+    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
+    var Util = require('util');
+    var Service = require('coreService');
+
+    var SingletonURLParamsModel = require('model/SingletonURLParamsModel');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
+
+    var LoginLoginView = require('login/loginLoginView');
+    var LoginRestoreView = require('login/loginRestoreView');
+    var LoginResetView = require('login/loginResetView');
+
+
+    var LoginView = Epoxy.View.extend({
+
+        className: 'login-page',
+        template: 'tpl-new-login',
+
+        bindings: {
+            '[data-js-build-versions]': 'html: fullServicesHtml',
+        },
+
+
+        initialize: function(options) {
+            $('.js-header, .js-sidebar').addClass("hide");
+            this.viewModel = new SingletonRegistryInfoModel();
+            this.render();
+
+            var urlModel = new SingletonURLParamsModel();
+            if (urlModel.get('reset')) {
+                var self = this;
+                Service.validateRestorationKey(urlModel.get('reset'))
+                    .done(function (response) {
+                        if (response.is) {
+                            self.restoreKey = urlModel.get('reset');
+                            self.openResetPassword();
+                        } else {
+                            self.showRestorationError();
+                        }
+                    })
+                    .fail(function (error) {
+                        self.showRestorationError();
+                    });
+            } else if (urlModel.get('errorAuth')) {
+                this.showError(urlModel.get('errorAuth'), false);
+                urlModel.set('errorAuth', null);
+            } else {
+                this.openLogin();
+            }
+        },
+
+        render: function() {
+            this.$el.html(Util.templates(this.template, {}));
+            this.subviewContainer = $('[data-js-subpage-container]', this.$el);
+        },
+
+        openForgotPass: function () {
+            if (this.loginSubView) {
+                this.destroySubView();
+            }
+            this.loginSubView = new LoginRestoreView();
+            this.listenTo(this.loginSubView, 'closeForgotPass', this.openLogin);
+            this.subviewContainer.html(this.loginSubView.el);
+        },
+        openLogin: function () {
+            if (this.loginSubView) {
+                this.destroySubView();
+            }
+            this.loginSubView = new LoginLoginView();
+            this.listenTo(this.loginSubView, 'forgotPass', this.openForgotPass);
+            this.subviewContainer.html(this.loginSubView.el)
+        },
+        openResetPassword: function () {
+            if (this.loginSubView) {
+                this.destroySubView();
+            }
+            this.loginSubView = new LoginResetView({restoreKey: this.restoreKey});
+            this.listenTo(this.loginSubView, 'closeResetPass', this.openLogin);
+            this.subviewContainer.html(this.loginSubView.el);
+        },
+
+        destroySubView: function () {
+            this.loginSubView.destroy();
+            this.stopListening();
+        },
+
+        showRestorationError: function () {
+            this.openLogin();
+            Util.ajaxFailMessenger(null, 'restorationExpired');
+        },
+
+        destroy: function(){
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            this.remove();
+            delete this;
+        }
+    });
+
+    return LoginView;
+});

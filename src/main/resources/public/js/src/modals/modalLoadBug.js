@@ -123,16 +123,19 @@ define(function (require, exports, module) {
             'click [data-bts-select-item]': 'onClickBts',
             'click [data-js-add-ticket]': 'onClickAddTicket',
             'click [data-js-load]': 'onClickLoad',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
 
-        initialize: function(option) {
+        initialize: function(options) {
+            this.from = options.from;
             this.externalSystems = appModel.getArr('externalSystem');
             if(!this.externalSystems.length) {
                 console.log('No bts found');
                 this.hide();
                 return;
             }
-            this.itemModels = option.items;
+            this.itemModels = options.items;
             this.testItemsIds = _.map(this.itemModels, function(model) {
                 return model.get('id');
             });
@@ -146,12 +149,40 @@ define(function (require, exports, module) {
             $('[data-js-load]', this.$el).trigger('click');
         },
         onClickAddTicket: function() {
+            if(this.from == 'logs') {
+                config.trackingDispatcher.trackEventNumber(222);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(177);
+            }
             this.collection.add({});
+        },
+        onClickClose: function(){
+            if(this.from == 'logs') {
+                config.trackingDispatcher.trackEventNumber(221);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(176);
+            }
+        },
+        onClickCancel: function(){
+            if(this.from == 'logs') {
+                config.trackingDispatcher.trackEventNumber(223);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(178);
+            }
         },
         onClickLoad: function() {
             var self = this;
             $('.form-control', this.$el).trigger('validate');
             if (!$('.validate-error', this.$el).length) {
+                if(this.from == 'logs') {
+                    config.trackingDispatcher.trackEventNumber(224);
+                }
+                else {
+                    config.trackingDispatcher.trackEventNumber(179);
+                }
                 var issues = _.map(this.collection.models, function(model) {
                     return {
                         ticketId: model.get('ticketId'),

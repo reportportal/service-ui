@@ -1,0 +1,270 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.login-login-subpage {
+  .header-mobile {
+    display: none;
+    width: 100%;
+    height: 146px;
+    margin-bottom: 30px;
+    background-image: url('../../img/login/login-mobile.png');
+    background-repeat: no-repeat;
+    -webkit-background-size: 100%;
+    background-size: 100%;
+
+    @media (max-width: 1010px) {
+      display: block;
+    }
+
+    .logo-label {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      width: 100px;
+      height: 16px;
+      background-image: url(../../img/rp-logo.svg);
+      background-repeat: no-repeat;
+      -webkit-background-size: 100%;
+      background-size: 100%;
+    }
+
+    .welcome-msg {
+      display: block;
+      width: 100%;
+      padding-top: 60px;
+      font-family: $OpenSansRegular, sans-serif;
+      color: #6f898d;;
+      font-size: 16px;
+      text-align: center;
+
+      .big {
+        font-size: 24px;
+      }
+    }
+  }
+  .welcome-msg {
+    display: block;
+    width: 100%;
+    margin-bottom: 50px;
+    font-family: $OpenSansRegular, sans-serif;
+    color: #6f898d;;
+    font-size: 24px;
+    text-align: center;
+
+    .big {
+      font-size: 32px;
+    }
+
+    @media (max-width: 1010px) {
+      display: none;
+    }
+  }
+
+  .epam-login {
+    margin: 0 auto 30px auto;
+    display: block;
+    width: 160px;
+    height: 40px;
+    font-size: 16px;
+
+    @media (max-width: 1010px) {
+      margin-bottom: 25px;
+    }
+  }
+
+  .github-login {
+    margin: 0 auto 30px auto;
+    display: block;
+    width: 195px;
+    height: 40px;
+    font-size: 16px;
+    line-height: 25px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      color: #fff;
+      display: inline-block;
+      fill: #fff;
+      vertical-align: top;
+      margin-top: 2px;
+      margin-right: 8px;
+    }
+
+    @media (max-width: 1010px) {
+      margin-bottom: 25px;
+    }
+  }
+
+  .login-form {
+    width: 100%;
+    min-height: 325px;
+
+    @media (max-width: 1010px) {
+      padding: 0 20px;
+      min-height: 0;
+      margin-bottom: 30px;
+    }
+
+    .or-block {
+      margin-bottom: 30px;
+
+      @media (max-width: 1010px) {
+        margin-bottom: 25px;
+      }
+
+      .or-line {
+        display: inline-block;
+        border-top: 1px solid #6f898d;
+        opacity: 0.2;
+        width: 165px;
+        margin-bottom: 4px;
+
+        @media (max-width: 1010px) {
+          width: 114px;
+        }
+      }
+
+      .or {
+        display: inline-block;
+        margin: 0 14px;
+        border: none;
+        font-size: 15px;
+        text-align: center;
+        color: #6f898d;
+      }
+    }
+
+    .rp-field {
+      position: relative;
+      width: 100%;
+      margin-bottom: 30px;
+      font-weight: normal;
+
+      .icon-wrapper {
+        position: absolute;
+        width: 40px;
+        height: 38px;
+        background-color: #f6f6f6;
+        border: solid 1px #cccccc;
+        border-right: none;
+        text-align: center;
+
+        i {
+          margin: 8px auto 0 auto;
+          font-size: 20px;
+          color: #9ADBE6;
+        }
+      }
+
+      .rp-input {
+        padding-left: 55px;
+        width: 100%;
+        height: 38px;
+        border: solid 1px $COLOR--gray-80;
+        border-left: none;
+
+        &.password-field {
+          padding-right: 35px;
+        }
+      }
+
+      .visability-toggler {
+        position: absolute;
+        top: 0;
+        right: 5px;
+        height: 38px;
+        width: 30px;
+        .shown {
+          display: none;
+          height: 100%;
+          width: 100%;
+          background-image: url('../../img/registration/pass-shown.png');
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+        .hided {
+          display: block;
+          height: 100%;
+          width: 100%;
+          background-image: url('../../img/registration/pass-hided.png');
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+
+        &.show {
+          .shown {
+            display: block;
+          }
+          .hided {
+            display: none;
+          }
+        }
+      }
+
+      .validate-hint {
+        top: 38px;
+        width: 100%;
+      }
+
+      .forgot-password {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 13px;
+        color: $COLOR--tealish;
+        cursor: pointer;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      &.validate-error {
+        .icon-wrapper, .rp-input {
+          border-color: $COLOR--orange-red;
+        }
+      }
+    }
+
+    .rp-btn-login {
+      margin: 0 auto 50px auto;
+      display: block;
+      width: 160px;
+      height: 40px;
+      font-size: 16px;
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+
+      @media (max-width: 1010px) {
+        margin-bottom: 0;
+      }
+    }
+
+    &.bad-credentials {
+      .icon-wrapper, .rp-input {
+        border-color: $COLOR--orange-red;
+      }
+    }
+  }
+}

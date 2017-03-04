@@ -53,13 +53,21 @@ define(function (require, exports, module) {
             cancelButtonText: Localization.ui.cancel,
             okButtonText: Localization.ui.delete,
             confirmFunction: function() {
-                config.trackingDispatcher.trackEventNumber(79);
+                var type = items[0].get('type');
+                if(type){
+                    config.trackingDispatcher.trackEventNumber(79);
+                }
+                else if(type == 'SUITE' || type == 'TEST'){
+                }
+                else {
+                    config.trackingDispatcher.trackEventNumber(182);
+                }
                 var ids = _.map(items, function(item) {
                     return item.get('id');
                 });
                 var message = (items.length > 1)? 'deleteLaunches' : 'deleteLaunch';
                 var path = Urls.getLaunchBase();
-                if(items[0].get('type') != 'LAUNCH') {
+                if(type != 'LAUNCH') {
                     path = Urls.itemBase();
                     message = (items.length > 1)? 'deleteTestItems' : 'deleteTestItem';
                 }
@@ -71,12 +79,27 @@ define(function (require, exports, module) {
             }
         });
         modal.$el.on('click', function(e){
-            var $target = $(e.target);
-            if ($target.is('[data-js-close]') || $target.is('[data-js-close] i')) {
-                config.trackingDispatcher.trackEventNumber(77);
+            var $target = $(e.target),
+                type = items[0].get('type'),
+                isCancel = $target.is('[data-js-cancel]'),
+                isClose = ($target.is('[data-js-close]') || $target.is('[data-js-close] i'));
+            if(type == 'LAUNCH'){
+                if (isClose) {
+                    config.trackingDispatcher.trackEventNumber(77);
+                }
+                if(isCancel){
+                    config.trackingDispatcher.trackEventNumber(78);
+                }
             }
-            if($target.is('[data-js-cancel]')){
-                config.trackingDispatcher.trackEventNumber(78);
+            else if(type == 'SUITE' || type == 'TEST'){
+            }
+            else {
+                if (isClose) {
+                    config.trackingDispatcher.trackEventNumber(180);
+                }
+                if(isCancel){
+                    config.trackingDispatcher.trackEventNumber(181);
+                }
             }
         });
 

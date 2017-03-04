@@ -26,7 +26,7 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Context = require('context');
     var App = require('app');
-    var LandingController = require('landing/LandingController');
+    //var LandingController = require('landing/LandingController');
     var TestRoute = require('TestRoute');
     var UserModel = require('model/UserModel');
 
@@ -44,7 +44,7 @@ define(function (require, exports, module) {
                 var async = $.Deferred();
                 self.user.isAuth()
                     .done(function () {
-                        self.landingController.hideLanding();
+                        //self.landingController.hideLanding();
                         async.resolve();
                         self.user.set({lastInsideHash: window.location.hash});
                     })
@@ -59,14 +59,23 @@ define(function (require, exports, module) {
                     });
                 return async.promise();
             });
+            testRoute.addTest('outsidePage', function() {
+                var async = $.Deferred();
+                self.user.isAuth()
+                    .done(function () {
+                        self.navigate(self.user.get('lastInsideHash'), {trigger: true});
+                    })
+                    .fail(function () {
+                        async.resolve();
+                    });
+                return async.promise();
+            });
 
-            this.landingController = new LandingController();
+            //this.landingController = new LandingController();
 
             this.user.ready.done(function () {
                 self.listenTo(self.user, 'change:auth', self.onChangeUserAuth.bind(self));
             });
-            // this.route(/^(.*)\/oldlaunches\/all(.*)$/, "openLaunches");
-            //this.route(/^(.*)\/userdebug\/all(.*)$/, "openUserDebug");
         },
         onChangeUserAuth: function (model, auth) {
             if (auth) {
@@ -79,14 +88,13 @@ define(function (require, exports, module) {
                 this.navigate(model.get('lastInsideHash'), {trigger: true});
             } else {
                 this.navigate('', {trigger: true});
-                Context.destroyViews();
             }
         },
         routes: {
-            '': 'openParallax',
-            'login': 'openParallaxLogin',
-            'documentation': 'openDocumentation',
-            'documentation/:id': 'openDocumentation',
+            '': 'openLogin',
+            'login': 'openLogin',
+            // 'documentation': 'openDocumentation',
+            // 'documentation/:id': 'openDocumentation',
             'user-profile': 'userProfile',
             'registration?*queryString': 'registerUser',
 
@@ -117,28 +125,14 @@ define(function (require, exports, module) {
             '*invalidRoute': "show404Page"
         },
         show404Page: function (route) {
-            // make sure it is not a value for dynamic .route
-            // if(route && route.indexOf('launches/all') === -1 && route.indexOf('userdebug/all') === -1) {
-            //     Context.openInvalid(route);
-            // }
             Context.openInvalid(route);
         },
-        openParallax: function () {
-            this.landingController.showParallax();
-            Context.destroyViews();
-        },
-        openParallaxLogin: function () {
-            this.landingController.showParallax();
-            this.landingController.openLogin();
-            Context.destroyViews();
-        },
-        registerUser: function (queryString) {
+        registerUser: testRoute.checkTest('outsidePage', function (queryString) {
             Context.openRegister(queryString);
-        },
-        openDocumentation: function (id) {
-            this.landingController.showDocumentation(id);
-            Context.destroyViews();
-        },
+        }),
+        openLogin: testRoute.checkTest('outsidePage', function () {
+            Context.openLogin();
+        }),
         openProject: testRoute.checkTest('insidePage', function (project) {
             Context.openRouted(project, 'info', null, null);
         }),
