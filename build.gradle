@@ -8,7 +8,7 @@ buildscript {
         classpath "io.spring.gradle:dependency-management-plugin:0.6.0.RELEASE"
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.1.RELEASE")
         classpath 'com.github.jengelman.gradle.plugins:gradle-processes:0.3.0'
-        classpath 'com.bmuschko:gradle-docker-plugin:3.0.3'
+        classpath 'com.bmuschko:gradle-docker-plugin:3.0.5g'
     }
 }
 
@@ -21,13 +21,13 @@ plugins {
 
 apply plugin: 'java'
 apply plugin: "org.springframework.boot"
-apply plugin: "io.spring.dependency-management"
+apply from: 'build-quality.gradle'
+apply from: 'https://raw.githubusercontent.com/reportportal/gradle-scripts/master/build-docker.gradle'
+apply from: 'https://raw.githubusercontent.com/reportportal/gradle-scripts/master/build-info.gradle'
+apply from: 'https://raw.githubusercontent.com/reportportal/gradle-scripts/master/release-service.gradle'
+
 apply plugin: 'com.moowork.grunt'
 apply plugin: 'idea'
-
-apply from: 'build-quality.gradle'
-apply from: 'build-docker.gradle'
-apply from: 'release-service.gradle'
 
 
 ext {
