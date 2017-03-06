@@ -62,7 +62,6 @@ define(function (require, exports, module) {
             '[data-js-name]': 'text: name, attr: {title: nameTitle}',
             '[data-js-launch-number]': 'text: numberText',
             '[data-js-item-edit]': 'classes: {hide: hideEdit}',
-            // '[data-js-description]': 'text: description',
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
             '[data-js-time-from-now]': 'text: startFromNow',

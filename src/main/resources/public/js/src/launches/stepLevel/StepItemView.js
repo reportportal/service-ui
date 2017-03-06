@@ -48,7 +48,6 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-name-link]': 'attr: {href: url}',
             '[data-js-name]': 'text: name',
-            // '[data-js-description]': 'text: description',
             '[data-js-status]': 'text: status',
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
