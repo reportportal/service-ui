@@ -26,6 +26,9 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var Service = require('coreService');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var ModalFilterEdit = ModalView.extend({
         template: 'tpl-modal-filter-edit',
@@ -38,6 +41,8 @@ define(function (require, exports, module) {
         },
         events: {
             'click [data-js-ok]': 'onClickOk',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
 
         computeds: {
@@ -62,6 +67,8 @@ define(function (require, exports, module) {
                 description: filterModel.get('description'),
             });
             this.render(options);
+            this.listenTo(this.model, 'change:description', this.onChangeDescription);
+            this.listenTo(this.model, 'change:isShared', this.onChangeShared);
             Service.getFilterNames()
                 .done(function(data){
                     _.each(data, function(filter){
@@ -93,11 +100,24 @@ define(function (require, exports, module) {
         onKeySuccess: function () {
             $('[data-js-ok]', this.$el).focus().trigger('click');
         },
+        onChangeDescription: function(){
+            config.trackingDispatcher.trackEventNumber(248);
+        },
+        onChangeShared: function(){
+            config.trackingDispatcher.trackEventNumber(249);
+        },
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(247);
+        },
+        onClickCancel: function(){
+            config.trackingDispatcher.trackEventNumber(250);
+        },
         validate: function(){
             return !($('[data-js-description]', this.$el).trigger('validate').data('validate-error') || $('[data-js-name-input]', this.$el).trigger('validate').data('validate-error'));
         },
         onClickOk: function() {
             if (!this.validate()) return;
+            config.trackingDispatcher.trackEventNumber(251);
             this.successClose(this.model);
         }
 

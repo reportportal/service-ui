@@ -26,6 +26,9 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var UserModel = require('model/UserModel');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var ModalEditDashboard = ModalView.extend({
         template: 'tpl-modal-edit-dashboard',
@@ -39,6 +42,8 @@ define(function (require, exports, module) {
 
         events: {
             'click [data-js-ok]': 'onClickOk',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
 
         initialize: function(options) {
@@ -49,6 +54,7 @@ define(function (require, exports, module) {
                     return model.get('name');
                 }
             });
+            this.isNew = (!dashboardModel.get('active') && !dashboardModel.get('name'));
             this.render(options);
 
             this.model = new Epoxy.Model({
@@ -67,6 +73,8 @@ define(function (require, exports, module) {
                 type: '',
                 max: 256
             });
+            this.listenTo(this.model, 'change:isShared', this.onChangeShared);
+            this.listenTo(this.model, 'change:description', this.onChangeDescription);
         },
         render: function(options) {
             this.$el.html(Util.templates(this.template, options));
@@ -74,9 +82,47 @@ define(function (require, exports, module) {
         onKeySuccess: function () {
             $('[data-js-ok]', this.$el).focus().trigger('click');
         },
+        onChangeShared: function(){
+            if(this.isNew){
+                config.trackingDispatcher.trackEventNumber(268);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(273);
+            }
+        },
+        onChangeDescription: function(){
+            if(this.isNew){
+                config.trackingDispatcher.trackEventNumber(267);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(272);
+            }
+        },
+        onClickClose: function(){
+            if(this.isNew){
+                config.trackingDispatcher.trackEventNumber(266);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(271);
+            }
+        },
+        onClickCancel: function(){
+            if(this.isNew){
+                config.trackingDispatcher.trackEventNumber(269);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(274);
+            }
+        },
         onClickOk: function() {
             $('[data-js-name-input]', this.$el).trigger('validate');
             if ($('.validate-error', this.$el).length) return;
+            if(this.isNew){
+                config.trackingDispatcher.trackEventNumber(270);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(275);
+            }
             this.successClose(this.model);
         }
 

@@ -98,6 +98,12 @@ define(function (require, exports, module) {
             })
         },
         onClickItem: function() {
+            if(this.model.get('isMy')){
+                config.trackingDispatcher.trackEventNumber(262);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(265);
+            }
             config.router.navigate(this.model.get('url'), {trigger: true});
         },
 

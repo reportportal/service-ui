@@ -12,4 +12,5 @@ spring:
     consul:
       host: consul
       discovery:
+        hostname: ${HOSTNAME:ui}
         prefer-ip-address: false

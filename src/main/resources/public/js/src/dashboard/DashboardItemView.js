@@ -166,6 +166,7 @@ define(function (require, exports, module) {
         },
         onClickFullScreen: function(e) {
             e.preventDefault();
+            config.trackingDispatcher.trackEventNumber(283);
             $('body').fullscreen({toggleClass: 'fullscreen'});
             this.updateGadgetsTimer();
         },
@@ -218,6 +219,7 @@ define(function (require, exports, module) {
         onClickEdit: function(e) {
             e.preventDefault();
             e.stopPropagation();
+            config.trackingDispatcher.trackEventNumber(282);
             var self = this;
             (new ModalEditDashboard({
                 dashboardCollection: this.model.collection,
@@ -230,19 +232,37 @@ define(function (require, exports, module) {
         onClickRemove: function(e) {
             e.preventDefault();
             e.stopPropagation();
+            config.trackingDispatcher.trackEventNumber(284);
             var self = this;
-            (new ModalConfirm({
+            var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.dashboardDelete,
                 bodyText: Util.replaceTemplate(Localization.dialog.dashboardDelete, this.model.get('name')),
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete,
-            })).show().done(function() {
-                var collection = self.model.collection;
-                self.model.collection.remove(self.model);
-                self.destroy();
-                collection.resetActive();
-            })
+            });
+            modal.show()
+                .done(function() {
+                    var collection = self.model.collection;
+                    self.model.collection.remove(self.model);
+                    self.destroy();
+                    collection.resetActive();
+                });
+            modal.$el.on('click', function(e){
+                var $target = $(e.target),
+                    isCancel = $target.is('[data-js-cancel]'),
+                    isDelete = $target.is('[data-js-ok]'),
+                    isClose = ($target.is('[data-js-close]') || $target.is('[data-js-close] i'));
+                if(isClose){
+                    config.trackingDispatcher.trackEventNumber(276);
+                }
+                else if(isCancel){
+                    config.trackingDispatcher.trackEventNumber(277);
+                }
+                else if(isDelete){
+                    config.trackingDispatcher.trackEventNumber(278);
+                }
+            });
         },
         onClickExitFullScreen: function(e) {
             clearTimeout(this.updateTimer);
@@ -263,11 +283,13 @@ define(function (require, exports, module) {
         onClickAddWidget: function(e) {
             e.preventDefault();
             e.stopPropagation();
+            config.trackingDispatcher.trackEventNumber(280);
             (new ModalAddWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
         },
         onClickAddSharedWidget: function(e) {
             e.preventDefault();
             e.stopPropagation();
+            config.trackingDispatcher.trackEventNumber(281);
             (new modalAddSharedWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
         },
         destroy: function () {
