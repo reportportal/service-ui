@@ -44,7 +44,10 @@ spring:
       enabled: false
       discovery:
         register: false
-
+eureka:
+  client:
+    enabled: true
+    register-with-eureka: true
 ## Consul as service registry
 ---
 spring:
