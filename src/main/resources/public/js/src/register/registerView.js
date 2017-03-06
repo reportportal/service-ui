@@ -88,7 +88,6 @@ define(function(require, exports, module) {
         },
 
         setupAnchors: function(){
-
             this.$login = $('[data-js-login]', this.$el);
             this.$name = $('[data-js-name]', this.$el);
             this.$email = $('[data-js-email]', this.$el);
@@ -99,14 +98,10 @@ define(function(require, exports, module) {
 
         checkForLoginUniqueness: function() {
             var self = this;
-            this.$register.addClass('disabled');
             CallService.call('GET', Urls.userInfoValidation() + '?username=' + this.$login.val())
                 .done(function (data) {
                     if (data.is) {
                         self.$login.parent().addClass('validate-error').find('.validate-hint').addClass('show-hint').html(Localization.validation.registeredLogin);
-                    }
-                    if (self.isFormReady()) {
-                        self.$register.removeClass('disabled');
                     }
                 })
                 .fail(function (error) {
@@ -119,27 +114,12 @@ define(function(require, exports, module) {
             this.$el.addClass('fail').append(Util.templates(this.messagesTpl));
         },
 
-        isFormReady: function () {
-            var ready = true;
-            $('.rp-input', this.$el).each(function (i, item) {
-                if ($(item).val() === '' || $(item).parent().hasClass('validate-error')) {
-                    ready = false;
-                }
-            });
-            return ready;
-        },
-
         checkFields: function () {
             if (this.$confirmPassword.val() !== this.$password.val() && this.$confirmPassword.val() !== '') {
                 this.$confirmPassword.parent().addClass('validate-error').find('.validate-hint').addClass('show-hint').html(Localization.validation.confirmMatch);
             } else {
                 this.$confirmPassword.parent().removeClass('validate-error').find('.validate-hint').removeClass('show-hint');
             }
-            if (!this.isFormReady() || this.$confirmPassword.val() !== this.$password.val()) {
-                this.$register.addClass('disabled');
-                return;
-            }
-            this.$register.removeClass('disabled');
         },
 
         bindValidators: function(){
@@ -214,9 +194,9 @@ define(function(require, exports, module) {
             }
         },
 
-        registerMember: function(){
+        registerMember: function() {
             $('.rp-field', this.$el).find('input').trigger('validate');
-            if ($('.validate-error', this.$el).length) return;
+            if ($('.validate-error', this.$el).length || this.$confirmPassword.val() !== this.$password.val()) return;
 
             var data = this.getData(),
                 self = this;

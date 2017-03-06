@@ -49,7 +49,6 @@ define(function(require, exports, module) {
             'mousedown [data-js-toggle-visability]': 'showPassword',
             'mouseup [data-js-toggle-visability]': 'hidePassword',
             'mouseleave [data-js-toggle-visability]': 'hidePassword',
-            'validation:success .rp-input': 'checkLoginFields',
             'click [data-js-github-login-btn]': 'gitHubLogin',
             'click [data-js-forgot-pass]': 'onForgotPass',
             'focus .rp-input': 'unHighlight'
@@ -164,23 +163,6 @@ define(function(require, exports, module) {
             return login;
         },
 
-        checkLoginFields: function () {
-            if (!this.isFormReady()) {
-                this.$loginBtn.addClass('disabled');
-                return;
-            }
-            this.$loginBtn.removeClass('disabled');
-        },
-
-        isFormReady: function () {
-            var ready = true;
-            $('.rp-input', this.$el).each(function (i, item) {
-                if ($(item).val() === '' || $(item).parent().hasClass('validate-error')) {
-                    ready = false;
-                }
-            });
-            return ready;
-        },
 
         onForgotPass: function () {
           this.trigger('forgotPass');

@@ -52,11 +52,6 @@ define(function(require, exports, module) {
             this.$el.html(Util.templates(this.template, {}));
             this.setupAnchors();
             this.bindValidators();
-
-            var self = this;
-            this.$email.on('validation:success', function () {
-                self.checkRestoreFields();
-            });
         },
 
         setupAnchors: function(){
@@ -71,18 +66,13 @@ define(function(require, exports, module) {
             ]);
         },
 
-        checkRestoreFields: function () {
-            if (this.$email.val() === '' || this.$email.parent().hasClass('validate-error')) {
-                this.$submitRestore.addClass('disabled');
-                return;
-            }
-            this.$submitRestore.removeClass('disabled');
-        },
-
         onCloseForgotPass: function () {
             this.trigger('closeForgotPass');
         },
         submitForgotPass: function () {
+            $('.rp-field', this.$el).find('input').trigger('validate');
+            if ($('.validate-error', this.$el).length) return;
+
             var self = this;
             Service.initializePassChange(this.$email.val())
                 .done(function () {

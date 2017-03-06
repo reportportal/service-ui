@@ -22,8 +22,9 @@
 .registration {
   position: relative;
   width: 1000px;
-  height: 726px;
-  margin: 20px auto 0 auto;
+  height: 746px;
+  margin: 0 auto;
+  padding-top: 20px;
 
   .login-content {
     position: relative;
@@ -39,9 +40,9 @@
   }
 
   &.fail {
-    height: 727px;
+    height: 747px;
     @media (max-width: 1010px) {
-      height: 568px;
+      height: 588px;
     }
   }
 
