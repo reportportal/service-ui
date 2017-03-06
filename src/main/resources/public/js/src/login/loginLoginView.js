@@ -147,7 +147,8 @@ define(function(require, exports, module) {
                 })
                 .fail(function(response){
                     if (response.status == 403) {
-                        self.showBlockMessage();
+                        // TODO handler for form blocker after inputting wrong creds five times
+                        //self.showBlockMessage();
                         /* OAuth Spec says wrong creds is 400 */
                     } else if (response.status == 400 && JSON.parse(response.responseText).error_code === 4003) {
                         self.$loginForm.addClass('bad-credentials');

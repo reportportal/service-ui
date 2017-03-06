@@ -604,6 +604,7 @@ define(function(require, exports, module) {
                 Util.setupSelect2WhithScroll(recipients, {
                     multiple: true,
                     minimumInputLength: 1,
+                    maximumInputLength: 128,
                     formatInputTooShort: function (input, min) {
                         return Localization.ui.minPrefix + minimumInputLength + Localization.ui.minSufixAuto
                     },
@@ -839,6 +840,7 @@ define(function(require, exports, module) {
                 Util.setupSelect2WhithScroll(this.$tagsContainer.eq(index), {
                     multiple: true,
                     minimumInputLength: 1,
+                    maximumInputLength: 128,
                     formatInputTooShort: function (input, min) {
                         return Localization.ui.enterChars
                     },
@@ -960,6 +962,8 @@ define(function(require, exports, module) {
                 Util.setupSelect2WhithScroll(this.$launchContainer.eq(index), {
                     multiple: true,
                     minimumInputLength: 1,
+                    maximumInputLength: 128,
+
                     formatInputTooShort: function (input, min) {
                         return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto
                     },
