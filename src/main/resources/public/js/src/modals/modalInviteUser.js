@@ -298,7 +298,11 @@ define(function (require, exports, module) {
                             Util.ajaxFailMessenger(null, 'inviteMember', messages.impossibleInvite);
                         }
                         else {
-                            Util.ajaxFailMessenger(responce, 'inviteMember');
+                            if(error) {
+                                Util.addMessage({clazz: 'alert', message: error.message});
+                            } else {
+                                Util.ajaxFailMessenger(responce, 'inviteMember');
+                            }
                         }
                     })
                     .always(function(){
