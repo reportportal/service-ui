@@ -6,5 +6,8 @@ info:
     branch: '@branch@'
 
 spring:
+  profiles:
+    ## Default one is still Eureka
+    active: ${rp.profiles:eureka}
   application:
     name: ui

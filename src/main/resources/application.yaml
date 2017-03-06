@@ -6,9 +6,6 @@ server:
     mime-types: text/html,text/xml,text/plain,text/css,application/javascript
 
 spring:
-  profiles:
-    ## Default one is still Eureka
-    active: ${rp.profiles:eureka}
   cloud:
     consul:
       host: localhost
