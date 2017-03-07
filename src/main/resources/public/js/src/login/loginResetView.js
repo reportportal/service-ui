@@ -39,7 +39,7 @@ define(function(require, exports, module) {
 
         events: {
             'mousedown [data-js-toogle-visability]': 'showPass',
-            'mouseout [data-js-toogle-visability]': 'hidePass',
+            'mouseleave [data-js-toogle-visability]': 'hidePass',
             'mouseup [data-js-toogle-visability]': 'hidePass',
             'validation:success .rp-input': 'checkFields',
             'click [data-js-reset-pass-btn]': 'submitChangePass'
@@ -101,33 +101,17 @@ define(function(require, exports, module) {
             $(e.currentTarget).removeClass('show').siblings('.rp-input').attr('type', 'password');
         },
 
-        isFormReady: function () {
-            var ready = true;
-            $('.rp-input', this.$el).each(function (i, item) {
-                if ($(item).val() === '' || $(item).parent().hasClass('validate-error')) {
-                    ready = false;
-                }
-            });
-            return ready;
-        },
-
         checkFields: function () {
-            if (this.$confirmPass.val() !== this.$pass.val()) {
+            if (this.$confirmPass.val() !== this.$pass.val() && this.$confirmPass.val() !== '') {
                 this.$confirmPass.parent().addClass('validate-error').find('.validate-hint').addClass('show-hint').html(Localization.validation.confirmMatch);
             } else {
                 this.$confirmPass.parent().removeClass('validate-error').find('.validate-hint').removeClass('show-hint');
             }
-            if (!this.isFormReady() || this.$confirmPass.val() !== this.$pass.val()) {
-
-                this.$resetPassBtn.addClass('disabled');
-                return;
-            }
-            this.$resetPassBtn.removeClass('disabled');
         },
 
         submitChangePass: function () {
             $('.rp-field', this.$el).find('input').trigger('validate');
-            if ($('.validate-error', this.$el).length) return;
+            if ($('.validate-error', this.$el).length  || this.$confirmPass.val() !== this.$pass.val()) return;
 
             var self = this;
 

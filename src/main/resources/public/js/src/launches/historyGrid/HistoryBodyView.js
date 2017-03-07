@@ -79,7 +79,8 @@ define(function (require, exports, module) {
             this.table = new HistoryTableView({
                 el: $('[data-js-history-table]', this.$el),
                 launches: this.launches,
-                items: this.items
+                items: this.items,
+                collectionItems: this.collectionItems
             });
         },
         load: function(){
@@ -103,7 +104,7 @@ define(function (require, exports, module) {
                 var key = launch.launchNumber;
                 _.forEach(launch.resources, function(item){
                     var newItem = {
-                        name: item.name, description: item.description || '' , tags: item.tags, launches: {}
+                        id: item.id, name: item.name, description: item.description || '' , tags: item.tags, launches: {}
                     };
                     newItem.launches[key] = [item];
                     if (_.isEmpty(items)) {

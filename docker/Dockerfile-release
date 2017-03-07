@@ -1,9 +1,15 @@
 FROM frolvlad/alpine-oraclejdk8:slim
 
 MAINTAINER Andrei Varabyeu <andrei_varabyeu@epam.com>
+LABEL version="@version@"
+LABEL description="@description@"
+
+ENV APP_FILE @name@-@version@
+ENV APP_DOWNLOAD_URL https://dl.bintray.com/epam/reportportal/com/epam/reportportal/@name@/@version@/$APP_FILE.jar
+ENV JAVA_OPTS="-Xmx192m"
 
 VOLUME /tmp
-ADD https://dl.bintray.com/epam/reportportal/com/epam/reportportal/${project.name}/${version}/${project.name}-${version}.jar /app.jar
+ADD $APP_DOWNLOAD_URL /app.jar
 RUN sh -c 'touch /app.jar'
 EXPOSE 8080
-ENTRYPOINT ["java","-Xmx256m","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar"]

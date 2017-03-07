@@ -28,7 +28,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
     var HistoryItemCellView = require('launches/historyGrid/HistoryItemCellView');
-    var MarkdownViewer = require('components/markdown/MarkdownViewer');
+    var LaunchItemInfoTooltipView = require('tooltips/LaunchItemInfoTooltipView');
 
     var config = App.getInstance();
 
@@ -41,7 +41,6 @@ define(function (require, exports, module) {
         },
         bindings: {
             '[data-js-name]': 'text: name, attr: {href: getUrl}',
-            '[data-js-tags-container]': 'getTags: tags'
         },
         computeds: {
             getUrl: {
@@ -60,28 +59,17 @@ define(function (require, exports, module) {
                 }
             }
         },
-        bindingHandlers: {
-            getTags: {
-                set: function($element) {
-                    var tags = this.view.model.get('tags'),
-                        action = tags && tags.length ? 'remove' : 'add',
-                        $tagsBlock = $('[data-js-tags]', $element);
-
-                    $element[action + 'Class']('hide');
-                    $tagsBlock.html('');
-                    _.each(tags, function(tag) {
-                        $tagsBlock.append(' <span data-tag="'+tag+'">'+tag+'</span>');
-                    });
-                }
-            },
-        },
         initialize: function(options) {
             this.launches = options.launches;
             this.renderedItems = [];
             this.render();
             this.applyBindings();
-            var markdownViewer = new MarkdownViewer({text: this.model.get('description')});
-            $('[data-js-description]', this.$el).html(markdownViewer.$el);
+            this.collectionItems = options.collectionItems;
+            this.tooltip = new LaunchItemInfoTooltipView({model: this.collectionItems.get(this.model.get('id'))});
+            var self = this;
+            Util.appendTooltip(function() {
+                return self.tooltip.$el;
+            }, $('[data-js-name]', this.$el), $('[data-js-name-block]', this.$el));
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {

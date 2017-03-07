@@ -190,6 +190,8 @@ define(function (require, exports, module) {
                 if (this.model.get('description')) {
                     data.description = this.model.get('description');
                 }
+                this.showLoading();
+                var self = this;
                 Service.updateWidget(data, this.model.get('id'))
                     .done(function (data) {
                         self.originalModel.set(self.model.toJSON());
@@ -198,6 +200,7 @@ define(function (require, exports, module) {
                     })
                     .fail(function (error) {
                         Util.ajaxFailMessenger(null, 'widgetSave');
+                        self.hideLoading();
                     });
             }
         },

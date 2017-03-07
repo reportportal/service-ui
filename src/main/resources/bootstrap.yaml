@@ -1,0 +1,13 @@
+info:
+  build:
+    name: UI Service
+    description: ReportPortal User Interface
+    version: '@version@'
+    branch: '@branch@'
+
+spring:
+  profiles:
+    ## Default one is still Eureka
+    active: ${rp.profiles:eureka}
+  application:
+    name: ui

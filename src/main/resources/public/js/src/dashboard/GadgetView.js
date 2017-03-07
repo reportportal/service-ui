@@ -29,8 +29,10 @@ define(function (require, exports, module) {
     var WidgetView = require('newWidgets/WidgetView');
     var ModalEditWidget = require('modals/addWidget/modalEditWidget');
     var SimpleTooltipView = require('tooltips/SimpleTooltipView');
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
 
     var config = App.getInstance();
+    var launchFilterCollection = new SingletonLaunchFilterCollection();
 
     var GadgetView = Epoxy.View.extend({
         className: 'gadget-view grid-stack-item',
@@ -163,6 +165,11 @@ define(function (require, exports, module) {
                 model: this.model
             })).show()
                 .done(function() {
+                    if(typeof self.model.changed.isShared != 'undefined') {
+                        launchFilterCollection.ready.done(function() {
+                            launchFilterCollection.update();
+                        })
+                    }
                     self.update();
                 })
         },

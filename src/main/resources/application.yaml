@@ -5,19 +5,7 @@ server:
     min-response-size: 1024
     mime-types: text/html,text/xml,text/plain,text/css,application/javascript
 
-info:
-  build:
-    name: UI Service
-    description: ReportPortal User Interface
-    version: '@version@'
-    branch: '@branch@'
-
 spring:
-  application:
-    name: ui
-  profiles:
-    ## Default one is still Eureka
-    active: ${rp.profiles:eureka}
   cloud:
     consul:
       host: localhost
@@ -44,7 +32,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://${reportportal.eureka.hostname:localhost}:8761/eureka/
-
+    register-with-eureka: false
+    enabled: false
 
 ## Eureka as service registry
 ---
@@ -55,7 +44,10 @@ spring:
       enabled: false
       discovery:
         register: false
-
+eureka:
+  client:
+    enabled: true
+    register-with-eureka: true
 ## Consul as service registry
 ---
 spring:

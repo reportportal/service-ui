@@ -381,7 +381,7 @@ define(function(require, exports, module) {
         345: ['Dashboard', 'Click on link Add New Widget on Dashboard', 'Arise Modal Add New Widget'],
         346: ['Dashboard', 'Click on Bttn Add New Dashboard on empty page', 'Arise Modal Add New Dashboard'],
 
-        
+
 
 
     }

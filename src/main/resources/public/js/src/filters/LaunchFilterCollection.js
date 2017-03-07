@@ -95,7 +95,19 @@ define(function(require, exports, module) {
                 this.ready.resolve();
                 return;
             }
-            call('GET', Urls.getFilters(ids))
+            this.update(ids)
+                .always(function() {
+                    self.ready.resolve();
+                })
+        },
+        update: function(ids) {
+            if(!ids) {
+                ids = _.map(this.models, function(model) {
+                    return model.get('id');
+                })
+            }
+            var self = this;
+            return call('GET', Urls.getFilters(ids))
                 .done(function(data) {
                     self.reset(_.map(data, function(item){
                         item.isLaunch = true;
@@ -104,9 +116,6 @@ define(function(require, exports, module) {
                         item.selection_parameters = JSON.stringify(item.selection_parameters);
                         return item;
                     }));
-                })
-                .always(function() {
-                    self.ready.resolve();
                 })
         },
         generateTempModel: function(data) {

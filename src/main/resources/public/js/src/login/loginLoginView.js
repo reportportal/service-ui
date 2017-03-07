@@ -48,8 +48,7 @@ define(function(require, exports, module) {
             'submit [data-js-login-login-form]': 'onSubmitForm',
             'mousedown [data-js-toggle-visability]': 'showPassword',
             'mouseup [data-js-toggle-visability]': 'hidePassword',
-            'mouseout [data-js-toggle-visability]': 'hidePassword',
-            'validation:success .rp-input': 'checkLoginFields',
+            'mouseleave [data-js-toggle-visability]': 'hidePassword',
             'click [data-js-github-login-btn]': 'gitHubLogin',
             'click [data-js-forgot-pass]': 'onForgotPass',
             'focus .rp-input': 'unHighlight'
@@ -117,13 +116,13 @@ define(function(require, exports, module) {
             window.location = window.location.protocol + '//' + window.location.host + '/uat/sso/login/github';
         },
 
-        showPassword: function () {
-            $('.visability-toggler', this.$el).addClass('show');
+        showPassword: function (e) {
+            $(e.currentTarget).addClass('show');
             this.$pass.attr('type', 'text');
         },
 
-        hidePassword: function () {
-            $('.visability-toggler', this.$el).removeClass('show');
+        hidePassword: function (e) {
+            $(e.currentTarget).removeClass('show');
             this.$pass.attr('type', 'password');
         },
         onSubmitForm: function(e) {
@@ -144,7 +143,7 @@ define(function(require, exports, module) {
             var self = this;
             this.user.login(login, pass)
                 .done(function () {
-                    $('.js-header, .js-sidebar').removeClass("hide");
+
                 })
                 .fail(function(response){
                     if (response.status == 403) {
@@ -164,23 +163,6 @@ define(function(require, exports, module) {
             return login;
         },
 
-        checkLoginFields: function () {
-            if (!this.isFormReady()) {
-                this.$loginBtn.addClass('disabled');
-                return;
-            }
-            this.$loginBtn.removeClass('disabled');
-        },
-
-        isFormReady: function () {
-            var ready = true;
-            $('.rp-input', this.$el).each(function (i, item) {
-                if ($(item).val() === '' || $(item).parent().hasClass('validate-error')) {
-                    ready = false;
-                }
-            });
-            return ready;
-        },
 
         onForgotPass: function () {
           this.trigger('forgotPass');

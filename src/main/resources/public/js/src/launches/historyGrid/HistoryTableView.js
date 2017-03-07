@@ -35,6 +35,7 @@ define(function (require, exports, module) {
         events: { },
         initialize: function(options) {
             this.filterModel = options.filterModel;
+            this.collectionItems = options.collectionItems;
             this.launches = options.launches;
             this.items = options.items;
             this.renderedItems = [];
@@ -50,7 +51,7 @@ define(function (require, exports, module) {
         renderItems: function() {
             var $itemsContainer = $('[data-js-history-content]', this.$el);
             _.each(this.items.models, function(model) {
-                var item = new HistoryItemView({model: model, launches: this.launches});
+                var item = new HistoryItemView({model: model, launches: this.launches, collectionItems: this.collectionItems});
                 $itemsContainer.append(item.$el);
                 this.renderedItems.push(item);
             }, this);
