@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="7" viewBox="0 0 18 7" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <path id="a" d="M2,0 C3.10090909,2.92666667 5.81818182,5 9,5 C12.1818182,5 14.8990909,2.92666667 16,0"/>
+    <mask id="g" width="14" height="5" x="0" y="0" fill="white">
+      <use xlink:href="#a"/>
+    </mask>
+    <rect id="b" width="1.385" height="2" x="8.308" y="4.846"/>
+    <mask id="h" width="1.385" height="2" x="0" y="0" fill="white">
+      <use xlink:href="#b"/>
+    </mask>
+    <rect id="c" width="1.385" height="2.769" x="3.301" y="2.955"/>
+    <mask id="i" width="1.385" height="2.769" x="0" y="0" fill="white">
+      <use xlink:href="#c"/>
+    </mask>
+    <rect id="d" width="1.385" height="2.769" x="1.095" y="-.258"/>
+    <mask id="j" width="1.385" height="2.769" x="0" y="0" fill="white">
+      <use xlink:href="#d"/>
+    </mask>
+    <rect id="e" width="1.385" height="2.769" x="12.993" y="2.955"/>
+    <mask id="k" width="1.385" height="2.769" x="0" y="0" fill="white">
+      <use xlink:href="#e"/>
+    </mask>
+    <rect id="f" width="1.385" height="2.769" x="15.633" y="-.258"/>
+    <mask id="l" width="1.385" height="2.769" x="0" y="0" fill="white">
+      <use xlink:href="#f"/>
+    </mask>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <use stroke="#999999" stroke-width="4" mask="url(#g)" xlink:href="#a"/>
+    <use fill="#D8D8D8" stroke="#979797" stroke-width="2" mask="url(#h)" xlink:href="#b"/>
+    <use fill="#D8D8D8" stroke="#979797" stroke-width="2" mask="url(#i)" transform="rotate(45 3.993 4.34)" xlink:href="#c"/>
+    <use fill="#D8D8D8" stroke="#979797" stroke-width="2" mask="url(#j)" transform="rotate(70 1.787 1.126)" xlink:href="#d"/>
+    <use fill="#D8D8D8" stroke="#979797" stroke-width="2" mask="url(#k)" transform="rotate(-45 13.685 4.34)" xlink:href="#e"/>
+    <use fill="#D8D8D8" stroke="#979797" stroke-width="2" mask="url(#l)" transform="rotate(-70 16.326 1.126)" xlink:href="#f"/>
+  </g>
+</svg>
