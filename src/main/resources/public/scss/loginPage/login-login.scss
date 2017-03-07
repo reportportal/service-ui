@@ -188,6 +188,10 @@
         &.password-field {
           padding-right: 35px;
         }
+
+        &:-webkit-autofill {
+          -webkit-box-shadow: 0 0 0 1000px #FDFFEB inset;
+        }
       }
 
       .visability-toggler {
