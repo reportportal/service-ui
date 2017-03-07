@@ -26,13 +26,16 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var App = require('app');
 
+    var config = App.getInstance();
 
     var FilterSearchItem = Epoxy.View.extend({
         className: 'modal-add-widget-filter-search-item',
         template: 'tpl-modal-add-widget-filter-search-item',
         events: {
             'click [data-js-filter-edit]': 'onClickFilterEdit',
+            'click [data-js-filter-select]': 'onSelectFilter'
         },
         bindings: {
             '[data-js-filter-name]': 'html: getName',
@@ -52,6 +55,7 @@ define(function (require, exports, module) {
             }
         },
         initialize: function(options) {
+            this.modalType = options.modalType;
             this.searchModel = options.searchModel;
             this.render();
             var self = this;
@@ -63,8 +67,18 @@ define(function (require, exports, module) {
             }
         },
         onClickFilterEdit: function(e) {
+            config.trackingDispatcher.trackEventNumber(298);
+            e.preventDefault();
             e.stopPropagation();
             this.model.trigger('edit', this.model);
+        },
+        onSelectFilter: function(){
+            if(this.modalType == 'edit'){
+                config.trackingDispatcher.trackEventNumber(329);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(297);
+            }
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));

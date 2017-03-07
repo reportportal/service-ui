@@ -48,6 +48,7 @@ define(function (require, exports, module) {
             'click [data-js-next-last-step]': 'onClickLastStep',
             'click [data-js-previous-second-step]': 'onClickSecondStep',
             'click [data-js-add-widget]': 'onClickAddWidget',
+            'click [data-js-close]': 'onClickClose'
         },
         bindings: {
             '[data-js-widget-type]': 'text: gadgetName',
@@ -89,6 +90,9 @@ define(function (require, exports, module) {
         onChangeModel: function(model) {
             // console.dir(model.changed);
         },
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(290);
+        },
         onChangePreview: function() {
             this.previewWidgetView && this.previewWidgetView.destroy();
             this.previewWidgetView = new PreviewWidgetView({model: this.model, filterModel: this.configureWidgetView.getSelectedFilterModel()});
@@ -124,9 +128,11 @@ define(function (require, exports, module) {
             }
         },
         onClickFirstStep: function() {
+            config.trackingDispatcher.trackEventNumber(301);
             this.viewModel.set('step', 1);
         },
         onClickSecondStep: function() {
+            config.trackingDispatcher.trackEventNumber(292);
             this.viewModel.set('step', 2);
         },
         onClickLastStep: function() {
@@ -154,6 +160,7 @@ define(function (require, exports, module) {
         },
         onClickAddWidget: function() {
             if(this.saveWidget.validate()) {
+                config.trackingDispatcher.trackEventNumber(314);
                 this.$el.addClass('load');
                 var self = this;
                 var curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];

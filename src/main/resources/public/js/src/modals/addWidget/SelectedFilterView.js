@@ -29,7 +29,6 @@ define(function (require, exports, module) {
     var FilterSearchItemView = require('modals/addWidget/FilterSearchItemView');
     var FilterModel = require('filters/FilterModel');
 
-
     var FilterSearchItem = Epoxy.View.extend({
         className: 'modal-add-widget-selected-filter',
         template: 'tpl-modal-add-widget-selected-filter',
@@ -52,7 +51,7 @@ define(function (require, exports, module) {
                     self.filterView = new FilterSearchItemView({ model: self.filterModel });
                     $('[data-js-filter-info]', self.$el).html(self.filterView.$el);
                     self.async.resolve();
-                })
+                });
         },
         getFilterModel: function() {
             return this.filterModel;

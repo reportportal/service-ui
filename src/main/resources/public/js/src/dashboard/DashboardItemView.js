@@ -47,6 +47,7 @@ define(function (require, exports, module) {
             'click [data-js-full-screen]': 'onClickFullScreen',
             'click [data-js-close-fullscreen]': 'onClickExitFullScreen',
             'click [data-js-add-widget]': 'onClickAddWidget',
+            'click [data-js-add-widget-bootm]': 'onClickWidgetBottom',
             'click [data-js-add-shared-widget]': 'onClickAddSharedWidget',
         },
 
@@ -152,9 +153,13 @@ define(function (require, exports, module) {
                 self.gadgetCollection.sort();
                 self.updateScroll();
             });
+            $gridStack.on('dragstop', function(event, ui) {
+                config.trackingDispatcher.trackEventNumber(285);
+            });
             $gridStack.on('resizestart', function (event, ui) {
                 var view = event.target.backboneView;
                 view && view.startResize();
+                config.trackingDispatcher.trackEventNumber(289);
             });
             $gridStack.on('resizestop', function (event, ui) {
                 var view = event.target.backboneView;
@@ -284,6 +289,12 @@ define(function (require, exports, module) {
             e.preventDefault();
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(280);
+            (new ModalAddWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
+        },
+        onClickWidgetBottom: function(){
+            e.preventDefault();
+            e.stopPropagation();
+            config.trackingDispatcher.trackEventNumber(345);
             (new ModalAddWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
         },
         onClickAddSharedWidget: function(e) {

@@ -47,6 +47,8 @@ define(function (require, exports, module) {
             'click [data-js-save]': 'onClickSaveWidget',
             'click [data-js-cancel-filter]': 'onClickCancelFilterEdit',
             'click [data-js-save-filter]': 'onClickSaveFilterEdit',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
         bindings: {
             '[data-js-widget-type]': 'text: gadgetName',
@@ -96,9 +98,10 @@ define(function (require, exports, module) {
             $('[data-js-widget-preview]', this.$el).html(this.previewWidgetView.$el);
         },
         onEditFilter: function(filterModel) {
+            config.trackingDispatcher.trackEventNumber(321);
             this.$el.addClass('filter-edit-state');
             this.destroyFilterSelect();
-            this.filterSelectView = new FilterSearchView({ model: this.model });
+            this.filterSelectView = new FilterSearchView({ model: this.model, modalType: 'edit'});
             this.listenTo(this.filterSelectView, 'disable:navigation', this.onChangefilterSelectState);
             $('[data-js-filter-search]', this.$el).html(this.filterSelectView.$el);
             this.filterSelectView.setFilterModel(filterModel);
@@ -123,16 +126,24 @@ define(function (require, exports, module) {
         onShow: function() {
             this.widgetSettingsView.activate();
         },
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(320);
+        },
+        onClickCancel: function(){
+            config.trackingDispatcher.trackEventNumber(325);
+        },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickCancelFilterEdit: function() {
+            config.trackingDispatcher.trackEventNumber(330);
             this.model.set({ filter_id: this.selectedFilterView.getFilterModel().get('id')});
             this.destroyFilterSelect();
             this.closeFilterEdit();
         },
         onClickSaveFilterEdit: function() {
             if(this.filterSelectView && this.filterSelectView.getSelectedFilterModel()) {
+                config.trackingDispatcher.trackEventNumber(331);
                 this.selectedFilterView.setFilterModel(this.filterSelectView.getSelectedFilterModel());
             }
             this.destroyFilterSelect();
@@ -150,6 +161,7 @@ define(function (require, exports, module) {
         },
         onClickSaveWidget: function() {
             if(this.saveWidget.validate() && this.widgetSettingsView.validate()) {
+                config.trackingDispatcher.trackEventNumber(326);
                 this.$el.addClass('load');
                 var self = this;
                 var curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];

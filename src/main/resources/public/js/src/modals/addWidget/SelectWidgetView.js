@@ -27,6 +27,9 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var _ = require('underscore');
     var WidgetsConfig = require('widget/widgetsConfig');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var SelectWidgetView = Epoxy.View.extend({
         className: 'modal-add-widget-select-widget',
@@ -43,6 +46,7 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {widgets: this.widgetConfig.widgetTypes}))
         },
         onChangeType: function() {
+            config.trackingDispatcher.trackEventNumber(291);
             var gadget = $('input:checked', this.$el).val();
             var curWidget = this.widgetConfig.widgetTypes[gadget];
             this.model.set({

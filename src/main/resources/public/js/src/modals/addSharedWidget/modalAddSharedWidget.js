@@ -101,6 +101,8 @@ define(function (require, exports, module) {
 
         events: {
             'click [data-js-add-widget]': 'onClickAddWidget',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
         bindings: {
             '[data-js-preview-block]': 'classes: {hide: not(name)}',
@@ -145,6 +147,9 @@ define(function (require, exports, module) {
                     $('[data-js-action-block]', self.$el).removeClass('load');
                     self.baronScroll = Util.setupBaronScroll($('[data-js-widgets-list-scroll]', self.$el));
                     Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 480});
+                    $('[data-js-widgets-list]', self.$el).closest('.baron_scroller').on('scroll', function(){
+                        config.trackingDispatcher.trackEventNumber(317);
+                    });
                 });
         },
         destroyViews: function() {
@@ -155,8 +160,15 @@ define(function (require, exports, module) {
             }
             this.renderedViews = [];
         },
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(315);
+        },
+        onClickCancel: function(){
+            config.trackingDispatcher.trackEventNumber(318);
+        },
         onChangeActive: function(model, active) {
             if(active) {
+                config.trackingDispatcher.trackEventNumber(316);
                 this.model.set({name: model.get('name'), id: model.get('id')});
                 this.previewWidgetView && this.previewWidgetView.destroy();
                 this.previewWidgetView = new PreviewWidgetView({sharedWidgetModel: model});
@@ -164,6 +176,7 @@ define(function (require, exports, module) {
             }
         },
         onClickAddWidget: function() {
+            config.trackingDispatcher.trackEventNumber(319);
             this.dashboardModel.addWidget(this.model);
             this.successClose({widgetId: this.model.get('id')});
         },

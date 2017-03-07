@@ -28,6 +28,9 @@ define(function (require, exports, module) {
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
     var WidgetsConfig = require('widget/widgetsConfig');
     var Localization = require('localization');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var SettingItemsView = SettingView.extend({
         className: 'modal-add-widget-setting-items',
@@ -50,10 +53,16 @@ define(function (require, exports, module) {
                     type: 'itemsSize',
                     min: this.curWidget.limit.min,
                     max: this.curWidget.limit.max
-            }])
+            }]);
+            this.listenTo(this.model, 'change:itemsCount', this.onChangeItemsCont);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {name: this.curWidget.limit.name || Localization.widgets.items}))
+        },
+        onChangeItemsCont: function(){
+            if(this.validate()){
+                config.trackingDispatcher.trackEventNumber(299);
+            }
         },
         validate: function() {
             return !$('[data-js-limit-input]', this.$el).trigger('validate').data('validate-error')

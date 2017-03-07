@@ -1203,10 +1203,10 @@ define(function (require, exports, module) {
             return {id: this.id}
         },
         redirectOnElementClick: function (type) {
-            this.chart[type].dispatch.on("elementClick", null);
             if (!this.isPreview) {
                 var self = this;
                 this.chart[type].dispatch.on("elementClick", function (e) {
+                    config.trackingDispatcher.trackEventNumber(344);
                     if ($('.fullscreen-close').is(':visible')) {
                         // $('#dynamic-content').getNiceScroll().remove();
                         $.fullscreen.exit();
@@ -1283,6 +1283,7 @@ define(function (require, exports, module) {
         tooltipContent: function(){
             var self = this;
             return function (key, x, y, e, graph) {
+                config.trackingDispatcher.trackEventNumber(343);
                 if (self.param.isTimeline) {
                     var index = e.pointIndex,
                         cat = self.categories[index],
@@ -1342,6 +1343,13 @@ define(function (require, exports, module) {
                     this.chart.legend.dispatch[property] = function () {
                     };
                 }
+            }
+        },
+        addLegendClick: function(svg){
+            if(this.chart.legend) {
+                svg.selectAll('.nvd3.nv-legend').on('click', function(){
+                    config.trackingDispatcher.trackEventNumber(342);
+                });
             }
         },
         addLaunchNameTip: function(svg, tip){
@@ -1503,10 +1511,12 @@ define(function (require, exports, module) {
                     point = svg.select('.nv-scatterWrap').selectAll('path.nv-point');
 
                 this.chart.stacked.dispatch.on("areaClick", function (e) {
+                    config.trackingDispatcher.trackEventNumber(344);
                     self.redirectTo(e);
                 });
                 point.each(function () {
                     d3.select(this).on('click', function (e) {
+                        config.trackingDispatcher.trackEventNumber(344);
                         self.redirectTo(e);
                     });
                 });
@@ -1646,12 +1656,15 @@ define(function (require, exports, module) {
                         }
                     });
                 }
-                self.addLaunchNameTip(vis, tip);
+                self.addLaunchNameTip(vis, tip)
                 self.redirectOnElementClick();
+                self.addLegendClick(vis);
             };
             this.chart.update = update;
+
             this.addResize();
             this.redirectOnElementClick();
+            this.addLegendClick(vis);
             if (self.isPreview) {
                 this.disabeLegendEvents();
             }
@@ -1769,6 +1782,7 @@ define(function (require, exports, module) {
             this.chart.update = update;
             this.addResize();
             this.redirectOnElementClick('multibar');
+            this.addLegendClick(vis);
             if (self.isPreview) {
                 this.disabeLegendEvents();
             }
@@ -1945,6 +1959,7 @@ define(function (require, exports, module) {
             this.chart.update = update;
             this.addResize();
             this.redirectOnElementClick('multibar');
+            this.addLegendClick(vis);
             if (self.isPreview) {
                 this.disabeLegendEvents();
             }
@@ -2070,6 +2085,7 @@ define(function (require, exports, module) {
                 .call(tip);
 
             this.addLaunchNameTip(vis, tip);
+            this.addLegendClick(vis);
             this.addResize();
             if (self.isPreview) {
                 this.disabeLegendEvents();
@@ -2146,6 +2162,7 @@ define(function (require, exports, module) {
             var self = this,
                 type = this.getTimeType(this.max);
             return function (key, x, y, e, graph) {
+                config.trackingDispatcher.trackEventNumber(343);
                 var index = e.pointIndex,
                     time = Moment.duration(Math.abs(e.value), type.type).humanize(true),
                     cat = self.categories[index],
@@ -2342,6 +2359,7 @@ define(function (require, exports, module) {
         tooltipContent: function(){
             var self = this;
             return function (key, x, y, e, graph) {
+                config.trackingDispatcher.trackEventNumber(343);
                 if (self.param.isTimeline) {
                     var index = e.pointIndex,
                         cat = self.categories[index];
@@ -2704,9 +2722,11 @@ define(function (require, exports, module) {
         updateOnLegendClick: function (id, title) {
             var self = this;
             this.chart.legend.dispatch.on("legendClick", function(d, i){
+                config.trackingDispatcher.trackEventNumber(342);
                 self.upadateTotal(id, title);
             });
             this.chart.legend.dispatch.on("legendDblclick", function(d, i){
+                config.trackingDispatcher.trackEventNumber(342);
                 self.upadateTotal(id, title);
             });
         },
@@ -2719,6 +2739,7 @@ define(function (require, exports, module) {
             this.chart[type].dispatch.on("elementClick", null);
             if (!this.isPreview) {
                 this.chart[type].dispatch.on("elementClick", function (e) {
+                    config.trackingDispatcher.trackEventNumber(344);
                     nv.tooltip.cleanup();
                     if ($('.fullscreen-close').is(':visible')) {
                         // $('#dynamic-content').getNiceScroll().remove();

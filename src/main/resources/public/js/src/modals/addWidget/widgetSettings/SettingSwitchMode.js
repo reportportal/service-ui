@@ -28,6 +28,9 @@ define(function (require, exports, module) {
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
     var WidgetsConfig = require('widget/widgetsConfig');
     var Localization = require('localization');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var SettingSwitchMode = SettingView.extend({
         className: 'modal-add-widget-setting-switch-mode',
@@ -54,6 +57,7 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, this.curWidget.mode))
         },
         onClickLaunch: function(e) {
+            config.trackingDispatcher.trackEventNumber(300);
             e.preventDefault();
             if(!this.$launchMode.hasClass('active')) {
                 this.$launchMode.addClass('active');
@@ -64,6 +68,7 @@ define(function (require, exports, module) {
             }
         },
         onClickTimeline: function(e) {
+            config.trackingDispatcher.trackEventNumber(300);
             e.preventDefault();
             if(!this.timelineMode.hasClass('active')) {
                 this.timelineMode.addClass('active');

@@ -75,6 +75,7 @@ define(function (require, exports, module) {
             }
         },
         onClickRefresh: function() {
+            config.trackingDispatcher.trackEventNumber(287);
             this.update();
         },
         startResize: function() {
@@ -127,24 +128,36 @@ define(function (require, exports, module) {
         },
         onClickRemove: function(e) {
             e.stopPropagation();
+            config.trackingDispatcher.trackEventNumber(288);
             var self = this;
-            (new ModalConfirm({
+            var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deletedWidget,
                 bodyText: Util.replaceTemplate(Localization.dialog.deletedWidget, this.model.get('name')),
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete,
-            })).show().done(function() {
+            });
+            modal.show().done(function() {
                 self.model.trigger('remove:view', self); // for gridstack
                 self.model.collection.remove(self.model);
                 self.destroy();
-            })
+            });
+            $('[data-js-close]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(339);
+            });
+            $('[data-js-cancel]', modal.$el).on('click', function(e){
+                config.trackingDispatcher.trackEventNumber(340);
+            });
+            $('[data-js-ok]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(341);
+            });
         },
         activateGadget: function() {
             this.activate = true;
             this.update();
         },
         onClickGadgetEdit: function() {
+            config.trackingDispatcher.trackEventNumber(286);
             var self = this;
             (new ModalEditWidget({
                 model: this.model

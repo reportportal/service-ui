@@ -31,6 +31,9 @@ define(function (require, exports, module) {
     var FilterItem = require('modals/addWidget/FilterSearchItemView');
     var FilterSearchEditView = require('modals/addWidget/FilterSearchEditView');
     var FilterSearchAddView = require('modals/addWidget/FilterSearchAddView');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var FilterCollection = Backbone.Collection.extend({
         model: FilterModel,
@@ -69,7 +72,8 @@ define(function (require, exports, module) {
             ':el': 'classes: {hide: not(gadgetIsFilter)}',
             '[data-js-seach-query]': 'text: search'
         },
-        initialize: function () {
+        initialize: function (options) {
+            this.modalType = options.modalType;
             this.widgetConfig = WidgetsConfig.getInstance();
             this.firstActivate = true,
                 this.collection = new FilterCollection({mainModel: this.model});
@@ -107,6 +111,9 @@ define(function (require, exports, module) {
                 this.selectFilterView = new FilterItem({model: model, searchModel: this.viewModel});
                 $('[data-js-select-filter-container]', this.$el).html(this.selectFilterView.$el);
                 this.selectedFilterModel = model;
+                this.selectFilterView.$el.on('mouseenter', function(){
+                    config.trackingDispatcher.trackEventNumber(296);
+                });
             } else {
                 $('[data-js-select-filter-block]', this.$el).addClass('empty-state');
             }
@@ -123,10 +130,16 @@ define(function (require, exports, module) {
             this.setFilterModel(filterModel);
         },
         onClickAddFilter: function (e) {
+            if(this.modalType == 'edit'){
+                config.trackingDispatcher.trackEventNumber(328);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(295);
+            }
             e.preventDefault();
             this.$el.addClass('hide-content');
             this.addFilterView && this.stopListening(this.addFilterView) && this.addFilterView.destroy();
-            this.addFilterView = new FilterSearchAddView({gadgetModel: this.model});
+            this.addFilterView = new FilterSearchAddView({gadgetModel: this.model, modalType: this.modalType});
             this.listenTo(this.addFilterView, 'change:filter', this.onSelectFilter);
             this.addFilterView.activate();
             $('[data-js-filter-add-container]', this.$el).html(this.addFilterView.$el);
@@ -147,7 +160,7 @@ define(function (require, exports, module) {
         onEditFilter: function (model) {
             this.$el.addClass('hide-content');
             this.editFilterView && this.editFilterView.destroy();
-            this.editFilterView = new FilterSearchEditView({model: model, gadgetModel: this.model});
+            this.editFilterView = new FilterSearchEditView({model: model, gadgetModel: this.model, modalType: this.modalType});
             $('[data-js-filter-edit-container]', this.$el).html(this.editFilterView.$el);
             this.trigger('disable:navigation', true);
             var self = this;
@@ -185,7 +198,16 @@ define(function (require, exports, module) {
             }
         },
         onChangeFilterName: function (e) {
-            this.viewModel.set({search: $(e.currentTarget).val()});
+            var value = $(e.currentTarget).val();
+            if(value){
+                if(this.modalType == 'edit'){
+                    config.trackingDispatcher.trackEventNumber(327);
+                }
+                else {
+                    config.trackingDispatcher.trackEventNumber(294);
+                }
+            }
+            this.viewModel.set({search: value});
         },
         onAddCollectionItems: function (model) {
             this.renderFilter(model);
@@ -200,7 +222,7 @@ define(function (require, exports, module) {
             }, this);
         },
         renderFilter: function (model) {
-            var filterItem = new FilterItem({model: model, searchModel: this.viewModel});
+            var filterItem = new FilterItem({model: model, searchModel: this.viewModel, modalType: this.modalType});
             $('[data-js-filter-list]', this.$el).append(filterItem.$el);
             this.renderViews.push(filterItem);
         },

@@ -27,6 +27,9 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var SelectDashboardView = require('modals/addWidget/SelectDashboardView');
     var Localization = require('localization');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var SaveWidgetView = Epoxy.View.extend({
         className: 'modal-add-widget-save-widget',
@@ -54,7 +57,10 @@ define(function (require, exports, module) {
                 max: 256
             });
             this.listenTo(this.model, 'change:name', this.onChangeName);
+            this.listenTo(this.model, 'change:description', this.onChangeDescription);
+            this.listenTo(this.model, 'change:isShared', this.onChangeShared);
             this.updateSharedSwitcher();
+
         },
         onChangeDashboard: function(model){
             this.dashboardModel = model;
@@ -64,8 +70,25 @@ define(function (require, exports, module) {
         isSharedDashboard: function(){
             return this.dashboardModel && this.dashboardModel.get('isShared');
         },
+        onChangeDescription: function(){
+            if(this.dashboardModel){
+                config.trackingDispatcher.trackEventNumber(323);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(312);
+            }
+        },
+        onChangeShared: function(){
+            if(this.dashboardModel){
+                config.trackingDispatcher.trackEventNumber(324);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(313);
+            }
+        },
         onChangeName: function(){
             if(this.validate()){
+                config.trackingDispatcher.trackEventNumber(322);
                 this.trigger('disable:navigation', false);
             }
             else {

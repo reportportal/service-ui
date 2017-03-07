@@ -34,7 +34,6 @@ define(function (require, exports, module) {
 
     var config = App.getInstance();
 
-
     var FilterSearchAddView = Epoxy.View.extend({
         className: 'modal-add-widget-filter-search-add',
         template: 'tpl-modal-add-widget-filter-search-add',
@@ -46,7 +45,8 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-filter-name]': 'text: name',
         },
-        initialize: function() {
+        initialize: function(options) {
+            this.modalType = options.modalType;
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.render();
             this.async = $.Deferred();
@@ -74,9 +74,25 @@ define(function (require, exports, module) {
                     filterLevel: 'launch',
                     model: self.model
                 });
+                $('input', $('[data-js-entity-choice-list] [data-js-link]', self.filterEntities.$el)).on('click', function(e){
+                    if(this.modalType == 'edit'){
+                        config.trackingDispatcher.trackEventNumber(332);
+                    }
+                    else {
+                        config.trackingDispatcher.trackEventNumber(302);
+                    }
+                });
                 self.filterSorting = new FilterSortingView({model: self.model});
                 $('[data-js-filter-sorting]', self.$el).append(self.filterSorting.$el);
                 self.listenTo(self.model, 'change:id', self.onChangeId);
+                $('[data-js-sorting-list] a', self.filterSorting.$el).on('click', function(){
+                    if(this.modalType == 'edit'){
+                        config.trackingDispatcher.trackEventNumber(333);
+                    }
+                    else {
+                        config.trackingDispatcher.trackEventNumber(303);
+                    }
+                });
             });
         },
         render: function() {
@@ -86,11 +102,23 @@ define(function (require, exports, module) {
             e.stopPropagation();
         },
         onClickCancel: function() {
+            if(this.modalType == 'edit'){
+                config.trackingDispatcher.trackEventNumber(334);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(304);
+            }
             this.model.set({newEntities: ''});
             this.launchFilterCollection.remove(this.model);
             this.async.reject();
         },
         onClickOk: function() {
+            if(this.modalType == 'edit'){
+                config.trackingDispatcher.trackEventNumber(335);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(305);
+            }
             var $filterName = $('[data-js-name-input]', this.$el);
             $filterName.trigger('validate');
             if(!$filterName.data('validate-error')) {

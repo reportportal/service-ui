@@ -28,7 +28,9 @@ define(function (require, exports, module) {
     var Util = require('util');
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
     var FilterSortingView = require('filterSelectionParameters/FilterSortingView');
+    var App = require('app');
 
+    var config = App.getInstance();
 
     var FilterSearchEditView = Epoxy.View.extend({
         className: 'modal-add-widget-filter-search-edit',
@@ -37,20 +39,45 @@ define(function (require, exports, module) {
             'click [data-js-cancel-edit]': 'onClickCancel',
             'click [data-js-ok-edit]': 'onClickOk',
             'click [data-js-cancel]': 'onClick',
+            'mouseenter [data-js-filter-name]': 'onHoverFilter',
         },
         bindings: {
             '[data-js-filter-name]': 'text: name',
         },
-        initialize: function() {
+        initialize: function(options) {
+            this.modalType = options.modalType;
             this.render();
             this.async = $.Deferred();
+            var self = this;
+            this.listenTo(this.model, 'change:entities', function(){
+                if(this.modalType == 'edit'){
+                    config.trackingDispatcher.trackEventNumber(336);
+                }
+                else {
+                    config.trackingDispatcher.trackEventNumber(307);
+                }
+            });
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-entities-container]', this.$el),
                 filterLevel: 'launch',
                 model: this.model
             });
+            $('input', $('[data-js-entity-choice-list] [data-js-link]', this.filterEntities.$el)).on('click', function(e){
+                if(this.modalType == 'edit'){
+                }
+                else {
+                    config.trackingDispatcher.trackEventNumber(308);
+                }
+            });
             this.filterSorting = new FilterSortingView({model: this.model});
             $('[data-js-filter-sorting]', this.$el).append(this.filterSorting.$el);
+            $('[data-js-sorting-list] a', this.filterSorting.$el).on('click', function(){
+                if(this.modalType == 'edit'){
+                }
+                else {
+                    config.trackingDispatcher.trackEventNumber(309);
+                }
+            });
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
@@ -58,11 +85,31 @@ define(function (require, exports, module) {
         onClick: function(e) {
             e.stopPropagation();
         },
+        onHoverFilter: function(){
+            if(this.modalType == 'edit'){
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(306);
+            }
+        },
         onClickCancel: function() {
+            if(this.modalType == 'edit'){
+                config.trackingDispatcher.trackEventNumber(337);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(310);
+            }
             this.model.set({newEntities: ''});
             this.async.reject();
         },
         onClickOk: function() {
+            if(this.modalType == 'edit'){
+                config.trackingDispatcher.trackEventNumber(338);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(311);
+            }
+
             this.model.saveFilter();
             this.async.resolve();
         },
