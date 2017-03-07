@@ -379,6 +379,7 @@ define(function (require, exports, module) {
 
         applyPaging: function (count) {
             var value = parseInt(this.pageSize.val());
+            config.trackingDispatcher.trackEventNumber(357);
             if (value && value !== this.model.get('size')) {
                 this.pageSizeStatic.text(value);
                 count && this.trigger('count', value);

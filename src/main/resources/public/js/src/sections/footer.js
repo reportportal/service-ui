@@ -26,6 +26,9 @@ define(function (require, exports, module) {
     var Util = require('util');
     var Moment = require('moment');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var Footer = Backbone.View.extend({
         el: "#pageFooter",
@@ -33,6 +36,15 @@ define(function (require, exports, module) {
 
         initialize: function () {
             this.viewModel = new SingletonRegistryInfoModel();
+        },
+
+        events: {
+            'click [data-js-fork-us]': 'onClickForkUs',
+            'click [data-js-chat-slack]': 'onClickChatSlack',
+            'click [data-js-contact-us]': 'onClickContactUs',
+            'click [data-js-epam]': 'onClickEpamLink',
+            'click [data-js-docs]': 'onClickDocs',
+            'click [data-js-api]': 'onClickApi'
         },
 
         render: function () {
@@ -46,7 +58,24 @@ define(function (require, exports, module) {
             Util.setupBaronScroll($('#ComponentsModal .modal-dialog', this.$el));
             return this;
         },
-
+        onClickForkUs: function(e){
+            config.trackingDispatcher.trackEventNumber(351);
+        },
+        onClickChatSlack: function(){
+            config.trackingDispatcher.trackEventNumber(352);
+        },
+        onClickContactUs: function(){
+            config.trackingDispatcher.trackEventNumber(353);
+        },
+        onClickEpamLink: function(){
+            config.trackingDispatcher.trackEventNumber(354);
+        },
+        onClickDocs: function(){
+            config.trackingDispatcher.trackEventNumber(355);
+        },
+        onClickApi: function(){
+            config.trackingDispatcher.trackEventNumber(356);
+        },
         destroy: function () {
             this.$el.html('');
             this.undelegateEvents();

@@ -39,6 +39,7 @@ define(function (require, exports, module) {
             'click [data-js-sidebar-close]': 'closeMenu',
             'click [data-js-administrate-page-link]': 'setLastActivePage',
             'click [data-js-logout]': 'onClickLogout',
+            'click [global-back-top]': 'onClickToTop'
         },
 
         initialize: function (options) {
@@ -79,7 +80,9 @@ define(function (require, exports, module) {
             });
             return this;
         },
-
+        onClickToTop: function(){
+            config.trackingDispatcher.trackEventNumber(350);
+        },
         setLastActivePage: function () {
             var page = Backbone.history.getFragment();
             (page == "user-profile") ? this.userStorage.set('lastActiveURL', this.projectUrl) : this.userStorage.set('lastActiveURL', page);

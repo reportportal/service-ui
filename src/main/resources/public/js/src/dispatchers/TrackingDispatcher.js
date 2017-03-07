@@ -381,7 +381,16 @@ define(function(require, exports, module) {
         345: ['Dashboard', 'Click on link Add New Widget on Dashboard', 'Arise Modal Add New Widget'],
         346: ['Dashboard', 'Click on Bttn Add New Dashboard on empty page', 'Arise Modal Add New Dashboard'],
 
+        350: ['Footer', 'Click on Back to Top link', 'Transition to top'],
+        351: ['Footer', 'Click on Fork us on GitHub link', 'Fork on GitHub'],
+        352: ['Footer', 'Click on Chat with us on Slack link', 'Move to Slack'],
+        353: ['Footer', 'Click on Contact us link', 'Open message window'],
+        354: ['Footer', 'Click on EPAM link', 'Transition to EPAM site'],
+        355: ['Footer', 'Click on Documentation link', 'Transition to Documentation'],
+        356: ['Footer', 'Click on API link', 'Transition to API'],
+        357: ['Footer', 'Edit number per page', 'Change number per page'],
 
+        
 
 
     }
