@@ -25,8 +25,10 @@ define(function (require, exports, module) {
     var DashboardHeaderView = require('dashboard/DashboardHeaderView');
     var DashboardBodyView = require('dashboard/DashboardBodyView');
     var DashboardCollection = require('dashboard/DashboardCollection');
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
 
     var config = App.getInstance();
+    var launchFilterCollection = new SingletonLaunchFilterCollection();
 
     var DashboardPage = Epoxy.View.extend({
         initialize: function(options) {
@@ -42,6 +44,14 @@ define(function (require, exports, module) {
             this.context.getMainView().$header.html(this.header.$el);
             this.context.getMainView().$body.html(this.body.$el);
             this.body.onShow && this.body.onShow();
+            this.listenTo(this.collection, 'after:update', this.onChangeShare);
+        },
+        onChangeShare: function(model) {
+            if(typeof model.changed.isShared != 'undefined') {
+                launchFilterCollection.ready.done(function() {
+                    launchFilterCollection.update();
+                })
+            }
         },
         update: function(options) {
             this.collection.resetActive();
