@@ -88,6 +88,67 @@
       right: 15px;
       white-space: pre-wrap;
       word-wrap: break-word;
+      z-index: 1;
+    }
+
+    &:after {
+      background-position: center;
+      -webkit-background-size: 100%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      content: "";
+      opacity: 0.3;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      position: absolute;
+      -webkit-box-shadow: inset 0px -30px 100px 3px $COLOR--reseted;
+      -moz-box-shadow: inset 0px -30px 100px 3px $COLOR--reseted;
+      box-shadow: inset inset 0px -30px 100px 3px $COLOR--reseted;
+    }
+
+    &.preview-0:after {
+      background-image: url('../../img/popup/activity_stream.png');
+    }
+    &.preview-1:after {
+      background-image: url('../../img/popup/different_launches_comparison.png');
+    }
+    &.preview-2:after {
+      background-image: url('../../img/popup/failed-cases-trend-chart.png');
+    }
+    &.preview-3:after {
+      background-image: url('../../img/popup/filter_results.png');
+    }
+    &.preview-4:after {
+      background-image: url('../../img/popup/filter_results_failure.png');
+    }
+    &.preview-5:after {
+      background-image: url('../../img/popup/growth_trend_chart.png');
+    }
+    &.preview-6:after {
+      background-image: url('../../img/popup/launch_statistics_pie.png');
+    }
+    &.preview-7:after {
+      background-image: url('../../img/popup/launch_statistics_trend_chart.png');
+    }
+    &.preview-8:after {
+      background-image: url('../../img/popup/launches_duration.png');
+    }
+    &.preview-9:after {
+      background-image: url('../../img/popup/non-passed_test-cases_trend.png');
+    }
+    &.preview-10:after {
+      background-image: url('../../img/popup/test-cases-growth-trend-chart.png');
+    }
+    &.preview-11:after {
+      background-image: url('../../img/popup/to_investigate_trend.png');
+    }
+    &.preview-12:after {
+      background-image: url('../../img/popup/trends_chart.png');
+    }
+    &.preview-13:after {
+      background-image: url('../../img/popup/unique_bugs_table.png');
     }
   }
   .icons-wrapper {

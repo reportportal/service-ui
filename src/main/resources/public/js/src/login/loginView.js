@@ -30,11 +30,11 @@ define(function(require, exports, module) {
 
     var SingletonURLParamsModel = require('model/SingletonURLParamsModel');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
+    var SingletonAppStorage = require('storage/SingletonAppStorage');
 
     var LoginLoginView = require('login/loginLoginView');
     var LoginRestoreView = require('login/loginRestoreView');
     var LoginResetView = require('login/loginResetView');
-
 
     var LoginView = Epoxy.View.extend({
 
@@ -45,14 +45,30 @@ define(function(require, exports, module) {
             '[data-js-build-versions]': 'html: fullServicesHtml',
         },
 
-
         initialize: function(options) {
+            var self = this;
+
             this.viewModel = new SingletonRegistryInfoModel();
+            this.storage = new SingletonAppStorage();
+            this.model = new (Epoxy.Model.extend({
+                defaults: {
+                    blockTime: 0,
+                }
+            }));
+            if (this.storage.getItem('login_block_time')) {
+                var secondsFromLastBlocking = ((Date.now() - this.storage.getItem('login_block_time')) / 1000).toFixed();
+
+                if (secondsFromLastBlocking <= 30) {
+                    this.model.set('blockTime', 30 - secondsFromLastBlocking);
+                    this.blockFormCountdown(30 - secondsFromLastBlocking);
+                }
+            }
+
             this.render();
 
             var urlModel = new SingletonURLParamsModel();
+
             if (urlModel.get('reset')) {
-                var self = this;
                 Service.validateRestorationKey(urlModel.get('reset'))
                     .done(function (response) {
                         if (response.is) {
@@ -90,10 +106,12 @@ define(function(require, exports, module) {
             if (this.loginSubView) {
                 this.destroySubView();
             }
-            this.loginSubView = new LoginLoginView();
+            this.loginSubView = new LoginLoginView({loginModel: this.model});
             this.listenTo(this.loginSubView, 'forgotPass', this.openForgotPass);
+            this.listenTo(this.loginSubView, 'blockLoginForm', this.blockLoginForm);
             this.subviewContainer.html(this.loginSubView.el)
         },
+
         openResetPassword: function () {
             if (this.loginSubView) {
                 this.destroySubView();
@@ -101,6 +119,26 @@ define(function(require, exports, module) {
             this.loginSubView = new LoginResetView({restoreKey: this.restoreKey});
             this.listenTo(this.loginSubView, 'closeResetPass', this.openLogin);
             this.subviewContainer.html(this.loginSubView.el);
+        },
+
+        blockLoginForm: function () {
+            var date = Date.now();
+            this.storage.setItem('login_block_time', date)
+            this.blockFormCountdown(30);
+        },
+
+        blockFormCountdown: function (seconds) {
+            var time = seconds;
+            var self = this;
+            this.timer = setInterval(function () {
+                time--;
+                if (time < 0) {
+                    clearInterval(self.timer);
+                } else {
+                    self.model.set('blockTime', time);
+                }
+
+            }, 1000)
         },
 
         destroySubView: function () {
@@ -114,6 +152,7 @@ define(function(require, exports, module) {
         },
 
         destroy: function(){
+            clearInterval(this.timer);
             this.undelegateEvents();
             this.stopListening();
             this.unbind();

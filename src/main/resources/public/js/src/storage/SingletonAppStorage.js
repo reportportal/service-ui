@@ -3,7 +3,7 @@
  *
  *
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,21 +19,16 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.modal-log-attachment-binary {
-  &.loading {
-    .preloader {
-      padding: 40px 0;
-      display: block;
-    }
-    .binary-holder {
-      display: none;
-    }
-  }
-  .modal-dialog {
-    width: 800px;
-    .binary-holder {
-      width: 100%;
-      padding: 30px 30px 20px 30px;
-    }
-  }
-}
+define(function (require, exports, module) {
+    'use strict';
+
+    var instance = null;
+    var AppStorage = require('storage/AppStorage');
+
+    var getInstance = function() {
+        if(instance) return instance;
+        return new AppStorage();
+    };
+
+    return getInstance;
+});

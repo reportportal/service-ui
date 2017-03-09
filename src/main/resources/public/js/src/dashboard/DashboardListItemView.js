@@ -71,6 +71,7 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {}));
+            this.setPreview();
         },
         onClickEdit: function(e) {
             e.stopPropagation();
@@ -98,13 +99,22 @@ define(function (require, exports, module) {
             })
         },
         onClickItem: function() {
-            if(this.model.get('isMy')){
+            if (this.model.get('isMy')) {
                 config.trackingDispatcher.trackEventNumber(262);
             }
             else {
                 config.trackingDispatcher.trackEventNumber(265);
             }
             config.router.navigate(this.model.get('url'), {trigger: true});
+        },
+
+        setPreview: function() {
+            var id = this.model.get('id');
+            var result = 0;
+            _.each(this.model.get('id'), function (item, i) {
+                result += id.charCodeAt(i);
+            });
+            $('[data-js-description-wrapper]', this.$el).addClass('preview-' + result % 14);
         },
 
         destroy: function () {
@@ -114,7 +124,6 @@ define(function (require, exports, module) {
             this.$el.remove();
         },
     });
-
 
     return DashboardListItemView;
 });

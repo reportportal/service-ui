@@ -25,7 +25,8 @@
     width: 100%;
     height: 146px;
     margin-bottom: 30px;
-    background-image: url('../../img/login/login-mobile.png');
+    background-image: url(../../img/login/login-mobile.svg);
+    background-color: $COLOR--light-blue;
     background-repeat: no-repeat;
     -webkit-background-size: 100%;
     background-size: 100%;
@@ -124,7 +125,7 @@
           display: none;
           height: 100%;
           width: 100%;
-          background-image: url('../../img/registration/pass-shown.png');
+          background-image: url(../../img/registration/pass-shown.svg);
           background-repeat: no-repeat;
           background-position: center;
         }
@@ -132,7 +133,7 @@
           display: block;
           height: 100%;
           width: 100%;
-          background-image: url('../../img/registration/pass-hided.png');
+          background-image: url(../../img/registration/pass-hided.svg);
           background-repeat: no-repeat;
           background-position: center;
         }

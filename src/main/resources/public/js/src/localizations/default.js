@@ -249,7 +249,8 @@ define(['util'], function () {
             currentVersion: 'Current version:',
             newVersions: 'New versions are available.',
             updateServices: 'Update to the latests',
-            twitterCaption: 'Be informed with our latest tweets'
+            twitterCaption: 'Be informed with our latest tweets',
+            error: 'Error',
         },
 
         landing: {
