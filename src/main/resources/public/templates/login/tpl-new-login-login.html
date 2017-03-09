@@ -28,6 +28,11 @@
         </div>
         <span class="validate-hint"></span>
         <span class="forgot-password" data-js-forgot-pass><%= data.text.login.forgotPassword %></span>
+        <div class="error-block hide" data-js-error-block>
+            <i class="rp-icons rp-icons-warning"></i>
+            <span class="error"><%= data.text.login.error %></span>
+            <span class="error-message" data-js-error-message></span>
+        </div>
     </label>
     <button class="rp-btn rp-btn-login" type="submit" data-js-login-btn><%= data.text.login.loginTitle%>
     </button>

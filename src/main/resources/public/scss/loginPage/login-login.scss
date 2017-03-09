@@ -243,6 +243,33 @@
         }
       }
 
+      .error-block {
+        margin-top: 10px;
+        height: auto;
+        overflow: hidden;
+
+        .rp-icons {
+          float: left;
+          color: $COLOR--failed;
+          font-size: 14px;
+        }
+        .error {
+          float: left;
+          color: $COLOR--failed;
+          font-family: $OpenSansSemibold;
+          font-size: 13px;
+          line-height: 16px;
+          margin-right: 5px;
+        }
+        .error-message {
+          float: left;
+          width: 320px;
+          display: block;
+          font-size: 12px;
+          color: $COLOR--charcoal-grey;
+        }
+      }
+
       &.validate-error {
         .icon-wrapper, .rp-input {
           border-color: $COLOR--orange-red;
