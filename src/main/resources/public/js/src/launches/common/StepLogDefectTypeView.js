@@ -74,7 +74,7 @@ define(function (require, exports, module) {
                         if (data.summary.length > 200) {
                             self.tooltip.$el.width(432);
                         }
-                        self.tooltip.update.html('<span>' + Localization.logs.summary +
+                        self.tooltip.update('<span>' + Localization.logs.summary +
                             '</span><br>' + data.summary +' <br><br>' +
                             '<span>' + Localization.logs.status + '</span><br>' +
                             ((data.status === 'Closed' || data.status === 'Resolved')?'<s>' + data.status + '</s>' : data.status)
