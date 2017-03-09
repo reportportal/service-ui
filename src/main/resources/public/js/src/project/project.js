@@ -251,6 +251,22 @@ define(function(require, exports, module) {
         renderTab: function (e) {
             var $el = $(e.currentTarget),
                 tab = $el.data('action');
+            switch (tab){
+                case 'notifications':
+                    config.trackingDispatcher.trackEventNumber(386);
+                    break;
+                case 'bts':
+                    config.trackingDispatcher.trackEventNumber(397);
+                    break;
+                case 'defect':
+                    config.trackingDispatcher.trackEventNumber(426);
+                    break;
+                case 'demoData':
+                    config.trackingDispatcher.trackEventNumber(427);
+                    break;
+                default:
+                    config.trackingDispatcher.trackEventNumber(380);
+            }
             config.router.navigate($el.attr('href'), {
                 silent: true
             });
@@ -281,6 +297,10 @@ define(function(require, exports, module) {
         initialize: function (options) {
             this.$el = options.holder;
             this.model = new ProjectSettings(config.project.configuration);
+            this.listenTo(this.model, 'change:interruptedJob', function(){config.trackingDispatcher.trackEventNumber(381);});
+            this.listenTo(this.model, 'change:keepLogs', function(){config.trackingDispatcher.trackEventNumber(382);});
+            this.listenTo(this.model, 'change:keepScreenshots', function(){config.trackingDispatcher.trackEventNumber(383);});
+            this.listenTo(this.model, 'change:isAutoAnalyzerEnabled', function(){config.trackingDispatcher.trackEventNumber(384);});
         },
 
         tpl: 'tpl-project-settings-general',
@@ -334,6 +354,7 @@ define(function(require, exports, module) {
         },
 
         submitSettings: function (e) {
+            config.trackingDispatcher.trackEventNumber(385);
             var externalSystemData = this.model.getProjectSettings();
             this.clearFormErrors();
             Service.updateProject(externalSystemData)
@@ -359,6 +380,8 @@ define(function(require, exports, module) {
             this.model = new NotificationsSettings(config.project.configuration.emailConfiguration);
             this.users = [];
             this.isValidEmail = true;
+            this.listenTo(this.model, 'change:emailEnabled', function(){config.trackingDispatcher.trackEventNumber(387);});
+            this.listenTo(this.model, 'change:fromAddress', function(){config.trackingDispatcher.trackEventNumber(388);});
         },
         emailCaseId: 0,
         tpl: 'tpl-project-settings-notifications',
@@ -472,7 +495,7 @@ define(function(require, exports, module) {
                 });
 
             params.addRule = true;
-
+            config.trackingDispatcher.trackEventNumber(395);
             var cases = this.model.get('emailCases'),
                 newCase = {
                     launchNames: [],
@@ -553,6 +576,7 @@ define(function(require, exports, module) {
             if (!config.userModel.hasPermissions()) {
                 return;
             }
+            config.trackingDispatcher.trackEventNumber(389);
             if (emailCase.hasClass('local-item')) {
                 var newRules = _.reject(this.model.get('emailCases'), function (eCase) {
                     return eCase.id == emailCase.data('email-case-id')
@@ -719,7 +743,7 @@ define(function(require, exports, module) {
             var recips = _.map(value, function(v){ return v.id; }),
                 checked = eci.find(".launchOwner").is(':checked'),
                 emails = [];
-
+            config.trackingDispatcher.trackEventNumber(390);
             this.hideFormsErrors(eci.find('.select2-container.recipients'));
             this.isValidEmail = true;
             if (_.isEmpty(recips) && !checked) {
@@ -755,6 +779,7 @@ define(function(require, exports, module) {
                 emailCase = _.findWhere(this.model.get('emailCases'), {
                     id: eci.data('email-case-id')
                 });
+            config.trackingDispatcher.trackEventNumber(393);
             emailCase.launchNames = launches;
 
             this.checkCases();
@@ -762,7 +787,7 @@ define(function(require, exports, module) {
 
         onChangeTags: function (value, eci) {
             var tags = (value) ? value.trim().split(',') : [];
-
+            config.trackingDispatcher.trackEventNumber(394);
             this.validateTags(tags);
             var emailCase = _.findWhere(this.model.get('emailCases'), {
                 id: eci.data('email-case-id')
@@ -1142,7 +1167,7 @@ define(function(require, exports, module) {
                     id: emailCase.data('email-case-id')
                 }),
                 sendCase = emailCaseObj['recipients'] || [];
-
+            config.trackingDispatcher.trackEventNumber(391);
             if ($el.is(':checked')) {
                 sendCase.push(val);
                 sendCase.length && this.hideFormsErrors(emailCase.find('.select2-container.recipients'));
@@ -1191,6 +1216,7 @@ define(function(require, exports, module) {
                     id: btn.closest('.email-case-item').data('email-case-id')
                 });
                 if (emailCase) {
+                    config.trackingDispatcher.trackEventNumber(392);
                     emailCase.sendCase = val;
                 }
                 this.checkCases();
@@ -1295,7 +1321,7 @@ define(function(require, exports, module) {
             var self = this,
                 emailField = $('#from', this.$el),
                 externalSystemData = this.model.getProjectSettings(this.rulesToDelete);
-
+            config.trackingDispatcher.trackEventNumber(396);
             if (this.model.get('emailEnabled')) {
                 if (!this.validateTags()) {
                     return false;
@@ -1331,12 +1357,11 @@ define(function(require, exports, module) {
             externalSystemData = this.checkTagsAndLaunches(externalSystemData);
             Service.updateEmailProjectSettings(externalSystemData)
                 .done(function (response) {
-
                     config.project.configuration.emailConfiguration = externalSystemData.configuration;
                     self.emailCaseId = 0;
                     self.rulesToDelete.length = 0;
                     self.updateIds();
-                    self.model = new NotificationsSettings(config.project.configuration.emailConfiguration);
+                    self.model.set(config.project.configuration.emailConfiguration);
                     self.render();
                     Util.ajaxSuccessMessenger('updateProjectSettings');
                 })
@@ -1524,6 +1549,7 @@ define(function(require, exports, module) {
             })
             // this.model = new BtsProperties(options.externalSystems[0]);
             this.model = new BtsProperties(modelsData[0]);
+            this.listenTo(this.model, 'change:fields', function(){config.trackingDispatcher.trackEventNumber(408)});
             this.systemAt = 0;
         },
 
@@ -1604,6 +1630,7 @@ define(function(require, exports, module) {
             if (el.hasClass('active')) {
                 return;
             }
+            config.trackingDispatcher.trackEventNumber(398);
             Util.flipActiveLi(el);
             this.validateBtsChange(value);
         },
@@ -1721,6 +1748,7 @@ define(function(require, exports, module) {
             }
 
             if ($tab.hasClass('add-new')) {
+                config.trackingDispatcher.trackEventNumber(400);
                 $parent.closest('ul').find('.active').removeClass('active');
                 $parent.addClass('disabled');
                 $parent.closest('ul').find('.bts-name-new-project').addClass('active').addClass('activated');
@@ -1734,6 +1762,7 @@ define(function(require, exports, module) {
                 });
                 this.renderInstance();
             } else {
+                config.trackingDispatcher.trackEventNumber(399);
                 this.systemAt = $tab.data('index');
                 this.model = new BtsProperties(this.systems[this.systemAt]);
                 this.renderMultiSelector();
@@ -1742,6 +1771,7 @@ define(function(require, exports, module) {
         },
 
         submitFields: function () {
+            config.trackingDispatcher.trackEventNumber(410);
             var result = [],
                 source = this.defaultFields ? this.defaultFields : this.model.get('fields');
             _.forEach(this.fieldsView.getDefaultValues(), function (value, key) {
@@ -1764,6 +1794,7 @@ define(function(require, exports, module) {
         },
 
         loadDefaultBtsFields: function () {
+            config.trackingDispatcher.trackEventNumber(409);
             var self = this;
             this.$fieldsLoader.show();
             Service.getBtsFields(this.model.get('id'))
@@ -1775,8 +1806,10 @@ define(function(require, exports, module) {
                         var item = _.find(data, {
                             id: field.id
                         });
-                        item['value'] = field.value;
-                        item['checked'] = true;
+                        if(item){
+                            item['value'] = field.value;
+                            item['checked'] = true;
+                        }
                     });
                     self.fieldsView.update(data);
 
@@ -1806,6 +1839,7 @@ define(function(require, exports, module) {
 
         saveProperties: function () {
             if (this.model.isValid()) {
+                config.trackingDispatcher.trackEventNumber(404);
                 if (this.validateForSystemsClearance()) {
                     config.userModel.set('bts', null);
                     Service.clearExternalSystem()
@@ -1914,6 +1948,7 @@ define(function(require, exports, module) {
         },
 
         deleteInstance: function () {
+            config.trackingDispatcher.trackEventNumber(402);
             var self = this;
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteBts,
@@ -1922,6 +1957,7 @@ define(function(require, exports, module) {
                 okButtonDanger: true,
                 okButtonText: Localization.ui.delete,
                 confirmFunction: function() {
+                    config.trackingDispatcher.trackEventNumber(407);
                     return Service.deleteExternalSystem(self.model.get('id'))
                         .done(function () {
                             self.systems.splice(self.systemAt, 1);
@@ -1945,6 +1981,12 @@ define(function(require, exports, module) {
                         });
                 }
             });
+            $('[data-js-close]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(405);
+            });
+            $('[data-js-cancel]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(406);
+            });
             modal.show();
         },
 
@@ -1963,12 +2005,14 @@ define(function(require, exports, module) {
         },
 
         editProperties: function () {
+            config.trackingDispatcher.trackEventNumber(401);
             this.model.setupEdit();
             this.setupValidityState();
             this.$cancelBtn.show();
         },
 
         cancelEditProperties: function () {
+            config.trackingDispatcher.trackEventNumber(403);
             var model = this.model.get('modelCache'),
                 self = this;
             _.forEach(model.restorable, function (id) {
@@ -2211,6 +2255,9 @@ define(function(require, exports, module) {
             // this.initListeners();
             this.editModel = new DefectTypeModel();
             this.listenTo(this.model, 'change:locator', this.onChangeLocator);
+            this.listenTo(this.model, 'change:longName', function(){config.trackingDispatcher.trackEventNumber(413)});
+            this.listenTo(this.model, 'change:shortName', function(){config.trackingDispatcher.trackEventNumber(414)});
+            this.listenTo(this.model, 'change:color', function(){config.trackingDispatcher.trackEventNumber(415)});
             this.listenTo(this.model, 'change', this.render);
         },
         onChangeLocator: function(model, locator) {
@@ -2237,7 +2284,10 @@ define(function(require, exports, module) {
             return data;
         },
         editItem: function (event) {
-            if(event) { event.preventDefault(); }
+            if(event) {
+                event.preventDefault();
+                config.trackingDispatcher.trackEventNumber(411);
+            }
             this.el.html(Util.templates(this.editor, this.model.toJSON()));
             this.editModel.set(this.model.toJSON());
             var itemId;
@@ -2249,6 +2299,7 @@ define(function(require, exports, module) {
             this.trigger('initClrPicker', mainHolder);
         },
         saveItem: function (event) {
+            config.trackingDispatcher.trackEventNumber(416)
             event.preventDefault();
 
             if (!this.editModel.isValid()) {
@@ -2277,6 +2328,7 @@ define(function(require, exports, module) {
             if (id === subType.toUpperCase() + '0') {
                 return;
             }
+            config.trackingDispatcher.trackEventNumber(412);
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.titleDeleteDefectType,
                 bodyText: Util.replaceTemplate(Localization.dialog.msgMessageTop, fullNameSubType, nameParentType),
@@ -2285,7 +2337,14 @@ define(function(require, exports, module) {
                 okButtonDanger: true,
                 okButtonText: Localization.ui.delete,
             });
+            $('[data-js-close]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(418);
+            });
+            $('[data-js-cancel]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(419);
+            });
             modal.show().done(function () {
+                config.trackingDispatcher.trackEventNumber(420);
                 self.model.collection.remove(self.model);
                 self.destroy();
                 Util.ajaxSuccessMessenger('deleteOneSubType');
@@ -2293,6 +2352,7 @@ define(function(require, exports, module) {
         },
         cancelItem: function (event) {
             event.preventDefault();
+            config.trackingDispatcher.trackEventNumber(417)
             if (this.model.get('locator') === 'newItem') {
                 var model = this.model;
                 this.destroy();
@@ -2476,6 +2536,7 @@ define(function(require, exports, module) {
             return view;
         },
         addItem: function(event) {
+            config.trackingDispatcher.trackEventNumber(421);
             event.preventDefault();
             var editModel = new DefectTypeModel({
                 locator: 'newItem',
@@ -2780,9 +2841,9 @@ define(function(require, exports, module) {
             event.preventDefault();
             if ($(event.target).hasClass('disabled')) {
                 return;
-            } else {
-                this.showModalResetColors();
             }
+            this.showModalResetColors();
+            config.trackingDispatcher.trackEventNumber(422);
         },
         showModalResetColors: function () {
             var self = this;
@@ -2793,7 +2854,14 @@ define(function(require, exports, module) {
                 okButtonDanger: true,
                 okButtonText: Localization.uiCommonElements.reset,
             });
+            $('[data-js-close]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(423);
+            });
+            $('[data-js-cancel]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(424);
+            });
             modal.show().done(function() {
+                config.trackingDispatcher.trackEventNumber(425);
                 self.resetColors();
                 Util.ajaxSuccessMessenger('changedColorDefectTypes');
             });

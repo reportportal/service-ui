@@ -36,6 +36,8 @@ define(function (require, exports, module) {
     var DemoDataSettingsView = Components.BaseView.extend({
         initialize: function (options) {
             this.$el = options.holder;
+            this.model = new Backbone.Model({postfix: ''});
+            this.listenTo(this.model, 'change:postfix', function(){config.trackingDispatcher.trackEventNumber(428)});
         },
         events: {
             'click [data-js-demo-data-submit]': 'submitSettings',
@@ -117,12 +119,13 @@ define(function (require, exports, module) {
             this.validate();
             if ($('.validate-error', this.$el).length) return;
             this.hideFormError();
+            config.trackingDispatcher.trackEventNumber(429);
             var postfix = this.$postfixInput.val(),
                 data = {
                     "isCreateDashboard": "true",
                     "postfix": postfix
                 };
-
+            this.model.set('postfix', postfix);
             this.toggleDisableForm(true);
             this.toggleLoader('show');
             Service.generateDemoData(data)
