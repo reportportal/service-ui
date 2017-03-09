@@ -32,10 +32,12 @@ define(function (require, exports, module) {
     var GadgetModel = require('dashboard/GadgetModel');
     var WidgetModel = require('newWidgets/WidgetModel');
     var WidgetConfig = require('widget/widgetsConfig');
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
 
     require('gridstackUi');
     require('fullscreen');
     var config = App.getInstance();
+    var launchFilterCollection = new SingletonLaunchFilterCollection();
 
     var DashboardItemView = Epoxy.View.extend({
         className: 'dashboard-item-view',
@@ -171,6 +173,11 @@ define(function (require, exports, module) {
             this.updateGadgetsTimer();
         },
         onAddGadget: function(gadgetModel) {
+            if(gadgetModel.get('isShared')) {
+                launchFilterCollection.ready.done(function() {
+                    launchFilterCollection.update();
+                })
+            }
             var view = new GadgetView({model: gadgetModel, dashboardModel: this.model});
             this.gridStack.addWidget.apply(this.gridStack, view.getDataForGridStack());
             this.gadgetViews.push(view);
