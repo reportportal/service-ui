@@ -25,7 +25,7 @@
                     <span class="user-edit">
                         <span data-js-user-name><%= data.fullName %></span>
                         <% if(canEdit){ %>
-                            <i title="<%= data.text.userProfile.editInfo %>" data-js-edit-info class="material-icons">edit</i>
+                            <i title="<%= data.text.userProfile.editInfo %>" data-js-edit-name class="material-icons">edit</i>
                         <% } %>
                     </span>
                 </div>
@@ -33,7 +33,7 @@
                     <span class="user-edit">
                         <span data-js-user-email class="user-mail"></span>
                         <% if(canEdit){ %>
-                            <i title="<%= data.text.userProfile.editInfo %>" data-js-edit-info class="material-icons">edit</i>
+                            <i title="<%= data.text.userProfile.editInfo %>" data-js-edit-email class="material-icons">edit</i>
                         <% } %>
                     </span>
                 </div>

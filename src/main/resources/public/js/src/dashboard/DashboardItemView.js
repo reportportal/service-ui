@@ -291,7 +291,7 @@ define(function (require, exports, module) {
             config.trackingDispatcher.trackEventNumber(280);
             (new ModalAddWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
         },
-        onClickWidgetBottom: function(){
+        onClickWidgetBottom: function(e){
             e.preventDefault();
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(345);

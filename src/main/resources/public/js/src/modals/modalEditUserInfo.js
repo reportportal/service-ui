@@ -42,12 +42,15 @@ define(function (require, exports, module) {
             'click [data-js-ok]:not(.disabled)': 'submitEditInfo',
             'validation::change [data-js-full-name]': 'validateUserInfo',
             'validation::change [data-js-user-email]': 'validateUserInfo',
+            'click [data-js-close]': 'onClickClose'
         },
 
         initialize: function(options) {
             this.oldName = this.model.get('fullName');
             this.oldEmail = this.model.get('email');
             this.isSubmit = false;
+            this.listenTo(this.model, 'change:fullName', this.onChangeName);
+            this.listenTo(this.model, 'change:email', this.onChangeEmail);
             this.render();
         },
 
@@ -101,12 +104,21 @@ define(function (require, exports, module) {
         },
 
         resetUserInfo: function(){
+            config.trackingDispatcher.trackEventNumber(376);
             this.model.set('fullName', this.oldName);
             this.model.set('email', this.oldEmail);
         },
-
+        onChangeName: function(){
+            config.trackingDispatcher.trackEventNumber(374);
+        },
+        onChangeEmail: function(){
+            config.trackingDispatcher.trackEventNumber(375);
+        },
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(373);
+        },
         submitEditInfo: function(){
-
+            config.trackingDispatcher.trackEventNumber(377);
             var data = {},
                 self = this,
                 userImage = config.userModel.get('image'),

@@ -65,7 +65,9 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-config-tab] li > a ': 'changeLangConfig',
             'click [data-js-change-password]': 'showChangePass',
-            'click [data-js-edit-info]': 'showEditUserInfo',
+            'click [data-js-edit-name]': 'onEditUserName',
+            'click [data-js-edit-email]': 'onEditUserEmail',
+            'click [data-js-select-photo]': 'onClickUploadPhoto',
             'change [data-js-select-photo]': 'previewPhoto',
             'submit [data-js-upload-photo-form]': 'uploadPhoto',
             'click [data-js-remove-photo]': 'removePhoto',
@@ -110,6 +112,7 @@ define(function (require, exports, module) {
             }, el, el);
         },
         updateToken: function () {
+            config.trackingDispatcher.trackEventNumber(365);
             var self = this;
             (new ModalRegenerateUUID()).show().done(function(){
                 return self.generateApiToken();
@@ -136,16 +139,28 @@ define(function (require, exports, module) {
             });
         },
         showChangePass: function () {
+            config.trackingDispatcher.trackEventNumber(360);
             var modal = new ModalChangePassword({
                 model: this.model
             });
             modal.show();
+        },
+        onEditUserName: function(){
+            config.trackingDispatcher.trackEventNumber(361);
+            this.showEditUserInfo();
+        },
+        onEditUserEmail: function(){
+            config.trackingDispatcher.trackEventNumber(362);
+            this.showEditUserInfo();
         },
         showEditUserInfo: function () {
             var modal = new ModalEditUserInfo({
                 model: this.model
             });
             modal.show();
+        },
+        onClickUploadPhoto: function(){
+            config.trackingDispatcher.trackEventNumber(363);
         },
         generateApiToken: function() {
             var self = this;
@@ -236,6 +251,7 @@ define(function (require, exports, module) {
             e.preventDefault();
         },
         removePhoto: function (e) {
+            config.trackingDispatcher.trackEventNumber(364);
             var self = this;
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteImage,
@@ -244,6 +260,7 @@ define(function (require, exports, module) {
                 okButtonDanger: true,
                 okButtonText: Localization.ui.delete,
                 confirmFunction: function() {
+                    config.trackingDispatcher.trackEventNumber(372);
                     return CallService.call('DELETE', Urls.uploadPhoto()).done(function() {
                         config.userModel.set('photo_loaded', false);
                         Util.setProfileUrl();
@@ -258,9 +275,16 @@ define(function (require, exports, module) {
                     });
                 }
             });
+            $('[data-js-close]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(370);
+            });
+            $('[data-js-cancel]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(371);
+            });
             modal.show();
         },
         changeLangConfig: function (e) {
+            config.trackingDispatcher.trackEventNumber(366);
             e.preventDefault();
             var el = $(e.target);
             if (!el.parent().hasClass('active')) {

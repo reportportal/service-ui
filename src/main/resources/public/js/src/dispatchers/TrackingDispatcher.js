@@ -390,7 +390,24 @@ define(function(require, exports, module) {
         356: ['Footer', 'Click on API link', 'Transition to API'],
         357: ['Footer', 'Edit number per page', 'Change number per page'],
 
-        
+        360: ['Profile', 'Click on Bttn Change password', 'Arise Modul Change password'],
+        361: ['Profile', 'Click on icon Edit User name', 'Arise Modul Edit Personal Information'],
+        362: ['Profile', 'Click on icon Edit Email', 'Arise Modul Edit Personal Information'],
+        363: ['Profile', 'Click on Bttn Upload photo', 'Upload photo'],
+        364: ['Profile', 'Click on link Remove photo', 'Arise Modul Delete image'],
+        365: ['Profile', 'Click on Bttn Regenerate', 'Regenerate'],
+        366: ['Profile', 'Select configuration tab', 'Select configuration tab'],
+        367: ['Profile', 'Click on icon Close on Modul Change password', 'Close Modul Change password'],
+        368: ['Profile', 'Click on Bttn Cancel on Modul Change password', 'Close Modul Change password'],
+        369: ['Profile', 'Click on Bttn Submit on Modul Change password', 'Submit changes on Modul Change password'],
+        370: ['Profile', 'Click on icon Close on Modul Delete image', 'Close Modul Delete image'],
+        371: ['Profile', 'Click on Bttn Cancel on Modul Delete image', 'Close Modul Delete image'],
+        372: ['Profile', 'Click on Bttn Delete on Modul Delete image', 'Delete image'],
+        373: ['Profile', 'Click on icon Close on Modul Edit personal information', 'Close Modul Edit personal information'],
+        374: ['Profile', 'Edit input User name on Modul Edit personal information', 'Edit User name on Modul Edit personal information'],
+        375: ['Profile', 'Edit input Email on Modul Edit personal information', 'Edit Email on Modul Edit personal information'],
+        376: ['Profile', 'Click on Bttn Cancel on Modul Edit personal information', 'Close Modul Edit personal information'],
+        377: ['Profile', 'Click on Bttn Submit on Modul Edit personal information', 'Submit changes on Modul Edit personal information'],
 
 
     }

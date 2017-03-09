@@ -35,7 +35,9 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-ok]:not(.disabled)': 'submitChangePassword',
             'change [data-js-show-password]': 'showPassword',
-            'validation::change [data-js-change-password]': 'validatePass'
+            'validation::change [data-js-change-password]': 'validatePass',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
 
         initialize: function(options) {
@@ -75,7 +77,14 @@ define(function (require, exports, module) {
             var action = $(e.currentTarget).is(':checked') ? 'text' : 'password';
             this.$originalPass.add(this.$newPass).add(this.$confirmPass).attr('type', action);
         },
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(367);
+        },
+        onClickCancel: function(){
+            config.trackingDispatcher.trackEventNumber(368);
+        },
         submitChangePassword: function(){
+            config.trackingDispatcher.trackEventNumber(369);
             var data = {
                 oldPassword: this.$originalPass.val(),
                 newPassword: this.$newPass.val()
