@@ -26,6 +26,7 @@ define(function(require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var Localization = require('localization');
     var App = require('app');
     var config = App.getInstance();
     var UserModel = require('model/UserModel');
@@ -60,13 +61,16 @@ define(function(require, exports, module) {
                 get: function(authExtensions){
                     return !_.contains(authExtensions, 'github');
                 }
-            }
+            },
         },
 
-        initialize: function () {
+        initialize: function (options) {
+            this.loginModel = options.loginModel;
+            this.listenTo(this.loginModel, 'change:blockTime', this.blockForm);
             this.user = new UserModel();
             this.viewModel = new SingletonRegistryInfoModel();
             this.render();
+            this.blockForm();
         },
 
         render: function () {
@@ -79,12 +83,13 @@ define(function(require, exports, module) {
             this.$login = $('[data-js-login]', this.$el);
             this.$pass = $('[data-js-password]', this.$el);
             this.$loginBtn = $('[data-js-login-btn]', this.$el);
+            this.$gitHubLoginBtn = $('[data-js-github-login-btn]', this.$el);
             this.$loginForm = $('[data-js-login-login-form]', this.$el);
+            this.$errorBlock = $('[data-js-error-block]', this.$el);
         },
 
         bindValidators: function () {
             Util.hintValidator(this.$login, [
-
                 {
                     validator: 'matchRegex',
                     type: 'loginRegex',
@@ -147,7 +152,7 @@ define(function(require, exports, module) {
                 })
                 .fail(function(response){
                     if (response.status == 403) {
-                        self.showBlockMessage();
+                        self.trigger('blockLoginForm');
                         /* OAuth Spec says wrong creds is 400 */
                     } else if (response.status == 400 && JSON.parse(response.responseText).error_code === 4003) {
                         self.$loginForm.addClass('bad-credentials');
@@ -163,6 +168,27 @@ define(function(require, exports, module) {
             return login;
         },
 
+        blockForm: function () {
+            var time = this.loginModel.get('blockTime');
+            if (time && time <= 30) {
+                var message = Localization.login.blockedLoginForm + ' <strong data-js-block-timer>' + time + '</strong> ' + Localization.ui.sec + '.';
+
+                this.$errorBlock.removeClass('hide');
+                this.$login.prop('disabled', true);
+                this.$pass.prop('disabled', true);
+                this.$loginBtn.prop('disabled', true);
+                this.$gitHubLoginBtn.prop('disabled', true);
+
+                $('[data-js-error-message]', this.$el).html(message);
+            }
+            if (time <= 0) {
+                this.$errorBlock.addClass('hide');
+                this.$login.prop('disabled', false);
+                this.$pass.prop('disabled', false);
+                this.$loginBtn.prop('disabled', false);
+                this.$gitHubLoginBtn.prop('disabled', false);
+            }
+        },
 
         onForgotPass: function () {
           this.trigger('forgotPass');

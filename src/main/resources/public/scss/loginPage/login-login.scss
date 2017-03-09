@@ -188,6 +188,10 @@
         &.password-field {
           padding-right: 35px;
         }
+
+        &:-webkit-autofill {
+          -webkit-box-shadow: 0 0 0 1000px #FDFFEB inset;
+        }
       }
 
       .visability-toggler {
@@ -200,7 +204,7 @@
           display: none;
           height: 100%;
           width: 100%;
-          background-image: url('../../img/registration/pass-shown.png');
+          background-image: url(../../img/registration/pass-shown.svg);
           background-repeat: no-repeat;
           background-position: center;
         }
@@ -208,7 +212,7 @@
           display: block;
           height: 100%;
           width: 100%;
-          background-image: url('../../img/registration/pass-hided.png');
+          background-image: url(../../img/registration/pass-hided.svg);
           background-repeat: no-repeat;
           background-position: center;
         }
@@ -236,6 +240,33 @@
         cursor: pointer;
         &:hover {
           text-decoration: underline;
+        }
+      }
+
+      .error-block {
+        margin-top: 10px;
+        height: auto;
+        overflow: hidden;
+
+        .rp-icons {
+          float: left;
+          color: $COLOR--failed;
+          font-size: 14px;
+        }
+        .error {
+          float: left;
+          color: $COLOR--failed;
+          font-family: $OpenSansSemibold;
+          font-size: 13px;
+          line-height: 16px;
+          margin-right: 5px;
+        }
+        .error-message {
+          float: left;
+          width: 320px;
+          display: block;
+          font-size: 12px;
+          color: $COLOR--charcoal-grey;
         }
       }
 

@@ -81,6 +81,7 @@ define(function (require, exports, module) {
                 noResizeSearch: false,
                 dropdownCssClass: '',
                 minimumInputLength: 1,
+                maximumInputLength: 128,
                 formatResultCssClass: function (state) {
                     if ((remoteTags.length == 0 || _.indexOf(remoteTags, state.text) < 0) && $('.select2-input.select2-active').val() == state.text) {
                         return 'exact-match';

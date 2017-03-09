@@ -189,7 +189,8 @@ define(function (require, exports, module) {
                     {name: '3 hours', value: '3 hours'},
                     {name: '6 hours', value: '6 hours'},
                     {name: '12 hours', value: '12 hours'},
-                    {name: '1 day', value: '1 day'}
+                    {name: '1 day', value: '1 day'},
+                    {name: '1 week', value: '1 week'}
                 ],
                 keepLogs: [
                     {name: '2 weeks', value: '2 weeks'},

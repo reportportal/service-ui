@@ -103,7 +103,7 @@
       font-size: 24px;
       text-align: center;
 
-      .welcome {
+      .big {
         font-size: 32px;
       }
 
@@ -145,7 +145,7 @@
         font-size: 16px;
         text-align: center;
 
-        .welcome {
+        .big {
           font-size: 24px;
         }
       }
@@ -198,7 +198,7 @@
             display: none;
             height: 100%;
             width: 100%;
-            background-image: url('../../img/registration/pass-shown.png');
+            background-image: url(../../img/registration/pass-shown.svg);
             background-repeat: no-repeat;
             background-position: center;
           }
@@ -206,7 +206,7 @@
             display: block;
             height: 100%;
             width: 100%;
-            background-image: url('../../img/registration/pass-hided.png');
+            background-image: url(../../img/registration/pass-hided.svg);
             background-repeat: no-repeat;
             background-position: center;
           }
