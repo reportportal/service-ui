@@ -43,7 +43,9 @@ define(function (require, exports, module) {
             'click [data-js-ok]': 'onClickOk',
             'click [data-js-select-role-dropdown] a': 'selectRole',
             'focus [data-js-invite-link]': 'selectLink',
-            'click [data-js-copy-link]': 'copyLink'
+            'click [data-js-copy-link]': 'copyLink',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
         bindings: {
             '[data-js-user]': 'value: user',
@@ -73,6 +75,7 @@ define(function (require, exports, module) {
             $('[data-js-load]', this.$el).trigger('click');
         },
         onClickInvite: function() {
+            config.trackingDispatcher.trackEventNumber(437);
             if(this.$form.valid()) {
                 if(Util.validateEmail(this.model.get('user'))){
                     this.inviteUser();
@@ -256,6 +259,12 @@ define(function (require, exports, module) {
                 email: user.user,
                 role: user.projectRole
             }
+        },
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(435);
+        },
+        onClickCancel: function(){
+            config.trackingDispatcher.trackEventNumber(436);
         },
         assignUser: function(){
             var userData = this.getUserData();

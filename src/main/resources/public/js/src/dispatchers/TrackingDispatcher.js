@@ -409,6 +409,15 @@ define(function(require, exports, module) {
         376: ['Profile', 'Click on Bttn Cancel on Modul Edit personal information', 'Close Modul Edit personal information'],
         377: ['Profile', 'Click on Bttn Submit on Modul Edit personal information', 'Submit changes on Modul Edit personal information'],
 
+        430: ['Members', 'Enter parameter for search', 'Show member by parameter'],
+        431: ['Members', 'Click on Bttn Permission map', 'Show Permission map'],
+        432: ['Members', 'Click on Bttn Invite user', 'Arise Modul Invite user'],
+        433: ['Members', 'Edit input Project role', 'Change Project role'],
+        434: ['Members', 'Click on Bttn Unassign', 'Unassign user'],
+        435: ['Members', 'Click on icon Close on Modul Invite user', 'Close Modul Invite user'],
+        436: ['Members', 'Click on Bttn Cancel on Modul Invite user', 'Close Modul Invite user'],
+        437: ['Members', 'Click on Bttn Invite on Modul Invite user', 'Invite user'],
+
 
     }
 

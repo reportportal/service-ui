@@ -160,6 +160,7 @@ define(function(require, exports, module) {
                 return;
             }
 
+            config.trackingDispatcher.trackEventNumber(433);
             var newRole = $el.data('value'),
                 userId = this.model.get('userId'),
                 projectId = this.appModel.get('projectId'),
@@ -188,6 +189,7 @@ define(function(require, exports, module) {
         },
 
         unAssignMember: function(e){
+            config.trackingDispatcher.trackEventNumber(434);
             e.preventDefault();
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.unAssignMember,

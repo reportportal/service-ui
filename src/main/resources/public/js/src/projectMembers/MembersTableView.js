@@ -156,6 +156,9 @@ define(function(require, exports, module) {
 
         onChangeFilterName: function (e, data) {
             if (data.valid) {
+                if(data.value){
+                    config.trackingDispatcher.trackEventNumber(430);
+                }
                 this.model.set({search: data.value});
                 this.paging.urlModel.set({'filter.cnt.name': data.value});
             }
@@ -196,6 +199,7 @@ define(function(require, exports, module) {
         },
 
         showInviteUser: function(e){
+            config.trackingDispatcher.trackEventNumber(432);
             e.preventDefault();
             var modal = new ModalInviteUser({});
             this.listenToOnce(modal, 'add:user', this.updateMembers);
@@ -210,6 +214,7 @@ define(function(require, exports, module) {
         },
 
         showPermissionsModal: function(e){
+            config.trackingDispatcher.trackEventNumber(431);
             e.preventDefault();
             var modal = new ModalPermissionsMap({});
             modal.show();
