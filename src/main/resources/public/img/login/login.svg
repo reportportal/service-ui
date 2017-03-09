@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="744" viewBox="0 0 500 744" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <path id="g" d="M0,2.00430103 C0,0.897356136 0.897047619,0 2.00149018,0 L500,0 L500,744 L2.00149018,744 C0.896097678,744 0,743.095885 0,741.995699 L0,2.00430103 Z"/>
+    <ellipse id="i" cx="23" cy="23" rx="23" ry="23"/>
+    <ellipse id="k" cx="23" cy="23" rx="23" ry="23"/>
+    <ellipse id="a" cx="23" cy="23" rx="15" ry="15"/>
+    <mask id="l" width="30" height="30" x="0" y="0" fill="white">
+      <use xlink:href="#a"/>
+    </mask>
+    <mask id="m" width="30" height="30" x="0" y="0" fill="white">
+      <use xlink:href="#a"/>
+    </mask>
+    <ellipse id="n" cx="23" cy="23" rx="23" ry="23"/>
+    <ellipse id="b" cx="23" cy="23" rx="15" ry="15"/>
+    <mask id="o" width="30" height="30" x="0" y="0" fill="white">
+      <use xlink:href="#b"/>
+    </mask>
+    <mask id="p" width="30" height="30" x="0" y="0" fill="white">
+      <use xlink:href="#b"/>
+    </mask>
+    <ellipse id="q" cx="23" cy="23" rx="23" ry="23"/>
+    <ellipse id="c" cx="23" cy="23" rx="15" ry="15"/>
+    <mask id="r" width="30" height="30" x="0" y="0" fill="white">
+      <use xlink:href="#c"/>
+    </mask>
+    <mask id="s" width="30" height="30" x="0" y="0" fill="white">
+      <use xlink:href="#c"/>
+    </mask>
+    <ellipse id="t" cx="23" cy="23" rx="23" ry="23"/>
+    <ellipse id="v" cx="23" cy="23" rx="23" ry="23"/>
+    <ellipse id="x" cx="23" cy="23" rx="23" ry="23"/>
+    <ellipse id="z" cx="23" cy="23" rx="23" ry="23"/>
+    <path id="d" d="M10,5.00302505 C10,2.23993061 12.2290419,0 14.9966729,0 L135.003327,0 C137.762913,0 140,2.24679708 140,5.00302505 L140,84 L10,84 L10,5.00302505 Z"/>
+    <mask id="B" width="130" height="84" x="0" y="0" fill="white">
+      <use xlink:href="#d"/>
+    </mask>
+    <rect id="e" width="120" height="76" x="15" y="8"/>
+    <mask id="C" width="120" height="76" x="0" y="0" fill="white">
+      <use xlink:href="#e"/>
+    </mask>
+    <path id="f" d="M0,83 L150,83 L150,88 C150,90.7614237 147.763174,93 145.009232,93 L4.99076843,93 C2.23444314,93 0,90.7558048 0,88 L0,83 Z"/>
+    <mask id="D" width="150" height="10" x="0" y="0" fill="white">
+      <use xlink:href="#f"/>
+    </mask>
+  </defs>
+  <g fill="none" fill-rule="evenodd">
+    <mask id="h" fill="white">
+      <use xlink:href="#g"/>
+    </mask>
+    <circle cx="474" cy="205" r="233" stroke="#39C2D7" stroke-dasharray="3 4" opacity=".25" mask="url(#h)"/>
+    <circle cx="105" cy="355" r="233" stroke="#39C2D7" stroke-dasharray="3 4" opacity=".25" mask="url(#h)"/>
+    <circle cx="408.5" cy="420.5" r="256.5" stroke="#39C2D7" stroke-dasharray="3 4" opacity=".25" mask="url(#h)"/>
+    <g transform="translate(174 544)" opacity=".4" mask="url(#h)">
+      <mask id="j" fill="white">
+        <use xlink:href="#i"/>
+      </mask>
+      <use fill="#D0F0F1" xlink:href="#i"/>
+      <rect width="27" height="5" x="8" y="13" fill="#FFFFFF" mask="url(#j)" rx="2"/>
+      <rect width="33" height="5" x="8" y="21" fill="#FFFFFF" mask="url(#j)" rx="2"/>
+      <path fill="#FFFFFF" d="M8,31.0048815 C8,29.897616 8.89821238,29 9.99079514,29 L26.0092049,29 C27.1086907,29 28,29.8938998 28,31.0048815 L28,31.9951185 C28,33.102384 27.1017876,34 26.0092049,34 L9.99079514,34 C8.89130934,34 8,33.1061002 8,31.9951185 L8,31.0048815 Z" mask="url(#j)"/>
+    </g>
+    <g transform="translate(339 -23)" opacity=".4" mask="url(#h)">
+      <use fill="#D0F0F1" xlink:href="#k"/>
+      <use stroke-width="46" mask="url(#m)" xlink:href="#a" transform="matrix(-1 0 0 1 46 0)"/>
+    </g>
+    <g transform="translate(313 370)" opacity=".4" mask="url(#h)">
+      <use fill="#D0F0F1" xlink:href="#n"/>
+      <use stroke-width="46" mask="url(#p)" xlink:href="#b" transform="matrix(-1 0 0 1 46 0)"/>
+    </g>
+    <g transform="translate(53 720)" opacity=".4" mask="url(#h)">
+      <use fill="#D0F0F1" xlink:href="#q"/>
+      <use stroke-width="46" mask="url(#s)" xlink:href="#c" transform="matrix(-1 0 0 1 46 0)"/>
+    </g>
+    <g transform="translate(385 141)" opacity=".4" mask="url(#h)">
+      <mask id="u" fill="white">
+        <use xlink:href="#t"/>
+      </mask>
+      <use fill="#D0F0F1" xlink:href="#t"/>
+      <polyline fill="#FFFFFF" points="5 29 18 17 22 22 29 12 41 29" mask="url(#u)"/>
+    </g>
+    <g transform="translate(-22 319)" opacity=".4" mask="url(#h)">
+      <mask id="w" fill="white">
+        <use xlink:href="#v"/>
+      </mask>
+      <use fill="#D0F0F1" xlink:href="#v"/>
+      <polyline fill="#FFFFFF" points="5 29 18 17 22 22 29 12 41 29" mask="url(#w)"/>
+    </g>
+    <g transform="translate(467 636)" opacity=".4" mask="url(#h)">
+      <mask id="y" fill="white">
+        <use xlink:href="#x"/>
+      </mask>
+      <use fill="#D0F0F1" xlink:href="#x"/>
+      <polyline stroke="#FFFFFF" stroke-width="2" points="41.5 31.5 33 19 27 24 16 10 4.5 32" mask="url(#y)"/>
+      <polyline stroke="#FFFFFF" stroke-width="2" points="42 32 33 26 26 30 17 20 4.5 32" mask="url(#y)"/>
+    </g>
+    <g transform="translate(80 97)" opacity=".4" mask="url(#h)">
+      <mask id="A" fill="white">
+        <use xlink:href="#z"/>
+      </mask>
+      <use fill="#D0F0F1" xlink:href="#z"/>
+      <rect width="3" height="25" x="16" y="12" fill="#FFFFFF" mask="url(#A)" rx="1.5"/>
+      <rect width="3" height="15" x="10" y="22" fill="#FFFFFF" mask="url(#A)" rx="1.5"/>
+      <rect width="3" height="30" x="22" y="7" fill="#FFFFFF" mask="url(#A)" rx="1.5"/>
+      <rect width="3" height="20" x="28" y="17" fill="#FFFFFF" mask="url(#A)" rx="1.5"/>
+      <rect width="3" height="10" x="34" y="27" fill="#FFFFFF" mask="url(#A)" rx="1.5"/>
+    </g>
+    <g opacity=".7" transform="translate(175 159)">
+      <use fill="#D7F3F4" fill-opacity=".5" stroke="#91D9E5" stroke-opacity=".15" stroke-width="2" mask="url(#B)" xlink:href="#d"/>
+      <use fill="#FCFEFE" stroke="#39C2D7" stroke-opacity=".15" stroke-width="2" mask="url(#C)" xlink:href="#e"/>
+      <rect width="53" height="8" x="67" y="36" fill="#D7F3F4" rx="4"/>
+      <rect width="53" height="8" x="67" y="49" fill="#D7F3F4" rx="4"/>
+      <path fill="#D7F3F4" d="M44,32 C36.265,32 30,38.3270297 30,46.1386139 C30,53.950198 36.265,60.2772277 44,60.2772277 C51.735,60.2772277 58,53.950198 58,46.1386139 C58,38.3270297 51.735,32 44,32 Z M44,36.2415842 C46.317,36.2415842 48.2,38.1432277 48.2,40.4831683 C48.2,42.8301782 46.317,44.7247525 44,44.7247525 C41.683,44.7247525 39.8,42.8301782 39.8,40.4831683 C39.8,38.1432277 41.683,36.2415842 44,36.2415842 Z M44,56.3184173 C40.493,56.3184173 37.413,54.5086733 35.6,51.7657822 C35.635,48.9592673 41.207,47.4110891 44,47.4110891 C46.793,47.4110891 52.358,48.9592673 52.4,51.7657822 C50.587,54.5086733 47.507,56.3184173 44,56.3184173 Z"/>
+      <use fill="#D7F3F4" fill-opacity=".5" stroke="#91D9E5" stroke-opacity=".15" stroke-width="2" mask="url(#D)" xlink:href="#f"/>
+    </g>
+  </g>
+</svg>
