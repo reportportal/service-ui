@@ -75,9 +75,11 @@ define(function (require, exports, module) {
             if(this.get('description')) {
                 data.description = this.get('description');
             }
+            var self = this;
             Service.updateDashboard(this.get('id'), data)
                 .done(function () {
                     Util.ajaxSuccessMessenger('dashboardUpdated');
+                    self.trigger('after:update', self);
                 })
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, 'updateDashboard');
