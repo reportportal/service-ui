@@ -128,7 +128,11 @@ define(function(require, exports, module) {
 
         events: {
             'click [data-js-delete-project]': 'deleteProject',
-            'click [data-js-assign-to-project]': 'assignAdminToProject'
+            'click [data-js-assign-to-project]': 'assignAdminToProject',
+            'click [data-js-project-name]': 'onClickProject',
+            'click [data-js-settings-link]': 'onClickSettings',
+            'click [data-js-members-link]': 'onClickMembers',
+            'click [data-js-go-to-project]': 'onOpenProject'
         },
 
         initialize: function (options) {
@@ -163,7 +167,21 @@ define(function(require, exports, module) {
             return Util.isDeleteLock(project);
         },
 
+        onClickProject: function(){
+            config.trackingDispatcher.trackEventNumber(447);
+        },
+        onClickSettings: function(){
+            config.trackingDispatcher.trackEventNumber(449);
+        },
+        onClickMembers: function(){
+            config.trackingDispatcher.trackEventNumber(450);
+        },
+        onOpenProject: function(){
+            config.trackingDispatcher.trackEventNumber(452);
+        },
+
         assignAdminToProject: function (e) {
+            config.trackingDispatcher.trackEventNumber(451);
             e.preventDefault();
             var id = this.model.get('projectId'),
                 data = {},
@@ -183,6 +201,7 @@ define(function(require, exports, module) {
         },
 
         deleteProject: function(e){
+            config.trackingDispatcher.trackEventNumber(448);
             e.preventDefault();
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteProject,
@@ -192,8 +211,15 @@ define(function(require, exports, module) {
                 okButtonDanger: true,
                 okButtonText: Localization.ui.delete,
                 confirmFunction: function(){
+                    config.trackingDispatcher.trackEventNumber(456);
                     return this.model.delete();
                 }.bind(this)
+            });
+            $('[data-js-close]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(456);
+            });
+            $('[data-js-cancel]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(458);
             });
             modal.show();
         },

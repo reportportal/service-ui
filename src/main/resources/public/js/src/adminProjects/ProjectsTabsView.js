@@ -76,6 +76,13 @@ define(function(require, exports, module) {
         updateTabs: function (e) {
             var $el = $(e.currentTarget),
                 tab = $el.data('js-tab-action');
+            switch (tab) {
+                case 'personal':
+                    config.trackingDispatcher.trackEventNumber(446);
+                    break;
+                default:
+                    config.trackingDispatcher.trackEventNumber(445);
+            }
             config.router.navigate($el.attr('href'), {
                 silent: true
             });
@@ -126,12 +133,20 @@ define(function(require, exports, module) {
             event.preventDefault();
             var $target = $(event.currentTarget),
                 viewType = $target.data('js-view-type');
+            switch (viewType) {
+                case 'table':
+                    config.trackingDispatcher.trackEventNumber(444);
+                    break;
+                default:
+                    config.trackingDispatcher.trackEventNumber(443);
+            }
             $('.projects-view.active').removeClass('active');
             $target.addClass('active');
             this.model.set('viewType', viewType);
         },
 
         changeSorting: function (e) {
+            config.trackingDispatcher.trackEventNumber(442);
             var btn = $(e.currentTarget);
             if (btn.hasClass('active')) {
                 btn.toggleClass('desc');
@@ -149,6 +164,7 @@ define(function(require, exports, module) {
             clearTimeout(this.searching);
             this.searching = setTimeout(function () {
                 if (data.valid && self.model.get('search') !== data.value) {
+                    config.trackingDispatcher.trackEventNumber(441);
                     self.model.set('search', data.value);
                 }
             }, config.userFilterDelay);

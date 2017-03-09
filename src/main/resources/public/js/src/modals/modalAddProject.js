@@ -36,6 +36,8 @@ define(function (require, exports, module) {
         className: 'modal-add-project',
         events: {
             'click [data-js-add]': 'addProject',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
         initialize: function(options) {
             this.render();
@@ -72,6 +74,12 @@ define(function (require, exports, module) {
                 tail = id ? id + '/' + action : action;
             return url + tail;
         },
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(453);
+        },
+        onClickCancel: function(){
+            config.trackingDispatcher.trackEventNumber(454);
+        },
         onKeySuccess: function () {
             $('[data-js-add]', this.$el).focus().trigger('click');
         },
@@ -80,6 +88,7 @@ define(function (require, exports, module) {
             if($('.validate-error', this.$el).length){
                 return;
             }
+            config.trackingDispatcher.trackEventNumber(455);
             this.showLoading();
             var name = this.$project.val().toLowerCase();
             AdminService.createProject(name)

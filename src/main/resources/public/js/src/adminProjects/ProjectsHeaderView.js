@@ -123,6 +123,7 @@ define(function(require, exports, module) {
         },
 
         addProject: function(e){
+            config.trackingDispatcher.trackEventNumber(440);
             e.preventDefault();
             var modal = new ModalAddProject();
             modal.show();

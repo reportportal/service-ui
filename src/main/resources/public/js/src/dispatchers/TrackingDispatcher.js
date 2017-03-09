@@ -473,6 +473,28 @@ define(function(require, exports, module) {
         436: ['Members', 'Click on Bttn Cancel on Modul Invite user', 'Close Modul Invite user'],
         437: ['Members', 'Click on Bttn Invite on Modul Invite user', 'Invite user'],
 
+        440: ['Projects', 'Click on Bttn Add Project', 'Arise Modul Add Project'],
+        441: ['Projects', 'Enter parameter for search', 'Show project by parameter'],
+        442: ['Projects', 'Edit sorting tab', 'Change sorting by name or by creation date'],
+        443: ['Projects', 'Click on Bttn Tile view', 'Tile view'],
+        444: ['Projects', 'Click on Bttn Table view', 'Table view'],
+        445: ['Projects', 'Click on tab Internal projects', 'Open tab Internal projects'],
+        446: ['Projects', 'Click on tab Personal projects', 'Open tab Personal projects'],
+
+        447: ['Projects', 'Click on Project name', 'Transition to Project page'],
+        448: ['Projects', 'Click on icon Close on Project tile', 'Arise Modul Delete Project'],
+        449: ['Projects', 'Click on icon Settings on Project tile', 'Transition to Settings page'],
+        450: ['Projects', 'Click on icon Members on Project tile', 'Transition to Members page'],
+        451: ['Projects', 'Click on icon Assign me on Project tile', 'Assign me to Project'],
+        452: ['Projects', 'Click on icon Open on Project tile', 'Open Dashboard page of Project'],
+
+        453: ['Projects', 'Click on icon Close on Modul Add project', 'Close Modul Add project'],
+        454: ['Projects', 'Click on Bttn Cancel on Modul Add project', 'Close Modul Add project'],
+        455: ['Projects', 'Click on Bttn Add on Modul Add project', 'Add project'],
+        456: ['Projects', 'Click on icon Close on Modul Delete project', 'Close Modul Delete project'],
+        457: ['Projects', 'Click on Bttn Cancel on Modul Delete project', 'Close Modul Delete project'],
+        458: ['Projects', 'Click on Bttn Delete on Modul Delete project', 'Delete project'],
+
 
     }
 
