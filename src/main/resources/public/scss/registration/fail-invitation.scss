@@ -26,7 +26,8 @@
   margin: 0 auto;
   border-radius: 2px;
   box-shadow: 0 1px 3px 0 $COLOR--skipped;
-  background-image: url('../../img/registration/registration-fail.png');
+  background-image: url(../../img/registration/registration-fail.svg);
+  background-color: $COLOR--light-blue;
   background-repeat: no-repeat;
   -webkit-background-size: contain;
   background-size: contain;
@@ -34,7 +35,7 @@
   @media (max-width: 1010px) {
     left: 0;
     width: 320px;
-    background-image: url('../../img/registration/registration-fail-mobile.png');
+    background-image: url(../../img/registration/registration-fail-mobile.svg);
   }
 
   .logo-label {

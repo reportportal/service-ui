@@ -99,7 +99,7 @@ define(function (require, exports, module) {
             })
         },
         onClickItem: function() {
-            if(this.model.get('isMy')){
+            if (this.model.get('isMy')) {
                 config.trackingDispatcher.trackEventNumber(262);
             }
             else {
@@ -109,8 +109,8 @@ define(function (require, exports, module) {
         },
 
         setPreview: function() {
-            var id = this.model.get('id'),
-                result = 0;
+            var id = this.model.get('id');
+            var result = 0;
             _.each(this.model.get('id'), function (item, i) {
                 result += id.charCodeAt(i);
             });
