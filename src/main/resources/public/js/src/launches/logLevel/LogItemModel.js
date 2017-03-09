@@ -28,9 +28,13 @@ define(function (require, exports, module) {
 
     var LogItemModel = Epoxy.Model.extend({
         defaults: {
+            id: '',
             binary_content: null,
-            message: '',
+            message: "",
+            test_item: "",
             time: 0,
+            active: false,
+            empty: false,
             level: null, // INFO, ERROR,
         },
         computeds: {
@@ -45,9 +49,46 @@ define(function (require, exports, module) {
                 get: function(binary_content) {
                     if(!binary_content) { return ''; }
                     if(!~binary_content.content_type.search('image/')) {
+                        var type = binary_content.content_type.split('/')[1];
+                        switch (type) {
+                            case 'CSS':
+                            case 'css': return 'img/launch/attachments/css.svg';
+                            case 'HTML':
+                            case 'html': return 'img/launch/attachments/html.svg';
+                            case 'JAVASCRIPT':
+                            case 'javascript': return 'img/launch/attachments/js.svg';
+                            case 'CSV':
+                            case 'csv': return 'img/launch/attachments/csv.svg';
+                            case 'JSON':
+                            case 'json': return 'img/launch/attachments/json.svg';
+                            case 'PHP':
+                            case 'php': return 'img/launch/attachments/php.svg';
+                            case 'XML':
+                            case 'xml': return 'img/launch/attachments/xml.svg';
+                            case 'PLAIN':
+                            case 'plain': return 'img/launch/attachments/txt.svg';
+                        }
                         return 'img/launch/attachment.png'
                     }
                     return Urls.getFileById(binary_content.thumbnail_id);
+                }
+            },
+            mainImagePath: {
+                deps: ['binary_content'],
+                get: function(binaryContent) {
+                    if(binaryContent && binaryContent.id) {
+                        if(!~binaryContent.content_type.search('image/')) {
+                            return this.get('imagePath');
+                        }
+                        return Urls.getFileById(binaryContent.id);
+                    }
+                    return '';
+                }
+            },
+            shortId: {
+                deps: ['id'],
+                get: function(id) {
+                    return id.substr(20);
                 }
             }
         },

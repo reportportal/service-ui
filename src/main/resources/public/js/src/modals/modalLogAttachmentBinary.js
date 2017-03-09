@@ -51,7 +51,9 @@ define(function (require, exports, module) {
                 });
 
                 $('[data-js-binary-holder]', self.$el).html(codeBlock.el);
-                self.$modalWrapper.removeClass('loading');
+                codeBlock.ready.done(function() {
+                    self.$modalWrapper.removeClass('loading');
+                })
             });
             this.render();
         },

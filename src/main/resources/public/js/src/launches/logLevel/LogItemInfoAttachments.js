@@ -29,6 +29,7 @@ define(function (require, exports, module) {
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
+    var ItemAttachmentModel = require('launches/logLevel/LogItemModel');
 
     var PAGE_SIZE = 6;
 
@@ -125,51 +126,6 @@ define(function (require, exports, module) {
         },
     })
 
-    var ItemAttachmentModel = Epoxy.Model.extend({
-        defaults: {
-            binary_content: {id: "", thumbnail_id: "", content_type: "image/png"},
-            message: "",
-            test_item: "",
-            time: 0,
-            active: false,
-            empty: false,
-        },
-        computeds: {
-            previewImg: {
-                deps: ['binary_content'],
-                get: function(binaryContent) {
-                    if(binaryContent && binaryContent.id) {
-                        if(!~binaryContent.content_type.search('image/')) {
-                            return 'img/launch/attachment.png'
-                        }
-                        if (binaryContent.thumbnail_id) {
-                            return Urls.getFileById(binaryContent.thumbnail_id);
-                        }
-                    }
-                    return '#';
-                }
-            },
-            mainImg: {
-                deps: ['binary_content'],
-                get: function(binaryContent) {
-                    if(binaryContent && binaryContent.id) {
-                        if(!~binaryContent.content_type.search('image/')) {
-                            return 'img/launch/attachment-big.png'
-                        }
-                        return Urls.getFileById(binaryContent.id);
-                    }
-                    return '';
-                }
-            },
-            shortId: {
-                deps: ['id'],
-                get: function(id) {
-                    return id.substr(20);
-                }
-            }
-        },
-    });
-
     var ItemAttachmentView = Epoxy.View.extend({
         className: 'gallery-preview',
 
@@ -178,7 +134,7 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-gallery-image]': 'attr: {src:  previewImg}',
+            '[data-js-gallery-image]': 'attr: {src:  imagePath}',
             ':el': 'classes: {active: active}',
         },
 
@@ -200,7 +156,7 @@ define(function (require, exports, module) {
         },
 
         bindings: {
-            '[data-js-main-image]': 'html: format("<img src=$1>", mainImg)',
+            '[data-js-main-image]': 'html: format("<img src=$1>", mainImagePath)',
         },
 
         initialize: function() {

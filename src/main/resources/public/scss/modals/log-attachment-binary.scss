@@ -22,12 +22,15 @@
 .modal-log-attachment-binary {
   &.loading {
     .preloader {
+      padding: 40px 0;
       display: block;
+    }
+    .binary-holder {
+      display: none;
     }
   }
   .modal-dialog {
-    width: 95%;
-
+    width: 800px;
     .binary-holder {
       width: 100%;
       padding: 30px 30px 20px 30px;

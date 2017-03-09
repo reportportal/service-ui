@@ -31,18 +31,29 @@ define(function (require, exports, module) {
 
         initialize: function (options) {
             var self = this;
-
+            this.ready = $.Deferred();
             this.language = options.language;
             this.binaryContent = options.binaryContent;
             this.isPlain = (this.language === 'plain');
+            if(this.language == 'html' || this.language == 'HTML') {
+                this.language = 'xml';
+            }
 
             this.loadHighlightJS().done(function () {
                 if (!self.isPlain) {
-                    self.loadLanguage(self.language).done(function () {
-                        hljs.registerLanguage(self.language, window['hljs_' + self.language]);
-                        self.render({binaryContent: self.binaryContent});
-                    });
+                    self.loadLanguage(self.language)
+                        .done(function () {
+                            hljs.registerLanguage(self.language, window['hljs_' + self.language]);
+                            self.ready.resolve();
+                            self.render({binaryContent: self.binaryContent});
+                        })
+                        .fail(function() {
+                            self.isPlain = true;
+                            self.ready.resolve();
+                            self.render({binaryContent: self.binaryContent});
+                        })
                 } else {
+                    self.ready.resolve();
                     self.render({binaryContent: self.binaryContent});
                 }
             });
@@ -69,7 +80,7 @@ define(function (require, exports, module) {
                 async.resolve();
             };
             script.onerror = function(e) {
-                async.resolve();
+                async.reject();
             };
 
             var lastScript = document.getElementsByTagName('script')[0];
@@ -88,7 +99,7 @@ define(function (require, exports, module) {
                 async.resolve();
             };
             script.onerror = function(e) {
-                async.resolve();
+                async.reject();
             };
 
             var lastScript = document.getElementsByTagName('script')[0];
