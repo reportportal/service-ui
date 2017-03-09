@@ -267,6 +267,10 @@
           display: block;
           font-size: 12px;
           color: $COLOR--charcoal-grey;
+
+          @media (max-width: 1010px) {
+            width: 220px;;
+          }
         }
       }
 
