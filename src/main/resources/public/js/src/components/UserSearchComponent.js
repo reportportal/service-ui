@@ -63,7 +63,7 @@ define(function (require, exports, module) {
                 if (_.filter(data, function (opt) {
                         return opt.text.localeCompare(term) === 0;
                     }).length === 0) {
-                    if(Util.validateEmail(term)){
+                    if(Util.validateEmail(term) && !remoteUsers.length){
                         return {
                             id: term,
                             text: term
