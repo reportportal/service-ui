@@ -26,7 +26,6 @@ define(function(require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var Service = require('coreService');
-    var Storage = require('storageService');
     var SingletonURLParamsModel = require('model/SingletonURLParamsModel');
     var SingletonAppModel = require('model/SingletonAppModel');
     require('cookie');
@@ -199,7 +198,6 @@ define(function(require, exports, module) {
                 .done(function(response){
                     self.set(self.parse(response));
                 })
-
         },
         updateProjects: function(){
             var async = $.Deferred();
@@ -223,25 +221,9 @@ define(function(require, exports, module) {
         getDefaultProjectHash: function () {
             return '#' + this.get('defaultProject');
         },
-
         clearSession: function () {
             this.set(this.defaults);
         },
-
-        // updateDefaultProject: function (project, callback) {
-        //     var self = this;
-        //     config.project = {projectId: project};
-        //     Service.updateDefaultProject(project)
-        //         .done(function () {
-        //             self.set('defaultProject', project);
-        //             if (callback && _.isFunction(callback)) {
-        //                 callback();
-        //             }
-        //         })
-        //         .fail(function (error) {
-        //             Util.ajaxFailMessenger(error, 'updateDefaultProject');
-        //         });
-        // },
         login: function (login, pass) {
             login = login.toLowerCase();
             var self = this;
@@ -265,30 +247,18 @@ define(function(require, exports, module) {
             Util.ajaxSuccessMessenger('signedIn');
             this.load();
         },
-
-
-        clearLocalSession: function () {
-
-        },
-
         hasPermissions: function (incomingProjectRole) {
-
             var project = this.get('projects')[this.appModel.get('projectId')];
 
-            if (Util.isAdmin(config.userModel.toJSON())) {
-                return true;
-            }
-
-            if (!project) {
-                return false;
-            }
+            if (Util.isAdmin(config.userModel.toJSON())) { return true; }
+            if (!project) { return false; }
 
             var projectRole = project.projectRole;
             incomingProjectRole = incomingProjectRole || projectRole;
 
-            var projectRoleIndex = _.indexOf(config.projectRoles, projectRole),
-                incomingProjectRoleIndex = _.indexOf(config.projectRoles, incomingProjectRole),
-                permission = false;
+            var projectRoleIndex = _.indexOf(config.projectRoles, projectRole);
+            var incomingProjectRoleIndex = _.indexOf(config.projectRoles, incomingProjectRole)
+            var permission = false;
             if (projectRoleIndex > 1) {
                 permission = projectRoleIndex >= incomingProjectRoleIndex;
             }
@@ -306,7 +276,6 @@ define(function(require, exports, module) {
 
         logout: function () {
             Service.userLogout();
-            // config.trackingDispatcher.userLoggedOut(Storage.getCurrentLogin());
             Util.clearXhrPool();
             config.project = {};
             this.clearSession();

@@ -51,8 +51,18 @@ define(function (require, exports, module) {
             '[data-js-switch-to-launch]': 'checked: isLaunch',
             '[data-js-switch-to-launch-mobile]': 'checked: isLaunch',
             '[data-js-switch-to-launch-text]': 'text: isLaunchString',
-            '[data-js-remove]': 'attr: {disabled: notMyFilter}, classes: {disabled: notMyFilter}',
+            '[data-js-remove]': 'attr: {disabled: not(canRemove)}, classes: {disabled: not(canRemove)}',
             '[data-js-filter-shared-icon]': 'classes: {disabled: notMyFilter}',
+        },
+        computeds: {
+            canRemove: {
+                deps: ['notMyFilter'],
+                get: function(notMyFilter) {
+                    return (config.userModel.get('isAdmin') ||
+                    config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager ||
+                    !notMyFilter);
+                }
+            }
         },
         initialize: function() {
             this.render();

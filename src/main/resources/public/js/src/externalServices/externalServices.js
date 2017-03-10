@@ -40,14 +40,12 @@ define(function (require, exports, module) {
         script.onload = function(){
             if(!window.ExternalServices){
                 async.resolve();
-
                 return;
             }
             new window.ExternalServices({Backbone: Backbone, Util: Util, config: config, AppModel: appModel});
             async.resolve();
         };
         script.onerror = function() {
-
             async.resolve();
         };
 

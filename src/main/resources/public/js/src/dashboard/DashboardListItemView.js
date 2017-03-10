@@ -46,7 +46,7 @@ define(function (require, exports, module) {
             '[data-js-icon-description]': 'text: sharedTitle',
             '[data-js-shared-container]': 'classes: {hide: not(isShared)}',
             '[data-js-edit]': 'classes: {hide: not(isMy)}',
-            '[data-js-remove]': 'classes: {hide: not(isMy)}',
+            '[data-js-remove]': 'classes: {hide: not(canRemove)}',
         },
         computeds: {
             displayingDescription: {
@@ -62,6 +62,14 @@ define(function (require, exports, module) {
                 deps: ['name', 'search'],
                 get: function(name, search){
                     return (search ? Util.textWrapper(name, search) : name).escapeScript();
+                }
+            },
+            canRemove: {
+                deps: ['isMy'],
+                get: function(isMy) {
+                    return (config.userModel.get('isAdmin') ||
+                    config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager ||
+                    isMy);
                 }
             }
         },

@@ -35,6 +35,7 @@ define(function(require, exports, module) {
     var Urls = require('dataUrlResolver');
     var callService = require('callService');
     var AnalyticsConnect = require('analytics/AnalyticsConnect');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
 
 
     var call = callService.call;
@@ -91,17 +92,16 @@ define(function(require, exports, module) {
     (new ExternalService())
         .done(function() {
             // start app
-            call('GET', Urls.getExternalSystems())
-                .done(function(services) {
-                    config.forSettings.btsList = _.map(services, function(service) {
-                        return {name: service.toUpperCase(), value: service.toUpperCase()}
-                    });
-                    $('html').removeClass('loading');
-                    Backbone.history.start();
-                    config.userModel.ready.done(function() {
-                        config.userModel.checkAuthUrl();
-                    });
-                })
-
+            var registryInfoModel = new SingletonRegistryInfoModel();
+            registryInfoModel.ready.done(function() {
+                config.forSettings.btsList = _.map(registryInfoModel.get('bugTrackingExtensions'), function(service) {
+                    return {name: service.toUpperCase(), value: service.toUpperCase()}
+                });
+                $('html').removeClass('loading');
+                Backbone.history.start();
+                config.userModel.ready.done(function() {
+                    config.userModel.checkAuthUrl();
+                });
+            });
         });
 });
