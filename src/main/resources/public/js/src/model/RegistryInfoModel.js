@@ -30,7 +30,8 @@ define(function(require, exports, module) {
         defaults: {
             uiBuildVersion: '',
             fullServicesHtml: '',
-            authExtensions: []
+            authExtensions: [],
+            bugTrackingExtensions: [],
         },
         initialize: function(){
             this.ready = $.Deferred();
@@ -43,6 +44,11 @@ define(function(require, exports, module) {
                     }
                     if(data && data.UAT && data.UAT.auth_extensions){
                         self.set({authExtensions: data.UAT.auth_extensions});
+                    }
+                    if(data && data.API){
+                        if(data.API.bugtracking) {
+                            self.set({bugTrackingExtensions: data.API.bugtracking});
+                        }
                     }
                     var fullServicesHtml = '';
                     _.each(data, function(service) {
