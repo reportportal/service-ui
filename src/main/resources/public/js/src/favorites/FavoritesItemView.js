@@ -117,8 +117,8 @@ define(function (require, exports, module) {
         onClickName: function(e){
             config.trackingDispatcher.trackEventNumber(242);
         },
-        destroy: function() {
-            this.remove();
+        onDestroy: function() {
+            this.$el.remove();
         }
     });
 

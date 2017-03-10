@@ -313,6 +313,9 @@ define(function (require, exports, module) {
         destroy: function () {
             clearTimeout(this.updateTimer);
             $.fullscreen.exit();
+            _.each(this.gadgetViews, function(view) {
+               view.destroy();
+            });
             this.undelegateEvents();
             this.gridStack && this.gridStack.destroy();
             this.$el.off('resize');

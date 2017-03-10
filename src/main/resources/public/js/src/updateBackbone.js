@@ -30,6 +30,7 @@ define(function (require, exports, module) {
     Backbone.View.prototype.destroy = function() {
         this.onDestroy && this.onDestroy();
         this.undelegateEvents();
+        this.removeBindings && this.removeBindings();
         this.stopListening();
         this.unbind();
     };

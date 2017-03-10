@@ -97,9 +97,9 @@ define(function(require, exports, module) {
                 config.forSettings.btsList = _.map(registryInfoModel.get('bugTrackingExtensions'), function(service) {
                     return {name: service.toUpperCase(), value: service.toUpperCase()}
                 });
-                $('html').removeClass('loading');
-                Backbone.history.start();
                 config.userModel.ready.done(function() {
+                    $('html').removeClass('loading');
+                    Backbone.history.start();
                     config.userModel.checkAuthUrl();
                 });
             });
