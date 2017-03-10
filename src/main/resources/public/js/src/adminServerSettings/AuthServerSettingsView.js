@@ -90,6 +90,7 @@ define(function(require, exports, module) {
         initialize: function(options){
             this.model = new AuthServerSettingsModel();
             this.getAuthSettings();
+            this.listenTo(this.model, 'change:gitHubAuthEnabled', function(){config.trackingDispatcher.trackEventNumber(494)});
         },
 
         render: function(){
@@ -129,6 +130,7 @@ define(function(require, exports, module) {
         },
 
         showAddOrganization: function(e){
+            config.trackingDispatcher.trackEventNumber(495);
             e.preventDefault();
             this.$addOrg.addClass('hide');
             this.$addOrgForm.removeClass('hide');
@@ -146,7 +148,8 @@ define(function(require, exports, module) {
             e.preventDefault();
             var $el = $(e.currentTarget),
                 field = $('[data-js-org-name]', $el.closest('[data-js-org-row]')),
-                name = field.data('js-org-name');
+                name = ''+field.data('js-org-name'),
+                self = this;
 
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteOrg,
@@ -158,8 +161,8 @@ define(function(require, exports, module) {
             });
             modal.show()
                 .done(function() {
-                    this.deleteOrganization(name);
-                }.bind(this));
+                    self.deleteOrganization(name);
+                });
         },
 
         deleteOrganization: function(name){
@@ -206,6 +209,7 @@ define(function(require, exports, module) {
         },
 
         submitAuthSettings: function(e){
+            config.trackingDispatcher.trackEventNumber(496);
             e.preventDefault();
             var gitHubAuthEnabled = this.model.get('gitHubAuthEnabled');
             if(gitHubAuthEnabled){

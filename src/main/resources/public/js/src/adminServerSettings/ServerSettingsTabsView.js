@@ -63,6 +63,14 @@ define(function(require, exports, module) {
         updateTabs: function (e) {
             var $el = $(e.currentTarget),
                 tab = $el.data('js-tab-action');
+            switch (tab) {
+                case 'auth':
+                    config.trackingDispatcher.trackEventNumber(491);
+                    break;
+                default:
+                    config.trackingDispatcher.trackEventNumber(490);
+
+            }
             config.router.navigate($el.attr('href'), {
                 silent: true
             });

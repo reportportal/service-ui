@@ -71,6 +71,7 @@ define(function (require, exports, module) {
         initialize: function (options) {
             this.model = new EmailServerSettingsModel();
             this.getSettings();
+            this.listenTo(this.model, 'change:enableEmailServer', function(){config.trackingDispatcher.trackEventNumber(492)});
         },
 
         getSettings: function (callback) {
@@ -183,6 +184,7 @@ define(function (require, exports, module) {
         },
 
         submitEmailSettings: function(e){
+            config.trackingDispatcher.trackEventNumber(493);
             e.preventDefault();
             var enableEmailServer = this.model.get('enableEmailServer');
             if(!enableEmailServer){

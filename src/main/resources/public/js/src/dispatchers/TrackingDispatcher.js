@@ -495,6 +495,14 @@ define(function(require, exports, module) {
         457: ['Projects', 'Click on Bttn Cancel on Modul Delete project', 'Close Modul Delete project'],
         458: ['Projects', 'Click on Bttn Delete on Modul Delete project', 'Delete project'],
 
+        490: ['Server Settings', 'Click on tab E-mail Server', 'Open tab E-mail Server'],
+        491: ['Server Settings', 'Click on tab Authorization Configuration', 'Open tab Authorization Configuration'],
+        492: ['Server Settings', 'Click on switcher Enable email server', 'On/off Enable email server'],
+        493: ['Server Settings', 'Click on Bttn Submit on tab E-mail Server', 'Submit changes on tab E-mail Server'],
+        494: ['Server Settings', 'Click on switcher Activate Github authorization on tab Authorization Configuration', 'On/off Activate Github authorization on tab Authorization Configuration'],
+        495: ['Server Settings', 'Click on Bttn Add Github Organization on tab Authorization Configuration', 'Arise field to Add Github Organization on tab Authorization Configuration'],
+        496: ['Server Settings', 'Click on Bttn Submit on tab Authorization Configuration', 'Submit changes on tab Authorization Configuration'],
+
 
     }
 
