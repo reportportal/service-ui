@@ -50,9 +50,19 @@ define(function (require, exports, module) {
             '[data-js-shared]': 'classes: {hide: any(not(isShared), not(isMy))}',
             '[data-js-widget-type]': 'text: gadgetName',
             '[data-js-public]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
-            '[data-js-gadget-remove]': 'classes: {hide: not(isMyDashboard)}',
+            '[data-js-gadget-remove]': 'classes: {hide: not(canRemove)}',
             '[data-js-gadget-edit]': 'classes: {hide: not(isMy)}',
             '[data-js-timeline]': 'classes: {hide: not(isTimeline)}'
+        },
+        computeds: {
+            canRemove: {
+                deps: ['isMy'],
+                get: function(isMy) {
+                    return (config.userModel.get('isAdmin') ||
+                    config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager ||
+                    isMy);
+                }
+            }
         },
         initialize: function() {
             this.activate = false;
