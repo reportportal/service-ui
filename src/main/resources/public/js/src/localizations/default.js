@@ -1186,6 +1186,7 @@ define(['util'], function () {
             serverSettings: "Server Settings",
             emailSettings: "E-mail server",
             authSettings: 'Authorization Configuration',
+            statisticsSettings: 'Statistics',
             host: "Host",
             port: "Port",
             username: "Username",
@@ -1198,10 +1199,8 @@ define(['util'], function () {
             addProject: "Add project",
             addNewProject: 'Add new project',
             addProjectTitle: "Assign project to the member",
-            addNewProject: "Add new project",
             activeProjects: "Active projects",
             notActiveProjects: "Not active projects",
-            personalProjects: "Personal projects",
             noProjectsFound: 'No projects found for',
             newProject: "new",
             usersQuantity: "members",
@@ -1261,8 +1260,6 @@ define(['util'], function () {
             SSL: 'SSL',
             emailError: 'Test connection was failed:',
             addUserProject: 'Add User to Project',
-            projectName: 'Project name',
-            projectRole: 'Project role',
             enableEmailServer: 'Enable Email Server',
             enableGuestAccount: 'Enable Guest Account',
             activateGitHubAuth: 'Activate GitHub Authorization',
@@ -1270,7 +1267,17 @@ define(['util'], function () {
             gitHubClientSecret: 'Client Secret',
             gitHubOrgName: 'Organization Name',
             addGitHubOrg: 'Add GitHub Organization',
-            emailSender: 'Default sender name'
+            emailSender: 'Default sender name',
+            sendStatisticsSwitcher: 'Help make ReportPortal better by automatically sending statistics and crash reports to us',
+            statisticsListToogler: 'List of sent statistics',
+            statisticsMessage: 'You can help us improve ReportPortal by opting to send usage statistics to us. While' +
+            ' you\'re using the app, we\'ll gather data that might help us improve ReportPortal performance and' +
+            ' usability by tracking usage frequency of particular features. See below for details about what information is sent.',
+            statisticsListMessage: 'Usage statistics reports usually won\'t include any personal information about' +
+            ' you, but they might include:',
+            statisticsPoint1: 'how often you use ReportPortal and how long you leave it open;',
+            statisticsPoint2: 'where you click;',
+            statisticsPoint3: 'your device\'s operating system and model.'
         },
 
         registration: {
@@ -1410,7 +1417,8 @@ define(['util'], function () {
             startAnalyzeAction: 'Auto-analyzer has been started.',
             generateDemoData: 'Demo Data has been generated',
             changedColorDefectTypes: "Defect types have been updated.",
-            updateDefect: 'Defects have been updated'
+            updateDefect: 'Defects have been updated',
+            updateServerSettings: 'Server settings were successfully updated',
         },
 
         failMessages: {

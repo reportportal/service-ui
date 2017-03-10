@@ -30,6 +30,7 @@ define(function(require, exports, module) {
     var ServerSettingsTabsView = require('adminServerSettings/ServerSettingsTabsView');
     var EmailSettings = require('adminServerSettings/EmailServerSettingsView');
     var AuthSettings = require('adminServerSettings/AuthServerSettingsView');
+    var StatisticsSettings = require('adminServerSettings/StatisticsServerSettingsView');
 
     var config = App.getInstance();
 
@@ -95,6 +96,9 @@ define(function(require, exports, module) {
             switch (tab) {
                 case 'auth':
                     return AuthSettings;
+                    break;
+                case 'statistics':
+                    return StatisticsSettings;
                     break;
                 default :
                     return EmailSettings;
