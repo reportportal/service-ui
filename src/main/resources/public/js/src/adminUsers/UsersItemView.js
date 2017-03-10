@@ -133,6 +133,7 @@ define(function(require, exports, module) {
                 }
             }, this);
             if(!this.userProjectsView){
+                config.trackingDispatcher.trackEventNumber(464);
                 $el.addClass('active');
                 this.userProjectsView = new UserProjectsView({
                     model: this.model
@@ -153,6 +154,7 @@ define(function(require, exports, module) {
         confirmChangeRole: function(e){
             e.preventDefault();
             if(!this.model.get('isYou')){
+                config.trackingDispatcher.trackEventNumber(463);
                 var modal = new ModalConfirm({
                     headerText: Localization.dialogHeader.changeRole,
                     bodyText: Util.replaceTemplate(Localization.dialog.changeRole, this.model.get('full_name') ||this.model.get('userId')),
@@ -161,11 +163,18 @@ define(function(require, exports, module) {
                     okButtonText: Localization.dialog.changeRoleBtn,
                     confirmFunction: this.changeRole.bind(this)
                 });
+                $('[data-js-close]', modal.$el).on('click', function(){
+                    config.trackingDispatcher.trackEventNumber(472);
+                });
+                $('[data-js-cancel]', modal.$el).on('click', function(){
+                    config.trackingDispatcher.trackEventNumber(473);
+                });
                 modal.show();
             }
         },
 
         changeRole: function(){
+            config.trackingDispatcher.trackEventNumber(474);
             var userId = this.model.get('userId'),
                 fullName = this.model.get('full_name'),
                 newRole = this.model.get('userRole') == config.accountRolesEnum.user ? config.accountRolesEnum.administrator : config.accountRolesEnum.user;
@@ -181,6 +190,7 @@ define(function(require, exports, module) {
         },
 
         deleteUser: function(e){
+            config.trackingDispatcher.trackEventNumber(468);
             e.preventDefault();
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteUser,
@@ -189,8 +199,15 @@ define(function(require, exports, module) {
                 okButtonDanger: true,
                 okButtonText: Localization.ui.delete,
                 confirmFunction: function(){
+                    config.trackingDispatcher.trackEventNumber(477);
                     return this.model.delete();
                 }.bind(this)
+            });
+            $('[data-js-close]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(475);
+            });
+            $('[data-js-cancel]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(476);
             });
             modal.show();
         },

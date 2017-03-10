@@ -103,7 +103,7 @@ define(function(require, exports, module) {
             if ($el.hasClass('active') || $el.hasClass('disabled')) {
                 return;
             }
-
+            config.trackingDispatcher.trackEventNumber(465);
             var newRole = $el.data('value');
             memberService.updateMember(newRole, this.userModel.get('userId'), this.model.get('projectId'))
                 .done(function () {
@@ -116,6 +116,7 @@ define(function(require, exports, module) {
         },
 
         confirmUnassign: function(e){
+            config.trackingDispatcher.trackEventNumber(466.1);
             e.preventDefault();
             var self = this;
             var modal = new ModalConfirm({

@@ -179,6 +179,7 @@ define(function (require, exports, module) {
         },
 
         assignToProject: function (e) {
+            config.trackingDispatcher.trackEventNumber(466.2);
             e.preventDefault();
             var data = {};
             data[this.userModel.get('userId')] = this.model.get('projectRole');

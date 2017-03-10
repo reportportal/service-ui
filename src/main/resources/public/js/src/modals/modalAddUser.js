@@ -41,7 +41,9 @@ define(function (require, exports, module) {
             'click [data-js-load]': 'onClickLoad',
             'click [data-js-generate-password]': 'generatePassword',
             'click [data-js-select-role-dropdown] a': 'selectRole',
-            'click [data-js-account-role-dropdown] a': 'selectAccount'
+            'click [data-js-account-role-dropdown] a': 'selectAccount',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
         bindings: {
             '[data-js-user-login]': 'value: userId',
@@ -255,11 +257,18 @@ define(function (require, exports, module) {
         generatePassword: function (e) {
             e.preventDefault();
             if (!$(e.target).hasClass('disabled')) {
+                config.trackingDispatcher.trackEventNumber(480);
                 var pass = this.randomPassword();
                 this.$password.val(pass);
                 this.$password.valid && _.isFunction(this.$password.valid) && this.$password.valid();
                 this.model.set('password', pass);
             }
+        },
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(478);
+        },
+        onClickCancel: function(){
+            config.trackingDispatcher.trackEventNumber(479);
         },
         randomPassword: function () {
             var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
@@ -286,6 +295,7 @@ define(function (require, exports, module) {
             var userData = this.getUserData();
             this.showLoading();
             if (userData) {
+                config.trackingDispatcher.trackEventNumber(481);
                 MembersService.addMember(userData)
                     .done(function (data) {
                         if(data.warning){

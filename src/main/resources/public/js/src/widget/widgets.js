@@ -1599,6 +1599,12 @@ define(function (require, exports, module) {
                 vis.call(tip);
             }
 
+            vis.selectAll('.nv-stackedarea').each(function(d, i){
+                $(this).on('mouseenter', function(){
+                    config.trackingDispatcher.trackEventNumber(343);
+                });
+            });
+
             if (self.param.isTimeline) {
                 vis.selectAll('.nv-x .tick text, .nv-x .nv-axisMaxMin text').each(function (d, i) {
                     var $this = $(this),
@@ -2581,6 +2587,12 @@ define(function (require, exports, module) {
                 $this.css('opacity') == 0 ? $this.parent().css('display', 'none') : ''
             });
 
+            vis.selectAll('.nv-line').each(function(d, i){
+                $(this).on('mouseenter', function(){
+                    config.trackingDispatcher.trackEventNumber(343);
+                });
+            });
+
             this.addLaunchNameTip(vis, tip);
 
             this.chart.xAxis
@@ -2701,6 +2713,13 @@ define(function (require, exports, module) {
                 .datum(data)
                 .call(this.chart)
                 ;
+
+            var vis = d3.select(id);
+            vis.selectAll('.nvd3.nv-wrap.nv-pie').each(function(d, i){
+                $(this).on('mouseenter', function(){
+                    config.trackingDispatcher.trackEventNumber(343);
+                });
+            });
 
             this.charts.push(this.chart);
             this.addResize();

@@ -125,6 +125,15 @@ define(function (require, exports, module) {
                     config.trackingDispatcher.trackEventNumber(3);
                     break;
                 }
+                case 'projectsSection':
+                    config.trackingDispatcher.trackEventNumber(502);
+                    break;
+                case 'usersSection':
+                    config.trackingDispatcher.trackEventNumber(503);
+                    break;
+                case 'settingsSection':
+                    config.trackingDispatcher.trackEventNumber(504);
+                    break;
             }
             this.closeMenu();
         },

@@ -98,6 +98,7 @@ define(function(require, exports, module) {
         },
 
         addUserProject: function(e){
+            config.trackingDispatcher.trackEventNumber(467);
             e.preventDefault();
             this.toggleAddProject('hide');
             var addFrom = new UsersAddProjectView({userModel: this.model});

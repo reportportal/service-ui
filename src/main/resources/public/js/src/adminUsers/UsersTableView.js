@@ -63,6 +63,7 @@ define(function(require, exports, module) {
             this.collection = new MembersCollection();
             this.listenTo(this.collection, 'reset', this.renderUsersList);
             this.listenTo(this.collection, 'remove', this.updateUsers);
+            this.listenTo(this.model, 'change:search', function(){config.trackingDispatcher.trackEventNumber(460)});
             this.pageType = 'PaginateAdminMembers';
             this.render();
         },
@@ -177,6 +178,7 @@ define(function(require, exports, module) {
         },
 
         showInviteUser: function(e){
+            config.trackingDispatcher.trackEventNumber(461);
             e.preventDefault();
             var modal = new ModalInviteUser({
                 type: 'users'
@@ -185,6 +187,7 @@ define(function(require, exports, module) {
         },
 
         showAddUser: function(e){
+            config.trackingDispatcher.trackEventNumber(462);
             e.preventDefault();
             var modal = new ModalAddUser({
                 type: 'users'

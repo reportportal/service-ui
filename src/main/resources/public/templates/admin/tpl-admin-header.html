@@ -15,12 +15,12 @@
             %><span class="header-crumb" data-js-admin-header-crumb></span></h3>
         <div class="pull-right admin_header_controls">
             <% if (data.project) { %>
-            <a id="backToProject" href="#<%- data.lastURL %>" class="backToProject">
+            <a id="backToProject" href="#<%- data.lastURL %>" class="backToProject" data-js-back-project>
                 <i class="material-icons">keyboard_arrow_left</i>
                 <%= data.text.admin.backToProject %>
             </a>
             <% } %>
-            <a id="logout" href="#login" class="logout">
+            <a href="#login" class="logout" data-js-admin-logout>
                 <span class="custom-padding"><%= data.text.topMenu.logout %></span>
                 <i class="material-icons">power_settings_new</i>
             </a>

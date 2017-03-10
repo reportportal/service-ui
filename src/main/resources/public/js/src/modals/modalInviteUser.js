@@ -75,7 +75,12 @@ define(function (require, exports, module) {
             $('[data-js-load]', this.$el).trigger('click');
         },
         onClickInvite: function() {
-            config.trackingDispatcher.trackEventNumber(437);
+            if(this.type == 'users'){
+                config.trackingDispatcher.trackEventNumber(471);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(437);
+            }
             if(this.$form.valid()) {
                 if(Util.validateEmail(this.model.get('user'))){
                     this.inviteUser();
@@ -261,10 +266,20 @@ define(function (require, exports, module) {
             }
         },
         onClickClose: function(){
-            config.trackingDispatcher.trackEventNumber(435);
+            if(this.type == 'users'){
+                config.trackingDispatcher.trackEventNumber(469);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(435);
+            }
         },
         onClickCancel: function(){
-            config.trackingDispatcher.trackEventNumber(436);
+            if(this.type == 'users'){
+                config.trackingDispatcher.trackEventNumber(470);
+            }
+            else {
+                config.trackingDispatcher.trackEventNumber(436);
+            }
         },
         assignUser: function(){
             var userData = this.getUserData();

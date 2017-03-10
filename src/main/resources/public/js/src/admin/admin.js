@@ -46,8 +46,10 @@ define(function (require, exports, module) {
         },
 
         events: {
-            'click #logout': 'onClickLogout'
+            'click [data-js-admin-logout]': 'onClickLogout',
+            'click [data-js-back-project]': 'onBackToProject'
         },
+
 
         render: function (options) {
             config.currentProjectsSettings = {};
@@ -77,8 +79,12 @@ define(function (require, exports, module) {
         },
 
         onClickLogout: function (e) {
+            config.trackingDispatcher.trackEventNumber(501);
             e.preventDefault();
             this.user.logout();
+        },
+        onBackToProject: function(){
+            config.trackingDispatcher.trackEventNumber(500);
         },
 
         update: function (options) {
