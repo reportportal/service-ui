@@ -21,19 +21,28 @@
 'use strict';
 
 define(function(require, exports, module) {
-    var AnalyticsObject = require('analytics/AnalyticsObject');
+    var AnalyticsGA = require('analytics/AnalyticsGA');
+    var App = require('app');
+    var _ = require('underscore');
 
-    var AnalyticsConsoleLog = AnalyticsObject.extend({
-        initialize: function() {
-
-        },
-        send: function(data) {
-            console.log('ANALYTICS: ' + data[0] + ' | ' + data[1] + ' | ' + data[2]);
-        },
-        pageView: function(data) {
-            console.log('ANALYTICS PAGE VIEW: ' + data[0]);
+    var instance = null;
+    var AnalyticsConnect = function() {
+        return {
+            analyticsList: [AnalyticsGA],
+            init: function() {
+                var config = App.getInstance();
+                _.each(this.analyticsList, function(analytic) {
+                    var analyticObj = new analytic();
+                    analyticObj.init(config.trackingDispatcher);
+                })
+            }
         }
-    });
+    };
 
-    return AnalyticsConsoleLog;
+    return function() {
+        if(!instance) {
+            instance = new AnalyticsConnect();
+        }
+        return instance;
+    }
 });
