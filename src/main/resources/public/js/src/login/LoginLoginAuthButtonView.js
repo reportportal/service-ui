@@ -34,7 +34,6 @@ define(function(require, exports, module) {
 
 
     var LoginLoginAuthButtonView = Epoxy.View.extend({
-        tagName: 'button',
         className:'rp-btn rp-btn-submit login-login-auth-button',
 
         events: {
