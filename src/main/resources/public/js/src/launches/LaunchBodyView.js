@@ -241,7 +241,7 @@ define(function (require, exports, module) {
             this.body = new StepTableView({
                 el: $('[data-js-info-container]', this.$el),
                 filterModel: info.filterModel,
-                model: (info.parentModel || info.launchModel),
+                model: (info.launchModel || info.parentModel),
                 collectionItems: this.collectionItems,
             });
             this.body.onShow && this.body.onShow();
@@ -258,7 +258,7 @@ define(function (require, exports, module) {
             this.body = new SuiteTableView({
                 el: $('[data-js-info-container]', this.$el),
                 filterModel: info.filterModel,
-                model: (info.parentModel || info.launchModel),
+                model: (info.launchModel || info.parentModel),
                 collectionItems: this.collectionItems,
             });
             this.body.onShow && this.body.onShow();
