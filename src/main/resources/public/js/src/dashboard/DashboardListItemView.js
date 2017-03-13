@@ -125,10 +125,7 @@ define(function (require, exports, module) {
             $('[data-js-description-wrapper]', this.$el).addClass('preview-' + result % 14);
         },
 
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
             this.$el.remove();
         },
     });

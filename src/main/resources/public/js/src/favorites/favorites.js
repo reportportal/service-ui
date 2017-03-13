@@ -192,12 +192,12 @@ define(function (require, exports, module) {
             var newFilter = this.launchFilterCollection.generateTempModel();
             config.router.navigate(newFilter.get('url'), {trigger: true});
         },
-        destroy: function() {
+        onDestroy: function() {
             this.$header.empty();
             this.mainBreadcrumbs && this.mainBreadcrumbs.destroy();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+            _.each(this.renderViews, function(view) {
+                view.destroy();
+            });
         },
     });
 

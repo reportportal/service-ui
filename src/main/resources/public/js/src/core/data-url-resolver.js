@@ -320,6 +320,23 @@ define(['app'], function (App) {
         }
         return startUrl + '?page.page=' + query.page + '&page.size=' + query.size + sort;
     };
+    var searchUsersSafe = function(query) {
+        var query = query;
+        if(!query) query = {};
+        if(!query.page) query.page = 1;
+        if(!query.size) query.size = 10;
+        var startUrl = config.apiVersion + 'project/' + (config.project.projectId || config.userModel.get('defaultProject'))
+            + '/usernames/';
+        var sort = '';
+        if(query.search){
+            startUrl += 'search/' + query.search;
+            sort = '&page.sort=login,ASC';
+        }else {
+            startUrl += 'all';
+            sort = '&page.sort=login,ASC';
+        }
+        return startUrl + '?page.page=' + query.page + '&page.size=' + query.size + sort;
+    };
 
     var modifyUserUrl = function (id) {
         return config.apiVersion + 'user/' + id;
@@ -527,6 +544,7 @@ define(['app'], function (App) {
 
         allUsersUrl: allUsersUrl,
         searchUsersUrl: searchUsersUrl,
+        searchUsersSafe: searchUsersSafe,
         modifyUserUrl: modifyUserUrl,
 
         getProjectNames: getProjectNames,

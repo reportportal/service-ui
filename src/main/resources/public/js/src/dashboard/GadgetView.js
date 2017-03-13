@@ -186,12 +186,8 @@ define(function (require, exports, module) {
         getDataForGridStack: function() {
             return [this.el, this.model.get('x'), this.model.get('y'), this.model.get('width'), this.model.get('height')];
         },
-        destroy: function () {
+        onDestroy: function () {
             this.$el.remove();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            delete this;
         },
     });
 

@@ -45,9 +45,9 @@ define(function(require, exports, module) {
                     if(data && data.UAT && data.UAT.auth_extensions){
                         self.set({authExtensions: data.UAT.auth_extensions});
                     }
-                    if(data && data.API){
-                        if(data.API.bugtracking) {
-                            self.set({bugTrackingExtensions: data.API.bugtracking});
+                    if(data && data.API &&data.API.extensions){
+                        if(data.API.extensions.bugtracking) {
+                            self.set({bugTrackingExtensions: data.API.extensions.bugtracking});
                         }
                     }
                     var fullServicesHtml = '';

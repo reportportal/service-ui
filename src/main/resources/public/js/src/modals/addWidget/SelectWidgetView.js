@@ -62,11 +62,15 @@ define(function (require, exports, module) {
                     defaultCriteria = curWidget.defaultCriteria;
                 }
                 else {
-                    defaultCriteria = _.map(curWidget.criteria, function (value, key) {
+                    defaultCriteria = [];
+                    _.each(curWidget.criteria, function (value, key) {
                         if(typeof value == 'object') {
-                            return value.keys.join(',');
+                            _.each(value.keys, function(valueKey) {
+                                defaultCriteria = defaultCriteria.concat(valueKey.split(','));
+                            });
+                        } else {
+                            defaultCriteria.push(key);
                         }
-                        return key;
                     });
                 }
             }
