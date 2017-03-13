@@ -65,11 +65,14 @@ define(function (require, exports, module) {
             this.render();
             this.applyBindings();
             this.collectionItems = options.collectionItems;
-            this.tooltip = new LaunchItemInfoTooltipView({model: this.collectionItems.get(this.model.get('id'))});
-            var self = this;
-            Util.appendTooltip(function() {
-                return self.tooltip.$el;
-            }, $('[data-js-name]', this.$el), $('[data-js-name-block]', this.$el));
+            var lastLaunchItem = this.collectionItems.get(this.model.get('id'));
+            if(lastLaunchItem){
+                this.tooltip = new LaunchItemInfoTooltipView({model: lastLaunchItem});
+                var self = this;
+                Util.appendTooltip(function() {
+                    return self.tooltip.$el;
+                }, $('[data-js-name]', this.$el), $('[data-js-name-block]', this.$el));
+            }
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
@@ -129,9 +132,9 @@ define(function (require, exports, module) {
         },
         onClickName: function(e) {
             e.preventDefault();
-            config.trackingDispatcher.trackEventNumber(133);
             var href = $(e.currentTarget).attr('href');
             if(href) {
+                config.trackingDispatcher.trackEventNumber(133);
                 config.router.navigate(href, {trigger: true});
             }
         },

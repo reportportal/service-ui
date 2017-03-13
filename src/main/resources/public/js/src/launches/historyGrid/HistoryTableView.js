@@ -32,7 +32,7 @@ define(function (require, exports, module) {
 
     var HistoryTableView = Epoxy.View.extend({
         template: 'tpl-launch-history-table',
-        events: { },
+        events: {},
         initialize: function(options) {
             this.filterModel = options.filterModel;
             this.collectionItems = options.collectionItems;
