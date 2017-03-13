@@ -27,7 +27,9 @@ require.config({
 
         app: 'core/app-config',
         jquery: '../lib/jquery-latest',
-        jqueryUI: '../lib/old-jquery-ui',
+        //jqueryUI: '../lib/old-jquery-ui',
+        'jqueryUI': '../lib/jquery-ui',
+        'jquery-ui': '../lib/jQuery-ui',
         'jaddons': '../lib/jquery-addons',
         underscore: '../lib/lodash.min',
         backbone: '../lib/backbone-min-my',
@@ -48,17 +50,17 @@ require.config({
         message: 'message/message-panel',
         templates: '../../compiled/templates/templates',
         mainview: 'main-view',
-        favorites: 'favorites/favorites',
-        register: 'register/register',
+        favorites: 'favorites',
+        //register: 'register/register',
         // filters: 'filter/filters',
         //components: 'core/components',
         lazyload: '../lib/jquery.lazyload.min',
         daterangepicker: '../lib/daterangepicker',
         'readmore-js': '../lib/readmore',
         select2: '../lib/select2.custom',
-        launch: 'launch/launch-navigation',
-        launchgrid: 'launch/launch-grid',
-        launchCrumbs: 'launch/launch-crumbs',
+        //launch: 'launch/launch-navigation',
+        //launchgrid: 'launch/launch-grid',
+        //launchCrumbs: 'launch/launch-crumbs',
         defectEditor: 'defect/defect-editor',
         log: 'log/logs',
         member: 'member/member',
@@ -93,13 +95,14 @@ require.config({
         storageService: 'core/storage-service',
         widgetWizard: 'wizard/widget',
         widgets: 'widget/widgets',
-        dashboard: 'dashboard/dashboard-view',
+        //dashboard: 'dashboard/dashboard-view',
         'fullscreen': '../lib/jquery.fullscreen',
         'isLoading': '../lib/jquery.isLoading',
         'equalHeightRows': '../lib/grids',
         'popup': '../lib/jquery.magnific-popup',
         'highlight': '../lib/highlight.pack',
         'gridstack': '../lib/gridstack/gridstack.custom',
+        'gridstackUi': '../lib/gridstack/gridstack.jQueryUI',
         helpers: 'core/helpers',
 
         d3: '../lib/d3/d3.v3.min',
@@ -127,6 +130,8 @@ require.config({
 
         'SwipeGallery': '../lib/SwipeGallery',
         'Hammer': '../lib/hammer',
+        'spectrum': '../lib/spectrum/spectrum',
+        'simplemde': '../lib/markdown/simplemde.min',
 
         fakeData: '../tests/mocks/data',
         adminFakeData: '../tests/mocks/adminData',
@@ -139,6 +144,7 @@ require.config({
         },
         'jasminejQuery': {exports: 'jasminejQuery', deps : ["jquery"] },
         'jqueryUI': ['jquery'],
+        'jquery-ui': ['jquery'],
         'bootstrap': ['jquery'],
         'equalHeightRows':  ['jquery'],
         'bootswitch': ['jquery', 'bootstrap'],
@@ -151,25 +157,28 @@ require.config({
         'select2': ['jquery'],
         'daterangepicker': ['jquery'],
         'gridstack': ['jquery', 'jqueryUI', 'underscore'],
+        'gridstackUi': ['gridstack'],
         'validate': {deps: ["jquery"]},
         'elasticColumns': ['jquery'],
         'nvd3': {deps: ['d3'], exports: 'nv'},
         'widgets': ['d3', 'nvd3', 'elementQuery'],
         'markitup': ['jquery'],
-        'markitupset': ['markitup']
+        'markitupset': ['markitup'],
+        'spectrum': ['jquery'],
+        'simplemde': ['jquery']
     },
 
     // dynamically load all test files
     // deps: allTestFiles,
     deps: [
-        '../tests/spec/login/login',
+        //'../tests/spec/login/login',
 
-        '../tests/spec/dashboards/add-dashboard',
-        '../tests/spec/dashboards/edit-dashboard',
-        '../tests/spec/dashboards/dashboards-menu',
-        '../tests/spec/dashboards/dashboards',
+        // '../tests/spec/dashboards/add-dashboard',
+        // '../tests/spec/dashboards/edit-dashboard',
+        // '../tests/spec/dashboards/dashboards-menu',
+        // '../tests/spec/dashboards/dashboards',
 
-        '../tests/spec/widgets/widgets',
+        //'../tests/spec/widgets/widgets',
 
         '../tests/spec/post_bug_to_jira/post_bug_to_bts',
         '../tests/spec/post_bug_to_jira/load_bug_to_bts',
@@ -182,7 +191,7 @@ require.config({
 
         '../tests/spec/test_item_editor/testItemEditor',
 
-        '../tests/spec/launches/historyGrid',
+        //'../tests/spec/launches/historyGrid',
 
         '../tests/spec/user_profile/user_profile',
 

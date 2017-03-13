@@ -192,31 +192,29 @@ define(function (require, exports, module) {
             expect(Service.updateMember).toHaveBeenCalledWith(role, members[0].userId, config.project.projectId);
         });
 
-        it('should unassign member on click button "Unassign"', function () {
-            renderView();
-            Util.deleteDialog = null;
-            spyOn(Util, "getDialog").and.callFake(function (options) {
-                return $("<div>" + Util.templates(options.name) + "</div>")
-                    .find(".dialog-shell")
-                    .unwrap()
-                    .appendTo(sandbox);
-            });
-            spyOn(Service, 'unAssignMember').and.callFake(function () {
-                var deferred = new $.Deferred();
-                deferred.resolve({});
-                return deferred.promise();
-            });
-            var button = $('.member-action:first', sandbox),
-                member = members[0],
-                modal;
-            button.click();
-            modal = $('.modal-dialog', sandbox);
-            expect(Util.getDialog).toHaveBeenCalled();
-            expect(modal.length).toEqual(1);
-            $('.rp-btn-danger', modal).click();
-            expect(Service.unAssignMember).toHaveBeenCalledWith(member.userId, config.project.projectId);
-        });
-
+        // it('should unassign member on click button "Unassign"', function () {
+        //     renderView();
+        //     Util.deleteDialog = null;
+        //     spyOn(Util, "getDialog").and.callFake(function (options) {
+        //         return $("<div>" + Util.templates(options.name) + "</div>")
+        //             .find(".dialog-shell")
+        //             .unwrap()
+        //             .appendTo(sandbox);
+        //     });
+        //     spyOn(Service, 'unAssignMember').and.callFake(function () {
+        //         var deferred = new $.Deferred();
+        //         deferred.resolve({});
+        //         return deferred.promise();
+        //     });
+        //     var button = $('.member-action:first', sandbox),
+        //         member = members[0],
+        //         modal;
+        //     button.click();
+        //     modal = $('.modal-dialog', sandbox);
+        //     expect(Util.getDialog).toHaveBeenCalled();
+        //     expect(modal.length).toEqual(1);
+        //     $('.rp-btn-danger', modal).click();
+        //     expect(Service.unAssignMember).toHaveBeenCalledWith(member.userId, config.project.projectId);
+        // });
     });
-
 });
