@@ -106,6 +106,10 @@
       -webkit-box-shadow: inset 0px -30px 100px 3px $COLOR--reseted;
       -moz-box-shadow: inset 0px -30px 100px 3px $COLOR--reseted;
       box-shadow: inset inset 0px -30px 100px 3px $COLOR--reseted;
+
+      @-moz-document url-prefix() {
+        opacity: 0.35;
+      }
     }
 
     &.preview-0:after {

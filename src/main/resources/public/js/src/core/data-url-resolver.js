@@ -449,6 +449,10 @@ define(['app'], function (App) {
         return config.apiVersion + 'demo/' + config.project.projectId;
     };
 
+    var toggleGoogleAnalytics = function() {
+        return config.apiVersion + 'settings/' + config.userModel.get('name') + '/analytics';
+    };
+
     return {
         getApiToken: getApiToken,
 
@@ -576,7 +580,8 @@ define(['app'], function (App) {
 
         userByEmail:userByEmail,
         postDemoDataUrl: postDemoDataUrl,
-        adminAuthSettings: adminAuthSettings
+        adminAuthSettings: adminAuthSettings,
+        toggleGoogleAnalytics: toggleGoogleAnalytics
 
     };
 });

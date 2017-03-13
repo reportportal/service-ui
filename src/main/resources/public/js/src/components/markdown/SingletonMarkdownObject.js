@@ -20,6 +20,7 @@
  */
 define(function(require, exports, module) {
     'use strict';
+    var $ = require('jquery');
 
     var instance = null;
     var SimpleMDE = require('simplemde');
