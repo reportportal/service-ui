@@ -91,10 +91,12 @@ define(function(require, exports, module) {
     (new ExternalService())
         .done(function() {
             // start app
-            var analyticsConnect = new SingletonAnalyticsConnect();
-            analyticsConnect.init();
             var registryInfoModel = new SingletonRegistryInfoModel();
             registryInfoModel.ready.done(function() {
+                if(registryInfoModel.get('sendStatistics')) {
+                    var analyticsConnect = new SingletonAnalyticsConnect();
+                    analyticsConnect.init();
+                }
                 config.forSettings.btsList = _.map(registryInfoModel.get('bugTrackingExtensions'), function(service) {
                     return {name: service.toUpperCase(), value: service.toUpperCase()}
                 });

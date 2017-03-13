@@ -21,18 +21,28 @@
 'use strict';
 
 define(function(require, exports, module) {
-    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
     var $ = require('jquery');
     var _ = require('underscore');
     var coreService = require('coreService');
     
-    var RegistryInfoModel = Backbone.Model.extend({
+    var RegistryInfoModel = Epoxy.Model.extend({
         defaults: {
             uiBuildVersion: '',
             fullServicesHtml: '',
             authExtensions: {},
             bugTrackingExtensions: [],
+            analyticsExtensions: {},
         },
+        computeds: {
+            sendStatistics: {
+                deps: ['analyticsExtensions'],
+                get: function(analyticsExtensions) {
+                    return analyticsExtensions.all && analyticsExtensions.all.enabled;
+                }
+            }
+        }
+        ,
         initialize: function(){
             this.ready = $.Deferred();
             var self = this;

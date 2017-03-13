@@ -34,6 +34,10 @@ define(function (require, exports, module) {
         this.stopListening();
         this.unbind();
     };
+    Backbone.Model.prototype.destroy = function() {
+        this.onDestroy && this.onDestroy();
+        this.stopListening();
+    };
 
 
     // overwrite click events

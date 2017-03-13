@@ -23,12 +23,11 @@ define(function(require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var Localization = require('localization');
     var Service = require('coreService');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
+    var SingletonAnalyticsConnect = require('analytics/SingletonAnalyticsConnect');
 
     var StatisticsServerSettingsView = Epoxy.View.extend({
 
@@ -40,19 +39,13 @@ define(function(require, exports, module) {
         },
 
         bindings: {
-            '[data-js-switcher]': 'attr: {checked: isStatisticsEnabled}',
+            '[data-js-switcher]': 'attr: {checked: sendStatistics}',
         },
 
-        computeds: {
-            isStatisticsEnabled: {
-                get: function() {
-                    return this.registryInfoModel.get('analyticsExtensions').google.enabled;
-                }
-            }
-        },
 
         initialize: function(options) {
-            this.registryInfoModel = new SingletonRegistryInfoModel();
+            this.model = new SingletonRegistryInfoModel();
+            this.analyticsConnect = new SingletonAnalyticsConnect();
             this.render();
         },
 
@@ -71,15 +64,22 @@ define(function(require, exports, module) {
 
         submit: function () {
             var self = this;
-            Service.toggleGoogleAnalytics({
-                enabled: self.$switcher.prop('checked'),
-                type: 'google'
+            var enabled = self.$switcher.prop('checked')
+            Service.toggleAnalytics({
+                enabled: enabled,
+                type: 'all'
             })
-                .done(function (responce) {
+                .done(function () {
+                    self.model.set({analyticsExtensions: {all: {enabled: enabled}}});
+                    if(enabled) {
+                        self.analyticsConnect.init();
+                    } else {
+                        self.analyticsConnect.destroy();
+                    }
                     Util.ajaxSuccessMessenger('updateServerSettings');
                 })
                 .fail(function (error) {
-                    console.log(error.responseText);
+                    Util.ajaxInfoMessenger(error, 'updateServerSettings');
                 });
         },
 

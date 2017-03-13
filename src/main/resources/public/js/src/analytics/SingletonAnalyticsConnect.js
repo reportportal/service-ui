@@ -31,10 +31,19 @@ define(function(require, exports, module) {
             analyticsList: [AnalyticsGA],
             init: function() {
                 var config = App.getInstance();
+                this.analytics = [];
+                var self = this;
                 _.each(this.analyticsList, function(analytic) {
                     var analyticObj = new analytic();
                     analyticObj.init(config.trackingDispatcher);
+                    self.analytics.push(analyticObj);
                 })
+            },
+            destroy: function() {
+                _.each(this.analytics, function(analyticObj) {
+                    analyticObj.destroy();
+                })
+                this.analytics = [];
             }
         }
     };

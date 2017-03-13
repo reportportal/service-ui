@@ -356,8 +356,8 @@ define([
     var generateDemoData = function(data){
         return call('POST', urls.postDemoDataUrl(), data);
     };
-    var toggleGoogleAnalytics = function (data) {
-        return call('PUT', urls.toggleGoogleAnalytics(), data);
+    var toggleAnalytics = function (data) {
+        return call('PUT', urls.toggleAnalytics(), data);
     };
     
 
@@ -457,6 +457,6 @@ define([
         getUserByEmail: getUserByEmail,
         generateDemoData: generateDemoData,
 
-        toggleGoogleAnalytics: toggleGoogleAnalytics,
+        toggleAnalytics: toggleAnalytics,
     }
 });
