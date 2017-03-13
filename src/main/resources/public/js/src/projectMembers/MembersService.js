@@ -100,6 +100,9 @@ define(function(require, exports, module) {
     var getSearchUser = function (options) {
         return call('GET', urls.searchUsersUrl(options))
     };
+    var getSearchUserSafe = function (options) {
+        return call('GET', urls.searchUsersSafe(options))
+    };
 
     return {
         assignMember: assignMember,
@@ -113,7 +116,8 @@ define(function(require, exports, module) {
         inviteMember: inviteMember,
         validateRegisterBid: validateRegisterBid,
         registerUser: registerUser,
-        getSearchUser: getSearchUser
+        getSearchUser: getSearchUser,
+        getSearchUserSafe: getSearchUserSafe,
     }
 
 });

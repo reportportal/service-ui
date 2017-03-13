@@ -28,20 +28,26 @@ define(function (require, exports, module) {
     var App = require('app');
     var MembersService = require('projectMembers/MembersService');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var UserModel = require('model/UserModel');
     var Localization = require('localization');
     var Urls = require('dataUrlResolver');
 
     var config = App.getInstance();
 
     var setupUserSearch = function ($el, options) {
-        options = options || {};
-        var appModel = new SingletonAppModel(),
-            validateUserProject = function(user){
-                var projectId = appModel.get('projectId'),
-                    userProjects = _.keys(user.assigned_projects);
-                return _.contains(userProjects, projectId);
-            },
-            remoteUsers = [];
+        var appModel = new SingletonAppModel();
+        var validateUserProject = function(user){
+            var userId = user.userId || user.id;
+            var answer = false;
+            _.each(appModel.get('users'), function(userInfo, id) {
+                if(id == userId) {
+                    answer = true;
+                    return false;
+                }
+            });
+            return answer;
+        };
+        var remoteUsers = [];
         Util.setupSelect2WhithScroll($el, {
             min: 1,
             minimumInputLength: 1,
@@ -76,24 +82,46 @@ define(function (require, exports, module) {
                 return Util.templates('tpl-user-search-result', {user: data, imagePath: Util.updateImagePath(Urls.getAvatar() + data.id)});
             },
             query: function (query) {
-                MembersService.getSearchUser({search: query.term})
-                    .done(function (response) {
-                        var data = {results: []};
-                        remoteUsers = [];
-                        _.each(response.content, function (item) {
-                            remoteUsers.push(item);
-                            data.results.push({
-                                id: item.userId,
-                                text: item.userId,
-                                name: item.full_name,
-                                disabled: validateUserProject(item)
+                var userModel = new UserModel();
+                if(userModel.get('isAdmin')) {
+                    MembersService.getSearchUser({search: query.term})
+                        .done(function (response) {
+                            var data = {results: []};
+                            remoteUsers = [];
+                            _.each(response.content, function (item) {
+                                remoteUsers.push(item);
+                                data.results.push({
+                                    id: item.userId,
+                                    text: item.userId,
+                                    name: item.full_name,
+                                    disabled: validateUserProject(item)
+                                });
                             });
+                            query.callback(data);
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error);
                         });
-                        query.callback(data);
-                    })
-                    .fail(function (error) {
-                        Util.ajaxFailMessenger(error);
-                    });
+                } else {
+                    MembersService.getSearchUserSafe({search: query.term})
+                        .done(function (response) {
+                            var data = {results: []};
+                            remoteUsers = [];
+                            _.each(response.content, function (item) {
+                                remoteUsers.push(item);
+                                data.results.push({
+                                    id: item.id,
+                                    text: item.id,
+                                    name: item.fullName,
+                                    disabled: validateUserProject(item)
+                                });
+                            });
+                            query.callback(data);
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error);
+                        });
+                }
             }
         });
     };
