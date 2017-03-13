@@ -69,12 +69,12 @@ define(function (require, exports, module) {
                 min: 1,
                 max: 128
             });
-            Util.hintValidator($('[data-js-link-input]', this.$el), [{
-                validator: 'matchRegex',
-                type: 'issueLinkRegex',
-                pattern: config.patterns.urlT,
-                arg: 'i'
-            }]);
+            // Util.hintValidator($('[data-js-link-input]', this.$el), [{
+            //     validator: 'matchRegex',
+            //     type: 'issueLinkRegex',
+            //     pattern: config.patterns.urlT,
+            //     arg: 'i'
+            // }]);
         },
         onBlurLinkInput: function() {
             var $link = $('[data-js-link-input]', this.$el);
