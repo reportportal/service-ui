@@ -30,7 +30,7 @@ define(function(require, exports, module) {
         defaults: {
             uiBuildVersion: '',
             fullServicesHtml: '',
-            authExtensions: [],
+            authExtensions: {},
             bugTrackingExtensions: [],
         },
         initialize: function(){
