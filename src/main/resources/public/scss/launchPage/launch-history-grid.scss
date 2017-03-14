@@ -115,17 +115,6 @@ $borderRadius100: 100px;
                 &.nd > span, &.pb > span, &.si > span {
                     color: #fff;
                 }
-                .defect-hover {
-                    text-align: left;
-                    .defect-name {
-                        font-family: $OpenSansRegular;
-                    }
-                    .defect-title {
-                        .defect-name {
-                            font-family: $OpenSansSemibold
-                        }
-                    }
-                }
             }
             .history-col-content {
                 text-align: center;

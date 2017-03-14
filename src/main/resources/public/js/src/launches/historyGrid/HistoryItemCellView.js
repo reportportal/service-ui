@@ -139,8 +139,9 @@ define(function (require, exports, module) {
             }
         },
         createTooltip: function (el, type) {
+            var $hoverElement = el,
+                self = this;
             if(type == 'warning' || type == 'comment' || type == 'tickets' || type == 'issue') {
-                var $hoverElement = el;
                 Util.appendTooltip(function() {
                     var tooltip = new SimpleTooltipView({
                         message: (type === 'issue') ?
@@ -152,12 +153,16 @@ define(function (require, exports, module) {
                 el.uitooltip('option', 'position', {my: "center+7.5 top+10", collision: "flipfit" }).uitooltip('open');
             }
             else {
-                var hoverView = new LaunchSuiteDefectsHoverView({
-                    el:  $('[data-js-defect-hover]', el),
-                    type: type,
-                    noLink: true,
-                    model: this.model
-                });
+                Util.appendTooltip(function() {
+                    var hoverView = new LaunchSuiteDefectsHoverView({
+                        type: type,
+                        noLink: true,
+                        model: self.model
+                    });
+                    return hoverView.$el.html();
+                }, $hoverElement, $hoverElement);
+                el.uitooltip('option', 'position', {my: "center+7.5 top+10", collision: "flipfit" }).uitooltip('open');
+
             }
         },
         destroy: function () {
