@@ -450,7 +450,7 @@ define(['app'], function (App) {
     };
 
     var toggleAnalytics = function() {
-        return config.apiVersion + 'settings/' + config.userModel.get('name') + '/analytics';
+        return config.apiVersion + 'settings/default/analytics';
     };
 
     return {

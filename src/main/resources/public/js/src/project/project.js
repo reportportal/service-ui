@@ -1682,7 +1682,11 @@ define(function(require, exports, module) {
                         fields: [],
                         editable: true
                     });
-                    this.loadDefaultBtsFields();
+
+                    var roleOnCurrentProject = config.userModel.get('projects')[this.appModel.get('projectId')].projectRole;
+                    if (roleOnCurrentProject && roleOnCurrentProject !== 'CUSTOMER' && roleOnCurrentProject !== 'MEMBER') {
+                        this.loadDefaultBtsFields();
+                    }
                 }
             }
         },
