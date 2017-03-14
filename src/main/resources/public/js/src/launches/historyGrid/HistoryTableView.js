@@ -46,7 +46,7 @@ define(function (require, exports, module) {
                 launches: this.launches.toJSON()
             }));
             this.renderItems();
-            $('[data-js-history-scroll]', this.$el).baron({direction: 'h'});
+            Util.setupBaronScroll($('[data-js-history-scroll]', this.$el), null, {direction: 'h'});
         },
         renderItems: function() {
             var $itemsContainer = $('[data-js-history-content]', this.$el);

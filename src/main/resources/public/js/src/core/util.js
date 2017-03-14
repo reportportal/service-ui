@@ -397,8 +397,9 @@ define(function (require, exports, module) {
                 this.messages.close();
             }
         },
-        setupBaronScroll: function ($element, inner) {
-            var wrapHtml = '<div class="baron baron__root baron__clipper"><div class="baron_scroller"></div></div>';
+        setupBaronScroll: function ($element, inner, options) {
+            var direction = options && options.direction ? options.direction : 'v';
+            var wrapHtml = '<div class="baron baron__root baron__clipper '+ (direction == "h" ? 'baron__horizontal': '') + '"><div class="baron_scroller"></div></div>';
             var $rootElement = null;
             if (inner) {
                 $element.wrapInner(wrapHtml);
@@ -422,7 +423,8 @@ define(function (require, exports, module) {
                     scroller: '.baron_scroller',
                     bar: '.baron__bar',
                     scrollingCls: '_scrolling',
-                    draggingCls: '_dragging'
+                    draggingCls: '_dragging',
+                    direction: direction
                 });
             }
             var $scrollObject = $element.parent('.baron_scroller');
