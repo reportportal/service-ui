@@ -143,11 +143,13 @@ define(function (require, exports, module) {
             });
         },
 
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            delete this;
+        onDestroy: function () {
+            _.each(this.myDashboardViews, function(view) {
+                view.destroy();
+            });
+            _.each(this.sharedDashboardViews, function(view) {
+                view.destroy();
+            });
         },
     });
 

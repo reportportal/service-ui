@@ -21,17 +21,37 @@
 'use strict';
 
 define(function(require, exports, module) {
-    var AnalyticsConsoleLog = require('analytics/AnalyticsConsoleLog');
     var AnalyticsGA = require('analytics/AnalyticsGA');
     var App = require('app');
+    var _ = require('underscore');
 
-    return {
-        init: function() {
-            var config = App.getInstance();
-            var analyticsConsoleLog = new AnalyticsConsoleLog();
-            analyticsConsoleLog.init(config.trackingDispatcher);
-            var analyticsGA = new AnalyticsGA();
-            analyticsGA.init(config.trackingDispatcher);
+    var instance = null;
+    var AnalyticsConnect = function() {
+        return {
+            analyticsList: [AnalyticsGA],
+            init: function() {
+                var config = App.getInstance();
+                this.analytics = [];
+                var self = this;
+                _.each(this.analyticsList, function(analytic) {
+                    var analyticObj = new analytic();
+                    analyticObj.init(config.trackingDispatcher);
+                    self.analytics.push(analyticObj);
+                })
+            },
+            destroy: function() {
+                _.each(this.analytics, function(analyticObj) {
+                    analyticObj.destroy();
+                })
+                this.analytics = [];
+            }
         }
     };
+
+    return function() {
+        if(!instance) {
+            instance = new AnalyticsConnect();
+        }
+        return instance;
+    }
 });

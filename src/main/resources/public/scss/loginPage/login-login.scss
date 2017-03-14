@@ -79,45 +79,6 @@
     }
   }
 
-  .epam-login {
-    margin: 0 auto 30px auto;
-    display: block;
-    width: 160px;
-    height: 40px;
-    font-size: 16px;
-
-    @media (max-width: 1010px) {
-      margin-bottom: 25px;
-    }
-  }
-
-  .github-login {
-    margin: 0 auto 30px auto;
-    display: block;
-    width: 195px;
-    height: 40px;
-    font-size: 16px;
-    line-height: 25px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-
-    svg {
-      width: 20px;
-      height: 20px;
-      color: #fff;
-      display: inline-block;
-      fill: #fff;
-      vertical-align: top;
-      margin-top: 2px;
-      margin-right: 8px;
-    }
-
-    @media (max-width: 1010px) {
-      margin-bottom: 25px;
-    }
-  }
-
   .login-form {
     width: 100%;
     min-height: 325px;
@@ -126,6 +87,9 @@
       padding: 0 20px;
       min-height: 0;
       margin-bottom: 30px;
+    }
+    .external-login {
+      text-align: center;
     }
 
     .or-block {

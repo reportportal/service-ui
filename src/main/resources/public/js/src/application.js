@@ -34,7 +34,7 @@ define(function(require, exports, module) {
     var ExternalService = require('externalServices/externalServices');
     var Urls = require('dataUrlResolver');
     var callService = require('callService');
-    var AnalyticsConnect = require('analytics/AnalyticsConnect');
+    var SingletonAnalyticsConnect = require('analytics/SingletonAnalyticsConnect');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
 
 
@@ -74,7 +74,6 @@ define(function(require, exports, module) {
     config.userModel = new UserModel;
     config.trackingDispatcher = TrackingDispatcher;
     config.router = new Router.Router();
-    AnalyticsConnect.init();
 
     Util.setupWindowEvents();
     Util.setupBackTop();
@@ -94,6 +93,10 @@ define(function(require, exports, module) {
             // start app
             var registryInfoModel = new SingletonRegistryInfoModel();
             registryInfoModel.ready.done(function() {
+                if(registryInfoModel.get('sendStatistics')) {
+                    var analyticsConnect = new SingletonAnalyticsConnect();
+                    analyticsConnect.init();
+                }
                 config.forSettings.btsList = _.map(registryInfoModel.get('bugTrackingExtensions'), function(service) {
                     return {name: service.toUpperCase(), value: service.toUpperCase()}
                 });

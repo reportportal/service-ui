@@ -102,80 +102,81 @@ define(function (require, exports, module) {
             expect($('#userNavigator', sandbox).length).toEqual(1);
         });
 
-        it('should destroy sidebar view', function () {
-            renderHeader();
-            headerView.destroy();
-            expect($('#topHeader', sandbox).html()).toEqual('');
-        });
 
-        it('should toogle menu', function () {
-            spyOn(Header.prototype, "onClickMenuOpen").and.callThrough();
-            renderHeader();
-            spyOnEvent($('[data-js-toogle-menu]'),'click');
-            $('[data-js-toogle-menu]', sandbox).trigger('click'); //open menu
-            expect('click').toHaveBeenTriggeredOn('[data-js-toogle-menu]');
-            expect(Header.prototype.onClickMenuOpen).toHaveBeenCalled();
-            expect($('body').hasClass('menu-open')).toBeTruthy();
-            $('[data-js-toogle-menu]', sandbox).trigger('click'); //close menu
-            expect($('body').hasClass('menu-open')).toBeFalsy();
-        });
-
-        it('should clear actives', function () {
-            spyOn(Header.prototype, "clearActives").and.callThrough();
-            renderHeader();
-            $('#members > a',sandbox).addClass('active');
-            expect($('#members > a.active',sandbox)).toExist();
-            headerView.clearActives();
-            expect(Header.prototype.clearActives).toHaveBeenCalled();
-            expect($('#members > a.active',sandbox)).not.toExist();
-            $('.user-id',sandbox).addClass('active');
-            expect($('.user-id.active',sandbox)).toExist();
-            headerView.clearActives();
-            expect(Header.prototype.clearActives).toHaveBeenCalled();
-            expect($('.user-id.active',sandbox)).not.toExist();
-        });
-
-        it('should update active link', function () {
-            spyOn(Header.prototype, "updateActiveLink").and.callThrough();
-            spyOn(Header.prototype, "clearActives").and.callThrough();
-            renderHeader();
-            $('.user-id',sandbox).addClass('active');
-            headerView.updateActiveLink();
-            expect(Header.prototype.updateActiveLink).toHaveBeenCalled();
-            expect($('.user-id.active',sandbox)).not.toExist();
-            expect($('a.active',sandbox)).toEqual($('#members > a',sandbox));
-        });
-
-        it('should set last active page', function () {
-            spyOn(Header.prototype, "setLastActivePage").and.callThrough();
-            spyOn(Header.prototype, "trackClick").and.stub();
-            renderHeader();
-            spyOnEvent($('[data-js-administrate-page-link]'), 'click');
-            headerView.userStorage.set('lastActiveURL', null);
-            $('[data-js-administrate-page-link]', sandbox).trigger('click');
-            expect('click').toHaveBeenTriggeredOn('[data-js-administrate-page-link]');
-            expect(Header.prototype.setLastActivePage).toHaveBeenCalled();
-            expect(headerView.userStorage.get('lastActiveURL')).toEqual('default_project/members');
-        });
-
-        it('should track click', function() {
-            spyOn(Header.prototype, "trackClick").and.callThrough();
-            renderHeader();
-            spyOnEvent($('#userNavigator a:not("#logout")'), 'click');
-            $('#userNavigator a:not("#logout")', sandbox).trigger('click');
-            expect('click').toHaveBeenTriggeredOn('#userNavigator a:not("#logout")');
-            expect(Header.prototype.trackClick).toHaveBeenCalled();
-        });
-
-        it('should logout on click logout button', function() {
-            spyOn(Header.prototype, "onClickLogout").and.callThrough();
-            renderHeader();
-            expect(config.userModel.get('auth')).toBeTruthy();
-            spyOnEvent($('#logout'), 'click');
-            $('#logout', sandbox).trigger('click');
-            expect('click').toHaveBeenTriggeredOn('#logout');
-            expect(Header.prototype.onClickLogout).toHaveBeenCalled();
-            expect(config.userModel.get('auth')).toBeFalsy();
-        });
+        // it('should destroy sidebar view', function () {
+        //     renderHeader();
+        //     headerView.destroy();
+        //     expect($('#topHeader', sandbox).html()).toEqual('');
+        // });
+        //
+        // it('should toogle menu', function () {
+        //     spyOn(Header.prototype, "onClickMenuOpen").and.callThrough();
+        //     renderHeader();
+        //     spyOnEvent($('[data-js-toogle-menu]'),'click');
+        //     $('[data-js-toogle-menu]', sandbox).trigger('click'); //open menu
+        //     expect('click').toHaveBeenTriggeredOn('[data-js-toogle-menu]');
+        //     expect(Header.prototype.onClickMenuOpen).toHaveBeenCalled();
+        //     expect($('body').hasClass('menu-open')).toBeTruthy();
+        //     $('[data-js-toogle-menu]', sandbox).trigger('click'); //close menu
+        //     expect($('body').hasClass('menu-open')).toBeFalsy();
+        // });
+        //
+        // it('should clear actives', function () {
+        //     spyOn(Header.prototype, "clearActives").and.callThrough();
+        //     renderHeader();
+        //     $('#members > a',sandbox).addClass('active');
+        //     expect($('#members > a.active',sandbox)).toExist();
+        //     headerView.clearActives();
+        //     expect(Header.prototype.clearActives).toHaveBeenCalled();
+        //     expect($('#members > a.active',sandbox)).not.toExist();
+        //     $('.user-id',sandbox).addClass('active');
+        //     expect($('.user-id.active',sandbox)).toExist();
+        //     headerView.clearActives();
+        //     expect(Header.prototype.clearActives).toHaveBeenCalled();
+        //     expect($('.user-id.active',sandbox)).not.toExist();
+        // });
+        //
+        // it('should update active link', function () {
+        //     spyOn(Header.prototype, "updateActiveLink").and.callThrough();
+        //     spyOn(Header.prototype, "clearActives").and.callThrough();
+        //     renderHeader();
+        //     $('.user-id',sandbox).addClass('active');
+        //     headerView.updateActiveLink();
+        //     expect(Header.prototype.updateActiveLink).toHaveBeenCalled();
+        //     expect($('.user-id.active',sandbox)).not.toExist();
+        //     expect($('a.active',sandbox)).toEqual($('#members > a',sandbox));
+        // });
+        //
+        // it('should set last active page', function () {
+        //     spyOn(Header.prototype, "setLastActivePage").and.callThrough();
+        //     spyOn(Header.prototype, "trackClick").and.stub();
+        //     renderHeader();
+        //     spyOnEvent($('[data-js-administrate-page-link]'), 'click');
+        //     headerView.userStorage.set('lastActiveURL', null);
+        //     $('[data-js-administrate-page-link]', sandbox).trigger('click');
+        //     expect('click').toHaveBeenTriggeredOn('[data-js-administrate-page-link]');
+        //     expect(Header.prototype.setLastActivePage).toHaveBeenCalled();
+        //     expect(headerView.userStorage.get('lastActiveURL')).toEqual('default_project/members');
+        // });
+        //
+        // it('should track click', function () {
+        //     spyOn(Header.prototype, "trackClick").and.callThrough();
+        //     renderHeader();
+        //     spyOnEvent($('#userNavigator a:not("#logout")'), 'click');
+        //     $('#userNavigator a:not("#logout")', sandbox).trigger('click');
+        //     expect('click').toHaveBeenTriggeredOn('#userNavigator a:not("#logout")');
+        //     expect(Header.prototype.trackClick).toHaveBeenCalled();
+        // });
+        //
+        // it('should logout on click logout button', function() {
+        //     spyOn(Header.prototype, "onClickLogout").and.callThrough();
+        //     renderHeader();
+        //     expect(config.userModel.get('auth')).toBeTruthy();
+        //     spyOnEvent($('#logout'), 'click');
+        //     $('#logout', sandbox).trigger('click');
+        //     expect('click').toHaveBeenTriggeredOn('#logout');
+        //     expect(Header.prototype.onClickLogout).toHaveBeenCalled();
+        //     expect(config.userModel.get('auth')).toBeFalsy();
+        // });
     });
 });

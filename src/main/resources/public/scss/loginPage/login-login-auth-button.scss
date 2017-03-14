@@ -18,22 +18,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-'use strict';
 
-define(function(require, exports, module) {
-    var AnalyticsObject = require('analytics/AnalyticsObject');
+.login-login-auth-button.rp-btn {
+  margin: 0 auto 30px auto;
+  display: inline-block;
+  height: 40px;
+  font-size: 16px;
+  line-height: 25px;
+  border-radius: 3px;
 
-    var AnalyticsConsoleLog = AnalyticsObject.extend({
-        initialize: function() {
+  svg {
+    width: 20px;
+    height: 20px;
+    color: #fff;
+    display: inline-block;
+    fill: #fff;
+    vertical-align: top;
+    margin-top: 2px;
+    margin-right: 8px;
+  }
 
-        },
-        send: function(data) {
-            console.log('ANALYTICS: ' + data[0] + ' | ' + data[1] + ' | ' + data[2]);
-        },
-        pageView: function(data) {
-            console.log('ANALYTICS PAGE VIEW: ' + data[0]);
-        }
-    });
-
-    return AnalyticsConsoleLog;
-});
+  @media (max-width: 1010px) {
+    margin-bottom: 25px;
+  }
+}

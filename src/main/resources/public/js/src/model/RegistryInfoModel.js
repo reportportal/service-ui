@@ -21,18 +21,28 @@
 'use strict';
 
 define(function(require, exports, module) {
-    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
     var $ = require('jquery');
     var _ = require('underscore');
     var coreService = require('coreService');
     
-    var RegistryInfoModel = Backbone.Model.extend({
+    var RegistryInfoModel = Epoxy.Model.extend({
         defaults: {
             uiBuildVersion: '',
             fullServicesHtml: '',
-            authExtensions: [],
+            authExtensions: {},
             bugTrackingExtensions: [],
+            analyticsExtensions: {},
         },
+        computeds: {
+            sendStatistics: {
+                deps: ['analyticsExtensions'],
+                get: function(analyticsExtensions) {
+                    return analyticsExtensions.all && analyticsExtensions.all.enabled;
+                }
+            }
+        }
+        ,
         initialize: function(){
             this.ready = $.Deferred();
             var self = this;
@@ -45,11 +55,15 @@ define(function(require, exports, module) {
                     if(data && data.UAT && data.UAT.auth_extensions){
                         self.set({authExtensions: data.UAT.auth_extensions});
                     }
-                    if(data && data.API &&data.API.extensions){
+                    if(data && data.API && data.API.extensions){
                         if(data.API.extensions.bugtracking) {
                             self.set({bugTrackingExtensions: data.API.extensions.bugtracking});
                         }
+                        if(data.API.extensions.analytics) {
+                            self.set({analyticsExtensions: data.API.extensions.analytics});
+                        }
                     }
+
                     var fullServicesHtml = '';
                     _.each(data, function(service) {
                        if(service.build && service.build.name && service.build.version) {

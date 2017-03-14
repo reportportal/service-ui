@@ -18,17 +18,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 define(function(require, exports, module) {
     'use strict';
+
     var $ = require('jquery');
+    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
+    var Util = require('util');
+    var Localization = require('localization');
+    var App = require('app');
+    var config = App.getInstance();
+    var UserModel = require('model/UserModel');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
 
-    var instance = null;
-    var SimpleMDE = require('simplemde');
-    var el = $('<div><textarea></textarea></div>');
-    var getInstance = function(){
-        if(!instance) { instance = new SimpleMDE({element: $('textarea', el).get(0) }) };
-        return instance;
-    };
 
-    return getInstance;
+    var LoginLoginAuthButtonView = Epoxy.View.extend({
+        className:'rp-btn rp-btn-submit login-login-auth-button',
+
+        events: {
+            'click': 'onClickButton',
+        },
+
+        initialize: function (options) {
+            this.$el.html(options.button);
+            this.path = options.path;
+        },
+        onClickButton: function () {
+            window.location = window.location.protocol + '//' + window.location.host + this.path;
+        },
+    });
+
+    return LoginLoginAuthButtonView;
 });

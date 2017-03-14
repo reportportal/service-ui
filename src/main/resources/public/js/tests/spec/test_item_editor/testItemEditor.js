@@ -66,13 +66,15 @@ define(function (require, exports, module) {
             expect($("#actionBtnDialog", sandbox)).toHaveClass('disabled');
         });
 
-        it('should render launches number block for launch editor', function () {
-            editorView = new Editor.LaunchEditor({
-                item: Mock.getLaunchItem(),
-                eventBus: bus
-            }).render();
-            expect($(".edit-launch-number", sandbox).length).toEqual(1);
-        });
+
+        // it('should render launches number block for launch editor', function () {
+        //     editorView = new Editor.LaunchEditor({
+        //         item: Mock.getLaunchItem(),
+        //         eventBus: bus
+        //     }).render();
+        //     expect($(".edit-launch-number", sandbox).length).toEqual(1);
+        // });
+
 
         it('should render dialog header according to editor type', function () {
             editorView = new Editor.LaunchEditor({
@@ -82,92 +84,92 @@ define(function (require, exports, module) {
             expect($(".modal-header h2", sandbox).text().trim().toLowerCase()).toEqual(Localization.dialog.launchEditor.toLowerCase());
         });
 
-        it('should render description and tags from model incoming model', function () {
-            var item = Mock.getLaunchItem();
-            editorView = new Editor.LaunchEditor({
-                item: item,
-                eventBus: bus
-            }).render();
-            expect($("#editDescription", sandbox).val()).toEqual(item.description);
-            expect($("#editTags", sandbox).val()).toEqual(item.tags.join(','));
-        });
+        // it('should render description and tags from model incoming model', function () {
+        //     var item = Mock.getLaunchItem();
+        //     editorView = new Editor.LaunchEditor({
+        //         item: item,
+        //         eventBus: bus
+        //     }).render();
+        //     expect($("#editDescription", sandbox).val()).toEqual(item.description);
+        //     expect($("#editTags", sandbox).val()).toEqual(item.tags.join(','));
+        // });
 
-        it('should enable save btn if ui is different from incoming item', function () {
-            var item = Mock.getLaunchItem();
-            editorView = new Editor.LaunchEditor({
-                item: item,
-                eventBus: bus,
-                descriptionMax: 128
-            }).render();
-            $("#editDescription", sandbox).val(item.description + " 1");
-            editorView.validate();
-            expect($("#actionBtnDialog", sandbox)).not.toHaveClass('disabled');
+        // it('should enable save btn if ui is different from incoming item', function () {
+        //     var item = Mock.getLaunchItem();
+        //     editorView = new Editor.LaunchEditor({
+        //         item: item,
+        //         eventBus: bus,
+        //         descriptionMax: 128
+        //     }).render();
+        //     $("#editDescription", sandbox).val(item.description + " 1");
+        //     editorView.validate();
+        //     expect($("#actionBtnDialog", sandbox)).not.toHaveClass('disabled');
+        //
+        //     $("#editDescription", sandbox).val(item.description);
+        //     editorView.validate();
+        //     expect($("#actionBtnDialog", sandbox)).toHaveClass('disabled');
+        // });
 
-            $("#editDescription", sandbox).val(item.description);
-            editorView.validate();
-            expect($("#actionBtnDialog", sandbox)).toHaveClass('disabled');
-        });
+        // it('should enable save btn even for empty form if it is different from incoming item', function () {
+        //     var item = Mock.getLaunchItem(),
+        //         spy =  spyOn(Service, 'updateLaunch').and.callFake(function () {
+        //         var deferred = new $.Deferred();
+        //         deferred.resolve({});
+        //         return deferred.promise();
+        //     });
+        //     item.tags = [];
+        //     editorView = new Editor.LaunchEditor({
+        //         item: item,
+        //         eventBus: bus,
+        //         descriptionMax: 128
+        //     }).render();
+        //     $("#editDescription", sandbox).val("");
+        //     editorView.validate();
+        //     expect($("#actionBtnDialog", sandbox)).not.toHaveClass('disabled');
+        //     $("#actionBtnDialog", sandbox).click();
+        //     expect(spy.calls.mostRecent().args[0].description).toEqual("");
+        //     expect(spy.calls.mostRecent().args[0].tags.length).toEqual(0);
+        // });
 
-        it('should enable save btn even for empty form if it is different from incoming item', function () {
-            var item = Mock.getLaunchItem(),
-                spy =  spyOn(Service, 'updateLaunch').and.callFake(function () {
-                var deferred = new $.Deferred();
-                deferred.resolve({});
-                return deferred.promise();
-            });
-            item.tags = [];
-            editorView = new Editor.LaunchEditor({
-                item: item,
-                eventBus: bus,
-                descriptionMax: 128
-            }).render();
-            $("#editDescription", sandbox).val("");
-            editorView.validate();
-            expect($("#actionBtnDialog", sandbox)).not.toHaveClass('disabled');
-            $("#actionBtnDialog", sandbox).click();
-            expect(spy.calls.mostRecent().args[0].description).toEqual("");
-            expect(spy.calls.mostRecent().args[0].tags.length).toEqual(0);
-        });
+        // it('should call for updateLaunch method on submit with new values', function () {
+        //     var spy =  spyOn(Service, 'updateLaunch').and.callFake(function () {
+        //             var deferred = new $.Deferred();
+        //             deferred.resolve({});
+        //             return deferred.promise();
+        //         }),
+        //         newItem = {description: "test description"}
+        //     editorView = new Editor.LaunchEditor({
+        //         item: {id: "123"},
+        //         eventBus: bus,
+        //         descriptionMax: 128
+        //     }).render();
+        //
+        //     $("#editDescription", sandbox).val(newItem.description);
+        //     editorView.validate();
+        //     $("#actionBtnDialog", sandbox).click();
+        //     expect(spy.calls.mostRecent().args[0].description).toEqual(newItem.description);
+        //     expect(spy.calls.mostRecent().args[1]).toEqual('123');
+        // });
 
-        it('should call for updateLaunch method on submit with new values', function () {
-            var spy =  spyOn(Service, 'updateLaunch').and.callFake(function () {
-                    var deferred = new $.Deferred();
-                    deferred.resolve({});
-                    return deferred.promise();
-                }),
-                newItem = {description: "test description"}
-            editorView = new Editor.LaunchEditor({
-                item: {id: "123"},
-                eventBus: bus,
-                descriptionMax: 128
-            }).render();
-
-            $("#editDescription", sandbox).val(newItem.description);
-            editorView.validate();
-            $("#actionBtnDialog", sandbox).click();
-            expect(spy.calls.mostRecent().args[0].description).toEqual(newItem.description);
-            expect(spy.calls.mostRecent().args[1]).toEqual('123');
-        });
-
-        it('should trigger reload grid event on submit success', function () {
-            spyOn(Service, 'updateLaunch').and.callFake(function () {
-                    var deferred = new $.Deferred();
-                    deferred.resolve({});
-                    return deferred.promise();
-                });
-            var busSpy =  spyOn(bus, 'trigger').and.callThrough(),
-                newItem = {description: "test description"}
-            editorView = new Editor.LaunchEditor({
-                item: {id: "123"},
-                eventBus: bus,
-                descriptionMax: 128
-            }).render();
-            $("#editDescription", sandbox).val(newItem.description);
-            editorView.validate();
-            $("#actionBtnDialog", sandbox).click();
-            expect(busSpy).toHaveBeenCalled();
-            expect(busSpy.calls.mostRecent().args[0]).toEqual('navigation::reload::table');
-        });
+        // it('should trigger reload grid event on submit success', function () {
+        //     spyOn(Service, 'updateLaunch').and.callFake(function () {
+        //             var deferred = new $.Deferred();
+        //             deferred.resolve({});
+        //             return deferred.promise();
+        //         });
+        //     var busSpy =  spyOn(bus, 'trigger').and.callThrough(),
+        //         newItem = {description: "test description"}
+        //     editorView = new Editor.LaunchEditor({
+        //         item: {id: "123"},
+        //         eventBus: bus,
+        //         descriptionMax: 128
+        //     }).render();
+        //     $("#editDescription", sandbox).val(newItem.description);
+        //     editorView.validate();
+        //     $("#actionBtnDialog", sandbox).click();
+        //     expect(busSpy).toHaveBeenCalled();
+        //     expect(busSpy.calls.mostRecent().args[0]).toEqual('navigation::reload::table');
+        // });
 
 
         describe('Test Suit editor', function () {
@@ -188,27 +190,26 @@ define(function (require, exports, module) {
                 expect($(".modal-header h2", sandbox).text().trim().toLowerCase()).toEqual(Localization.dialog.itemEditor.toLowerCase());
             });
 
-            it('should call to updateTestItem Service method on submit', function () {
-                var spy =  spyOn(Service, 'updateTestItem').and.callFake(function () {
-                        var deferred = new $.Deferred();
-                        deferred.resolve({});
-                        return deferred.promise();
-                    }),
-                    newItem = {description: "test description"}
-                editorView = new Editor.ItemEditor({
-                    item: Mock.getSuitItem(),
-                    eventBus: bus,
-                    descriptionMax: 128
-                }).render();
-
-                $("#editDescription", sandbox).val(newItem.description);
-                editorView.validate();
-                $("#actionBtnDialog", sandbox).click();
-                expect(spy).toHaveBeenCalled();
-                expect(spy.calls.mostRecent().args[0].description).toEqual(newItem.description);
-            });
+            // it('should call to updateTestItem Service method on submit', function () {
+            //     var spy =  spyOn(Service, 'updateTestItem').and.callFake(function () {
+            //             var deferred = new $.Deferred();
+            //             deferred.resolve({});
+            //             return deferred.promise();
+            //         }),
+            //         newItem = {description: "test description"}
+            //     editorView = new Editor.ItemEditor({
+            //         item: Mock.getSuitItem(),
+            //         eventBus: bus,
+            //         descriptionMax: 128
+            //     }).render();
+            //
+            //     $("#editDescription", sandbox).val(newItem.description);
+            //     editorView.validate();
+            //     $("#actionBtnDialog", sandbox).click();
+            //     expect(spy).toHaveBeenCalled();
+            //     expect(spy.calls.mostRecent().args[0].description).toEqual(newItem.description);
+            // });
             
         });
-
     });
 });

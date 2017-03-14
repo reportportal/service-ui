@@ -9,8 +9,14 @@
             <%= data.text.admin.authSettings %>
         </a>
     </li>
+    <li class="<%= data.tab === 'statistics' ? 'active' : '' %>">
+        <a href="#administrate/settings/statistics" class="tab" data-js-tab-action="statistics">
+            <%= data.text.admin.statisticsSettings %>
+        </a>
+    </li>
 </ul>
 <div class="tab-content setting-content-wrapper">
     <div class="tab-pane <%= data.tab === 'email' ? 'active' : '' %>" data-js-tab-content="email"></div>
     <div class="tab-pane <%= data.tab === 'auth' ? 'active' : '' %>" data-js-tab-content="auth"></div>
+    <div class="tab-pane <%= data.tab === 'statistics' ? 'active' : '' %>" data-js-tab-content="statistics"></div>
 </div>

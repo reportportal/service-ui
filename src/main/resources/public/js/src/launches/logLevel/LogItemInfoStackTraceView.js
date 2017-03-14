@@ -27,6 +27,9 @@ define(function (require, exports, module) {
     var Util = require('util');
     var FilterModel = require('filters/FilterModel');
     var LogItemCollection = require('launches/logLevel/LogItemCollection');
+    var App = require('app');
+
+    var config = App.getInstance();
 
 
     var LogItemInfoStackTraceItemView = Epoxy.View.extend({

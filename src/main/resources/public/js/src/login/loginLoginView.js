@@ -31,6 +31,7 @@ define(function(require, exports, module) {
     var config = App.getInstance();
     var UserModel = require('model/UserModel');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
+    var LoginLoginAuthButtonView = require('login/LoginLoginAuthButtonView');
 
 
     var LoginLoginView = Epoxy.View.extend({
@@ -39,46 +40,43 @@ define(function(require, exports, module) {
         attributes: {'data-js-login-login-subpage': ''},
         template: 'tpl-new-login-login',
 
-        bindings: {
-            '[data-js-github-login]': 'classes: {hide: validateGitHubAuth}',
-            '[data-js-github-login-btn]': 'attr: {disabled: validateGitHubAuth}',
-        },
-
         events: {
             'click [data-js-login-btn]': 'onSubmitForm',
             'submit [data-js-login-login-form]': 'onSubmitForm',
             'mousedown [data-js-toggle-visability]': 'showPassword',
             'mouseup [data-js-toggle-visability]': 'hidePassword',
             'mouseleave [data-js-toggle-visability]': 'hidePassword',
-            'click [data-js-github-login-btn]': 'gitHubLogin',
             'click [data-js-forgot-pass]': 'onForgotPass',
             'focus .rp-input': 'unHighlight'
         },
 
-        computeds: {
-            validateGitHubAuth: {
-                deps: ['authExtensions'],
-                get: function(authExtensions){
-                    return !_.contains(authExtensions, 'github');
-                }
-            },
-        },
-
         initialize: function (options) {
+            this.oAuthButtons = [];
             this.loginModel = options.loginModel;
             this.listenTo(this.loginModel, 'change:blockTime', this.blockForm);
             this.user = new UserModel();
-            this.viewModel = new SingletonRegistryInfoModel();
+            this.registryModel = new SingletonRegistryInfoModel();
             this.render();
             this.blockForm();
         },
 
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
+            this.renderOAuth();
             this.setupAnchors();
             this.bindValidators();
         },
-
+        renderOAuth: function() {
+            var self = this;
+            _.each(this.registryModel.get('authExtensions'), function(value) {
+                var view = new LoginLoginAuthButtonView(value);
+                self.oAuthButtons.push(view);
+                $('[data-js-oauth-container]', self.$el).append(view.$el);
+            });
+            if(this.oAuthButtons.length) {
+                $('[data-js-oauth-login]', this.$el).removeClass('hide');
+            }
+        },
         setupAnchors: function(){
             this.$login = $('[data-js-login]', this.$el);
             this.$pass = $('[data-js-password]', this.$el);

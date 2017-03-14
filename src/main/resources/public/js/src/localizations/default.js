@@ -242,11 +242,7 @@ define(['util'], function () {
             welcomeMsg: '<span class="big">Welcome,</span><br>login to your account',
             welcomeMsgForgotPass: '<span class="big">Forgot password?</span><br>enter your email to restore',
             welcomeMsgResetPass: '<span class="big">Change password</span><br>enter new password and confirm it',
-            epamLogin: '< Epam login >',
-            gitHubLogin: '<svg aria-hidden="true" height="28" version="1.1" viewBox="0 0 16 16" width="28"><path' +
-            ' d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38' +
-            ' 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path></svg> <span>Login with GitHub</span>',
-            currentVersion: 'Current version:',
+           currentVersion: 'Current version:',
             newVersions: 'New versions are available.',
             updateServices: 'Update to the latests',
             twitterCaption: 'Be informed with our latest tweets',
@@ -1190,6 +1186,7 @@ define(['util'], function () {
             serverSettings: "Server Settings",
             emailSettings: "E-mail server",
             authSettings: 'Authorization Configuration',
+            statisticsSettings: 'Statistics',
             host: "Host",
             port: "Port",
             username: "Username",
@@ -1202,10 +1199,8 @@ define(['util'], function () {
             addProject: "Add project",
             addNewProject: 'Add new project',
             addProjectTitle: "Assign project to the member",
-            addNewProject: "Add new project",
             activeProjects: "Active projects",
             notActiveProjects: "Not active projects",
-            personalProjects: "Personal projects",
             noProjectsFound: 'No projects found for',
             newProject: "new",
             usersQuantity: "members",
@@ -1265,8 +1260,6 @@ define(['util'], function () {
             SSL: 'SSL',
             emailError: 'Test connection was failed:',
             addUserProject: 'Add User to Project',
-            projectName: 'Project name',
-            projectRole: 'Project role',
             enableEmailServer: 'Enable Email Server',
             enableGuestAccount: 'Enable Guest Account',
             activateGitHubAuth: 'Activate GitHub Authorization',
@@ -1274,7 +1267,17 @@ define(['util'], function () {
             gitHubClientSecret: 'Client Secret',
             gitHubOrgName: 'Organization Name',
             addGitHubOrg: 'Add GitHub Organization',
-            emailSender: 'Default sender name'
+            emailSender: 'Default sender name',
+            sendStatisticsSwitcher: 'Help make ReportPortal better by automatically sending statistics and crash reports to us',
+            statisticsListToogler: 'List of sent statistics',
+            statisticsMessage: 'You can help us improve ReportPortal by opting to send usage statistics to us. While' +
+            ' you\'re using the app, we\'ll gather data that might help us improve ReportPortal performance and' +
+            ' usability by tracking usage frequency of particular features. See below for details about what information is sent.',
+            statisticsListMessage: 'Usage statistics reports usually won\'t include any personal information about' +
+            ' you, but they might include:',
+            statisticsPoint1: 'how often you use ReportPortal and how long you leave it open;',
+            statisticsPoint2: 'where you click;',
+            statisticsPoint3: 'your device\'s operating system and model.'
         },
 
         registration: {
@@ -1414,7 +1417,8 @@ define(['util'], function () {
             startAnalyzeAction: 'Auto-analyzer has been started.',
             generateDemoData: 'Demo Data has been generated',
             changedColorDefectTypes: "Defect types have been updated.",
-            updateDefect: 'Defects have been updated'
+            updateDefect: 'Defects have been updated',
+            updateServerSettings: 'Server settings were successfully updated',
         },
 
         failMessages: {
