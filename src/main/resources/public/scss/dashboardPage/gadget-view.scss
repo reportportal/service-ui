@@ -78,6 +78,9 @@
         &.comment-icon{
           font-size: 16px;
           margin-top: 2px;
+          @media (max-width: $SCREEN_SM_MAX) {
+            display: none;
+          }
         }
       }
       p {
