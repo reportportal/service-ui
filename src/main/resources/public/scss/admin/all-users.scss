@@ -160,6 +160,7 @@
           text-overflow: ellipsis;
         }
         .user-email {
+          text-transform: lowercase;
           a {
             color: $COLOR--windows-blue;
           }
