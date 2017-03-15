@@ -1268,16 +1268,14 @@ define(['util'], function () {
             gitHubOrgName: 'Organization Name',
             addGitHubOrg: 'Add GitHub Organization',
             emailSender: 'Default sender name',
-            sendStatisticsSwitcher: 'Help make ReportPortal better by automatically sending statistics and crash reports to us',
+            sendStatisticsSwitcher: 'Help make ReportPortal better by automatically sending statistics to us',
             statisticsListToogler: 'List of sent statistics',
-            statisticsMessage: 'You can help us improve ReportPortal by opting to send usage statistics to us. While' +
+            statisticsMessage: 'You can help us improve ReportPortal by opting to send usage statistics. While' +
             ' you\'re using the app, we\'ll gather data that might help us improve ReportPortal performance and' +
             ' usability by tracking usage frequency of particular features. See below for details about what information is sent.',
-            statisticsListMessage: 'Usage statistics reports usually won\'t include any personal information about' +
-            ' you, but they might include:',
-            statisticsPoint1: 'how often you use ReportPortal and how long you leave it open;',
-            statisticsPoint2: 'where you click;',
-            statisticsPoint3: 'your device\'s operating system and model.'
+            statisticsListMessage: 'Usage statistics reports usually won\'t include any personal information, but they might include:',
+            statisticsPoint1: 'Device information - such as your hardware model, operating system version, screen resolution, browser version;',
+            statisticsPoint2: 'Log information - such as details of how you use ReportPortal, where you click and what actions you do, how long you leave app open.'
         },
 
         registration: {
