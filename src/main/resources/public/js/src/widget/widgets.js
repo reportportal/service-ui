@@ -1238,7 +1238,7 @@ define(function (require, exports, module) {
                         link = newFilter.get('url');
 
                     entities.push(dateFilter);
-                    newFilter.set('entities', JSON.stringify(entities));
+                    newFilter.set('newEntities', JSON.stringify(entities));
                     link += '?' + newFilter.getOptions().join('&');
                     if (link) {
                         setTimeout(function(){
