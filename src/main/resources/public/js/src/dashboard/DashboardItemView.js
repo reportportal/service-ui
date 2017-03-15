@@ -39,6 +39,9 @@ define(function (require, exports, module) {
     var config = App.getInstance();
     var launchFilterCollection = new SingletonLaunchFilterCollection();
 
+    var TIME_UPDATE = 30000;
+    var TIME_UPDATE_FULL_SCREEN = 60000;
+
     var DashboardItemView = Epoxy.View.extend({
         className: 'dashboard-item-view',
         template: 'tpl-dashboard-item',
@@ -104,6 +107,7 @@ define(function (require, exports, module) {
                 self.activateGridStack();
                 self.listenTo(self.model, 'add:widget', self.onAddNewGadget);
                 self.listenTo(self.model, 'change:isShared', self.onShareDashboard);
+                self.updateGadgetsTimer(TIME_UPDATE);
             });
 
         },
@@ -175,7 +179,7 @@ define(function (require, exports, module) {
             e.preventDefault();
             config.trackingDispatcher.trackEventNumber(283);
             $('body').fullscreen({toggleClass: 'fullscreen'});
-            this.updateGadgetsTimer();
+            this.updateGadgetsTimer(TIME_UPDATE_FULL_SCREEN);
         },
         onAddGadget: function(gadgetModel) {
             if(gadgetModel.get('isShared')) {
@@ -277,20 +281,20 @@ define(function (require, exports, module) {
             });
         },
         onClickExitFullScreen: function(e) {
-            clearTimeout(this.updateTimer);
+            this.updateGadgetsTimer(TIME_UPDATE);
             e.preventDefault();
             e.stopPropagation();
             $.fullscreen.exit();
         },
-        updateGadgetsTimer: function() {
+        updateGadgetsTimer: function(time) {
             clearTimeout(this.updateTimer);
             var self = this;
             this.updateTimer = setTimeout(function() {
                 _.each(self.gadgetCollection.models, function(gadgetModel) {
                     gadgetModel.trigger('update:timer');
                 });
-                self.updateGadgetsTimer();
-            }, 60000);
+                self.updateGadgetsTimer(time);
+            }, time);
         },
         onClickAddWidget: function(e) {
             e.preventDefault();
