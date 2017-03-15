@@ -33,17 +33,21 @@ define(function (require, exports, module) {
     var InvalidPage = Epoxy.View.extend({
         tpl: 'tpl-invalid-page',
         className: 'invalid-page',
+        events: {
+            'click [data-js-back-home]': 'onClickHome',
+        },
 
         initialize: function () {
             this.render();
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.tpl, {
-                url: config.userModel.getDefaultProjectHash()
-            }));
+            this.$el.html(Util.templates(this.tpl));
             config.userModel.set({lastInsideHash: config.userModel.getDefaultProjectHash()});
             return this;
+        },
+        onClickHome: function() {
+            config.router.navigate(config.userModel.getDefaultProjectHash(), {trigger: true})
         },
         onDestroy: function() {
             this.remove();

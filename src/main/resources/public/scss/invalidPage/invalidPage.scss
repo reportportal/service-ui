@@ -20,23 +20,29 @@
  */
 
 .invalid-page {
-  width: 60%;
-  margin: 30px auto 20px;
-  padding: 2px;
-  border: 1px solid #DDD;
-  border-radius: 6px;
-  background-color: $COLOR--white-default;
-  box-shadow: 0 1px 2px rgba(0,0,0,.075);
-
-  .notfound-content {
-    min-height: 250px;
-    border-radius: 4px;
-    background: #dceaf4;
-    text-align: center;
-
-    h2, h3, h4 {
-      margin: 0;
-      padding: 16px 0;
-    }
+  color: #464547;
+  text-align: center;
+  .invalid-bg {
+    position: absolute;
+    width: 100%;
+    height: 960px;
+    max-height: 100%;
+    background: url(../img/bg-422.png) center -365px no-repeat;
+  }
+  h1 {
+    font-family: "OpenSansSemibold", sans-serif;
+    font-size: 16px;
+    line-height: 16px;
+    margin-bottom: 20px;
+    margin-top: 0;
+    padding-top: 330px;
+    position: relative;
+  }
+  p {
+    margin-bottom: 6px;
+    position: relative;
+  }
+  button {
+    margin-top: 20px;
   }
 }
