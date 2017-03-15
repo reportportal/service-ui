@@ -967,11 +967,16 @@ define(function (require, exports, module) {
                             if(item){
                                 self.calculateItemInfo(item, id);
                             }
+                            else {
+                                $('[data-item-id="' + id + '"]', self.$el).empty().hide();
+                            }
                         });
                     })
                     .fail(function (error) {
                         Util.ajaxFailMessenger(error, 'getItemsWidgetBugTable');
-                        // $('#' + id, self.$el).empty();
+                        _.each(itemsIds, function(id){
+                            $('[data-item-id="' + id + '"]', self.$el).empty().hide();
+                        });
                     });
             }
         },
