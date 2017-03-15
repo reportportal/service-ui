@@ -630,7 +630,7 @@ define(['util'], function () {
             tHeadTitleOwners: 'Owners',
             tHeadTitleDashboardName: 'Dashboard Name',
             description: 'Description',
-            dashboardEmptyHeader: 'You have no Widgets on this dashboard',
+            dashboardEmptyHeader: 'You have no Widgets on this Dashboard',
             dashboardEmptyText: 'Add your first Widget to analyse statistics',
         },
 
