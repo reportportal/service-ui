@@ -32,7 +32,7 @@ define(function (require, exports, module) {
     var Admin = require('admin');
     var Register = require('register/registerView');
     var LoginView = require('login/loginView');
-    var NotFoundPage = require('pages/404');
+    var InvalidPage = require('invalidPage/invalidPage');
 
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
@@ -59,11 +59,10 @@ define(function (require, exports, module) {
 
         containersSet: false,
 
-        wrongResponseTo404: function () {
+        wrongResponseTo404: function (error) {
             config.userModel.clearLastInsidePage();
             if (this.currentProjectId) {
-                this.destroyMainView();
-                this.openInvalid();
+                this.openInvalid(error);
             } else {
                 this.logout();
             }
@@ -145,8 +144,8 @@ define(function (require, exports, module) {
                 $.when.apply($, dependenciesCalls).done(function () {
                     self.destroyMainView();
                     renderPage();
-                }).fail(function () {
-                    self.wrongResponseTo404();
+                }).fail(function (error) {
+                    self.wrongResponseTo404(error);
                 });
             } else {
                 renderPage();
@@ -221,19 +220,25 @@ define(function (require, exports, module) {
             }
         },
 
-        openInvalid: function () {
-            this.validateContentViewByContextName("not-found");
-            var target;
-            if (this.mainView) {
-                target = $("#dynamic-content", this.mainView.$el);
-            } else {
-                target = $("#mainContainer");
-            }
-            this.invalidView = new NotFoundPage({container: target}).render();
+        openInvalid: function (error) {
+            this.prepareOutsideView();
+            this.outsideView = new InvalidPage({
+                error: error
+            });
+            $('[data-js-notapplication-container]').html(this.outsideView.$el);
+
+            // this.validateContentViewByContextName("not-found");
+            // var target;
+            // if (this.mainView) {
+            //     target = $("#dynamic-content", this.mainView.$el);
+            // } else {
+            //     target = $("#mainContainer");
+            // }
+            // this.invalidView = new NotFoundPage({container: target}).render();
         },
 
         logout: function () {
-            if (config.userModel &&  window.location.hash.indexOf('documentation') == -1) {
+            if (config.userModel) {
                 config.userModel.logout();
                 this.currentProjectId = null;
                 Util.ajaxInfoMessenger('logOuted');

@@ -151,13 +151,9 @@ define(function(require, exports, module) {
             Util.ajaxFailMessenger(null, 'restorationExpired');
         },
 
-        destroy: function(){
+        onDestroy: function(){
             clearInterval(this.timer);
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
             this.remove();
-            delete this;
         }
     });
 

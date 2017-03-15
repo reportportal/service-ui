@@ -23,18 +23,19 @@ define(function (require, exports, module) {
     "use strict";
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
+    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var UserModel = require('model/UserModel');
     var App = require('app');
 
     var config = App.getInstance();
 
-    var NotFoundPage = Backbone.View.extend({
-        tpl: 'tpl-404',
+    var InvalidPage = Epoxy.View.extend({
+        tpl: 'tpl-invalid-page',
+        className: 'invalid-page',
 
-        initialize: function (options) {
-            this.$el = options.container;
+        initialize: function () {
+            this.render();
         },
 
         render: function () {
@@ -44,13 +45,10 @@ define(function (require, exports, module) {
             config.userModel.set({lastInsideHash: config.userModel.getDefaultProjectHash()});
             return this;
         },
-
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.$el.empty();
+        onDestroy: function() {
+            this.remove();
         }
     });
 
-    return NotFoundPage;
+    return InvalidPage;
 });
