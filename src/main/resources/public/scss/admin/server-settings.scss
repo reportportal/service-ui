@@ -120,7 +120,7 @@
     position: relative;
 
     .rp-form {
-      margin: 0 auto;
+      margin: 0 auto 20px auto;
 
       .image-holder {
         width: 320px;
@@ -136,24 +136,20 @@
         margin-left: 16px;
       }
 
-      .rp-checkbox-wrap {
-        margin-left: 16px;
-      }
-
       .statistics-list {
-        margin: 5px 0 10px 15px;
+        margin: 0 0 20px 15px;
 
         .statistics-list-toggler {
           position: relative;
-          font-family: "OpenSansRegular", sans-serif;
-          font-size: 13px;
-          color: $COLOR--windows-blue;
+          font-family: $OpenSansSemibold, sans-serif;
+          font-size: 12px;
+          color: $COLOR--gray-47;
+          text-transform: uppercase;
           cursor: pointer;
 
           i {
             position: absolute;
             font-size: 19px;
-            top: 1px;
           }
 
           .arrow-down {
@@ -179,6 +175,7 @@
 
           .listMessage {
             margin-left: 20px;
+            margin-right: 20px;
           }
 
           .statistics-point {
@@ -211,6 +208,11 @@
             display: block;
           }
         }
+      }
+
+      .rp-checkbox-wrap {
+        margin-left: 16px;
+        margin-bottom: 20px;
       }
 
       .rp-btn-submit {
