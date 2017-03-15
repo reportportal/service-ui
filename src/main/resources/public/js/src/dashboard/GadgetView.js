@@ -144,7 +144,10 @@ define(function (require, exports, module) {
             var self = this;
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deletedWidget,
-                bodyText: Util.replaceTemplate(Localization.dialog.deletedWidget, this.model.get('name')),
+                bodyText: Util.replaceTemplate(
+                    this.model.get('isMy')?Localization.dialog.deletedWidget:Localization.dialog.deletedWidgetDanger,
+                    this.model.get('name')),
+                confirmText: this.model.get('isMy')?'':Localization.ui.sureToDelete,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete,

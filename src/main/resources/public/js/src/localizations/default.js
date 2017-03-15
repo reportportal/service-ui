@@ -1725,6 +1725,7 @@ define(['util'], function () {
             createNewDashboard: "Create new Dashboard",
             dashboardSettings: "Dashboard settings",
             deleteFilter: "Are you sure you want to delete the filter <b>'%%%'</b>?",
+            deleteFilterDanger: "As a user with PM/ADMIN privileges you can delete shared Filter <b>'%%%'</b> of other users.<br>This can affect all users on the projects, if somebody else use it.",
             deleteProject: "Are you sure you want to delete the project <b>'%%%'</b>?",
             deleteEmailRule: "Are you sure you want to remove notification rule?",
             deleteEmailRuleBtn: 'Remove',
@@ -1736,7 +1737,9 @@ define(['util'], function () {
             deleteImage: "Are you sure you want to delete profile photo?",
             deleteBts: "Are you sure you want to remove %%% project <b>'%%%'</b> from project settings?",
             dashboardDelete: "Are you sure want to delete dashboard <b>'%%%'</b>?",
+            dashboardDeleteDanger: "As a user with PM/ADMIN privileges you can delete shared Dashboard <b>'%%%'</b> of other users.<br>This can affect all users on the projects, if somebody else use it.",
             deletedWidget: "Are you sure you want to remove widget <b>'%%%'</b>?",
+            deletedWidgetDanger: "As a user with PM/ADMIN privileges you can delete shared Widget <b>'%%%'</b> of other users.<br>This can affect all users on the projects, if somebody else use it.",
             deleteBtsBtn: "Remove",
             dashboardDeleteBtn: "Remove",
 
