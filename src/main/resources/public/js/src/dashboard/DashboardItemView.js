@@ -39,8 +39,8 @@ define(function (require, exports, module) {
     var config = App.getInstance();
     var launchFilterCollection = new SingletonLaunchFilterCollection();
 
-    var TIME_UPDATE = 30000;
-    var TIME_UPDATE_FULL_SCREEN = 60000;
+    var TIME_UPDATE = 60000;
+    var TIME_UPDATE_FULL_SCREEN = 30000;
 
     var DashboardItemView = Epoxy.View.extend({
         className: 'dashboard-item-view',
