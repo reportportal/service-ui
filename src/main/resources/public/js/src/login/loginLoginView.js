@@ -43,9 +43,14 @@ define(function(require, exports, module) {
         events: {
             'click [data-js-login-btn]': 'onSubmitForm',
             'submit [data-js-login-login-form]': 'onSubmitForm',
+
             'mousedown [data-js-toggle-visability]': 'showPassword',
             'mouseup [data-js-toggle-visability]': 'hidePassword',
             'mouseleave [data-js-toggle-visability]': 'hidePassword',
+
+            'touchstart [data-js-toggle-visability]': 'showPassword',
+            'touchend  [data-js-toggle-visability]': 'hidePassword',
+
             'click [data-js-forgot-pass]': 'onForgotPass',
             'focus .rp-input': 'unHighlight'
         },
