@@ -50,6 +50,7 @@ define(function(require, exports, module) {
 
             'touchstart [data-js-toggle-visability]': 'showPassword',
             'touchend  [data-js-toggle-visability]': 'hidePassword',
+            'touchcancel  [data-js-toggle-visability]': 'hidePassword',
 
             'click [data-js-forgot-pass]': 'onForgotPass',
             'focus .rp-input': 'unHighlight'

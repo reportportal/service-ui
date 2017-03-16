@@ -44,6 +44,7 @@ define(function(require, exports, module) {
 
             'touchstart [data-js-toogle-visability]': 'showPass',
             'touchend  [data-js-toogle-visability]': 'hidePass',
+            'touchcancel  [data-js-toogle-visability]': 'hidePass',
 
             'validation:success .rp-input': 'checkFields',
             'click [data-js-reset-pass-btn]': 'submitChangePass'
