@@ -114,6 +114,7 @@ define(function (require, exports, module) {
             this.checkForContextChange(contextName);
             this.validateMainViewForAdmin();
             this.container = $('#mainContainer');
+            //TODO config.project deprecated
             config.project['projectId'] = projectId || config.userModel.get('defaultProject');
             var data = {container: this.container, projectId: projectId, contextName: contextName, subContext: subContext, queryString: queryString};
 
@@ -153,7 +154,7 @@ define(function (require, exports, module) {
         },
 
         projectIsNotLoaded: function () {
-            return !this.currentProjectId || this.currentProjectId !== config.project.projectId;
+            return !this.currentProjectId || this.currentProjectId !== appModel.get('projectId');
         },
 
         preferencesAreNotLoaded: function () {
@@ -238,11 +239,8 @@ define(function (require, exports, module) {
         },
 
         logout: function () {
-            if (config.userModel) {
-                config.userModel.logout();
-                this.currentProjectId = null;
-                Util.ajaxInfoMessenger('logOuted');
-            }
+            this.currentProjectId = null;
+            Util.ajaxInfoMessenger('logOuted');
         },
 
         destroyMainView: function () {
