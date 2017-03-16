@@ -61,11 +61,7 @@ define(function (require, exports, module) {
 
         wrongResponseTo404: function (error) {
             config.userModel.clearLastInsidePage();
-            if (this.currentProjectId) {
-                this.openInvalid(error);
-            } else {
-                this.logout();
-            }
+            this.openInvalid(error);
         },
 
         loadProject: function () {
