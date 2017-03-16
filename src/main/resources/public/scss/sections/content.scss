@@ -59,6 +59,10 @@
     position: relative;
     padding: 0 15px 15px 15px;
     background-color: #ffffff;
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      padding: 0 10px 15px 10px;
+    }
   }
 
   & > #dynamicContent {
