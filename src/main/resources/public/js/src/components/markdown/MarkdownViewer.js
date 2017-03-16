@@ -38,7 +38,7 @@ define(function (require, exports, module) {
         },
         update: function(text) {
             if(text) {
-                var html = this.simpleMDE.markdown(text.escapeScript());
+                var html = this.simpleMDE.markdown(text.escapeScript().indentSpases());
                 var doc = document.createElement('div');
                 var self = this;
                 doc.innerHTML = html;

@@ -126,6 +126,11 @@ define(function (require, exports, module) {
                 return this
                     .replace(/(?!<code>)*<script*>*(?!<\/code>)/gi, ' ');
             };
+            String.prototype.indentSpases = function() {
+                return this.replace(/^ +/gm, function(str) {
+                    return str.replace(/ /g, '&nbsp;')
+                })
+            };
 
             String.prototype.replaceNewLines = function () {
                 return this.replace(/\\r\\n/g, "<br>");
