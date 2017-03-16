@@ -529,7 +529,7 @@
            text-transform: uppercase;
            @media (max-width: $SCREEN_XS_MAX){
              font-size: 14px;
-             margin: 0 15px;
+             margin: 0 0 0 -5px;
            }
 
            .header-crumb {
