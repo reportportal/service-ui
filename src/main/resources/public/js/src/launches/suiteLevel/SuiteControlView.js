@@ -46,7 +46,7 @@ define(function (require, exports, module) {
         computeds: {
             validateForHistoryBtn: function(){
                 var interrupted = config.launchStatus.interrupted,
-                    showBtn = this.parentModel.get('status') !== interrupted && this.launchModel.get('status') !== interrupted && !_.isEmpty(this.collectionItems.models);
+                    showBtn = this.launchModel.get('status') !== interrupted && !_.isEmpty(this.collectionItems.models);
                 return showBtn;
             },
             activeMultiDelete: function() {

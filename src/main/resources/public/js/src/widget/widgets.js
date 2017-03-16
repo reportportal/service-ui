@@ -856,23 +856,20 @@ define(function (require, exports, module) {
             if(items.length){
                 var self = this;
                 var itemsIds = _.uniq(_.map(items, function(item){return item.testItemId}));
+                console.log(itemsIds);
+                console.log(items);
                 Service.getTestItemsInfo(itemsIds)
                     .done(function(response){
-                        _.each(itemsIds, function(id){
+                        /*_.each(itemsIds, function(id){
                             var item = _.find(response, function(d){ return d.id == id; });
                             if(item){
                                 self.calculateItemInfo(item, id);
                             }
-                            else {
-                                $('[data-item-id="' + id + '"]', self.$el).empty().hide();
-                            }
-                        });
+                        });*/
                     })
                     .fail(function (error) {
                         Util.ajaxFailMessenger(error, 'getItemsWidgetBugTable');
-                        _.each(itemsIds, function(id){
-                            $('[data-item-id="' + id + '"]', self.$el).empty().hide();
-                        });
+                        $('[data-js-item]' + id, self.$el).empty();
                     });
             }
         },
