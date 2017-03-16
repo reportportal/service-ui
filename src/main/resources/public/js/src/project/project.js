@@ -183,7 +183,21 @@ define(function(require, exports, module) {
             this.$defect = $("#defectTypes", this.$el);
             this.$demoDataHolder = $("[data-js-demo-data]", this.$el);
 
-            this[this.tab + "Render"]();
+            var self = this;
+            if (!config.project.externalSystem) {
+                Service.getProject()
+                    .done(function (data) {
+                        config.project = data;
+                        self[self.tab + "Render"]();
+                    })
+                    .fail(function (error) {
+                        Util.ajaxFailMessenger(error, 'projectLoad');
+                    });
+            } else {
+                this[this.tab + "Render"]();
+            }
+
+
 
             return this;
         },
@@ -1684,7 +1698,7 @@ define(function(require, exports, module) {
                     });
 
                     var roleOnCurrentProject = config.userModel.get('projects')[this.appModel.get('projectId')].projectRole;
-                    if (roleOnCurrentProject && roleOnCurrentProject !== 'CUSTOMER' && roleOnCurrentProject !== 'MEMBER') {
+                    if ((roleOnCurrentProject && roleOnCurrentProject !== 'CUSTOMER' && roleOnCurrentProject !== 'MEMBER') || config.userModel.get('userRole') === 'ADMINISTRATOR') {
                         this.loadDefaultBtsFields();
                     }
                 }
