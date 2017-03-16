@@ -52,27 +52,15 @@
             font-size: 13px;
             font-family: "OpenSansRegular", sans-serif;
             min-width: 320px;
-            background: #e4e5e6;
+            background:  #FBFFF1;
         }
         .content-err-wrapper {
-            position: relative;
-            background-color: #fbfff2;
-            background-image: url("compiled/img/bg-404-lg.png");
-            background-repeat: no-repeat;
-            background-position: top center;
-            width: 100%;
-            height: 100%;
-            /*background-size: 100%;*/
-        }
-        .content-header {
-            position: absolute;
-            left: 0;
-            right: 0;
-            top: 0;
-            height: 60px;
-            margin: 0px;
-            padding: 0px;
-            background-color: #2b2b2b;
+            position:relative;
+            width: 320px;
+            height: 320px;
+            top: 95px;
+            left: 50%;
+            margin-left: -160px;
         }
         .content-logotip {
             position: absolute;
@@ -80,7 +68,7 @@
             z-index: 1;
             top: 0;
             left: 0;
-            width: 90px;
+            width: 100%;
             height: 60px;
             background-color: #313131;
         }
@@ -106,9 +94,13 @@
             width: 90px;
             background-color: #464547;
         }
+        .content-err{
+            position: relative;
+            top: -320px;
+        }
         .content-err-txt {
             position: relative;
-            padding-top: 430px;
+            padding-top: 318px;
         }
         .content-err-txt p {
             text-align: center;
@@ -121,6 +113,13 @@
             font-weight: 600;
             color: #464547;
         }
+        .content-err::after{
+             position: absolute;
+             top: 170px;
+             left: 50%;
+             margin-left: -152px;
+             content: url('compiled/img/404/404.svg');
+         }
         .content-action {
             position: relative;
             text-align: center;
@@ -145,32 +144,226 @@
             border-color: #39c2d7;
             text-decoration: none;
         }
-
+        .wrapper{
+            width: 100%;
+            height: 100%;
+            min-height: 520px;
+            overflow: hidden;
+        }
         /* view max-width - 321px and min-width - 768px */
-        @media (min-width: 321px) and (max-width: 768px) {
-            .content-err-wrapper {
-                background-image: url("compiled/img/bg-404-sm.png");
-            }
+        @media  (max-width: 768px) {
             .content-err-txt {
-                padding-top: 270px;
+                padding-top: 300px;
             }
         }
 
         /* mobile view max-width - 320px */
         @media (max-width: 320px) {
-            .content-err-wrapper {
-                background-image: url("compiled/img/bg-404-xs.png");
-            }
             .content-err-txt {
-                padding-top: 230px;
+                padding-top: 390px;
             }
         }
-    </style>
+        /*----------------------------------------------------------------*/
+        .round{
+            border-radius: 50%;
+            opacity: 0.3;
+            position: absolute;
+            background: #A3C644;
+            top: 50%;
+            left: 50%;
+        }
+        .round-7{
+            width: 1780px;
+            height: 1780px;
+            margin-top: -890px;
+            margin-left: -890px;
+            box-shadow: rgba(255, 255, 255, 0.4) 0 0 13px;
+        }
+        .round-6{
+            width: 1500px;
+            height: 1500px;
+            margin-top: -750px;
+            margin-left: -750px;
+            box-shadow: rgba(255, 255, 255, 0.4) 0 0 11px;
+        }
+        .round-5{
+            width: 1250px;
+            height: 1250px;
+            margin-top: -625px;
+            margin-left: -625px;
+            box-shadow: rgba(255, 255, 255, 0.4) 0 0 9px;
+        }
+        .round-4{
+            width: 1008px;
+            height: 1008px;
+            margin-top: -504px;
+            margin-left: -504px;
+            box-shadow: rgba(255, 255, 255, 0.4) 0 0 7px;
+        }
+        .round-3{
+            width: 778px;
+            height: 778px;
+            margin-top: -389px;
+            margin-left: -389px;
+            box-shadow: rgba(255, 255, 255, 0.4) 0 0 5px;
+        }
+        .round-2{
+            width: 580px;
+            height: 580px;
+            margin-top: -290px;
+            margin-left: -290px;
+            box-shadow: rgba(255, 255, 255, 0.4) 0 0 3px;
+        }
+        .round-1{
+            width: 416px;
+            height: 416px;
+            margin-top: -208px;
+            margin-left: -208px;
+            box-shadow: rgba(255, 255, 255, 0.4) 0 0 2px;
+        }
+        .round-center {
+            position: absolute;
+            width: 320px;
+            height: 320px;
+        }
+        .red-planet div{
+            background-image: url('compiled/img/404/planet2.png');
+            width: 50px;
+            height: 45px;
+            position: absolute;
+            top: -20px;
+        }
+        .saturn div{
+            background-image: url('compiled/img/404/planet3.png');
+            width: 90px;
+            height: 60px;
+            position: absolute;
+            margin-left: -170px;
+            margin-top: 183px;
+        }
+        .orange-planet div{
+            background-image: url('compiled/img/404/planet1.png');
+            width: 100px;
+            height: 90px;
+            position: absolute;
+            right: -264px;
+            top: 193px;
+        }
+        .orbit-rotation{
+            animation: OrbitRotation 20s linear infinite;
+            transform-origin: center;
+        }
+        .rocket{
+            background-image: url('compiled/img/404/rocket 2.svg');
+            width: 70px;
+            height: 25px;
+            position: absolute;
+            left: -900px;
+            top: 400px;
+            animation: Rocket 8s ease-in infinite;
+        }
+        @keyframes Rocket {
+            0%{ opacity: 0;}
+            1% {opacity: 1;  transform:rotate(-35deg) translateX(0); }
+            99%{ opacity: 1; transform:rotate(-35deg) translateX(800px); }
+            100% {opacity: 0; transform:rotate(-35deg) translateX(800px);}
+        }
+        @keyframes OrbitRotation {
+            from{ transform: rotate(0deg) ; }
+            to{ transform: rotate(360deg) ; }
+        }
+        .self-rotation{
+            animation: SelfRotation 20s linear infinite;
+            transform-origin: center;
+        }
+        @keyframes SelfRotation {
+            from{ transform: rotate(0deg) ; }
+            to{ transform: rotate(-360deg) ; }
+        }
+        .bones{
+            background-image: url(compiled/img/404/bones.svg);
+            width: 210px;
+            height: 90px;
+            position: absolute;
+            right: -1070px;
+            top: -200px;
+            animation: Bones 17s linear infinite ;
+        }
+        @keyframes Bones{
+            0%{ opacity: 0; }
+            1% {opacity: 1;  transform:rotate(-35deg) translateX(0); }
+            50%{ opacity: 1; }
+            100% {opacity: 0; transform:rotate(-35deg) translateX(-2000px);}
+        }
+        .dog{
+            background-image: url(compiled/img/404/dog.svg);
+            width: 150px;
+            height: 120px;
+            position: absolute;
+            right: -1600px;
+            top:-600px;
+            animation: Dog 17s ease-in-out
+            infinite ;
+        }
+        @keyframes Dog{
+            0%{ opacity: 0; }
+            1% {opacity: 1;  transform:rotate(-35deg) translateX(0); }
+            50%{ opacity: 1; }
+            100% {opacity: 0; transform:rotate(-35deg) translateX(-2400px);}
+        }
+        .stars{
+            position: absolute;
+            left: 50%;
+        }
+        .layer-1{
+            top: -38px;
+            background-image: url(compiled/img/404/stars1.svg);
+            width: 1083px;
+            height: 488px;
+            margin-left: -543px;
+            animation: Stars 2s linear infinite;
+        }
+        .layer-2{
+            top: -22px;
+            background-image: url("compiled/img/404/stars2.svg");
+            width: 1155px;
+            height: 464px;
+            margin-left: -577px;
+            animation: Stars 3s ease-in infinite;
+        }
+        @keyframes Stars  {
+            0%{ opacity: 1;}
+            50% {opacity: 0.3;}
+            100% { opacity: 1;}
+        }
 
-    <div class="content-err-wrapper">
-        <div class="content-header"></div>
-        <div class="content-logotip">
-            <a href="/" class="logo"></a>
+    </style>
+    <div class="content-logotip">
+        <a href="/" class="logo"></a>
+    </div>
+    <div class="wrapper">
+        <div class="content-err-wrapper">
+            <div class="round round-7"></div>
+            <div class="round round-6"></div>
+            <div class="round round-5"></div>
+            <div class="round round-4"></div>
+            <div class="round round-3"></div>
+            <div class="round round-2"></div>
+            <div class="round round-1"></div>
+            <div class="stars layer-1"></div>
+            <div class="stars layer-2"></div>
+            <div class="orbit-rotation round-center red-planet">
+                <div class="self-rotation"></div>
+            </div>
+            <div class="orbit-rotation round-center saturn">
+                <div class="self-rotation"></div>
+            </div>
+            <div class="orbit-rotation round-center orange-planet">
+                <div class="self-rotation"></div>
+            </div>
+            <div class="rocket"></div>
+            <div class="bones"></div>
+            <div class="dog"></div>
         </div>
         <!-- <div class="content-left"></div> -->
         <div class="content-err">
@@ -183,5 +376,7 @@
             </div>
         </div>
     </div>
+
+
 </body>
 </html>
