@@ -1682,9 +1682,8 @@ define(function(require, exports, module) {
                         fields: [],
                         editable: true
                     });
-
                     var roleOnCurrentProject = config.userModel.get('projects')[this.appModel.get('projectId')].projectRole;
-                    if (roleOnCurrentProject && roleOnCurrentProject !== 'CUSTOMER' && roleOnCurrentProject !== 'MEMBER') {
+                    if ((roleOnCurrentProject && roleOnCurrentProject !== 'CUSTOMER' && roleOnCurrentProject !== 'MEMBER') || config.userModel.get('userRole') === 'ADMINISTRATOR') {
                         this.loadDefaultBtsFields();
                     }
                 }
