@@ -123,7 +123,7 @@ define(function (require, exports, module) {
                 dependenciesCalls.push(this.loadPreferences());
             }
 
-            if (this.projectIsNotLoaded(this.projectId) || this.isSettingsPage(this.contextName)) {
+            if (appModel.get('projectId') != projectId) {
                 dependenciesCalls.push(this.loadProject());
             }
             this.destroyInvalidView();
@@ -151,10 +151,6 @@ define(function (require, exports, module) {
             } else {
                 renderPage();
             }
-        },
-
-        projectIsNotLoaded: function () {
-            return !this.currentProjectId || this.currentProjectId !== appModel.get('projectId');
         },
 
         preferencesAreNotLoaded: function () {
