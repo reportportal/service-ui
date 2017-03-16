@@ -87,6 +87,10 @@ define(function (require, exports, module) {
         },
 
         openAdmin: function (page, id, action, queryString) {
+            if (!config.userModel.get('isAdmin')) {
+                config.router.navigate(config.userModel.get('defaultProject'), {trigger: true});
+                return;
+            }
             this.prepareInsideView();
             this.currentContext = page;
             if(id) {
