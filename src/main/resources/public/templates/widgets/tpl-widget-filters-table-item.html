@@ -1,0 +1,278 @@
+<% var projectUrl = data.projectUrl; id = data.item.id %>
+<div class="overflow-wrapper">
+    <div class="col-xs-12 col-sm-5 nopadding">
+        <div class="col-xs-12 col-sm-6">
+            <div class="name-grid-overflow">
+                <i class="accordion-arrow rp-icons rp-icons-expand" data-js-toggle-open></i>
+                <h5 class="rp-grid-name">
+                    <a class="navigateable rp-blue-link-undrl" href="" data-js-name-link><span data-js-name></span><span
+                        data-js-launch-number></span></a>
+                </h5>
+                <ul class="rp-grid-tags">
+                    <% if(data.item.userRef){ %>
+                    <li title="Owner" class="rp-launch-owner owner">
+                        <i class="material-icons">person</i>
+                        <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.in.user=<%- data.item.userRef %>"
+                           data-js-user-tag data-tag="<%- data.item.userRef %>"><%- data.item.userRef %></a>
+                    </li>
+                    <% } %>
+                    <% var tags = data.item.tags %>
+                    <% if(tags){ %>
+                    <li class="rp-launch-tags" data-js-tags-container>
+                        <i class="rp-icons rp-icons-ticket"></i>
+                        <% _.each(tags.split(','), function(tag){ %>
+                        <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.has.tags=<%- tag %>"
+                           data-js-tag data-tag="<%- tag %>" class="text-muted tag"><%- tag %></a>
+                        <% }); %>
+                    </li>
+                    <% } %>
+                </ul>
+                <div class="rp-grid-description" data-js-description></div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-2 ftp-cols">
+            <% if (data.item.status) { %>
+            <div class="rp-table-td">
+                <span class="visible-xs-inline showTimeTip"><b><%= data.text.launches.prefixStatus %></b></span>
+                <%= data.text.launchStatus[data.item.status] %>
+            </div>
+            <% } %>
+        </div>
+        <div class="col-xs-6 col-sm-2 show-time ftp-cols">
+            <% if (data.criteria.start_time) { %>
+            <% if (data.item.startTime) { %>
+            <% var date = parseInt(data.item.startTime), fullTime = data.dateFormat(date); %>
+            <div class="hoverFullTime">
+                        <span class="visible-xs-inline showTimeTip"><b><%= data.text.launches.prefixStartTime
+                            %></b></span>
+                <span class="timeMoment timeHover"><%= data.moment(fullTime).fromNow() %></span>
+                <span class="time-full timeHover hidden"><%= fullTime %></span>
+                <span class="time-ms hidden"><%= date %></span>
+            </div>
+            <% } %>
+            <% } %>
+        </div>
+        <div class="col-xs-6 col-sm-2 ftp-cols">
+            <% if (data.criteria.end_time) { %>
+            <% if (data.item.end_time){ %>
+            <% var date = parseInt(data.item.end_time), fullTime = data.dateFormat(date); %>
+            <div class="hoverFullTime">
+                            <span class="visible-xs-inline showTimeTip"><b><%= data.text.launches.finishTime
+                                %></b></span>
+                <span class="timeMoment timeHover"><%= data.moment(fullTime).fromNow() %></span>
+                <span class="time-full timeHover hidden"><%= fullTime %></span>
+                <span class="time-ms hidden"><%= date %></span>
+            </div>
+            <% } else if(data.item.status == 'IN_PROGRESS') { %>
+            <img alt="<%= data.text.launches.inProgress %>" src="img/time-in-progress.gif"
+                 title="<%= data.text.launches.inProgress %>">
+            <% } %>
+            <% } %>
+        </div>
+    </div>
+    <div class="accordion-block">
+        <i class="material-icons" data-js-toggle-open="">keyboard_arrow_down</i>
+        <i class="material-icons little" data-js-toggle-open="">keyboard_arrow_up</i>
+    </div>
+</div>
+<div class="statistics-block">
+    <div class="col-xs-12 col-sm-5 nopadding empty-coll"></div>
+    <div class="col-xs-12 col-sm-7 nopadding rp-mobile-padding">
+        <div class="col-xs-12 col-sm-6 nopadding">
+            <% if (data.criteria.total) { %>
+            <% var total = data.item.statistics$executionCounter$total; %>
+            <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors total">
+                <div class="filter-tb-td">
+                    <% if(total && total !== '0'){ %>
+                    <a class="cases-view rp-blue-link-undrl"
+                       href="<%= data.allCasesUrl('total') %>"><%= total %></a>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.total%></p>
+                    <% } else { %>
+                    <span class="text-muted visible-xs-inline">0</span>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.total%></p>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+            <% if (data.criteria.passed) { %>
+            <% var passed = data.item.statistics$executionCounter$passed; %>
+            <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors passed">
+                <div class="filter-tb-td">
+                    <% if(passed && passed !== '0'){ %>
+                    <a class="cases-view rp-blue-link-undrl"
+                       href="<%= data.allCasesUrl('passed') %>"><%= passed %></a>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.passed%></p>
+                    <% } else { %>
+                    <span class="text-muted visible-xs-inline">0</span>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.passed%></p>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+            <% if (data.criteria.failed) { %>
+            <% var failed = data.item.statistics$executionCounter$failed; %>
+            <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors failed">
+                <div class="filter-tb-td">
+                    <% if(failed && failed !== '0'){ %>
+                    <a class="cases-view rp-blue-link-undrl"
+                       href="<%= data.allCasesUrl('failed') %>"><%= failed %></a>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.failed%></p>
+                    <% } else { %>
+                    <span class="text-muted visible-xs-inline">0</span>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.failed%></p>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+            <% if (data.criteria.skipped) { %>
+            <% var skipped = data.item.statistics$executionCounter$skipped; %>
+            <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors skipped">
+                <div class="filter-tb-td">
+                    <% if(skipped && skipped !== '0'){ %>
+                    <a class="cases-view rp-blue-link-undrl"
+                       href="<%= data.allCasesUrl('skipped') %>"><%= skipped %></a>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.skipped%></p>
+                    <% } else { %>
+                    <span class="text-muted visible-xs-inline">0</span>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.skipped%></p>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+        </div>
+        <div class="col-xs-12 col-sm-6 nopadding">
+            <% if (data.criteria.product_bug) { %>
+            <% var product_bugs = data.item.statistics$issueCounter$productBug; %>
+            <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors pb">
+                <div class="filter-tb-td">
+                    <% if(product_bugs && product_bugs.total){ %>
+                    <% var total = product_bugs.total,
+                    stats = 'product_bug',
+                    link = data.allCasesUrl(stats),
+                    value = product_bugs; %>
+                    <div class="launch-suite-defects" data-js-launch-defect data-defect-type="<%= stats %>"
+                         id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
+                        <a href="<%- link %>" class="chart-overflow">
+                            <svg data-js-chart></svg>
+                            <div class="total-overflow">
+                                        <span class="pr-grid-defect-total"
+                                              style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
+                                            <%= total %>
+                                        </span>
+                            </div>
+                        </a>
+                    </div>
+                            <span class="visible-xs cases-view ">
+                                <a href="<%- link %>" class="rp-blue-link-undrl"
+                                   data-id="<%- id %>">
+                                    <%- total %>
+                                </a>
+                            </span>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.product_bug %></p>
+                    <% } else { %>
+                    <span class="text-muted visible-xs-inline">0</span>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.product_bug %></p>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+            <% if (data.criteria.automation_bug){ %>
+            <% var test_bugs = data.item.statistics$issueCounter$automationBug; %>
+            <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors ab">
+                <div class="filter-tb-td">
+                    <% if(test_bugs && test_bugs.total){ %>
+                    <% var total = test_bugs.total,
+                    stats = 'automation_bug',
+                    link = data.allCasesUrl(stats),
+                    value = test_bugs; %>
+                    <div class="launch-suite-defects" data-js-launch-defect data-defect-type="<%= stats %>"
+                         id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
+                        <a href="<%- link %>" class="chart-overflow">
+                            <svg data-js-chart></svg>
+                            <div class="total-overflow">
+                                        <span class="pr-grid-defect-total"
+                                              style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
+                                            <%= total %>
+                                        </span>
+                            </div>
+                        </a>
+                    </div>
+                            <span class="visible-xs cases-view ">
+                                <a href="<%- link %>" class="rp-blue-link-undrl"
+                                   data-id="<%- id %>">
+                                    <%- total %>
+                                </a>
+                            </span>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.automation_bug %></p>
+                    <% } else { %>
+                    <span class="text-muted visible-xs-inline">0</span>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.automation_bug %></p>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+            <% if (data.criteria.system_issue){ %>
+            <% var system_issue = data.item.statistics$issueCounter$systemIssue; %>
+            <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors si">
+                <div class="filter-tb-td">
+                    <% if(system_issue && system_issue.total){ %>
+                    <% var total = system_issue.total,
+                    stats = 'system_issue',
+                    link = data.allCasesUrl(stats),
+                    value = system_issue; %>
+                    <div class="launch-suite-defects" data-js-launch-defect data-defect-type="<%= stats %>"
+                         id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
+                        <a href="<%- link %>" class="chart-overflow">
+                            <svg data-js-chart></svg>
+                            <div class="total-overflow">
+                                        <span
+                                            style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
+                                            <%= total %>
+                                        </span>
+                            </div>
+                        </a>
+                    </div>
+                            <span class="visible-xs cases-view ">
+                                <a href="<%- link %>" class="rp-blue-link-undrl"
+                                   data-id="<%- id %>">
+                                    <%- total %>
+                                </a>
+                            </span>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.system_issue %></p>
+                    <% } else { %>
+                    <span class="text-muted visible-xs-inline">0</span>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.system_issue %></p>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+            <% if (data.criteria.to_investigate){ %>
+            <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors ti">
+                <div class="filter-tb-td">
+                    <% var to_investigate = data.item.statistics$issueCounter$toInvestigate; %>
+                    <% if(to_investigate && to_investigate.total){ %>
+                    <% var total = to_investigate.total,
+                    stats = 'to_investigate',
+                    link = data.allCasesUrl(stats),
+                    value = to_investigate,
+                    tiColor = data.getDefectColor(value, stats, data.defectTypes); %>
+                    <a href="<%- link %>"
+                       style="background: <%= tiColor %>; border-color: <%= tiColor %>"
+                       class="rp-ti-badge hidden-xs-inline" data-id="<%- id %>">
+                        <%- total %>
+                    </a>
+                    <a class="cases-view rp-blue-link-undrl visible-xs-inline"
+                       href="<%- link %>">
+                        <%= total %>
+                    </a>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.to_investigate %></p>
+                    <% } else { %>
+                    <span class="text-muted visible-xs-inline">0</span>
+                    <p class="visible-xs cell-name"><%= data.text.launchesHeaders.to_investigate %></p>
+                    <% } %>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,5 @@
 <div class="launches-table-panel">
-    <% if (data.items && !_.isEmpty(data.items)) { %>
+    <% if (!data.noItems) { %>
     <div class="container-fluid">
         <div class="row rp-grid-thead hidden-xs">
             <div class="col-xs-12 col-sm-5 nopadding">
@@ -10,17 +10,20 @@
                 </div>
                 <div class="col-xs-12 col-sm-2 ftp-cols">
                     <% if (data.criteria.status) { %>
-                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.filterNameById.status %></span></div>
+                    <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.filterNameById.status %></span>
+                    </div>
                     <% } %>
                 </div>
                 <div class="col-xs-6 col-sm-2 ftp-cols">
                     <% if (data.criteria.start_time) { %>
-                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.launchesHeaders.start_time %></span></div>
+                    <div class="rp-grid-th"><span
+                        class="rp-grid-th-name"><%= data.text.launchesHeaders.start_time %></span></div>
                     <% } %>
                 </div>
                 <div class="col-xs-6 col-sm-2 ftp-cols">
                     <% if (data.criteria.end_time) { %>
-                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.launchesHeaders.end_time %></span></div>
+                    <div class="rp-grid-th"><span
+                        class="rp-grid-th-name"><%= data.text.launchesHeaders.end_time %></span></div>
                     <% } %>
                 </div>
             </div>
@@ -28,311 +31,61 @@
                 <div class="col-xs-12 col-sm-6 nopadding">
                     <% if (data.criteria.total) { %>
                     <div class="col-xs-3 col-sm-3 ftp-cols">
-                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.launchesHeaders.total %></span></div>
+                        <div class="rp-grid-th"><span
+                            class="rp-grid-th-name"><%= data.text.launchesHeaders.total %></span></div>
                     </div>
                     <% } %>
                     <% if (data.criteria.passed) { %>
                     <div class="col-xs-3 col-sm-3 ftp-cols">
-                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.launchesHeaders.passed %></span></div>
+                        <div class="rp-grid-th"><span
+                            class="rp-grid-th-name"><%= data.text.launchesHeaders.passed %></span></div>
                     </div>
                     <% } %>
                     <% if (data.criteria.failed) { %>
                     <div class="col-xs-3 col-sm-3 ftp-cols">
-                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.launchesHeaders.failed %></span></div>
+                        <div class="rp-grid-th"><span
+                            class="rp-grid-th-name"><%= data.text.launchesHeaders.failed %></span></div>
                     </div>
                     <% } %>
                     <% if (data.criteria.skipped) { %>
                     <div class="col-xs-3 col-sm-3 ftp-cols">
-                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.launchesHeaders.skipped %></span></div>
+                        <div class="rp-grid-th"><span
+                            class="rp-grid-th-name"><%= data.text.launchesHeaders.skipped %></span></div>
                     </div>
                     <% } %>
                 </div>
                 <div class="col-xs-12 col-sm-6 nopadding">
                     <% if (data.criteria.product_bug) { %>
                     <div class="col-xs-3 col-sm-3 ftp-cols">
-                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.launchesHeaders.product_bug %></span></div>
+                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.launchesHeaders.product_bug %></span>
+                        </div>
                     </div>
                     <% } %>
                     <% if (data.criteria.automation_bug) { %>
                     <div class="col-xs-3 col-sm-3 ftp-cols">
-                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.launchesHeaders.automation_bug %></span></div>
+                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.launchesHeaders.automation_bug %></span>
+                        </div>
                     </div>
                     <% } %>
                     <% if (data.criteria.system_issue) { %>
                     <div class="col-xs-3 col-sm-3 ftp-cols">
-                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.launchesHeaders.system_issue %></span></div>
+                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.launchesHeaders.system_issue %></span>
+                        </div>
                     </div>
                     <% } %>
                     <% if (data.criteria.to_investigate) { %>
                     <div class="col-xs-3 col-sm-3 ftp-cols" style="overflow: hidden;">
-                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%=  data.text.launchesHeaders.to_investigate %></span></div>
-                    </div>
-                    <% } %>
-                </div>
-            </div>
-        </div>
-        <% _.each(data.items, function(item){ %>
-        <% var id = item.id, projectUrl = data.project.projectId; %>
-        <div class="row rp-table-row" id="<%= id %>">
-            <div class="col-xs-12 col-sm-5 nopadding">
-                <div class="col-xs-12 col-sm-6">
-                    <h5 class="rp-grid-name">
-                        <a class="navigateable rp-blue-link-undrl" href="#<%- projectUrl %>/launches/all/<%= id %>">
-                            <%- item.name %>
-                            <%- (item.number) ? '#' + item.number : '' %>
-                        </a>
-                    </h5>
-                    <% if(item.description){ %>
-                    <div class="rp-grid-description nicescroll-it"><%- item.description %></div>
-                    <% } %>
-                    <ul class="rp-grid-tags">
-                        <% if(item.userRef){ %>
-                        <li title="Owner" class="rp-launch-owner owner">
-                            <i class="material-icons">person</i>
-                            <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.in.user=<%- item.userRef %>" data-js-user-tag data-tag="<%- item.userRef %>"><%- item.userRef %></a>
-                        </li>
-                        <% } %>
-                        <% var tags = item.tags %>
-                        <% if(tags){ %>
-                        <li class="rp-launch-tags" data-js-tags-container>
-                            <i class="rp-icons rp-icons-ticket"></i>
-                            <% _.each(tags.split(','), function(tag){ %>
-                            <a href="#<%- projectUrl %>/launches/all?page.page=1&amp;page.sort=start_time,DESC&amp;page.size=50&filter.has.tags=<%- tag %>" data-js-tag data-tag="<%- tag %>" class="text-muted tag"><%- tag %></a>
-                            <% }); %>
-                        </li>
-                        <% } %>
-                    </ul>
-                </div>
-                <div class="col-xs-12 col-sm-2 ftp-cols">
-                    <% if (item.status) { %>
-                    <div class="rp-table-td">
-                        <span class="visible-xs-inline showTimeTip"><b><%= data.text.launches.prefixStatus %></b></span>
-                        <%= data.text.launchStatus[item.status] %>
-                    </div>
-                    <% } %>
-                </div>
-                <div class="col-xs-6 col-sm-2 show-time ftp-cols">
-                    <% if (data.criteria.start_time) { %>
-                        <% if (item.startTime) { %>
-                        <% var date = parseInt(item.startTime), fullTime = data.dateFormat(date); %>
-                        <div class="hoverFullTime">
-                            <span class="visible-xs-inline showTimeTip"><b><%= data.text.launches.prefixStartTime %></b></span>
-                            <span class="timeMoment timeHover"><%= data.moment(fullTime).fromNow() %></span>
-                            <span class="time-full timeHover hidden"><%= fullTime %></span>
-                            <span class="time-ms hidden"><%= date %></span>
-                        </div>
-                        <% } %>
-                    <% } %>                </div>
-                <div class="col-xs-6 col-sm-2 ftp-cols">
-                    <% if (data.criteria.end_time) { %>
-                        <% if (item.end_time){ %>
-                        <% var date = parseInt(item.end_time), fullTime = data.dateFormat(date); %>
-                        <div class="hoverFullTime">
-                            <span class="visible-xs-inline showTimeTip"><b><%= data.text.launches.finishTime %></b></span>
-                            <span class="timeMoment timeHover"><%= data.moment(fullTime).fromNow() %></span>
-                            <span class="time-full timeHover hidden"><%= fullTime %></span>
-                            <span class="time-ms hidden"><%= date %></span>
-                        </div>
-                        <% } else if(item.status == 'IN_PROGRESS') { %>
-                        <img alt="<%= data.text.launches.inProgress %>" src="img/time-in-progress.gif" title="<%= data.text.launches.inProgress %>">
-                        <% } %>
-                    <% } %>
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-7 nopadding rp-mobile-padding">
-                <div class="col-xs-12 col-sm-6 nopadding">
-                    <% if (data.criteria.total) { %>
-                    <% var total = item.statistics$executionCounter$total; %>
-                    <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors total">
-                        <div class="filter-tb-td">
-                        <% if(total && total !== '0'){ %>
-                        <a class="cases-view rp-blue-link-undrl" href="<%- data.linkToRedirectService('total', id) %>"><%= total %></a>
-                        <p class="visible-xs cell-name"><%= data.text.launchesHeaders.total%></p>
-                        <% } else { %>
-                        <span class="text-muted visible-xs-inline">0</span>
-                        <p class="visible-xs cell-name"><%= data.text.launchesHeaders.total%></p>
-                        <% } %>
-                        </div>
-                    </div>
-                    <% } %>
-                    <% if (data.criteria.passed) { %>
-                    <% var passed = item.statistics$executionCounter$passed; %>
-                    <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors passed">
-                        <div class="filter-tb-td">
-                        <% if(passed && passed !== '0'){ %>
-                        <a class="cases-view rp-blue-link-undrl" href="<%- data.linkToRedirectService('passed', id) %>"><%= passed %></a>
-                        <p class="visible-xs cell-name"><%= data.text.launchesHeaders.passed%></p>
-                        <% } else { %>
-                        <span class="text-muted visible-xs-inline">0</span>
-                        <p class="visible-xs cell-name"><%= data.text.launchesHeaders.passed%></p>
-                        <% } %>
-                        </div>
-                    </div>
-                    <% } %>
-                    <% if (data.criteria.failed) { %>
-                    <% var failed = item.statistics$executionCounter$failed; %>
-                    <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors failed">
-                        <div class="filter-tb-td">
-                        <% if(failed && failed !== '0'){ %>
-                        <a class="cases-view rp-blue-link-undrl" href="<%- data.linkToRedirectService('failed', id) %>"><%= failed %></a>
-                        <p class="visible-xs cell-name"><%= data.text.launchesHeaders.failed%></p>
-                        <% } else { %>
-                        <span class="text-muted visible-xs-inline">0</span>
-                        <p class="visible-xs cell-name"><%= data.text.launchesHeaders.failed%></p>
-                        <% } %>
-                        </div>
-                    </div>
-                    <% } %>
-                    <% if (data.criteria.skipped) { %>
-                    <% var skipped = item.statistics$executionCounter$skipped; %>
-                    <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors skipped">
-                        <div class="filter-tb-td">
-                        <% if(skipped && skipped !== '0'){ %>
-                        <a class="cases-view rp-blue-link-undrl" href="<%- data.linkToRedirectService('skipped', id) %>"><%= skipped %></a>
-                        <p class="visible-xs cell-name"><%= data.text.launchesHeaders.skipped%></p>
-                        <% } else { %>
-                        <span class="text-muted visible-xs-inline">0</span>
-                        <p class="visible-xs cell-name"><%= data.text.launchesHeaders.skipped%></p>
-                        <% } %>
-                        </div>
-                    </div>
-                    <% } %>
-                </div>
-                <div class="col-xs-12 col-sm-6 nopadding">
-                    <% if (data.criteria.product_bug) { %>
-                    <% var product_bugs = item.statistics$issueCounter$productBug; %>
-                    <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors pb">
-                        <div class="filter-tb-td">
-                        <% if(product_bugs && product_bugs.total){ %>
-                            <% var total = product_bugs.total,
-                                stats = 'product_bug',
-                                link = data.linkToRedirectService('productBug', id),
-                                value = product_bugs; %>
-                            <div class="launch-suite-defects" data-js-launch-defect data-defect-type="<%= stats %>" id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
-                                <a href="<%- link %>" class="chart-overflow">
-                                    <svg data-js-chart></svg>
-                                    <div class="total-overflow">
-                                        <span class="pr-grid-defect-total" style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
-                                            <%= total %>
-                                        </span>
-                                    </div>
-                                </a>
-                            </div>
-                            <span class="visible-xs cases-view ">
-                                <a href="<%- link %>" class="rp-blue-link-undrl"
-                                   data-id="<%- id %>">
-                                    <%- total %>
-                                </a>
-                            </span>
-                            <p class="visible-xs cell-name"><%= data.text.launchesHeaders.product_bug %></p>
-                        <% } else { %>
-                            <span class="text-muted visible-xs-inline">0</span>
-                            <p class="visible-xs cell-name"><%= data.text.launchesHeaders.product_bug %></p>
-                        <% } %>
-                        </div>
-                    </div>
-                    <% } %>
-                    <% if (data.criteria.automation_bug){ %>
-                    <% var test_bugs = item.statistics$issueCounter$automationBug; %>
-                    <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors ab">
-                        <div class="filter-tb-td">
-                        <% if(test_bugs && test_bugs.total){ %>
-                            <% var total = test_bugs.total,
-                                stats = 'automation_bug',
-                                link = data.linkToRedirectService('automationBug', id),
-                                value = test_bugs; %>
-                            <div class="launch-suite-defects" data-js-launch-defect data-defect-type="<%= stats %>" id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
-                                <a href="<%- link %>" class="chart-overflow">
-                                    <svg data-js-chart></svg>
-                                    <div class="total-overflow">
-                                        <span class="pr-grid-defect-total" style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
-                                            <%= total %>
-                                        </span>
-                                    </div>
-                                </a>
-                            </div>
-                            <span class="visible-xs cases-view ">
-                                <a href="<%- link %>" class="rp-blue-link-undrl"
-                                   data-id="<%- id %>">
-                                    <%- total %>
-                                </a>
-                            </span>
-                            <p class="visible-xs cell-name"><%= data.text.launchesHeaders.automation_bug %></p>
-                        <% } else { %>
-                            <span class="text-muted visible-xs-inline">0</span>
-                            <p class="visible-xs cell-name"><%= data.text.launchesHeaders.automation_bug %></p>
-                        <% } %>
-                        </div>
-                    </div>
-                    <% } %>
-                    <% if (data.criteria.system_issue){ %>
-                    <% var system_issue = item.statistics$issueCounter$systemIssue; %>
-                    <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors si">
-                        <div class="filter-tb-td">
-                        <% if(system_issue && system_issue.total){ %>
-                            <% var total = system_issue.total,
-                                stats = 'system_issue',
-                                link = data.linkToRedirectService('systemIssue', id),
-                                value = system_issue; %>
-                            <div class="launch-suite-defects" data-js-launch-defect data-defect-type="<%= stats %>" id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
-                                <a href="<%- link %>" class="chart-overflow">
-                                    <svg data-js-chart></svg>
-                                    <div class="total-overflow">
-                                        <span style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
-                                            <%= total %>
-                                        </span>
-                                    </div>
-                                </a>
-                            </div>
-                            <span class="visible-xs cases-view ">
-                                <a href="<%- link %>" class="rp-blue-link-undrl"
-                                   data-id="<%- id %>">
-                                    <%- total %>
-                                </a>
-                            </span>
-                            <p class="visible-xs cell-name"><%= data.text.launchesHeaders.system_issue %></p>
-                        <% } else { %>
-                            <span class="text-muted visible-xs-inline">0</span>
-                            <p class="visible-xs cell-name"><%= data.text.launchesHeaders.system_issue %></p>
-                        <% } %>
-                        </div>
-                    </div>
-                    <% } %>
-                    <% if (data.criteria.to_investigate){ %>
-                    <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors ti">
-                        <div class="filter-tb-td">
-                        <% var to_investigate = item.statistics$issueCounter$toInvestigate; %>
-                        <% if(to_investigate && to_investigate.total){ %>
-                            <% var total = to_investigate.total,
-                                stats = 'to_investigate',
-                                link = data.linkToRedirectService('toInvestigate', id),
-                                value = to_investigate,
-                                tiColor = data.getDefectColor(value, stats, data.defectTypes); %>
-                            <a href="<%- link %>"
-                               style="background: <%= tiColor %>; border-color: <%= tiColor %>"
-                               class="rp-ti-badge hidden-xs-inline" data-id="<%- id %>">
-                                <%- total %>
-                            </a>
-                            <a class="cases-view rp-blue-link-undrl visible-xs-inline"
-                               href="<%- link %>">
-                                <%= total %>
-                            </a>
-                            <p class="visible-xs cell-name"><%=  data.text.launchesHeaders.to_investigate %></p>
-                        <% } else { %>
-                            <span class="text-muted visible-xs-inline">0</span>
-                            <p class="visible-xs cell-name"><%=  data.text.launchesHeaders.to_investigate %></p>
-                        <% } %>
+                        <div class="rp-grid-th"><span class="rp-grid-th-name"><%=  data.text.launchesHeaders.to_investigate %></span>
                         </div>
                     </div>
                     <% } %>
                 </div>
             </div>
         </div>
-        <% }) %>
+        <div data-js-items></div>
     </div>
     <% } else { %>
-        <div class="no-data-error"><%= data.text.widgets.noData %></div>
+    <div class="no-data-error"><%= data.text.widgets.noData %></div>
     <% } %>
-
     <div class="mobile-disabling-cover"></div>
 </div>
