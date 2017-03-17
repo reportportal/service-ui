@@ -87,9 +87,9 @@ define(function (require, exports, module) {
         },
         onClickImg: function() {
             config.trackingDispatcher.trackEventNumber(212);
-            var modal,
-                contentType = this.model.get('binary_content').content_type,
-                binaryId = this.model.get('binary_content').id;
+            var modal;
+            var contentType = this.model.get('binary_content').content_type;
+            var binaryId = this.model.get('binary_content').id;
 
             //this.model.trigger('click:attachment', this.model); // open's image in gallery.
             if (~contentType.indexOf('image/')) {

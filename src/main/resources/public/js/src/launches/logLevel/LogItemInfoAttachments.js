@@ -30,6 +30,8 @@ define(function (require, exports, module) {
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
     var ItemAttachmentModel = require('launches/logLevel/LogItemModel');
+    var ModalLogAttachmentImage = require('modals/modalLogAttachmentImage');
+    var ModalLogAttachmentBinary = require('modals/modalLogAttachmentBinary');
 
     var PAGE_SIZE = 6;
 
@@ -152,7 +154,7 @@ define(function (require, exports, module) {
         template: 'tpl-launch-log-item-info-attachments-main-item',
 
         events: {
-            'click [data-js-rotate]': 'onClickRotate'
+            'click [data-js-main-image]': 'onClickMainImage',
         },
 
         bindings: {
@@ -160,13 +162,27 @@ define(function (require, exports, module) {
         },
 
         initialize: function() {
-            this.rotate = 0;
             this.render();
             this.listenTo(this.model, 'change:id', this.onChangeId);
         },
-        onClickRotate: function() {
-            this.rotate += 90;
-            $('[data-js-main-image] img', this.$el).css('transform', 'rotate('+this.rotate+'deg)');
+        onClickMainImage: function() {
+            var modal;
+            var contentType = this.model.get('binary_content').content_type;
+            var binaryId = this.model.get('binary_content').id;
+
+            if (~contentType.indexOf('image/')) {
+                modal = new ModalLogAttachmentImage({
+                    imageId: binaryId,
+                });
+                modal.show();
+            } else {
+                var language = contentType.split('/')[1];
+                modal = new ModalLogAttachmentBinary({
+                    binaryId: binaryId,
+                    language: language
+                });
+                modal.show();
+            }
         },
         onChangeId: function(model, id) {
             this.rotate = 0;
