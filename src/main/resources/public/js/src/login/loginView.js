@@ -40,6 +40,9 @@ define(function(require, exports, module) {
 
         className: 'login-page',
         template: 'tpl-new-login',
+        events: {
+            'click [data-js-logo]': 'onClickLogo',
+        },
 
         bindings: {
             '[data-js-build-versions]': 'html: fullServicesHtml',
@@ -120,7 +123,9 @@ define(function(require, exports, module) {
             this.listenTo(this.loginSubView, 'closeResetPass', this.openLogin);
             this.subviewContainer.html(this.loginSubView.el);
         },
-
+        onClickLogo: function() {
+            window.open('http://reportportal.io/');
+        },
         blockLoginForm: function () {
             var date = Date.now();
             this.storage.setItem('login_block_time', date)
