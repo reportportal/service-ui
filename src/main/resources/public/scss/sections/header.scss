@@ -111,6 +111,10 @@
            padding-right: 0;
          }
 
+         @media(min-width: $SCREEN_SM_MIN) {
+           padding: 16px 5px 11px 15px;
+         }
+
          @media (max-width: $SCREEN_XS_MAX) {
            position: relative;
            box-shadow: none;
@@ -522,7 +526,7 @@
          }
 
          .admin_header {
-           margin: 5px 15px;
+           margin: 5px 0;
            padding: 0;
            @include fontHeader;
            font-size: 20px;
@@ -543,7 +547,6 @@
 
          .admin_header_controls {
            text-align: right;
-           margin-right: 15px;
            @media (max-width: $SCREEN_XS_MAX){
              display: none;
            }
@@ -583,7 +586,7 @@
            }
 
            .logout {
-             padding: 8px 19px 9px;
+             padding: 8px 0 9px 20px;
              font-size: 13px;
            }
          }
