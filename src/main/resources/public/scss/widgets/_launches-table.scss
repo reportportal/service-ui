@@ -68,8 +68,9 @@
     .overflow-wrapper {
       position: relative;
       padding: 13px 0;
-      max-height: 200px;
+      //max-height: 200px;
       overflow: hidden;
+      @extend %CLEAR_FIX;
       .accordion-arrow {
         position: absolute;
         display: block;

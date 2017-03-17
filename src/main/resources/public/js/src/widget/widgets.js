@@ -526,6 +526,7 @@ define(function (require, exports, module) {
             return criteria;
         },
         render: function () {
+            this.renderedItems = [];
             this.items = this.getData();
 
             var params = {
@@ -557,7 +558,22 @@ define(function (require, exports, module) {
                     link: this.getLink()
                 });
                 $('[data-js-items]', this.$el).append(item.$el);
+
+                this.renderedItems.push(item);
             }, this);
+        },
+
+        activateAccordions: function(){
+            _.each(this.renderedItems, function(view) {
+                view.activateAccordion && view.activateAccordion();
+            });
+        },
+
+        destroy: function(){
+            _.each(this.renderedItems, function(view) {
+                view.destroy && view.destroy();
+            });
+            BaseWidget.prototype.destroy.call(this);
         }
 
     });
@@ -565,7 +581,7 @@ define(function (require, exports, module) {
     var FilterResultsTableItem = Epoxy.View.extend({
         className: 'row rp-table-row',
         tpl: 'tpl-widget-filters-table-item',
-        toolTipContent: 'tpl-launches-tooltip-defects',
+        toolTipContent: 'tpl-launches-table-tooltip-defects',
         bindings: {
             '[data-js-name-link]': 'attr: {href: getItemUrl}',
             '[data-js-name]': 'text: name',
@@ -592,12 +608,15 @@ define(function (require, exports, module) {
             this.appModel = new SingletonAppModel();
             this.defectTypes = new SingletonDefectTypeCollection();
             this.render();
-            var self = this;
             this.markdownViewer = new MarkdownViewer({text: this.model.get('description')});
             $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
+            var self = this;
             this.listenTo(this.model, 'change:description', function(model, description){ self.markdownViewer.update(description); });
-            this.listenTo(this.model, 'change:description change:tags', this.activateAccordion);
-            this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
+            //this.listenTo(this.model, 'change:description change:tags', this.activateAccordion);
+            //this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
+            setTimeout(function(){
+                self.renderDefects();
+            }, 100);
         },
         render: function(){
             this.$el.html(Util.templates(this.tpl, {
@@ -611,14 +630,10 @@ define(function (require, exports, module) {
                 widgetId: this.widgetId,
                 moment: Moment
             }));
-            var self = this;
-            setTimeout(function(){
-                self.renderDefects();
-            }, 100);
         },
         activateAccordion: function() {
             var innerHeight = 198;
-            if($(window).width() < 887) {
+            if($(window).width() < 900) {
                 innerHeight = 318;
             }
             if (this.$el.innerHeight() > innerHeight) {
@@ -692,7 +707,6 @@ define(function (require, exports, module) {
         createDefectTooltip: function (el, type) {
             var launchId = el.closest('.row.rp-table-row').attr('id'),
                 content = this.renderDefectsTooltip(launchId, type);
-            console.log(content);
             el.append(content);
         },
         renderDefectsTooltip: function (launchId, type) {
@@ -706,7 +720,7 @@ define(function (require, exports, module) {
                     item: launch,
                     noSubDefects: !this.defectTypes.checkForSubDefects(),
                     color: this.getDefectColor(defect, type, this.defectTypes),
-                    url: ''//this.linkToRedirectService(type, launchId)
+                    url: this.allCasesUrl(type)
                 };
             _.each(defect, function(v, k){
                 if(k !== 'total'){
@@ -721,7 +735,6 @@ define(function (require, exports, module) {
                 }
             }, this);
             params.defects.sort(Util.sortSubDefects);
-            console.log(params);
             return Util.templates(this.toolTipContent, params);
         },
         getDefectColor: function (defect, type, defectTypes) {
@@ -786,6 +799,13 @@ define(function (require, exports, module) {
                 .call(chart)
             ;
             return chart;
+        },
+        destroy: function(){
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            this.$el.remove();
+            delete this;
         }
     });
 
