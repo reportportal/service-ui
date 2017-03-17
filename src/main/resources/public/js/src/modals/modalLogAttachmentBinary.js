@@ -29,12 +29,20 @@ define(function (require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var Urls = require('dataUrlResolver');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var CodeBlockWithHighlightComponent = require('components/CodeBlockWithHighlightComponent');
 
     var ModalLogAttachmentBinary = ModalView.extend({
         tpl: 'tpl-modal-log-attachment-binary',
         className: 'modal-log-attachment-binary',
+
+        events: {
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
+        },
 
         initialize: function(options) {
             var self = this;
@@ -65,7 +73,12 @@ define(function (require, exports, module) {
         onShow: function () {
             this.$modalWrapper.addClass('loading');
         },
-
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(509);
+        },
+        onClickCancel: function(){
+            config.trackingDispatcher.trackEventNumber(511);
+        },
         loadData: function () {
             var async = $.Deferred();
             var self = this;

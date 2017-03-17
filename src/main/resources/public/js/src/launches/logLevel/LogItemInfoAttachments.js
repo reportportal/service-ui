@@ -32,6 +32,9 @@ define(function (require, exports, module) {
     var ItemAttachmentModel = require('launches/logLevel/LogItemModel');
     var ModalLogAttachmentImage = require('modals/modalLogAttachmentImage');
     var ModalLogAttachmentBinary = require('modals/modalLogAttachmentBinary');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var PAGE_SIZE = 6;
 
@@ -144,6 +147,7 @@ define(function (require, exports, module) {
             this.$el.html('<div class="gallery-image"><img data-js-gallery-image></div>');
         },
         onClickGalleryImage: function() {
+            config.trackingDispatcher.trackEventNumber(508);
             this.model.trigger('click:min:item', this.model);
             this.model.trigger('change:active:slide', this.model);
         }
@@ -154,7 +158,7 @@ define(function (require, exports, module) {
         template: 'tpl-launch-log-item-info-attachments-main-item',
 
         events: {
-            'click [data-js-main-image]': 'onClickMainImage',
+            'click [data-js-main-image]': 'onClickMainImage'
         },
 
         bindings: {
@@ -166,6 +170,7 @@ define(function (require, exports, module) {
             this.listenTo(this.model, 'change:id', this.onChangeId);
         },
         onClickMainImage: function() {
+            config.trackingDispatcher.trackEventNumber(507);
             var modal;
             var contentType = this.model.get('binary_content').content_type;
             var binaryId = this.model.get('binary_content').id;
@@ -273,7 +278,6 @@ define(function (require, exports, module) {
                             self.activateAttachment(logId);
                         })
                 });
-            // console.log(logId);
         },
         activateAttachment: function(logId) {
             var curModel = this.currentLoadCollection.get(logId);
@@ -420,8 +424,10 @@ define(function (require, exports, module) {
             this.model.set({currentElement: (activeModel.get('pageNumber') - 1)*PAGE_SIZE + activeModel.get('pageIndex') + 1});
             if(activeModel.get('id') == '') {
                 if(options.dirrection == 'right') {
+                    config.trackingDispatcher.trackEventNumber(506);
                     this.galleryMain.prev();
                 } else {
+                    config.trackingDispatcher.trackEventNumber(505);
                     this.galleryMain.next();
                 }
                 return;
@@ -435,6 +441,7 @@ define(function (require, exports, module) {
             });
             this.updateArrowMainGallery(curIndex);
             if(options.dirrection == 'right'){
+                config.trackingDispatcher.trackEventNumber(506);
                 if(!this.currentLoadCollection.at(curIndex+1)){
                     options.galleryModels[options.index+1].set({id: ''});
                     return;
@@ -446,6 +453,7 @@ define(function (require, exports, module) {
                 }
                 return;
             }
+            config.trackingDispatcher.trackEventNumber(505);
             if(!this.currentLoadCollection.at(curIndex-1)) {
                 options.galleryModels[options.index-1].set({id: ''});
                 return;
