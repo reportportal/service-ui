@@ -19,16 +19,18 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'swipe-gallery';
-@import 'select2-container';
-@import 'main-breadcrumbs';
-
-@import 'switcher-big';
-@import 'dropdown-menu';
-@import 'user-search-select2-dropdown';
-@import 'drop-down-component';
-@import 'beta-badge';
-@import 'colorPicker';
-@import 'markdown/MarkdownEditor';
-@import 'markdown/common';
-@import 'twitterNewsComponent/main';
+.post-news-item {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 2px;
+  background-color: $COLOR--white-default;
+  color: $COLOR--charcoal-grey;
+  a {
+    color: $COLOR--topaz;
+    &:hover {
+      color: $COLOR--tealish;
+    }
+  }
+}

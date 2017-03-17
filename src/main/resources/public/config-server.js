@@ -12,7 +12,7 @@ if(proxyConfig.path == '') {
 module.exports = {
     devServer: {
         contentBase: publicPath,
-        https: true,
+        https: false,
         host: '0.0.0.0',
         proxy: [
             {
