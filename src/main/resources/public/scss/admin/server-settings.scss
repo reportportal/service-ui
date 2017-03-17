@@ -173,14 +173,13 @@
           display: none;
           margin-top: 5px;
 
-          .listMessage {
-            margin-left: 20px;
+          .list-message {
             margin-right: 20px;
           }
 
           .statistics-point {
             position: relative;
-            padding-left: 20px;
+            padding-left: 25px;
             line-height: 22px;
             margin-left: 12px;
 
@@ -372,6 +371,8 @@
 
             &:after {
               content: ':';
+              font-size: 16px;
+              line-height: 16px;
             }
             i {
               display: none !important;
@@ -379,6 +380,20 @@
           }
           ul {
             display: block;
+            margin-top: 10px;
+
+            .list-message {
+              margin-bottom: 10px;
+            }
+
+            .statistics-point {
+              margin-left: 0;
+              padding-left: 12px;
+
+              &:before {
+                left: 0;
+              }
+            }
           }
         }
 

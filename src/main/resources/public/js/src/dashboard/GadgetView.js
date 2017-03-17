@@ -57,11 +57,11 @@ define(function (require, exports, module) {
         },
         computeds: {
             canRemove: {
-                deps: ['isMy'],
-                get: function(isMy) {
+                deps: ['isMy', 'isMyDashboard'],
+                get: function(isMy, isMyDashboard) {
                     return (config.userModel.get('isAdmin') ||
                     config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager ||
-                    isMy);
+                    (isMy && isMyDashboard));
                 }
             }
         },
@@ -148,7 +148,7 @@ define(function (require, exports, module) {
                 bodyText: Util.replaceTemplate(
                     this.model.get('isMy')?Localization.dialog.deletedWidget:Localization.dialog.deletedWidgetDanger,
                     this.model.get('name')),
-                confirmText: this.model.get('isMy')?'':Localization.ui.sureToDelete,
+                confirmText: this.model.get('isMy')?'':Localization.dialog.deletedWidgetDangerConfirmText,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete,

@@ -62,7 +62,7 @@
       background-size: 100%;
     }
 
-    .twitter-wrapper {
+    .post-wrapper {
       position: relative;
       width: 100%;
       height: 545px;
@@ -125,22 +125,22 @@
         background-position: center;
 
         &.gh-icon {
-          background-image: url(../../img/login/socials/github.svg);
+          background-image: url(../../img/login/socials/socialGh.svg);
         }
         &.fb-icon {
-          background-image: url(../../img/login/socials/fb.svg);
+          background-image: url(../../img/login/socials/socialFb.svg);
         }
         &.tw-icon {
-          background-image: url(../../img/login/socials/twitter.svg);
+          background-image: url(../../img/login/socials/socialTw.svg);
         }
         &.vk-icon {
-          background-image: url(../../img/login/socials/vk.svg);
+          background-image: url(../../img/login/socials/socialVk.svg);
         }
         &.yt-icon {
-          background-image: url(../../img/login/socials/youtube.svg);
+          background-image: url(../../img/login/socials/socialYt.svg);
         }
         &.slk-icon {
-          background-image: url(../../img/login/socials/slack.svg);
+          background-image: url(../../img/login/socials/socialSl.svg);
           margin-right: 0;
         }
       }
