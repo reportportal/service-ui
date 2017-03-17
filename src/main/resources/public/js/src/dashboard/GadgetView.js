@@ -56,11 +56,11 @@ define(function (require, exports, module) {
         },
         computeds: {
             canRemove: {
-                deps: ['isMy'],
-                get: function(isMy) {
+                deps: ['isMy', 'isMyDashboard'],
+                get: function(isMy, isMyDashboard) {
                     return (config.userModel.get('isAdmin') ||
                     config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager ||
-                    isMy);
+                    (isMy && isMyDashboard));
                 }
             }
         },
