@@ -513,7 +513,7 @@ define(['util'], function () {
             percentageOfProductBugs: 'Percentage of product bugs',
             percentageOfSystemIssues: 'Percentage of system issues',
             percentageOfAutoBugs: 'Percentage of auto bugs',
-            pleaseUpdateWidget: 'Please, update widget by saving it in <span class="rp-link" href="">Widget Wizard</span>.',
+            pleaseUpdateWidget: 'Please, update widget by saving it in <span class="rp-link" href="">Edit Widget</span>.',
             haveInvalidCriteria: 'You have <strong>%%% invalid $$$</strong> with deleted defect types.',
             invalidCriteria: 'Invalid criterion',
             criteria: 'criteria',

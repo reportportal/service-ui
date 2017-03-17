@@ -42,6 +42,7 @@ define(function (require, exports, module) {
             'click [data-js-gadget-refresh]': 'onClickRefresh',
             'click [data-js-gadget-remove]': 'onClickRemove',
             'click [data-js-gadget-edit]': 'onClickGadgetEdit',
+            'click [data-js-edit-invalid-data]': 'onClickGadgetEdit'
         },
 
         bindings: {
