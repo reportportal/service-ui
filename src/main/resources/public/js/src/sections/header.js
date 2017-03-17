@@ -39,7 +39,7 @@ define(function (require, exports, module) {
 
         events: {
             'click .user-projects a': 'changeProject',
-            'click #logout': 'onClickLogout',
+            'click [data-js-logout]': 'onClickLogout',
             'click [data-js-toogle-menu]': 'onClickMenuOpen',
             'click [data-js-administrate-page-link]': 'onClickAdminLink',
             'click [data-js-members-icon]': 'onClickMembersIcon',
