@@ -147,7 +147,7 @@ define(function (require, exports, module) {
                 bodyText: Util.replaceTemplate(
                     this.model.get('isMy')?Localization.dialog.deletedWidget:Localization.dialog.deletedWidgetDanger,
                     this.model.get('name')),
-                confirmText: this.model.get('isMy')?'':Localization.ui.sureToDelete,
+                confirmText: this.model.get('isMy')?'':Localization.dialog.deletedWidgetDangerConfirmText,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete,

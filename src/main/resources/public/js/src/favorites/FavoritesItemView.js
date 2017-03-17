@@ -83,7 +83,7 @@ define(function (require, exports, module) {
                 bodyText: Util.replaceTemplate(
                     this.model.get('notMyFilter')?Localization.dialog.deleteFilterDanger:Localization.dialog.deleteFilter,
                     this.model.get('name').escapeHtml()),
-                confirmText: this.model.get('notMyFilter')?Localization.ui.sureToDelete:'',
+                confirmText: this.model.get('notMyFilter')?Localization.dialog.deleteFilterDangerConfirmText:'',
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete,
