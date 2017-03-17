@@ -293,14 +293,13 @@ define(function (require, exports, module) {
             }
         },
 
-        destroy: function() {
+        onDestroy: function() {
             $(window).off('resize.logItems');
+            _.each(this.items, function(view) {
+                view.destroy();
+            })
             this.items = null;
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
             this.$el.html('');
-            delete this;
         }
     })
 
