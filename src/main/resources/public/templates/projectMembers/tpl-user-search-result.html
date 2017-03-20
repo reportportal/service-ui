@@ -1,13 +1,18 @@
-<div class="user-search-result-wrap" title="<%= data.user.disabled ? data.text.members.alredyAdded : '' %>">
+<div class="user-search-result-wrap" title="<%= data.user.title %>">
     <div class="user-avatar">
         <img src="<%= data.imagePath %>">
         <i class="material-icons">mail_outline</i>
     </div>
     <div class="user-search-info">
         <p class="user-search-name"><%= data.user.name %></p>
-        <p class="user-search-login"><span class="invite-pref"><%= data.text.members.invitePref %></span><%= data.user.id %></p>
+        <p class="user-search-login"><span class="invite-pref"><%= data.text.members.invitePref %></span><%=
+            data.user.id %></p>
         <p class="user-search-send-email"><%= data.text.members.sendInvite %></p>
         <i class="material-icons user-add">add</i>
-        <i class="material-icons user-added">done</i>
+        <% if(data.user.isAddedUser){ %>
+        <i class="material-icons user-added user-disabled">done</i>
+        <% } else if(data.user.isExternalUser){ %>
+        <i class="material-icons user-added user-disabled">not_interested</i>
+        <% } %>
     </div>
 </div>
