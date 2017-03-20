@@ -37,14 +37,25 @@ define(function (require, exports, module) {
     var setupUserSearch = function ($el, options) {
         var appModel = new SingletonAppModel();
         var validateUserProject = function(user){
-            var userId = user.userId || user.id;
-            var answer = false;
-            _.each(appModel.get('users'), function(userInfo, id) {
+            var userId = user.userId || user.id,
+                answer = false,
+                users = appModel.get('users');
+            _.each(users, function(userInfo, id) {
                 if(id == userId) {
                     answer = true;
                     return false;
                 }
             });
+            return answer;
+        };
+        var validateForExternalUsers = function(user){
+            var appModel = new SingletonAppModel(),
+                answer = false,
+                projectConfig = appModel.get('configuration'),
+                isInternalProject = projectConfig && (projectConfig.entryType == "INTERNAL" || projectConfig.entryType == "PERSONAL");
+            if(user.account_type !== "INTERNAL" && !isInternalProject){
+                answer = true;
+            }
             return answer;
         };
         var remoteUsers = [];
@@ -78,26 +89,33 @@ define(function (require, exports, module) {
                     return null;
                 }
             },
-            formatResult: function(data)  {
+            formatResult: function(data){
                 return Util.templates('tpl-user-search-result', {user: data, imagePath: Util.updateImagePath(Urls.getAvatar() + data.id)});
             },
             query: function (query) {
-                var userModel = new UserModel();
+                var userModel = new UserModel(),
+                    getUserData = function(response){
+                        var data = {results: []};
+                        remoteUsers = [];
+                        _.each(response.content, function (item) {
+                            remoteUsers.push(item);
+                            var isAddedUser = validateUserProject(item),
+                                isExternalUser = validateForExternalUsers(item)
+                            data.results.push({
+                                id: item.userId,
+                                text: item.userId,
+                                name: item.full_name,
+                                disabled: isAddedUser || isExternalUser,
+                                isExternalUser: isExternalUser,
+                                isAddedUser: isAddedUser
+                            });
+                        });
+                        return data;
+                    };
                 if(userModel.get('isAdmin')) {
                     MembersService.getSearchUser({search: query.term})
                         .done(function (response) {
-                            var data = {results: []};
-                            remoteUsers = [];
-                            _.each(response.content, function (item) {
-                                remoteUsers.push(item);
-                                data.results.push({
-                                    id: item.userId,
-                                    text: item.userId,
-                                    name: item.full_name,
-                                    disabled: validateUserProject(item)
-                                });
-                            });
-                            query.callback(data);
+                            query.callback(getUserData(response));
                         })
                         .fail(function (error) {
                             Util.ajaxFailMessenger(error);
@@ -105,18 +123,7 @@ define(function (require, exports, module) {
                 } else {
                     MembersService.getSearchUserSafe({search: query.term})
                         .done(function (response) {
-                            var data = {results: []};
-                            remoteUsers = [];
-                            _.each(response.content, function (item) {
-                                remoteUsers.push(item);
-                                data.results.push({
-                                    id: item.id,
-                                    text: item.id,
-                                    name: item.fullName,
-                                    disabled: validateUserProject(item)
-                                });
-                            });
-                            query.callback(data);
+                            query.callback(getUserData(response));
                         })
                         .fail(function (error) {
                             Util.ajaxFailMessenger(error);
