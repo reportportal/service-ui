@@ -35,6 +35,7 @@ define(function(require, exports, module) {
         },
         onChangeIsLaunch: function(model, isLaunch) {
             if(isLaunch) {
+                model.collection = this.launchFilterCollection;
                 this.launchFilterCollection.add(model);
                 return;
             }
