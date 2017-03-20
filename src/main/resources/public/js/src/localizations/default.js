@@ -1571,7 +1571,7 @@ define(['util'], function () {
             confirmMinMax: "Password should have size from '4' to '25' symbols",
             confirmMatch: "Passwords do not match",
             fullNameInfoRegex: "Full name should have size from '3' to '256' symbols, Latin, Cyrillic, numeric characters, hyphen, underscore, dot, space.",
-            loginRegex: "Full name should have size from '1' to '128' symbols, Latin, numeric characters, hyphen, underscore.",
+            loginRegex: "Login should have size from '1' to '128' symbols, Latin, numeric characters, hyphen, underscore.",
             originalPassRegex: "Password should have size from '4' to '25' symbols",
             hostMatchRegex: 'Check the entered data',
 
