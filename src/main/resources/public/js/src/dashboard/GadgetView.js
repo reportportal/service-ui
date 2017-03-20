@@ -61,7 +61,7 @@ define(function (require, exports, module) {
                 get: function(isMy, isMyDashboard) {
                     return (config.userModel.get('isAdmin') ||
                     config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager ||
-                    (isMy && isMyDashboard));
+                    isMyDashboard || (isMy && isMyDashboard));
                 }
             }
         },
@@ -143,12 +143,13 @@ define(function (require, exports, module) {
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(288);
             var self = this;
+            var dangerRemove = (!this.model.get('isMy') && !this.model.get('isMyDashboard'));
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deletedWidget,
                 bodyText: Util.replaceTemplate(
-                    this.model.get('isMy')?Localization.dialog.deletedWidget:Localization.dialog.deletedWidgetDanger,
+                    !dangerRemove ? Localization.dialog.deletedWidget:Localization.dialog.deletedWidgetDanger,
                     this.model.get('name')),
-                confirmText: this.model.get('isMy')?'':Localization.dialog.deletedWidgetDangerConfirmText,
+                confirmText: !dangerRemove?'':Localization.dialog.deletedWidgetDangerConfirmText,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete,
