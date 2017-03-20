@@ -85,8 +85,8 @@ define(function(require, exports, module) {
                         self.showRestorationError();
                     });
             } else if (urlModel.get('errorAuth')) {
-                this.showError(urlModel.get('errorAuth'), false);
-                urlModel.set('errorAuth', null);
+                Util.ajaxFailMessenger(null, null, urlModel.get('errorAuth'));
+                this.openLogin();
             } else {
                 this.openLogin();
             }
