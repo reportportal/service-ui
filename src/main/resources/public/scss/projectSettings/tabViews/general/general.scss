@@ -21,8 +21,7 @@
 /*---------------------------------*/
 /* STYLE FOR GENERAL SETTINGS PAGE */
 
-%GENERAL_SETTINGS {
-  #generalSettings {
+  .general-project-settings {
     padding: 10px 0 20px;
     position: relative;
     @media (max-width: $SCREEN_XS_MAX) {
@@ -70,29 +69,14 @@
       }
     }
   }
-}
-
-/*----------------*/
-/* INCLUDE STYLES */
-
-/* FOR USUAL USERS */
-#dynamic-content {
-  @extend %GENERAL_SETTINGS;
-}
-
-/* FOR ADMINISTRATORS USERS */
-#dynamicContent {
-  @extend %GENERAL_SETTINGS;
-}
 
 /*-----------------------------------*/
 /* STYLES OF DYNAMIC WIDTH OF SCREEN */
 
 /* xs - 767px */
 @media (max-width: $SCREEN_XS_MAX) {
-  #generalSettings {
+  .general-project-settings {
     .rp-form-group {
-
       .rp-control-label {
         margin-bottom: 10px;
       }
@@ -115,7 +99,7 @@
 
 /* sm - 768px - 991px */
 @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
-  #generalSettings {
+  .general-project-settings {
     .rp-form-group {
       &:not(:first-child) {
         margin-bottom: 25px;
@@ -140,7 +124,7 @@
       }
 
       .rp-text-description {
-        span {
+        span, div.rp-help-block {
           margin-left: 33%;
           padding-left: 12px;
         }
@@ -156,7 +140,7 @@
 
 /* lg - 1200px */
 @media (min-width: $SCREEN_LG_MIN) {
-  #generalSettings {
+  .general-project-settings {
     width: $WIDTH_LAYOUT_PAGE_SETTINGS;
     max-width: $MAX_WIDTH_LAYOUT_PAGE_SETTINGS;
     margin: 0 auto;

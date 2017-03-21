@@ -31,6 +31,7 @@ define(function(require, exports, module) {
     var EmailSettings = require('adminServerSettings/EmailServerSettingsView');
     var AuthSettings = require('adminServerSettings/AuthServerSettingsView');
     var StatisticsSettings = require('adminServerSettings/StatisticsServerSettingsView');
+    var DropDownComponent = require('components/DropDownComponent');
 
     var config = App.getInstance();
 
@@ -39,7 +40,7 @@ define(function(require, exports, module) {
         tpl: 'tpl-server-settings-shell',
 
         events: {
-            'click [data-js-tab-action]': 'updateTabs'
+            'click [data-js-tab-action]': 'getTab'
         },
 
         initialize: function (options) {
@@ -50,20 +51,35 @@ define(function(require, exports, module) {
         render: function () {
             this.$el.html(Util.templates(this.tpl, {tab: this.tab}));
             this.setupAnchors();
+            this.setupSelectDropDown();
             this.renderTabContent();
         },
 
-        update: function(tab, silent){
+        update: function(tab){
             this.tab = tab || "email";
-            if (!silent) {
-                $('[data-action=' + this.tab + ']', this.$el).tab('show');
-            }
             this.renderTabContent();
         },
 
-        updateTabs: function (e) {
-            var $el = $(e.currentTarget),
-                tab = $el.data('js-tab-action');
+        setupSelectDropDown: function () {
+            this.tabSelector = new DropDownComponent({
+                data: [
+                    {name: 'E-MAIL SERVER', value: 'email'},
+                    {name: 'AUTHORIZATION CONFIGURATION', value: 'auth'},
+                    {name: 'STATISTICS', value: 'statistics'},
+                ],
+                multiple: false,
+                defaultValue: this.tab,
+            });
+            $('[data-js-nav-tabs-mobile]', this.$el).html(this.tabSelector.$el);
+            this.listenTo(this.tabSelector, 'change', this.updateTabs);
+        },
+
+        getTab: function (e) {
+            e.preventDefault();
+            this.updateTabs($(e.currentTarget).data('js-tab-action'));
+        },
+
+        updateTabs: function (tab) {
             switch (tab) {
                 case 'auth':
                     config.trackingDispatcher.trackEventNumber(491);
@@ -72,24 +88,22 @@ define(function(require, exports, module) {
                     config.trackingDispatcher.trackEventNumber(490);
 
             }
-            config.router.navigate($el.attr('href'), {
-                silent: true
-            });
-            this.update(tab, true);
+            config.router.navigate('#administrate/settings/' + tab);
+            this.update(tab);
         },
 
         renderTabContent: function(){
             this.tabView && this.tabView.destroy();
 
-            var viewTab = this.getTabView(this.tab),
-                currentContent = $('[data-js-tab-content="' + this.tab + '"]', this.$el);
-
+            var viewTab = this.getTabView(this.tab);
             this.tabView = new viewTab();
-            $('[data-js-tab-content]', this.$el).hide();
+            this.$tabContent.html(this.tabView.$el);
+
             $('[data-js-tab-action]', this.$el).closest('li.active').removeClass('active');
+            $('[data-js-nav-tabs-mobile] li.active', this.$el).removeClass('active');
             $('[data-js-tab-action="' + this.tab + '"]', this.$el).closest('li').addClass('active');
-            currentContent.append(this.tabView.$el);
-            currentContent.show();
+            $('[data-js-nav-tabs-mobile] [data-value="' + this.tab + '"]', this.$el).parent().addClass('active');
+            this.tabSelector.activateItem(this.tab);
         },
 
         getTabView: function(tab) {
@@ -106,7 +120,7 @@ define(function(require, exports, module) {
         },
 
         setupAnchors: function () {
-
+            this.$tabContent = $('[data-js-tab-content]', this.$el);
         },
 
         destroy: function(){

@@ -21,6 +21,62 @@
 
 .rp-server-settings {
 
+  .nav-tabs-custom {
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
+  .nav-tabs-mobile {
+    display: none;
+    margin: 15px 0 15px 0;
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: block;
+    }
+
+    .drop-down-component {
+      width: 100%;
+
+      .dropdown-toggle {
+        position: relative;
+        padding-right: 0;
+
+        .select-value {
+          color: $COLOR--charcoal-grey;
+          font-family: $OpenSansSemibold, sans-serif;
+
+          &:after {
+            display: block;
+            position: absolute;
+            width: 12px;
+            height: 8px;
+            content: '';
+            top: 10px;
+            right: 12px;
+            background-image: url(../../../img/icons/arrow_down.svg);
+          }
+        }
+        .rp-caret {
+          display: none;
+        }
+      }
+
+      .dropdown-menu {
+        width: 100%;
+      }
+
+      &.open {
+        .dropdown-toggle {
+          .select-value {
+            &:after {
+              background-image: url(../../../img/icons/arrow_up.svg);
+            }
+          }
+        }
+      }
+    }
+  }
+
   .rp-auth-server-settings {
     padding-top: 10px;
     padding-bottom: 20px;
@@ -68,7 +124,7 @@
     }
   }
 
-  .rp-email-settings {
+  .rp-email-server-settings {
     padding-top: 10px;
     padding-bottom: 20px;
     position: relative;
@@ -228,6 +284,7 @@
       display: none;
     }
   }
+
   .rp-form {
     width: 600px;
 
@@ -275,7 +332,7 @@
     }
   }
   @media (max-width: $SCREEN_XS_MAX) {
-    .rp-email-settings, .rp-auth-server-settings {
+    .rp-email-server-settings, .rp-auth-server-settings {
       .email-server-error,
       .email-server-btn {
         display: none;

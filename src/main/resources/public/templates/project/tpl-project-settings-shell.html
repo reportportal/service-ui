@@ -1,40 +1,33 @@
-<ul class="nav-tabs-custom clearfix" role="tablist">
-    <li role="presentation" class="<%= data.tab === 'general' ? 'active' : '' %>">
-        <a href="#<% if(data.adminPage){ %>administrate/project-details/<% } %><%= data.projectId %>/settings/general"
-           data-target="#generalSettings" aria-controls="home" role="tab" data-toggle="tab" class="tab settings" data-action="general">
+<ul class="nav-tabs-custom clearfix">
+    <li class="<%= data.tab === 'general' ? 'active' : '' %>">
+        <a href="#" class="tab settings" data-js-tab-action="general">
             <%= data.text.project.generalTab %>
         </a>
     </li>
-    <li role="presentation" class="<%= data.tab === 'notifications' ? 'active' : '' %>">
-        <a href="#<% if(data.adminPage){ %>administrate/project-details/<% } %><%= data.projectId %>/settings/notifications" data-target="#notificationsSettings" aria-controls="home" role="tab" data-toggle="tab" class="tab settings" data-action="notifications">
+    <li class="<%= data.tab === 'notifications' ? 'active' : '' %>">
+        <a href="#" class="tab settings" data-js-tab-action="notifications">
             <%= data.text.project.notificationsTab %>
         </a>
     </li>
-    <li role="presentation" class="<%= data.tab === 'bts' ? 'active' : '' %>">
-        <a href="#<% if(data.adminPage){ %>administrate/project-details/<% } %><%= data.projectId %>/settings/bts" data-target="#btsSettings" aria-controls="profile" role="tab" data-toggle="tab" class="tab settings" data-action="bts">
+    <li class="<%= data.tab === 'bts' ? 'active' : '' %>">
+        <a href="#" class="tab settings" data-js-tab-action="bts">
             <%= data.text.project.btsTab %>
             <span class="label label-above label-success"><%= data.text.project.beta %></span>
         </a>
     </li>
-    <li role="presentation" class="<%= data.tab === 'defect' ? 'active' : '' %>">
-        <a href="#<% if(data.adminPage){ %>administrate/project-details/<% } %><%= data.projectId %>/settings/defect" data-target="#defectTypes" aria-controls="profile" role="tab" data-toggle="tab" class="tab settings" data-action="defect">
+    <li class="<%= data.tab === 'defect' ? 'active' : '' %>">
+        <a href="#" class="tab settings" data-js-tab-action="defect">
             <%= data.text.project.defectTypes %>
         </a>
     </li>
     <% if(data.generateDemoDataAccess){ %>
-    <li role="presentation" class="<%= data.tab === 'demoData' ? 'active' : '' %>">
-        <a href="#<% if(data.adminPage){ %>administrate/project-details/<% } %><%= data.projectId %>/settings/demoData" data-target="#DemoDataSettings" aria-controls="profile" role="tab" data-toggle="tab" class="tab settings" data-action="demoData">
+    <li class="<%= data.tab === 'demoData' ? 'active' : '' %>">
+        <a href="#" class="tab settings" data-js-tab-action="demoData">
             <%= data.text.project.demoDataSettings %>
         </a>
     </li>
     <% } %>
 </ul>
-<div class="tab-content setting-content-wrapper">
-    <div role="tabpanel" class="tab-pane <%= data.tab === 'general' ? 'active' : '' %>" id="generalSettings"></div>
-    <div role="tabpanel" class="tab-pane <%= data.tab === 'notifications' ? 'active' : '' %>" id="notificationsSettings"></div>
-    <div role="tabpanel" class="tab-pane bts-settings <%= data.tab === 'bts' ? 'active' : '' %>" id="btsSettings"></div>
-    <div role="tabpanel" class="tab-pane <%= data.tab === 'defect' ? 'active' : '' %>" id="defectTypes"></div>
-    <% if(data.generateDemoDataAccess){ %>
-    <div role="tabpanel" data-js-demo-data class="tab-pane <%= data.tab === 'demoData' ? 'active' : '' %>" id="DemoDataSettings"></div>
-    <% } %>
-</div>
+<div data-js-nav-tabs-mobile class="nav-tabs-mobile"></div>
+<div data-js-tab-content class="tab-content"></div>
+

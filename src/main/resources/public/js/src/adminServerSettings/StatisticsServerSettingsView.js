@@ -31,6 +31,7 @@ define(function(require, exports, module) {
 
     var StatisticsServerSettingsView = Epoxy.View.extend({
 
+        className: 'rp-statistics-server-settings',
         template: 'tpl-statistics-server-settings',
 
         events: {
@@ -64,7 +65,7 @@ define(function(require, exports, module) {
 
         submit: function () {
             var self = this;
-            var enabled = self.$switcher.prop('checked')
+            var enabled = self.$switcher.prop('checked');
             Service.toggleAnalytics({
                 enabled: enabled,
                 type: 'all'

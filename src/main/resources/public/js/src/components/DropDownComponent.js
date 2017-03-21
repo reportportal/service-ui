@@ -61,6 +61,9 @@ define(function (require, exports, module) {
         },
         onClickItem: function(e) { // simple select
             e.preventDefault();
+            if ($(e.currentTarget).parent().hasClass('active')) {
+                return;
+            }
             var value = $(e.currentTarget).data('value');
             this.trigger('change', value);
             this.activateItem(value);
