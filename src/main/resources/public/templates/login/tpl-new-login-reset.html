@@ -3,7 +3,7 @@
     <span class="welcome-msg"><%= data.text.login.welcomeMsgResetPass %></span>
 </div>
 <span class="welcome-msg"><%= data.text.login.welcomeMsgResetPass %></span>
-<form class="reset-form rp-form">
+<form class="reset-form rp-form" data-js-reset-form>
     <label class="rp-field pass-field">
         <div class="icon-wrapper"><i class="material-icons">lock_outline</i></div>
         <input type="password" class="rp-input" placeholder="Password" data-js-password>
@@ -23,6 +23,6 @@
         </div>
         <span class="validate-hint"></span>
     </label>
-    <button class="rp-btn rp-btn-login" type="button" data-js-reset-pass-btn><%= data.text.login.changePassword %>
+    <button class="rp-btn rp-btn-login" type="submit" data-js-reset-pass-btn><%= data.text.login.changePassword %>
     </button>
 </form>

@@ -50,8 +50,9 @@ define(function(require, exports, module) {
         },
 
         events: {
+            'submit [data-js-register-form]': 'onSubmitForm',
             'click [data-js-cancel]': 'resetForm',
-            'click [data-js-register]': 'registerMember',
+            'click [data-js-register]': 'onSubmitForm',
 
             'mousedown [data-js-toogle-visability]': 'showPass',
             'mouseleave [data-js-toogle-visability]': 'hidePass',
@@ -199,7 +200,11 @@ define(function(require, exports, module) {
                 password: this.model.get('password')
             }
         },
-
+        onSubmitForm: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.registerMember();
+        },
         registerMember: function() {
             $('.rp-field', this.$el).find('input').trigger('validate');
             if ($('.validate-error', this.$el).length || this.$confirmPassword.val() !== this.$password.val()) return;

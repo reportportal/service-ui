@@ -47,7 +47,8 @@ define(function(require, exports, module) {
             'touchcancel  [data-js-toogle-visability]': 'hidePass',
 
             'validation:success .rp-input': 'checkFields',
-            'click [data-js-reset-pass-btn]': 'submitChangePass'
+            'click [data-js-reset-pass-btn]': 'onSubmitForm',
+            'submit [data-js-reset-form]': 'onSubmitForm'
         },
 
         initialize: function (options) {
@@ -113,7 +114,11 @@ define(function(require, exports, module) {
                 this.$confirmPass.parent().removeClass('validate-error').find('.validate-hint').removeClass('show-hint');
             }
         },
-
+        onSubmitForm: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.submitChangePass();
+        },
         submitChangePass: function () {
             $('.rp-field', this.$el).find('input').trigger('validate');
             if ($('.validate-error', this.$el).length  || this.$confirmPass.val() !== this.$pass.val()) return;
