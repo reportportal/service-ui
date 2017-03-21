@@ -32,8 +32,7 @@ define(function (require, exports, module) {
 
     var config = App.getInstance();
 
-
-    var HistoryItemView = Epoxy.View.extend({
+    var HistoryItemNameView = Epoxy.View.extend({
         template: 'tpl-launch-history-item',
         className: 'history-grid-row',
         events: {
@@ -61,7 +60,6 @@ define(function (require, exports, module) {
         },
         initialize: function(options) {
             this.launches = options.launches;
-            this.renderedItems = [];
             this.render();
             this.applyBindings();
             this.collectionItems = options.collectionItems;
@@ -76,59 +74,8 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
-                nameWidth: this.getNameCellWidth(),
                 item: this.model.toJSON()
             }));
-            this.renderItems();
-        },
-        getNameCellWidth: function(){
-            var launchesSize = this.launches.length;
-            if(launchesSize > 10){
-                return 8;
-            }
-            else if (launchesSize > 5){
-                return 20;
-            }
-            else if (launchesSize >= 3 && launchesSize <= 5){
-                return 35;
-            }
-            else if(launchesSize <= 2){
-                return 50;
-            }
-        },
-        renderItems: function(){
-            var items = this.model.get('launches');
-            _.each(this.launches.models, function(launch){
-                var launchNumber = launch.get('launchNumber'),
-                    oneItem = {launchNumber: launchNumber, parent_launch_status: launch.get('launchStatus')},
-                    itemsInLaunch = items[launchNumber];
-                if(itemsInLaunch) {
-                    if(itemsInLaunch.length == 1){
-                        oneItem = _.extend(oneItem, this.updateDataForModel(itemsInLaunch[0]));
-                    }
-                    else {
-                        oneItem.status = 'MANY';
-                    }
-                } else {
-                    oneItem.status = 'NOT_FOUND';
-                }
-                var item = new HistoryItemCellView({
-                    launchesSize: this.launches.length,
-                    container: this.$el,
-                    cellWidth: (100-this.getNameCellWidth())/(this.launches.length || 1),
-                    model: new LaunchSuiteStepItemModel(oneItem)
-                });
-                this.renderedItems.push(item);
-            }, this);
-        },
-        updateDataForModel: function(data) {
-            if(data.issue) {
-                data.issue = JSON.stringify(data.issue);
-            }
-            if(data.tags) {
-                data.tags = JSON.stringify(data.tags);
-            }
-            return data;
         },
         onClickName: function(e) {
             e.preventDefault();
@@ -139,9 +86,6 @@ define(function (require, exports, module) {
             }
         },
         destroy: function () {
-            while(this.renderedItems.length) {
-                this.renderedItems.pop().destroy();
-            }
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
@@ -150,5 +94,5 @@ define(function (require, exports, module) {
         }
     });
 
-    return HistoryItemView;
+    return HistoryItemNameView;
 });
