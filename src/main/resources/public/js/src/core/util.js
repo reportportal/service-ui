@@ -541,7 +541,7 @@ define(function (require, exports, module) {
         },
 
         setupWindowEvents: function () {
-            config.mainScrollElement.on('scroll', function (e) {
+            config.mainScrollElement.on('scroll.global', function (e) {
                 var data = {top: e.currentTarget.scrollTop, height: $(window).height()};
                 $.publish("scroll:change", data);
                 if (e.currentTarget.scrollTop > 100) {
@@ -550,7 +550,7 @@ define(function (require, exports, module) {
                     $.publish("scroll:less:than:100", data);
                 }
             });
-            $(window).on('resize', function () {
+            $(window).on('resize.global', function () {
                 $.publish("window:resize", {height: $(window).height(), width: $(window).width()});
             });
             $(document).on('click', 'a', function (e) {
