@@ -30,7 +30,7 @@ define(function (require, exports, module) {
     var LaunchPage = require('launches/LaunchPage');
     var LaunchDebugPage = require('launches/LaunchDebugPage');
     var DashboardPage = require('dashboard/DashboardPage');
-    var Project = require('project');
+    var ProjectSettingsPage = require('projectSettings/projectSettingsPage');
     var ProjectInfo = require('projectinfo');
     var Member = require('projectMembers/MembersPageView');
     var Profile = require('userProfile/UserProfilePage');
@@ -131,7 +131,7 @@ define(function (require, exports, module) {
                     return Member;
                     break;
                 case "settings":
-                    return Project;
+                    return ProjectSettingsPage;
                     break;
                 case "user-profile":
                     return Profile;

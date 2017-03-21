@@ -71,7 +71,6 @@ require.config({
         'DemoDataSettingsView': 'project/DemoDataSettingsView',
 
         dataUrlResolver: 'core/data-url-resolver',
-        project: 'project/project',
         'projectinfo': 'project/projectinfo',
         validators: 'core/validators',
         validate: '../lib/jquery.validate',
@@ -115,7 +114,7 @@ require.config({
         admin: 'admin/admin',
         projects: 'admin/projects',
         users: 'admin/users',
-        settings: 'admin/settings',
+
         adminService: 'admin/service',
 
         'textile': '../lib/textile',
@@ -178,8 +177,8 @@ require.config({
 
         //'../tests/spec/widgets/widgets',
 
-        '../tests/spec/post_bug_to_jira/post_bug_to_bts',
-        '../tests/spec/post_bug_to_jira/load_bug_to_bts',
+        //'../tests/spec/post_bug_to_jira/post_bug_to_bts',
+        //'../tests/spec/post_bug_to_jira/load_bug_to_bts',
 
         '../tests/spec/project/projectinfo',
 
@@ -195,7 +194,7 @@ require.config({
 
         '../tests/spec/wizard/widget-wizard',
 
-        '../tests/spec/project/project',
+        //'../tests/spec/project/project',
 
         //'../tests/spec/admin/admin',
 

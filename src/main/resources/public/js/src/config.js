@@ -75,7 +75,6 @@ require.config({
         'log': 'log/logs',
         'TestRoute': 'router/TestRoute',
         'router': 'router/router',
-        'project': 'project/project',
         'projectinfo': 'project/projectinfo',
         'member': 'member/member',
         'memberService': 'member/service',
@@ -83,7 +82,6 @@ require.config({
         'launchgrid': 'launch/launch-grid',
         'launchEditor' : 'launch/launch-editor',
         'launchCrumbs': 'launch/launch-crumbs',
-        'defectEditor': 'defect/defect-editor',
         'mainview': 'main-view',
         'widgets': 'widget/widgets',
         //'favorites': 'favorites/favorites',
@@ -117,7 +115,6 @@ require.config({
         'cacheService': 'core/cache-service',
         'scrollable': 'core/scrollable-view',
         "text": "../lib/text",
-        'DemoDataSettingsView': 'project/DemoDataSettingsView',
 
         "spectrum": "../lib/spectrum/spectrum",
 

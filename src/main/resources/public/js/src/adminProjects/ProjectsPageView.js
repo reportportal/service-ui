@@ -17,9 +17,9 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
@@ -27,9 +27,8 @@ define(function(require, exports, module) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
-    var Localization = require('localization');
     var MembersTableView = require('projectMembers/MembersTableView');
-    var Project = require('project');
+    var ProjectSettingsView = require('projectSettings/projectSettingsView');
     var ProjectsDetailsView = require('adminProjects/ProjectsDetailsView');
     var ProjectsTabsView = require('adminProjects/ProjectsTabsView');
     var AdminService = require('adminService');
@@ -61,7 +60,7 @@ define(function(require, exports, module) {
             return this;
         },
 
-        renderHeader: function(){
+        renderHeader: function () {
             this.destroyHeader();
             this.header = new ProjectsHeaderView({
                 page: this.page,
@@ -74,7 +73,7 @@ define(function(require, exports, module) {
 
         renderBody: function () {
             this.destroyBody();
-            if(this.page == 'project-details'){
+            if (this.page == 'project-details') {
                 AdminService.getProjectInfo(this.id)
                     .done(function (data) {
                         config.project = data;
@@ -89,23 +88,24 @@ define(function(require, exports, module) {
             }
         },
 
-        renderProjectsList: function(){
+        renderProjectsList: function () {
             this.body = new ProjectsTabsView({
                 action: this.action || 'internal'
             });
             $('[data-js-admin-projects]', this.$el).append(this.body.$el);
         },
 
-        renderProject: function(){
+        renderProject: function () {
             var key = this.action;
             switch (key) {
                 case "settings":
-                    this.body = new Project.SettingsView({
-                        holder: $('[data-js-admin-projects]', this.$el),
+                    this.body = new ProjectSettingsView({
                         projectId: this.id,
                         adminPage: true,
                         tab: this.queryString
-                    }).render();
+                    });
+                    $('[data-js-admin-projects]', this.$el).html(this.body.$el);
+                    this.body.onShow && this.body.onShow();
                     break;
                 case "members":
                     this.body = new MembersTableView({
@@ -127,37 +127,32 @@ define(function(require, exports, module) {
             }
         },
 
-        update: function () {
-            this.renderHeader();
-            this.renderBody();
+        update: function (options) {
+            this.body.update(options.queryString);
         },
 
-        addProject: function(e){
+        addProject: function (e) {
             e.preventDefault();
         },
 
-        destroyHeader: function(){
+        destroyHeader: function () {
             if (this.header) {
                 this.header.destroy();
                 this.header = null;
             }
             this.$header.empty();
         },
-        destroyBody: function(){
+        destroyBody: function () {
             if (this.body) {
                 this.body.destroy();
                 this.body = null;
             }
         },
 
-        destroy: function(){
+        onDestroy: function () {
             this.destroyHeader();
             this.destroyBody();
             this.$el.html('');
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            delete this;
         }
     });
 
