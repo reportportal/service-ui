@@ -123,7 +123,7 @@ define(function (require, exports, module) {
                 dependenciesCalls.push(this.loadPreferences());
             }
 
-            if (appModel.get('projectId') != projectId) {
+            if (appModel.get('projectId') !== projectId) {
                 dependenciesCalls.push(this.loadProject());
             }
             this.destroyInvalidView();
