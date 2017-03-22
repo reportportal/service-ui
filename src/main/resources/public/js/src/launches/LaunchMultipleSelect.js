@@ -190,7 +190,11 @@ define(function (require, exports, module) {
                     self.compareAction = null;
                     self.collectionItems.load(true);
                     var parentModel = self.collectionItems.parentModel || self.collectionItems.launchModel;
-                    parentModel && parentModel.updateData(true);
+                    if(parentModel) {
+                        _.each(parentModel.collection.models, function (model) {
+                            model.updateData(true);
+                        });
+                    }
                     self.reset();
                 })
             },
