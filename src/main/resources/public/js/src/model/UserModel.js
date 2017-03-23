@@ -49,6 +49,7 @@ define(function(require, exports, module) {
             roles: null,
             label: null,
             name: 'anonymous',
+            fullName: '',
             email: null,
             account_type: null,
             userRole: null,

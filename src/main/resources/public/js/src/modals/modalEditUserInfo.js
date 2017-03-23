@@ -38,17 +38,17 @@ define(function (require, exports, module) {
         },
 
         events: {
-            'click [data-js-cancel]': 'resetUserInfo',
-            'click [data-js-ok]:not(.disabled)': 'submitEditInfo',
-            'validation::change [data-js-full-name]': 'validateUserInfo',
-            'validation::change [data-js-user-email]': 'validateUserInfo',
-            'click [data-js-close]': 'onClickClose'
+            'click [data-js-ok]': 'submitEditInfo',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel',
         },
 
-        initialize: function(options) {
-            this.oldName = this.model.get('fullName');
-            this.oldEmail = this.model.get('email');
-            this.isSubmit = false;
+        initialize: function() {
+            this.userModel = config.userModel;
+            this.model = new Backbone.Model({
+                fullName: this.userModel.get('fullName'),
+                email: this.userModel.get('email')
+            });
             this.listenTo(this.model, 'change:fullName', this.onChangeName);
             this.listenTo(this.model, 'change:email', this.onChangeEmail);
             this.render();
@@ -64,12 +64,6 @@ define(function (require, exports, module) {
                 this.submitEditInfo();
             }
         },
-        validateUserInfo: function () {
-            var action = (this.$email.data('valid') && this.$fullName.data('valid')
-            && (this.$fullName.val() !== this.oldName || this.$email.val() !== this.oldEmail))
-                ? 'remove' : 'add';
-            this.$submitInfo[action + 'Class']('disabled');
-        },
 
         setupAnchors: function(){
             this.$fullName = $('[data-js-full-name]', this.$el);
@@ -78,22 +72,16 @@ define(function (require, exports, module) {
         },
 
         setupValidation: function(){
-            Util.bootValidator(this.$email, [
+            Util.hintValidator(this.$email, [
                 {
                     validator: 'matchRegex',
                     type: 'emailMatchRegex',
                     message: Localization.validation.submitProfileInfoEmail,
                     pattern: config.patterns.email
                 },
-                {
-                    validator: 'remoteEmail',
-                    remote: true,
-                    message: Localization.validation.registeredEmail,
-                    type: 'remoteEmail'
-                },
                 {validator: 'required'}
             ]);
-            Util.bootValidator(this.$fullName, [
+            Util.hintValidator(this.$fullName, [
                 {
                     validator: 'matchRegex',
                     type: 'fullNameInfoRegex',
@@ -103,10 +91,8 @@ define(function (require, exports, module) {
             ]);
         },
 
-        resetUserInfo: function(){
+        onClickCancel: function(){
             config.trackingDispatcher.trackEventNumber(376);
-            this.model.set('fullName', this.oldName);
-            this.model.set('email', this.oldEmail);
         },
         onChangeName: function(){
             config.trackingDispatcher.trackEventNumber(374);
@@ -119,49 +105,47 @@ define(function (require, exports, module) {
         },
         submitEditInfo: function(){
             config.trackingDispatcher.trackEventNumber(377);
-            var data = {},
-                self = this,
-                userImage = config.userModel.get('image'),
-                name = this.$fullName.val(),
-                email = this.$email.val();
-
-            data.full_name = name;
-            this.model.set('fullName', name);
-            data.email = email;
-            this.model.set('email', email);
-            this.isSubmit = true;
-
-            Service.submitProfileInfo(data)
-                .done(function () {
-                    Util.ajaxSuccessMessenger('submitProfileInfo');
-                    if (!config.userModel.get('image')) {
-                        config.userModel.set('image', userImage);
-                    }
-                    self.isSubmit = false;
-                    self.hide();
-                    // config.trackingDispatcher.profileInfoEdit();
-                })
-                .fail(function (error) {
-                    var type = 'submitProfileInfo',
-                        message = '';
-                    if (error.responseText.indexOf('4094') >= 0) {
-                        type = 'submitProfileInfoDuplication';
-                    } else if (config.patterns.emailWrong.test(error.responseText)) {
-                        type = 'submitProfileInfoWrongData';
-                    }
-                    if (type !== 'submitProfileInfoWrongData') {
-                        self.$email.focus();
-                        self.$email.closest('.rp-form-group').addClass('has-error');
-                        message = Localization.validation.registeredEmail;
-                    }
-                    else {
-                        message = Localization.failMessages.submitProfileInfoWrongData;
-                    }
-                    $('.help-line', self.$email.closest('.rp-form-group')).text(message)
-                    self.isSubmit = false;
-                    self.resetUserInfo();
-                    Util.ajaxFailMessenger(null, type);
-                });
+            $('input', this.$el).trigger('validate');
+            if (!$('.validate-error', this.$el).length) {
+                var data = {
+                    full_name: this.model.get('fullName'),
+                    email: this.model.get('email')
+                };
+                var self = this;
+                this.showLoading();
+                Service.submitProfileInfo(data)
+                    .done(function () {
+                        Util.ajaxSuccessMessenger('submitProfileInfo');
+                        self.userModel.set({
+                            fullName: self.model.get('fullName'),
+                            email: self.model.get('email'),
+                        });
+                        // if (!config.userModel.get('image')) {
+                        //     config.userModel.set('image', userImage);
+                        // }
+                        self.successClose();
+                    })
+                    .fail(function (error) {
+                        self.hideLoading();
+                        var type = 'submitProfileInfo',
+                            message = '';
+                        if (error.responseText.indexOf('4094') >= 0) {
+                            type = 'submitProfileInfoDuplication';
+                        } else if (config.patterns.emailWrong.test(error.responseText)) {
+                            type = 'submitProfileInfoWrongData';
+                        }
+                        if (type !== 'submitProfileInfoWrongData') {
+                            self.$email.focus();
+                            self.$email.closest('label').addClass('validate-error');
+                            message = Localization.validation.registeredEmail;
+                        }
+                        else {
+                            message = Localization.failMessages.submitProfileInfoWrongData;
+                        }
+                        $('.help-line', self.$email.closest('.rp-form-group')).text(message);
+                        Util.ajaxFailMessenger(null, type);
+                    });
+            }
         }
     });
 

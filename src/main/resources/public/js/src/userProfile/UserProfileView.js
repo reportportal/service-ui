@@ -154,9 +154,7 @@ define(function (require, exports, module) {
             this.showEditUserInfo();
         },
         showEditUserInfo: function () {
-            var modal = new ModalEditUserInfo({
-                model: this.model
-            });
+            var modal = new ModalEditUserInfo();
             modal.show();
         },
         onClickUploadPhoto: function(){
