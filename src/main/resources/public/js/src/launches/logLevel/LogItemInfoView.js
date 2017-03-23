@@ -96,13 +96,13 @@ define(function (require, exports, module) {
 
         computeds: {
             validateLoadBug: {
-                deps: [],
+                deps: ['launch_isProcessing'],
                 get: function () {
                     return this.viewModel.validate.loadbug();
                 }
             },
             validatePostBug: {
-                deps: [],
+                deps: ['launch_isProcessing'],
                 get: function () {
                     return this.viewModel.validate.postbug();
                 }
