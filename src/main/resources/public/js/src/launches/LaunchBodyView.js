@@ -273,6 +273,7 @@ define(function (require, exports, module) {
             this.body = new LaunchTableView({
                 el: $('[data-js-info-container]', this.$el),
                 filterModel: filterModel,
+                userDebugMode: (this.context === 'userdebug'),
                 collectionItems: this.collectionItems,
             });
             this.body.onShow && this.body.onShow();

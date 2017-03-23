@@ -17,15 +17,11 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
-    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
-
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
-    var LaunchHeaderView = require('launches/LaunchHeaderView');
     var LaunchBodyView = require('launches/LaunchBodyView');
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
 
     var config = App.getInstance();
 
@@ -39,7 +35,6 @@ define(function (require, exports, module) {
                 el: this.context.getMainView().$body,
                 context: this.contextName
             });
-            this.listenTo(this.launchFilterCollection, 'remove', this.onRemoveFilter);
             this.listenTo(this.body, 'change:level', this.onChangeLevel);
             this.update({subContext: options.subContext});
         },
@@ -48,25 +43,13 @@ define(function (require, exports, module) {
         },
 
         update: function(options) {
-            this.filterId = options.subContext[1];
-            var pathPart = [this.filterId];
+            var pathPart = ['all'];
+            this.launchFilterCollection.activateFilter('all');
             var query = options.subContext[3];
             if(options.subContext[2]) {
                 pathPart =  pathPart.concat(options.subContext[2].split('/'));
             }
-            var self = this;
-            if(this.filterId == 'all') {
-                this.launchFilterCollection.activateFilter(this.filterId);
-                self.body.update(pathPart, query);
-            } else {
-                this.launchFilterCollection.activateFilter(this.filterId)
-                    .fail(function() {
-
-                    })
-                    .done(function() {
-                        self.body.update(pathPart, query);
-                    });
-            }
+            this.body.update(pathPart, query);
         },
 
         destroy: function () {
