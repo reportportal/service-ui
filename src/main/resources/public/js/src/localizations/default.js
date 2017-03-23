@@ -1666,6 +1666,7 @@ define(['util'], function () {
             enterDashboardName: "Enter new dashboard name",
             sharedFiltersAbsent: "No shared filters found",
             ownFiltersAbsent: "No filters found for ",
+            projectFiltersAbsent: "No filters in project ",
             sharedWidgetAdded: "Widget is already added to selected dashboard",
             sharedWidgetCantBeAdded: "Widget could not be added",
             noOwnDashboards: "Project has no dashboards yet",
