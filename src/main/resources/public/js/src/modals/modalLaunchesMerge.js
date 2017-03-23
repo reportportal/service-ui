@@ -49,8 +49,8 @@ define(function (require, exports, module) {
 
         events: {
             'click [data-js-submit]': 'submit',
-            'change #mergeName': 'validate',
-            'change #mergeDescription': 'validate',
+            // 'change #mergeName': 'validate',
+            // 'change [data-js-description]': 'validate',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel'
         },
@@ -92,13 +92,13 @@ define(function (require, exports, module) {
         render: function () {
             this.$el.html(Util.templates(this.template, this.renderObject));
             this.setupAnchors();
-            Util.bootValidator(this.$name, {
+            Util.hintValidator(this.$name, {
                 validator: 'minMaxRequired',
                 type: 'mergeName',
                 min: 3,
                 max: 256
             });
-            Util.bootValidator(this.$description, {
+            Util.hintValidator(this.$description, {
                 validator: 'minMaxNotRequired',
                 type: 'launchDescription',
                 min: 0,
@@ -114,7 +114,7 @@ define(function (require, exports, module) {
             // });
             // this.highlightCommonTags();
 
-            this.validate();
+            // this.validate();
             this.delegateEvents();
         },
 
@@ -123,18 +123,17 @@ define(function (require, exports, module) {
         },
         setupAnchors: function () {
             this.$actionBtn = $('[data-js-submit]', this.$el);
-            this.$name = $("#mergeName", this.$el);
+            this.$name = $("[data-js-merge-name]", this.$el);
             this.$description = $("[data-js-description]", this.$el);
-            this.$loader = $(".preloader", this.$el);
-            this.$tags = $("#mergeTags", this.$el);
-            this.$extendWithOriginal = $('#extendWithOriginal', this.$el);
+            this.$tags = $("[data-js-merge-tags]", this.$el);
+            this.$extendWithOriginal = $('[data-js-extend-checkbox]', this.$el);
         },
 
-        validate: function () {
-            var validity = $(".has-error", this.$el).length ? false : true;
-            var actionClass = validity ? 'remove' : 'add';
-            this.$actionBtn[actionClass + 'Class']('disabled');
-        },
+        // validate: function () {
+        //     var validity = $(".has-error", this.$el).length ? false : true;
+        //     var actionClass = validity ? 'remove' : 'add';
+        //     this.$actionBtn[actionClass + 'Class']('disabled');
+        // },
 
         // highlightCommonTags: function () {
         //     var tags = $('.select2-search-choice > div', this.$el),
@@ -155,7 +154,8 @@ define(function (require, exports, module) {
             config.trackingDispatcher.trackEventNumber(81);
         },
         submit: function () {
-            if (!$(".has-error", this.$el).length) {
+            $('input', this.$el).trigger('validate');
+            if (!$('.validate-error', this.$el).length) {
                 config.trackingDispatcher.trackEventNumber(82);
                 var data = {
                     tags: this.$tags.val().trim().split(','),
@@ -166,7 +166,7 @@ define(function (require, exports, module) {
                     extendSuitesDescription: this.$extendWithOriginal.is(':checked')
                 };
                 var self = this;
-                this.$loader.show();
+                this.showLoading();
                 Service.mergeLaunches(data)
                     .done(function (response) {
                         self.successClose(response, self.lastLaunch);
