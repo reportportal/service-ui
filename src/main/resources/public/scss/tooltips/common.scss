@@ -30,6 +30,12 @@
   display: inline-block;
   box-shadow: 1px 1px 6px -1px rgba(0, 0, 0, 0.4);
   padding: 0;
+
+  &.filter-description-tooltip {
+    max-width: 430px;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+  }
   .ui-tooltip-content {
     position: relative;
     color: $COLOR--charcoal-grey;
