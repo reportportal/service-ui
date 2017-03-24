@@ -591,7 +591,7 @@ define(function (require, exports, module) {
             getItemUrl: {
                 deps: ['id'],
                 get: function(id){
-                    return this.appModel.get('projectId') + '/launches/all/' + id;
+                    return '#' + this.appModel.get('projectId') + '/launches/all/' + id;
                 }
             }
         },
