@@ -25,9 +25,10 @@ define(function(require, exports, module) {
     var CallService = require('callService');
     var urls = require('dataUrlResolver');
     var SingletonAppModel = require('model/SingletonAppModel');
-    var Helpers = require('helpers');
+    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var Localization = require('localization');
     var Util = require('util');
+    var Moment = require('moment');
     var Components = require('core/components');
     var ModalFilterEdit = require('modals/modalFilterEdit');
     var App = require('app');
@@ -37,6 +38,7 @@ define(function(require, exports, module) {
     var call = CallService.call;
     var appModel = new SingletonAppModel();
 
+    var FilterEntities = require('filterEntities/FilterEntities');
 
     var FilterModel = Epoxy.Model.extend({
         defaults: {
@@ -62,11 +64,13 @@ define(function(require, exports, module) {
                 deps: ['entities', 'selection_parameters'],
                 get: function(entities, selection_params) {
                     var selection_parameters = this.getParametersObj();
-                    var result = '(' + Helpers.getFilterOptions(this.getEntitiesObj(), Localization.comparators) + ')';
-                    var sortKey = selection_parameters &&  Helpers.getLastKey(selection_parameters.sorting_column);
+                    var result = '(' + this.getFilterOptions(this.getEntitiesObj(), Localization.comparators) + ')';
+                    var sortKey = selection_parameters &&  this.getLastKey(selection_parameters.sorting_column);
+
                     if(sortKey) {
                         result += Localization.favorites.sortedBy + ' ' + Localization.launchesHeaders[sortKey];
                     }
+
                     return result;
                 }
             },
@@ -115,6 +119,106 @@ define(function(require, exports, module) {
             this.listenTo(this, 'change:temp', this.onChangeTemp);
             this.computedsUrl();
         },
+
+        getLastKey: function (keyArray) {
+            if (keyArray) {
+                keyArray = keyArray.split('$');
+                return keyArray.length > 1 ? keyArray[keyArray.length - 1] : keyArray[0];
+            }
+        },
+
+        getFilterOptions: function (entities, text) {
+            var self = this;
+
+            if (!entities || !entities.length) {
+                return '';
+            }
+
+            if (entities) {
+                var mapped = _.map(entities, function (item) {
+                    if (item.filtering_field === 'start_time' /*&& item.value.split(',').length === 1*/) {
+                        item.value = (new FilterEntities.EntityTimeRangeModel(item).getInfo().value);
+                        if (~item.value.indexOf(',') || ~item.value.indexOf(';')) {
+                            item.condition = '';
+                        } else {
+                            item.condition = 'eq'
+                        }
+                    }
+                    var filterName = self.getSmartKey(item.filtering_field);
+                    if (!filterName) {
+                        return '<span style="color: #ff3222"><b>Invalid</b></span>';
+                    }
+                    if (item.value == '') {
+                        return '';
+                    }
+                    return [filterName, ' ',
+                        item.is_negative ? text['not'] : '',
+                        text[item.condition] || "", ' ',
+                        self.clearValue(item.value)].join('');
+                }, {});
+                return mapped.join(text['andb']);
+            }
+        },
+
+        clearValue: function (field) {
+            var result = field;
+            var time = result.split(',');
+            var timeDynamic = result.split(';');
+            if (time.length === 2) {
+                result = this.getTimeString(time[0], time[1]);
+            } else if (timeDynamic.length == 3) {
+                var curTime = Moment().startOf('day').unix() * 1000;
+                result = this.getTimeString(curTime + parseInt(timeDynamic[0], 10) * 60000, curTime + parseInt(timeDynamic[1], 10) * 60000) + ' (dynamic)';
+            }
+            return result.escapeHtml();
+        },
+
+        getTimeString: function (startTime, endTime) {
+            var result = '';
+            var hum = config.dateRangeFullFormat;
+            var from = Moment(parseInt(startTime));
+            var to = Moment(parseInt(endTime));
+
+            if (from.isValid() && to.isValid()) {
+                result = Localization.ui.from + ' ' + from.format(hum) + ' ' + Localization.ui.to + ' ' + to.format(hum);
+            }
+            return result;
+        },
+
+        getSmartKey: function (string) {
+            var defectTypeCollection = new SingletonDefectTypeCollection();
+            var splitKey = string.split('$');
+            var locator = splitKey.pop();
+            var type = splitKey.shift();
+            var defectTypeTotal = splitKey.pop();
+            var defectType = defectTypeCollection.findWhere({locator: locator});
+
+            if (!string) {
+                return ''
+            }
+            if (Localization.filterNameById[string]) {
+                if (type == 'statistics') {
+
+                    var searchDefectTypes = defectTypeCollection.where({typeRef: defectTypeTotal.toUpperCase()});
+                    if (searchDefectTypes.length == 1) {
+                        return searchDefectTypes[0].get('longName');
+                    } else {
+                        return Localization.filterNameById[string];
+                    }
+                } else {
+                    return Localization.filterNameById[string];
+                }
+            }
+            if (defectType) {
+                return defectType.get('longName');
+            }
+            var firstPartKey = type + '$' + splitKey[0] + '$' + defectTypeTotal;
+            if (Localization.filterNameById[firstPartKey]) {
+                return false
+            }
+            return locator.capitalizeName();
+        },
+
         getEntitiesObj: function() {
             try {
                 if(this.get('newEntities')) {
