@@ -201,7 +201,7 @@ define(function (require, exports, module) {
             };
             Object.defineProperty(Array.prototype, "equals", {enumerable: false});
         },
-        appendTooltip: function (content, $el, $parrent, openCallback) {
+        appendTooltip: function (content, $el, $parrent, openCallback, className) {
             $el.uitooltip({
                 position: {
                     my: 'left top',
@@ -209,6 +209,7 @@ define(function (require, exports, module) {
                     of: $parrent,
                     collision: 'fit'
                 },
+                tooltipClass: className || 'default-tooltip',
                 show: {effect: 'none', delay: 500, duration: 0},
                 hide: {effect: 'none', duration: 0},
                 items: ':not([disabled])',

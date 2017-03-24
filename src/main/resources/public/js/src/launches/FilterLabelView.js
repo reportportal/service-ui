@@ -53,7 +53,7 @@ define(function (require, exports, module) {
         setTooltip: function () {
             if (this.model.get('description')) {
                 Util.appendTooltip(this.model.get('description'), $('[data-js-filter-comment]', this.$el), this.$el,
-                function() { config.trackingDispatcher.trackEventNumber(18); });
+                function() { config.trackingDispatcher.trackEventNumber(18); }, 'filter-description-tooltip');
             }
             Util.appendTooltip(Localization.launches.filterIsSharedByOtherUser, $('[data-js-filter-not-my]', this.$el), this.$el,
                 function() { config.trackingDispatcher.trackEventNumber(19); });
