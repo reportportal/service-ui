@@ -62,8 +62,8 @@ define(function(require, exports, module) {
             'touchend  [data-js-toogle-visability]': 'hidePass',
             'touchcancel  [data-js-toogle-visability]': 'hidePass',
 
-            'validation:success .rp-input': 'checkFields',
-            'validation:success [data-js-login]' : 'checkForLoginUniqueness'
+            'keyup [data-js-password-confirm]': 'checkFields',
+            // 'validation:success [data-js-login]' : 'checkForLoginUniqueness'
         },
 
         initialize: function(options){
@@ -103,18 +103,18 @@ define(function(require, exports, module) {
             this.$register = $('[data-js-register]', this.$el);
         },
 
-        checkForLoginUniqueness: function() {
-            var self = this;
-            CallService.call('GET', Urls.userInfoValidation() + '?username=' + this.$login.val())
-                .done(function (data) {
-                    if (data.is) {
-                        self.$login.parent().addClass('validate-error').find('.validate-hint').addClass('show-hint').html(Localization.validation.registeredLogin);
-                    }
-                })
-                .fail(function (error) {
-
-                });
-        },
+        // checkForLoginUniqueness: function() {
+        //     var self = this;
+        //     CallService.call('GET', Urls.userInfoValidation() + '?username=' + this.$login.val())
+        //         .done(function (data) {
+        //             if (data.is) {
+        //                 self.$login.parent().addClass('validate-error').find('.validate-hint').addClass('show-hint').html(Localization.validation.registeredLogin);
+        //             }
+        //         })
+        //         .fail(function (error) {
+        //
+        //         });
+        // },
 
         showExpiredPage: function(e) {
             e && e.preventDefault();
@@ -207,10 +207,10 @@ define(function(require, exports, module) {
         },
         registerMember: function() {
             $('.rp-field', this.$el).find('input').trigger('validate');
-            if ($('.validate-error', this.$el).length || this.$confirmPassword.val() !== this.$password.val()) return;
+            if ($('.validate-error', this.$el).length) { return };
 
-            var data = this.getData(),
-                self = this;
+            var data = this.getData();
+            var self = this;
 
             if (data) {
                 Service.registerUser(data, this.id)
@@ -225,6 +225,9 @@ define(function(require, exports, module) {
 
                     })
                     .fail(function(error){
+                        if(error.status == 409) {
+                            self.$login.parent().addClass('validate-error');
+                        }
                         Util.ajaxFailMessenger(error, 'registerMember');
                     });
             }
