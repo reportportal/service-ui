@@ -41,6 +41,21 @@ define(function (require, exports, module) {
     var appModel = new SingletonAppModel();
 
     var FavoritesPage = Epoxy.View.extend({
+        template: 'tpl-favorite-page',
+        templateHeader: 'tpl-favorites-header',
+        events: {
+            'keyup [data-js-filter-name]': 'debounceChange',
+            'change [data-js-filter-name]': 'onChangeFilterName',
+            'click [data-js-link-launch]': 'onClickLinkLaunch',
+            'click [data-js-add-filter]': 'onClickAddFilter',
+        },
+        bindings: {
+            '[data-js-filter-name]': 'attr: {disabled: empty}',
+            '[data-js-empty-block]': 'classes: {hide: not(empty)}',
+            '[data-js-filter-paginate]': 'classes: {hide: any(empty, notFound)}',
+            '[data-js-not-found]': 'classes: {hide: not(notFound)}',
+            '[data-js-search-value]': 'text: search',
+        },
         initialize: function(options) {
             this.model = new Backbone.Model({
                 search: '',
@@ -55,21 +70,11 @@ define(function (require, exports, module) {
             this.context = options.context;
             this.$header = this.context.getMainView().$header;
             this.$el = this.context.getMainView().$body;
+            this.debounceChange = _.debounce(function() {
+                $('[data-js-filter-name]', this.$el).trigger('change');
+            }.bind(this), 800)
         },
-        template: 'tpl-favorite-page',
-        templateHeader: 'tpl-favorites-header',
-        events: {
-            'validation::change [data-js-filter-name]': 'onChangeFilterName',
-            'click [data-js-link-launch]': 'onClickLinkLaunch',
-            'click [data-js-add-filter]': 'onClickAddFilter',
-        },
-        bindings: {
-            '[data-js-filter-name]': 'attr: {disabled: empty}',
-            '[data-js-empty-block]': 'classes: {hide: not(empty)}',
-            '[data-js-filter-paginate]': 'classes: {hide: any(empty, notFound)}',
-            '[data-js-not-found]': 'classes: {hide: not(notFound)}',
-            '[data-js-search-value]': 'text: search',
-        },
+
         render: function() {
             var defectTypeCollection = new SingletonDefectTypeCollection();
             this.mainBreadcrumbs = new MainBreadcrumbsComponent({
@@ -81,7 +86,7 @@ define(function (require, exports, module) {
                 this.$filterName = $('[data-js-filter-name]', this.$el);
                 this.$filterList = $('[data-js-filter-list]', this.$el);
                 this.$filterPaginate = $('[data-js-filter-paginate]', this.$el);
-                Util.bootValidator(this.$filterName, [{
+                Util.hintValidator(this.$filterName, [{
                     validator: 'minMaxNotRequired',
                     type: 'filterName',
                     min: 3,
@@ -112,11 +117,12 @@ define(function (require, exports, module) {
             this.paging.trigger('page', 1);
         },
         onChangeFilterName: function (e, data) {
-            if (data.valid) {
+            if (!$('[data-js-filter-name]', this.$el).data('validate-error')) {
+                var name = $('[data-js-filter-name]', this.$el).val();
                 config.trackingDispatcher.trackEventNumber(240);
-                this.paging.urlModel.set({'filter.cnt.name': data.value});
-                this.model.set({search: data.value});
-                this.searchString = data.value;
+                this.paging.urlModel.set({'filter.cnt.name': name});
+                this.model.set({search: name});
+                this.searchString = name;
             }
         },
         onPage: function(page) {
