@@ -134,6 +134,7 @@ define(function (require, exports, module) {
         },
         update: function () {
             this.loadDefectTooltip();
+            this.loadExecutionsTooltip();
         },
         onHoverExecutionStats: function(){
             config.trackingDispatcher.trackEventNumber(89);
