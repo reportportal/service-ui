@@ -66,13 +66,10 @@ define(function (require, exports, module) {
 
         loadProject: function () {
             var self = this;
-
-            return Service.getProject().then(
-                function (response) {
-                    self.currentProjectId = response.projectId;
-                    config.project = response;
-                    appModel.parse(response);
-                });
+            return appModel.update().done(function(response) {
+                self.currentProjectId = response.projectId;
+                config.project = response;
+            });
         },
 
         loadPreferences: function () {

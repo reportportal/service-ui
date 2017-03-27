@@ -22,6 +22,7 @@ define(function(require, exports, module) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
+    var Service = require('coreService');
 
     var AppModel = Epoxy.Model.extend({
         defaults: {
@@ -70,6 +71,12 @@ define(function(require, exports, module) {
                 return null;
             }
             return this.get('configuration').entryType === 'INTERNAL';
+        },
+        update: function() {
+            var self = this;
+            return Service.getProject().done(function(data) {
+                self.parse(data);
+            });
         },
         parse: function(data) {
             data.externalSystem = '';

@@ -27,7 +27,6 @@ define(function (require, exports, module) {
     var MembersModel = require('projectMembers/MembersModel');
 
     var MembersCollection = Backbone.Collection.extend({
-
         model: MembersModel,
 
         parse: function (response) {

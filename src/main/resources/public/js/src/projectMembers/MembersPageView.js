@@ -28,6 +28,7 @@ define(function(require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var MembersTableView = require('projectMembers/MembersTableView');
+    var SingletonAppModel = require('model/SingletonAppModel');
 
     var config = App.getInstance();
 
@@ -40,13 +41,19 @@ define(function(require, exports, module) {
             this.context = options.context;
             this.$header = this.context.getMainView().$header;
             this.$el = this.context.getMainView().$body;
+            this.appModel = new SingletonAppModel();
         },
 
         render: function(){
             this.renderHeader();
             this.$el.html(Util.templates(this.template), {});
             this.body = new MembersTableView({});
-            $('[data-js-members]', this.$el).append(this.body.$el)
+            $('[data-js-members]', this.$el).append(this.body.$el);
+            this.listenTo(this.body, 'remove:member invite:member', this.onChangeMembers);
+        },
+
+        onChangeMembers: function() {
+            this.appModel.update();
         },
 
         renderHeader: function(){

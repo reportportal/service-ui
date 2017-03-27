@@ -37,14 +37,20 @@ define(function (require, exports, module) {
     var setupUserSearch = function ($el, options) {
         var appModel = new SingletonAppModel();
         var validateUserProject = function(user){
-            var userId = user.userId || user.id;
             var answer = false;
-            _.each(appModel.get('users'), function(userInfo, id) {
-                if(id == userId) {
-                    answer = true;
-                    return false;
-                }
-            });
+            if (user.assigned_projects) { // for admin part
+                var projectId = appModel.get('projectId'),
+                    userProjects = _.keys(user.assigned_projects);
+                answer = _.contains(userProjects, projectId);
+            } else {
+                var userId = user.userId || user.id;
+                _.each(appModel.get('users'), function(userInfo, id) {
+                    if(id == userId) {
+                        answer = true;
+                        return false;
+                    }
+                });
+            }
             return answer;
         };
         var remoteUsers = [];
