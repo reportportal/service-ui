@@ -301,7 +301,7 @@ define(function (require, exports, module) {
                         if(data.warning){
                             var messages = Localization.failMessages;
                             if(data.warning.indexOf(messages.serverNotConfigured) >=0){
-                                Util.ajaxFailMessenger(null, 'addUserWithoutEmail');
+                                Util.ajaxSuccessMessenger('addUserWithoutEmail');
                             }
                             else {
                                 Util.ajaxFailMessenger(null, 'addMember', data.warning);

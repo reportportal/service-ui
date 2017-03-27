@@ -1417,6 +1417,7 @@ define(['util'], function () {
             changedColorDefectTypes: "Defect types have been updated.",
             updateDefect: 'Defects have been updated',
             updateServerSettings: 'Server settings were successfully updated',
+            addUserWithoutEmail: 'User has been created, but impossible to send message due to email server configuration is broken or switched-off',
         },
 
         failMessages: {
