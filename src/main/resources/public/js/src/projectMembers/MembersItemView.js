@@ -31,6 +31,8 @@ define(function(require, exports, module) {
     var SingletonAppModel = require('model/SingletonAppModel');
     var ModalConfirm = require('modals/modalConfirm');
     var MemberService = require('projectMembers/MembersService');
+    var CallService = require('callService');
+    var Urls = require('dataUrlResolver');
 
     var config = App.getInstance();
 
@@ -45,14 +47,15 @@ define(function(require, exports, module) {
             '[data-js-member-name]': 'html: getFullName',
             '[data-js-member-login]': 'html: getLogin',
             '[data-js-member-you]': 'classes: {hide: not(isYou)}',
-            '[data-js-member-admin]': 'classes: {hide: not(isAdmin)}',
+            '[data-js-member-admin]': 'classes: {hide: not(isAdmin), notlink: isYou}',
             '[data-js-member-unassign]': 'classes: {disabled: not(canUnAssign)}, attr: {disabled: not(canUnAssign), title: getUnAssignTitle}',
             '[data-js-select-roles]': 'classes: {hide: isAdmin}',
             '[data-js-admin-role]': 'classes: {hide: not(isAdmin)}',
             '[data-js-selected-role]': 'text: getProjectRole',
             '[data-js-member-role-mobile]': 'text: getProjectRole',
             '[data-js-dropdown-roles]': 'updateRoleDropDown: assigned_projects',
-            '[data-js-button-roles] ': 'classes: {disabled: not(canChangeRole)}, attr: {disabled: not(canChangeRole)}'
+            '[data-js-button-roles] ': 'classes: {disabled: not(canChangeRole)}, attr: {disabled: not(canChangeRole)}',
+            '[data-js-make-admin]': 'classes: {hide: hideMakeAdmin}',
         },
 
         computeds: {
@@ -107,6 +110,12 @@ define(function(require, exports, module) {
                         roles = Util.getRolesMap();
                     return roles[assignedProjects[projectId].projectRole];
                 }
+            },
+            hideMakeAdmin: {
+                deps: ['isAdmin', 'isYou'],
+                get: function(isAdmin, isYou){
+                    return isAdmin || isYou;
+                }
             }
         },
 
@@ -127,7 +136,9 @@ define(function(require, exports, module) {
         events: {
             'click [data-js-login-time]': 'toggleTimeView',
             'click [data-js-dropdown-roles] a': 'updateProjectRole',
-            'click [data-js-member-unassign]': 'unAssignMember'
+            'click [data-js-member-unassign]': 'unAssignMember',
+            'click [data-js-member-admin]': 'confirmChangeAccountRole',
+            'click [data-js-make-admin]': 'confirmChangeAccountRole',
         },
 
         initialize: function (options) {
@@ -139,6 +150,44 @@ define(function(require, exports, module) {
 
         render: function () {
             this.$el.html(Util.templates(this.tpl, {roles: this.roles}));
+        },
+
+        confirmChangeAccountRole: function (e) {
+            e.preventDefault();
+            if (!this.model.get('isYou')) {
+                config.trackingDispatcher.trackEventNumber(463);
+                var modal = new ModalConfirm({
+                    headerText: Localization.dialogHeader.changeRole,
+                    bodyText: Util.replaceTemplate(Localization.dialog.changeRole, this.model.get('full_name') || this.model.get('userId')),
+                    cancelButtonText: Localization.ui.cancel,
+                    okButtonDanger: true,
+                    okButtonText: Localization.dialog.changeRoleBtn,
+                    confirmFunction: this.changeAccountRole.bind(this)
+                });
+                $('[data-js-close]', modal.$el).on('click', function () {
+                    config.trackingDispatcher.trackEventNumber(472);
+                });
+                $('[data-js-cancel]', modal.$el).on('click', function () {
+                    config.trackingDispatcher.trackEventNumber(473);
+                });
+                modal.show();
+            }
+        },
+
+        changeAccountRole: function () {
+            config.trackingDispatcher.trackEventNumber(474);
+            var userId = this.model.get('userId'),
+                fullName = this.model.get('full_name'),
+                newRole = this.model.get('userRole') == config.accountRolesEnum.user ? config.accountRolesEnum.administrator : config.accountRolesEnum.user;
+
+            return CallService.call('PUT', Urls.modifyUserUrl(userId), {role: newRole})
+                .done(function() {
+                    this.model.set('userRole', newRole);
+                    Util.ajaxSuccessMessenger("changeRole", fullName || userId);
+                }.bind(this))
+                .fail(function (error) {
+                    Util.ajaxFailMessenger(error, "changeRole", fullName || userId);
+                });
         },
 
         isPersonalProjectOwner: function(){
