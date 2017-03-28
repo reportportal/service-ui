@@ -22,13 +22,11 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
-    var WidgetsConfig = require('widget/widgetsConfig');
+    var WidgetService = require('newWidgets/WidgetService');
     var Filters = require('filterEntities/FilterEntities');
-    var Localization = require('localization');
 
     var SettingUsersView = SettingView.extend({
         className: 'modal-add-widget-setting-users',
@@ -38,34 +36,32 @@ define(function (require, exports, module) {
         bindings: {
 
         },
-        initialize: function() {
-            this.widgetConfig = WidgetsConfig.getInstance();
-            this.curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
+        initialize: function () {
+            this.curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             if (!this.curWidget.usersFilter) {
                 this.destroy();
                 return false;
             }
             this.render();
-            this.usersModel = new Filters.Model({value: ''});
-            this.userView = new Filters.UserTagEntityView({model: this.usersModel, type: 'autocompleteUserUrl'});
+            this.usersModel = new Filters.Model({ value: '' });
+            this.userView = new Filters.UserTagEntityView({ model: this.usersModel, type: 'autocompleteUserUrl' });
             $('[data-js-user-tags-container]', this.$el).html(this.userView.$el);
             this.listenTo(this.usersModel, 'change:value', this.onChangeValue);
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {}))
+        render: function () {
+            this.$el.html(Util.templates(this.template, {}));
         },
-        activate: function(){
+        activate: function () {
             var curOptions = this.model.getWidgetOptions();
-            if(curOptions.userRef){
+            if (curOptions.userRef) {
                 this.usersModel.set('value', curOptions.userRef.join(','));
             }
         },
-        onChangeValue: function(model, value) {
+        onChangeValue: function (model, value) {
             var curOptions = this.model.getWidgetOptions();
-            if(value){
+            if (value) {
                 curOptions.userRef = value.split(',');
-            }
-            else {
+            } else {
                 delete curOptions.userRef;
             }
             this.model.setWidgetOptions(curOptions);

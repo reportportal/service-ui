@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
@@ -31,13 +31,73 @@ define(function(require, exports, module) {
             isShared: false,
             name: '',
             owner: '',
+            interval: 3 // default interval for status page widgets
         },
         computeds: {
+            isTimeline: {
+                deps: ['content_parameters'],
+                get: function (widgetOptions) {
+                    var options = this.getWidgetOptions();
+                    if (options.timeline && options.timeline.length) {
+                        return true;
+                    }
+                    return false;
+                }
+            },
+            gadget: {
+                deps: ['content_parameters'],
+                get: function (params) {
+                    return this.getParameters().gadget;
+                }
+            }
         },
-        initialize: function(){
+        initialize: function () {
 
         },
+        getContent: function () {
+            try {
+                return JSON.parse(this.get('content'));
+            } catch (err) {
+                return [];
+            }
+        },
+        setContent: function (options) {
+            this.set({ content: JSON.stringify(options) });
+        },
+        getParameters: function () {
+            try {
+                return JSON.parse(this.get('content_parameters'));
+            } catch (err) {
+                return {};
+            }
+        },
+        setParameters: function (options) {
+            this.set({ content_parameters: JSON.stringify(options) });
+        },
+        getContentFields: function () {
+            return this.getParameters().content_fields || [];
+        },
+        setContentFields: function (data) {
+            var params = this.getParameters();
+            params.content_fields = data;
+            this.setParameters(params);
+        },
+        getWidgetOptions: function () {
+            return this.getParameters().widgetOptions || {};
+        },
+        parse: function (data) {
+            return {
+                id: data.id,
+                content: JSON.stringify(data.content),
+                content_parameters: JSON.stringify(data.content_parameters),
+                filter_id: data.filter_id,
+                isShared: data.isShared,
+                name: data.name,
+                owner: data.owner,
+                interval: data.interval || 3
+            };
+        }
     });
 
     return WidgetModel;
-})
+});

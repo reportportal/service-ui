@@ -17,9 +17,9 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
@@ -32,7 +32,8 @@ define(function(require, exports, module) {
     var Service = require('coreService');
     var Helpers = require('helpers');
     var AdminService = require('adminService');
-    var Widget = require('widgets');
+    var WidgetModel = require('newWidgets/WidgetModel');
+    var WidgetService = require('newWidgets/WidgetService');
 
     require('select2');
 
@@ -106,29 +107,29 @@ define(function(require, exports, module) {
             this.loadWidgets();
             return this;
         },
-        renderGeneralInfo: function(data){
+        renderGeneralInfo: function (data) {
             var el = this.$generalInfo;
             var generalInfo = el.find('.general-info');
             var isGeneralInfo = (generalInfo.length > 0);
             $('.loading-widget', el).hide();
             generalInfo.remove();
             el.append(Util.templates(this.tplGeneralInfo, {info: data, hasValidBtsSystem: Util.hasValidBtsSystem()}));
-            if(!isGeneralInfo) {
+            if (!isGeneralInfo) {
                 Util.setupBaronScroll(el);
             }
         },
-        renderLaunchesOwners: function(data){
+        renderLaunchesOwners: function (data) {
             var el = this.$launchOwners,
                 params = {};
             $('.loading-widget', el).hide();
             params.launchesPerUser = _.sortByOrder(data.launchesPerUser, 'count', false);
             el.append(Util.templates(this.tplLaunchesOwners, params));
-            if(!this.isRenderLaunchesOwner) {
+            if (!this.isRenderLaunchesOwner) {
                 Util.setupBaronScroll(el);
                 this.isRenderLaunchesOwner = true;
             }
         },
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$launchOwners = $('#launches_owners .widget-body', this.$el);
             this.$generalInfo = $('#general_info .widget-body', this.$el);
             this.$projectDetails = [this.$generalInfo, this.$launchOwners];
@@ -137,7 +138,7 @@ define(function(require, exports, module) {
             var self = this,
                 projectId = this.project;
 
-            _.each(this.$projectDetails, function(w){
+            _.each(this.$projectDetails, function (w) {
                 var cont = $('.project-content', w);
                 cont.length && cont.remove();
                 $('.loading-widget', w).show();
@@ -159,28 +160,28 @@ define(function(require, exports, module) {
             var xhr = AdminService.loadProjectDetailsWidgets(projectId, widgetId, this.interval)
                 .done(function (data) {
                     self.renderWidget(data, widgetId);
-                    if(widget.childs){
-                        _.each(widget.childs, function(w){
+                    if (widget.childs) {
+                        _.each(widget.childs, function (w) {
                             self.renderWidget(data, w);
                         });
                     }
                 })
                 .fail(function (error) {
                     self.renderFailedLoad(widgetId);
-                    if(widget.childs){
-                        _.each(widget.childs, function(w){
+                    if (widget.childs) {
+                        _.each(widget.childs, function (w) {
                             self.renderFailedLoad(w);
                         });
                     }
                     Util.ajaxFailMessenger(error, 'widgetData');
                 })
-                .always(function() {
+                .always(function () {
                     var i = this.xhrPool.indexOf(xhr);
                     if (i > -1) this.xhrPool.splice(i, 1);
                 }.bind(this))
             this.xhrPool.push(xhr);
         },
-        renderFailedLoad: function(widgetId){
+        renderFailedLoad: function (widgetId) {
             var widgetEl = $('#' + widgetId),
                 $loading = $('.loading-widget', widgetEl),
                 $errorEl = $('div.no-data-error', widgetEl);
@@ -189,47 +190,48 @@ define(function(require, exports, module) {
             $errorEl.length && $errorEl.remove();
             $('.widget-body', widgetEl).append(Util.templates(this.unableLoadTpl, {}));
         },
-        renderWidget: function(data, widgetId){
-            var container = $('#' + widgetId),
-                $errorEl = $('div.no-data-error', container),
-                $loading = $('.loading-widget', container),
-                view = Widget.widgetService(widgetId),
-                widget = null,
-                params = {
-                    container: $('.widget-body', container),
-                    param: {
-                        id: widgetId,
-                        content: data,
-                        interval: this.interval
-                    }
-                };
+        renderWidget: function (data, widgetId) {
 
-            if(widgetId == 'activities'){
-                params.isAutoRefresh = false;
-                params.isReverse = false;
-                params.projectId = this.project;
+            var container = $('#' + widgetId);
+            var $errorEl = $('div.no-data-error', container);
+            var $loading = $('.loading-widget', container);
+            var view = WidgetService.getWidgetView(widgetId);
+            var widget = null;
+            var widgetModel = new WidgetModel({
+                id: _.uniqueId() + '-' + widgetId,
+                content_parameters: {gadget: widgetId},
+                content: data,
+                interval: this.interval
+            }, {parse: true});
+            var widgetData = {
+                isPreview: false,
+                model: widgetModel
+            };
+            if (widgetId == 'activities') {
+                widgetData.isReverse = true;
             }
 
             $loading.hide();
             $errorEl.length && $errorEl.remove();
-
-            widget = new view(params).render();
+            widget = new view(widgetData);
+            $('.widget-body', container).append(widget.$el);
+            widget.onShow();
             this.widgets.push({id: widgetId, view: widget});
         },
-        loadWidgets: function(){
+        loadWidgets: function () {
             var cloneXhr = _.clone(this.xhrPool);
-            _.each(cloneXhr, function(xhr) {
+            _.each(cloneXhr, function (xhr) {
                 xhr.abort();
             });
-            _.each(this.widgets, function(widget){
+            _.each(this.widgets, function (widget) {
                 widget.view.destroy();
-                    var widgetId = widget.id,
-                        container = $('#' + widgetId);
+                var widgetId = widget.id,
+                    container = $('#' + widgetId);
                 $('.loading-widget', container).show();
             }, this);
-            this.widgets = [];
 
-            _.each(this.staticWidgets, function(w){
+            this.destroyWidgets();
+            _.each(this.staticWidgets, function (w) {
                 this.loadStaticWidget(w);
             }, this);
         },
@@ -237,10 +239,15 @@ define(function(require, exports, module) {
             this.loadProjectInfo();
             this.loadWidgets();
         },
-        destroy: function () {
-            _.each(this.widgets, function(widget){
+        destroyWidgets: function(){
+            _.each(this.widgets, function (widget) {
                 widget.view.destroy();
+                widget.view.$el.remove();
             });
+            this.widgets = [];
+        },
+        destroy: function () {
+            this.destroyWidgets();
             Components.BaseView.prototype.destroy.call(this);
         }
     });

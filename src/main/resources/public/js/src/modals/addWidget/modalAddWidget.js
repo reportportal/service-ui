@@ -27,7 +27,7 @@ define(function (require) {
     var Util = require('util');
     var $ = require('jquery');
     var _ = require('underscore');
-    var WidgetsConfig = require('widget/widgetsConfig');
+    var WidgetService = require('newWidgets/WidgetService');
     var SelectWidgetView = require('modals/addWidget/SelectWidgetView');
     var ConfigureWidgetView = require('modals/addWidget/ConfigureWidgetView');
     var SaveWidgetView = require('modals/addWidget/SaveWidgetView');
@@ -66,7 +66,7 @@ define(function (require) {
             this.dashboardModel = options.dashboardModel;
             this.isNoDashboard = options.isNoDashboard;
             options.filter_id && this.model.set('filter_id', options.filter_id);
-            this.widgetConfig = WidgetsConfig.getInstance();
+            this.curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             this.viewModel = new (Epoxy.Model.extend({
                 defaults: { step: 1, disableNavigate: false }
             }))();
@@ -96,6 +96,7 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(290);
         },
         onChangePreview: function () {
+            this.curWidget = WidgetService.getWidgetConfig(model.get('gadget'));
             this.previewWidgetView && this.previewWidgetView.destroy();
             this.previewWidgetView = new PreviewWidgetView({
                 model: this.model,
@@ -169,7 +170,6 @@ define(function (require) {
         },
         onClickAddWidget: function () {
             var self = this;
-            var curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
             var contentParameters = {};
             var data = {};
             if (this.saveWidget.validate()) {
@@ -181,7 +181,7 @@ define(function (require) {
                 if (this.model.get('gadget') === 'most_failed_test_cases') {
                     contentParameters.metadata_fields = ['name', 'start_time'];
                 }
-                contentParameters.type = curWidget.widget_type;
+                contentParameters.type = this.curWidget.widget_type;
                 contentParameters.gadget = this.model.get('gadget');
                 contentParameters.itemsCount = this.model.get('itemsCount');
                 if (this.model.getContentFields().length) {

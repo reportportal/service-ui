@@ -23,16 +23,12 @@ define(function (require, exports, module) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
-    var Util = require('util');
-    var $ = require('jquery');
-
-
 
     var SettingView = Epoxy.View.extend({
-        validate: function() {
+        validate: function () {
             return true;
         },
-        destroy: function() {
+        destroy: function () {
             this.onDestroy && this.onDestroy();
             this.undelegateEvents();
             this.stopListening();
