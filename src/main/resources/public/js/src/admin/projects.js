@@ -33,7 +33,6 @@ define(function (require, exports, module) {
     var ProjectSettingsPage = require('projectSettings/projectSettingsPage');
     var ProjectInfo = require('projectinfo');
     var MemberService = require('memberService');
-    var Widget = require('widgets');
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
 

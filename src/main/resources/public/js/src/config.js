@@ -35,7 +35,6 @@ require.config({
         'cookie': '../lib/jquery.cookie',
         // 'nicescroll': '../lib/jquery.nicescroll',
         'bootswitch': '../lib/bootstrap-switch.min',
-        'elementQuery': '../lib/EQCSS',
         'baron': '../lib/baron',
         'base64': '../lib/base64',
         'util': 'core/util',
@@ -144,7 +143,7 @@ require.config({
         'validate': { deps : ['jquery'] },
         'elasticColumns': ['jquery'],
         'nvd3': {deps: ['d3'], exports : 'nv'},
-        'widgets': ['d3', 'nvd3', 'elementQuery'],
+        'widgets': ['d3', 'nvd3'],
         'markitup': ['jquery'],
         'markitupset': ['markitup'],
         'underscore': {

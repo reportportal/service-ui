@@ -21,7 +21,124 @@
 
 .launches-table-panel {
   position: relative;
-  margin: -15px;
+
+  &.launches-table-mobile {
+    .si-sort {
+      padding-left: 27px;
+    }
+    .col-xs-1.investigated {
+      margin-left: -14px;
+    }
+
+    .rp-table-thead {
+      font-size: 12px;
+    }
+    .rp-table-row .statistics-block {
+      position: relative;
+      float: left;
+      height: 100%;
+      margin-bottom: 20px;
+    }
+
+    .hidden-xs {
+      display: none !important;
+    }
+
+    .launch-suite-defects {
+      display: none;
+    }
+
+    .col-xs-11.col-sm-3 {
+      width: 91.66666667%;
+    }
+
+    .filter-tb-td {
+      padding: 0 0 0 4px;
+      text-align: left;
+    }
+    .ftp-cols {
+      padding: 0 15px;
+    }
+
+    .col-xs-6 {
+      width: 50%;
+    }
+
+    .rp-info.rp-colors {
+      margin: 0 0 8px;
+    }
+
+    .name-wrapper {
+      padding: 0;
+    }
+
+    .col-xs-4.col-sm-2 {
+      width: 33.33333333%;
+    }
+
+    .col-xs-12 {
+      width: 100%;
+    }
+    .visible-xs-inline,
+    .visible-xs {
+      display: inline !important;
+    }
+    .hidden-xs-inline,
+    .hidden-xs {
+      display: none !important;
+    }
+    .rp-info.rp-colors:before {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: 0;
+      width: 12px;
+      height: 100%;
+    }
+    .rp-mobile-padding {
+      padding: 0 15px !important;
+
+    }
+    .rp-info.rp-colors {
+      padding-bottom: 1%;
+      padding-top: 1%;
+      text-align: center;
+    }
+    .rp-info.total:before {
+      background-color: #489beb;
+    }
+    .rp-info.passed:before {
+      background-color: #87b87f;
+    }
+    .rp-info.pb:before {
+      background-color: #e93416;
+    }
+    .rp-info.failed:before {
+      background-color: #f16a50;
+    }
+    .rp-info.ab:before {
+      background-color: #f5d752;
+    }
+    .rp-info.skipped:before {
+      background-color: #bdc7cc;
+    }
+    .rp-info.si:before {
+      background-color: #2273cd;
+    }
+    .rp-info.ti:before {
+      background-color: #FFB752;
+    }
+    .to_investigate-table-cell {
+      width: 100%;
+      position: relative;
+      text-align: left;
+      margin-top: -13px;
+      margin-left: -6px;
+    }
+    .cases-view.TO_INVESTIGATE {
+      display: inline-block;
+    }
+  }
 
   .no-data-error {
     padding: 40px 0;

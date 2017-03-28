@@ -121,7 +121,7 @@ define(function (require, exports, module) {
                 this.onLoadDataError();
                 return;
             }
-            this.widgetView = new WidgetView({model: (new WidgetModel(this.model.get('widgetData')))});
+            this.widgetView = new WidgetView({model: (new WidgetModel(this.model.get('widgetData'), {parse: true}))});
             $('[data-js-widget-container]', this.$el).html(this.widgetView.$el);
             this.appendTooltip();
         },

@@ -163,7 +163,6 @@ define(function (require, exports, module) {
                         callback(response);
                     } else {
                         self.renderWidget(response);
-                        EQCSS.apply();
                     }
                     self.toggleLoader();
                 })
@@ -537,7 +536,6 @@ define(function (require, exports, module) {
             this.renderItems();
             Util.hoverFullTime(this.$el);
             !this.noScroll && Util.setupBaronScroll(this.$el);
-            EQCSS.apply();
             return this;
         },
 
@@ -2957,6 +2955,8 @@ define(function (require, exports, module) {
 
     });
 
+    // STATUS page widgets
+
     var LastLaunchPieChartView = CombinePieChartView.extend({
         initialize: function(options){
             CombinePieChartView.prototype.initialize.call(this, options);
@@ -3738,9 +3738,6 @@ define(function (require, exports, module) {
             case "investigated_trend":
                 return ColumnChartView;
                 break;
-            case "last_launch":
-                return LastLaunchPieChartView;
-                break;
             case "launch_statistics":
                 return CombinePieChartView;
                 break;
@@ -3772,6 +3769,16 @@ define(function (require, exports, module) {
             case "launches_table":
                 return FilterResultsTable;
                 break;
+            case "most_failed_test_cases":
+                return MostFailedTestCases;
+                break;
+            case "cases_stats":
+                return TestCasesUniqueLaunches;
+                break;
+            //
+            case "last_launch":
+                return LastLaunchPieChartView;
+                break;
             case "investigated":
                 return PercantageOfInvestigationsChart;
                 break;
@@ -3784,14 +3791,8 @@ define(function (require, exports, module) {
             case "auto_bugs_percentage":
                 return PercentageOfAutoBugsChart;
                 break;
-            case "cases_stats":
-                return TestCasesUniqueLaunches;
-                break;
             case "launches_quantity":
                 return LaunchesQuantity;
-                break;
-            case "most_failed_test_cases":
-                return MostFailedTestCases;
                 break;
             case "issues_chart_trend":
             case "issues_chart":

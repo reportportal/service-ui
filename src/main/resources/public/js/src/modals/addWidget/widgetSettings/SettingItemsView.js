@@ -22,11 +22,10 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
-    var WidgetsConfig = require('widget/widgetsConfig');
+    var WidgetService = require('newWidgets/WidgetService');
     var Localization = require('localization');
     var App = require('app');
 
@@ -40,32 +39,33 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-limit-input]': 'value: itemsCount'
         },
-        initialize: function() {
-            this.widgetConfig = WidgetsConfig.getInstance();
-            this.curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
+        initialize: function () {
+            this.curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             if (!this.curWidget.limit || !this.curWidget.limit.display) {
                 this.destroy();
                 return false;
             }
             this.render();
             Util.hintValidator($('[data-js-limit-input]', this.$el), [{
-                    validator: 'minMaxNumberRequired',
-                    type: 'itemsSize',
-                    min: this.curWidget.limit.min,
-                    max: this.curWidget.limit.max
+                validator: 'minMaxNumberRequired',
+                type: 'itemsSize',
+                min: this.curWidget.limit.min,
+                max: this.curWidget.limit.max
             }]);
             this.listenTo(this.model, 'change:itemsCount', this.onChangeItemsCont);
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {name: this.curWidget.limit.name || Localization.widgets.items}))
+        render: function () {
+            this.$el.html(Util.templates(this.template, {
+                name: this.curWidget.limit.name || Localization.widgets.items
+            }));
         },
-        onChangeItemsCont: function(){
-            if(this.validate()){
+        onChangeItemsCont: function () {
+            if (this.validate()) {
                 config.trackingDispatcher.trackEventNumber(299);
             }
         },
-        validate: function() {
-            return !$('[data-js-limit-input]', this.$el).trigger('validate').data('validate-error')
+        validate: function () {
+            return !$('[data-js-limit-input]', this.$el).trigger('validate').data('validate-error');
         }
     });
 
