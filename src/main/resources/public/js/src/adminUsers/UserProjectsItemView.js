@@ -17,7 +17,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 define(function(require, exports, module) {
     'use strict';
@@ -43,14 +43,26 @@ define(function(require, exports, module) {
             '[data-js-project]': 'text: projectId',
             '[data-js-project-role]': 'text: getProjectRole',
             '[data-js-dropdown-roles]': 'updateRoleDropDown: projectRole',
-            '[data-js-unassign]': 'classes: {disabled: not(canUnAssign)}, attr: {disabled: not(canUnAssign)}',
+            '[data-js-unassign]': 'classes: {disabled: not(canUnAssign)}, attr: {disabled: not(canUnAssign), title: getUnAssignTitle}',
         },
 
         computeds: {
             canUnAssign: {
                 deps: ['projectId', 'entryType'],
                 get: function(){
-                    return !this.isPersonalProjectOwner() && !this.unassignedLock();
+                    return !this.isPersonalProjectOwner() && !this.unassignedLock() && !this.isUpsaUserOnUpsaProject();
+                }
+            },
+            getUnAssignTitle: {
+                deps: ['projectId', 'entryType'],
+                get: function () {
+                    var members = Localization.members;
+                    if (this.isPersonalProjectOwner()) {
+                        return members.unAssignTitlePersonal;
+                    } else if (this.isUpsaUserOnUpsaProject()) {
+                        return members.unAssignTitleExternal;
+                    }
+                    return members.unAssignTitle;
                 }
             },
             getProjectRole: {
@@ -91,6 +103,10 @@ define(function(require, exports, module) {
             var projectId = this.model.get('projectId'),
                 isPersonalProject = this.model.get('entryType') === 'PERSONAL';
             return isPersonalProject && (projectId === this.userModel.get('userId') + '_personal');
+        },
+
+        isUpsaUserOnUpsaProject: function () {
+            return this.model.get('entryType') === 'UPSA' && this.userModel.get('account_type') === 'UPSA';
         },
 
         unassignedLock: function(){
