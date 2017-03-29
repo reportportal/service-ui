@@ -42,7 +42,6 @@ define(function (require, exports, module) {
             this.body = new LaunchBodyView({
                 el: this.context.getMainView().$body,
             });
-            this.listenTo(this.launchFilterCollection, 'remove', this.onRemoveFilter);
             this.listenTo(this.body, 'change:level', this.onChangeLevel);
             this.update({subContext: options.subContext});
         },
@@ -80,21 +79,10 @@ define(function (require, exports, module) {
                     });
             }
         },
-        onRemoveFilter: function() {
-            var self = this;
-            setTimeout(function() {
-                config.router.navigate(self.header.model.get('url'), {trigger: true});
-            });
-
-        },
-        destroy: function () {
+        onDestroy: function () {
             this.header.destroy();
             this.body.destroy();
             this.$el.html('');
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            delete this;
         },
     });
 
