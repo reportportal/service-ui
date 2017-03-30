@@ -116,7 +116,8 @@ define(function (require, exports, module) {
                     nextItemId && optionsURL && self.body && self.body.activateNextId && self.body.activateNextId(nextItemId)
                 })
                 .fail(function() {
-                    config.router.show404Page();
+                    self.onChangePathId();  // not valid filter
+                    // config.router.show404Page();
                 })
         },
         onRestoreItemCrumbs: function() {
