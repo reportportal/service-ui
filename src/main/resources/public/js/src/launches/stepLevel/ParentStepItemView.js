@@ -51,7 +51,7 @@ define(function (require, exports, module) {
         },
         getParentUrl: function(id){
             var url = window.location.hash;
-            return url.split('|')[0] + "/" + id;
+            return url.split('|')[0].split('?')[0] + "/" + id;
         },
         destroy: function () {
             this.undelegateEvents();

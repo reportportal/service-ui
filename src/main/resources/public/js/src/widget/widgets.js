@@ -371,7 +371,7 @@ define(function (require, exports, module) {
             var project = '#' + appModel.get('projectId');
             var filterId = this.param.filter_id;
             var filterStatus = '';
-            var getLink = function(filters){
+            var getLink = function(filtersz){
                 var arrLink = [project, 'launches/all'];
                 var filterForAll = '?page.page=1&page.size=50&page.sort=start_time&filter.eq.has_childs=false';
                 var params = [[id, filterForAll].join('')];
