@@ -308,7 +308,7 @@ module.exports = function (grunt) {
                 }],
                 options: {
                     replacements: [{
-                        pattern: 'DEBUG_STATE',
+                        pattern: /'DEBUG_STATE'/g,
                         replacement: 'true'
                     }]
                 }
@@ -323,8 +323,8 @@ module.exports = function (grunt) {
                 }],
                 options: {
                     replacements: [{
-                        pattern: 'DEBUG_STATE',
-                        replacement: ''
+                        pattern: /'DEBUG_STATE'/g,
+                        replacement: 'false'
                     }]
                 }
             }

@@ -27,35 +27,33 @@ define(function(require, exports, module) {
     var AnalyticsGA = AnalyticsObject.extend({
         initialize: function() {
             if('DEBUG_STATE') {
-
-            } else {
-                window.ga = window.ga || function () {
-                        (ga.q = ga.q || []).push(arguments)
-                    };
-                ga.l = +new Date;
-                ga('create', 'UA-96321031-1', 'auto');
-                ga('send', 'pageview');
-                var script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.async = true;
-                script.src = 'https://www.google-analytics.com/analytics.js';
-                var lastScript = document.getElementsByTagName('script')[0];
-                lastScript.parentNode.insertBefore(script, lastScript);
+                return;
             }
+            window.ga = window.ga || function () {
+                    (ga.q = ga.q || []).push(arguments)
+                };
+            ga.l = +new Date;
+            ga('create', 'UA-96321031-1', 'auto');
+            ga('send', 'pageview');
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.async = true;
+            script.src = 'https://www.google-analytics.com/analytics.js';
+            var lastScript = document.getElementsByTagName('script')[0];
+            lastScript.parentNode.insertBefore(script, lastScript);
+
         },
         send: function(data) {
             if('DEBUG_STATE') {
-
-            } else {
-                ga('send', 'event', data[0], data[1], data[2]);
+                return;
             }
+            ga('send', 'event', data[0], data[1], data[2]);
         },
         pageView: function(data) {
             if('DEBUG_STATE') {
-
-            } else {
-                ga('send', 'pageview', data[0]);
+                return;
             }
+            ga('send', 'pageview', data[0]);
         }
     });
 
