@@ -135,6 +135,9 @@ define(function (require, exports, module) {
                 ],
                 placeholder: options.placeholder || '',
                 spellChecker: false,
+                previewRender: function(plainText) {
+                    return self.simplemde.markdown(plainText.indentSpases());
+                },
                 // insertTexts: {
                 //     link: ['[](', ')']
                 // }

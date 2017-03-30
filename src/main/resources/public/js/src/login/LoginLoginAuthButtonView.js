@@ -45,7 +45,7 @@ define(function(require, exports, module) {
             this.path = options.path;
         },
         onClickButton: function () {
-            window.location = window.location.protocol + '//' + window.location.host + this.path;
+            window.location = window.location.protocol + '//' + window.location.host + '/uat' + this.path;
         },
     });
 

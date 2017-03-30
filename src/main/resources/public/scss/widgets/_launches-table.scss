@@ -22,98 +22,206 @@
 .launches-table-panel {
   position: relative;
   margin: -15px;
-    .rp-grid-thead {
-        background: $COLOR--white;
-        border-bottom: solid 1px $COLOR--gray-91;
-        border-top: solid 1px $COLOR--gray-91;
-        .rp-grid-th {
-            height: 50px;
-            text-transform: uppercase;
-            font-size: 12px;
-            color: $COLOR--gray-47;
-            padding: 0;
-            position: relative;
-            .rp-grid-th-name {
-              font-family: $OpenSansSemibold;
-              @extend %VERTICAL_CENTER;
-            }
-        }
-    }
-    .rp-grid-description {
-        white-space: pre;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
-        font-size: 13px;
-        margin: 4px 0 0 1px;
-    }
-    .rp-grid-name {
-        padding: 0;
-        margin: 0 0 6px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+
+  .no-data-error {
+    padding: 40px 0;
+  }
+
+  .rp-grid-thead {
+    background: $COLOR--white;
+    border-bottom: solid 1px $COLOR--gray-91;
+    border-top: solid 1px $COLOR--gray-91;
+    .rp-grid-th {
+      height: 50px;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: $COLOR--gray-47;
+      padding: 0;
+      position: relative;
+      .rp-grid-th-name {
         font-family: $OpenSansSemibold;
-        line-height: 1.4;
-        a {
-            text-decoration: none;
-            color: $COLOR--windows-blue;
-        }
+        @extend %VERTICAL_CENTER;
+      }
     }
-    .rp-grid-tags {
-        margin-top: 6px;
-        font-size: 12px;
-        line-height: 18px;
-        & > li {
-            float: left;
-            display: inline-block;
-            margin: 0 17px 2px 2px;
-            color: #999999;
-            a {
-                color: $COLOR--gray-60;
-                cursor: pointer;
-                &:hover {
-                    color: $COLOR--charcoal-grey;
-                }
-            }
-            i {
-                vertical-align: top;
-                font-size: 18px;
-                &.rp-icons-ticket {
-                    font-size: 12px;
-                    margin-top: 2px;
-                }
-            }
-        }
+  }
+
+  .rp-table-row {
+    padding: 0;
+
+    .statistics-block {
+      position: absolute;
+      top: 13px;
+      right: 0;
+      width: 100%;
+      height: 0;
+      @media (max-width: 887px) {
+        position: relative;
+        float: left;
+        height: 100%;
+        margin-bottom: 20px;
+      }
+
+      .empty-coll {
+        min-height: 1px;
+      }
     }
-    .rp-ti-badge {
-        display: inline-block;
-        color: $COLOR--white-default;
-        font-family: $OpenSansSemibold;
-        padding: 0 10px;
-        line-height: 19px;
-        border-radius: 10px;
+    .overflow-wrapper {
+      position: relative;
+      padding: 13px 0;
+      //max-height: 200px;
+      overflow: hidden;
+      @extend %CLEAR_FIX;
+      .accordion-arrow {
+        position: absolute;
+        display: block;
+        top: -10px;
+        right: 5px;
+        padding: 10px;
         cursor: pointer;
+        display: none;
+      }
     }
-    .launch-suite-defects {
-        .defects-tooltip {
-            left: auto;
-            right: 0;
-            display: none;
+    &.open {
+      .overflow-wrapper {
+        max-height: 100%;
+        padding-bottom: 27px;
+      }
+      .accordion-block {
+        box-shadow: none !important;
+        i {
+          display: none;
+        }
+        i.little {
+          display: inline-block;
+        }
+      }
+    }
+
+    .accordion-block {
+      transition: background-color .2s ease 0s, box-shadow .2s ease 0s;
+      display: none;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: white;
+      text-align: center;
+      font-size: 19px;
+      box-shadow: 0 0px 20px 15px white;
+      i {
+        position: relative;
+        color: $COLOR--gray-60;
+        padding: 0 75px 8px 55px;
+        width: 20px;
+        display: inline-block;
+        cursor: pointer;
+        &:before, &:after {
+          position: absolute;
+          content: '';
+          top: 7px;
+          width: 50px;
+          border-top: 2px dotted $COLOR--gray-60;
+        }
+        &:before {
+          left: 0px;
+        }
+        &:after {
+          right: 0px;
         }
         &:hover {
-            .defects-tooltip {
-                display: block;
-            }
+          color: $COLOR--charcoal-grey;
+          &:after, &:before {
+            border-color: $COLOR--charcoal-grey;
+          }
         }
+        &.little {
+          display: none;
+        }
+      }
+    }
+    &.show-accordion {
+      .accordion-block {
+        display: block;
+      }
+    }
+    &:hover {
+      background: $COLOR--tealish-light;
+      .accordion-block {
+        background: $COLOR--tealish-light;
+        box-shadow: 0 0 20px 15px $COLOR--tealish-light;
+      }
+    }
+
+    .rp-grid-description {
+      margin: 4px 0 0 1px;
+    }
+    .rp-grid-name {
+      padding: 0;
+      margin: 0 0 6px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: $OpenSansSemibold;
+      line-height: 1.4;
+      a {
+        text-decoration: none;
+        color: $COLOR--windows-blue;
+      }
+    }
+    .rp-grid-tags {
+      margin-top: 6px;
+      font-size: 12px;
+      line-height: 18px;
+      & > li {
+        display: inline-block;
+        margin: 0 17px 2px 2px;
+        color: #999999;
+        a {
+          color: $COLOR--gray-60;
+          cursor: pointer;
+          &:hover {
+            color: $COLOR--charcoal-grey;
+          }
+        }
+        i {
+          vertical-align: top;
+          font-size: 18px;
+          &.rp-icons-ticket {
+            font-size: 12px;
+            margin-top: 2px;
+          }
+        }
+      }
+    }
+    .rp-ti-badge {
+      display: inline-block;
+      color: $COLOR--white-default;
+      font-family: $OpenSansSemibold;
+      padding: 0 10px;
+      line-height: 19px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .launch-suite-defects {
+      .defects-tooltip {
+        left: auto;
+        right: 0;
+        display: none;
+      }
+      &:hover {
+        .defects-tooltip {
+          display: block;
+        }
+      }
 
     }
-    .ftp-cols {
-        padding: 0 15px 0 0;
-        .hoverFullTime,
-        .filter-tb-td {
-            padding-top: 2px;
-        }
+  }
+  .ftp-cols {
+    padding: 0 15px 0 0;
+    .hoverFullTime,
+    .filter-tb-td {
+      padding-top: 2px;
     }
+  }
   .mobile-disabling-cover {
     @extend %MOBILE_DISABLING_COVER;
   }

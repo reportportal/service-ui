@@ -50,13 +50,22 @@ define(function(require, exports, module) {
         },
 
         events: {
+            'submit [data-js-register-form]': 'onSubmitForm',
             'click [data-js-cancel]': 'resetForm',
-            'click [data-js-register]': 'registerMember',
+            'click [data-js-register]': 'onSubmitForm',
+
+            'change [data-js-login]': function() { this.loginDuplicate = false},
+
             'mousedown [data-js-toogle-visability]': 'showPass',
             'mouseleave [data-js-toogle-visability]': 'hidePass',
             'mouseup [data-js-toogle-visability]': 'hidePass',
-            'validation:success .rp-input': 'checkFields',
-            'validation:success [data-js-login]' : 'checkForLoginUniqueness'
+
+            'touchstart [data-js-toogle-visability]': 'showPass',
+            'touchend  [data-js-toogle-visability]': 'hidePass',
+            'touchcancel  [data-js-toogle-visability]': 'hidePass',
+
+            'keyup [data-js-password-confirm]': 'checkFields',
+            // 'validation:success [data-js-login]' : 'checkForLoginUniqueness'
         },
 
         initialize: function(options){
@@ -64,6 +73,7 @@ define(function(require, exports, module) {
             this.context = options.context;
             this.model = new RegisterModel();
             this.user = new UserModel();
+            this.loginDuplicate = false;
             var self = this;
             Service.validateRegisterBid(this.id)
                 .done(function(data){
@@ -96,18 +106,18 @@ define(function(require, exports, module) {
             this.$register = $('[data-js-register]', this.$el);
         },
 
-        checkForLoginUniqueness: function() {
-            var self = this;
-            CallService.call('GET', Urls.userInfoValidation() + '?username=' + this.$login.val())
-                .done(function (data) {
-                    if (data.is) {
-                        self.$login.parent().addClass('validate-error').find('.validate-hint').addClass('show-hint').html(Localization.validation.registeredLogin);
-                    }
-                })
-                .fail(function (error) {
-
-                });
-        },
+        // checkForLoginUniqueness: function() {
+        //     var self = this;
+        //     CallService.call('GET', Urls.userInfoValidation() + '?username=' + this.$login.val())
+        //         .done(function (data) {
+        //             if (data.is) {
+        //                 self.$login.parent().addClass('validate-error').find('.validate-hint').addClass('show-hint').html(Localization.validation.registeredLogin);
+        //             }
+        //         })
+        //         .fail(function (error) {
+        //
+        //         });
+        // },
 
         showExpiredPage: function(e) {
             e && e.preventDefault();
@@ -193,13 +203,21 @@ define(function(require, exports, module) {
                 password: this.model.get('password')
             }
         },
-
+        onSubmitForm: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.registerMember();
+        },
         registerMember: function() {
             $('.rp-field', this.$el).find('input').trigger('validate');
-            if ($('.validate-error', this.$el).length || this.$confirmPassword.val() !== this.$password.val()) return;
+            if($('.validate-error', this.$el).length) { return };
+            if(this.loginDuplicate) {
+                this.$login.parent().addClass('validate-error');
+                return;
+            }
 
-            var data = this.getData(),
-                self = this;
+            var data = this.getData();
+            var self = this;
 
             if (data) {
                 Service.registerUser(data, this.id)
@@ -214,6 +232,10 @@ define(function(require, exports, module) {
 
                     })
                     .fail(function(error){
+                        if(error.status == 409) {
+                            self.$login.parent().addClass('validate-error');
+                            self.loginDuplicate = true;
+                        }
                         Util.ajaxFailMessenger(error, 'registerMember');
                     });
             }

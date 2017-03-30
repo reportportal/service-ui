@@ -73,11 +73,13 @@ define(function (require, exports, module) {
             Util.setupBaronScroll(this.$el.find('[data-js-scroll-container]'));
 
             var self = this;
-            $(window).resize(function () {
-                if (window.innerWidth >= 768 && self.$bodyElement.hasClass('menu-open')) {
-                    self.closeMenu();
-                }
-            });
+            $(window)
+                .off('resize.sidebar')
+                .on('resize.sidebar', function () {
+                    if (window.innerWidth >= 768 && self.$bodyElement.hasClass('menu-open')) {
+                        self.closeMenu();
+                    }
+                });
             return this;
         },
         onClickToTop: function(){
@@ -151,7 +153,7 @@ define(function (require, exports, module) {
         },
 
         destroy: function () {
-            $(window).unbind('resize');
+            $(window).off('resize.sidebar');
             this.$el.html('');
             this.undelegateEvents();
             this.stopListening();

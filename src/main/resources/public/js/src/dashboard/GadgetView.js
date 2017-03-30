@@ -42,6 +42,7 @@ define(function (require, exports, module) {
             'click [data-js-gadget-refresh]': 'onClickRefresh',
             'click [data-js-gadget-remove]': 'onClickRemove',
             'click [data-js-gadget-edit]': 'onClickGadgetEdit',
+            'click [data-js-edit-invalid-data]': 'onClickGadgetEdit'
         },
 
         bindings: {
@@ -56,11 +57,11 @@ define(function (require, exports, module) {
         },
         computeds: {
             canRemove: {
-                deps: ['isMy'],
-                get: function(isMy) {
+                deps: ['isMy', 'isMyDashboard'],
+                get: function(isMy, isMyDashboard) {
                     return (config.userModel.get('isAdmin') ||
                     config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager ||
-                    isMy);
+                    isMyDashboard || (isMy && isMyDashboard));
                 }
             }
         },
@@ -142,9 +143,13 @@ define(function (require, exports, module) {
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(288);
             var self = this;
+            var dangerRemove = (!this.model.get('isMy') && !this.model.get('isMyDashboard'));
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deletedWidget,
-                bodyText: Util.replaceTemplate(Localization.dialog.deletedWidget, this.model.get('name')),
+                bodyText: Util.replaceTemplate(
+                    !dangerRemove ? Localization.dialog.deletedWidget:Localization.dialog.deletedWidgetDanger,
+                    this.model.get('name')),
+                confirmText: !dangerRemove?'':Localization.dialog.deletedWidgetDangerConfirmText,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete,

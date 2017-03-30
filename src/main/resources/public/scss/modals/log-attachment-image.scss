@@ -24,18 +24,51 @@
     .preloader {
       display: block;
     }
+    .modal-dialog {
+      .image-holder {
+        display: block;
+        height: 0;
+        overflow: hidden;
+      }
+      .image-rotate {
+        display: none;
+      }
+    }
   }
   .modal-dialog {
     width: 95%;
     max-width: 1000px;
 
     .image-holder {
+      display: table;
       width: 100%;
-      padding: 30px;
-
+      .image-cell {
+        display: table-cell;
+        vertical-align: middle;
+        width: 100%;
+        height: 100%;
+      }
       img {
         width: 100%;
+        padding: 30px;
         cursor: pointer;
+      }
+    }
+    .image-rotate {
+      float: left;
+      display: inline-block;
+      font-size: 15px;
+      cursor: pointer;
+      color: $COLOR--gray-60;
+      i {
+        vertical-align: middle;
+        font-size: 20px;
+      }
+      span {
+        vertical-align: middle;
+      }
+      &:hover {
+        color: $COLOR--charcoal-grey;
       }
     }
   }

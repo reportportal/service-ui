@@ -77,7 +77,7 @@ define(function(require, exports, module) {
 
             this.collection = new MembersCollection();
             this.listenTo(this.collection, 'reset', this.renderMembersList);
-            this.listenTo(this.collection, 'remove', this.updateMembers);
+            this.listenTo(this.collection, 'remove', this.onRemoveMember);
             this.pageType = 'PaginateProjectMembers_unAssignMember_' + this.projectId;
             this.render();
         },
@@ -123,6 +123,15 @@ define(function(require, exports, module) {
             this.$membersList = $('[data-js-members-list]', this.$el);
             this.$pagingBlock = $('[data-js-members-paginate]', this.$el);
             this.$searchFilter = $('[data-js-members-search]', this.$el);
+        },
+
+        onRemoveMember: function(model) {
+            this.trigger('remove:member', model);
+            this.updateMembers();
+        },
+        onInviteMember: function() {
+            this.trigger('invite:member');
+            this.updateMembers();
         },
 
         updateMembers: function(){
@@ -202,7 +211,7 @@ define(function(require, exports, module) {
             config.trackingDispatcher.trackEventNumber(432);
             e.preventDefault();
             var modal = new ModalInviteUser({});
-            this.listenToOnce(modal, 'add:user', this.updateMembers);
+            this.listenToOnce(modal, 'add:user', this.onInviteMember);
             modal.show();
         },
 

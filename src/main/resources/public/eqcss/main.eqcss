@@ -15,6 +15,13 @@
 
 @element ".launches-table-panel" and (max-width: 767px) {
 
+    $this .rp-table-row .statistics-block {
+        position: relative;
+        float: left;
+        height: 100%;
+        margin-bottom: 20px;
+    }
+
     $this .hidden-xs{
         display: none !important;
     }

@@ -42,7 +42,8 @@ define(function(require, exports, module) {
 
         events: {
             'click [data-js-cancel-restore-btn]': 'onCloseForgotPass',
-            'click [data-js-change-pass-btn]': 'submitForgotPass',
+            'click [data-js-change-pass-btn]': 'onSubmitForm',
+            'submit [data-js-restore-form]': 'onSubmitForm',
         },
 
         initialize: function () {
@@ -69,6 +70,11 @@ define(function(require, exports, module) {
 
         onCloseForgotPass: function () {
             this.trigger('closeForgotPass');
+        },
+        onSubmitForm: function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.submitForgotPass();
         },
         submitForgotPass: function () {
             $('.rp-field', this.$el).find('input').trigger('validate');

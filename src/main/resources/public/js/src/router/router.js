@@ -88,6 +88,7 @@ define(function (require, exports, module) {
                 this.navigate(model.get('lastInsideHash'), {trigger: true});
             } else {
                 this.navigate('', {trigger: true});
+                Context.logout();
             }
         },
         routes: {

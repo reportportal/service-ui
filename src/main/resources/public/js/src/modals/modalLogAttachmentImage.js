@@ -24,35 +24,61 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
-
-    var Backbone = require('backbone');
-    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var Urls = require('dataUrlResolver');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var ModalLogAttachmentImage = ModalView.extend({
         tpl: 'tpl-modal-log-attachment-image',
         className: 'modal-log-attachment-image',
 
         events: {
-            'click [data-js-image]': 'openImgInNewWindow'
+            'click [data-js-image]': 'openImgInNewWindow',
+            'click [data-js-rotate]': 'onClickRotate',
+            'click [data-js-close]': 'onClickClose',
+            'click [data-js-cancel]': 'onClickCancel'
         },
 
         initialize: function(options) {
+            this.rotate = 0;
             this.imageSrc = Urls.getFileById(options.imageId);
             this.render();
         },
 
         onShow: function () {
             this.$modalWrapper.addClass('loading');
-        },
-
-        render: function() {
             var self = this;
-            this.$el.html(Util.templates(this.tpl, {imageSrc: this.imageSrc}));
             $('[data-js-image]', this.$el).load(function () {
                 self.$modalWrapper.removeClass('loading');
             })
+        },
+
+        render: function() {
+            this.$el.html(Util.templates(this.tpl, {imageSrc: this.imageSrc}));
+        },
+        onClickClose: function(){
+            config.trackingDispatcher.trackEventNumber(509);
+        },
+        onClickCancel: function(){
+            config.trackingDispatcher.trackEventNumber(511);
+        },
+        onClickRotate: function() {
+            config.trackingDispatcher.trackEventNumber(510);
+            this.rotate += 90;
+            if (!this.nativeSize) {
+                this.nativeSize = {
+                    width: $('[data-js-image-block]', this.$el).width(),
+                    height: $('[data-js-image-block]', this.$el).height(),
+                }
+            }
+            $('[data-js-image]', this.$el).css('transform', 'rotate('+this.rotate+'deg)');
+            if ((this.rotate/90)%2 == 1) {
+                $('[data-js-image-block]', this.$el).css({height: this.nativeSize.width});
+            } else {
+                $('[data-js-image-block]', this.$el).css({height: this.nativeSize.height});
+            }
         },
         openImgInNewWindow: function () {
             window.open(this.imageSrc);

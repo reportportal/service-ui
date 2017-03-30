@@ -68,7 +68,7 @@ define(function (require, exports, module) {
     };
     var getFilterOptions = function (entities, text) {
         if (!entities || !entities.length) {
-            return;
+            return '';
         }
         var clearValue = function (field) {
             var result = field;
@@ -107,6 +107,9 @@ define(function (require, exports, module) {
                 var filterName = getSmartKey(item.filtering_field);
                 if (!filterName) {
                     return '<span style="color: #ff3222"><b>Invalid</b></span>';
+                }
+                if(item.value == '') {
+                    return '';
                 }
                 return [filterName, ' ',
                     item.is_negative ? text['not'] : '',

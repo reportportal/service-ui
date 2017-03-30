@@ -251,6 +251,9 @@ define(function(require, exports, module) {
                     if (!self.appModel.get('isBtsAdded')) {
                         return Localization.launches.configureTBSLoad;
                     }
+                    if (self.get('launch_isProcessing')) {
+                        return Localization.launches.launchIsProcessing;
+                    }
                     return '';
                 },
                 postbug: function() {
@@ -260,6 +263,9 @@ define(function(require, exports, module) {
                     }
                     if (!self.appModel.get('isBtsConfigure')) {
                         return Localization.launches.configureTBS;
+                    }
+                    if (self.get('launch_isProcessing')) {
+                        return Localization.launches.launchIsProcessing;
                     }
                     return '';
                 }

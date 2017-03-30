@@ -124,12 +124,11 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {context: this.context}));
         },
 
-        destroy: function () {
+        onDestroy: function () {
+            this.history && this.history.destroy();
+            this.historyItem && this.historyItem.destroy();
+            this.logsItem && this.logsItem.destroy();
             this.$el.html('');
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            delete this;
         },
     });
 

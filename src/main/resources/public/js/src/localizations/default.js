@@ -513,7 +513,7 @@ define(['util'], function () {
             percentageOfProductBugs: 'Percentage of product bugs',
             percentageOfSystemIssues: 'Percentage of system issues',
             percentageOfAutoBugs: 'Percentage of auto bugs',
-            pleaseUpdateWidget: 'Please, update widget by saving it in <span class="rp-link" href="">Widget Wizard</span>.',
+            pleaseUpdateWidget: 'Please, update widget by saving it in <span class="rp-link" href="">Edit Widget</span>.',
             haveInvalidCriteria: 'You have <strong>%%% invalid $$$</strong> with deleted defect types.',
             invalidCriteria: 'Invalid criterion',
             criteria: 'criteria',
@@ -1268,16 +1268,14 @@ define(['util'], function () {
             gitHubOrgName: 'Organization Name',
             addGitHubOrg: 'Add GitHub Organization',
             emailSender: 'Default sender name',
-            sendStatisticsSwitcher: 'Help make ReportPortal better by automatically sending statistics and crash reports to us',
+            sendStatisticsSwitcher: 'Help make ReportPortal better by automatically sending statistics to us',
             statisticsListToogler: 'List of sent statistics',
-            statisticsMessage: 'You can help us improve ReportPortal by opting to send usage statistics to us. While' +
+            statisticsMessage: 'You can help us improve ReportPortal by opting to send usage statistics. While' +
             ' you\'re using the app, we\'ll gather data that might help us improve ReportPortal performance and' +
             ' usability by tracking usage frequency of particular features. See below for details about what information is sent.',
-            statisticsListMessage: 'Usage statistics reports usually won\'t include any personal information about' +
-            ' you, but they might include:',
-            statisticsPoint1: 'how often you use ReportPortal and how long you leave it open;',
-            statisticsPoint2: 'where you click;',
-            statisticsPoint3: 'your device\'s operating system and model.'
+            statisticsListMessage: 'Usage statistics reports usually won\'t include any personal information, but they might include:',
+            statisticsPoint1: 'Device information - such as your hardware model, operating system version, screen resolution, browser version;',
+            statisticsPoint2: 'Log information - such as details of how you use ReportPortal, where you click and what actions you do, how long you leave app open.'
         },
 
         registration: {
@@ -1420,6 +1418,7 @@ define(['util'], function () {
             changedColorDefectTypes: "Defect types have been updated.",
             updateDefect: 'Defects have been updated',
             updateServerSettings: 'Server settings were successfully updated',
+            addUserWithoutEmail: 'User has been created, but impossible to send message due to email server configuration is broken or switched-off',
         },
 
         failMessages: {
@@ -1574,7 +1573,7 @@ define(['util'], function () {
             confirmMinMax: "Password should have size from '4' to '25' symbols",
             confirmMatch: "Passwords do not match",
             fullNameInfoRegex: "Full name should have size from '3' to '256' symbols, Latin, Cyrillic, numeric characters, hyphen, underscore, dot, space.",
-            loginRegex: "Full name should have size from '1' to '128' symbols, Latin, numeric characters, hyphen, underscore.",
+            loginRegex: "Login should have size from '1' to '128' symbols, Latin, numeric characters, hyphen, underscore.",
             originalPassRegex: "Password should have size from '4' to '25' symbols",
             hostMatchRegex: 'Check the entered data',
 
@@ -1728,6 +1727,8 @@ define(['util'], function () {
             createNewDashboard: "Create new Dashboard",
             dashboardSettings: "Dashboard settings",
             deleteFilter: "Are you sure you want to delete the filter <b>'%%%'</b>?",
+            deleteFilterDanger: "As a user with PM/ADMIN privileges you can delete shared filter of other users. This can affect all users on the projects, if somebody else use it.<br>Are you sure you want to delete <b>'%%%'</b>?",
+            deleteFilterDangerConfirmText: "I am sure I want to delete the filter",
             deleteProject: "Are you sure you want to delete the project <b>'%%%'</b>?",
             deleteEmailRule: "Are you sure you want to remove notification rule?",
             deleteEmailRuleBtn: 'Remove',
@@ -1739,7 +1740,11 @@ define(['util'], function () {
             deleteImage: "Are you sure you want to delete profile photo?",
             deleteBts: "Are you sure you want to remove %%% project <b>'%%%'</b> from project settings?",
             dashboardDelete: "Are you sure want to delete dashboard <b>'%%%'</b>?",
+            dashboardDeleteDanger: "As a user with PM/ADMIN privileges you can delete shared dashboards of other users. This can affect all users on the projects, if somebody else use it.<br>Are you sure you want to delete <b>'%%%'</b>?",
+            dashboardDeleteDangerConfirmText: "I am sure I want to delete the dashboard",
             deletedWidget: "Are you sure you want to remove widget <b>'%%%'</b>?",
+            deletedWidgetDanger: "As a user with PM/ADMIN privileges you can delete shared widgets of other users. This can affect all users on the projects, if somebody else use it.<br>Are you sure you want to delete <b>'%%%'</b>?",
+            deletedWidgetDangerConfirmText: "I am sure I want to delete the widget",
             deleteBtsBtn: "Remove",
             dashboardDeleteBtn: "Remove",
 

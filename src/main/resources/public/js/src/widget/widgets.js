@@ -37,6 +37,9 @@ define(function (require, exports, module) {
         SingletonAppModel = require('model/SingletonAppModel'),
         Components = require('core/components'),
         Localization = require('localization'),
+        Epoxy = require('backbone-epoxy'),
+        SingletonAppModel = require('model/SingletonAppModel'),
+        MarkdownViewer = require('components/markdown/MarkdownViewer'),
         SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection'),
         SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection'),
         ModalConfirm = require('modals/modalConfirm');
@@ -470,13 +473,7 @@ define(function (require, exports, module) {
 
     var FilterResultsTable = BaseWidget.extend({
 
-        initialize: function(options){
-            BaseWidget.prototype.initialize.call(this, options);
-            this.defectTypes = new SingletonDefectTypeCollection();
-        },
-
         tpl: 'tpl-widget-filters-table',
-        toolTipContent: 'tpl-launches-tooltip-defects',
 
         getData: function(){
             var contentData = this.param.content || [];
@@ -529,41 +526,144 @@ define(function (require, exports, module) {
             return criteria;
         },
         render: function () {
+            this.renderedItems = [];
             this.items = this.getData();
 
             var params = {
-                widgetId: this.id,
-                title: this.getTitle(),
                 criteria: this.getCriteria(),
-                items: this.items,
-                project: config.project,
-                getDefectColor: this.getDefectColor,
-                defectTypes: this.defectTypes,
-                linkToRedirectService: this.linkToRedirectService.bind(this),
-                dateFormat: Util.dateFormat,
-                moment: Moment
+                noItems: !this.items.length
             };
             this.container.append(this.$el.html(Util.templates(this.tpl, params)));
+            this.renderItems();
             Util.hoverFullTime(this.$el);
-            this.renderDefects();
             !this.noScroll && Util.setupBaronScroll(this.$el);
             EQCSS.apply();
             return this;
         },
 
+        getLink: function(){
+            var appModel = new SingletonAppModel(),
+                project = '#' + appModel.get('projectId'),
+                filterId = this.param.filter_id,
+                arrLink = [project, 'launches', filterId];
+            return arrLink.join('/');
+        },
+
+        renderItems: function(){
+            _.each(this.items, function(launch){
+                var item = new FilterResultsTableItem({
+                    model: new Epoxy.Model(launch),
+                    criteria: this.getCriteria(),
+                    widgetId: this.id,
+                    link: this.getLink()
+                });
+                $('[data-js-items]', this.$el).append(item.$el);
+
+                this.renderedItems.push(item);
+            }, this);
+        },
+
+        activateAccordions: function(){
+            _.each(this.renderedItems, function(view) {
+                view.activateAccordion && view.activateAccordion();
+            });
+        },
+
+        destroy: function(){
+            _.each(this.renderedItems, function(view) {
+                view.destroy && view.destroy();
+            });
+            BaseWidget.prototype.destroy.call(this);
+        }
+
+    });
+
+    var FilterResultsTableItem = Epoxy.View.extend({
+        className: 'row rp-table-row',
+        tpl: 'tpl-widget-filters-table-item',
+        toolTipContent: 'tpl-launches-table-tooltip-defects',
+        bindings: {
+            '[data-js-name-link]': 'attr: {href: getItemUrl}',
+            '[data-js-name]': 'text: name',
+            '[data-js-launch-number]': 'text: number',
+        },
+        computeds: {
+            getItemUrl: {
+                deps: ['id'],
+                get: function(id){
+                    return '#' + this.appModel.get('projectId') + '/launches/all/' + id;
+                }
+            }
+        },
         events: {
+            'click [data-js-toggle-open]': 'onClickOpen',
             'mouseenter [data-js-launch-defect]': 'showDefectTooltip',
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-user-tag]': 'onClickUserTag',
         },
-
-        showDefectTooltip: function (e) {
-            var el = $(e.currentTarget),
-                type = el.data('defectType');
-            if(!el.data('tooltip')){
-                el.data('tooltip', 'tooltip');
-                this.createDefectTooltip(el, type);
+        initialize: function(options){
+            this.widgetId = options.widgetId;
+            this.criteria = options.criteria;
+            this.link = options.link;
+            this.appModel = new SingletonAppModel();
+            this.defectTypes = new SingletonDefectTypeCollection();
+            this.render();
+            this.markdownViewer = new MarkdownViewer({text: this.model.get('description')});
+            $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
+            var self = this;
+            this.listenTo(this.model, 'change:description', function(model, description){ self.markdownViewer.update(description); });
+            //this.listenTo(this.model, 'change:description change:tags', this.activateAccordion);
+            //this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
+            setTimeout(function(){
+                self.renderDefects();
+            }, 100);
+        },
+        render: function(){
+            this.$el.html(Util.templates(this.tpl, {
+                item: this.model.toJSON(),
+                criteria: this.criteria,
+                projectUrl: this.appModel.get('projectId'),
+                defectTypes: this.defectTypes,
+                getDefectColor: this.getDefectColor,
+                allCasesUrl: this.allCasesUrl.bind(this),
+                dateFormat: Util.dateFormat,
+                widgetId: this.widgetId,
+                moment: Moment
+            }));
+        },
+        activateAccordion: function() {
+            var innerHeight = 198;
+            if($(window).width() < 900) {
+                innerHeight = 318;
             }
+            if (this.$el.innerHeight() > innerHeight) {
+                this.$el.addClass('show-accordion');
+            } else {
+                this.$el.removeClass('show-accordion');
+            }
+        },
+        onClickOpen: function() {
+            this.$el.toggleClass('open');
+        },
+        allCasesUrl: function(type){
+            var url = this.link + '/' + this.model.get('id'),
+                statusFilter = '';
+
+            switch (type) {
+                case 'total':
+                    statusFilter = '&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED&filter.in.type=STEP';
+                    break;
+                case 'passed':
+                case 'failed':
+                case 'skipped':
+                    statusFilter = '&filter.in.status=' + type.toUpperCase() + '&filter.in.type=STEP';
+                    break;
+                default:
+                    var subDefects = this.defectTypes.toJSON(),
+                        defects = Util.getSubDefectsLocators(type, subDefects).join('%2C');
+                    statusFilter = '&filter.in.issue$issue_type=' + defects;
+            }
+            return url + '?' + '&filter.eq.has_childs=false' + statusFilter;
         },
         onClickTag: function(e) {
             e.preventDefault();
@@ -581,35 +681,36 @@ define(function (require, exports, module) {
             config.router.navigate(tempFilterModel.get('url'), {trigger: true});
             tempFilterModel.trigger('add_entity', filterName, filterValue);
         },
-
         renderDefects: function () {
-            _.each(this.items, function(launch){
-                var row = $('#'+launch.id, this.container),
-                    defectCell = $('[data-js-launch-defect]', row);
-                _.each(defectCell, function(cell){
-                    var el = $(cell),
-                        type = el.data('defectType'),
-                        defect = this.getDefectByType(launch, type),
-                        id = this.id + '-defect-'+launch.id+'-'+type;
-                    this.drawPieChart(defect, id);
-                }, this);
+            var defectCell = $('[data-js-launch-defect]', this.$el);
+            _.each(defectCell, function(cell){
+                var el = $(cell),
+                    type = el.data('defectType'),
+                    defect = this.getDefectByType(this.model.toJSON(), type),
+                    id = this.widgetId + '-defect-'+this.model.get('id')+'-'+type;
+                this.drawPieChart(defect, id);
             }, this);
         },
-
         getDefectByType: function(item, type){
             var typeCC = _.map(type.split('_'), function(t, i){return i ? t.capitalize() : t;}),
                 key = 'statistics$issueCounter$' + typeCC.join('');
             return item[key];
         },
-
+        showDefectTooltip: function (e) {
+            var el = $(e.currentTarget),
+                type = el.data('defectType');
+            if(!el.data('tooltip')){
+                el.data('tooltip', 'tooltip');
+                this.createDefectTooltip(el, type);
+            }
+        },
         createDefectTooltip: function (el, type) {
             var launchId = el.closest('.row.rp-table-row').attr('id'),
                 content = this.renderDefectsTooltip(launchId, type);
             el.append(content);
         },
-
         renderDefectsTooltip: function (launchId, type) {
-            var launch = _.find(this.items, function(d){return d.id == launchId;}),
+            var launch = this.model.toJSON(),
                 defect = this.getDefectByType(launch, type),
                 sd = config.patterns.defectsLocator,
                 params = {
@@ -619,7 +720,7 @@ define(function (require, exports, module) {
                     item: launch,
                     noSubDefects: !this.defectTypes.checkForSubDefects(),
                     color: this.getDefectColor(defect, type, this.defectTypes),
-                    url: this.linkToRedirectService(type, launchId)
+                    url: this.allCasesUrl(type)
                 };
             _.each(defect, function(v, k){
                 if(k !== 'total'){
@@ -636,7 +737,6 @@ define(function (require, exports, module) {
             params.defects.sort(Util.sortSubDefects);
             return Util.templates(this.toolTipContent, params);
         },
-
         getDefectColor: function (defect, type, defectTypes) {
             var sd = config.patterns.defectsLocator,
                 defectType = _.findKey(defect, function(v, k){
@@ -650,7 +750,6 @@ define(function (require, exports, module) {
             }
             return Util.getDefaultColor(type);
         },
-
         getDefectChartData: function (defect) {
             var data = [];
             _.each(defect, function(v, k){
@@ -664,7 +763,6 @@ define(function (require, exports, module) {
             }, this);
             return data;
         },
-
         drawPieChart: function (defect, id) {
             var chart,
                 pieWidth = 48,
@@ -701,6 +799,13 @@ define(function (require, exports, module) {
                 .call(chart)
             ;
             return chart;
+        },
+        destroy: function(){
+            this.undelegateEvents();
+            this.stopListening();
+            this.unbind();
+            this.$el.remove();
+            delete this;
         }
     });
 

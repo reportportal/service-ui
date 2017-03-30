@@ -3,43 +3,49 @@
 
     <h4><%= data.text.launches.mergeLaunchesModalTitle %></h4>
     <div class="fields">
-        <div class="rp-form-group name">
-            <span class="field-caption"><%= data.text.launches.launchName %></span>
-            <input type="text" id="mergeName" class="rp-input-default" value="<%- data.name %>">
-            <span class="help-inline"></span>
-        </div>
-        <div class="rp-form-group owner">
-            <span class="field-caption"><%= data.text.forms.owner %></span>
-            <input type="text" class="rp-input-default" value="<%- data.owner %>" disabled="disabled">
-        </div>
-        <div class="rp-form-group description">
-            <span class="field-caption"><%= data.text.forms.description %></span>
-            <textarea id="mergeDescription" class="rp-input-default" rows="3" data-js-description><%= data.description
-                    %></textarea>
-            <span class="help-inline"></span>
-        </div>
-        <div class="rp-form-group tags">
-            <span class="field-caption"><%= data.text.forms.tags %></span>
-            <input type="text" class="rp-input-default" id="mergeTags" data-warning="<%= data.text.ui.enterChars %>"
-                    placeholder="" value="<%= data.tags.join(',') %>"/>
-        </div>
-        <div class="rp-form-group start-time">
-            <span class="field-caption"><%= data.text.forms.startTime %></span>
-            <input type="text" class="rp-input-default" value="<%- data.dateFormat(data.startTime) %>" disabled="disabled">
-        </div>
-        <div class="rp-form-group end-time">
-            <span class="field-caption"><%= data.text.forms.endTime %></span>
-            <input type="text" class="rp-input-default" value="<%- data.dateFormat(data.endTime) %>" disabled="disabled">
-        </div>
-        <div class="rp-form-group extended">
-            <label class="rp-checkbox-wrap">
-                <input class="rp-input-checkbox" type="checkbox" id="extendWithOriginal" name="extendWithOriginal">
-                <span><%= data.text.launches.extendWithOriginal %></span>
+        <div class="rp-form">
+            <label>
+                <span><%= data.text.launches.launchName %></span>
+                <input data-js-merge-name class="rp-input" type="text" value="<%- data.name %>">
+                <span class="validate-hint"></span>
             </label>
+            <label>
+                <span><%= data.text.forms.owner %></span>
+                <input class="rp-input" type="text" value="<%- data.owner %>" disabled="disabled">
+                <span class="validate-hint"></span>
+            </label>
+            <label>
+                <span><%= data.text.forms.description %></span>
+                <textarea class="rp-input" rows="3" data-js-description><%= data.description
+                    %></textarea>
+                <span class="validate-hint"></span>
+            </label>
+            <label>
+                <span><%= data.text.forms.tags %></span>
+                <input class="rp-input" type="text" data-warning="<%= data.text.ui.enterChars %>"
+                       placeholder="" value="<%= data.tags.join(',') %>" data-js-merge-tags>
+                <span class="validate-hint"></span>
+            </label>
+            <label>
+                <span><%= data.text.forms.startTime %></span>
+                <input class="rp-input" type="text" value="<%- data.dateFormat(data.startTime) %>" disabled="disabled">
+                <span class="validate-hint"></span>
+            </label>
+            <label>
+                <span><%= data.text.forms.endTime %></span>
+                <input class="rp-input" type="text" value="<%- data.dateFormat(data.endTime) %>" disabled="disabled">
+                <span class="validate-hint"></span>
+            </label>
+            <div class="rp-field">
+                <span></span>
+                <label class="rp-checkbox-wrap">
+                    <input class="rp-input-checkbox" type="checkbox" data-js-extend-checkbox name="extendWithOriginal">
+                    <span><%= data.text.launches.extendWithOriginal %></span>
+                </label>
+            </div>
+
         </div>
-    </div>
-    <div class="preloader">
-        <i class="material-icons loader-animation">refresh</i>
+
     </div>
 </div>
 <div class="modal-footer">

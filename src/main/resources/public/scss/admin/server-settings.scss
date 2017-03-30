@@ -120,7 +120,7 @@
     position: relative;
 
     .rp-form {
-      margin: 0 auto;
+      margin: 0 auto 20px auto;
 
       .image-holder {
         width: 320px;
@@ -136,24 +136,20 @@
         margin-left: 16px;
       }
 
-      .rp-checkbox-wrap {
-        margin-left: 16px;
-      }
-
       .statistics-list {
-        margin: 5px 0 10px 15px;
+        margin: 0 0 20px 15px;
 
         .statistics-list-toggler {
           position: relative;
-          font-family: "OpenSansRegular", sans-serif;
-          font-size: 13px;
-          color: $COLOR--windows-blue;
+          font-family: $OpenSansSemibold, sans-serif;
+          font-size: 12px;
+          color: $COLOR--gray-47;
+          text-transform: uppercase;
           cursor: pointer;
 
           i {
             position: absolute;
             font-size: 19px;
-            top: 1px;
           }
 
           .arrow-down {
@@ -177,13 +173,13 @@
           display: none;
           margin-top: 5px;
 
-          .listMessage {
-            margin-left: 20px;
+          .list-message {
+            margin-right: 20px;
           }
 
           .statistics-point {
             position: relative;
-            padding-left: 20px;
+            padding-left: 25px;
             line-height: 22px;
             margin-left: 12px;
 
@@ -211,6 +207,11 @@
             display: block;
           }
         }
+      }
+
+      .rp-checkbox-wrap {
+        margin-left: 16px;
+        margin-bottom: 20px;
       }
 
       .rp-btn-submit {
@@ -370,6 +371,8 @@
 
             &:after {
               content: ':';
+              font-size: 16px;
+              line-height: 16px;
             }
             i {
               display: none !important;
@@ -377,6 +380,20 @@
           }
           ul {
             display: block;
+            margin-top: 10px;
+
+            .list-message {
+              margin-bottom: 10px;
+            }
+
+            .statistics-point {
+              margin-left: 0;
+              padding-left: 12px;
+
+              &:before {
+                left: 0;
+              }
+            }
           }
         }
 

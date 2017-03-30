@@ -130,7 +130,7 @@
         & + input, & + textarea, & + label {
           float: left;
         }
-        & + input, & + textarea {
+        & + input, & + textarea, & + .select2-container, & + .rp-checkbox-wrap {
           width: 74%;
         }
         & + textarea {

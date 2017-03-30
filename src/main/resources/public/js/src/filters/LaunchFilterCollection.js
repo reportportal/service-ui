@@ -130,6 +130,7 @@ define(function(require, exports, module) {
             data.id = modelName;
             data.name = modelName;
             data.temp = true;
+            data.isLaunch = true;
             data.owner = config.userModel.get('name');
             return this.add(data);
         },

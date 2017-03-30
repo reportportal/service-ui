@@ -56,6 +56,7 @@ define(function (require, exports, module) {
         },
         initialize: function(options) {
             this.filterModel = options.filterModel;
+            this.userDebugMode = options.userDebugMode;
             this.render();
             this.userStorage = new SingletonUserStorage();
             this.collectionItems = options.collectionItems;
@@ -186,7 +187,7 @@ define(function (require, exports, module) {
                 default:
                     break;
             }
-            if(this.filterModel.get('id') == 'all') {
+            if(this.filterModel.get('id') == 'all' && !this.userDebugMode) {
                 var launchFilterCollection = new SingletonLaunchFilterCollection();
                 var tempFilterModel = launchFilterCollection.generateTempModel();
                 config.router.navigate(tempFilterModel.get('url'), {trigger: true});

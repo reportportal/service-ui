@@ -520,6 +520,14 @@ define(function(require, exports, module) {
         503: ['MB Sidebar', 'Click on Menu Bttn All Users', 'Transition to All Users Page'],
         504: ['MB Sidebar', 'Click on Menu Bttn Server Settings', 'Transition to Server Settings Page'],
 
+        505: ['Log', 'Click on icon Previous Attachment', 'Show Previous Attachment'],
+        506: ['Log', 'Click on icon Next Attachment', 'Show Next Attachment'],
+        507: ['Log', 'Click on opened Attachment', 'Arise modal with Attachment'],
+        508: ['Log', 'Click on thumbnail of Attachment', 'Show this Attachment'],
+        509: ['Log', 'Click on icon Close on Modal Attachment', 'Close Modal Attachment'],
+        510: ['Log', 'Click on icon Rotate on Modal Attachment', 'Rotate Attachment'],
+        511: ['Log', 'Click on Bttn Close on Modal Attachment', 'Close Modal Attachment'],
+
     }
 
     function getExportTitle(type){

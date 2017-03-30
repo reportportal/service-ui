@@ -61,22 +61,15 @@ define(function (require, exports, module) {
 
         wrongResponseTo404: function (error) {
             config.userModel.clearLastInsidePage();
-            if (this.currentProjectId) {
-                this.openInvalid(error);
-            } else {
-                this.logout();
-            }
+            this.openInvalid(error);
         },
 
         loadProject: function () {
             var self = this;
-
-            return Service.getProject().then(
-                function (response) {
-                    self.currentProjectId = response.projectId;
-                    config.project = response;
-                    appModel.parse(response);
-                });
+            return appModel.update().done(function(response) {
+                self.currentProjectId = response.projectId;
+                config.project = response;
+            });
         },
 
         loadPreferences: function () {
@@ -87,6 +80,10 @@ define(function (require, exports, module) {
         },
 
         openAdmin: function (page, id, action, queryString) {
+            if (!config.userModel.get('isAdmin')) {
+                config.router.navigate(config.userModel.get('defaultProject'), {trigger: true});
+                return;
+            }
             this.prepareInsideView();
             this.currentContext = page;
             if(id) {
@@ -114,6 +111,7 @@ define(function (require, exports, module) {
             this.checkForContextChange(contextName);
             this.validateMainViewForAdmin();
             this.container = $('#mainContainer');
+            //TODO config.project deprecated
             config.project['projectId'] = projectId || config.userModel.get('defaultProject');
             var data = {container: this.container, projectId: projectId, contextName: contextName, subContext: subContext, queryString: queryString};
 
@@ -122,7 +120,7 @@ define(function (require, exports, module) {
                 dependenciesCalls.push(this.loadPreferences());
             }
 
-            if (this.projectIsNotLoaded(this.projectId) || this.isSettingsPage(this.contextName)) {
+            if (appModel.get('projectId') !== projectId) {
                 dependenciesCalls.push(this.loadProject());
             }
             this.destroyInvalidView();
@@ -150,10 +148,6 @@ define(function (require, exports, module) {
             } else {
                 renderPage();
             }
-        },
-
-        projectIsNotLoaded: function () {
-            return !this.currentProjectId || this.currentProjectId !== config.project.projectId;
         },
 
         preferencesAreNotLoaded: function () {
@@ -238,11 +232,8 @@ define(function (require, exports, module) {
         },
 
         logout: function () {
-            if (config.userModel) {
-                config.userModel.logout();
-                this.currentProjectId = null;
-                Util.ajaxInfoMessenger('logOuted');
-            }
+            this.currentProjectId = null;
+            Util.ajaxInfoMessenger('logOuted');
         },
 
         destroyMainView: function () {

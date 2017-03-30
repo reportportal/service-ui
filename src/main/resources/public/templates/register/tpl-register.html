@@ -9,7 +9,7 @@
             <div class="logo-label"></div>
             <div class="caption"><%= data.text.registration.welcomeMsg %></div>
         </div>
-        <form class="registration-form rp-form">
+        <form class="registration-form rp-form" data-js-register-form>
             <label class="rp-field">
                 <div class="icon-wrapper"><i class="material-icons">person_outline</i></div>
                 <input type="text" class="rp-input" placeholder="Login" data-js-login>
@@ -50,7 +50,7 @@
                 <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
                     <%= data.text.ui.reset %>
                 </button>
-                <button class="rp-btn rp-btn-login" type="button" data-js-register>
+                <button class="rp-btn rp-btn-login" type="submit" data-js-register>
                     <%= data.text.ui.register %>
                 </button>
             </div>

@@ -12,10 +12,10 @@ spring:
       port: 8500
       discovery:
         tags:
-          - urlprefix-${server.contextPath:/}
-#          - urlprefix-/ui opts strip=/ui
-          - traefik.frontend.rule=PathPrefix:${server.contextPath:/}
-#          - traefik.frontend.rule=PathPrefixStrip:${server.contextPath}${management.contextPath}
+          - urlprefix-/ui opts strip=/ui
+          - traefik.frontend.rule=PathPrefixStrip:${server.contextPath:}/ui
+          - statusPageUrlPath=${server.contextPath:}/info
+          - healthCheckUrlPath=${server.contextPath:}/health
         healthCheckPath: ${management.contextPath:}/health
         host-info: ${management.contextPath:}/info
         hostname: ${HOSTNAME:ui}

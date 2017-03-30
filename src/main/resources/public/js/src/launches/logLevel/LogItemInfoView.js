@@ -89,20 +89,38 @@ define(function (require, exports, module) {
             '[data-js-item-gallery]': 'classes: {hide: not(attachments)}',
             '[data-js-item-details]': 'classes: {hide: not(itemDetails)}',
             '[data-js-item-activity]': 'classes: {hide: not(activity)}',
-            '[data-js-match]': 'classes: {hide: not(parent_launch_investigate), disabled: parent_launch_isProcessing}',
+            '[data-js-match]': 'classes: {hide: not(parent_launch_investigate), disabled: not(validateMatchIssues)}, attr: {title: matchIssuesTitle}',
             '[data-js-post-bug]': 'classes: {disabled: validatePostBug}, attr: {title: postBugTitle}',
             '[data-js-load-bug]': 'classes: {disabled: validateLoadBug}, attr: {title: loadBugTitle}',
         },
 
         computeds: {
+            validateMatchIssues: {
+                deps: ['parent_launch_isProcessing', 'parent_launch_status'],
+                get: function(parent_launch_isProcessing, parent_launch_status) {
+                    return (!parent_launch_isProcessing && parent_launch_status != config.launchStatus.inProgress)
+                }
+            },
+            matchIssuesTitle: {
+                deps: ['parent_launch_isProcessing', 'parent_launch_status'],
+                get: function(parent_launch_isProcessing, parent_launch_status) {
+                    if(parent_launch_status == config.launchStatus.inProgress) {
+                        return Localization.launches.launchNotInProgress;
+                    }
+                    if (parent_launch_isProcessing) {
+                        return Localization.launches.launchIsProcessing;
+                    }
+                    return Localization.launches.matchTitle;
+                }
+            },
             validateLoadBug: {
-                deps: [],
+                deps: ['launch_isProcessing'],
                 get: function () {
                     return this.viewModel.validate.loadbug();
                 }
             },
             validatePostBug: {
-                deps: [],
+                deps: ['launch_isProcessing'],
                 get: function () {
                     return this.viewModel.validate.postbug();
                 }
