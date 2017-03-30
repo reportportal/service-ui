@@ -370,13 +370,13 @@ define(function (require, exports, module) {
             var appModel = new SingletonAppModel()
             var project = '#' + appModel.get('projectId');
             var filterId = this.param.filter_id;
+            var filterForAll = '?page.page=1&page.size=50&page.sort=start_time&filter.eq.has_childs=false';
             var filterStatus = '';
-            var getLink = function(filtersz){
-                var arrLink = [project, 'launches/all'];
-                var filterForAll = '?page.page=1&page.size=50&page.sort=start_time&filter.eq.has_childs=false';
-                var params = [[id, filterForAll].join('')];
-                params.push(filters);
-                arrLink.push(params.join('&'));
+            var getLink = function(filters){
+                var arrLink = [project, 'launches/all', id];
+                var params = [];
+                filters && params.push(filters);
+                arrLink.push(params.join());
                 return arrLink.join('/');
             };
             var getDefects = function(seria){
@@ -390,45 +390,45 @@ define(function (require, exports, module) {
                 case 'total':
                 case 'Grow test cases':
                 case 'grow_test_cases':
-                    filterStatus = 'filter.in.type=STEP&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED';
+                    filterStatus = filterForAll + '&filter.in.type=STEP&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED';
                     break;
                 case 'Passed':
                 case 'passed':
-                    filterStatus = 'filter.in.type=STEP&filter.in.status=PASSED';
+                    filterStatus = filterForAll + '&filter.in.type=STEP&filter.in.status=PASSED';
                     break;
                 case 'Failed':
                 case 'failed':
-                    filterStatus = 'filter.in.type=STEP&filter.in.status=FAILED';
+                    filterStatus = filterForAll + '&filter.in.type=STEP&filter.in.status=FAILED';
                     break;
                 case 'Skipped':
                 case 'skipped':
-                    filterStatus = 'filter.in.type=STEP&filter.in.status=SKIPPED';
+                    filterStatus = filterForAll + '&filter.in.type=STEP&filter.in.status=SKIPPED';
                     break;
                 case 'To Investigate':
                 case 'to_investigate':
                 case 'toInvestigate':
-                    filterStatus = ['filter.in.issue$issue_type=', getDefects('To Investigate')].join('');
+                    filterStatus = filterForAll + '&' + ['filter.in.issue$issue_type=', getDefects('To Investigate')].join('');
                     break;
                 case 'System Issue':
                 case 'systemIssue':
                 case 'system_issue':
-                    filterStatus = ['filter.in.issue$issue_type=', getDefects('System Issue')].join('');
+                    filterStatus = filterForAll + '&' + ['filter.in.issue$issue_type=', getDefects('System Issue')].join('');
                     break;
                 case 'Product Bug':
                 case 'productBug':
                 case 'product_bug':
-                    filterStatus = ['filter.in.issue$issue_type=', getDefects('Product Bug')].join('');
+                    filterStatus = filterForAll + '&' + ['filter.in.issue$issue_type=', getDefects('Product Bug')].join('');
                     break;
                 case 'No Defect':
                 case 'noDefect':
                 case 'no_defect':
-                    filterStatus = ['filter.in.issue$issue_type=', getDefects('No Defect')].join('');
+                    filterStatus = filterForAll + '&' + ['filter.in.issue$issue_type=', getDefects('No Defect')].join('');
                     break;
                 case 'Automation Bug':
                 case 'Auto Bug':
                 case 'automationBug':
                 case 'automation_bug':
-                    filterStatus = ['filter.in.issue$issue_type=', getDefects('Automation Bug')].join('');
+                    filterStatus = filterForAll + '&' + ['filter.in.issue$issue_type=', getDefects('Automation Bug')].join('');
                     break;
                 case 'Investigated':
                 case 'investigated':
@@ -437,7 +437,7 @@ define(function (require, exports, module) {
                     _.each(types, function(d){
                         defects = defects.concat(getDefects(d));
                     });
-                    filterStatus = ['filter.in.issue$issue_type=', defects].join('');
+                    filterStatus = filterForAll + '&' + ['filter.in.issue$issue_type=', defects].join('');
                     break;
                 case 'Duration':
                 case 'duration':
@@ -446,7 +446,7 @@ define(function (require, exports, module) {
                 default :
                     var defect = _.find(defectTypes.toJSON(), function(d){ return d.locator == series; });
                     if (defect) {
-                        filterStatus = ['filter.in.issue$issue_type=', defect.locator].join('');
+                        filterStatus = filterForAll + '&' + ['filter.in.issue$issue_type=', defect.locator].join('');
                     }
                     else {
                         filterStatus = '';
