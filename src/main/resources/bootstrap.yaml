@@ -4,6 +4,7 @@ info:
     description: ReportPortal User Interface
     version: '@version@'
     branch: '@branch@'
+    repo: '@repo@'
 
 spring:
   application:
