@@ -26,11 +26,13 @@ define(function (require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var SingletonAnalyticsConnect = require('analytics/SingletonAnalyticsConnect');
 
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
 
     var loadExternal = function(){
+        var analyticsConnect = new SingletonAnalyticsConnect();
         var async = $.Deferred();
         var script = document.createElement('script');
 
@@ -40,19 +42,17 @@ define(function (require, exports, module) {
         script.onload = function(){
             if(!window.ExternalServices){
                 async.resolve();
-
                 return;
             }
-            new window.ExternalServices({Backbone: Backbone, Util: Util, config: config, AppModel: appModel});
+            new window.ExternalServices({Backbone: Backbone, Util: Util, config: config, AppModel: appModel, analytics: analyticsConnect});
             async.resolve();
         };
         script.onerror = function() {
-
             async.resolve();
         };
 
         var lastScript = document.getElementsByTagName('script')[0];
-        lastScript.parentNode.insertBefore(script, lastScript)
+        lastScript.parentNode.insertBefore(script, lastScript);
 
         return async;
     }

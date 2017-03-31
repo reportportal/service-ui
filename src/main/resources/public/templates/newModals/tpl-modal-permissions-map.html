@@ -1,0 +1,436 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.project.permissionsMap}) %>
+<div class="modal-body">
+    <div class="rp-permissions-map">
+        <table class="permissions-map-table">
+            <thead>
+            <tr>
+                <th rowspan="2"><%= data.text.permissionMap.actionRole %></th>
+                <th rowspan="2"><%= data.text.ui.admin %></th>
+                <th rowspan="2"><%= data.text.ui.manager %></th>
+                <th rowspan="2"><%= data.text.ui.lead %></th>
+                <th colspan="2" class="roles-th"><%= data.text.ui.member %></th>
+                <th colspan="2" class="roles-th"><%= data.text.ui.customer %></th>
+            </tr>
+            <tr>
+                <th class="roles-th"><%= data.text.permissionMap.owner %></th>
+                <th class="roles-th"><%= data.text.permissionMap.notOwner %></th>
+                <th class="roles-th"><%= data.text.permissionMap.owner %></th>
+                <th class="roles-th"><%= data.text.permissionMap.notOwner %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><%= data.text.permissionMap.accessToManagementSystem %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.createProject %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.deleteProject %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.updateSettings %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.seeSettings %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <%= data.text.ui.create %>
+                    <%= data.text.permissionMap.internal %>
+                    <%= data.text.permissionMap.user %>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <%= data.text.admin.invite %>
+                    <%= data.text.permissionMap.internal %>
+                    <%= data.text.permissionMap.user %>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <div class="check-attention">
+                        <i class="rp-icons rp-icons-check"></i>
+                        <span class="attention">*</span>
+                    </div>
+                </td>
+                <td class="has-permission">
+                    <div class="check-attention">
+                        <i class="rp-icons rp-icons-check"></i>
+                        <span class="attention">*</span>
+                    </div>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <%= data.text.permissionMap.unSlashAssign %>
+                    <%= data.text.permissionMap.internal %>
+                    <%= data.text.permissionMap.userToFrom %>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <div class="check-attention">
+                        <i class="rp-icons rp-icons-check"></i>
+                        <span class="attention">**</span>
+                    </div>
+                </td>
+                <td class="has-permission">
+                    <div class="check-attention">
+                        <i class="rp-icons rp-icons-check"></i>
+                        <span class="attention">**</span>
+                    </div>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.changeUserRole %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <div class="check-attention">
+                        <i class="rp-icons rp-icons-check"></i>
+                        <span class="attention">*</span>
+                    </div>
+                </td>
+                <td class="has-permission">
+                    <div class="check-attention">
+                        <i class="rp-icons rp-icons-check"></i>
+                        <span class="attention">*</span>
+                    </div>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <%= data.text.ui.del %>
+                    <%= data.text.permissionMap.internal %>
+                    <%= data.text.permissionMap.user %>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.seeMembers %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>
+                    <%= data.text.permissionMap.editOwnAccount1 %>
+                    <span class="attention">***</span>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.deleteLaunch %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.forceFinishLaunch %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.startAnalysis %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.deleteTestItem %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.moveToDebug %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.mergeLaunches %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.workWithFiltersEtc %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+            </tr>
+            <tr>
+                <td><%= data.text.permissionMap.readData %></td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+                <td class="has-permission">
+                    <i class="rp-icons rp-icons-check"></i>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="permission-attention">
+        <span class="attention">*</span>
+        <span><%= data.text.permissionMap.oneAttention %></span>
+    </div>
+    <div class="permission-attention">
+        <span class="attention">**</span>
+        <span><%= data.text.permissionMap.twoAttention %></span>
+    </div>
+    <div class="permission-attention">
+        <span class="attention">***</span>
+        <span><%= data.text.permissionMap.threeAttention %></span>
+    </div>
+</div>

@@ -1,201 +1,222 @@
 @font-face {
-    font-family: 'ReportPortal';
-    src: url('../report-portal.eot');
-    src: url('../report-portal.eot#iefix') format('embedded-opentype'),
-         url('../report-portal.ttf') format('truetype'),
-         url('../report-portal.woff') format('woff'),
-         url('../report-portal.svg#ReportPortal') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'Report-Portal-Font';
+  src:  url('../Report-Portal-Font.eot?lyarcf');
+  src:  url('../Report-Portal-Font.eot?lyarcf#iefix') format('embedded-opentype'),
+    url('../Report-Portal-Font.ttf?lyarcf') format('truetype'),
+    url('../Report-Portal-Font.woff?lyarcf') format('woff'),
+    url('../Report-Portal-Font.svg?lyarcf#Report-Portal-Font') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
-[class^="rp-icons-"],
-[class*=" rp-icons-"] {
-    /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'ReportPortal' !important;
-    speak: none;
-    font-style: normal;
-    font-weight: normal;
-    font-variant: normal;
-    text-transform: none;
-    line-height: 1;
+[class^="rp-icons-"], [class*=" rp-icons-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'Report-Portal-Font' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
 
-    /* Better Font Rendering =========== */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+.rp-icons-addnewprjct:before {
+  content: "\e92b";
+}
+.rp-icons-logout:before {
+  content: "\e92a";
+}
+.rp-icons-right:before {
+  content: "\e925";
+}
+.rp-icons-warning2:before {
+  content: "\e926";
+}
+.rp-icons-add-dash:before {
+  content: "\e927";
+}
+.rp-icons-left:before {
+  content: "\e928";
+}
+.rp-icons-sorting:before {
+  content: "\e929";
+}
 .rp-icons-code:before {
-    content: "\e932";
+  content: "\e932";
 }
 .rp-icons-bold:before {
-    content: "\e945";
+  content: "\e945";
 }
 .rp-icons-bullets:before {
-    content: "\e931";
+  content: "\e931";
 }
 .rp-icons-link:before {
-    content: "\e946";
+  content: "\e946";
 }
 .rp-icons-image:before {
-    content: "\e947";
+  content: "\e947";
 }
 .rp-icons-italic:before {
-    content: "\e948";
+  content: "\e948";
 }
 .rp-icons-quote:before {
-    content: "\e949";
+  content: "\e949";
 }
 .rp-icons-strikethrough:before {
-    content: "\e950";
+  content: "\e950";
 }
 .rp-icons-add-filter:before {
-    content: "\e930";
+  content: "\e930";
 }
 .rp-icons-delete:before {
-    content: "\e933";
+  content: "\e933";
 }
 .rp-icons-discard:before {
-    content: "\e934";
+  content: "\e934";
 }
 .rp-icons-expand:before {
-    content: "\e935";
+  content: "\e935";
 }
 .rp-icons-H1:before {
-    content: "\e936";
+  content: "\e936";
 }
 .rp-icons-H2:before {
-    content: "\e937";
+  content: "\e937";
 }
 .rp-icons-H3:before {
-    content: "\e938";
+  content: "\e938";
 }
 .rp-icons-H4:before {
-    content: "\e939";
+  content: "\e939";
 }
 .rp-icons-H5:before {
-    content: "\e940";
+  content: "\e940";
 }
 .rp-icons-H6:before {
-    content: "\e941";
+  content: "\e941";
 }
 .rp-icons-numbers:before {
-    content: "\e942";
+  content: "\e942";
 }
 .rp-icons-paragraph:before {
-    content: "\e943";
+  content: "\e943";
 }
 .rp-icons-all-users:before {
-    content: "\e900";
+  content: "\e900";
 }
 .rp-icons-cancel:before {
-    content: "\e901";
+  content: "\e901";
 }
 .rp-icons-dashboard:before {
-    content: "\e902";
+  content: "\e902";
 }
 .rp-icons-edit:before {
-    content: "\e903";
+  content: "\e903";
 }
 .rp-icons-eye:before {
-    content: "\e904";
+  content: "\e904";
 }
 .rp-icons-fighter-jet-landing:before {
-    content: "\e905";
+  content: "\e905";
 }
 .rp-icons-filter:before {
-    content: "\e906";
+  content: "\e906";
 }
 .rp-icons-heartbeat:before {
-    content: "\e907";
+  content: "\e907";
 }
 .rp-icons-integrate-landing:before {
-    content: "\e908";
+  content: "\e908";
 }
 .rp-icons-launches:before {
-    content: "\e909";
+  content: "\e909";
 }
 .rp-icons-live-visibility-landing:before {
-    content: "\e90a";
+  content: "\e90a";
 }
 .rp-icons-magic:before {
-    content: "\e90b";
+  content: "\e90b";
 }
 .rp-icons-ok:before {
-    content: "\e90c";
+  content: "\e90c";
 }
 .rp-icons-projects:before {
-    content: "\e90d";
+  content: "\e90d";
 }
 .rp-icons-refactoring-landing:before {
-    content: "\e90e";
+  content: "\e90e";
 }
 .rp-icons-report-landing:before {
-    content: "\e90f";
+  content: "\e90f";
 }
 .rp-icons-settings-landing:before {
-    content: "\e910";
+  content: "\e910";
 }
 .rp-icons-settings-left-menu:before {
-    content: "\e911";
+  content: "\e911";
 }
 .rp-icons-statusbar:before {
-    content: "\e912";
+  content: "\e912";
 }
 .rp-icons-ticket:before {
-    content: "\e913";
+  content: "\e913";
 }
 .rp-icons-search:before {
-    content: "\e914";
+  content: "\e914";
 }
 .rp-icons-settings:before {
-    content: "\e915";
+  content: "\e915";
 }
 .rp-icons-sort:before {
-    content: "\e916";
+  content: "\e916";
 }
 .rp-icons-warning:before {
-    content: "\e917";
+  content: "\e917";
 }
 .rp-icons-square-plus:before {
-    content: "\e918";
+  content: "\e918";
 }
 .rp-icons-unassign:before {
-    content: "\e919";
+  content: "\e919";
 }
 .rp-icons-add-project:before {
-    content: "\e91a";
+  content: "\e91a";
 }
 .rp-icons-add-user:before {
-    content: "\e91b";
+  content: "\e91b";
 }
 .rp-icons-assign:before {
-    content: "\e91c";
+  content: "\e91c";
 }
 .rp-icons-square-minus:before {
-    content: "\e91d";
+  content: "\e91d";
 }
 .rp-icons-check:before {
-    content: "\e91e";
+  content: "\e91e";
 }
 .rp-icons-close:before {
-    content: "\e91f";
+  content: "\e91f";
 }
 .rp-icons-buble:before {
-    content: "\e920";
+  content: "\e920";
 }
 .rp-icons-history-view:before {
-    content: "\e921";
+  content: "\e921";
 }
 .rp-icons-invite-user:before {
-    content: "\e922";
+  content: "\e922";
 }
 .rp-icons-unlock:before {
-    content: "\e923";
+  content: "\e923";
 }
 .rp-icons-open:before {
-    content: "\e924";
+  content: "\e924";
 }
 .rp-icons-menu:before {
-    content: "\e944";
+  content: "\e944";
 }
+

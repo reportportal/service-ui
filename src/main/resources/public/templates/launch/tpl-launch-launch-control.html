@@ -1,0 +1,38 @@
+<% var isDebug = (data.context === 'userdebug'); %>
+<div class="control-buttons rp-nav rp-nav-right">
+    <a class="rp-btn mobile-hide rp-btn-default rp-button-with-icon rp-button-dropdown disabled" data-js-multi-button aria-expanded="true" data-toggle="dropdown" title="<%= data.text.launches.actionTitle %>">
+        <i class="material-icons">menu</i>
+        <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.ui.actions %></span>
+        <i class="material-icons">keyboard_arrow_down</i>
+    </a>
+    <ul class="dropdown-menu">
+        <% if (!isDebug) { %>
+        <li>
+            <a data-js-multi-action="merge"><%= data.text.launches.merge %></a>
+        </li>
+        <li>
+            <a data-js-multi-action="compare"><%= data.text.launches.Compare %></a>
+        </li>
+        <% } %>
+        <li>
+            <a data-js-multi-action="changemode"><%= (isDebug) ? data.text.launches.shiftToLaunches : data.text.launches.shiftToDebug %></a>
+        </li>
+        <li>
+            <a data-js-multi-action="forcefinish"><%= data.text.launches.forceFinish %></a>
+        </li>
+        <li>
+            <a data-js-multi-action="remove"><%= data.text.ui.delete %></a>
+        </li>
+    </ul>
+    <a class="rp-btn rp-btn-default rp-button-with-icon" data-js-refresh title="<%= data.text.ui.refresh %>">
+        <i class="material-icons">autorenew</i>
+        <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.ui.refresh %></span>
+        <span data-js-refresh-counter class="counter"></span>
+    </a>
+</div>
+<% if (data.context == 'userdebug') { %>
+<div class="refine-wrapper filter-entities clearfix">
+    <span class="refine-label hidden-xs">REFINE:</span>
+    <div data-js-refine-entities></div>
+</div>
+<% } %>

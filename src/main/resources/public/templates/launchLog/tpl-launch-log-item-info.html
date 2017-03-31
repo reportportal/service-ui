@@ -1,0 +1,63 @@
+<% var isDebug = (data.context === 'userdebug') %>
+<div class="launch-log-item-info">
+    <div class="item-info">
+        <div data-js-item-info-issue class="launch-log-item-issue row">
+            <div class="item-issue-container" data-js-step-issue></div>
+            <% if (!isDebug) { %>
+                <div class="button-container">
+                    <div class="rp-btn rp-btn-default rp-button-with-icon" title=" <%= data.text.launches.postBug %>" data-js-post-bug>
+                        <i class="material-icons">bug_report</i>
+                        <span class="rp-btn-val hidden-sm hidden-xs"> <%= data.text.launches.postBug %></span>
+                    </div>
+
+                    <div class="rp-btn rp-btn-default rp-button-with-icon" title="<%= data.text.launches.loadBug %>" data-js-load-bug>
+                        <i class="material-icons">link</i>
+                        <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.launches.loadBug %></span>
+                    </div>
+                    <div class="rp-btn rp-btn-default rp-button-with-icon" title="<%= data.text.launches.matchTitle %>" data-js-match>
+                        <i class="rp-icons rp-icons-magic"></i>
+                        <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.launches.matchTitle %></span>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    <ul class="tabs">
+        <li data-js-item-stack-trace-label class="desktop-tab"><i class="material-icons">assignment</i><span><%= data.text.launchLogItem.stackTrace %></span>
+        </li>
+        <li data-js-item-gallery-label class="desktop-tab"><i class="material-icons">attach_file</i><span><%= data.text.launchLogItem.attachments %></span>
+        </li>
+        <li data-js-item-details-label class="desktop-tab"><i class="material-icons">info_outline</i><span><%= data.text.launchLogItem.itemDetails %></span>
+        </li>
+        <li data-js-item-activity-label class="desktop-tab"><i class="material-icons">access_time</i><span><%= data.text.launchLogItem.historyOfActions %></span>
+        </li>
+    </ul>
+    <div data-js-item-stack-trace-label class="mobile-tab">
+        <i class="material-icons">assignment</i>
+        <span><%= data.text.launchLogItem.stackTrace %></span>
+        <i class="arrow-up material-icons">keyboard_arrow_up</i>
+        <i class="arrow-down material-icons">keyboard_arrow_down</i>
+    </div>
+    <div class="tabs-item stack-trace" data-js-item-stack-trace></div>
+    <div data-js-item-gallery-label class="mobile-tab">
+        <i class="material-icons">attach_file</i>
+        <span><%= data.text.launchLogItem.attachments %></span>
+        <i class="arrow-up material-icons">keyboard_arrow_up</i>
+        <i class="arrow-down material-icons">keyboard_arrow_down</i>
+    </div>
+    <div class="tabs-item" data-js-item-gallery></div>
+    <div data-js-item-details-label class="mobile-tab">
+        <i class="material-icons">info_outline</i>
+        <span><%= data.text.launchLogItem.itemDetails %></span>
+        <i class="arrow-up material-icons">keyboard_arrow_up</i>
+        <i class="arrow-down material-icons">keyboard_arrow_down</i>
+    </div>
+    <div class="tabs-item" data-js-item-details></div>
+    <div data-js-item-activity-label class="mobile-tab">
+        <i class="material-icons">access_time</i>
+        <span><%= data.text.launchLogItem.historyOfActions %></span>
+        <i class="arrow-up material-icons">keyboard_arrow_up</i>
+        <i class="arrow-down material-icons">keyboard_arrow_down</i>
+    </div>
+    <div class="tabs-item" data-js-item-activity></div>
+</div>

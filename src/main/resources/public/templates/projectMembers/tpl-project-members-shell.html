@@ -1,0 +1,61 @@
+<div class="project-members-actions">
+    <div class="project-members-filter">
+        <div class="rp-input-search-wrap">
+            <div class="input-filter form-group">
+                <input type="text" class="rp-input-search form-control" id="membersFilter" name="membersFilter" placeholder="" data-js-members-search>
+                <i class="material-icons">search</i>
+                <div class="error-bottom">
+                    <div class="help-inline"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="project-members-buttons">
+        <button type="button" class="rp-btn rp-btn-default rp-button-with-icon not-small" data-js-add-user>
+            <i class="rp-icons rp-icons-add-user"></i>
+            <span class="rp-btn-val"><%- data.text.members.addMember %></span>
+        </button>
+        <button type="button" class="rp-btn rp-btn-default rp-button-with-icon not-small" data-js-invite-user>
+            <i class="rp-icons rp-icons-invite-user"></i>
+            <span class="rp-btn-val"><%- data.text.members.inviteMember %></span>
+        </button>
+        <button type="button" class="rp-btn rp-btn-default rp-button-with-icon not-small" data-js-permissions>
+            <i class="material-icons">lock_open</i>
+            <span class="rp-btn-val"><%- data.text.members.permissionsMap %></span>
+        </button>
+    </div>
+</div>
+<div class="project-members-table rp-table-grid show-from-now" data-js-members-table>
+    <div class="row rp-grid-thead">
+        <div class="rp-grid-th grid-cell name-grid-cell">
+            <div class="table-wrapper">
+                <div class="middle-wrapper">
+                    <span class="rp-grid-th-name"><%= data.text.members.titleNameLogin %></span>
+                </div>
+            </div>
+        </div>
+        <div class="rp-grid-th grid-cell login-grid-cell">
+            <div class="table-wrapper">
+                <div class="middle-wrapper">
+                    <span class="rp-grid-th-name"><%= data.text.admin.lastLogin %></span>
+                </div>
+            </div>
+        </div>
+        <div class="rp-grid-th grid-cell role-grid-cell">
+            <div class="table-wrapper">
+                <div class="middle-wrapper">
+                    <span class="rp-grid-th-name"><%= data.text.project.projectRole %></span>
+                </div>
+            </div>
+        </div>
+        <div class="rp-grid-th grid-cell action-grid-cell">
+            <div class="table-wrapper">
+                <div class="middle-wrapper action-right">
+                    <span class="rp-grid-th-name"><%= data.text.ui.action %></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div data-js-members-list></div>
+</div>
+<div data-js-members-paginate></div>

@@ -1,0 +1,27 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.widgets.addSharedWidget}) %>
+<div class="modal-body">
+    <div class="info-block">
+        <div class="preview-block" data-js-preview-block>
+            <h2 data-js-active-widget-name></h2>
+            <div class="widget-preview" data-js-widget-preview></div>
+        </div>
+    </div>
+    <div class="action-block" data-js-action-block>
+        <h1><%- data.text.widgets.selectShared %></h1>
+        <div class="shared-widgets-list-wrapper">
+            <div data-js-widgets-list-scroll>
+                <div class="shared-widgets-list" data-js-widgets-list></div>
+                <div class="shared-widgets-empty hide" data-js-widgets-empty>
+                    <span><%= data.text.wizard.noSharedWidgets %></span>
+                </div>
+            </div>
+        </div>
+        <div class="preloader">
+            <i class="material-icons loader-animation">refresh</i>
+        </div>
+    </div>
+    <div class="buttons-block rp-nav-right">
+        <button class="rp-btn rp-btn-cancel" data-js-cancel><%- data.text.ui.cancel %></button>
+        <button class="rp-btn rp-btn-submit" data-js-add-widget><%- data.text.ui.add %></button>
+    </div>
+</div>

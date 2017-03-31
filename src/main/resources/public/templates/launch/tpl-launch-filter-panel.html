@@ -1,0 +1,36 @@
+<div class="filter-block">
+    <div class="filter-entities clearfix" data-js-filter-entities>
+
+    </div>
+    <div class="filter-settings">
+        <div class="left-items">
+            <a class="rp-btn rp-btn-default rp-button-with-icon" title="Add Widget" data-js-add-widget>
+                <i class="material-icons">add_circle</i>
+                <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.widgets.addNewWidget %></span>
+            </a>
+        </div>
+        <div class="right-items">
+            <a class="rp-btn rp-btn-default rp-button-with-icon" title="Discard" data-js-discard-filter>
+                <i class="rp-icons rp-icons-discard"></i>
+                <span class="rp-btn-val hidden-sm hidden-xs">Discard</span>
+            </a>
+            <a class="rp-btn rp-btn-default rp-button-with-icon" title="Clone" data-js-clone-filter>
+                <i class="material-icons">library_add</i>
+                <span class="rp-btn-val hidden-sm hidden-xs">Clone</span>
+            </a>
+            <a class="rp-btn rp-btn-default rp-button-with-icon" title="Edit" data-js-edit-filter>
+                <i class="material-icons">edit</i>
+                <span class="rp-btn-val hidden-sm hidden-xs">Edit</span>
+            </a>
+            <a class="rp-btn rp-btn-default rp-button-with-icon" title="Save" data-js-save-filter>
+                <i class="material-icons">bookmark_border</i>
+                <span class="rp-btn-val hidden-sm hidden-xs">Save</span>
+            </a>
+        </div>
+        <div class="right-items">
+            <div class="description" data-js-filter-shared-descr><i class="material-icons" title="<%= data.text.filters.sharedDescription %>">share</i><span><%= data.text.filters.sharedDescription %></span></div>
+            <div class="description" data-js-filter-not-save-descr><span class="obligatory-field"></span><span><%= data.text.filters.notSaveDescription %></span></div>
+            <div class="description" data-js-filter-not-my-descr><i class="material-icons" title="<%= data.text.filters.globalDescription %>">public</i><span><%= data.text.filters.globalDescription %></span></div>
+        </div>
+    </div>
+</div>

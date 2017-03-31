@@ -1,0 +1,13 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.userProfile.msgRegenMid}) %>
+<div class="modal-body">
+    <p class="warning">
+        <%= data.text.userProfile.updateUserDataFrom %> <span data-js-type></span>:
+        <%= data.msg %>
+    </p>
+    <p><%= data.text.ui.reloginToApply %></p>
+</div>
+<div class="modal-footer">
+    <button class="rp-btn rp-btn-submit" type="button" data-js-ok>
+        <%= data.text.ui.relogin %>
+    </button>
+</div>

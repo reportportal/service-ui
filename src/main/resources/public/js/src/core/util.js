@@ -17,7 +17,7 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 define(function (require, exports, module) {
     'use strict';
@@ -30,11 +30,12 @@ define(function (require, exports, module) {
     var Tpl = require('templates');
     var App = require('app');
     var Validators = require('validators');
+    var Service = require('coreService');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
 
     require('baron');
     require('cookie');
-    require('nicescroll');
+    // require('nicescroll');
     require('bootswitch');
     require('isLoading');
     require('select2');
@@ -48,14 +49,15 @@ define(function (require, exports, module) {
     var Util = {};
     _.extend(Util, {
 
-       templates: function (name, data) {
+        templates: function (name, data) {
             var data = data || {};
             data['text'] = Localization;
+            data.includeTemplate = Util.templates;
 
             var template = Tpl[name];
             if (template) {
                 var tplText = Tpl[name](data);
-                if('DEBUG_STATE') {
+                if ('DEBUG_STATE' && name != '_tpl-modal') {
                     tplText = '<!-- start ' + name + ' -->' + tplText;
                     tplText = tplText + '<!-- end ' + name + ' -->';
                 }
@@ -65,35 +67,31 @@ define(function (require, exports, module) {
             }
         },
 
-        getDocumentationHtml: function(){
+        getDocumentationHtml: function () {
             var async = $.Deferred();
             $.ajax({
                 type: 'GET',
                 dataType: 'html',
                 url: 'compiled/documentation.html',
-                success: function(data){
+                success: function (data) {
                     async.resolve($(data));
                 }
             });
 
             return async.promise();
         },
-        
-        parseUrl: function parseUrl(){
-            var parseUrl_result = {};
-            var parseUrl_url = decodeURI(window.location.href);
-            var parseUrl_paramsStr = parseUrl_url.split('?')[1];
-            if (typeof parseUrl_paramsStr != 'undefined'){
-                var parseUrl_params = parseUrl_paramsStr.split('&');
-                var nameVal = '';
-                for (var i = 0; i < parseUrl_params.length; i++) {
-                    nameVal = parseUrl_params[i].split('=');
-                    if (nameVal.length == 2){
-                        parseUrl_result[nameVal[0]] = nameVal[1];
-                    }
-                }
+        checkWidthScroll: function() {
+            var div = document.createElement('div');
+            div.style.overflowY = 'scroll';
+            div.style.width = '50px';
+            div.style.height = '50px';
+            div.style.visibility = 'hidden';
+            document.body.appendChild(div);
+            var scrollWidth = div.offsetWidth - div.clientWidth;
+            document.body.removeChild(div);
+            if (scrollWidth != 0) {
+                $('body').addClass('no-zero-scroll');
             }
-            return parseUrl_result;
         },
 
         isMobileNavigator: function () {
@@ -126,8 +124,12 @@ define(function (require, exports, module) {
             };
             String.prototype.escapeScript = function () {
                 return this
-                    .replace(/<script[^>]*>/gi, ' <!-- ')
-                    .replace(/<\/script>/gi, ' --> ');
+                    .replace(/(?!<code>)*<script*>*(?!<\/code>)/gi, ' ');
+            };
+            String.prototype.indentSpases = function() {
+                return this.replace(/^ +/gm, function(str) {
+                    return str.replace(/ /g, '&nbsp;')
+                })
             };
 
             String.prototype.replaceNewLines = function () {
@@ -199,12 +201,34 @@ define(function (require, exports, module) {
             };
             Object.defineProperty(Array.prototype, "equals", {enumerable: false});
         },
+        appendTooltip: function (content, $el, $parrent, openCallback) {
+            $el.uitooltip({
+                position: {
+                    my: 'left top',
+                    at: 'left bottom+5',
+                    of: $parrent,
+                    collision: 'fit'
+                },
+                show: {effect: 'none', delay: 500, duration: 0},
+                hide: {effect: 'none', duration: 0},
+                items: ':not([disabled])',
+                content: content,
+                open: function( event, ui ) {
+                    setTimeout(function() {
+                        if($(event.currentTarget).attr('aria-describedby')) {
+                            openCallback && openCallback();
+                        }
+                    }, 500);
+                }
+            });
+            $('.ui-helper-hidden-accessible').remove();  // this block needs for voiseover osx only
+        },
 
         textWrapper: function (value, search) {
-            if(!value) {
+            if (!value) {
                 return '';
             }
-            var regex = new RegExp(search, 'ig');
+            var regex = new RegExp(search.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'ig');
             return value.replace(regex, '<mark>$&</mark>');
         },
         replaceOccurrences: function (occurenceArr) {
@@ -216,6 +240,13 @@ define(function (require, exports, module) {
                 }
                 return finalString;
             }
+        },
+        replaceTemplate: function (template) {
+            var result = template;
+            for (var i = 1; i < arguments.length; i++) {
+                result = result.replace('%%%', arguments[i]);
+            }
+            return result;
         },
         shimBind: function () {
             if (!Function.prototype.bind) {
@@ -243,13 +274,12 @@ define(function (require, exports, module) {
                 };
             }
         },
-        ajaxBeforeSend: function(req) {
+        ajaxBeforeSend: function (req) {
             req.setRequestHeader('Authorization', config.userModel.get('token'));
             req.setRequestHeader('X-XSRF-TOKEN', $.cookie('XSRF-TOKEN'));
             req.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
             this.addXhrToPool(req);
         },
-
         trackAjaxCalls: function () {
             var self = this;
             $.ajaxSetup({
@@ -264,9 +294,9 @@ define(function (require, exports, module) {
                 .ajaxStart(function () {
                     NP.start();
                 }).ajaxComplete(function () {
-                    NP.done();
+                NP.done();
             }).ajaxError(function (event, jqxhr, settings, exception) {
-                if(Util.validateForLogOut(jqxhr)) {
+                if (Util.validateForLogOut(jqxhr)) {
                     return false;
                 }
             });
@@ -278,10 +308,9 @@ define(function (require, exports, module) {
                 this.isActive = false;
             });
         },
-
         validateForLogOut: function (jqxhr) {
             if (jqxhr.status === 401) {
-                if(config.userModel.get('auth')){
+                if (config.userModel.get('auth')) {
                     this.addMessage({clazz: 'alert', message: Localization.failMessages.sessionExpired});
                 }
                 config.userModel && config.userModel.clearSession();
@@ -290,24 +319,22 @@ define(function (require, exports, module) {
             }
             return false;
         },
-
-        updateImagePath: function(path) {
-            var token = config.userModel.get('token')
-            if(!token) {
+        updateImagePath: function (path) {
+            var token = config.userModel.get('token');
+            if (!token) {
                 return path;
             }
             var partToken = token.split(' ')[1];
-            if(!partToken) {
+            if (!partToken) {
                 return path;
             }
-            if(~path.indexOf('?')){
+            if (~path.indexOf('?')) {
                 path = path + '&';
             } else {
                 path = path + '?';
             }
             return path + 'access_token=' + partToken;
         },
-
         clearXhrPool: function () {
             // because .abort() call complete event and xhr remove self
             var xhrPoolClone = _.clone(xhrPool);
@@ -318,21 +345,17 @@ define(function (require, exports, module) {
                 }
             });
         },
-
         addXhrToPool: function (jqXHR) {
             xhrPool.push(jqXHR);
         },
-
         removeXhrFromPool: function (jqXHR) {
             var i = xhrPool.indexOf(jqXHR);
             if (i > -1) xhrPool.splice(i, 1);
         },
-
         setupMessagesTracker: function (messages) {
             var self = this;
             self.messages = messages;
         },
-
         addMessage: function (options) {
             var self = this;
 
@@ -359,69 +382,14 @@ define(function (require, exports, module) {
                 this.messages.close();
             }
         },
-        showOverlay: function(element, deleting) {
+        showOverlay: function (element, deleting) {
             $(element).LoadingOverlay("show", {
-                image   : "img/graph_loader.gif"
+                image: "img/graph_loader.gif"
             });
         },
-        hideOverlay: function(element) {
+        hideOverlay: function (element) {
             $(element).LoadingOverlay("hide");
         },
-        setupVisualEffects: function () {
-            var self = this;
-
-            $(window)
-                .on("load resize", function () {
-                    if ($(".js-menu-toggle").hasClass("js-active")) {
-                        $(".js-sidebar").animate({left: '-250px'});
-                        $(".js-header").animate({left: "0px"});
-                        $(".js-main-content").animate({left: "0px"});
-                        $(".js-menu-toggle").removeClass("js-active").animate({left: "0px"});
-                    }
-                });
-
-            $(document)
-                .on("click", "#topHeader .js-menu-toggle", function () {
-                    if ($(this).hasClass("js-active")) {
-                        $(".js-sidebar").animate({left: '-250px'});
-                        $(this).removeClass("js-active").animate({left: "0px"});
-                    } else {
-                        if ($('#navbar-header-collapse').hasClass('in')) {
-                            $('.js-projects-toggle').click();
-                        }
-                        $(this).addClass("js-active").animate({left: "250px"});
-                        $(".js-sidebar").animate({left: '0px'});
-                    }
-                })
-                .off('click.hide-sidebar')
-                .on("click.hide-sidebar", ".js-main-content, #topHeader", function (event) {
-                    var target = $(event.target);
-
-                    if (target.hasClass('js-menu-toggle') || target.closest('.js-menu-toggle').length > 0) return
-                    if ($(".js-menu-toggle").hasClass("js-active")) {
-                        $(".js-menu-toggle").click();
-                    }
-                });
-
-            $(document).on("click", "#topHeader .js-projects-toggle", function () {
-                self.setEqualHeightRow($('.user-projects .rp-mobile.list-group-item'));
-                var anotherMenuButton = $('#topHeader .js-menu-toggle');
-                if (anotherMenuButton.hasClass("js-active")) {
-                    $(".js-sidebar").animate({left: '-250px'});
-                    anotherMenuButton.removeClass("js-active").animate({left: "0px"});
-                }
-            });
-
-            $(".js-sidebar").on("click", ".main-menu a", function () {
-                if ($(".js-menu-toggle").hasClass("js-active")) {
-                    $(".js-sidebar").animate({left: '-250px'});
-                    $(".js-header").animate({left: "0px"});
-                    $(".js-main-content").animate({left: "0px"});
-                    $(".js-menu-toggle").removeClass("js-active").animate({left: "0px"});
-                }
-            });
-        },
-
         hideMessagePanel: function () {
             var self = this;
             $('.cancel, [type="cancel"]').on('click', function () {
@@ -434,101 +402,43 @@ define(function (require, exports, module) {
                 this.messages.close();
             }
         },
-        // isMac: function () {
-        //     return navigator.platform.toUpperCase().indexOf('MAC') >= 0;
-        // },
-        // updateNiceScrollLib: function () {
-        //     var self = this;
-        //
-        //     $(document.body).on('wheel DoMMouseScroll', function (e) {
-        //         var eo = e.originalEvent;
-        //         if (self.isMac()) {
-        //             if (eo.wheelDeltaY || eo.wheelDeltaX) {
-        //                 if (Math.abs(eo.wheelDeltaY) < 10 && Math.abs(eo.wheelDeltaX) > 2) {
-        //
-        //                     if (eo.wheelDeltaX < -3 || eo.wheelDeltaX > 3) {
-        //                         $('.modal').modal('hide');
-        //                         $.nicescroll[0].wheelprevented = true;
-        //                     } else if (eo.wheelDeltaY < -2 || eo.wheelDeltaY > 2) {
-        //                         $.nicescroll[0].wheelprevented = false;
-        //                     }
-        //                 }
-        //             } else {
-        //                 if (eo.deltaX != 0) {
-        //                     $.nicescroll[0].wheelprevented = true;
-        //                 } else if (eo.deltaY != 0) {
-        //                     $.nicescroll[0].wheelprevented = false;
-        //                 }
-        //             }
-        //         }
-        //     });
-        // },
-        // setupNiceScroll: function (element) {
-        //     var options = $.extend({}, {
-        //         autohidemode: 'false',
-        //         cursorborderradius: '5px', // Scroll cursor radius
-        //         background: '#d8d9dc',     // The scrollbar rail color
-        //         cursorwidth: '10px',       // Scroll cursor width
-        //         cursorcolor: '#666'     // Scroll cursor color
-        //     });
-        //
-        //     if (!this.isMac()) {
-        //         if (element) {
-        //             element.niceScroll(options);
-        //             var scroll = element.getNiceScroll();
-        //             if (scroll[0]) {
-        //                 scroll[0].setScrollTop = function (val) {
-        //                     return setTimeout(function () {
-        //                         if (scroll[0] && scroll[0].docscroll) {
-        //                             scroll[0].docscroll.scrollTop(val);
-        //                         }
-        //                     }, 1);
-        //                 };
-        //                 scroll[0].setScrollLeft = function (val) {
-        //                     return setTimeout(function () {
-        //                         if (scroll[0] && scroll[0].docscroll) {
-        //                             scroll[0].docscroll.scrollLeft((scroll[0].detected.ismozilla && scroll[0].isrtlmode) ? -val : val);
-        //                         }
-        //                     }, 1);
-        //                 };
-        //             }
-        //         } else {
-        //             $(function () {
-        //                 $("body").niceScroll(options);
-        //             });
-        //         }
-        //     }
-        // },
-        setupBaronScroll: function($element, inner){
-            var wrapHtml = '<div class="baron baron__root baron__clipper"><div class="baron_scroller"></div></div>';
+        setupBaronScroll: function ($element, inner, options) {
+            var direction = options && options.direction ? options.direction : 'v';
+            var wrapHtml = '<div class="baron baron__root baron__clipper '+ (direction == "h" ? 'baron__horizontal': '') + '"><div class="baron_scroller"></div></div>';
             var $rootElement = null;
-            if(inner) {
+            if (inner) {
                 $element.wrapInner(wrapHtml);
                 $rootElement = $element.children('.baron_scroller').children('.baron__root');
             } else {
                 $element.wrap(wrapHtml);
                 $rootElement = $element.parent('.baron_scroller').parent('.baron__root');
             }
-            if($rootElement) {
-                $rootElement.append('<div class="baron__track">'+
-                    '<div class="baron__control baron__up">▲</div>'+
-                    '<div class="baron__free">'+
-                    '<div class="baron__bar"></div>'+
-                    '</div>'+
-                    '<div class="baron__control baron__down">▼</div>'+
+            var baron = null;
+            if ($rootElement && $('body').hasClass('no-zero-scroll')) {
+                $rootElement.append('<div class="baron__track">' +
+                    '<div class="baron__control baron__up">▲</div>' +
+                    '<div class="baron__free">' +
+                    '<div class="baron__bar"></div>' +
+                    '</div>' +
+                    '<div class="baron__control baron__down">▼</div>' +
                     '</div>');
-                $rootElement.baron({
+                baron = $rootElement.baron({
                     cssGuru: true,
                     root: '.baron',
                     scroller: '.baron_scroller',
                     bar: '.baron__bar',
                     scrollingCls: '_scrolling',
-                    draggingCls: '_dragging'
+                    draggingCls: '_dragging',
+                    direction: direction
                 });
             }
-            return $element.parent('.baron_scroller');
+            var $scrollObject = $element.parent('.baron_scroller');
+            if($scrollObject.length){
+                $scrollObject.get(0).baron = baron;
+            }
+            return $scrollObject;
         },
-        setupBaronScrollSize: function($scrollElem, options) {
+        setupBaronScrollSize: function ($scrollElem, options) {
             var $contentBlock = $scrollElem.children();
             var $overflowBlock = $scrollElem.parent('.baron__root');
             $contentBlock.css({maxHeight: 'none'});
@@ -536,53 +446,54 @@ define(function (require, exports, module) {
             if (height < 25) {
                 height = 25;
             }
-            if(options && height > options.maxHeight) {
+            if (options && height > options.maxHeight) {
                 height = options.maxHeight;
                 $overflowBlock.addClass('_scrollbar');
             }
             $overflowBlock.height(height);
-            if(options && options.changeWidth){
+            if (options && options.changeWidth) {
                 $overflowBlock.width($contentBlock.width());
             }
-                
+            var baron = $scrollElem.get(0).baron;
+            baron && baron.update();
+
         },
-        setupSelect2WhithScroll: function(el, options) {
-            el.select2(options);
-            el.one('select2-open', function(e){
-                $('input.select2-input', el.parent()).on('input', function(ev){
-                    if($(this).val().trim().length<3){
+        setupSelect2WhithScroll: function (el, options) {
+            el.one('select2-open', function (e) {
+                $('#select2-drop input.select2-input').on('input', function (ev) {
+                    if ($(this).val().trim().length < 3) {
                         Util.setupBaronScrollSize(e.currentTarget.$scrollEl, {maxHeight: 200});
                     }
                 });
             });
-            el.on('select2-open select2-loaded', function(e) {
-                if(!e.currentTarget.$scrollEl) {
+            el.on('select2-open select2-loaded', function (e) {
+                if (!e.currentTarget.$scrollEl) {
                     e.currentTarget.$scrollEl = Util.setupBaronScroll($('ul.select2-results').last());
                     el.select2('setScrollContainer', e.currentTarget.$scrollEl);
                 }
                 Util.setupBaronScrollSize(e.currentTarget.$scrollEl, {maxHeight: 200});
             });
-            return el;
+            return el.select2(options);
         },
         setEqualHeightRow: function (elem) {
             $(elem).responsiveEqualHeightGrid();
         },
-        attachNiceScrollToDropDown: function (options) {
-            var found = $("li", options.holder).length,
-                target = $("ul:first", options.holder);
-            if (found > options.acceptable) {
-                options.holder
-                    .on('shown.bs.dropdown', function () {
-
-                        Util.setupNiceScroll(target);
-                    }).on('hidden.bs.dropdown', function () {
-                    target.getNiceScroll().remove();
-                }).on('remove', function () {
-                    target = null;
-                    options.holder = null;
-                });
-            }
-        },
+        // attachNiceScrollToDropDown: function (options) {
+        //     var found = $("li", options.holder).length,
+        //         target = $("ul:first", options.holder);
+        //     if (found > options.acceptable) {
+        //         options.holder
+        //             .on('shown.bs.dropdown', function () {
+        //
+        //                 Util.setupNiceScroll(target);
+        //             }).on('hidden.bs.dropdown', function () {
+        //             target.getNiceScroll().remove();
+        //         }).on('remove', function () {
+        //             target = null;
+        //             options.holder = null;
+        //         });
+        //     }
+        // },
 
         scrollToHighlight: function (id, needPurification) {
             id = config.commentAnchor || id;
@@ -608,60 +519,29 @@ define(function (require, exports, module) {
             config.commentAnchor = '';
         },
 
-        // setupScrollTracker: function () {
-        //     var backTop = $('#back-top'),
-        //         win = $(window),
-        //         scrollTracker = function () {
-        //             var data = {top: win.scrollTop(), height: win.height()};
-        //             $.publish("scroll:change", data);
-        //             if (win.scrollTop() > 100) {
-        //                 $.publish("scroll:greater:than:100", data);
-        //                 if (!backTop.is(':visible')) {
-        //                     backTop.show();
-        //                 }
-        //             } else {
-        //                 backTop.fadeOut();
-        //             }
-        //         };
-        //     win.off('scroll').scroll(function () {
-        //         scrollTracker();
-        //     });
-        //     // scroll body to 0px on click
-        //     backTop.off('click').click(function () {
-        //         $(this).fadeOut();
-        //         $('body,html').animate({
-        //             scrollTop: 0
-        //         }, 100);
-        //         return false;
-        //     });
-        //     // resize tracker
-        //     win.off('resize').resize(function () {
-        //         $.publish("window:resize");
-        //     });
-        // },
-        setupBackTop: function(){
-            $('body').on('click', '#back-top', function(){
+        setupBackTop: function () {
+            $('body').on('click', '[global-back-top]', function () {
                 config.mainScrollElement.animate({
                     scrollTop: 0
                 }, 100);
                 return false;
             });
-            $.subscribe('scroll:greater:than:100', function(){
-                var backTop = $('#back-top');
-                if(backTop.length && !backTop.is(':visible')) {
+            $.subscribe('scroll:greater:than:100', function () {
+                var backTop = $('[global-back-top]');
+                if (backTop.length && !backTop.is(':visible')) {
                     backTop.show();
                 }
             });
-            $.subscribe('scroll:less:than:100', function(){
-                var backTop = $('#back-top');
-                if(backTop.length && backTop.is(':visible')) {
+            $.subscribe('scroll:less:than:100', function () {
+                var backTop = $('[global-back-top]');
+                if (backTop.length && backTop.is(':visible')) {
                     backTop.fadeOut();
                 }
             })
         },
 
-        setupWindowEvents: function(){
-            config.mainScrollElement.on('scroll', function(e){
+        setupWindowEvents: function () {
+            config.mainScrollElement.on('scroll.global', function (e) {
                 var data = {top: e.currentTarget.scrollTop, height: $(window).height()};
                 $.publish("scroll:change", data);
                 if (e.currentTarget.scrollTop > 100) {
@@ -670,8 +550,13 @@ define(function (require, exports, module) {
                     $.publish("scroll:less:than:100", data);
                 }
             });
-            $(window).on('resize', function(){
+            $(window).on('resize.global', function () {
                 $.publish("window:resize", {height: $(window).height(), width: $(window).width()});
+            });
+            $(document).on('click', 'a', function (e) {
+                if ($(e.currentTarget).is(':disabled')) {
+                    e.preventDefault();
+                }
             })
         },
 
@@ -756,7 +641,7 @@ define(function (require, exports, module) {
             return time;
         },
         dateFormat: function (val, withUtc) {
-            var date = val ? new Date(val) : new Date(),
+            var date = new Date(val),
                 month = date.getMonth() + 1,
                 day = date.getDate(),
                 hour = date.getHours(),
@@ -768,6 +653,7 @@ define(function (require, exports, module) {
             } else {
                 utc = 'UTC' + utc;
             }
+
 
             // normalize value to 2 symbols string
             //   1 -> 01
@@ -818,8 +704,8 @@ define(function (require, exports, module) {
         },
 
         ajaxFailMessenger: function (error, type, messageText) {
-            if(error && error.statusText === "abort") return;
-            if(error && error.status === 401) return;
+            if (error && error.statusText === "abort") return;
+            if (error && error.status === 401) return;
             var response = "", message = messageText || "";
             if (error) {
                 try {
@@ -865,8 +751,10 @@ define(function (require, exports, module) {
             });
         },
 
+
         getDialog: function (options) {
             $('.rp-modal-dialog').remove();
+            console.log('Modal ' + options.name);
             var modalEl = $("<div>" + this.templates(options.name, options.data) + "</div>")
                 .find(".dialog-shell")
                 .unwrap()
@@ -875,18 +763,18 @@ define(function (require, exports, module) {
             var $dialog = $('.modal-dialog', modalEl);
             this.setupBaronScroll($dialog);
             $('.baron_scroller', modalEl).attr('data-js-close', true);
-            modalEl.click(function(e) {
+            modalEl.click(function (e) {
                 var $target = $(e.target);
-                if($target.is('[data-js-close]')) {
+                if ($target.is('[data-js-close]')) {
                     modalEl.modal('hide');
                 }
             });
 
             return modalEl;
         },
-        showAnswerDialog: function(options) {
+        showAnswerDialog: function (options) {
             var async = $.Deferred();
-            var dialog =  Util.getDialog({
+            var dialog = Util.getDialog({
                 name: 'tpl-dialog-modal',
                 data: options,
             })
@@ -895,9 +783,13 @@ define(function (require, exports, module) {
                 dialog.remove();
                 dialog = null;
             });
-            $('[data-js-submit]', dialog).click(function(){async.resolve()});
-            $('[data-js-cancel]', dialog).click(function(){async.reject()});
-            async.always(function(){
+            $('[data-js-submit]', dialog).click(function () {
+                async.resolve()
+            });
+            $('[data-js-cancel]', dialog).click(function () {
+                async.reject()
+            });
+            async.always(function () {
                 dialog.modal("hide");
             });
             return async.promise()
@@ -974,9 +866,9 @@ define(function (require, exports, module) {
         },
 
         getLocalSharedIcon: function () {
-            return '<span class="share-icon-wrapper">'+
-                '<i class="material-icons" title="' + Localization.launches.filterIsShared + '">share</i>'+
-            '</span>';
+            return '<span class="share-icon-wrapper">' +
+                '<i class="material-icons" title="' + Localization.launches.filterIsShared + '">share</i>' +
+                '</span>';
         },
 
         updateLaunchesHref: function (url) {
@@ -1041,9 +933,9 @@ define(function (require, exports, module) {
         canStartMatchIssues: function (launch) {
             if (!launch) return false;
             /*var userValid = Util.isInPrivilegedGroup();
-            if (!userValid) {
-                userValid = launch.owner === config.user.user_login;
-            }*/
+             if (!userValid) {
+             userValid = launch.owner === config.user.user_login;
+             }*/
             return launch.status !== 'IN_PROGRESS'
                 && launch.statistics
                 && launch.statistics.defects
@@ -1089,6 +981,7 @@ define(function (require, exports, module) {
             if (valid) {
                 var matchXML = item.message.match(/(>)\s*(<)(\/*)/g);
                 if (matchXML && matchXML.length > 8) {
+                    console.log('matchXML');
                     split = Util.beautifyText(item.message).split('<!--!>');
                     split.push('xml');
                 } else {
@@ -1155,12 +1048,84 @@ define(function (require, exports, module) {
             el.closest('ul').find('.active').removeClass('active');
             el.addClass('active');
         },
+        hintValidator: function($el, options) {
+            var $holder = $el.closest(".form-group, .rp-form-group, label, .rp-field");
+            var $hintBlock = $('> .validate-hint', $holder);
+            var validators = [];
+
+            if (!_.isArray(options)) {
+                options = [options];
+            }
+            _.each(options, function (option) {
+                if (option.max) {
+                    $el.attr('maxLength', option.max);
+                }
+                if (Validators[option.validator]) {
+                    validators.push({validate: Validators[option.validator], options: option});
+                }
+            });
+            var validate = function () {
+                var result = '';
+                _.each(validators, function (validator) {
+                    var val = validator.options.noTrim ? $el.val() : $el.val().trim();
+                    var message = validator.validate(val, validator.options, Util);
+                    if (message) {
+                        result = !result ? message + "</br>" : result;
+                    }
+                });
+                if(result) {
+                    $holder.addClass('validate-error');
+                } else {
+                    triggerDebounce();
+                    $holder.removeClass('validate-error');
+                }
+                $el.data('validate-error', result);
+                return result;
+            };
+            var showResult = function(result) {
+                if(result) {
+                    $hintBlock.html(result).addClass('show-hint');
+                }
+            };
+            var hideResult = function() {
+                $hintBlock.removeClass('show-hint');
+            };
+            var triggerDebounce = _.debounce(function() {
+                $el.trigger('validation:success');
+            }, 500)
+            $el.on('keyup', function (e) {
+                    if (e.keyCode && (e.keyCode === 9 || e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40)) {
+                        return;
+                    }
+                    var result = validate();
+                    if(result) {
+                        showResult(result);
+                    } else {
+                        hideResult();
+                    }
+                })
+                .on('paste', function () {
+                    $(this).trigger('keyup');
+                })
+                .on('focus', function () {
+                    $(this).trigger('keyup');
+                })
+                .on('validate', function() {
+                    validate();
+                })
+                .on('blur', function () {
+                    hideResult();
+                })
+        },
 
         bootValidator: function ($el, options, extraOptions) {
             $el.data('valid', true).data('was', $el.val());
 
             // TODO - added variant with class 'rp-form-group'
             var $holder = $el.closest(".form-group, .rp-form-group");
+            if (options && options.max) {
+                $el.attr('maxLength', options.max)
+            }
 
             var $messenger = $(".help-inline:first", $holder);
             var isHint = $messenger.hasClass('error-hint');
@@ -1169,7 +1134,7 @@ define(function (require, exports, module) {
             var showResult;
             var validate;
 
-            showResult = function(result){
+            showResult = function (result) {
                 if (!result) {
                     $holder.removeClass('has-error');
                     $el.data('valid', true);
@@ -1186,9 +1151,9 @@ define(function (require, exports, module) {
                 var result = '';
                 _.forEach(validators, function (validator) {
                     var val = validator.options.noTrim ? $el.val() : $el.val().trim();
-                    if(validator.options.remote){
-                        $.when(validator.type(val, validator.options)).done(function(data){
-                            if(!data.valid){
+                    if (validator.options.remote) {
+                        $.when(validator.type(val, validator.options)).done(function (data) {
+                            if (!data.valid) {
                                 var message = validator.options.message;
                                 result += message + "</br>";
                             }
@@ -1197,9 +1162,9 @@ define(function (require, exports, module) {
                         });
                     }
                     else {
-                        var message = validator.type(val, validator.options);
+                        var message = validator.type(val, validator.options, Util);
                         if (message) {
-                            result = !result ?  message + "</br>" : result;
+                            result = !result ? message + "</br>" : result;
                         }
                         showResult(result);
                     }
@@ -1423,50 +1388,149 @@ define(function (require, exports, module) {
             return obj;
         },
 
-        getIssueTypes: function(){
+        getIssueTypes: function () {
             return ['product_bug', 'automation_bug', 'system_issue', 'no_defect', 'to_investigate'];
         },
 
-        getDefaultColor: function(type){
+        getDefaultColor: function (type) {
             var color,
-                ccProp = _.map(type.split('_'), function(a, i){
+                ccProp = _.map(type.split('_'), function (a, i) {
                     return i ? a.capitalize() : a;
                 });
             type = ccProp.join('');
             color = config.defaultColors[type];
-            if(!color){
+            if (!color) {
                 color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
             }
             return color;
         },
 
-        sortSubDefects: function(a, b){
+        sortSubDefects: function (a, b) {
             var sd = config.patterns.defectsLocator;
-            if(sd.test(a.locator)){ return -1;}
-            if(sd.test(b.locator)){ return 1;}
-            if(a.longName < b.longName){return -1;}
-            if(a.longName > b.longName){return 1;}
+            if (sd.test(a.locator)) {
+                return -1;
+            }
+            if (sd.test(b.locator)) {
+                return 1;
+            }
+            if (a.longName < b.longName) {
+                return -1;
+            }
+            if (a.longName > b.longName) {
+                return 1;
+            }
             return 0;
         },
 
-        getSubDefectsLocators: function(type, subDefects){
+        getSubDefectsLocators: function (type, subDefects) {
             var locators = [];
-            _.each(subDefects, function(d){
-                if(d.typeRef == type.toUpperCase()){
+            _.each(subDefects, function (d) {
+                if (d.typeRef == type.toUpperCase()) {
                     locators.push(d.locator);
                 }
             });
             return locators;
         },
 
-        getDefectCls: function(type){
+        getDefectCls: function (type) {
             var cls = '',
                 tArr = type.split('_');
-            cls = tArr.length == 1 ? tArr[0].slice(0,1) : tArr.length == 2 ? tArr[0][0] + tArr[1][0] : '';
+            cls = tArr.length == 1 ? tArr[0].slice(0, 1) : tArr.length == 2 ? tArr[0][0] + tArr[1][0] : '';
             return cls
         },
+        setupSelect2Tags: function ($tags, options) {
+            options = options || {};
+            var warning = $tags.data('warning'),
+                remoteTags = [],
+                timeOut = null;
+            this.setupSelect2WhithScroll($tags, {
+                formatInputTooShort: function (input, min) {
+                    return warning;
+                },
+                tags: true,
+                multiple: true,
+                noResizeSearch: options.noResizeSearch ? options.noResizeSearch : false,
+                dropdownCssClass: options.dropdownCssClass || '',
+                minimumInputLength: options.min || 1,
+                maximumInputLength: 128,
+                formatResultCssClass: function (state) {
+                    if ((remoteTags.length == 0 || _.indexOf(remoteTags, state.text) < 0) && $('.select2-input.select2-active').val() == state.text) {
+                        return 'exact-match';
+                    }
+                },
+                initSelection: function (item, callback) {
+                    var tags = item.val().split(','),
+                        data = _.map(tags, function (tag) {
+                            tag = tag.trim();
+                            return {id: tag, text: tag};
+                        });
+                    callback(data);
+                },
+                createSearchChoice: function (term, data) {
+                    if(!options.noCreateNew) {
+                        if (_.filter(data, function (opt) {
+                                return opt.text.localeCompare(term) === 0;
+                            }).length === 0) {
+                            return {id: term, text: term};
+                        }
+                    }
+                    return null;
+                },
+                query: function (query) {
+                    if (query.term === "?") return;
+                    var data = {results: []};
+                    if (options.startSearch && query.term.length < options.startSearch) {
+                        remoteTags = [];
+                        data.results.push({
+                            id: query.term,
+                            text: query.term
+                        });
+                        query.callback(data);
+                    } else {
+                        clearTimeout(timeOut);
+                        timeOut = setTimeout(function () {
+                            Service.searchTags(query, options.type, options.mode)
+                                .done(function (response) {
+                                    var respType = _.isObject(response) && response.content ? 'user' : 'default',
+                                        response = respType == 'default' ? response : response.content,
+                                        remoteTags = [];
+                                    _.forEach(response, function (item) {
+                                        if(respType == 'user'){
+                                            data.results.push({
+                                                id: item.userId,
+                                                text: item.full_name
+                                            });
+                                            item = item.full_name;
+                                        }
+                                        else {
+                                            data.results.push({
+                                                id: item,
+                                                text: item
+                                            });
+                                        }
+                                        remoteTags.push(item);
+                                    });
+                                    query.callback(data);
+                                })
+                                .fail(function (error) {
+                                    this.ajaxFailMessenger(error);
+                                });
+                        }, config.userFilterDelay);
+                    }
+                }
+            });
+            $tags.on('remove', function () {
+                warning = null;
+                $tags = null;
+                options = null;
+                if (timeOut) {
+                    clearTimeout(timeOut);
+                    timeOut = null;
+                }
+            });
+        },
 
-        getDefaultRequestParams: function(){
+        getDefaultRequestParams: function () {
             var params = {
                 launch: function () {
                     return {

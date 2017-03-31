@@ -1,14 +1,14 @@
-<div class="activity-widget">
+<div class="project-activity-panel">
     <% if (!_.isEmpty(data.dates)) { %>
     <% _.each(data.dates, function(date){ %>
     <div class="activity-date-header">
         <%= date.dayTitle %>
     </div>
     <% _.each(date.items, function(item){ %>
-    <div class="row activity-item">
+    <div class="activity-item">
         <% if(item.actionType !== 'create_user'){ %>
         <div class="activity-avatar">
-            <img src="<%= data.methodUpdateImagePath(data.imageRoot() + item.userRef.split(' ').join('_')) %>" class="img-thumbnail avatar" alt="<%= item.userRef %>" />
+            <img src="<%= data.methodUpdateImagePath(data.imageRoot() + item.userRef.split(' ').join('_')) %>" class="avatar" alt="<%= item.userRef %>" />
         </div>
         <% } %>
         <div class="activity-item-summary-wrap">
@@ -22,14 +22,14 @@
                 <strong class="activity-item-user"><%= item.userRef %></strong>
             <% } %>
             <% if(item.objectType == 'launch'){ %>
-                <p><%= data.text.widgets[item.actionType + 'Launch'] %>
+                <%= data.text.widgets[item.actionType + 'Launch'] %>
                 <% if((item.actionType !== 'delete') && (!_.isEmpty(item.name))){ %>
                     <a class="rp-blue-link-undrl" target="_blank"
                        href="#<%= data.properties.projectUrl %>/launches/all/<%= item.loggedObjectRef %>">
                        <%- item.name %></a>.
                 <% } else { %>
                     <%- item.name %>.
-                <% } %></p>
+                <% } %>
             <% } else %>
             <% if(item.objectType == 'widget' || item.objectType == 'dashboard'){ %>
                 <%= data.text.widgets[item.actionType + item.objectType.capitalize()] %>
@@ -151,4 +151,5 @@
     <% } else { %>
         <div class="no-data-error"><%= data.text.widgets.noData %></div>
     <% } %>
+    <div class="mobile-disabling-cover"></div>
 </div>

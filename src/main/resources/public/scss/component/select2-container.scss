@@ -1,0 +1,95 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.select2-container {
+
+    .select2-choice {
+        background-image: none;
+        border-color: $COLOR--gray-80;
+        border-radius: 0;
+        box-shadow: none;
+        height: auto;
+        min-height: 30px;
+        margin-right: -1px;
+
+        .select2-chosen {
+            max-width: 190px;
+            margin-right: 30px;
+            box-shadow: none;
+            padding: 2px 5px;
+
+        }
+        .select2-arrow {
+            width: 30px;
+            border: none;
+            background: 0 0;
+            color: $COLOR--charcoal-grey;
+            b {
+                background: 0 0;
+                display: inline-block;
+                width: 0;
+                height: 0;
+                margin-left: 10px;
+                margin-top: 2px;
+                vertical-align: middle;
+                border-top: 4px solid;
+                border-right: 4px solid transparent;
+                border-left: 4px solid transparent;
+                background-position: 2px 1px;
+            }
+        }
+        &:hover {
+            border-color: $COLOR--gray-47;
+        }
+    }
+
+}
+.rp-select2-separate-block.select2-drop {
+    background: $COLOR--white-default;
+    border: 1px solid $COLOR--gray-80;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+    margin-top: 4px;
+
+    .select2-search {
+        padding: 8px;
+    }
+    .select2-results {
+
+        .select2-highlighted {
+            background: $COLOR--tealish-opacity;
+            .select2-result-label {
+                color: $COLOR--charcoal-grey;
+            }
+        }
+        .select2-disabled, .select2-result-unselectable {
+            background: $COLOR--white-default;
+
+            .select2-result-label {
+                cursor: not-allowed;
+                color: $COLOR--gray-60;
+            }
+        }
+        .select2-result-label {
+            padding: 8px 15px;
+            color: $COLOR--charcoal-grey;
+        }
+    }
+}

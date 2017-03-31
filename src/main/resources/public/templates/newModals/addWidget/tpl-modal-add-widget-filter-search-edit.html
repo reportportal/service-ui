@@ -1,0 +1,19 @@
+<div class="filter-edit-header">
+    <h1><%- data.text.filter.edit %></h1>
+</div>
+<label class="filter-name-label">
+    <input class="rp-input-radio" type="radio" checked="checked" disabled="disabled">
+    <span data-js-filter-name></span>
+</label>
+<div class="edit-block clearfix">
+    <div class="entities-container clearfix" data-js-entities-container></div>
+    <div class="sorting-wrapper">
+        <span><%- data.text.ui.sortBy %>:</span>&nbsp;&nbsp;<span data-js-filter-sorting></span>
+    </div>
+
+    <div class="rp-nav-right">
+        <button class="rp-btn rp-btn-cancel" data-js-cancel-edit><%= data.text.ui.cancel %></button>
+        <button class="rp-btn rp-btn-submit" data-js-ok-edit><%= data.text.ui.submit %></button>
+    </div>
+</div>
+

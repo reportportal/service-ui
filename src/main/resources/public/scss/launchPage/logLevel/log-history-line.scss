@@ -1,0 +1,249 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+.history-line-block {
+  .launch-log-history-line {
+    position: relative;
+    width: 100%;
+    margin-top: 11px;
+    padding-bottom: 10px;
+    .history-line-item {
+      float: left;
+      width: 10%;
+      cursor: pointer;
+      position: relative;
+      &:last-child {
+        .active_bg:before {
+          display: none;
+        }
+      }
+      .title-launch {
+        text-align: center;
+        font-size: 11px;
+        color: $COLOR--gray-60;
+        font-family: OpenSansSemibold;
+        margin-bottom: 7px;
+        padding-left: 10px;
+        span:first-child {
+          display: none;
+        }
+      }
+      .history-item-container {
+        position:relative;
+        height: 30px;
+        width: 100%;
+        text-align: center;
+        padding-left: 10px;
+        &:before {
+          content: "";
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          left: 10px;
+        }
+        i {
+          position: relative;
+          font-size: 18px;
+          line-height: 30px;
+          color: $COLOR--gray-60;
+          display: inline-block;
+          &.icon-comment {
+            margin-top: 1px;
+          }
+          &.icon-ticket {
+            font-size: 17px;
+            vertical-align: top;
+            margin-top: 1px;
+          }
+        }
+        .many-items, .not-found-items {
+          display: none;
+        }
+        .issue-type {
+          vertical-align: top;
+          display: inline-block;
+          position: relative;
+          margin-top: 6px;
+          padding: 0 8px;
+          border-radius: 8px;
+        }
+      }
+      &:first-child {
+        .history-item-container {
+          &:before {
+            left: 0;
+          }
+        }
+      }
+      .active_bg {
+        position: absolute;
+        left: 2px;
+        right: -10px;
+        top: 0;
+        bottom: 0;
+        overflow: hidden;
+        &:before {
+          content: "";
+          position: absolute;
+          display: block;
+          border-top: 20px solid transparent !important;
+          border-bottom: 20px solid transparent !important;
+          border-right: 3px solid transparent !important;
+          border-left: 8px solid transparent;
+          right: 0;
+          top: -5px;
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          display: block;
+          border-left: 8px solid transparent !important;
+          border-right: 3px solid transparent;
+          border-top: 20px solid transparent;
+          border-bottom: 20px solid transparent;
+          left: 0;
+          top: -5px;
+        }
+      }
+      .arrow-bottom {
+        position: absolute;
+        width: 14px;
+        height: 10px;
+        top: 60px;
+        left: 50%;
+        margin-left: -7px;
+        display: none;
+        &:before {
+          content: "";
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 0;
+          height: 0;
+          border-left: 7px solid transparent;
+          border-right: 7px solid transparent;
+          border-bottom: 10px solid #cccccc;
+        }
+        &:after {
+          content: "";
+          position: absolute;
+          top: 2px;
+          left: 0;
+          width: 0;
+          height: 0;
+          border-left: 7px solid transparent;
+          border-right: 7px solid transparent;
+          border-bottom: 10px solid #f9f9f9;
+        }
+      }
+      &.active {
+        cursor: default;
+        .arrow-bottom {
+          display: block;
+        }
+        .active_bg {
+          top: -3px;
+          bottom: -3px;
+          &:before, &:after {
+            top: -2px;
+          }
+        }
+        .title-launch {
+          color: $COLOR--charcoal-grey;
+          span:first-child {
+            display: inline;
+          }
+        }
+        .history-item-container {
+          &:before {
+            top: -3px;
+            bottom: -3px;
+          }
+          i {
+            color: $COLOR--charcoal-grey;
+          }
+        }
+      }
+      &.launch-is-progress {
+        .history-item-container:before {
+          background-image: url(/img/launch/launch-is-processing.png);
+          background-size: 22px 100%;
+        }
+      }
+      @mixin logColorSet($colorDisabled, $color) {
+        .history-item-container:before {
+          background-color: $colorDisabled;
+        }
+        .active_bg:after, .active_bg:before {
+          border-color: $colorDisabled;
+        }
+        &.active {
+          .history-item-container:before {
+            background-color: $color;
+          }
+          .active_bg:after, .active_bg:before {
+            border-color: $color;
+          }
+        }
+      }
+      &.status-FAILED, &.status-INTERRUPTED {
+        @include logColorSet($COLOR--failed-disabled, $COLOR--failed);
+      }
+      &.status-MANY {
+        cursor: default;
+        @include logColorSet($COLOR--light-yellow, $COLOR--light-yellow);
+        .many-items {
+          display: inline;
+        }
+      }
+      &.status-NOT_FOUND {
+        cursor: default;
+        @include logColorSet($COLOR--white, $COLOR--white);
+        .not-found-items {
+          display: inline;
+        }
+      }
+      &.status-SKIPPED {
+        @include logColorSet($COLOR--skipped-disabled, $COLOR--skipped);
+      }
+      &.status-PASSED {
+        @include logColorSet($COLOR--passed-disabled, $COLOR--passed);
+      }
+      &.status-IN_PROGRESS {
+        @include logColorSet($COLOR--violet-disabled, $COLOR--violet);
+      }
+    }
+
+  }
+  .bubble-item {
+    top: 74px;
+    position: absolute;
+    width: 350px;
+    height: 102px;
+    border-radius: 2px;
+    background-color: $COLOR--white-default;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+    border: solid 1px $COLOR--gray-80;
+  }
+  @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+    display: none;
+  }
+}

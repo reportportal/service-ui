@@ -1,0 +1,16 @@
+<% var isDebug = (data.context === 'userdebug'); %>
+<div class="launch-log-body" data-js-log-item-container>
+    <div class="preloader launch-log-preloader">
+        <i class="material-icons loader-animation">refresh</i>
+    </div>
+    <div class="no-result-found launch-log-not-found">
+        <i class="rp-icons rp-icons-warning"></i>
+        <span><%= data.text.launches.noItemFound %></span>
+        <p><%- data.text.failMessages.gridData %></p>
+    </div>
+    <div class="item-info-block" data-js-item-info></div>
+    <div data-js-item-logs></div>
+    <% if (!isDebug) { %>
+        <div class="history-line-block" data-js-history-line></div>
+    <% } %>
+</div>

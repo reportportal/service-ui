@@ -22,15 +22,16 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var Localization = require('localization'),
-        Util = require('util'),
-        SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection'),
-        App = require('app'),
-        appConfig = App.getInstance();
+    var Localization = require('localization');
+    var Util = require('util');
+    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var App = require('app');
+    var appConfig = App.getInstance();
 
     var config = function(){
 
         return {
+            defaultWidgetImg: 'no_chart.png',
             widgetTypes: {
                 'old_line_chart': {
                     gadget_name: Localization.widgets.statisticsLineChart,
@@ -183,7 +184,7 @@ define(function (require, exports, module) {
                 },
                 'cases_trend': {
                     gadget_name: Localization.widgets.growthTrendChart,
-                    img: 'growth_trend_chart.png',
+                    img: 'test-cases-growth-trend-chart.png',
                     description: Localization.widgets.growthTrendChartDescription,
                     widget_type: 'cases_trend_chart',
                     gadget: 'cases_trend',
@@ -268,7 +269,7 @@ define(function (require, exports, module) {
                     gadget_name: Localization.widgets.failedTestCasesTable,
                     widget_type: 'table',
                     gadget: 'most_failed_test_cases',
-                    img: 'filter_results.png',
+                    img: 'filter_results_failure.png',
                     description: Localization.widgets.failedTestCasesTableDescription,
                     noFilters: true,
                     launchesFilter: true,
@@ -285,7 +286,7 @@ define(function (require, exports, module) {
                 },
                 'bug_trend': {
                     gadget_name: Localization.widgets.failedTrendChart,
-                    img: 'failed-cases_growth_trend_chart.png',
+                    img: 'failed-cases-trend-chart.png',
                     description: Localization.widgets.failedTrendChartDescription,
                     widget_type: 'bug_trend',
                     gadget: 'bug_trend',
@@ -466,6 +467,15 @@ define(function (require, exports, module) {
 
     return {
         getInstance: getInstance,
+        updateInstance: function() {
+            var async = $.Deferred();
+            var collection = new SingletonDefectTypeCollection();
+            collection.ready.done(function() {
+                clear();
+                async.resolve(getInstance());
+            });
+            return async.promise();
+        },
         clear: clear
     };
 

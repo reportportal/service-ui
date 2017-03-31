@@ -17,107 +17,134 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 /*------------------------------*/
 /* STYLE FOR NOTIFICATIONS PAGE */
 
 %NOTIFICATIONS_SETTINGS {
-    #notificationsSettings {
-        padding-top: 10px;
-
-        .rp-form-group {
-            &.notification-rule {
-                margin-bottom: 15px;
-            }
-
-            &.recipients-wrap {
-                margin-bottom: 5px;
-            }
-
-            &.checkbox-launch-owner-wrap {
-                margin-bottom: 17px;
-
-                .checkbox-launch-owner {
-                    .rp-checkbox-wrap {
-                        margin: 0px;
-                    }
-                }
-            }
-
-            label {
-                &.rp-control-label  {
-                    padding-top: 8px;
-                    vertical-align: top;
-                }
-                &.obligatory-field {
-                    &:after {
-                        position: absolute;
-                        margin-left: 2px;
-                    }
-                }
-            }
-
-            .title-block {
-                font-family: $OpenSansSemibold;
-                font-size: 12px;
-                text-transform: uppercase;
-                color: #777777;
-            }
-
-            input {
-                &.bts-property {
-                    width: 100%;
-                }
-            }
-        }
-
-        #emailNotificationsSettings {
-            #notificationArray {
-                .rp-form-group {
-                    &.rp-note-and {
-                        margin-bottom: 2px;
-                    }
-                }
-
-                .email-case-title {
-                    padding-left: 0px;
-                    margin-left: -15px;
-
-                    .email-case-label {
-                        min-height: inherit;
-                        padding: 0px;
-                        margin: 0;
-                    }
-                }
-
-                .email-case-item {
-                    &:last-child {
-                        .rp-wrap-underline {
-                            display: none;
-                        }
-                    }
-                }
-            }
-
-            .has-error {
-                input:not(.select2-input),
-                .select2-choices,
-                input:focus:not(.select2-input) {
-                    color: $COLOR--black-two;
-                    box-shadow: 0 0 2px 0 rgba(255, 49, 33, .7);
-                    border: 1px solid $COLOR--orange-red;
-                }
-            }
-        }
-
-        .error-block {
-            display: none;
-            color: #ff3222;
-            font-size: 12px;
-            line-height: 12px;
-            padding: 5px 0 5px 0;
-        }
+  #notificationsSettings {
+    padding-top: 10px;
+    position: relative;
+    @media (max-width: $SCREEN_XS_MAX) {
+      padding: 0 0 30px;
+      margin: 0 -15px;
     }
+
+    .mobile-disabling-cover {
+      @extend %MOBILE_DISABLING_COVER;
+    }
+
+    .rp-form-group {
+      &.notification-rule {
+        margin-bottom: 15px;
+      }
+
+      &.recipients-wrap {
+        margin-bottom: 5px;
+      }
+
+      &.checkbox-launch-owner-wrap {
+        margin-bottom: 17px;
+        @media (max-width: $SCREEN_XS_MAX) {
+          margin: -6px 0 4px;
+        }
+
+        .checkbox-launch-owner {
+          .rp-checkbox-wrap {
+            margin: 0px;
+          }
+        }
+      }
+
+      label {
+        &.rp-control-label {
+          padding-top: 8px;
+          vertical-align: top;
+          .mobile-note-and {
+            display: none;
+            float: right;
+            @media (max-width: $SCREEN_XS_MAX) {
+              display: inline-block;
+            }
+          }
+        }
+        &.obligatory-field {
+          &:after {
+            position: absolute;
+            margin-left: 2px;
+          }
+        }
+      }
+
+      .title-block {
+        font-family: $OpenSansSemibold;
+        font-size: 12px;
+        text-transform: uppercase;
+        color: #777777;
+      }
+
+      input {
+        &.bts-property {
+          width: 100%;
+        }
+      }
+    }
+
+    #emailNotificationsSettings {
+
+      #notificationArray {
+        .rp-form-group {
+          &.rp-note-and {
+            margin-bottom: 2px;
+            @media (max-width: $SCREEN_XS_MAX) {
+              display: none;
+            }
+          }
+        }
+
+        .email-case-title {
+          padding-left: 0px;
+          margin-left: -15px;
+          @media (max-width: $SCREEN_XS_MAX) {
+            margin-left: 0;
+            background: $COLOR--white-four;
+            padding: 5px 10px 6px;
+          }
+          .email-case-label {
+            min-height: inherit;
+            padding: 0px;
+            margin: 0;
+          }
+        }
+
+        .email-case-item {
+          &:last-child {
+            .rp-wrap-underline {
+              display: none;
+            }
+          }
+        }
+      }
+
+      .has-error {
+        input:not(.select2-input),
+        .select2-choices,
+        input:focus:not(.select2-input) {
+          color: $COLOR--black-two;
+          box-shadow: 0 0 2px 0 rgba(255, 49, 33, .7);
+          border: 1px solid $COLOR--orange-red;
+        }
+      }
+    }
+
+    .error-block {
+      display: none;
+      color: #ff3222;
+      font-size: 12px;
+      line-height: 12px;
+      padding: 5px 0 5px 0;
+    }
+  }
 }
 
 /*----------------*/
@@ -125,12 +152,12 @@
 
 /* FOR USUAL USERS */
 #dynamic-content {
-    @extend %NOTIFICATIONS_SETTINGS;
+  @extend %NOTIFICATIONS_SETTINGS;
 }
 
 /* FOR ADMINISTRATORS USERS */
 #dynamicContent {
-    @extend %NOTIFICATIONS_SETTINGS;
+  @extend %NOTIFICATIONS_SETTINGS;
 }
 
 /*--------------------------*/
@@ -138,91 +165,124 @@
 
 /* xs - 767px */
 @media (max-width: $SCREEN_XS_MAX) {
-    #dynamic-content,
-    #dynamicContent {
-        #notificationsSettings {
-            .rp-form-group {
-                .rp-control-label {
-                    margin-bottom: 10px;
-                }
-
-                .rp-custom-col {
-                    &:last-child {
-                        margin-top: 10px;
-                    }
-                }
+  #dynamic-content,
+  #dynamicContent {
+    #notificationsSettings {
+      .email-case-title {
+        .remove-email-case {
+          display: none;
+          &.rp-input-checkbox + span {
+            padding-left: 0;
+            &:before {
+              display: none;
             }
+          }
         }
+      }
+      .rp-form-group {
+        margin-bottom: 4px;
+        &.notification-rule {
+          margin: 15px 0 6px;
+          .rp-custom-col {
+            margin: 0;
+          }
+        }
+
+        .rp-control-label {
+          margin-bottom: 10px;
+        }
+
+        .rp-custom-col {
+        }
+        .rp-underline {
+          margin: 20px 15px 0;
+          width: auto;
+        }
+        .rp-input,
+        .rp-btn,
+        .select2-container-multi .select2-choices {
+          pointer-events: none;
+          tab-index: -1;
+          background-color: $COLOR--gray-91;
+        }
+      }
+      .rp-wrap-underline {
+        display: none;
+      }
+      .notification-submit-block, .notification-add-block {
+        display: none;
+      }
     }
+  }
 }
 
 /* sm - 768px - 991px */
 @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
-    #dynamic-content,
-    #dynamicContent {
-        #notificationsSettings {
-            & > .rp-form-group {
-                &:last-child {
-                    margin-bottom: 15px;
-                }
-            }
-
-            .rp-form-group {
-                margin-bottom: 40px;
-
-                &.rp-wrap-underline {
-                    margin-bottom: 15px;
-                }
-
-                &.checkbox-launch-owner-wrap {
-                    margin-bottom: 40px;
-                }
-
-                #emailNotificationsSettings {
-
-                    & > .rp-form-group {
-                        &:first-child {
-
-                        }
-                    }
-
-                    #notificationArray {
-                        .notification-rule {
-                            .rp-custom-col {
-                                &:last-child {
-                                    position: relative;
-                                    display: inline-block;
-                                    top: inherit;
-                                    height: inherit;
-                                    right: inherit;
-                                    padding: 0 15px;
-                                }
-                            }
-                        }
-                    }
-
-                    .email-case-item {
-                        max-width: $WIDTH_LAYOUT_PAGE_SETTINGS;
-                        margin: 0 auto;
-                    }
-                }
-            }
+  #dynamic-content,
+  #dynamicContent {
+    #notificationsSettings {
+      & > .rp-form-group {
+        &:last-child {
+          margin-bottom: 15px;
         }
+      }
+
+      .rp-form-group {
+        margin-bottom: 40px;
+
+        &.rp-wrap-underline {
+          margin-bottom: 15px;
+        }
+
+        &.checkbox-launch-owner-wrap {
+          margin-bottom: 40px;
+        }
+
+        #emailNotificationsSettings {
+
+          & > .rp-form-group {
+            &:first-child {
+
+            }
+          }
+
+          #notificationArray {
+            .notification-rule {
+              .rp-custom-col {
+                &:last-child {
+                  position: relative;
+                  display: inline-block;
+                  top: inherit;
+                  height: inherit;
+                  right: inherit;
+                  padding: 0 15px;
+                }
+              }
+            }
+          }
+
+          .email-case-item {
+            max-width: $WIDTH_LAYOUT_PAGE_SETTINGS;
+            margin: 0 auto;
+          }
+        }
+      }
     }
+  }
 }
 
 /* md - 992px - 1199px */
 @media (min-width: $SCREEN_MD_MIN) and (max-width: $SCREEN_MD_MAX) {
-    #notificationsSettings {
+  #notificationsSettings {
 
-    }
+  }
 }
 
 /* lg - 1200px */
 @media (min-width: $SCREEN_LG_MIN) {
-    #notificationsSettings {
-        width: $WIDTH_LAYOUT_PAGE_SETTINGS;
-        max-width: $MAX_WIDTH_LAYOUT_PAGE_SETTINGS;
-        margin: 0 auto;
-    }
+  #notificationsSettings {
+    width: $WIDTH_LAYOUT_PAGE_SETTINGS;
+    max-width: $MAX_WIDTH_LAYOUT_PAGE_SETTINGS;
+    margin: 0 auto;
+  }
 }

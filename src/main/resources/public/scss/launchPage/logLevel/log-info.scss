@@ -1,0 +1,165 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+.launch-log-item-info {
+  border: 1px solid $COLOR--gray-80;
+  background-color: $COLOR--white-four;
+  width: 100%;
+  overflow: visible;
+  .item-info {
+    position: relative;
+    width: 100%;
+    .button-container {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      @media (max-width: 500px) {
+        display: none;
+      }
+    }
+    .item-issue-container {
+      padding: 0 10px;
+      &:hover {
+        .edit-defect {
+          opacity: 1;
+        }
+      }
+
+      .tickets-container {
+        padding-right: 420px;
+        .ui-tooltip {
+          left: 99px;
+        }
+        @media (max-width: 990px) {
+          padding-right: 160px;
+        }
+        @media (max-width: 500px) {
+          padding-right: 0;
+        }
+      }
+      @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+        .edit-defect {
+          opacity: 1;
+        }
+      }
+    }
+    .launch-log-item-issue {
+      padding: 15px;
+      min-height: 50px;
+    }
+    .editor-row {
+      padding: 10px 15px;
+      border-top: none;
+      background: $COLOR--white-four;
+    }
+  }
+
+  .rp-grid-item-issue {
+    margin: 0 15px;
+    float: left;
+  }
+  .tabs {
+    position: relative;
+    width: 100%;
+    background: $COLOR--gray-91;
+    padding: 9px 0 5px 0;
+    overflow: hidden;
+    @media(max-width: $SCREEN_MAX_WIDTH_LAUNCHES_LOGS_TAB) {
+      display: none;
+    }
+  }
+  .mobile-tab, .desktop-tab {
+    font-size: 13px;
+    text-transform: uppercase;
+    float: left;
+    padding: 0 10px;
+    color: $COLOR--gray-47;
+    cursor: pointer;
+    &:hover {
+      color: $COLOR--black-four;
+    }
+    &.active {
+      color: $COLOR--topaz;
+    }
+    i {
+      font-size: 24px;
+    }
+    span {
+      display: inline-block;
+      margin-top: 3px;
+      margin-left: 7px;
+      vertical-align: top;
+      font-family: OpenSansSemibold;
+    }
+
+  }
+  .mobile-tab {
+    width: 100%;
+    background: $COLOR--gray-91;
+    float: none;
+    padding: 6px 8px;
+    border-top: 1px solid $COLOR--gray-80;
+    display: none;
+    .arrow-up, .arrow-down {
+      font-size: 26px;
+      position: absolute;
+      right: 14px;
+      color: $COLOR--gray-60;
+    }
+    .arrow-up {
+      display: none;
+    }
+    &.active {
+      .arrow-down {
+        display: none;
+      }
+      .arrow-up {
+        display: inline-block;
+      }
+    }
+    @media(max-width: $SCREEN_MAX_WIDTH_LAUNCHES_LOGS_TAB) {
+      display: block;
+    }
+  }
+  .tabs-item {
+    position: relative;
+    border-top: 1px solid $COLOR--white-four;
+    box-shadow: inset 0 -1px 0 0 $COLOR--gray-91;
+    background-color: $COLOR--white-four;
+    overflow: hidden;
+    .close-icon {
+      position: absolute;
+      top: 12px;
+      right: 10px;
+      font-size: 20px;
+      cursor: pointer;
+      @media(max-width: $SCREEN_MAX_WIDTH_LAUNCHES_LOGS_TAB) {
+        display: none;
+      }
+    }
+    .not-found-message {
+      width: 100%;
+      text-align: center;
+      padding: 20px;
+    }
+  }
+}

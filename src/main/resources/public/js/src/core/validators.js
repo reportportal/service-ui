@@ -29,7 +29,13 @@ define(function (require, exports, module) {
     var regexes = {};
 
     var noDuplications = function (val, options) {
-        if (options.source.indexOf(val) !== -1 || options.source.indexOf(val.toLowerCase()) !== -1) {
+        var condition;
+        if (options.isCaseSensitive) {
+            condition = options.source.indexOf(val) !== -1;
+        } else {
+            condition = options.source.indexOf(val.toLowerCase()) !== -1
+        }
+        if (condition) {
             return Localization.validation[options.type + "Duplication"];
         }
     };
@@ -49,24 +55,30 @@ define(function (require, exports, module) {
                 : new RegExp(options.pattern, options.arg);
         }
         if (!regexes[options.type].test(''+val)) {
-            return Localization.validation[options.type];
+            return options.message || Localization.validation[options.type];
         }
         return null;
     };
-
-    var minMaxRequired = function (val, options) {
+    var minMaxRequired = function (val, options, Util) {
         var length = val.length;
         if (length === 0 || validateForMinMax(length, options)) {
-            return Localization.validation[options.type + "Length"].replace('{0}', options.min).replace('{1}', options.max);
+            return Util.replaceTemplate(Localization.validation[options.type + "Length"], options.min, options.max);
+        }
+        return null;
+    };
+    var maxRequired = function (val, options, Util) {
+        var length = val.length;
+        if (validateForMax(length, options)) {
+            return Util.replaceTemplate(Localization.validation[options.type + "MaxLength"], options.max);
         }
         return null;
     };
 
-    var minMaxNumberRequired = function (val, options) {
+    var minMaxNumberRequired = function (val, options, Util) {
         var integerVal = isInt(val),
             intVal = parseInt(val);
-        if (!integerVal || (intVal < options.min || intVal > options.max)) {
-            return Localization.validation[options.type + "Length"];
+        if (!val.length || !integerVal || (intVal < options.min || intVal > options.max)) {
+            return Util.replaceTemplate(Localization.validation[options.type + "Length"], options.min, options.max);
         }
         return null;
     };
@@ -75,19 +87,22 @@ define(function (require, exports, module) {
         return Number(n) == n && n % 1 === 0;
     };
 
-    var minMaxNotRequired = function (val, options) {
+    var minMaxNotRequired = function (val, options, Util) {
         var length = val.length;
         if (length === 0) {
             return null;
         }
         if (validateForMinMax(length, options)) {
-            return Localization.validation[options.type + "Length"];
+            return Util.replaceTemplate(Localization.validation[options.type + "Length"], options.min, options.max);
         }
         return null;
     };
 
     var validateForMinMax = function (length, options) {
         return length < options.min || length > options.max;
+    };
+    var validateForMax = function(length, options) {
+        return length > options.max;
     };
 
     var remoteEmail = function (val, options) {

@@ -17,193 +17,310 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 /*------------------------------*/
 /* STYLE FOR BTS SETTINGS PAGE */
 
-%BTS_SETTINGS {
-    #btsSettings {
-        padding-top: 10px;
-        .no-bts-found {
-            padding-top: 10px;
-            display: inline-block;
-        }
+.bts-settings {
+  padding-top: 10px;
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0 0 30px;
+  }
+  .bts-general-settings {
+    @media (max-width: $SCREEN_XS_MAX) {
+      position: relative;
+    }
+  }
 
-        #instanceHead {
-            margin-bottom: 20px;
+  .bts-selector {
+    margin-left: 142px;
+    margin-bottom: 15px;
 
-            .close-add {
-                display: none;
+    .rp-control-label {
+      float: left;
+    }
+
+    .rp-btn-group {
+      float: left;
+      margin-left: 34px;
+      width: 310px;
+      .rp-btn-with-dropdown {
+        display: block;
+      }
+    }
+
+    .no-bts-found {
+      display: block;
+      padding-top: 10px;
+      margin-left: 160px;
+      width: 310px;
+      clear: both;
+    }
+  }
+
+  .tbs-change-warning-block {
+    margin: 0;
+    #tbsChangeWarning {
+      display: none;
+      padding-bottom: 20px;
+      margin-left: 300px;
+    }
+  }
+  .bts-instance-container {
+    .instance-head {
+
+      .bts-instance-wrapper {
+        margin-left: 85px;
+        margin-bottom: 20px;
+
+        .nav-tabs-bts-instances {
+          border-bottom: solid 1px #e9e9e9;
+          width: 600px;
+
+          .activated .close-add {
+            display: inline-block !important;
+          }
+
+          li {
+            position: relative;
+            float: left;
+
+            &.bts-instance-title {
+              & > span {
+                opacity: 0.9;
+                font-size: 12px;
+                color: $COLOR--gray-47;
+                font-weight: 600;
+                text-transform: uppercase;
+              }
             }
-        }
 
-        #instanceBody {
-            #fieldsLoader {
-                display: none;
-                position: relative;
-                height: 65px;
+            &.bts-name-project {
+              margin-left: 20px;
 
-                .loader {
-                    width: 100%;
+              a {
+                opacity: 0.6;
+                font-size: 14px;
+                cursor: pointer;
+                font-weight: 600;
+                text-transform: uppercase;
+                color: $COLOR--gray-47;
+                text-decoration: none;
+              }
+            }
+
+            &.active {
+              &:before {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: -10px;
+                right: -10px;
+                height: 1px;
+                background-color: $COLOR--topaz;
+              }
+
+              a {
+                color: $COLOR--topaz;
+                opacity: 0.9;
+              }
+            }
+
+            &.bts-instance-action {
+              float: right;
+
+              &.disabled {
+                a {
+                  color: $COLOR--gray-60;
+                  cursor: not-allowed;
                 }
+              }
+              a {
+                color: $COLOR--topaz;
+                font-weight: normal;
+                font-size: 13px;
+                text-transform: capitalize;
+                text-decoration: none;
+                opacity: 1;
+                margin: 0;
+
+                i {
+                  &.material-icons {
+                    font-size: 13px;
+                    line-height: 20px;
+                    width: 25px;
+                  }
+                }
+              }
             }
+
+            span,
+            a {
+              position: relative;
+              font-family: $OpenSansRegular;
+              line-height: 30px;
+            }
+          }
         }
+      }
+
+      .close-add {
+        display: none;
+      }
+    }
+
+    .instance-body {
+      .bts-properties {
+        padding-left: 145px;
 
         .rp-form-group {
-        
-        }
 
-        label {
-            &.obligatory-field {
-                &:after {
-                    position: absolute;
-                    margin-left: 2px;
-                }
+          &.has-error {
+            .bts-property,
+            .bts-property:focus {
+              color: #393939;
+              box-shadow: 0 0 2px 0 rgba(255, 49, 33, 0.7);
+              border: 1px solid #ff3222;
             }
-        }
+          }
+          .rp-control-label {
+            width: 125px;
+            float: left;
+          }
+          .bts-property {
+            margin-left: 30px;
+            width: 310px;
+            float: left;
+          }
+          .help-inline {
+            clear: both;
+            margin-left: 154px;
+            margin-top: 38px;
+          }
+          .bts-properties-controls {
+            float: left;
+            margin-left: 20px;
 
-        .bts-instance-wrapper {
-            .nav-tabs-bts-instances {
-                border-bottom: solid 1px #e9e9e9;
-
-                .activated .close-add {
-                    display: inline-block !important;
-                }
-
-                li {
-                    position: relative;
-                    float: left;
-
-                    &.bts-instance-title {
-                        & > span {
-                            opacity: 0.9;
-                            font-size: 12px;
-                            color: $COLOR--gray-47;
-                            font-weight: 600;
-                            text-transform: uppercase;
-                        }
-                    }
-
-                    &.bts-name-project {
-                        margin-left: 20px;
-
-                        a {
-                            opacity: 0.6;
-                            font-size: 14px;
-                            cursor: pointer;
-                            font-weight: 600;
-                            text-transform: uppercase;
-                            color: $COLOR--gray-47;
-                            text-decoration: none;
-                        }
-                    }
-
-                    &.active {
-                        &:before {
-                            content: '';
-                            position: absolute;
-                            bottom: -1px;
-                            left: -10px;
-                            right: -10px;
-                            height: 1px;
-                            background-color: $COLOR--topaz;
-                        }
-
-                        a {
-                            color: $COLOR--topaz;
-                            opacity: 0.9;
-                        }
-                    }
-
-                    &.bts-instance-action {
-                        float: right;
-
-                        &.disabled {
-                            a {
-                                color: $COLOR--gray-60;
-                                cursor: not-allowed;
-                            }
-                        }
-
-                        a {
-                            color: $COLOR--topaz;
-                            font-weight: normal;
-                            font-size: 13px;
-                            text-transform: capitalize;
-                            text-decoration: none;
-                            opacity: 1;
-                            margin: 0;
-
-                            i {
-                                &.material-icons {
-                                    font-size: 13px;
-                                    line-height: 20px;
-                                    width: 25px;
-                                }
-                            }
-                        }
-                    }
-
-                    span,
-                    a {
-                        position: relative;
-                        font-family: $OpenSansRegular;
-                        line-height: 30px;
-                    }
-                }
+            a {
+              margin-top: 5px;
             }
-        }
-
-        .tbs-change-warning-block {
-            margin: 0;
-            #tbsChangeWarning {
-                display: none;
-                padding-bottom: 20px;
-            }
-        }
-
-        .title-block-wrapper {
-            margin-bottom: 12px;
-
-            h4 {
-                .common-title {
-                    margin: 0 0 4px 0;
-                    padding-left: 10px;
-                }
-            }
+          }
         }
 
         #authorizationType {
-            textarea {
-                height: 50px;
-                overflow: auto;
-                resize: vertical;
-                max-height: 200px;
-                font-family: $OpenSansRegular;
-                font-size: 13px;
-                line-height: 18px;
-                color: #393939;
-                padding: 5px 11px 5px 11px;
-            }
-        }
+          textarea {
+            overflow: auto;
+            resize: vertical;
+            height: 50px;
+            max-height: 200px;
+            font-family: $OpenSansRegular;
+            font-size: 13px;
+            line-height: 18px;
+            color: #393939;
+            padding: 5px 11px 5px 11px;
+          }
 
-        .span-empty {
-            min-height: 8px;
+          .rp-form-group.has-error {
+            textarea {
+              margin-bottom: 8px;
+            }
+          }
+        }
+      }
+
+      .reset-fields-warning {
+        margin-left: 300px;
+      }
+
+      .submit-properties {
+        display: block;
+        overflow: hidden;
+        width: 610px;
+        padding-bottom: 15px;
+      }
+
+      .bts-fields-wrapper {
+        .title-block-wrapper {
+          margin-left: 100px;
+          margin-bottom: 12px;
+
+          h4 {
+            .common-title {
+              margin: 0 0 4px 0;
+              padding-left: 10px;
+            }
+          }
         }
 
         .group-title-block {
-            margin-bottom: 5px;
-        }
+          margin-bottom: 4px;
+          text-transform: uppercase;
+          font-size: 12px;
 
-        #accessKeyBlock {
-            .rp-control-label {
-                vertical-align: top;
-                padding-top: 8px;
+          .inputs-caption {
+            float: left;
+            margin-left: 300px;
+          }
+
+          .checkboxes-caption {
+            float: left;
+            margin-left: 243px;
+          }
+        }
+        .bts-fields {
+          margin-left: 120px;
+
+          .bts-field-input {
+            position: relative;
+
+            .dropdown-menu {
+              width: 100%;
             }
+          }
         }
-    }
-}
 
+        .fields-controls {
+          display: block;
+          width: 610px;
+        }
+      }
+      #fieldsLoader {
+        display: none;
+        position: relative;
+        height: 65px;
+
+        .loader {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .mobile-disabling-cover {
+    @extend %MOBILE_DISABLING_COVER;
+  }
+
+  label {
+    &.obligatory-field {
+      &:after {
+        position: absolute;
+        top: 8px;
+        margin-left: 2px;
+      }
+    }
+  }
+
+  .span-empty {
+    min-height: 8px;
+  }
+
+  #accessKeyBlock {
+    .rp-control-label {
+      vertical-align: top;
+      padding-top: 8px;
+    }
+  }
+}
 
 /* TODO. Looks like only usual users styles */
 #authorizationType,
@@ -211,10 +328,10 @@
 .input-group.to-100-width,
 .to-100-width .btn,
 .to-80-width .btn {
-    width: 100%;
-    text-align: left;
-    position: relative;
-    display: inline-block;
+  width: 100%;
+  text-align: left;
+  position: relative;
+  display: inline-block;
 }
 
 #cancelBtsProperties,
@@ -224,25 +341,7 @@
 #fieldsWrapper,
 #requiredFields,
 #resetFieldsWarning {
-    display: none;
-}
-
-#submitPropertiesBlock, .col-sm-12.p-bottom-15 {
-    padding-bottom: 15px;
-}
-/*----------------*/
-
-/*----------------*/
-/* INCLUDE STYLES */
-
-/* FOR USUAL USERS */
-#dynamic-content {
-    @extend %BTS_SETTINGS;
-}
-
-/* FOR ADMINISTRATORS USERS */
-#dynamicContent {
-    @extend %BTS_SETTINGS;
+  display: none;
 }
 
 /*-----------------------------------*/
@@ -250,20 +349,260 @@
 
 /* xs - 767px */
 @media (max-width: $SCREEN_XS_MAX) {
-    #btsSettings {
-        #dynamicFields + .fields-controls {
-            padding: 0;
-        }
+  .bts-settings {
+    position: relative;
 
-        .rp-padding-right-30 {
-            padding-right: 30px;
+    .bts-selector {
+      width: 100%;
+      margin-left: 0;
+      margin-bottom: 10px;
+
+      .rp-control-label {
+        width: 100%;
+        margin-bottom: 13px;
+      }
+      .rp-btn-group {
+        width: 100%;
+        margin-left: 0;
+
+        .rp-btn {
+          color: $COLOR--charcoal-grey;
+          background-color: $COLOR--gray-91;
+          border-color: $COLOR--gray-80;
+          box-shadow: none;
+          cursor: no-drop;
         }
+      }
+
+      .no-bts-found {
+        margin-left: 0;
+        width: 100%;
+      }
     }
+
+    .tbs-change-warning-block {
+      display: block;
+      #tbsChangeWarning {
+        margin-left: 0;
+      }
+    }
+
+    .bts-instance-container {
+      .instance-head {
+
+        .bts-instance-wrapper {
+          margin-bottom: 14px;
+          margin-left: 0;
+          .nav-tabs-bts-instances {
+            width: 100%;
+            border: none;
+
+            .bts-instance-title {
+              height: 30px;
+              background-color: #f9f9f9;
+              width: 100%;
+              padding-left: 10px;
+              margin-bottom: 20px;
+
+              &:after {
+                clear: both;
+              }
+            }
+
+            li.bts-name-project {
+              margin-left: 0px;
+              margin-right: 10px;
+              width: 103px;
+              height: 30px;
+              text-align: center;
+              border: solid 1px $COLOR--gray-91;
+
+              &.active {
+                background-color: $COLOR--gray-91;
+              }
+
+              &:before {
+                display: none;
+              }
+
+              .bts-instance {
+                width: 65px;
+                height: 19px;
+                font-family: "OpenSansSemibold";
+                font-size: 14px;
+              }
+            }
+
+            .bts-name-new-project {
+              display: none;
+            }
+
+            .bts-instance-action {
+              display: none;
+            }
+          }
+        }
+      }
+
+      .instance-body {
+        .bts-block {
+          position: relative;
+          .bts-properties {
+            padding-left: 0;
+
+            .rp-form-group {
+              margin-bottom: 10px;
+              &:last-child {
+                margin-bottom: 0;
+              }
+              .rp-control-label {
+                width: 100%;
+                margin-bottom: 14px;
+              }
+              .bts-property {
+                margin-left: 0;
+                margin-bottom:0;
+                width: 100%;
+              }
+              span.help-inline {
+                margin-left: 0;
+              }
+              .bts-properties-controls {
+                display: none;
+              }
+            }
+          }
+
+          .reset-fields-warning {
+            margin-left: 0;
+          }
+
+          & > .clearfix {
+            display: none;
+          }
+
+          .bts-fields-wrapper {
+            &:first-child {
+              display: none;
+            }
+
+            .title-block-wrapper {
+              margin-left: 0;
+              padding: 0 10px;
+              background-color: $COLOR--white-four;
+            }
+
+            .group-title-block {
+              display: none;
+            }
+
+            .bts-fields {
+              margin-left: 0;
+              .rp-form-group {
+                margin-bottom: 10px;
+                .bts-field-label {
+                  width: 100%;
+                }
+                .bts-field-input {
+                  margin-left: 0;
+                  width: calc(100% - 37px);
+                }
+                .bts-field-checkbox {
+                  margin-left: 13px;
+                }
+              }
+            }
+
+            .fields-controls {
+              display: none;
+            }
+          }
+        }
+      }
+    }
+
+    .bts-property > .rp-btn-with-dropdown,
+    .bts-field-input .rp-input-default,
+    .bts-properties .rp-input-default,
+    .bts-field-input .rp-btn-with-dropdown {
+      color: $COLOR--charcoal-grey;
+      background-color: $COLOR--gray-91;
+      border-color: $COLOR--gray-80;
+      box-shadow: none;
+      cursor: no-drop;
+    }
+
+    .bts-field-checkbox {
+      .rp-checkbox-wrap {
+        span {
+          &:before {
+            box-shadow: none;
+            background-color: $COLOR--white;
+            border-color: $COLOR--gray-91;
+          }
+          &:after {
+            color: $COLOR--gray-60;
+          }
+        }
+      }
+    }
+  }
 }
 
 /* sm - 768px - 991px */
 @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+  .bts-settings {
+    width: 600px;
+    margin: 0 auto;
 
+    .bts-selector {
+      margin-left: 20px;
+    }
+
+    .tbs-change-warning-block {
+      #tbsChangeWarning {
+        margin-left: 179px;
+      }
+    }
+
+    .bts-instance-container {
+      .instance-head {
+        .bts-instance-wrapper {
+          margin-left: 0;
+        }
+      }
+
+      .instance-body {
+        .bts-block {
+          .bts-properties {
+            padding-left: 25px;
+          }
+          .bts-fields-wrapper {
+            .title-block-wrapper {
+              margin-left: 0;
+            }
+            .group-title-block {
+              .inputs-caption {
+                margin-left: 180px;
+              }
+            }
+            .bts-fields {
+              margin-left: 0;
+            }
+            .fields-controls {
+              width: 490px;
+            }
+          }
+          .reset-fields-warning {
+            margin-left: 180px;
+          }
+          .submit-properties {
+            width: 490px;
+          }
+        }
+      }
+    }
+  }
 }
 
 /* md - 992px - 1199px */
@@ -273,9 +612,9 @@
 
 /* lg - 1200px */
 @media (min-width: $SCREEN_LG_MIN) {
-    #btsSettings {
-        width: $WIDTH_LAYOUT_PAGE_SETTINGS;
-        max-width: $MAX_WIDTH_LAYOUT_PAGE_SETTINGS;
-        margin: 0 auto;
-    }
+  .bts-settings {
+    width: $WIDTH_LAYOUT_PAGE_SETTINGS;
+    max-width: $MAX_WIDTH_LAYOUT_PAGE_SETTINGS;
+    margin: 0 auto;
+  }
 }

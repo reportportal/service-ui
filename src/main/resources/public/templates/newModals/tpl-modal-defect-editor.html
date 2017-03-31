@@ -1,0 +1,63 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.dialogHeader.titleEditDefectType}) %>
+<div class="modal-body">
+    <div class="inline-editor pr-defect-editor">
+        <div class="container-fluid rp-form-group">
+            <label class="rp-control-label rp-defect-type-label" for="selectDefectType"><%= data.text.dialog.defectType %></label>
+            <div class="btn-group rp-defect-type-btn-group">
+                <% var defectType = !data.isMultipleEdit ? data.getDefectType(data.item) : null %>
+                <button id="selectDefectType" data-toggle="dropdown" class="btn rp-defect-type-dropdown dropdown-toggle" value="">
+                    <span style="<% if(!defectType){ %>display:none;<% } %>" data-js-issue-title title="<%= defectType ? defectType.longName : '' %>" class="pr-defect-type-badge">
+                        <i data-js-issue-color style="background: <%= defectType ? defectType.color : '' %>"></i>
+                        <span data-js-issue-name><%= defectType ? defectType.longName : '' %></span>
+                    </span>
+                    <span data-js-noissue-name style="<% if(defectType){ %>display:none;<% } %>"><%= data.text.dialog.choseDefectType %></span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu rp-defects-menu">
+                    <% _.each(data.defectsGroup, function(defect, i){ %>
+                    <% var rowDesktop = i == 0 ? '12' : '3', rowTablet = i == 0 ? '12' : '6' %>
+                    <% var sepDesktop = i == 1 ? 'visible-md visible-lg' : '', sepTable = i%2 == 0 ? '' : 'visible-sm'
+                    %>
+                    <% if(i > 0){ %>
+                    <li role="separator" class="divider <%= sepDesktop %>"></li>
+                    <li role="separator" class="divider <%= sepTable %>"></li>
+                    <li role="separator" class="divider visible-xs-block"></li>
+                    <% } %>
+                    <li class="col-md-<%= rowDesktop %> col-sm-<%= rowTablet %> col-xs-12">
+                        <% _.each(data.subDefects[defect], function(d){ %>
+                        <% var checked = !data.isMultipleEdit && d.locator == data.getIssueType(data.item) ? true : false %>
+                        <div class="rp-defect-row">
+                            <label title="<%- d.longName %>" class="<%= checked ? 'selected' : '' %>"
+                                   data-js-select-issue data-locator="<%= d.locator %>">
+                                <i style="background: <%- d.color %>"></i><%- d.longName.setMaxLength(20) %>
+                            </label>
+                        </div>
+                        <% }); %>
+                    </li>
+                    <% }); %>
+                </ul>
+            </div>
+        </div>
+        <div class="text-editor" data-js-issue-comment></div>
+        <div class="rp-defect-editor-bottom">
+            <% if(data.isMultipleEdit){ %>
+            <label class="rp-checkbox-wrap replace-comments">
+                <input class="rp-input-checkbox" type="checkbox" data-js-replace-comment>
+                <span><%= data.text.launches.replaceComments %></span>
+            </label>
+            <% } %>
+            <div class="hot-keys-wrapper">
+                <span class="hot-keys"><%= data.text.ui.escToCancel %></span>
+                <span class="hot-keys"><%= data.text.ui.ctrlEnterToSubmit %></span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.cancel %>
+    </button>
+    <button class="rp-btn rp-btn-submit" type="button" data-js-save>
+        <%= data.text.ui.save %>
+    </button>
+</div>

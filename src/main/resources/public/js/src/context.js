@@ -25,65 +25,25 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var App = require('app');
-    var Projects = require('project');
-    var ProjectInfo = require('projectinfo');
-    var Member = require('member');
     var Main = require('mainview');
-    var Dashboard = require('dashboard');
-    var Favorites = require('favorites');
-    var Launch = require('launch');
-    var Profile = require('profile');
+    var LaunchPage = require('launches/LaunchPage');
     var Util = require('util');
     var Service = require('coreService');
     var Admin = require('admin');
-    var Register = require('register');
+    var Register = require('register/registerView');
+    var LoginView = require('login/loginView');
+    var InvalidPage = require('invalidPage/invalidPage');
 
     var SingletonAppModel = require('model/SingletonAppModel');
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
 
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
+    var launchFilterCollection = new SingletonLaunchFilterCollection();
+
     var Context = {
 
-        pages: [
-            {name: 'login', url: 'login'},
-            {name: 'documentation', url: 'documentation'},
-            {name: 'user profile', url: 'user-profile'}
-        ],
-
-        service: function (name) {
-            switch (name) {
-                case "dashboard":
-                    return Dashboard;
-                    break;
-                case "filters":
-                    return Favorites;
-                    break;
-                case "launches":
-                case "userdebug":
-                    return Launch;
-                    break;
-                case "members":
-                    return Member;
-                    break;
-                case "settings":
-                    return Projects;
-                    break;
-                case "user-profile":
-                    return Profile;
-                    break;
-                case "info":
-                    return ProjectInfo;
-                    break;
-                default:
-                    break;
-            }
-        },
-
-        current: null,
-
         currentContext: null,
-
-        adminContext: 'admin',
 
         mainView: undefined,
 
@@ -93,71 +53,105 @@ define(function (require, exports, module) {
 
         currentProjectId: null,
 
-        create: {},
-
         bodyContainer: null,
 
         mainContainer: null,
 
         containersSet: false,
 
-        wrongResponseTo404: function () {
+        wrongResponseTo404: function (error) {
             config.userModel.clearLastInsidePage();
-            if (this.currentProjectId) {
-                this.destroyViews();
-                this.openInvalid();
-            } else {
-                this.logout();
-            }
+            this.openInvalid(error);
         },
 
         loadProject: function () {
             var self = this;
-
-            return Service.getProject().then(
-                function (response) {
-                    self.currentProjectId = response.projectId;
-                    config.project = response;
-                    appModel.set({projectId: response.projectId, type: response.configuration.entryType});
-                });
+            return appModel.update().done(function(response) {
+                self.currentProjectId = response.projectId;
+                config.project = response;
+            });
         },
 
         loadPreferences: function () {
-            return Service.getPreferences().done(function (result) {
-                config.preferences = result;
+            return Service.getPreferences().done(function (response) {
+                config.preferences = response;
+                launchFilterCollection.parse(response.filters);
             });
         },
 
         openAdmin: function (page, id, action, queryString) {
+            if (!config.userModel.get('isAdmin')) {
+                config.router.navigate(config.userModel.get('defaultProject'), {trigger: true});
+                return;
+            }
+            this.prepareInsideView();
+            this.currentContext = page;
             if(id) {
                 appModel.set({projectId: id});
             }
             this.checkForContextChange(page);
-            this.checkForContainers();
-
-            var data = {page: page, id: id, action: action, queryString: queryString};
+            var data = {page: page, id: id, action: action, contextName: this.currentContext, queryString: queryString};
             this.currentProjectId = null;
-            this.mainContainer && this.mainContainer.removeClass('tabbed');
-            this.validateMainViewByContextName(this.adminContext);
-
+            this.validateMainViewByContextName();
+            this.bodyContainer = $("#bodyContainer");
             if (!this.mainView) {
                 this.mainView = new Admin.MainView({
                     el: this.bodyContainer
                 });
                 this.mainView.render(data);
-                this.trigger('renderMainView', this.mainView);
             } else {
-                // set update active links
                 this.mainView.update(data);
             }
         },
 
-        checkForContainers: function () {
-            if (!this.containersSet) {
-                this.mainContainer = $('#mainContainer');
-                this.bodyContainer = $("#bodyContainer");
-                this.containersSet = true;
+        openRouted: function (projectId, contextName, subContext, queryString) {
+            config.trackingDispatcher.pageView(contextName);
+            this.prepareInsideView();
+            this.currentContext = contextName;
+            this.checkForContextChange(contextName);
+            this.validateMainViewForAdmin();
+            this.container = $('#mainContainer');
+            //TODO config.project deprecated
+            config.project['projectId'] = projectId || config.userModel.get('defaultProject');
+            var data = {container: this.container, projectId: projectId, contextName: contextName, subContext: subContext, queryString: queryString};
+
+            var dependenciesCalls = [];
+            if (this.preferencesAreNotLoaded()) {
+                dependenciesCalls.push(this.loadPreferences());
             }
+
+            if (appModel.get('projectId') !== projectId) {
+                dependenciesCalls.push(this.loadProject());
+            }
+            this.destroyInvalidView();
+            var self = this;
+            var renderPage = function() {
+                if (!self.mainView) {
+                    self.mainView = new Main.MainView({
+                        el: self.container,
+                        contextName: contextName,
+                        projectId: projectId
+                    });
+                    self.mainView.render(data);
+                } else {
+                    self.mainView.update(data);
+                }
+            };
+            this.validateContentViewByContextName(contextName);
+            if (dependenciesCalls.length) {
+                $.when.apply($, dependenciesCalls).done(function () {
+                    self.destroyMainView();
+                    renderPage();
+                }).fail(function (error) {
+                    self.wrongResponseTo404(error);
+                });
+            } else {
+                renderPage();
+            }
+        },
+
+        preferencesAreNotLoaded: function () {
+            return !config.preferences || config.preferences.projectRef !== config.project.projectId;
         },
 
         checkForContextChange: function (newContext) {
@@ -167,81 +161,29 @@ define(function (require, exports, module) {
             this.currentContext = newContext;
         },
 
-
         openRegister: function (id) {
-            this.destroyViews();
-            this.mainView = new Register.RegisterView({
-                el: $("#bodyContainer"),
-                id: id,
+            this.prepareOutsideView();
+            this.outsideView = new Register({
+                uuid: id,
                 context: this
-            }).render();
+            });
+            $('[data-js-notapplication-container]').html(this.outsideView.$el);
         },
-
-        openRouted: function (projectId, contextName, subContext, queryString) {
-            this.checkForContextChange(contextName);
-            this.checkForContainers();
-
-            this.validateMainViewForAdmin();
-
-
-            // make sure alert messages are whipped down on page transaction
-            Util.clearMessage();
-
-            config.project['projectId'] = projectId || config.userModel.get('defaultProject');
-
-            var dependenciesCalls = [];
-            if (this.preferencesAreNotLoaded()) {
-                dependenciesCalls.push(this.loadPreferences());
-            }
-
-            if (this.projectIsNotLoaded(projectId) || this.isSettingsPage(contextName)) {
-                dependenciesCalls.push(this.loadProject());
-            }
-
-            // make sure that previous 404's are removed
-            this.destroyInvalidView();
-
-            var self = this,
-                renderPage = function () {
-                    self.manageMainView({contextName: contextName, projectId: projectId || config.project.projectId});
-                    self.validateContentViewByContextName(contextName);
-                    //check for possible tabs
-                    var tabbedAction = contextName === 'launches' ? 'add' : 'remove';
-                    self.mainContainer[tabbedAction + "Class"]('tabbed');
-
-                    if (self.contentView && self.contentView.update) {
-                        // if context is the same update it
-                        self.contentView.update({subContext: subContext, queryString: queryString});
-                    } else {
-                        // fill content view according to the context
-                        var LocalView = self.service(contextName);
-                        self.contentView = new LocalView.ContentView({
-                            contextName: contextName,
-                            context: self.getAppProp(),
-                            subContext: subContext,
-                            queryString: queryString
-                        }).render();
-                    }
-                    self.trigger('onRenderPage', {
-                        projectId: projectId,
-                        contextName: contextName,
-                        subContext: subContext,
-                        queryString: queryString
-                    })
-                };
-
-            if (dependenciesCalls.length) {
-                $.when.apply($, dependenciesCalls).done(function () {
-                    self.destroyContentView();
-                    self.destroyMainView();
-                    renderPage();
-                }).fail(function () {
-                    self.wrongResponseTo404();
-                });
-            } else {
-                renderPage();
-            }
-            $('#main_content').focus();
+        openLogin: function () {
+            this.prepareOutsideView();
+            this.outsideView = new LoginView({
+                context: this
+            });
+            $('[data-js-notapplication-container]').html(this.outsideView.$el);
+        },
+        prepareOutsideView: function() {
+            this.destroyViews();
+            this.outsideView && this.outsideView.destroy();
+            $('[data-js-application-container]').addClass('hide');
+        },
+        prepareInsideView: function() {
+            this.outsideView && this.outsideView.destroy();
+            $('[data-js-application-container]').removeClass('hide');
         },
 
         isSettingsPage: function (context) {
@@ -249,14 +191,14 @@ define(function (require, exports, module) {
         },
 
         validateMainViewForAdmin: function () {
-            if (this.mainView && this.mainView.contextName === this.adminContext) {
-                this.destroyViews();
+            if (this.mainView && this.mainView.contextName === 'admin') {
+                this.destroyMainView();
             }
         },
 
-        validateMainViewByContextName: function (name) {
-            if (this.mainView && this.mainView.contextName !== name) {
-                this.destroyViews();
+        validateMainViewByContextName: function () {
+            if (this.mainView && this.mainView.contextName !== 'admin') {
+                this.destroyMainView();
             }
         },
 
@@ -272,53 +214,26 @@ define(function (require, exports, module) {
             }
         },
 
-        manageMainView: function (options) {
-            // create main view if absent
-            if (!this.mainView) {
-                this.mainView = new Main.MainView({
-                    el: this.mainContainer,
-                    contextName: options.contextName
-                });
-                this.mainView.render();
-                this.trigger('renderMainView', this.mainView);
-            } else {
-                // set update active links
-                this.mainView.update(options);
-            }
-        },
+        openInvalid: function (error) {
+            this.prepareOutsideView();
+            this.outsideView = new InvalidPage({
+                error: error
+            });
+            $('[data-js-notapplication-container]').html(this.outsideView.$el);
 
-        projectIsNotLoaded: function () {
-            return !this.currentProjectId || this.currentProjectId !== config.project.projectId;
-        },
-
-        preferencesAreNotLoaded: function () {
-            return !config.preferences || config.preferences.projectRef !== config.project.projectId;
-        },
-
-        openInvalid: function () {
-            this.validateContentViewByContextName("not-found");
-            var target;
-            if (this.mainView) {
-                target = $("#dynamic-content", this.mainView.$el);
-            } else {
-                target = $("#mainContainer");
-            }
-            this.invalidView = new Main.NotFoundPage({container: target}).render();
+            // this.validateContentViewByContextName("not-found");
+            // var target;
+            // if (this.mainView) {
+            //     target = $("#dynamic-content", this.mainView.$el);
+            // } else {
+            //     target = $("#mainContainer");
+            // }
+            // this.invalidView = new NotFoundPage({container: target}).render();
         },
 
         logout: function () {
-            if (config.userModel &&  window.location.hash.indexOf('documentation') == -1) {
-                // this.destroyContentView();
-                // this.destroyMainView();
-
-                // $('.js-loginblock').removeClass('b-login--open');
-                // window.location = '/reportportal-ws';
-
-                config.userModel.logout();
-                this.currentProjectId = null;
-
-                Util.ajaxInfoMessenger('logOuted');
-            }
+            this.currentProjectId = null;
+            Util.ajaxInfoMessenger('logOuted');
         },
 
         destroyMainView: function () {

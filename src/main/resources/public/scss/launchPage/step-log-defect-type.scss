@@ -1,0 +1,103 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.step-log-defect-type {
+  .defect-type-badge-overflow {
+    display: inline-block;
+    cursor: pointer;
+    &.disabled {
+      cursor: default;
+      .edit-defect {
+        cursor: default;
+      }
+    }
+    .defect-type-badge {
+      background: $COLOR--white-default;
+      border-radius: 20px;
+      display: inline-block;
+      height: 20px;
+      border: 1px solid $COLOR--gray-80;
+      color: $COLOR--charcoal-grey;
+      font-size: 13px;
+      font-family: "OpenSansSemibold", sans-serif;
+      padding: 0 7px;
+      line-height: 16px;
+      i {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 3px;
+        vertical-align: top;
+        margin-top: 3px;
+      }
+    }
+    .edit-defect {
+      vertical-align: top;
+      font-size: 18px;
+      color: $COLOR--gray-60;
+      cursor: pointer;
+      width: 0px;
+      opacity: 0;
+      margin-top: 1px;
+      cursor: pointer;
+      &:hover {
+        color: $COLOR--black;
+      }
+      &.disabled {
+        cursor: default;
+        &:hover {
+          color: $COLOR--gray-60;
+        }
+      }
+    }
+  }
+  .tickets-container {
+    margin-top: 8px;
+    a {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 2px;
+      background-color: $COLOR--white;
+      border: 1px solid $COLOR--gray-80;
+      color: $COLOR--gray-47;
+      font-size: 12px;
+      line-height: 17px;
+      padding: 0 5px;
+      margin-right: 5px;
+      i {
+        font-size: 14px;
+        vertical-align: top;
+        padding: 2px;
+      }
+      &:hover {
+        .ui-tooltip {
+          visibility: visible;
+          opacity: 1;
+          transition: visibility 0s linear 0.4s, opacity 0.2s ease 0.4s;
+        }
+      }
+    }
+  }
+  .defect-type-description {
+    margin: 10px 0 0 1px;
+  }
+}

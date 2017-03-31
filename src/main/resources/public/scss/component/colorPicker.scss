@@ -1,0 +1,226 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.colorpicker-spectrum {
+  .sp-replacer {
+    width: 55px;
+    height: 30px;
+    background-color: $COLOR--white-default;
+    border: 1px solid  $COLOR--gray-80;
+    &:hover {
+      border: 1px solid $COLOR--gray-47;
+    }
+
+    &:after {
+      content: '\25BC';
+      display: block;
+      margin-top: 1px;
+      color: $COLOR--gray-60;
+    }
+    &:before {
+      content: '\25B2';
+      display: none;
+      margin-top: 1px;
+      color: $COLOR--gray-60;
+      position: absolute;
+      left: 35px;
+    }
+
+    &.sp-active {
+      &:before {
+        display: block;
+      }
+      &:after {
+        display: none;
+      }
+    }
+
+    .sp-preview {
+      margin: 5px 8px 0 7px;
+      width: 12px;
+      height: 12px;
+      border: none;
+      background: none;
+
+      .sp-preview-inner {
+        border-radius: 100%;
+      }
+    }
+
+    .sp-dd {
+      display: none;
+      margin-top: 1px;
+      color: $COLOR--gray-60;
+    }
+  }
+
+  .sp-container {
+    width: 242px;
+    padding: 15px 10px 15px 10px;
+    border: 1px solid $COLOR--gray-80;
+    background-color: $COLOR--white-default;
+    font-size: 13px;
+    line-height: 13px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+
+    &:before {
+      content: 'PICK A SWATCH:';
+      margin-left: 5px;
+      color: $COLOR--gray-47;
+      font-family: $OpenSansSemibold;
+      font-size: 12px;
+      line-height: 12px;
+    }
+
+    .sp-palette-container {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid $COLOR--gray-91;
+      margin-bottom: 15px;
+      padding: 8px 0 5px 3px;
+
+
+      .sp-palette {
+        .sp-palette-row {
+          width: 100%;
+          margin-bottom: 2px;
+
+          .sp-thumb-el {
+            width: 12px;
+            height: 12px;
+            margin: 0 6px 0 0;
+            border: 2px solid transparent;
+            background-image: none;
+            -webkit-border-radius: 100%;
+            -moz-border-radius: 100%;
+            border-radius: 100%;
+            
+            &:hover {
+              border-color:  $COLOR--black-four;
+            }
+            &.sp-thumb-active {
+              border-color:  $COLOR--black-four;
+              .sp-thumb-inner {
+                background-image: none;
+              }
+            }
+
+            .sp-thumb-inner {
+              -webkit-border-radius: 100%;
+              -moz-border-radius: 100%;
+              border-radius: 100%;
+            }
+          }
+        }
+      }
+    }
+
+    .sp-picker-container {
+      width: 100%;
+      padding: 0 0 285px 0;
+      &:before {
+        content: 'SELECT YOUR COLORS:';
+        margin-left: 4px;
+        color: $COLOR--gray-47;
+        font-family: $OpenSansSemibold;
+        font-size: 12px;
+        line-height: 12px;
+      }
+
+      .sp-top {
+        width: 140px;
+        height: 125px;
+        float: left;
+
+        .sp-top-inner {
+          .sp-color {
+            width: 110px;
+            height: 110px;
+            margin-top: 15px;
+            margin-left: 4px;
+            -webkit-border-radius: 100%;
+            -moz-border-radius: 100%;
+            border-radius: 100%;
+            border-color: $COLOR--white-default;
+
+            .sp-sat {
+              .sp-val {
+                -webkit-border-radius: 100%;
+                -moz-border-radius: 100%;
+                border-radius: 100%;
+
+                .sp-dragger {
+                  width: 10px;
+                  height: 10px;
+                  margin: -4px 0 0 -4px;
+                  -webkit-border-radius: 100%;
+                  -moz-border-radius: 100%;
+                  border-radius: 100%;
+                  border: 2px solid #fff;
+                  background: transparent;
+                }
+              }
+            }
+          }
+
+          .sp-hue {
+            height: 110px;
+            width: 15px;
+            margin-top: 14px;
+            margin-left: 6px;
+            border: none;
+            cursor: row-resize;
+
+            .sp-slider {
+              cursor: inherit;
+              height: 3px;
+              width: 19px;
+              left: -3px;
+              opacity: 1;
+            }
+          }
+        }
+      }
+      .sp-input-container {
+        margin-left: 5px;
+        margin-top: 15px;
+        width: 75px;
+        height: 30px;
+        float: left;
+
+        input {
+          font-family: "OpenSansRegular", sans-serif;
+          color: $COLOR--charcoal-grey;
+          font-size: 13px;
+          line-height: 13px;
+          border: 1px solid $COLOR--gray-80;
+
+          &:focus {
+            color: inherit;
+            border-color: #1a9cb0;
+            box-shadow: 0 0 2px 0 rgba(25, 155, 176, 0.7);
+          }
+        }
+      }
+    }
+  }
+}

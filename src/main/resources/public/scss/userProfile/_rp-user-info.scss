@@ -1,0 +1,387 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.rp-user-profile {
+  padding: 15px 0 0;
+  background: $COLOR--white-default;
+
+  .user-profile-title {
+    background: $COLOR--white;
+    color: $COLOR--gray-47;
+    padding: 6px 15px 7px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .user-profile-info {
+    padding: 15px;
+    margin: 0 0 36px;
+    @extend %CLEAR_FIX;
+
+    .user-profile-photo {
+      float: left;
+      width: 108px;
+      height: 120px;
+      overflow: hidden;
+      line-height: 1.0;
+
+      .user-avatar {
+        max-width: 108px;
+        height: auto;
+        display: block;
+      }
+    }
+    .user-change-password {
+      float: right;
+      margin-right: -15px;
+      .rp-btn-default {
+        padding: 8px 10px;
+      }
+    }
+    .user-info-content {
+      margin: 0 0 0 122px;
+
+      .user-info-id {
+        font-size: 16px;
+        text-transform: uppercase;
+        margin: 0 110px 8px 0;
+        span {
+          overflow: hidden;
+          max-width: calc(100% - 20px);
+          display: inline-block;
+          text-overflow: ellipsis;
+        }
+      }
+      .user-info-name {
+        font-size: 14px;
+        margin: 0 0 9px;
+        .user-edit {
+          width: 100%;
+          span {
+            overflow: hidden;
+            max-width: calc(100% - 25px);
+            display: inline-block;
+            text-overflow: ellipsis;
+          }
+        }
+      }
+      .user-info-mail {
+        font-size: 14px;
+        margin: 0 0 12px;
+        .user-mail {
+          color: $COLOR--gray-47;
+          text-decoration: none;
+          overflow: hidden;
+          word-wrap: break-word;
+        }
+      }
+      .user-edit {
+        display: inline-block;
+        position: relative;
+        max-width: 100%;
+        width: 100%;
+
+        &:hover {
+          i {
+            display: inline-block;
+          }
+        }
+
+        i {
+          display: none;
+          position: static;
+          cursor: pointer;
+          font-size: 18px;
+          vertical-align: top;
+          color: $COLOR--gray-60;
+        }
+      }
+      .user-edit-photo {
+        vertical-align: baseline;
+        .rp-btn-default {
+          padding: 8px 10px;
+          position: relative;
+          overflow: hidden;
+          &.user-upload-photo-btn {
+            cursor: pointer;
+            display: inline-block;
+            border-width: 1px;
+            border-style: solid;
+            height: 30px;
+            line-height: 13px;
+            vertical-align: text-top;
+          }
+
+          input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: white;
+            cursor: inherit;
+            display: block;
+          }
+        }
+        .user-remove-photo {
+          vertical-align: text-top;
+          cursor: pointer;
+          display: none;
+          color: $COLOR--windows-blue;
+          margin: 9px 0 9px 6px;
+          height: 14px;
+          line-height: 13px;
+
+          &.active {
+            display: inline-block;
+          }
+        }
+      }
+      .upload-photo-form {
+        display: none;
+
+      }
+      .photo-error-message {
+        display: none;
+        font-size: 12px;
+        color: $COLOR--orange-red;
+        margin: 10px 0 0;
+      }
+    }
+  }
+  .user-projects-list {
+    .user-projects-throw {
+      background: $COLOR--white;
+      color: $COLOR--gray-47;
+      padding: 6px 0 7px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      @extend %CLEAR_FIX;
+      h2 {
+        font-size: 12px;
+        line-height: inherit;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin: 0;
+        font-size: 12px;
+      }
+    }
+    .user-projects-row {
+      border-bottom: 1px solid $COLOR--gray-91;
+      padding: 8px 0 9px;
+      @extend %CLEAR_FIX;
+
+      .project-name {
+        display: block;
+        overflow: hidden;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: $COLOR--charcoal-grey;
+        text-decoration: none;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+  .user-uuid-form {
+    margin: 15px 0 26px;
+    @extend %CLEAR_FIX;
+
+    .user-uuid-label {
+      text-transform: uppercase;
+      float: left;
+      padding: 6px 0 0;
+    }
+    .user-uuid-button {
+      float: right;
+      position: relative;
+      width: 92px;
+      .rp-btn-default {
+        padding: 8px 10px;
+        float: right;
+      }
+    }
+    .user-uuid-field {
+      margin: 0 100px 0 44px;
+
+      .form-control[readonly] {
+        width: 100%;
+        font-size: 13px;
+        padding: 0 10px;
+        height: 30px;
+        background: $COLOR--white-default;
+      }
+    }
+    .user-uuid-help-block {
+      width: 100%;
+      float: left;
+      color: $COLOR--gray-60;
+      font-size: 12px;
+      line-height: 1.4;
+      padding: 5px 0;
+    }
+  }
+  .user-config-editor {
+    .config-pills {
+      position: relative;
+      margin: 15px 0 10px;
+      text-align: center;
+      padding: 0 15px;
+      border-bottom: 1px solid $COLOR--gray-91;
+      @extend %CLEAR_FIX;
+
+      li {
+        display: inline-block;
+        margin: 0;
+        padding: 0 3px 4px;
+
+        a {
+          display: inline-block;
+          font-size: 14px;
+          font-weight: 600;
+          color: $COLOR--gray-47;
+          text-transform: uppercase;
+          padding: 0 12px;
+          &:hover {
+          }
+        }
+        &.active {
+          position: relative;
+          a {
+            color: $COLOR--topaz;
+          }
+          &:after {
+            content: "";
+            position: absolute;
+            display: block;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 0;
+            border-top: 1px solid $COLOR--topaz;
+          }
+        }
+      }
+    }
+    .user-config-container {
+      border: 1px solid $COLOR--gray-80;
+      height: 420px;
+      position: relative;
+      .config-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: 100%;
+        border-radius: 0;
+        background: $COLOR--white-default;
+        padding: 12px 15px;
+        color: $COLOR--gray-60;
+        font: normal 13px $FontMonacoMonospace;
+        overflow: auto;
+
+        p {
+          margin-bottom: 0;
+        }
+        h1 {
+          font-size: 13px;
+          margin-bottom: 0;
+          margin-top: 15px;
+        }
+        .comment {
+          padding-left: 40px;
+          font-size: 12px;
+          line-height: 16px;
+        }
+        .options {
+          padding-left: 20px;
+        }
+      }
+    }
+  }
+}
+
+.warning_modal {
+  margin: 30px 0 0;
+}
+
+@media (max-width: $SCREEN_XS_MAX) {
+  .rp-user-profile {
+    .user-edit-photo {
+      display: none;
+    }
+    .user-profile-info {
+      .user-change-password {
+        display: none;
+      }
+      .user-info-content {
+        margin: 0 0 0 50px;
+
+        .user-info-mail {
+          margin-bottom: 0;
+        }
+        .user-edit {
+          i {
+            display: none;
+          }
+        }
+      }
+      .user-profile-photo {
+        width: 40px;
+        height: 56px;
+        .user-avatar {
+          width: 40px;
+        }
+      }
+    }
+    .user-projects-list {
+      margin-bottom: 40px;
+
+      .user-projects-throw {
+        .user-projects-roles {
+          display: none;
+        }
+      }
+    }
+    .user-uuid-form {
+      .user-uuid-field {
+        margin: 0;
+
+        .form-control[readonly] {
+          background: $COLOR--gray-91;
+        }
+      }
+      .user-uuid-label, .user-uuid-button, .user-uuid-help-block {
+        display: none;
+      }
+    }
+    .user-config-editor {
+      display: none;
+    }
+  }
+}

@@ -21,19 +21,16 @@ module.exports = function (grunt) {
 
         'css/daterangepicker-bs3.css',
         'css/nvd3/nv.d3.min.css',
-        'css/gridstack/gridstack.css',
         'css/select2.css',
         'css/markitup.css',
         'css/magnific-popup.css',
+        'css/spectrum.css',
+        'css/highlightJS/atom-one-light.css',
 
         'compiled/scss/main.css',
         'css/animate.min.css',
 
-        // TODO
-        // 'css/style.css',
-        // 'css/default.css',
-        // 'css/style-custom.css',
-        // 'css/epam-style.css',
+        'css/markdown/simplemde.min.css'
     ];
 
     grunt.initConfig({
@@ -43,7 +40,6 @@ module.exports = function (grunt) {
                     cwd: rootPath,
                     src: [
                         'img/**',
-                        'Images/**',
                         'css/**/*.css',
                         'eqcss/**/*.eqcss',
                         'js/lib/**/*.js',
@@ -59,7 +55,6 @@ module.exports = function (grunt) {
                     cwd: rootPath,
                     src: [
                         'img/**',
-                        'Images/**',
                         'eqcss/**/*.eqcss',
                         'compiled/**',
                         'epam/**'
@@ -91,10 +86,6 @@ module.exports = function (grunt) {
                 src: 'templates/index.html',
                 dest: publicPath + '/index.html'
             },
-            certificate: {
-                src: 'certificate/reportportal-client-v2.jks',
-                dest: publicPath + '/certificate/reportportal-client-v2.jks'
-            },
             images: {
                 src: 'img/**',
                 dest: 'compiled/'
@@ -102,6 +93,21 @@ module.exports = function (grunt) {
             fonts: {
                 src: 'fonts/**',
                 dest: 'compiled/'
+            },
+            jsLib: {
+                files: [{
+                    cwd: rootPath,
+                    src: 'js/lib/**',
+                    dest: publicPath + '/',
+                    filter: 'isFile'
+                }]
+            },
+            swagger: {
+                files: [{
+                    cwd: rootPath,
+                    src: 'swagger-ui/**',
+                    dest: publicPath + '/'
+                }]
             }
         },
         cssmin: {
@@ -168,10 +174,6 @@ module.exports = function (grunt) {
             copy_js: {
                 files: ['js/src/**/*.js'],
                 tasks: ['string-replace:jsDist']
-            },
-            assemble: {
-                files: ['md/**/*.hbs', 'md/**/*.md'],
-                tasks: ['assemble:documentation']
             },
             index: {
                 files: ['templates/index.html'],
@@ -246,25 +248,6 @@ module.exports = function (grunt) {
                 }
             }
         },
-        assemble: {
-            options: {
-                flatten: true,
-                layoutdir: 'md/layout',
-                partials: ['./*.md'],
-                // plugins: ['grunt-assemble-navigation', 'grunt-assemble-anchors', 'grunt-reportportal-toc', 'grunt-reportportal-link'],
-                anchors: {
-                    template: 'md/md-template.js'
-                }
-            },
-            documentation: {
-                options: {
-                    layout: 'default.hbs'
-                },
-                files: {
-                    'compiled/': ['md/pages/*.hbs']
-                }
-            }
-        },
         requirejs: {
             compile: {
                 options: {
@@ -325,7 +308,7 @@ module.exports = function (grunt) {
                 }],
                 options: {
                     replacements: [{
-                        pattern: 'DEBUG_STATE',
+                        pattern: /'DEBUG_STATE'/g,
                         replacement: 'true'
                     }]
                 }
@@ -340,8 +323,8 @@ module.exports = function (grunt) {
                 }],
                 options: {
                     replacements: [{
-                        pattern: 'DEBUG_STATE',
-                        replacement: ''
+                        pattern: /'DEBUG_STATE'/g,
+                        replacement: 'false'
                     }]
                 }
             }
@@ -353,7 +336,6 @@ module.exports = function (grunt) {
     require('load-grunt-tasks')(grunt, {
         pattern: [
             'grunt-*',
-            '!grunt-assemble-*',
             '!grunt-reportportal-*',
             '!grunt-legacy-util'
         ]
@@ -363,7 +345,6 @@ module.exports = function (grunt) {
         'compileResource',
         [
             'jst',
-            'assemble',
             'copy:images',
             'copy:fonts'
         ]
@@ -379,7 +360,7 @@ module.exports = function (grunt) {
             'concat:develop',
             'copy:main',
             'copy:mainDevelop',
-            'copy:certificate',
+            'copy:swagger',
             'postcss:develop',
             'string-replace:jsDist',
             'sync:main',
@@ -398,7 +379,8 @@ module.exports = function (grunt) {
             'string-replace:jsProd',
             'concat:production',
             'copy:mainProduction',
-            'copy:certificate',
+            'copy:jsLib',
+            'copy:swagger',
             'postcss:production',
             'cssmin',
             'sync:production',

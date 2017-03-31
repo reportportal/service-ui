@@ -1,39 +1,36 @@
 <% var notAllowed = (!data.access) ? 'disabled="disabled"' : '' %>
-<div class="rp-form-group">
-    <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col">
-        <%= data.text.project.bts %>
-    </label>
-    <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-        <div class="rp-btn-group rp-width-100">
+<div class="bts-general-settings">
+    <div class="rp-form-group bts-selector">
+        <label class="rp-control-label">
+            <%= data.text.project.bts %>
+        </label>
+        <div class="rp-btn-group">
             <button type="button"
-                class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
-                data-toggle="dropdown"
-                <%= notAllowed %>
-                id="systemType">
-                <span class="select-value"><%= data.systemType %></span>
-                <span class="rp-caret"></span>
+                    class="rp-btn rp-btn-with-dropdown dropdown-toggle"
+                    data-toggle="dropdown"
+            <%= notAllowed %>
+            id="systemType">
+            <span class="select-value"><%= data.systemType %></span>
+            <span class="rp-caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <% _.forEach(data.settings.btsList, function(item) {%>
-                    <li>
-                        <a href="#" class="bts-option"><%= item.name %></a>
-                    </li>
+                <li>
+                    <a href="#" class="bts-option"><%= item.name %></a>
+                </li>
                 <% }) %>
             </ul>
         </div>
         <span class="no-bts-found hide" data-js-no-bts-message><%- data.text.bts.btsNotFound %></span>
     </div>
-    <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
-</div>
-<div class="rp-form-group tbs-change-warning-block">
-    <div class="col-md-3 col-sm-3 hidden-xs rp-custom-col"></div>
-    <div class="col-md-9 col-sm-9 col-xs-12 rp-custom-col">
+    <div class="rp-form-group tbs-change-warning-block">
         <div id="tbsChangeWarning" class="rp-help-block rp-text-danger">
             <%= data.text.bts.tbsChangeWarning %>
         </div>
     </div>
+    <div class="mobile-disabling-cover"></div>
 </div>
-<div id="btsInstance">
-    <div id="instanceHead" class="clearfix"></div>
-    <div id="instanceBody" class="clearfix"></div>
+<div id="btsInstance" class="bts-instance-container">
+    <div id="instanceHead" class="clearfix instance-head"></div>
+    <div id="instanceBody" class="clearfix instance-body"></div>
 </div>

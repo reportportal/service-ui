@@ -1,39 +1,35 @@
-<div class="uniq-bugs-panel">
+<div class="most-failed-launches">
     <% if (data.items && !_.isEmpty(data.items)) { %>
-    <div class="container-fluid rp-margin-reset rp-odd-even rp-table-hover">
-        <div class="row rp-table-thead hidden-xs most-failed-launch">
-            <div class="col-xs-11 col-sm-12 col-md-12">
-                <div class="rp-table-th"><%= data.text.widgets.typeLaunchName %>:
-                    <strong><%- data.lastLaunch.name %></strong>
-                </div>
-            </div>
+    <div class="most-failed-launches-table">
+        <div class="most-failed-launch">
+            <%= data.text.widgets.typeLaunchName %>: <%- data.lastLaunch.name %>
         </div>
-        <div class="row rp-grid-thead hidden-xs">
-            <div class="col-xs-11 col-sm-5 col-md-6 ubp-title">
-                <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.widgets.testCase %></span></div>
+        <div class="most-failed-head">
+            <div class="most-failed-name-col">
+                <span class="most-failed-th-name"><%= data.text.widgets.testCase %></span>
             </div>
-            <div class="col-xs-11 col-sm-4 col-md-4 ubp-title">
-                <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.widgets.failed %></span></div>
+            <div class="most-failed-stats-col">
+                <span class="most-failed-th-name"><%= data.text.widgets.failed %></span>
             </div>
-            <div class="col-xs-11 col-sm-3 col-md-2 ubp-title">
-                <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.widgets.lastFailure %></span></div>
+            <div class="most-failed-date-col">
+                <span class="most-failed-th-name"><%= data.text.widgets.lastFailure %></span>
             </div>
         </div>
         <% _.each(data.items, function(item){ %>
-        <div class="row rp-table-row">
-            <div class="col-xs-11 col-sm-5 col-md-6">
+        <div class="most-failed-row">
+            <div class="most-failed-name-col">
                 <strong title="<%- item.name %>" class="over-name"><%- item.name %></strong>
-                <a target="_blank" class="rp-blue-link-undrl pull-right"
-                   href="<%= data.lastLaunch.link %>filter.eq.name=<%- encodeURIComponent(item.name) %>">
+                <a target="_blank" class="found-in-last rp-blue-link-undrl"
+                   href="<%= data.lastLaunch.link %>&filter.eq.name=<%- encodeURIComponent(item.name) %>">
                     <%= data.text.widgets.findLastLaunch %>
                 </a>
             </div>
-            <div class="col-xs-11 col-sm-4 col-md-4">
+            <div class="most-failed-stats-col">
                 <strong><%= item.failed %></strong> <%= data.text.widgets.failsOf %> <strong><%= item.runs %></strong> <%=
                 data.text.widgets.testCaseExe %> <strong><%=
                 item.affected %>%</strong> <%= data.text.widgets.failure %>
             </div>
-            <div class="col-xs-11 col-sm-3 col-md-2">
+            <div class="most-failed-date-col">
                 <% var date = (item.lastDate) ? new Date(parseFloat(item.lastDate)) : null; %>
                 <% if(date){ %>
                 <div class="hoverFullTime">
@@ -46,6 +42,7 @@
         </div>
         <% }) %>
     </div>
+    <div class="mobile-disabling-cover"></div>
 </div>
 <% } else { %>
 <div class="no-data-error"><%= data.text.widgets.noData %></div>

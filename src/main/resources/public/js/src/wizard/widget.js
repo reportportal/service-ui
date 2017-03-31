@@ -25,7 +25,7 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
-    var Components = require('components');
+    var Components = require('core/components');
     var App = require('app');
     var Service = require('coreService');
     var Helpers = require('helpers');
@@ -1173,7 +1173,7 @@ define(function (require, exports, module) {
                 var selectedLaunches = gadget && gadget.widgetOptions && gadget.widgetOptions.launchNameFilter,
                     self = this;
                 this.$templateOptions.append(Util.templates(this.launchesSelectorTpl, {selected: selectedLaunches || []}));
-                Util.setupSelect2WhithScroll($('input.users-typeahead:first', this.$templateConfig), {
+                Util.setupSelect2WhithScroll($('.users-typeahead:first', this.$templateConfig), {
                     multiple: false,
                     min: 3,
                     noCreateNew: true,
@@ -1202,12 +1202,12 @@ define(function (require, exports, module) {
                             });
                     }
                 });
-                $('input.users-typeahead:first', this.$el).on('select2-open', function () {
+                $('.users-typeahead:first', this.$templateConfig).on('select2-open', function () {
                     $('.select2-drop-mask').remove();
                     self.hideCriteriaDropDown();
                 });
                 $(document).on('mousedown', function () {
-                    $('input.users-typeahead:first', self.$templateConfig).select2('close');
+                    $('.users-typeahead:first', self.$templateConfig).select2('close');
                 });
             }
 
@@ -1407,7 +1407,7 @@ define(function (require, exports, module) {
                             .done(function (data) {
                                 makeAction(updatedList);
                                 var gadget = self.model.get('widget_template');
-                                config.trackingDispatcher.widgetAdded((!!gadget.gadget ? gadget.gadget : self.model.get('widget_id')));
+                                // config.trackingDispatcher.widgetAdded((!!gadget.gadget ? gadget.gadget : self.model.get('widget_id')));
                                 self.$widgetGlobalLoader.hide();
                             }).fail(errorHandler);
                     }

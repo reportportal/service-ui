@@ -1,0 +1,91 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.modal-filter-edit {
+  .modal-content-wrapper {
+    .modal-body {
+      padding: 30px 20px 21px 29px;
+
+      & > .modal-field {
+        width: 100%;
+        font-weight: normal;
+        position: relative;
+        color: $COLOR--charcoal-grey;
+        vertical-align: top;
+        margin-bottom: 20px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        & > .field-title {
+          display: block;
+          float: left;
+          margin-right: 30px;
+          min-width: 80px;
+          text-align: right;
+          line-height: 30px;
+
+        }
+        & > input, textarea {
+          margin-top: 0;
+          display: block;
+          width: 350px;
+        }
+        .validate-hint {
+          width: 350px;
+          margin-left: 110px;
+        }
+      }
+      .description-label {
+        textarea {
+          height: 68px;
+        }
+      }
+      .share-label {
+        .rp-switcher-big {
+          width: 100px;
+          margin-bottom: 0;
+        }
+      }
+      
+      @media (max-width: 620px) {
+        & > .modal-field {
+          & > .field-title {
+            float: none;
+            text-align: left;
+          }
+
+          & > input, textarea {
+            width: 100%;
+          }
+        }
+        & > .share-label {
+          & > span {
+            float: left;
+            min-width: 0;
+          }
+        }
+      }
+    }
+  }
+}
+

@@ -17,25 +17,59 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 /*---------------------------------*/
 /* STYLE FOR GENERAL SETTINGS PAGE */
 
 %GENERAL_SETTINGS {
-    #generalSettings {
-        padding-top: 10px;
-
-        .rp-form-group {
-            label {
-                &.obligatory-field {
-                    &:after {
-                        position: absolute;
-                        margin-left: 2px;
-                    }
-                }
-            }
-        }
+  #generalSettings {
+    padding: 10px 0 20px;
+    position: relative;
+    @media (max-width: $SCREEN_XS_MAX) {
+      padding-top: 0;
     }
+
+    .mobile-disabling-cover {
+      @extend %MOBILE_DISABLING_COVER;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      margin: 0 -15px;
+    }
+    .rp-form-group {
+      @media (max-width: $SCREEN_XS_MAX) {
+        margin-bottom: 0;
+      }
+      label {
+        &.obligatory-field {
+          &:after {
+            position: absolute;
+            margin-left: 2px;
+          }
+        }
+      }
+      .rp-btn-submit {
+        @media (max-width: $SCREEN_XS_MAX) {
+          display: none;
+        }
+      }
+      .rp-btn, .rp-input {
+        @media (max-width: $SCREEN_XS_MAX) {
+          pointer-events: none;
+          tab-index: -1;
+          background-color: $COLOR--gray-91;
+        }
+      }
+      .rp-help-block {
+        p {
+          margin: 0;
+          display: inline-block;
+          @media (max-width: $SCREEN_XS_MAX) {
+            display: block;
+          }
+        }
+      }
+    }
+  }
 }
 
 /*----------------*/
@@ -43,12 +77,12 @@
 
 /* FOR USUAL USERS */
 #dynamic-content {
-    @extend %GENERAL_SETTINGS;
+  @extend %GENERAL_SETTINGS;
 }
 
 /* FOR ADMINISTRATORS USERS */
 #dynamicContent {
-    @extend %GENERAL_SETTINGS;
+  @extend %GENERAL_SETTINGS;
 }
 
 /*-----------------------------------*/
@@ -56,60 +90,63 @@
 
 /* xs - 767px */
 @media (max-width: $SCREEN_XS_MAX) {
-    #generalSettings {
-        .rp-form-group {
+  #generalSettings {
+    .rp-form-group {
 
-            .rp-control-label {
-                margin-bottom: 10px;
-            }
+      .rp-control-label {
+        margin-bottom: 10px;
+      }
 
-            .rp-custom-col {
-                display: inline-block;
-                margin-bottom: 8px;
-                float: left;
+      .rp-custom-col {
+        display: inline-block;
+        margin-bottom: 8px;
+        float: left;
 
-                &:last-child {
-                    margin-top: 10px;
-                }
-            }
+        &:last-child {
+          margin-top: 10px;
+          @media (max-width: $SCREEN_XS_MAX) {
+            margin-top: 0;
+          }
         }
+      }
     }
+  }
 }
 
 /* sm - 768px - 991px */
 @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
-    #generalSettings {
-        .rp-form-group {
-            &:not(:first-child) {
-                margin-bottom: 25px;
-            }
+  #generalSettings {
+    .rp-form-group {
+      &:not(:first-child) {
+        margin-bottom: 25px;
+      }
 
-            &:first-child {
-                margin-bottom: 30px;
-            }
+      &:first-child {
+        margin-bottom: 30px;
+      }
 
-            &:last-child {
-                margin-bottom: 15px;
-            }
+      &:last-child {
+        margin-bottom: 15px;
+      }
 
-            .rp-custom-col {
-                display: inline-block;
-                margin-bottom: 8px;
-                float: left;
-            }
-            .rp-control-label {
-                padding-top: 8px;
-                margin: 0;
-            }
+      .rp-custom-col {
+        display: inline-block;
+        margin-bottom: 8px;
+        float: left;
+      }
+      .rp-control-label {
+        padding-top: 8px;
+        margin: 0;
+      }
 
-            .rp-text-description {
-                span {
-                    margin-left: 33%;
-                    padding-left: 12px;
-                }
-            }
+      .rp-text-description {
+        span {
+          margin-left: 33%;
+          padding-left: 12px;
         }
+      }
     }
+  }
 }
 
 /* md - 992px - 1199px */
@@ -119,9 +156,9 @@
 
 /* lg - 1200px */
 @media (min-width: $SCREEN_LG_MIN) {
-    #generalSettings {
-        width: $WIDTH_LAYOUT_PAGE_SETTINGS;
-        max-width: $MAX_WIDTH_LAYOUT_PAGE_SETTINGS;
-        margin: 0 auto;
-    }
+  #generalSettings {
+    width: $WIDTH_LAYOUT_PAGE_SETTINGS;
+    max-width: $MAX_WIDTH_LAYOUT_PAGE_SETTINGS;
+    margin: 0 auto;
+  }
 }

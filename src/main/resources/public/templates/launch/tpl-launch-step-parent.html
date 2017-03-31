@@ -1,0 +1,10 @@
+<div class="row rp-table-row rp-step-parents-line">
+    <div class="parents-line">
+        <%  var currentHref = ""; %>
+        <% _.each(data.model.parentPath, function(value, key) { %>
+            <% if(currentHref) { %><span class="parents-line-item">/</span><% } %>
+             <% if(!currentHref) { currentHref = data.getParentUrl(key); } else { currentHref += "/" + key; } %>
+             <a href="<%= currentHref %>" class="parents-line-item"><%- value %></a>
+        <% }); %>
+    </div>
+</div>

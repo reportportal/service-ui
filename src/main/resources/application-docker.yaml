@@ -1,0 +1,16 @@
+# Eureka Configuration
+eureka:
+  instance:
+    hostname: ${HOSTNAME:ui}
+  client:
+    serviceUrl:
+      defaultZone: http://registry:8761/eureka/
+
+
+spring:
+  cloud:
+    consul:
+      host: consul
+      discovery:
+        hostname: ${HOSTNAME:ui}
+        prefer-ip-address: false

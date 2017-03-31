@@ -1,0 +1,95 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.most-failed-launches {
+  margin: 0 -15px;
+  .most-failed-launches-table {
+    .most-failed-launch {
+      padding: 0 15px 15px;
+      font: bold 13px $OpenSansSemibold;
+    }
+    .most-failed-head {
+      border-top: 1px solid $COLOR--gray-91;
+      background: $COLOR--white;
+      @extend %CLEAR_FIX;
+
+      .most-failed-name-col,
+      .most-failed-stats-col,
+      .most-failed-date-col {
+        padding: 0 15px;
+        height: 50px;
+        text-transform: uppercase;
+        font-size: 12px;
+        color: $COLOR--gray-47;
+        position: relative;
+        .most-failed-th-name {
+          font-family: $OpenSansSemibold;
+          @extend %VERTICAL_CENTER;
+        }
+      }
+    }
+    .most-failed-row {
+      border-top: 1px solid $COLOR--gray-91;
+      @extend %CLEAR_FIX;
+      &:first-child {
+        border: none;
+      }
+      &:nth-child(2n) {
+        background: $COLOR--white-four;
+      }
+      &:hover {
+        background: $COLOR--tealish-opacity;
+      }
+    }
+    .most-failed-name-col,
+    .most-failed-stats-col,
+    .most-failed-date-col {
+      float: left;
+      padding: 10px 15px;
+    }
+    .most-failed-name-col {
+      width: 48%;
+      .over-name {
+        @include textEllipsis('inline');
+      }
+      .found-in-last {
+        float: right;
+        display: inline-block;
+        margin-left: 10px;
+      }
+    }
+    .most-failed-stats-col {
+      width: 34%;
+    }
+    .most-failed-date-col {
+      width: 18%;
+      .hoverFullTime {
+        min-height: 34px;
+      }
+    }
+  }
+  .mobile-disabling-cover {
+    @extend %MOBILE_DISABLING_COVER;
+  }
+}
+
+
+

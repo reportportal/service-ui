@@ -25,7 +25,7 @@ define(function(require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
-    var Components = require('components');
+    var Components = require('core/components');
     var urls = require('dataUrlResolver');
     var App = require('app');
     var Localization = require('localization');
@@ -33,14 +33,14 @@ define(function(require, exports, module) {
     var Helpers = require('helpers');
     var D3 = require('d3');
     var NVD3 = require('nvd3');
-    var colorPickerCustomCfg = require('colorpickerConfig');
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var DefectTypeModel = require('defectType/DefectTypeModel');
-    var SingletonAppModel = require('model/SingletonAppModel');
     var DemoDataSettingsView = require('DemoDataSettingsView');
+    var ModalConfirm = require('modals/modalConfirm');
+    var ColorPicker = require('components/ColorPicker');
 
-    require('colorpicker');
+
 
     var config = App.getInstance();
 
@@ -78,7 +78,7 @@ define(function(require, exports, module) {
     });
 
     var Header = Components.BaseView.extend({
-        tpl: 'tpl-projects-header',
+        tpl: 'tpl-project-settings-header',
         initialize: function (options) {
             this.$el = options.header;
         },
@@ -251,6 +251,22 @@ define(function(require, exports, module) {
         renderTab: function (e) {
             var $el = $(e.currentTarget),
                 tab = $el.data('action');
+            switch (tab){
+                case 'notifications':
+                    config.trackingDispatcher.trackEventNumber(386);
+                    break;
+                case 'bts':
+                    config.trackingDispatcher.trackEventNumber(397);
+                    break;
+                case 'defect':
+                    config.trackingDispatcher.trackEventNumber(426);
+                    break;
+                case 'demoData':
+                    config.trackingDispatcher.trackEventNumber(427);
+                    break;
+                default:
+                    config.trackingDispatcher.trackEventNumber(380);
+            }
             config.router.navigate($el.attr('href'), {
                 silent: true
             });
@@ -281,6 +297,10 @@ define(function(require, exports, module) {
         initialize: function (options) {
             this.$el = options.holder;
             this.model = new ProjectSettings(config.project.configuration);
+            this.listenTo(this.model, 'change:interruptedJob', function(){config.trackingDispatcher.trackEventNumber(381);});
+            this.listenTo(this.model, 'change:keepLogs', function(){config.trackingDispatcher.trackEventNumber(382);});
+            this.listenTo(this.model, 'change:keepScreenshots', function(){config.trackingDispatcher.trackEventNumber(383);});
+            this.listenTo(this.model, 'change:isAutoAnalyzerEnabled', function(){config.trackingDispatcher.trackEventNumber(384);});
         },
 
         tpl: 'tpl-project-settings-general',
@@ -334,6 +354,7 @@ define(function(require, exports, module) {
         },
 
         submitSettings: function (e) {
+            config.trackingDispatcher.trackEventNumber(385);
             var externalSystemData = this.model.getProjectSettings();
             this.clearFormErrors();
             Service.updateProject(externalSystemData)
@@ -359,6 +380,8 @@ define(function(require, exports, module) {
             this.model = new NotificationsSettings(config.project.configuration.emailConfiguration);
             this.users = [];
             this.isValidEmail = true;
+            this.listenTo(this.model, 'change:emailEnabled', function(){config.trackingDispatcher.trackEventNumber(387);});
+            this.listenTo(this.model, 'change:fromAddress', function(){config.trackingDispatcher.trackEventNumber(388);});
         },
         emailCaseId: 0,
         tpl: 'tpl-project-settings-notifications',
@@ -472,7 +495,7 @@ define(function(require, exports, module) {
                 });
 
             params.addRule = true;
-
+            config.trackingDispatcher.trackEventNumber(395);
             var cases = this.model.get('emailCases'),
                 newCase = {
                     launchNames: [],
@@ -553,6 +576,7 @@ define(function(require, exports, module) {
             if (!config.userModel.hasPermissions()) {
                 return;
             }
+            config.trackingDispatcher.trackEventNumber(389);
             if (emailCase.hasClass('local-item')) {
                 var newRules = _.reject(this.model.get('emailCases'), function (eCase) {
                     return eCase.id == emailCase.data('email-case-id')
@@ -604,6 +628,7 @@ define(function(require, exports, module) {
                 Util.setupSelect2WhithScroll(recipients, {
                     multiple: true,
                     minimumInputLength: 1,
+                    maximumInputLength: 128,
                     formatInputTooShort: function (input, min) {
                         return Localization.ui.minPrefix + minimumInputLength + Localization.ui.minSufixAuto
                     },
@@ -651,7 +676,6 @@ define(function(require, exports, module) {
                                 if (queryLength <= 256) {
                                     self.validateRecipients();
                                 }
-                                //query.term = query.term.replace(/[@#.?*+^$[\]\\(){}|-]/g, "\\$&");
                                 Service.getProjectUsersById(query.term)
                                     .done(function (response) {
                                         remoteUsers = [];
@@ -720,7 +744,7 @@ define(function(require, exports, module) {
             var recips = _.map(value, function(v){ return v.id; }),
                 checked = eci.find(".launchOwner").is(':checked'),
                 emails = [];
-
+            config.trackingDispatcher.trackEventNumber(390);
             this.hideFormsErrors(eci.find('.select2-container.recipients'));
             this.isValidEmail = true;
             if (_.isEmpty(recips) && !checked) {
@@ -752,11 +776,11 @@ define(function(require, exports, module) {
         },
 
         onChangeLaunchNames: function (value, eci) {
-            var launches = (value) ? value.trim().split(',') : [];
-
-            var emailCase = _.findWhere(this.model.get('emailCases'), {
-                id: eci.data('email-case-id')
-            });
+            var launches = _.map(value, function(i){ return i.id;}),
+                emailCase = _.findWhere(this.model.get('emailCases'), {
+                    id: eci.data('email-case-id')
+                });
+            config.trackingDispatcher.trackEventNumber(393);
             emailCase.launchNames = launches;
 
             this.checkCases();
@@ -764,7 +788,7 @@ define(function(require, exports, module) {
 
         onChangeTags: function (value, eci) {
             var tags = (value) ? value.trim().split(',') : [];
-
+            config.trackingDispatcher.trackEventNumber(394);
             this.validateTags(tags);
             var emailCase = _.findWhere(this.model.get('emailCases'), {
                 id: eci.data('email-case-id')
@@ -841,6 +865,7 @@ define(function(require, exports, module) {
                 Util.setupSelect2WhithScroll(this.$tagsContainer.eq(index), {
                     multiple: true,
                     minimumInputLength: 1,
+                    maximumInputLength: 128,
                     formatInputTooShort: function (input, min) {
                         return Localization.ui.enterChars
                     },
@@ -885,7 +910,6 @@ define(function(require, exports, module) {
                                 if (queryLength == 256) {
                                     self.validateTags(null, true);
                                 }
-                                //    self.hideFormsErrors($('this.$tagsContainer.eq(index)'));
                                 Service.searchTags(query)
                                     .done(function (response) {
                                         remoteTags = [];
@@ -962,7 +986,9 @@ define(function(require, exports, module) {
                 // todo : extract to helpers
                 Util.setupSelect2WhithScroll(this.$launchContainer.eq(index), {
                     multiple: true,
-                    minimumInputLength: 3,
+                    minimumInputLength: 1,
+                    maximumInputLength: 128,
+
                     formatInputTooShort: function (input, min) {
                         return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto
                     },
@@ -1002,7 +1028,6 @@ define(function(require, exports, module) {
                                 if (queryLength == 256) {
                                     self.toggleLaunchNamesErrors(false, false, self.$launchContainer.eq(index));
                                 }
-                                query.term = query.term.replace(/[@#.?*+^$[\]\\(){}|-]/g, "\\$&");
                                 Service.searchLaunches(query)
                                     .done(function (response) {
                                         remoteLaunches = [];
@@ -1040,7 +1065,8 @@ define(function(require, exports, module) {
                         self.$launchContainer.eq(index).select2('positionDropdown');
                     })
                     .on('change', function () {
-                        self.onChangeLaunchNames($(this).val(), $(this).closest('.email-case-item'));
+                        var values = self.$launchContainer.eq(index).select2('data')
+                        self.onChangeLaunchNames(values, $(this).closest('.email-case-item'));
                     }).select2("data", launches);
             }
 
@@ -1145,7 +1171,7 @@ define(function(require, exports, module) {
                     id: emailCase.data('email-case-id')
                 }),
                 sendCase = emailCaseObj['recipients'] || [];
-
+            config.trackingDispatcher.trackEventNumber(391);
             if ($el.is(':checked')) {
                 sendCase.push(val);
                 sendCase.length && this.hideFormsErrors(emailCase.find('.select2-container.recipients'));
@@ -1194,6 +1220,7 @@ define(function(require, exports, module) {
                     id: btn.closest('.email-case-item').data('email-case-id')
                 });
                 if (emailCase) {
+                    config.trackingDispatcher.trackEventNumber(392);
                     emailCase.sendCase = val;
                 }
                 this.checkCases();
@@ -1298,7 +1325,7 @@ define(function(require, exports, module) {
             var self = this,
                 emailField = $('#from', this.$el),
                 externalSystemData = this.model.getProjectSettings(this.rulesToDelete);
-
+            config.trackingDispatcher.trackEventNumber(396);
             if (this.model.get('emailEnabled')) {
                 if (!this.validateTags()) {
                     return false;
@@ -1334,12 +1361,11 @@ define(function(require, exports, module) {
             externalSystemData = this.checkTagsAndLaunches(externalSystemData);
             Service.updateEmailProjectSettings(externalSystemData)
                 .done(function (response) {
-
                     config.project.configuration.emailConfiguration = externalSystemData.configuration;
                     self.emailCaseId = 0;
                     self.rulesToDelete.length = 0;
                     self.updateIds();
-                    self.model = new NotificationsSettings(config.project.configuration.emailConfiguration);
+                    self.model.set(config.project.configuration.emailConfiguration);
                     self.render();
                     Util.ajaxSuccessMessenger('updateProjectSettings');
                 })
@@ -1394,7 +1420,7 @@ define(function(require, exports, module) {
             if (!modelData) {
                 var defaultBts = config.forSettings.btsList[0];
                 if (!defaultBts) {
-                    console.log('no bts');
+                    //console.log('no bts');
                     return;
                 } else {
                     this.set({systemType: defaultBts.name})
@@ -1515,17 +1541,19 @@ define(function(require, exports, module) {
             this.settings = options.settings;
             this.access = options.access;
             this.systems = options.externalSystems;
-            var modelData = null;
+            this.appModel = new SingletonAppModel();
+            var modelsData = [];
             _.each(options.externalSystems, function(system) {
                 return _.each(config.forSettings.btsList, function(btsItem) {
                     if(btsItem.name == system.systemType) {
-                        modelData = system;
+                        modelsData.push(system);
                         return false;
                     }
                 })
             })
             // this.model = new BtsProperties(options.externalSystems[0]);
-            this.model = new BtsProperties(modelData);
+            this.model = new BtsProperties(modelsData[0]);
+            this.listenTo(this.model, 'change:fields', function(){config.trackingDispatcher.trackEventNumber(408)});
             this.systemAt = 0;
         },
 
@@ -1544,7 +1572,7 @@ define(function(require, exports, module) {
             this.$instanceBoby = $("#instanceBody", this.$el);
 
             if(config.forSettings.btsList.length) {
-                this.renderMultiSelector()
+                this.renderMultiSelector();
                 this.renderInstance();
             } else {
                 $('button', this.$el).prop({disabled: 'disabled'});
@@ -1572,6 +1600,7 @@ define(function(require, exports, module) {
             this.$instanceBoby.empty();
 
             var params = this.model.toJSON();
+
             params['authorizationTypes'] = this.settings['bts' + this.model.get('systemType')].authorizationType;
             params['access'] = this.access;
             params['settings'] = this.settings;
@@ -1605,6 +1634,7 @@ define(function(require, exports, module) {
             if (el.hasClass('active')) {
                 return;
             }
+            config.trackingDispatcher.trackEventNumber(398);
             Util.flipActiveLi(el);
             this.validateBtsChange(value);
         },
@@ -1652,7 +1682,10 @@ define(function(require, exports, module) {
                         fields: [],
                         editable: true
                     });
-                    this.loadDefaultBtsFields();
+                    var roleOnCurrentProject = config.userModel.get('projects')[this.appModel.get('projectId')].projectRole;
+                    if ((roleOnCurrentProject && roleOnCurrentProject !== 'CUSTOMER' && roleOnCurrentProject !== 'MEMBER') || config.userModel.get('userRole') === 'ADMINISTRATOR') {
+                        this.loadDefaultBtsFields();
+                    }
                 }
             }
         },
@@ -1722,6 +1755,7 @@ define(function(require, exports, module) {
             }
 
             if ($tab.hasClass('add-new')) {
+                config.trackingDispatcher.trackEventNumber(400);
                 $parent.closest('ul').find('.active').removeClass('active');
                 $parent.addClass('disabled');
                 $parent.closest('ul').find('.bts-name-new-project').addClass('active').addClass('activated');
@@ -1735,6 +1769,7 @@ define(function(require, exports, module) {
                 });
                 this.renderInstance();
             } else {
+                config.trackingDispatcher.trackEventNumber(399);
                 this.systemAt = $tab.data('index');
                 this.model = new BtsProperties(this.systems[this.systemAt]);
                 this.renderMultiSelector();
@@ -1743,6 +1778,7 @@ define(function(require, exports, module) {
         },
 
         submitFields: function () {
+            config.trackingDispatcher.trackEventNumber(410);
             var result = [],
                 source = this.defaultFields ? this.defaultFields : this.model.get('fields');
             _.forEach(this.fieldsView.getDefaultValues(), function (value, key) {
@@ -1765,6 +1801,7 @@ define(function(require, exports, module) {
         },
 
         loadDefaultBtsFields: function () {
+            config.trackingDispatcher.trackEventNumber(409);
             var self = this;
             this.$fieldsLoader.show();
             Service.getBtsFields(this.model.get('id'))
@@ -1776,8 +1813,10 @@ define(function(require, exports, module) {
                         var item = _.find(data, {
                             id: field.id
                         });
-                        item['value'] = field.value;
-                        item['checked'] = true;
+                        if(item){
+                            item['value'] = field.value;
+                            item['checked'] = true;
+                        }
                     });
                     self.fieldsView.update(data);
 
@@ -1807,6 +1846,7 @@ define(function(require, exports, module) {
 
         saveProperties: function () {
             if (this.model.isValid()) {
+                config.trackingDispatcher.trackEventNumber(404);
                 if (this.validateForSystemsClearance()) {
                     config.userModel.set('bts', null);
                     Service.clearExternalSystem()
@@ -1844,19 +1884,23 @@ define(function(require, exports, module) {
 
             Service[call](externalSystemData)
                 .done(function (response) {
-
                     self.setupValidityState();
                     self.$fieldsWrapper.show();
 
                     if (response.id) {
+                        self.externalId = response.id;
                         self.updateCredentials(externalSystemData, response.id);
                         self.systems.push(externalSystemData);
                         self.systemAt = self.systems.length - 1;
                         self.renderMultiSelector();
+                        externalSystemData.id = self.externalId;
                     } else {
                         _.merge(self.systems[self.systemAt], externalSystemData);
                         self.model.discardEdit();
+                        externalSystemData.id = self.systems[self.systemAt].id;
                     }
+
+                    self.appModel.setArr('externalSystem', self.systems);
                     self.renderInstance();
                     self.renderMultiSelector();
                     self.$tbsChangeWarning.hide();
@@ -1872,11 +1916,25 @@ define(function(require, exports, module) {
         },
 
         handleBtsFailure: function (error) {
+            var response;
             var message = this.$externalSystemWarning.data('casual');
+
+            try {
+                response = JSON.parse(error.responseText); // expect JSON format
+            } catch(e) {
+
+            }
+            if (error.status == 404) {
+                message = 'Impossible interact with external system. External system with type JIRA is not deployed or not available';
+            }
+
             if (error.status == 403) {
                 message = Localization.failMessages.noPermissions;
             } else if (error.responseText && error.responseText.indexOf(this.settings.projectNotFoundPattern) !== -1) {
                 message = this.$externalSystemWarning.data('noproject').replace('%%%', this.model.get('project'));
+            }
+            if ((error.status == 400 || error.status == 409) && response.error_code == 4032) {
+                message = response.message;
             }
             this.$externalSystemWarning.text(message).show();
         },
@@ -1897,36 +1955,46 @@ define(function(require, exports, module) {
         },
 
         deleteInstance: function () {
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    var self = this;
-                    Service.deleteExternalSystem(this.model.get('id'))
+            config.trackingDispatcher.trackEventNumber(402);
+            var self = this;
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.deleteBts,
+                bodyText: Util.replaceTemplate(Localization.dialog.deleteBts, this.model.get('systemType'), this.model.get('project')),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
+                confirmFunction: function() {
+                    config.trackingDispatcher.trackEventNumber(407);
+                    return Service.deleteExternalSystem(self.model.get('id'))
                         .done(function () {
                             self.systems.splice(self.systemAt, 1);
                             if (self.systems.length) {
                                 self.model = new BtsProperties(self.systems[0]);
                             } else {
-                                var type = config.forSettings.btsList[0].value;
+                                var type = self.model.get('systemType');
                                 self.model = new BtsProperties({
                                     systemType: type
                                 });
                             }
+                            (self.systems.length > 0) ? self.appModel.setArr('externalSystem', [self.systems[0]]) : self.appModel.setArr('externalSystem', []);
                             self.systemAt = 0;
-                            self.setPristineBTSForm();
-                            self.renderInstance();
                             self.renderMultiSelector();
+                            self.renderInstance();
+                            self.setPristineBTSForm();
                             Util.ajaxSuccessMessenger("deleteBts");
                         })
                         .fail(function (error) {
                             Util.ajaxFailMessenger(error, "deleteBts");
                         });
-                }.bind(this),
-                message: 'deleteBts',
-                format: [
-                    this.model.get('systemType'),
-                    this.model.get('project')
-                ]
+                }
             });
+            $('[data-js-close]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(405);
+            });
+            $('[data-js-cancel]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(406);
+            });
+            modal.show();
         },
 
         setPristineBTSForm: function (el) {
@@ -1944,12 +2012,14 @@ define(function(require, exports, module) {
         },
 
         editProperties: function () {
+            config.trackingDispatcher.trackEventNumber(401);
             this.model.setupEdit();
             this.setupValidityState();
             this.$cancelBtn.show();
         },
 
         cancelEditProperties: function () {
+            config.trackingDispatcher.trackEventNumber(403);
             var model = this.model.get('modelCache'),
                 self = this;
             _.forEach(model.restorable, function (id) {
@@ -2185,9 +2255,6 @@ define(function(require, exports, module) {
             'click .save-item': 'saveItem',
             'click .cancel-item': 'cancelItem',
             'focusout .rp-input': 'liveValidate',
-            'focus .rp-input': 'focusInput',
-            'focus .check-color-input': 'onFocusColor',
-            'click .check-color-input': 'onFocusColor'
         },
         initialize: function (options) {
             _.extend(this, options);
@@ -2195,6 +2262,9 @@ define(function(require, exports, module) {
             // this.initListeners();
             this.editModel = new DefectTypeModel();
             this.listenTo(this.model, 'change:locator', this.onChangeLocator);
+            this.listenTo(this.model, 'change:longName', function(){config.trackingDispatcher.trackEventNumber(413)});
+            this.listenTo(this.model, 'change:shortName', function(){config.trackingDispatcher.trackEventNumber(414)});
+            this.listenTo(this.model, 'change:color', function(){config.trackingDispatcher.trackEventNumber(415)});
             this.listenTo(this.model, 'change', this.render);
         },
         onChangeLocator: function(model, locator) {
@@ -2221,7 +2291,10 @@ define(function(require, exports, module) {
             return data;
         },
         editItem: function (event) {
-            if(event) { event.preventDefault(); }
+            if(event) {
+                event.preventDefault();
+                config.trackingDispatcher.trackEventNumber(411);
+            }
             this.el.html(Util.templates(this.editor, this.model.toJSON()));
             this.editModel.set(this.model.toJSON());
             var itemId;
@@ -2233,6 +2306,7 @@ define(function(require, exports, module) {
             this.trigger('initClrPicker', mainHolder);
         },
         saveItem: function (event) {
+            config.trackingDispatcher.trackEventNumber(416)
             event.preventDefault();
 
             if (!this.editModel.isValid()) {
@@ -2240,7 +2314,7 @@ define(function(require, exports, module) {
                 $('[data-type="shortName"]', this.$el).focusout();
                 return;
             }
-
+            $('[data-js-colorpicker-holder]', this.$el).spectrum('hide');
             this.model.set(this.editModel.toJSON());
             this.el.html(Util.templates(this.static, this.setTemplateData()));
 
@@ -2260,63 +2334,32 @@ define(function(require, exports, module) {
 
             if (id === subType.toUpperCase() + '0') {
                 return;
-            };
-
-            var modalDialog = {
-                paramModal: {
-                    additionalClass: 'dialog-delete-defect-type',
-                    sizeModal: 'md',
-                    withConfirm: true,
-                    isFormatText: true
-                },
-                dialogHeader: {
-                    title: Localization.dialogHeader.titleDeleteDefectType
-                },
-                dialogBody: {
-                    txtMessageTop: updateMsgForModalDialog(Localization.dialog.msgMessageTop),
-                    txtMessage: Localization.dialog.msgDeleteDefectType
-                },
-                dialogFooter: {
-                    cancelButton: Localization.uiCommonElements.cancel,
-                    dangerButton: Localization.uiCommonElements.delete
-                }
-            };
-
-            this.deleteDialog = Util.getDialog({
-                name: this.confirmModal,
-                data: modalDialog,
+            }
+            config.trackingDispatcher.trackEventNumber(412);
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.titleDeleteDefectType,
+                bodyText: Util.replaceTemplate(Localization.dialog.msgMessageTop, fullNameSubType, nameParentType),
+                confirmText: Localization.dialog.msgDeleteDefectType,
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
             });
-
-            this.deleteDialog
-                .on('click', ".rp-btn-danger", function () {
-                    self.model.collection.remove(self.model);
-                    self.destroy();
-                    self.deleteDialog.modal("hide");
-                    Util.ajaxSuccessMessenger('deleteOneSubType');
-                })
-                .on('click', ".rp-btn-cancel", function () {
-                    // TODO
-                    // options.cancelCallback && options.cancelCallback();
-                })
-                .on('click', "input[type='checkbox'].confirm", function (event) {
-                    var elem = event.target;
-                    var btnDelete = $(elem).closest('.modal-body').find('.rp-btn-danger');
-                    if (elem.checked) {
-                        $(btnDelete.selector).removeAttr('disabled');
-                    } else {
-                        $(btnDelete.selector).attr("disabled", "disabled");
-                    }
-                })
-                .on('hidden.bs.modal', function () {
-                    $(this).data('modal', null);
-                    self.deleteDialog.off().remove();
-                    self.deleteDialog = null;
-                });
-
-            this.deleteDialog.modal("show");
+            $('[data-js-close]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(418);
+            });
+            $('[data-js-cancel]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(419);
+            });
+            modal.show().done(function () {
+                config.trackingDispatcher.trackEventNumber(420);
+                self.model.collection.remove(self.model);
+                self.destroy();
+                Util.ajaxSuccessMessenger('deleteOneSubType');
+            });
         },
         cancelItem: function (event) {
             event.preventDefault();
+            config.trackingDispatcher.trackEventNumber(417)
             if (this.model.get('locator') === 'newItem') {
                 var model = this.model;
                 this.destroy();
@@ -2334,46 +2377,13 @@ define(function(require, exports, module) {
 
             return data;
         },
-        onFocusColor: function() {
-            $('.check-color-picker', this.$el).colorpicker('show');
-        },
         initColorPicker: function (mainHolder) {
-            // this.off('initClrPicker:' + this.name, this.onHideColorPicker);
-
-            var elem = $('.check-color-picker', this.$el);
-            var currentPoint = $('.point-color-picker', this.$el);
-            var holderColorPicker = $('.holder-color-picker', this.$el);
-            var currentInput = holderColorPicker.find('input');
-            var currentColor = currentInput.val();
-            var changeRow = elem.find('.rp-toggle-content');
-            changeRow.removeClass('hide-content');
-            changeRow.addClass('show-content');
-
-            elem
-                .colorpicker(colorPickerCustomCfg)
-                .on('changeColor', function (e) {
-                    currentInput.val(e.color.toHex());
-                    currentInput.trigger('focusout');
-                    currentPoint.css('backgroundColor', e.color.toHex());
-                    $(this).find('.colorpicker-current-color > span').html(e.color.toHex());
-                    currentColor = e.color.toHex();
-                })
-                .on('showPicker', function (e) {
-                    changeRow.removeClass('show-content');
-                    changeRow.addClass('hide-content');
-                    e.color.setColor(currentColor);
-                    $(this).find('.colorpicker-current-color > span').html(e.color.toHex());
-                })
-                .on('hidePicker', function () {
-                    changeRow.removeClass('hide-content');
-                    changeRow.addClass('show-content');
-                });
-            elem.colorpicker('setValue', this.model.get('color'));
-        },
-        focusInput: function (e) {
-            var subTypeEl = $(e.target).closest('.dt-body-item');
-            var row = $(e.target).attr('data-type');
-            this.clearErrMessages([row], subTypeEl);
+            var colorPicker = new ColorPicker({initColor: this.editModel.get('color')});
+            var self = this;
+            $('.holder-color-picker', this.$el).html(colorPicker.el);
+            this.listenTo(colorPicker, 'change:color', function (color) {
+                self.editModel.set('color', color);
+            });
         },
         liveValidate: function (e) {
             var subTypeEl = $(e.target).closest('.dt-body-item');
@@ -2456,6 +2466,7 @@ define(function(require, exports, module) {
             });
         },
         destroy: function () {
+            this.stopListening();
             this.$el.remove();
             Backbone.Events.off(null, null, this);
             Components.BaseView.prototype.destroy.call(this);
@@ -2532,6 +2543,7 @@ define(function(require, exports, module) {
             return view;
         },
         addItem: function(event) {
+            config.trackingDispatcher.trackEventNumber(421);
             event.preventDefault();
             var editModel = new DefectTypeModel({
                 locator: 'newItem',
@@ -2836,58 +2848,32 @@ define(function(require, exports, module) {
             event.preventDefault();
             if ($(event.target).hasClass('disabled')) {
                 return;
-            } else {
-                this.showModalResetColors();
             }
+            this.showModalResetColors();
+            config.trackingDispatcher.trackEventNumber(422);
         },
         showModalResetColors: function () {
             var self = this;
-            var modalDialog = {
-                paramModal: {
-                    additionalClass: 'dialog-reset-colors',
-                    sizeModal: 'md',
-                    withConfirm: false
-                },
-                dialogHeader: {
-                    title: Localization.dialogHeader.titleEditDefectType
-                },
-                dialogBody: {
-                    txtMessage: Localization.dialog.msgResetColorsDefectType
-                },
-                dialogFooter: {
-                    cancelButton: Localization.uiCommonElements.cancel,
-                    dangerButton: Localization.uiCommonElements.reset
-                }
-            };
-
-            this.modalConfirmReset = Util.getDialog({
-                name: this.confirmModal,
-                data: modalDialog
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.titleResetDefectColors,
+                bodyText: Localization.dialog.msgResetColorsDefectType,
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.uiCommonElements.reset,
             });
-
-            this.modalConfirmReset
-                .on('click', ".rp-btn-danger", function () {
-                    self.resetColors();
-                    self.modalConfirmReset.modal("hide");
-                    Util.ajaxSuccessMessenger('changedColorDefectTypes');
-                })
-                .on('click', "input[type='checkbox'].confirm", function (event) {
-                    var elem = event.target;
-                    var btnDelete = $(elem).closest('.modal-body').find('.rp-btn-danger');
-                    if (elem.checked) {
-                        $(btnDelete.selector).removeAttr('disabled');
-                    } else {
-                        $(btnDelete.selector).attr("disabled", "disabled");
-                    }
-                })
-                .on('hidden.bs.modal', function () {
-                    $(this).data('modal', null);
-                    self.modalConfirmReset.off().remove();
-                    self.modalConfirmReset = null;
-                });
-
-            this.modalConfirmReset.modal("show");
+            $('[data-js-close]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(423);
+            });
+            $('[data-js-cancel]', modal.$el).on('click', function(){
+                config.trackingDispatcher.trackEventNumber(424);
+            });
+            modal.show().done(function() {
+                config.trackingDispatcher.trackEventNumber(425);
+                self.resetColors();
+                Util.ajaxSuccessMessenger('changedColorDefectTypes');
+            });
         },
+
         resetColors: function () {
             this.defectTypes.trigger('resetColors');
         },

@@ -1,0 +1,68 @@
+<div class="project-delete-col">
+    <div class="remove-project">
+        <a class="project-link hide" data-js-delete-project href="#delete-project"
+           title="<%= data.text.permissionMap.deleteProject %>">
+            <i class="rp-icons rp-icons-delete"></i>
+        </a>
+    </div>
+</div>
+<div class="project-cols-group">
+    <div class="grid-cell project-name-col">
+        <div class="project-title-mobile">
+            <h5><%= data.text.admin.projectName %></h5>
+        </div>
+        <h2 class="project-name">
+            <span class="name">
+                <a href="" class="project_details break-link" title="<%= data.text.admin.projectTitle %>"
+                   data-js-project-name></a>
+                <span class="label label-success hide" data-js-project-new><%= data.text.admin.newProject %></span>
+            </span>
+        </h2>
+    </div>
+    <div class="grid-cell project-kpi-col"></div>
+    <div class="grid-cell project-members-col">
+        <div class="project-title-mobile">
+            <h5><%= data.text.admin.projectMembers %></h5>
+        </div>
+        <div class="project-members">
+            <div class="project-info" data-js-project-users></div>
+        </div>
+    </div>
+    <div class="grid-cell project-launches-col">
+        <div class="project-title-mobile">
+            <h5><%= data.text.topMenu.launches %></h5>
+        </div>
+        <div class="project-launches">
+            <div class="project-info" data-js-project-launches></div>
+        </div>
+    </div>
+    <div class="grid-cell project-date-col">
+        <div class="project-title-mobile">
+            <h5><%= data.text.admin.lastLaunchDate %></h5>
+        </div>
+        <div class="project-date">
+            <div class="project-info" data-js-project-last-run></div>
+        </div>
+    </div>
+    <div class="grid-cell project-actions-col">
+        <div class="projects-actions">
+            <div class="project-link-wrapper">
+                <a class="project-link go-to-settings" title="<%= data.text.ui.settings %>" href=""
+                   data-js-settings-link>
+                    <i class="material-icons">settings</i>
+                </a>
+                <a class="project-link go-to-members" title="<%= data.text.ui.members %>" href="" data-js-members-link>
+                    <i class="rp-icons rp-icons-all-users"></i>
+                </a>
+                <a class="project-link go-to-project hide" title="<%= data.text.admin.goToProject %>"
+                   href="#open-project" data-js-go-to-project>
+                    <i class="material-icons">open_in_browser</i>
+                </a>
+                <a class="project-link assign-to-project hide" title="<%= data.text.admin.assignToProject %>"
+                   href="#assign-to-project" data-js-assign-to-project>
+                    <i class="material-icons">playlist_add_check</i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

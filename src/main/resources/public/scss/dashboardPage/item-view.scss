@@ -1,0 +1,143 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.dashboard-item-view {
+  @media (max-width: 767px) {
+    margin-bottom: 40px;
+  }
+  .buttons-container {
+    padding: 20px 15px;
+    margin: 0 -15px;
+    border-bottom: 1px solid $COLOR--gray-91;
+  }
+  .grid-stack {
+    margin: 15px -7px;
+  }
+  &.load {
+    .grid-stack {
+      display: none;
+    }
+    .preloader {
+      display: block;
+    }
+  }
+  &.not-found {
+    .preloader, .grid-stack {
+      display: none;
+    }
+    .no-result-found {
+      display: block;
+    }
+  }
+  .no-result-found {
+    .empty-widgets-img {
+      background-image: url(../img/dashboard/empty-widgets.png);
+      width: 140px;
+      height: 98px;
+      margin: 0 auto;
+    }
+    .empty-shared-widgets-img {
+      background-image: url(../img/dashboard/empty-shared-widgets.svg);
+      width: 130px;
+      height: 80px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: OpenSansSemiBold;
+      font-size: 16px;
+      margin-top: 27px;
+    }
+    p {
+      margin-top: 15px;
+      margin-bottom: 20px
+    }
+  }
+  .is-not-my-dashbord {
+    display: none;
+    font-size: 14px;
+    padding-top: 7px;
+    color: $COLOR--charcoal-grey;
+    i {
+      font-size: 20px;
+      vertical-align: top;
+      color: $COLOR--gray-60;
+    }
+  }
+  &.not-my {
+    .is-my-dashbord {
+      display: none;
+    }
+    .is-not-my-dashbord {
+      display: block;
+    }
+  }
+  .fullscreen-overflow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    i {
+      font-size: 22px;
+      box-shadow: 0 0 40px 30px $COLOR--white-default;
+      background: $COLOR--white-default;
+      cursor: pointer;
+      color: $COLOR--gray-60;
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      width: 24px;
+      height: 23px;
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      &:hover {
+        color: $COLOR--gray-47;
+      }
+    }
+  }
+  @media (max-width: 767px) {
+    .grid-stack {
+      margin: 15px -15px;
+    }
+    .buttons-container {
+      display: none;
+    }
+  }
+}
+body.fullscreen {
+  .dashboard-item-view {
+    position: relative;
+    margin-top: -15px;
+    .buttons-container {
+      display: none;
+    }
+    .fullscreen-overflow {
+      display: block;
+      &:hover {
+        i {
+          opacity: 1;
+        }
+      }
+    }
+  }
+}

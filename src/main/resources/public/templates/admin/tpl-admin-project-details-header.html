@@ -1,0 +1,42 @@
+<div id="headerBar" class="clearfix">
+    <ul class="rp-nav-left">
+        <li class="title-holder">
+            <a href="/#administrate/projects"
+               class="header-alike"
+               title="<%= data.text.admin.projects %>">
+                <span><%= data.text.admin.projects %></span>
+            </a>
+        </li>
+        <li class="title-holder">
+                <span class="header-alike">
+                    <%= data.projectId %>
+                </span>
+        </li>
+    </ul>
+    <div class="btn-group rp-nav-right in-header-block" data-toggle="buttons">
+        <label class="btn btn-custom <%= data.interval === 6 ? 'active': '' %>">
+            <input type="radio"
+                   name="interval"
+                   id="interval6"
+                   autocomplete="off"
+            <%= data.interval === 6 ? 'checked': '' %>
+            data-value="6" />6 <%= data.text.ui.monthsString %>
+        </label>
+        <label class="btn btn-custom <%= data.interval === 3 ? 'active': '' %>">
+            <input type="radio"
+                   name="interval"
+                   id="interval3"
+                   autocomplete="off"
+            <%= data.interval === 3 ? 'checked': '' %>
+            data-value="3" />3 <%= data.text.ui.monthsString %>
+        </label>
+        <label class="btn btn-custom <%= data.interval === 1 ? 'active': '' %>">
+            <input type="radio"
+                   name="interval"
+                   id="interval1"
+                   autocomplete="off"
+            <%= data.interval === 1 ? 'checked': '' %>
+            data-value="1" />1 <%= data.text.ui.month %>
+        </label>
+    </div>
+</div>

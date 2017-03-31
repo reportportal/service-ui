@@ -1,0 +1,111 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.invitation-fail {
+  position: relative;
+  width: 1000px;
+  height: 100%;
+  margin: 0 auto;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px 0 $COLOR--skipped;
+  background-image: url(../../img/registration/registration-fail.svg);
+  background-color: $COLOR--light-blue;
+  background-repeat: no-repeat;
+  -webkit-background-size: contain;
+  background-size: contain;
+
+  @media (max-width: 1010px) {
+    left: 0;
+    width: 320px;
+    background-image: url(../../img/registration/registration-fail-mobile.svg);
+  }
+
+  .logo-label {
+    position: absolute;
+    width: 141px;
+    height: 23px;
+    top: 31px;
+    left: 59px;
+    background-image: url('../../img/rp-logo.svg');
+    background-repeat: no-repeat;
+    -webkit-background-size: 100%;
+    background-size: 100%;
+
+    @media (max-width: 1010px) {
+      top: 15px;
+      left: 20px;
+      width: 100px;
+      height: 17px;
+    }
+  }
+
+  .caption {
+    position: absolute;
+    top: 250px;
+    left: 75%;
+    display: block;
+    width: 335px;
+    margin-bottom: 50px;
+    font-family: $OpenSansRegular, sans-serif;
+    color: #6f898d;;
+    font-size: 26px;
+    text-align: center;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+
+    .big {
+      font-size: 32px;
+    }
+
+    @media (max-width: 1010px) {
+      top: 180px;
+      left: 50%;
+      width: 240px;
+      font-size: 16px;
+      .big {
+        font-size: 24px;
+      }
+    }
+  }
+
+  .backlink {
+    position: absolute;
+    top: 400px;
+    left: 50%;
+    width: 50%;
+    text-align: center;
+    font-family: $OpenSansRegular, sans-serif;
+    font-size: 16px;
+    span {
+      color: #5d777a;
+    }
+    a {
+      color: #32b6ce;
+    }
+
+    @media (max-width: 1010px) {
+      top: 290px;
+      left: 0;
+      width: 100%;
+    }
+  }
+}

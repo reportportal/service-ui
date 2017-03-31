@@ -1,0 +1,164 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.launch-breadcrumbs {
+  position: relative;
+  font-family: OpenSansRegular;
+  font-size: 12px;
+  padding-top: 9px;
+  padding-right: 15px;
+  .load-crumbs {
+    position: absolute;
+    right: 0;
+    top: 8px;
+    display: none;
+  }
+
+  &.load {
+    .load-crumbs {
+      display: block;
+    }
+  }
+  li {
+    float: left;
+    &.crumb {
+      margin-left: 5px;
+      margin-bottom: 10px;
+      .fail-load-container {
+        display: none;
+      }
+      &.fail-load {
+        .fail-load-container {
+          display: inline-block;
+        }
+        .success-load-container {
+          display: none;
+        }
+      }
+      a {
+        color: $COLOR--topaz;
+        display: inline-block;
+      }
+      span.link-as-element {
+        display: none;
+      }
+      a, span.link-as-element {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 100%;
+      }
+      .autoanalyze {
+        width: auto;
+        border-radius: 10px;
+        background: $COLOR--orange-red;
+        padding: 0 5px;
+        color: $COLOR--white-default;
+        margin-left: 5px;
+        vertical-align: top;
+        display: none;
+        animation: flash 4s infinite alternate;
+        &.visible {
+          display: inline-block;
+        }
+      }
+      &:last-child {
+        span.link-as-element {
+          display: inline-block
+        }
+        a, i.arrow {
+          display: none;
+        }
+      }
+      i {
+        font-size: 17px;
+        vertical-align: top;
+        &.arrow {
+          margin-top: 1px;
+        }
+        &.rp-icons-warning{
+          font-size: 13px;
+          margin-top: 1px;
+          color: $COLOR--orange-red;
+        }
+      }
+    }
+  }
+  .breadcrumbs-mode-container {
+    cursor: pointer;
+    font-size: 13px;
+    margin-right: 5px;
+  }
+  .breadcrumb-plus {
+    display: none;
+  }
+  &.min-size {
+    .crumb{
+      span.link-as-element, a {
+        max-width: 120px;
+      }
+    }
+    .breadcrumb-plus {
+      display: inline-block;
+    }
+    .breadcrumb-minus {
+      display: none;
+    }
+  }
+  .bredcrambs-lost-path {
+    display: none;
+    color: $COLOR--charcoal-grey;
+    margin-bottom: 10px;
+    span {
+      margin-left: 7px;
+    }
+    a {
+      color: $COLOR--topaz;
+      cursor: pointer;
+      margin-left: 20px;
+    }
+  }
+  &.lost-path {
+    .crumb {
+      display: none;
+    }
+    .bredcrambs-lost-path {
+      display: inline-block;
+    }
+    .breadcrumbs-mode-container {
+      &:after {
+        content: '';
+        position: relative;
+        width: 13px;
+        height: 13px;
+        border: 1px solid $COLOR--gray-91;
+        background: $COLOR--white;
+        border-radius: 2px;
+        display: inline-block;
+        margin-top: 2px;
+        vertical-align: top;
+      }
+      i {
+        display: none;
+      }
+    }
+  }
+}

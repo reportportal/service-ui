@@ -1,0 +1,72 @@
+<div class="rp-email-settings">
+    <form class="rp-form">
+        <div class="rp-field">
+            <span><%= data.text.admin.enableEmailServer %></span>
+            <div class="email-server-state-mobile" data-js-server-enable-mobile></div>
+            <label class="rp-switcher-big">
+                <span class="turn-on">ON</span>
+                <span class="turn-off">OFF</span>
+                <input type="checkbox" data-js-server-enable>
+                <div class="slider"></div>
+            </label>
+        </div>
+        <div data-js-server-config>
+            <label class="rp-field">
+                <span class="required"><%= data.text.admin.host %></span>
+                <input type="text" class="rp-input" data-js-server-host>
+                <span class="validate-hint"></span>
+            </label>
+            <label class="rp-field">
+                <span><%= data.text.admin.protocol %></span>
+                <div data-js-server-protocol class="rp-field-item"></div>
+            </label>
+            <label class="rp-field">
+                <span><%= data.text.admin.emailSender %></span>
+                <input type="text" class="rp-input" data-js-server-sender>
+            </label>
+            <label class="rp-field">
+                <span class="required"><%= data.text.admin.port %></span>
+                <input type="text" class="rp-input" data-js-server-port>
+                <span class="validate-hint"></span>
+            </label>
+            <label class="rp-field">
+                <span><%= data.text.admin.authorization %></span>
+                <div data-js-server-auth class="rp-field-item"></div>
+            </label>
+            <div class="auth" dats-js-server-auth-config>
+                <label class="rp-field">
+                    <span><%= data.text.admin.username %></span>
+                    <input type="text" class="rp-input" data-js-server-username>
+                </label>
+                <label class="rp-field">
+                    <span><%= data.text.admin.password %></span>
+                    <input type="password" class="rp-input" data-js-server-password>
+                </label>
+            </div>
+            <div class="rp-field">
+                <span></span>
+                <div class="tls-enabled">
+                    <label class="rp-checkbox-wrap" for="tls">
+                        <input data-js-tls-enabled class="rp-input-checkbox" type="checkbox" id="tls"
+                               data-js-server-tls>
+                        <span><%= data.text.admin.TLS %></span>
+                    </label>
+                    <label class="rp-checkbox-wrap" for="ssl">
+                        <input data-js-ssl-enabled class="rp-input-checkbox" type="checkbox" id="ssl"
+                               data-js-server-ssl>
+                        <span><%= data.text.admin.SSL %></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="rp-field email-server-error">
+            <div class="test-connection-alert" data-js-server-connection-message></div>
+        </div>
+        <div class="rp-field email-server-btn">
+            <button type="button" class="rp-btn rp-btn-submit" data-js-submit-server-settings>
+                <%= data.text.ui.submit %>
+            </button>
+        </div>
+    </form>
+    <div class="mobile-disabling-cover"></div>
+</div>

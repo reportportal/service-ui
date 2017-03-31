@@ -1,9 +1,9 @@
-<div class="row rp-table-row">
-    <div class="col-xs-11 col-sm-3">
-        <strong id="bugId-<%= data.item.bugId %>"><%= data.item.bugId %></strong>
+<div class="uniq-bugs-row">
+    <div class="uniq-bugs-id">
+        <strong id="bugId-<%= data.item.bugId %>" class="bugs-id"><%= data.item.bugId %></strong>
     </div>
-    <div class="col-xs-11 col-sm-4"></div>
-    <div class="col-xs-11 col-sm-2">
+    <div class="uniq-bugs-item" data-js-bugs-item> </div>
+    <div class="uniq-bugs-date">
         <% var date = data.item.time ? new Date(data.item.time) : null; %>
         <% if(date) { %>
             <div class="hoverFullTime">
@@ -17,14 +17,14 @@
             </div>
         <% } %>
     </div>
-    <div class="col-xs-11 col-sm-3">
+    <div class="uniq-bugs-user">
         <% if (data.item.name) { %>
             <div class="bugs-avatar">
                 <img src="<%= data.methodUpdateImagePath(data.imageRoot() + data.item.name) %>"
-                    class="img-thumbnail avatar"
+                    class="avatar"
                     alt="<%= data.item.name %>"/>
             </div>
-            <strong><%- data.item.name.split('_').join(' ').capitalize() %></strong>
+            <strong class="owner-name"><%- data.item.name.split('_').join(' ').capitalize() %></strong>
         <% } %>
     </div>
 </div>

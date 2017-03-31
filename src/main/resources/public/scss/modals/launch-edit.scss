@@ -1,0 +1,91 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.modal-launch-edit {
+  .modal-content-wrapper {
+    .modal-body {
+      padding: 30px 10px 15px 10px;
+      & > h2 {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: $COLOR--charcoal-grey;
+        font-family: 'OpenSansSemibold',sans-serif;
+        font-size: 14px;
+        line-height: 17px;
+        margin: 20px 8px;
+      }
+      label {
+        font-weight: normal;
+      }
+      .markdown-editor {
+        max-width: 540px;
+      }
+      .fields {
+        margin: 0;
+        width: 100%;
+        margin-left: 18px;
+        padding-top: 2px;
+
+        & > label {
+          position: relative;
+          width: 100%;
+
+          & > span {
+            display: block;
+            position: absolute;
+            left: 0;
+            text-align: right;
+            line-height: 30px;
+          }
+          & > .tags-wrapper {
+            position: relative;
+            width: 100%;
+            padding-right: 20px;
+            padding-left: 60px;
+          }
+        }
+
+        @media (max-width: 620px) {
+          & > label {
+            padding-right: 20px;
+
+            & > span {
+              float: none;
+              text-align: left;
+            }
+          }
+        }
+      }
+
+      .warning-block {
+        margin-top: 16px;
+        margin-left: 10px;
+        .warning {
+          color: $COLOR--failed;
+        }
+        .warning-message {
+          font-size: 12px;
+          padding-left: 2px;
+        }
+      }
+    }
+  }
+}

@@ -32,7 +32,7 @@ define(function (require, exports, module) {
     var SingletonAppModel = require('model/SingletonAppModel');
     var FiltersResolver = require('filtersResolver');
     var App = require('app');
-    var Components = require('components');
+    var Components = require('core/components');
 
     var initialState = require('initialState');
 

@@ -1,21 +1,21 @@
-<div class="uniq-bugs-panel">
-    <% if (data.items && !_.isEmpty(data.items)) { %>
-    <div class="container-fluid rp-margin-reset rp-odd-even rp-table-hover">
-        <div class="row rp-grid-thead hidden-xs">
-            <div class="col-xs-11 col-sm-3 ubp-title">
-                <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.widgets.bugId %></span></div>
-            </div>
-            <div class="col-xs-11 col-sm-4 ubp-title">
-                <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.widgets.foundIn %></span></div>
-            </div>
-            <div class="col-xs-11 col-sm-2 ubp-title">
-                <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.widgets.submitDate %></span></div>
-            </div>
-            <div class="col-xs-11 col-sm-3 ubp-title">
-                <div class="rp-grid-th"><span class="rp-grid-th-name"><%= data.text.widgets.submitter %></span></div>
-            </div>
+<% if (data.items && !_.isEmpty(data.items)) { %>
+<div class="uniq-bugs-table rp-table-hover">
+    <div class="uniq-bugs-head">
+        <div class="uniq-bugs-id uniq-bugs-th">
+            <span class="uniq-bugs-th-name"><%= data.text.widgets.bugId %></span>
         </div>
-        <div class="rp-margin-reset uniq-bugs-list">        </div>    </div>
+        <div class="uniq-bugs-item uniq-bugs-th">
+            <span class="uniq-bugs-th-name"><%= data.text.widgets.foundIn %></span>
+        </div>
+        <div class="uniq-bugs-date uniq-bugs-th">
+            <span class="uniq-bugs-th-name"><%= data.text.widgets.submitDate %></span>
+        </div>
+        <div class="uniq-bugs-user uniq-bugs-th">
+            <span class="uniq-bugs-th-name"><%= data.text.widgets.submitter %></span>
+        </div>
+    </div>
+    <div class="uniq-bugs-list"></div>
+    <div class="mobile-disabling-cover"></div>
 </div>
 <% } else { %>
 <div class="no-data-error"><%= data.text.widgets.noData %></div>

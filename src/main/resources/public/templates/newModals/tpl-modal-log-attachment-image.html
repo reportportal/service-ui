@@ -1,0 +1,20 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.dialogHeader.logAttachment}) %>
+<div class="modal-body">
+    <div class="preloader">
+        <i class="material-icons loader-animation">refresh</i>
+    </div>
+    <div class="image-holder" data-js-image-block>
+        <div class="image-cell">
+            <img src=<%= data.imageSrc %> alt="" data-js-image>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <div class="image-rotate" data-js-rotate>
+        <i class="material-icons">rotate_90_degrees_ccw</i>
+        <span>Rotate</span>
+    </div>
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.close %>
+    </button>
+</div>

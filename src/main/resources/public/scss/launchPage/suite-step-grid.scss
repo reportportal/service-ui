@@ -1,0 +1,144 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+
+
+$launch-name-cell-width: 30%;
+$launch-time-cell-width: 10%;
+$launch-number-cell-width: 5.5%;
+$launch-select-cell-width: 2%;
+$launch-counter-cell-width: (100 - $launch-name-cell-width - $launch-time-cell-width -$launch-number-cell-width*4 - $launch-select-cell-width) / 4;
+
+
+$launch-min-name-cell-width: 25%;
+$launch-min-time-cell-width: 8%;
+$launch-min-number-cell-width: 5.5%;
+$launch-min-select-cell-width: 2%;
+$launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min-time-cell-width -$launch-min-number-cell-width*4 - $launch-min-select-cell-width) / 4;
+.suit-grid {
+  .grid-cell {
+    &.name-grid-cell {
+      padding-left: 10px;
+      width: $launch-name-cell-width;
+      &.rp-grid-th {
+        .text-overflow {
+          padding-left: 25px;
+        }
+      }
+    }
+    &.time-grid-cell {
+      width: $launch-time-cell-width;
+    }
+    &.counter-grid-cell {
+      width: $launch-counter-cell-width;
+    }
+    &.number-grid-cell {
+      width: $launch-number-cell-width;
+      text-align: right;
+    }
+    &.select-grid-cell {
+      width: $launch-select-cell-width;
+      text-align: center;
+      padding: 0;
+      .rp-checkbox-wrap span {
+        height: 11px;
+      }
+    }
+    @media (max-width: 1150px) {
+      &.name-grid-cell {
+        width: $launch-min-name-cell-width;
+      }
+      &.time-grid-cell {
+        width: $launch-min-time-cell-width;
+      }
+      &.counter-grid-cell {
+        width: $launch-min-counter-cell-width;
+      }
+      &.number-grid-cell {
+        width: $launch-min-number-cell-width;
+      }
+      &.select-grid-cell {
+        width: $launch-min-select-cell-width;
+      }
+    }
+  }
+}
+
+$step-name-cell-width: 37%;
+$step-time-cell-width: 12.5%;
+$step-status-cell-width: 8%;
+$step-select-cell-width: 2%;
+$step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - $step-status-cell-width - $step-select-cell-width);
+.step-grid {
+  .grid-cell {
+    &.name-grid-cell {
+      padding-left: 10px;
+      width: $step-name-cell-width;
+      &.rp-grid-th {
+        .text-overflow {
+          padding-left: 25px;
+        }
+      }
+    }
+    &.time-grid-cell {
+      width: $step-time-cell-width;
+    }
+    &.status-grid-cell {
+      width: $step-status-cell-width;
+    }
+    &.type-grid-cell {
+      width: $step-type-cell-width;
+    }
+    &.select-grid-cell {
+      width: $step-select-cell-width;
+      text-align: center;
+      padding: 0;
+      .rp-checkbox-wrap span {
+        height: 11px;
+      }
+    }
+    &.add-collapse-methods-btn {
+      padding-left: 44px;
+      .rp-switcher {
+        position: absolute;
+        left: 7px;
+        top: 50%;
+        margin-top: -6px;
+      }
+    }
+  }
+  &.hide-collapsed-methods {
+    .collapse-method {
+      overflow: hidden;
+      height: 0;
+      padding-top: 3px;
+      .grid-cell {
+        display: none;
+      }
+    }
+  }
+}
+.grid-cell {
+  .rp-grid-tags {
+    text-align: left;
+  }
+}
+

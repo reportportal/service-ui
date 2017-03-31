@@ -1,0 +1,174 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.rp-select2-user-search {
+    &.select2-drop-active {
+        background: $COLOR--white-default;
+        border: 1px solid $COLOR--gray-80;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2);
+        margin-top: 4px;
+
+        .select2-search {
+            padding: 8px;
+        }
+        .select2-results {
+
+            .select2-highlighted {
+                background: $COLOR--tealish-opacity;
+                .select2-result-label {
+                    color: $COLOR--charcoal-grey;
+                }
+            }
+            .select2-disabled, .select2-result-unselectable {
+                background: $COLOR--white-default;
+
+                .select2-result-label {
+                    cursor: not-allowed;
+                    color: $COLOR--gray-60;
+                }
+                .user-search-result-wrap {
+                    .user-search-info {
+                        .user-added {
+                            display: inline-block;
+                        }
+                        .user-add {
+                            display: none;
+                        }
+                    }
+                }
+            }
+            .select2-result-label {
+                padding: 8px 15px;
+                color: $COLOR--charcoal-grey;
+            }
+            .user-search-result-wrap {
+                white-space: normal;
+                @extend %CLEAR_FIX;
+
+                div {
+                    white-space: normal;
+                }
+                .user-avatar {
+                    float: left;
+                    max-width: 24px;
+                    min-height: 34px;
+                    img {
+                        width: 100%;
+                        height: auto;
+                        display: block;
+                    }
+                    .material-icons {
+                        display: none;
+                        color: $COLOR--gray-80;
+                        font-size: 26px;
+                        margin: 4px 0 0;
+                    }
+                }
+                .user-search-info {
+                    margin: -1px 0 0 37px;
+                    font-size: 13px;
+                    padding-right: 20px;
+                    position: relative;
+
+                    .user-search-name, .user-search-login, .user-search-send-email {
+                        margin: 0;
+                        padding: 0;
+                        font-weight: normal;
+                        max-width: 100%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+                    .user-search-name {
+                        text-transform: capitalize;
+                    }
+                    .user-search-login {
+                        font-weight: 600;
+                        .invite-pref {
+                            display: none;
+                            margin-right: 6px;
+                        }
+                    }
+                    .user-search-send-email {
+                        display: none;
+                    }
+                    .user-added {
+                        display: none;
+                        font-size: 18px;
+                    }
+                    .user-add {
+                        display: inline-block;
+                        font-size: 24px;
+                    }
+                    .material-icons {
+                        position: absolute;
+                        top: 50%;
+                        right: 0;
+                        transform: translateY(-50%);
+                    }
+                }
+            }
+            .no-exact-match-user {
+                .select2-result-label {
+                    &:first-child {
+                        margin-top: 0;
+                        padding-bottom: 12px;
+                        padding-top: 12px;
+                    }
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                    &:after {
+                        display: none;
+                    }
+                    .user-search-result-wrap {
+                        .user-avatar {
+                            img {
+                                display: none;
+                            }
+                            .material-icons {
+                                display: block;
+                            }
+                        }
+                        .user-search-info {
+                            .user-search-name {
+                                display: none;
+                            }
+                            .user-added {
+                                display: none;
+                            }
+                            .user-add {
+                                display: none;
+                            }
+                            .user-search-login {
+                                .invite-pref {
+                                    display: inline-block;
+                                }
+                            }
+                            .user-search-send-email {
+                                display: block;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

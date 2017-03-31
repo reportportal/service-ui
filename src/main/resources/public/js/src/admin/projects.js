@@ -25,25 +25,26 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
-    var Components = require('components');
+    var Components = require('core/components');
     var App = require('app');
     var urls = require('dataUrlResolver');
     var Service = require('adminService');
-    var Member = require('member');
+    var MembersTableView = require('projectMembers/MembersTableView');
     var Projects = require('project');
     var ProjectInfo = require('projectinfo');
     var MemberService = require('memberService');
     var Widget = require('widgets');
-
-    // var Localization = require('localization');
+    var ModalConfirm = require('modals/modalConfirm');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
     var List = Components.BaseView.extend({
         initialize: function (options) {
-            this.$el = options.el;
             this.action = options.action || 'internal';
-            this.currentView = config.currentProjectsSettings.listView || config.defaultProjectsSettings.listView;
+            this.$el = options.el;
+            this.$header = options.header;
+            this.currentTpl = config.currentProjectsSettings.listView || config.defaultProjectsSettings.listView;
         },
 
         getDefaultFilter: function () {
@@ -59,8 +60,7 @@ define(function (require, exports, module) {
         listShellTpl: 'tpl-admin-projects-list-shell',
 
         render: function (options) {
-            this.$el.html(Util.templates(this.shellTpl));
-            this.$header = $("#contentHeader", this.$el);
+            this.$el.html(Util.templates(this.shellTpl, {query: 'internal'}));
             this.$body = $("#contentBody", this.$el);
             this.fillContent();
             return this;
@@ -89,7 +89,6 @@ define(function (require, exports, module) {
             this.action = query;
             this.renderTab();
         },
-
         getProjectsView: function () {
             var tab = this.action;
             return new ProjectsList({
@@ -334,14 +333,20 @@ define(function (require, exports, module) {
         },
         removeProject: function (e) {
             e.preventDefault();
+            var self = this;
             var el = $(e.currentTarget);
             var id = '' + el.data('id');
             var status = el.data('active');
 
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    var self = this;
-                    Service.deleteProject(id)
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.deleteProject,
+                bodyText: Util.replaceTemplate(Localization.dialog.deleteProject, id),
+                confirmText: Localization.dialog.msgDeleteProject,
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.ui.delete,
+                confirmFunction: function () {
+                    return Service.deleteProject(id)
                         .done(function () {
                             var curProjects = config.userModel.get('projects');
                             delete curProjects[id];
@@ -352,10 +357,9 @@ define(function (require, exports, module) {
                         .fail(function (error) {
                             Util.ajaxFailMessenger(error, "deleteProject");
                         });
-                }.bind(this),
-                message: 'deleteProject',
-                format: [id]
+                }
             });
+            modal.show();
         },
         assignAdminToProject: function (e) {
             e.preventDefault();
@@ -387,6 +391,7 @@ define(function (require, exports, module) {
             this.id = options.id;
             this.action = options.action;
             this.query = options.queryString;
+            this.$header = options.header;
             this.vent = _.extend({}, Backbone.Events);
         },
 
@@ -394,16 +399,13 @@ define(function (require, exports, module) {
         $name: null,
         settingsBlock: undefined,
         usersBlock: undefined,
-
         headerTpl: 'tpl-admin-project-header',
         bodyTpl: 'tpl-admin-project-body',
         shellTpl: 'tpl-admin-content-shell',
         permissionsTpl: 'tpl-permissions-map',
-        membersNavigationTpl: 'tpl-members-navigation',
 
         render: function () {
             this.$el.html(Util.templates(this.shellTpl));
-            this.$header = $("#contentHeader", this.$el);
             this.$body = $("#contentBody", this.$el);
 
             var tab = this.action === 'members' ? 'members' : 'settings';
@@ -419,12 +421,12 @@ define(function (require, exports, module) {
                     id: this.id,
                     query: this.query,
                     btnVisible: {
-                        btnPermissionMap: true,
                         btnProjectSettings: true,
                         btnProjectMembers: true
                     }
                 }));
             }
+            this.$header.find('.tab').click(this.updateRoute.bind(this));
 
             this.$body.html(Util.templates(this.bodyTpl, {
                 tab: tab,
@@ -435,18 +437,6 @@ define(function (require, exports, module) {
             this.$settings = $("#projectSettings", this.$body);
 
             this.$users = $("#projectUsers", this.$body);
-
-            this.$users.html(Util.templates(this.membersNavigationTpl, {
-                canManage: true,
-                query: this.query,
-                projectId: this.id,
-                adminPage: true
-            }));
-
-            this.$assignedMembers = $("#assignedMembers", this.$body);
-            this.$addMember = $("#addMember", this.$body);
-            this.$inviteMember = $("#inviteMember", this.$body);
-            this.$assignMember = $("#assignMember", this.$body);
 
             if (this.id) {
                 config.project = {projectId: this.id};
@@ -500,7 +490,6 @@ define(function (require, exports, module) {
             } else {
                 this.settingsBlock.update(this.query);
             }
-            this.$header.find('#headerBar').find('li.tab-permissions-map').hide();
         },
 
         removeSettings: function () {
@@ -512,54 +501,12 @@ define(function (require, exports, module) {
         },
 
         renderUsers: function () {
-            var usersView = this.getUsersView(this.query);
             this.destroyUsersBlock();
-            this.usersBlock = new usersView(this.getMembersDataObject()).render();
-            this.$header.find('#headerBar').find('li.tab-permissions-map').show();
-        },
-
-        getMembersDataObject: function () {
-            var data = {
-                container: this.membersTab,
-                isDefaultProject: this.id === config.demoProjectName
-            };
-
-            if (this.fullMembers) {
-                data.projectId = this.id;
-                data.project = {type: config.project.configuration.entryType, projectId: this.id};
-                data.user = config.userModel.toJSON();
-                data.roles = config.projectRoles;
-                data.memberAction = 'unAssignMember';
-                data.projectRoleIndex = config.projectRoles.length + 1;
-                data.grandAdmin = true;
-            }
-            return data;
-        },
-
-        getUsersView: function (query) {
-            this.fullMembers = false;
-            this.membersTab = null;
-
-            switch (query) {
-                case "add":
-                    this.membersTab = this.$addMember;
-                    return Member.MembersAdd;
-                    break;
-                case "invite":
-                    this.membersTab = this.$inviteMember;
-                    return Member.MembersInvite;
-                    break;
-                case "assign":
-                    this.fullMembers = true;
-                    this.membersTab = this.$assignMember;
-                    return Member.MembersViewAssign;
-                    break;
-                default:
-                    this.fullMembers = true;
-                    this.membersTab = this.$assignedMembers;
-                    return Member.MembersView;
-                    break;
-            }
+            this.usersBlock = new MembersTableView({
+                projectId: this.id,
+                grandAdmin: true
+            });
+            $('[data-js-project-members]', this.$el).append(this.usersBlock.$el);
         },
 
         setupAddProject: function () {
@@ -583,13 +530,6 @@ define(function (require, exports, module) {
             'click .tab': 'updateRoute',
             'click .rp-nav-tabs .disabled': 'stopPropagation',
             'click #create-project': 'createProject',
-            'click [data-js-show-permissions-map]': 'onClickShowPermissionsMap'
-        },
-
-        onClickShowPermissionsMap: function (e) {
-            e.preventDefault();
-            Util.getDialog({name: 'tpl-permissions-map-modal'})
-                .modal('show');
         },
 
         createProject: function () {
@@ -635,7 +575,6 @@ define(function (require, exports, module) {
             if (action) {
                 this.action = el.data('action');
             }
-
             if (this.action === 'members') {
                 this.$header.find('#headerBar').find('#title-members').show();
                 this.$header.find('#headerBar').find('#title-settings').hide();
@@ -652,9 +591,6 @@ define(function (require, exports, module) {
 
         resetMembersView: function () {
             this.usersBlock && this.usersBlock.destroy();
-            $(".active", this.$users).removeClass('active');
-            $("li:first", this.$users).addClass('active');
-            this.$assignedMembers.addClass('active');
         },
 
         destroyUsersBlock: function () {
@@ -679,19 +615,22 @@ define(function (require, exports, module) {
             this.action = options.action;
             this.interval = this.getInterval(options.queryString);
             this.project = options.id;
+            this.$header = options.header;
         },
 
-        infoTpl: "tpl-admin-project-details",
+        headerTpl: "tpl-admin-project-details-header",
+        bodyTpl: "tpl-admin-project-details",
 
         getInterval: function (query) {
             return query ? +query.split('=')[1] : 3;
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.infoTpl, {
+            this.$el.html(Util.templates(this.bodyTpl, {}));
+            /*this.$header.html(Util.templates(this.headerTpl, {
                 projectId: this.id,
                 interval: this.interval
-            }));
+            }));*/
             this.$content = $("#contentTarget", this.$el);
             this.$content.html(Util.templates(this.tpl));
             this.$interval = $(".btn-group:first", this.$el);

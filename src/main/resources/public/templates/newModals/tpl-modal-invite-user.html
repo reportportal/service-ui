@@ -1,0 +1,85 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.members.inviteMember}) %>
+<div class="modal-body">
+    <div class="rp-invite-user-form">
+        <h4><%= data.text.admin.inviteNewUser %></h4>
+        <form id="addMemberForm" name="addMemberForm" data-js-invite-user-form>
+            <div class="rp-form-group clearfix" data-js-invite-user-form-group>
+                <label class="rp-control-label rp-custom-col invite-user-label obligatory-field" for="user">
+                    <%= data.isUsers ? data.text.forms.email : data.text.forms.loginOrEmail %>
+                </label>
+                <div class="rp-custom-col invite-user-field">
+                    <input data-js-user id="user" name="user" type="text" value=""
+                           class="tst-user">
+                    <div class="error-bottom">
+                        <div class="help-inline" data-js-invite-user-form-error></div>
+                    </div>
+                </div>
+            </div>
+            <% if(data.isUsers){ %>
+            <div class="rp-form-group clearfix" data-js-invite-user-form-group>
+                <label class="rp-control-label rp-custom-col invite-user-label obligatory-field" for="project">
+                    <%= data.text.forms.selectProject %>
+                </label>
+                <div class="rp-custom-col invite-user-field">
+                    <input data-js-user-project id="project" name="project" type="text" value="" class="rp-input-default">
+                    <div class="error-bottom">
+                        <div class="help-inline" data-js-invite-user-form-error></div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+            <div class="rp-form-group clearfix" data-js-invite-user-form-group>
+                <label class="rp-control-label rp-custom-col invite-user-label obligatory-field" for="projectRole">
+                    <%= data.text.forms.projectRole %>
+                </label>
+                <div class="rp-custom-col invite-user-field">
+                    <div class="rp-btn-group rp-width-100">
+                        <button data-js-user-project-role id="projectRole" name="projectRole" type="button"
+                                class="rp-btn-group rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
+                                data-toggle="dropdown">
+                            <span class="select-value" data-js-user-project-role-text></span>
+                            <span class="rp-caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" data-js-select-role-dropdown>
+                            <% _.each(data.roles, function(val, key){ %>
+                            <% var isDisabled = !data.canSelectRole(key) ? 'disabled-option' : '' %>
+                            <li><a href="#" data-value="<%= key %>" class="<%= isDisabled %>"><%= val %></a></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div data-js-success-from class="hide">
+            <div class="rp-form-group clearfix">
+                <label class="rp-control-label rp-custom-col invite-user-label">
+                    <%= data.text.members.invitationSent %>
+                </label>
+                <div class="rp-custom-col invite-user-field">
+                    <div class="invite-send-email" data-js-email></div>
+                </div>
+            </div>
+            <div class="rp-form-group clearfix">
+                <label class="rp-control-label rp-custom-col invite-user-label" for="link">
+                    <%= data.text.forms.linkInvitation %>
+                </label>
+                <div class="rp-custom-col invite-user-field">
+                    <input data-js-invite-link id="link" name="link" type="text" readonly value=""
+                           class="rp-input-default rp-width-100 form-control">
+                    <div class="copy-invite-link"><a href="" class="rp-link" data-js-copy-link><%= data.text.forms.copyLink %></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.cancel %>
+    </button>
+    <button class="rp-btn rp-btn-submit" type="button" data-js-load>
+        <%= data.text.admin.invite %>
+    </button>
+    <button class="rp-btn rp-btn-submit hide" type="button" data-js-ok>
+        <%= data.text.ui.ok %>
+    </button>
+</div>

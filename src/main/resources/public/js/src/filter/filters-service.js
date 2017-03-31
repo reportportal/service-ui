@@ -24,7 +24,7 @@ define(function (require, exports, module) {
 
     var $ = require('jquery');
     var Urls = require('dataUrlResolver');
-    var Commponents = require('components');
+    var Commponents = require('core/components');
     var CallService = require('callService');
 
     var call = CallService.call;

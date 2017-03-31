@@ -53,7 +53,6 @@ define(function (require, exports, module) {
             },
 
             projectUrl: '/api/v1/project/',
-            certificateUrl: 'certificate/reportportal-client-v2.jks',
             project: {},
             projectId: null,
             defaultProjectsSettings: {
@@ -99,6 +98,7 @@ define(function (require, exports, module) {
             historyItemsToLoad: 30,
             defaultHistoryDepth: 10,
             defaultTabId: 'allCases',
+            autocompletePageSize: 10,
 
             contextName: null,
             preferences: null,
@@ -118,15 +118,20 @@ define(function (require, exports, module) {
                 tagsMax: 1024,
                 triggerMin: 3,
                 filterName: [3, 128],
-                filterUser: 3
+                filterUser: 3,
+                projectNameRange: [3, 256],
             },
 
             launchVerifyDelay: 3000,
             launchStatus: {
                 inProgress: "IN_PROGRESS",
                 stopped: 'STOPPED',
-                interrupted: 'INTERRUPTED'
+                interrupted: 'INTERRUPTED',
+                reseted: 'RESETED',
+                skipped: 'SKIPPED'
             },
+
+            defectsGroupSorted :['TO_INVESTIGATE', 'PRODUCT_BUG', 'AUTOMATION_BUG', 'SYSTEM_ISSUE', 'NO_DEFECT'],
 
             defaultColors: {
                 'total': '#489BEB',
@@ -153,7 +158,8 @@ define(function (require, exports, module) {
                 email: /^[a-z0-9._-]+@[a-z0-9_-]+?\.[a-z0-9]{2,}$/i,
                 emailInternal: "^((?!(@epam.com)).)*$",
                 emailWrong: /wrong email/i,
-                fullName: /^[a-z0-9._-\s\u0400-\u04FF]{3,255}$/i,
+                login: /^[0-9a-zA-Z-_]{1,128}$/,
+                fullName: /^[a-z0-9._-\s\u0400-\u04FF]{3,256}$/i,
                 originalPass: /^(.){4,25}$/,
                 onlyIntegers: /^\d+$/,
                 doubles: /^[0-9]+(\.[0-9]+)?$/,
@@ -163,7 +169,9 @@ define(function (require, exports, module) {
                 getBodyContent: /<body[^>]*>((.|[\n\r])*)<\/body>/im,
                 replaceBodyTag: /<\/?body[^>]*>/gi,
                 hostandIP: /((^\s*((([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5]))\s*$)|(^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$))|(^\s*((?=.{1,255}$)(?=.*[A-Za-z].*)[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|\b-){0,61}[0-9A-Za-z])?)*)\s*$)/,
-                defectsLocator: /AB001|PB001|SI001|ND001|TI001/
+                defectsLocator: /AB001|PB001|SI001|ND001|TI001/,
+                symbolsLogin: /^[0-9a-zA-Z-_]+$/,
+                symbolsFullName: /^[0-9a-zA-Zа-яА-Я-_. ]+$/
             },
 
             restorationStamp: '?reset=',
@@ -181,7 +189,8 @@ define(function (require, exports, module) {
                     {name: '3 hours', value: '3 hours'},
                     {name: '6 hours', value: '6 hours'},
                     {name: '12 hours', value: '12 hours'},
-                    {name: '1 day', value: '1 day'}
+                    {name: '1 day', value: '1 day'},
+                    {name: '1 week', value: '1 week'}
                 ],
                 keepLogs: [
                     {name: '2 weeks', value: '2 weeks'},
@@ -260,8 +269,9 @@ define(function (require, exports, module) {
 
             forAdminSettings: {
                 protocol: [
-                    {value: 'SMTP', name: 'SMTP'}
-                ]
+                    {value: 'smtp', name: 'SMTP'}
+                ],
+                defaultProtocol: 'smtp'
             },
 
             widgetCriteria: {

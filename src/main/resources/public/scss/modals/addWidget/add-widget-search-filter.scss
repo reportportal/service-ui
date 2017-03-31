@@ -1,0 +1,127 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.modal-add-widget-filter-search {
+  .filter-search-header {
+    background: $COLOR--white;
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    .input-filter {
+      margin: 0;
+      width: 245px;
+      float: left;
+      input {
+        background: $COLOR--white-default;
+      }
+    }
+    .rp-btn {
+      float: right;
+    }
+  }
+  .select-filter-wrapper {
+    width: 100%;
+    height: 38px;
+    margin-top: 1px;
+    background: $COLOR--white;
+    border-bottom: 1px solid $COLOR--gray-91;
+    .title {
+      display: none;
+      text-transform: uppercase;
+      font-family: "OpenSansSemibold", sans-serif;
+      color: $COLOR--gray-47;
+      font-size: 12px;
+      line-height: 38px;
+      padding-left: 10px;
+    }
+    &.empty-state {
+      .title{
+        display: block;
+      }
+    }
+    .modal-add-widget-filter-search-item {
+      position: relative;
+      border: none;
+      cursor: default;
+      label {
+        cursor: default;
+        position: static;
+      }
+    }
+    .rp-input-radio + span{
+      position: static;
+      cursor: default;
+      &:before, &:after {
+        display: none;
+      }
+    }
+    .filter-options {
+      display: none;
+      position: absolute;
+      background: $COLOR--white;
+      left: 0;
+      right: 0;
+      top: 24px;
+      padding: 5px 20px 10px 32px;
+      border-bottom: 1px solid $COLOR--gray-91;
+      z-index: 10;
+      .material-icons {
+        display: none;
+      }
+    }
+    &:hover {
+      border-bottom: none;
+      .filter-options {
+        display: block;
+      }
+    }
+  }
+  .filter-list-wrapper {
+    .filter-no-data {
+      padding: 26px 10px 20px;
+      text-align: center;
+      font-size: 13px;
+      color: $COLOR--gray-47;
+      border-bottom:  1px solid $COLOR--gray-91;
+      .no-data-warning {
+        font-size: 14px;
+        font-weight: 600;
+        font-family: $OpenSansSemibold;
+        &> i.rp-icons-warning {
+          color: $COLOR--gray-80;
+        }
+        span {
+          font-family: $OpenSansRegular;
+        }
+      }
+    }
+  }
+  &.load {
+    .preloader {
+      display: block;
+    }
+  }
+  &.hide-content {
+    .filter-search-header, .filter-list-wrapper, .select-filter-wrapper {
+      display: none;
+    }
+  }
+}

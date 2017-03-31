@@ -1,0 +1,68 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+<div class="dropdown-menu" >
+  <li>
+    <a>
+      // content
+    </a>
+  </li>
+</div
+
+*/
+
+
+.dropdown-menu {
+  border-radius: 0;
+  font-size: 13px;
+  line-height: 13px;
+  & > li {
+    position: relative;
+    & > a, & > label {
+      cursor: pointer;
+      position: relative;
+      font-family: $OpenSansRegular;
+      padding: 6px 15px;
+      text-decoration: none;
+      text-transform: capitalize;
+      color: $COLOR--gray-47;
+      white-space: nowrap;
+      &:focus, &:hover {
+        background: $COLOR--tealish-opacity;
+      }
+      &[disabled] {
+        color: #999999;
+        background: transparent;
+        border-color: #cccccc;
+        box-shadow: none;
+        cursor: default;
+      }
+    }
+    &.active {
+      & > a, & > label, & > a:hover, & > label:hover {
+        cursor: default;
+        background: $COLOR--gray-91;
+        color: $COLOR--charcoal-grey;
+      }
+    }
+  }
+}

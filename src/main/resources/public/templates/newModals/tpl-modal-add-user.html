@@ -1,0 +1,121 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.members.addMember}) %>
+<div class="modal-body">
+    <div class="rp-add-user-form">
+        <h4><%= data.text.members.addMemberToProject %></h4>
+        <form id="addMemberForm" name="addMemberForm" data-js-add-user-form>
+            <div class="rp-form-group clearfix" data-js-add-user-form-group>
+                <label class="rp-control-label rp-custom-col add-user-label obligatory-field" for="username">
+                    <%= data.text.forms.login %>
+                </label>
+                <div class="rp-custom-col add-user-field">
+                    <input data-js-user-login id="username" name="username" type="text" value=""
+                           class="rp-input-default rp-width-100 form-control">
+                    <div class="error-bottom">
+                        <div class="help-inline" data-js-add-user-form-error></div>
+                    </div>
+                </div>
+            </div>
+            <div class="rp-form-group clearfix" data-js-add-user-form-group>
+                <label class="rp-control-label rp-custom-col add-user-label obligatory-field" for="fullName">
+                    <%= data.text.forms.fullName %>
+                </label>
+                <div class="rp-custom-col add-user-field">
+                    <input data-js-user-full-name id="fullName" name="fullName" type="text" value=""
+                           class="rp-input-default rp-width-100 form-control">
+                    <div class="error-bottom">
+                        <div class="help-inline" data-js-add-user-form-error></div>
+                    </div>
+                </div>
+            </div>
+            <div class="rp-form-group clearfix" data-js-add-user-form-group>
+                <label class="rp-control-label rp-custom-col add-user-label obligatory-field" for="email">
+                    <%= data.text.forms.email %>
+                </label>
+                <div class="rp-custom-col add-user-field">
+                    <input data-js-user-email id="email" name="email" type="text" value=""
+                           class="rp-input-default rp-width-100 form-control">
+                    <div class="error-bottom">
+                        <div class="help-inline" data-js-add-user-form-error></div>
+                    </div>
+                </div>
+            </div>
+            <% if(data.isUsers){ %>
+            <div class="rp-form-group clearfix" data-js-add-user-form-group>
+                <label class="rp-control-label rp-custom-col add-user-label obligatory-field" for="accountRole">
+                    <%= data.text.forms.accountRole %>
+                </label>
+                <div class="rp-custom-col add-user-field">
+                    <div class="rp-btn-group rp-width-100">
+                        <button data-js-user-account-role id="accountRole" name="accountRole" type="button"
+                                class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
+                                data-toggle="dropdown" value="">
+                            <span class="select-value" data-js-user-account-role-text></span>
+                            <span class="rp-caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" data-js-account-role-dropdown>
+                            <% _.each(data.accountRoles, function(role){ %>
+                            <li><a href="#" data-value="<%= role %>"><%= role %></a></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="rp-form-group clearfix" data-js-add-user-form-group>
+                <label class="rp-control-label rp-custom-col add-user-label obligatory-field" for="project">
+                    <%= data.text.forms.selectProject %>
+                </label>
+                <div class="rp-custom-col add-user-field">
+                    <input data-js-user-project id="project" name="project" type="text" value="" class="rp-input-default">
+                    <div class="error-bottom">
+                        <div class="help-inline" data-js-add-user-form-error></div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+            <div class="rp-form-group clearfix" data-js-add-user-form-group>
+                <label class="rp-control-label rp-custom-col add-user-label obligatory-field" for="projectRole">
+                    <%= data.text.forms.projectRole %>
+                </label>
+                <div class="rp-custom-col add-user-field">
+                    <div class="rp-btn-group rp-width-100">
+                        <button data-js-user-project-role id="projectRole" name="projectRole" type="button"
+                                class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
+                                data-toggle="dropdown" value="">
+                            <span class="select-value" data-js-user-project-role-text></span>
+                            <span class="rp-caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" data-js-select-role-dropdown>
+                            <% _.each(data.roles, function(val, key){ %>
+                                <li><a href="#" data-value="<%= key %>"><%= val %></a></li>
+                            <% }); %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="rp-form-group clearfix" data-js-add-user-form-group>
+                <label class="rp-control-label rp-custom-col add-user-label obligatory-field" for="password">
+                    <%= data.text.forms.password %>
+                </label>
+                <div class="rp-custom-col add-user-field">
+                    <input data-js-user-password id="password" name="password" value="" type="text" class="rp-input-default rp-width-100 form-control">
+                    <div class="error-bottom">
+                        <div class="help-inline" data-js-add-user-form-error></div>
+                    </div>
+                    <div class="to-gen-pass">
+                        <a data-js-generate-password href="#" class="rp-blue-link-undrl rp-link" id="generate_password">
+                            <%= data.text.forms.genPassword %>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.cancel %>
+    </button>
+    <button class="rp-btn rp-btn-submit" type="button" data-js-load>
+        <%= data.text.ui.add %>
+    </button>
+</div>

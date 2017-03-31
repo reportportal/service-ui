@@ -333,7 +333,6 @@ input[type=checkbox] + label {
 #mainContainer {
     .rp-main-panel {
         #contentHeader {
-
             #headerBar {
                 &.dashboard-header-wrap {
                     padding-top: 10px;
@@ -472,7 +471,7 @@ input[type=checkbox] + label {
 .widgets-list .panel-default .panel-heading {
     border-bottom: none;
     background-color: #f0f0f0;
-    font-family: $OswaldRegular;
+  @include fontHeader;
     font-size: 14px;
     color: #464547;
 }

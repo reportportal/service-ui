@@ -1,0 +1,155 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+.launches-header-bar {
+  padding: 10px 0 0 0;
+  margin: 0 -15px;
+  background-color: $COLOR--white-default;
+  border-bottom: solid 1px $COLOR--gray-91;
+  .rp-btn {
+    vertical-align: top;
+  }
+  .control-buttons {
+    margin-bottom: 10px;
+    .rp-btn {
+      margin-left: 8px;
+    }
+    .arrow-buttons {
+      overflow: hidden;
+      margin: 0 2px 0 10px;
+      display: block;
+      float: left;
+      .rp-btn {
+        float: left;
+        display: block;
+        margin: 0;
+        &:last-child {
+          margin-left: -1px;
+          &.disabled {
+            border-left: none;
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  }
+  .counter {
+      position: absolute;
+      min-width: 15px;
+      height: 15px;
+      text-align: center;
+      vertical-align: middle;
+      color: $COLOR--white-default;
+      background-color: $COLOR--orange-red;
+      bottom: 50%;
+      right: 3px;
+      font-size: 10px;
+      line-height: 10px;
+      padding: 1px 4px;
+      margin: 0px 0px 5px 1px;
+      border: 1px solid $COLOR--white-default;
+      border-radius: 100px;
+      animation: bounce 2s infinite;
+  }
+  .info-wrapper, .refine-wrapper {
+    width: 100%;
+    float: left;
+    border-top: 1px solid #e9e9e9;
+  }
+  .refine-wrapper {
+    padding: 10px 15px 10px 15px;
+    border-bottom: 1px solid #e9e9e9;
+  }
+  .refine-label {
+    display: block;
+    float: left;
+    padding-top: 1px;
+    font-size: 12px;
+    padding-right: 18px;
+    color: $COLOR--gray-47;
+    font-family: OpenSansSemibold;
+  }
+  @media (max-width: 767px) {
+    .info-wrapper, .refine-wrapper {
+      //border-top-width: 2px;
+    }
+    //border-bottom: 2px solid #e9e9e9;
+  }
+  .multiple-selected-container {
+    display: none;
+  }
+  &.multiple-select {
+    .multiple-selected-container {
+      display: block;
+    }
+    .crumbs-container, .info-wrapper, .refine-wrapper {
+      display: none;
+    }
+  }
+  @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+    .mobile-hide {
+      display: none;
+    }
+  }
+}
+
+.launch-body-wrapper {
+  &.load {
+    .preloader {
+      display: block;
+    }
+  }
+}
+
+/* ------------------------- */
+
+.launch-body-wrapper {
+  .rp-table-hover {
+    .rp-table-row {
+      &.selected {
+        border: 1px solid #999;
+        border-bottom: none;
+        background-color: #e9e9e9 !important;
+      }
+      &.selected:last-child {
+        border-bottom: 1px solid #999;
+      }
+    }
+  }
+  .rp-margin-reset {
+    .rp-table-thead {
+      .rp-table-th {
+        padding-left: 0;
+      }
+    }
+  }
+}
+
+.rp-table-hover {
+  .rp-table-row {
+    &.selected + .rp-table-row,
+    &.selected + .method-collapsed .rp-table-row {
+      border-top: 1px solid #999;
+    }
+    &.selected:last-child {
+      border-bottom: 1px solid #999;
+    }
+  }
+}

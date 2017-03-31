@@ -1,4 +1,5 @@
 <div class="rp-settings-demo-data">
+    <div class="rp-form-group demo-data-mobile-title"><%= data.text.project.generateDataMobile %></div>
     <div class="rp-form-group demo-data-details">
         <h4><%= data.text.project.generateDemoDataTitle %></h4>
         <ul>
@@ -7,23 +8,29 @@
             <li><%= data.text.project.generateDemoDataFilter %></li>
         </ul>
     </div>
-    <div class="rp-form-group demo-data-form">
-        <label class="rp-control-label">
-            <%= data.text.project.postfixLabel %>
-        </label>
-        <input data-js-demo-data-postfix placeholder="<%= data.text.project.postfixPlaceHolder %>" name="postfix_name" value="" class="rp-input-default form-control">
-        <span class="help-inline"></span>
-    </div>
-    <div class="rp-form-group rp-wrap-button">
-        <button type="submit" class="rp-btn rp-btn-submit" data-js-demo-data-submit>
-            <%= data.text.project.generateDemoData %>
-        </button>
-        <button type="submit" class="rp-btn rp-btn-submit demo-data-submit-mobile" disabled="disabled">
-            <%= data.text.project.generateDemoData %>
-        </button>
-    </div>
+    <form class="rp-form">
+        <div class="demo-data-form" data-js-demo-data-form>
+            <label class="rp-field">
+                <span><%= data.text.project.postfixLabel %></span>
+                <input data-js-demo-data-postfix placeholder="<%= data.text.project.postfixPlaceHolder %>"
+                       name="postfix_name" value="" class="rp-input">
+                <span class="validate-hint"></span>
+            </label>
+        </div>
+        <div class="rp-form-group rp-wrap-button">
+            <button type="button" class="rp-btn rp-btn-submit" data-js-demo-data-submit>
+                <%= data.text.project.generateDemoData %>
+            </button>
+            <button type="button" class="rp-btn rp-btn-submit demo-data-submit-mobile" disabled="disabled">
+                <%= data.text.project.generateDemoData %>
+            </button>
+        </div>
+    </form>
     <div class="rp-form-group demo-data-loader" style="display: none;" data-js-demo-data-loader>
-        <i class="material-icons loader-animation">refresh</i><span><%= data.text.project.generationDataInProgress %></span>
+        <div class="preloader" data-js-preloader-launch-body>
+            <i class="material-icons loader-animation">refresh</i>
+        </div>
+        <span><%= data.text.project.generationDataInProgress %></span>
     </div>
     <div class="rp-form-group demo-data-warning-block">
         <span class="demo-data-warning">

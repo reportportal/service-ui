@@ -1,0 +1,362 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*-----------------------------*/
+/* STYLE FOR DEFECT TYPES PAGE */
+
+%DEFECT_TYPES {
+  #defectTypes {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    @media (max-width: $SCREEN_XS_MAX) {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .form-group {
+      margin-bottom: 30px;
+
+      .dt-form-group-header {
+        padding-top: 10px;
+        padding-bottom: 10px;
+        margin: 0;
+        overflow: hidden;
+        border-bottom: solid 1px $COLOR--skipped;
+        @media (max-width: $SCREEN_XS_MAX) {
+          display: none;
+        }
+
+        span {
+          @include setFontStyle(12px, 12px, $COLOR--gray-47, uppercase);
+          font-family: $OpenSansSemibold;
+        }
+
+        .title-defect-name {
+          span {
+            margin-left: 60px;
+          }
+        }
+        .title-abbreviation {
+          span {
+            margin-left: 11px;
+          }
+        }
+        .title-diagram {
+          span {
+            margin-left: 20px;
+          }
+        }
+      }
+
+      .dt-form-group-body {
+        margin: 0;
+
+        .dt-content-item-wrap {
+
+          &#to_investigate {
+            margin-bottom: 40px;
+            @media (max-width: $SCREEN_XS_MAX) {
+              margin-bottom: 10px;
+            }
+          }
+
+          display: block;
+          @extend %CLEAR_FIX;
+
+          .dt-body-item {
+            @media (max-width: $SCREEN_XS_MAX) {
+              margin: 10px -15px;
+            }
+
+            &.dt-row-first {
+              margin-bottom: 0px;
+              padding: 8px 0 0 0;
+              height: 48px;
+              overflow: hidden;
+
+              .dt-full-name {
+                font-family: $OpenSansSemibold;
+              }
+            }
+
+            & > div {
+              & > span {
+                margin-top: 5px;
+                margin-bottom: 0px;
+              }
+            }
+
+            margin-bottom: 10px;
+            min-height: 30px;
+
+            @extend %CLEAR_FIX;
+
+            .dt-full-name {
+              @include setFontStyle(12px, 12px, $COLOR--charcoal-grey, false);
+              font-family: $OpenSansRegular;
+              margin-left: 60px;
+              margin-top: 6px;
+              @media (max-width: $SCREEN_XS_MAX) {
+                margin-left: 0px;
+                margin-top: 0px;
+              }
+            }
+
+            .shortening-difect-id {
+              font-family: OpenSansSemibold;
+              text-transform: uppercase;
+              padding: 0px 11px;
+              margin-top: 6px;
+              @media (max-width: $SCREEN_XS_MAX) {
+                margin-top: 0;
+              }
+            }
+
+            .dt-point-wrap {
+              position: relative;
+              margin-top: 8px;
+              @media (max-width: $SCREEN_XS_MAX) {
+                margin-top: 2px;
+              }
+            }
+
+            & > div {
+              min-height: 20px;
+
+              &.holder-color-picker {
+                padding: 0 3px;
+              }
+
+              .nvd3-svg {
+                position: absolute;
+                display: block;
+                overflow: visible;
+                top: -10px;
+                left: 25px;
+                right: 0;
+                padding: 10px;
+                margin: 0 auto;
+                text-align: center;
+                max-height: 67px;
+                min-height: 67px;
+              }
+            }
+            .dt-edit-cell {
+              @media (max-width: $SCREEN_XS_MAX) {
+                display: none;
+              }
+            }
+            .dt-diagramm-cell {
+              @media (max-width: $SCREEN_XS_MAX) {
+                display: none;
+              }
+            }
+          }
+
+          .controll-panel {
+            @extend %CLEAR_FIX;
+            @media (max-width: $SCREEN_XS_MAX) {
+              display: none;
+            }
+
+            margin-bottom: 40px;
+            padding-top: 6px;
+
+            button {
+              &.add-item {
+                margin-left: 60px;
+                margin-right: 10px;
+              }
+            }
+
+            p {
+              display: inline-block;
+              font-size: 12px;
+              line-height: 14px;
+              margin: 8px 0;
+              margin-left: 20px;
+              color: $COLOR--gray-60;
+
+              span {
+                margin-right: 6px;
+              }
+            }
+          }
+
+          .rp-input-long-name {
+            margin-left: 60px;
+
+            /* STYLE FOR ERROR */
+            & + p {
+              margin-left: 60px;
+            }
+          }
+
+          .rp-input-long-name,
+          .rp-input-short-name {
+
+            /* STYLE FOR ERROR */
+            & + p {
+              font-size: 12px;
+              @extend %MSG_ERR_STYLE;
+            }
+          }
+          .check-color-input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+
+          }
+          .check-color-input, .check-color-picker {
+            width: 55px;
+            height: 30px;
+            cursor: pointer;
+          }
+          .check-color-picker {
+            &:hover {
+              border: solid 1px $COLOR--gray-47;
+            }
+
+            &.data-failed {
+              box-shadow: 0 0 2px 0 rgba(255, 49, 33, 0.7);
+              border: solid 1px $COLOR--orange-red;
+              color: $COLOR--black-two;
+            }
+
+            position: relative;
+            padding: 7px 11px;
+            background-color: $COLOR--white-default;
+            border: solid 1px $COLOR--gray-80;
+
+            .point-color-picker {
+              position: relative;
+              width: 12px;
+              height: 12px;
+              border-radius: 100%;
+              display: inline-block;
+              cursor: pointer;
+              background-color: #eee;
+            }
+          }
+
+          a {
+            &.edit-item,
+            &.delete-item,
+            &.save-item,
+            &.cancel-item {
+              width: 20px;
+              height: 20px;
+
+              i {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+              }
+            }
+          }
+        }
+
+        .dt-content-item-title {
+          width: 100%;
+          height: 30px;
+          background-color: $COLOR--white-four;
+          margin-bottom: 12px;
+          @media (max-width: $SCREEN_XS_MAX) {
+            margin: 10px 0;
+            &:first-child {
+              margin: 0 0 10px;
+            }
+          }
+
+          span {
+            @include setFontStyle(12px, 12px, $COLOR--gray-47, uppercase);
+            font-family: $OpenSansSemibold;
+            padding-left: 11px;
+            line-height: 30px;
+          }
+        }
+
+        .collection-colors {
+          padding: 15px;
+          border: solid 1px $COLOR--skipped;
+          margin-bottom: 40px;
+
+          h4 {
+            @include setFontStyle(12px, 17px, $COLOR--gray-47, uppercase);
+            font-family: $OpenSansSemibold;
+            margin: 0 0 4px 0;
+            padding: 0;
+          }
+        }
+
+        .dt-form-group-footer {
+          @media (max-width: $SCREEN_XS_MAX) {
+            display: none;
+          }
+          a {
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+}
+
+/*----------------*/
+/* INCLUDE STYLES */
+
+/* FOR USUAL USERS */
+#dynamic-content {
+  @extend %DEFECT_TYPES;
+}
+
+/* FOR ADMINISTRATORS USERS */
+#dynamicContent {
+  @extend %DEFECT_TYPES;
+}
+
+/*-----------------------------------*/
+/* STYLES OF DYNAMIC WIDTH OF SCREEN */
+
+/* xs - 767px */
+@media (max-width: $SCREEN_XS_MAX) {
+
+}
+
+/* sm - 768px - 991px */
+@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+
+}
+
+/* md - 992px - 1199px */
+@media (min-width: $SCREEN_MD_MIN) and (max-width: $SCREEN_MD_MAX) {
+
+}
+
+/* lg - 1200px */
+@media (min-width: $SCREEN_LG_MIN) {
+
+}

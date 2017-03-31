@@ -24,7 +24,7 @@ define(function (require, exports, module) {
 
     var $ = require('jquery');
     var Backbone = require('backbone');
-    var Components = require('components');
+    var Components = require('core/components');
     var Util = require('util');
     var urls = require('dataUrlResolver');
     var Localization = require('localization');
@@ -209,7 +209,6 @@ define(function (require, exports, module) {
             this.conditionFlipper(e);
             if (this.model.get('value')) {
                 this.onUserTypes(e);
-                config.trackingDispatcher.filterCndChanged(this.model.get('condition'));
             } else {
                 this.clearErrors();
             }
@@ -394,7 +393,6 @@ define(function (require, exports, module) {
             if (!this.$tags.val()) return;
 
             this.onValueChange();
-            config.trackingDispatcher.filterCndChanged(this.model.get('condition'));
         },
 
         setupTagsSearch: function () {
@@ -775,7 +773,6 @@ define(function (require, exports, module) {
             this.conditionFlipper(e);
             if (this.model.get('value')) {
                 this.handleChange();
-                config.trackingDispatcher.filterCndChanged(this.model.get('condition'));
             }
         },
 

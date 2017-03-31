@@ -23,178 +23,549 @@
 define(function(require, exports, module) {
     var Backbone = require('backbone');
 
-    var text = {
-        shared: "Shared",
-        own: "OWN",
-        notShared: "NotShared"
-    };
+    var eventTable = {
+        1: ['Sidebar', 'Click on Menu Bttn Dashboards', 'Transition on Dashboards Page'],
+        2: ['Sidebar', 'Click on Menu Bttn Filters', 'Transition on Filters Page'],
+        3: ['Sidebar', 'Click on Menu Bttn Debug', 'Transition on Debug Page'],
+        4: ['Header', 'Click on Menu Bttn Members', 'Transition on Members Page'],
+        5: ['Header', 'Click on Menu Bttn Settings', 'Transition on Settings Page'],
+        6: ['Header', 'Click on Profile Dropdown', 'Arise Dropdown Menu'],
+        7: ['Header', 'Click on Profile link on Dropdown', 'Transition on Profile Page'],
+        8: ['Header', 'Click on Administrate link on Dropdown', 'Transition to Administrate Mode'],
+        9: ['Header', 'Click on Logout link on Dropdown', 'Logout and transition on Landing Page'],
+        10: ['Header', 'Click on Project Dropdown', 'Arise Dropdown with list of Projects'],
+        11: ['Header', 'Click on Another Project Name', 'Transition to another project'],
+
+        12: ['Filter Launches', 'Click on Bttn Add Filters', 'Add New Filter'],
+        13: ['Filter Panel', 'Click on Bttn Discard', 'Discard Filter parameters'],
+        14: ['Filter Panel', 'Click on Bttn Clone', 'Clone Filter parameters'],
+        15: ['Filter Panel', 'Click on Bttn Edit', 'Edit Filter parameters/Arise modal "Edit Filter"'],
+        16: ['Filter Panel', 'Click on Bttn Save', 'Save Filter parameters'],
+        17: ['Filter Panel', 'Click on Bttn Add Widget', 'Add New Widget from Launches Page/Arise Modal "Add Widget"'],
+        18: ['Filter Launches', 'Hover on Icon Comment on Filter Tab', 'Arise Tooltip with comment from Filter Tab'],
+        19: ['Filter Launches', 'Hover on Icon Shared by other on Filter Tab', 'Arise Tooltip with "Filter is shared by other user" from Filter Tab'],
+        20: ['Filter Launches', 'Hover on Icon Shared on Filter Tab', 'Arise Tooltip with "Filter is shared" from Filter Tab'],
+        21: ['Filter Launches', 'Hover on Icon Star on Filter Tab', 'Arise Tooltip with "Filter is not saved: from Filter Tab'],
+        22: ['Launches', 'Click on All Launches', 'Transition to All Launches without filter'],
+        23: ['Launches', 'Click on Item Name', 'Transition to Item page'],
+        24: ['Launches', 'Click on Icon Menu near Launch Name', 'Arise Dropdown with single actions for this launch'],
+        25: ['Launches', 'Click on "Move to Debug" in Launch Menu', 'Arise Modal "Move to Debug"'],
+        26: ['Launches', 'Click on "Force Finish" in Launch Menu', 'Interrupt launch loading'],
+        27: ['Launches', 'Click on "Match Issues in Launch" in Launch Menu', 'Starts Matching'],
+        28: ['Launches', 'Click on "Analysis" in Launch Menu', 'Starts Analysing'],
+        29: ['Launches', 'Click on "Delete" in Launch Menu', 'Arise Modal "Delete Launch"'],
+        30: ['Launches', getExportTitle('PDF'), getExportDescription('PDF')],
+        31: ['Launches', getExportTitle('XLS'), getExportDescription('XLS')],
+        32: ['Launches', getExportTitle('HTML'), getExportDescription('HTML')],
+        33: ['Launches', getActionLaunchTitle('NAME'), getDescriptionLaunchTitle('NAME')],
+        34: ['Launches', getActionTableFilter('NAME'), getDescriptionTableFilter()],
+        35: ['Launches', getActionLaunchTitle('START'), getDescriptionLaunchTitle('START')],
+        36: ['Launches', getActionTableFilter('START'), getDescriptionTableFilter()],
+        37: ['Launches', getActionLaunchTitle('TOTAL'), getDescriptionLaunchTitle('TOTAL')],
+        38: ['Launches', getActionTableFilter('TOTAL'), getDescriptionTableFilter()],
+        39: ['Launches', getActionLaunchTitle('PASSED'), getDescriptionLaunchTitle('PASSED')],
+        40: ['Launches', getActionTableFilter('PASSED'), getDescriptionTableFilter()],
+        41: ['Launches', getActionLaunchTitle('FAILED'), getDescriptionLaunchTitle('FAILED')],
+        42: ['Launches', getActionTableFilter('FAILED'), getDescriptionTableFilter()],
+        43: ['Launches', getActionLaunchTitle('SKIPPED'), getDescriptionLaunchTitle('SKIPPED')],
+        44: ['Launches', getActionTableFilter('SKIPPED'), getDescriptionTableFilter()],
+        45: ['Launches', getActionLaunchTitle('PRODUCT BUG'), getDescriptionLaunchTitle('PRODUCT BUG')],
+        46: ['Launches', getActionTableFilter('PRODUCT BUG'), getDescriptionTableFilter()],
+        47: ['Launches', getActionLaunchTitle('AUTO BUG'), getDescriptionLaunchTitle('AUTO BUG')],
+        48: ['Launches', getActionTableFilter('AUTO BUG'), getDescriptionTableFilter()],
+        49: ['Launches', getActionLaunchTitle('SYSTEM ISSUE'), getDescriptionLaunchTitle('SYSTEM ISSUE')],
+        50: ['Launches', getActionTableFilter('SYSTEM ISSUE'), getDescriptionTableFilter()],
+        51: ['Launches', getActionLaunchTitle('TO INVESTIGATE'), getDescriptionLaunchTitle('TO INVESTIGATE')],
+        52: ['Launches', getActionTableFilter('TO INVESTIGATE'), getDescriptionTableFilter()],
+        53: ['Launches', 'Click on Edit Icon after launch name', 'Edit Launch/Arise Modal "Edit Launch"'],
+
+        54.1: ['Launches', 'Hover on Product Bug Circle', 'Arise Tooltip with "Total Product Bugs"'],
+        54.2: ['Launches', 'Click on Product Bug Circle', 'Transition to inner level of launch with Product Bugs'],
+        55: ['Launches', 'Click on Tooltip "Total Product Bugs"', 'Transition to inner level of launch with Product Bugs'],
+        56.1: ['Launches', 'Hover on Auto Bug Circle', 'Arise Tooltip with "Total Auto Bug"'],
+        56.2: ['Launches', 'Click on Auto Bug Circle', 'Transition to inner level of launch with Auto Bug'],
+        57: ['Launches', 'Click on Tooltip "Total Auto Bug"', 'Transition to inner level of launch with Auto Bug'],
+        58.1: ['Launches', 'Hover on System Issue Circle', 'Arise Tooltip with "Total System Issue"'],
+        58.2: ['Launches', 'Click on System Issue Circle', 'Transition to inner level of launch with System Issue'],
+        59: ['Launches', 'Click on Tooltip "Total System Issue"', 'Transition to inner level of launch with System Issue'],
+        60: ['Launches', 'Click on To Investigate tag', 'Transition to inner level of launch with To Investigate'],
+
+        61.1: ['Launches', 'Click on item icon "select all launches"', 'Select/unselect all launches'],
+        61.2: ['Launches', 'Click on item icon "select one launch"', 'Select/unselect one launch'],
+
+        61.3: ['Launches', 'Click on Bttn Actions', 'Arise Dropdown with list of actions'],
+        62: ['Launches', 'Click on Bttn "Merge" in list of actions', 'Arise Modal "Merge Launches"'],
+        63: ['Launches', 'Click on Bttn "Compare" in list of actions', 'Arise Modal "Compare Launches"'],
+        64: ['Launches', 'Click on Bttn "Move to Debug" in list of actions', 'Arise Modal "Move to Debug"'],
+        65: ['Launches', 'Click on Bttn "Force Finish" in list of actions', 'Force Finish'],
+        66: ['Launches', 'Click on Bttn "Delete" in list of actions', 'Arise Modal "Delete Launch"'],
+
+        67: ['Launches', 'Click on Close Icon on Tag of Launch', 'Remove launch from  selection'],
+        68: ['Launches', 'Click on Close Icon of all selection', 'Unselect all launches'],
+        //69: ['Launches', 'Click on Close Icon on Error Tag of Launch', 'Remove launch from  selection'],
+        70: ['Launches', 'Click on Bttn "Proceed Valid Items"', 'Remove invalid launches from selection'],
+
+        71.1: ['Modal Launches', 'Click on Close Icon on Modal "Edit Launch"', 'Close modal "Edit Launch"'],
+        71.2: ['Modal Launches', 'Edit description in Modal "Edit Launch"', 'Edit launch description'],
+        72: ['Modal Launches', 'Click on Bttn Cancel on Modal "Edit Launch"', 'Close modal "Edit Launch"'],
+        73: ['Modal Launches', 'Click on Bttn Save on Modal "Edit Launch"', 'Save changes "Edit Launch"'],
+        74: ['Modal Launches', 'Click on Close Icon on Modal "Move to Debug"', 'Close modal "Move to Debug"'],
+        75: ['Modal Launches', 'Click on Bttn Cancel on Modal "Move to Debug"', 'Close modal "Move to Debug"'],
+        76: ['Modal Launches', 'Click on Bttn Save on Modal "Move to Debug"', 'Save changes "Move to Debug"'],
+        77: ['Modal Launches', 'Click on Close Icon on Modal "Delete Launch"', 'Close modal "Delete Launch"'],
+        78: ['Modal Launches', 'Click on Bttn Cancel on Modal "Delete Launch"', 'Close modal "Delete Launch"'],
+        79: ['Modal Launches', 'Click on Bttn Delete on Modal "Delete Launch"', 'Delete launch mentioned in modal "Delete Launch"'],
+        80: ['Modal Launches', 'Click on Close Icon on Modal "Merge Launches"', 'Close modal "Merge Launches"'],
+        81: ['Modal Launches', 'Click on Bttn Cancel on Modal "Merge Launches"', 'Close modal "Merge Launches"'],
+        82: ['Modal Launches', 'Click on Bttn Merge on Modal "Merge Launches"', 'Merge launches mentioned in modal "Merge Launches"'],
+        83: ['Suite', 'Click on Bread Crumb icon Plus/Minus', 'Show/Hide all names of items'],
+        84: ['Suite', 'Click on Bread Crumb All', 'Transition to Launches Page'],
+        85: ['Suite', 'Click on Bread Crumb Item name', 'Transition to Item'],
+        86: ['Suite', 'Click on Bttn Delete', 'Delete selected Items'],
+        87: ['Suite', 'Click on Bttn History', 'Transition to History View Page'],
+        88: ['Suite', 'Click on Bttn Refresh', 'Refresh the page'],
+        89: ['Suite', 'Hover on Status bar', getTooltipDescription()],
+        90: ['Suite', 'Hover on Duration', getTooltipDescription()],
+        91: ['Suite', 'Hover on Info line "PB"', getTooltipDescription()],
+        92: ['Suite', 'Hover on Info line "AB"', getTooltipDescription()],
+        93: ['Suite', 'Hover on Info line "SI"', getTooltipDescription()],
+        94: ['Suite', 'Hover on Info line "TI"', getTooltipDescription()],
+        95: ['Suite', 'Hover on Info line "ND"', getTooltipDescription()],
+        96: ['Suite', 'Enter parameters to refine by name', 'Refine by name'],
+        97.1: ['Suite', 'Click on Refine bttn More', 'Arise dropdown with parameters'],
+        97.2: ['Suite', 'Select parameters to refine', 'Show parameters fields to refine'],
+        98: ['Suite', 'Click on item icon "edit"', 'Arise Modal "Edit Item"'],
+        99: ['Suite', 'Click on item icon "select all items"', 'Select/unselect all items'],
+        100.1: ['Suite', 'Click on item icon "select one item"', 'Select/unselect one item'],
+        100.2: ['Suite', 'Click on icon "close" on selected item', 'Remove item from  selection'],
+        100.3: ['Suite', 'Click on icon "close" of all selection', 'Unselect all items'],
+        100.4: ['Suite', 'Click on Bttn "Proceed Valid Items"', 'Remove invalid items from selection'],
+        101: ['Suite', 'Click on Close Icon on Modal "Edit Item"', 'Close modal "Edit Item"'],
+        102: ['Suite', 'Edit description in Modal "Edit Item"', 'Edit description'],
+        103: ['Suite', 'Click on Bttn Cancel on Modal "Edit Item"', 'Close modal "Edit Item"'],
+        104: ['Suite', 'Click on Bttn Save on Modal "Edit Item"', 'Save changes'],
+        105: ['Suite', 'Click on icon "filter" on Name', '"Suite name" input becomes active'],
+        106: ['Suite', 'Click on icon "sorting" on Name', 'Sort items by name'],
+        107: ['Suite', 'Click on icon "filter" on Start time', 'Arises active "Start time" input'],
+        108: ['Suite', 'Click on icon "sorting" on Start time', 'Sort items by Start time'],
+        109: ['Suite', 'Click on icon "filter" on Total', 'Arises active "Total" input'],
+        110: ['Suite', 'Click on icon "sorting" on Total', 'Sort items by Total'],
+        111: ['Suite', 'Click on icon "filter" on Passed', 'Arises active "Passed" input'],
+        112: ['Suite', 'Click on icon "sorting" on Passed', 'Sort items by Passed'],
+        113: ['Suite', 'Click on icon "filter" on Failed', 'Arises active "Failed" input'],
+        114: ['Suite', 'Click on icon "sorting" on Failed', 'Sort items by Failed'],
+        115: ['Suite', 'Click on icon "filter" on Skipped', 'Arises active "Skipped" input'],
+        116: ['Suite', 'Click on icon "sorting" on Skipped', 'Sort items by Skipped'],
+        117: ['Suite', 'Click on icon "filter" on Product Bug', 'Arises active "Product Bug" input'],
+        118: ['Suite', 'Click on icon "sorting" on Product Bug', 'Sort items by Product Bug'],
+        119: ['Suite', 'Click on icon "filter" on Auto Bug', 'Arises active "Auto Bug" input'],
+        120: ['Suite', 'Click on icon "sorting" on Auto Bug', 'Sort items by Auto Bug'],
+        121: ['Suite', 'Click on icon "filter" on System Issue', 'Arises active "System Issue" input'],
+        122: ['Suite', 'Click on icon "sorting" on System Issue', 'Sort items by System Issue'],
+        123: ['Suite', 'Click on icon "filter" on To Investigate', 'Arises active "To Investigate" input'],
+        124: ['Suite', 'Click on icon "sorting" on To Investigatee', 'Sort items by To Investigate'],
+        125: ['Suite', 'Hover on PB Circle', 'Arise Tooltip with "Total Product Bugs"'],
+        126.1: ['Suite', 'Click on PB Circle', 'Transition to PB list view'],
+        126.2: ['Suite', 'Click on Tooltip "Total Product Bugs"', 'Transition to PB list view'],
+        127: ['Suite', 'Hover on AB Circle', 'Arise Tooltip with "Total Auto Bug"'],
+        128.1: ['Suite', 'Click on AB Circle', 'Transition to AB list view '],
+        128.2: ['Suite', 'Click on Tooltip "Auto Bug"', 'Transition to AB list view '],
+        129: ['Suite', 'Hover on SI Circle', 'Arise Tooltip with "Total System Issue"'],
+        130.1: ['Suite', 'Click on SI Circle', 'Transition to SI list view '],
+        130.2: ['Suite', 'Click on Tooltip "Total System Issue"', 'Transition to SI list view'],
+        131: ['Suite', 'Click on TI tag', 'Transition to TI list view '],
+        132: ['History View', 'Select "history depth"', 'Show parameter of selected "history depth"'],
+        133: ['History View', 'Click on item', 'Transition to "Item"'],
+        134: ['History View', 'Hover on defect type tag', getTooltipDescription()],
+        135: ['Test', 'Enter parameters to refine by name', 'Refine by name'],
+        136: ['Test', 'Click on Refine bttn More', 'Arise dropdown with parameters'],
+        137: ['Test', 'Select parameters to refine', 'Show parameters fields to refine'],
+        138: ['Test', 'Click on Method type switcher', 'Show/Hide method type'],
+        139: ['Test', 'Click on icon "filter" Method type', 'Arises active "Method type" input'],
+        140: ['Test', 'Click on icon "sorting" Method type', 'Sort items by Method type'],
+        141: ['Test', 'Click on icon "filter" Name', '"Suite name" input becomes active'],
+        142: ['Test', 'Click on icon "sorting" Name', 'Sort items by Name'],
+        143: ['Test', 'Click on icon "filter" Status', 'Arises active "Status" input'],
+        144: ['Test', 'Click on icon "sorting" Status', 'Sort items by Status'],
+        145: ['Test', 'Click on icon "filter" Start time', 'Arises active "Start time" input'],
+        146: ['Test', 'Click on icon "sorting" Start time', 'Sort items by Start time'],
+        147: ['Test', 'Click on icon "filter" Defect type', 'Arises active "Defect type" input'],
+        148: ['Test', 'Click on icon "sorting" Defect type', 'Sort items by Defect type'],
+        149: ['Test', 'Click on item icon "edit"', 'Arise Modal "Edit Item"'],
+        150: ['Test', 'Click on icon "edit" of Defect type tag', 'Arise Modal "Edit Defect Type"'],
+        151: ['Test', 'Click on item icon "select all items"', 'Select/unselect all items'],
+        152: ['Test', 'Click on item icon "select one item"', 'Select/unselect one item'],
+        153: ['Test', 'Click on Close Icon on Modal "Edit Item"', 'Close modal "Edit Item"'],
+        154: ['Test', 'Edit description in Modal "Edit Item"', 'Edit description'],
+        155: ['Test', 'Click on Bttn Cancel on Modal "Edit Item"', 'Close modal "Edit Item"'],
+        156: ['Test', 'Click on Bttn Save on Modal "Edit Item"', 'Save changes'],
+        157: ['Test', 'Click on Close Icon on Modal "Edit Defect Type"', 'Close modal "Edit Defect Type"'],
+        158: ['Test', 'Edit description in Modal "Edit Defect Type"', 'Edit description'],
+        159: ['Test', 'Click on Bttn Cancel on Modal "Edit Defect Type"', 'Close modal "Edit Defect Type"'],
+        160: ['Test', 'Click on Bttn Save on Modal "Edit Defect Type"', 'Save changes'],
+        161: ['Test', 'Click on icon "close" on selected item', 'Unselect item'],
+        162: ['Test', 'Click on Bttn "Proceed Valid Items"', 'Remove invalid launches from selection'],
+        163: ['Test', 'Click on Close Icon of all selection', 'Close panel with selected items'],
+        164: ['Test', 'Click on Bttn "Edit Defect"', 'Arise Modal "Edit Defect Type"'],
+        165: ['Test', 'Click on Bttn "Post Bug"', 'Arise Modal "Post Bug"'],
+        166: ['Test', 'Click on Bttn "Load Bug"', 'Arise Modal "Load Bug"'],
+        167: ['Test', 'Click on Bttn "Delete"', 'Arise Modal "Delete Item"'],
+        168: ['Test', 'Click on Bttn "History"', 'Transition to History View Page'],
+        169: ['Test', 'Click on Bttn "Refresh"', 'Refresh page'],
+        170: ['Test', 'Click on Icon Close on Modal Post Bug', 'Close Modal Post Bug'],
+        171: ['Test', 'Click on Screenshots switcher on Modal Post Bug', 'On/off Screenshots in Modal Post Bug'],
+        172: ['Test', 'Click on Logs switcher on Modal Post Bug', 'On/off Logs in Modal Post Bug'],
+        173: ['Test', 'Click on Comment switcher on Modal Post Bug', 'On/off Comment in Modal Post Bug'],
+        174: ['Test', 'Click on Bttn Cancel on Modal Post Bug', 'Close Modal Post Bug'],
+        175: ['Test', 'Click on Bttn Post on Modal Post Bug', 'Post bug'],
+        176: ['Test', 'Click on Icon Close on Modal Load Bug', 'Close Modal Load Bug'],
+        177: ['Test', 'Click on Bttn Add New Issue on Modal Load Bug', 'Add input in Modal Load Bug'],
+        178: ['Test', 'Click on Bttn Cancel on Modal Load Bug', 'Close Modal Load Bug'],
+        179: ['Test', 'Click on Bttn Load on Modal Load Bug', 'Load bug'],
+        180: ['Test', 'Click on Icon Close on Modal Delete Item', 'Close Modal Delete Item'],
+        181: ['Test', 'Click on Bttn Cancel on Modal Delete Item', 'Close Modal Delete Item'],
+        182: ['Test', 'Click on Bttn Delete on Modal Delete Item', 'Delete item'],
+
+        183: ['Log', 'Click on Bread Crumb icon Plus/Minus', 'Show/Hide all names of items'],
+        184: ['Log', 'Click on Bread Crumb All', 'Transition to Launches Page'],
+        185: ['Log', 'Click on Bread Crumb Item name', 'Transition to Item'],
+        186: ['Log', 'Click on Bttn prev Method', 'Transition to prev Method Item'],
+        187: ['Log', 'Click on Bttn next Method', 'Transition to next Method Item'],
+        188: ['Log', 'Click on Bttn Refresh', 'Refresh page'],
+        189: ['Log', 'Hover on History execution tab', 'Arise tooltip'],
+        190: ['Log', 'Click on History execution tab', 'Transition to item log page'],
+        191: ['Log', 'Hover on Defect type tag', 'Arise icon Edit'],
+        192: ['Log', 'Click on Defect type tag', 'Arise Modal Edit Defect type'],
+        193: ['Log', 'Click on Bttn Post Bug', 'Arise Modal Post Bug'],
+        194: ['Log', 'Click on Bttn Load Bug', 'Arise Modal Load Bug'],
+        195: ['Log', 'Click on Bttn Match issues in launch', 'Begin autoanalysis'],
+        196: ['Log', 'Hover on Stack Trace tab', 'Tab becomes active'],
+        197: ['Log', 'Hover on Attachments tab', 'Tab becomes active'],
+        198: ['Log', 'Hover on Item Details tab', 'Tab becomes active'],
+        199: ['Log', 'Hover on History of Actions tab', 'Tab becomes active'],
+        200: ['Log', 'Click on Stack Trace tab', 'Open Stack Trace tab'],
+        201: ['Log', 'Click on Attachments tab', 'Open Attachments tab'],
+        202: ['Log', 'Click on Item Details tab', 'Open Item Details tab'],
+        203: ['Log', 'Click on History of Actions tab', 'Open History of Actions tab'],
+        204: ['Log', 'Click on Log level filter', 'Arise log level filter dropdown'],
+        205: ['Log', 'Select Log level filter in dropdown', 'Filter by selected parametr'],
+        206: ['Log', 'Click on checkbox Logs with attachments', 'Check/uncheck logs with attachments'],
+        207: ['Log', 'Click on Bttn Next Error', 'Transition to next error page'],
+        208: ['Log', 'Click on Bttn Previous Log message page', 'Transition to previous log message page'],
+        209: ['Log', 'Click on Bttn Next Log message page', 'Transition to next log message page'],
+        210: ['Log', 'Enter filter parameter in Log message input', 'Filter log messages by parameter'],
+        211: ['Log', 'Click on icon Sorting on Time in Log Message', 'Sort logs'],
+        212: ['Log', 'Click on Attachment in Log Message', 'Open Attachment'],
+        213: ['Log', 'Click on icon Expand in Log Message', 'Expand/close log'],
+        214: ['Log', 'Click on Go to Stack Trace link in Stack Trace tab', 'Open Stack Trace log message'],
+        215: ['Log', 'Click on Icon Close on Modal Post Bug', 'Close Modal Post Bug'],
+        216: ['Log', 'Click on Screenshots switcher on Modal Post Bug', 'On/off Screenshots in Modal Post Bug'],
+        217: ['Log', 'Click on Logs switcher on Modal Post Bug', 'On/off Logs in Modal Post Bug'],
+        218: ['Log', 'Click on Comment switcher on Modal Post Bug', 'On/off Comment in Modal Post Bug'],
+        219: ['Log', 'Click on Bttn Cancel on Modal Post Bug', 'Close Modal Post Bug'],
+        220: ['Log', 'Click on Bttn Post on Modal Post Bug', 'Post bug'],
+        221: ['Log', 'Click on Icon Close on Modal Load Bug', 'Close Modal Load Bug'],
+        222: ['Log', 'Click on Bttn Add New Issue on Modal Load Bug', 'Add imputs in Modal Load Bug'],
+        223: ['Log', 'Click on Bttn Cancel on Modal Load Bug', 'Close Modal Load Bug'],
+        224: ['Log', 'Click on Bttn Load on Modal Load Bug', 'Load bug'],
+
+        240: ['Filters', 'Enter parameter for search', 'Show filters by parameter'],
+        241: ['Filters', 'Click on Bttn Add Filter', 'Transition to Launches Page'],
+        242: ['Filters', 'Click on Filter name', 'Transition to Launch Page'],
+        243: ['Filters', 'Click on Filter on/off switcher', 'Show/hide Filter on Launch Page'],
+        244: ['Filters', 'Click on icon Delete on Filter Page', 'Arise Modal Delete filter'],
+        245: ['Filters', 'Click on icon Edit on Filter name', 'Arise Modal Edite filter'],
+        246: ['Filters', 'Click on icon Shared on Filter', 'Arise Modal Edite filter'],
+        247: ['Filters', 'Click on icon Close on Modal Edit Filter', 'Close Modal Edit Filter'],
+        248: ['Filters', 'Enter description in Modal Edit Filter', 'Description'],
+        249: ['Filters', 'Click on Share on/off in Modal Edit Filter', 'Share/unshare Filter'],
+        250: ['Filters', 'Click on Bttn Cancel in Modal Edit Filter', 'Close Modal Edit Filter'],
+        251: ['Filters', 'Click on Bttn Update in Modal Edit Filter', 'Update Modal Edit Filter'],
+        252: ['Filters', 'Click on icon Close on Modal Delete Filter', 'Close Modal Delete Filter'],
+        253: ['Filters', 'Click on Bttn Cancel in Modal Delete Filter', 'Close Modal Delete Filter'],
+        254: ['Filters', 'Click on Bttn Delete in Modal Delete Filter', 'Delete Filter'],
+        255: ['Filters', 'Click on Bttn Add Filter on empty page', 'Transition to Launches Page'],
+
+        260: ['Dashboard', 'Click on Bttn Add New Dashboard', 'Arise Modal Add New Dashboard'],
+        261: ['Dashboard', 'Enter parameter for search', 'Show dashboards by parameter'],
+        262: ['Dashboard', 'Click on Dashboard name', 'Transition to Dashboard'],
+        263: ['Dashboard', 'Click on icon Settings on Dashboard tile', 'Arise Modal Edit Dashboard'],
+        264: ['Dashboard', 'Click on icon Close on Dashboard tile', 'Arise Modal Delete Dashboard'],
+        265: ['Dashboard', 'Click on Shared Dashboard name', 'Transition to Dashboard'],
+        266: ['Dashboard', 'Click on icon Close on Modal Add New Dashboard', 'Close Modal Add New Dashboard'],
+        267: ['Dashboard', 'Enter description in Modal Add New Dashboard', 'Description'],
+        268: ['Dashboard', 'Click on Share on/off in Modal Add New Dashboard', 'Share/unshare Dashboard'],
+        269: ['Dashboard', 'Click on Bttn Cancel in Modal Add New Dashboard', 'Close Modal Add New Dashboard'],
+        270: ['Dashboard', 'Click on Bttn Add in Modal Add New Dashboard', 'Add Dashboard'],
+        271: ['Dashboard', 'Click on icon Close on Modal Edit Dashboard', 'Close Modal Edit Dashboard'],
+        272: ['Dashboard', 'Enter description in Modal Edit Dashboard', 'Description'],
+        273: ['Dashboard', 'Click on Share on/off in Modal Edit Dashboard', 'Share/unshare Dashboard'],
+        274: ['Dashboard', 'Click on Bttn Cancel in Modal Edit Dashboard', 'Close Modal Edit Dashboard'],
+        275: ['Dashboard', 'Click on Bttn Update in Modal Edit Dashboard', 'Update Dashboard'],
+        276: ['Dashboard', 'Click on icon Close on Modal Delete Dashboard', 'Close Modal Delete Dashboard'],
+        277: ['Dashboard', 'Click on Bttn Cancel in Modal Delete Dashboard', 'Close Modal Delete Dashboard'],
+        278: ['Dashboard', 'Click on Bttn Delete in Modal Delete Dashboard', 'Delete Dashboard'],
+        279: ['Dashboard', 'Click on Bread Crumb All Dashboards', 'Transition to All Dashboards'],
+        280: ['Dashboard', 'Click on Bttn Add New Widget on Dashboard', 'Arise Modal Add New Widget'],
+        281: ['Dashboard', 'Click on Bttn Add Shared Widget on Dashboard', 'Arise Modal Add Shared Widget'],
+        282: ['Dashboard', 'Click on Bttn Edit on Dashboard', 'Arise Modal Edit Dashboard'],
+        283: ['Dashboard', 'Click on Bttn Full Screen on Dashboard', 'Full Screen of Dashboard'],
+        284: ['Dashboard', 'Click on Bttn Remove on Dashboard', 'Arise Modal Delete Dashboard'],
+        285: ['Dashboard', 'Click and drag Widget', 'Move Widget'],
+        286: ['Dashboard', 'Click on icon Settings on Widget', 'Arise Modal Edit Widget'],
+        287: ['Dashboard', 'Click on icon Refresh on Widget', 'Refresh Widget'],
+        288: ['Dashboard', 'Click on icon Remove on Widget', 'Arise Modal Delete Widget'],
+        289: ['Dashboard', 'Click and drag on icon Resize on Widget', 'Resize Widget'],
+        290: ['Dashboard', 'Click on icon Close on Modal Add New Widget', 'Close Modal Add New Widget'],
+        291: ['Dashboard', 'Choose radio bttn of Widget type in Modal Add New Widget', 'Choose Widget type in Modal Add New Widget'],
+        292: ['Dashboard', 'Click on Bttn Next Step on Modal Add New Widget', 'Transition to Next Step on Modal Add New Widget'],
+        294: ['Dashboard', 'Enter parameter for search', 'Show filter by parameter'],
+        295: ['Dashboard', 'Click on Bttn Add Filter on Modal Add New Widget', 'Arise fields for adding new filter'],
+        296: ['Dashboard', 'Hover on selected Filter on Modal Add New Widget', 'Arise filter parameters'],
+        297: ['Dashboard', 'Click on radio bttn of Filter on Modal Add New Widget', 'Choose filter'],
+        298: ['Dashboard', 'Click on icon Edit Filter on Modal Add New Widget', 'Arise fields to edit filter'],
+        299: ['Dashboard', 'Edit Items input on Modal Add New Widget', 'Edited Items input on Modal Add New Widget'],
+        300: ['Dashboard', 'Toggle Launch/Timeline mode on Modal Add New Widget', 'Choose Launch/Timeline mode on Modal Add New Widget'],
+        301: ['Dashboard', 'Click on Bttn Previous Step on Modal Add New Widget', 'Transition to Previous Step in Modal Add New Widget'],
+        302: ['Dashboard', 'Select parameters of new filter on Modal Add New Widget', 'Show parameters of new filter on Modal Add New Widget'],
+        303: ['Dashboard', 'Select parameters of sorting in new filter on Modal Add New Widget', 'Show parameters of sorting in new filter on Modal Add New Widget'],
+        304: ['Dashboard', 'Click on Bttn Cancel in Add new filter in Modal Add New Widget', 'Cancel adding new filter in Modal Add New Widget'],
+        305: ['Dashboard', 'Click on Bttn Add in Add new filter in Modal Add New Widget', 'Add new filter in Modal Add New Widget'],
+        306: ['Dashboard', 'Hover on selected filter while editing in Modal Add New Widget', 'Arise filter parametrs'],
+        307: ['Dashboard', 'Edit filter name in Modal Add New Widget', 'Edited filter name in Modal Add New Widget'],
+        308: ['Dashboard', 'Select parameters of edited filter in Modal Add New Widget', 'Show parameters of edited filter in Modal Add New Widget'],
+        309: ['Dashboard', 'Select parameters of sorting in edited filter in Modal Add New Widget', 'Show parameters of sorting of edited filter in Modal Add New Widget'],
+        310: ['Dashboard', 'Click on Bttn Cancel in Edit filter in Modal Add New Widget', 'Cancel Edit filter in Modal Add New Widget'],
+        311: ['Dashboard', 'Click on Bttn Submit in Edit filter in Modal Add New Widget', 'Submit changes in filter in Modal Add New Widget'],
+        312: ['Dashboard', 'Enter Widget description in Modal Add New Widget', 'Widget description in Modal Add New Widget'],
+        313: ['Dashboard', 'Click on Share Widget on/off in Modal Add New Widget', 'Share/unshare Widget'],
+        314: ['Dashboard', 'Click on Bttn Add in Modal Add New Widget', 'Submit changes in filter in Modal Add New Widget'],
+        315: ['Dashboard', 'Click on icon Close on Modal Add Shared Widget', 'Close Modal Add Shared Widget'],
+        316: ['Dashboard', 'Choose radio bttn of Widget type in Modal Add Shared Widget', 'Choose Widget type in Modal Add Shared Widget'],
+        317: ['Dashboard', 'Scroll widgets in Modal Add Shared Widget', 'Scroll widgets in Modal Add Shared Widget'],
+        318: ['Dashboard', 'Click on Bttn Cancel in Modal Add Shared Widget', 'Cancel Modal Add Shared Widget'],
+        319: ['Dashboard', 'Click on Bttn Add in Modal Add Shared Widget', 'Add Shared Widget'],
+        320: ['Dashboard', 'Click on icon Close on Modal Edit Widget', 'Close Modal Edit Widget'],
+        321: ['Dashboard', 'Click on icon Edit Filter on Modal Edit Widget', 'Arise fields to edit filter in Modal Edit Widget'],
+        322: ['Dashboard', 'Change Widget name in Modal Edit Widget', 'New Widget name in Modal Edit Widget'],
+        323: ['Dashboard', 'Change Widget description in Modal Edit Widget', 'New Widget description in Modal Edit Widget'],
+        324: ['Dashboard', 'Click on Share Widget on/off in Modal Edit Widget', 'Share/unshare Widget'],
+        325: ['Dashboard', 'Click on Bttn Cancel in Modal Edit Widget', 'Close Modal Edit Widget'],
+        326: ['Dashboard', 'Click on Bttn Save in Modal Edit Widget', 'Save changes in Modal Edit Widget'],
+        327: ['Dashboard', 'Enter parametr for search in Modal Edit Widget', 'Show filter by parameter in Modal Edit Widget'],
+        328: ['Dashboard', 'Click on Bttn Add Filter in Modal Edit Widget', 'Arise fields for adding new filter in Modal Edit Widget'],
+        329: ['Dashboard', 'Click on radio bttn of Filter in Modal Edit Widget', 'Choose filter in Modal Edit Widget'],
+        330: ['Dashboard', 'Click on Bttn Cancel in Edit filter in Modal Edit Widget', 'Close Edit filter in Modal Edit Widget'],
+        331: ['Dashboard', 'Click on Bttn Submit filter change in Modal Edit Widget', 'Save filter change in Modal Edit Widget'],
+        332: ['Dashboard', 'Select parameters of new filter in Modal Edit Widget', 'Show parameters of new filter in Modal Edit Widget'],
+        333: ['Dashboard', 'Select parameters of sorting in new filter in Modal Edit Widget', 'Show parameters of sorting of new filter in Modal Edit Widget'],
+        334: ['Dashboard', 'Click on Bttn Cancel in add new filter in Modal Edit Widget', 'Cancel add new filter in Modal Edit Widget'],
+        335: ['Dashboard', 'Click on Bttn Add in add new filter in Modal Edit Widget', 'Add new filter in Modal Edit Widget'],
+        336: ['Dashboard', 'Edit filter parametrs in Modal Edit Widget', 'Show new filter parameters in Modal Edit Widget'],
+        337: ['Dashboard', 'Click on Bttn Cancel in Edit filter in Modal Edit Widget', 'Cancel Edit filter in Modal Edit Widget'],
+        338: ['Dashboard', 'Click on Bttn Submit in Edit filter in Modal Edit Widget', 'Submit changes in filter in Modal Edit Widget'],
+        339: ['Dashboard', 'Click on Icon Close on Modal Delete Widget', 'Close Modal Delete Widget'],
+        340: ['Dashboard', 'Click on Bttn Cancel on Modal Delete Widget', 'Close Modal Delete Widget'],
+        341: ['Dashboard', 'Click on Bttn Delete on Modal Delete Widget', 'Delete Widget'],
+        342: ['Dashboard', 'Edit Widget legend', 'Change Widget legend'],
+        343: ['Dashboard', 'Hover on Widget', 'Arise Widget tooltip'],
+        344: ['Dashboard', 'Click on Widget', 'Transition to launches page'],
+        345: ['Dashboard', 'Click on link Add New Widget on Dashboard', 'Arise Modal Add New Widget'],
+        346: ['Dashboard', 'Click on Bttn Add New Dashboard on empty page', 'Arise Modal Add New Dashboard'],
+
+        350: ['Footer', 'Click on Back to Top link', 'Transition to top'],
+        351: ['Footer', 'Click on Fork us on GitHub link', 'Fork on GitHub'],
+        352: ['Footer', 'Click on Chat with us on Slack link', 'Move to Slack'],
+        353: ['Footer', 'Click on Contact us link', 'Open message window'],
+        354: ['Footer', 'Click on EPAM link', 'Transition to EPAM site'],
+        355: ['Footer', 'Click on Documentation link', 'Transition to Documentation'],
+        356: ['Footer', 'Click on API link', 'Transition to API'],
+        357: ['Footer', 'Edit number per page', 'Change number per page'],
+
+        360: ['Profile', 'Click on Bttn Change password', 'Arise Modal Change password'],
+        361: ['Profile', 'Click on icon Edit User name', 'Arise Modal Edit Personal Information'],
+        362: ['Profile', 'Click on icon Edit Email', 'Arise Modal Edit Personal Information'],
+        363: ['Profile', 'Click on Bttn Upload photo', 'Upload photo'],
+        364: ['Profile', 'Click on link Remove photo', 'Arise Modal Delete image'],
+        365: ['Profile', 'Click on Bttn Regenerate', 'Regenerate'],
+        366: ['Profile', 'Select configuration tab', 'Select configuration tab'],
+        367: ['Profile', 'Click on icon Close on Modal Change password', 'Close Modal Change password'],
+        368: ['Profile', 'Click on Bttn Cancel on Modal Change password', 'Close Modal Change password'],
+        369: ['Profile', 'Click on Bttn Submit on Modal Change password', 'Submit changes on Modal Change password'],
+        370: ['Profile', 'Click on icon Close on Modal Delete image', 'Close Modal Delete image'],
+        371: ['Profile', 'Click on Bttn Cancel on Modal Delete image', 'Close Modal Delete image'],
+        372: ['Profile', 'Click on Bttn Delete on Modal Delete image', 'Delete image'],
+        373: ['Profile', 'Click on icon Close on Modal Edit personal information', 'Close Modal Edit personal information'],
+        374: ['Profile', 'Edit input User name on Modal Edit personal information', 'Edit User name on Modal Edit personal information'],
+        375: ['Profile', 'Edit input Email on Modal Edit personal information', 'Edit Email on Modal Edit personal information'],
+        376: ['Profile', 'Click on Bttn Cancel on Modal Edit personal information', 'Close Modal Edit personal information'],
+        377: ['Profile', 'Click on Bttn Submit on Modal Edit personal information', 'Submit changes on Modal Edit personal information'],
+
+        380: ['Settings', 'Click on tab General in Settings', 'Open tab General in Settings'],
+        381: ['Settings', 'Edit input Launch inactivity timeout on tab General', 'Change input Launch inactivity timeout on tab General'],
+        382: ['Settings', 'Edit input Keep logs on tab General', 'Change input Keep logs on tab General'],
+        383: ['Settings', 'Edit input Keep screenshots on tab General', 'Change input Keep screenshots on tab General'],
+        384: ['Settings', 'Edit input Auto Analysis on tab General', 'Change input Auto Analysis on tab General'],
+        385: ['Settings', 'Click on Bttn Submit on tab General', 'Submit changes on tab General'],
+        386: ['Settings', 'Click on tab Notifications in Settings', 'Open tab Notifications in Settings'],
+        387: ['Settings', 'Edit input Email notifications on tab Notifications', 'Change input Email notifications on tab Notifications'],
+        388: ['Settings', 'Edit input From on tab Notifications', 'Change input From on tab Notifications'],
+        389: ['Settings', 'Delete rule on tab Notifications', 'Delete rule on tab Notifications'],
+        390: ['Settings', 'Edit input Recipients on tab Notifications', 'Change input Recipients on tab Notifications'],
+        391: ['Settings', 'Edit checkbox Launch owner on tab Notifications', 'Check/uncheck Launch owner on tab Notifications'],
+        392: ['Settings', 'Edit input In case on tab Notifications', 'Change input In case on tab Notifications'],
+        393: ['Settings', 'Edit input Launch names on tab Notifications', 'Change input Launch names on tab Notifications'],
+        394: ['Settings', 'Edit input Tags on tab Notifications', 'Change input Tags on tab Notifications'],
+        395: ['Settings', 'Click on Bttn Add new rule on tab Notifications', 'Add new rule on tab Notifications'],
+        396: ['Settings', 'Click on Bttn Submit on tab Notifications', 'Submit changes on tab Notifications'],
+        397: ['Settings', 'Click on tab Bug tracking system in Settings', 'Open tab Bug tracking system in Settings'],
+        398: ['Settings', 'Edit input Bug tracking system on tab Bug tracking system', 'Change input Bug tracking system on tab Bug tracking system'],
+        399: ['Settings', 'Change project of BTS Instances on tab Bug tracking system', 'Change project of BTS Instances on tab Bug tracking system'],
+        400: ['Settings', 'Click on link Add new instance on tab Bug tracking system', 'Arise fields for adding new project on tab Bug tracking system'],
+        401: ['Settings', 'Click on icon Edit Projects BTS Instance on tab Bug tracking system', 'Arise fields for editing Projects BTS Instance on tab Bug tracking system'],
+        402: ['Settings', 'Click on icon Delete Projects BTS Instance on tab Bug tracking system', 'Arise Modal delete Projects BTS Instance on tab Bug tracking system'],
+        403: ['Settings', 'Click on Bttn Cancel Edit Projects BTS Instance on tab Bug tracking system', 'Cancel Change of Projects BTS Instance on tab Bug tracking system'],
+        404: ['Settings', 'Click on Bttn Submit Edit Projects BTS Instance on tab Bug tracking system', 'Submit Change of Projects BTS Instance on tab Bug tracking system'],
+        405: ['Settings', 'Click on icon Close on Modal Delete Project', 'Close Modal Delete Project'],
+        406: ['Settings', 'Click on Bttn Cancel on Modal Delete Project', 'Close Modal Delete Project'],
+        407: ['Settings', 'Click on Bttn Delete on Modal Delete Project', 'Delete Project'],
+        408: ['Settings', 'Edit inputs of Default properties for issue form on tab Bug tracking system', 'Change inputs of Default properties for issue form on tab Bug tracking system'],
+        409: ['Settings', 'Click on Bttn Update Default properties for issue form on tab Bug tracking system', 'Update Default properties for issue form on tab Bug tracking system'],
+        410: ['Settings', 'Click on Bttn Submit Default properties for issue form on tab Bug tracking system', 'Submit Change of Default properties for issue form on tab Bug tracking system'],
+        411: ['Settings', 'Click on icon Edit defect tag on tab Defect Types', 'Arise fields for editing defect tag on tab Defect Types'],
+        412: ['Settings', 'Click on icon Delete defect tag on tab Defect Types', 'Arise Modal Delete defect type on tab Defect Types'],
+        413: ['Settings', 'Edit input Defect type name on tab Defect Types', 'Change Defect type name on tab Defect Types'],
+        414: ['Settings', 'Edit input Defect type abbreviation on tab Defect Types', 'Change Defect type abbreviation on tab Defect Types'],
+        415: ['Settings', 'Edit input Defect type color on tab Defect Types', 'Change Defect type color on tab Defect Types'],
+        416: ['Settings', 'Click on icon Submit defect type change on tab Defect Types', 'Change defect type on tab Defect Types'],
+        417: ['Settings', 'Click on icon Cancel defect type change on tab Defect Types', 'Cancel defect type change on tab Defect Types'],
+        418: ['Settings', 'Click on icon Close on Modal Delete Defect type', 'Close Modal Delete Defect type'],
+        419: ['Settings', 'Click on Bttn Cancel on Modal Delete Defect type', 'Close Modal Delete Defect type'],
+        420: ['Settings', 'Click on Bttn Delete on Modal Delete Defect type', 'Delete Defect type'],
+        421: ['Settings', 'Click on Bttn Add defect type on tab Defect types', 'Arise fieldes for Add defect type on tab Defect types'],
+        422: ['Settings', 'Click on link Reset to default colors on tab Defect types', 'Arise fieldes for Add defect type on tab Defect types'],
+        423: ['Settings', 'Click on icon Close on Modal Reset Defect colors', 'Close Modal Reset Defect colors'],
+        424: ['Settings', 'Click on Bttn Cancel on Modal Reset Defect colors', 'Close Modal Reset Defect colors'],
+        425: ['Settings', 'Click on Bttn Reset on Modal Reset Defect colors', 'Reset Defect colors'],
+        426: ['Settings', 'Click on tab Defect Types in Settings', 'Open tab Defect Types in Settings'],
+
+        427: ['Settings', 'Click on tab Demo Data in Settings', 'Open tab Demo Data in Settings'],
+        428: ['Settings', 'Edit input Postfix on tab Demo Data', 'Change Postfix on tab Demo Data'],
+        429: ['Settings', 'Click on Bttn Generate Demo Data on tab Demo Data', 'Generate Demo Data on tab Demo Data'],
+
+        430: ['Members', 'Enter parameter for search', 'Show member by parameter'],
+        431: ['Members', 'Click on Bttn Permission map', 'Show Permission map'],
+        432: ['Members', 'Click on Bttn Invite user', 'Arise Modal Invite user'],
+        433: ['Members', 'Edit input Project role', 'Change Project role'],
+        434: ['Members', 'Click on Bttn Unassign', 'Unassign user'],
+        435: ['Members', 'Click on icon Close on Modal Invite user', 'Close Modal Invite user'],
+        436: ['Members', 'Click on Bttn Cancel on Modal Invite user', 'Close Modal Invite user'],
+        437: ['Members', 'Click on Bttn Invite on Modal Invite user', 'Invite user'],
+
+        440: ['Projects', 'Click on Bttn Add Project', 'Arise Modal Add Project'],
+        441: ['Projects', 'Enter parameter for search', 'Show project by parameter'],
+        442: ['Projects', 'Edit sorting tab', 'Change sorting by name or by creation date'],
+        443: ['Projects', 'Click on Bttn Tile view', 'Tile view'],
+        444: ['Projects', 'Click on Bttn Table view', 'Table view'],
+        445: ['Projects', 'Click on tab Internal projects', 'Open tab Internal projects'],
+        446: ['Projects', 'Click on tab Personal projects', 'Open tab Personal projects'],
+        447: ['Projects', 'Click on Project name', 'Transition to Project page'],
+        448: ['Projects', 'Click on icon Close on Project tile', 'Arise Modal Delete Project'],
+        449: ['Projects', 'Click on icon Settings on Project tile', 'Transition to Settings page'],
+        450: ['Projects', 'Click on icon Members on Project tile', 'Transition to Members page'],
+        451: ['Projects', 'Click on icon Assign me on Project tile', 'Assign me to Project'],
+        452: ['Projects', 'Click on icon Open on Project tile', 'Open Dashboard page of Project'],
+        453: ['Projects', 'Click on icon Close on Modal Add project', 'Close Modal Add project'],
+        454: ['Projects', 'Click on Bttn Cancel on Modal Add project', 'Close Modal Add project'],
+        455: ['Projects', 'Click on Bttn Add on Modal Add project', 'Add project'],
+        456: ['Projects', 'Click on icon Close on Modal Delete project', 'Close Modal Delete project'],
+        457: ['Projects', 'Click on Bttn Cancel on Modal Delete project', 'Close Modal Delete project'],
+        458: ['Projects', 'Click on Bttn Delete on Modal Delete project', 'Delete project'],
+
+        460: ['All Users', 'Enter parameter for search', 'Show user by parameter'],
+        461: ['All Users', 'Click on Bttn Invite user', 'Arise Modal Invite user'],
+        462: ['All Users', 'Click on Bttn Add user', 'Arise Modal Add user'],
+        463: ['All Users', 'Click on label Make admin', 'Arise Modal Change role'],
+        464: ['All Users', 'Click on Bttn View Projects and roles', 'Arise tile with Projects and roles'],
+        465: ['All Users', 'Edit input Project role', 'Change Project role'],
+        466.1: ['All Users', 'Click on Bttn Unassign', 'Unassign on Project'],
+        466.2: ['All Users', 'Click on Bttn Assign', 'Assign on Project'],
+        467: ['All Users', 'Click on Bttn Add on project', 'Arise fields to Add on project'],
+        468: ['All Users', 'Click on Bttn Delete user', 'Arise Modal Delete user'],
+        469: ['All Users', 'Click on icon Close on Modal Invite user', 'Close Modal Invite user'],
+        470: ['All Users', 'Click on Bttn Cancel on Modal Invite user', 'Close Modal Invite user'],
+        471: ['All Users', 'Click on Bttn Invite on Modal Invite user', 'Invite user'],
+        472: ['All Users', 'Click on icon Close on Modal Change role', 'Close Modal Change role'],
+        473: ['All Users', 'Click on Bttn Cancel on Modal Change role', 'Close Modal Change role'],
+        474: ['All Users', 'Click on Bttn Change on Modal Change role', 'Change role'],
+        475: ['All Users', 'Click on icon Close on Modal Delete user', 'Close Modal Delete user'],
+        476: ['All Users', 'Click on Bttn Cancel on Modal Delete user', 'Close Modal Delete user'],
+        477: ['All Users', 'Click on Bttn Delete on Modal Delete user', 'Delete user'],
+        478: ['All Users', 'Click on icon Close on Modal Add user', 'Close Modal Add user'],
+        479: ['All Users', 'Click on Bttn Cancel on Modal Add user', 'Close Modal Add user'],
+        480: ['All Users', 'Click on link Generate password on Modal Add user', 'Generate password'],
+        481: ['All Users', 'Click on Bttn Add on Modal Add user', 'Add user'],
+
+        490: ['Server Settings', 'Click on tab E-mail Server', 'Open tab E-mail Server'],
+        491: ['Server Settings', 'Click on tab Authorization Configuration', 'Open tab Authorization Configuration'],
+        492: ['Server Settings', 'Click on switcher Enable email server', 'On/off Enable email server'],
+        493: ['Server Settings', 'Click on Bttn Submit on tab E-mail Server', 'Submit changes on tab E-mail Server'],
+        494: ['Server Settings', 'Click on switcher Activate Github authorization on tab Authorization Configuration', 'On/off Activate Github authorization on tab Authorization Configuration'],
+        495: ['Server Settings', 'Click on Bttn Add Github Organization on tab Authorization Configuration', 'Arise field to Add Github Organization on tab Authorization Configuration'],
+        496: ['Server Settings', 'Click on Bttn Submit on tab Authorization Configuration', 'Submit changes on tab Authorization Configuration'],
+
+        500: ['MB Header', 'Click on link Back to project', 'Transition to project'],
+        501: ['MB Header', 'Click on link Logout', 'Logout'],
+        502: ['MB Sidebar', 'Click on Menu Bttn Projects', 'Transition to Projects Page'],
+        503: ['MB Sidebar', 'Click on Menu Bttn All Users', 'Transition to All Users Page'],
+        504: ['MB Sidebar', 'Click on Menu Bttn Server Settings', 'Transition to Server Settings Page'],
+
+        505: ['Log', 'Click on icon Previous Attachment', 'Show Previous Attachment'],
+        506: ['Log', 'Click on icon Next Attachment', 'Show Next Attachment'],
+        507: ['Log', 'Click on opened Attachment', 'Arise modal with Attachment'],
+        508: ['Log', 'Click on thumbnail of Attachment', 'Show this Attachment'],
+        509: ['Log', 'Click on icon Close on Modal Attachment', 'Close Modal Attachment'],
+        510: ['Log', 'Click on icon Rotate on Modal Attachment', 'Rotate Attachment'],
+        511: ['Log', 'Click on Bttn Close on Modal Attachment', 'Close Modal Attachment'],
+
+    }
+
+    function getExportTitle(type){
+        return 'Click on "Export: ' + type + '" in Launch Menu';
+    }
+    function getExportDescription(type){
+        return 'Stars download of report in ' + type;
+    }
+    function getActionLaunchTitle(titleName) {
+        return 'Hover on Table title "' + titleName +'"';
+    }
+    function getDescriptionLaunchTitle(titleName) {
+        return 'Arise filter icon before Table title "' + titleName + '"';
+    }
+    function getActionTableFilter(titleName) {
+        return 'Click on Filter Icon before Table title "' + titleName + '"';
+    }
+    function getDescriptionTableFilter() {
+        return 'Arise new field in filter';
+    }
+    function getTooltipDescription(){
+        return 'Arise tooltip';
+    }
 
     var TrackingDispatcher = {
         trackEvent: function(){
-            this.trigger('trackEvent', arguments);
+            this.trigger('track:event', arguments);
         },
-        trackSiteSearch: function(){
-            this.trigger('trackSiteSearch', arguments);
+        pageView: function() {
+            this.trigger('page:view', arguments);
         },
-
-        userLoggedIn: function (login) {
-            this.trackEvent('"Nav", "Login", "Login " + login');
-        },
-        userLoggedOut: function (login) {
-            this.trackEvent('"Nav", "Logout", "Logout " + login');
-        },
-        projectChanged: function (project) {
-            this.trackEvent("Nav", "Project changed", "Project " + project);
-        },
-        adminPage: function () {
-            this.trackEvent("Nav", "Admin page", "Admin page visited ");
-        },
-        profilePage: function () {
-            this.trackEvent("Nav", "Profile page", "Profile page visited ");
-        },
-
-        profileInfoEdit: function () {
-            this.trackEvent("Profile", "Edit personal data", "Information updated");
-        },
-        profilePasswordChanged: function () {
-            this.trackEvent("Profile", "Change password", "Password changed");
-        },
-        profilePhotoUploaded: function () {
-            this.trackEvent("Profile", "Upload photo", "Photo uploaded");
-        },
-
-        logViewOpened: function (type, name) {
-            this.trackEvent("Test", "Log view opened", ["Log for " + type]);
-        },
-        logViewPaging: function (page, totalPages) {
-            this.trackEvent("Test", "Logs paged", "Pg:" + page + " / " + totalPages);
-        },
-        jiraTicketPost: function (screens, logs) {
-            this.trackEvent("Test", "Jira ticket post", "Pic: " + screens + " logs: " + logs);
-        },
-        jiraTicketLoad: function (num) {
-            this.trackEvent("Test", "Ticket load", "Number of tickets: " + num);
-        },
-        jiraTicketDelete: function () {
-            this.trackEvent("Test", "Ticket deleted", "Ticket deleted");
-        },
-        defectStateChange: function (was, is) {
-            this.trackEvent("Test", "Defect type changed", "Defect " + was +  "->" + is);
-        },
-        historyLineNavigation: function (diff) {
-            var direction = diff < 0 ? "forward" :  "back";
-            this.trackEvent("Test", "History line nav", "History "+ Math.abs(diff) + " steps " + direction);
-        },
-        testItemActivityExpanded: function (name) {
-            this.trackEvent("Test", "Test item activity expanded");
-        },
-        screenShotOpen: function () {
-            this.trackEvent("Test", "Screen shot opened");
-        },
-        logLevelIn: function (level) {
-            this.trackEvent("Test", "Log level", "Log level " + level);
-        },
-        searchLogMessage: function (string) {
-            this.trackSiteSearch("Test", "Message contains search", string);
-        },
-        nextPreviousTest: function(direction){
-            this.trackEvent("Test", "Next-Previous test case", "NxtPrv: " + direction);
-        },
-
-        logWithAttach: function () {
-            this.trackEvent("Log with attach", "Logs filtered by attach");
-        },
-        matchIssue: function (type) {
-            this.trackEvent("Match issue called", type);
-        },
-
-        filterClicked: function (isShared, name) {
-            this.trackEvent("Filters", "Filter name clicked", ["F.Click " + isShared, name]);
-        },
-        filterShared: function (isOn, name) {
-            this.trackEvent("Filters", "Filter shared", ["F.Shared " + isOn, name]);
-        },
-        filterFavoured: function (isOn, name) {
-            this.trackEvent("Filters", "Filter faved", ["F.Fav " + isOn, name]);
-        },
-
-        launchesMerge: function (count) {
-            this.trackEvent("Launch", "Merge Launch", "Merge " + count);
-        },
-        filterAdded: function (type, criteria) {
-            this.trackEvent("Launch", "Filter added", ["F.Add " + type, criteria]);
-        },
-        filterCndChanged: function (type) {
-            this.trackEvent("Launch", "Filter condition changed", type);
-        },
-        debugOn: function (status) {
-            this.trackEvent("Launch", "Debug ON " + status);
-        },
-        debugOff: function (status) {
-            this.trackEvent("Launch", "Debug OFF " + status);
-        },
-        filterTagClick: function (tag) {
-            this.trackEvent("Launch", "Filter tag click",  "Tag " + tag);
-        },
-        refreshGrid: function (level) {
-            this.trackEvent("Launches grid refresh", level);
-        },
-        listView: function (type, amount) {
-            this.trackEvent("Launch", "List view", "ListView " + type, amount);
-        },
-        historyView: function (depth) {
-            this.trackEvent("Launch", "HistoryView", "depth " + depth);
-        },
-        drillDown: function (level) {
-            this.trackEvent("Launch", "Drilldown", "lvl " + level);
-        },
-        tabSaved: function (amount) {
-            var type = amount > 1 ? 'Tab saved All' : 'Tab saved',
-                subType = amount > 1 ? 'Tab saved. All' : 'Tab saved. one';
-            this.trackEvent("Launch", type, subType, amount);
-        },
-        preconditionMethods: function(status) {
-            this.trackEvent("Launch", "Hide preconditions", "Hide pre: " + status);
-        },
-
-        dashboardSwitched: function (isShared) {
-            var type = isShared ? text.shared : text.own;
-            this.trackEvent("Dash", "Dash switched", "Dash open " + type);
-        },
-        dashboardDel: function (isShared) {
-            var type = isShared ? text.shared : text.own;
-            this.trackEvent("Dash", "Dash del", "Dash del " + type);
-        },
-        dashboardAdd: function (isShared) {
-            var type = isShared ? text.shared : text.notShared;
-            this.trackEvent("Dash", "Dash added", "Dash add " + type);
-        },
-        dashboardRefresh: function (isShared) {
-            // todo: implement when logic will be attached
-        },
-        dashboardExport: function (isShared) {
-            // todo: implement when logic will be attached
-        },
-        dashboardFullScreen: function (isShared) {
-            this.trackEvent("Dash", "Dash full screen", "Dash FULL is shared - " + isShared);
-        },
-
-        widgetAdded: function (type) {
-            this.trackEvent("Wdg", "Wdg added", "Wdg " + type);
-        },
-        widgetRemoveType: function (type) {
-            this.trackEvent("Wdg", "Wdg removed", "Wdg " + type);
-        },
-        widgetRemoveIsShared: function (isShared) {
-            var type = isShared ? text.shared : text.own;
-            this.trackEvent("Wdg", "Wdg removed", "Wdg " + type);
-        },
-        widgetRefresh: function (type) {
-            this.trackEvent("Wdg", "Wdgt refresh", "Wdgt refresh " + type);
-        },
-        widgetExport: function (type) {
-        // todo: implement when logic will be attached
-        },
+        trackEventNumber: function(num) {
+            if(!eventTable[num]) {
+                console.log('event "' + num + '" not found');
+                return;
+            }
+            this.trigger('track:event', eventTable[num]);
+        }
 
 
     };

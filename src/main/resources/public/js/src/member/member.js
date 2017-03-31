@@ -25,13 +25,14 @@ define(function(require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
-    var Components = require('components');
+    var Components = require('core/components');
     var urls = require('dataUrlResolver');
     var App = require('app');
     var Localization = require('localization');
     var Service = require('memberService');
     var Scrollable = require('scrollable');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var ModalConfirm = require('modals/modalConfirm');
 
     require('validate');
 
@@ -47,13 +48,13 @@ define(function(require, exports, module) {
         },
         render: function () {
             this.header = new Header({action: this.subContext, holder: this.context.getMainView().$header}).render();
-            $("#headerBar").append(Util.templates(this.permissionsMapTpl, {
+            /*$("#headerBar").append(Util.templates(this.permissionsMapTpl, {
                 btnVisible: {
                     btnPermissionMap: true,
                     btnProjectSettings: false,
                     btnProjectMembers: false
                 }
-            }));
+            }));*/
 
             $("#headerBar [data-js-show-permissions-map]").click(this.onClickShowPermissionsMap);
 
@@ -71,7 +72,7 @@ define(function(require, exports, module) {
             this.renderPageView();
             return this;
         },
-        permissionsMapTpl: 'tpl-permissions-map',
+        //permissionsMapTpl: 'tpl-permissions-map',
         membersNavigationTpl: 'tpl-members-navigation',
         events: {
             'click .tab': 'updateRoute',
@@ -600,7 +601,7 @@ define(function(require, exports, module) {
                 if(self.paging.urlModel.get('filter.cnt.login')) {
                     self.searchString = self.paging.urlModel.get('filter.cnt.login');
                 }
-                self.$memberFilter.val(self.searchString)
+                self.$memberFilter.val(self.searchString);
                 self.prevVal = self.searchString;
                 self.changeMembers();
             });
@@ -836,16 +837,9 @@ define(function(require, exports, module) {
                         }
                         return valid;
                     }) || {};
-
-            Util.confirmDeletionDialog({
-                callback: function () {
-                    this.doAction(member, index, el);
-                }.bind(this),
-                message: this.memberAction,
-                format: [member.full_name || member.userId, this.projectId]
-            });
+            this.doAction(member, index, el);
         },
-        removeMember: function(index, el){
+        removeMember: function (index, el) {
             var removeMember = this.members.splice(index, 1);
             this.loadMembers();
             this.trigger('user::action');
@@ -853,14 +847,24 @@ define(function(require, exports, module) {
         },
         doAction: function (member, index, el) {
             var self = this;
-            Service.unAssignMember(member.userId, self.projectId)
-                .done(function () {
-                    Util.ajaxSuccessMessenger("unAssignMember");
-                    self.removeMember();
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "unAssignMember");
-                });
+            var modal = new ModalConfirm({
+                headerText: Localization.dialogHeader.unAssignMember,
+                bodyText: Util.replaceTemplate(Localization.dialog.unAssignMember, member.userId, this.projectId),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonDanger: true,
+                okButtonText: Localization.dialog.unAssignMemberBtn,
+                confirmFunction: function() {
+                    return Service.unAssignMember(member.userId, self.projectId)
+                        .done(function () {
+                            Util.ajaxSuccessMessenger("unAssignMember");
+                            self.removeMember();
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error, "unAssignMember");
+                        });
+                }
+            });
+            modal.show();
         },
         destroy: function () {
             this.members = null;

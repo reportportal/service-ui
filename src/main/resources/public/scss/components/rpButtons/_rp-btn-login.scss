@@ -1,0 +1,55 @@
+/*-------------------------*/
+/* REMINDER FOR USE MIXINS */
+
+// @mixin rpBtnStyle($txtColor, $bgColor, $brColor, $boxShadow);
+
+/*-------------------*/
+/* CONSTANTS FOR USE */
+
+// $COLOR--white-default: #ffffff;
+//             $COLOR---: #f48265;
+
+/*--------*/
+/* LOGIN */
+
+.rp-btn {
+  &.rp-btn-login {
+    @include rpBtnStyle(
+        $COLOR--white-default,
+        #f48265,
+        #f48265,
+        false
+    );
+
+    &:hover {
+      @include rpBtnStyle(
+          $COLOR--white-default,
+          darken( #f48265, 15% ),
+          darken( #f48265, 15% ),
+          false
+      );
+    }
+
+    &:active {
+      @include rpBtnStyle(
+          $COLOR--white-default,
+          darken( #f48265, 30% ),
+          darken( #f48265, 30% ),
+          false
+      );
+    }
+
+    &:disabled,
+    &[disabled="disabled"],
+    &[disabled],
+    &.disabled {
+      @include rpBtnStyle(
+          $COLOR--white-default,
+          #f48265,
+          #f48265,
+          false
+      );
+      opacity: 0.4;
+    }
+  }
+}

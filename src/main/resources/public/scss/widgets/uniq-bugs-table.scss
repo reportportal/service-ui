@@ -1,0 +1,100 @@
+/*
+ * Copyright 2016 EPAM Systems
+ * 
+ * 
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ * 
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.uniq-bugs-table {
+  margin: -15px -15px 0;
+  position: relative;
+  .uniq-bugs-head {
+    border-top: 1px solid $COLOR--gray-91;
+    background: $COLOR--white;
+    @extend %CLEAR_FIX;
+
+    .uniq-bugs-th {
+      height: 50px;
+      text-transform: uppercase;
+      font-size: 12px;
+      color: $COLOR--gray-47;
+      position: relative;
+      .uniq-bugs-th-name {
+        font-family: $OpenSansSemibold;
+        @extend %VERTICAL_CENTER;
+      }
+    }
+  }
+  .uniq-bugs-row {
+    @extend %CLEAR_FIX;
+    padding: 13px 0;
+    border-top: 1px solid $COLOR--gray-91;
+    &:nth-child(2n) {
+      background: $COLOR--white-four;
+    }
+    &:hover {
+      background: $COLOR--tealish-opacity;
+    }
+  }
+  .uniq-bugs-id,
+  .uniq-bugs-date,
+  .uniq-bugs-user,
+  .uniq-bugs-item {
+    float: left;
+    width: 20%;
+    padding: 0 0 0 15px;
+  }
+  .uniq-bugs-id {
+    .bugs-id {
+      @include textEllipsis('inline');
+      word-break: break-all;
+    }
+  }
+  .uniq-bugs-user {
+    padding: 0 15px;
+    .owner-name {
+      @include textEllipsis('inline');
+    }
+    .bugs-avatar {
+      float: left;
+      .avatar {
+        max-width: 36px;
+        padding: 2px;
+        margin-right: 0.6em;
+        @extend %AVATAR;
+      }
+    }
+  }
+  .uniq-bugs-item {
+    width: 40%;
+    .bug-item {
+      @include textEllipsis('block');
+    }
+  }
+  .uniq-bugs-date {
+    .hoverFullTime {
+      height: 34px;
+      color: $COLOR--gray-60;
+    }
+  }
+  .mobile-disabling-cover {
+    @extend %MOBILE_DISABLING_COVER;
+  }
+}
+
+
+

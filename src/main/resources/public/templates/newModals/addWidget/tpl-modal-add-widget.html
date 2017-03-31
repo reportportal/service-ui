@@ -1,0 +1,43 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.widgets.addNewWidget}) %>
+<div class="modal-body">
+   <div class="info-block">
+       <ul>
+           <li data-js-step-1-title><span>1</span><span><%- data.text.widgets.selectType %></span></li>
+           <li data-js-step-2-title><span>2</span><span><%- data.text.widgets.configureWidget %></span></li>
+           <li data-js-step-3-title><span>3</span><span><%- data.text.ui.save %></span></li>
+       </ul>
+       <div class="preview-block">
+           <h2 data-js-widget-type></h2>
+           <p data-js-widget-description></p>
+           <div class="widget-preview" data-js-widget-preview></div>
+       </div>
+   </div>
+    <div class="action-block">
+        <div data-js-step-1>
+            <div class="buttons-block"></div>
+        </div>
+        <div data-js-step-2></div>
+        <div data-js-step-3></div>
+    </div>
+    <div class="buttons-block rp-nav-right">
+        <a class="rp-btn rp-btn-default rp-button-with-icon rp-btn-icon-reverse" data-js-next-second-step>
+            <i class="material-icons">keyboard_arrow_right</i>
+            <span class="rp-btn-val"><%- data.text.dashboard.nextStep %></span>
+        </a>
+        <a class="rp-btn rp-btn-default rp-button-with-icon" data-js-previous-first-step>
+            <i class="material-icons">keyboard_arrow_left</i>
+            <span class="rp-btn-val"><%- data.text.dashboard.previousStep %></span>
+        </a>
+        <a class="rp-btn rp-btn-default rp-button-with-icon rp-btn-icon-reverse" data-js-next-last-step>
+            <i class="material-icons">keyboard_arrow_right</i>
+            <span class="rp-btn-val"><%- data.text.dashboard.nextStep %></span>
+        </a>
+        <a class="rp-btn rp-btn-default rp-button-with-icon" data-js-previous-second-step>
+            <i class="material-icons">keyboard_arrow_left</i>
+            <span class="rp-btn-val"><%- data.text.dashboard.previousStep %></span>
+        </a>
+        <a class="rp-btn rp-btn-submit rp-btn-add" data-js-add-widget>
+            <span><%- data.text.ui.add %></span>
+        </a>
+    </div>
+</div>

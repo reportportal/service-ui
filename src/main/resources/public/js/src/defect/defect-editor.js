@@ -22,7 +22,7 @@
 define([
     'jquery',
     'backbone',
-    'components',
+    'core/components',
     'util',
     'app',
     'coreService',
@@ -263,7 +263,7 @@ define([
                         var oldDefectModel = this.navigationInfo.defectTypes.findWhere({locator: this.item.issue.issue_type});
                         var newDefectModel = this.navigationInfo.defectTypes.findWhere({locator: issue.issue_type});
                         if(oldDefectModel && newDefectModel) {
-                            config.trackingDispatcher.defectStateChange(oldDefectModel.get('typeRef'), newDefectModel.get('typeRef'));
+
                         }
                     }
                     config.commentAnchor = this.item.id;
@@ -469,7 +469,7 @@ define([
                                 errorHandler(error);
                             });
                         self.persistCredentials();
-                        config.trackingDispatcher.jiraTicketPost(data.include_data, data.include_logs);
+
                     })
                     .fail(function (error) {
                         errorHandler(error);
@@ -930,7 +930,7 @@ define([
                                 self.done();
                             });
                         config.session.lastLoadedTo = self.systemId;
-                        config.trackingDispatcher.jiraTicketLoad(data.issues.length);
+
                     })
                     .fail(function (error) {
                         Util.ajaxFailMessenger(error, "submitKeys");

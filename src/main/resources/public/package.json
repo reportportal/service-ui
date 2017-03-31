@@ -5,17 +5,18 @@
   "main": "index.js",
   "scripts": {
     "grunt": "grunt",
+    "build": "grunt build",
     "server": "webpack-dev-server --config config-server.js",
     "tests": "karma start"
   },
   "author": "me",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "autoprefixer": "^6.3.6",
     "cssnano": "^3.5.2",
     "grunt": "^0.4.5",
-    "grunt-assemble": "^0.4.0",
     "grunt-cli": "latest",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-concat": "^1.0.0",
