@@ -111,9 +111,6 @@ idea {
 
 processResources {
     exclude "**/public/*"
-    filesMatching('**/application*.yaml') {
-        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [version: project.property("version")])
-    }
 }
 
 // The run task added by the application plugin
