@@ -23,20 +23,23 @@
 /* SIDEBAR */
 
 .sidebar {
-  position: fixed;
+  position: absolute;
+  overflow-x: hidden;
   box-shadow: none;
   width: 90px;
   left: 0;
   top: 0;
   bottom: 0;
-  min-height: 100%;
+  min-height: 415px;
   background: #464547;
   color: #b4b4b4;
   z-index: 100;
+  transition: transform 0.5s cubic-bezier(0, 0, 0.2, 1);
   .user-menu {
     display: none;
   }
   .logo {
+    position: absolute;
     display: inline-block;
     box-sizing: border-box;
     padding: 16px 0 0 0;
@@ -63,22 +66,20 @@
 
   nav {
     position: relative;
+    padding-top: 60px;
     height: 100%;
-    height: -webkit-calc(100% - 60px);
-    height: -moz-calc(100% - 60px);
-    height: calc(100% - 60px);
     overflow: hidden;
 
-    @media (max-height: 455px) {
-      &:not(.admin-side-bar) {
-        min-height: 455px;
-
-        .user-menu {
-          position: static;
-          margin-top: 45px;
-        }
-      }
-    }
+    //@media (max-height: 455px) {
+    //  &:not(.admin-side-bar) {
+    //    min-height: 455px;
+    //
+    //    .user-menu {
+    //      position: static;
+    //      margin-top: 45px;
+    //    }
+    //  }
+    //}
 
     @media (max-height: 410px) {
       &.admin-side-bar,
@@ -211,7 +212,7 @@
   }
 
   #back-top {
-    position: fixed;
+    position: absolute;
     display: block;
     width: 90px;
     height: auto;
@@ -225,10 +226,23 @@
     line-height: 12px;
     opacity: 0.7;
 
+
+    @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+      width: 60px;
+    }
+
+    //@media (max-height: 400px) {
+    //  display: none !important;
+    //}
+
     &:hover {
       background: none;
       color: #fff;
       opacity: 1;
+    }
+
+    span {
+      white-space: pre-line;
     }
   }
 }
@@ -265,6 +279,7 @@
     left: -200px;
     width: 200px;
     &:before {
+      position: absolute;
       content: '';
       display: block;
       width: 100%;
@@ -337,6 +352,7 @@
 body.menu-open {
   @media (max-width: $SCREEN_XS_MAX) {
     .sidebar {
+      transform: translate(200px, 0);
       .sidebar-close {
         position: absolute;
         left: 100%;
