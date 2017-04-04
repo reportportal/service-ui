@@ -157,10 +157,10 @@ define(function (require, exports, module) {
             return Util.timeFormat(startTime, endTime);
         },
         validateForApproximateTime: function(){
-            var inProgress = this.model.get('isProgress'),
+            var inProgress = this.isProgress(),
                 type = this.model.get('type'),
-                isLaunch = type === 'launch' || !(!!type);
-            //console.log(inProgress, ' && ', isLaunch, ' ', this.model.get('status'));
+                isLaunch = type === 'LAUNCH' || !(!!type);
+            //console.log(inProgress, ' && ', isLaunch, ' ', this.model.get('status'), this.model.get('number'));
             return inProgress && isLaunch;
         },
         startTimer: function () {
@@ -190,7 +190,7 @@ define(function (require, exports, module) {
         },
         getApproximateTimeText: function(){
             var time = this.getApproximateTime();
-            if(time > 0){
+            if (time > 0) {
                 return time > 60 ? Localization.launches.approximateTimeLeft.replace('%%%', this.approximateTimeFormat(time)) : Localization.launches.approximateTimeLessMin;
             }
             return '';
@@ -201,8 +201,8 @@ define(function (require, exports, module) {
                 return '';
             }
             //console.log('time: ', time);
-            var end = this.approximateTimeFormat(Math.round(this.model.get('start_time') / 1000)),
-                over = this.approximateTimeFormat(time);
+            var end = this.approximateTimeFormat(this.model.get('approximateDuration') / 1000),
+                over = this.approximateTimeFormat(-time);
             return [Localization.launches.approximateTimeExpected, ' ', end, ', ', Localization.launches.approximateTimeOverLap, ' ', over].join('');
         },
         approximateTimeFormat: function (time) {
@@ -211,6 +211,7 @@ define(function (require, exports, module) {
                 minutes = Math.floor((time - (days * 86400) - (hours * 3600)) / 60),
                 seconds = time - (days * 86400) - (hours * 3600) - (minutes * 60),
                 val = '';
+
             if (days > 0) {
                 val = val + days + 'd ';
             }
