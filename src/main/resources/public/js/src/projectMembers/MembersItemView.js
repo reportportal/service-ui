@@ -75,7 +75,7 @@ define(function(require, exports, module) {
                     else if(!this.validateForPermissions()){
                         return members.unAssignTitleNoPermission;
                     }
-                    else if(this.unassignedLock()){
+                    else if(this.isUpsaUserOnUpsaProject()){
                         return members.unAssignTitleExternal;
                     }
                     return members.unAssignTitle;
@@ -90,7 +90,7 @@ define(function(require, exports, module) {
             canUnAssign: {
                 deps: ['isYou', 'userId', 'assigned_projects'],
                 get: function(isYou, userId, assigned_projects) {
-                    return !this.isPersonalProjectOwner() && !this.unassignedLock() && !isYou && this.validateForPermissions();
+                    return !this.isPersonalProjectOwner() && !this.unassignedLock() && !isYou && this.validateForPermissions() && !this.isUpsaUserOnUpsaProject();
                 }
             },
             canChangeRole: {
@@ -145,6 +145,10 @@ define(function(require, exports, module) {
             var project = this.appModel.get('projectId'),
                 isPersonalProject = this.appModel.isPersonalProject();
             return isPersonalProject && (project === this.model.get('userId') + '_personal');
+        },
+
+        isUpsaUserOnUpsaProject: function () {
+            return this.appModel.get('configuration').entryType === 'UPSA' && this.model.get('account_type') === 'UPSA';
         },
 
         unassignedLock: function(){
