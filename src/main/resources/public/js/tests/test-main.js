@@ -52,7 +52,6 @@ require.config({
         mainview: 'main-view',
         favorites: 'favorites',
         //register: 'register/register',
-        // filters: 'filter/filters',
         //components: 'core/components',
         lazyload: '../lib/jquery.lazyload.min',
         daterangepicker: '../lib/daterangepicker',
@@ -79,7 +78,6 @@ require.config({
 
         filtersPanel: 'filter/filters-panel',
         filtersResolver: 'filter/filters-resolver',
-        filtersService: 'filter/filters-service',
         profile: 'login/user_profile',
         ace: '../lib/ace/ace.custom',
         aceDark: '../lib/ace/theme-dark',
