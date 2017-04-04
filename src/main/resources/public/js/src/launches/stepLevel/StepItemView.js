@@ -152,7 +152,7 @@ define(function (require, exports, module) {
         },
         onClickTag: function(e) {
             var tag = $(e.currentTarget).data('js-tag');
-            this.addFastFilter('tags', tag);
+            this.filterModel && this.addFastFilter('tags', tag);
         },
         addFastFilter: function(filterId, value) {
             this.filterModel.trigger('add_entity', filterId, value);
