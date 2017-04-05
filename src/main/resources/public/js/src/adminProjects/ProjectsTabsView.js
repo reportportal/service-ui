@@ -17,9 +17,9 @@
  * 
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
@@ -29,6 +29,7 @@ define(function(require, exports, module) {
     var App = require('app');
     var ProjectsList = require('adminProjects/ProjectsListView');
     var Localization = require('localization');
+    var DropDownComponent = require('components/DropDownComponent');
 
     var config = App.getInstance();
 
@@ -37,11 +38,11 @@ define(function(require, exports, module) {
         tpl: 'tpl-projects-list-shell',
 
         events: {
-            'click [data-js-tab-action]': 'updateTabs',
+            'click [data-js-tab-action]': 'getTab',
             'click [data-js-sort-block] .rp-btn': 'changeSorting',
             'validation::change [data-js-filter-projects]': 'filterProjects',
             'click [data-js-view-type]': 'changeProjectsView',
-            'click [data-toggle="tab"]': 'updateTabs'
+            //'click [data-toggle="tab"]': 'updateTabs'
         },
 
         initialize: function (options) {
@@ -53,10 +54,10 @@ define(function(require, exports, module) {
                 viewType: config.defaultProjectsSettings.listView
             });
             var self = this;
-            this.model.on('change:sort change:direction change:search', function(){
+            this.model.on('change:sort change:direction change:search', function () {
                 self.update(self.tab);
             });
-            this.model.on('change:viewType', function(){
+            this.model.on('change:viewType', function () {
                 self.tabView.updateView();
             });
             this.render();
@@ -65,17 +66,16 @@ define(function(require, exports, module) {
         render: function () {
             this.$el.html(Util.templates(this.tpl, {tab: this.tab}));
             this.setupAnchors();
+            this.setupSelectDropDown();
             this.fillContent();
         },
 
-        update: function(tab, silent){
+        update: function (tab, silent) {
             this.tab = tab || "internal";
             this.renderTabContent();
         },
 
-        updateTabs: function (e) {
-            var $el = $(e.currentTarget),
-                tab = $el.data('js-tab-action');
+        updateTabs: function (tab) {
             switch (tab) {
                 case 'personal':
                     config.trackingDispatcher.trackEventNumber(446);
@@ -83,25 +83,41 @@ define(function(require, exports, module) {
                 default:
                     config.trackingDispatcher.trackEventNumber(445);
             }
-            config.router.navigate($el.attr('href'), {
-                silent: true
-            });
+            config.router.navigate('#administrate/projects/' + tab);
             this.clearSearch();
             this.update(tab, true);
         },
 
-        renderTabContent: function(){
-            if(this.tabView){
-                this.tabView.destroy();
-            }
+        setupSelectDropDown: function () {
+            this.tabSelector = new DropDownComponent({
+                data: [
+                    {name: 'INTERNAL PROJECTS', value: 'internal'},
+                    {name: 'PERSONAL PROJECTS', value: 'personal'}
+                ],
+                multiple: false,
+                defaultValue: this.tab,
+            });
+            $('[data-js-nav-tabs-mobile]', this.$el).html(this.tabSelector.$el);
+            this.listenTo(this.tabSelector, 'change', this.updateTabs);
+        },
+
+        getTab: function (e) {
+            e.preventDefault();
+            this.updateTabs($(e.currentTarget).data('js-tab-action'));
+        },
+
+        renderTabContent: function () {
+            this.tabView && this.tabView.destroy();
+
             this.tabView = this.getProjectsView();
-            var currentContent = $('[data-js-tab-content="' + this.tab + '"]', this.$el);
-            $('[data-js-tab-content]', this.$el).hide();
-            $('[data-js-selected-tab]', this.$el).text(this.tab === 'internal' ? Localization.admin.internalProjects : Localization.admin.personalProjects);
+            this.$tabContent.html(this.tabView.$el);
+
             $('[data-js-tab-action]', this.$el).closest('li.active').removeClass('active');
+            $('[data-js-nav-tabs-mobile] li.active', this.$el).removeClass('active');
             $('[data-js-tab-action="' + this.tab + '"]', this.$el).closest('li').addClass('active');
-            currentContent.append(this.tabView.$el);
-            currentContent.show();
+            $('[data-js-nav-tabs-mobile] [data-value="' + this.tab + '"]', this.$el).parent().addClass('active');
+            this.tabSelector.activateItem(this.tab);
+
         },
 
         fillContent: function (options) {
@@ -116,15 +132,16 @@ define(function(require, exports, module) {
             this.listenTo(this.tabView, 'loadProjectsReady', this.onLoadProjectsReady);
         },
 
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$sortBlock = $("[data-js-sort-block]", this.$el);
             this.$searchString = $("[data-js-filter-projects]", this.$el);
+            this.$tabContent = $('[data-js-tab-content]', this.$el);
         },
 
         getProjectsView: function () {
             return new ProjectsList({
                 projectsType: this.tab,
-                total: $('[data-js-'+this.tab+'-qty]', this.$el),
+                total: $('[data-js-' + this.tab + '-qty]', this.$el),
                 model: this.model
             });
         },
@@ -170,12 +187,12 @@ define(function(require, exports, module) {
             }, config.userFilterDelay);
         },
 
-        clearSearch: function(){
+        clearSearch: function () {
             this.model.set('search', config.defaultProjectsSettings.search, {silent: true});
             this.$searchString.val('');
         },
 
-        destroy: function(){
+        destroy: function () {
             this.tabView && this.tabView.destroy();
             this.undelegateEvents();
             this.stopListening();

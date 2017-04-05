@@ -68,41 +68,6 @@
       width: 100%;
       height: 545px;
       margin-bottom: 20px;
-
-      .twitter-content {
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-
-        .caption {
-          width: 100%;
-          height: 24px;
-          padding-left: 25px;
-          margin-bottom: 20px;
-          line-height: 24px;
-          font-family: $OpenSansRegular, sans-serif;
-          font-size: 16px;
-          text-align: center;
-          color: #6f898d;
-          background-image: url('../../img/login/socials/twitter-gray.png');
-          background-repeat: no-repeat;
-          background-position: 45px 50%;
-        }
-
-        .twits {
-          width: 100%;
-          .twit {
-            display: block;
-            width: 100%;
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            -webkit-border-radius: 2px;
-            -moz-border-radius: 2px;
-            border-radius: 2px;
-            background-color: $COLOR--white-default;
-          }
-        }
-      }
     }
 
     .separator {

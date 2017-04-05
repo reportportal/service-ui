@@ -1,22 +1,19 @@
 <ul class="nav-tabs-custom" role="tablist">
     <li class="<%= data.tab === 'email' ? 'active' : '' %>">
-        <a href="#administrate/settings/email" class="tab" data-js-tab-action="email">
+        <a href="#" class="tab" data-js-tab-action="email">
             <%= data.text.admin.emailSettings %>
         </a>
     </li>
     <li class="<%= data.tab === 'auth' ? 'active' : '' %>">
-        <a href="#administrate/settings/auth" class="tab" data-js-tab-action="auth">
+        <a href="#" class="tab" data-js-tab-action="auth">
             <%= data.text.admin.authSettings %>
         </a>
     </li>
     <li class="<%= data.tab === 'statistics' ? 'active' : '' %>">
-        <a href="#administrate/settings/statistics" class="tab" data-js-tab-action="statistics">
+        <a href="#" class="tab" data-js-tab-action="statistics">
             <%= data.text.admin.statisticsSettings %>
         </a>
     </li>
 </ul>
-<div class="tab-content setting-content-wrapper">
-    <div class="tab-pane <%= data.tab === 'email' ? 'active' : '' %>" data-js-tab-content="email"></div>
-    <div class="tab-pane <%= data.tab === 'auth' ? 'active' : '' %>" data-js-tab-content="auth"></div>
-    <div class="tab-pane <%= data.tab === 'statistics' ? 'active' : '' %>" data-js-tab-content="statistics"></div>
-</div>
+<div data-js-nav-tabs-mobile class="nav-tabs-mobile"></div>
+<div data-js-tab-content class="tab-content"></div>

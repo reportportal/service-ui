@@ -112,7 +112,10 @@ define(function (require, exports, module) {
 
         },
         render: function() {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, {isMyDashboard: this.isMyDashboard()}));
+        },
+        isMyDashboard: function () {
+            return this.model.get('owner') === config.userModel.get('name');
         },
         onAddNewGadget: function(model) {
             this.checkEmptyDashboard();

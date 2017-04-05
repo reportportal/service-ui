@@ -48,6 +48,7 @@ define(function(require, exports, module) {
             '[data-js-user-login]': 'html: getLogin',
             '[data-js-user-email]': 'html: getEmail, attr: {href: getEmailLink}',
             '[data-js-user-you]': 'classes: {hide: not(isYou)}',
+            '[data-js-delete-user]': 'classes: {you: isYou}',
             '[data-js-user-admin]': 'classes: {hide: not(isAdmin), notlink: isYou}',
             '[data-js-make-admin]': 'classes: {hide: hideMakeAdmin}',
             '[data-js-user-projects-mobile]': 'getUserProjects: assigned_projects',
@@ -192,24 +193,27 @@ define(function(require, exports, module) {
         deleteUser: function(e){
             config.trackingDispatcher.trackEventNumber(468);
             e.preventDefault();
-            var modal = new ModalConfirm({
-                headerText: Localization.dialogHeader.deleteUser,
-                bodyText: Util.replaceTemplate(Localization.dialog.deleteUser, this.model.get('full_name') ||this.model.get('userId')),
-                cancelButtonText: Localization.ui.cancel,
-                okButtonDanger: true,
-                okButtonText: Localization.ui.delete,
-                confirmFunction: function(){
-                    config.trackingDispatcher.trackEventNumber(477);
-                    return this.model.delete();
-                }.bind(this)
-            });
-            $('[data-js-close]', modal.$el).on('click', function(){
-                config.trackingDispatcher.trackEventNumber(475);
-            });
-            $('[data-js-cancel]', modal.$el).on('click', function(){
-                config.trackingDispatcher.trackEventNumber(476);
-            });
-            modal.show();
+
+            if (config.userModel.get('user_login') !== this.model.get('userId')) {
+                var modal = new ModalConfirm({
+                    headerText: Localization.dialogHeader.deleteUser,
+                    bodyText: Util.replaceTemplate(Localization.dialog.deleteUser, this.model.get('full_name') ||this.model.get('userId')),
+                    cancelButtonText: Localization.ui.cancel,
+                    okButtonDanger: true,
+                    okButtonText: Localization.ui.delete,
+                    confirmFunction: function(){
+                        config.trackingDispatcher.trackEventNumber(477);
+                        return this.model.delete();
+                    }.bind(this)
+                });
+                $('[data-js-close]', modal.$el).on('click', function(){
+                    config.trackingDispatcher.trackEventNumber(475);
+                });
+                $('[data-js-cancel]', modal.$el).on('click', function(){
+                    config.trackingDispatcher.trackEventNumber(476);
+                });
+                modal.show();
+            }
         },
 
         toggleTimeView: function(e){

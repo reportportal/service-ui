@@ -228,6 +228,14 @@
           font-size: 18px;
           line-height: 20px;
         }
+
+        &.you {
+          cursor: not-allowed;
+
+          .rp-icons-delete {
+            color: $COLOR--gray-80;
+          }
+        }
       }
     }
     .users-project-roles {

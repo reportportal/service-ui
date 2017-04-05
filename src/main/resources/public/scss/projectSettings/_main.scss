@@ -19,5 +19,10 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'defect-types';
-@import 'demo-data';
+@import 'tabViews/bts/bts';
+@import 'tabViews/defectTypes/defect-types';
+@import 'tabViews/demoData/demo-data';
+@import 'tabViews/general/general';
+@import 'tabViews/notifications/notifications';
+
+@import 'settingsView';

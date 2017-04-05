@@ -23,45 +23,56 @@ define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
+    var Epoxy = require('backbone-epoxy');
     var Backbone = require('backbone');
     var Util = require('util');
-    var Components = require('core/components');
     var App = require('app');
-    var Service = require('coreService');
     var Localization = require('localization');
-    var SingletonAppModel = require('model/SingletonAppModel');
+    var Service = require('coreService');
 
     var config = App.getInstance();
 
-    var DemoDataSettingsView = Components.BaseView.extend({
-        initialize: function (options) {
-            this.$el = options.holder;
-            this.model = new Backbone.Model({postfix: ''});
-            this.listenTo(this.model, 'change:postfix', function(){config.trackingDispatcher.trackEventNumber(428)});
-        },
+    var DemoDataTabView = Epoxy.View.extend({
+
+        className: 'demo-data-project-settings',
+
+        attributes: {'data-js-demo-data': ''},
+
+        tpl: 'tpl-project-settings-demo-data',
+
         events: {
             'click [data-js-demo-data-submit]': 'submitSettings',
             'input [data-js-demo-data-postfix]': 'validate',
             'keypress [data-js-demo-data-postfix]': 'onEnterActions',
         },
-        tpl: 'tpl-project-settings-demo-data',
+
+        initialize: function () {
+            this.model = new Backbone.Model({postfix: ''});
+            this.listenTo(this.model, 'change:postfix', function () {
+                config.trackingDispatcher.trackEventNumber(428)
+            });
+            this.render();
+        },
+
         render: function () {
             this.$el.html(Util.templates(this.tpl));
             this.setupAnchors();
             this.initValidators();
             return this;
         },
+
         setupAnchors: function () {
             this.$submitSettings = $('[data-js-demo-data-submit]', this.$el);
             this.$postfixInput = $('[data-js-demo-data-postfix]', this.$el);
             this.$alertLoaderBlock = $('[data-js-demo-data-loader]', this.$el);
         },
+
         toggleDisableForm: function (disable) {
             this.$postfixInput.prop('disabled', disable);
             this.$submitSettings.prop('disabled', disable);
         },
+
         initValidators: function () {
-            var self = this;
             Util.hintValidator(this.$postfixInput, [
                 {
                     type: 'postfix',
@@ -71,15 +82,18 @@ define(function (require, exports, module) {
                 }
             ]);
         },
+
         validate: function () {
             this.$postfixInput.trigger('validate');
         },
+
         onEnterActions: function (e) {
             if (e.keyCode === 13) {
                 this.submitSettings();
                 return false;
             }
         },
+
         showFormError: function (error) {
             var response = null,
                 message = '';
@@ -107,14 +121,17 @@ define(function (require, exports, module) {
             form.addClass('has-error');
             $('.help-inline', form).text(message);
         },
+
         hideFormError: function () {
             var form = this.$postfixInput.closest('.rp-form-group');
             form.removeClass('has-error');
             $('.help-inline', form).text('');
         },
+
         toggleLoader: function (action) {
             this.$alertLoaderBlock[action]();
         },
+
         submitSettings: function (e) {
             this.validate();
             if ($('.validate-error', this.$el).length) return;
@@ -149,10 +166,11 @@ define(function (require, exports, module) {
                 }.bind(this));
 
         },
-        destroy: function () {
-            Components.RemovableView.prototype.destroy.call(this);
+
+        onDestroy: function () {
+
         }
     });
 
-    return DemoDataSettingsView;
+    return DemoDataTabView;
 });

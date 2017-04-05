@@ -36,6 +36,7 @@ define(function (require, exports, module) {
 
     var EmailServerSettingsView = Epoxy.View.extend({
 
+        className: 'rp-email-server-settings',
         template: 'tpl-email-server-settings',
 
         bindings: {

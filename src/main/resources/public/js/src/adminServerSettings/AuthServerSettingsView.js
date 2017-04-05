@@ -36,8 +36,17 @@ define(function(require, exports, module) {
 
     var AuthServerSettingsView = Epoxy.View.extend({
 
+        className: 'rp-auth-server-settings',
+
         template: 'tpl-auth-server-settings',
         orgTpl: 'tpl-auth-server-organizations',
+
+        events: {
+            'click [data-js-add-org-btn]': 'showAddOrganization',
+            'click [data-js-delete-org]': 'confirmDeleteOrg',
+            'click [data-js-remove-add-new-org]': 'hideAddOrganization',
+            'click [data-js-submit-auth-settings]': 'submitAuthSettings'
+        },
 
         bindings: {
             //'[data-js-guest-enable]': 'checked: enableGuestAccount',
@@ -78,13 +87,6 @@ define(function(require, exports, module) {
                     }, this);
                 }
             }
-        },
-
-        events: {
-            'click [data-js-add-org-btn]': 'showAddOrganization',
-            'click [data-js-delete-org]': 'confirmDeleteOrg',
-            'click [data-js-remove-add-new-org]': 'hideAddOrganization',
-            'click [data-js-submit-auth-settings]': 'submitAuthSettings'
         },
 
         initialize: function(options){

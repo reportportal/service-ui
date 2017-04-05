@@ -31,7 +31,6 @@ define(function (require, exports, module) {
         urls = require('dataUrlResolver'),
         App = require('app'),
         Service = require('coreService'),
-        FiltersService = require('filtersService'),
         Moment = require('moment'),
         WidgetsConfig = require('widget/widgetsConfig'),
         SingletonAppModel = require('model/SingletonAppModel'),
