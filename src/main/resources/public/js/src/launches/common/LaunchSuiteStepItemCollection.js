@@ -367,6 +367,8 @@ define(function (require, exports, module) {
             _.each(response.content, function(modelData) {
                 modelData.issue && (modelData.issue = JSON.stringify(modelData.issue));
                 modelData.tags && (modelData.tags = JSON.stringify(modelData.tags));
+                modelData.paging_page = self.pagingData.number;
+                modelData.paging_size = self.pagingData.size;
                 if (self.launchModel) {
                     modelData.parent_launch_owner = self.launchModel.get('owner');
                     modelData.parent_launch_status = self.launchModel.get('status');
