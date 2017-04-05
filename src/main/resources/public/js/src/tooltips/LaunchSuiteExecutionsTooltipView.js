@@ -38,6 +38,11 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, {stats: this.data}));
         },
 
+        update: function (data) {
+            this.data = data;
+            this.render();
+        },
+
         destroy: function () {
             this.undelegateEvents();
             this.stopListening();
