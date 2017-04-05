@@ -4,10 +4,10 @@ info:
     description: ReportPortal User Interface
     version: '@version@'
     branch: '@branch@'
+    repo: '@repo@'
 
 spring:
   profiles:
-    ## Default one is still Eureka
-    active: ${rp.profiles:eureka}
+    active: ${rp.profiles:default}
   application:
     name: ui
