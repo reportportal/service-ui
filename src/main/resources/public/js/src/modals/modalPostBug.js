@@ -527,7 +527,7 @@ define(function (require, exports, module) {
                         backlinkMiddlePart += '/' + key;
                     }
 
-                    backLink[item.id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + item.id;
+                    backLink[item.id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + item.id + '&page.page=' + item.get('paging_page') + '&page.size=' + item.get('paging_size');
                 });
             } else {
                 var id = this.items[0].id;
@@ -538,7 +538,7 @@ define(function (require, exports, module) {
                     backlinkMiddlePart += '/' + key;
                 }
 
-                backLink[id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + id;
+                backLink[id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + id + '&page.page=' + this.item[0].get('paging_page') + '&page.size=' + this.item[0].get('paging_size');
             }
             return backLink;
         },
