@@ -25,6 +25,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var Localization = require('localization');
+    var SimpleTooltipView = require('tooltips/SimpleTooltipView');
 
     var config = App.getInstance();
 
@@ -51,19 +52,37 @@ define(function (require, exports, module) {
             this.listenTo(this.model, 'change', this.update);
         },
         setTooltip: function () {
+            var self = this;
             if (this.model.get('description')) {
-                Util.appendTooltip(this.model.get('description'), $('[data-js-filter-comment]', this.$el), this.$el,
-                function() { config.trackingDispatcher.trackEventNumber(18); }, 'filter-description-tooltip');
+                Util.appendTooltip(function() {
+                        var tooltip = new SimpleTooltipView({
+                            message: self.model.get('description')
+                        });
+                        return tooltip.$el;
+                    }, $('[data-js-filter-comment]', this.$el), this.$el,
+                function() { config.trackingDispatcher.trackEventNumber(18); });
             }
-            Util.appendTooltip(Localization.launches.filterIsSharedByOtherUser, $('[data-js-filter-not-my]', this.$el), this.$el,
+            Util.appendTooltip(function() {
+                var tooltip = new SimpleTooltipView({
+                    message: Localization.launches.filterIsSharedByOtherUser
+                });
+                return tooltip.$el;
+            }, $('[data-js-filter-not-my]', this.$el), this.$el,
                 function() { config.trackingDispatcher.trackEventNumber(19); });
-            Util.appendTooltip(Localization.launches.filterIsShared, $('[data-js-filter-shared]', this.$el), this.$el,
+            Util.appendTooltip(function() {
+                var tooltip = new SimpleTooltipView({
+                    message: Localization.launches.filterIsShared
+                });
+                return tooltip.$el;
+            }, $('[data-js-filter-shared]', this.$el), this.$el,
                 function() { config.trackingDispatcher.trackEventNumber(20); });
-            Util.appendTooltip(Localization.filters.notSaveDescription, $('[data-js-filter-not-save]', this.$el), this.$el,
+            Util.appendTooltip(function() {
+                var tooltip = new SimpleTooltipView({
+                    message: Localization.filters.notSaveDescription
+                });
+                return tooltip.$el;
+            }, $('[data-js-filter-not-save]', this.$el), this.$el,
                 function() { config.trackingDispatcher.trackEventNumber(21); });
-
-
-
         },
         update: function () {
             this.setTooltip();

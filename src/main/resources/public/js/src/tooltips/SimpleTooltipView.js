@@ -28,7 +28,7 @@ define(function (require, exports, module) {
 
 
     var SimpleTooltip = Epoxy.View.extend({
-        template: 'tpl-launch-message-tooltip',
+        template: 'tpl-simple-tooltip',
         className: 'simple-tooltip',
 
         initialize: function(options) {
