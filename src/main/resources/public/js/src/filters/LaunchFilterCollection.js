@@ -29,6 +29,7 @@ define(function(require, exports, module) {
     var _ = require('underscore');
     var App = require('app');
     var Util = require('util');
+    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
 
     var config = App.getInstance();
     var call = CallService.call;
@@ -109,13 +110,15 @@ define(function(require, exports, module) {
             var self = this;
             return call('GET', Urls.getFilters(ids))
                 .done(function(data) {
-                    self.reset(_.map(data, function(item){
-                        item.isLaunch = true;
-                        item.type = 'launch';
-                        item.entities = JSON.stringify(item.entities);
-                        item.selection_parameters = JSON.stringify(item.selection_parameters);
-                        return item;
-                    }));
+                    (new SingletonDefectTypeCollection).ready.done(function () {
+                        self.reset(_.map(data, function(item){
+                            item.isLaunch = true;
+                            item.type = 'launch';
+                            item.entities = JSON.stringify(item.entities);
+                            item.selection_parameters = JSON.stringify(item.selection_parameters);
+                            return item;
+                        }));
+                    })
                 })
         },
         generateTempModel: function(data) {
