@@ -72,7 +72,22 @@ define(function (require, exports, module) {
         },
         bindings: {
             ':el': 'classes: {hide: not(gadgetIsFilter)}',
-            '[data-js-seach-query]': 'text: search'
+            '[data-js-seach-query]': 'text: search',
+            '[data-js-filter-none]' : 'classes: {hide:   filterMessage(search,empty)}',
+
+
+            '[data-js-filter-empty]' : 'classes: { hide:  not(search)  }',
+
+        },
+        bindingFilters: {
+            filterMessage: function (search, empty) {
+                if(!search && empty){
+                    return false;
+                }
+                else {
+                    return true;
+                }
+            }
         },
         initialize: function (options) {
             this.modalType = options.modalType;
@@ -81,7 +96,7 @@ define(function (require, exports, module) {
             this.renderViews = [];
             this.render();
             this.viewModel = new Epoxy.Model({
-                search: '',
+                search: "",
                 empty: false,
                 notFound: false,
                 currentPage: 1,
@@ -276,9 +291,8 @@ define(function (require, exports, module) {
                         self.setFilterModel(self.collection.get(self.model.get('filter_id')));
                     }
                     $('[data-js-select-filter-block]', self.$el)[(!data.content.length ? 'add' : 'remove') + 'Class']('hide');
-                    $('[data-js-filter-empty]', self.$el)[((data.content.length ||  self.viewModel.get('search')=="") ? 'add' : 'remove') + 'Class']('hide');
-                    $('[data-js-filter-none]', self.$el)[((data.content.length || self.viewModel.get('search')!="")? 'add' : 'remove') + 'Class']('hide');
                 });
+
         },
         getQueryString: function (query) {
             if (!query) query = {};
