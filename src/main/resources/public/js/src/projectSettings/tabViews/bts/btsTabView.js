@@ -389,7 +389,6 @@ define(function (require, exports, module) {
                 .done(function (response) {
                     self.setupValidityState();
                     self.$fieldsWrapper.show();
-
                     if (response.id) {
                         self.externalId = response.id;
                         self.updateCredentials(externalSystemData, response.id);
@@ -407,6 +406,10 @@ define(function (require, exports, module) {
                     self.renderInstance();
                     self.renderMultiSelector();
                     self.$tbsChangeWarning.hide();
+
+                    if (call === 'updateExternalSystem') {
+                        Util.addMessage({clazz: 'success', message: response.msg});
+                    }
                 })
                 .fail(function (error) {
                     self.handleBtsFailure(error);
