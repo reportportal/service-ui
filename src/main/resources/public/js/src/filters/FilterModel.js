@@ -213,7 +213,7 @@ define(function(require, exports, module) {
                 return defectType.get('longName');
             }
             var firstPartKey = type + '$' + splitKey[0] + '$' + defectTypeTotal;
-            if (Localization.filterNameById[firstPartKey]) {
+            if (!Localization.filterNameById[firstPartKey]) {
                 return false
             }
             return locator.capitalizeName();
