@@ -144,11 +144,12 @@ define(function (require, exports, module) {
             if(type == 'warning' || type == 'comment' || type == 'tickets' || type == 'issue') {
                 Util.appendTooltip(function() {
                     var tooltip = new SimpleTooltipView({
+                        width: 200,
                         message: (type === 'issue') ?
                             '<span class="defect-color" style="background: ' + el.css('backgroundColor') + '"></span>' + ' ' + el.data('tooltip-content') :
                             el.data('tooltip-content')
                     });
-                    return tooltip.$el.html();
+                    return tooltip.$el;
                 }, $hoverElement, $hoverElement);
                 el.uitooltip('option', 'position', {my: "center+7.5 top+10", collision: "flipfit" }).uitooltip('open');
             }
@@ -159,7 +160,7 @@ define(function (require, exports, module) {
                         noLink: true,
                         model: self.model
                     });
-                    return hoverView.$el.html();
+                    return hoverView.$el;
                 }, $hoverElement, $hoverElement);
                 el.uitooltip('option', 'position', {my: "center+7.5 top+10", collision: "flipfit" }).uitooltip('open');
 

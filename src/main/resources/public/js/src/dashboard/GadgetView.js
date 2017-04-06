@@ -83,7 +83,7 @@ define(function (require, exports, module) {
             if(description){
                 Util.appendTooltip(function() {
                     var tooltip = new SimpleTooltipView({message: description});
-                    return tooltip.$el.html();
+                    return tooltip.$el;
                 }, el, el);
             }
         },

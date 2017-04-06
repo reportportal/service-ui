@@ -20,9 +20,24 @@
  */
 
 .simple-tooltip {
-  width: 400px;
-  color: $COLOR--gray-47;
-  font-family: 'OpenSansSemibold',sans-serif;
-  font-size: 12px;
-  word-wrap: break-word;
+  max-width: 430px;
+
+  .message-container {
+    color: $COLOR--charcoal-grey;
+    font-family: $OpenSansRegular;
+    font-size: 12px;
+    line-height: 1.43;
+    padding: 1px 5px 3px;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+
+    .defect-color {
+      width: 12px;
+      height: 12px;
+      float: left;
+      display: block;
+      border-radius: 50%;
+      margin: 3px 9px 0 4px;
+    }
+  }
 }
