@@ -1496,7 +1496,7 @@ define(['util'], function () {
             clearExternalSystem: "Failed to clear current BTS setup",
             mergeLaunches: "Failed to merge selected launches",
             forceUpdateUserRoles: "Error when update data from UPSA",
-            forceUpdateGitHub: "Error when update data from GitHub",
+            forceUpdateGitHub: "Error during data has been force updated",
             updateUuid: "Error when regenerate UUID: ",
             loadHistory: "Failed to load history for current item",
             loadActivityItems: "Failed to load activity items",
