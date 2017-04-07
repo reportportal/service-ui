@@ -120,9 +120,9 @@ define(function (require, exports, module) {
         },
         forceUpdate: function(e){
             e.preventDefault();
-            var type = this.model.get('account_type');
-            if(type.toLowerCase() === 'github'){
-                Service.gitHubForceUpdate()
+            var type = (this.model.get('account_type')).toLowerCase();
+            if(type !== 'internal'){
+                Service.externalForceUpdate(type)
                     .done(function(data){
                         this.showForceUpdateModal(data);
                     }.bind(this))

@@ -310,8 +310,8 @@ define([
         return call('PUT', urls.generateUUID());
     };
 
-    var gitHubForceUpdate = function(data){
-        return call('POST', urls.updateGitHubProfile());
+    var externalForceUpdate = function(accountType){
+        return call('POST', urls.updateExternalProfile(accountType));
     };
 
     var searchLaunches = function (query) {
@@ -444,7 +444,7 @@ define([
 
         deletePhoto: deletePhoto,
         generateUUID: generateUUID,
-        gitHubForceUpdate: gitHubForceUpdate,
+        externalForceUpdate: externalForceUpdate,
 
         deleteLaunch: deleteLaunch,
         deleteTestItem: deleteTestItem,

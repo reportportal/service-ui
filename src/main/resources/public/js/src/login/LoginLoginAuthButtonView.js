@@ -34,15 +34,20 @@ define(function(require, exports, module) {
 
 
     var LoginLoginAuthButtonView = Epoxy.View.extend({
-        className:'rp-btn rp-btn-submit login-login-auth-button',
+        className:'login-login-auth-button',
+        template: 'tpl-new-login-auth-button',
 
         events: {
-            'click': 'onClickButton',
+            'click [data-js-auth-button]': 'onClickButton',
         },
 
         initialize: function (options) {
-            this.$el.html(options.button);
+            this.render();
+            $('[data-js-auth-button]', this.$el).html(options.button);
             this.path = options.path;
+        },
+        render: function() {
+            this.$el.html(Util.templates(this.template, {}));
         },
         onClickButton: function () {
             window.location = window.location.protocol + '//' + window.location.host + '/uat' + this.path;
