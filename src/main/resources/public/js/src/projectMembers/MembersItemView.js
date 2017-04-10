@@ -114,7 +114,7 @@ define(function(require, exports, module) {
             hideMakeAdmin: {
                 deps: ['isAdmin', 'isYou'],
                 get: function(isAdmin, isYou){
-                    return isAdmin || isYou;
+                    return isAdmin || isYou || !this.isAdminContext;
                 }
             }
         },
@@ -142,6 +142,7 @@ define(function(require, exports, module) {
         },
 
         initialize: function (options) {
+            this.isAdminContext = options.isAdminContext;
             this.searchString = options.searchString || '';
             this.roles = Util.getRolesMap();
             this.appModel = new SingletonAppModel();
