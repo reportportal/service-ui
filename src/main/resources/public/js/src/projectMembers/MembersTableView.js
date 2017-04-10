@@ -193,7 +193,7 @@ define(function(require, exports, module) {
                 return;
             }
             _.each(this.collection.models, function(model) {
-                var memberItem = new MembersItemView({model: model, searchString: this.model.get('search')});
+                var memberItem = new MembersItemView({model: model, searchString: this.model.get('search'), isAdminContext: this.isGrandAdmin});
                 this.$membersList.append(memberItem.$el);
                 this.renderViews.push(memberItem);
             }, this);
