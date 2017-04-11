@@ -1,9 +1,18 @@
 language: java
 
-script: ./gradlew build
+install:
+  - npm install -g codecov
+
+script: 
+  - ./gradlew build
+  - cd src/main/resources/public
+  - npm run test
 
 jdk:
   - oraclejdk8
 
 notifications:
   slack: reportportal-dev:fl6xWHVQp1jvsMmCJxYW9YKP
+
+after_success:
+  - codecov
