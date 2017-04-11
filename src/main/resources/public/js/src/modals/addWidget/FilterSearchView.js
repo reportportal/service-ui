@@ -266,7 +266,8 @@ define(function (require, exports, module) {
                         self.setFilterModel(self.collection.get(self.model.get('filter_id')));
                     }
                     $('[data-js-select-filter-block]', self.$el)[(!data.content.length ? 'add' : 'remove') + 'Class']('hide');
-                    $('[data-js-filter-empty]', self.$el)[(data.content.length ? 'add' : 'remove') + 'Class']('hide');
+                    $('[data-js-filter-empty]', self.$el)[((data.content.length ||  self.viewModel.get('search')=="") ? 'add' : 'remove') + 'Class']('hide');
+                    $('[data-js-filter-none]', self.$el)[((data.content.length || self.viewModel.get('search')!="")? 'add' : 'remove') + 'Class']('hide');
                 });
         },
         getQueryString: function (query) {
