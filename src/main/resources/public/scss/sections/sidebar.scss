@@ -225,10 +225,23 @@
     line-height: 12px;
     opacity: 0.7;
 
+
+    @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+      width: 60px;
+    }
+
+    @media (max-height: 400px) {
+      display: none !important;
+    }
+
     &:hover {
       background: none;
       color: #fff;
       opacity: 1;
+    }
+
+    span {
+      white-space: pre-line;
     }
   }
 }
