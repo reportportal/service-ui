@@ -165,24 +165,6 @@
           }
         }
       }
-      &.show-from-now {
-        .login-time {
-          .exact-time {
-            display: none;
-          }
-          .from-now {
-            display: inline-block;
-          }
-          &:hover {
-            .exact-time {
-              display: inline-block;
-            }
-            .from-now {
-              display: none;
-            }
-          }
-        }
-      }
       .member-select-role {
         width: 100%;
         max-width: 250px;
@@ -211,7 +193,24 @@
         text-transform: uppercase;
       }
     }
-
+    &.show-from-now {
+      .login-time {
+        .exact-time {
+          display: none;
+        }
+        .from-now {
+          display: inline-block;
+        }
+        &:hover {
+          .exact-time {
+            display: inline-block;
+          }
+          .from-now {
+            display: none;
+          }
+        }
+      }
+    }
   }
   .project-empty-members {
 
