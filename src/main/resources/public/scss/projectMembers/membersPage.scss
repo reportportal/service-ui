@@ -49,10 +49,28 @@
     }
   }
   .project-members-table {
+    .name-grid-cell {
+      width: 35%;
+    }
+    .login-grid-cell {
+      width: 20%;
+    }
+    .role-grid-cell {
+      width: 27%;
+    }
+    .action-grid-cell {
+      width: 18%;
+    }
     .rp-grid-thead {
       border-top: 1px solid $COLOR--gray-91;
-    }
 
+      .action-grid-cell {
+        .action-right {
+          text-align: right;
+          padding-right: 66px;
+        }
+      }
+    }
     .rp-table-row {
       padding: 20px 0;
 
@@ -65,24 +83,6 @@
               }
             }
           }
-        }
-      }
-
-      .name-grid-cell {
-        width: 35%;
-      }
-      .login-grid-cell {
-        width: 20%;
-      }
-      .role-grid-cell {
-        width: 27%;
-      }
-      .action-grid-cell {
-        width: 18%;
-
-        .action-right {
-          text-align: right;
-          padding-right: 66px;
         }
       }
 
