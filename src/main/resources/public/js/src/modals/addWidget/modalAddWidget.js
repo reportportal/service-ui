@@ -95,7 +95,7 @@ define(function (require) {
         onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(290);
         },
-        onChangePreview: function () {
+        onChangePreview: function (model) {
             this.curWidget = WidgetService.getWidgetConfig(model.get('gadget'));
             this.previewWidgetView && this.previewWidgetView.destroy();
             this.previewWidgetView = new PreviewWidgetView({

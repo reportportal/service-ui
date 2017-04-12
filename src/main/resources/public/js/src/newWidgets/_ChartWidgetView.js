@@ -32,7 +32,6 @@ define(function (require, exports, module) {
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var d3 = require('d3');
     var d3tip = require('d3Tip');
-    var nvd3 = require('nvd3');
 
     var config = App.getInstance();
 
