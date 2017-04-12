@@ -19,29 +19,33 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
-    var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
 
     var SelectDashboardItemView = Epoxy.View.extend({
         className: 'select-dashboard-item',
         template: 'tpl-modal-add-widget-select-dashboard-item',
+        events: {
+            click: 'onClickItem'
+        },
         bindings: {
             '[data-js-dashboard-item]': 'attr: {"data-dashboard-id": id}, classes: {active: active}',
             '[data-js-dashboard-item] span': 'text: name',
             '[data-js-share-icon]': 'classes: {hide: not(isShared)}'
         },
-        initialize: function(options) {
+        initialize: function () {
             this.render();
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        destroy: function() {
+        onClickItem: function () {
+            this.model.set({ active: true });
+        },
+        destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
