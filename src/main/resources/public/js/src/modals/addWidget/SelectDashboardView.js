@@ -19,83 +19,79 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var DashboardCollection = require('dashboard/DashboardCollection');
-    var DashboardModel = require('dashboard/DashboardModel');
     var SelectDashboardItemView = require('modals/addWidget/SelectDashboardItemView');
     var Localization = require('localization');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var SelectDashboardView = Epoxy.View.extend({
         className: 'modal-add-widget-select-dashboard',
         template: 'tpl-modal-add-widget-select-dashboard',
-        events: {
-            'click [data-js-dashboard-item]': 'setActiveDashboard',
-        },
-        initialize: function() {
+        initialize: function () {
             this.render();
         },
-        render: function() {
+        render: function () {
+            var self = this;
             this.destroyItems();
             this.$el.html(Util.templates(this.template, {}));
-            var self = this;
             this.$el.addClass('load');
-            this.collection = new DashboardCollection({});
-            this.collection.ready
-                .done(function() {
+            this.collection = new Backbone.Collection();
+            this.allDashboardCollection = new DashboardCollection({});
+            this.allDashboardCollection.ready
+                .done(function () {
                     self.$el.removeClass('load');
+                    self.collection.reset(self.allDashboardCollection.where({ owner: config.userModel.get('name') }));
                     self.activate();
                 });
             this.listenTo(this.collection, 'change:active', this.onChangeActive);
         },
-        activate: function(){
+        activate: function () {
+            var active;
             $('[data-js-dashboard-items]', this.$el).removeClass('hide');
-            if(this.collection.isEmpty()){
-                this.collection.add({id: _.uniqueId(), name: Localization.dashboard.firstDashboard, owner: config.userModel.get('name')});
+            if (this.collection.isEmpty()) {
+                this.collection.add({
+                    id: _.uniqueId(),
+                    name: Localization.dashboard.firstDashboard,
+                    owner: config.userModel.get('name')
+                });
                 $('[data-js-auto-created]', this.$el).removeClass('hide');
             }
-            var active = this.collection.first();
+            active = this.collection.first();
             active.set('active', true);
             this.renderItems();
         },
-        renderItems: function(){
+        renderItems: function () {
             this.destroyItems();
-            _.each(this.collection.models, function(model){
-                var item = new SelectDashboardItemView({model: model});
+            _.each(this.collection.models, function (model) {
+                var item = new SelectDashboardItemView({ model: model });
                 $('[data-js-dashboard-items]', this.$el).append(item.$el);
                 this.renderedItems.push(item);
             }, this);
         },
-        destroyItems: function(){
-            _.each(this.renderedItems, function(view){
+        destroyItems: function () {
+            _.each(this.renderedItems, function (view) {
                 view && view.destroy();
             });
             this.renderedItems = [];
             $('[data-js-dashboard-items]', this.$el).empty();
         },
-        setActiveDashboard: function(e){
-            e.preventDefault();
-            e.stopPropagation();
-            var $el = $(e.currentTarget),
-                id = $el.data('dashboardId'),
-                model = this.collection.get(id);
-            model.set('active', true);
-        },
-        onChangeActive: function(model){
-            if(model.get('active')){
+        onChangeActive: function (model) {
+            if (model.get('active')) {
                 this.trigger('change::dashboard', model);
             }
         },
-        destroy: function() {
+        onDestroy: function () {
             this.destroyItems();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
             this.$el.remove();
         }
     });
