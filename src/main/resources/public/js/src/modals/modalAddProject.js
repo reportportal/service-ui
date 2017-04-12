@@ -14,19 +14,15 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
-    var Backbone = require('backbone');
-    var Epoxy = require('backbone-epoxy');
     var App = require('app');
     var Util = require('util');
     var AdminService = require('adminService');
-
-    require('validate');
 
     var config = App.getInstance();
 
@@ -39,66 +35,70 @@ define(function (require, exports, module) {
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel'
         },
-        initialize: function(options) {
+        initialize: function () {
             this.render();
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
             this.setupAnchors();
+        },
+        onShow: function () {
+            var self = this;
             this.showLoading();
             AdminService.getProjectNames()
                 .done(function (data) {
-                    this.allNames = _.map(data, function (n) {
-                        return n.toLowerCase();
+                    self.allNames = _.map(data, function (name) {
+                        return name.toLowerCase();
                     });
-                    this.bindValidators();
-                    this.hideLoading();
-
-                }.bind(this))
-                .fail(function (error) {});
-
+                })
+                .always(function () {
+                    self.bindValidators();
+                    self.hideLoading();
+                });
         },
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$project = $('[data-js-project-name]', this.$el);
         },
-        bindValidators: function(){
+        bindValidators: function () {
             Util.hintValidator(this.$project, [
-                {validator: 'required', type: 'projectName', noTrim: true},
-                {validator: 'minMaxNotRequired', type: 'addProjectName', min: 3, max: 256, noTrim: true},
-                {validator: 'matchRegex', type: 'projectNameRegex', pattern: '^[a-zA-Z0-9_-]*$', arg: 'i', noTrim: true},
-                {validator: 'noDuplications', type: 'projectName', source: this.allNames || []}
+                { validator: 'required', type: 'projectName', noTrim: true },
+                { validator: 'minMaxNotRequired', type: 'addProjectName', min: 3, max: 256, noTrim: true },
+                { validator: 'matchRegex', type: 'projectNameRegex', pattern: '^[a-zA-Z0-9_-]*$', arg: 'i', noTrim: true },
+                { validator: 'noDuplications', type: 'projectName', source: this.allNames || [] }
             ]);
         },
         getProjectUrl: function (id, action) {
-            var url = '#administrate/project-details/',
-                tail = id ? id + '/' + action : action;
+            var url = '#administrate/project-details/';
+            var tail = id ? id + '/' + action : action;
             return url + tail;
         },
-        onClickClose: function(){
+        onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(453);
         },
-        onClickCancel: function(){
+        onClickCancel: function () {
             config.trackingDispatcher.trackEventNumber(454);
         },
         onKeySuccess: function () {
             $('[data-js-add]', this.$el).focus().trigger('click');
         },
         addProject: function () {
+            var name = this.$project.val().toLowerCase();
+            var self = this;
             this.$project.trigger('validate');
-            if($('.validate-error', this.$el).length){
+            if ($('.validate-error', this.$el).length) {
                 return;
             }
             config.trackingDispatcher.trackEventNumber(455);
             this.showLoading();
-            var name = this.$project.val().toLowerCase();
             AdminService.createProject(name)
-                .done(function (data) {
-                    config.userModel.get('projects')[name] = {projectRole: "MEMBER", entryType: "INTERNAL"};
+                .done(function () {
+                    config.userModel.get('projects')[name] = { projectRole: 'MEMBER', entryType: 'INTERNAL' };
                     Util.ajaxSuccessMessenger('projectCreated', name);
-                    config.router.navigate(this.getProjectUrl(name, 'settings'), {trigger: true});
-                    this.successClose();
-                }.bind(this))
+                    config.router.navigate(self.getProjectUrl(name, 'settings'), { trigger: true });
+                    self.successClose();
+                })
                 .fail(function (error) {
+                    self.hideLoading();
                     Util.ajaxFailMessenger(error, 'projectCreate');
                 });
         }
