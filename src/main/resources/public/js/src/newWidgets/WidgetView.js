@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
@@ -32,22 +32,21 @@ define(function (require, exports, module) {
         render: function (options) {
             var gadget = this.model.get('gadget');
             var CurrentView = WidgetService.getWidgetView(gadget);
-            var self = this;
-            setTimeout(function () {
-                var widgetData = {
-                    model: self.model,
-                    isPreview: (options && options.preview) || false
-                };
-                self.widget && self.widget.destroy();
-                self.widget = new CurrentView(widgetData);
-                self.$el.append(self.widget.$el);
-                self.widget.onShow();
-            }, 1);
+            var widgetData = {
+                model: this.model,
+                isPreview: (options && options.preview) || false
+            };
+            this.widget && this.widget.destroy();
+            this.widget = new CurrentView(widgetData);
+            this.$el.append(this.widget.$el);
+        },
+        onShow: function () {
+            this.widget.onShow();
         },
         resize: function () {
             this.widget.updateWidget();
         },
-        destroy: function () {
+        onDestroy: function () {
             this.widget && this.widget.destroy();
             this.$el.remove();
         }

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
@@ -52,9 +52,9 @@ define(function (require, exports, module) {
             var color = defect ? defect.color : Util.getDefaultColor(name);
             return color;
         },
-        invalidDataMessage: function (n) {
+        invalidDataMessage: function (numberOfCriteria) {
             return Util.templates('tpl-widget-invalid-data', {
-                qty: n
+                qty: numberOfCriteria
             });
         },
         linkToRedirectService: function (series, id) {
@@ -80,6 +80,10 @@ define(function (require, exports, module) {
                 var subDefects = defectTypes.toJSON();
                 return Util.getSubDefectsLocators(type, subDefects);
             };
+            var types;
+            var defects;
+            var defect;
+
             switch (series) {
             case 'Total':
             case 'total':
@@ -127,8 +131,8 @@ define(function (require, exports, module) {
                 break;
             case 'Investigated':
             case 'investigated':
-                var types = ['System Issue', 'Product Bug', 'No Defect', 'Automation Bug'],
-                    defects = [];
+                types = ['System Issue', 'Product Bug', 'No Defect', 'Automation Bug'];
+                defects = [];
                 _.each(types, function (d) {
                     defects = defects.concat(getDefects(d));
                 });
@@ -139,7 +143,7 @@ define(function (require, exports, module) {
                 filterStatus = '';
                 break;
             default :
-                var defect = _.find(defectTypes.toJSON(), function (d) {
+                defect = _.find(defectTypes.toJSON(), function (d) {
                     return d.locator === series;
                 });
                 if (defect) {

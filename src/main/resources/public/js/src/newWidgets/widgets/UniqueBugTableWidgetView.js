@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -68,6 +68,8 @@ define(function (require, exports, module) {
                 dateFormat: Util.dateFormat,
                 moment: Moment
             };
+            var self = this;
+            var scrollEl;
             this.items = this.getData();
             params.items = this.items;
             this.$el.html(Util.templates(this.tpl, params));
@@ -77,8 +79,7 @@ define(function (require, exports, module) {
             this.currentBugItemIndex = 0;
             this.addPackItems();
             if (!this.isPreview) {
-                var scrollEl = Util.setupBaronScroll($('', this.$el));
-                var self = this;
+                scrollEl = Util.setupBaronScroll($('.uniq-bugs-table', this.$el));
                 scrollEl.scroll(function () {
                     var elem = scrollEl.get(0);
                     if (elem.scrollHeight - elem.scrollTop < elem.offsetHeight * 2) {
@@ -96,7 +97,10 @@ define(function (require, exports, module) {
                 }
                 if (this.currentBugItemIndex < this.currentBug.items.length) {
                     this.lastBugContainer.append(
-                        Util.templates(this.tplItem, this.currentBug.items[this.currentBugItemIndex])
+                        Util.templates(
+                            this.tplItem,
+                            this.currentBug.items[this.currentBugItemIndex]
+                        )
                     );
                     addedPack.push(this.currentBug.items[this.currentBugItemIndex]);
                     this.currentBugItemIndex++;
@@ -108,16 +112,18 @@ define(function (require, exports, module) {
             this.getItemsInfo(addedPack);
         },
         addBugList: function () {
+            var params;
+            var $listElement;
             if (this.currentBugIndex >= this.items.length) return false;
             this.currentBug = this.items[this.currentBugIndex];
-            var params = {
+            params = {
                 item: this.currentBug,
                 dateFormat: Util.dateFormat,
                 imageRoot: urls.getAvatar,
                 methodUpdateImagePath: Util.updateImagePath,
                 moment: Moment
             };
-            var $listElement = $.parseHTML(Util.templates(this.tplList, params));
+            $listElement = $.parseHTML(Util.templates(this.tplList, params));
             Util.hoverFullTime($listElement);
             this.listContainer.append($listElement);
             this.lastBugContainer = $('[data-js-bugs-item]:last', this.listContainer);
@@ -139,9 +145,10 @@ define(function (require, exports, module) {
             return '#' + projectId + '/launches/all/' + path.join('/') + '?log.item=' + id;
         },
         getItemsInfo: function (items) {
+            var self = this;
+            var itemsIds;
             if (items.length) {
-                var self = this;
-                var itemsIds = _.uniq(_.map(items, function (item) { return item.testItemId; }));
+                itemsIds = _.uniq(_.map(items, function (item) { return item.testItemId; }));
                 coreService.getTestItemsInfo(itemsIds)
                     .done(function (response) {
                         _.each(itemsIds, function (id) {
