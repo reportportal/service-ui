@@ -55,13 +55,13 @@ define(function (require, exports, module) {
         computeds: {
             getProjectRole: {
                 deps: ['projectRole'],
-                get: function(projectRole) {
+                get: function (projectRole) {
                     var roles = Util.getRolesMap();
                     return roles[projectRole];
                 }
             }
         },
-        initialize: function(options) {
+        initialize: function (options) {
             this.type = options.type;
             this.appModel = new SingletonAppModel();
             this.model = new Epoxy.Model({
@@ -71,29 +71,27 @@ define(function (require, exports, module) {
             });
             this.render();
         },
-        onKeySuccess: function() {
+        onKeySuccess: function () {
             $('[data-js-load]', this.$el).trigger('click');
         },
-        onClickInvite: function() {
-            if(this.type == 'users'){
+        onClickInvite: function () {
+            if (this.type == 'users') {
                 config.trackingDispatcher.trackEventNumber(471);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(437);
             }
-            if(this.$form.valid()) {
-                if(Util.validateEmail(this.model.get('user'))){
+            if (this.$form.valid()) {
+                if (Util.validateEmail(this.model.get('user'))) {
                     this.inviteUser();
-                }
-                else {
+                } else {
                     this.assignUser();
                 }
             }
         },
-        onClickOk: function(){
+        onClickOk: function () {
             this.successClose();
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {
                 roles: Util.getRolesMap(),
                 canSelectRole: this.canSelectRole.bind(this),
@@ -104,10 +102,10 @@ define(function (require, exports, module) {
             this.setupUserSearch();
             this.setupProjectSearch();
         },
-        isUsers: function(){
+        isUsers: function () {
             return this.type == 'users';
         },
-        canSelectRole: function(role){
+        canSelectRole: function (role) {
             var user = config.userModel,
                 userRole = user.getRoleForCurrentProject(),
                 userRoleIndex = _.indexOf(config.projectRoles, userRole),
@@ -115,7 +113,7 @@ define(function (require, exports, module) {
                 isAdmin = user.get('isAdmin');
             return isAdmin || (user.hasPermissions() && userRoleIndex >= roleIndex);
         },
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$form = $('[data-js-invite-user-form]', this.$el);
             this.$inviteBtn = $('[ data-js-load]', this.$el);
             this.$okBtn = $('[ data-js-ok]', this.$el);
@@ -125,15 +123,14 @@ define(function (require, exports, module) {
             this.$inviteLink = $('[data-js-invite-link]', this.$el);
             this.$selectProject = $('[data-js-user-project]', this.$el);
         },
-        setupUserSearch:function() {
+        setupUserSearch: function () {
             var self = this;
-            if(!this.isUsers()) {
+            if (!this.isUsers()) {
                 UserSearchComponent.setupUserSearch(self.$usersField);
                 self.$usersField.on('change', function () {
                     self.$usersField.valid && _.isFunction(self.$usersField.valid) && self.$usersField.valid();
                 });
-            }
-            else {
+            } else {
                 self.$usersField.addClass('rp-input-default rp-width-100 form-control');
                 self.$usersField.rules('add', {
                     email: true,
@@ -147,7 +144,7 @@ define(function (require, exports, module) {
         },
         remoteValidation: function () {
             return {
-                type: "GET",
+                type: 'GET',
                 url:
                     Urls.userInfoValidation(),
                 data: {},
@@ -155,13 +152,13 @@ define(function (require, exports, module) {
                     var data = JSON.parse(response);
                     return !data.is;
                 }
-            }
+            };
         },
         setupValidation: function () {
             var self = this;
             $.validator.setDefaults({
                 debug: true,
-                success: "valid"
+                success: 'valid'
             });
             this.validator = this.$form.validate({
                 errorClass: 'has-error',
@@ -187,7 +184,7 @@ define(function (require, exports, module) {
                     $(element).closest('[data-js-invite-user-form-group]').removeClass(errorClass);
                 }
             });
-            if(this.isUsers()){
+            if (this.isUsers()) {
                 this.addProjectValidation();
             }
         },
@@ -211,7 +208,7 @@ define(function (require, exports, module) {
             if (link.hasClass('disabled-option')) return;
             this.model.set('projectRole', val);
         },
-        setupProjectSearch:function() {
+        setupProjectSearch: function () {
             var self = this;
             Util.setupSelect2WhithScroll(this.$selectProject, {
                 multiple: false,
@@ -221,14 +218,14 @@ define(function (require, exports, module) {
                 placeholder: Localization.admin.enterProjectName,
                 allowClear: true,
                 initSelection: function (element, callback) {
-                    callback({id: element.val(), text: element.val()});
+                    callback({ id: element.val(), text: element.val() });
                 },
                 query: function (query) {
                     AdminService.getProjects(self.getSearchQuery(query.term))
                         .done(function (response) {
-                            var data = {results: []}
+                            var data = { results: [] };
                             _.each(response.content, function (item) {
-                                if(item.projectId !== self.model.get('default_project')) {
+                                if (item.projectId !== self.model.get('default_project')) {
                                     data.results.push({
                                         id: item.projectId,
                                         text: item.projectId
@@ -243,45 +240,43 @@ define(function (require, exports, module) {
                 }
             });
         },
-        getSearchQuery: function(query){
-            return '?page.sort=name,asc&page.page=1&page.size='+ config.autocompletePageSize +'&filter.cnt.name=' + query;
+        getSearchQuery: function (query) {
+            return '?page.sort=name,asc&page.page=1&page.size=' + config.autocompletePageSize + '&filter.cnt.name=' + query;
         },
-        selectLink: function(e){
+        selectLink: function (e) {
             e.preventDefault();
             $(e.currentTarget).select();
         },
-        copyLink: function(e){
+        copyLink: function (e) {
             e.preventDefault();
             this.$inviteLink.select();
             try {
                 document.execCommand('copy');
             } catch (err) {}
         },
-        getUserData: function(){
+        getUserData: function () {
             var user = this.model.toJSON();
             return {
                 default_project: this.isUsers() ? user.default_project : this.appModel.get('projectId'),
                 email: user.user,
                 role: user.projectRole
-            }
+            };
         },
-        onClickClose: function(){
-            if(this.type == 'users'){
+        onClickClose: function () {
+            if (this.type == 'users') {
                 config.trackingDispatcher.trackEventNumber(469);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(435);
             }
         },
-        onClickCancel: function(){
-            if(this.type == 'users'){
+        onClickCancel: function () {
+            if (this.type == 'users') {
                 config.trackingDispatcher.trackEventNumber(470);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(436);
             }
         },
-        assignUser: function(){
+        assignUser: function () {
             var userData = this.getUserData();
             if (userData) {
                 var data = {};
@@ -289,14 +284,14 @@ define(function (require, exports, module) {
                 this.showLoading();
                 MembersService.assignMember(data, userData.default_project)
                     .done(function () {
-                        Util.ajaxSuccessMessenger("assignMember", userData.email);
+                        Util.ajaxSuccessMessenger('assignMember', userData.email);
                         this.trigger('add:user');
                         this.successClose();
                     }.bind(this))
                     .fail(function (error) {
-                        Util.ajaxFailMessenger(error, "assignMember");
+                        Util.ajaxFailMessenger(error, 'assignMember');
                     })
-                    .always(function(){
+                    .always(function () {
                         this.hideLoading();
                     }.bind(this));
             }
@@ -318,23 +313,24 @@ define(function (require, exports, module) {
                                 error = JSON.parse(responce.responseText);
                             } catch (e) {}
                         }
-                        if(error && (error.error_code == 40305 || error.message.indexOf(messages.serverNotConfigured) >=0)){
-                            Util.ajaxFailMessenger(null, 'inviteMember', messages.impossibleInvite);
+                        // if(error && (error.error_code == 40305 || error.message.indexOf(messages.serverNotConfigured) >=0)){
+                        //     Util.ajaxFailMessenger(null, 'inviteMember', messages.impossibleInvite);
+                        // }
+                        // else {
+                        // use server message
+                        if (error) {
+                            Util.addMessage({ clazz: 'alert', message: error.message });
+                        } else {
+                            Util.ajaxFailMessenger(responce, 'inviteMember');
                         }
-                        else {
-                            if(error) {
-                                Util.addMessage({clazz: 'alert', message: error.message});
-                            } else {
-                                Util.ajaxFailMessenger(responce, 'inviteMember');
-                            }
-                        }
+                        // }
                     })
-                    .always(function(){
+                    .always(function () {
                         this.hideLoading();
                     }.bind(this));
             }
         },
-        showSuccess: function(data){
+        showSuccess: function (data) {
             this.$inviteLink.val(data.backLink);
             this.$inviteBtn.addClass('hide');
             this.$cancelBtn.addClass('hide');
