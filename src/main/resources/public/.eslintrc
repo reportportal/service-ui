@@ -12,6 +12,7 @@
     "no-debugger": 0,
     "no-console": 0,
     "indent": ["error", 4],
-    "quotes": [2, "single"]
+    "quotes": [2, "single"],
+    "no-unused-expressions": ["error", { "allowShortCircuit": true }]
   }
 }

@@ -1,20 +1,20 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -51,7 +51,7 @@ define(function (require, exports, module) {
 
         templates: function (name, data) {
             var data = data || {};
-            data['text'] = Localization;
+            data.text = Localization;
             data.includeTemplate = Util.templates;
 
             var template = Tpl[name];
@@ -62,9 +62,8 @@ define(function (require, exports, module) {
                     tplText = tplText + '<!-- end ' + name + ' -->';
                 }
                 return tplText;
-            } else {
-                return '';
             }
+            return '';
         },
 
         getDocumentationHtml: function () {
@@ -80,7 +79,7 @@ define(function (require, exports, module) {
 
             return async.promise();
         },
-        checkWidthScroll: function() {
+        checkWidthScroll: function () {
             var div = document.createElement('div');
             div.style.overflowY = 'scroll';
             div.style.width = '50px';
@@ -111,29 +110,29 @@ define(function (require, exports, module) {
             };
             String.prototype.stringToHexColor = function () {
                 for (var i = 0, hash = 0; i < this.length; hash = this.charCodeAt(i++) + ((hash << 5) - hash));
-                for (var i = 0, colour = "#"; i < 3; colour += ("00" + ((hash >> i++ * 8) & 0xFF).toString(16)).slice(-2));
+                for (var i = 0, colour = '#'; i < 3; colour += ('00' + ((hash >> i++ * 8) & 0xFF).toString(16)).slice(-2));
                 return colour;
             };
             String.prototype.escapeHtml = function () {
                 return this
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")
-                    .replace(/"/g, "&quot;")
-                    .replace(/'/g, "&#039;");
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;');
             };
             String.prototype.escapeScript = function () {
                 return this
                     .replace(/(?!<code>)*<script*>*(?!<\/code>)/gi, ' ');
             };
-            String.prototype.indentSpases = function() {
-                return this.replace(/^ +/gm, function(str) {
-                    return str.replace(/ /g, '&nbsp;')
-                })
+            String.prototype.indentSpases = function () {
+                return this.replace(/^ +/gm, function (str) {
+                    return str.replace(/ /g, '&nbsp;');
+                });
             };
 
             String.prototype.replaceNewLines = function () {
-                return this.replace(/\\r\\n/g, "<br>");
+                return this.replace(/\\r\\n/g, '<br>');
             };
             String.prototype.replaceTabs = function () {
                 return this.replace(/\t/g, '').replace(/&#9;/g, '').replace(/&#x09;/g, '');
@@ -157,49 +156,44 @@ define(function (require, exports, module) {
             };
             String.prototype.capitalizeName = function () {
                 return this.replace('_', ' ').toLowerCase().replace(/(?:_|\b)(\w)/g, function (str, p1) {
-                    return p1.toUpperCase()
+                    return p1.toUpperCase();
                 });
             };
             String.prototype.getCapitalizedOnly = function () {
-                return this.replace(/[^A-Z]/g, "");
+                return this.replace(/[^A-Z]/g, '');
             };
             String.prototype.escapeLessDirection = function () {
                 return this.replace('filter.lte.', 'filter.gte.');
             };
             String.prototype.escapeNaN = function () {
-                return this.toUpperCase() === "NAN" ? "0" : this;
+                return this.toUpperCase() === 'NAN' ? '0' : this;
             };
             String.prototype.setMaxLength = function (max) {
-                return this.length > max ? this.slice(0, max - 3) + "..." : this;
+                return this.length > max ? this.slice(0, max - 3) + '...' : this;
             };
             String.prototype.escapeRE = function (text) {
-                return this.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+                return this.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
             };
             stringsHasBeenExtended = true;
         },
 
         extendArrays: function () {
-            if (Array.prototype.equals)
-                console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
+            if (Array.prototype.equals) { console.warn('Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there\'s a framework conflict or you\'ve got double inclusions in your code.'); }
             Array.prototype.equals = function (array) {
-                if (!array)
-                    return false;
+                if (!array) { return false; }
 
-                if (this.length != array.length)
-                    return false;
+                if (this.length != array.length) { return false; }
 
                 for (var i = 0, l = this.length; i < l; i++) {
                     if (this[i] instanceof Array && array[i] instanceof Array) {
-                        if (!this[i].equals(array[i]))
-                            return false;
-                    }
-                    else if (this[i] != array[i]) {
+                        if (!this[i].equals(array[i])) { return false; }
+                    } else if (this[i] != array[i]) {
                         return false;
                     }
                 }
                 return true;
             };
-            Object.defineProperty(Array.prototype, "equals", {enumerable: false});
+            Object.defineProperty(Array.prototype, 'equals', { enumerable: false });
         },
         appendTooltip: function (content, $el, $parrent, openCallback) {
             $el.uitooltip({
@@ -209,13 +203,13 @@ define(function (require, exports, module) {
                     of: $parrent,
                     collision: 'fit'
                 },
-                show: {effect: 'none', delay: 500, duration: 0},
-                hide: {effect: 'none', duration: 0},
+                show: { effect: 'none', delay: 500, duration: 0 },
+                hide: { effect: 'none', duration: 0 },
                 items: ':not([disabled])',
                 content: content,
-                open: function( event, ui ) {
-                    setTimeout(function() {
-                        if($(event.currentTarget).attr('aria-describedby')) {
+                open: function (event, ui) {
+                    setTimeout(function () {
+                        if ($(event.currentTarget).attr('aria-describedby')) {
                             openCallback && openCallback();
                         }
                     }, 500);
@@ -228,7 +222,7 @@ define(function (require, exports, module) {
             if (!value) {
                 return '';
             }
-            var regex = new RegExp(search.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'ig');
+            var regex = new RegExp(search.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&'), 'ig');
             return value.replace(regex, '<mark>$&</mark>');
         },
         replaceOccurrences: function (occurenceArr) {
@@ -236,10 +230,10 @@ define(function (require, exports, module) {
                 var finalString = string.trim();
 
                 for (var i = 0; i < occurenceArr.length; i++) {
-                    finalString = finalString.replace("%%%", _.escape(occurenceArr[i]));
+                    finalString = finalString.replace('%%%', _.escape(occurenceArr[i]));
                 }
                 return finalString;
-            }
+            };
         },
         replaceTemplate: function (template) {
             var result = template;
@@ -251,9 +245,9 @@ define(function (require, exports, module) {
         shimBind: function () {
             if (!Function.prototype.bind) {
                 Function.prototype.bind = function (oThis) {
-                    if (typeof this !== "function") {
+                    if (typeof this !== 'function') {
                         // closest thing possible to the ECMAScript 5 internal IsCallable function
-                        throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+                        throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
                     }
 
                     var aArgs = Array.prototype.slice.call(arguments, 1),
@@ -284,7 +278,7 @@ define(function (require, exports, module) {
             var self = this;
             $.ajaxSetup({
                 dataType: 'json',
-                contentType: "application/json;charset=UTF-8",
+                contentType: 'application/json;charset=UTF-8',
                 beforeSend: this.ajaxBeforeSend.bind(this),
                 complete: function (req) {
                     self.removeXhrFromPool(req);
@@ -294,12 +288,12 @@ define(function (require, exports, module) {
                 .ajaxStart(function () {
                     NP.start();
                 }).ajaxComplete(function () {
-                NP.done();
-            }).ajaxError(function (event, jqxhr, settings, exception) {
-                if (Util.validateForLogOut(jqxhr)) {
-                    return false;
-                }
-            });
+                    NP.done();
+                }).ajaxError(function (event, jqxhr, settings, exception) {
+                    if (Util.validateForLogOut(jqxhr)) {
+                        return false;
+                    }
+                });
             window.isActive = true;
             $(window).focus(function () {
                 this.isActive = true;
@@ -311,7 +305,7 @@ define(function (require, exports, module) {
         validateForLogOut: function (jqxhr) {
             if (jqxhr.status === 401) {
                 if (config.userModel.get('auth')) {
-                    this.addMessage({clazz: 'alert', message: Localization.failMessages.sessionExpired});
+                    this.addMessage({ clazz: 'alert', message: Localization.failMessages.sessionExpired });
                 }
                 config.userModel && config.userModel.clearSession();
                 $('.modal').modal('hide');
@@ -329,9 +323,9 @@ define(function (require, exports, module) {
                 return path;
             }
             if (~path.indexOf('?')) {
-                path = path + '&';
+                path += '&';
             } else {
-                path = path + '?';
+                path += '?';
             }
             return path + 'access_token=' + partToken;
         },
@@ -373,7 +367,7 @@ define(function (require, exports, module) {
             }
 
             _.delay(function () {
-                self.clearMessage()
+                self.clearMessage();
             }, 10000);
         },
 
@@ -383,12 +377,12 @@ define(function (require, exports, module) {
             }
         },
         showOverlay: function (element, deleting) {
-            $(element).LoadingOverlay("show", {
-                image: "img/graph_loader.gif"
+            $(element).LoadingOverlay('show', {
+                image: 'img/graph_loader.gif'
             });
         },
         hideOverlay: function (element) {
-            $(element).LoadingOverlay("hide");
+            $(element).LoadingOverlay('hide');
         },
         hideMessagePanel: function () {
             var self = this;
@@ -404,7 +398,7 @@ define(function (require, exports, module) {
         },
         setupBaronScroll: function ($element, inner, options) {
             var direction = options && options.direction ? options.direction : 'v';
-            var wrapHtml = '<div class="baron baron__root baron__clipper '+ (direction == "h" ? 'baron__horizontal': '') + '"><div class="baron_scroller"></div></div>';
+            var wrapHtml = '<div class="baron baron__root baron__clipper ' + (direction == 'h' ? 'baron__horizontal' : '') + '"><div class="baron_scroller"></div></div>';
             var $rootElement = null;
             if (inner) {
                 $element.wrapInner(wrapHtml);
@@ -433,7 +427,7 @@ define(function (require, exports, module) {
                 });
             }
             var $scrollObject = $element.parent('.baron_scroller');
-            if($scrollObject.length){
+            if ($scrollObject.length) {
                 $scrollObject.get(0).baron = baron;
             }
             return $scrollObject;
@@ -441,7 +435,7 @@ define(function (require, exports, module) {
         setupBaronScrollSize: function ($scrollElem, options) {
             var $contentBlock = $scrollElem.children();
             var $overflowBlock = $scrollElem.parent('.baron__root');
-            $contentBlock.css({maxHeight: 'none'});
+            $contentBlock.css({ maxHeight: 'none' });
             var height = $contentBlock.height();
             if (height < 25) {
                 height = 25;
@@ -456,13 +450,12 @@ define(function (require, exports, module) {
             }
             var baron = $scrollElem.get(0).baron;
             baron && baron.update();
-
         },
         setupSelect2WhithScroll: function (el, options) {
             el.one('select2-open', function (e) {
                 $('#select2-drop input.select2-input').on('input', function (ev) {
                     if ($(this).val().trim().length < 3) {
-                        Util.setupBaronScrollSize(e.currentTarget.$scrollEl, {maxHeight: 200});
+                        Util.setupBaronScrollSize(e.currentTarget.$scrollEl, { maxHeight: 200 });
                     }
                 });
             });
@@ -471,7 +464,7 @@ define(function (require, exports, module) {
                     e.currentTarget.$scrollEl = Util.setupBaronScroll($('ul.select2-results').last());
                     el.select2('setScrollContainer', e.currentTarget.$scrollEl);
                 }
-                Util.setupBaronScrollSize(e.currentTarget.$scrollEl, {maxHeight: 200});
+                Util.setupBaronScrollSize(e.currentTarget.$scrollEl, { maxHeight: 200 });
             });
             return el.select2(options);
         },
@@ -501,9 +494,9 @@ define(function (require, exports, module) {
                 return;
             }
             if (needPurification) {
-                id = id.replace("log-for-", '').replace("all-cases-for-", '');
+                id = id.replace('log-for-', '').replace('all-cases-for-', '');
             }
-            var element = $("#" + id),
+            var element = $('#' + id),
                 top = 0;
             if (element.length) {
                 top = element.get(0).offsetTop;
@@ -537,27 +530,27 @@ define(function (require, exports, module) {
                 if (backTop.length && backTop.is(':visible')) {
                     backTop.fadeOut();
                 }
-            })
+            });
         },
 
         setupWindowEvents: function () {
             config.mainScrollElement.on('scroll.global', function (e) {
-                var data = {top: e.currentTarget.scrollTop, height: $(window).height()};
-                $.publish("scroll:change", data);
+                var data = { top: e.currentTarget.scrollTop, height: $(window).height() };
+                $.publish('scroll:change', data);
                 if (e.currentTarget.scrollTop > 100) {
-                    $.publish("scroll:greater:than:100", data);
+                    $.publish('scroll:greater:than:100', data);
                 } else {
-                    $.publish("scroll:less:than:100", data);
+                    $.publish('scroll:less:than:100', data);
                 }
             });
             $(window).on('resize.global', function () {
-                $.publish("window:resize", {height: $(window).height(), width: $(window).width()});
+                $.publish('window:resize', { height: $(window).height(), width: $(window).width() });
             });
             $(document).on('click', 'a', function (e) {
                 if ($(e.currentTarget).is(':disabled')) {
                     e.preventDefault();
                 }
-            })
+            });
         },
 
         switcheryInitialize: function (parent) {
@@ -584,21 +577,21 @@ define(function (require, exports, module) {
         attachSelectAllFlipper: function (el) {
             $('label', el).click(function (e) {
                 e.stopPropagation();
-                $(e.currentTarget).closest(".dropdown-menu").find(".check-all").removeClass('checked');
+                $(e.currentTarget).closest('.dropdown-menu').find('.check-all').removeClass('checked');
             });
             $('.check-all', el).click(function (e) {
                 e.preventDefault();
                 var flipper = $(e.currentTarget),
                     checked = !flipper.hasClass('checked'),
                     action = checked ? 'add' : 'remove';
-                flipper.closest(".dropdown-menu").find(".selectable").prop('checked', checked);
-                flipper[action + "Class"]('checked');
+                flipper.closest('.dropdown-menu').find('.selectable').prop('checked', checked);
+                flipper[action + 'Class']('checked');
             });
         },
 
         // todo: deprecate this shit!!! toggle single class on table Level (see launches common table example)!
         hoverFullTime: function (el) {
-            //var $el = el ?  $('.hoverFullTime', el) : $('.hoverFullTime');
+            // var $el = el ?  $('.hoverFullTime', el) : $('.hoverFullTime');
             $('.hoverFullTime', el).parent().hover(
                 function () {
                     $(this).find('.time-full').toggleClass('hidden');
@@ -631,8 +624,8 @@ define(function (require, exports, module) {
             if (minutes > 0) {
                 time = time + minutes + 'm';
             }
-            //time = time + ' ' + seconds + 's';
-            //if (time === '0s' && seconds === 0) {
+            // time = time + ' ' + seconds + 's';
+            // if (time === '0s' && seconds === 0) {
             if (time === '' && seconds > 0) {
                 time = seconds + 's';
             } else if (time === '' && seconds === 0) {
@@ -648,7 +641,7 @@ define(function (require, exports, module) {
                 minute = date.getMinutes(),
                 second = date.getSeconds(),
                 utc = (date.getTimezoneOffset() / 60) * -1;
-            if (utc.toString().indexOf("-") === -1) {
+            if (utc.toString().indexOf('-') === -1) {
                 utc = 'UTC+' + utc;
             } else {
                 utc = 'UTC' + utc;
@@ -684,8 +677,7 @@ define(function (require, exports, module) {
             // Calculate the difference in milliseconds
             var difference_ms = Math.abs(date1_ms - date2_ms);
             // Convert back to days and return
-            return Math.round(difference_ms / ONE_DAY)
-
+            return Math.round(difference_ms / ONE_DAY);
         },
 
         replaceLink: function (comment) {
@@ -704,14 +696,14 @@ define(function (require, exports, module) {
         },
 
         ajaxFailMessenger: function (error, type, messageText) {
-            if (error && error.statusText === "abort") return;
+            var response = '';
+            var message = messageText || '';
+            if (error && error.statusText === 'abort') return;
             if (error && error.status === 401) return;
-            var response = "", message = messageText || "";
             if (error) {
                 try {
-                    response = JSON.parse(error.responseText)
+                    response = JSON.parse(error.responseText);
                 } catch (e) {
-                    console.log(e);
                     if (type) {
                         message = Localization.failMessages[type];
                     }
@@ -719,29 +711,25 @@ define(function (require, exports, module) {
                 if (error.status === 409 || error.status === 422) {
                     // resource duplication
                     message = response.message.split('.')[0] || Localization.failMessages.duplicatedRecourse;
-                } else {
-                    if (type) {
-                        if (response && response.message) {
-                            message = Localization.failMessages[type] + " : " + response.message.split('.')[0];
-                        }
-                    } else {
-                        if (response && response.message) {
-                            message = response.message.replace('{}', '');
-                        }
+                } else if (type) {
+                    if (response && response.message) {
+                        message = Localization.failMessages[type] + ' : ' + response.message.split('.')[0];
                     }
+                } else if (response && response.message) {
+                    message = response.message.replace('{}', '');
                 }
             } else {
-                message = (Localization.failMessages[type] || Localization.failMessages.defaults) + (message ? " : " + message : '');
+                message = (Localization.failMessages[type] || Localization.failMessages.defaults) + (message ? ' : ' + message : '');
             }
-            this.addMessage({clazz: 'alert', message: message || Localization.failMessages.defaults});
+            this.addMessage({ clazz: 'alert', message: message || Localization.failMessages.defaults });
         },
 
         ajaxSuccessMessenger: function (type, segment) {
             var message = Localization.successMessages[type] || Localization.successMessages.defaults;
             if (segment) {
-                message = message.replace("%%%", segment);
+                message = message.replace('%%%', segment);
             }
-            this.addMessage({clazz: 'success', message: message});
+            this.addMessage({ clazz: 'success', message: message });
         },
 
         ajaxInfoMessenger: function (type) {
@@ -755,10 +743,10 @@ define(function (require, exports, module) {
         getDialog: function (options) {
             $('.rp-modal-dialog').remove();
             console.log('Modal ' + options.name);
-            var modalEl = $("<div>" + this.templates(options.name, options.data) + "</div>")
-                .find(".dialog-shell")
+            var modalEl = $('<div>' + this.templates(options.name, options.data) + '</div>')
+                .find('.dialog-shell')
                 .unwrap()
-                .appendTo("body");
+                .appendTo('body');
 
             var $dialog = $('.modal-dialog', modalEl);
             this.setupBaronScroll($dialog);
@@ -776,30 +764,30 @@ define(function (require, exports, module) {
             var async = $.Deferred();
             var dialog = Util.getDialog({
                 name: 'tpl-dialog-modal',
-                data: options,
-            })
-            dialog.modal("show");
+                data: options
+            });
+            dialog.modal('show');
             dialog.on('hidden.bs.modal', function () {
                 dialog.remove();
                 dialog = null;
             });
             $('[data-js-submit]', dialog).click(function () {
-                async.resolve()
+                async.resolve();
             });
             $('[data-js-cancel]', dialog).click(function () {
-                async.reject()
+                async.reject();
             });
             async.always(function () {
-                dialog.modal("hide");
+                dialog.modal('hide');
             });
-            return async.promise()
+            return async.promise();
         },
 
         confirmDeletionDialog: function (options) {
             var self = this;
             if (!this.deleteDialog) {
                 this.deleteDialog = Util.getDialog({
-                    name: "tpl-delete-dialog",
+                    name: 'tpl-delete-dialog',
                     data: {
                         message: options.message,
                         okButton: options.okButton,
@@ -810,11 +798,11 @@ define(function (require, exports, module) {
                     }
                 });
                 this.deleteDialog
-                    .on('click', ".rp-btn-danger", function () {
+                    .on('click', '.rp-btn-danger', function () {
                         options.callback();
-                        self.deleteDialog.modal("hide");
+                        self.deleteDialog.modal('hide');
                     })
-                    .on('click', ".rp-btn-cancel", function () {
+                    .on('click', '.rp-btn-cancel', function () {
                         options.cancelCallback && options.cancelCallback();
                     })
                     .on('hidden.bs.modal', function () {
@@ -824,11 +812,11 @@ define(function (require, exports, module) {
                         options = null;
                     });
             }
-            this.deleteDialog.modal("show");
+            this.deleteDialog.modal('show');
         },
 
         getExternalSystem: function (toLower) {
-            var system = config.project.configuration.externalSystem[0].systemType || "";
+            var system = config.project.configuration.externalSystem[0].systemType || '';
             return toLower ? system.toLocaleLowerCase() : system;
         },
 
@@ -844,23 +832,23 @@ define(function (require, exports, module) {
         },
 
         mapContentTypeToIcon: function (type) {
-            var icon = "";
+            var icon = '';
             switch (type) {
-                case "text/plain":
-                    icon = "fa-file-text";
-                    break;
-                case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
-                    icon = "fa-file-excel-o";
-                    break;
-                case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-                    icon = "fa-file-word-o";
-                    break;
-                case "video/mp4":
-                    icon = "fa-file-movie-o";
-                    break;
-                default :
-                    icon = "fa-file";
-                    break;
+            case 'text/plain':
+                icon = 'fa-file-text';
+                break;
+            case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                icon = 'fa-file-excel-o';
+                break;
+            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                icon = 'fa-file-word-o';
+                break;
+            case 'video/mp4':
+                icon = 'fa-file-movie-o';
+                break;
+            default :
+                icon = 'fa-file';
+                break;
             }
             return icon;
         },
@@ -872,20 +860,19 @@ define(function (require, exports, module) {
         },
 
         updateLaunchesHref: function (url) {
-            url = url || "#" + config.project.projectId + "/launches/all";
-            $("#launches").attr('href', url);
+            url = url || '#' + config.project.projectId + '/launches/all';
+            $('#launches').attr('href', url);
         },
 
         updateDebugHref: function (ownersValue) {
-            var $link = $("#userdebug"),
+            var $link = $('#userdebug'),
                 href = $link.attr('href'),
                 separator = '&filter.in.user=';
             if (ownersValue) {
                 var split = href.split(separator);
                 split[1] = ownersValue;
                 $link.attr('href', split.join(separator));
-            }
-            else {
+            } else {
                 var inx = href.indexOf(separator);
                 inx >= 0 && $link.attr('href', href.slice(0, inx));
             }
@@ -896,7 +883,7 @@ define(function (require, exports, module) {
         },
 
         getCopyName: function (name) {
-            return Localization.ui.copy + " " + name;
+            return Localization.ui.copy + ' ' + name;
         },
         isAdmin: function (user) {
             user = user || config.userModel.toJSON();
@@ -920,10 +907,9 @@ define(function (require, exports, module) {
         isInPrivilegedGroup: function () {
             if (Util.isAdmin()) {
                 return true;
-            } else {
-                var role = config.userModel.get('projects')[config.project.projectId] && config.userModel.get('projects')[config.project.projectId].projectRole;
-                return role === config.projectRolesEnum.project_manager || role === config.projectRolesEnum.lead;
             }
+            var role = config.userModel.get('projects')[config.project.projectId] && config.userModel.get('projects')[config.project.projectId].projectRole;
+            return role === config.projectRolesEnum.project_manager || role === config.projectRolesEnum.lead;
         },
 
         hasExternalSystem: function () {
@@ -932,7 +918,7 @@ define(function (require, exports, module) {
 
         canStartMatchIssues: function (launch) {
             if (!launch) return false;
-            /*var userValid = Util.isInPrivilegedGroup();
+            /* var userValid = Util.isInPrivilegedGroup();
              if (!userValid) {
              userValid = launch.owner === config.user.user_login;
              }*/
@@ -948,7 +934,7 @@ define(function (require, exports, module) {
             return !member;
         },
         isDeleteLock: function (project) {
-            return project.projectId.toLowerCase() === config.demoProjectName
+            return project.projectId.toLowerCase() === config.demoProjectName;
         },
 
         canManageMembers: function () {
@@ -998,14 +984,12 @@ define(function (require, exports, module) {
             var matchXML = item.message.match(/<.*?>/g);
             if (matchXML && matchXML.length > 8) {
                 return this.beautifyText(item.message).replace('<!--!>', '');
-            } else {
-                return false;
             }
+            return false;
         },
 
         beautifyText: function (text) {
             function formatXml(xml) {
-
                 var formatted = '';
                 var reg = /(>)(<)(\/*)/g;
                 xml = xml.replace(reg, '$1\r\n$2$3');
@@ -1048,8 +1032,8 @@ define(function (require, exports, module) {
             el.closest('ul').find('.active').removeClass('active');
             el.addClass('active');
         },
-        hintValidator: function($el, options) {
-            var $holder = $el.closest(".form-group, .rp-form-group, label, .rp-field");
+        hintValidator: function ($el, options) {
+            var $holder = $el.closest('.form-group, .rp-form-group, label, .rp-field');
             var $hintBlock = $('> .validate-hint', $holder);
             var validators = [];
 
@@ -1061,7 +1045,7 @@ define(function (require, exports, module) {
                     $el.attr('maxLength', option.max);
                 }
                 if (Validators[option.validator]) {
-                    validators.push({validate: Validators[option.validator], options: option});
+                    validators.push({ validate: Validators[option.validator], options: option });
                 }
             });
             var validate = function () {
@@ -1070,10 +1054,10 @@ define(function (require, exports, module) {
                     var val = validator.options.noTrim ? $el.val() : $el.val().trim();
                     var message = validator.validate(val, validator.options, Util);
                     if (message) {
-                        result = !result ? message + "</br>" : result;
+                        result = !result ? message + '</br>' : result;
                     }
                 });
-                if(result) {
+                if (result) {
                     $holder.addClass('validate-error');
                 } else {
                     triggerDebounce();
@@ -1082,52 +1066,52 @@ define(function (require, exports, module) {
                 $el.data('validate-error', result);
                 return result;
             };
-            var showResult = function(result) {
-                if(result) {
+            var showResult = function (result) {
+                if (result) {
                     $hintBlock.html(result).addClass('show-hint');
                 }
             };
-            var hideResult = function() {
+            var hideResult = function () {
                 $hintBlock.removeClass('show-hint');
             };
-            var triggerDebounce = _.debounce(function() {
+            var triggerDebounce = _.debounce(function () {
                 $el.trigger('validation:success');
-            }, 500)
+            }, 500);
             $el.on('keyup', function (e) {
-                    if (e.keyCode && (e.keyCode === 9 || e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40)) {
-                        return;
-                    }
-                    var result = validate();
-                    if(result) {
-                        showResult(result);
-                    } else {
-                        hideResult();
-                    }
-                })
+                if (e.keyCode && (e.keyCode === 9 || e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40)) {
+                    return;
+                }
+                var result = validate();
+                if (result) {
+                    showResult(result);
+                } else {
+                    hideResult();
+                }
+            })
                 .on('paste', function () {
                     $(this).trigger('keyup');
                 })
                 .on('focus', function () {
                     $(this).trigger('keyup');
                 })
-                .on('validate', function() {
+                .on('validate', function () {
                     validate();
                 })
                 .on('blur', function () {
                     hideResult();
-                })
+                });
         },
 
         bootValidator: function ($el, options, extraOptions) {
             $el.data('valid', true).data('was', $el.val());
 
             // TODO - added variant with class 'rp-form-group'
-            var $holder = $el.closest(".form-group, .rp-form-group");
+            var $holder = $el.closest('.form-group, .rp-form-group');
             if (options && options.max) {
-                $el.attr('maxLength', options.max)
+                $el.attr('maxLength', options.max);
             }
 
-            var $messenger = $(".help-inline:first", $holder);
+            var $messenger = $('.help-inline:first', $holder);
             var isHint = $messenger.hasClass('error-hint');
             var validators = [];
             var timeout = null;
@@ -1155,16 +1139,15 @@ define(function (require, exports, module) {
                         $.when(validator.type(val, validator.options)).done(function (data) {
                             if (!data.valid) {
                                 var message = validator.options.message;
-                                result += message + "</br>";
+                                result += message + '</br>';
                             }
                             showResult(result);
-                            $el.trigger("validation::change");
+                            $el.trigger('validation::change');
                         });
-                    }
-                    else {
+                    } else {
                         var message = validator.type(val, validator.options, Util);
                         if (message) {
-                            result = !result ? message + "</br>" : result;
+                            result = !result ? message + '</br>' : result;
                         }
                         showResult(result);
                     }
@@ -1179,7 +1162,7 @@ define(function (require, exports, module) {
                     validators.push(type);
                 } else if (typeof type === 'object') {
                     if (Validators[type.validator]) {
-                        validators.push({type: Validators[type.validator], options: type});
+                        validators.push({ type: Validators[type.validator], options: type });
                     }
                 }
             });
@@ -1189,13 +1172,13 @@ define(function (require, exports, module) {
                 })
                 .on('keydown', function (e) {
                     if (e.keyCode === 13) {
-                        //e.preventDefault();
+                        // e.preventDefault();
                         if (!$holder.hasClass('has-error')) {
-                            $el.trigger("validation::submit::success");
+                            $el.trigger('validation::submit::success');
                         }
                     }
                     if (e.keyCode === 27) {
-                        $el.trigger("validation::escape");
+                        $el.trigger('validation::escape');
                     }
                 })
                 .on('keyup', function (e) {
@@ -1207,7 +1190,7 @@ define(function (require, exports, module) {
                         validate();
                         var hasError = $holder.hasClass('has-error'),
                             value = $el.val().trim();
-                        $el.trigger("validation::change", {
+                        $el.trigger('validation::change', {
                             valid: !hasError,
                             value: value,
                             dirty: $el.data('was') != value
@@ -1228,19 +1211,19 @@ define(function (require, exports, module) {
                 .on('blur', function () {
                     $(this).trigger('keyup');
                     isHint && $messenger.fadeOut(100);
-                    //if(!$el.val().trim()){
+                    // if(!$el.val().trim()){
                     //    $holder.removeClass('has-error');
-                    //}
+                    // }
                 }).on('remove', function () {
-                clearTimeout(timeout);
-                options = null;
-                $el = null;
-                $holder = null;
-                $messenger = null;
-                isHint = null;
-                validators = null;
-                timeout = null;
-            });
+                    clearTimeout(timeout);
+                    options = null;
+                    $el = null;
+                    $holder = null;
+                    $messenger = null;
+                    isHint = null;
+                    validators = null;
+                    timeout = null;
+                });
         },
 
         configRegexValidation: function (el, pattern) {
@@ -1255,31 +1238,31 @@ define(function (require, exports, module) {
                     el.next().show();
                 }
                 el.data('valid', isValid);
-                el.trigger("validation::change", {valid: isValid});
+                el.trigger('validation::change', { valid: isValid });
             }).on('remove', function () {
                 el = null;
             });
         },
 
         confirmValidator: function (data) {
-            var $messenger = $(".help-inline:first", data.holder),
-                $first = $("input:first", data.holder),
-                $confirm = $(".confirm", data.holder),
+            var $messenger = $('.help-inline:first', data.holder),
+                $first = $('input:first', data.holder),
+                $confirm = $('.confirm', data.holder),
                 message,
                 info,
                 value,
                 validateConfirmation = function () {
-                    info = {valid: $first.val() === $confirm.val()};
+                    info = { valid: $first.val() === $confirm.val() };
                     message = Localization.validation.confirmMatch;
                 },
                 validateLength = function () {
-                    info = {valid: value.length >= data.min && value.length <= data.max};
+                    info = { valid: value.length >= data.min && value.length <= data.max };
                     message = Localization.validation.confirmMinMax;
                 };
 
             data.holder.on('keyup', 'input[type=password], input[type=text]', function (e) {
                 var el = $(this);
-                //el.val(el.val().trim());
+                // el.val(el.val().trim());
                 value = el.val();
                 if (el.hasClass('confirm')) {
                     if (data.firstCheckLength) {
@@ -1293,17 +1276,15 @@ define(function (require, exports, module) {
                             validateLength();
                         }
                     }
+                } else if (data.firstCheckLength) {
+                    validateLength();
+                    if (info.valid && $confirm.val() != '') {
+                        validateConfirmation();
+                    }
                 } else {
-                    if (data.firstCheckLength) {
-                        validateLength();
-                        if (info.valid && $confirm.val() != '') {
-                            validateConfirmation();
-                        }
-                    } else {
-                        validateLength();
-                        if (info.valid) {
-                            validateConfirmation();
-                        }
+                    validateLength();
+                    if (info.valid) {
+                        validateConfirmation();
                     }
                 }
                 if (!info.valid) {
@@ -1316,7 +1297,7 @@ define(function (require, exports, module) {
                 if (!$first.val() || !$confirm.val()) {
                     info.valid = false;
                 }
-                data.holder.trigger("validation::change", info);
+                data.holder.trigger('validation::change', info);
             }).on('remove', function () {
                 data.holder = null;
                 data = null;
@@ -1331,7 +1312,7 @@ define(function (require, exports, module) {
 
         attachCounter: function ($el, data) {
             // TODO - added variant with class 'rp-form-group'
-            var counter = $el.closest(".form-group, .rp-form-group").find(data.selector + ":first");
+            var counter = $el.closest('.form-group, .rp-form-group').find(data.selector + ':first');
 
             if (counter.length) {
                 $el.on('keyup', function (e) {
@@ -1358,10 +1339,10 @@ define(function (require, exports, module) {
 
         addSymbolsValidation: function () {
             var self = this;
-            $.validator.addMethod("symbols", function (value, element, param) {
+            $.validator.addMethod('symbols', function (value, element, param) {
                 return param.test(value);
             });
-            $.validator.addMethod("email", function (value, element, param) {
+            $.validator.addMethod('email', function (value, element, param) {
                 return self.validateEmail(value);
             });
         },
@@ -1371,19 +1352,19 @@ define(function (require, exports, module) {
         },
 
         clearLaunchesActiveFilter: function () {
-            config.preferences.active = "";
-            $("#launches").attr('href', '#' + config.project.projectId + '/launches/all');
+            config.preferences.active = '';
+            $('#launches').attr('href', '#' + config.project.projectId + '/launches/all');
         },
 
         getTicketUrlId: function (str) {
             var pattern = config.patterns.urlT,
                 ind = str.search(pattern),
-                obj = {id: str, url: null};
+                obj = { id: str, url: null };
             if (ind >= 0) {
                 obj = {
                     id: str.slice(0, ind - 1),
                     url: str.slice(ind)
-                }
+                };
             }
             return obj;
         },
@@ -1436,7 +1417,7 @@ define(function (require, exports, module) {
             var cls = '',
                 tArr = type.split('_');
             cls = tArr.length == 1 ? tArr[0].slice(0, 1) : tArr.length == 2 ? tArr[0][0] + tArr[1][0] : '';
-            return cls
+            return cls;
         },
         setupSelect2Tags: function ($tags, options) {
             options = options || {};
@@ -1462,23 +1443,23 @@ define(function (require, exports, module) {
                     var tags = item.val().split(','),
                         data = _.map(tags, function (tag) {
                             tag = tag.trim();
-                            return {id: tag, text: tag};
+                            return { id: tag, text: tag };
                         });
                     callback(data);
                 },
                 createSearchChoice: function (term, data) {
-                    if(!options.noCreateNew) {
+                    if (!options.noCreateNew) {
                         if (_.filter(data, function (opt) {
-                                return opt.text.localeCompare(term) === 0;
-                            }).length === 0) {
-                            return {id: term, text: term};
+                            return opt.text.localeCompare(term) === 0;
+                        }).length === 0) {
+                            return { id: term, text: term };
                         }
                     }
                     return null;
                 },
                 query: function (query) {
-                    if (query.term === "?") return;
-                    var data = {results: []};
+                    if (query.term === '?') return;
+                    var data = { results: [] };
                     if (options.startSearch && query.term.length < options.startSearch) {
                         remoteTags = [];
                         data.results.push({
@@ -1495,14 +1476,13 @@ define(function (require, exports, module) {
                                         response = respType == 'default' ? response : response.content,
                                         remoteTags = [];
                                     _.forEach(response, function (item) {
-                                        if(respType == 'user'){
+                                        if (respType == 'user') {
                                             data.results.push({
                                                 id: item.userId,
                                                 text: item.full_name
                                             });
                                             item = item.full_name;
-                                        }
-                                        else {
+                                        } else {
                                             data.results.push({
                                                 id: item,
                                                 text: item
@@ -1536,25 +1516,25 @@ define(function (require, exports, module) {
                     return {
                         'page.page': 1,
                         'page.size': config.objectsOnPage,
-                        'page.sort': "start_time,DESC"
-                    }
+                        'page.sort': 'start_time,DESC'
+                    };
                 },
                 suit: function () {
                     return {
                         'page.page': 1,
                         'page.size': config.objectsOnPage,
-                        'page.sort': "start_time,ASC",
+                        'page.sort': 'start_time,ASC',
                         'filter.eq.launch': null,
                         'filter.size.path': 0
-                    }
+                    };
                 },
                 test: function () {
                     return {
                         'page.page': 1,
                         'page.size': config.objectsOnPage,
-                        'page.sort': "start_time,ASC"
+                        'page.sort': 'start_time,ASC'
                         // 'filter.eq.parent': null
-                    }
+                    };
                 },
                 log: function () {
                     return {
@@ -1562,17 +1542,17 @@ define(function (require, exports, module) {
                         'page.page': 1,
                         'page.size': config.objectsOnPageLogs,
                         'page.sort': 'time,ASC'
-                    }
+                    };
                 },
                 allcases: function (executionStatistics, id, length) {
                     var params = {
-                        //'filter.!in.status': 'IN_PROGRESS',
-                        //'filter.eq.launch': null,
+                        // 'filter.!in.status': 'IN_PROGRESS',
+                        // 'filter.eq.launch': null,
                         'filter.eq.has_childs': false,
                         'page.page': 1,
                         'page.size': config.objectsOnPage,
                         'page.sort': 'start_time,ASC'
-                    }
+                    };
                     if (length > 2) {
                         params['filter.in.path'] = id;
                     } else {
