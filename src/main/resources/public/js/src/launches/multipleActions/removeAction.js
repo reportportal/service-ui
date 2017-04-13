@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -32,72 +32,85 @@ define(function (require, exports, module) {
 
     var config = App.getInstance();
 
-    var RemoveAction = function(options) {
+    var RemoveAction = function (options) {
         var items = options.items;
         var typeItems = (items.length > 1) ? Localization.ui.launches : Localization.ui.launch;
         var itemNumber;
-
-        if(items[0].get('type') != 'LAUNCH') {
+        var itemName;
+        var modal;
+        var confirmText = '';
+        console.log(options);
+        console.log(config);
+        if (items[0].get('type') !== 'LAUNCH') {
             typeItems = (items.length > 1) ? Localization.ui.items : Localization.ui.item;
             itemNumber = '';
         } else {
             itemNumber = ' #' + items[0].get('number').toString().bold();
         }
-
-        var itemName = (items.length > 1) ? typeItems : typeItems + ' \'' + items[0].get('name').bold() + itemNumber + '\'';
-
-        var modal = new ModalConfirm({
-            headerText: Localization.ui.delete +' '+ typeItems,
-            bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, typeItems, itemName),
-            confirmText: Util.replaceTemplate(Localization.launches.deleteAgree, typeItems),
-            cancelButtonText: Localization.ui.cancel,
-            okButtonText: Localization.ui.delete,
-            confirmFunction: function() {
-                var type = items[0].get('type');
-                if(type){
-                    config.trackingDispatcher.trackEventNumber(79);
-                }
-                else if(type == 'SUITE' || type == 'TEST'){
-                }
-                else {
-                    config.trackingDispatcher.trackEventNumber(182);
-                }
-                var ids = _.map(items, function(item) {
-                    return item.get('id');
-                });
-                var message = (items.length > 1)? 'deleteLaunches' : 'deleteLaunch';
-                var path = Urls.getLaunchBase();
-                if(type != 'LAUNCH') {
-                    path = Urls.itemBase();
-                    message = (items.length > 1)? 'deleteTestItems' : 'deleteTestItem';
-                }
-                return CallService.call('DELETE', path + '?ids=' + ids.join(',')).done(function() {
-                    Util.ajaxSuccessMessenger(message);
-                }).fail(function(err) {
-                    Util.ajaxFailMessenger(err, message);
-                })
+        items.forEach(function (item) {
+            var itemType = item.attributes.type;
+            var itemOwner = item.attributes.owner;
+            var loginUser = config.userModel.attributes.name;
+            var itemParentOwner = item.attributes.parent_launch_owner;
+            if (itemType === 'LAUNCH' && itemOwner !== loginUser) {
+                confirmText = Util.replaceTemplate(Localization.launches.deleteWarningAgree,
+                    typeItems);
+            } else if (itemParentOwner && itemParentOwner !== loginUser) {
+                confirmText = Util.replaceTemplate(Localization.launches.deleteWarningAgree,
+                    typeItems);
             }
         });
-        modal.$el.on('click', function(e){
-            var $target = $(e.target),
-                type = items[0].get('type'),
-                isCancel = $target.is('[data-js-cancel]'),
-                isClose = ($target.is('[data-js-close]') || $target.is('[data-js-close] i'));
-            if(type == 'LAUNCH'){
+        itemName = (items.length > 1) ? typeItems : typeItems + ' \'' + items[0].get('name').bold() + itemNumber + '\'';
+
+        modal = new ModalConfirm({
+            headerText: Localization.ui.delete + ' ' + typeItems,
+            bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, typeItems, itemName),
+            confirmText: confirmText,
+            cancelButtonText: Localization.ui.cancel,
+            okButtonText: Localization.ui.delete,
+            confirmFunction: function () {
+                var type = items[0].get('type');
+                var ids;
+                var message;
+                var path;
+                if (type) {
+                    config.trackingDispatcher.trackEventNumber(79);
+                } else if (type !== 'SUITE' || type !== 'TEST') {
+                    config.trackingDispatcher.trackEventNumber(182);
+                }
+                ids = _.map(items, function (item) {
+                    return item.get('id');
+                });
+                message = (items.length > 1) ? 'deleteLaunches' : 'deleteLaunch';
+                path = Urls.getLaunchBase();
+                if (type !== 'LAUNCH') {
+                    path = Urls.itemBase();
+                    message = (items.length > 1) ? 'deleteTestItems' : 'deleteTestItem';
+                }
+                return CallService.call('DELETE', path + '?ids=' + ids.join(',')).done(function () {
+                    Util.ajaxSuccessMessenger(message);
+                }).fail(function (err) {
+                    Util.ajaxFailMessenger(err, message);
+                });
+            }
+        });
+        modal.$el.on('click', function (e) {
+            var $target = $(e.target);
+            var type = items[0].get('type');
+            var isCancel = $target.is('[data-js-cancel]');
+            var isClose = ($target.is('[data-js-close]') || $target.is('[data-js-close] i'));
+            if (type === 'LAUNCH') {
                 if (isClose) {
                     config.trackingDispatcher.trackEventNumber(77);
                 }
-                if(isCancel){
+                if (isCancel) {
                     config.trackingDispatcher.trackEventNumber(78);
                 }
-            }
-            else if(type == 'SUITE' || type == 'TEST'){
-            }
-            else {
+            } else if (type !== 'SUITE' || type !== 'TEST') {
                 if (isClose) {
                     config.trackingDispatcher.trackEventNumber(180);
                 }
-                if(isCancel){
+                if (isCancel) {
                     config.trackingDispatcher.trackEventNumber(181);
                 }
             }
