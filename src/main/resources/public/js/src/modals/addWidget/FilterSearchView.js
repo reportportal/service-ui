@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
@@ -55,10 +55,11 @@ define(function (require, exports, module) {
         parse: function (data) {
             var self = this;
             return _.map(data, function (itemData) {
-                itemData.entities = JSON.stringify(itemData.entities);
-                itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
-                itemData.active = !!(itemData.id === self.mainModel.get('filter_id'));
-                return itemData;
+                var item = itemData;
+                item.entities = JSON.stringify(item.entities);
+                item.selection_parameters = JSON.stringify(item.selection_parameters);
+                item.active = !!(item.id === self.mainModel.get('filter_id'));
+                return item;
             });
         }
     });
@@ -73,20 +74,16 @@ define(function (require, exports, module) {
         bindings: {
             ':el': 'classes: {hide: not(gadgetIsFilter)}',
             '[data-js-seach-query]': 'text: search',
-            '[data-js-filter-none]' : 'classes: {hide:   filterMessage(search,empty)}',
-
-
-            '[data-js-filter-empty]' : 'classes: { hide:  not(search)  }',
+            '[data-js-filter-none]': 'classes: {hide:   filterMessage(search,empty)}',
+            '[data-js-filter-empty]': 'classes: { hide:  not(search)  }'
 
         },
         bindingFilters: {
             filterMessage: function (search, empty) {
-                if(!search && empty){
+                if (!search && empty) {
                     return false;
                 }
-                else {
-                    return true;
-                }
+                return true;
             }
         },
         initialize: function (options) {
@@ -96,7 +93,7 @@ define(function (require, exports, module) {
             this.renderViews = [];
             this.render();
             this.viewModel = new Epoxy.Model({
-                search: "",
+                search: '',
                 empty: false,
                 notFound: false,
                 currentPage: 1,
@@ -146,6 +143,7 @@ define(function (require, exports, module) {
             this.setFilterModel(filterModel);
         },
         onClickAddFilter: function (e) {
+            var self = this;
             if (this.modalType === 'edit') {
                 config.trackingDispatcher.trackEventNumber(328);
             } else {
@@ -153,7 +151,8 @@ define(function (require, exports, module) {
             }
             e.preventDefault();
             this.$el.addClass('hide-content');
-            this.addFilterView && this.stopListening(this.addFilterView) && this.addFilterView.destroy();
+            this.addFilterView && this.stopListening(this.addFilterView) &&
+                this.addFilterView.destroy();
             this.addFilterView = new FilterSearchAddView({
                 gadgetModel: this.model,
                 modalType: this.modalType
@@ -162,7 +161,6 @@ define(function (require, exports, module) {
             this.addFilterView.activate();
             $('[data-js-filter-add-container]', this.$el).html(this.addFilterView.$el);
             this.trigger('disable:navigation', true);
-            var self = this;
             this.addFilterView.getReadyState()
                 .always(function () {
                     self.addFilterView.destroy();
@@ -176,6 +174,7 @@ define(function (require, exports, module) {
                 });
         },
         onEditFilter: function (model) {
+            var self = this;
             this.$el.addClass('hide-content');
             this.editFilterView && this.editFilterView.destroy();
             this.editFilterView = new FilterSearchEditView({
@@ -185,7 +184,6 @@ define(function (require, exports, module) {
             });
             $('[data-js-filter-edit-container]', this.$el).html(this.editFilterView.$el);
             this.trigger('disable:navigation', true);
-            var self = this;
             this.editFilterView.getReadyState()
                 .always(function () {
                     self.editFilterView.destroy();
@@ -194,17 +192,17 @@ define(function (require, exports, module) {
                 });
         },
         activate: function () {
+            var curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
+            var self = this;
             if (!this.firstActivate) {
                 return;
             }
-            var curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             if (!curWidget.noFilters) {
                 this.firstActivate = false;
-                var self = this;
                 this.load().always(function () {
                     self.baronScroll = Util.setupBaronScroll($('[data-js-filter-list-scroll]', self.$el));
                     Util.setupBaronScrollSize(self.baronScroll, { maxHeight: 330 });
-                    self.baronScroll.on('scroll', function (e) {
+                    self.baronScroll.on('scroll', function () {
                         var elem = self.baronScroll.get(0);
                         if (elem.scrollHeight - elem.scrollTop < elem.offsetHeight * 2) {
                             self.addLoadData();
@@ -252,20 +250,20 @@ define(function (require, exports, module) {
             this.renderViews.push(filterItem);
         },
         updateFilters: function () {
+            var self = this;
             this.collection.reset([]);
             this.viewModel.set({
                 totalPage: 1,
                 currentPage: 1
             });
-            var self = this;
             this.load()
                 .done(function () {
                     Util.setupBaronScrollSize(self.baronScroll, { maxHeight: 330 });
                 });
         },
         load: function () {
-            this.$el.addClass('load');
             var self = this;
+            this.$el.addClass('load');
             return CoreService.saveFilter(this.getQueryString({
                 search: encodeURIComponent(this.viewModel.get('search')),
                 page: this.viewModel.get('currentPage'),
@@ -292,15 +290,16 @@ define(function (require, exports, module) {
                     }
                     $('[data-js-select-filter-block]', self.$el)[(!data.content.length ? 'add' : 'remove') + 'Class']('hide');
                 });
-
         },
         getQueryString: function (query) {
-            if (!query) query = {};
-            if (!query.page) query.page = 1;
-            if (!query.size) query.size = 10;
-            var url = '?page.sort=name&page.page=' + query.page + '&page.size=' + query.size;
-            if (query.search) {
-                url += '&filter.cnt.name=' + query.search;
+            var url;
+            var Query = query;
+            if (!Query) Query = {};
+            if (!Query.page) Query.page = 1;
+            if (!Query.size) Query.size = 10;
+            url = '?page.sort=name&page.page=' + Query.page + '&page.size=' + Query.size;
+            if (Query.search) {
+                url += '&filter.cnt.name=' + Query.search;
             }
             return url;
         },
