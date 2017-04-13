@@ -19,8 +19,9 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
-    "use strict";
+define(function (require) {
+    'use strict';
+
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
@@ -29,6 +30,7 @@ define(function (require, exports, module) {
     var DefectTypeModel = require('defectType/DefectTypeModel');
     var ModalConfirm = require('modals/modalConfirm');
     var ColorPicker = require('components/ColorPicker');
+    var _ = require('underscore');
 
     var config = App.getInstance();
 
@@ -46,7 +48,7 @@ define(function (require, exports, module) {
             'click .edit-item': 'editItem',
             'click .save-item': 'saveItem',
             'click .cancel-item': 'cancelItem',
-            'focusout .rp-input': 'liveValidate',
+            'focusout .rp-input': 'liveValidate'
         },
 
         initialize: function (options) {
@@ -54,23 +56,24 @@ define(function (require, exports, module) {
             this.on('initClrPicker', this.initColorPicker, this);
             this.editModel = new DefectTypeModel();
             this.listenTo(this.model, 'change:locator', this.onChangeLocator);
-            this.listenTo(this.model, 'change:longName', function(){config.trackingDispatcher.trackEventNumber(413)});
-            this.listenTo(this.model, 'change:shortName', function(){config.trackingDispatcher.trackEventNumber(414)});
-            this.listenTo(this.model, 'change:color', function(){config.trackingDispatcher.trackEventNumber(415)});
+            this.listenTo(this.model, 'change:longName', function () { config.trackingDispatcher.trackEventNumber(413); });
+            this.listenTo(this.model, 'change:shortName', function () { config.trackingDispatcher.trackEventNumber(414); });
+            this.listenTo(this.model, 'change:color', function () { config.trackingDispatcher.trackEventNumber(415); });
             this.listenTo(this.model, 'change', this.render);
         },
 
-        onChangeLocator: function(model, locator) {
-            this.$el.attr({id: locator});
+        onChangeLocator: function (model, locator) {
+            this.$el.attr({ id: locator });
         },
 
         render: function () {
             var id = this.model.get('locator');
             var template = this.static;
             var data = this.setTemplateData();
+            var $el;
             $(this.el).html(Util.templates(template, data));
             if (id === 'newItem') {
-                var $el = $('#' + id);
+                $el = $('#' + id);
                 this.trigger('initClrPicker', $el);
             }
         },
@@ -81,29 +84,26 @@ define(function (require, exports, module) {
                 color: this.parent.color,
                 edit: this.edit
             };
-            data['first'] = this.model.get('mainType');
-
+            data.first = this.model.get('mainType');
             return data;
         },
 
         editItem: function (event) {
-            if(event) {
+            var itemId;
+            var mainHolder;
+            if (event) {
                 event.preventDefault();
                 config.trackingDispatcher.trackEventNumber(411);
             }
             this.el.html(Util.templates(this.editor, this.model.toJSON()));
             this.editModel.set(this.model.toJSON());
-            var itemId;
-            var mainHolder;
-
             itemId = this.model.get('locator');
-
             mainHolder = $('#' + itemId);
             this.trigger('initClrPicker', mainHolder);
         },
 
         saveItem: function (event) {
-            config.trackingDispatcher.trackEventNumber(416)
+            config.trackingDispatcher.trackEventNumber(416);
             event.preventDefault();
 
             if (!this.editModel.isValid()) {
@@ -115,37 +115,36 @@ define(function (require, exports, module) {
             this.model.set(this.editModel.toJSON());
             this.el.html(Util.templates(this.static, this.setTemplateData()));
 
-            if(this.model.get('locator') === 'newItem') {
+            if (this.model.get('locator') === 'newItem') {
                 this.model.collection.add(this.model);
             }
         },
 
         deleteItem: function (event) {
-            event.preventDefault();
+            var modal;
             var self = this;
             var id = $(event.target).closest('.dt-body-item').attr('id');
             var subType = $(event.target).closest('.dt-body-item').attr('data-defect-type');
-            var nameParentType = this.model.get('typeRef').replace("_", " ").capitalize();
+            var nameParentType = this.model.get('typeRef').replace('_', ' ').capitalize();
             var fullNameSubType = this.model.get('longName');
-
-            var updateMsgForModalDialog = Util.replaceOccurrences.call(null, [fullNameSubType, nameParentType]);
-
+            event.preventDefault();
             if (id === subType.toUpperCase() + '0') {
                 return;
             }
             config.trackingDispatcher.trackEventNumber(412);
-            var modal = new ModalConfirm({
+            modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.titleDeleteDefectType,
-                bodyText: Util.replaceTemplate(Localization.dialog.msgMessageTop, fullNameSubType, nameParentType),
-                confirmText: Localization.dialog.msgDeleteDefectType,
+                bodyText: Util.replaceTemplate(Localization.dialog.msgMessageTop,
+                    fullNameSubType, nameParentType),
+                confirmText: '',
                 cancelButtonText: Localization.ui.cancel,
                 okButtonDanger: true,
-                okButtonText: Localization.ui.delete,
+                okButtonText: Localization.ui.delete
             });
-            $('[data-js-close]', modal.$el).on('click', function(){
+            $('[data-js-close]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(418);
             });
-            $('[data-js-cancel]', modal.$el).on('click', function(){
+            $('[data-js-cancel]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(419);
             });
             modal.show().done(function () {
@@ -157,10 +156,11 @@ define(function (require, exports, module) {
         },
 
         cancelItem: function (event) {
+            var model;
             event.preventDefault();
-            config.trackingDispatcher.trackEventNumber(417)
+            config.trackingDispatcher.trackEventNumber(417);
             if (this.model.get('locator') === 'newItem') {
-                var model = this.model;
+                model = this.model;
                 this.destroy();
                 model.collection.trigger('cancel:add', model.get('typeRef'));
                 return;
@@ -178,8 +178,8 @@ define(function (require, exports, module) {
             return data;
         },
 
-        initColorPicker: function (mainHolder) {
-            var colorPicker = new ColorPicker({initColor: this.editModel.get('color')});
+        initColorPicker: function () {
+            var colorPicker = new ColorPicker({ initColor: this.editModel.get('color') });
             var self = this;
             $('.holder-color-picker', this.$el).html(colorPicker.el);
             this.listenTo(colorPicker, 'change:color', function (color) {
@@ -188,6 +188,7 @@ define(function (require, exports, module) {
         },
 
         liveValidate: function (e) {
+            var errorsList;
             var subTypeEl = $(e.target).closest('.dt-body-item');
             var row = $(e.target).attr('data-type');
             var value = $.trim($(e.target).val());
@@ -196,7 +197,7 @@ define(function (require, exports, module) {
             this.editModel.set(row, value);
 
             if (!this.editModel.isValid()) {
-                var errorsList = this.uniteErrors(this.editModel.validationError, {});
+                errorsList = this.uniteErrors(this.editModel.validationError, {});
 
                 _.each(errorsList, function (el, key) {
                     if (key !== row) {
@@ -207,8 +208,6 @@ define(function (require, exports, module) {
                 this.showErrors({
                     data: errorsList
                 }, subTypeEl, [row]);
-
-                return;
             }
         },
 
@@ -221,7 +220,7 @@ define(function (require, exports, module) {
             });
 
             _.each(uniqErr, function (err) {
-                if (err.valid == true) {
+                if (err.valid === true) {
                     return;
                 }
 
@@ -246,9 +245,10 @@ define(function (require, exports, module) {
 
         addErrMessage: function (errors, element) {
             _.each(errors.data, function (el, key) {
+                var noteErr;
                 var currentInput = $(element).find('[data-type=' + key + ']');
                 currentInput.attr('required', true);
-                var noteErr = Localization.validation[el];
+                noteErr = Localization.validation[el];
 
                 if (currentInput.closest('div').find('p')) {
                     currentInput.closest('div').append('<p>' + noteErr + '</p>');
@@ -262,13 +262,14 @@ define(function (require, exports, module) {
 
         clearErrMessages: function (rows, element) {
             _.each(rows, function (el) {
+                var currentInput;
                 if (el === 'color') {
-                    return
+                    return;
                 }
-                var currentInput = $(element).find('[data-type=' + el + ']');
+                currentInput = $(element).find('[data-type=' + el + ']');
                 currentInput.removeAttr('required');
                 currentInput.closest('div').find('p').remove();
-                currentInput.closest('div').find('.check-color-picker').removeClass('data-failed')
+                currentInput.closest('div').find('.check-color-picker').removeClass('data-failed');
             });
         },
 
