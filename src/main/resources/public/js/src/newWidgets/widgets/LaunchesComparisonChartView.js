@@ -49,10 +49,11 @@ define(function (require, exports, module) {
                 var seriesId = t;
                 var sd = config.patterns.defectsLocator;
                 var name = Localization.launchesHeaders[seriesId];
+                var defect;
                 if (seriesId !== 'total') {
                     if (type === 'defects') {
-                        var def = _.map(a[2].split('_'), function (d, i) { return i > 0 ? d.capitalize() : d; });
-                        t = def.join('');
+                        defect = _.map(a[2].split('_'), function (d, n) { return n > 0 ? d.capitalize() : d; });
+                        t = defect.join('');
                     }
                     if (!series[t]) {
                         series[t] = {
@@ -73,9 +74,10 @@ define(function (require, exports, module) {
 
         getData: function () {
             var contentData = this.model.getContent() || [];
+            var series;
             this.categories = [];
             if (!_.isEmpty(contentData)) {
-                var series = this.getSeries();
+                series = this.getSeries();
 
                 _.each(contentData.result, function (d, i) {
                     var cat = {
@@ -109,6 +111,8 @@ define(function (require, exports, module) {
             var data = this.getData();
             var self = this;
             var tooltip = this.tooltipContent();
+            var vis;
+            var tip;
 
             this.addSVG();
 
@@ -142,14 +146,15 @@ define(function (require, exports, module) {
                     return self.formatNumber(d);
                 });
 
-            var tip = this.createTooltip();
-            var vis = d3.select($('svg', this.$el).get(0))
+            tip = this.createTooltip();
+            vis = d3.select($('svg', this.$el).get(0))
                 .datum(data)
                 .call(this.chart)
                 .call(tip);
 
             this.addLaunchNameTip(vis, tip);
             this.addLegendClick(vis);
+            this.redirectOnElementClick('multibar');
             this.addResize();
             if (self.isPreview) {
                 this.disabeLegendEvents();

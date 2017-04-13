@@ -67,6 +67,7 @@ define(function (require, exports, module) {
                 delete criteria.statistics$defects$no_defect$total;
                 widgetData.content_parameters.content_fields = _.keys(criteria);
                 self.widget = new LaunchesComparisonChart({
+                    isPreview: true,
                     model: new WidgetModel(widgetData, { parse: true })
                 });
                 self.$el.addClass('ready');
