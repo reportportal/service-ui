@@ -31,7 +31,7 @@ define(function (require, exports, module) {
         tpl: 'tpl-widget-statistics-panel',
         getData: function () {
             var contentData = this.model.getContent();
-            if (!_.isEmpty(contentData) && !_.isEmpty(contentData.result)) {
+            if (!_.isEmpty(contentData.result) && !_.isEmpty(contentData.result[0].values)) {
                 var contentFields = this.model.getContentFields();
                 var values = contentData.result[0].values;
                 var data = {

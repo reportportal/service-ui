@@ -21,6 +21,7 @@
 
 .launches-table-panel {
   position: relative;
+  height: 100%;
 
   &.launches-table-mobile {
     .si-sort {
@@ -138,10 +139,6 @@
     .cases-view.TO_INVESTIGATE {
       display: inline-block;
     }
-  }
-
-  .no-data-error {
-    padding: 40px 0;
   }
 
   .rp-grid-thead {

@@ -36,10 +36,13 @@ define(function (require, exports, module) {
             ChartWidgetView.prototype.initialize.call(this, options);
             this.issues = 0;
             this.total = 0;
+            this.charts = [];
         },
         pieGrid: 'tpl-pie-grid',
         addSVG: function (data) {
-            this.$el.attr(this.attributes()).append(Util.templates(this.pieGrid, { id: this.id, stats: data }));
+            this.$el.attr(this.attributes()).append(
+                Util.templates(this.pieGrid, { id: this.id, stats: data })
+            );
         },
         roundLabels: function (d) {
             var label = (d % 2 === 0) ? d * 100 : d3.round(d * 100, 2);
@@ -56,9 +59,11 @@ define(function (require, exports, module) {
         // LAST LAUNCH STATISTIC
         renderPie: function (data, id, title) {
             var self = this;
+            var chart;
+            var vis;
 
             this.forLabels = { size: data.length, count: 0, sum: 0 };
-            var chart = nvd3.models.pieChart()
+            chart = nvd3.models.pieChart()
                 .x(function (d) {
                     return d.key;
                 })
@@ -84,12 +89,12 @@ define(function (require, exports, module) {
                 .donutRatio(0.4)
                 .tooltips(!self.isPreview)
                 .showLegend(!self.isPreview)
-                ;
+            ;
 
-            var vis = d3.select($(id, this.$el).get(0))
+            vis = d3.select($(id, this.$el).get(0))
                 .datum(data)
                 .call(chart)
-                ;
+            ;
 
             vis.selectAll('.nvd3.nv-wrap.nv-pie').each(function (d, i) {
                 $(this).on('mouseenter', function () {
@@ -105,6 +110,11 @@ define(function (require, exports, module) {
                 this.disabeLegendEvents(chart);
             }
             this.updateInvalidCriteria(vis);
+
+            // fix for no data message for "LAST LAUNCH STATISTIC WIDGET" on status page
+            if (_.isEmpty(data)) {
+                this.fixNoDataMessage(id);
+            }
         },
         updateTotal: function (id) {
             var data = d3.select($(id, this.$el).get(0)).data()[0];
@@ -142,8 +152,6 @@ define(function (require, exports, module) {
             chart[type].dispatch.on('elementClick', null);
             if (!this.isPreview) {
                 chart[type].dispatch.on('elementClick', function (e) {
-                    config.trackingDispatcher.trackEventNumber(344);
-                    nvd3.tooltip.cleanup();
                     var key = e.label;
                     var seria = _.find(self.series, function (v, k) {
                         return v.key === key;
@@ -151,6 +159,8 @@ define(function (require, exports, module) {
                     var seriesId = seria ? seria.seriesId : '';
                     var id = e.point.launch.id;
                     var link = seriesId && id ? self.linkToRedirectService(seriesId, id) : '';
+                    config.trackingDispatcher.trackEventNumber(344);
+                    nvd3.tooltip.cleanup();
                     if (link) {
                         document.location.hash = link;
                     }
@@ -206,7 +216,6 @@ define(function (require, exports, module) {
             var issues = data.issues || [];
             this.addSVG(data);
 
-            this.charts = [];
             this.renderPie(this.checkForZeroData(exec), '#' + this.id + '-svg1', 'Sum');
             this.renderPie(this.checkForZeroData(issues), '#' + this.id + '-svg2', 'Issues');
             if (!_.isEmpty(this.model.getContent())) {
@@ -218,6 +227,22 @@ define(function (require, exports, module) {
             return !_.all(data, function (v) {
                 return v.value === 0;
             }) ? data : [];
+        },
+        fixNoDataMessage: function (id) {
+            var svg = $(id, this.$el);
+            var vis = d3.select(svg.get(0));
+            if (svg.width() > 180) {
+                vis.attr('viewBox', null)
+                    .attr('preserveAspectRatio', null);
+            } else {
+                vis.attr('viewBox', '-30 40 200 100')
+                    .attr('preserveAspectRatio', 'xMinYMid meet');
+            }
+        },
+        updateWidget: function () {
+            _.each(this.charts, function (chart) {
+                chart && chart.update();
+            }, this);
         }
     });
 

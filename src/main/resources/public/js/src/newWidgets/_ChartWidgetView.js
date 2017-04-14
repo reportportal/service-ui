@@ -309,14 +309,7 @@ define(function (require, exports, module) {
             return [];
         },
         updateWidget: function () {
-            var self = this;
-            if (self.charts && self.charts.length) {
-                _.each(self.charts, function (chart) {
-                    chart && chart.update();
-                });
-            } else {
-                self.chart && self.chart.update();
-            }
+            this.chart && this.chart.update();
         },
         onDestroy: function () {
             $(window).off('resize.' + this.id);

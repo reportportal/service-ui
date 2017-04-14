@@ -33,7 +33,9 @@ define(function (require, exports, module) {
     var ProjectActivityWidget = BaseWidgetView.extend({
         initialize: function (options) {
             BaseWidgetView.prototype.initialize.call(this, options);
-            this.isReverse = !_.isUndefined(options.isReverse) ? options.isReverse : false; // for status page widget
+            this.isReverse = !_.isUndefined(options.isReverse)
+                ? options.isReverse : false; // for status page widget
+            this.testItems = [];
         },
         tpl: 'tpl-widget-activity-stream',
         parseOnOff: function (val) {
@@ -148,7 +150,6 @@ define(function (require, exports, module) {
                 imageRoot: urls.getAvatar,
                 dates: dates
             };
-            this.testItems = [];
 
             this.$el.html(Util.templates(this.tpl, params));
             Util.hoverFullTime(this.$el);
