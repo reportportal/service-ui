@@ -18,13 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
+    var Urls = require('dataUrlResolver');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
     var ModalLogAttachmentImage = require('modals/modalLogAttachmentImage');
     var ModalLogAttachmentBinary = require('modals/modalLogAttachmentBinary');
@@ -37,77 +39,95 @@ define(function (require, exports, module) {
 
         events: {
             'click [data-js-toggle-open]': 'onClickOpen',
-            'click [data-js-image]': 'onClickImg'
+            'click [data-js-link]': 'onClickImg'
         },
 
         bindings: {
             '[data-js-time]': 'text: timeString',
-            '[data-js-image]': 'attr: {src: imagePath}, classes: {hide: not(binary_content)}',
+            '[data-js-image]': 'attr: {src: imagePath}',
+            '[data-js-link]': 'attr: {href: getBinaryDataUrl}, classes: {hide: not(binary_content)}',
             ':el': 'levelClass: level'
+        },
+
+        computeds: {
+            getBinaryDataUrl: {
+                deps: ['binary_content'],
+                get: function (binaryContent) {
+                    return binaryContent ? Urls.getFileById(binaryContent.id) : '';
+                }
+            }
         },
 
         bindingHandlers: {
             levelClass: {
-                set: function($element, value) {
-                    if(!value) { return; }
+                set: function ($element, value) {
+                    if (!value) {
+                        return;
+                    }
                     $element.addClass('level-' + value);
                 }
             }
         },
 
-        onClickOpen: function() {
+        onClickOpen: function () {
             config.trackingDispatcher.trackEventNumber(213);
             this.$el.toggleClass('open');
         },
 
-        initialize: function() {
+        initialize: function () {
             this.render();
             this.listenTo(this.model, 'scrollTo', this.scrollTo);
-            this.markdownViewer = new MarkdownViewer({text: this.model.get('message')});
+            this.markdownViewer = new MarkdownViewer({ text: this.model.get('message') });
             $('[data-js-message]', this.$el).html(this.markdownViewer.$el);
             this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
+            this.supportedLanguages = ['xml', 'javascript', 'json', 'html', 'css', 'php'];
         },
 
-        resize: function() {
+        resize: function () {
             this.activateAccordion();
         },
-        scrollTo: function() {
+        scrollTo: function () {
+            var self = this;
             this.$el.removeClass('hide-highlight');
-            if(!$('.highlight', this.$el).length) {
+            if (!$('.highlight', this.$el).length) {
                 this.$el.prepend('<div class="highlight"></div>');
             }
-            var self = this;
-            config.mainScrollElement.animate({ scrollTop: this.el.offsetTop}, 500, function() {
+            config.mainScrollElement.animate({ scrollTop: this.el.offsetTop }, 500, function () {
                 self.$el.addClass('hide-highlight');
             });
         },
 
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        onClickImg: function() {
-            config.trackingDispatcher.trackEventNumber(212);
-            var modal;
+        onClickImg: function (e) {
             var contentType = this.model.get('binary_content').content_type;
             var binaryId = this.model.get('binary_content').id;
-
-            //this.model.trigger('click:attachment', this.model); // open's image in gallery.
-            if (~contentType.indexOf('image/')) {
-                modal = new ModalLogAttachmentImage({
-                    imageId: binaryId,
-                });
-                modal.show();
-            } else {
-                var language = contentType.split('/')[1];
-                modal = new ModalLogAttachmentBinary({
-                    binaryId: binaryId,
-                    language: language
-                });
-                modal.show();
+            var language = contentType.split('/')[1];
+            var isImage = contentType.indexOf('image/') > -1;
+            var isValidForModal = _.contains(this.supportedLanguages, language) || isImage;
+            var modal;
+            config.trackingDispatcher.trackEventNumber(212);
+            if (isValidForModal) {
+                e.preventDefault();
+                // this.model.trigger('click:attachment', this.model); // open's image in gallery.
+                if (isImage) {
+                    modal = new ModalLogAttachmentImage({
+                        imageId: binaryId
+                    });
+                    modal.show();
+                } else {
+                    modal = new ModalLogAttachmentBinary({
+                        binaryId: binaryId,
+                        language: language,
+                        supportedLanguages: this.supportedLanguages
+                    });
+                    modal.show();
+                }
             }
         },
 
-        activateAccordion: function() {
+        activateAccordion: function () {
             if (this.$el.innerHeight() > 128) {
                 this.$el.addClass('show-accordion');
             } else {
