@@ -1,0 +1,59 @@
+.DEFAULT_GOAL := build
+
+COMMIT_HASH = `git rev-parse --short HEAD 2>/dev/null`
+BUILD_DATE = `date +%FT%T%z`
+
+GO = go
+BINARY_DIR=bin
+
+BUILD_DEPS:= github.com/alecthomas/gometalinter
+GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
+GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
+PACKAGE_COMMONS=github.com/reportportal/go-commons
+BUILD_INFO_LDFLAGS=-ldflags "-X ${PACKAGE_COMMONS}/commons.Branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.BuildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.Version=${v}"
+
+.PHONY: vendor test build
+
+help:
+	@echo "build      - go build"
+	@echo "test       - go test"
+	@echo "checkstyle - gofmt+golint+misspell"
+
+vendor: ## Install govendor and sync vendored dependencies
+	go get github.com/kardianos/govendor
+	govendor sync
+
+get-build-deps: vendor
+	$(GO) get $(BUILD_DEPS)
+	gometalinter --install
+
+test: vendor
+	govendor test +local
+
+checkstyle: get-build-deps
+	gometalinter --vendor ./... --fast --disable=gas --disable=errcheck --disable=gotype --deadline 10m
+
+fmt:
+	gofmt -l -w -s ${GOFILES_NOVENDOR}
+
+
+# Builds server
+build-server: checkstyle test
+	CGO_ENABLED=0 GOOS=linux $(GO) build ${BUILD_INFO_LDFLAGS} -o ${BINARY_DIR}/service-ui ./
+
+# Builds the project
+build-statics:
+	npm install
+	npm --prefix src/main/resources/public/ run build
+
+# Builds the project
+build: build-statics build-server
+
+# Builds the container
+docker: build
+	docker build -t service-ui -f docker/Dockerfile .
+
+clean:
+	if [ -d ${BINARY_DIR} ] ; then rm -r ${BINARY_DIR} ; fi
+	if [ -d 'node_modules' ] ; then rm -r 'node_modules' ; fi
+	if [ -d 'build' ] ; then rm -r 'build' ; fi

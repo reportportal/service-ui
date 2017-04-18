@@ -5,6 +5,14 @@ build/
 */**/.idea/
 .idea/
 *.ipr
-*.iml
 *.iws
 *.log
+
+## Binaries
+bin/
+
+##Vendor
+vendor/*/
+
+## Data
+data/
