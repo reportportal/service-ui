@@ -1554,7 +1554,7 @@ define(['util'], function () {
             confirmPassword: 'Password and confirm password do not match.',
             memberNameLength: 'Member name should have size from \'1\' to \'128\'',
             filterNameMax: 'Filter name should have size up to \'55\'',
-            fullNameRegex: 'Only Latin, numbers symbols, underscore, dash, dot, space are possible',
+            fullNameRegex: 'Only Latin, Cyrillic, numeric characters, symbols: hyphen, underscore, dot, space',
             mergeNameLength: 'Field name should have size from \'3\' to \'256\'',
             fromEmailLength: '\'From\' field should have size from \'5\' to \'256\'',
             addProjectNameLength: 'Project name should have size from \'3\' to \'256\'',
