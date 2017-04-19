@@ -126,9 +126,9 @@
                     <% if(v.newValue && v.oldValue){ %>
                         <%= data.text.activity[k] %>
                         <%= data.text.ui.from %>
-                        <%- data.parseOnOff(v.oldValue) %>
+                        <%- data.replaceValues(v.oldValue) %>
                         <%= data.text.ui.to %>
-                        <%- data.parseOnOff(v.newValue) %><%= i < size ? ',' : '.' %>
+                        <%- data.replaceValues(v.newValue) %><%= i < size ? ',' : '.' %>
                     <% } else { %>
                         <%= data.text.activity[k] %><%= i < size ? ',' : '' %>.
                     <% } %>

@@ -1056,6 +1056,8 @@ define(['util'], function () {
             howKeepLogs: 'How long to keep old logs in launches. Related launches structure will be saved, in order to keep statistics',
             keepScreen: 'Keep Screenshots',
             howKeepScreen: 'How long to keep screenshots in system',
+            strategyRegular: 'Regular',
+            strategyBdd: 'BDD',
             bts: 'Bug Tracking System',
             properties: 'Properties',
             linkBts: 'Link to issue tracker system',
@@ -1790,7 +1792,8 @@ define(['util'], function () {
             keepLogs: 'Keep logs',
             keepScreenshots: 'Keep screenshots',
             auto_analyze: 'Auto Analysis',
-            launchInactivity: 'Launch inactivity timeout'
+            launchInactivity: 'Launch inactivity timeout',
+            statisticsCalculationStrategy: 'Select strategy'
         },
 
         permissionMap: {

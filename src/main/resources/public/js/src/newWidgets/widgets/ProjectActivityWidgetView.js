@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -38,101 +38,117 @@ define(function (require, exports, module) {
             this.testItems = [];
         },
         tpl: 'tpl-widget-activity-stream',
-        parseOnOff: function (val) {
-            return val === 'false' ? Localization.ui.off : val === 'true' ? Localization.ui.on : val;
+        replaceValues: function (val) {
+            switch (val) {
+            case 'false':
+                return Localization.ui.off;
+            case 'true':
+                return Localization.ui.on;
+            case 'STEP_BASED':
+                return Localization.project.strategyRegular;
+            case 'TEST_BASED':
+                return Localization.project.strategyBdd;
+            default:
+                return val;
+            }
         },
         getBts: function (val) {
             var bts = val.split(':');
-            return { type: bts[0], name: bts[1] };
+            return { type: bts[0], name: bts[1] && bts[1] !== 'null' ? bts[1] : null };
         },
         getData: function () {
             var dates = [];
             var contentData = this.model.getContent();
             if (contentData.result) {
-                _.each(this.isReverse ? contentData.result : contentData.result.reverse(), function (val) {
-                    if (!(!Util.hasValidBtsSystem() && val.values.objectType === 'testItem' && val.values.actionType.indexOf('issue') > 0)) {
-                        var isEmail = null;
-                        var emailAction = null;
-                        var values = {
-                            id: val.id
-                        };
-                        if (val.values.actionType === 'update_project') {
-                            values.history = {};
-                            _.each(val.values, function (v, k) {
-                                if (k.indexOf('Value') > 0) {
-                                    if (k === 'emailEnabled$newValue') {
-                                        isEmail = 'email';
-                                        emailAction = v === 'false' ? 'off_email' : 'on_email';
-                                    } else if (k === 'emailCases$newValue') {
-                                        isEmail = 'email';
-                                        emailAction = 'update_email';
-                                    } else {
-                                        var a = k.split('$');
-                                        var name = a[0];
-                                        var type = a[1];
-                                        var obj = {};
-                                        obj[type] = v;
-                                        if (values.history[name]) {
-                                            _.extend(values.history[name], obj);
+                _.each(this.isReverse ? contentData.result : contentData.result.reverse(),
+                    function (val) {
+                        if (!(!Util.hasValidBtsSystem() && val.values.objectType === 'testItem' && val.values.actionType.indexOf('issue') > 0)) {
+                            var isEmail = null;
+                            var emailAction = null;
+                            var values = {
+                                id: val.id
+                            };
+                            if (val.values.actionType === 'update_project') {
+                                values.history = {};
+                                _.each(val.values, function (v, k) {
+                                    if (k.indexOf('Value') > 0) {
+                                        if (k === 'emailEnabled$newValue') {
+                                            isEmail = 'email';
+                                            emailAction = v === 'false' ? 'off_email' : 'on_email';
+                                        } else if (k === 'emailCases$newValue') {
+                                            isEmail = 'email';
+                                            emailAction = 'update_email';
                                         } else {
-                                            values.history[name] = obj;
+                                            var a = k.split('$');
+                                            var name = a[0];
+                                            var type = a[1];
+                                            var obj = {};
+                                            obj[type] = v;
+                                            if (values.history[name]) {
+                                                _.extend(values.history[name], obj);
+                                            } else {
+                                                values.history[name] = obj;
+                                            }
                                         }
                                     }
-                                }
-                                values[k] = v;
-                            }, this);
-                        } else {
-                            _.extend(values, val.values);
-                        }
-
-                        if (isEmail) {
-                            values.objectType = isEmail;
-                            values.actionType = emailAction;
-                        }
-
-                        if (this.checkForIssues(values.actionType)) {
-                            this.testItems.push(values.loggedObjectRef);
-                        }
-
-                        var date = new Date(parseFloat(values.last_modified));
-                        var dateWoTime = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-                        var dateKey = '' + Date.parse(dateWoTime);
-
-                        values.fullTime = Util.dateFormat(parseFloat(values.last_modified));
-                        values.momentTime = Moment(values.fullTime).fromNow();
-                        values.userRef = (values.userRef) ? values.userRef.split('_').join(' ') : '';
-
-                        var contains = _.find(dates, function (item) {
-                            return item.day === dateKey;
-                        });
-                        if (contains) {
-                            contains.items.push(values);
-                        } else {
-                            var now = new Date();
-                            var today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).valueOf();
-                            var dayTitle = '';
-                            var yesterday = new Date(today - 86400000).valueOf();
-                            var dt = new Date(parseFloat(dateKey));
-                            var months = Localization.ui.months;
-                            var days = Localization.ui.days;
-                            if (dateKey === today) {
-                                dayTitle = Localization.ui.today;
-                            } else if (dateKey === yesterday) {
-                                dayTitle = Localization.ui.yesterday;
-                            } else if (today - dateKey <= 604800000) {
-                                dayTitle = days[dt.getDay()];
+                                    values[k] = v;
+                                }, this);
                             } else {
-                                dayTitle = months[dt.getMonth()] + ' ' + dt.getDate();
+                                _.extend(values, val.values);
                             }
-                            var obj = {
-                                day: dateKey,
-                                dayTitle: dayTitle,
-                                items: [values]
-                            };
-                            dates.push(obj);
+
+                            if (isEmail) {
+                                values.objectType = isEmail;
+                                values.actionType = emailAction;
+                            }
+
+                            if (this.checkForIssues(values.actionType)) {
+                                this.testItems.push(values.loggedObjectRef);
+                            }
+
+                            var date = new Date(parseFloat(values.last_modified));
+                            var dateWoTime = new Date(date.getFullYear(),
+                                date.getMonth(),
+                                date.getDate());
+                            var dateKey = '' + Date.parse(dateWoTime);
+
+                            values.fullTime = Util.dateFormat(parseFloat(values.last_modified));
+                            values.momentTime = Moment(values.fullTime).fromNow();
+                            values.userRef = (values.userRef) ? values.userRef.split('_').join(' ') : '';
+
+                            var contains = _.find(dates, function (item) {
+                                return item.day === dateKey;
+                            });
+                            if (contains) {
+                                contains.items.push(values);
+                            } else {
+                                var now = new Date();
+                                var today = new Date(now.getFullYear(),
+                                    now.getMonth(),
+                                    now.getDate()).valueOf();
+                                var dayTitle = '';
+                                var yesterday = new Date(today - 86400000).valueOf();
+                                var dt = new Date(parseFloat(dateKey));
+                                var months = Localization.ui.months;
+                                var days = Localization.ui.days;
+                                if (dateKey === today) {
+                                    dayTitle = Localization.ui.today;
+                                } else if (dateKey === yesterday) {
+                                    dayTitle = Localization.ui.yesterday;
+                                } else if (today - dateKey <= 604800000) {
+                                    dayTitle = days[dt.getDay()];
+                                } else {
+                                    dayTitle = months[dt.getMonth()] + ' ' + dt.getDate();
+                                }
+                                var obj = {
+                                    day: dateKey,
+                                    dayTitle: dayTitle,
+                                    items: [values]
+                                };
+                                dates.push(obj);
+                            }
                         }
-                    }
-                }, this);
+                    }, this);
             }
             return dates;
         },
@@ -145,7 +161,7 @@ define(function (require, exports, module) {
                 getBts: this.getBts,
                 getTicketUrlId: Util.getTicketUrlId,
                 getTickets: this.getTickets,
-                parseOnOff: this.parseOnOff,
+                replaceValues: this.replaceValues,
                 methodUpdateImagePath: Util.updateImagePath,
                 imageRoot: urls.getAvatar,
                 dates: dates
@@ -172,7 +188,7 @@ define(function (require, exports, module) {
                             $(this).html(' ' + responce.name).wrap('<a class="rp-blue-link-undrl" target="_blank" href="#' + projectId + '/launches/all/' + path.join('/') + '?log.item=' + ikey + '"></a>');
                         });
                     })
-                    .fail(function (error) {
+                    .fail(function () {
                         // Util.ajaxFailMessenger(error, 'getItemsWidgetBugTable');
                         $('#itemId-' + ikey, self.$el).html(Localization.widgets.testItemNotFound);
                     });
