@@ -350,12 +350,11 @@ $mobile: 768px;
     height: 62px;
     top: 0;
     background-color: #2b2b2b;
-    cursor: pointer;
     .logo {
       width: 90px;
       height: 100%;
       background: #313131 url(../img/rp_logo.png) center no-repeat;
-
+      cursor: pointer;
     }
   }
 }
