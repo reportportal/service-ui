@@ -1,25 +1,25 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/epam/ReportPortal
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -34,7 +34,7 @@ define(function(require, exports, module) {
     var AdminService = require('adminService');
     var ModalAddUser = require('modals/modalAddUser');
     var ModalInviteUser = require('modals/modalInviteUser');
-
+    var _ = require('underscore');
     var config = App.getInstance();
 
     var UsersTableView = Epoxy.View.extend({
@@ -43,27 +43,27 @@ define(function(require, exports, module) {
         emptyMembersTpl: 'tpl-project-members-empty',
 
         bindings: {
-            '[data-js-users-search]': 'attr: {placeholder: getPlaceHolder}',
+            '[data-js-users-search]': 'attr: {placeholder: getPlaceHolder}'
         },
 
         computeds: {
-            getPlaceHolder: function(){
+            getPlaceHolder: function () {
                 return Localization.members.searchNameLoginEmail;
             }
         },
 
-        initialize: function (options) {
+        initialize: function () {
             this.model = new Backbone.Model({
                 search: '',
                 empty: false,
-                notFound: false,
+                notFound: false
             });
             this.renderViews = [];
 
             this.collection = new MembersCollection();
             this.listenTo(this.collection, 'reset', this.renderUsersList);
             this.listenTo(this.collection, 'remove', this.updateUsers);
-            this.listenTo(this.model, 'change:search', function(){config.trackingDispatcher.trackEventNumber(460)});
+            this.listenTo(this.model, 'change:search', function () { config.trackingDispatcher.trackEventNumber(460); });
             this.pageType = 'PaginateAdminMembers';
             this.render();
         },
@@ -92,10 +92,10 @@ define(function(require, exports, module) {
             });
             this.listenTo(this.paging, 'page', this.updateUsers);
             this.listenTo(this.paging, 'count', this.updateUsers);
-
-            this.paging.ready.done(function(){
-                if(this.paging.urlModel.get('filter.cnt.name')) {
-                    this.model.set({search: this.paging.urlModel.get('filter.cnt.name')});
+            console.log(this.paging);
+            this.paging.ready.done(function () {
+                if (this.paging.urlModel.get('filter.cnt.name')) {
+                    this.model.set({ search: decodeURIComponent(this.paging.urlModel.get('filter.cnt.name')) });
                     this.$searchFilter.val(this.model.get('search'));
                 }
                 this.listenTo(this.model, 'change:search', this.onChangeModelSearch);
@@ -104,21 +104,21 @@ define(function(require, exports, module) {
             return this;
         },
 
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$usersList = $('[data-js-users-list]', this.$el);
             this.$pagingBlock = $('[data-js-users-paginate]', this.$el);
             this.$searchFilter = $('[data-js-users-search]', this.$el);
         },
 
-        updateUsers: function(){
+        updateUsers: function () {
             this.paging.render();
             this.loadUsers();
         },
 
-        loadUsers: function(){
+        loadUsers: function () {
             AdminService.getSearchUser(this.getSearchQuery())
                 .done(function (data) {
-                    if(data.page.totalPages < data.page.number && data.page.totalPages != 0){
+                    if (data.page.totalPages < data.page.number && data.page.totalPages !== 0) {
                         this.paging.trigger('page', data.page.totalPages);
                         return;
                     }
@@ -128,75 +128,77 @@ define(function(require, exports, module) {
                 }.bind(this))
                 .fail(function (error) {
                     this.collection.parse([]);
-                    Util.ajaxFailMessenger(error, "loadUsers");
+                    Util.ajaxFailMessenger(error, 'loadUsers');
                 }.bind(this));
         },
 
-        onChangeModelSearch: function(){
+        onChangeModelSearch: function () {
             this.paging.trigger('page', 1);
         },
 
         onChangeFilterName: function (e, data) {
             if (data.valid) {
-                this.model.set({search: data.value});
-                this.paging.urlModel.set({'filter.cnt.name': data.value});
+                this.model.set({ search: data.value });
+                this.paging.urlModel.set({ 'filter.cnt.name': data.value });
             }
         },
 
-        getSearchQuery: function(){
+        getSearchQuery: function () {
             return {
                 search: encodeURIComponent(this.model.get('search')),
                 page: this.paging.model.get('number'),
                 size: this.paging.model.get('size')
-            }
+            };
         },
 
-        renderEmptyUsers: function(){
+        renderEmptyUsers: function () {
             this.clearUsers();
             this.$usersList.append(Util.templates(this.emptyMembersTpl, {}));
         },
 
-        renderUsersList: function() {
+        renderUsersList: function () {
             this.clearUsers();
-            if(_.isEmpty(this.collection.models)){
+            if (_.isEmpty(this.collection.models)) {
                 this.renderEmptyUsers();
                 return;
             }
-            _.each(this.collection.models, function(user) {
-                var userItem = new UsersItemView({model: user, searchString: this.model.get('search'), table: this});
+            _.each(this.collection.models, function (user) {
+                var userItem = new UsersItemView({ model: user, searchString: this.model.get('search'), table: this });
                 this.$usersList.append(userItem.$el);
                 this.renderViews.push(userItem);
             }, this);
         },
 
-        clearUsers: function(){
-            _.each(this.renderViews, function(view) {
+        clearUsers: function () {
+            _.each(this.renderViews, function (view) {
                 view.destroy();
             });
             this.$usersList.html('');
             this.renderViews = [];
         },
 
-        showInviteUser: function(e){
+        showInviteUser: function (e) {
+            var modal;
             config.trackingDispatcher.trackEventNumber(461);
             e.preventDefault();
-            var modal = new ModalInviteUser({
+            modal = new ModalInviteUser({
                 type: 'users'
             });
             modal.show();
         },
 
-        showAddUser: function(e){
+        showAddUser: function (e) {
+            var modal;
             config.trackingDispatcher.trackEventNumber(462);
             e.preventDefault();
-            var modal = new ModalAddUser({
+            modal = new ModalAddUser({
                 type: 'users'
             });
             this.listenToOnce(modal, 'add:user', this.updateUsers);
             modal.show();
         },
 
-        destroy: function(){
+        destroy: function () {
             this.clearUsers();
             this.undelegateEvents();
             this.stopListening();
@@ -207,5 +209,4 @@ define(function(require, exports, module) {
     });
 
     return UsersTableView;
-
 });
