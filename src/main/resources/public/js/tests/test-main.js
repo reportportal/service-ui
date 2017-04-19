@@ -1,6 +1,3 @@
-
-
-
 var allTestFiles = [];
 var TEST_REGEXP = /\/spec\//i;
 
@@ -28,7 +25,7 @@ require.config({
         app: 'core/app-config',
         jquery: '../lib/jquery-latest',
         'jquery-ui': '../lib/jQuery-ui',
-        'jaddons': '../lib/jquery-addons',
+        jaddons: '../lib/jquery-addons',
         underscore: '../lib/lodash.min',
         backbone: '../lib/backbone',
         'backbone-epoxy': '../lib/backbone-epoxy',
@@ -53,17 +50,16 @@ require.config({
         //launchgrid: 'launch/launch-grid',
         //launchCrumbs: 'launch/launch-crumbs',
         defectEditor: 'defect/defect-editor',
-        log: 'log/logs',
         member: 'member/member',
         memberService: 'member/service',
         launchEditor: 'launch/launch-editor',
         stickyHeader: 'core/sticky-header',
-        'launchCrumbs': 'launch/launch-crumbs',
+        launchCrumbs: 'launch/launch-crumbs',
         log: 'log/logs',
-        'DemoDataSettingsView': 'project/DemoDataSettingsView',
+        DemoDataSettingsView: 'project/DemoDataSettingsView',
 
         dataUrlResolver: 'core/data-url-resolver',
-        'projectinfo': 'project/projectinfo',
+        projectinfo: 'project/projectinfo',
         validators: 'core/validators',
         validate: '../lib/jquery.validate',
 
@@ -71,8 +67,8 @@ require.config({
         filtersResolver: 'filter/filters-resolver',
         profile: 'login/user_profile',
 
-        "colorpicker": "../lib/colorpicker/bootstrap-colorpicker",
-        "colorpickerConfig": "../lib/colorpicker/bootstrap-colorpicker-cfg-custom",
+        colorpicker: '../lib/colorpicker/bootstrap-colorpicker',
+        colorpickerConfig: '../lib/colorpicker/bootstrap-colorpicker-cfg-custom',
 
         callService: 'core/call-service',
         coreService: 'core/core-service',
@@ -101,18 +97,18 @@ require.config({
         'cacheService': 'core/cache-service',
         'scrollable': 'core/scrollable-view',
 
-        'SwipeGallery': '../lib/SwipeGallery',
-        'Hammer': '../lib/hammer',
-        'spectrum': '../lib/spectrum/spectrum',
-        'simplemde': '../lib/markdown/simplemde.min',
+        SwipeGallery: '../lib/SwipeGallery',
+        Hammer: '../lib/hammer',
+        spectrum: '../lib/spectrum/spectrum',
+        simplemde: '../lib/markdown/simplemde.min',
 
         fakeData: '../tests/mocks/data',
         adminFakeData: '../tests/mocks/adminData',
-        jasminejQuery: '../tests/lib/jasmine-jquery.2.0.5',
+        jasminejQuery: '../tests/lib/jasmine-jquery.2.0.5'
 
     },
     shim: {
-        'jquery': {
+        jquery: {
             exports: '$'
         },
         'jasminejQuery': {exports: 'jasminejQuery', deps : ["jquery"] },
@@ -135,46 +131,54 @@ require.config({
     // dynamically load all test files
     // deps: allTestFiles,
     deps: [
-        //'../tests/spec/login/login',
+
+        '../tests/spec/dashboard/dashboardListItemViewTests',
+        '../tests/spec/dashboard/gadgetViewTests',
+        '../tests/spec/dashboard/dashboardItemViewTests',
+
+        '../tests/spec/components/paging',
+
+        '../tests/spec/user_profile/user_profile',
+
+        '../tests/spec/sections/header',
+        '../tests/spec/sections/sidebar',
+        '../tests/spec/sections/footer',
+        '../tests/spec/sections/content'
+
+        // old tests
 
         // '../tests/spec/dashboards/add-dashboard',
         // '../tests/spec/dashboards/edit-dashboard',
         // '../tests/spec/dashboards/dashboards-menu',
         // '../tests/spec/dashboards/dashboards',
 
-        //'../tests/spec/widgets/widgets',
+        // '../tests/spec/login/login',
 
-        //'../tests/spec/post_bug_to_jira/post_bug_to_bts',
-        //'../tests/spec/post_bug_to_jira/load_bug_to_bts',
+        // '../tests/spec/widgets/widgets',
 
-        '../tests/spec/project/projectinfo',
+        // '../tests/spec/post_bug_to_jira/post_bug_to_bts',
+        // '../tests/spec/post_bug_to_jira/load_bug_to_bts',
 
-        //'../tests/spec/favorites/favorites',
+        // '../tests/spec/project/projectinfo',
 
-        '../tests/spec/components/paging',
-
-        '../tests/spec/test_item_editor/testItemEditor',
-
-        //'../tests/spec/launches/historyGrid',
-
-        '../tests/spec/user_profile/user_profile',
+        // '../tests/spec/favorites/favorites',
 
         // '../tests/spec/wizard/widget-wizard',
 
-        //'../tests/spec/project/project',
+        // '../tests/spec/project/project',
 
-        //'../tests/spec/admin/admin',
+        // '../tests/spec/admin/admin',
 
-        '../tests/spec/member/member_assigned',
-        '../tests/spec/member/assign_member',
-        '../tests/spec/member/invite_member',
+        // '../tests/spec/member/member_assigned',
+        // '../tests/spec/member/assign_member',
+        // '../tests/spec/member/invite_member',
 
-        //
         // '../tests/spec/filter/filters-panel',
-        '../tests/spec/sections/header',
-        '../tests/spec/sections/sidebar',
-        '../tests/spec/sections/footer',
-        '../tests/spec/sections/content'
+
+        // '../tests/spec/test_item_editor/testItemEditor',
+
+        // '../tests/spec/launches/historyGrid',
+
     ],
 
     // we have to kickoff jasmine, as it is asynchronous

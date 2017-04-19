@@ -181,10 +181,11 @@ define(function (require) {
         },
         onClickGadgetEdit: function () {
             var self = this;
-            config.trackingDispatcher.trackEventNumber(286);
-            (new ModalEditWidget({
-                model: this.model
-            })).show()
+            if (this.model.get('isMy')) {
+                config.trackingDispatcher.trackEventNumber(286);
+                (new ModalEditWidget({
+                    model: this.model
+                })).show()
                 .done(function () {
                     if (typeof self.model.changed.isShared !== 'undefined') {
                         launchFilterCollection.ready.done(function () {
@@ -193,6 +194,7 @@ define(function (require) {
                     }
                     self.update();
                 });
+            }
         },
         getDataForGridStack: function () {
             return [this.el, this.model.get('x'), this.model.get('y'), this.model.get('width'), this.model.get('height')];

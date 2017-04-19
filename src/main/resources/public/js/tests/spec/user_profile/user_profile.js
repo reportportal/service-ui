@@ -1,23 +1,23 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 
 define(function (require, exports, module) {
@@ -40,8 +40,7 @@ define(function (require, exports, module) {
     $('body').append('<div id="sandbox" style="height: 1px; position:absolute;left: 2000px;"></div>');
 
     describe('User profile', function () {
-
-        var sandbox = $("#sandbox"),
+        var sandbox = $('#sandbox'),
             context,
             userInfo,
             appModel,
@@ -62,7 +61,7 @@ define(function (require, exports, module) {
                     return {
                         $body: $('#dynamic-content', sandbox),
                         $header: $('#contentHeader', sandbox)
-                    }
+                    };
                 }
             };
 
@@ -72,7 +71,7 @@ define(function (require, exports, module) {
 
             spyOn(Profile.UserPageView.prototype, 'initEditor').and.stub();
 
-            spyOn(Service, 'getApiToken').and.callFake(function(){
+            spyOn(Service, 'getApiToken').and.callFake(function () {
                 var deferred = new $.Deferred();
                 deferred.resolve(DataMock.getToken());
                 return deferred.promise();
@@ -84,7 +83,6 @@ define(function (require, exports, module) {
                 context: this.context,
                 navigationInfo: this.navigationInfo
             });
-
         });
 
         afterEach(function () {
@@ -160,7 +158,7 @@ define(function (require, exports, module) {
                 email = 'useremail@email.com';
             spyOn(Service, 'submitProfileInfo').and.callFake(function () {
                 var deferred = new $.Deferred();
-                deferred.resolve({fullName: name, email: email});
+                deferred.resolve({ fullName: name, email: email });
                 return deferred.promise();
             });
             editInfo.click();
@@ -212,7 +210,7 @@ define(function (require, exports, module) {
             $('#originalPass', sandbox).val(oldPass).data('valid', true);
             $('#newPass', sandbox).val(newPass);
             $('#newPassComfirm', sandbox).val(newPass);
-            profileView.validatePass({}, {valid: true, value: "654321"});
+            profileView.validatePass({}, { valid: true, value: '654321' });
             $('#submit_change', sandbox).click();
             expect(Service.submitPassChange).toHaveBeenCalled();
             expect(Service.submitPassChange.calls.mostRecent().args[0].oldPassword).toEqual(oldPass);
@@ -235,9 +233,9 @@ define(function (require, exports, module) {
 
         it('should delete user photo on click button "Remove avatar"', function () {
             var remove = $('#remove-image', sandbox);
-            spyOn(Util, "getDialog").and.callFake(function (options) {
-                return $("<div>" + Util.templates(options.name) + "</div>")
-                    .find(".dialog-shell")
+            spyOn(Util, 'getDialog').and.callFake(function (options) {
+                return $('<div>' + Util.templates(options.name) + '</div>')
+                    .find('.dialog-shell')
                     .unwrap()
                     .appendTo(sandbox);
             });
@@ -252,14 +250,13 @@ define(function (require, exports, module) {
             expect(modal.length).toEqual(1);
             $('.rp-btn-danger', modal).click();
             expect(Service.deletePhoto).toHaveBeenCalled();
-
         });
 
         it('should update UUID on click button "Update UUID"', function () {
             var update = $('#update-uuid', sandbox);
-            spyOn(Util, "getDialog").and.callFake(function (options) {
-                return $("<div>" + Util.templates(options.name) + "</div>")
-                    .find(".dialog-shell")
+            spyOn(Util, 'getDialog').and.callFake(function (options) {
+                return $('<div>' + Util.templates(options.name) + '</div>')
+                    .find('.dialog-shell')
                     .unwrap()
                     .appendTo(sandbox);
             });
@@ -275,7 +272,5 @@ define(function (require, exports, module) {
             $('#actionBtnDialog', modal).click();
             expect(Service.generateApiToken).toHaveBeenCalled();
         });
-
     });
-
 });

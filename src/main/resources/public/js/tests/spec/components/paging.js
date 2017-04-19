@@ -1,20 +1,20 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -36,10 +36,8 @@ define(function (require, exports, module) {
     $('body').append('<div id="sandbox" style="height: 1px; position:absolute;left: 2000px;"></div>');
 
     describe('PagingToolbar', function () {
-
-        xdescribe("disabled suite", function () {
-
-            var sandbox = $("#sandbox"),
+        xdescribe('disabled suite', function () {
+            var sandbox = $('#sandbox'),
                 context,
                 page,
                 view,
@@ -51,7 +49,7 @@ define(function (require, exports, module) {
                 view = new Components.PagingToolbar({
                     el: sandbox,
                     model: new Backbone.Model(page),
-                    pageType: "objectsOnPage"
+                    pageType: 'objectsOnPage'
                 }).render();
             };
 
@@ -133,8 +131,8 @@ define(function (require, exports, module) {
                 renderPaging();
                 var qty = 10,
                     form = $('#pageSize', sandbox),
-                    e = $.Event("keyup");
-                view.showItemsPerPageControl($.Event("click"));
+                    e = $.Event('keyup');
+                view.showItemsPerPageControl($.Event('click'));
                 form.val(qty);
                 e.keyCode = 13;
                 form.trigger(e);
@@ -152,7 +150,6 @@ define(function (require, exports, module) {
                 expect(btn.length).toEqual(1);
                 btn.click();
                 expect(Components.PagingToolbar.prototype.trigger).toHaveBeenCalledWith('page', 1);
-
             });
 
             it('should be navigate to last page onclick "Last page" button', function () {
