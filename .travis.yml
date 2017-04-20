@@ -1,9 +1,9 @@
-language: java
+language: go
 
-script: ./gradlew build
+go:
+  - 1.8.1
 
-jdk:
-  - oraclejdk8
+script: make build
 
 notifications:
   slack: reportportal-dev:fl6xWHVQp1jvsMmCJxYW9YKP
