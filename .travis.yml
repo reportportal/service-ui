@@ -3,6 +3,9 @@ language: go
 go:
   - 1.8.1
 
+env:
+  - TRAVIS_NODE_VERSION="7.8.0"
+
 script: make build
 
 notifications:
