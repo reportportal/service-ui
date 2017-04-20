@@ -11,6 +11,7 @@ GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 PACKAGE_COMMONS=github.com/reportportal/go-commons
 BUILD_INFO_LDFLAGS=-ldflags "-X ${PACKAGE_COMMONS}/commons.Branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.BuildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.Version=${v}"
+IMAGE_NAME=reportportal/service-ui$(IMAGE_POSTFIX)
 
 .PHONY: vendor test build
 
@@ -51,7 +52,14 @@ build: build-statics build-server
 
 # Builds the container
 docker: build
-	docker build -t service-ui -f docker/Dockerfile .
+
+# Builds the container and pushes to private registry
+pushDev:
+	echo "Registry is not provided"
+	if [ -d ${REGISTRY} ] ; then echo "Provide registry"; exit 1 ; fi
+	docker build -t "$(IMAGE_NAME)" -f docker/Dockerfile .
+	docker tag "$(IMAGE_NAME)" "$(REGISTRY)/$(IMAGE_NAME):latest"
+	docker push "$(REGISTRY)/$(IMAGE_NAME):latest"
 
 clean:
 	if [ -d ${BINARY_DIR} ] ; then rm -r ${BINARY_DIR} ; fi
