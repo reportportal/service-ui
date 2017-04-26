@@ -1,29 +1,28 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/epam/ReportPortal
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
@@ -49,78 +48,78 @@ define(function(require, exports, module) {
             '[data-js-members-link]': 'attr: {href: getMembersUrl}',
             '[data-js-go-to-project]': 'classes: {hide: not(assignToProject)}, attr: {href: openProjectUrl}',
             '[data-js-assign-to-project]': 'classes: {hide: assignToProject}',
-            '[data-js-delete-project]': 'classes: {hide: not(canDeleteProject)}',
+            '[data-js-delete-project]': 'classes: {hide: not(canDeleteProject)}'
         },
 
         computeds: {
             getProjectName: {
                 deps: ['projectId'],
-                get: function(projectId){
+                get: function (projectId) {
                     return this.wrapSearchResult(projectId);
                 }
             },
             getUsersQuantity: {
                 deps: ['usersQuantity'],
-                get: function(usersQuantity){
+                get: function (usersQuantity) {
                     var view = this.filterModel.get('viewType');
                     return '<strong>' + usersQuantity + '</strong> ' +
-                        (view != "table" ? (usersQuantity == 1 ? Localization.admin.usersQuantitySingular : Localization.admin.usersQuantity) : "");
+                        (view !== 'table' ? (usersQuantity === 1 ? Localization.admin.usersQuantitySingular : Localization.admin.usersQuantity) : '');
                 }
             },
             getLaunchesQuantity: {
                 deps: ['launchesQuantity'],
-                get: function(launchesQuantity){
+                get: function (launchesQuantity) {
                     var view = this.filterModel.get('viewType');
                     return '<strong>' + launchesQuantity + '</strong> ' +
-                        (view != "table" ? (launchesQuantity == 1 ? Localization.admin.launchesQuantitySingular : Localization.admin.launchesQuantity) : "");
+                        (view !== 'table' ? (launchesQuantity === 1 ? Localization.admin.launchesQuantitySingular : Localization.admin.launchesQuantity) : '');
                 }
             },
             getLastRun: {
                 deps: ['lastRun'],
-                get: function(lastRun){
+                get: function (lastRun) {
                     return Localization.admin.lastRunPrefix + ' ' + (lastRun ? Util.daysFromNow(lastRun) : Localization.admin.lastRunSuffix);
                 }
             },
             getProjectDetailsUrl: {
                 deps: ['projectId'],
-                get: function(projectId){
+                get: function (projectId) {
                     return '#administrate/project-details/' + projectId;
                 }
             },
             openProjectUrl: {
                 deps: ['projectId'],
-                get: function(projectId){
+                get: function (projectId) {
                     return '#' + projectId;
                 }
             },
             getSettingsUrl: {
                 deps: ['projectId'],
-                get: function(projectId){
+                get: function (projectId) {
                     return '#administrate/project-details/' + projectId + '/settings';
                 }
             },
             getMembersUrl: {
                 deps: ['projectId'],
-                get: function(projectId){
+                get: function (projectId) {
                     return '#administrate/project-details/' + projectId + '/members';
                 }
             },
             isNew: {
                 deps: ['creationDate'],
-                get: function(creationDate){
+                get: function (creationDate) {
                     return Util.daysBetween(new Date(), new Date(creationDate)) <= 7;
                 }
             },
             assignToProject: {
                 deps: ['projectId'],
-                get: function(projectId){
-                    var projects= config.userModel.get('projects');
+                get: function (projectId) {
+                    var projects = config.userModel.get('projects');
                     return !!projects[projectId];
                 }
             },
             canDeleteProject: {
                 deps: ['entryType'],
-                get: function(entryType){
+                get: function (entryType) {
                     return !(this.isDeleteLock() || this.isPersonalProject(entryType));
                 }
             }
@@ -145,20 +144,20 @@ define(function(require, exports, module) {
             this.$el.addClass(this.getViewClass()).html(Util.templates(tpl, {}));
         },
 
-        getViewClass: function(){
-            return this.filterModel.get('viewType') == 'table' ? 'project-table-row project-item' : 'project-list-row project-item';
+        getViewClass: function () {
+            return this.filterModel.get('viewType') === 'table' ? 'project-table-row project-item' : 'project-list-row project-item';
         },
 
-        getViewTemplate: function(){
-            return this.filterModel.get('viewType') == 'table' ? this.tplTable : this.tplList;
+        getViewTemplate: function () {
+            return this.filterModel.get('viewType') === 'table' ? this.tplTable : this.tplList;
         },
 
-        wrapSearchResult: function(str){
+        wrapSearchResult: function (str) {
             var search = this.filterModel.get('search');
             return search ? Util.textWrapper(str, search) : str;
         },
 
-        isPersonalProject: function(entryType){
+        isPersonalProject: function (entryType) {
             return entryType === 'PERSONAL';
         },
 
@@ -167,64 +166,66 @@ define(function(require, exports, module) {
             return Util.isDeleteLock(project);
         },
 
-        onClickProject: function(){
+        onClickProject: function () {
             config.trackingDispatcher.trackEventNumber(447);
         },
-        onClickSettings: function(){
+        onClickSettings: function () {
             config.trackingDispatcher.trackEventNumber(449);
         },
-        onClickMembers: function(){
+        onClickMembers: function () {
             config.trackingDispatcher.trackEventNumber(450);
         },
-        onOpenProject: function(){
+        onOpenProject: function () {
             config.trackingDispatcher.trackEventNumber(452);
         },
 
         assignAdminToProject: function (e) {
+            var id = this.model.get('projectId');
+            var data = {};
+            var defaultRole = config.projectRolesEnum.project_manager;
+
             config.trackingDispatcher.trackEventNumber(451);
             e.preventDefault();
-            var id = this.model.get('projectId'),
-                data = {},
-                defaultRole = config.projectRoles[1];
 
             data[config.userModel.get('name')] = defaultRole;
             MemberService.assignMember(data, id)
                 .done(function () {
-                    config.userModel.get('projects')[id] = {projectRole: defaultRole};
+                    config.userModel.get('projects')[id] = { projectRole: defaultRole };
                     $('[data-js-assign-to-project]', this.$el).addClass('hide');
                     $('[data-js-go-to-project]', this.$el).removeClass('hide');
-                    Util.ajaxSuccessMessenger("assignYourSelf", (id + '').toUpperCase());
+                    Util.ajaxSuccessMessenger('assignYourSelf', (id + '').toUpperCase());
                 }.bind(this))
                 .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "assignYourSelf");
+                    Util.ajaxFailMessenger(error, 'assignYourSelf');
                 });
         },
 
-        deleteProject: function(e){
+        deleteProject: function (e) {
+            var modal;
             config.trackingDispatcher.trackEventNumber(448);
             e.preventDefault();
-            var modal = new ModalConfirm({
+            modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteProject,
                 bodyText: Util.replaceTemplate(Localization.dialog.deleteProject, this.model.get('projectId')),
                 confirmText: Localization.dialog.msgDeleteProject,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonDanger: true,
                 okButtonText: Localization.ui.delete,
-                confirmFunction: function(){
+                confirmFunction: function () {
                     config.trackingDispatcher.trackEventNumber(456);
                     return this.model.delete();
                 }.bind(this)
             });
-            $('[data-js-close]', modal.$el).on('click', function(){
+            $('[data-js-close]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(456);
             });
-            $('[data-js-cancel]', modal.$el).on('click', function(){
+            $('[data-js-cancel]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(458);
             });
             modal.show();
         },
 
-        destroy: function(){
+        destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
@@ -234,5 +235,4 @@ define(function(require, exports, module) {
     });
 
     return ProjectsItemView;
-
 });

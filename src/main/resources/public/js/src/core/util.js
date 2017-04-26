@@ -1052,9 +1052,21 @@ define(function (require, exports, module) {
                 var result = '';
                 _.each(validators, function (validator) {
                     var val = validator.options.noTrim ? $el.val() : $el.val().trim();
-                    var message = validator.validate(val, validator.options, Util);
-                    if (message) {
-                        result = !result ? message + '</br>' : result;
+                    if (validator.options.remote) {
+                        $.when(validator.validate(val, validator.options, Util)).done(function (data) {
+                            if (!data.valid) {
+                                var message = validator.options.message;
+                                result += message + '</br>';
+                                $holder.addClass('validate-error');
+                            }
+                            showResult(result);
+                            $el.trigger('validation::change');
+                        });
+                    } else {
+                        var message = validator.validate(val, validator.options, Util);
+                        if (message) {
+                            result = !result ? message + '</br>' : result;
+                        }
                     }
                 });
                 if (result) {
