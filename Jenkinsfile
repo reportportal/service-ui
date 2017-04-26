@@ -9,15 +9,20 @@ node {
        stage('Build UI') {
        node {
             withEnv(["PATH+NODE=${tool name: 'node-7.9.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'}/bin"]) {
-                sh 'node -v'
-                sh 'npm install'
+                sh 'make build-statics'
             }
         }
 
        }
 
        stage('Build Server'){
-            sh 'make build-server'
+             // Install the desired Go version
+                def root = tool name: 'Go 1.8', type: 'go'
+
+                // Export environment variables pointing to the directory where Go was installed
+                withEnv(["GOROOT=${root}", "PATH+GO=${root}/bin"]) {
+                    sh 'go version'
+                }
        }
 
 }
