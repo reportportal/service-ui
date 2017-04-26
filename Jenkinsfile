@@ -21,6 +21,5 @@ node('node') {
             sh 'make build-server'
        }
 
-    }
-
 }
+
