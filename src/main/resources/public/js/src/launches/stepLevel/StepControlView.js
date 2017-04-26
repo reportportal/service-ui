@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
+    var _ = require('underscore');
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
     var Util = require('util');
     var $ = require('jquery');
@@ -47,30 +48,32 @@ define(function (require, exports, module) {
         },
 
         computeds: {
-            validateForHistoryBtn: function(){
-                var interrupted = config.launchStatus.interrupted,
-                    showBtn = this.parentModel.get('status') !== interrupted && this.launchModel.get('status') !== interrupted && !this.collectionItems.validateForAllCases() && !_.isEmpty(this.collectionItems.models);
+            validateForHistoryBtn: function () {
+                var interrupted = config.launchStatus.interrupted;
+                var showBtn = (this.launchModel.get('status') !== interrupted)
+                    && !this.collectionItems.validateForAllCases()
+                    && !_.isEmpty(this.collectionItems.models);
                 return showBtn;
             },
-            getHistoryHref: function(){
+            getHistoryHref: function () {
                 return this.getHistoryLink();
             },
-            activeMultiDelete: function() {
-                return !(this.launchModel.get('status') == config.launchStatus.inProgress)
+            activeMultiDelete: function () {
+                return !(this.launchModel.get('status') === config.launchStatus.inProgress);
             },
-            multipleDeleteTooltip: function() {
+            multipleDeleteTooltip: function () {
                 if (this.getBinding('activeMultiDelete')) {
                     return '';
                 }
                 return Localization.launches.launchNotInProgress;
             },
-            loadBugTooltip: function() {
+            loadBugTooltip: function () {
                 if (!this.appModel.get('isBtsAdded')) {
                     return Localization.launches.configureTBSLoad;
                 }
                 return '';
             },
-            postBugTooltip: function() {
+            postBugTooltip: function () {
                 if (!this.appModel.get('isBtsConfigure')) {
                     return Localization.launches.configureTBS;
                 }
@@ -79,18 +82,18 @@ define(function (require, exports, module) {
         },
 
         template: 'tpl-launch-step-control',
-        initialize: function(options) {
+        initialize: function (options) {
             this.context = options.context;
             this.filterModel = options.filterModel;
             this.launchModel = options.launchModel;
             this.parentModel = options.parentModel;
-            this.collectionItems =  options.collectionItems;
+            this.collectionItems = options.collectionItems;
             this.appModel = new SingletonAppModel();
             this.model = new (Epoxy.Model.extend({
                 defaults: {
-                    refreshItems: 0,
+                    refreshItems: 0
                 }
-            }));
+            }))();
             this.listenTo(this.collectionItems, 'change:issue change:description change:tags', this.increaseRefreshItemsCount);
             this.listenTo(this.collectionItems, 'loading', this.resetRefreshItems);
             this.listenTo(this.collectionItems, 'change:issue', this.updateParentModel);
@@ -102,82 +105,81 @@ define(function (require, exports, module) {
             });
             this.infoLine = new InfoPanelView({
                 el: $('[data-js-info-line]', this.$el),
-                model: this.parentModel,
+                model: this.parentModel
             });
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {context: this.context}));
+        render: function () {
+            this.$el.html(Util.templates(this.template, { context: this.context }));
         },
         updateParentModel: function () {
             _.each(this.parentModel.collection.models, function (model) {
                 model.updateData(true);
             });
         },
-        activateMultiple: function() {
+        activateMultiple: function () {
             $('[data-js-refresh], [data-js-history-view]', this.$el).addClass('disabled');
-            $('[data-js-multi-button]', this.$el).removeClass('disabled').attr({title: Localization.ui.actions});
+            $('[data-js-multi-button]', this.$el).removeClass('disabled').attr({ title: Localization.ui.actions });
             $('[data-js-history]', this.$el).addClass('disabled');
         },
-        disableMultiple: function() {
+        disableMultiple: function () {
             $('[data-js-refresh], [data-js-history-view]', this.$el).removeClass('disabled');
-            $('[data-js-multi-button]', this.$el).addClass('disabled').attr({title: Localization.launches.actionTitle});
+            $('[data-js-multi-button]', this.$el).addClass('disabled').attr({ title: Localization.launches.actionTitle });
             $('[data-js-history]', this.$el).removeClass('disabled');
         },
-        onClickMultiAction: function(e) {
+        onClickMultiAction: function (e) {
             var type = $(e.currentTarget).data('js-multi-action');
             switch (type) {
-                case 'editdefect':
-                    config.trackingDispatcher.trackEventNumber(164);
-                    break;
-                case 'postbug':
-                    config.trackingDispatcher.trackEventNumber(165);
-                    break;
-                case 'loadbug':
-                    config.trackingDispatcher.trackEventNumber(166);
-                    break;
-                case 'remove':
-                    config.trackingDispatcher.trackEventNumber(167);
-                    break;
+            case 'editdefect':
+                config.trackingDispatcher.trackEventNumber(164);
+                break;
+            case 'postbug':
+                config.trackingDispatcher.trackEventNumber(165);
+                break;
+            case 'loadbug':
+                config.trackingDispatcher.trackEventNumber(166);
+                break;
+            case 'remove':
+                config.trackingDispatcher.trackEventNumber(167);
+                break;
+            default:
+                break;
             }
             this.trigger('multi:action', type);
         },
-        onClickRefresh: function() {
+        onClickRefresh: function () {
             config.trackingDispatcher.trackEventNumber(169);
             this.collectionItems.load();
             this.resetRefreshItems();
         },
-        resetRefreshItems: function() {
-            this.model.set({refreshItems: 0});
+        resetRefreshItems: function () {
+            this.model.set({ refreshItems: 0 });
         },
         increaseRefreshItemsCount: function (model) {
             if (this.isAnyFilterEnabled() && this.isFilteredAttrChanged(model)) {
-                this.model.set({refreshItems: this.model.get('refreshItems') + 1});
+                this.model.set({ refreshItems: this.model.get('refreshItems') + 1 });
             }
         },
-        isFilteredAttrChanged: function(model) {
+        isFilteredAttrChanged: function (model) {
             var self = this;
             var isFilteredAttrChanged = false;
             _.each(this.getFilterEntities(), function (filter) {
                 _.each(self.getChangedAttrs(model), function (changedAttrVal, changedAttrKey) {
                     if (changedAttrKey === 'issue$issue_type' && filter.filtering_field == 'issue$issue_type') {
-                        if (!_.contains(filter.value.split(','), changedAttrVal) && _.isMatch(filter, {filtering_field: changedAttrKey})) {
+                        if (!_.contains(filter.value.split(','), changedAttrVal) && _.isMatch(filter, { filtering_field: changedAttrKey })) {
                             isFilteredAttrChanged = true;
                         }
-                    } else {
-                        if (_.isMatch(filter, {filtering_field: changedAttrKey})) {
-                            isFilteredAttrChanged = true;
-                        }
+                    } else if (_.isMatch(filter, { filtering_field: changedAttrKey })) {
+                        isFilteredAttrChanged = true;
                     }
-                })
+                });
             });
             return isFilteredAttrChanged;
         },
-        getFilterEntities: function() {
+        getFilterEntities: function () {
             if (this.filterModel.get('newEntities') !== '') {
                 return JSON.parse(this.filterModel.get('newEntities'));
-            } else {
-                return JSON.parse(this.filterModel.get('entities'));
             }
+            return JSON.parse(this.filterModel.get('entities'));
         },
         getChangedAttrs: function (model) {
             var changedAttrs = model.changedAttributes();
@@ -193,32 +195,26 @@ define(function (require, exports, module) {
             return changedAttrs;
         },
         isAnyFilterEnabled: function () {
-             return !((this.filterModel.get('newEntities') === '' && this.filterModel.get('entities') === '[]') ||
+            return !((this.filterModel.get('newEntities') === '' && this.filterModel.get('entities') === '[]') ||
             (this.filterModel.get('newEntities') === '[]' && this.filterModel.get('entities') === '[]'));
         },
-        getHistoryLink: function(){
+        getHistoryLink: function () {
             var currentPath = window.location.hash;
             currentPath += '&history.item=' + this.parentModel.get('id');
             return currentPath;
         },
-        onClickHistory: function(e){
+        onClickHistory: function (e) {
             e.preventDefault();
-            if(!$(e.currentTarget).hasClass('disabled')){
+            if (!$(e.currentTarget).hasClass('disabled')) {
                 config.trackingDispatcher.trackEventNumber(168);
-                config.router.navigate(this.getHistoryLink(), {trigger: true});
+                config.router.navigate(this.getHistoryLink(), { trigger: true });
             }
         },
-        destroy: function () {
+        onDestroy: function () {
             this.filterEntities && this.filterEntities.destroy();
             this.infoLine && this.infoLine.destroy();
-            this.$el.html('');
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            delete this;
-        },
+        }
     });
-
 
     return StepControlView;
 });
