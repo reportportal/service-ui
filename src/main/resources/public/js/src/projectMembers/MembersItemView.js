@@ -46,7 +46,7 @@ define(function (require) {
             '[data-js-member-name]': 'html: getFullName',
             '[data-js-member-login]': 'html: getLogin',
             '[data-js-member-you]': 'classes: {hide: not(isYou)}',
-            '[data-js-member-admin]': 'classes: {hide: not(isAdmin), notlink: isYou}',
+            '[data-js-member-admin]': 'classes: {hide: not(isAdmin), notlink: any(isYou, not(isAdminContext))}',
             '[data-js-member-unassign]': 'classes: {disabled: not(canUnAssign)}, attr: {disabled: not(canUnAssign), title: getUnAssignTitle}',
             '[data-js-select-roles]': 'classes: {hide: isAdmin}',
             '[data-js-admin-role]': 'classes: {hide: not(isAdmin)}',
@@ -115,6 +115,12 @@ define(function (require) {
                 get: function (isAdmin, isYou) {
                     return isAdmin || isYou || !this.isAdminContext;
                 }
+            },
+            isAdminContext: {
+                get: function () {
+                    console.log(!!this.isAdminContext);
+                    return !!this.isAdminContext;
+                }
             }
         },
         bindingHandlers: {
@@ -154,7 +160,10 @@ define(function (require) {
         confirmChangeAccountRole: function (e) {
             var modal;
             e.preventDefault();
-            if (!this.model.get('isYou')) {
+            if (!this.isAdminContext) {
+                return;
+            }
+            if (!this.model.get('isYou') || !!this.isAdminContext) {
                 config.trackingDispatcher.trackEventNumber(463);
                 modal = new ModalConfirm({
                     headerText: Localization.dialogHeader.changeRole,
