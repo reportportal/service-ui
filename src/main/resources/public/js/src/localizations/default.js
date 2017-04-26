@@ -629,7 +629,7 @@ define(['util'], function () {
             tHeadTitleDashboardName: 'Dashboard Name',
             description: 'Description',
             dashboardEmptyHeader: 'You have no Widgets on this Dashboard',
-            notMyDashboardEmptyHeader: 'There are no Widgets on this dashboard',
+            notMyDashboardEmptyHeader: 'There are no Widgets on this Dashboard',
             dashboardEmptyText: 'Add your first Widget to analyse statistics'
         },
 
