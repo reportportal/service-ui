@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
@@ -34,12 +34,15 @@ define(function (require, exports, module) {
     var PreviewWidgetView = Epoxy.View.extend({
         className: 'preview-widget-view',
         initialize: function (options) {
+            var self = this;
+            var gadget;
+            var filterOptions;
             this.filterModel = options.filterModel;
             if (options.sharedWidgetModel) {
                 this.model = new GadgetModel({ gadget: options.sharedWidgetModel.get('gadget') });
             }
-            var self = this;
-            var gadget = this.model.get('gadget');
+
+            gadget = this.model.get('gadget');
             if ((!this.filterModel && !options.sharedWidgetModel) || gadget === 'activity_stream' || gadget === 'launches_table' ||
                 gadget === 'unique_bug_table' || gadget === 'most_failed_test_cases') {
                 this.$el.css('background-image', 'url(' + this.model.get('gadgetPreviewImg') + ')');
@@ -59,12 +62,13 @@ define(function (require, exports, module) {
                             preview: true
                         });
                         self.$el.html(self.widgetView.$el);
+                        self.widgetView.onShow();
                     })
                     .fail(function (error) {
                         Util.ajaxFailMessenger(error, 'sharedWidgetData');
                     });
             } else {
-                var filterOptions = this.filterModel.getOptions();
+                filterOptions = this.filterModel.getOptions();
 
                 filterOptions.push('filter.!in.status=IN_PROGRESS');
                 filterOptions.push('page.page=1');
@@ -73,7 +77,7 @@ define(function (require, exports, module) {
                     .done(function (data) {
                         self.renderWidgetPreview(data);
                     })
-                    .fail(function (error) {
+                    .fail(function () {
                         // Util.ajaxFailMessenger(null, 'widgetPreviewData');
                     });
             }
@@ -96,10 +100,11 @@ define(function (require, exports, module) {
                 content_parameters: this.getContentParameters(),
                 content: this.parseWidgetPreviewData(data, this.model)
             }, { parse: true });
+            var CurrentView;
 
             this.widget && this.widget.destroy();
             this.$el.html('');
-            var CurrentView = WidgetService.getWidgetView(this.model.get('gadget'));
+            CurrentView = WidgetService.getWidgetView(this.model.get('gadget'));
             this.widget = new CurrentView({
                 model: widgetModel,
                 isPreview: true

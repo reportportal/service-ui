@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
@@ -123,6 +123,7 @@ define(function (require, exports, module) {
         renderViews: function () {
             var $container = $('[data-js-widgets-list]', this.$el);
             var self = this;
+            var view;
             this.destroyViews();
             if (this.collection.isEmpty()) {
                 $('[data-js-widgets-empty]', this.$el).removeClass('hide');
@@ -132,7 +133,7 @@ define(function (require, exports, module) {
                 if (_.find(self.dashboardModel.getWidgets(), function (w) { return w.widgetId === model.get('id'); })) {
                     model.set('added', true);
                 }
-                var view = new SharedWidgetItem({
+                view = new SharedWidgetItem({
                     model: model,
                     dashboardModel: self.dashboardModel
                 });
