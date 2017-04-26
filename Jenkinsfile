@@ -8,7 +8,7 @@ node {
 
        stage('Build UI') {
        node {
-            withEnv(["PATH+NODE=${tool name: 'node-5.10.1', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'}/bin"]) {
+            withEnv(["PATH+NODE=${tool name: 'node-7.9.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'}/bin"]) {
                 sh 'node -v'
                 sh 'npm install'
             }
