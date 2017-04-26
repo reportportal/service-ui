@@ -2,11 +2,16 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {
+        stage('Build UI') {
             steps {
-                echo 'Building..'
-                sh 'make build'
-
+                echo 'Building UI..'
+                sh 'make build-statics'
+            }
+        }
+        stage('Build Server') {
+            steps {
+                echo 'Building Server..'
+                sh 'make build-server'
             }
         }
     }
