@@ -1,21 +1,26 @@
-pipeline {
-    agent any
+#!groovy
 
-    stages {
-        stage('Build UI') {
-            steps {
-                node {
-                  withEnv(["PATH+NODE=${tool name: 'node-5.10.1', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'}/bin"]) {
-                    sh 'node -v'
-                  }
-                }
+node('node') {
+
+       stage('Checkout'){
+          checkout scm
+       }
+
+       stage('Build UI') {
+       node {
+            withEnv(["PATH+NODE=${tool name: 'node-5.10.1', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'}/bin"]) {
+                sh 'node -v'
+                sh 'npm install'
             }
         }
-        stage('Build Server') {
-            steps {
-                echo 'Building Server..'
-                sh 'make build-server'
-            }
-        }
+
+       }
+
+       stage('Build Server'){
+
+            sh 'make build-server'
+       }
+
     }
+
 }
