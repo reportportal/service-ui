@@ -1216,6 +1216,7 @@ define(['util'], function () {
             lastLogin: 'Last login',
             projectsRoles: 'Projects and Roles',
             deleteUser: 'Delete User',
+            deleteOwnUser: 'You cannot delete own account',
             viewProjects: ' View Projects and Roles',
             addNewUser: 'Add new user',
             inviteNewUser: 'Invite user to the project',
