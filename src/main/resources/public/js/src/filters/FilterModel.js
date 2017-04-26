@@ -18,9 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var CallService = require('callService');
     var urls = require('dataUrlResolver');
@@ -29,7 +30,6 @@ define(function(require, exports, module) {
     var Localization = require('localization');
     var Util = require('util');
     var Moment = require('moment');
-    var Components = require('core/components');
     var ModalFilterEdit = require('modals/modalFilterEdit');
     var App = require('app');
     var Urls = require('dataUrlResolver');
@@ -57,17 +57,17 @@ define(function(require, exports, module) {
             isLaunch: false,
             active: false,
             url: '',
-            temp: false,
+            temp: false
         },
         computeds: {
             optionsString: {
                 deps: ['entities', 'selection_parameters'],
-                get: function(entities, selection_params) {
+                get: function (entities, selection_params) {
                     var selection_parameters = this.getParametersObj();
                     var result = '(' + this.getFilterOptions(this.getEntitiesObj(), Localization.comparators) + ')';
-                    var sortKey = selection_parameters &&  this.getLastKey(selection_parameters.sorting_column);
+                    var sortKey = selection_parameters && this.getLastKey(selection_parameters.sorting_column);
 
-                    if(sortKey) {
+                    if (sortKey) {
                         result += Localization.favorites.sortedBy + ' ' + Localization.launchesHeaders[sortKey];
                     }
 
@@ -76,42 +76,42 @@ define(function(require, exports, module) {
             },
             notMyFilter: {
                 deps: ['owner'],
-                get:function(owner) {
-                    return owner != config.userModel.get('name');
+                get: function (owner) {
+                    return owner !== config.userModel.get('name');
                 }
             },
             sharedByTitle: {
                 deps: ['owner'],
-                get: function(owner) {
+                get: function (owner) {
                     return Localization.filters.sharedBy + ' ' + owner;
                 }
             },
             isAskSorting: {
                 deps: ['selection_parameters', 'newSelectionParameters'],
-                get: function() {
+                get: function () {
                     var params = this.getParametersObj();
                     return params.is_asc;
                 }
             },
             sortingColumn: {
                 deps: ['selection_parameters', 'newSelectionParameters'],
-                get: function() {
+                get: function () {
                     var params = this.getParametersObj();
                     return params.sorting_column;
                 }
             },
             isLaunchString: {
                 deps: ['isLaunch'],
-                get: function(showOnLaunches){
-                    if(showOnLaunches) {
+                get: function (showOnLaunches) {
+                    if (showOnLaunches) {
                         return Localization.ui.on;
                     }
                     return Localization.ui.off;
                 }
-            },
+            }
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.context = options.context;
             this.listenTo(this, 'change:name change:isShared change:description change:entities change:selection_parameters', this.onChangeFilterInfo);
             this.listenTo(this, 'change:id', this.computedsUrl);
@@ -136,27 +136,27 @@ define(function(require, exports, module) {
 
             if (entities) {
                 var mapped = _.map(entities, function (item) {
-                    if (item.filtering_field === 'start_time' /*&& item.value.split(',').length === 1*/) {
+                    if (item.filtering_field === 'start_time' /* && item.value.split(',').length === 1*/) {
                         item.value = (new FilterEntities.EntityTimeRangeModel(item).getInfo().value);
                         if (~item.value.indexOf(',') || ~item.value.indexOf(';')) {
                             item.condition = '';
                         } else {
-                            item.condition = 'eq'
+                            item.condition = 'eq';
                         }
                     }
                     var filterName = self.getSmartKey(item.filtering_field);
                     if (!filterName) {
                         return '<span style="color: #ff3222"><b>Invalid</b></span>';
                     }
-                    if (item.value == '') {
+                    if (item.value === '') {
                         return '';
                     }
                     return [filterName, ' ',
-                        item.is_negative ? text['not'] : '',
-                        text[item.condition] || "", ' ',
+                        item.is_negative ? text.not : '',
+                        text[item.condition] || '', ' ',
                         self.clearValue(item.value)].join('');
                 }, {});
-                return mapped.join(text['andb']);
+                return mapped.join(text.andb);
             }
         },
 
@@ -164,11 +164,12 @@ define(function(require, exports, module) {
             var result = field;
             var time = result.split(',');
             var timeDynamic = result.split(';');
+            var curTime;
             if (time.length === 2) {
                 result = this.getTimeString(time[0], time[1]);
-            } else if (timeDynamic.length == 3) {
-                var curTime = Moment().startOf('day').unix() * 1000;
-                result = this.getTimeString(curTime + parseInt(timeDynamic[0], 10) * 60000, curTime + parseInt(timeDynamic[1], 10) * 60000) + ' (dynamic)';
+            } else if (timeDynamic.length === 3) {
+                curTime = Moment().startOf('day').unix() * 1000;
+                result = this.getTimeString(curTime + (parseInt(timeDynamic[0], 10) * 60000), curTime + (parseInt(timeDynamic[1], 10) * 60000)) + ' (dynamic)';
             }
             return result.escapeHtml();
         },
@@ -176,8 +177,8 @@ define(function(require, exports, module) {
         getTimeString: function (startTime, endTime) {
             var result = '';
             var hum = config.dateRangeFullFormat;
-            var from = Moment(parseInt(startTime));
-            var to = Moment(parseInt(endTime));
+            var from = Moment(parseInt(startTime, 10));
+            var to = Moment(parseInt(endTime, 10));
 
             if (from.isValid() && to.isValid()) {
                 result = Localization.ui.from + ' ' + from.format(hum) + ' ' + Localization.ui.to + ' ' + to.format(hum);
@@ -191,60 +192,57 @@ define(function(require, exports, module) {
             var locator = splitKey.pop();
             var type = splitKey.shift();
             var defectTypeTotal = splitKey.pop();
-            var defectType = defectTypeCollection.findWhere({locator: locator});
+            var defectType = defectTypeCollection.findWhere({ locator: locator });
 
             if (!string) {
-                return ''
+                return '';
             }
             if (Localization.filterNameById[string]) {
-                if (type == 'statistics') {
-
-                    var searchDefectTypes = defectTypeCollection.where({typeRef: defectTypeTotal.toUpperCase()});
-                    if (searchDefectTypes.length == 1) {
+                if (type === 'statistics') {
+                    var searchDefectTypes = defectTypeCollection.where({ typeRef: defectTypeTotal.toUpperCase() });
+                    if (searchDefectTypes.length === 1) {
                         return searchDefectTypes[0].get('longName');
-                    } else {
-                        return Localization.filterNameById[string];
                     }
-                } else {
                     return Localization.filterNameById[string];
                 }
+                return Localization.filterNameById[string];
             }
             if (defectType) {
                 return defectType.get('longName');
             }
             var firstPartKey = type + '$' + splitKey[0] + '$' + defectTypeTotal;
             if (!Localization.filterNameById[firstPartKey]) {
-                return false
+                return false;
             }
             return locator.capitalizeName();
         },
 
-        getEntitiesObj: function() {
+        getEntitiesObj: function () {
             try {
-                if(this.get('newEntities')) {
+                if (this.get('newEntities')) {
                     return JSON.parse(this.get('newEntities'));
                 }
                 return JSON.parse(this.get('entities'));
-            } catch(err) {
+            } catch (err) {
                 return [];
             }
         },
-        getParametersObj: function() {
+        getParametersObj: function () {
             try {
-                if(this.get('newSelectionParameters')) {
+                if (this.get('newSelectionParameters')) {
                     var data = JSON.parse(this.get('newSelectionParameters'));
                     return data;
                 }
                 var data = JSON.parse(this.get('selection_parameters'));
                 return data;
-            } catch(err) {
+            } catch (err) {
                 return {};
             }
         },
-        getOptions: function() {
+        getOptions: function () {
             var data = [];
-            _.each(this.getEntitiesObj(), function(entity){
-                if(entity.value) {
+            _.each(this.getEntitiesObj(), function (entity) {
+                if (entity.value) {
                     data.push('filter.' + entity.condition + '.' + entity.filtering_field +
                         '=' + encodeURIComponent(entity.value));
                 }
@@ -257,30 +255,29 @@ define(function(require, exports, module) {
             data.push('page.sort=' + selectionParameters.sorting_column + '%2C' + sortDirection);
             return data;
         },
-        computedsUrl: function() {
-            var contextUrlPart = (this.context == 'userdebug') ? '/userdebug/' : '/launches/';
-            this.set({url: '#' + appModel.get('projectId') + contextUrlPart + this.get('id')});
+        computedsUrl: function () {
+            var contextUrlPart = (this.context === 'userdebug') ? '/userdebug/' : '/launches/';
+            this.set({ url: '#' + appModel.get('projectId') + contextUrlPart + this.get('id') });
         },
-        onChangeFilterInfo: function() {
-            if(!this.get('temp')) {
+        onChangeFilterInfo: function () {
+            if (!this.get('temp')) {
                 call('PUT', urls.filterById(this.get('id')), this.getDataFromServer())
-                    .done(function() {
-                        Util.ajaxSuccessMessenger("editFilter");
+                    .done(function () {
+                        Util.ajaxSuccessMessenger('editFilter');
                     })
                     .fail(function (error) {
-                        Util.ajaxFailMessenger(error, "editFilter");
-
-                    })
+                        Util.ajaxFailMessenger(error, 'editFilter');
+                    });
             }
         },
-        getDataFromServer: function() {
+        getDataFromServer: function () {
             var entities = this.getEntitiesObj();
-            if(!entities.length) {
+            if (!entities.length) {
                 entities.push({
                     condition: 'cnt',
                     filtering_field: 'name',
-                    value: '',
-                })
+                    value: ''
+                });
             }
             return {
                 name: this.get('name'),
@@ -288,36 +285,37 @@ define(function(require, exports, module) {
                 entities: entities,
                 share: this.get('isShared'),
                 selection_parameters: this.getParametersObj(),
-                type: this.get('type'),
-            }
+                type: this.get('type')
+            };
         },
-        editMainInfo: function() {
+        editMainInfo: function () {
             var self = this;
             this.showPopupMyInfo(function (dataModel) {
                 self.set({
                     name: dataModel.get('name'),
                     isShared: dataModel.get('isShared'),
-                    description: dataModel.get('description'),
+                    description: dataModel.get('description')
                 });
-            }, 'update')
+            }, 'update');
         },
-        onChangeTemp: function(model, temp) {
-            if(temp || this.collection) {
+        onChangeTemp: function (model, temp) {
+            var self = this;
+            var data;
+            if (temp || this.collection) {
                 return;
             }
-            var data = model.getDataFromServer();
+            data = model.getDataFromServer();
             data.type = 'launch';
-            var self = this;
-            call('POST', Urls.saveFilter(), {elements: [data]})
-                .done(function(data) {
+            call('POST', Urls.saveFilter(), { elements: [data] })
+                .done(function (response) {
                     Util.ajaxSuccessMessenger('savedFilter');
-                    self.set({id: data[0].id});
+                    self.set({ id: response[0].id });
                 })
-                .fail(function(error) {
+                .fail(function (error) {
                     Util.ajaxFailMessenger(error, 'savedFilter');
-                })
+                });
         },
-        saveFilter: function() {
+        saveFilter: function () {
             var self = this;
             if (this.get('temp')) {
                 this.showPopupMyInfo(function (dataModel) {
@@ -328,55 +326,58 @@ define(function(require, exports, module) {
                         entities: self.get('newEntities') || self.get('entities'),
                         newEntities: '',
                         selection_parameters: self.get('newSelectionParameters') || self.get('selection_parameters'),
-                        newSelectionParameters: '',
+                        newSelectionParameters: ''
                     });
                     // for right work listeners
-                    self.set({temp: false});
-                }, 'save')
-           } else {
-                 this.set({
-                     entities: this.get('newEntities') || this.get('entities'),
-                     newEntities: '',
-                     selection_parameters: this.get('newSelectionParameters') || this.get('selection_parameters'),
-                     newSelectionParameters: '',
-                 })
+                    self.set({ temp: false });
+                }, 'save');
+            } else {
+                this.set({
+                    entities: this.get('newEntities') || this.get('entities'),
+                    newEntities: '',
+                    selection_parameters: this.get('newSelectionParameters') || this.get('selection_parameters'),
+                    newSelectionParameters: ''
+                });
             }
         },
-        showPopupMyInfo: function(callback, mode) {
+        showPopupMyInfo: function (callback, mode) {
             var modal = new ModalFilterEdit({
                 mode: mode,
-                filterModel: this,
+                filterModel: this
             });
             modal.show()
-                .done(function(dataModel) {
-                    callback(dataModel)
+                .done(function (dataModel) {
+                    callback(dataModel);
                 });
         },
-        load: function() {
+        load: function () {
             var self = this;
             return call('GET', Urls.getFilters([this.get('id')]))
-                .done(function(data) {
-                    var itemData = data[0];
-                    itemData.entities = JSON.stringify(itemData.entities);
-                    itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
-                    self.set(itemData);
-                })
+                .done(function (data) {
+                    var itemData;
+                    if (data.length) {
+                        itemData = data[0];
+                        itemData.entities = JSON.stringify(itemData.entities);
+                        itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
+                        self.set(itemData);
+                    }
+                });
         },
 
-        remove: function() {
+        remove: function () {
             var self = this;
             return call('DELETE', urls.filterById(this.get('id')))
-                .done(function() {
-                    Util.ajaxSuccessMessenger("deleteFilter");
-                    if(self.collection) {
+                .done(function () {
+                    Util.ajaxSuccessMessenger('deleteFilter');
+                    if (self.collection) {
                         self.collection.remove(self);
                     }
                 })
                 .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "editFilter");
-                })
+                    Util.ajaxFailMessenger(error, 'editFilter');
+                });
         }
     });
 
     return FilterModel;
-})
+});

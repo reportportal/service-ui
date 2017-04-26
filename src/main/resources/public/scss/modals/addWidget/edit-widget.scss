@@ -103,6 +103,9 @@
     padding-top: 20px;
   }
   .filter-edit-state{
+    .filter-not-found {
+      display: none;
+    }
     .settings-block {
       display: none;
     }

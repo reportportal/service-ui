@@ -358,6 +358,7 @@ define(['util'], function () {
             noData: 'No Data Available.',
             selectLaunch: 'Select launch',
             chooseFilter: 'Choose filter from the list below',
+            selectedFilterNotFound: 'The filter not found. Please choose another one.',
             limit: 'Items count',
             items: 'Items',
             launchesCount: 'Launches count',
