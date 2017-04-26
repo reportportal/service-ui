@@ -56,6 +56,7 @@
       right: 120px;
       padding-top: 10px;
       font-family: "OpenSansSemibold", sans-serif;
+      white-space: nowrap;
       @media (max-width: $SCREEN_SM_MAX) {
         right: 15px
       }

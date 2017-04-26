@@ -85,7 +85,7 @@ define(function (require) {
     };
 
     var isInt = function (n) {
-        return Number(n) === n && n % 1 === 0;
+        return Number(n) == n && n % 1 === 0;
     };
 
     var minMaxNotRequired = function (val, options, Util) {
