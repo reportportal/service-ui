@@ -538,10 +538,10 @@ define(function (require, exports, module) {
                     backlinkMiddlePart += '/' + key;
                 }
 
-                backLink[id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + id + '&page.page=' + this.item[0].get('paging_page') + '&page.size=' + this.item[0].get('paging_size');
+                backLink[id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + id + '&page.page=' + this.items[0].get('paging_page') + '&page.size=' + this.items[0].get('paging_size');
             }
             return backLink;
-        },
+        }
     });
 
     return ModalPostBug;
