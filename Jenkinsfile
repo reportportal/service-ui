@@ -1,6 +1,6 @@
 #!groovy
 
-node('node') {
+node {
 
        stage('Checkout'){
           checkout scm
@@ -17,7 +17,6 @@ node('node') {
        }
 
        stage('Build Server'){
-
             sh 'make build-server'
        }
 
