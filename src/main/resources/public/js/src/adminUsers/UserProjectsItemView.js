@@ -91,7 +91,10 @@ define(function(require, exports, module) {
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.tpl, {roles: Util.getRolesMap()}));
+            this.$el.html(Util.templates(this.tpl,{
+                roles: Util.getRolesMap(),
+                isPersonal: this.isPersonalProjectOwner()
+            }));
         },
 
         isPersonalProjectOwner: function(){
