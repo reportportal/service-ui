@@ -124,9 +124,13 @@ define(function (require) {
                     var projectId = this.view.appModel.get('projectId');
                     var role = assignedProjects[projectId].projectRole;
                     _.each($('a', $el), function (a) {
-                        var action = $(a).data('value') === role ? 'add' : 'remove';
-                        $(a)[action + 'Class']('active');
-                    });
+                        var itemRole = $(a).data('value');
+                        var activeAction = itemRole === role ? 'add' : 'remove';
+                        var disabledAction = !this.view.validateForPermissions(itemRole) ? 'add' : 'remove';
+                        $(a)[activeAction + 'Class']('active');
+                        $(a)[disabledAction + 'Class']('notlink');
+                        $(a)[disabledAction === 'add' ? 'attr' : 'removeAttr']('title', Localization.members.unAssignTitleNoPermission);
+                    }, this);
                 }
             }
         },
@@ -200,12 +204,10 @@ define(function (require) {
             var userId;
             var projectId;
             var assignedProjects;
-
             e.preventDefault();
-            if ($el.hasClass('active') || $el.hasClass('disabled')) {
+            if ($el.hasClass('active') || $el.hasClass('notlink')) {
                 return;
             }
-
             config.trackingDispatcher.trackEventNumber(433);
             newRole = $el.data('value');
             userId = this.model.get('userId');
@@ -221,11 +223,11 @@ define(function (require) {
                     Util.ajaxFailMessenger(error, 'updateProjectRole');
                 });
         },
-        validateForPermissions: function () {
+        validateForPermissions: function (memberRole) {
             var userRole = config.userModel.getRoleForCurrentProject();
             var assignedProjects = this.model.getAssignedProjects();
             var projectId = this.appModel.get('projectId');
-            var role = assignedProjects[projectId].projectRole;
+            var role = memberRole || assignedProjects[projectId].projectRole;
             var userRoleIndex = _.indexOf(config.projectRoles, userRole);
             var memberRoleIndex = _.indexOf(config.projectRoles, role);
             return config.userModel.get('isAdmin') || (config.userModel.hasPermissions() && userRoleIndex >= memberRoleIndex);
