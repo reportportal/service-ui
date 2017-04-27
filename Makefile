@@ -23,7 +23,7 @@ help:
 	@echo "checkstyle - gofmt+golint+misspell"
 
 vendor: ## Install govendor and sync vendored dependencies
-	go get github.com/kardianos/govendor
+	go get -u github.com/kardianos/govendor
 	govendor sync
 
 get-build-deps: vendor
