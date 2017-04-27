@@ -9,12 +9,12 @@ node {
        }
 
        stage('Build UI') {
-            docker.image('node').inside {
-                        stage "Checkout and build deps"
-                            sh "npm install"
-
-                        stage "Test and validate"
-                            sh "npm install gulp-cli && ./node_modules/.bin/gulp"
+            withEnv(["PATH+NODE=${tool name: 'node-5.10.1', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'}/bin"]) {
+                sh 'node -v'
+                sh 'npm -version'
+                sh 'node -version'
+                sh 'ls -la'
+                sh 'make build-statics'
             }
 
        }
