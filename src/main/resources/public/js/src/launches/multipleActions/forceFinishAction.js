@@ -35,8 +35,6 @@ define(function (require) {
         var items = options.items;
         var confirmText = '';
         var modal;
-        console.log(config);
-        console.log(items);
         items.forEach(function (item) {
             var itemOwner = item.attributes.owner;
             var loginUser = config.userModel.attributes.name;

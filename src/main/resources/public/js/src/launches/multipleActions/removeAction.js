@@ -39,8 +39,7 @@ define(function (require) {
         var itemName;
         var modal;
         var confirmText = '';
-        console.log(options);
-        console.log(config);
+
         if (items[0].get('type') !== 'LAUNCH') {
             typeItems = (items.length > 1) ? Localization.ui.items : Localization.ui.item;
             itemNumber = '';
@@ -52,10 +51,7 @@ define(function (require) {
             var itemOwner = item.attributes.owner;
             var loginUser = config.userModel.attributes.name;
             var itemParentOwner = item.attributes.parent_launch_owner;
-            if (itemType === 'LAUNCH' && itemOwner !== loginUser) {
-                confirmText = Util.replaceTemplate(Localization.launches.deleteWarningAgree,
-                    typeItems);
-            } else if (itemParentOwner && itemParentOwner !== loginUser) {
+            if ((itemType === 'LAUNCH' && itemOwner !== loginUser) || (itemParentOwner && itemParentOwner !== loginUser)) {
                 confirmText = Util.replaceTemplate(Localization.launches.deleteWarningAgree,
                     typeItems);
             }
