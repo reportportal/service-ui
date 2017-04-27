@@ -108,7 +108,7 @@ define(function(require, exports, module) {
                     if (has_childs) {
                         return window.location.hash.split('?')[0] + '/' + id;
                     }
-                    return '';
+                    return window.location.hash + '&log.item=' + id;
                 }
             },
             clearUrl: {
