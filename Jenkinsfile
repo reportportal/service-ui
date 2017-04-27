@@ -8,12 +8,15 @@ node {
           sh 'git pull'
        }
 
-       withEnv(["PATH+NODE=${tool name: 'node-7.9.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'}/bin"]) {
-                sh 'node -v'
-                sh 'npm -version'
-                sh 'node -version'
-                sh 'ls -la'
-                sh 'make build-statics'
+       stage('Build UI') {
+            node {
+              def nodeHome = tool name: 'node-7.9.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+              sh "${nodeHome}/bin/node -v"
+              sh 'npm -version'
+              sh 'node -version'
+              sh 'ls -la'
+              sh 'make build-statics'
+            }
 
        }
 
