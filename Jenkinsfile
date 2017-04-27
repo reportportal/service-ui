@@ -10,9 +10,6 @@ node {
 
        stage('Build UI') {
             withEnv(["PATH+NODE=${tool name: 'node-7.9.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'}/bin"]) {
-              sh 'npm -version'
-              sh 'node -version'
-              sh 'ls -la'
               sh 'make build-statics'
 
             }
