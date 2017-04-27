@@ -18,19 +18,17 @@
 // TODO - rewrite
 
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
-    var Components = require('core/components');
     var Util = require('util');
     var SingletonAppModel = require('model/SingletonAppModel');
     var App = require('app');
     var Helpers = require('helpers');
     var Storage = require('storageService');
-    var UserModel = require('model/UserModel');
     var Service = require('coreService');
 
 
@@ -85,7 +83,7 @@ define(function (require, exports, module) {
             }));
 
             this.setupAnchors();
-            //Util.switcheryInitialize(this.$includesBlock);
+            // Util.switcheryInitialize(this.$includesBlock);
             $('[data-js-is-included]', this.$includesBlock).attr('checked', 'checked');
 
             this.renderFields();
@@ -96,19 +94,19 @@ define(function (require, exports, module) {
         },
 
         setupAnchors: function () {
-            this.$dynamicContent = $("#dynamicContent", this.$el);
-            this.$includesBlock = $("#includesBlock", this.$el);
-            this.$includeLogs = $("#include_logs > [data-js-is-included]", this.$includesBlock);
-            this.$includeData = $("#include_data > [data-js-is-included]", this.$includesBlock);
-            this.$includeComments = $("#include_comments > [data-js-is-included]", this.$includesBlock);
-            this.$postToUrl = $("#postToUrl", this.$el);
-            this.$actionBtn = $("[data-js-ok]", this.$el);
-            this.$credentialsLink = $("#credentialsLink", this.$el);
-            this.$collapseCredentials = $("#collapseCredentials", this.$el);
-            this.$authorizationType = $("#authorizationType", this.$el);
-            this.$requiredFieldsWarning = $("#requiredFields", this.$el);
-            this.$credentialsSoftWarning = $("#credentialsSoft", this.$el);
-            this.$credentialsWrongWarning = $("#credentialsWrong", this.$el);
+            this.$dynamicContent = $('#dynamicContent', this.$el);
+            this.$includesBlock = $('#includesBlock', this.$el);
+            this.$includeLogs = $('#include_logs > [data-js-is-included]', this.$includesBlock);
+            this.$includeData = $('#include_data > [data-js-is-included]', this.$includesBlock);
+            this.$includeComments = $('#include_comments > [data-js-is-included]', this.$includesBlock);
+            this.$postToUrl = $('#postToUrl', this.$el);
+            this.$actionBtn = $('[data-js-ok]', this.$el);
+            this.$credentialsLink = $('#credentialsLink', this.$el);
+            this.$collapseCredentials = $('#collapseCredentials', this.$el);
+            this.$authorizationType = $('#authorizationType', this.$el);
+            this.$requiredFieldsWarning = $('#requiredFields', this.$el);
+            this.$credentialsSoftWarning = $('#credentialsSoft', this.$el);
+            this.$credentialsWrongWarning = $('#credentialsWrong', this.$el);
         },
 
         setUserBts: function () {
@@ -119,12 +117,10 @@ define(function (require, exports, module) {
                 };
                 this.user.bts.current = this.systems[0];
                 this.updateHash();
+            } else if (!this.user.bts.current) {
+                this.user.bts.current = this.systems[0];
             } else {
-                if (!this.user.bts.current) {
-                    this.user.bts.current = this.systems[0];
-                } else {
-                    this.user.bts.current = _.find(this.systems, {id: this.user.bts.current.id});
-                }
+                this.user.bts.current = _.find(this.systems, { id: this.user.bts.current.id });
             }
         },
 
@@ -142,7 +138,7 @@ define(function (require, exports, module) {
             e.preventDefault();
             if ($(e.currentTarget).parent().hasClass('active')) return;
             Util.dropDownHandler(e);
-            this.user.bts.current = _.find(this.systems, {id: $(e.currentTarget).attr('id')});
+            this.user.bts.current = _.find(this.systems, { id: $(e.currentTarget).attr('id') });
             this.updateHash();
             this.renderFields();
             this.renderCredentials();
@@ -159,13 +155,13 @@ define(function (require, exports, module) {
                 disabled: this.systemSettings.disabledForEdit,
                 update: false,
                 access: true,
-                popup: true,
+                popup: true
             }));
             if (this.user.bts.current.fields) {
                 Helpers.applyTypeForBtsFields(this.user.bts.current.fields, this.$dynamicContent);
-                this.$actionBtn.prop("disabled", false);
+                this.$actionBtn.prop('disabled', false);
             } else {
-                this.$actionBtn.prop("disabled", true);
+                this.$actionBtn.prop('disabled', true);
             }
         },
 
@@ -173,10 +169,10 @@ define(function (require, exports, module) {
             var data = {
                 systemAuth: this.systemAuth,
                 access: true,
-                post: true,
+                post: true
             };
-            var storedBts = Storage.getBtsCredentials() || {},
-                currentId = this.user.bts.current.id;
+            var storedBts = Storage.getBtsCredentials() || {};
+            var currentId = this.user.bts.current.id;
             _.extend(data, this.user.bts.hash[currentId], storedBts[currentId]);
             data.hasPassword = !!this.user.bts.hash[currentId].password;
             data.defaultPassword = this.settings.defaultPassword;
@@ -187,66 +183,62 @@ define(function (require, exports, module) {
             $('[data-js-post]', this.$el).trigger('click');
         },
 
-        onClickClose: function(){
-            if(this.from == 'logs') {
+        onClickClose: function () {
+            if (this.from === 'logs') {
                 config.trackingDispatcher.trackEventNumber(215);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(170);
             }
         },
 
-        onClickCancel: function(){
-            if(this.from == 'logs') {
+        onClickCancel: function () {
+            if (this.from === 'logs') {
                 config.trackingDispatcher.trackEventNumber(219);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(174);
             }
         },
 
-        onClickIncludeData: function(e){
+        onClickIncludeData: function (e) {
             var type = $(e.currentTarget).closest('.rp-switcher-big').attr('id');
-            if(this.from == 'logs') {
+            if (this.from === 'logs') {
                 switch (type) {
-                    case 'include_logs':
-                        config.trackingDispatcher.trackEventNumber(217);
-                        break;
-                    case 'include_comments':
-                        config.trackingDispatcher.trackEventNumber(218);
-                        break;
-                    default:
-                        config.trackingDispatcher.trackEventNumber(216);
+                case 'include_logs':
+                    config.trackingDispatcher.trackEventNumber(217);
+                    break;
+                case 'include_comments':
+                    config.trackingDispatcher.trackEventNumber(218);
+                    break;
+                default:
+                    config.trackingDispatcher.trackEventNumber(216);
                 }
-            }
-            else {
+            } else {
                 switch (type) {
-                    case 'include_logs':
-                        config.trackingDispatcher.trackEventNumber(172);
-                        break;
-                    case 'include_comments':
-                        config.trackingDispatcher.trackEventNumber(173);
-                        break;
-                    default:
-                        config.trackingDispatcher.trackEventNumber(171);
+                case 'include_logs':
+                    config.trackingDispatcher.trackEventNumber(172);
+                    break;
+                case 'include_comments':
+                    config.trackingDispatcher.trackEventNumber(173);
+                    break;
+                default:
+                    config.trackingDispatcher.trackEventNumber(171);
                 }
             }
         },
 
         submit: function () {
-            var data = this.getData(),
-                self = this,
-                errorHandler = function (error) {
-                    if (error.status !== 401) {
-                        self.parseError(error);
-                    }
-                    self.hideLoading();
-                };
-            if (data) {
-                if(this.from == 'logs') {
-                    config.trackingDispatcher.trackEventNumber(220);
+            var data = this.getData();
+            var self = this;
+            var errorHandler = function (error) {
+                if (error.status !== 401) {
+                    self.parseError(error);
                 }
-                else {
+                self.hideLoading();
+            };
+            if (data) {
+                if (this.from === 'logs') {
+                    config.trackingDispatcher.trackEventNumber(220);
+                } else {
                     config.trackingDispatcher.trackEventNumber(175);
                 }
                 this.showLoading();
@@ -254,23 +246,23 @@ define(function (require, exports, module) {
                 Service.postBugToBts(data, this.user.bts.current.id)
                     .done(function (response) {
                         var issues = self.bindTicketToIssues(self.items, response);
-                        Service.updateDefect({issues: issues})
+                        Service.updateDefect({ issues: issues })
                             .done(function () {
                                 _.each(self.items, function (item) {
                                     _.each(issues, function (issue) {
-                                        if (item.id == issue.test_item_id) {
-                                            self.addIssuesToItem(item, issue.issue.externalSystemIssues);
+                                        if (item.id === issue.test_item_id) {
+                                            self.addIssuesToItem(item, issue
+                                                .issue.externalSystemIssues);
                                         }
                                     });
                                 });
-                                Util.ajaxSuccessMessenger("addTicket");
+                                Util.ajaxSuccessMessenger('addTicket');
                                 self.successClose();
                             })
                             .fail(function (error) {
                                 errorHandler(error);
                             });
                         self.persistCredentials();
-                        // config.trackingDispatcher.jiraTicketPost(data.include_data, data.include_logs);
                     })
                     .fail(function (error) {
                         errorHandler(error);
@@ -283,22 +275,27 @@ define(function (require, exports, module) {
 
         bindTicketToIssues: function (items, response) {
             var issues = [];
-            _.forEach(items, function (item, i) {
-                var defectBadge = $('.inline-editor .rp-defect-type-dropdown .pr-defect-type-badge'),
-                    chosenIssue = defectBadge.length > 0 ? defectBadge.data('id') : null,
-                    issue = {
-                        issue_type: chosenIssue ? chosenIssue : JSON.parse(item.get('issue')).issue_type,
-                        comment: item.get('issue').comment,
-                        externalSystemIssues: item.getIssue().externalSystemIssues || []
-                    };
+            var defectBadge;
+            var chosenIssue;
+            var issue;
+            var val;
+            var comment;
+            _.forEach(items, function (item) {
+                defectBadge = $('.inline-editor .rp-defect-type-dropdown .pr-defect-type-badge');
+                chosenIssue = defectBadge.length > 0 ? defectBadge.data('id') : null;
+                issue = {
+                    issue_type: chosenIssue || JSON.parse(item.get('issue')).issue_type,
+                    comment: item.get('issue').comment,
+                    externalSystemIssues: item.getIssue().externalSystemIssues || []
+                };
 
                 if ($('#replaceComments').prop('checked')) {
                     issue.comment = $('.markItUpEditor').val().length > 0 ? $('.markItUpEditor').val() : item.issue.comment;
                 }
 
-                if (item.id == $('.editor-row').closest('.selected').attr('id')) {
-                    var val = $('.markItUpEditor').val(),
-                        comment = item.issue.comment;
+                if (item.id === $('.editor-row').closest('.selected').attr('id')) {
+                    val = $('.markItUpEditor').val();
+                    comment = item.issue.comment;
                     issue.comment = comment && (val.trim() === comment.trim()) ? comment : val;
                 }
                 issue.externalSystemIssues.push({
@@ -306,34 +303,35 @@ define(function (require, exports, module) {
                     systemId: this.user.bts.current.id,
                     url: response.url
                 });
-                issues.push({issue: issue, test_item_id: item.id});
+                issues.push({ issue: issue, test_item_id: item.id });
             }, this);
             return issues;
         },
 
-        addIssuesToItem: function(item, issues) {
-            var self = this;
+        addIssuesToItem: function (item, issues) {
             var curIssue = item.getIssue();
-            if(!curIssue.externalSystemIssues) {
+            var newIds;
+            var newExternalSystemIssues;
+            if (!curIssue.externalSystemIssues) {
                 curIssue.externalSystemIssues = [];
             }
-            var newIds = _.map(issues, function(issue) {
+            newIds = _.map(issues, function (issue) {
                 return issue.ticketId;
             });
 
-            var newExternalSystemIssues = [];  // remove not unique item
-            _.each(curIssue.externalSystemIssues, function(externalItem) {
-                if(!_.contains(newIds, externalItem.ticketId)){
+            newExternalSystemIssues = [];  // remove not unique item
+            _.each(curIssue.externalSystemIssues, function (externalItem) {
+                if (!_.contains(newIds, externalItem.ticketId)) {
                     newExternalSystemIssues.push(externalItem);
                 }
             }, this);
 
-            _.each(issues, function(issue) {
+            _.each(issues, function (issue) {
                 newExternalSystemIssues.push({
                     systemId: issue.systemId,
                     ticketId: issue.ticketId,
-                    url: issue.url,
-                })
+                    url: issue.url
+                });
             }, this);
             curIssue.externalSystemIssues = newExternalSystemIssues;
             item.setIssue(curIssue);
@@ -341,25 +339,33 @@ define(function (require, exports, module) {
 
         persistCredentials: function () {
             var currentHash = this.user.bts.hash[this.user.bts.current.id];
+            var data;
             currentHash.submits += 1;
-            var data = {username: currentHash.username, id: currentHash.id};
+            data = { username: currentHash.username, id: currentHash.id };
             if (currentHash.domain) data.domain = currentHash.domain;
 
             Storage.setBtsCredentials(data);
         },
 
         parseError: function (error) {
+            var responseObj;
+            var bodyText;
             if (error.responseText) {
                 this.$credentialsSoftWarning.hide();
                 try {
-                    var responseObj = JSON.parse(error.responseText);
-                    if (responseObj.message.indexOf(this.systemSettings.credentialsErrorPattern) !== -1) {
+                    responseObj = JSON.parse(error.responseText);
+                    if (responseObj
+                            .message
+                            .indexOf(this.systemSettings.credentialsErrorPattern) !== -1) {
                         this.highlightCredentials(true);
                     }
                     if (config.patterns.htmlError.test(responseObj.message)) {
-                        var bodyText = responseObj.message.match(config.patterns.getBodyContent).map(function (val) {
-                            return val.replace(config.patterns.replaceBodyTag, '');
-                        });
+                        bodyText = responseObj
+                            .message
+                            .match(config.patterns.getBodyContent)
+                            .map(function (val) {
+                                return val.replace(config.patterns.replaceBodyTag, '');
+                            });
                         this.$credentialsWrongWarning.html(bodyText[0]).show();
                         this.validateBtsHomeLink();
                     } else {
@@ -376,14 +382,21 @@ define(function (require, exports, module) {
         },
 
         getData: function () {
-
-            var hasError = false,
-                fields = [],
-                result,
-                isRally = this.systemType === config.btsEnum.rally;
-            // get dynamic fields
-            _.forEach($(".default-value, select", this.$dynamicContent), function (el) {
-                var element = $(el), isMultiSelect = false;
+            var hasError = false;
+            var fields = [];
+            var result;
+            var isRally = this.systemType === config.btsEnum.rally;
+            var element;
+            var isMultiSelect;
+            var required;
+            var value;
+            var tmp;
+            var field;
+            var currentHash;
+                // get dynamic fields
+            _.forEach($('.default-value, select', this.$dynamicContent), function (el) {
+                element = $(el);
+                isMultiSelect = false;
 
                 if (element.hasClass('users-typeahead')) {
                     if (element.is('div')) {
@@ -392,11 +405,11 @@ define(function (require, exports, module) {
                     isMultiSelect = true;
                 }
 
-                var required = element.hasClass('required-value'),
-                    value = element.hasClass('rp-btn') ? $(".select-value", element).text() : element.val().trim();
+                required = element.hasClass('required-value');
+                value = element.hasClass('rp-btn') ? $('.select-value', element).text() : element.val().trim();
                 if (isMultiSelect) {
-                    var tmp = value.split(',');
-                    value = tmp[0] === "" ? [] : tmp;
+                    tmp = value.split(',');
+                    value = tmp[0] === '' ? [] : tmp;
                 } else {
                     value = value ? [value] : [];
                 }
@@ -409,7 +422,7 @@ define(function (require, exports, module) {
                     hasError = element.closest('.rp-form-group').hasClass('has-error');
                 }
 
-                var field = {
+                field = {
                     value: value,
                     required: required,
                     id: element.attr('id'),
@@ -434,80 +447,83 @@ define(function (require, exports, module) {
                 item: this.items[0].id,
                 log_quantity: this.systemSettings.logsAmount
             };
-            var currentHash = this.user.bts.hash[this.user.bts.current.id];
+            currentHash = this.user.bts.hash[this.user.bts.current.id];
             if (currentHash.username) {
-                result['username'] = currentHash.username;
-                result['password'] = currentHash.password;
+                result.username = currentHash.username;
+                result.password = currentHash.password;
                 if (currentHash.domain) {
-                    result['domain'] = currentHash.domain;
+                    result.domain = currentHash.domain;
                 }
             }
             if (currentHash.accessKey) {
-                // todo find out why you have to configure system with accessKey BUT submit with token???
-                result['token'] = currentHash.accessKey;
+                result.token = currentHash.accessKey;
             }
-            result['include_logs'] = this.isMultiply ? false : this.$includeLogs.is(':checked');
-            result['include_data'] = this.isMultiply ? false : this.$includeData.is(':checked');
-            result['include_comments'] = this.isMultiply ? false : this.$includeComments.is(':checked');
+            result.include_logs = this.isMultiply ? false : this.$includeLogs.is(':checked');
+            result.include_data = this.isMultiply ? false : this.$includeData.is(':checked');
+            result.include_comments = this.isMultiply ? false : this.$includeComments.is(':checked');
             return result;
         },
 
         validateCredentials: function () {
-            var valid = false,
-                currentHash = this.user.bts.hash[this.user.bts.current.id],
-                clearBasic = function () {
-                    delete currentHash.username;
-                    delete currentHash.password;
-                    delete currentHash.domain;
-                }.bind(this);
+            var valid = false;
+            var currentHash = this.user.bts.hash[this.user.bts.current.id];
+            var inputs;
+            var allEmpty;
+            var allFilled;
+            var apiKey;
+            var clearBasic = function () {
+                delete currentHash.username;
+                delete currentHash.password;
+                delete currentHash.domain;
+            };
             this.$authorizationType.find('.has-error').removeClass('has-error');
             switch (this.systemAuth) {
-                case 'BASIC':
-                case 'NTLM':
-                    delete currentHash.accessKey;
-                    var inputs = $(".bts-property", this.$authorizationType),
-                        allEmpty = _.every(inputs, function (inp) {
-                            return !inp.value;
-                        }),
-                        allFilled = _.every(inputs, function (inp) {
-                            return inp.value;
-                        });
-                    if (allFilled || (allEmpty && currentHash.type != "JIRA")) {
-                        valid = true;
-                        if (allEmpty) clearBasic();
-                        if (inputs[0].value) {
-                            _.forEach(inputs, function (input) {
-                                if (input.id === 'password' && input.value === this.settings.defaultPassword) {
-                                    return;
-                                }
-                                currentHash[input.id] = input.value;
-                            }.bind(this));
-                        }
-                    } else {
-                        clearBasic();
+            case 'BASIC':
+            case 'NTLM':
+                delete currentHash.accessKey;
+                inputs = $('.bts-property', this.$authorizationType);
+                allEmpty = _.every(inputs, function (inp) {
+                    return !inp.value;
+                });
+                allFilled = _.every(inputs, function (inp) {
+                    return inp.value;
+                });
+                if (allFilled || (allEmpty && currentHash.type !== 'JIRA')) {
+                    valid = true;
+                    if (allEmpty) clearBasic();
+                    if (inputs[0].value) {
                         _.forEach(inputs, function (input) {
-                            if (!input.value) {
-                                $(input).closest('.rp-form-group').addClass('has-error');
-                            } else {
-                                $(input).closest('.rp-form-group').removeClass('has-error');
+                            if (input.id === 'password' && input.value === this.settings.defaultPassword) {
+                                return;
                             }
-                        });
-                        this.$credentialsWrongWarning.text(this.$credentialsWrongWarning.data('fill')).show();
+                            currentHash[input.id] = input.value;
+                        }.bind(this));
                     }
-                    break;
-                case 'APIKEY':
+                } else {
                     clearBasic();
-                    var apiKey = $("#accessKey", this.$authorizationType);
-                    if (apiKey.val().length) {
-                        currentHash.accessKey = apiKey.val();
-                        valid = true;
-                    } else {
-                        apiKey.parent().addClass('has-error');
-                        this.$credentialsWrongWarning.text(this.$credentialsWrongWarning.data('fill')).show();
-                    }
-                default :
-                    break;
-
+                    _.forEach(inputs, function (input) {
+                        if (!input.value) {
+                            $(input).closest('.rp-form-group').addClass('has-error');
+                        } else {
+                            $(input).closest('.rp-form-group').removeClass('has-error');
+                        }
+                    });
+                    this.$credentialsWrongWarning.text(this.$credentialsWrongWarning.data('fill')).show();
+                }
+                break;
+            case 'APIKEY':
+                clearBasic();
+                apiKey = $('#accessKey', this.$authorizationType);
+                if (apiKey.val().length) {
+                    currentHash.accessKey = apiKey.val();
+                    valid = true;
+                } else {
+                    apiKey.parent().addClass('has-error');
+                    this.$credentialsWrongWarning.text(this.$credentialsWrongWarning.data('fill')).show();
+                }
+                break;
+            default :
+                break;
             }
             if (valid) {
                 this.$credentialsWrongWarning.hide();
@@ -516,9 +532,10 @@ define(function (require, exports, module) {
         },
 
         getLinks: function () {
-            var backLink = {},
-                backlinkFirstPart = window.location.protocol + '//' + window.location.host + '/ui/#' + this.appModel.get('projectId') + '/launches/all',
-                backlinkMiddlePart;
+            var backLink = {};
+            var backlinkFirstPart = window.location.protocol + '//' + window.location.host + '/ui/#' + this.appModel.get('projectId') + '/launches/all';
+            var backlinkMiddlePart;
+            var id;
             if (this.items.length > 1) {
                 _.forEach(this.items, function (item) {
                     backlinkMiddlePart = '/' + item.get('launchId');
@@ -530,7 +547,7 @@ define(function (require, exports, module) {
                     backLink[item.id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + item.id + '&page.page=' + item.get('paging_page') + '&page.size=' + item.get('paging_size');
                 });
             } else {
-                var id = this.items[0].id;
+                id = this.items[0].id;
 
                 backlinkMiddlePart = '/' + this.items[0].get('launchId');
 
@@ -538,10 +555,10 @@ define(function (require, exports, module) {
                     backlinkMiddlePart += '/' + key;
                 }
 
-                backLink[id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + id + '&page.page=' + this.item[0].get('paging_page') + '&page.size=' + this.item[0].get('paging_size');
+                backLink[id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + id + '&page.page=' + this.items[0].get('paging_page') + '&page.size=' + this.items[0].get('paging_size');
             }
             return backLink;
-        },
+        }
     });
 
     return ModalPostBug;

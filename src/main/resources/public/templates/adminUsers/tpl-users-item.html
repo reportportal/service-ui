@@ -1,6 +1,8 @@
 <div class="grid-cell action-grid-cell">
     <div class="users-actions">
-        <a class="remove-user" href="#delete-user" title="<%= data.text.admin.deleteUser %>" data-js-delete-user>
+        <a class="remove-user" href="#delete-user"
+           title="<%= (data.isYou) ? data.text.admin.deleteOwnUser : data.text.admin.deleteUser %>"
+           data-js-delete-user>
             <i class="rp-icons rp-icons-delete"></i>
         </a>
     </div>

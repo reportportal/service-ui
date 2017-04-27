@@ -44,8 +44,9 @@ define(function (require) {
             '[data-js-project-role]': 'text: getProjectRole',
             '[data-js-dropdown-roles]': 'updateRoleDropDown: projectRole',
             '[data-js-unassign]': 'classes: {disabled: not(canUnAssign)}, attr: {disabled: not(canUnAssign)}',
-            '[data-js-user-select-role]': 'classes: {hide: isAdmin}',
-            '[data-js-admin-role]': 'classes: {hide: not(isAdmin)}'
+            // '[data-js-user-select-role]': 'classes: {hide: isAdmin}',
+            // '[data-js-admin-role]': 'classes: {hide: not(isAdmin)}',
+
         },
 
         computeds: {
@@ -61,12 +62,12 @@ define(function (require) {
                     var roles = Util.getRolesMap();
                     return roles[projectRole];
                 }
-            },
-            isAdmin: {
-                get: function () {
-                    return this.userModel.get('userRole') === config.accountRoles[1];
-                }
             }
+            // isAdmin: {
+            //     get: function () {
+            //         return this.userModel.get('userRole') === config.accountRoles[1];
+            //     }
+            // }
         },
 
         bindingHandlers: {
