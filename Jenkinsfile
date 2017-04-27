@@ -13,7 +13,8 @@ node {
 
             stage('Build UI') {
                 withEnv(["PATH+NODE=${tool name: 'node-7.9.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'}/bin"]) {
-                sh 'make build-statics'
+                    sh 'make build-statics'
+                }
             }
 
             stage('Build Server') {
