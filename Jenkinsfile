@@ -21,7 +21,7 @@ node {
              def root = tool name: 'go-1.8.1', type: 'go'
 
              // Export environment variables pointing to the directory where Go was installed
-             withEnv(["GOROOT=${root}", "PATH+GO=${root}/bin"]) {
+             withEnv(["GOROOT=${root}","GOPATH=${root}", "PATH+GO=${root}/bin"]) {
                  sh 'echo $GOROOT'
                  sh 'make build-server'
              }
