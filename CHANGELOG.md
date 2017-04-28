@@ -7,9 +7,10 @@
 
 * Initial release to Public Maven Repositories
 * DockerHub Release 
+* EPMRPP-25355 - Implemented tablet view for login pages.
 
 ### Bugfixes
 
-* XXX
+
 
 
