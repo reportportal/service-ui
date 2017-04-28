@@ -254,10 +254,7 @@ define(function (require) {
             });
         },
 
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
             this.remove();
             delete this;
         }
