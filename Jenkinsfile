@@ -2,6 +2,7 @@
 
 node {
 
+       load "$JENKINS_HOME/jobvars.env"
        dir('src/github.com/reportportal') {
 
            stage('Checkout'){
@@ -25,11 +26,19 @@ node {
 
             }
 
-            stage('Build Docker Image') {
-                withEnv(["IMAGE_POSTFIX=dev-golang"]) {
-                    sh 'make build-image'
-                }
-            }
+           withEnv(["IMAGE_POSTFIX=dev-golang"]) {
+                 docker.withServer("$DOCKER_HOST") {
+                                  stage('Build Docker Image') {
+                                          sh 'make build-image'
+                                  }
+
+                                  stage('Push Docker Image') {
+                                          sh 'docker-compose -p reportportal -f $COMPOSE_FILE up -d --force-recreate ui'
+                                  }
+                 }
+           }
+
+
 
         }
 }
