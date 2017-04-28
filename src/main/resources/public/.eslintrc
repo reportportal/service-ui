@@ -13,6 +13,7 @@
     "no-console": 0,
     "indent": ["error", 4],
     "quotes": [2, "single"],
-    "no-unused-expressions": ["error", { "allowShortCircuit": true }]
+    "no-unused-expressions": ["error", { "allowShortCircuit": true }],
+    "linebreak-style": 0
   }
 }
