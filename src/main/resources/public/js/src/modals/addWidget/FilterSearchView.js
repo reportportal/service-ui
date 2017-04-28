@@ -22,6 +22,7 @@
 define(function (require) {
     'use strict';
 
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
@@ -273,6 +274,7 @@ define(function (require) {
                     self.$el.removeClass('load');
                 })
                 .done(function (data) {
+                    var launchFilterCollection;
                     self.viewModel.set({
                         totalPage: data.page.totalPages,
                         currentPage: data.page.number
@@ -286,7 +288,12 @@ define(function (require) {
                     }
                     self.collection.add(data.content, { parse: true });
                     if (self.model.get('filter_id')) {
-                        self.setFilterModel(self.collection.get(self.model.get('filter_id')));
+                        if (self.collection.get(self.model.get('filter_id'))) {
+                            self.setFilterModel(self.collection.get(self.model.get('filter_id')));
+                        } else {
+                            launchFilterCollection = new SingletonLaunchFilterCollection();
+                            self.setFilterModel(launchFilterCollection.get(self.model.get('filter_id')));
+                        }
                     }
                     $('[data-js-select-filter-block]', self.$el)[(!data.content.length ? 'add' : 'remove') + 'Class']('hide');
                 });
