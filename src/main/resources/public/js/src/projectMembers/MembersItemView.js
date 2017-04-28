@@ -118,7 +118,6 @@ define(function (require) {
             },
             isAdminContext: {
                 get: function () {
-                    console.log(!!this.isAdminContext);
                     return !!this.isAdminContext;
                 }
             }
