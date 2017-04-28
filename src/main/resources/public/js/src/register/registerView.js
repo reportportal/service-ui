@@ -19,18 +19,15 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function(require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
     var Service = require('memberService');
-    var CallService = require('callService');
     var Localization = require('localization');
-    var Urls = require('dataUrlResolver');
     var UserModel = require('model/UserModel');
     var RegisterModel = require('register/registerModel');
     var config = App.getInstance();
@@ -53,8 +50,9 @@ define(function(require, exports, module) {
             'submit [data-js-register-form]': 'onSubmitForm',
             'click [data-js-cancel]': 'resetForm',
             'click [data-js-register]': 'onSubmitForm',
+            'click [data-js-logo]': 'onClickLogo',
 
-            'change [data-js-login]': function() { this.loginDuplicate = false},
+            'change [data-js-login]': function () { this.loginDuplicate = false; },
 
             'mousedown [data-js-toogle-visability]': 'showPass',
             'mouseleave [data-js-toogle-visability]': 'hidePass',
@@ -64,40 +62,39 @@ define(function(require, exports, module) {
             'touchend  [data-js-toogle-visability]': 'hidePass',
             'touchcancel  [data-js-toogle-visability]': 'hidePass',
 
-            'keyup [data-js-password-confirm]': 'checkFields',
+            'keyup [data-js-password-confirm]': 'checkFields'
             // 'validation:success [data-js-login]' : 'checkForLoginUniqueness'
         },
 
-        initialize: function(options){
+        initialize: function (options) {
+            var self = this;
             this.id = options.uuid.slice(5, options.uuid.length);
             this.context = options.context;
             this.model = new RegisterModel();
             this.user = new UserModel();
             this.loginDuplicate = false;
-            var self = this;
             Service.validateRegisterBid(this.id)
-                .done(function(data){
-                    if(data.isActive){
+                .done(function (data) {
+                    if (data.isActive) {
                         self.model.set('email', data.email);
                         self.render();
-                    }
-                    else {
+                    } else {
                         self.showExpiredPage();
                     }
                 })
-                .fail(function(error){
+                .fail(function (error) {
                     Util.ajaxFailMessenger(error, 'validateRegisterBid');
                 });
         },
 
-        render: function(){
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
             this.setupAnchors();
             this.bindValidators();
             this.applyBindings();
         },
 
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$login = $('[data-js-login]', this.$el);
             this.$name = $('[data-js-name]', this.$el);
             this.$email = $('[data-js-email]', this.$el);
@@ -111,7 +108,11 @@ define(function(require, exports, module) {
         //     CallService.call('GET', Urls.userInfoValidation() + '?username=' + this.$login.val())
         //         .done(function (data) {
         //             if (data.is) {
-        //                 self.$login.parent().addClass('validate-error').find('.validate-hint').addClass('show-hint').html(Localization.validation.registeredLogin);
+        //                 self.$login.parent()
+        //                      .addClass('validate-error')
+        //                      .find('.validate-hint')
+        //                      .addClass('show-hint')
+        //                      .html(Localization.validation.registeredLogin);
         //             }
         //         })
         //         .fail(function (error) {
@@ -119,20 +120,28 @@ define(function(require, exports, module) {
         //         });
         // },
 
-        showExpiredPage: function(e) {
+        onClickLogo: function () {
+            window.open('http://reportportal.io/');
+        },
+
+        showExpiredPage: function (e) {
             e && e.preventDefault();
             this.$el.addClass('fail').append(Util.templates(this.messagesTpl));
         },
 
         checkFields: function () {
             if (this.$confirmPassword.val() !== this.$password.val() && this.$confirmPassword.val() !== '') {
-                this.$confirmPassword.parent().addClass('validate-error').find('.validate-hint').addClass('show-hint').html(Localization.validation.confirmMatch);
+                this.$confirmPassword.parent()
+                    .addClass('validate-error')
+                    .find('.validate-hint')
+                    .addClass('show-hint')
+                    .html(Localization.validation.confirmMatch);
             } else {
                 this.$confirmPassword.parent().removeClass('validate-error').find('.validate-hint').removeClass('show-hint');
             }
         },
 
-        bindValidators: function(){
+        bindValidators: function () {
             Util.hintValidator(this.$login, [
                 {
                     validator: 'matchRegex',
@@ -195,44 +204,41 @@ define(function(require, exports, module) {
             $(e.currentTarget).removeClass('show').siblings('.rp-input').attr('type', 'password');
         },
 
-        getData: function(){
+        getData: function () {
             return {
                 login: this.model.get('login'),
                 email: this.model.get('email'),
                 full_name: this.model.get('fullName'),
                 password: this.model.get('password')
-            }
+            };
         },
-        onSubmitForm: function(e) {
+        onSubmitForm: function (e) {
             e.preventDefault();
             e.stopPropagation();
             this.registerMember();
         },
-        registerMember: function() {
+        registerMember: function () {
+            var data = this.getData();
+            var self = this;
             $('.rp-field', this.$el).find('input').trigger('validate');
-            if($('.validate-error', this.$el).length) { return };
-            if(this.loginDuplicate) {
+            if ($('.validate-error', this.$el).length) { return; }
+            if (this.loginDuplicate) {
                 this.$login.parent().addClass('validate-error');
                 return;
             }
-
-            var data = this.getData();
-            var self = this;
-
             if (data) {
                 Service.registerUser(data, this.id)
-                    .done(function (response) {
+                    .done(function () {
                         self.context.destroyViews();
-                    self.user.login(data.login, data.password).
-                        done(function () {
+                        self.user.login(data.login, data.password)
+                        .done(function () {
                             Util.ajaxSuccessMessenger('registerMember');
                         }).fail(function () {
-                            config.router.navigate('#login', {trigger: true});
+                            config.router.navigate('#login', { trigger: true });
                         });
-
                     })
-                    .fail(function(error){
-                        if(error.status == 409) {
+                    .fail(function (error) {
+                        if (error.status === 409) {
                             self.$login.parent().addClass('validate-error');
                             self.loginDuplicate = true;
                         }
@@ -241,14 +247,14 @@ define(function(require, exports, module) {
             }
         },
 
-        resetForm: function() {
+        resetForm: function () {
             $('.rp-field', this.$el).removeClass('validate-error').find('input:enabled').val('');
             $('.validate-hint', this.$el).each(function (i, item) {
                 $(item).removeClass('show-hint');
             });
         },
 
-        destroy: function(){
+        destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
