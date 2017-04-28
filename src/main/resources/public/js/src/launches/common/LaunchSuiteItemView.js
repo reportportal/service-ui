@@ -194,16 +194,14 @@ define(function (require) {
                 + '&filter.eq.has_childs=false' + statusFilter;
         },
         initialize: function (options) {
-            var defectCollection;
-            var self;
+            var defectCollection = new SingletonDefectTypeCollection();
+            var self = this;
             var toInvest;
             this.statistics = [];
             this.filterModel = options.filterModel;
             this.render();
             this.applyBindings();
 
-            defectCollection = new SingletonDefectTypeCollection();
-            self = this;
             defectCollection.ready.done(function () {
                 if (self.getBinding('defectToInvestigate')) {
                     toInvest = defectCollection.findWhere({ typeRef: 'TO_INVESTIGATE' });

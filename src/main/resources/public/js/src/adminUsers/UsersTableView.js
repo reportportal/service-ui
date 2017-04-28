@@ -92,7 +92,6 @@ define(function (require) {
             });
             this.listenTo(this.paging, 'page', this.updateUsers);
             this.listenTo(this.paging, 'count', this.updateUsers);
-            console.log(this.paging);
             this.paging.ready.done(function () {
                 if (this.paging.urlModel.get('filter.cnt.name')) {
                     this.model.set({ search: decodeURIComponent(this.paging.urlModel.get('filter.cnt.name')) });
