@@ -21,8 +21,10 @@
 
 .login-restore-subpage {
   width: 380px;
-
-  @media (max-width: 1010px) {
+  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
     padding: 0;
   }
@@ -38,7 +40,7 @@
     -webkit-background-size: 100%;
     background-size: 100%;
 
-    @media (max-width: 1010px) {
+    @media (max-width: $SCREEN_XS_MAX) {
       display: block;
     }
 
@@ -80,7 +82,7 @@
       font-size: 32px;
     }
 
-    @media (max-width: 1010px) {
+    @media (max-width: $SCREEN_XS_MAX) {
       display: none;
     }
   }
@@ -90,7 +92,7 @@
     height: auto;
     overflow: hidden;
 
-    @media (max-width: 1010px) {
+    @media (max-width: $SCREEN_XS_MAX) {
       padding: 0 20px;
       margin-bottom: 10px;
     }
@@ -101,7 +103,13 @@
       margin-bottom: 50px;
       font-weight: normal;
 
-      @media (max-width: 1010px) {
+      @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+        width: 380px;
+        display: block;
+        margin: 0 auto 50px auto;
+      }
+
+      @media (max-width: $SCREEN_XS_MAX) {
         margin-bottom: 30px;
       }
 
@@ -145,7 +153,7 @@
       border-radius: 3px;
       font-size: 16px;
 
-      @media (max-width: 1010px) {
+      @media (max-width: $SCREEN_XS_MAX) {
         width: 130px;
         float: left;
       }
@@ -153,7 +161,7 @@
       &.rp-btn-cancel {
         margin-right: 30px;
 
-        @media (max-width: 1010px) {
+        @media (max-width: $SCREEN_XS_MAX) {
           margin-right: 20px;
         }
       }
