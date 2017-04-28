@@ -18,70 +18,76 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var TwitterNewsItemView = require('components/twitterNewsComponent/TwitterNewsItemView');
 
     var TwitterModel = Epoxy.Model.extend({
-       defaults: {
-           id: '',
-           text: '',
-           user: '',
-           entities: {},
-       },
+        defaults: {
+            id: '',
+            text: '',
+            user: '',
+            entities: {}
+        },
         computeds: {
-           textHtml: {
-               deps: ['text', 'entities'],
-               get: function(text, entities) {
+            textHtml: {
+                deps: ['text', 'entities'],
+                get: function (text, entities) {
                     var replaceObjects = [];
-                    function parseEntitie(entities, getHtml) {
-                        _.each(entities, function(entity) {
-                            if(entity.indices[0] !== entity.indices[1]) {
+                    var result = '';
+                    var currentReplaceObject;
+                    function parseEntitie(curEntities, getHtml) {
+                        _.each(curEntities, function (entity) {
+                            if (entity.indices[0] !== entity.indices[1]) {
                                 replaceObjects.push({
                                     start: entity.indices[0],
                                     end: entity.indices[1],
-                                    html: getHtml(entity),
-                                })
+                                    html: getHtml(entity)
+                                });
                             }
                         });
                     }
-                   parseEntitie(entities.urls, function(entity) { return '<a target="_blank" href="' + entity.url+ '">' + entity.display_url + '</a>'; });
-                   parseEntitie(entities.user_mentions, function(entity) { return '<a target="_blank" href="https://twitter.com/intent/user?user_id=' + entity.id+ '">@' + entity.screen_name + '</a>'; });
-                   parseEntitie(entities.hashtags, function(entity) { return '<a target="_blank" href="https://twitter.com/hashtag/' + entity.text+ '">#' + entity.text + '</a>'; });
-                   replaceObjects.sort(function(a, b) {
-                       return a.start - b.start;
-                   });
-                   var currentReplaceObject = replaceObjects.shift();
-                   var result = '';
-                   _.each(text, function(letter, index) {
-                       if(!currentReplaceObject && replaceObjects.length) { currentReplaceObject = replaceObjects.shift() }
-                       if(!currentReplaceObject || index < currentReplaceObject.start) {
-                           result += letter;
-                           return true;
-                       }
-                       if(currentReplaceObject.start === index) {
-                           result += currentReplaceObject.html;
-                           return true;
-                       }
-                       if(index >=currentReplaceObject.end) {
-                           result += letter;
-                           currentReplaceObject = null;
-                       }
-                   })
-                   return result.replace(/\n/g, '<br>');
-               }
-           }
+                    parseEntitie(entities.urls, function (entity) { return '<a target="_blank" href="' + entity.url + '">' + entity.display_url + '</a>'; });
+                    parseEntitie(entities.user_mentions, function (entity) { return '<a target="_blank" href="https://twitter.com/intent/user?user_id=' + entity.id + '">@' + entity.screen_name + '</a>'; });
+                    parseEntitie(entities.hashtags, function (entity) { return '<a target="_blank" href="https://twitter.com/hashtag/' + entity.text + '">#' + entity.text + '</a>'; });
+                    parseEntitie(entities.media, function (entity) { return '<a target="_blank" href="' + entity.url + '">' + entity.display_url + '</a>'; });
+                    replaceObjects.sort(function (a, b) {
+                        return a.start - b.start;
+                    });
+                    currentReplaceObject = replaceObjects.shift();
+                    _.each(text, function (letter, index) {
+                        if (!currentReplaceObject && replaceObjects.length) {
+                            currentReplaceObject = replaceObjects.shift();
+                        }
+                        if (!currentReplaceObject || index < currentReplaceObject.start) {
+                            result += letter;
+                            return true;
+                        }
+                        if (currentReplaceObject.start === index) {
+                            result += currentReplaceObject.html;
+                            return true;
+                        }
+                        if (index >= currentReplaceObject.end) {
+                            result += letter;
+                            currentReplaceObject = null;
+                        }
+                        return true;
+                    });
+                    return result.replace(/\n/g, '<br>');
+                }
+            }
         }
     });
 
     var TwitterCollection = Backbone.Collection.extend({
-        model: TwitterModel,
-    })
+        model: TwitterModel
+    });
 
     var TwitterNewsComponent = Epoxy.View.extend({
         className: 'post-news-component',
@@ -89,47 +95,47 @@ define(function (require, exports, module) {
         events: {
         },
 
-        initialize: function() {
+        initialize: function () {
             this.renderViews = [];
             this.collection = new TwitterCollection();
             this.listenTo(this.collection, 'reset', this.renderTwits);
             this.render();
             this.update();
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, this.options));
             this.scrollEl = Util.setupBaronScroll($('[data-js-items-container]', this.$el));
         },
-        update: function() {
+        update: function () {
             var self = this;
             $.ajax({
                 url: '//evbyminsd6293.minsk.epam.com:8081/twitter',
                 dataType: 'jsonp',
                 jsonp: 'jsonp',
                 crossDomain: true,
-                async: true,
+                async: true
             })
-                .done(function(data) {
+                .done(function (data) {
                     self.collection.reset(data);
-                })
+                });
         },
-        renderTwits: function() {
-            this.destroyTwits();
+        renderTwits: function () {
             var self = this;
-            _.each(this.collection.models, function(model) {
-                var view = new TwitterNewsItemView({model: model});
+            this.destroyTwits();
+            _.each(this.collection.models, function (model) {
+                var view = new TwitterNewsItemView({ model: model });
                 self.renderViews.push(view);
                 $('[data-js-items-container]', self.$el).append(view.$el);
-            })
+            });
             Util.setupBaronScrollSize(this.scrollEl, { maxHeight: 450 });
         },
-        destroyTwits: function() {
-            _.each(this.renderViews, function(view) {
+        destroyTwits: function () {
+            _.each(this.renderViews, function (view) {
                 view.destroy();
             });
             this.renderViews = [];
         },
-        onDestroy: function() {
+        onDestroy: function () {
             this.destroyTwits();
         }
     });
