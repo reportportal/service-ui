@@ -19,14 +19,16 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
-    "use strict";
+define(function (require) {
+    'use strict';
+
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
     var Localization = require('localization');
     var Service = require('coreService');
+    var _ = require('underscore');
 
     var config = App.getInstance();
 
@@ -66,10 +68,11 @@ define(function (require, exports, module) {
         },
 
         updateIds: function (data) {
+            var i;
             var conf = data || config.project.configuration.emailConfiguration.emailCases;
-            for (var i = 0; i < conf.length; i++) {
+            for (i = 0; i < conf.length; i += 1) {
                 conf[i].id = this.emailCaseId;
-                this.emailCaseId++;
+                this.emailCaseId += 1;
             }
         },
 
@@ -81,9 +84,9 @@ define(function (require, exports, module) {
                 settings: config.forSettings
             });
             this.$el.html(Util.templates(this.tpl, params));
-            this.$notificationArray = $("#notificationArray", this.$el);
+            this.$notificationArray = $('#notificationArray', this.$el);
             this.$notificationArray.html(Util.templates(this.tplItem, params));
-            this.$emailBlock = $("#emailNotificationsSettings", this.$el);
+            this.$emailBlock = $('#emailNotificationsSettings', this.$el);
 
             if (this.model.get('emailEnabled')) {
                 this.$emailBlock.show();
@@ -95,7 +98,7 @@ define(function (require, exports, module) {
 
         initValidators: function () {
             var self = this;
-            Util.bootValidator($("#from", this.$el), [
+            Util.bootValidator($('#from', this.$el), [
                 {
                     validator: 'required'
                 },
@@ -111,7 +114,7 @@ define(function (require, exports, module) {
                     max: 256
                 }
             ]);
-            $("#from", this.$el).on('validation::change', function (e, data) {
+            $('#from', this.$el).on('validation::change', function (e, data) {
                 if (data.valid) {
                     self.model.set('fromAddress', data.value);
                 }
@@ -120,7 +123,7 @@ define(function (require, exports, module) {
 
         renderEmailCases: function () {
             var self = this;
-            $('.email-case-item', this.$el).each(function (index, elem) {
+            $('.email-case-item', this.$el).each(function (index) {
                 if (Util.isCustomer() && !Util.isAdmin()) {
                     self.setupDisabledRecipients(index);
                 } else {
@@ -137,8 +140,8 @@ define(function (require, exports, module) {
         },
 
         setupDisabledRecipients: function (index) {
-            var self = this,
-                recipients = self.getRecipients(index);
+            var self = this;
+            var recipients = self.getRecipients(index);
 
             self.$recipients = $('input.recipients', this.$el);
             self.$launchOwner = $('input.launchOwner', this.$el);
@@ -148,30 +151,33 @@ define(function (require, exports, module) {
                     tags: recipients
                 });
                 self.$recipients.eq(index).select2('val', _.pluck(recipients, 'id'));
-                self.$recipients.eq(index).prop("disabled", true);
+                self.$recipients.eq(index).prop('disabled', true);
             }
-            self.$launchOwner.eq(index).prop("disabled", true);
+            self.$launchOwner.eq(index).prop('disabled', true);
         },
 
         addRule: function () {
-            var self = this,
-                params = _.merge(this.model.toJSON(), {
-                    edit: config.project && config.project.projectId,
-                    currentProject: config.project.projectId,
-                    access: config.userModel.hasPermissions(),
-                    settings: config.forSettings
-                });
+            var self = this;
+            var cases;
+            var newCase;
+            var index;
+            var params = _.merge(this.model.toJSON(), {
+                edit: config.project && config.project.projectId,
+                currentProject: config.project.projectId,
+                access: config.userModel.hasPermissions(),
+                settings: config.forSettings
+            });
 
             params.addRule = true;
             config.trackingDispatcher.trackEventNumber(395);
-            var cases = this.model.get('emailCases'),
-                newCase = {
-                    launchNames: [],
-                    recipients: ['OWNER'],
-                    sendCase: "ALWAYS",
-                    tags: [],
-                    id: self.emailCaseId
-                };
+            cases = this.model.get('emailCases');
+            newCase = {
+                launchNames: [],
+                recipients: ['OWNER'],
+                sendCase: 'ALWAYS',
+                tags: [],
+                id: self.emailCaseId
+            };
 
             params.newCase = newCase;
             cases.push(newCase);
@@ -179,10 +185,9 @@ define(function (require, exports, module) {
             this.$notificationArray.append(Util.templates(this.tplItem, params));
 
             self.updateRules();
-            self.emailCaseId++;
+            self.emailCaseId += 1;
 
-            var index = $('input.recipients', this.$el).length - 1,
-                recipients = $('.email-case-item', this.$el).last().find('input.recipients');;
+            index = $('input.recipients', this.$el).length - 1;
 
             this.filterMembers(true, index);
             this.filterLaunches(index);
@@ -190,19 +195,19 @@ define(function (require, exports, module) {
         },
 
         updateRules: function () {
-
-            var allLength = $('.email-case-item', this.$el).length,
-                checkedLength = $('.email-case-item', this.$el).find('.remove-email-case:checked').length;
+            var emailCase;
+            var allLength = $('.email-case-item', this.$el).length;
+            var checkedLength = $('.email-case-item', this.$el).find('.remove-email-case:checked').length;
             if (!config.userModel.hasPermissions()) {
                 return;
             }
             if ($('.email-case-item', this.$el).length > 1 && (allLength - checkedLength) > 1) {
-                $('.remove-email-case', this.$el).prop('disabled', false)
+                $('.remove-email-case', this.$el).prop('disabled', false);
                 $('.email-case-item', this.$el).prop('disabled', true).removeClass('the-only');
             } else {
                 $('.remove-email-case:not(:checked)', this.$el).prop('disabled', true).closest('.email-case-item').addClass('the-only');
-                if (allLength == checkedLength) {
-                    var emailCase = $('.email-case-item', this.$el).eq(0);
+                if (allLength === checkedLength) {
+                    emailCase = $('.email-case-item', this.$el).eq(0);
 
                     this.updateEmailCase(emailCase, 'remove');
                     $('.remove-email-case', emailCase).prop('disabled', true);
@@ -214,112 +219,117 @@ define(function (require, exports, module) {
         rulesToDelete: [],
 
         updateEmailCase: function (emailCase, type) {
-            var emailCheckbox = emailCase.find('.remove-email-case'),
-                label = $('.ruleName', emailCase),
-                errorBlock = $('.duplicate-error', emailCase);
-            if (type == 'add') {
+            var emailCheckbox = emailCase.find('.remove-email-case');
+            var label = $('.ruleName', emailCase);
+            var errorBlock = $('.duplicate-error', emailCase);
+            if (type === 'add') {
                 label.text(Localization.project.deleteRule);
                 errorBlock.text(Localization.project.ruleDeleted).show();
                 emailCheckbox.closest('.remove-email-item').addClass('checked');
                 emailCase.addClass('will-delete');
                 emailCheckbox.attr('checked', 'checked').prop('checked', true);
                 this.rulesToDelete.push(emailCase.data('email-case-id'));
-            }
-            else {
+            } else {
                 emailCheckbox.closest('.remove-email-item').removeClass('checked');
                 emailCase.removeClass('will-delete');
                 emailCheckbox.attr('checked', false).prop('checked', false);
                 label.text(Localization.project.rule);
                 errorBlock.empty().hide();
                 this.rulesToDelete = $.grep(this.rulesToDelete, function (value) {
-                    return value != emailCase.data('email-case-id');
+                    return value !== emailCase.data('email-case-id');
                 });
             }
         },
 
         removeRule: function (event) {
-            var self = this,
-                emailCase = $(event.target).closest('.email-case-item');
+            var self = this;
+            var newRules;
+            var externalSystemData;
+            var emailCheckbox;
+            var emailCase = $(event.target).closest('.email-case-item');
 
             if (!config.userModel.hasPermissions()) {
                 return;
             }
             config.trackingDispatcher.trackEventNumber(389);
             if (emailCase.hasClass('local-item')) {
-                var newRules = _.reject(this.model.get('emailCases'), function (eCase) {
-                    return eCase.id == emailCase.data('email-case-id')
+                newRules = _.reject(this.model.get('emailCases'), function (eCase) {
+                    return eCase.id === emailCase.data('email-case-id');
                 });
                 this.model.set('emailCases', newRules);
                 emailCase.fadeOut(function () {
                     emailCase.remove();
                     self.updateRules();
                 });
-                var externalSystemData = self.model.getProjectSettings();
+                externalSystemData = self.model.getProjectSettings();
                 config.project.configuration.emailConfiguration = externalSystemData.configuration;
                 this.checkCases();
-            } else {
-                if (!emailCase.hasClass('the-only')) {
-                    var emailCheckbox = emailCase.find('.remove-email-case'),
-                        label = $('.ruleName', emailCase),
-                        errorBlock = $('.duplicate-error', emailCase);
-                    if (emailCheckbox.is(':checked')) {
-                        this.updateEmailCase(emailCase, 'add');
-                        this.checkCases();
-                        this.updateRules();
-                    } else {
-                        this.updateEmailCase(emailCase, 'remove');
-                        this.updateRules();
-                        this.checkCases();
-                    }
+            } else if (!emailCase.hasClass('the-only')) {
+                emailCheckbox = emailCase.find('.remove-email-case');
+                if (emailCheckbox.is(':checked')) {
+                    this.updateEmailCase(emailCase, 'add');
+                    this.checkCases();
+                    this.updateRules();
+                } else {
+                    this.updateEmailCase(emailCase, 'remove');
+                    this.updateRules();
+                    this.checkCases();
                 }
             }
         },
 
-        filterMembers: function (getAnyway, index, callback) {
+        filterMembers: function (getAnyway, index) {
+            var caseItem;
+            var recipients;
+            var remoteUsers;
+            var users;
+            var minimumInputLength;
+            var self;
             this.$recipients = $('input.recipients', this.$el);
             this.$launchOwner = $('input.launchOwner', this.$el);
 
             if (Util.isInPrivilegedGroup()) {
-                this.$recipients.prop("disabled", false);
-                this.$launchOwner.prop("disabled", false);
+                this.$recipients.prop('disabled', false);
+                this.$launchOwner.prop('disabled', false);
             }
 
-            var caseItem = $('.email-case-item', this.$el).eq(index || 0),
-                recipients = caseItem.find('input.recipients'),
-                remoteUsers = [],
-                users = this.getRecipients(index),
-                minimumInputLength = config.forms.filterUser,
-                resultFound = false,
-                self = this;
+            caseItem = $('.email-case-item', this.$el).eq(index || 0);
+            recipients = caseItem.find('input.recipients');
+            remoteUsers = [];
+            users = this.getRecipients(index);
+            minimumInputLength = config.forms.filterUser;
+            self = this;
 
             if (getAnyway || !recipients.hasClass('select2-offscreen')) {
                 Util.setupSelect2WhithScroll(recipients, {
                     multiple: true,
                     minimumInputLength: 1,
                     maximumInputLength: 128,
-                    formatInputTooShort: function (input, min) {
-                        return Localization.ui.minPrefix + minimumInputLength + Localization.ui.minSufixAuto
+                    formatInputTooShort: function () {
+                        return Localization.ui.minPrefix +
+                            minimumInputLength + Localization.ui.minSufixAuto;
                     },
                     formatResultCssClass: function (state) {
-                        if ((remoteUsers.length == 0 || _.indexOf(remoteUsers, state.text) < 0) && $('.users-typeahead.recipients:not(input)', self.$el).eq(index).find('input').val() == state.text) {
+                        if ((remoteUsers.length === 0 || _.indexOf(remoteUsers, state.text) < 0) &&
+                            $('.users-typeahead.recipients:not(input)', self.$el).eq(index).find('input').val() === state.text) {
                             return 'exact-match';
                         }
+                        return undefined;
                     },
                     allowClear: true,
                     createSearchChoice: function (term, data) {
                         if ($(data).filter(function () {
-                                return this.text.localeCompare(term) === 0;
-                            }).length === 0) {
+                            return this.text.localeCompare(term) === 0;
+                        }).length === 0) {
                             if (Util.validateEmail(term)) {
                                 return {
                                     id: term,
                                     text: term
                                 };
                             }
-                            else {
-                                return null;
-                            }
+                            return null;
                         }
+                        return undefined;
                     },
                     initSelection: function (element, callback) {
                         callback({
@@ -331,11 +341,10 @@ define(function (require, exports, module) {
                         return Localization.project.notFoundRecipients;
                     },
                     query: function (query) {
-                        resultFound = false;
-                        var queryLength = query.term.length,
-                            data = {
-                                results: []
-                            };
+                        var queryLength;
+                        var data;
+                        queryLength = query.term.length;
+                        data = { results: [] };
 
                         if (queryLength >= minimumInputLength) {
                             if (queryLength > 256) {
@@ -348,9 +357,6 @@ define(function (require, exports, module) {
                                     .done(function (response) {
                                         remoteUsers = [];
                                         _.each(response, function (item) {
-                                            if (item == query.term) {
-                                                resultFound = true;
-                                            }
                                             remoteUsers.push(item);
                                             data.results.push({
                                                 id: item,
@@ -376,14 +382,15 @@ define(function (require, exports, module) {
                 this.$recipients.eq(index).on('select2-open', function () {
                     $('.select2-drop-mask', self.$el).remove();
                 })
-                    .on("select2-loaded", function (e) {
-                        $('.select2-drop-active', self.$el).removeClass("select2-drop-above");
+                    .on('select2-loaded', function () {
+                        $('.select2-drop-active', self.$el).removeClass('select2-drop-above');
                         self.$recipients.eq(index).select2('positionDropdown');
                     })
                     .on('change', function () {
                         var data = $(this).select2('data');
                         self.onChangeRicipients(data, $(this).closest('.email-case-item'));
-                    }).select2("data", users);
+                    })
+                    .select2('data', users);
 
                 $(this.el)
                     .on('mousedown.recipients', function () {
@@ -393,7 +400,7 @@ define(function (require, exports, module) {
                             if ($this.find('.select2-input').val().length <= 256) {
                                 self.validateRecipients();
                             }
-                        })
+                        });
                     });
             }
         },
@@ -409,11 +416,12 @@ define(function (require, exports, module) {
         },
 
         onChangeRicipients: function (value, eci) {
+            var emailCase;
             var recips = _.map(value, function (v) {
-                    return v.id;
-                }),
-                checked = eci.find(".launchOwner").is(':checked'),
-                emails = [];
+                return v.id;
+            });
+            var checked = eci.find('.launchOwner').is(':checked');
+            var emails = [];
             config.trackingDispatcher.trackEventNumber(390);
             this.hideFormsErrors(eci.find('.select2-container.recipients'));
             this.isValidEmail = true;
@@ -430,12 +438,11 @@ define(function (require, exports, module) {
                 } else {
                     emails.push(v);
                 }
-
             }, this);
             if (checked) {
-                emails.push(eci.find(".launchOwner").val());
+                emails.push(eci.find('.launchOwner').val());
             }
-            var emailCase = _.findWhere(this.model.get('emailCases'), {
+            emailCase = _.findWhere(this.model.get('emailCases'), {
                 id: eci.data('email-case-id')
             });
             if (emailCase) {
@@ -447,11 +454,11 @@ define(function (require, exports, module) {
 
         onChangeLaunchNames: function (value, eci) {
             var launches = _.map(value, function (i) {
-                    return i.id;
-                }),
-                emailCase = _.findWhere(this.model.get('emailCases'), {
-                    id: eci.data('email-case-id')
-                });
+                return i.id;
+            });
+            var emailCase = _.findWhere(this.model.get('emailCases'), {
+                id: eci.data('email-case-id')
+            });
             config.trackingDispatcher.trackEventNumber(393);
             emailCase.launchNames = launches;
 
@@ -459,10 +466,11 @@ define(function (require, exports, module) {
         },
 
         onChangeTags: function (value, eci) {
+            var emailCase;
             var tags = (value) ? value.trim().split(',') : [];
             config.trackingDispatcher.trackEventNumber(394);
             this.validateTags(tags);
-            var emailCase = _.findWhere(this.model.get('emailCases'), {
+            emailCase = _.findWhere(this.model.get('emailCases'), {
                 id: eci.data('email-case-id')
             });
             emailCase.tags = tags;
@@ -471,39 +479,23 @@ define(function (require, exports, module) {
         },
 
         getRecipients: function (index) {
+            var emailCase;
+            var recipients;
+            var val;
+            var rejected;
             if (this.model) {
-                if (index != undefined) {
+                if (index !== undefined) {
                     this.$launchOwner = $('.launchOwner', this.$el);
-                    var emailCase = this.model.get('emailCases')[index],
-                        recipients = emailCase.recipients || [],
-                        val = [],
-                        rejected = _.reject(recipients, function (r) {
-                            return r === this.$launchOwner.eq(index).val()
-                        }, this);
+                    emailCase = this.model.get('emailCases')[index];
+                    recipients = emailCase.recipients || [];
+                    val = [];
+                    rejected = _.reject(recipients, function (r) {
+                        return r === this.$launchOwner.eq(index).val();
+                    }, this);
 
                     _.each(rejected, function (m) {
                         var em = _.find(this.users, function (e) {
-                            return e.id === m
-                        });
-                        if (em) {
-                            val.push(em);
-                        } else {
-                            val.push({
-                                id: m,
-                                text: m
-                            });
-                        }
-                    }, this);
-                    return val;
-                } else {
-                    var recipients = this.model.get('recipients'),
-                        val = [],
-                        rejected = _.reject(recipients, function (r) {
-                            return r === this.$launchOwner.val()
-                        }, this);
-                    _.each(rejected, function (m) {
-                        var em = _.find(this.users, function (e) {
-                            return e.id === m
+                            return e.id === m;
                         });
                         if (em) {
                             val.push(em);
@@ -516,14 +508,33 @@ define(function (require, exports, module) {
                     }, this);
                     return val;
                 }
+                recipients = this.model.get('recipients');
+                val = [];
+                rejected = _.reject(recipients, function (r) {
+                    return r === this.$launchOwner.val();
+                }, this);
+                _.each(rejected, function (m) {
+                    var em = _.find(this.users, function (e) {
+                        return e.id === m;
+                    });
+                    if (em) {
+                        val.push(em);
+                    } else {
+                        val.push({
+                            id: m,
+                            text: m
+                        });
+                    }
+                }, this);
+                return val;
             }
+            return undefined;
         },
 
         filterTags: function (index) {
-            var self = this,
-                tags = [],
-                remoteTags = [],
-                resultFound = false;
+            var self = this;
+            var tags = [];
+            var remoteTags = [];
 
             _.each(this.model.get('emailCases')[index].tags, function (item) {
                 tags.push({
@@ -538,57 +549,57 @@ define(function (require, exports, module) {
                     multiple: true,
                     minimumInputLength: 1,
                     maximumInputLength: 128,
-                    formatInputTooShort: function (input, min) {
-                        return Localization.ui.enterChars
+                    formatInputTooShort: function () {
+                        return Localization.ui.enterChars;
                     },
                     formatResultCssClass: function (state) {
-                        if ((remoteTags.length == 0 || _.indexOf(remoteTags, state.text) < 0) && $('.users-typeahead.tags:not(input)', self.$el).eq(index).find('input').val() == state.text) {
+                        if ((remoteTags.length === 0 || _.indexOf(remoteTags, state.text) < 0) &&
+                            $('.users-typeahead.tags:not(input)', self.$el).eq(index).find('input').val() === state.text) {
                             return 'exact-match';
                         }
+                        return undefined;
                     },
                     tags: true,
                     initSelection: function (item, callback) {
-                        var tags = item.val().split(','),
-                            data = _.map(tags, function (tag) {
-                                tag = tag.trim();
-                                return {
-                                    id: tag,
-                                    text: tag
-                                };
-                            });
+                        var data;
+                        tags = item.val().split(',');
+                        data = _.map(tags, function (tag) {
+                            var tagData = tag.trim();
+                            return {
+                                id: tagData,
+                                text: tagData
+                            };
+                        });
                         callback(data);
                     },
                     createSearchChoice: function (term, data) {
                         if ($(data).filter(function () {
-                                return this.text.localeCompare(term) === 0;
-                            }).length === 0) {
+                            return this.text.localeCompare(term) === 0;
+                        }).length === 0) {
                             return {
                                 id: term,
                                 text: term
                             };
                         }
+                        return undefined;
                     },
                     query: function (query) {
-                        resultFound = false;
-                        var queryLength = query.term.length,
-                            data = {
-                                results: []
-                            };
+                        var queryLength = query.term.length;
+                        var data = {
+                            results: []
+                        };
 
                         if (queryLength >= 1) {
                             if (queryLength > 256) {
                                 self.validateTags(null, true);
                             } else {
-                                if (queryLength == 256) {
+                                if (queryLength === 256) {
                                     self.validateTags(null, true);
                                 }
                                 Service.searchTags(query)
                                     .done(function (response) {
                                         remoteTags = [];
                                         _.each(response, function (item) {
-                                            if (item == query.term) {
-                                                resultFound = true;
-                                            }
                                             remoteTags.push(item);
                                             data.results.push({
                                                 id: item,
@@ -611,8 +622,8 @@ define(function (require, exports, module) {
                         }
                     }
                 });
-                this.$tagsContainer.eq(index).on("select2-loaded", function (e) {
-                    $('.select2-drop-active', self.$el).removeClass("select2-drop-above");
+                this.$tagsContainer.eq(index).on('select2-loaded', function () {
+                    $('.select2-drop-active', self.$el).removeClass('select2-drop-above');
                     self.$tagsContainer.eq(index).select2('positionDropdown');
                 })
                     .on('select2-open', function () {
@@ -620,13 +631,15 @@ define(function (require, exports, module) {
                     })
                     .on('change', function () {
                         self.onChangeTags($(this).val(), $(this).closest('.email-case-item'));
-                    }).select2("data", tags);
+                    })
+                    .select2('data', tags);
             }
 
             $(this.el)
                 .on('mousedown.tags', function () {
+                    var input;
                     $('.users-typeahead.tags', self.$el).select2('close');
-                    var input = $('.users-typeahead.tags', self.$el).find('.select2-input');
+                    input = $('.users-typeahead.tags', self.$el).find('.select2-input');
 
                     if (input && input.length) {
                         if (input.val().length <= 256) {
@@ -641,10 +654,9 @@ define(function (require, exports, module) {
         },
 
         filterLaunches: function (index) {
-            var self = this,
-                remoteLaunches = [],
-                launches = [],
-                resultFound = false;
+            var self = this;
+            var remoteLaunches = [];
+            var launches = [];
 
             _.each(this.model.get('emailCases')[index].launchNames, function (item) {
                 launches.push({
@@ -661,24 +673,28 @@ define(function (require, exports, module) {
                     minimumInputLength: 1,
                     maximumInputLength: 128,
 
-                    formatInputTooShort: function (input, min) {
-                        return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto
+                    formatInputTooShort: function () {
+                        return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto;
                     },
                     formatResultCssClass: function (state) {
-                        if ((remoteLaunches.length == 0 || _.indexOf(remoteLaunches, state.text) < 0) && $('.users-typeahead.launches:not(input)', self.$el).eq(index).find('input').val() == state.text) {
+                        if ((remoteLaunches.length === 0 ||
+                            _.indexOf(remoteLaunches, state.text) < 0) &&
+                            $('.users-typeahead.launches:not(input)', self.$el).eq(index).find('input').val() === state.text) {
                             return 'exact-match';
                         }
+                        return undefined;
                     },
                     allowClear: true,
                     createSearchChoice: function (term, data) {
                         if ($(data).filter(function () {
-                                return this.text.localeCompare(term) === 0;
-                            }).length === 0) {
+                            return this.text.localeCompare(term) === 0;
+                        }).length === 0) {
                             return {
                                 id: term,
                                 text: term
                             };
                         }
+                        return undefined;
                     },
                     initSelection: function (element, callback) {
                         callback({
@@ -687,26 +703,24 @@ define(function (require, exports, module) {
                         });
                     },
                     query: function (query) {
-                        resultFound = false;
-                        var queryLength = query.term.length,
-                            data = {
-                                results: []
-                            };
+                        var queryLength = query.term.length;
+                        var data = {
+                            results: []
+                        };
 
                         if (queryLength >= 3) {
                             if (queryLength > 256) {
-                                self.toggleLaunchNamesErrors(true, false, self.$launchContainer.eq(index));
+                                self.toggleLaunchNamesErrors(true, false,
+                                    self.$launchContainer.eq(index));
                             } else {
-                                if (queryLength == 256) {
-                                    self.toggleLaunchNamesErrors(false, false, self.$launchContainer.eq(index));
+                                if (queryLength === 256) {
+                                    self.toggleLaunchNamesErrors(false, false,
+                                        self.$launchContainer.eq(index));
                                 }
                                 Service.searchLaunches(query)
                                     .done(function (response) {
                                         remoteLaunches = [];
                                         _.each(response, function (item) {
-                                            if (item == query.term) {
-                                                resultFound = true;
-                                            }
                                             remoteLaunches.push(item);
                                             data.results.push({
                                                 id: item,
@@ -732,14 +746,15 @@ define(function (require, exports, module) {
                 this.$launchContainer.eq(index).on('select2-open', function () {
                     $('.select2-drop-mask', self.$el).remove();
                 })
-                    .on("select2-loaded", function (e) {
-                        $('.select2-drop-active', self.$el).removeClass("select2-drop-above");
+                    .on('select2-loaded', function () {
+                        $('.select2-drop-active', self.$el).removeClass('select2-drop-above');
                         self.$launchContainer.eq(index).select2('positionDropdown');
                     })
                     .on('change', function () {
-                        var values = self.$launchContainer.eq(index).select2('data')
+                        var values = self.$launchContainer.eq(index).select2('data');
                         self.onChangeLaunchNames(values, $(this).closest('.email-case-item'));
-                    }).select2("data", launches);
+                    })
+                    .select2('data', launches);
             }
 
 
@@ -751,7 +766,7 @@ define(function (require, exports, module) {
                         if ($this.find('.select2-input').val().length <= 256) {
                             self.toggleLaunchNamesErrors(false, true, $this);
                         }
-                    })
+                    });
                 });
 
             if (!Util.isInPrivilegedGroup() && this.$launchContainer) {
@@ -760,17 +775,13 @@ define(function (require, exports, module) {
         },
 
         validateTags: function (tags, lengthExceeded) {
-            var valid = true,
-                self = this;
+            var valid = true;
+            var self = this;
 
             $('.email-case-item', this.$el).each(function (index, elem) {
-                var tagContainer = $(elem).find('.select2-container.tags'),
-                    findTags = _.findWhere(self.model.get('emailCases'), {
-                        id: $(elem).data('email-case-id')
-                    }),
-                    tags = tags || (!!findTags ? findTags['tags'] : []);
+                var tagContainer = $(elem).find('.select2-container.tags');
 
-                if (lengthExceeded && ($.inArray($(elem).data('email-case-id'), self.rulesToDelete) == -1)) {
+                if (lengthExceeded && ($.inArray($(elem).data('email-case-id'), self.rulesToDelete) === -1)) {
                     self.showFormErrors(tagContainer, Localization.ui.maxPrefix + '256' + Localization.ui.maxSufix);
                     $('.select2-drop-active', self.$el).hide();
                     $('.select2-input.select2-active', self.$el).removeClass('select2-active');
@@ -786,21 +797,26 @@ define(function (require, exports, module) {
 
         checkCases: function () {
             var self = this;
+            var i;
+            var j;
+            var firstCaseEqual;
+            var caseEqual;
+            var currentCase;
             var duplicates = false;
             var cases = this.model.get('emailCases');
 
             $('.email-case-item', this.$el).removeClass('duplicate');
 
-            if (cases.length == 1) {
+            if (cases.length === 1) {
                 return false;
             }
 
-            for (var i = 0; i < cases.length; i++) {
-                var currentCase = cases[i];
-                for (var j = i + 1; j < cases.length; j++) {
+            for (i = 0; i < cases.length; i += 1) {
+                currentCase = cases[i];
+                for (j = i + 1; j < cases.length; j += 1) {
                     if (this.isCasesEqual(currentCase, cases[j])) {
-                        var caseEqual = $('.email-case-item[data-email-case-id=' + cases[j].id + ']', self.$el),
-                            firstCaseEqual = $('.email-case-item[data-email-case-id=' + currentCase.id + ']', self.$el);
+                        caseEqual = $('.email-case-item[data-email-case-id=' + cases[j].id + ']', self.$el);
+                        firstCaseEqual = $('.email-case-item[data-email-case-id=' + currentCase.id + ']', self.$el);
 
                         if (!caseEqual.hasClass('will-delete') && !firstCaseEqual.hasClass('will-delete')) {
                             caseEqual.addClass('duplicate');
@@ -813,37 +829,34 @@ define(function (require, exports, module) {
         },
 
         isCasesEqual: function (caseOne, caseTwo) {
-            if (caseOne.sendCase != caseTwo.sendCase) {
+            if (caseOne.sendCase !== caseTwo.sendCase) {
                 return false;
             }
-
-            if (caseOne.tags.length != caseTwo.tags.length) {
+            if (caseOne.tags.length !== caseTwo.tags.length) {
                 return false;
             }
-
-            if (caseOne.launchNames.length != caseTwo.launchNames.length) {
+            if (caseOne.launchNames.length !== caseTwo.launchNames.length) {
                 return false;
             }
-
-            if (caseOne.recipients.length != caseTwo.recipients.length) {
+            if (caseOne.recipients.length !== caseTwo.recipients.length) {
                 return false;
             }
-
-            if (_.sortBy(caseOne.tags).equals(_.sortBy(caseTwo.tags)) && _.sortBy(caseOne.launchNames).equals(_.sortBy(caseTwo.launchNames)) && _.sortBy(caseOne.recipients).equals(_.sortBy(caseTwo.recipients))) {
+            if (_.sortBy(caseOne.tags).equals(_.sortBy(caseTwo.tags)) &&
+                _.sortBy(caseOne.launchNames).equals(_.sortBy(caseTwo.launchNames)) &&
+                _.sortBy(caseOne.recipients).equals(_.sortBy(caseTwo.recipients))) {
                 return true;
             }
-
             return false;
         },
 
         selectOwner: function (e) {
-            var $el = $(e.target),
-                emailCase = $el.closest('.email-case-item'),
-                val = $el.val(),
-                emailCaseObj = _.findWhere(this.model.get('emailCases'), {
-                    id: emailCase.data('email-case-id')
-                }),
-                sendCase = emailCaseObj['recipients'] || [];
+            var $el = $(e.target);
+            var emailCase = $el.closest('.email-case-item');
+            var val = $el.val();
+            var emailCaseObj = _.findWhere(this.model.get('emailCases'), {
+                id: emailCase.data('email-case-id')
+            });
+            var sendCase = emailCaseObj.recipients || [];
             config.trackingDispatcher.trackEventNumber(391);
             if ($el.is(':checked')) {
                 sendCase.push(val);
@@ -865,31 +878,40 @@ define(function (require, exports, module) {
         },
 
         selectProp: function (e) {
+            var self = this;
+            var blockAction;
+            var emailCase;
+            var link = $(e.target);
+            var btn = link.closest('.open').find('.dropdown-toggle');
+            var val = (link.data('value')) ? link.data('value') : link.text();
+            var id = btn.attr('id');
             e.preventDefault();
-            var self = this,
-                link = $(e.target),
-                btn = link.closest('.open').find('.dropdown-toggle'),
-                val = (link.data('value')) ? link.data('value') : link.text(),
-                id = btn.attr('id');
 
             if (id === 'emailEnabled') {
                 val = (val === 'ON');
-                var blockAction = val ? 'show' : 'hide';
+                blockAction = val ? 'show' : 'hide';
                 this.$emailBlock[blockAction]();
                 if (val) {
                     self.model.set('emailEnabled', true);
-                    $('.email-case-item', self.$el).each(function (index, elem) {
+                    $('.email-case-item', self.$el).each(function (index) {
                         self.filterLaunches(index);
                         self.filterTags(index);
                     });
-
+                    Service.getProject()
+                        .done(function () {
+                            self.render();
+                            Util.ajaxSuccessMessenger('updateProjectSettings');
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error, 'updateProjectSettings');
+                        });
                 } else {
                     self.model.set('emailEnabled', false);
                 }
                 this.model.set(id, val);
                 this.updateRules();
             } else {
-                var emailCase = _.findWhere(this.model.get('emailCases'), {
+                emailCase = _.findWhere(this.model.get('emailCases'), {
                     id: btn.closest('.email-case-item').data('email-case-id')
                 });
                 if (emailCase) {
@@ -904,7 +926,7 @@ define(function (require, exports, module) {
         setEmailToDefault: function () {
             var self = this;
             $('.email-case-item', this.$el).each(function (index, elem) {
-                var emailCase = _.findWhere(self.model.get('emailCases'), {id: $(elem).data('email-case-id')});
+                var emailCase = _.findWhere(self.model.get('emailCases'), { id: $(elem).data('email-case-id') });
 
                 var inCase = config.forSettings.emailInCase[0];
                 $(elem).find('.launchOwner').attr('checked', 'checked').prop('checked', 'checked');
@@ -935,16 +957,19 @@ define(function (require, exports, module) {
         },
 
         validateRecipients: function () {
-            var self = this,
-                recipients = false,
-                validAllRecipients = true;
+            var self = this;
+            var recipients = false;
+            var validAllRecipients = true;
+            var emailCase;
+            var emailCaseToDelete;
+            var validRecipients;
 
             $('.email-case-item').each(function (index, elem) {
-                var validRecipients = true,
-                    emailCase = _.findWhere(self.model.get('emailCases'), {
-                        id: $(elem).data('email-case-id')
-                    }),
-                    emailCaseToDelete = $.inArray($(elem).data('email-case-id'), self.rulesToDelete) != -1;
+                validRecipients = true;
+                emailCase = _.findWhere(self.model.get('emailCases'), {
+                    id: $(elem).data('email-case-id')
+                });
+                emailCaseToDelete = $.inArray($(elem).data('email-case-id'), self.rulesToDelete) !== -1;
 
                 if (!recipients && emailCase && !emailCaseToDelete) {
                     recipients = _.isEmpty(emailCase.recipients);
@@ -954,7 +979,7 @@ define(function (require, exports, module) {
                 }
                 if (emailCase && !emailCaseToDelete) {
                     if (validRecipients) {
-                        validRecipients = _.isEmpty(emailCase.recipients) ? false : true;
+                        validRecipients = !_.isEmpty(emailCase.recipients);
                     }
                     validAllRecipients = validRecipients;
                     if (!validRecipients) {
@@ -970,7 +995,7 @@ define(function (require, exports, module) {
             if (show) {
                 this.showFormErrors(launches, Localization.ui.maxPrefix + '256' + Localization.ui.maxSufix);
                 $('.select2-drop-active', this.$el).hide();
-                $('.select2-input.select2-active', this.$el).removeClass('select2-active')
+                $('.select2-input.select2-active', this.$el).removeClass('select2-active');
             } else {
                 this.hideFormsErrors(launches);
                 if (!click) {
@@ -982,22 +1007,21 @@ define(function (require, exports, module) {
 
         checkTagsAndLaunches: function (data) {
             var conf = data.configuration;
-            if (conf.launchNames && conf.launchNames.length == 0) {
+            if (conf.launchNames && conf.launchNames.length === 0) {
                 delete conf.launchNames;
             }
-
-            if (conf.tags && conf.tags.length == 0) {
+            if (conf.tags && conf.tags.length === 0) {
                 delete conf.tags;
             }
-
             data.configuration = conf;
+            console.log(JSON.stringify(data));
             return data;
         },
 
-        submitNotifications: function (e) {
-            var self = this,
-                emailField = $('#from', this.$el),
-                externalSystemData = this.model.getProjectSettings(this.rulesToDelete);
+        submitNotifications: function () {
+            var self = this;
+            var emailField = $('#from', this.$el);
+            var externalSystemData = this.model.getProjectSettings(this.rulesToDelete);
             config.trackingDispatcher.trackEventNumber(396);
             if (this.model.get('emailEnabled')) {
                 if (!this.validateTags()) {
@@ -1016,25 +1040,15 @@ define(function (require, exports, module) {
                     return false;
                 }
             } else {
-                var defaultEmailCase = [
-                    {
-                        launchNames: [],
-                        recipients: ['OWNER'],
-                        sendCase: "ALWAYS",
-                        tags: [],
-                        id: 0
-                    }
-                ];
                 self.model.set('emailEnabled', false);
-                self.model.set('emailCases', defaultEmailCase);
                 $('.email-case-item').remove();
-                self.model.set('fromAddress', 'reportportal@example.com');
                 externalSystemData = self.model.getProjectSettings();
             }
             externalSystemData = this.checkTagsAndLaunches(externalSystemData);
             Service.updateEmailProjectSettings(externalSystemData)
-                .done(function (response) {
-                    config.project.configuration.emailConfiguration = externalSystemData.configuration;
+                .done(function () {
+                    config.project.configuration.emailConfiguration =
+                        externalSystemData.configuration;
                     self.emailCaseId = 0;
                     self.rulesToDelete.length = 0;
                     self.updateIds();
@@ -1045,9 +1059,10 @@ define(function (require, exports, module) {
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, 'updateProjectSettings');
                 });
+            return undefined;
         },
 
-        onDestroy: function (view) {
+        onDestroy: function () {
             this.$recipients = $('input.recipients', this.$el);
             this.$launchContainer = $('input.launchNames', this.$el);
             this.$tagsContainer = $('input.tags', this.$el);
@@ -1065,10 +1080,9 @@ define(function (require, exports, module) {
                 this.$tagsContainer = null;
             }
 
-            $("body > #select2-drop-mask, body > .select2-sizer").remove();
+            $('body > #select2-drop-mask, body > .select2-sizer').remove();
         }
     });
 
     return NotificationsTabView;
-
 });

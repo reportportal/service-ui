@@ -45,13 +45,26 @@ $mobile: 768px;
       position: relative;
       top: -320px;
       &::after {
-        content: url(../img/invalidPage/422.png);
+        content: "";
+        background-image: url(../img/invalidPage/422.png);
         position: absolute;
         top: 173px;
         left: 50%;
+        width: 300px;
+        height: 135px;
         margin-left: -95px;
+        background-size: cover;
+        background-repeat: no-repeat;
         @include respond-to(handhelds) {
           margin-left: -149px;
+        }
+      }
+      @media(max-width: 500px) {
+        &::after {
+          width: 192px;
+          height: 78px;
+          margin-left: -70px;
+          top: 176px;
         }
       }
     }
@@ -118,6 +131,50 @@ $mobile: 768px;
         margin-top: -208px;
         margin-left: -208px;
         box-shadow: rgba(255, 255, 255, 0.4) 0 0 2px;
+      }
+      @media (max-width: 500px) {
+        .round-1 {
+          width: 258px;
+          height: 258px;
+          margin-top: -129px;
+          margin-left: -129px;
+        }
+        .round-2 {
+          width: 360px;
+          height: 360px;
+          margin-top: -180px;
+          margin-left: -180px;
+        }
+        .round-3 {
+          width: 474px;
+          height: 474px;
+          margin-top: -237px;
+          margin-left: -237px;
+        }
+        .round-4 {
+          width: 610px;
+          height: 610px;
+          margin-top: -305px;
+          margin-left: -305px;
+        }
+        .stars{
+          width: 320px;
+          height: 568px;
+          margin-left: 0;
+          left: 0;
+          &.layer-1 {
+            top: -93px;
+            background-image: url(../img/404/Mobile_404_stars1.svg);
+          }
+          &.layer-2 {
+            top: -93px;
+            background-image: url(../img/404/Mobile_404_stars2.svg);
+          }
+        }
+        .orange-planet{
+          display: none;
+          animation: unset;
+        }
       }
       .layer-1 {
         top: -38px;
@@ -259,8 +316,23 @@ $mobile: 768px;
             left: 25px;
             animation: MovingRevert 6.5s linear infinite;
           }
-        }
 
+        }
+        @media (max-width: 500px) {
+          .area{
+            width: 30px;
+            height: 30px;
+            background-size: contain;
+            top: 5px;
+            left: 30px;
+            .part1, .part2, .part4{
+              top: 20px;
+            }
+            .part3{
+              top: 16px;
+            }
+          }
+        }
       }
       .orange-planet {
         .planet {
@@ -340,6 +412,24 @@ $mobile: 768px;
       margin-bottom: 6px;
       position: relative;
     }
+    @media(max-width: 500px){
+      h1{
+        padding-top: 288px;
+        margin-bottom: 13px;
+      }
+      .mobile-short{
+        width: 200px;
+        margin: 0 auto;
+      }
+      p{
+        margin-bottom: 0;
+        line-height: 1.77;
+      }
+      button{
+        margin-top: 18px;
+        padding: 8px 26px;
+      }
+    }
     button {
       margin-top: 20px;
     }
@@ -349,13 +439,20 @@ $mobile: 768px;
     width: 100%;
     height: 62px;
     top: 0;
-    background-color: #2b2b2b;
-    cursor: pointer;
+    background-color: #313131;
     .logo {
       width: 90px;
       height: 100%;
-      background: #313131 url(../img/rp_logo.png) center no-repeat;
-
+      background: url(../img/rp_logo.png) center no-repeat;
+      cursor: pointer;
+    }
+    @media (max-width:500px) {
+      .logo{
+        background: url(../img/404/mobile-logo.svg) center no-repeat;
+        display: inline-block;
+        width: 150px;
+        height: 60px;
+      }
     }
   }
 }
