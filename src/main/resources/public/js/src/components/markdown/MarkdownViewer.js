@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -26,35 +26,35 @@ define(function (require, exports, module) {
     var SingletonMarkdownObject = require('components/markdown/SingletonMarkdownObject');
 
 
-
     var MainBreadcrumbsComponent = Epoxy.View.extend({
         className: 'markdown-viewer',
         events: {
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.simpleMDE = new SingletonMarkdownObject();
             this.update(options.text);
         },
-        update: function(text) {
-            if(text) {
-                var html = this.simpleMDE.markdown(text.escapeScript().indentSpases());
-                var doc = document.createElement('div');
-                var self = this;
+        update: function (text) {
+            var html;
+            var doc = document.createElement('div');
+            var self = this;
+            if (text) {
+                html = this.simpleMDE.markdown(text.escapeHtml().indentSpases());
                 doc.innerHTML = html;
-                $('img', doc).each(function() {
-                    this.onload = function() {
+                $('img', doc).each(function () {
+                    this.onload = function () {
                         self.trigger('load');
-                    }
+                    };
                 });
-                $('a', doc).each(function() {
-                    $(this).attr({target: '_blank'});
+                $('a', doc).each(function () {
+                    $(this).attr({ target: '_blank' });
                 });
                 this.$el.html(doc.innerHTML);
             } else {
                 this.$el.html('');
             }
-        },
+        }
     });
 
 
