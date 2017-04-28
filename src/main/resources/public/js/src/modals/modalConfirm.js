@@ -19,23 +19,21 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var ModalView = require('modals/_modalView');
     var Util = require('util');
-    var $ = require('jquery');
 
     var ModalConfirm = ModalView.extend({
         template: 'tpl-modal-confirm',
         className: 'modal-confirm',
 
         events: {
-            'change [data-js-select]': 'onChangeCheckbox',
             'click [data-js-ok]': 'onClickSuccess'
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             /*  options = {
                headerText: '',
                bodyText: '',
@@ -48,38 +46,23 @@ define(function (require, exports, module) {
             this.render(options);
             this.confirmFunction = options.confirmFunction;
         },
-        render: function(options) {
+        render: function (options) {
             this.$el.html(Util.templates(this.template, options));
         },
-        onChangeCheckbox: function(e) {
-            if($(e.currentTarget).is(':checked')) {
-                $('[data-js-ok]', this.$el).removeClass('disabled');
-            } else {
-                $('[data-js-ok]', this.$el).addClass('disabled');
-            }
-        },
-
-        onKeySuccess: function () {
-            var confirmBtn = $('[data-js-ok]',this.$el);
-            if (!confirmBtn.hasClass('disabled')) {
-                confirmBtn.trigger('click')
-            }
-        },
-
-        onClickSuccess: function() {
+        onClickSuccess: function () {
             var self = this;
-            if(!this.confirmFunction) {
+            if (!this.confirmFunction) {
                 self.successClose();
                 return;
             }
             this.showLoading();
-            this.confirmFunction().done(function() {
+            this.confirmFunction().done(function () {
                 self.closeAsync && self.closeAsync.resolve();
-            }).fail(function(err) {
+            }).fail(function (err) {
                 self.closeAsync && self.closeAsync.resolve(err);
-            }).always(function() {
+            }).always(function () {
                 self.hide();
-            })
+            });
         }
     });
 

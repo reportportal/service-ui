@@ -55,7 +55,7 @@ define(function (require) {
         bindings: {
             ':el': 'classes: {"select-state": select}',
             '[data-js-analize-label]': 'classes: {visible: isProcessing}',
-            '[data-js-name-link]': 'attr: {href: url}, classes: {"not-link": not(url)}',
+            '[data-js-name-link]': 'attr: {href: url}',
             '[data-js-name]': 'text: name, attr: {title: nameTitle}',
             '[data-js-launch-number]': 'text: numberText',
             '[data-js-item-edit]': 'classes: {hide: hideEdit}',
@@ -314,11 +314,11 @@ define(function (require) {
             var href;
             config.trackingDispatcher.trackEventNumber(23);
             e.preventDefault();
-            href = $(e.currentTarget).attr('href');
-            if (href !== '') {
+            var href = $(e.currentTarget).attr('href');
+            if(this.model.get('has_childs')) {
                 this.model.trigger('drill:item', this.model);
-                config.router.navigate(href, { trigger: true });
             }
+            config.router.navigate(href, {trigger: true});
         },
         onClickEdit: function () {
             var modal;

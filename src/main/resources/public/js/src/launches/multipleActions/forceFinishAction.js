@@ -18,10 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
-    var $ = require('jquery');
     var _ = require('underscore');
     var Util = require('util');
     var ModalConfirm = require('modals/modalConfirm');
@@ -32,35 +31,52 @@ define(function (require, exports, module) {
 
     var config = App.getInstance();
 
-    var ForceFinishAction = function(options) {
+    var ForceFinishAction = function (options) {
         var items = options.items;
-        var modal = new ModalConfirm({
+        var confirmText = '';
+        var modal;
+        items.forEach(function (item) {
+            var itemOwner = item.attributes.owner;
+            var loginUser = config.userModel.attributes.name;
+            if (itemOwner !== loginUser) {
+                if (items.length > 1) {
+                    confirmText = Util.replaceTemplate(Localization.launches.finishSelectedLaunch,
+                        Localization.ui.launches);
+                } else {
+                    confirmText = Util.replaceTemplate(Localization.launches.finishOneLaunch,
+                        Localization.ui.launch);
+                }
+            }
+        });
+        modal = new ModalConfirm({
             headerText: Localization.dialogHeader.forceFinish,
             bodyText: (items.length > 1) ?
-                Util.replaceTemplate(Localization.launches.finishWarning, Localization.ui.launches, Localization.ui.selectedLaunches) :
-                Util.replaceTemplate(Localization.launches.finishWarning, Localization.ui.launch, Localization.ui.launch),
-            confirmText: (items.length > 1) ?
-                Util.replaceTemplate(Localization.launches.finishAgree, Localization.ui.launches) :
-                Util.replaceTemplate(Localization.launches.finishAgree, Localization.ui.launch),
+                Util.replaceTemplate(Localization.launches.finishWarning,
+                    Localization.ui.launches,
+                    Localization.ui.selectedLaunches) :
+                Util.replaceTemplate(Localization.launches.finishWarning,
+                    Localization.ui.launch,
+                    Localization.ui.launch),
+            confirmText: confirmText,
             cancelButtonText: Localization.ui.cancel,
             okButtonText: Localization.ui.finish,
-            confirmFunction: function() {
+            confirmFunction: function () {
                 var entities = {};
                 var time = new Date().getTime();
-                _.each(items, function(item) {
+                _.each(items, function (item) {
                     entities[item.get('id')] = {
                         end_time: time,
                         status: config.launchStatus.stopped
                     };
                 });
-                return CallService.call('PUT', Urls.getLaunchStop(), {entities: entities}).done(function() {
+                return CallService.call('PUT', Urls.getLaunchStop(), { entities: entities }).done(function () {
                     Util.ajaxSuccessMessenger('finishLaunch');
-                    _.each(items, function(item) {
-                        item.set({status: config.launchStatus.stopped});
+                    _.each(items, function (item) {
+                        item.set({ status: config.launchStatus.stopped });
                     });
-                }).fail(function(err) {
+                }).fail(function (err) {
                     Util.ajaxFailMessenger(err, 'finishLaunch');
-                })
+                });
             }
         });
 

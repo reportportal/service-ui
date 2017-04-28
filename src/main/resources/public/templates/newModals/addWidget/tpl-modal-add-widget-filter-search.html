@@ -21,12 +21,18 @@
         <div class="preloader">
             <i class="material-icons loader-animation">refresh</i>
         </div>
-        <div data-js-filter-empty class="hide filter-no-data">
+        <div data-js-filter-empty class="filter-no-data">
             <p class="no-data-warning">
                 <i class="rp-icons rp-icons-warning"></i>
                 <%= data.text.wizard.ownFiltersAbsent %> "<span data-js-seach-query></span>"
             </p>
             <p><%= data.text.ui.checkQuery %></p>
+        </div>
+        <div data-js-filter-none  class="filter-no-data" >
+            <p class="no-data-warning">
+                <i class="rp-icons rp-icons-warning"></i>
+                <%= data.text.wizard.projectFiltersAbsent %>
+            </p>
         </div>
     </div>
 </div>

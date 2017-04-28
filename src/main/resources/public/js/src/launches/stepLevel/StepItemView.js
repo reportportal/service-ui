@@ -161,14 +161,10 @@ define(function (require, exports, module) {
             e.preventDefault();
             config.trackingDispatcher.trackEventNumber(23);
             var href = $(e.currentTarget).attr('href');
-            if(href != '') {
+            if(this.model.get('has_childs')) {
                 this.model.trigger('drill:item', this.model);
-                config.router.navigate(href, {trigger: true});
-            } else {
-                var currentPath = window.location.hash;
-                currentPath += '&log.item=' + this.model.get('id');
-                config.router.navigate(currentPath, {trigger: true});
             }
+            config.router.navigate(href, {trigger: true});
         },
         onClickEdit: function() {
             config.trackingDispatcher.trackEventNumber(149);
