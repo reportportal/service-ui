@@ -6,7 +6,8 @@
 ### New Features
 
 * Initial release to Public Maven Repositories
-* DockerHub Release 
+* DockerHub Release
+* EPMRPP-25356 - Implemented tablet view for registration pages.
 
 ### Bugfixes
 
