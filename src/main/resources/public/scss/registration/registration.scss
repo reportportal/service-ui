@@ -26,22 +26,42 @@
   margin: 0 auto;
   padding-top: 20px;
 
-  .login-content {
+  .registration-content {
     position: relative;
     width: 100%;
     height: 100%;
     border-radius: 2px;
     box-shadow: 0 1px 3px 0 $COLOR--skipped;
+
+    @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+      background-image: url(../../img/registration/registration-tablet.svg);
+      background-color: $COLOR--light-blue;
+      background-repeat: no-repeat;
+      -webkit-background-size: contain;
+      background-size: contain;
+    }
   }
 
-  @media (max-width: 1010px) {
+  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+    width: 768px;
+    height: 1044px;
+    padding-bottom: 20px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
     width: 320px;
     height: 665px;
   }
 
   &.fail {
     height: 747px;
-    @media (max-width: 1010px) {
+
+    @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+      width: 768px;
+      height: 1044px;
+      padding-bottom: 20px;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
       height: 588px;
     }
   }
@@ -57,7 +77,12 @@
     -webkit-background-size: 100%;
     background-size: 100%;
 
-    @media (max-width: 1010px) {
+    @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+      width: 0;
+      height: 0;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
       display: none;
     }
 
@@ -71,15 +96,20 @@
       background-repeat: no-repeat;
       -webkit-background-size: 100%;
       background-size: 100%;
+      cursor: pointer;
     }
 
     .caption {
       width: 300px;
-      margin: 410px auto 0px auto;
+      margin: 410px auto 0 auto;
       text-align: center;
       font-family: $OpenSansRegular;
       font-size: 16px;
       color: #6f898d;
+
+      @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+        display: none;
+      }
     }
   }
 
@@ -90,7 +120,17 @@
     padding: 60px;
     background-color: $COLOR--white-default;
 
-    @media (max-width: 1010px) {
+    @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+      width: 668px;
+      height: 706px;
+      float: none;
+      position: absolute;
+      top: 83px;
+      left: 50px;
+      padding: 50px 144px;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
       padding: 0;
       width: 100%;
     }
@@ -108,7 +148,7 @@
         font-size: 32px;
       }
 
-      @media (max-width: 1010px) {
+      @media (max-width: $SCREEN_XS_MAX) {
         display: none;
       }
     }
@@ -123,7 +163,7 @@
       -webkit-background-size: 100%;
       background-size: 100%;
 
-      @media (max-width: 1010px) {
+      @media (max-width: $SCREEN_XS_MAX) {
         display: block;
       }
 
@@ -137,6 +177,7 @@
         background-repeat: no-repeat;
         -webkit-background-size: 100%;
         background-size: 100%;
+        cursor: pointer;
       }
       .caption {
         display: block;
@@ -155,7 +196,7 @@
 
     .registration-form {
       width: 100%;
-      @media (max-width: 1010px) {
+      @media (max-width: $SCREEN_XS_MAX) {
         padding: 30px 20px 0 20px;
         width: 100%;
       }
@@ -248,7 +289,7 @@
         &.confirm-pass-field {
           margin-bottom: 50px;
 
-          @media (max-width: 1010px) {
+          @media (max-width: $SCREEN_XS_MAX) {
             margin-bottom: 30px;
           }
           .rp-input {
@@ -267,7 +308,7 @@
         width: 354px;
         margin: 0 auto;
 
-        @media (max-width: 1010px) {
+        @media (max-width: $SCREEN_XS_MAX) {
           width: 284px;
         }
 
@@ -279,14 +320,14 @@
           -moz-border-radius: 3px;
           border-radius: 3px;
 
-          @media (max-width: 1010px) {
+          @media (max-width: $SCREEN_XS_MAX) {
             width: 130px;
           }
 
           &.rp-btn-cancel {
             margin-right: 30px;
 
-            @media (max-width: 1010px) {
+            @media (max-width: $SCREEN_XS_MAX) {
               margin-right: 20px;
             }
           }
