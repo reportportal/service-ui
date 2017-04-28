@@ -3,31 +3,34 @@
 node {
 
        dir('src/github.com/reportportal') {
-           checkout scm
 
            stage('Checkout'){
                 checkout scm
-                sh 'git checkout golang'
+                sh 'git checkout golang-docker'
                 sh 'git pull'
             }
 
             stage('Build UI') {
-                withEnv(["PATH+NODE=${tool name: 'node-7.9.0', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'}/bin"]) {
-                    sh 'make build-statics'
-                }
+                docker.image('node:onbuild').inside('-u root') {
+                   sh 'make build-statics'
+                 }
             }
 
             stage('Build Server') {
-                // Install the desired Go version
-                def root = tool name: 'go-1.8.1', type: 'go'
+                 // Export environment variables pointing to the directory where Go was installed
+                 docker.image('golang:1.8.1').inside("-u root -e GOPATH=${env.WORKSPACE}")  {
+                        sh 'PATH=$PATH:$GOPATH/bin && make build-server'
+                 }
+                 archiveArtifacts artifacts: 'bin/*'
 
-                // Export environment variables pointing to the directory where Go was installed
-                withEnv(["GOROOT=${root}","PATH+GO=${root}/bin","GOPATH=${env.WORKSPACE}","PATH+GOPATH=${env.WORKSPACE}/bin"]) {
-                     sh 'echo $GOROOT'
-                     sh 'make build-server'
+            }
+
+            stage('Build Docker Image') {
+                withEnv(["IMAGE_POSTFIX=dev-golang"]) {
+                    sh 'make build-image'
                 }
             }
-       }
 
+        }
 }
 

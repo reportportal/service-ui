@@ -53,13 +53,14 @@ build-statics:
 build: build-statics build-server
 
 # Builds the container
-docker: build
+build-image:
+	docker build -t "$(IMAGE_NAME)" -f docker/Dockerfile .
+
 
 # Builds the container and pushes to private registry
 pushDev:
 	echo "Registry is not provided"
 	if [ -d ${REGISTRY} ] ; then echo "Provide registry"; exit 1 ; fi
-	docker build -t "$(IMAGE_NAME)" -f docker/Dockerfile .
 	docker tag "$(IMAGE_NAME)" "$(REGISTRY)/$(IMAGE_NAME):latest"
 	docker push "$(REGISTRY)/$(IMAGE_NAME):latest"
 
