@@ -52,7 +52,7 @@
             content: '';
             top: 10px;
             right: 12px;
-            background-image: url(../../../img/icons/arrow_down.svg);
+            background-image: url(../img/icons/arrow_down.svg);
           }
         }
         .rp-caret {
@@ -68,7 +68,7 @@
         .dropdown-toggle {
           .select-value {
             &:after {
-              background-image: url(../../../img/icons/arrow_up.svg);
+              background-image: url(../img/icons/arrow_up.svg);
             }
           }
         }
