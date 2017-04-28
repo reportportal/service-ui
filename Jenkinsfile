@@ -3,6 +3,7 @@
 node {
 
        load "$JENKINS_HOME/jobvars.env"
+
        dir('src/github.com/reportportal') {
 
            stage('Checkout'){
@@ -32,8 +33,8 @@ node {
                                           sh 'make build-image'
                                   }
 
-                                  stage('Push Docker Image') {
-                                          sh 'docker-compose -p reportportal -f $COMPOSE_FILE up -d --force-recreate ui'
+                                  stage('Deploy container') {
+                                          sh "docker-compose -p reportportal -f $COMPOSE_FILE up -d --force-recreate ui"
                                   }
                  }
            }
