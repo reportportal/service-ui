@@ -90,14 +90,15 @@
            }
          }
          .rp-logo {
-           width: 130px;
-           height: 29px;
-           background-size: 100%;
-           background-image: url("../img/landing/logo_small.png");
+           width: 150px;
+           height: 60px;
+           background-image: url(../img/landing/logo_small.svg);
            position: absolute;
-           top: 16px;
+           top: 0;
            left: 50%;
            margin-left: -65px;
+           background-repeat: no-repeat;
+           background-position: center center;
          }
        }
 
