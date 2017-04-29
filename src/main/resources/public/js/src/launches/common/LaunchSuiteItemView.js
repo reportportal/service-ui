@@ -310,15 +310,11 @@ define(function (require) {
                 config.trackingDispatcher.trackEventNumber(61.2);
             }
         },
-        onClickName: function (e) {
-            var href;
+        onClickName: function () {
             config.trackingDispatcher.trackEventNumber(23);
-            e.preventDefault();
-            var href = $(e.currentTarget).attr('href');
-            if(this.model.get('has_childs')) {
+            if (this.model.get('has_childs')) {
                 this.model.trigger('drill:item', this.model);
             }
-            config.router.navigate(href, {trigger: true});
         },
         onClickEdit: function () {
             var modal;
