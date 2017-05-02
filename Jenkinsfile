@@ -12,6 +12,8 @@ node {
                 sh 'git pull'
             }
 
+            stage('Build') {
+
             parallel 'Build UI': {
              docker.image('node:onbuild').inside('-u root') {
                                sh 'make build-statics'
@@ -24,6 +26,7 @@ node {
                  }
                  archiveArtifacts artifacts: 'bin/*'
 
+            }
             }
 
            withEnv(["IMAGE_POSTFIX=dev-golang"]) {
