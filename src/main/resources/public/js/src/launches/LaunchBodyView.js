@@ -107,7 +107,7 @@ define(function (require, exports, module) {
         },
         onChangeItemCrumbs: function(launchModel, parentModel, optionsURL, nextItemId) {
             var self = this;
-            this.collectionItems.update(launchModel, parentModel, optionsURL)
+            this.collectionItems.update(launchModel, parentModel, optionsURL, this.crumbs)
                 .done(function() {
                     self.onChangePathId();
                 })
@@ -244,6 +244,7 @@ define(function (require, exports, module) {
                 filterModel: info.filterModel,
                 model: (info.launchModel || info.parentModel),
                 collectionItems: this.collectionItems,
+                crumbs: this.crumbs
             });
             this.body.onShow && this.body.onShow();
         },

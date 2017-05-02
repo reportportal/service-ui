@@ -81,6 +81,7 @@ define(function (require, exports, module) {
             !firstInit && config.router.navigate(this.collectionItems.getPathByLogItemId(curOptions.item), {trigger: false});
             var itemModelFromCollection = this.collectionItems.get(itemModel.id);
             if (itemModelFromCollection) {
+                itemModel.set('urlMiddlePart', itemModelFromCollection.get('urlMiddlePart'));
                 itemModel.set('path_names', itemModelFromCollection.get('path_names'));
             }
 
@@ -89,7 +90,7 @@ define(function (require, exports, module) {
                 el: $('[data-js-item-info]', this.$el),
                 context: this.context,
                 itemModel: itemModel,
-                launchModel: this.launchModel,
+                launchModel: this.launchModel
             });
             this.listenTo(this.historyItem, 'goToLog', this.goToLog);
             this.listenTo(this.historyItem, 'change:issue', this.onChangeItemIssue);
