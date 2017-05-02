@@ -13,3 +13,4 @@
 ### Bugfixes
 
 * EPMRPP-25178 - limited minimum height (415px) for application in desktop view.
+* EPMRPP-25364 - fixed link for test item containing logs
