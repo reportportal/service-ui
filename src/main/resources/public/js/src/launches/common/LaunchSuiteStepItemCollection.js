@@ -24,7 +24,7 @@ define(function (require) {
     var Backbone = require('backbone');
     var $ = require('jquery');
     var _ = require('underscore');
-
+    var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var FilterModel = require('filters/FilterModel');
 
@@ -379,11 +379,12 @@ define(function (require) {
             var filterOptions = this.filterModel.getOptions();
             _.each(response.content, function (modelData) {
                 var modelItemData = modelData;
+                var urlPart = self.crumbs.collection.models[self.crumbs.collection.length - 1].get('url').split('#' + (new SingletonAppModel()).get('projectId') + '/launches/')[1]
                 modelItemData.issue && (modelItemData.issue = JSON.stringify(modelItemData.issue));
                 modelItemData.tags && (modelItemData.tags = JSON.stringify(modelItemData.tags));
                 modelItemData.urlMiddlePart =
-                    self.crumbs.collection.models[self.crumbs.collection.length - 1].get('url').split('launches/all')[1]
-                    + ((~self.crumbs.collection.models[self.crumbs.collection.length - 1].get('url').split('launches/all')[1].indexOf('?')) ? '&' : '?')
+                    urlPart
+                    + ((~urlPart.indexOf('?')) ? '&' : '?')
                     + 'page.page=' + self.pagingData.number
                     + '&page.size=' + self.pagingData.size;
                 _.each(filterOptions, function (item) {
