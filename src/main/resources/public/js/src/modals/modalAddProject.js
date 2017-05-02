@@ -100,6 +100,7 @@ define(function (require) {
                 .fail(function (error) {
                     self.hideLoading();
                     Util.ajaxFailMessenger(error, 'projectCreate');
+                    self.$project.trigger('validate:error');
                 });
         }
     });

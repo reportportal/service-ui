@@ -710,13 +710,13 @@ define(function (require, exports, module) {
                 }
                 if (error.status === 409 || error.status === 422) {
                     // resource duplication
-                    message = response.message.split('.')[0] || Localization.failMessages.duplicatedRecourse;
+                    message = response.message || Localization.failMessages.duplicatedRecourse;
                 } else if (type) {
                     if (response && response.message) {
-                        message = Localization.failMessages[type] + ' : ' + response.message.split('.')[0];
+                        message = Localization.failMessages[type] + ' : ' + response.message;
                     }
                 } else if (response && response.message) {
-                    message = response.message.replace('{}', '');
+                    message = response.message;
                 }
             } else {
                 message = (Localization.failMessages[type] || Localization.failMessages.defaults) + (message ? ' : ' + message : '');
@@ -1032,38 +1032,39 @@ define(function (require, exports, module) {
             el.closest('ul').find('.active').removeClass('active');
             el.addClass('active');
         },
-        hintValidator: function ($el, options) {
+        hintValidator: function ($el, initOptions) {
             var $holder = $el.closest('.form-group, .rp-form-group, label, .rp-field');
             var $hintBlock = $('> .validate-hint', $holder);
             var validators = [];
-
-            if (!_.isArray(options)) {
-                options = [options];
-            }
-            _.each(options, function (option) {
-                if (option.max) {
-                    $el.attr('maxLength', option.max);
+            var showResult = function (result) {
+                if (result) {
+                    $hintBlock.html(result).addClass('show-hint');
                 }
-                if (Validators[option.validator]) {
-                    validators.push({ validate: Validators[option.validator], options: option });
-                }
-            });
+            };
+            var hideResult = function () {
+                $hintBlock.removeClass('show-hint');
+            };
+            var triggerDebounce = _.debounce(function () {
+                $el.trigger('validation:success');
+            }, 500);
             var validate = function () {
                 var result = '';
+                var message = '';
                 _.each(validators, function (validator) {
                     var val = validator.options.noTrim ? $el.val() : $el.val().trim();
                     if (validator.options.remote) {
-                        $.when(validator.validate(val, validator.options, Util)).done(function (data) {
-                            if (!data.valid) {
-                                var message = validator.options.message;
-                                result += message + '</br>';
-                                $holder.addClass('validate-error');
-                            }
-                            showResult(result);
-                            $el.trigger('validation::change');
-                        });
+                        $.when(validator.validate(val, validator.options, Util))
+                            .done(function (data) {
+                                if (!data.valid) {
+                                    message = validator.options.message;
+                                    result += message + '</br>';
+                                    $holder.addClass('validate-error');
+                                }
+                                showResult(result);
+                                $el.trigger('validation::change');
+                            });
                     } else {
-                        var message = validator.validate(val, validator.options, Util);
+                        message = validator.validate(val, validator.options, Util);
                         if (message) {
                             result = !result ? message + '</br>' : result;
                         }
@@ -1078,17 +1079,15 @@ define(function (require, exports, module) {
                 $el.data('validate-error', result);
                 return result;
             };
-            var showResult = function (result) {
-                if (result) {
-                    $hintBlock.html(result).addClass('show-hint');
+            var options = _.isArray(initOptions) ? initOptions : [initOptions];
+            _.each(options, function (option) {
+                if (option.max) {
+                    $el.attr('maxLength', option.max);
                 }
-            };
-            var hideResult = function () {
-                $hintBlock.removeClass('show-hint');
-            };
-            var triggerDebounce = _.debounce(function () {
-                $el.trigger('validation:success');
-            }, 500);
+                if (Validators[option.validator]) {
+                    validators.push({ validate: Validators[option.validator], options: option });
+                }
+            });
             $el.on('keyup', function (e) {
                 if (e.keyCode && (e.keyCode === 9 || e.keyCode === 37 || e.keyCode === 38 || e.keyCode === 39 || e.keyCode === 40)) {
                     return;
@@ -1108,6 +1107,9 @@ define(function (require, exports, module) {
                 })
                 .on('validate', function () {
                     validate();
+                })
+                .on('validate:error', function () {
+                    $holder.addClass('validate-error');
                 })
                 .on('blur', function () {
                     hideResult();
