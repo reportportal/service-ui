@@ -13,3 +13,4 @@
 ### Bugfixes
 
 * EPMRPP-25178 - limited minimum height (415px) for application in desktop view.
+* EPMRPP-25182 - fixed backlinks after bug posting.
