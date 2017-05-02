@@ -12,22 +12,18 @@ node {
                 sh 'git pull'
             }
 
-            parallel firstBranch: {
+            parallel 'Build UI': {
+             docker.image('node:onbuild').inside('-u root') {
+                               sh 'make build-statics'
+             }
 
-            stage('Build UI') {
-                docker.image('node:onbuild').inside('-u root') {
-                   sh 'make build-statics'
-                 }
-            }
-
-            }, secondBranch: {stage('Build Server') {
+            }, 'Build Server': {
                  // Export environment variables pointing to the directory where Go was installed
                  docker.image('golang:1.8.1').inside("-u root -e GOPATH=${env.WORKSPACE}")  {
                         sh 'PATH=$PATH:$GOPATH/bin && make build-server'
                  }
                  archiveArtifacts artifacts: 'bin/*'
 
-            }
             }
 
            withEnv(["IMAGE_POSTFIX=dev-golang"]) {
