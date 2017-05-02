@@ -55,7 +55,8 @@ define(function (require, exports, module) {
             this.noChildFilter = false;
             this.context = options.context;
         },
-        update: function(launchModel, parentModel, optionsURL) {
+        update: function(launchModel, parentModel, optionsURL, crumbs) {
+            this.crumbs = crumbs;
             this.pagingPage = 1;
             this.pagingTotalPages = 1;
             var async = $.Deferred();
@@ -364,11 +365,21 @@ define(function (require, exports, module) {
         },
         parse: function (response) {
             var self = this;
+            var filterOptions = this.filterModel.getOptions();
             _.each(response.content, function(modelData) {
                 modelData.issue && (modelData.issue = JSON.stringify(modelData.issue));
                 modelData.tags && (modelData.tags = JSON.stringify(modelData.tags));
-                modelData.paging_page = self.pagingData.number;
-                modelData.paging_size = self.pagingData.size;
+                modelData.urlMiddlePart =
+                    self.crumbs.collection.models[self.crumbs.collection.length - 1].get('url').split('launches/all')[1]
+                    + ((~self.crumbs.collection.models[self.crumbs.collection.length - 1].get('url').split('launches/all')[1].indexOf('?')) ? '&' : '?')
+                    + 'page.page=' + self.pagingData.number
+                    + '&page.size=' + self.pagingData.size;
+                _.each(filterOptions, function (item) {
+                    if (!~modelData.urlMiddlePart.indexOf(item)) {
+                        modelData.urlMiddlePart += '&' + item;
+                    }
+                    modelData.urlMiddlePart = modelData.urlMiddlePart.replace('|', encodeURIComponent('|'));
+                });
                 if (self.launchModel) {
                     modelData.parent_launch_owner = self.launchModel.get('owner');
                     modelData.parent_launch_status = self.launchModel.get('status');
