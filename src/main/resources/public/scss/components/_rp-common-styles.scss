@@ -51,8 +51,11 @@ body {
   font-size: 13px;
   font-family: $OpenSansRegular;
   min-width: 320px;
-  min-height: 415px;
   background: #e4e5e6;
+
+  @media (min-width: $SCREEN_SM_MIN) {
+    min-height: 415px;
+  }
 }
 
 ul, ol {

@@ -8,9 +8,8 @@
 * Initial release to Public Maven Repositories
 * DockerHub Release 
 * EPMRPP-25355 - Implemented tablet view for login pages.
+* EPMRPP-25356 - Implemented tablet view for registration pages.
 
 ### Bugfixes
 
-
-
-
+* EPMRPP-25178 - limited minimum height (415px) for application in desktop view.

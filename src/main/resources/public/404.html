@@ -114,11 +114,16 @@
             color: #464547;
         }
         .content-err::after{
+             background-repeat: no-repeat;
              position: absolute;
              top: 170px;
              left: 50%;
              margin-left: -152px;
-             content: url('compiled/img/404/404.svg');
+             content: "";
+             background-image: url('compiled/img/404/404.svg');
+             width: 294px;
+             height: 119px;
+             background-size: contain;
          }
         .content-action {
             position: relative;
@@ -150,20 +155,7 @@
             min-height: 520px;
             overflow: hidden;
         }
-        /* view max-width - 321px and min-width - 768px */
-        @media  (max-width: 768px) {
-            .content-err-txt {
-                padding-top: 300px;
-            }
-        }
 
-        /* mobile view max-width - 320px */
-        @media (max-width: 320px) {
-            .content-err-txt {
-                padding-top: 390px;
-            }
-        }
-        /*----------------------------------------------------------------*/
         .round{
             border-radius: 50%;
             opacity: 0.3;
@@ -268,6 +260,12 @@
             99%{ opacity: 1; transform:rotate(-35deg) translateX(800px); }
             100% {opacity: 0; transform:rotate(-35deg) translateX(800px);}
         }
+        @keyframes Rocket-mobile {
+            0%{ opacity: 0;}
+            1% {opacity: 1;  transform: translateX(220px) scale(-1,1); }
+            99%{ opacity: 1; transform: translateX(-550px) scale(-1,1); }
+            100% {opacity: 0; transform: translateX(-550px) scale(-1,1);}
+        }
         @keyframes OrbitRotation {
             from{ transform: rotate(0deg) ; }
             to{ transform: rotate(360deg) ; }
@@ -336,7 +334,100 @@
             50% {opacity: 0.3;}
             100% { opacity: 1;}
         }
+        /* view max-width - 321px and min-width - 768px */
+        @media  (max-width: 768px) {
+            .content-err-txt {
+                padding-top: 300px;
+            }
+        }
+        @media (max-width: 500px){
+            .round-1{
+                width: 258px;
+                height: 258px;
+                margin-top: -129px;
+                margin-left: -129px;
+            }
+            .round-2{
+                width: 360px;
+                height:  360px;
+                margin-top: -180px;
+                margin-left: -180px;
+            }
+            .round-3{
+                width: 474px;
+                height: 474px;
+                margin-top: -237px;
+                margin-left: -237px;
+            }
+            .round-4{
+                width: 610px;
+                height: 610px;
+                margin-top: -305px;
+                margin-left: -305px;
+            }
+            .content-err::after{
+                width: 192px;
+                height: 78px;
+                margin-left: -91px;
+                top: 176px;
+            }
+            .content-err-txt {
+                padding-top: 280px;
+            }
+            .content-action a{
+                padding: 8px 10px;
+                left: 2px;
+                top: 2px;
+            }
+            .red-planet div {
+                top: 5px;
+                left: 25px;
+                width: 40px;
+                height: 40px;
+                background-size: cover;
+            }
+            .bones, .dog, .orange-planet, .saturn, .orange-planet div, .saturn div {
+                animation: unset;
+                display:none;
+            }
+            .content-err-txt .content-err-greeting{
+                margin-bottom: 17px;
+            }
+            .rocket{
+                top: 360px;
+                transform: scale(-1,1);
+                left: 220px;
+                width: 60px;
+                height: 20px;
+                background-size: cover;
+                animation: Rocket-mobile 6s ease-in infinite;
+            }
+            .layer-1 {
+                top: -93px;
+                background-image: url(compiled/img/404/Mobile_404_stars1.svg);
+            }
+            .stars{
+                width: 320px;
+                height: 568px;
+                margin-left: 0;
+                left: 0;
+            }
+            .layer-2 {
+                top: -93px;
+                background-image: url(compiled/img/404/Mobile_404_stars2.svg);
+            }
+            .content-logotip .logo{
+                position: relative;
+                background-image: url(compiled/img/404/mobile-logo.svg);
+                margin: 0 auto;
+                left: 0;
+                width: 150px;
+                top: 0;
+                height: 60px;
+            }
+        }
 
+        /*----------------------------------------------------------------*/
     </style>
     <div class="content-logotip">
         <a href="/" class="logo"></a>

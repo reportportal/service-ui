@@ -361,6 +361,10 @@
     a {
       cursor: pointer;
     }
+    a.not-link{
+      cursor: default;
+      color: #333;
+    }
   }
   .counter-grid-cell {
     .defect-to-investigate {

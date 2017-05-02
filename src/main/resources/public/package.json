@@ -8,7 +8,8 @@
     "grunt": "grunt",
     "build": "grunt build",
     "server": "webpack-dev-server --config config-server.js",
-    "tests": "karma start"
+    "tests": "karma start",
+    "test": "karma start --single-run"
   },
   "author": "me",
   "license": "ISC",
@@ -37,8 +38,9 @@
     "grunt-sync": "^0.2.0",
     "grunt-usemin": "^3.1.1",
     "jasmine-core": "^2.3.4",
-    "karma": "^0.13.20",
+    "karma": "^0.13.22",
     "karma-chrome-launcher": "^0.2.0",
+    "karma-coverage": "^1.1.1",
     "karma-jasmine": "^0.3.6",
     "karma-jasmine-jquery": "^0.1.1",
     "karma-phantomjs-launcher": "^1.0.1",

@@ -1,33 +1,34 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
+    var $ = require('jquery');
     var fixedClass = 'fixed-block';
     var App = require('app');
     var config = App.getInstance();
 
     var StickyHeader = function (options) {
-        if (!options.fixedBlock || options.fixedBlock.length == 0) {
+        if (!options.fixedBlock || options.fixedBlock.length === 0) {
             console.log('StickyHeader: fixed block not defined');
             return;
         }
@@ -37,18 +38,16 @@ define(function (require, exports, module) {
         this.clearOriginBlock();
         this.cloneBlock = this.originBlock.clone();
 
-        this.scrollTop = config.mainScrollElement.scrollTop();
-
         this.isShow = null;
         this.activate = true;
         this.checkWindowWidth($(window).width());
 
         this.originBlock.after(this.cloneBlock);
+        this.scrollTop = config.mainScrollElement.scrollTop();
         this.sync();
 
         this.bindScrollChange = this.scrollChange.bind(this);
         this.bindResize = this.resize.bind(this);
-
 
 
         $.subscribe('scroll:change', this.bindScrollChange);
@@ -72,8 +71,8 @@ define(function (require, exports, module) {
         this.sync();
         this.checkScroll();
     };
-    StickyHeader.prototype.checkWindowWidth = function(width) {
-        if(width < this.minWidthWindow) {
+    StickyHeader.prototype.checkWindowWidth = function (width) {
+        if (width < this.minWidthWindow) {
             this.activate = false;
             this.hide();
             this.clearOriginBlock();
@@ -86,7 +85,7 @@ define(function (require, exports, module) {
         if (!this.isShow) {
             showBlock = this.originBlock;
         }
-        this.originBlockTop = showBlock.offset().top + this.scrollTop - this.topMargin;
+        this.originBlockTop = (showBlock.offset().top + this.scrollTop) - this.topMargin;
         this.syncWidth();
     };
 
@@ -96,7 +95,7 @@ define(function (require, exports, module) {
         }
     };
 
-    StickyHeader.prototype.checkScroll = function (){
+    StickyHeader.prototype.checkScroll = function () {
         if (this.activate) {
             if (this.scrollTop >= this.originBlockTop) {
                 this.show();
@@ -109,8 +108,8 @@ define(function (require, exports, module) {
     StickyHeader.prototype.show = function () {
         if (this.isShow == null || !this.isShow) {
             this.isShow = true;
-            this.originBlock.addClass(fixedClass).css({top: this.topMargin});
-            this.cloneBlock.css({display: 'block'});
+            this.originBlock.addClass(fixedClass).css({ top: this.topMargin });
+            this.cloneBlock.css({ display: 'block' });
             this.syncWidth();
         }
     };
@@ -119,29 +118,29 @@ define(function (require, exports, module) {
         if (this.isShow == null || this.isShow) {
             this.isShow = false;
             this.clearOriginBlock();
-            this.cloneBlock.css({display: 'none'});
+            this.cloneBlock.css({ display: 'none' });
         }
     };
 
-    StickyHeader.prototype.clearOriginBlock = function() {
+    StickyHeader.prototype.clearOriginBlock = function () {
         this.originBlock.removeClass(fixedClass).attr('style', '');
     };
 
     StickyHeader.prototype.updateClone = function () {
         this.cloneBlock.remove();
         this.cloneBlock = this.originBlock.clone();
-        this.cloneBlock.addClass(fixedClass).css({top: 0});
+        this.cloneBlock.addClass(fixedClass).css({ top: 0 });
         this.sync();
         this.originBlock.after(this.cloneBlock);
         this.checkScroll();
     };
 
     StickyHeader.prototype.destroy = function () {
-        if(this.originBlock) {
+        if (this.originBlock) {
             this.cloneBlock.remove();
             this.clearOriginBlock();
         }
-        $.unsubscribe("scroll:change", this.bindScrollChange);
+        $.unsubscribe('scroll:change', this.bindScrollChange);
         $.unsubscribe('window:resize', this.bindResize);
     };
 
