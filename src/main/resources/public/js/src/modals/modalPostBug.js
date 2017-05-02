@@ -533,7 +533,7 @@ define(function (require) {
 
         getLinks: function () {
             var backLink = {};
-            var backlinkFirstPart = window.location.protocol + '//' + window.location.host + '/ui/#' + this.appModel.get('projectId') + '/launches/all';
+            var backlinkFirstPart = window.location.protocol + '//' + window.location.host + '/#' + this.appModel.get('projectId') + '/launches/';
             var backlinkMiddlePart;
             _.forEach(this.items, function (item) {
                 backlinkMiddlePart = item.get('urlMiddlePart');
