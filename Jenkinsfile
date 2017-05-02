@@ -28,6 +28,7 @@ node {
                  archiveArtifacts artifacts: 'bin/*'
 
             }
+            }
 
            withEnv(["IMAGE_POSTFIX=dev-golang"]) {
                  docker.withServer("$DOCKER_HOST") {
