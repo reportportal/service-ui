@@ -20,6 +20,11 @@
  */
 
 .login-login-auth-button {
+
+  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+    display: inline-block;
+    margin-right: 10px;
+  }
   .rp-btn {
     margin: 0 auto 10px auto;
     display: inline-block;
@@ -39,8 +44,8 @@
       margin-right: 8px;
     }
 
-    @media (max-width: 1010px) {
+    @media (max-width: $SCREEN_XS_MAX) {
       margin-bottom: 25px;
     }
-}
+  }
 }

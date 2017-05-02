@@ -32,8 +32,20 @@
     height: 100%;
     border-radius: 2px;
     box-shadow: 0 1px 3px 0 $COLOR--skipped;
+    @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+      background-color: $COLOR--light-blue;
+      background-repeat: no-repeat;
+      -webkit-background-size: 100%;
+      background-size: 100%;
+      background-image: url(../../img/login/login-tablet.svg);
+    }
   }
-  @media (max-width: 1010px) {
+  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+    width: 768px;
+    height: 1044px;
+    padding-bottom: 20px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
     width: 320px;
     height: auto;
   }
@@ -49,7 +61,17 @@
     -webkit-background-size: 100%;
     background-size: 100%;
 
-    @media (max-width: 1010px) {
+    @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+      float: none;
+      position: absolute;
+      height: 255px;
+      width: 668px;
+      bottom: 0;
+      left: 50px;
+      padding: 0;
+      background-image: none;
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
       display: none;
     }
 
@@ -61,6 +83,13 @@
       -webkit-background-size: 100%;
       background-size: 100%;
       cursor: pointer;
+
+      @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+        position: absolute;
+        top: -720px;
+        left: 0;
+        z-index: 1;
+      }
     }
 
     .post-wrapper {
@@ -68,6 +97,10 @@
       width: 100%;
       height: 545px;
       margin-bottom: 20px;
+
+      @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+        height: 160px;
+      }
     }
 
     .separator {
@@ -76,6 +109,11 @@
       margin-bottom: 30px;
       border-top: 1px solid #6f898d;
       opacity: 0.2;
+
+      @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+        margin-top: 30px;
+        margin-bottom: 5px;
+      }
     }
 
     .socials-block {
@@ -89,6 +127,10 @@
         margin-right: 30px;
         background-repeat: no-repeat;
         background-position: center;
+
+        @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+          margin-right: 60px;
+        }
 
         &.gh-icon {
           background-image: url(../../img/login/socials/socialGh.svg);
@@ -121,7 +163,20 @@
     padding: 60px;
     background-color: $COLOR--white-default;
 
-    @media (max-width: 1010px) {
+    @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+      float: none;
+      position: absolute;
+      height: auto;
+      width: 668px;
+      top: 83px;
+      left: 50px;
+      padding: 0;
+      max-height: 640px;
+      overflow-y: hidden;
+      box-shadow: 0 1px 3px 0 $COLOR--skipped;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
       width: 100%;
       padding: 0 0 146px 0;
     }
@@ -129,6 +184,14 @@
     .subpage-container {
       width: 100%;
       height: 100%;
+      background-color: $COLOR--white-default;
+
+      @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+        height: auto;
+        width: 100%;
+        margin: 0;
+        padding: 50px 30px 0 30px;
+      }
     }
 
     .services {
@@ -137,7 +200,16 @@
       padding-bottom: 60px;
       bottom: 0;
 
-      @media (max-width: 1010px) {
+      @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+        position: static;
+        margin: 0;
+        width: 100%;
+        background-color: $COLOR--white-default;
+        padding: 30px 30px 50px;
+        bottom: initial;
+      }
+
+      @media (max-width: $SCREEN_XS_MAX) {
         width: 100%;
         padding: 20px;
       }
@@ -145,7 +217,7 @@
         font-size: 12px;
         color: $COLOR--gray-47;
 
-        @media (max-width: 1010px) {
+        @media (max-width: $SCREEN_XS_MAX) {
           position: absolute;
           display: inline-block;
         }
@@ -154,7 +226,7 @@
         font-size: 11px;
         color: $COLOR--charcoal-grey;
 
-        @media (max-width: 1010px) {
+        @media (max-width: $SCREEN_XS_MAX) {
           width: 100%;
           display: inline-block;
         }
@@ -163,7 +235,7 @@
           margin-left: 13px;
 
           &:first-child {
-            @media (max-width: 1010px) {
+            @media (max-width: $SCREEN_XS_MAX) {
               margin-left: 99px;
             }
           }
@@ -180,7 +252,7 @@
         font-size: 12px;
         color: $COLOR--gray-47;
 
-        @media (max-width: 1010px) {
+        @media (max-width: $SCREEN_XS_MAX) {
           display: none;
         }
 
