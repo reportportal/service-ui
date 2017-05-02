@@ -102,13 +102,14 @@ define(function(require, exports, module) {
                 })
         },
         update: function(ids) {
+            var async = $.Deferred();
             if(!ids) {
                 ids = _.map(this.models, function(model) {
                     return model.get('id');
                 })
             }
             var self = this;
-            return call('GET', Urls.getFilters(ids))
+            call('GET', Urls.getFilters(ids))
                 .done(function(data) {
                     (new SingletonDefectTypeCollection).ready.done(function () {
                         self.reset(_.map(data, function(item){
@@ -118,8 +119,10 @@ define(function(require, exports, module) {
                             item.selection_parameters = JSON.stringify(item.selection_parameters);
                             return item;
                         }));
+                        async.resolve();
                     })
                 })
+            return async;
         },
         generateTempModel: function(data) {
             var data = data || {};
@@ -144,7 +147,7 @@ define(function(require, exports, module) {
                 _.each(self.models, function(model) {
                     model.set({active: false});
                 });
-                var activeModel = self.findWhere({id: filterId})
+                var activeModel = self.findWhere({id: filterId});
                 if(activeModel) {
                     activeModel.set({active: true});
                     answer.resolve(activeModel);
