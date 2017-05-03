@@ -13,6 +13,5 @@
 ### Bugfixes
 
 * EPMRPP-25178 - limited minimum height (415px) for application in desktop view.
+* EPMRPP-25182 - fixed backlinks after bug posting.
 * EPMRPP-25331 - fixed twitter messages on login page for mobile
-
-
