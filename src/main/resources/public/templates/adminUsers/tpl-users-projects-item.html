@@ -2,7 +2,7 @@
     <div class="project-name" data-js-project></div>
 </div>
 <div class="grid-cell project-role-cell">
-    <div class="user-select-role">
+    <div class="user-select-role" data-js-user-select-role>
         <div class="rp-btn-group rp-width-100">
             <button type="button" class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle" data-toggle="dropdown">
                 <span class="select-value" data-js-project-role></span>
@@ -18,6 +18,9 @@
                 <% }); %>
             </ul>
         </div>
+    </div>
+    <div data-js-admin-role class="admin-role">
+        <%= data.text.admin.privileges %>
     </div>
 </div>
 <div class="grid-cell project-action-cell">

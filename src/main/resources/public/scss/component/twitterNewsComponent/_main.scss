@@ -19,16 +19,5 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'swipe-gallery';
-@import 'select2-container';
-@import 'main-breadcrumbs';
-
-@import 'switcher-big';
-@import 'dropdown-menu';
-@import 'user-search-select2-dropdown';
-@import 'drop-down-component';
-@import 'beta-badge';
-@import 'colorPicker';
-@import 'markdown/MarkdownEditor';
-@import 'markdown/common';
-@import 'twitterNewsComponent/main';
+@import 'twitter-news-component';
+@import 'twitter-news-item';

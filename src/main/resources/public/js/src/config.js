@@ -87,7 +87,6 @@ require.config({
         'mainview': 'main-view',
         'widgets': 'widget/widgets',
         //'favorites': 'favorites/favorites',
-        // 'filters': 'filter/filters',
         // 'dashboard': 'dashboard/dashboard-view',
         'context': 'context',
 
@@ -100,9 +99,6 @@ require.config({
         'users': 'admin/users',
         'settings': 'admin/settings',
         'adminService': 'admin/service',
-        'filtersPanel': 'filter/filters-panel',
-        'filtersResolver': 'filter/filters-resolver',
-        'filtersService': 'filter/filters-service',
         'widgetWizard': 'wizard/widget',
         'helpers': 'core/helpers',
         'storageService': 'core/storage-service',

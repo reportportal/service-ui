@@ -18,17 +18,30 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function (require, exports, module) {
+    'use strict';
 
-@import 'swipe-gallery';
-@import 'select2-container';
-@import 'main-breadcrumbs';
+    var $ = require('jquery');
+    var Epoxy = require('backbone-epoxy');
+    var Util = require('util');
 
-@import 'switcher-big';
-@import 'dropdown-menu';
-@import 'user-search-select2-dropdown';
-@import 'drop-down-component';
-@import 'beta-badge';
-@import 'colorPicker';
-@import 'markdown/MarkdownEditor';
-@import 'markdown/common';
-@import 'twitterNewsComponent/main';
+    var TwitterNewsItemView = Epoxy.View.extend({
+        className: 'post-news-item',
+        template: 'tpl-twitter-news-item',
+        events: {
+        },
+        bindings: {
+            '[data-js-text]': 'html: textHtml',
+        },
+
+        initialize: function() {
+            this.render();
+        },
+        render: function() {
+            this.$el.html(Util.templates(this.template));
+        },
+    });
+
+
+    return TwitterNewsItemView;
+});
