@@ -59,22 +59,24 @@ define(function (require) {
             if (pathPart.length <= 1) {
                 this.onChangeLevel('LAUNCH');
             }
-            if (this.filterId === 'all') {
-                this.launchFilterCollection.activateFilter(this.filterId);
-                self.body.update(pathPart, query);
-            } else {
-                this.launchFilterCollection.activateFilter(this.filterId)
-                    .fail(function () {
-                        // set "all launches" if filter not exist
-                        setTimeout(function () { // for return render function (logic context)
-                            config.router.navigate(self.header.model.get('url') + (options.subContext[2] || ''), { trigger: true });
+            this.launchFilterCollection.ready.done(function () {
+                if (self.filterId === 'all') {
+                    self.launchFilterCollection.activateFilter(self.filterId);
+                    self.body.update(pathPart, query);
+                } else {
+                    self.launchFilterCollection.activateFilter(self.filterId)
+                        .fail(function () {
+                            // set "all launches" if filter not exist
+                            setTimeout(function () { // for return render function (logic context)
+                                config.router.navigate(self.header.model.get('url') + (options.subContext[2] || ''), { trigger: true });
+                            });
+                            self.header.onChangeActiveFilter();
+                        })
+                        .done(function () {
+                            self.body.update(pathPart, query);
                         });
-                        self.header.onChangeActiveFilter();
-                    })
-                    .done(function () {
-                        self.body.update(pathPart, query);
-                    });
-            }
+                }
+            });
         },
         onDestroy: function () {
             this.header.destroy();

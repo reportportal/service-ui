@@ -533,30 +533,12 @@ define(function (require) {
 
         getLinks: function () {
             var backLink = {};
-            var backlinkFirstPart = window.location.protocol + '//' + window.location.host + '/ui/#' + this.appModel.get('projectId') + '/launches/all';
+            var backlinkFirstPart = window.location.protocol + '//' + window.location.host + '/#' + this.appModel.get('projectId') + '/launches/';
             var backlinkMiddlePart;
-            var id;
-            if (this.items.length > 1) {
-                _.forEach(this.items, function (item) {
-                    backlinkMiddlePart = '/' + item.get('launchId');
-
-                    for (var key in item.get('path_names')) {
-                        backlinkMiddlePart += '/' + key;
-                    }
-
-                    backLink[item.id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + item.id + '&page.page=' + item.get('paging_page') + '&page.size=' + item.get('paging_size');
-                });
-            } else {
-                id = this.items[0].id;
-
-                backlinkMiddlePart = '/' + this.items[0].get('launchId');
-
-                for (var key in this.items[0].get('path_names')) {
-                    backlinkMiddlePart += '/' + key;
-                }
-
-                backLink[id] = backlinkFirstPart + backlinkMiddlePart + '?log.item=' + id + '&page.page=' + this.items[0].get('paging_page') + '&page.size=' + this.items[0].get('paging_size');
-            }
+            _.forEach(this.items, function (item) {
+                backlinkMiddlePart = item.get('urlMiddlePart');
+                backLink[item.id] = backlinkFirstPart + backlinkMiddlePart + '&log.item=' + item.id;
+            });
             return backLink;
         }
     });

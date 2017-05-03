@@ -13,4 +13,5 @@
 ### Bugfixes
 
 * EPMRPP-25178 - limited minimum height (415px) for application in desktop view.
+* EPMRPP-25182 - fixed backlinks after bug posting.
 * EPMRPP-25348 - fixed email validation for invite user modal
