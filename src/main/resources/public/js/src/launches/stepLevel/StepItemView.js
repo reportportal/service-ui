@@ -18,14 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
+    var _ = require('underscore');
     var Localization = require('localization');
     var ItemDurationView = require('launches/common/ItemDurationView');
     var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
@@ -56,134 +56,131 @@ define(function (require, exports, module) {
             '[data-js-time-from-now]': 'text: startFromNow',
             '[data-js-time-exact]': 'text: startFormat',
             ':el': 'classes: {failed: highlightedFailed, "select-state": select, "collapse-method": validateForCollapsed}',
-            '[data-js-select-item]': 'checked:select, attr: {disabled: launch_isProcessing}',
+            '[data-js-select-item]': 'checked:select, attr: {disabled: launch_isProcessing}'
         },
         bindingHandlers: {
             sortTags: {
-                set: function($element) {
+                set: function ($element) {
+                    var $tagsBlock;
                     var sortTags = this.view.model.get('sortTags');
-                    if(!sortTags.length){
+                    if (!sortTags.length) {
                         $element.addClass('hide');
                     } else {
                         $element.removeClass('hide');
                     }
-                    var $tagsBlock = $('[data-js-tags]', $element);
+                    $tagsBlock = $('[data-js-tags]', $element);
                     $tagsBlock.html('');
-                    _.each(sortTags, function(tag) {
-                        $tagsBlock.append('  <a data-js-tag="' + tag + '">' + tag.replaceTabs() + '</a>')
-                    })
+                    _.each(sortTags, function (tag) {
+                        $tagsBlock.append('  <a data-js-tag="' + tag + '">' + tag.replaceTabs() + '</a>');
+                    });
                 }
             }
         },
         computeds: {
             showMethodType: {
                 deps: ['type'],
-                get: function(type){
+                get: function (type) {
                     return Localization.testTableMethodTypes[type];
                 }
             },
             highlightedFailed: {
                 deps: ['status'],
-                get: function(status){
-                    return status == 'FAILED';
+                get: function (status) {
+                    return status === 'FAILED';
                 }
             },
             validateForCollapsed: {
                 deps: ['status', 'type'],
-                get: function(status, type){
-                    return (type.indexOf('METHOD')>=0 || type.indexOf('CLASS')>=0) && status !== 'FAILED';
+                get: function (status, type) {
+                    return (type.indexOf('METHOD') >= 0 || type.indexOf('CLASS') >= 0) && status !== 'FAILED';
                 }
             }
         },
-        initialize: function(options) {
+        initialize: function (options) {
+            var self = this;
             this.noIssue = options.noIssue;
             this.filterModel = options.filterModel;
             this.render();
             this.listenTo(this.model, 'scrollToAndHighlight', this.highlightItem);
-            var self = this;
-            this.markdownViewer = new MarkdownViewer({text: this.model.get('description')});
+            this.markdownViewer = new MarkdownViewer({ text: this.model.get('description') });
             $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
-            this.listenTo(this.model, 'change:description', function(model, description){ self.markdownViewer.update(description); });
+            this.listenTo(this.model, 'change:description', function (model, description) { self.markdownViewer.update(description); });
             this.listenTo(this.model, 'change:description change:tags change:issue', this.activateAccordion);
             this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {
-                model: this.model.toJSON({computed: true}),
+                model: this.model.toJSON({ computed: true }),
                 noIssue: this.noIssue,
                 isCollapsedMethod: this.isCollapsedMethod()
             }));
             this.renderDuration();
-            if(this.hasIssue() && !this.noIssue){
+            if (this.hasIssue() && !this.noIssue) {
                 this.renderIssue();
             }
         },
-        highlightItem: function() {
-            this.$el.prepend('<div class="highlight"></div>');
+        highlightItem: function () {
             var self = this;
-            config.mainScrollElement.animate({ scrollTop: this.el.offsetTop}, 500, function() {
+            this.$el.prepend('<div class="highlight"></div>');
+            config.mainScrollElement.animate({ scrollTop: this.el.offsetTop }, 500, function () {
                 self.$el.addClass('hide-highlight');
             });
-
         },
-        renderDuration: function(){
+        renderDuration: function () {
             this.duration && this.duration.destroy();
             this.duration = new ItemDurationView({
                 model: this.model,
                 el: $('[data-js-item-status]', this.$el)
             });
         },
-        toggleStartTimeView: function (e) {
-            this.model.collection.trigger('change:time:format')
+        toggleStartTimeView: function () {
+            this.model.collection.trigger('change:time:format');
         },
         isCollapsedMethod: function () {
-            return this.model.get('type') !== 'STEP' &&  this.model.get('status') !== 'FAILED';
+            return this.model.get('type') !== 'STEP' && this.model.get('status') !== 'FAILED';
         },
-        hasIssue: function(){
+        hasIssue: function () {
             var issue = this.model.get('issue');
-            return issue ? true : false;
+            return !!issue;
         },
-        renderIssue: function(){
+        renderIssue: function () {
             this.issueView = new StepLogDefectTypeView({
                 model: this.model,
                 el: $('[data-js-step-issue]', this.$el)
             });
             this.listenTo(this.issueView, 'load:comment', this.activateAccordion);
         },
-        onClickTag: function(e) {
+        onClickTag: function (e) {
             var tag = $(e.currentTarget).data('js-tag');
             this.filterModel && this.addFastFilter('tags', tag);
         },
-        addFastFilter: function(filterId, value) {
+        addFastFilter: function (filterId, value) {
             this.filterModel.trigger('add_entity', filterId, value);
         },
-        onClickName: function(e) {
-            e.preventDefault();
+        onClickName: function () {
             config.trackingDispatcher.trackEventNumber(23);
-            var href = $(e.currentTarget).attr('href');
-            if(this.model.get('has_childs')) {
+            if (this.model.get('has_childs')) {
                 this.model.trigger('drill:item', this.model);
             }
-            config.router.navigate(href, {trigger: true});
         },
-        onClickEdit: function() {
+        onClickEdit: function () {
             config.trackingDispatcher.trackEventNumber(149);
             var modal = new ModalLaunchItemEdit({
-                item: this.model,
-            })
+                item: this.model
+            });
             modal.show();
         },
-        onClickSelect: function(){
+        onClickSelect: function () {
             config.trackingDispatcher.trackEventNumber(152);
         },
-        activateAccordion: function() {
+        activateAccordion: function () {
             if (this.$el.innerHeight() > 198) {
                 this.$el.addClass('show-accordion');
             } else {
                 this.$el.removeClass('show-accordion');
             }
         },
-        onClickOpen: function() {
+        onClickOpen: function () {
             this.$el.toggleClass('open');
         },
         destroy: function () {
@@ -194,7 +191,7 @@ define(function (require, exports, module) {
             this.unbind();
             this.$el.html('');
             delete this;
-        },
+        }
     });
 
     return StepItemView;
