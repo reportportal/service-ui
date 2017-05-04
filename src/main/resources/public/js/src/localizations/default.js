@@ -1749,7 +1749,7 @@ define(['util'], function () {
             deleteBts: 'Are you sure you want to remove %%% project <b>\'%%%\'</b> from project settings?',
 
             dashboardDelete: 'Are you sure you want to delete dashboard <b>\'%%%\'</b>?',
-            dashboardDeleteDanger: 'User with PM privileges you can delete shared dashboards of other users. This can affect all users on the projects, if somebody else use it.<br>Are you sure you want to delete <b>\'%%%\'</b>?',
+            dashboardDeleteDanger: 'As a user with PM privileges you can delete shared dashboards of other users. This can affect all users on the projects, if somebody else use it.<br>Are you sure you want to delete <b>\'%%%\'</b>?',
 
             dashboardDeleteDangerConfirmText: 'I am sure I want to delete the dashboard',
             deletedWidget: 'Are you sure you want to remove widget <b>\'%%%\'</b>?',
