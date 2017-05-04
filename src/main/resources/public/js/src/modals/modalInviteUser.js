@@ -14,13 +14,12 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
     var Util = require('util');
@@ -75,7 +74,7 @@ define(function (require, exports, module) {
             $('[data-js-load]', this.$el).trigger('click');
         },
         onClickInvite: function () {
-            if (this.type == 'users') {
+            if (this.type === 'users') {
                 config.trackingDispatcher.trackEventNumber(471);
             } else {
                 config.trackingDispatcher.trackEventNumber(437);
@@ -103,14 +102,14 @@ define(function (require, exports, module) {
             this.setupProjectSearch();
         },
         isUsers: function () {
-            return this.type == 'users';
+            return this.type === 'users';
         },
         canSelectRole: function (role) {
-            var user = config.userModel,
-                userRole = user.getRoleForCurrentProject(),
-                userRoleIndex = _.indexOf(config.projectRoles, userRole),
-                roleIndex = _.indexOf(config.projectRoles, role),
-                isAdmin = user.get('isAdmin');
+            var user = config.userModel;
+            var userRole = user.getRoleForCurrentProject();
+            var userRoleIndex = _.indexOf(config.projectRoles, userRole);
+            var roleIndex = _.indexOf(config.projectRoles, role);
+            var isAdmin = user.get('isAdmin');
             return isAdmin || (user.hasPermissions() && userRoleIndex >= roleIndex);
         },
         setupAnchors: function () {
@@ -128,7 +127,8 @@ define(function (require, exports, module) {
             if (!this.isUsers()) {
                 UserSearchComponent.setupUserSearch(self.$usersField);
                 self.$usersField.on('change', function () {
-                    self.$usersField.valid && _.isFunction(self.$usersField.valid) && self.$usersField.valid();
+                    self.$usersField.valid && _.isFunction(self.$usersField.valid)
+                        && self.$usersField.valid();
                 });
             } else {
                 self.$usersField.addClass('rp-input-default rp-width-100 form-control');
@@ -143,11 +143,15 @@ define(function (require, exports, module) {
             }
         },
         remoteValidation: function () {
+            var self = this;
             return {
                 type: 'GET',
-                url:
-                    Urls.userInfoValidation(),
-                data: {},
+                url: Urls.userInfoValidation(),
+                data: {
+                    email: function () {
+                        return self.$usersField.val().trim();
+                    }
+                },
                 dataFilter: function (response) {
                     var data = JSON.parse(response);
                     return !data.is;
@@ -155,7 +159,6 @@ define(function (require, exports, module) {
             };
         },
         setupValidation: function () {
-            var self = this;
             $.validator.setDefaults({
                 debug: true,
                 success: 'valid'
@@ -196,16 +199,15 @@ define(function (require, exports, module) {
                 }
             });
             this.$selectProject.on('change', function () {
-                this.$selectProject.valid && _.isFunction(this.$selectProject.valid) && this.$selectProject.valid();
+                this.$selectProject.valid && _.isFunction(this.$selectProject.valid)
+                    && this.$selectProject.valid();
             }.bind(this));
         },
         selectRole: function (e) {
+            var link = $(e.target);
+            var val = (link.data('value')) ? link.data('value') : link.text();
             e.preventDefault();
-            var link = $(e.target),
-                btn = link.closest('.open').find('.dropdown-toggle'),
-                val = (link.data('value')) ? link.data('value') : link.text();
-
-            if (link.hasClass('disabled-option')) return;
+            if (link.hasClass('disabled-option')) { return; }
             this.model.set('projectRole', val);
         },
         setupProjectSearch: function () {
@@ -252,7 +254,7 @@ define(function (require, exports, module) {
             this.$inviteLink.select();
             try {
                 document.execCommand('copy');
-            } catch (err) {}
+            } catch (e) {}
         },
         getUserData: function () {
             var user = this.model.toJSON();
@@ -263,14 +265,14 @@ define(function (require, exports, module) {
             };
         },
         onClickClose: function () {
-            if (this.type == 'users') {
+            if (this.type === 'users') {
                 config.trackingDispatcher.trackEventNumber(469);
             } else {
                 config.trackingDispatcher.trackEventNumber(435);
             }
         },
         onClickCancel: function () {
-            if (this.type == 'users') {
+            if (this.type === 'users') {
                 config.trackingDispatcher.trackEventNumber(470);
             } else {
                 config.trackingDispatcher.trackEventNumber(436);
@@ -278,8 +280,9 @@ define(function (require, exports, module) {
         },
         assignUser: function () {
             var userData = this.getUserData();
+            var data;
             if (userData) {
-                var data = {};
+                data = {};
                 data[userData.email] = userData.role;
                 this.showLoading();
                 MembersService.assignMember(data, userData.default_project)
@@ -306,8 +309,8 @@ define(function (require, exports, module) {
                         Util.ajaxSuccessMessenger('inviteMember');
                     }.bind(this))
                     .fail(function (responce) {
-                        var messages = Localization.failMessages,
-                            error;
+                        // var messages = Localization.failMessages;
+                        var error;
                         if (responce) {
                             try {
                                 error = JSON.parse(responce.responseText);
