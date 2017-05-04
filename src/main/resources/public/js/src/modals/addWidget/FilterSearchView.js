@@ -292,7 +292,9 @@ define(function (require) {
                             self.setFilterModel(self.collection.get(self.model.get('filter_id')));
                         } else {
                             launchFilterCollection = new SingletonLaunchFilterCollection();
-                            self.setFilterModel(launchFilterCollection.get(self.model.get('filter_id')));
+                            launchFilterCollection.ready.done(function () {
+                                self.setFilterModel(launchFilterCollection.get(self.model.get('filter_id')));
+                            });
                         }
                     }
                     $('[data-js-select-filter-block]', self.$el)[(!data.content.length ? 'add' : 'remove') + 'Class']('hide');
