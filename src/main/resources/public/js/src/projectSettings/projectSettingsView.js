@@ -19,8 +19,9 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
-    "use strict";
+define(function (require) {
+    'use strict';
+
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
@@ -43,13 +44,13 @@ define(function (require, exports, module) {
         tpl: 'tpl-project-settings-shell',
 
         events: {
-            'click .tab.settings': 'getTab',
+            'click .tab.settings': 'getTab'
         },
 
         initialize: function (options) {
             this.adminPage = options.adminPage;
             this.projectId = options.projectId;
-            this.tab = options.tab || "general";
+            this.tab = options.tab || 'general';
             this.appModel = new SingletonAppModel();
             this.render();
         },
@@ -75,10 +76,11 @@ define(function (require, exports, module) {
         },
 
         renderTabContent: function () {
+            var ViewTab;
             this.tabView && this.tabView.destroy();
 
-            var viewTab = this.getTabView(this.tab);
-            this.tabView = new viewTab();
+            ViewTab = this.getTabView(this.tab);
+            this.tabView = new ViewTab();
 
             this.$tabContent.html(this.tabView.$el);
 
@@ -95,54 +97,50 @@ define(function (require, exports, module) {
             $('.users-typeahead.launches').select2('close');
             $('.users-typeahead.tags').select2('close');
             $('.users-typeahead.recipients').select2('close');
-            this.tab = tab || "general";
+            this.tab = tab || 'general';
             this.renderTabContent();
         },
 
         setupSelectDropDown: function () {
             this.tabSelector = new DropDownComponent({
                 data: [
-                    {name: 'GENERAL', value: 'general'},
-                    {name: 'NOTIFICATIONS', value: 'notifications'},
-                    {name: 'BUG TRACKING SYSTEM', value: 'bts'},
-                    {name: 'DEFECT TYPES', value: 'defect'},
-                    {name: 'DEMO DATA', value: 'demoData'}
+                    { name: 'GENERAL', value: 'general' },
+                    { name: 'NOTIFICATIONS', value: 'notifications' },
+                    { name: 'BUG TRACKING SYSTEM', value: 'bts' },
+                    { name: 'DEFECT TYPES', value: 'defect' },
+                    { name: 'DEMO DATA', value: 'demoData' }
                 ],
                 multiple: false,
-                defaultValue: this.tab,
+                defaultValue: this.tab
             });
             $('[data-js-nav-tabs-mobile]', this.$el).html(this.tabSelector.$el);
             this.listenTo(this.tabSelector, 'change', this.updateTabs);
         },
 
         isPersonalProjectOwner: function () {
-            var user = config.userModel.get('name'),
-                project = this.appModel.get('projectId'),
-                isPersonalProject = this.appModel.isPersonalProject();
+            var user = config.userModel.get('name');
+            var project = this.appModel.get('projectId');
+            var isPersonalProject = this.appModel.isPersonalProject();
             return isPersonalProject && project === user + '_personal';
         },
 
         getTabView: function (tab) {
             switch (tab) {
-                case 'notifications':
-                    config.trackingDispatcher.trackEventNumber(386);
-                    return NotificationsTabView;
-                    break;
-                case 'bts':
-                    config.trackingDispatcher.trackEventNumber(397);
-                    return BtsTabView;
-                    break;
-                case 'defect':
-                    config.trackingDispatcher.trackEventNumber(426);
-                    return DefectTabView;
-                    break;
-                case 'demoData':
-                    config.trackingDispatcher.trackEventNumber(427);
-                    return DemoDataTabView;
-                    break;
-                default:
-                    config.trackingDispatcher.trackEventNumber(380);
-                    return GeneralTabView;
+            case 'notifications':
+                config.trackingDispatcher.trackEventNumber(386);
+                return NotificationsTabView;
+            case 'bts':
+                config.trackingDispatcher.trackEventNumber(397);
+                return BtsTabView;
+            case 'defect':
+                config.trackingDispatcher.trackEventNumber(426);
+                return DefectTabView;
+            case 'demoData':
+                config.trackingDispatcher.trackEventNumber(427);
+                return DemoDataTabView;
+            default:
+                config.trackingDispatcher.trackEventNumber(380);
+                return GeneralTabView;
             }
         },
 
