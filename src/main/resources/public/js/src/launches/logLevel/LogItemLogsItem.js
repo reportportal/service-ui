@@ -107,22 +107,30 @@ define(function (require) {
             var isImage = contentType.indexOf('image/') > -1;
             var isValidForModal = _.contains(this.supportedLanguages, language) || isImage;
             var modal;
-            config.trackingDispatcher.trackEventNumber(212);
-            if (isValidForModal) {
+            var url;
+            e.preventDefault();
+            if (contentType === 'text/html') {
                 e.preventDefault();
-                // this.model.trigger('click:attachment', this.model); // open's image in gallery.
-                if (isImage) {
-                    modal = new ModalLogAttachmentImage({
-                        imageId: binaryId
-                    });
-                    modal.show();
-                } else {
-                    modal = new ModalLogAttachmentBinary({
-                        binaryId: binaryId,
-                        language: language,
-                        supportedLanguages: this.supportedLanguages
-                    });
-                    modal.show();
+                url = Urls.getFileById(binaryId);
+                window.open(url);
+            } else {
+                config.trackingDispatcher.trackEventNumber(212);
+                if (isValidForModal) {
+                    // this.model.trigger('click:attachment', this.model);
+                    // open's image in gallery.
+                    if (isImage) {
+                        modal = new ModalLogAttachmentImage({
+                            imageId: binaryId
+                        });
+                        modal.show();
+                    } else {
+                        modal = new ModalLogAttachmentBinary({
+                            binaryId: binaryId,
+                            language: language,
+                            supportedLanguages: this.supportedLanguages
+                        });
+                        modal.show();
+                    }
                 }
             }
         },
