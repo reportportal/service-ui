@@ -19,10 +19,21 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'login';
-@import 'login-login';
-@import 'login-reset';
-@import 'login-restore';
-@import 'login-login-auth-button';
-@import 'login-versions';
-@import 'login-versions-item';
+.login-versions-item {
+  font-size: 11px;
+  color: $COLOR--charcoal-grey;
+  &.expired {
+    color: #ed684f;
+  }
+  .service-name {
+    margin-left: 13px;
+
+    &:first-child {
+      @media (max-width: $SCREEN_XS_MAX) {
+        margin-left: 99px;
+      }
+    }
+
+
+  }
+}

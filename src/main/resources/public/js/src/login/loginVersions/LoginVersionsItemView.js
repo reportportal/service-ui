@@ -19,10 +19,32 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'login';
-@import 'login-login';
-@import 'login-reset';
-@import 'login-restore';
-@import 'login-login-auth-button';
-@import 'login-versions';
-@import 'login-versions-item';
+define(function (require) {
+    'use strict';
+
+    var Epoxy = require('backbone-epoxy');
+    var Util = require('util');
+
+    var LoginVersionsItemView = Epoxy.View.extend({
+        className: 'login-versions-item',
+        template: 'tpl-login-versions-item',
+        tagName: 'span',
+
+        bindings: {
+            '[data-js-service-name]': 'text: name',
+            '[data-js-service-version]': 'text: version',
+            ':el': 'classes: {expired: isNewVersion}, attr: {title: newVersionTitle}'
+        },
+
+        initialize: function () {
+            this.render();
+        },
+        render: function () {
+            this.$el.html(Util.templates(this.template, {}));
+        },
+        onDestroy: function () {
+        }
+    });
+
+    return LoginVersionsItemView;
+});
