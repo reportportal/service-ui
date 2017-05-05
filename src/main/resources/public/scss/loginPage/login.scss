@@ -200,7 +200,7 @@
       }
     }
 
-    .services {
+    .service-versions {
       position: absolute;
       width: 380px;
       padding-bottom: 60px;
@@ -218,69 +218,6 @@
       @media (max-width: $SCREEN_XS_MAX) {
         width: 100%;
         padding: 20px;
-      }
-      .current {
-        font-size: 12px;
-        color: $COLOR--gray-47;
-
-        @media (max-width: $SCREEN_XS_MAX) {
-          position: absolute;
-          display: inline-block;
-        }
-      }
-      .list {
-        font-size: 11px;
-        color: $COLOR--charcoal-grey;
-
-        @media (max-width: $SCREEN_XS_MAX) {
-          width: 100%;
-          display: inline-block;
-        }
-
-        .service-name {
-          margin-left: 13px;
-
-          &:first-child {
-            @media (max-width: $SCREEN_XS_MAX) {
-              margin-left: 99px;
-            }
-          }
-
-          &.expired {
-            color: #ed684f;
-          }
-        }
-      }
-
-      .update-services {
-        position: relative;
-        margin-top: 10px;
-        font-size: 12px;
-        color: $COLOR--gray-47;
-
-        @media (max-width: $SCREEN_XS_MAX) {
-          display: none;
-        }
-
-        i {
-          position: relative;
-          top: 2px;
-          font-size: 18px;
-          color: #ed684f;
-        }
-        span {
-          line-height: 18px;
-        }
-        .update-link {
-          margin-left: 10px;
-          font-size: 13px;
-          color: $COLOR--tealish;
-          cursor: pointer;
-
-          &:hover {
-            text-decoration: underline;
-          }
-        }
       }
     }
   }

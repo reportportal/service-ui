@@ -17,12 +17,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
     var Util = require('util');
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
     var InfoPanelView = require('launches/common/InfoPanelView');
@@ -45,8 +46,9 @@ define(function (require, exports, module) {
         computeds: {
             validateForHistoryBtn: function () {
                 var interrupted = config.launchStatus.interrupted;
-                var showBtn = this.launchModel.get('status') !== interrupted && !this.collectionItems.validateForAllCases() && !_.isEmpty(this.collectionItems.models);
-                return showBtn;
+                return this.launchModel.get('status') !== interrupted
+                    && !this.collectionItems.validateForAllCases()
+                    && !_.isEmpty(this.collectionItems.models);
             },
             activeMultiDelete: function () {
                 return !(this.launchModel.get('status') === config.launchStatus.inProgress);
@@ -71,6 +73,7 @@ define(function (require, exports, module) {
             }))();
             this.listenTo(this.collectionItems, 'change:description change:tags', this.increaseRefreshItemsCount);
             this.listenTo(this.collectionItems, 'loading', this.resetRefreshItems);
+            this.listenTo(this.collectionItems, 'change:issue', this.updateInfoLine);
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-refine-entities]', this.$el),
                 filterLevel: 'suit',
@@ -86,6 +89,9 @@ define(function (require, exports, module) {
         },
         render: function () {
             this.$el.html(Util.templates(this.template, { context: this.context }));
+        },
+        updateInfoLine: function () {
+            this.parentModel.collection.forceUpdate();
         },
         activateMultiple: function () {
             $('[data-js-refresh]', this.$el).addClass('disabled');
@@ -108,6 +114,7 @@ define(function (require, exports, module) {
         onClickRefresh: function () {
             config.trackingDispatcher.trackEventNumber(88);
             this.collectionItems.load();
+            this.updateInfoLine();
             this.resetRefreshItems();
         },
         increaseRefreshItemsCount: function (model) {
@@ -139,10 +146,12 @@ define(function (require, exports, module) {
         getChangedAttrs: function (model) {
             var changedAttrs = model.changedAttributes();
             if (changedAttrs.issue) {
-                if (JSON.parse(changedAttrs.issue).issue_type !== JSON.parse(model.previousAttributes().issue).issue_type) {
+                if (JSON.parse(changedAttrs.issue).issue_type !==
+                    JSON.parse(model.previousAttributes().issue).issue_type) {
                     changedAttrs.issue$issue_type = JSON.parse(changedAttrs.issue).issue_type;
                 }
-                if (JSON.parse(changedAttrs.issue).comment !== JSON.parse(model.previousAttributes().issue).comment) {
+                if (JSON.parse(changedAttrs.issue).comment !==
+                    JSON.parse(model.previousAttributes().issue).comment) {
                     changedAttrs.issue$issue_comment = JSON.parse(changedAttrs.issue).comment;
                 }
                 delete changedAttrs.issue;

@@ -22,6 +22,7 @@ define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
@@ -32,7 +33,6 @@ define(function (require) {
     var LaunchSuiteDefectsView = require('launches/common/LaunchSuiteDefectsView');
     var ItemDurationView = require('launches/common/ItemDurationView');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
-    var _ = require('underscore');
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
 
     var config = App.getInstance();
@@ -65,10 +65,10 @@ define(function (require) {
             '[data-js-time-exact]': 'text: startFormat',
             '[data-js-select-item]': 'checked: select, attr: {disabled: launch_isProcessing}',
             '[data-js-tags-container]': 'sortTags: tags',
-            '[data-js-statistics-total]': 'text: executionTotal, attr: {href: executionTotalLink}, classes: {"not-link": not(executionTotalLink)}',
-            '[data-js-statistics-failed]': 'text: executionFailed, attr: {href: executionFailedLink}, classes: {"not-link": not(executionTotalLink)}',
-            '[data-js-statistics-skipped]': 'text: executionSkipped, attr: {href: executionSkippedLink}, classes: {"not-link": not(executionTotalLink)}',
-            '[data-js-statistics-passed]': 'text: executionPassed, attr: {href: executionPassedLink}, classes: {"not-link": not(executionTotalLink)}',
+            '[data-js-statistics-total]': 'text: executionTotal, attr: {href: executionTotalLink}',
+            '[data-js-statistics-failed]': 'text: executionFailed, attr: {href: executionFailedLink}',
+            '[data-js-statistics-skipped]': 'text: executionSkipped, attr: {href: executionSkippedLink}',
+            '[data-js-statistics-passed]': 'text: executionPassed, attr: {href: executionPassedLink}',
             '[data-js-statistics-to-investigate]': 'text: defectToInvestigate'
         },
         bindingHandlers: {
@@ -251,13 +251,22 @@ define(function (require) {
         renderDefects: function () {
             this.productBug && this.productBug.destroy();
             this.productBug = new LaunchSuiteDefectsView({
-                model: this.model, el: $('[data-js-statistics-product-bug]', this.$el), type: 'product_bug' });
+                model: this.model,
+                el: $('[data-js-statistics-product-bug]', this.$el),
+                type: 'product_bug'
+            });
             this.autoBug && this.autoBug.destroy();
             this.autoBug = new LaunchSuiteDefectsView({
-                model: this.model, el: $('[data-js-statistics-automation-bug]', this.$el), type: 'automation_bug' });
+                model: this.model,
+                el: $('[data-js-statistics-automation-bug]', this.$el),
+                type: 'automation_bug'
+            });
             this.systemIssue && this.systemIssue.destroy();
             this.systemIssue = new LaunchSuiteDefectsView({
-                model: this.model, el: $('[data-js-statistics-system-issue]', this.$el), type: 'system_issue' });
+                model: this.model,
+                el: $('[data-js-statistics-system-issue]', this.$el),
+                type: 'system_issue'
+            });
         },
         onClickToInvestigate: function () {
             if (this.model.get('type') === 'SUITE') {
@@ -342,7 +351,7 @@ define(function (require) {
                 this.$el.removeClass('show-accordion');
             }
         },
-        destroy: function () {
+        onDestroy: function () {
             this.menu && this.menu.destroy();
             this.duration && this.duration.destroy();
             _.each(this.statistics, function (v) {
@@ -350,11 +359,6 @@ define(function (require) {
                     v.destroy();
                 }
             });
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            this.$el.html('');
-            delete this;
         }
     });
 

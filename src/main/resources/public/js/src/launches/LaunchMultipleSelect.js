@@ -222,6 +222,7 @@ define(function (require) {
             this.listenTo(this.collection, 'change:select', this.onUnCheckItem);
             this.listenTo(this.collection, 'add', this.onAddItem);
             this.currentAction = '';
+            this.scrollItems = Util.setupBaronScroll($('[data-js-multi-select-items]', this.$el));
         },
         onChangeSelect: function (model, select) {
             if (select) {
@@ -230,6 +231,8 @@ define(function (require) {
                 this.collection.remove(model.get('id'));
             }
             this.checkStatus();
+            Util.setupBaronScrollSize(this.scrollItems, { maxHeight: 120 });
+            this.scrollItems.scrollTop(this.scrollItems.get(0).scrollHeight);
         },
         onResetCollectionItems: function () {
             var self = this;

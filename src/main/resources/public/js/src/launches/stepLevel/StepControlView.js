@@ -96,7 +96,7 @@ define(function (require) {
             }))();
             this.listenTo(this.collectionItems, 'change:issue change:description change:tags', this.increaseRefreshItemsCount);
             this.listenTo(this.collectionItems, 'loading', this.resetRefreshItems);
-            this.listenTo(this.collectionItems, 'change:issue', this.updateParentModel);
+            this.listenTo(this.collectionItems, 'change:issue', this.updateInfoLine);
             this.render();
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-refine-entities]', this.$el),
@@ -111,10 +111,8 @@ define(function (require) {
         render: function () {
             this.$el.html(Util.templates(this.template, { context: this.context }));
         },
-        updateParentModel: function () {
-            _.each(this.parentModel.collection.models, function (model) {
-                model.updateData(true);
-            });
+        updateInfoLine: function () {
+            this.parentModel.collection.forceUpdate();
         },
         activateMultiple: function () {
             $('[data-js-refresh], [data-js-history-view]', this.$el).addClass('disabled');
@@ -149,6 +147,7 @@ define(function (require) {
         onClickRefresh: function () {
             config.trackingDispatcher.trackEventNumber(169);
             this.collectionItems.load();
+            this.updateInfoLine();
             this.resetRefreshItems();
         },
         resetRefreshItems: function () {
