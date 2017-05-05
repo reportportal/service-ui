@@ -379,20 +379,26 @@ define(function (require) {
             var filterOptions = this.filterModel.getOptions();
             _.each(response.content, function (modelData) {
                 var modelItemData = modelData;
-                var urlPart = self.crumbs.collection.models[self.crumbs.collection.length - 1].get('url').split('#' + (new SingletonAppModel()).get('projectId') + '/launches/')[1]
+                var urlPart;
+
                 modelItemData.issue && (modelItemData.issue = JSON.stringify(modelItemData.issue));
                 modelItemData.tags && (modelItemData.tags = JSON.stringify(modelItemData.tags));
-                modelItemData.urlMiddlePart =
-                    urlPart
-                    + ((~urlPart.indexOf('?')) ? '&' : '?')
-                    + 'page.page=' + self.pagingData.number
-                    + '&page.size=' + self.pagingData.size;
-                _.each(filterOptions, function (item) {
-                    if (!~modelItemData.urlMiddlePart.indexOf(item)) {
-                        modelItemData.urlMiddlePart += '&' + item;
-                    }
-                    modelItemData.urlMiddlePart = modelItemData.urlMiddlePart.replace('|', encodeURIComponent('|'));
-                });
+
+                if (self.context !== 'userdebug') {
+                    urlPart = self.crumbs.collection.models[self.crumbs.collection.length - 1].get('url').split('#' + (new SingletonAppModel()).get('projectId') + '/launches/')[1];
+                    modelItemData.urlMiddlePart =
+                        urlPart
+                        + ((~urlPart.indexOf('?')) ? '&' : '?')
+                        + 'page.page=' + self.pagingData.number
+                        + '&page.size=' + self.pagingData.size;
+                    _.each(filterOptions, function (item) {
+                        if (!~modelItemData.urlMiddlePart.indexOf(item)) {
+                            modelItemData.urlMiddlePart += '&' + item;
+                        }
+                        modelItemData.urlMiddlePart = modelItemData.urlMiddlePart.replace('|', encodeURIComponent('|'));
+                    });
+                }
+
                 if (self.launchModel) {
                     modelItemData.parent_launch_owner = self.launchModel.get('owner');
                     modelItemData.parent_launch_status = self.launchModel.get('status');
