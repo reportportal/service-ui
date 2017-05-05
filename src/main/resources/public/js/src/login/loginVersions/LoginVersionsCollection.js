@@ -19,10 +19,15 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'login';
-@import 'login-login';
-@import 'login-reset';
-@import 'login-restore';
-@import 'login-login-auth-button';
-@import 'login-versions';
-@import 'login-versions-item';
+define(function (require) {
+    'use strict';
+
+    var Backbone = require('backbone');
+    var LoginVersionsModel = require('login/loginVersions/LoginVersionsModel');
+
+    var LoginVersionsCollection = Backbone.Collection.extend({
+        model: LoginVersionsModel
+    });
+
+    return LoginVersionsCollection;
+});

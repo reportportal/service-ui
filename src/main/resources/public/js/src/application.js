@@ -1,25 +1,25 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -31,13 +31,9 @@ define(function(require, exports, module) {
     var Router = require('router');
     var TrackingDispatcher = require('dispatchers/TrackingDispatcher');
     var ExternalService = require('externalServices/externalServices');
-    var Urls = require('dataUrlResolver');
-    var callService = require('callService');
     var SingletonAnalyticsConnect = require('analytics/SingletonAnalyticsConnect');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
-
-
-    var call = callService.call;
+    var config = App.getInstance();
 
     require('../lib/outdatedbrowser');
     require('cookie');
@@ -45,7 +41,6 @@ define(function(require, exports, module) {
     $.widget.bridge('uitooltip', $.ui.tooltip);
     require('bootstrap');
     require('jaddons');
-    // require('landingDocs');
     require('updateBackbone');
 
 
@@ -54,7 +49,7 @@ define(function(require, exports, module) {
     Util.extendArrays();
 
     // init Messages on startup since login uses it
-    Util.setupMessagesTracker(new Message.Success({el: $('div.flash-container')}));
+    Util.setupMessagesTracker(new Message.Success({ el: $('div.flash-container') }));
 
     // setup Ajax tracking and handling
     Util.trackAjaxCalls();
@@ -64,12 +59,10 @@ define(function(require, exports, module) {
 
     Util.addSymbolsValidation();
 
-    var config = App.getInstance();
-
     Util.checkWidthScroll();
 
     config.mainScrollElement = Util.setupBaronScroll($('#main_content'));
-    config.userModel = new UserModel;
+    config.userModel = new UserModel();
     config.trackingDispatcher = TrackingDispatcher;
     config.router = new Router.Router();
 
@@ -77,28 +70,24 @@ define(function(require, exports, module) {
     Util.setupBackTop();
 
 
-
-
-
     config.userModel.load();
-    if('DEBUG_STATE') {
+    if ('DEBUG_STATE') {
         window.userModel = config.userModel;
         window.router = config.router;
         window.config = config;
     }
     (new ExternalService())
-        .done(function() {
+        .done(function () {
             // start app
             var registryInfoModel = new SingletonRegistryInfoModel();
-            registryInfoModel.ready.done(function() {
-                if(registryInfoModel.get('sendStatistics')) {
-                    var analyticsConnect = new SingletonAnalyticsConnect();
-                    analyticsConnect.init();
+            registryInfoModel.ready.done(function () {
+                if (registryInfoModel.get('sendStatistics')) {
+                    (new SingletonAnalyticsConnect()).init();
                 }
-                config.forSettings.btsList = _.map(registryInfoModel.get('bugTrackingExtensions'), function(service) {
-                    return {name: service.toUpperCase(), value: service.toUpperCase()}
+                config.forSettings.btsList = _.map(registryInfoModel.get('bugTrackingExtensions'), function (service) {
+                    return { name: service.toUpperCase(), value: service.toUpperCase() };
                 });
-                config.userModel.ready.done(function() {
+                config.userModel.ready.done(function () {
                     $('html').removeClass('loading');
                     Backbone.history.start();
                     config.userModel.checkAuthUrl();

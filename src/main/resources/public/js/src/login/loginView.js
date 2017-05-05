@@ -19,17 +19,15 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function(require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var Service = require('coreService');
 
     var SingletonURLParamsModel = require('model/SingletonURLParamsModel');
-    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
 
     var LoginLoginView = require('login/loginLoginView');
@@ -37,29 +35,24 @@ define(function(require, exports, module) {
     var LoginResetView = require('login/loginResetView');
 
     var TwitterNewsComponent = require('components/twitterNewsComponent/TwitterNewsComponent');
+    var LoginVersionsView = require('login/loginVersions/LoginVersionsView');
 
     var LoginView = Epoxy.View.extend({
 
         className: 'login-page',
         template: 'tpl-new-login',
         events: {
-            'click [data-js-logo]': 'onClickLogo',
+            'click [data-js-logo]': 'onClickLogo'
         },
 
-        bindings: {
-            '[data-js-build-versions]': 'html: fullServicesHtml',
-        },
-
-        initialize: function(options) {
+        initialize: function () {
             var self = this;
-
-            this.viewModel = new SingletonRegistryInfoModel();
             this.storage = new SingletonAppStorage();
             this.model = new (Epoxy.Model.extend({
                 defaults: {
-                    blockTime: 0,
+                    blockTime: 0
                 }
-            }));
+            }))();
             if (this.storage.getItem('login_block_time')) {
                 var secondsFromLastBlocking = ((Date.now() - this.storage.getItem('login_block_time')) / 1000).toFixed();
 
@@ -72,6 +65,8 @@ define(function(require, exports, module) {
             this.render();
             this.twitterComponent = new TwitterNewsComponent();
             $('[data-js-twitter-container]', this.$el).html(this.twitterComponent.$el);
+            this.versionsServices = new LoginVersionsView();
+            $('[data-js-service-versions-container]', this.$el).html(this.versionsServices.$el);
             var urlModel = new SingletonURLParamsModel();
 
             if (urlModel.get('reset')) {
@@ -84,7 +79,7 @@ define(function(require, exports, module) {
                             self.showRestorationError();
                         }
                     })
-                    .fail(function (error) {
+                    .fail(function () {
                         self.showRestorationError();
                     });
             } else if (urlModel.get('errorAuth')) {
@@ -95,7 +90,7 @@ define(function(require, exports, module) {
             }
         },
 
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
             this.subviewContainer = $('[data-js-subpage-container]', this.$el);
         },
@@ -112,26 +107,26 @@ define(function(require, exports, module) {
             if (this.loginSubView) {
                 this.destroySubView();
             }
-            this.loginSubView = new LoginLoginView({loginModel: this.model});
+            this.loginSubView = new LoginLoginView({ loginModel: this.model });
             this.listenTo(this.loginSubView, 'forgotPass', this.openForgotPass);
             this.listenTo(this.loginSubView, 'blockLoginForm', this.blockLoginForm);
-            this.subviewContainer.html(this.loginSubView.el)
+            this.subviewContainer.html(this.loginSubView.el);
         },
 
         openResetPassword: function () {
             if (this.loginSubView) {
                 this.destroySubView();
             }
-            this.loginSubView = new LoginResetView({restoreKey: this.restoreKey});
+            this.loginSubView = new LoginResetView({ restoreKey: this.restoreKey });
             this.listenTo(this.loginSubView, 'closeResetPass', this.openLogin);
             this.subviewContainer.html(this.loginSubView.el);
         },
-        onClickLogo: function() {
+        onClickLogo: function () {
             window.open('http://reportportal.io/');
         },
         blockLoginForm: function () {
             var date = Date.now();
-            this.storage.setItem('login_block_time', date)
+            this.storage.setItem('login_block_time', date);
             this.blockFormCountdown(30);
         },
 
@@ -145,8 +140,7 @@ define(function(require, exports, module) {
                 } else {
                     self.model.set('blockTime', time);
                 }
-
-            }, 1000)
+            }, 1000);
         },
 
         destroySubView: function () {
@@ -159,9 +153,10 @@ define(function(require, exports, module) {
             Util.ajaxFailMessenger(null, 'restorationExpired');
         },
 
-        onDestroy: function(){
+        onDestroy: function () {
             clearInterval(this.timer);
             this.twitterComponent && this.twitterComponent.destroy();
+            this.versionsServices && this.versionsServices.destroy();
             this.remove();
         }
     });
