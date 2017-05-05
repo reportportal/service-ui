@@ -23,18 +23,9 @@
   .current {
     font-size: 12px;
     color: $COLOR--gray-47;
+    margin-right: 13px;
+  }
 
-    @media (max-width: $SCREEN_XS_MAX) {
-      position: absolute;
-      display: inline-block;
-    }
-  }
-  .list {
-    @media (max-width: $SCREEN_XS_MAX) {
-      width: 100%;
-      display: inline-block;
-    }
-  }
 
   .update-services {
     position: relative;

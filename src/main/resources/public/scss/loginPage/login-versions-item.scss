@@ -22,18 +22,8 @@
 .login-versions-item {
   font-size: 11px;
   color: $COLOR--charcoal-grey;
+  margin-right: 13px;
   &.expired {
     color: #ed684f;
-  }
-  .service-name {
-    margin-left: 13px;
-
-    &:first-child {
-      @media (max-width: $SCREEN_XS_MAX) {
-        margin-left: 99px;
-      }
-    }
-
-
   }
 }
