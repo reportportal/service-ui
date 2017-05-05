@@ -19,10 +19,12 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
-    "use strict";
+define(function (require) {
+    'use strict';
+
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
+    var _ = require('underscore');
     var Util = require('util');
     var App = require('app');
     var Localization = require('localization');
@@ -64,24 +66,22 @@ define(function (require, exports, module) {
         },
 
         initialize: function () {
+            var modelsData = [];
             this.appModel = new SingletonAppModel();
             this.settings = config.forSettings;
             this.access = Util.isInPrivilegedGroup();
             this.systems = this.appModel.get('configuration').externalSystem;
-
-            var modelsData = [];
-
-            _.each(this.systems, function(system) {
-                return _.each(config.forSettings.btsList, function(btsItem) {
-                    if(btsItem.name == system.systemType) {
+            _.each(this.systems, function (system) {
+                return _.each(config.forSettings.btsList, function (btsItem) {
+                    if (btsItem.name === system.systemType) {
                         modelsData.push(system);
                         return false;
                     }
-                })
+                });
             });
 
             this.model = new BtsPropertiesModel(modelsData[0]);
-            this.listenTo(this.model, 'change:fields', function(){config.trackingDispatcher.trackEventNumber(408)});
+            this.listenTo(this.model, 'change:fields', function () { config.trackingDispatcher.trackEventNumber(408); });
             this.systemAt = 0;
             this.render();
         },
@@ -92,14 +92,14 @@ define(function (require, exports, module) {
                 systemType: this.model.get('systemType'),
                 access: this.access
             }));
-            this.$instanceHead = $("#instanceHead", this.$el);
-            this.$instanceBoby = $("#instanceBody", this.$el);
+            this.$instanceHead = $('#instanceHead', this.$el);
+            this.$instanceBoby = $('#instanceBody', this.$el);
 
-            if(config.forSettings.btsList.length) {
+            if (config.forSettings.btsList.length) {
                 this.renderMultiSelector();
                 this.renderInstance();
             } else {
-                $('button', this.$el).prop({disabled: 'disabled'});
+                $('button', this.$el).prop({ disabled: 'disabled' });
                 $('[data-js-no-bts-message]', this.$el).removeClass('hide');
             }
 
@@ -107,10 +107,14 @@ define(function (require, exports, module) {
         },
 
         renderMultiSelector: function () {
+            var selectedSystemType;
+            var systems;
             this.$instanceHead.empty();
-            var selectedSystemType = this.model.get('systemType');
+            selectedSystemType = this.model.get('systemType');
             if (this.systemWithMultipleProjects(selectedSystemType)) {
-                var systems = (this.systems.length && selectedSystemType === this.systems[0].systemType) ? this.systems : [];
+                systems = (this.systems.length && selectedSystemType === this.systems[0].systemType)
+                    ? this.systems
+                    : [];
                 this.$instanceHead.html(Util.templates(this.multiTpl, {
                     systems: systems,
                     index: this.systemAt,
@@ -122,14 +126,12 @@ define(function (require, exports, module) {
         },
 
         renderInstance: function () {
-            this.$instanceBoby.empty();
-
             var params = this.model.toJSON();
-
-            params['authorizationTypes'] = this.settings['bts' + this.model.get('systemType')].authorizationType;
-            params['access'] = this.access;
-            params['settings'] = this.settings;
-            params['projectType'] = this.model.isRally() ? 'projectId' : 'projectName';
+            this.$instanceBoby.empty();
+            params.authorizationTypes = this.settings['bts' + this.model.get('systemType')].authorizationType;
+            params.access = this.access;
+            params.settings = this.settings;
+            params.projectType = this.model.isRally() ? 'projectId' : 'projectName';
 
             this.$instanceBoby.html(Util.templates(this.instanceTpl, params));
             this.setupAnchors();
@@ -152,9 +154,11 @@ define(function (require, exports, module) {
         },
 
         changeBts: function (e) {
+            var el;
+            var value;
             e.preventDefault();
-            var el = $(e.currentTarget);
-            var value = el.text();
+            el = $(e.currentTarget);
+            value = el.text();
 
             if (el.hasClass('active')) {
                 return;
@@ -166,8 +170,8 @@ define(function (require, exports, module) {
 
         validateBtsChange: function (value) {
             var system = this.checkIfSystemDefined(value) ? this.systems[this.systemAt] : {
-                    systemType: value
-                };
+                systemType: value
+            };
             this.model = new BtsPropertiesModel(system);
             this.validateForChangeBtsWarning();
             this.renderMultiSelector();
@@ -175,7 +179,7 @@ define(function (require, exports, module) {
         },
 
         validateForChangeBtsWarning: function () {
-            var action = this.systems.length && !!!this.model.get('id') ? 'show' : 'hide';
+            var action = this.systems.length && !this.model.get('id') ? 'show' : 'hide';
             this.$tbsChangeWarning[action]();
         },
 
@@ -213,30 +217,33 @@ define(function (require, exports, module) {
         },
 
         setupAnchors: function () {
-            this.$tbsChangeWarning = $("#tbsChangeWarning", this.$el);
-            this.$authDropDown = $("#systemAuth", this.$el);
-            this.$authType = $("#authorizationType", this.$el);
-            this.$fieldsLoader = $("#fieldsLoader", this.$el);
+            this.$tbsChangeWarning = $('#tbsChangeWarning', this.$el);
+            this.$authDropDown = $('#systemAuth', this.$el);
+            this.$authType = $('#authorizationType', this.$el);
+            this.$fieldsLoader = $('#fieldsLoader', this.$el);
 
-            this.$submitBlock = $("#submitPropertiesBlock", this.$el);
-            this.$editBtn = $("#editBtsProperties", this.$el);
-            this.$deleteBtn = $("#deleteInstance", this.$el);
-            this.$cancelBtn = $("#cancelBtsProperties", this.$el);
-            this.$propertiesWrapper = $("#propertiesWrapper", this.$el);
-            this.$resetFieldsWarning = $("#resetFieldsWarning", this.$el);
-            this.$externalSystemWarning = $("#externalError", this.$el);
+            this.$submitBlock = $('#submitPropertiesBlock', this.$el);
+            this.$editBtn = $('#editBtsProperties', this.$el);
+            this.$deleteBtn = $('#deleteInstance', this.$el);
+            this.$cancelBtn = $('#cancelBtsProperties', this.$el);
+            this.$propertiesWrapper = $('#propertiesWrapper', this.$el);
+            this.$resetFieldsWarning = $('#resetFieldsWarning', this.$el);
+            this.$externalSystemWarning = $('#externalError', this.$el);
 
-            this.$fieldsWrapper = $("#fieldsWrapper", this.$el);
-            this.$dynamicFieldsWrapper = $("#dynamicFields", this.$el);
-            this.$fieldsControls = $(".fields-controls", this.$el);
-            this.$updateFieldsBtn = $("#updateFields", this.$fieldsControls);
-            this.$cancelFieldsBtn = $("#cancelFields", this.$fieldsControls);
+            this.$fieldsWrapper = $('#fieldsWrapper', this.$el);
+            this.$dynamicFieldsWrapper = $('#dynamicFields', this.$el);
+            this.$fieldsControls = $('.fields-controls', this.$el);
+            this.$updateFieldsBtn = $('#updateFields', this.$fieldsControls);
+            this.$cancelFieldsBtn = $('#cancelFields', this.$fieldsControls);
         },
 
         discardAddNew: function (e) {
             e.preventDefault();
             $(e.currentTarget).closest('li').removeClass('activated').removeClass('active');
-            $(e.currentTarget).closest('ul').find('[data-index=' + this.systemAt + ']').parent().addClass('active');
+            $(e.currentTarget).closest('ul')
+                .find('[data-index=' + this.systemAt + ']')
+                .parent()
+                .addClass('active');
             $(e.currentTarget).closest('ul').find('.bts-instance-action').removeClass('disabled');
 
             this.model = new BtsPropertiesModel(this.systems[this.systemAt]);
@@ -245,12 +252,11 @@ define(function (require, exports, module) {
         },
 
         selectBtsInstance: function (e) {
-            e.preventDefault();
             var $tab;
             var $parent;
             var type;
             var url;
-
+            e.preventDefault();
             $tab = $(e.currentTarget);
             $parent = $tab.parent();
 
@@ -282,20 +288,22 @@ define(function (require, exports, module) {
         },
 
         submitFields: function () {
+            var result = [];
+            var source = this.defaultFields ? this.defaultFields : this.model.get('fields');
+            var field;
             config.trackingDispatcher.trackEventNumber(410);
-            var result = [],
-                source = this.defaultFields ? this.defaultFields : this.model.get('fields');
-            _.forEach(this.fieldsView.getDefaultValues(), function (value, key) {
-                var field = _.find(source, {
+            _.forEach(this.fieldsView.getDefaultValues(), function (val, key) {
+                var value = val;
+                field = _.find(source, {
                     id: key
                 });
                 if (field) {
                     if (field.fieldType === 'array') {
-                        value = value.split(',')
+                        value = value.split(',');
                     } else {
                         value = [value];
                     }
-                    field['value'] = value;
+                    field.value = value;
                     result.push(field);
                 }
             });
@@ -305,8 +313,8 @@ define(function (require, exports, module) {
         },
 
         loadDefaultBtsFields: function () {
-            config.trackingDispatcher.trackEventNumber(409);
             var self = this;
+            config.trackingDispatcher.trackEventNumber(409);
             this.$fieldsLoader.show();
             Service.getBtsFields(this.model.get('id'))
                 .done(function (data) {
@@ -317,9 +325,9 @@ define(function (require, exports, module) {
                         var item = _.find(data, {
                             id: field.id
                         });
-                        if(item){
-                            item['value'] = field.value;
-                            item['checked'] = true;
+                        if (item) {
+                            item.value = field.value;
+                            item.checked = true;
                         }
                     });
                     self.fieldsView.update(data);
@@ -358,17 +366,21 @@ define(function (require, exports, module) {
                             this.saveBts(true);
                         }.bind(this))
                         .fail(function () {
-                            Util.ajaxSuccessMessenger("clearExternalSystem");
+                            Util.ajaxSuccessMessenger('clearExternalSystem');
                         });
                 } else {
                     this.saveBts();
                 }
             } else {
-                $("input:visible, textarea:visible", this.$propertiesWrapper).trigger('validate');
+                $('input:visible, textarea:visible', this.$propertiesWrapper).trigger('validate');
             }
         },
 
         saveBts: function (clear) {
+            var self = this;
+            var call;
+            var externalSystemData;
+
             this.$fieldsLoader.show();
 
             if (clear) {
@@ -376,11 +388,8 @@ define(function (require, exports, module) {
                     this.systems.pop();
                 }
             }
-
-            var self = this,
-                call = this.model.get('id') ? 'updateExternalSystem' : 'createExternalSystem';
-
-            var externalSystemData = this.model.getBtsSettings();
+            call = this.model.get('id') ? 'updateExternalSystem' : 'createExternalSystem';
+            externalSystemData = this.model.getBtsSettings();
             if (this.checkIfLinkOrProjectNameChanged(externalSystemData)) {
                 this.model.set('fields', []);
                 externalSystemData.fields = [];
@@ -409,7 +418,7 @@ define(function (require, exports, module) {
                     self.$tbsChangeWarning.hide();
 
                     if (call === 'updateExternalSystem') {
-                        Util.addMessage({clazz: 'success', message: response.msg});
+                        Util.addMessage({ clazz: 'success', message: response.msg });
                     }
                 })
                 .fail(function (error) {
@@ -428,32 +437,36 @@ define(function (require, exports, module) {
 
             try {
                 response = JSON.parse(error.responseText); // expect JSON format
-            } catch(e) {
-
+            } catch (e) {
+                console.log(e);
             }
-            if (error.status == 404) {
+            if (error.status === 404) {
                 message = 'Impossible interact with external system. External system with type JIRA is not deployed or not available';
             }
 
-            if (error.status == 403) {
+            if (error.status === 403) {
                 message = Localization.failMessages.noPermissions;
-            } else if (error.responseText && error.responseText.indexOf(this.settings.projectNotFoundPattern) !== -1) {
+            } else if (
+                    error.responseText
+                    && error.responseText.indexOf(this.settings.projectNotFoundPattern) !== -1
+                ) {
                 message = this.$externalSystemWarning.data('noproject').replace('%%%', this.model.get('project'));
             }
-            if ((error.status == 400 || error.status == 409) && response.error_code == 4032) {
+            if ((error.status === 400 || error.status === 409) && response.error_code === 4032) {
                 message = response.message;
             }
             this.$externalSystemWarning.text(message).show();
         },
 
-        updateCredentials: function (system, id) {
+        updateCredentials: function (sys, id) {
+            var system = sys;
             this.model.set('id', id);
-            system["id"] = id;
+            system.id = id;
             if (this.model.validForBasic()) {
                 this.model.set('password', this.settings.defaultPassword);
-                system["password"] = this.settings.defaultPassword;
+                system.password = this.settings.defaultPassword;
             } else if (this.model.validForApiKey()) {
-                system["accessKey"] = this.model.get('accessKey');
+                system.accessKey = this.model.get('accessKey');
             }
         },
 
@@ -462,7 +475,6 @@ define(function (require, exports, module) {
         },
 
         deleteInstance: function () {
-            config.trackingDispatcher.trackEventNumber(402);
             var self = this;
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteBts,
@@ -470,41 +482,47 @@ define(function (require, exports, module) {
                 cancelButtonText: Localization.ui.cancel,
                 okButtonDanger: true,
                 okButtonText: Localization.ui.delete,
-                confirmFunction: function() {
+                confirmFunction: function () {
                     config.trackingDispatcher.trackEventNumber(407);
                     return Service.deleteExternalSystem(self.model.get('id'))
                         .done(function () {
+                            var type;
                             self.systems.splice(self.systemAt, 1);
                             if (self.systems.length) {
                                 self.model = new BtsPropertiesModel(self.systems[0]);
                             } else {
-                                var type = self.model.get('systemType');
+                                type = self.model.get('systemType');
                                 self.model = new BtsPropertiesModel({
                                     systemType: type
                                 });
                             }
-                            (self.systems.length > 0) ? self.appModel.setArr('externalSystem', [self.systems[0]]) : self.appModel.setArr('externalSystem', []);
+                            if (self.systems.length > 0) {
+                                self.appModel.setArr('externalSystem', [self.systems[0]]);
+                            } else {
+                                self.appModel.setArr('externalSystem', []);
+                            }
                             self.systemAt = 0;
                             self.renderMultiSelector();
                             self.renderInstance();
                             self.setPristineBTSForm();
-                            Util.ajaxSuccessMessenger("deleteBts");
+                            Util.ajaxSuccessMessenger('deleteBts');
                         })
                         .fail(function (error) {
-                            Util.ajaxFailMessenger(error, "deleteBts");
+                            Util.ajaxFailMessenger(error, 'deleteBts');
                         });
                 }
             });
-            $('[data-js-close]', modal.$el).on('click', function(){
+            config.trackingDispatcher.trackEventNumber(402);
+            $('[data-js-close]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(405);
             });
-            $('[data-js-cancel]', modal.$el).on('click', function(){
+            $('[data-js-cancel]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(406);
             });
             modal.show();
         },
 
-        setPristineBTSForm: function (el) {
+        setPristineBTSForm: function () {
             var defaultParam = config.forSettings.btsList[0].value;
             $('#btsSettings').find('#systemType').find('.select-value').text(defaultParam);
             this.renderMultiSelector();
@@ -526,16 +544,17 @@ define(function (require, exports, module) {
         },
 
         cancelEditProperties: function () {
+            var model = this.model.get('modelCache');
+            var self = this;
+            var type;
             config.trackingDispatcher.trackEventNumber(403);
-            var model = this.model.get('modelCache'),
-                self = this;
             _.forEach(model.restorable, function (id) {
                 $('#' + id, self.$propertiesWrapper).val(model[id]);
             });
-            var type = $("#" + model.systemAuth, this.$propertiesWrapper);
+            type = $('#' + model.systemAuth, this.$propertiesWrapper);
             type.closest('.dropdown-menu').find('.active').removeClass('active');
             type.addClass('active');
-            $("#systemAuth", this.$el).find('.select-value').text(type.text());
+            $('#systemAuth', this.$el).find('.select-value').text(type.text());
 
             this.setAuthBlock(model);
             $('.has-error', this.$propertiesWrapper).removeClass('has-error');
@@ -551,15 +570,16 @@ define(function (require, exports, module) {
         },
 
         updateModel: function (e) {
-            var $el = $(e.currentTarget),
-                value = $el.val().trim(),
-                id = $el.attr('id');
+            var $el = $(e.currentTarget);
+            var value = $el.val().trim();
+            var id = $el.attr('id');
+            var pass;
             if (value !== this.model.get(id)) {
                 (id !== 'password') && $el.trigger('validate');
-                value = $el.data('valid') ? value : "";
+                value = $el.data('valid') ? value : '';
                 if (this.model.isEdit() && this.checkIfCanResetFields(id)) {
                     this.model.fieldsWereSelected() && this.$resetFieldsWarning.show();
-                    $("#username, #password, #accessKey", this.$el).val("");
+                    $('#username, #password, #accessKey', this.$el).val('');
                     this.model.set({
                         username: '',
                         password: '',
@@ -567,9 +587,9 @@ define(function (require, exports, module) {
                     });
                 }
                 if (id === 'username') {
-                    var pass = $("#password", this.$propertiesWrapper);
+                    pass = $('#password', this.$propertiesWrapper);
                     if (pass.val() === this.settings.defaultPassword) {
-                        pass.val("");
+                        pass.val('');
                         this.model.set('password', '');
                     }
                 }
@@ -578,7 +598,7 @@ define(function (require, exports, module) {
         },
 
         bindValidators: function () {
-            Util.bootValidator($("#url", this.$propertiesWrapper), [
+            Util.bootValidator($('#url', this.$propertiesWrapper), [
                 {
                     validator: 'required',
                     type: 'btsLink'
@@ -590,14 +610,14 @@ define(function (require, exports, module) {
                     arg: 'i'
                 }
             ]);
-            Util.bootValidator($("#project", this.$propertiesWrapper), {
+            Util.bootValidator($('#project', this.$propertiesWrapper), {
                 validator: 'minMaxRequired',
                 type: 'projectName',
                 min: 1,
                 max: 55
             });
             if (this.model.isRally()) {
-                Util.bootValidator($("#accessKey", this.$propertiesWrapper), {
+                Util.bootValidator($('#accessKey', this.$propertiesWrapper), {
                     validator: 'required',
                     type: 'accessKey'
                 });
@@ -609,32 +629,33 @@ define(function (require, exports, module) {
                 this.$submitBlock.hide();
                 this.$editBtn.show();
                 this.$deleteBtn.show();
-                $("input, textarea", this.$propertiesWrapper).prop('disabled', true);
+                $('input, textarea', this.$propertiesWrapper).prop('disabled', true);
                 this.$authDropDown.prop('disabled', true);
             } else {
                 this.$submitBlock.show();
                 this.$editBtn.hide();
                 this.$deleteBtn.hide();
-                $("input, textarea", this.$propertiesWrapper).prop('disabled', false);
+                $('input, textarea', this.$propertiesWrapper).prop('disabled', false);
                 this.$authDropDown.prop('disabled', false);
             }
         },
 
-        setAuthBlock: function (data) {
-            data['access'] = this.access;
-            data['hasPassword'] = !!this.model.get('id');
-            data['defaultPassword'] = this.settings.defaultPassword;
+        setAuthBlock: function (args) {
+            var data = args;
+            data.access = this.access;
+            data.hasPassword = !!this.model.get('id');
+            data.defaultPassword = this.settings.defaultPassword;
             this.$authType.html(Util.templates(this.authTpl, data));
             if (this.model.validForBasic()) {
-                Util.bootValidator($("#username", this.$propertiesWrapper), {
+                Util.bootValidator($('#username', this.$propertiesWrapper), {
                     validator: 'required'
                 });
 
-                Util.bootValidator($("#password", this.$propertiesWrapper), {
+                Util.bootValidator($('#password', this.$propertiesWrapper), {
                     validator: 'required'
                 });
                 if (this.model.isTFS()) {
-                    Util.bootValidator($("#domain", this.$propertiesWrapper), {
+                    Util.bootValidator($('#domain', this.$propertiesWrapper), {
                         validator: 'minMaxRequired',
                         type: 'tfsDomain',
                         min: 1,
@@ -642,23 +663,25 @@ define(function (require, exports, module) {
                     });
                 }
             } else if (this.model.validForApiKey()) {
-                Util.bootValidator($("#accessKey", this.$propertiesWrapper), {
+                Util.bootValidator($('#accessKey', this.$propertiesWrapper), {
                     validator: 'minMaxRequired',
                     type: 'apiKey',
                     min: 4,
                     max: 128
                 });
             } else {
-                Util.bootValidator($("#accessKey", this.$propertiesWrapper), {
+                Util.bootValidator($('#accessKey', this.$propertiesWrapper), {
                     validator: 'required'
                 });
             }
         },
 
         updateAuthType: function (e) {
+            var $el;
+            var type;
             e.preventDefault();
-            var $el = $(e.currentTarget).parent(),
-                type = $el.attr('id');
+            $el = $(e.currentTarget).parent();
+            type = $el.attr('id');
             if ($el.hasClass('active')) {
                 return;
             }
@@ -681,5 +704,4 @@ define(function (require, exports, module) {
     });
 
     return BtsTabView;
-
 });

@@ -19,12 +19,13 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
-    "use strict";
+define(function (require) {
+    'use strict';
+
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var Components = require('core/components');
     var App = require('app');
     var D3 = require('d3');
     var NVD3 = require('nvd3');
@@ -67,24 +68,24 @@ define(function (require, exports, module) {
             };
             this.$el.html(Util.templates(this.template, data));
             this.updateControls();
-
         },
 
-        onShow: function() {
+        onShow: function () {
             this.renderSubTypes();
         },
 
         renderSubTypes: function () {
-            if (this.collection.length == 0) {
+            if (this.collection.length === 0) {
                 return;
             }
 
-            _.each(this.collection.models, function (model, key) {
+            _.each(this.collection.models, function (model) {
+                var data;
                 if (model.get('typeRef').toLowerCase() !== this.name) {
                     return;
                 }
 
-                var data = {
+                data = {
                     model: model,
                     parent: this,
                     edit: this.edit
@@ -93,44 +94,48 @@ define(function (require, exports, module) {
                 if (this.name === 'to_investigate') {
                     $('.controll-panel', this.$el).remove();
                 }
-
             }, this);
 
             this.getDataForDiagramm(this.collection);
             this.getDataForGraph(this.diagrammParams);
         },
 
-        renderItem: function (data) {
+        renderItem: function (args) {
+            var data = args;
             var id = data.model.get('locator');
             var template = Util.templates(this.subTemplate, {
                 id: id,
                 type: data.model.get('typeRef'),
                 edit: data.edit
             });
+            var view;
             $('.controll-panel', this.$el).before(template);
             data.el = $('#' + id, this.$el);
-            var view = new DefectTypeSubView(data);
+            view = new DefectTypeSubView(data);
             view.render();
 
             return view;
         },
 
         addItem: function (event) {
+            var editModel;
+            var data;
+            var view;
             config.trackingDispatcher.trackEventNumber(421);
             event.preventDefault();
-            var editModel = new DefectTypeModel({
+            editModel = new DefectTypeModel({
                 locator: 'newItem',
                 typeRef: this.name.toUpperCase(),
                 color: this.color
             });
             editModel.collection = this.collection;
             $(event.currentTarget).attr('disabled', 'disabled');
-            var data = {
+            data = {
                 model: editModel,
                 parent: this,
                 edit: this.edit
             };
-            var view = this.renderItem(data);
+            view = this.renderItem(data);
             view.editItem();
         },
 
@@ -166,13 +171,13 @@ define(function (require, exports, module) {
             var data = [];
             var pieWidth = 46;
             var pieHeight = 46;
-            var id = "#diagramm_" + selector;
-            _.map(params, function (param, k) {
+            var id = '#diagramm_' + selector;
+            _.map(params, function (param) {
                 data.push({
                     key: param.child.itemLongName,
                     y: 1,
                     color: param.child.itemColor
-                })
+                });
             }, this);
 
             chart = NVD3.models.pie()
@@ -228,7 +233,7 @@ define(function (require, exports, module) {
             _.each(this.collection.models, function (el) {
                 var typeRef = el.get('typeRef').toLowerCase();
                 if (typeRef === this.name) {
-                    length++;
+                    length += 1;
                 }
             }, this);
 
@@ -237,9 +242,8 @@ define(function (require, exports, module) {
 
         recountAddLeft: function () {
             var collectionLength = this.getCollectionLength();
-            this.addLeft = 10 - collectionLength;
-
             var parent = this.$el.find('.add-item').parent();
+            this.addLeft = 10 - collectionLength;
             if (this.addLeft > 0) {
                 $(parent).find('p:first span').html(this.addLeft);
                 $(parent).find('p:last').hide();
@@ -263,5 +267,4 @@ define(function (require, exports, module) {
     });
 
     return DefectTypeView;
-
 });

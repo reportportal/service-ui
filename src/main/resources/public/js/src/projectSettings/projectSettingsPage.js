@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function(require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -31,35 +31,6 @@ define(function(require, exports, module) {
     var MainBreadcrumbsComponent = require('components/MainBreadcrumbsComponent');
 
     var ProjectSettingsView = require('projectSettings/projectSettingsView');
-
-    var ContentView = Epoxy.View.extend({
-        initialize: function (options) {
-            this.contextName = options.contextName;
-            this.context = options.context;
-            this.subContext = options.subContext;
-        },
-        render: function () {
-            this.header = new Header();
-            this.context.getMainView().$header.html(this.header.$el);
-            //do not call render method on body - since it is async data dependant and will do it after fetch
-            this.body = new Body({
-                context: this.context,
-                tab: this.subContext
-            });
-            this.context.getMainView().$body.html(this.body.$el);
-            this.body.onShow && this.body.onShow();
-            return this;
-        },
-        update: function (options) {
-            this.body.update(options.subContext);
-        },
-        onDestroy: function () {
-            this.header.destroy();
-            this.body.destroy();
-
-            $('.select2-drop-active', this.$el).remove();
-        }
-    });
 
     var Header = Epoxy.View.extend({
 
@@ -74,8 +45,8 @@ define(function(require, exports, module) {
             this.render();
         },
 
-        getHeaderData: function(){
-            var data = [{name: Localization.project.settings, link: '#' + config.project.projectId + '/settings'}];
+        getHeaderData: function () {
+            var data = [{ name: Localization.project.settings, link: '#' + config.project.projectId + '/settings' }];
             return data;
         },
 
@@ -110,6 +81,36 @@ define(function(require, exports, module) {
         },
         onDestroy: function () {
             this.projectSettings && this.projectSettings.destroy();
+        }
+    });
+
+    var ContentView = Epoxy.View.extend({
+        initialize: function (options) {
+            this.contextName = options.contextName;
+            this.context = options.context;
+            this.subContext = options.subContext;
+        },
+        render: function () {
+            this.header = new Header();
+            this.context.getMainView().$header.html(this.header.$el);
+            // do not call render method on body - since it is async data
+            // dependant and will do it after fetch
+            this.body = new Body({
+                context: this.context,
+                tab: this.subContext
+            });
+            this.context.getMainView().$body.html(this.body.$el);
+            this.body.onShow && this.body.onShow();
+            return this;
+        },
+        update: function (options) {
+            this.body.update(options.subContext);
+        },
+        onDestroy: function () {
+            this.header.destroy();
+            this.body.destroy();
+
+            $('.select2-drop-active', this.$el).remove();
         }
     });
 
