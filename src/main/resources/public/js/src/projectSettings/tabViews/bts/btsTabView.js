@@ -64,10 +64,11 @@ define(function (require, exports, module) {
         },
 
         initialize: function () {
+            this.appModel = new SingletonAppModel();
             this.settings = config.forSettings;
             this.access = Util.isInPrivilegedGroup();
-            this.systems = config.project.configuration.externalSystem;
-            this.appModel = new SingletonAppModel();
+            this.systems = this.appModel.get('configuration').externalSystem;
+
             var modelsData = [];
 
             _.each(this.systems, function(system) {

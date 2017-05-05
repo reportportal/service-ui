@@ -29,6 +29,7 @@ define(function (require) {
     var Localization = require('localization');
     var Service = require('coreService');
     var _ = require('underscore');
+    var SingletonAppModel = require('model/SingletonAppModel');
 
     var config = App.getInstance();
 
@@ -54,8 +55,9 @@ define(function (require) {
         },
 
         initialize: function () {
+            this.appModel = new SingletonAppModel();
             this.updateIds();
-            this.model = new NotificationsSettings(config.project.configuration.emailConfiguration);
+            this.model = new NotificationsSettings(this.appModel.get('configuration').emailConfiguration);
             this.users = [];
             this.isValidEmail = true;
             this.listenTo(this.model, 'change:emailEnabled', function () {
@@ -69,7 +71,7 @@ define(function (require) {
 
         updateIds: function (data) {
             var i;
-            var conf = data || config.project.configuration.emailConfiguration.emailCases;
+            var conf = data || this.appModel.get('configuration').emailConfiguration.emailCases;
             for (i = 0; i < conf.length; i += 1) {
                 conf[i].id = this.emailCaseId;
                 this.emailCaseId += 1;
@@ -262,7 +264,7 @@ define(function (require) {
                     self.updateRules();
                 });
                 externalSystemData = self.model.getProjectSettings();
-                config.project.configuration.emailConfiguration = externalSystemData.configuration;
+                this.appModel.get('configuration').emailConfiguration = externalSystemData.configuration;
                 this.checkCases();
             } else if (!emailCase.hasClass('the-only')) {
                 emailCheckbox = emailCase.find('.remove-email-case');
@@ -1047,12 +1049,12 @@ define(function (require) {
             externalSystemData = this.checkTagsAndLaunches(externalSystemData);
             Service.updateEmailProjectSettings(externalSystemData)
                 .done(function () {
-                    config.project.configuration.emailConfiguration =
+                    self.appModel.get('configuration').emailConfiguration =
                         externalSystemData.configuration;
                     self.emailCaseId = 0;
                     self.rulesToDelete.length = 0;
                     self.updateIds();
-                    self.model.set(config.project.configuration.emailConfiguration);
+                    self.model.set(self.appModel.get('configuration').emailConfiguration);
                     self.render();
                     Util.ajaxSuccessMessenger('updateProjectSettings');
                 })

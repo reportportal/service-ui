@@ -47,6 +47,7 @@ define(function(require, exports, module) {
                 tab: this.subContext
             });
             this.context.getMainView().$body.html(this.body.$el);
+            this.body.onShow && this.body.onShow();
             return this;
         },
         update: function (options) {
@@ -90,7 +91,6 @@ define(function(require, exports, module) {
         initialize: function (options) {
             this.context = options.context;
             this.tab = options.tab;
-            this.render();
         },
         render: function () {
             this.projectSettings = new ProjectSettingsView({
@@ -100,6 +100,9 @@ define(function(require, exports, module) {
             this.$el.html(this.projectSettings.$el);
             this.projectSettings.onShow && this.projectSettings.onShow();
             return this;
+        },
+        onShow: function () {
+            this.render();
         },
         update: function (tab) {
             this.tab = tab;
