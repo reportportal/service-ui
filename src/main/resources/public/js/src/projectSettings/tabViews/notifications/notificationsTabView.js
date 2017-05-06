@@ -95,6 +95,7 @@ define(function (require) {
             }
 
             this.renderEmailCases();
+            this.validateRecipients();
             return this;
         },
 
@@ -303,59 +304,60 @@ define(function (require) {
             self = this;
 
             if (getAnyway || !recipients.hasClass('select2-offscreen')) {
-                Util.setupSelect2WhithScroll(recipients, {
-                    multiple: true,
-                    minimumInputLength: 1,
-                    maximumInputLength: 128,
-                    formatInputTooShort: function () {
-                        return Localization.ui.minPrefix +
+                _.defer(function () {
+                    Util.setupSelect2WhithScroll(recipients, {
+                        multiple: true,
+                        minimumInputLength: 1,
+                        maximumInputLength: 128,
+                        formatInputTooShort: function () {
+                            return Localization.ui.minPrefix +
                             minimumInputLength + Localization.ui.minSufixAuto;
-                    },
-                    formatResultCssClass: function (state) {
-                        if ((remoteUsers.length === 0 || _.indexOf(remoteUsers, state.text) < 0) &&
-                            $('.users-typeahead.recipients:not(input)', self.$el).eq(index).find('input').val() === state.text) {
-                            return 'exact-match';
-                        }
-                        return undefined;
-                    },
-                    allowClear: true,
-                    createSearchChoice: function (term, data) {
-                        if ($(data).filter(function () {
-                            return this.text.localeCompare(term) === 0;
-                        }).length === 0) {
-                            if (Util.validateEmail(term)) {
-                                return {
-                                    id: term,
-                                    text: term
-                                };
+                        },
+                        formatResultCssClass: function (state) {
+                            if ((remoteUsers.length === 0 || _.indexOf(remoteUsers, state.text) < 0)
+                                && $('.users-typeahead.recipients:not(input)', self.$el).eq(index).find('input').val() === state.text) {
+                                return 'exact-match';
                             }
-                            return null;
-                        }
-                        return undefined;
-                    },
-                    initSelection: function (element, callback) {
-                        callback({
-                            id: element.val(),
-                            text: element.val()
-                        });
-                    },
-                    formatNoMatches: function () {
-                        return Localization.project.notFoundRecipients;
-                    },
-                    query: function (query) {
-                        var queryLength;
-                        var data;
-                        queryLength = query.term.length;
-                        data = { results: [] };
-
-                        if (queryLength >= minimumInputLength) {
-                            if (queryLength > 256) {
-                                self.validateRecipients();
-                            } else {
-                                if (queryLength <= 256) {
-                                    self.validateRecipients();
+                            return undefined;
+                        },
+                        allowClear: true,
+                        createSearchChoice: function (term, data) {
+                            if ($(data).filter(function () {
+                                return this.text.localeCompare(term) === 0;
+                            }).length === 0) {
+                                if (Util.validateEmail(term)) {
+                                    return {
+                                        id: term,
+                                        text: term
+                                    };
                                 }
-                                Service.getProjectUsersById(query.term)
+                                return null;
+                            }
+                            return undefined;
+                        },
+                        initSelection: function (element, callback) {
+                            callback({
+                                id: element.val(),
+                                text: element.val()
+                            });
+                        },
+                        formatNoMatches: function () {
+                            return Localization.project.notFoundRecipients;
+                        },
+                        query: function (query) {
+                            var queryLength;
+                            var data;
+                            queryLength = query.term.length;
+                            data = { results: [] };
+
+                            if (queryLength >= minimumInputLength) {
+                                if (queryLength > 256) {
+                                    self.validateRecipients();
+                                } else {
+                                    if (queryLength <= 256) {
+                                        self.validateRecipients();
+                                    }
+                                    Service.getProjectUsersById(query.term)
                                     .done(function (response) {
                                         remoteUsers = [];
                                         _.each(response, function (item) {
@@ -370,16 +372,17 @@ define(function (require) {
                                     .fail(function (error) {
                                         Util.ajaxFailMessenger(error);
                                     });
+                                }
+                            } else {
+                                remoteUsers = [];
+                                data.results.push({
+                                    id: query.term,
+                                    text: query.term
+                                });
+                                query.callback(data);
                             }
-                        } else {
-                            remoteUsers = [];
-                            data.results.push({
-                                id: query.term,
-                                text: query.term
-                            });
-                            query.callback(data);
                         }
-                    }
+                    });
                 });
                 this.$recipients.eq(index).on('select2-open', function () {
                     $('.select2-drop-mask', self.$el).remove();
@@ -428,7 +431,7 @@ define(function (require) {
             this.hideFormsErrors(eci.find('.select2-container.recipients'));
             this.isValidEmail = true;
             if (_.isEmpty(recips) && !checked) {
-                this.showFormErrors(eci.find('.select2-container.recipients'), Localization.project.emptyRecipients);
+                this.showFormErrors(eci.find('.select2-container.recipients'), Localization.project.invalidRecipients);
             }
             _.each(recips, function (v) {
                 var user = _.find(this.users, function (u) {
@@ -547,82 +550,84 @@ define(function (require) {
 
             this.$tagsContainer = $('input.users-typeahead.tags', this.$el);
             if (this.$tagsContainer.eq(index)) {
-                Util.setupSelect2WhithScroll(this.$tagsContainer.eq(index), {
-                    multiple: true,
-                    minimumInputLength: 1,
-                    maximumInputLength: 128,
-                    formatInputTooShort: function () {
-                        return Localization.ui.enterChars;
-                    },
-                    formatResultCssClass: function (state) {
-                        if ((remoteTags.length === 0 || _.indexOf(remoteTags, state.text) < 0) &&
-                            $('.users-typeahead.tags:not(input)', self.$el).eq(index).find('input').val() === state.text) {
-                            return 'exact-match';
-                        }
-                        return undefined;
-                    },
-                    tags: true,
-                    initSelection: function (item, callback) {
-                        var data;
-                        tags = item.val().split(',');
-                        data = _.map(tags, function (tag) {
-                            var tagData = tag.trim();
-                            return {
-                                id: tagData,
-                                text: tagData
-                            };
-                        });
-                        callback(data);
-                    },
-                    createSearchChoice: function (term, data) {
-                        if ($(data).filter(function () {
-                            return this.text.localeCompare(term) === 0;
-                        }).length === 0) {
-                            return {
-                                id: term,
-                                text: term
-                            };
-                        }
-                        return undefined;
-                    },
-                    query: function (query) {
-                        var queryLength = query.term.length;
-                        var data = {
-                            results: []
-                        };
-
-                        if (queryLength >= 1) {
-                            if (queryLength > 256) {
-                                self.validateTags(null, true);
-                            } else {
-                                if (queryLength === 256) {
-                                    self.validateTags(null, true);
-                                }
-                                Service.searchTags(query)
-                                    .done(function (response) {
-                                        remoteTags = [];
-                                        _.each(response, function (item) {
-                                            remoteTags.push(item);
-                                            data.results.push({
-                                                id: item,
-                                                text: item
-                                            });
-                                        });
-                                        query.callback(data);
-                                    })
-                                    .fail(function (error) {
-                                        Util.ajaxFailMessenger(error);
-                                    });
+                _.defer(function () {
+                    Util.setupSelect2WhithScroll(self.$tagsContainer.eq(index), {
+                        multiple: true,
+                        minimumInputLength: 1,
+                        maximumInputLength: 128,
+                        formatInputTooShort: function () {
+                            return Localization.ui.enterChars;
+                        },
+                        formatResultCssClass: function (state) {
+                            if ((remoteTags.length === 0 || _.indexOf(remoteTags, state.text) < 0)
+                                && $('.users-typeahead.tags:not(input)', self.$el).eq(index).find('input').val() === state.text) {
+                                return 'exact-match';
                             }
-                        } else {
-                            remoteTags = [];
-                            data.results.push({
-                                id: query.term,
-                                text: query.term
+                            return undefined;
+                        },
+                        tags: true,
+                        initSelection: function (item, callback) {
+                            var data;
+                            tags = item.val().split(',');
+                            data = _.map(tags, function (tag) {
+                                var tagData = tag.trim();
+                                return {
+                                    id: tagData,
+                                    text: tagData
+                                };
                             });
-                            query.callback(data);
+                            callback(data);
+                        },
+                        createSearchChoice: function (term, data) {
+                            if ($(data).filter(function () {
+                                return this.text.localeCompare(term) === 0;
+                            }).length === 0) {
+                                return {
+                                    id: term,
+                                    text: term
+                                };
+                            }
+                            return undefined;
+                        },
+                        query: function (query) {
+                            var queryLength = query.term.length;
+                            var data = {
+                                results: []
+                            };
+
+                            if (queryLength >= 1) {
+                                if (queryLength > 256) {
+                                    self.validateTags(null, true);
+                                } else {
+                                    if (queryLength === 256) {
+                                        self.validateTags(null, true);
+                                    }
+                                    Service.searchTags(query)
+                                        .done(function (response) {
+                                            remoteTags = [];
+                                            _.each(response, function (item) {
+                                                remoteTags.push(item);
+                                                data.results.push({
+                                                    id: item,
+                                                    text: item
+                                                });
+                                            });
+                                            query.callback(data);
+                                        })
+                                        .fail(function (error) {
+                                            Util.ajaxFailMessenger(error);
+                                        });
+                                }
+                            } else {
+                                remoteTags = [];
+                                data.results.push({
+                                    id: query.term,
+                                    text: query.term
+                                });
+                                query.callback(data);
+                            }
                         }
-                    }
+                    });
                 });
                 this.$tagsContainer.eq(index).on('select2-loaded', function () {
                     $('.select2-drop-active', self.$el).removeClass('select2-drop-above');
@@ -669,81 +674,82 @@ define(function (require) {
 
             this.$launchContainer = $('input.users-typeahead.launches', this.$el);
             if (this.$launchContainer.eq(index)) {
-                // todo : extract to helpers
-                Util.setupSelect2WhithScroll(this.$launchContainer.eq(index), {
-                    multiple: true,
-                    minimumInputLength: 1,
-                    maximumInputLength: 128,
+                _.defer(function () {
+                    Util.setupSelect2WhithScroll(self.$launchContainer.eq(index), {
+                        multiple: true,
+                        minimumInputLength: 1,
+                        maximumInputLength: 128,
 
-                    formatInputTooShort: function () {
-                        return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto;
-                    },
-                    formatResultCssClass: function (state) {
-                        if ((remoteLaunches.length === 0 ||
-                            _.indexOf(remoteLaunches, state.text) < 0) &&
-                            $('.users-typeahead.launches:not(input)', self.$el).eq(index).find('input').val() === state.text) {
-                            return 'exact-match';
-                        }
-                        return undefined;
-                    },
-                    allowClear: true,
-                    createSearchChoice: function (term, data) {
-                        if ($(data).filter(function () {
-                            return this.text.localeCompare(term) === 0;
-                        }).length === 0) {
-                            return {
-                                id: term,
-                                text: term
-                            };
-                        }
-                        return undefined;
-                    },
-                    initSelection: function (element, callback) {
-                        callback({
-                            id: element.val(),
-                            text: element.val()
-                        });
-                    },
-                    query: function (query) {
-                        var queryLength = query.term.length;
-                        var data = {
-                            results: []
-                        };
-
-                        if (queryLength >= 3) {
-                            if (queryLength > 256) {
-                                self.toggleLaunchNamesErrors(true, false,
-                                    self.$launchContainer.eq(index));
-                            } else {
-                                if (queryLength === 256) {
-                                    self.toggleLaunchNamesErrors(false, false,
-                                        self.$launchContainer.eq(index));
-                                }
-                                Service.searchLaunches(query)
-                                    .done(function (response) {
-                                        remoteLaunches = [];
-                                        _.each(response, function (item) {
-                                            remoteLaunches.push(item);
-                                            data.results.push({
-                                                id: item,
-                                                text: item
-                                            });
-                                        });
-                                        query.callback(data);
-                                    })
-                                    .fail(function (error) {
-                                        Util.ajaxFailMessenger(error);
-                                    });
+                        formatInputTooShort: function () {
+                            return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto;
+                        },
+                        formatResultCssClass: function (state) {
+                            if ((remoteLaunches.length === 0 ||
+                                _.indexOf(remoteLaunches, state.text) < 0) &&
+                                $('.users-typeahead.launches:not(input)', self.$el).eq(index).find('input').val() === state.text) {
+                                return 'exact-match';
                             }
-                        } else {
-                            remoteLaunches = [];
-                            data.results.push({
-                                id: query.term,
-                                text: query.term
+                            return undefined;
+                        },
+                        allowClear: true,
+                        createSearchChoice: function (term, data) {
+                            if ($(data).filter(function () {
+                                    return this.text.localeCompare(term) === 0;
+                                }).length === 0) {
+                                return {
+                                    id: term,
+                                    text: term
+                                };
+                            }
+                            return undefined;
+                        },
+                        initSelection: function (element, callback) {
+                            callback({
+                                id: element.val(),
+                                text: element.val()
                             });
-                            query.callback(data);
+                        },
+                        query: function (query) {
+                            var queryLength = query.term.length;
+                            var data = {
+                                results: []
+                            };
+
+                            if (queryLength >= 3) {
+                                if (queryLength > 256) {
+                                    self.toggleLaunchNamesErrors(true, false,
+                                        self.$launchContainer.eq(index));
+                                } else {
+                                    if (queryLength === 256) {
+                                        self.toggleLaunchNamesErrors(false, false,
+                                            self.$launchContainer.eq(index));
+                                    }
+                                    Service.searchLaunches(query)
+                                        .done(function (response) {
+                                            remoteLaunches = [];
+                                            _.each(response, function (item) {
+                                                remoteLaunches.push(item);
+                                                data.results.push({
+                                                    id: item,
+                                                    text: item
+                                                });
+                                            });
+                                            query.callback(data);
+                                        })
+                                        .fail(function (error) {
+                                            Util.ajaxFailMessenger(error);
+                                        });
+                                }
+                            } else {
+                                remoteLaunches = [];
+                                data.results.push({
+                                    id: query.term,
+                                    text: query.term
+                                });
+                                query.callback(data);
+                            }
                         }
-                    }
+                    });
                 });
                 this.$launchContainer.eq(index).on('select2-open', function () {
                     $('.select2-drop-mask', self.$el).remove();
@@ -871,7 +877,7 @@ define(function (require) {
                 if (emailCaseObj) {
                     emailCaseObj.recipients = sendCase;
                 }
-                !sendCase.length && this.showFormErrors(emailCase.find('.select2-container.recipients'), Localization.project.emptyRecipients);
+                !sendCase.length && this.showFormErrors(emailCase.find('.select2-container.recipients'), Localization.project.invalidRecipients);
                 this.validateRecipients();
             }
             sendCase.recipients = sendCase;
@@ -977,7 +983,7 @@ define(function (require) {
                     recipients = _.isEmpty(emailCase.recipients);
                 }
                 if (emailCase && _.isEmpty(emailCase.recipients) && !emailCaseToDelete) {
-                    self.showFormErrors($(elem).find('input.recipients'), Localization.project.emptyRecipients);
+                    self.showFormErrors($(elem).find('input.recipients'), Localization.project.invalidRecipients);
                 }
                 if (emailCase && !emailCaseToDelete) {
                     if (validRecipients) {
