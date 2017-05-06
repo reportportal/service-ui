@@ -79,6 +79,9 @@ define(function (require, exports, module) {
                     }
                 }
                 else if(this.isProgress()){
+                    if (this.model.get('number') === 1) {
+                        return Localization.launches.inProcess;
+                    }
                     if(this.validateForApproximateTime()){
                         var time = this.getApproximateTime();
                         if(time <=0){
