@@ -4,6 +4,7 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/reportportal/commons-go/conf"
 	"github.com/reportportal/commons-go/server"
+	"github.com/reportportal/commons-go/commons"
 	"goji.io"
 	"goji.io/pat"
 	"log"
@@ -24,7 +25,10 @@ func main() {
 
 	rpConf.AppName = "service-ui"
 
-	srv := server.New(rpConf)
+	info := commons.GetBuildInfo()
+	info.Name = rpConf.AppName
+
+	srv := server.New(rpConf, info)
 	srv.AddRoute(func(router *goji.Mux) {
 		router.Use(func(next http.Handler) http.Handler {
 			return handlers.LoggingHandler(os.Stdout, next)
