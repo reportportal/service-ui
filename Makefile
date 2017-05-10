@@ -9,10 +9,10 @@ BINARY_DIR=bin
 BUILD_DEPS:= github.com/alecthomas/gometalinter
 GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
-PACKAGE_COMMONS=github.com/reportportal/go-commons
+PACKAGE_COMMONS=github.com/reportportal/service-index/vendor/github.com/reportportal/commons-go
 
 UI_BUILD_ROOT=src/main/resources/public/
-BUILD_INFO_LDFLAGS=-ldflags "-X ${PACKAGE_COMMONS}/commons.Branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.BuildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.Version=${v}"
+BUILD_INFO_LDFLAGS=-ldflags "-X ${PACKAGE_COMMONS}/commons.branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.version=${v}"
 IMAGE_NAME=reportportal/service-ui$(IMAGE_POSTFIX)
 
 .PHONY: vendor test build
