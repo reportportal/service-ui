@@ -1,21 +1,24 @@
-<%= data.includeTemplate('_tpl-modal-header', {headerText: data.headerText}) %>
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.headerText})  %>
 <div class="modal-body">
     <p><%= data.bodyText %></p>
-    <% if(data.confirmText) { %>
-        <label class="rp-checkbox-wrap confirm-block">
-            <!--<input class="rp-input-checkbox" type="checkbox" data-js-select>-->
-            <span><%= data.confirmText %></span>
-        </label>
+    <% if (data.confirmText && !data.okButtonDanger ) { %>
+    <div class="warning-block">
+        <div class="warning"><i class="rp-icons rp-icons-warning"></i> Warning!</div>
+        <div class="warning-message"><%= data.confirmText %></div>
+    </div>
     <% } %>
 </div>
-<div class="modal-footer">
+<div class="modal-footer ">
     <% if(data.cancelButtonText) { %>
     <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
         <%= data.cancelButtonText %>
     </button>
     <% } %>
     <% if(data.okButtonText) { %>
-    <button class="rp-btn  <%= (data.confirmText || data.okButtonDanger)?' rp-btn-danger':' rp-btn-submit' %>" type="button" data-js-ok>
+   <!-- <button class="rp-btn  <%= (data.confirmText || data.okButtonDanger)?' rp-btn-danger':' rp-btn-submit' %>" type="button" data-js-ok>
+        <%= data.okButtonText %>
+    </button>-->
+    <button class="rp-btn   rp-btn-danger" type="button" data-js-ok>
         <%= data.okButtonText %>
     </button>
     <% } %>
