@@ -1,0 +1,36 @@
+<div class="statistics-panel <% if(data.invalid){ %>widget-invalid<% } %>">
+    <% if(data.invalid){ %>
+    <%= data.invalidDataMessage %>
+    <% } %>
+    <% if (data.statistics && !_.isEmpty(data.statistics) && (!_.isEmpty(data.statistics.defects) ||
+    !_.isEmpty(data.statistics.executions))) { %>
+    <% if(!_.isEmpty(data.statistics.executions)){ %>
+    <div class="stats-row">
+        <% _.each(data.statistics.executions, function(d){ %>
+        <div class="stats-cols">
+            <div class="statictic-block" style="border-left-color: <%= d.color %>">
+                <h2><%= d.value %></h2>
+                <p><%= d.key %></p>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+    <% } %>
+    <% if(!_.isEmpty(data.statistics.defects)){ %>
+    <div class="stats-row">
+        <% _.each(data.statistics.defects, function(d){ %>
+        <div class="stats-cols">
+            <div class="statictic-block"
+                 style="border-left-color: <%- d.color %>; <% if(d.seriesId == 'invalid'){%>color: <%- d.color %><% } %>">
+                <h2><%= d.value %></h2>
+                <p><%= d.key %></p>
+            </div>
+        </div>
+        <% }); %>
+    </div>
+    <% } %>
+    <div class="mobile-disabling-cover"></div>
+    <% } else { %>
+    <div class="no-data-error"><%= data.text.widgets.noData %></div>
+    <% } %>
+</div>

@@ -28,7 +28,6 @@ define(function (require, exports, module) {
     var Components = require('core/components');
     var Helpers = require('helpers');
     var Util = require('util');
-    var Service = require('filtersService');
     var coreService = require('coreService');
     var App = require('app');
     var Favorites = require('favorites');
@@ -246,25 +245,25 @@ define(function (require, exports, module) {
             expect(Favorites.Body.prototype.toFavorites).toHaveBeenCalled();
         });
 
-        it('should be share filter on click action button', function () {
-            spyOn(Favorites.Body.prototype, 'shareFilter').and.callThrough();
-            spyOn(Favorites.Body.prototype, 'onShareFilter').and.stub;
-            spyOn(Service, 'shareFilter').and.callFake(function () {
-                var deferred = new $.Deferred();
-                deferred.resolve({});
-                return deferred.promise();
-            });
-            renderView();
-            var row = $('#dynamic-content .row.rp-table-row', sandbox).eq(0),
-                cell = $('.filter-actions', row),
-                actions = $('ul.nav.rp-icons-style', cell),
-                filter = view.collection.at(0),
-                btn = $('a.mark-as-shared', cell);
-            expect(btn.length).toEqual(1);
-            btn.click();
-            expect(Favorites.Body.prototype.shareFilter.calls.mostRecent().args[0]).toEqual(filter);
-            expect(Service.shareFilter).toHaveBeenCalled();
-        });
+        // it('should be share filter on click action button', function () {
+        //     spyOn(Favorites.Body.prototype, 'shareFilter').and.callThrough();
+        //     spyOn(Favorites.Body.prototype, 'onShareFilter').and.stub;
+        //     spyOn(Service, 'shareFilter').and.callFake(function () {
+        //         var deferred = new $.Deferred();
+        //         deferred.resolve({});
+        //         return deferred.promise();
+        //     });
+        //     renderView();
+        //     var row = $('#dynamic-content .row.rp-table-row', sandbox).eq(0),
+        //         cell = $('.filter-actions', row),
+        //         actions = $('ul.nav.rp-icons-style', cell),
+        //         filter = view.collection.at(0),
+        //         btn = $('a.mark-as-shared', cell);
+        //     expect(btn.length).toEqual(1);
+        //     btn.click();
+        //     expect(Favorites.Body.prototype.shareFilter.calls.mostRecent().args[0]).toEqual(filter);
+        //     expect(Service.shareFilter).toHaveBeenCalled();
+        // });
 
         it('should be show edit filter form on click action button "Edit"', function () {
             spyOn(Favorites.Body.prototype, 'editFilter').and.callThrough();

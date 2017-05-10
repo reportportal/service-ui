@@ -13,8 +13,6 @@
     <link rel="stylesheet" type="text/css" href="compiled/css/styles.min.css">
     <!-- endbuild -->
 
-    <script type="text/eqcss" src="eqcss/main.eqcss"></script>
-
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
         <script type="text/javascript" src="../assets/js/html5shiv.js"></script>
@@ -46,22 +44,21 @@
         <div data-js-notapplication-container></div>
         <div class="wrapper js-wrapper" id="bodyContainer" data-js-application-container>
             <!--<div class="color"></div>-->
-            <section class="sidebar js-sidebar" id="pageSidebar" style="display: none;"></section>
             <section class="header js-header">
                 <div class="container">
-                    <div class="row" id="topHeader" style="display: none;"></div>
+                    <div class="row" id="topHeader"></div>
                 </div>
             </section>
             <section class="content-wrapper">
                 <div class="content-layout container  x-fluid">
-                    <!--<div class="row" id="topHeader" style="display: none;"></div>-->
                     <div class="row" id="mainContainer"></div>
                 </div>
-                <div id="pageFooter" class="footer clearfix" style="display: none;"></div>
+                <div id="pageFooter" class="footer clearfix"></div>
             </section>
         </div>
         <div class="flash-container"></div>
     </div>
+    <section class="sidebar js-sidebar" id="pageSidebar"></section>
     <!-- build:js compiled/js/scripts.js -->
         <script src="compiled/js/scripts.js"></script>
     <!-- endbuild -->

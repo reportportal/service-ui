@@ -30,7 +30,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var coreService = require('coreService');
     var App = require('app');
-    var Project = require('project');
+    var Project = require('projectSettings/projectSettingsPage');
     var Mock = require('fakeData');
     var SingletonAppModel = require('model/SingletonAppModel');
     var UserModel = require('model/UserModel');

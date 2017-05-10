@@ -5,8 +5,11 @@ build/
 */**/.idea/
 .idea/
 *.ipr
+*.iml
 *.iws
 *.log
+
+coverage
 
 ## Binaries
 bin/

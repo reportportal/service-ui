@@ -20,14 +20,11 @@
  */
 
 define(function (require, exports, module) {
-    'use strict';
-
-    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
     var _ = require('underscore');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
-    var WidgetsConfig = require('widget/widgetsConfig');
+    var WidgetService = require('newWidgets/WidgetService');
     var DropDownComponent = require('components/DropDownComponent');
     var Localization = require('localization');
 
@@ -38,15 +35,12 @@ define(function (require, exports, module) {
         },
         bindings: {
         },
-        initialize: function() {
-            this.widgetConfig = WidgetsConfig.getInstance();
-            this.curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
+        initialize: function () {
+            $.when(WidgetService.getFullWidgetConfig(this.model.get('gadget'))).done(this.onRedyWidgetConfig.bind(this));
+        },
+        onRedyWidgetConfig: function (widget) {
+            this.curWidget = widget;
             if (this.curWidget.noCriteria || !this.curWidget.criteria) {
-                // if (this.curWidget.staticCriteria) {
-                //     this.onChangeSelectCriteria(_.map(this.curWidget.staticCriteria, function(val, key) {
-                //         return key;
-                //     }));
-                // }
                 this.destroy();
                 return false;
             }
@@ -55,62 +49,64 @@ define(function (require, exports, module) {
             this.selectCriteria = new DropDownComponent({
                 data: criteriaData,
                 placeholder: Localization.widgets.selectCriteria,
-                multiple: (this.curWidget.criteriaSelectType == 'radio') ? false : true,
-                defaultValue: this.getDefaultValue(),
+                multiple: this.curWidget.criteriaSelectType !== 'radio',
+                defaultValue: this.getDefaultValue()
             });
             $('[data-js-select-criteria-container]', this.$el).html(this.selectCriteria.$el);
             this.listenTo(this.selectCriteria, 'change', this.onChangeSelectCriteria);
         },
-        getCriteriaData: function(){
+        getCriteriaData: function () {
             return _.map(this.curWidget.criteria, function (value, key) {
-                if(typeof value == 'object') {
-                    return {name: value.name, value: value.keys.join(',')}
+                if (typeof value === 'object') {
+                    return { name: value.name, value: value.keys.join(',') };
                 }
-                return {name: value, value: key};
+                return { name: value, value: key };
             });
         },
-        getDefaultValue: function(){
+        getDefaultValue: function () {
             var gadget = this.model.get('gadget'),
                 contentFields = this.model.getContentFields();
-            if(gadget == 'launches_table'){
-                var criteriaData = this.getCriteriaData(),
-                    content = [];
-                _.each(contentFields, function(field){
-                    var criteria = _.find(criteriaData, function(c){ return c.value.indexOf(field)>=0; });
+            if (gadget === 'launches_table') {
+                var criteriaData = this.getCriteriaData();
+                var content = [];
+                _.each(contentFields, function (field) {
+                    var criteria = _.find(criteriaData, function (c) {
+                        return c.value.indexOf(field) >= 0;
+                    });
                     criteria && content.push(criteria.value);
                 });
                 return _.uniq(content);
             }
             return contentFields;
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {}))
+        render: function () {
+            this.$el.html(Util.templates(this.template, {}));
         },
-        onChangeSelectCriteria: function(content_fields) {
+        onChangeSelectCriteria: function (contentFields) {
             var values = [];
-            if(typeof content_fields == 'string') {
-                values.push(content_fields);
+            if (typeof contentFields === 'string') {
+                values.push(contentFields);
             } else {
-                _.each(content_fields, function(item) {
+                _.each(contentFields, function (item) {
                     values = values.concat(item.split(','));
                 });
             }
             if (this.curWidget.staticCriteria) {
-                _.each(this.curWidget.staticCriteria, function(val, key){
+                _.each(this.curWidget.staticCriteria, function (val, key) {
                     values.push(key);
                 });
             }
             this.model.setContentFields(_.uniq(values));
             this.validate();
         },
-        validate: function() {
-            if(!this.model.getContentFields().length) {
+        validate: function () {
+            if (!this.model.getContentFields().length) {
                 this.selectCriteria.setErrorState(Localization.validation.selectAtLeastOneCriteria);
                 return false;
             }
             return true;
         },
-        onDestroy: function() {
+        onDestroy: function () {
             this.selectCriteria && this.selectCriteria.destroy();
         }
     });

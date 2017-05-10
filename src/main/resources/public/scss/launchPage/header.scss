@@ -167,6 +167,11 @@
         height: 100%;
         float: left;
       }
+      @media(max-width: 767px){
+        .left-items{
+          display:none;
+        }
+      }
       .right-items {
         height: 100%;
         float: right;

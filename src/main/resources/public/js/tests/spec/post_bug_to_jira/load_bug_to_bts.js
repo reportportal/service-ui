@@ -26,7 +26,7 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
-    var DefectEditor = require('defectEditor');
+
     var App = require('app');
     var Mock = require('fakeData');
     var Service = require('coreService');

@@ -160,6 +160,11 @@ define(function (require, exports, module) {
                     this.collection.parse(data.content);
                 }.bind(this));
         },
+
+        update: function () {
+            this.updateFilters();
+        },
+
         getQueryString: function(query){
             if(!query) query = {};
             if(!query.page) query.page = 1;

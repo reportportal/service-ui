@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
@@ -58,142 +57,154 @@ define(function (require, exports, module) {
         computeds: {
             canRemove: {
                 deps: ['isMy', 'isMyDashboard'],
-                get: function(isMy, isMyDashboard) {
-                    return (config.userModel.get('isAdmin') ||
-                    config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager ||
-                    isMyDashboard || (isMy && isMyDashboard));
+                get: function (isMy, isMyDashboard) {
+                    return (
+                        config.userModel.get('isAdmin')
+                        || config.userModel.getRoleForCurrentProject()
+                        === config.projectRolesEnum.project_manager
+                        || isMyDashboard
+                        || (isMy && isMyDashboard)
+                    );
                 }
             }
         },
-        initialize: function() {
+        initialize: function () {
             this.activate = false;
             this.render();
             this.$el.addClass('load');
-            this.$el.attr({'data-id': this.model.get('id'), 'data-gs-min-width': config.minWidgetWidth,
-                'data-gs-min-height': config.minWidgetHeight});
+            this.$el.attr({
+                'data-id': this.model.get('id'),
+                'data-gs-min-width': config.minWidgetWidth,
+                'data-gs-min-height': config.minWidgetHeight
+            });
             this.el.backboneView = this;// for gridstack
             this.listenTo(this.model, 'update:timer', this.updateTimer);
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        appendTooltip: function(){
-            var description =  this.model.get('description'),
-                el = $('[data-js-comment]', this.$el);
-            if(description){
-                Util.appendTooltip(function() {
-                    var tooltip = new SimpleTooltipView({message: description});
-                    return tooltip.$el.html();
+        appendTooltip: function () {
+            var description = this.model.get('description');
+            var el = $('[data-js-comment]', this.$el);
+            if (description) {
+                Util.appendTooltip(function () {
+                    var tooltip = new SimpleTooltipView({ message: description });
+                    return tooltip.$el;
                 }, el, el);
             }
         },
-        onClickRefresh: function() {
+        onClickRefresh: function () {
             config.trackingDispatcher.trackEventNumber(287);
             this.update();
         },
-        startResize: function() {
+        startResize: function () {
             this.$el.addClass('hide-widget');
         },
-        stopResize: function() {
+        stopResize: function () {
             this.widgetView && this.widgetView.resize();
             this.$el.removeClass('hide-widget');
         },
-        update: function(silent) {
-            !silent && this.$el.addClass('load');
+        update: function (silent) {
             var self = this;
+            !silent && this.$el.addClass('load');
             this.model.update()
-                .done(function(){
+                .done(function () {
+                    !silent && self.$el.removeClass('load');
                     self.updateWidget();
                 })
-                .fail(function(error){
-                    self.onLoadDataError(error);
-                })
-                .always(function() {
+                .fail(function (error) {
                     !silent && self.$el.removeClass('load');
-                })
+                    self.onLoadDataError(error);
+                });
         },
-        updateTimer: function() {
+        updateTimer: function () {
             this.activate && this.update(true);
         },
-        updateWidget: function() {
+        updateWidget: function () {
             this.widgetView && this.widgetView.destroy();
-            if(!this.model.get('gadget')){
+            if (!this.model.get('gadget')) {
                 this.onLoadDataError();
                 return;
             }
-            this.widgetView = new WidgetView({model: (new WidgetModel(this.model.get('widgetData')))});
+            this.widgetView = new WidgetView({ model: (new WidgetModel(this.model.get('widgetData'), { parse: true })) });
             $('[data-js-widget-container]', this.$el).html(this.widgetView.$el);
+            this.widgetView.onShow();
             this.appendTooltip();
         },
-        onLoadDataError: function(error){
+        onLoadDataError: function (error) {
             var message = Localization.widgets.unableLoadData;
-            if(error && error.status == 404){
+            var owner;
+            var isShared
+            if (error && error.status === 404) {
                 message = Localization.widgets.widgetNotFound;
-            }
-            else {
-                var owner = this.model.get('owner'),
-                    isShared = this.model.get('isShared');
-                if(!isShared && (owner !== config.userModel.get('name'))){
+            } else {
+                owner = this.model.get('owner');
+                isShared = this.model.get('isShared');
+                if (!isShared && (owner !== config.userModel.get('name'))) {
                     message = Localization.widgets.unsharedWidget;
                 }
             }
-            $('[data-js-widget-container]', this.$el).html(Util.templates(this.errorTpl, {message: message}));
+            $('[data-js-widget-container]', this.$el).html(Util.templates(this.errorTpl, { message: message }));
         },
-        onClickRemove: function(e) {
-            e.stopPropagation();
-            config.trackingDispatcher.trackEventNumber(288);
+        onClickRemove: function (e) {
             var self = this;
             var dangerRemove = (!this.model.get('isMy') && !this.model.get('isMyDashboard'));
-            var modal = new ModalConfirm({
+            var modal;
+            e.stopPropagation();
+            config.trackingDispatcher.trackEventNumber(288);
+            modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deletedWidget,
                 bodyText: Util.replaceTemplate(
-                    !dangerRemove ? Localization.dialog.deletedWidget:Localization.dialog.deletedWidgetDanger,
-                    this.model.get('name')),
-                confirmText: !dangerRemove?'':Localization.dialog.deletedWidgetDangerConfirmText,
+                    !dangerRemove
+                        ? Localization.dialog.deletedWidget
+                        : Localization.dialog.deletedWidgetDanger,
+                    this.model.get('name')
+                ),
+                confirmText: !dangerRemove ? '' : Localization.dialog.deletedWidgetDangerConfirmText,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
-                okButtonText: Localization.ui.delete,
+                okButtonText: Localization.ui.delete
             });
-            modal.show().done(function() {
+            modal.show().done(function () {
                 self.model.trigger('remove:view', self); // for gridstack
                 self.model.collection.remove(self.model);
                 self.destroy();
             });
-            $('[data-js-close]', modal.$el).on('click', function(){
+            $('[data-js-close]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(339);
             });
-            $('[data-js-cancel]', modal.$el).on('click', function(e){
+            $('[data-js-cancel]', modal.$el).on('click', function (e) {
                 config.trackingDispatcher.trackEventNumber(340);
             });
-            $('[data-js-ok]', modal.$el).on('click', function(){
+            $('[data-js-ok]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(341);
             });
         },
-        activateGadget: function() {
+        activateGadget: function () {
             this.activate = true;
             this.update();
         },
-        onClickGadgetEdit: function() {
-            config.trackingDispatcher.trackEventNumber(286);
+        onClickGadgetEdit: function () {
             var self = this;
+            config.trackingDispatcher.trackEventNumber(286);
             (new ModalEditWidget({
                 model: this.model
             })).show()
-                .done(function() {
-                    if(typeof self.model.changed.isShared != 'undefined') {
-                        launchFilterCollection.ready.done(function() {
+                .done(function () {
+                    if (typeof self.model.changed.isShared !== 'undefined') {
+                        launchFilterCollection.ready.done(function () {
                             launchFilterCollection.update();
-                        })
+                        });
                     }
                     self.update();
-                })
+                });
         },
-        getDataForGridStack: function() {
+        getDataForGridStack: function () {
             return [this.el, this.model.get('x'), this.model.get('y'), this.model.get('width'), this.model.get('height')];
         },
         onDestroy: function () {
             this.$el.remove();
-        },
+        }
     });
 
 

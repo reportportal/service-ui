@@ -1,0 +1,78 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.project-settings {
+  .nav-tabs-custom {
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
+  .nav-tabs-mobile {
+    display: none;
+    margin: 15px 0 15px 0;
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: block;
+    }
+
+    .drop-down-component {
+      width: 100%;
+
+      .dropdown-toggle {
+        position: relative;
+        padding-right: 0;
+
+        .select-value {
+          color: $COLOR--charcoal-grey;
+          font-family: $OpenSansSemibold, sans-serif;
+
+          &:after {
+            display: block;
+            position: absolute;
+            width: 12px;
+            height: 8px;
+            content: '';
+            top: 10px;
+            right: 12px;
+            background-image: url(../img/icons/arrow_down.svg);
+          }
+        }
+        .rp-caret {
+          display: none;
+        }
+      }
+
+      .dropdown-menu {
+        width: 100%;
+      }
+
+      &.open {
+        .dropdown-toggle {
+          .select-value {
+            &:after {
+              background-image: url(../img/icons/arrow_up.svg);
+            }
+          }
+        }
+      }
+    }
+  }
+}

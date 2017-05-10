@@ -22,11 +22,10 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
-    var WidgetsConfig = require('widget/widgetsConfig');
+    var WidgetService = require('newWidgets/WidgetService');
     var Localization = require('localization');
     var Service = require('coreService');
 
@@ -36,33 +35,31 @@ define(function (require, exports, module) {
         className: 'modal-add-widget-setting-launch',
         template: 'modal-add-widget-setting-launch',
         events: {
-            'change [data-js-data-launch-input]': 'onChange',
+            'change [data-js-data-launch-input]': 'onChange'
         },
         bindings: {
 
         },
-        initialize: function() {
-            this.widgetConfig = WidgetsConfig.getInstance();
-            this.curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
+        initialize: function () {
+            this.curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             if (!this.curWidget.launchesFilter) {
                 this.destroy();
                 return false;
             }
             this.render();
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {}))
+        render: function () {
+            this.$el.html(Util.templates(this.template, {}));
         },
-        onChange: function(e) {
+        onChange: function (e) {
             var curOptions = this.model.getWidgetOptions();
             curOptions.launchNameFilter = [$(e.currentTarget).val()];
             this.model.setWidgetOptions(curOptions);
         },
-        activate: function() {
-            var self = this,
-                curOptions = this.model.getWidgetOptions(),
-                field = $('[data-js-data-launch-input]', this.$el);
-            if(curOptions.launchNameFilter){
+        activate: function () {
+            var curOptions = this.model.getWidgetOptions();
+            var field = $('[data-js-data-launch-input]', this.$el);
+            if (curOptions.launchNameFilter) {
                 field.val(curOptions.launchNameFilter);
             }
             Util.setupSelect2WhithScroll(field, {
@@ -75,12 +72,12 @@ define(function (require, exports, module) {
                 allowClear: false,
                 placeholder: Localization.widgets.selectLaunch,
                 initSelection: function (element, callback) {
-                    callback({id: element.val(), text: element.val()});
+                    callback({ id: element.val(), text: element.val() });
                 },
                 query: function (query) {
                     Service.searchLaunches(query)
                         .done(function (response) {
-                            var data = {results: []}
+                            var data = { results: [] };
                             _.each(response, function (item) {
                                 data.results.push({
                                     id: item,
@@ -100,9 +97,8 @@ define(function (require, exports, module) {
             Util.hintValidator(field, {
                 validator: 'required'
             });
-
         },
-        validate: function(){
+        validate: function () {
             return !$('[data-js-data-launch-input]', this.$el).trigger('validate').data('validate-error');
         }
     });

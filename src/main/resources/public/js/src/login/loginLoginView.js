@@ -19,11 +19,11 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function(require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var Localization = require('localization');
@@ -36,8 +36,8 @@ define(function(require, exports, module) {
 
     var LoginLoginView = Epoxy.View.extend({
 
-        className:'login-login-subpage',
-        attributes: {'data-js-login-login-subpage': ''},
+        className: 'login-login-subpage',
+        attributes: { 'data-js-login-login-subpage': '' },
         template: 'tpl-new-login-login',
 
         events: {
@@ -72,22 +72,21 @@ define(function(require, exports, module) {
             this.setupAnchors();
             this.bindValidators();
         },
-        renderOAuth: function() {
+        renderOAuth: function () {
             var self = this;
-            _.each(this.registryModel.get('authExtensions'), function(value) {
+            _.each(this.registryModel.get('authExtensions'), function (value) {
                 var view = new LoginLoginAuthButtonView(value);
                 self.oAuthButtons.push(view);
                 $('[data-js-oauth-container]', self.$el).append(view.$el);
             });
-            if(this.oAuthButtons.length) {
+            if (this.oAuthButtons.length) {
                 $('[data-js-oauth-login]', this.$el).removeClass('hide');
             }
         },
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$login = $('[data-js-login]', this.$el);
             this.$pass = $('[data-js-password]', this.$el);
             this.$loginBtn = $('[data-js-login-btn]', this.$el);
-            this.$gitHubLoginBtn = $('[data-js-github-login-btn]', this.$el);
             this.$loginForm = $('[data-js-login-login-form]', this.$el);
             this.$errorBlock = $('[data-js-error-block]', this.$el);
         },
@@ -121,10 +120,6 @@ define(function(require, exports, module) {
             ]);
         },
 
-        gitHubLogin: function () {
-            window.location = window.location.protocol + '//' + window.location.host + '/uat/sso/login/github';
-        },
-
         showPassword: function (e) {
             $(e.currentTarget).addClass('show');
             this.$pass.attr('type', 'text');
@@ -134,31 +129,32 @@ define(function(require, exports, module) {
             $(e.currentTarget).removeClass('show');
             this.$pass.attr('type', 'password');
         },
-        onSubmitForm: function(e) {
+        onSubmitForm: function (e) {
             e.preventDefault();
             e.stopPropagation();
             this.login();
         },
         login: function () {
+            var self = this;
+            var login;
+            var pass;
             $('.rp-field', this.$el).find('input').trigger('validate');
             if ($('.validate-error', this.$el).length) return;
-
-            var login = this.cutIfEmail(this.$login.val()),
-                pass = this.$pass.val();
-
+            login = this.cutIfEmail(this.$login.val());
+            pass = encodeURIComponent(this.$pass.val());
             if (config.router) {
-                config.router.navigate('login', {silent: true});
+                config.router.navigate('login', { silent: true });
             }
-            var self = this;
             this.user.login(login, pass)
                 .done(function () {
 
                 })
-                .fail(function(response){
-                    if (response.status == 403) {
+                .fail(function (response) {
+                    if (response.status === 403) {
                         self.trigger('blockLoginForm');
                         /* OAuth Spec says wrong creds is 400 */
-                    } else if (response.status == 400 && JSON.parse(response.responseText).error_code === 4003) {
+                    } else if (response.status === 400
+                        && JSON.parse(response.responseText).error_code === 4003) {
                         self.$loginForm.addClass('bad-credentials');
                     }
                 });
@@ -166,22 +162,22 @@ define(function(require, exports, module) {
 
         cutIfEmail: function (login) {
             if (Util.validateEmail(login)) {
-                var n = login.indexOf('@');
-                return login.slice(0, n);
+                return login.slice(0, login.indexOf('@'));
             }
             return login;
         },
 
         blockForm: function () {
             var time = this.loginModel.get('blockTime');
+            var message;
             if (time && time <= 30) {
-                var message = Localization.login.blockedLoginForm + ' <strong data-js-block-timer>' + time + '</strong> ' + Localization.ui.sec + '.';
+                message = Localization.login.blockedLoginForm + ' <strong data-js-block-timer>' +
+                    time + '</strong> ' + Localization.ui.sec + '.';
 
                 this.$errorBlock.removeClass('hide');
                 this.$login.prop('disabled', true);
                 this.$pass.prop('disabled', true);
                 this.$loginBtn.prop('disabled', true);
-                this.$gitHubLoginBtn.prop('disabled', true);
 
                 $('[data-js-error-message]', this.$el).html(message);
             }
@@ -190,24 +186,19 @@ define(function(require, exports, module) {
                 this.$login.prop('disabled', false);
                 this.$pass.prop('disabled', false);
                 this.$loginBtn.prop('disabled', false);
-                this.$gitHubLoginBtn.prop('disabled', false);
             }
         },
 
         onForgotPass: function () {
-          this.trigger('forgotPass');
+            this.trigger('forgotPass');
         },
 
         unHighlight: function () {
             this.$loginForm.removeClass('bad-credentials');
         },
 
-        destroy: function(){
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
             this.remove();
-            delete this;
         }
     });
 

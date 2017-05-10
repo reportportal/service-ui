@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
 
@@ -34,18 +34,18 @@ define(function (require, exports, module) {
     var DashboardCollection = Backbone.Collection.extend({
         model: DashboardModel,
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.ready = $.Deferred();
             this.defaultPath = '#' + appModel.get('projectId') + '/dashboard';
             this.update(options.startId);
             var self = this;
-            this.ready.done(function() {
+            this.ready.done(function () {
                 self.listenTo(self, 'add', self.onAddDashboard);
                 self.listenTo(self, 'remove', self.onRemoveDashboard);
                 self.listenTo(self, 'change:active', self.onChangeActive);
-            })
+            });
         },
-        onAddDashboard: function(model) {
+        onAddDashboard: function (model) {
             var dashboard = {
                 name: model.get('name'),
                 share: model.get('isShared'),
@@ -53,14 +53,14 @@ define(function (require, exports, module) {
             };
             Service.addOwnDashboard(dashboard)
                 .done(function (data) {
-                    model.set({id: data.id});
+                    model.set({ id: data.id });
                     Util.ajaxSuccessMessenger('dashboardAdded');
                 })
                 .fail(function (request) {
                     Util.ajaxFailMessenger(request, 'dashboardAdded');
                 });
         },
-        onRemoveDashboard: function(model) {
+        onRemoveDashboard: function (model) {
             var self = this;
             return Service.deleteDashboard(model.get('id'))
                 .done(function () {
@@ -71,87 +71,88 @@ define(function (require, exports, module) {
                     Util.ajaxFailMessenger(error, 'dashboardDelete');
                 });
         },
-        update: function(startId) {
+        update: function (startId) {
             this.reset([]);
             var self = this;
-            this.getDashboards(startId).done(function(dashboards) {
-                self.getSharedDashboards(startId).done(function(sharedDashboards) {
+            this.getDashboards(startId).done(function (dashboards) {
+                self.getSharedDashboards(startId).done(function (sharedDashboards) {
                     self.reset(dashboards.concat(sharedDashboards));
                     self.ready.resolve();
-                })
-            })
+                });
+            });
         },
-        getDashboards: function(startId) {
+        getDashboards: function (startId) {
             var async = $.Deferred();
             var self = this;
             Service.getProjectDashboards()
-                .done(function(data) {
+                .done(function (data) {
                     async.resolve(self.parse(data, startId));
                 })
-                .fail(function(data) {
+                .fail(function (data) {
                     async.reject(data);
                 });
             return async.promise();
         },
-        getSharedDashboards: function(startId) {
+        getSharedDashboards: function (startId) {
             var async = $.Deferred();
             var self = this;
             Service.getSharedDashboards()
-                .done(function(data) {
+                .done(function (data) {
                     async.resolve(self.parseShared(data, startId));
                 })
-                .fail(function(data) {
+                .fail(function (data) {
                     async.reject(data);
                 });
             return async.promise();
         },
-        parse: function(data, startId) {
-            _.each(data, function(item) {
-                if (item.id == startId) {
+        parse: function (data, startId) {
+            _.each(data, function (item) {
+                if (item.id === startId) {
                     item.active = true;
                 }
                 item.widgets = JSON.stringify(item.widgets);
             });
             return data;
         },
-        parseShared: function(data, startId) {
+        parseShared: function (data, startId) {
             var widgetsData = [];
-            _.each(data, function(value, key) {
-                if (key == startId) {
-                    value.active = true;
+            _.each(data, function (value, key) {
+                var newValue = value;
+                if (key === startId) {
+                    newValue.active = true;
                 }
-                value.isShared = true;
-                value.id = key;
-                value.notLoad = true;
+                newValue.isShared = true;
+                newValue.id = key;
+                newValue.notLoad = true;
                 widgetsData.push(value);
             });
             return widgetsData;
         },
-        createNewDashboard: function() {
+        createNewDashboard: function () {
             var self = this;
             (new ModalEditDashboard({
                 dashboardCollection: this,
-                dashboardModel: (new DashboardModel),
-                mode: 'save',
-            })).show().done(function(newModel) {
+                dashboardModel: (new DashboardModel()),
+                mode: 'save'
+            })).show().done(function (newModel) {
                 var data = newModel.toJSON();
                 data.name = data.name.trim();
                 data.owner = config.userModel.get('name');
                 self.add(data);
-            })
+            });
         },
-        onChangeActive: function(model, active) {
-            if(active) {
-                _.each(this.models, function(itemModel) {
-                    if (model.get('id') != itemModel.get('id')) {
-                        itemModel.set({active: false}, {silent: true});
+        onChangeActive: function (model, active) {
+            if (active) {
+                _.each(this.models, function (itemModel) {
+                    if (model.get('id') !== itemModel.get('id')) {
+                        itemModel.set({ active: false });
                     }
-                })
+                });
             }
         },
-        resetActive: function() {
-            _.each(this.models, function(model) {
-                model.set({active: false});
+        resetActive: function () {
+            _.each(this.models, function (model) {
+                model.set({ active: false });
             });
             this.trigger('reset:active');
         }

@@ -24,7 +24,8 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var HistoryItemView = require('launches/historyGrid/HistoryItemView');
+    var HistoryItemNameView = require('launches/historyGrid/HistoryItemNameView');
+    var HistoryItemCellsView = require('launches/historyGrid/HistoryItemCellsView');
     var App = require('app');
     require('baron');
 
@@ -43,17 +44,47 @@ define(function (require, exports, module) {
         },
         render: function() {
             this.$el.html(Util.templates(this.template, {
-                launches: this.launches.toJSON()
+                launches: this.launches.toJSON(),
+                nameWidth: this.getNameCellWidth()
             }));
             this.renderItems();
             Util.setupBaronScroll($('[data-js-history-scroll]', this.$el), null, {direction: 'h'});
         },
+        getNameCellWidth: function(){
+            var launchesSize = this.launches.length;
+            if(launchesSize > 10){
+                return 15;
+            }
+            else if (launchesSize > 5){
+                return 20;
+            }
+            else if (launchesSize >= 3 && launchesSize <= 5){
+                return 35;
+            }
+            else if(launchesSize <= 2){
+                return 50;
+            }
+        },
         renderItems: function() {
-            var $itemsContainer = $('[data-js-history-content]', this.$el);
+            var $nameContainer = $('[data-js-history-names]', this.$el),
+                $cellsContainer = $('[data-js-history-items-cells]', this.$el);
             _.each(this.items.models, function(model) {
-                var item = new HistoryItemView({model: model, launches: this.launches, collectionItems: this.collectionItems});
-                $itemsContainer.append(item.$el);
-                this.renderedItems.push(item);
+                var name = new HistoryItemNameView({model: model, launches: this.launches, collectionItems: this.collectionItems}),
+                    cells = new HistoryItemCellsView({model: model, launches: this.launches, collectionItems: this.collectionItems});
+                $nameContainer.append(name.$el);
+                $cellsContainer.append(cells.$el);
+
+                var cellsHeight = cells.$el.height(),
+                    nameHeight = name.$el.height(),
+                    height = nameHeight >= cellsHeight ? nameHeight : cellsHeight;
+
+                $('[data-js-name-block]', name.$el).height(height);
+                $('[data-js-history-cell]', cells.$el).height(height);
+
+                this.renderedItems.push(name);
+                this.renderedItems.push(cells);
+
+
             }, this);
         },
         destroy: function () {

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -33,10 +33,10 @@ define(function (require, exports, module) {
         events: {
         },
 
-        initialize: function(options) {
-            var options = options || {};
-            this.render();
+        initialize: function (initOptions) {
+            var options = initOptions || {};
             var self = this;
+            this.render();
             options.value && $('[data-js-text-area]', this.$el).val(options.value);
             this.simplemde = new SimpleMDE({
                 element: $('[data-js-text-area]', this.$el).get(0),
@@ -131,38 +131,38 @@ define(function (require, exports, module) {
                         action: SimpleMDE.togglePreview,
                         className: 'icon-preview no-disable',
                         title: 'Toggle Preview'
-                    },
+                    }
                 ],
                 placeholder: options.placeholder || '',
                 spellChecker: false,
-                previewRender: function(plainText) {
-                    return self.simplemde.markdown(plainText.indentSpases());
-                },
+                previewRender: function (plainText) {
+                    return self.simplemde.markdown(plainText.escapeHtml().indentSpases());
+                }
                 // insertTexts: {
                 //     link: ['[](', ')']
                 // }
             });
 
-            this.simplemde.codemirror.on("change", function(){
+            this.simplemde.codemirror.on('change', function () {
                 self.trigger('change', self.simplemde.value());
             });
-            this.simplemde.codemirror.on("focus", function(){
+            this.simplemde.codemirror.on('focus', function () {
                 self.$el.addClass('focused');
             });
-            this.simplemde.codemirror.on("blur", function(){
+            this.simplemde.codemirror.on('blur', function () {
                 self.$el.removeClass('focused');
             });
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        update: function() { // for rerender
+        update: function () { // for rerender
             this.setValue(this.getValue());
         },
-        getValue: function() {
+        getValue: function () {
             return this.simplemde.value();
         },
-        setValue: function(value) {
+        setValue: function (value) {
             this.simplemde.value(value);
         }
     });

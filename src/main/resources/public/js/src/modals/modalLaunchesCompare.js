@@ -17,72 +17,69 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
-
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
-
-    var App = require('app');
     var Util = require('util');
     var Service = require('coreService');
-    var WidgetsConfig = require('widget/widgetsConfig');
-    var Widgets = require('widgets');
-
-    var config = App.getInstance();
+    var WidgetService = require('newWidgets/WidgetService');
+    var WidgetModel = require('newWidgets/WidgetModel');
+    var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
 
     var ModalLaunchesCompare = ModalView.extend({
         template: 'tpl-modal-launches-compare',
         className: 'modal-launches-compare',
 
 
-        initialize: function(options) {
-            this.ids = _.map(options.items, function(item) {
+        initialize: function (options) {
+            this.ids = _.map(options.items, function (item) {
                 return item.get('id');
             });
             this.$el.addClass('load');
             this.render();
             this.load();
         },
-        load: function() {
+        load: function () {
             var self = this;
             Service.getCompare(this.ids.join(','))
                 .done(function (response) {
                     self.$el.removeClass('load');
                     self.createChart(response);
                 }).fail(function (response) {
-                    Util.ajaxFailMessenger(response, "errorUpdateWidget");
+                    Util.ajaxFailMessenger(response, 'errorUpdateWidget');
                     self.hide();
                 });
         },
         onKeySuccess: function () {
-          return;
+
         },
         createChart: function (response) {
-            var gadget = 'launches_comparison_chart',
-                container = $('[data-js-widget-content]', this.$el),
-                widgetsConfig = WidgetsConfig.getInstance(),
-                criteria = widgetsConfig.widgetTypes[gadget].staticCriteria;
-            delete criteria['statistics$defects$no_defect$total'];
-            this.widget = new Widgets.LaunchesComparisonChart({
-                container: container,
-                param: {
-                    gadget: gadget,
-                    content: response,
-                    content_fields: _.keys(widgetsConfig.widgetTypes[gadget].staticCriteria),
-                    height: config.defaultWidgetHeight
-                }
-            });
-            this.$el.addClass('ready');
+            var gadget = 'launches_comparison_chart';
             var self = this;
-            setTimeout(function () {
-                self.widget.render();
-            }, 500);
-
+            $.when(WidgetService.getFullWidgetConfig(gadget)).done(function (widget) {
+                var curWidget = widget;
+                var criteria = curWidget.staticCriteria;
+                var widgetData = {
+                    id: _.uniqueId() + '-' + gadget,
+                    content_parameters: { gadget: gadget },
+                    content: response
+                };
+                delete criteria.statistics$defects$no_defect$total;
+                widgetData.content_parameters.content_fields = _.keys(criteria);
+                self.widget = new LaunchesComparisonChart({
+                    isPreview: true,
+                    model: new WidgetModel(widgetData, { parse: true })
+                });
+                self.$el.addClass('ready');
+                setTimeout(function () {
+                    $('[data-js-widget-content]', this.$el).append(self.widget.$el);
+                    self.widget.onShow();
+                }, 500);
+            });
         },
 
-        render: function() {
-            this.$el.html(Util.templates(this.template, {}))
+        render: function () {
+            this.$el.html(Util.templates(this.template, {}));
         }
     });
 

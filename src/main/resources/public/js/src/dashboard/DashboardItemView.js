@@ -19,19 +19,17 @@ define(function (require, exports, module) {
 
     var Util = require('util');
     var $ = require('jquery');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
     var ModalEditDashboard = require('modals/modalEditDashboard');
     var ModalConfirm = require('modals/modalConfirm');
     var ModalAddWidget = require('modals/addWidget/modalAddWidget');
-    var modalAddSharedWidget = require('modals/addSharedWidget/modalAddSharedWidget');
+    var ModalAddSharedWidget = require('modals/addSharedWidget/modalAddSharedWidget');
     var Localization = require('localization');
     var GadgetCollection = require('dashboard/GadgetCollection');
     var GadgetView = require('dashboard/GadgetView');
     var GadgetModel = require('dashboard/GadgetModel');
-    var WidgetModel = require('newWidgets/WidgetModel');
-    var WidgetConfig = require('widget/widgetsConfig');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
 
     require('gridstackUi');
@@ -53,12 +51,12 @@ define(function (require, exports, module) {
             'click [data-js-close-fullscreen]': 'onClickExitFullScreen',
             'click [data-js-add-widget]': 'onClickAddWidget',
             'click [data-js-add-widget-bootm]': 'onClickWidgetBottom',
-            'click [data-js-add-shared-widget]': 'onClickAddSharedWidget',
+            'click [data-js-add-shared-widget]': 'onClickAddSharedWidget'
         },
 
         bindings: {
             ':el': 'classes: {"not-my": not(isMy)}',
-            '[data-js-owner-name]': 'text: owner',
+            '[data-js-owner-name]': 'text: owner'
             // '[data-js-add-widget]': 'classes: {disabled: not(validateForAddWidget)}, attr: {title: getAddBtnTitle}',
             // '[data-js-add-shared-widget]': 'classes: {disabled: not(validateForAddWidget)}, attr: {title: getAddBtnTitle}'
         },
@@ -80,53 +78,53 @@ define(function (require, exports, module) {
             // }
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.gadgetViews = [];
             this.scrollElement = config.mainScrollElement;
             this.onShowAsync = $.Deferred();
             this.render();
             var self = this;
-            if(this.model.get('notLoad')) {
+            if (this.model.get('notLoad')) {
                 this.$el.addClass('load');
-                this.model.update().done(function() {
+                this.model.update().done(function () {
                     self.$el.removeClass('load');
                     self.postInit();
                     self.applyBindings();
-                })
+                });
             } else {
                 this.postInit();
             }
         },
-        postInit: function() {
-            var self = this;
-            WidgetConfig.updateInstance().done(function() {
-                self.gadgetCollection = new GadgetCollection([], {dashboardModel: self.model});
-                self.listenTo(self.gadgetCollection, 'add', self.onAddGadget);
-                self.listenTo(self.gadgetCollection, 'remove:view', self.onRemoveGadget);
-                self.listenTo(self.gadgetCollection, 'remove', self.checkEmptyDashboard);
-                self.activateGridStack();
-                self.listenTo(self.model, 'add:widget', self.onAddNewGadget);
-                self.listenTo(self.model, 'change:isShared', self.onShareDashboard);
-                self.updateGadgetsTimer(TIME_UPDATE);
-            });
+        postInit: function () {
+            this.gadgetCollection = new GadgetCollection([], { dashboardModel: this.model });
+            this.listenTo(this.gadgetCollection, 'add', this.onAddGadget);
+            this.listenTo(this.gadgetCollection, 'remove:view', this.onRemoveGadget);
+            this.listenTo(this.gadgetCollection, 'remove', this.checkEmptyDashboard);
+            this.activateGridStack();
+            this.listenTo(this.model, 'add:widget', this.onAddNewGadget);
+            this.listenTo(this.model, 'change:isShared', this.onShareDashboard);
+            this.updateGadgetsTimer(TIME_UPDATE);
 
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {}));
+        render: function () {
+            this.$el.html(Util.templates(this.template, { isMyDashboard: this.isMyDashboard() }));
         },
-        onAddNewGadget: function(model) {
+        isMyDashboard: function () {
+            return this.model.get('owner') === config.userModel.get('name');
+        },
+        onAddNewGadget: function (model) {
             this.checkEmptyDashboard();
             this.gadgetCollection.add(model);
             this.updateScroll();
         },
-        onShareDashboard: function(){
-            if(this.model.get('isShared')){
-                _.each(this.gadgetViews, function(view){
+        onShareDashboard: function () {
+            if (this.model.get('isShared')) {
+                _.each(this.gadgetViews, function (view) {
                     view.model.set('isShared', true);
                 }, this);
             }
         },
-        activateGridStack: function() {
+        activateGridStack: function () {
             var $gridStack = $('[data-js-grid-stack]', this.$el);
             $gridStack.gridstack({
                 cellHeight: config.widgetGridCellHeight,
@@ -138,28 +136,28 @@ define(function (require, exports, module) {
                     handles: 'se, sw'
                 },
                 disableDrag: !this.model.get('isMy'),
-                disableResize: !this.model.get('isMy'),
+                disableResize: !this.model.get('isMy')
             });
             this.gridStack = $gridStack.data('gridstack');
             this.createGadgets();
             var self = this;
             $gridStack.on('change', function (e, items) {
-                _.each(items, function(item) {
+                _.each(items, function (item) {
                     var id = item.el.data('id');
-                    if(!id) return;
+                    if (!id) return;
                     var gadgetModel = self.gadgetCollection.get(id);
-                    if(!gadgetModel) return;
+                    if (!gadgetModel) return;
                     gadgetModel.set({
                         x: item.x,
                         y: item.y,
                         width: item.width,
-                        height: item.height,
+                        height: item.height
                     });
                 });
                 self.gadgetCollection.sort();
                 self.updateScroll();
             });
-            $gridStack.on('dragstop', function(event, ui) {
+            $gridStack.on('dragstop', function (event, ui) {
                 config.trackingDispatcher.trackEventNumber(285);
             });
             $gridStack.on('resizestart', function (event, ui) {
@@ -169,70 +167,69 @@ define(function (require, exports, module) {
             });
             $gridStack.on('resizestop', function (event, ui) {
                 var view = event.target.backboneView;
-                setTimeout(function(){
+                setTimeout(function () {
                     view && view.stopResize();
                 }, 300);
             });
-
         },
-        onClickFullScreen: function(e) {
+        onClickFullScreen: function (e) {
             e.preventDefault();
             config.trackingDispatcher.trackEventNumber(283);
-            $('body').fullscreen({toggleClass: 'fullscreen'});
+            $('body').fullscreen({ toggleClass: 'fullscreen' });
             this.updateGadgetsTimer(TIME_UPDATE_FULL_SCREEN);
         },
-        onAddGadget: function(gadgetModel) {
-            if(gadgetModel.get('isShared')) {
-                launchFilterCollection.ready.done(function() {
+        onAddGadget: function (gadgetModel) {
+            if (gadgetModel.get('isShared')) {
+                launchFilterCollection.ready.done(function () {
                     launchFilterCollection.update();
-                })
+                });
             }
-            var view = new GadgetView({model: gadgetModel, dashboardModel: this.model});
+            var view = new GadgetView({ model: gadgetModel, dashboardModel: this.model });
             this.gridStack.addWidget.apply(this.gridStack, view.getDataForGridStack());
             this.gadgetViews.push(view);
         },
-        onRemoveGadget: function(view) {
+        onRemoveGadget: function (view) {
             this.gridStack.removeWidget(view.el);
         },
-        checkEmptyDashboard: function() {
-            if(!this.model.getWidgets().length) {
+        checkEmptyDashboard: function () {
+            if (!this.model.getWidgets().length) {
                 this.$el.addClass('not-found');
             } else {
                 this.$el.removeClass('not-found');
             }
         },
-        createGadgets: function() {
+        createGadgets: function () {
             this.checkEmptyDashboard();
-            this.gadgetCollection.add(this.model.getWidgets(), {silent: true, parse: true});
-            this.gadgetCollection.forEach(function(model){
+            this.gadgetCollection.add(this.model.getWidgets(), { silent: true, parse: true });
+            this.gadgetCollection.forEach(function (model) {
                 this.onAddGadget(model);
             }, this);
             this.updateScroll();
             var self = this;
-            this.$el.on('resize', function(){
+            this.$el.on('resize', function () {
                 self.scrollerAnimate.resize();
             });
         },
-        updateScroll: function() {
+        updateScroll: function () {
             var self = this;
-            this.onShowAsync.done(function() {
+            this.onShowAsync.done(function () {
                 self.scrollerAnimate = new ScrollerAnimate(self.gadgetViews);
                 self.scrollElement
                     .off('scroll.dashboardPage')
-                    .on("scroll.dashboardPage", function (e) {
+                    .on('scroll.dashboardPage', function () {
                         self.onScroll();
                     });
                 self.onScroll();
-            })
+            });
         },
-        onShow: function() {
+        onShow: function () {
             this.onShowAsync.resolve();
         },
-        onScroll: function() {
+        onScroll: function () {
             var scrollTop = this.scrollElement.scrollTop();
             this.scrollerAnimate.activateScroll(scrollTop);
         },
-        onClickEdit: function(e) {
+        onClickEdit: function (e) {
             e.preventDefault();
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(282);
@@ -240,12 +237,12 @@ define(function (require, exports, module) {
             (new ModalEditDashboard({
                 dashboardCollection: this.model.collection,
                 dashboardModel: this.model,
-                mode: 'edit',
-            })).show().done(function(newModel) {
+                mode: 'edit'
+            })).show().done(function (newModel) {
                 self.model.set(newModel.toJSON());
-            })
+            });
         },
-        onClickRemove: function(e) {
+        onClickRemove: function (e) {
             e.preventDefault();
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(284);
@@ -255,70 +252,71 @@ define(function (require, exports, module) {
                 bodyText: Util.replaceTemplate(Localization.dialog.dashboardDelete, this.model.get('name')),
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
-                okButtonText: Localization.ui.delete,
+                okButtonText: Localization.ui.delete
             });
             modal.show()
-                .done(function() {
+                .done(function () {
                     var collection = self.model.collection;
                     self.model.collection.remove(self.model);
                     self.destroy();
                     collection.resetActive();
                 });
-            modal.$el.on('click', function(e){
-                var $target = $(e.target),
-                    isCancel = $target.is('[data-js-cancel]'),
-                    isDelete = $target.is('[data-js-ok]'),
-                    isClose = ($target.is('[data-js-close]') || $target.is('[data-js-close] i'));
-                if(isClose){
+            modal.$el.on('click', function () {
+                var $target = $(e.target);
+                var isCancel = $target.is('[data-js-cancel]');
+                var isDelete = $target.is('[data-js-ok]');
+                var isClose = ($target.is('[data-js-close]') || $target.is('[data-js-close] i'));
+                if (isClose) {
                     config.trackingDispatcher.trackEventNumber(276);
-                }
-                else if(isCancel){
+                } else if (isCancel) {
                     config.trackingDispatcher.trackEventNumber(277);
-                }
-                else if(isDelete){
+                } else if (isDelete) {
                     config.trackingDispatcher.trackEventNumber(278);
                 }
             });
         },
-        onClickExitFullScreen: function(e) {
+        onClickExitFullScreen: function (e) {
             this.updateGadgetsTimer(TIME_UPDATE);
             e.preventDefault();
             e.stopPropagation();
             $.fullscreen.exit();
         },
-        updateGadgetsTimer: function(time) {
+        updateGadgetsTimer: function (time) {
             clearTimeout(this.updateTimer);
             var self = this;
-            this.updateTimer = setTimeout(function() {
-                _.each(self.gadgetCollection.models, function(gadgetModel) {
+            this.updateTimer = setTimeout(function () {
+                _.each(self.gadgetCollection.models, function (gadgetModel) {
                     gadgetModel.trigger('update:timer');
                 });
                 self.updateGadgetsTimer(time);
             }, time);
         },
-        onClickAddWidget: function(e) {
+        onClickAddWidget: function (e) {
             e.preventDefault();
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(280);
-            (new ModalAddWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
+            (new ModalAddWidget({ model: new GadgetModel(), dashboardModel: this.model })).show();
         },
-        onClickWidgetBottom: function(e){
+        onClickWidgetBottom: function (e) {
             e.preventDefault();
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(345);
-            (new ModalAddWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
+            (new ModalAddWidget({ model: new GadgetModel(), dashboardModel: this.model })).show();
         },
-        onClickAddSharedWidget: function(e) {
+        onClickAddSharedWidget: function (e) {
             e.preventDefault();
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(281);
-            (new modalAddSharedWidget({model: new GadgetModel(), dashboardModel: this.model})).show();
+            (new ModalAddSharedWidget({
+                model: new GadgetModel(),
+                dashboardModel: this.model
+            })).show();
         },
         destroy: function () {
             clearTimeout(this.updateTimer);
             $.fullscreen.exit();
-            _.each(this.gadgetViews, function(view) {
-               view.destroy();
+            _.each(this.gadgetViews, function (view) {
+                view.destroy();
             });
             this.undelegateEvents();
             this.gridStack && this.gridStack.destroy();
@@ -327,18 +325,18 @@ define(function (require, exports, module) {
             this.stopListening();
             this.unbind();
             this.$el.remove();
-        },
+        }
     });
 
-    function ScrollerAnimate(blocks){
+    function ScrollerAnimate(blocks) {
         this.blocks = blocks;
         this.scrollMap = [];
         this.documentHeight = 0;
 
-        this._createScrollMap = function(){
+        this._createScrollMap = function () {
             this.scrollMap = [];
             this.documentHeight = document.documentElement.clientHeight;
-            for(var i = 0; i < this.blocks.length; i++){
+            for (var i = 0; i < this.blocks.length; i++) {
                 this.scrollMap.push({
                     scrollStart: this.blocks[i].el.offsetTop,
                     scrollEnd: this.blocks[i].el.offsetTop + this.blocks[i].el.offsetHeight
@@ -346,32 +344,32 @@ define(function (require, exports, module) {
             }
         };
 
-        this.activateScroll = function(scrollTop){
+        this.activateScroll = function (scrollTop) {
             var scrollBottom = scrollTop + this.documentHeight;
             var showBlockIndexs = [];
-            for(var i = 0; i < this.scrollMap.length; i++){
-                if((this.scrollMap[i].scrollStart <= scrollBottom && scrollTop < this.scrollMap[i].scrollStart)
+            for (var i = 0; i < this.scrollMap.length; i++) {
+                if ((this.scrollMap[i].scrollStart <= scrollBottom && scrollTop < this.scrollMap[i].scrollStart)
                     || (this.scrollMap[i].scrollEnd <= scrollBottom && scrollTop < this.scrollMap[i].scrollEnd)
-                    || (this.scrollMap[i].scrollEnd > scrollBottom && scrollTop >= this.scrollMap[i].scrollStart)){
+                    || (this.scrollMap[i].scrollEnd > scrollBottom && scrollTop >= this.scrollMap[i].scrollStart)) {
                     showBlockIndexs.push(i);
-                    if(!this.blocks[i].activate){
+                    if (!this.blocks[i].activate) {
                         this.blocks[i].activate = true;
                         this.blocks[i].activateGadget();
                     }
                 }
             }
             // return middle block index
-            if(showBlockIndexs.length != 2) return showBlockIndexs[parseInt(showBlockIndexs.length/2)];
-            var middleScreen = scrollBottom - this.documentHeight/2,
-                blockSeparate = this.scrollMap[showBlockIndexs[0]].scrollEnd;
-            if(blockSeparate > middleScreen) return showBlockIndexs[0];
+            if (showBlockIndexs.length !== 2) return showBlockIndexs[parseInt(showBlockIndexs.length / 2, 10)];
+            var middleScreen = scrollBottom - (this.documentHeight / 2);
+            var blockSeparate = this.scrollMap[showBlockIndexs[0]].scrollEnd;
+            if (blockSeparate > middleScreen) return showBlockIndexs[0];
             return showBlockIndexs[1];
         };
 
-        this.resize = function(){
+        this.resize = function () {
             this._createScrollMap();
             this.activateScroll(config.mainScrollElement.scrollTop());
-        }
+        };
 
         this._createScrollMap();
     }

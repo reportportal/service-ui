@@ -3,7 +3,7 @@
     <p><%= data.bodyText %></p>
     <% if(data.confirmText) { %>
         <label class="rp-checkbox-wrap confirm-block">
-            <input class="rp-input-checkbox" type="checkbox" data-js-select>
+            <!--<input class="rp-input-checkbox" type="checkbox" data-js-select>-->
             <span><%= data.confirmText %></span>
         </label>
     <% } %>
@@ -15,7 +15,7 @@
     </button>
     <% } %>
     <% if(data.okButtonText) { %>
-    <button class="rp-btn <%= data.confirmText?'disabled':'' %> <%= (data.confirmText || data.okButtonDanger)?' rp-btn-danger':' rp-btn-submit' %>" type="button" data-js-ok>
+    <button class="rp-btn  <%= (data.confirmText || data.okButtonDanger)?' rp-btn-danger':' rp-btn-submit' %>" type="button" data-js-ok>
         <%= data.okButtonText %>
     </button>
     <% } %>

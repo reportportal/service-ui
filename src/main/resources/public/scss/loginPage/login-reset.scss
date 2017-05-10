@@ -31,7 +31,7 @@
     -webkit-background-size: 100%;
     background-size: 100%;
 
-    @media (max-width: 1010px) {
+    @media (max-width: $SCREEN_XS_MAX) {
       display: block;
     }
 
@@ -74,7 +74,7 @@
       font-size: 32px;
     }
 
-    @media (max-width: 1010px) {
+    @media (max-width: $SCREEN_XS_MAX) {
       display: none;
     }
   }
@@ -82,7 +82,7 @@
     width: 100%;
     text-align: center;
 
-    @media (max-width: 1010px) {
+    @media (max-width: $SCREEN_XS_MAX) {
       padding: 0 20px;
       margin-bottom: 10px;
     }
@@ -91,7 +91,13 @@
       width: 100%;
       font-weight: normal;
 
-      @media (max-width: 1010px) {
+      @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+        width: 380px;
+        display: block;
+        margin: 0 auto 30px auto;
+      }
+
+      @media (max-width: $SCREEN_XS_MAX) {
         margin-bottom: 30px;
       }
       .icon-wrapper {
@@ -169,7 +175,7 @@
       &.confirm-pass-field {
         margin-bottom: 50px;
 
-        @media (max-width: 1010px) {
+        @media (max-width: $SCREEN_XS_MAX) {
           margin-bottom: 30px;
         }
         .rp-input {

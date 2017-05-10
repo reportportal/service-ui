@@ -31,7 +31,7 @@
     -webkit-background-size: 100%;
     background-size: 100%;
 
-    @media (max-width: 1010px) {
+    @media (max-width: $SCREEN_XS_MAX) {
       display: block;
     }
 
@@ -74,7 +74,7 @@
       font-size: 32px;
     }
 
-    @media (max-width: 1010px) {
+    @media (max-width: $SCREEN_XS_MAX) {
       display: none;
     }
   }
@@ -83,7 +83,11 @@
     width: 100%;
     min-height: 325px;
 
-    @media (max-width: 1010px) {
+    @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+      text-align: center;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
       padding: 0 20px;
       min-height: 0;
       margin-bottom: 30px;
@@ -94,8 +98,9 @@
 
     .or-block {
       margin-bottom: 30px;
+      margin-top: 20px;
 
-      @media (max-width: 1010px) {
+      @media (max-width: $SCREEN_XS_MAX) {
         margin-bottom: 25px;
       }
 
@@ -106,7 +111,11 @@
         width: 165px;
         margin-bottom: 4px;
 
-        @media (max-width: 1010px) {
+        @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+          width: 278px;
+        }
+
+        @media (max-width: $SCREEN_XS_MAX) {
           width: 114px;
         }
       }
@@ -126,6 +135,11 @@
       width: 100%;
       margin-bottom: 30px;
       font-weight: normal;
+
+      @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+        width: 380px;
+        text-align: left;
+      }
 
       .icon-wrapper {
         position: absolute;
@@ -233,7 +247,7 @@
           font-size: 12px;
           color: $COLOR--charcoal-grey;
 
-          @media (max-width: 1010px) {
+          @media (max-width: $SCREEN_XS_MAX) {
             width: 220px;;
           }
         }
@@ -256,7 +270,11 @@
       -moz-border-radius: 3px;
       border-radius: 3px;
 
-      @media (max-width: 1010px) {
+      @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+        margin-bottom: 0;
+      }
+
+      @media (max-width: $SCREEN_XS_MAX) {
         margin-bottom: 0;
       }
     }

@@ -19,26 +19,33 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.login-login-auth-button.rp-btn {
-  margin: 0 auto 30px auto;
-  display: inline-block;
-  height: 40px;
-  font-size: 16px;
-  line-height: 25px;
-  border-radius: 3px;
+.login-login-auth-button {
 
-  svg {
-    width: 20px;
-    height: 20px;
-    color: #fff;
+  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
     display: inline-block;
-    fill: #fff;
-    vertical-align: top;
-    margin-top: 2px;
-    margin-right: 8px;
+    margin-right: 10px;
   }
+  .rp-btn {
+    margin: 0 auto 10px auto;
+    display: inline-block;
+    height: 40px;
+    font-size: 16px;
+    line-height: 25px;
+    border-radius: 3px;
 
-  @media (max-width: 1010px) {
-    margin-bottom: 25px;
+    svg {
+      width: 20px;
+      height: 20px;
+      color: #fff;
+      display: inline-block;
+      fill: #fff;
+      vertical-align: top;
+      margin-top: 2px;
+      margin-right: 8px;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      margin-bottom: 25px;
+    }
   }
 }

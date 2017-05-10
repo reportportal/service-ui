@@ -133,7 +133,14 @@ define(function (require, exports, module) {
             this.loadExecutionsTooltip();
         },
         update: function () {
+            var stats =  this.model.get('statistics');
+            var data = {
+                passed: this.getExecutionStats(stats, 'passed'),
+                failed: this.getExecutionStats(stats, 'failed'),
+                skipped: this.getExecutionStats(stats, 'skipped'),
+            };
             this.loadDefectTooltip();
+            this.executionsTooltip.update(data);
         },
         onHoverExecutionStats: function(){
             config.trackingDispatcher.trackEventNumber(89);
@@ -220,6 +227,7 @@ define(function (require, exports, module) {
             }, $hoverElement, $hoverElement);
         },
         loadExecutionsTooltip: function(){
+            var self = this;
             var el = $('[data-js-executions]');
             var stats =  this.model.get('statistics');
             var data = {
@@ -228,11 +236,11 @@ define(function (require, exports, module) {
                 skipped: this.getExecutionStats(stats, 'skipped'),
             };
             var $hoverElement = el.next($('[data-js-hover-element]', this.$el));
+            this.executionsTooltip = new LaunchSuiteExecutionsTooltipView({
+                data: data
+            });
             Util.appendTooltip(function() {
-                var tooltip = new LaunchSuiteExecutionsTooltipView({
-                    data: data
-                });
-                return tooltip.$el.html();
+                return self.executionsTooltip.$el;
             }, $hoverElement, $hoverElement);
         },
         destroy: function () {

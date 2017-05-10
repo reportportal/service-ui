@@ -14,23 +14,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
     var Util = require('util');
     var MembersService = require('projectMembers/MembersService');
     var AdminService = require('adminService');
     var SingletonAppModel = require('model/SingletonAppModel');
-    var urls = require('dataUrlResolver');
+    var DropDownComponent = require('components/DropDownComponent');
     var Localization = require('localization');
-
-    require('validate');
 
     var config = App.getInstance();
 
@@ -40,8 +37,6 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-load]': 'onClickLoad',
             'click [data-js-generate-password]': 'generatePassword',
-            'click [data-js-select-role-dropdown] a': 'selectRole',
-            'click [data-js-account-role-dropdown] a': 'selectAccount',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel'
         },
@@ -50,145 +45,158 @@ define(function (require, exports, module) {
             '[data-js-user-password]': 'value: password',
             '[data-js-user-email]': 'value: email',
             '[data-js-user-full-name]': 'value: full_name',
-            '[data-js-user-project]': 'value: default_project',
-            '[data-js-user-project-role-text]': 'text: getProjectRole',
-            '[data-js-user-account-role]': 'value: accountRole',
-            '[data-js-user-account-role-text]': 'text: accountRole'
+            '[data-js-user-project]': 'value: default_project'
         },
-        computeds: {
-            getProjectRole: {
-                deps: ['projectRole'],
-                get: function(projectRole) {
-                    var roles = Util.getRolesMap();
-                    return roles[projectRole];
-                }
-            }
-        },
-        initialize: function(options) {
+        initialize: function (options) {
             this.type = options.type;
             this.appModel = new SingletonAppModel();
-            this.model = new Epoxy.Model({
-                userId: '',
-                password: '',
-                email: '',
-                full_name: '',
-                accountRole: config.defaultAccountRole,
-                default_project: '',
-                projectRole: config.defaultProjectRole
-            });
+            this.model = new (Epoxy.Model.extend({
+                defaults: {
+                    userId: '',
+                    password: '',
+                    email: '',
+                    full_name: '',
+                    accountRole: config.defaultAccountRole,
+                    default_project: '',
+                    projectRole: config.defaultProjectRole
+                }
+            }))();
             this.render();
         },
-        onClickLoad: function() {
-            if(this.$form.valid()) {
+        onClickLoad: function () {
+            if (this.validate()) {
                 this.addUser();
             }
         },
         onKeySuccess: function () {
             $('[data-js-load]', this.$el).focus();
-            if(this.$form.valid()) {
+            if (this.validate()) {
                 this.addUser();
             }
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {
-                roles: Util.getRolesMap(),
-                isUsers: this.isUsers(),
-                accountRoles: config.accountRoles
+                isUsers: this.isUsers()
             }));
             this.setupAnchors();
-            this.setupValidation();
-            if(this.isUsers()){
+            this.setupDropDowns();
+            this.bindValidators();
+            if (this.isUsers()) {
                 this.setupProjectSearch();
             }
         },
-        isUsers: function(){
-            return this.type == 'users';
+        isUsers: function () {
+            return this.type === 'users';
         },
-        setupAnchors: function(){
+        setupAnchors: function () {
+            this.$login = $('[data-js-user-login]', this.$el);
+            this.$fullName = $('[data-js-user-full-name]', this.$el);
+            this.$email = $('[data-js-user-email]', this.$el);
             this.$password = $('[data-js-user-password]', this.$el);
-            this.$form = $('[data-js-add-user-form]', this.$el);
             this.$selectProject = $('[data-js-user-project]', this.$el);
         },
-        setupValidation: function () {
-            var self = this;
-            $.validator.setDefaults({
-                debug: true,
-                success: "valid"
+        setupDropDowns: function () {
+            this.selectProjectRole = new DropDownComponent({
+                data: _.map(config.projectRolesEnum, function (val) {
+                    return { name: val, value: val };
+                }),
+                multiple: false,
+                defaultValue: this.model.get('projectRole')
             });
-            this.validator = this.$form.validate({
-                errorClass: 'has-error',
-                label: $('[data-js-add-user-form-group]'),
-                rules: {
-                    username: {
-                        required: true,
-                        rangelength: config.forms.nameRange,
-                        remote: this.remoteValidation(),
-                        symbols: config.patterns.symbolsLogin
-                    },
-                    fullName: {
-                        required: true,
-                        rangelength: config.forms.fullNameRange,
-                        symbols: config.patterns.symbolsFullName
-                    },
-                    email: {
-                        required: true,
-                        email: true,
-                        remote: this.remoteValidation()
-                    },
-                    password: {
-                        required: true,
-                        rangelength: config.forms.passwordRange
-                    }
-                },
-                messages: {
-                    username: {
-                        required: Localization.validation.requiredDefault,
-                        rangelength: Localization.validation.loginSize,
-                        remote: Localization.validation.registeredLogin,
-                        symbols: Localization.validation.projectNameRegex
-                    },
-                    fullName: {
-                        required: Localization.validation.requiredDefault,
-                        rangelength: Localization.validation.fullNameSize,
-                        symbols: Localization.validation.fullNameRegex
-                    },
-                    email: {
-                        required: Localization.validation.requiredDefault,
-                        email: Localization.validation.incorrectEmail,
-                        remote: Localization.validation.registeredEmail
-                    },
-                    password: {
-                        required: Localization.validation.requiredDefault,
-                        rangelength: Localization.validation.passwordSize
-                    }
-                },
-                ignore: 'input[id^="s2id"]',
-                errorPlacement: function (error, element) {
-                    error.appendTo($('[data-js-add-user-form-error]', element.closest('[data-js-add-user-form-group]')));
-                },
-                highlight: function (element, errorClass) {
-                    $(element).closest('[data-js-add-user-form-group]').addClass(errorClass);
-                },
-                unhighlight: function (element, errorClass) {
-                    $(element).closest('[data-js-add-user-form-group]').removeClass(errorClass);
-                }
+            $('[data-js-project-role-dropdown]', this.$el).html(this.selectProjectRole.$el);
+            this.listenTo(this.selectProjectRole, 'change', this.onChangeProjectRole);
+            this.selectAccoutRole = new DropDownComponent({
+                data: _.map(config.accountRolesEnum, function (val) {
+                    return { name: val, value: val };
+                }),
+                multiple: false,
+                defaultValue: this.model.get('accountRole')
             });
-            if(this.isUsers()){
-                this.addProjectValidation();
-            }
+            $('[data-js-accout-role-dropdown]', this.$el).html(this.selectAccoutRole.$el);
+            this.listenTo(this.selectAccoutRole, 'change', this.onChangeAccountRole);
         },
-        addProjectValidation: function () {
-            this.$selectProject.rules('add', {
-                required: true,
-                messages: {
-                    required: Localization.validation.requiredDefault
-                }
-            });
-            this.$selectProject.on('change', function () {
-                this.$selectProject.valid && _.isFunction(this.$selectProject.valid) && this.$selectProject.valid();
-            }.bind(this));
+        onChangeProjectRole: function (val) {
+            this.model.set('projectRole', val);
         },
-        setupProjectSearch:function() {
+        onChangeAccountRole: function (val) {
+            var role = val === config.accountRolesEnum.administrator
+                ? config.projectRolesEnum.project_manager
+                : config.defaultProjectRole;
+            this.model.set('accountRole', val);
+            this.updateProjectRole(role);
+        },
+        updateProjectRole: function (role) {
+            this.model.set('projectRole', role);
+            this.selectProjectRole.activateItem(role);
+        },
+        bindValidators: function () {
+            Util.hintValidator(this.$login, [
+                {
+                    validator: 'required'
+                },
+                {
+                    validator: 'matchRegex',
+                    type: 'loginRegex',
+                    pattern: config.patterns.login
+                },
+                {
+                    validator: 'minMaxRequired',
+                    type: 'loginRange',
+                    min: config.forms.nameRange[0],
+                    max: config.forms.nameRange[1]
+                },
+                {
+                    validator: 'remoteLogin',
+                    remote: true,
+                    message: Localization.validation.registeredLogin,
+                    type: 'remoteLogin'
+                }
+            ]);
+            Util.hintValidator(this.$fullName, [
+                {
+                    validator: 'required'
+                },
+                {
+                    validator: 'matchRegex',
+                    type: 'fullNameInfoRegex',
+                    pattern: config.patterns.fullName
+                },
+                {
+                    validator: 'minMaxRequired',
+                    type: 'userName',
+                    min: config.forms.fullNameRange[0],
+                    max: config.forms.fullNameRange[1]
+                }
+            ]);
+            Util.hintValidator(this.$email, [
+                {
+                    validator: 'required'
+                },
+                {
+                    validator: 'matchRegex',
+                    type: 'emailMatchRegex',
+                    pattern: config.patterns.email
+                },
+                {
+                    validator: 'remoteEmail',
+                    remote: true,
+                    message: Localization.validation.registeredEmail,
+                    type: 'remoteEmail'
+                }
+            ]);
+            Util.hintValidator(this.$password, [
+                {
+                    validator: 'required'
+                },
+                {
+                    validator: 'minMaxRequired',
+                    type: 'password',
+                    min: config.forms.passwordRange[0],
+                    max: config.forms.passwordRange[1]
+                }
+            ]);
+        },
+        setupProjectSearch: function () {
             var self = this;
             Util.setupSelect2WhithScroll(this.$selectProject, {
                 multiple: false,
@@ -198,14 +206,14 @@ define(function (require, exports, module) {
                 placeholder: Localization.admin.enterProjectName,
                 allowClear: true,
                 initSelection: function (element, callback) {
-                    callback({id: element.val(), text: element.val()});
+                    callback({ id: element.val(), text: element.val() });
                 },
                 query: function (query) {
                     AdminService.getProjects(self.getSearchQuery(query.term))
                         .done(function (response) {
-                            var data = {results: []}
+                            var data = { results: [] };
                             _.each(response.content, function (item) {
-                                if(item.projectId !== self.model.get('default_project')) {
+                                if (item.projectId !== self.model.get('default_project')) {
                                     data.results.push({
                                         id: item.projectId,
                                         text: item.projectId
@@ -219,67 +227,54 @@ define(function (require, exports, module) {
                         });
                 }
             });
+            Util.hintValidator(this.$selectProject, [
+                {
+                    validator: 'required'
+                }
+            ]);
+            this.$selectProject.on('change', function () {
+                this.$selectProject.trigger('validate');
+            }.bind(this));
         },
-        getSearchQuery: function(query){
+        getSearchQuery: function (query) {
             return '?page.sort=name,asc&page.page=1&page.size=10&&filter.cnt.name=' + query;
         },
-        remoteValidation: function () {
-            return {
-                type: "GET",
-                url: urls.userInfoValidation(),
-                data: {},
-                dataFilter: function (response) {
-                    var data = JSON.parse(response);
-                    return !data.is;
-                }
-            }
-        },
-        selectRole: function (e) {
-            e.preventDefault();
-            var link = $(e.target),
-                btn = link.closest('.open').find('.dropdown-toggle'),
-                val = (link.data('value')) ? link.data('value') : link.text();
-
-            if (link.hasClass('disabled-option')) return;
-            this.model.set('projectRole', val);
-        },
-        selectAccount: function (e) {
-            e.preventDefault();
-            var link = $(e.target),
-                btn = link.closest('.open').find('.dropdown-toggle'),
-                val = (link.data('value')) ? link.data('value') : link.text();
-
-            if (link.hasClass('disabled-option')) return;
-            btn.attr('value', val);
-            this.model.set('accountRole', val);
-            $('.select-value', btn).text(link.text());
-        },
         generatePassword: function (e) {
+            var pass;
             e.preventDefault();
             if (!$(e.target).hasClass('disabled')) {
                 config.trackingDispatcher.trackEventNumber(480);
-                var pass = this.randomPassword();
+                pass = this.randomPassword();
                 this.$password.val(pass);
-                this.$password.valid && _.isFunction(this.$password.valid) && this.$password.valid();
+                this.$password.trigger('validate');
                 this.model.set('password', pass);
             }
         },
-        onClickClose: function(){
+        validate: function () {
+            var els = [
+                this.$login, this.$fullName, this.$email, this.$password, this.$selectProject
+            ];
+            $('input', this.$el).trigger('validate').data('validate-error');
+            return !_.any(els, function (el) { return el.data('validate-error'); });
+        },
+        onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(478);
         },
-        onClickCancel: function(){
+        onClickCancel: function () {
             config.trackingDispatcher.trackEventNumber(479);
         },
         randomPassword: function () {
-            var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
-                passSize = 6,
-                pass = '';
-            for (var i = 0, n = chars.length; i < passSize; ++i) {
+            var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+            var passSize = 6;
+            var pass = '';
+            var i;
+            var n;
+            for (i = 0, n = chars.length; i < passSize; ++i) {
                 pass += chars.charAt(Math.floor(Math.random() * n));
             }
             return pass;
         },
-        getUserData: function(){
+        getUserData: function () {
             var user = this.model.toJSON();
             return {
                 default_project: this.isUsers() ? user.default_project : this.appModel.get('projectId'),
@@ -289,7 +284,7 @@ define(function (require, exports, module) {
                 accountRole: this.isUsers() ? user.accountRole : config.defaultAccountRole,
                 full_name: user.full_name,
                 password: user.password
-            }
+            };
         },
         addUser: function () {
             var userData = this.getUserData();
@@ -298,16 +293,15 @@ define(function (require, exports, module) {
                 config.trackingDispatcher.trackEventNumber(481);
                 MembersService.addMember(userData)
                     .done(function (data) {
-                        if(data.warning){
-                            var messages = Localization.failMessages;
-                            if(data.warning.indexOf(messages.serverNotConfigured) >=0){
+                        var messages;
+                        if (data.warning) {
+                            messages = Localization.failMessages;
+                            if (data.warning.indexOf(messages.serverNotConfigured) >= 0) {
                                 Util.ajaxSuccessMessenger('addUserWithoutEmail');
-                            }
-                            else {
+                            } else {
                                 Util.ajaxFailMessenger(null, 'addMember', data.warning);
                             }
-                        }
-                        else {
+                        } else {
                             Util.ajaxSuccessMessenger('addMember');
                         }
                         this.trigger('add:user');
@@ -315,7 +309,7 @@ define(function (require, exports, module) {
                     .fail(function (error) {
                         Util.ajaxFailMessenger(error, 'addMember');
                     })
-                    .always(function(){
+                    .always(function () {
                         this.successClose();
                     }.bind(this));
             }

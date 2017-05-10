@@ -42,9 +42,6 @@
     z-index: 1100;
 }
 
-// .has-error .help-inline {
-//     color: #B94A48;
-// }
 
 .form-group.has-error .help-inline {
     display: inline-block;
@@ -53,7 +50,6 @@
 .form-group .custom-padding,
 .control-label.custom-padding {
     padding: 7px 0 0;
-    //text-align: right;
 }
 
 .form-group .wizard-name-label {
@@ -125,61 +121,7 @@
     cursor: pointer;
 }
 
-#tbsChangeWarning {
-    &.rp-text-danger {
-        color: $COLOR--orange-red;
-    }
-}
-
-/*-----------------*/
-/* FOR USUAL USERS */
-
-#dynamic-content {
-    .form-group {
-        margin-left: 0;
-        margin-right: 0;
-    }
-}
-
-/*-----------------------------------*/
-/* STYLES OF DYNAMIC WIDTH OF SCREEN */
-
-/* xs - 767px */
-@media (max-width: $SCREEN_XS_MAX) {
-
-}
-
-/* sm - 768px - 991px */
-@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
-
-}
-
-/* md - 992px - 1199px */
-@media (min-width: $SCREEN_MD_MIN) and (max-width: $SCREEN_MD_MAX) {
-
-}
-
-/* lg - 1200px */
-@media (min-width: $SCREEN_LG_MIN) {
-
-}
-
-/*-----------------------------------*/
-
-
-/*--- PROJECT SETTINGS START ---*/
-/*--- BUG TRACKING SYSTEM START ---*/
-
-#jiraBlock #resetFieldsWarning {
-    margin-top: -15px;
-    margin-bottom: 15px;
-}
-
-/*--- BUG TRACKING SYSTEM END ---*/
-/*--- PROJECT SETTINGS END ---*/
-
-
-
-#projectSettings .nav-tabs {
-    margin: 0 -10px 25px -10px;
+.form-group {
+  margin-left: 0;
+  margin-right: 0;
 }

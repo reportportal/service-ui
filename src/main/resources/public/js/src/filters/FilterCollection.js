@@ -25,12 +25,14 @@ define(function(require, exports, module) {
     var _ = require('underscore');
     var FilterModel = require('filters/FilterModel');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
 
 
     var FilterCollection = Backbone.Collection.extend({
         model: FilterModel,
         initialize: function() {
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
+            this.defectTypeCollection = new SingletonDefectTypeCollection();
             this.listenTo(this, 'change:isLaunch', this.onChangeIsLaunch);
         },
         onChangeIsLaunch: function(model, isLaunch) {
@@ -44,18 +46,20 @@ define(function(require, exports, module) {
         parse: function(data) {
             var self = this;
             this.launchFilterCollection.ready.done(function() {
-                self.reset(_.map(data, function(itemData) {
-                    var launchModelClone = self.launchFilterCollection.where({id: itemData.id})[0];
-                    if(launchModelClone) {
-                        return launchModelClone;
-                    }
-                    itemData.entities = JSON.stringify(itemData.entities);
-                    itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
-                    return itemData;
-                }))
+                self.defectTypeCollection.ready.done(function () {
+                    self.reset(_.map(data, function(itemData) {
+                        var launchModelClone = self.launchFilterCollection.where({id: itemData.id})[0];
+                        if(launchModelClone) {
+                            return launchModelClone;
+                        }
+                        itemData.entities = JSON.stringify(itemData.entities);
+                        itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
+                        return itemData;
+                    }));
+                });
             });
         },
     });
 
     return FilterCollection;
-})
+});

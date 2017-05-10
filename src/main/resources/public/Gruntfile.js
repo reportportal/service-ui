@@ -41,7 +41,6 @@ module.exports = function (grunt) {
                     src: [
                         'img/**',
                         'css/**/*.css',
-                        'eqcss/**/*.eqcss',
                         'js/lib/**/*.js',
                         'compiled/**',
                         'epam/**'
@@ -55,7 +54,6 @@ module.exports = function (grunt) {
                     cwd: rootPath,
                     src: [
                         'img/**',
-                        'eqcss/**/*.eqcss',
                         'compiled/**',
                         'epam/**'
                     ],
@@ -155,7 +153,6 @@ module.exports = function (grunt) {
             copy: {
                 files: [
                     'css/**/*.css',
-                    'eqcss/**/*.eqcss',
                     'scss/**/*.scss',
                     'js/lib/**/*.js',
                     'build/**/*.*',
@@ -308,7 +305,7 @@ module.exports = function (grunt) {
                 }],
                 options: {
                     replacements: [{
-                        pattern: 'DEBUG_STATE',
+                        pattern: /'DEBUG_STATE'/g,
                         replacement: 'true'
                     }]
                 }
@@ -323,8 +320,8 @@ module.exports = function (grunt) {
                 }],
                 options: {
                     replacements: [{
-                        pattern: 'DEBUG_STATE',
-                        replacement: ''
+                        pattern: /'DEBUG_STATE'/g,
+                        replacement: 'false'
                     }]
                 }
             }

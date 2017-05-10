@@ -1,9 +1,9 @@
 <%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.admin.addProject}) %>
 <div class="modal-body">
-    <div class="rp-add-project-form">
-        <h4><%= data.text.admin.addNewProject %></h4>
+    <h4><%= data.text.admin.addNewProject %></h4>
+    <div class="fields">
         <form class="rp-form">
-            <label class="rp-field">
+            <label>
                 <span class="required"><%= data.text.admin.projectName %></span>
                 <input type="text" class="rp-input" data-js-project-name>
                 <span class="validate-hint"></span>

@@ -19,8 +19,9 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
-    "use strict";
+define(function (require) {
+    'use strict';
+
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
@@ -30,7 +31,7 @@ define(function (require, exports, module) {
     var LaunchPage = require('launches/LaunchPage');
     var LaunchDebugPage = require('launches/LaunchDebugPage');
     var DashboardPage = require('dashboard/DashboardPage');
-    var Project = require('project');
+    var ProjectSettingsPage = require('projectSettings/projectSettingsPage');
     var ProjectInfo = require('projectinfo');
     var Member = require('projectMembers/MembersPageView');
     var Profile = require('userProfile/UserProfilePage');
@@ -55,7 +56,7 @@ define(function (require, exports, module) {
         render: function (options) {
             this.$el.html(Util.templates(this.tpl));
             if (this.isAdminPage) {
-                this.$container = $("#dynamic-content", this.$el);
+                this.$container = $('#dynamic-content', this.$el);
             }
             this.setupPageView(options);
             if (this.pageView.contextName === 'settings' || this.isAdminPage) {
@@ -65,7 +66,7 @@ define(function (require, exports, module) {
         },
 
         update: function (options) {
-            if(this.page !== options.contextName || this.action !== options.action) {
+            if (this.page !== options.contextName || this.action !== options.action) {
                 this.pageView.destroy();
                 if (this.isAdminPage) {
                     this.page = options.page;
@@ -76,24 +77,28 @@ define(function (require, exports, module) {
                 this.pageView.update(options);
             }
 
-            (this.isAdminPage || this.pageView.contextName === 'settings') ?
-                this.$el.find('.rp-main-panel').addClass('mobile-without-content-header') :
+            if (this.isAdminPage || this.pageView.contextName === 'settings') {
+                this.$el.find('.rp-main-panel').addClass('mobile-without-content-header');
+            } else {
                 this.$el.find('.rp-main-panel').removeClass('mobile-without-content-header');
+            }
         },
 
-        setupPageView: function (options) {
+        setupPageView: function (opts) {
+            var PageView;
+            var self = this;
+            var options = opts;
             if (this.isAdminPage) {
                 this.page = options.page;
-                var PageView = this.getViewForAdministratePage(options);
-                options['el'] = this.$container;
-                options['header'] = $('#contentHeader', this.$el);
+                PageView = this.getViewForAdministratePage(options);
+                options.el = this.$container;
+                options.header = $('#contentHeader', this.$el);
                 this.pageView = new PageView(options).render();
             } else {
                 this.page = options.contextName;
-                var PageView = this.getViewForPage(options.contextName);
+                PageView = this.getViewForPage(options.contextName);
                 this.$header = $('#contentHeader', this.$el);
                 this.$body = $('#dynamic-content', this.$el);
-                var self = this;
                 this.pageView = new PageView.ContentView({
                     contextName: options.contextName,
                     context: this.getAppProp(self),
@@ -110,37 +115,29 @@ define(function (require, exports, module) {
                 getMainView: function () {
                     return mainView;
                 }
-            }
+            };
         },
 
         getViewForPage: function (name) {
             switch (name) {
-                case "dashboard":
-                    return DashboardPage;
-                    break;
-                case "filters":
-                    return Favorites;
-                    break;
-                case "userdebug":
-                    return LaunchDebugPage;
-                    break;
-                case "launches":
-                    return LaunchPage;
-                    break;
-                case "members":
-                    return Member;
-                    break;
-                case "settings":
-                    return Project;
-                    break;
-                case "user-profile":
-                    return Profile;
-                    break;
-                case "info":
-                    return ProjectInfo;
-                    break;
-                default:
-                    break;
+            case 'dashboard':
+                return DashboardPage;
+            case 'filters':
+                return Favorites;
+            case 'userdebug':
+                return LaunchDebugPage;
+            case 'launches':
+                return LaunchPage;
+            case 'members':
+                return Member;
+            case 'settings':
+                return ProjectSettingsPage;
+            case 'user-profile':
+                return Profile;
+            case 'info':
+                return ProjectInfo;
+            default:
+                break;
             }
         },
 
@@ -149,9 +146,8 @@ define(function (require, exports, module) {
                 return Users.ContentView;
             } else if (options.page === 'settings') {
                 return Settings.ContentView;
-            } else {
-                return Projects.ContentView;
             }
+            return Projects.ContentView;
         },
 
         destroy: function () {

@@ -26,7 +26,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var $ = require('jquery');
     var _ = require('underscore');
-    var WidgetsConfig = require('widget/widgetsConfig');
+    var WidgetService = require('newWidgets/WidgetService');
     var App = require('app');
 
     var config = App.getInstance();
@@ -35,37 +35,43 @@ define(function (require, exports, module) {
         className: 'modal-add-widget-select-widget',
         template: 'tpl-modal-add-widget-select-widget',
         events: {
-            'change input[type="radio"]': 'onChangeType',
+            'change input[type="radio"]': 'onChangeType'
         },
 
-        initialize: function() {
-            this.widgetConfig = WidgetsConfig.getInstance();
+        initialize: function () {
             this.render();
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {widgets: this.widgetConfig.widgetTypes}))
+        render: function () {
+            this.$el.html(Util.templates(this.template, {
+                widgets: WidgetService.getDefaultConfig()
+            }));
         },
-        onChangeType: function() {
-            config.trackingDispatcher.trackEventNumber(291);
+        onChangeType: function () {
             var gadget = $('input:checked', this.$el).val();
-            var curWidget = this.widgetConfig.widgetTypes[gadget];
+            var self = this;
+            config.trackingDispatcher.trackEventNumber(291);
+            $.when(WidgetService.getFullWidgetConfig(gadget)).done(function (widget) {
+                self.updateModel(gadget, widget);
+            });
+        },
+        updateModel: function (gadget, curWidget) {
+            var defaultCriteria = [];
+            var defaultActions = [];
             this.model.set({
                 gadget: gadget,
                 itemsCount: curWidget.limit.def,
                 widgetDescription: '',
                 widgetOptions: '{}',
-                content_fields: '[]',
+                content_fields: '[]'
             });
-            var defaultCriteria = [];
             if (curWidget.criteria && !curWidget.noCriteria) {
-                if(curWidget.defaultCriteria){
+                if (curWidget.defaultCriteria) {
                     defaultCriteria = curWidget.defaultCriteria;
-                }
-                else {
+                } else {
                     defaultCriteria = [];
                     _.each(curWidget.criteria, function (value, key) {
-                        if(typeof value == 'object') {
-                            _.each(value.keys, function(valueKey) {
+                        if (typeof value === 'object') {
+                            _.each(value.keys, function (valueKey) {
                                 defaultCriteria = defaultCriteria.concat(valueKey.split(','));
                             });
                         } else {
@@ -74,22 +80,20 @@ define(function (require, exports, module) {
                     });
                 }
             }
-            if(curWidget.staticCriteria){
-                _.each(curWidget.staticCriteria, function(val, key){
+            if (curWidget.staticCriteria) {
+                _.each(curWidget.staticCriteria, function (val, key) {
                     defaultCriteria.push(key);
                 });
             }
             this.model.setContentFields(_.uniq(defaultCriteria));
-            if(curWidget.actions){
-                var defaultActions = [];
+            if (curWidget.actions) {
                 _.each(curWidget.actions, function (a) {
                     Array.prototype.push.apply(defaultActions, a.actions);
                 });
-                this.model.setWidgetOptions({actionType: defaultActions});
+                this.model.setWidgetOptions({ actionType: defaultActions });
             }
         },
-        destroy: function() {
-
+        onDestroy: function () {
         }
     });
 

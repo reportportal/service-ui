@@ -17,14 +17,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
     var Util = require('util');
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
-    var FilterModel = require('filters/FilterModel');
     var App = require('app');
     var InfoPanelView = require('launches/common/InfoPanelView');
     var Localization = require('localization');
@@ -44,34 +44,36 @@ define(function (require, exports, module) {
         },
 
         computeds: {
-            validateForHistoryBtn: function(){
-                var interrupted = config.launchStatus.interrupted,
-                    showBtn = this.parentModel.get('status') !== interrupted && this.launchModel.get('status') !== interrupted && !_.isEmpty(this.collectionItems.models);
-                return showBtn;
+            validateForHistoryBtn: function () {
+                var interrupted = config.launchStatus.interrupted;
+                return this.launchModel.get('status') !== interrupted
+                    && !this.collectionItems.validateForAllCases()
+                    && !_.isEmpty(this.collectionItems.models);
             },
-            activeMultiDelete: function() {
-                return !(this.launchModel.get('status') == config.launchStatus.inProgress)
+            activeMultiDelete: function () {
+                return !(this.launchModel.get('status') === config.launchStatus.inProgress);
             },
-            getHistoryHref: function(){
+            getHistoryHref: function () {
                 return this.getHistoryLink();
             }
         },
 
         template: 'tpl-launch-suite-control',
-        initialize: function(options) {
+        initialize: function (options) {
             this.context = options.context;
             this.filterModel = options.filterModel;
             this.parentModel = options.parentModel;
             this.launchModel = options.launchModel;
-            this.collectionItems =  options.collectionItems;
+            this.collectionItems = options.collectionItems;
             this.render();
             this.model = new (Epoxy.Model.extend({
                 defaults: {
-                    refreshItems: 0,
+                    refreshItems: 0
                 }
-            }));
+            }))();
             this.listenTo(this.collectionItems, 'change:description change:tags', this.increaseRefreshItemsCount);
             this.listenTo(this.collectionItems, 'loading', this.resetRefreshItems);
+            this.listenTo(this.collectionItems, 'change:issue', this.updateInfoLine);
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-refine-entities]', this.$el),
                 filterLevel: 'suit',
@@ -79,72 +81,77 @@ define(function (require, exports, module) {
             });
             this.infoLine = new InfoPanelView({
                 el: $('[data-js-info-line]', this.$el),
-                model: this.parentModel,
+                model: this.parentModel
             });
-            if(!this.getBinding('activeMultiDelete')) {
-                $('[data-js-milti-delete]', this.$el).attr({title: Localization.launches.launchNotInProgress});
+            if (!this.getBinding('activeMultiDelete')) {
+                $('[data-js-milti-delete]', this.$el).attr({ title: Localization.launches.launchNotInProgress });
             }
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {context: this.context}));
+        render: function () {
+            this.$el.html(Util.templates(this.template, { context: this.context }));
         },
-        activateMultiple: function() {
+        updateInfoLine: function () {
+            this.parentModel.collection.forceUpdate();
+        },
+        activateMultiple: function () {
             $('[data-js-refresh]', this.$el).addClass('disabled');
             if (this.getBinding('activeMultiDelete')) {
-                $('[data-js-milti-delete]', this.$el).removeClass('disabled').attr({title: Localization.launches.deleteBulk});
+                $('[data-js-milti-delete]', this.$el).removeClass('disabled').attr({ title: Localization.launches.deleteBulk });
                 $('[data-js-history]', this.$el).addClass('disabled');
             }
         },
-        onClickMultiDelete: function() {
+        onClickMultiDelete: function () {
             config.trackingDispatcher.trackEventNumber(86);
             this.trigger('multi:action', 'remove');
         },
-        disableMultiple: function() {
+        disableMultiple: function () {
             $('[data-js-refresh]', this.$el).removeClass('disabled');
             if (this.getBinding('activeMultiDelete')) {
-                $('[data-js-milti-delete]', this.$el).addClass('disabled').attr({title: Localization.launches.actionTitle});
+                $('[data-js-milti-delete]', this.$el).addClass('disabled').attr({ title: Localization.launches.actionTitle });
                 $('[data-js-history]', this.$el).removeClass('disabled');
             }
         },
-        onClickRefresh: function() {
+        onClickRefresh: function () {
             config.trackingDispatcher.trackEventNumber(88);
             this.collectionItems.load();
+            this.updateInfoLine();
             this.resetRefreshItems();
         },
         increaseRefreshItemsCount: function (model) {
             if (this.isAnyFilterEnabled() && this.isFilteredAttrChanged(model)) {
-                this.model.set({refreshItems: this.model.get('refreshItems') + 1});
+                this.model.set({ refreshItems: this.model.get('refreshItems') + 1 });
             }
         },
-        resetRefreshItems: function() {
-            this.model.set({refreshItems: 0});
+        resetRefreshItems: function () {
+            this.model.set({ refreshItems: 0 });
         },
-        isFilteredAttrChanged: function(model) {
+        isFilteredAttrChanged: function (model) {
             var self = this;
             var isFilteredAttrChanged = false;
             _.each(this.getFilterEntities(), function (filter) {
                 _.each(self.getChangedAttrs(model), function (changedAttrVal, changedAttrKey) {
-                    if (_.isMatch(filter, {filtering_field: changedAttrKey})) {
+                    if (_.isMatch(filter, { filtering_field: changedAttrKey })) {
                         isFilteredAttrChanged = true;
                     }
-                })
+                });
             });
             return isFilteredAttrChanged;
         },
-        getFilterEntities: function() {
+        getFilterEntities: function () {
             if (this.filterModel.get('newEntities') !== '') {
                 return JSON.parse(this.filterModel.get('newEntities'));
-            } else {
-                return JSON.parse(this.filterModel.get('entities'));
             }
+            return JSON.parse(this.filterModel.get('entities'));
         },
         getChangedAttrs: function (model) {
             var changedAttrs = model.changedAttributes();
             if (changedAttrs.issue) {
-                if (JSON.parse(changedAttrs.issue).issue_type !== JSON.parse(model.previousAttributes().issue).issue_type) {
+                if (JSON.parse(changedAttrs.issue).issue_type !==
+                    JSON.parse(model.previousAttributes().issue).issue_type) {
                     changedAttrs.issue$issue_type = JSON.parse(changedAttrs.issue).issue_type;
                 }
-                if (JSON.parse(changedAttrs.issue).comment !== JSON.parse(model.previousAttributes().issue).comment) {
+                if (JSON.parse(changedAttrs.issue).comment !==
+                    JSON.parse(model.previousAttributes().issue).comment) {
                     changedAttrs.issue$issue_comment = JSON.parse(changedAttrs.issue).comment;
                 }
                 delete changedAttrs.issue;
@@ -155,16 +162,16 @@ define(function (require, exports, module) {
             return !((this.filterModel.get('newEntities') === '' && this.filterModel.get('entities') === '[]') ||
             (this.filterModel.get('newEntities') === '[]' && this.filterModel.get('entities') === '[]'));
         },
-        getHistoryLink: function(){
+        getHistoryLink: function () {
             var currentPath = window.location.hash;
             currentPath += '&history.item=' + this.parentModel.get('id');
             return currentPath;
         },
-        onClickHistory: function(e){
+        onClickHistory: function (e) {
             e.preventDefault();
-            if(!$(e.currentTarget).hasClass('disabled')){
+            if (!$(e.currentTarget).hasClass('disabled')) {
                 config.trackingDispatcher.trackEventNumber(87);
-                config.router.navigate(this.getHistoryLink(), {trigger: true});
+                config.router.navigate(this.getHistoryLink(), { trigger: true });
             }
         },
         destroy: function () {
@@ -175,7 +182,7 @@ define(function (require, exports, module) {
             this.stopListening();
             this.unbind();
             delete this;
-        },
+        }
     });
 
     return SuiteControlView;

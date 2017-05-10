@@ -408,8 +408,8 @@ define(['app'], function (App) {
     var generateUUID = function () {
         return config.apiVersion + 'user/uuid';
     };
-    var updateGitHubProfile  = function(){
-        return '/uat/sso/me/github/synchronize';
+    var updateExternalProfile  = function(accountType){
+        return '/uat/sso/me/' + accountType + '/synchronize';
     };
     var exportLaunchUrl = function (id, format) {
         return config.apiVersion + config.project.projectId + '/launch/' + id + '/report?view=' + (format || 'xls');
@@ -568,7 +568,7 @@ define(['app'], function (App) {
         getFile: getFile,
         getFileById: getFileById,
         generateUUID: generateUUID,
-        updateGitHubProfile: updateGitHubProfile,
+        updateExternalProfile: updateExternalProfile,
         exportLaunchUrl: exportLaunchUrl,
 
         getDefectTypes: getDefectTypes,
