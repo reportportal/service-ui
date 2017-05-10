@@ -109,12 +109,12 @@ define(function (require) {
             var modal;
             var url;
             e.preventDefault();
+            config.trackingDispatcher.trackEventNumber(212);
             if (contentType === 'text/html') {
                 e.preventDefault();
                 url = Urls.getFileById(binaryId);
                 window.open(url);
             } else {
-                config.trackingDispatcher.trackEventNumber(212);
                 if (isValidForModal) {
                     // this.model.trigger('click:attachment', this.model);
                     // open's image in gallery.

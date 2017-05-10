@@ -179,11 +179,11 @@ define(function (require) {
             var language;
             var contentType = this.model.get('binary_content').content_type;
             var binaryId = this.model.get('binary_content').id;
+            config.trackingDispatcher.trackEventNumber(507);
             if (contentType === 'text/html') {
                 url = Urls.getFileById(binaryId);
                 window.open(url);
             } else {
-                config.trackingDispatcher.trackEventNumber(507);
                 if (~contentType.indexOf('image/')) {
                     modal = new ModalLogAttachmentImage({
                         imageId: binaryId
