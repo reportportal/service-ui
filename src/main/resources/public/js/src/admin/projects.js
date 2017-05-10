@@ -30,10 +30,9 @@ define(function (require, exports, module) {
     var urls = require('dataUrlResolver');
     var Service = require('adminService');
     var MembersTableView = require('projectMembers/MembersTableView');
-    var Projects = require('project');
+    var ProjectSettingsPage = require('projectSettings/projectSettingsPage');
     var ProjectInfo = require('projectinfo');
     var MemberService = require('memberService');
-    var Widget = require('widgets');
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
 
@@ -480,7 +479,7 @@ define(function (require, exports, module) {
         renderSettings: function () {
             this.resetMembersView();
             if (!this.settingsBlock) {
-                this.settingsBlock = new Projects.SettingsView({
+                this.settingsBlock = new ProjectSettingsPage.SettingsView({
                     holder: this.$settings,
                     projectId: this.id,
                     adminPage: true,

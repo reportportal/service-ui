@@ -19,32 +19,36 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 .modal-add-user {
-    .modal-body {
-        padding: 40px 10px 10px 10px;
-        .rp-add-user-form {
-            h4 {
-                margin: 0 0 20px;
-            }
-            .add-user-label {
-                width: 32%;
-                padding: 8px 15px;
-            }
-            .add-user-field {
-                width: 68%;
-                padding: 0 15px;
+  .modal-body {
+    padding: 40px 10px 10px 10px;
+    .rp-add-user-form {
+      h4 {
+        margin: 0 0 20px;
+      }
+      .rp-form {
+        width: 90%;
 
-                .rp-input-default, .rp-btn-group {
-                    max-width: 320px;
-                }
-                .error-bottom {
-                    .help-inline {
-                        color: $COLOR--orange-red;
-                        label {
-                            color: $COLOR--orange-red;
-                        }
-                    }
-                }
-            }
+        .add-user-label {
+          width: 32%;
         }
+        .add-user-field {
+          width: 68%;
+          float: left;
+          .drop-down-component {
+            width: 100%;
+          }
+        }
+        .validate-hint {
+          width: 68%;
+        }
+        .password-field {
+          margin-bottom: 0;
+        }
+        .to-gen-pass {
+          width: 68%;
+          margin: 4px 0 0 32%;
+        }
+      }
     }
+  }
 }

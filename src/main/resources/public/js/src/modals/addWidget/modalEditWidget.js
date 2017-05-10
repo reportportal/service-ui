@@ -22,17 +22,16 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var Epoxy = require('backbone-epoxy');
     var ModalView = require('modals/_modalView');
     var Util = require('util');
     var $ = require('jquery');
-    var WidgetsConfig = require('widget/widgetsConfig');
+    var _ = require('underscore');
+    var WidgetService = require('newWidgets/WidgetService');
     var WidgetSettingsView = require('modals/addWidget/WidgetSettingsView');
     var SaveWidgetView = require('modals/addWidget/SaveWidgetView');
     var SelectedFilterView = require('modals/addWidget/SelectedFilterView');
     var PreviewWidgetView = require('newWidgets/PreviewWidgetView');
     var FilterSearchView = require('modals/addWidget/FilterSearchView');
-    var GadgetModel = require('dashboard/GadgetModel');
     var Service = require('coreService');
     var App = require('app');
 
@@ -52,130 +51,138 @@ define(function (require, exports, module) {
         },
         bindings: {
             '[data-js-widget-type]': 'text: gadgetName',
-            '[data-js-widget-description]': 'html: gadgetDescription',
+            '[data-js-widget-description]': 'html: gadgetDescription'
         },
 
-        initialize: function(options) {
-            if(!options.model) {
-                //console.log('Model is not found');
+        initialize: function (options) {
+            var self;
+            if (!options.model) {
+                // console.log('Model is not found');
                 return false;
             }
             this.originalModel = options.model;
             this.model = this.originalModel.clone();
-            this.widgetConfig = WidgetsConfig.getInstance();
+            this.curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             this.render();
-            this.widgetSettingsView = new WidgetSettingsView({model: this.model});
+            this.widgetSettingsView = new WidgetSettingsView({ model: this.model });
             $('[data-js-widget-settings]', this.$el).html(this.widgetSettingsView.$el);
-            this.saveWidget = new SaveWidgetView({model: this.model, dashboardModel: this.dashboardModel});
+            this.saveWidget = new SaveWidgetView({
+                model: this.model, dashboardModel: this.dashboardModel
+            });
             $('[data-js-widget-save]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
             this.filterReadyAsync = $.Deferred();
-            var self = this;
-            if(this.model.get('filter_id')){
+            self = this;
+            if (this.model.get('filter_id')) {
                 this.selectedFilterView = new SelectedFilterView({ model: this.model });
                 $('[data-js-widget-filter]', this.$el).html(this.selectedFilterView.$el);
                 this.listenTo(this.selectedFilterView, 'edit', this.onEditFilter);
-                this.selectedFilterView.getAsync().done(function() {
+                this.selectedFilterView.getAsync().done(function () {
                     self.filterReadyAsync.resolve();
-                })
+                });
             } else {
                 this.filterReadyAsync.resolve();
             }
         },
-        onChangeModel: function(model) {
+        onChangeModel: function (model) {
+            this.curWidget = WidgetService.getWidgetConfig(model.get('gadget'));
             // console.dir(model.changed);
         },
-        onChangePreview: function() {
-            this.previewWidgetView && this.previewWidgetView.destroy();
+        onChangePreview: function () {
             var filterModel = null;
+            this.previewWidgetView && this.previewWidgetView.destroy();
             if (this.model.get('gadgetIsFilter')) {
                 filterModel = this.selectedFilterView.getSelectedFilterModel();
                 if (this.filterSelectView) {
                     filterModel = this.filterSelectView.getSelectedFilterModel();
                 }
             }
-            this.previewWidgetView = new PreviewWidgetView({model: this.model, filterModel: filterModel});
+            this.previewWidgetView = new PreviewWidgetView({
+                model: this.model, filterModel: filterModel
+            });
             $('[data-js-widget-preview]', this.$el).html(this.previewWidgetView.$el);
         },
-        onEditFilter: function(filterModel) {
+        onEditFilter: function (filterModel) {
             config.trackingDispatcher.trackEventNumber(321);
             this.$el.addClass('filter-edit-state');
             this.destroyFilterSelect();
-            this.filterSelectView = new FilterSearchView({ model: this.model, modalType: 'edit'});
+            this.filterSelectView = new FilterSearchView({
+                model: this.model,
+                modalType: 'edit'
+            });
             this.listenTo(this.filterSelectView, 'disable:navigation', this.onChangefilterSelectState);
             $('[data-js-filter-search]', this.$el).html(this.filterSelectView.$el);
             this.filterSelectView.setFilterModel(filterModel);
             this.filterSelectView.activate();
         },
-        destroyFilterSelect: function() {
+        destroyFilterSelect: function () {
             if (this.filterSelectView) {
                 this.stopListening(this.filterSelectView);
                 this.filterSelectView.destroy();
             }
         },
-        closeFilterEdit: function() {
+        closeFilterEdit: function () {
             this.$el.removeClass('filter-edit-state');
         },
-        onShown: function() {
+        onShown: function () {
             var self = this;
-            this.filterReadyAsync.done(function() {
+            this.filterReadyAsync.done(function () {
                 self.listenTo(self.model, 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount', _.debounce(self.onChangePreview, 10));
                 self.onChangePreview();
-            })
+            });
         },
-        onShow: function() {
+        onShow: function () {
             this.widgetSettingsView.activate();
         },
-        onClickClose: function(){
+        onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(320);
         },
-        onClickCancel: function(){
+        onClickCancel: function () {
             config.trackingDispatcher.trackEventNumber(325);
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        onClickCancelFilterEdit: function() {
+        onClickCancelFilterEdit: function () {
             config.trackingDispatcher.trackEventNumber(330);
-            this.model.set({ filter_id: this.selectedFilterView.getFilterModel().get('id')});
+            this.model.set({ filter_id: this.selectedFilterView.getFilterModel().get('id') });
             this.destroyFilterSelect();
             this.closeFilterEdit();
         },
-        onClickSaveFilterEdit: function() {
-            if(this.filterSelectView && this.filterSelectView.getSelectedFilterModel()) {
+        onClickSaveFilterEdit: function () {
+            if (this.filterSelectView && this.filterSelectView.getSelectedFilterModel()) {
                 config.trackingDispatcher.trackEventNumber(331);
                 this.selectedFilterView.setFilterModel(this.filterSelectView.getSelectedFilterModel());
             }
             this.destroyFilterSelect();
             this.closeFilterEdit();
         },
-        onChangefilterSelectState: function(state) {
-            if(state) {
+        onChangefilterSelectState: function (state) {
+            if (state) {
                 this.$el.addClass('select-filter-edit-state');
             } else {
                 this.$el.removeClass('select-filter-edit-state');
             }
         },
-        onKeySuccess: function() {
+        onKeySuccess: function () {
             $('[data-js-save]', this.$el).focus().trigger('click');
         },
-        onClickSaveWidget: function() {
-            if(this.saveWidget.validate() && this.widgetSettingsView.validate()) {
+        onClickSaveWidget: function () {
+            if (this.saveWidget.validate() && this.widgetSettingsView.validate()) {
                 config.trackingDispatcher.trackEventNumber(326);
                 this.$el.addClass('load');
                 var self = this;
-                var curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
                 var contentParameters = {};
                 if (!_.contains(['unique_bug_table', 'activity_stream', 'launches_table'], this.model.get('gadget'))) {
                     contentParameters.metadata_fields = ['name', 'number', 'start_time'];
                 }
-                if (this.model.get('gadget') == 'most_failed_test_cases') {
+                if (this.model.get('gadget') === 'most_failed_test_cases') {
                     contentParameters.metadata_fields = ['name', 'start_time'];
                 }
-                contentParameters.type = curWidget.widget_type;
+                contentParameters.type = this.curWidget.widget_type;
                 contentParameters.gadget = this.model.get('gadget');
                 contentParameters.itemsCount = this.model.get('itemsCount');
-                if(this.model.getContentFields().length) {
+                if (this.model.getContentFields().length) {
                     contentParameters.content_fields = this.model.getContentFields();
                 }
                 contentParameters.widgetOptions = this.model.getWidgetOptions();
@@ -184,18 +191,17 @@ define(function (require, exports, module) {
                     share: this.model.get('isShared'),
                     content_parameters: contentParameters
                 };
-                if(this.model.get('filter_id')){
+                if (this.model.get('filter_id')) {
                     data.filter_id = this.model.get('filter_id');
                 }
                 if (this.model.get('description')) {
                     data.description = this.model.get('description');
                 }
                 this.showLoading();
-                var self = this;
                 Service.updateWidget(data, this.model.get('id'))
-                    .done(function (data) {
+                    .done(function (response) {
                         self.originalModel.set(self.model.toJSON());
-                        self.successClose(data.id);
+                        self.successClose(response.id);
                         Util.ajaxSuccessMessenger('widgetSave');
                     })
                     .fail(function (error) {
@@ -204,7 +210,7 @@ define(function (require, exports, module) {
                     });
             }
         },
-        onDestroy: function() {
+        onDestroy: function () {
             this.filterSelectView && this.filterSelectView.destroy();
             this.selectedFilterView && this.selectedFilterView.destroy();
             this.widgetSettingsView && this.widgetSettingsView.destroy();

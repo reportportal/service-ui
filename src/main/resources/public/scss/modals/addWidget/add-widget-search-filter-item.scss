@@ -26,6 +26,11 @@
   input:checked + span .filter-name {
     font-family: "OpenSansSemibold", sans-serif;
   }
+  .filter-not-found {
+    display: inline-block;
+    padding-top: 12px;
+    padding-bottom: 8px;
+  }
   .filter-name {
     display: inline-block !important;
     white-space: nowrap;

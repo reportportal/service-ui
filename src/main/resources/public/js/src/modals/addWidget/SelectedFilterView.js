@@ -19,11 +19,10 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var FilterSearchItemView = require('modals/addWidget/FilterSearchItemView');
@@ -33,47 +32,47 @@ define(function (require, exports, module) {
         className: 'modal-add-widget-selected-filter',
         template: 'tpl-modal-add-widget-selected-filter',
         events: {
-            'click [data-js-filter-edit]': 'onClickFilterEdit',
+            'click [data-js-filter-edit]': 'onClickFilterEdit'
         },
-        initialize: function() {
+        initialize: function () {
+            var self = this;
             this.async = $.Deferred();
             this.render();
-            var self = this;
             this.filterModel = new FilterModel({
                 id: this.model.get('filter_id'),
                 temp: true,
-                active: true,
+                active: true
             });
             this.$el.addClass('load');
             this.filterModel.load()
-                .always(function() {
+                .always(function () {
                     self.$el.removeClass('load');
                     self.filterView = new FilterSearchItemView({ model: self.filterModel });
                     $('[data-js-filter-info]', self.$el).html(self.filterView.$el);
                     self.async.resolve();
                 });
         },
-        getFilterModel: function() {
+        getFilterModel: function () {
             return this.filterModel;
         },
-        getAsync: function() {
+        getAsync: function () {
             return this.async;
         },
-        setFilterModel: function(model) {
+        setFilterModel: function (model) {
             this.filterView && this.filterView.destroy();
             this.filterView = new FilterSearchItemView({ model: model });
             $('[data-js-filter-info]', this.$el).html(this.filterView.$el);
         },
-        getSelectedFilterModel: function() {
+        getSelectedFilterModel: function () {
             return this.filterModel;
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        onClickFilterEdit: function() {
+        onClickFilterEdit: function () {
             this.trigger('edit', this.filterModel);
         },
-        destroy: function() {
+        destroy: function () {
             this.filterView && this.filterView.destroy();
             this.undelegateEvents();
             this.stopListening();
@@ -81,7 +80,6 @@ define(function (require, exports, module) {
             this.$el.remove();
         }
     });
-
 
 
     return FilterSearchItem;

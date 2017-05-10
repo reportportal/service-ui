@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
@@ -33,10 +33,7 @@ define(function (require, exports, module) {
     var LaunchSuiteDefectsView = require('launches/common/LaunchSuiteDefectsView');
     var ItemDurationView = require('launches/common/ItemDurationView');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
-
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
-    var d3 = require('d3');
-    var nvd3 = require('nvd3');
 
     var config = App.getInstance();
 
@@ -72,36 +69,37 @@ define(function (require, exports, module) {
             '[data-js-statistics-failed]': 'text: executionFailed, attr: {href: executionFailedLink}',
             '[data-js-statistics-skipped]': 'text: executionSkipped, attr: {href: executionSkippedLink}',
             '[data-js-statistics-passed]': 'text: executionPassed, attr: {href: executionPassedLink}',
-            '[data-js-statistics-to-investigate]': 'text: defectToInvestigate',
+            '[data-js-statistics-to-investigate]': 'text: defectToInvestigate'
         },
         bindingHandlers: {
             sortTags: {
-                set: function($element) {
+                set: function ($element) {
+                    var $tagsBlock;
                     var sortTags = this.view.model.get('sortTags');
-                    if(!sortTags.length){
+                    if (!sortTags.length) {
                         $element.addClass('hide');
                     } else {
                         $element.removeClass('hide');
                     }
-                    var $tagsBlock = $('[data-js-tags]', $element);
+                    $tagsBlock = $('[data-js-tags]', $element);
                     $tagsBlock.html('');
-                    _.each(sortTags, function(tag) {
-                        $tagsBlock.append('  <a data-js-tag="' + tag + '">' + tag.replaceTabs() + '</a>')
-                    })
+                    _.each(sortTags, function (tag) {
+                        $tagsBlock.append('  <a data-js-tag="' + tag + '">' + tag.replaceTabs() + '</a>');
+                    });
                 }
             }
         },
         computeds: {
             hideEdit: {
                 deps: ['launch_owner'],
-                get: function() {
-                    return this.model.validate.edit()
+                get: function () {
+                    return this.model.validate.edit();
                 }
             },
             nameTitle: {
-               deps: ['url'],
-                get: function(url) {
-                    if(!url) {
+                deps: ['url'],
+                get: function (url) {
+                    if (!url) {
                         return Localization.launches.noItemsInside;
                     }
                     return '';
@@ -109,155 +107,179 @@ define(function (require, exports, module) {
             },
             executionTotal: {
                 deps: ['statistics'],
-                get: function(statistics) {
+                get: function (statistics) {
                     return this.getExecution(statistics, 'total');
                 }
             },
-            executionTotalLink: function() {
-                return this.allCasesUrl('total');
+            executionTotalLink: function () {
+                if (this.hasChild(this.model)) {
+                    return this.allCasesUrl('total');
+                }
+                return undefined;
             },
             executionPassed: {
                 deps: ['statistics'],
-                get: function(statistics) {
+                get: function (statistics) {
                     return this.getExecution(statistics, 'passed');
                 }
             },
-            executionPassedLink: function() {
-                return this.allCasesUrl('passed');
+            executionPassedLink: function () {
+                if (this.hasChild(this.model)) {
+                    return this.allCasesUrl('passed');
+                }
+                return undefined;
             },
             executionSkipped: {
                 deps: ['statistics'],
-                get: function(statistics) {
+                get: function (statistics) {
                     return this.getExecution(statistics, 'skipped');
                 }
             },
-            executionSkippedLink: function() {
-                return this.allCasesUrl('skipped');
+            executionSkippedLink: function () {
+                if (this.hasChild(this.model)) {
+                    return this.allCasesUrl('skipped');
+                }
+                return undefined;
             },
             executionFailed: {
                 deps: ['statistics'],
-                get: function(statistics) {
+                get: function (statistics) {
                     return this.getExecution(statistics, 'failed');
                 }
             },
-            executionFailedLink: function() {
-                return this.allCasesUrl('failed');
+            executionFailedLink: function () {
+                if (this.hasChild(this.model)) {
+                    return this.allCasesUrl('failed');
+                }
+                return undefined;
             },
             defectToInvestigate: {
                 deps: ['statistics'],
-                get: function(statistics) {
-                    if (statistics.defects && statistics.defects.to_investigate && parseInt(statistics.defects.to_investigate.total)) {
+                get: function (statistics) {
+                    if (statistics.defects && statistics.defects.to_investigate
+                        && parseInt(statistics.defects.to_investigate.total, 10)) {
                         return statistics.defects.to_investigate.total;
                     }
                     return '';
                 }
-            },
+            }
         },
-        getExecution: function(statistics, executionType) {
-            if (statistics.executions && statistics.executions[executionType] && parseInt(statistics.executions[executionType])) {
+        hasChild: function (item) {
+            return item.attributes.has_childs;
+        },
+        getExecution: function (statistics, executionType) {
+            if (statistics.executions && statistics.executions[executionType] &&
+                parseInt(statistics.executions[executionType], 10)) {
                 return statistics.executions[executionType];
             }
             return '';
         },
-        allCasesUrl: function(type){
+        allCasesUrl: function (type) {
             var url = this.model.get('url');
             var statusFilter = '';
 
             switch (type) {
-                case 'total':
-                    statusFilter = '&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED&filter.in.type=STEP';
-                    break;
-                case 'passed':
-                case 'failed':
-                case 'skipped':
-                    statusFilter = '&filter.in.status=' + type.toUpperCase() + '&filter.in.type=STEP';
-                    break;
-                default:
-                    break;
+            case 'total':
+                statusFilter = '&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED&filter.in.type=STEP';
+                break;
+            case 'passed':
+            case 'failed':
+            case 'skipped':
+                statusFilter = '&filter.in.status=' + type.toUpperCase() + '&filter.in.type=STEP';
+                break;
+            default:
+                break;
             }
-            return url + '|'+ decodeURIComponent('filter.eq.has_childs=false' + statusFilter) + '?'
+            return url + '|' + decodeURIComponent('filter.eq.has_childs=false' + statusFilter) + '?'
                 + '&filter.eq.has_childs=false' + statusFilter;
         },
-
-
-
-        initialize: function(options) {
+        initialize: function (options) {
+            var defectCollection = new SingletonDefectTypeCollection();
+            var self = this;
+            var toInvest;
             this.statistics = [];
             this.filterModel = options.filterModel;
             this.render();
             this.applyBindings();
 
-            var defectCollection = new SingletonDefectTypeCollection();
-            var self = this;
-            defectCollection.ready.done(function(){
+            defectCollection.ready.done(function () {
                 if (self.getBinding('defectToInvestigate')) {
-                    var toInvest = defectCollection.findWhere({typeRef: 'TO_INVESTIGATE'});
+                    toInvest = defectCollection.findWhere({ typeRef: 'TO_INVESTIGATE' });
                     if (toInvest) {
                         $('[data-js-statistics-to-investigate]', self.$el).attr({
                             href: self.model.get('url') + '?filter.eq.has_childs=false&filter.in.issue$issue_type=' + toInvest.get('locator')
-                        })
+                        });
                     }
                 }
-                $('[data-js-label-pb]', self.$el).css({backgroundColor: defectCollection.getMainColorByType('product_bug')});
-                $('[data-js-label-ab]', self.$el).css({backgroundColor: defectCollection.getMainColorByType('automation_bug')});
-                $('[data-js-label-si]', self.$el).css({backgroundColor: defectCollection.getMainColorByType('system_issue')});
-                $('[data-js-label-ti]', self.$el).css({backgroundColor: defectCollection.getMainColorByType('to_investigate')});
+                $('[data-js-label-pb]', self.$el).css({ backgroundColor: defectCollection.getMainColorByType('product_bug') });
+                $('[data-js-label-ab]', self.$el).css({ backgroundColor: defectCollection.getMainColorByType('automation_bug') });
+                $('[data-js-label-si]', self.$el).css({ backgroundColor: defectCollection.getMainColorByType('system_issue') });
+                $('[data-js-label-ti]', self.$el).css({ backgroundColor: defectCollection.getMainColorByType('to_investigate') });
             });
             this.listenTo(this.model, 'scrollToAndHighlight', this.highlightItem);
-            this.markdownViewer = new MarkdownViewer({text: this.model.get('description')});
+            this.markdownViewer = new MarkdownViewer({ text: this.model.get('description') });
             $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
-            this.listenTo(this.model, 'change:description', function(model, description){ self.markdownViewer.update(description); });
+            this.listenTo(this.model, 'change:description', function (model, description) { self.markdownViewer.update(description); });
             this.listenTo(this.model, 'change:description change:tags', this.activateAccordion);
             this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {type: this.model.get('type')}));
+        render: function () {
+            this.$el.html(Util.templates(this.template, { type: this.model.get('type') }));
             this.renderDuration();
             this.renderDefects();
 
             // this.renderStatistics();
         },
-        highlightItem: function() {
+        highlightItem: function () {
+            var self;
             this.$el.prepend('<div class="highlight"></div>');
-            var self = this;
-            config.mainScrollElement.animate({ scrollTop: this.el.offsetTop}, 500, function() {
+            self = this;
+            config.mainScrollElement.animate({ scrollTop: this.el.offsetTop }, 500, function () {
                 self.$el.addClass('hide-highlight');
             });
-
         },
-        toggleStartTimeView: function (e) {
-            this.model.collection.trigger('change:time:format')
+        toggleStartTimeView: function () {
+            this.model.collection.trigger('change:time:format');
         },
-        renderDuration: function(){
+        renderDuration: function () {
             this.duration && this.duration.destroy();
             this.duration = new ItemDurationView({
                 model: this.model,
                 el: $('[data-js-item-status]', this.$el)
             });
         },
-        renderDefects: function() {
+        renderDefects: function () {
             this.productBug && this.productBug.destroy();
             this.productBug = new LaunchSuiteDefectsView({
-                model: this.model, el: $('[data-js-statistics-product-bug]', this.$el), type: 'product_bug'});
+                model: this.model,
+                el: $('[data-js-statistics-product-bug]', this.$el),
+                type: 'product_bug'
+            });
             this.autoBug && this.autoBug.destroy();
             this.autoBug = new LaunchSuiteDefectsView({
-                model: this.model, el: $('[data-js-statistics-automation-bug]', this.$el), type: 'automation_bug'});
+                model: this.model,
+                el: $('[data-js-statistics-automation-bug]', this.$el),
+                type: 'automation_bug'
+            });
             this.systemIssue && this.systemIssue.destroy();
             this.systemIssue = new LaunchSuiteDefectsView({
-                model: this.model, el: $('[data-js-statistics-system-issue]', this.$el), type: 'system_issue'});
+                model: this.model,
+                el: $('[data-js-statistics-system-issue]', this.$el),
+                type: 'system_issue'
+            });
         },
-        onClickToInvestigate: function(){
-            if(this.model.get('type') == 'SUITE'){
+        onClickToInvestigate: function () {
+            if (this.model.get('type') === 'SUITE') {
                 config.trackingDispatcher.trackEventNumber(131);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(60);
             }
         },
         showItemMenu: function (e) {
+            var $link;
             config.trackingDispatcher.trackEventNumber(24);
-            if(!$(e.currentTarget).hasClass('rendered')) {
-                var $link = $(e.currentTarget);
+            if (!$(e.currentTarget).hasClass('rendered')) {
+                $link = $(e.currentTarget);
                 this.menu = new LaunchItemMenuView({
                     model: this.model
                 });
@@ -267,62 +289,60 @@ define(function (require, exports, module) {
                     .dropdown();
             }
         },
-        onClickTag: function(e) {
+        onClickTag: function (e) {
             var tag = $(e.currentTarget).data('js-tag');
             this.addFastFilter('tags', tag);
         },
-        onClickOwnerName: function() {
+        onClickOwnerName: function () {
             this.addFastFilter('user', this.model.get('owner'));
         },
-        addFastFilter: function(filterId, value) {
+        addFastFilter: function (filterId, value) {
+            var launchFilterCollection;
+            var tempFilterModel;
             if (this.model.get('mode') === 'DEBUG') {
                 this.filterModel.trigger('add_entity', filterId, value);
                 return;
             }
-            if(this.filterModel.get('id') == 'all') {
-                var launchFilterCollection = new SingletonLaunchFilterCollection();
-                var tempFilterModel = launchFilterCollection.generateTempModel();
-                config.router.navigate(tempFilterModel.get('url'), {trigger: true});
+            if (this.filterModel.get('id') === 'all') {
+                launchFilterCollection = new SingletonLaunchFilterCollection();
+                tempFilterModel = launchFilterCollection.generateTempModel();
+                config.router.navigate(tempFilterModel.get('url'), { trigger: true });
                 tempFilterModel.trigger('add_entity', filterId, value);
             } else {
                 this.filterModel.trigger('add_entity', filterId, value);
             }
         },
-        onClickSelect: function(){
-            if(this.model.get('type') == 'SUITE'){
+        onClickSelect: function () {
+            if (this.model.get('type') === 'SUITE') {
                 config.trackingDispatcher.trackEventNumber(100.1);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(61.2);
             }
         },
-        onClickName: function(e) {
+        onClickName: function () {
             config.trackingDispatcher.trackEventNumber(23);
-            e.preventDefault();
-            var href = $(e.currentTarget).attr('href');
-            if(this.model.get('has_childs')) {
+            if (this.model.get('has_childs')) {
                 this.model.trigger('drill:item', this.model);
             }
-            config.router.navigate(href, {trigger: true});
         },
-        onClickEdit: function() {
-            if(this.model.get('type') == 'SUITE'){
+        onClickEdit: function () {
+            var modal;
+            if (this.model.get('type') === 'SUITE') {
                 config.trackingDispatcher.trackEventNumber(98);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(53);
             }
-            var modal = new ModalLaunchItemEdit({
-                item: this.model,
-            })
+            modal = new ModalLaunchItemEdit({
+                item: this.model
+            });
             modal.show();
         },
-        onClickOpen: function() {
+        onClickOpen: function () {
             this.$el.toggleClass('open');
         },
-        activateAccordion: function() {
+        activateAccordion: function () {
             var innerHeight = 198;
-            if($(window).width() < 900) {
+            if ($(window).width() < 900) {
                 innerHeight = 318;
             }
             if (this.$el.innerHeight() > innerHeight) {
@@ -331,19 +351,14 @@ define(function (require, exports, module) {
                 this.$el.removeClass('show-accordion');
             }
         },
-        destroy: function () {
+        onDestroy: function () {
             this.menu && this.menu.destroy();
             this.duration && this.duration.destroy();
-            _.each(this.statistics, function(v){
-                if(_.isFunction(v.destroy)){
+            _.each(this.statistics, function (v) {
+                if (_.isFunction(v.destroy)) {
                     v.destroy();
                 }
             });
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            this.$el.html('');
-            delete this;
         }
     });
 

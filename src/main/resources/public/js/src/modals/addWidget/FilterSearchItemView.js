@@ -19,11 +19,10 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
@@ -44,53 +43,58 @@ define(function (require, exports, module) {
             '[data-js-filter-not-my]': 'classes: {hide: not(notMyFilter)}, attr: {title: sharedByTitle}',
             '[data-js-filter-edit]': 'classes: {hide: notMyFilter}',
             '[data-js-filter-select]': 'checked: active',
+            '[data-js-filter-info]': 'classes: {hide: noFilter}',
+            '[data-js-no-filter]': 'classes: {hide: not(noFilter)}'
         },
         computeds: {
+            noFilter: {
+                deps: ['name', 'entities'],
+                get: function (name, entities) {
+                    return !(name && entities);
+                }
+            },
             getName: {
                 deps: ['name'],
-                get: function(name){
+                get: function (name) {
                     var search = this.searchModel ? this.searchModel.get('search') : null;
                     return search ? Util.textWrapper(name, search) : name;
                 }
             }
         },
-        initialize: function(options) {
+        initialize: function (options) {
+            var self = this;
             this.modalType = options.modalType;
             this.searchModel = options.searchModel;
             this.render();
-            var self = this;
-            if(this.model.get('active')) {
-                setTimeout(function() {
+            if (this.model.get('active')) {
+                setTimeout(function () {
                     $('[data-js-filter-select]', self.$el)[0].checked = true;
-                })
-
+                });
             }
         },
-        onClickFilterEdit: function(e) {
+        onClickFilterEdit: function (e) {
             config.trackingDispatcher.trackEventNumber(298);
             e.preventDefault();
             e.stopPropagation();
             this.model.trigger('edit', this.model);
         },
-        onSelectFilter: function(){
-            if(this.modalType == 'edit'){
+        onSelectFilter: function () {
+            if (this.modalType === 'edit') {
                 config.trackingDispatcher.trackEventNumber(329);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(297);
             }
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        destroy: function() {
+        destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
             this.$el.remove();
         }
     });
-
 
 
     return FilterSearchItem;

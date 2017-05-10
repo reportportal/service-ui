@@ -39,7 +39,7 @@ define(function (require, exports, module) {
     //var Favorites = require('favorites');
     //var Launch = require('launch');
     var LaunchPage = require('launches/LaunchPage');
-    var Project = require('project');
+    var Project = require('projectSettings/projectSettingsPage');
     var ProjectInfo = require('projectinfo');
     var Member = require('member');
     var Profile = require('userProfile/UserProfilePage');
@@ -47,7 +47,6 @@ define(function (require, exports, module) {
     // Administrate modules
     var Projects = require('projects');
     var Users = require('users');
-    var Settings = require('settings');
 
     var Content = require('sections/content');
 

@@ -50,6 +50,11 @@
       }
     }
   }
+  .rp-btn.disabled {
+    .counter {
+      display: none;
+    }
+  }
   .counter {
       position: absolute;
       min-width: 15px;

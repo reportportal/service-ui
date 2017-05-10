@@ -114,15 +114,18 @@ define(function (require, exports, module) {
         onChangeIdFilter: function(filterModel) {
             config.router.navigate(filterModel.get('url'), {trigger: false});
         },
-        destroy: function () {
-            this.$el.empty();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            delete this;
+        discardTemporaryFiltersChanges: function () {
+            var toRemove = this.launchFilterCollection.where({temp: true});
+            this.launchFilterCollection.remove(toRemove);
+            _.each(this.launchFilterCollection.models, function (item) {
+                item.set('newEntities', '');
+            });
         },
+        onDestroy: function () {
+            this.discardTemporaryFiltersChanges();
+            this.$el.empty();
+        }
     });
-
 
     return LaunchHeaderView;
 });

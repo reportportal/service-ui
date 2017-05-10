@@ -18,45 +18,442 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+$mobile: 768px;
+@mixin respond-to($media){
+  @if $media == handhelds{
+    @media (max-width : $mobile){
+      @content;
+    }
+  }
+}
 .invalid-page {
   color: #464547;
   text-align: center;
-  .invalid-bg {
+  width: 100%;
+  height: 100%;
+  min-height: 540px;
+  overflow: hidden;
+  .invalid-wrapper {
+    padding: 0 10px;
     position: absolute;
     width: 100%;
     height: 100%;
-    background: #FBFFF1 url(../img/bg-422.png) center -365px no-repeat;
-    min-height: 500px;
+    overflow: hidden;
+    min-height: 540px;
+    background: #FBFFF1;
+    .content-err {
+      position: relative;
+      top: -320px;
+      &::after {
+        content: "";
+        background-image: url(../img/invalidPage/422.png);
+        position: absolute;
+        top: 173px;
+        left: 50%;
+        width: 300px;
+        height: 135px;
+        margin-left: -95px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        @include respond-to(handhelds) {
+          margin-left: -149px;
+        }
+      }
+      @media(max-width: 500px) {
+        &::after {
+          width: 192px;
+          height: 78px;
+          margin-left: -70px;
+          top: 176px;
+        }
+      }
+    }
+    .content-err-wrapper {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      top: 95px;
+      left: 50%;
+      margin-left: -160px;
+      .round {
+        border-radius: 50%;
+        opacity: 0.3;
+        position: absolute;
+        background: #A3C644;
+        top: 50%;
+        left: 50%;
+      }
+      .round-7 {
+        width: 1780px;
+        height: 1780px;
+        margin-top: -890px;
+        margin-left: -890px;
+        box-shadow: rgba(255, 255, 255, 0.4) 0 0 13px;
+      }
+      .round-6 {
+        width: 1500px;
+        height: 1500px;
+        margin-top: -750px;
+        margin-left: -750px;
+        box-shadow: rgba(255, 255, 255, 0.4) 0 0 11px;
+      }
+      .round-5 {
+        width: 1250px;
+        height: 1250px;
+        margin-top: -625px;
+        margin-left: -625px;
+        box-shadow: rgba(255, 255, 255, 0.4) 0 0 9px;
+      }
+      .round-4 {
+        width: 1008px;
+        height: 1008px;
+        margin-top: -504px;
+        margin-left: -504px;
+        box-shadow: rgba(255, 255, 255, 0.4) 0 0 7px;
+      }
+      .round-3 {
+        width: 778px;
+        height: 778px;
+        margin-top: -389px;
+        margin-left: -389px;
+        box-shadow: rgba(255, 255, 255, 0.4) 0 0 5px;
+      }
+      .round-2 {
+        width: 580px;
+        height: 580px;
+        margin-top: -290px;
+        margin-left: -290px;
+        box-shadow: rgba(255, 255, 255, 0.4) 0 0 3px;
+      }
+      .round-1 {
+        width: 416px;
+        height: 416px;
+        margin-top: -208px;
+        margin-left: -208px;
+        box-shadow: rgba(255, 255, 255, 0.4) 0 0 2px;
+      }
+      @media (max-width: 500px) {
+        .round-1 {
+          width: 258px;
+          height: 258px;
+          margin-top: -129px;
+          margin-left: -129px;
+        }
+        .round-2 {
+          width: 360px;
+          height: 360px;
+          margin-top: -180px;
+          margin-left: -180px;
+        }
+        .round-3 {
+          width: 474px;
+          height: 474px;
+          margin-top: -237px;
+          margin-left: -237px;
+        }
+        .round-4 {
+          width: 610px;
+          height: 610px;
+          margin-top: -305px;
+          margin-left: -305px;
+        }
+        .stars{
+          width: 320px;
+          height: 568px;
+          margin-left: 0;
+          left: 0;
+          &.layer-1 {
+            top: -93px;
+            background-image: url(../img/404/Mobile_404_stars1.svg);
+          }
+          &.layer-2 {
+            top: -93px;
+            background-image: url(../img/404/Mobile_404_stars2.svg);
+          }
+        }
+        .orange-planet{
+          display: none;
+          animation: unset;
+        }
+      }
+      .layer-1 {
+        top: -38px;
+        background-image: url(../img/404/stars1.svg);
+        width: 1083px;
+        height: 488px;
+        margin-left: -543px;
+        animation: Stars 2s linear infinite;
+      }
+      .layer-2 {
+        top: -22px;
+        background-image: url(../img/404/stars2.svg);
+        width: 1155px;
+        height: 464px;
+        margin-left: -577px;
+        animation: Stars 3s ease-in infinite;
+      }
+      @keyframes Stars {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.3;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      .stars {
+        position: absolute;
+        left: 50%;
+      }
+      .round-center {
+        position: absolute;
+        width: 320px;
+        height: 320px;
+      }
+      .orbit-rotation {
+        animation: OrbitRotation 60s linear infinite;
+        transform-origin: center;
+      }
+      @keyframes OrbitRotation {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .self-rotation {
+        animation: SelfRotation 60s linear infinite;
+        transform-origin: center;
+      }
+      @keyframes SelfRotation {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(-360deg);
+        }
+      }
+      @keyframes Moving {
+        0% {
+          transform: translate(0px, 0px);
+        }
+        25% {
+          transform: translate(3px, 0px);
+        }
+        50% {
+          transform: translate(0px, 0px);
+        }
+        75% {
+          transform: translate(0px, 3px);
+        }
+        100% {
+          transform: translate(0px, 0px);
+        }
+      }
+      @keyframes MovingRevert {
+        0% {
+          transform: translate(0px, 0px);
+        }
+        25% {
+          transform: translate(0px, 3px);
+        }
+        50% {
+          transform: translate(0px, 0px);
+        }
+        75% {
+          transform: translate(3px, 0px);
+        }
+        100% {
+          transform: translate(0px, 0px);
+        }
+      }
+      .red-planet {
+        .planet {
+          background-image: url('../img/invalidPage/planet2.png');
+        }
+        .area {
+          width: 40px;
+          height: 40px;
+          position: absolute;
+          top: -15px;
+          left: -215px;
+          .part1 {
+            background: url('../img/invalidPage/planet2_1.png');
+            width: 8px;
+            height: 7px;
+            left: 30px;
+            top: 30px;
+            position: relative;
+            animation: Moving 5s linear infinite;
+          }
+          .part2 {
+            background: url('../img/invalidPage/planet2_2.png');
+            width: 4px;
+            height: 6px;
+            position: relative;
+            top: 30px;
+            left: 23px;
+            animation: Moving 5.5s linear infinite;
+          }
+          .part3 {
+            background: url('../img/invalidPage/planet2_4.png');
+            width: 5px;
+            height: 4px;
+            position: relative;
+            top: 26px;
+            left: 32px;
+            animation: MovingRevert 6s linear infinite;
+          }
+          .part4 {
+            background: url('../img/invalidPage/planet2_5.png');
+            width: 3px;
+            height: 4px;
+            position: relative;
+            top: 29px;
+            left: 25px;
+            animation: MovingRevert 6.5s linear infinite;
+          }
+
+        }
+        @media (max-width: 500px) {
+          .area{
+            width: 30px;
+            height: 30px;
+            background-size: contain;
+            top: 5px;
+            left: 30px;
+            .part1, .part2, .part4{
+              top: 20px;
+            }
+            .part3{
+              top: 16px;
+            }
+          }
+        }
+      }
+      .orange-planet {
+        .planet {
+          background-image: url('../img/invalidPage/planet1.png');
+        }
+        .area {
+          width: 80px;
+          height: 80px;
+          position: absolute;
+          right: -375px;
+          top: 200px;
+          .part1 {
+            background: url('../img/invalidPage/planet1_1.png');
+            width: 8px;
+            height: 7px;
+            left: 55px;
+            top: 70px;
+            position: relative;
+            animation: Moving 5s linear infinite;
+          }
+          .part2 {
+            background: url('../img/invalidPage/planet1_2.png');
+            width: 8px;
+            height: 7px;
+            left: 85px;
+            top: 45px;
+            position: relative;
+            animation: Moving 5s linear infinite;
+          }
+          .part3 {
+            background: url('../img/invalidPage/planet1_3.png');
+            width: 8px;
+            height: 7px;
+            left: 85px;
+            top: 55px;
+            position: relative;
+            animation: MovingRevert 5s linear infinite;
+          }
+          .part4 {
+            background: url('../img/invalidPage/planet1_4.png');
+            width: 8px;
+            height: 7px;
+            left: 65px;
+            top: 60px;
+            position: relative;
+            animation: MovingRevert 5s linear infinite;
+          }
+          .part5 {
+            background: url('../img/invalidPage/planet1_5.png');
+            width: 8px;
+            height: 7px;
+            left: 70px;
+            top: 35px;
+            position: relative;
+            animation: MovingRevert 5s linear infinite;
+          }
+        }
+      }
+    }
+    .invalid-bg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #FBFFF1 url(../img/bg-422.png) center -365px no-repeat;
+      min-height: 500px;
+    }
+    h1 {
+      font-family: "OpenSansSemibold", sans-serif;
+      font-size: 16px;
+      line-height: 16px;
+      margin-bottom: 20px;
+      margin-top: 0;
+      padding-top: 330px;
+      position: relative;
+    }
+    p {
+      margin-bottom: 6px;
+      position: relative;
+    }
+    @media(max-width: 500px){
+      h1{
+        padding-top: 288px;
+        margin-bottom: 13px;
+      }
+      .mobile-short{
+        width: 200px;
+        margin: 0 auto;
+      }
+      p{
+        margin-bottom: 0;
+        line-height: 1.77;
+      }
+      button{
+        margin-top: 18px;
+        padding: 8px 26px;
+      }
+    }
+    button {
+      margin-top: 20px;
+    }
   }
   .invalid-header {
     position: absolute;
     width: 100%;
     height: 62px;
     top: 0;
-    background-color: #2b2b2b;
-    cursor: pointer;
+    background-color: #313131;
     .logo {
       width: 90px;
       height: 100%;
-      background: #313131 url(../img/rp_logo.png) center no-repeat;
-
+      background: url(../img/rp_logo.png) center no-repeat;
+      cursor: pointer;
+    }
+    @media (max-width:500px) {
+      .logo{
+        background: url(../img/404/mobile-logo.svg) center no-repeat;
+        display: inline-block;
+        width: 150px;
+        height: 60px;
+      }
     }
   }
-  h1 {
-    font-family: "OpenSansSemibold", sans-serif;
-    font-size: 16px;
-    line-height: 16px;
-    margin-bottom: 20px;
-    margin-top: 0;
-    padding-top: 330px;
-    position: relative;
-  }
-  p {
-    margin-bottom: 6px;
-    position: relative;
-  }
-  button {
-    margin-top: 20px;
-  }
 }
+

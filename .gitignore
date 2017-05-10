@@ -8,3 +8,5 @@ build/
 *.iml
 *.iws
 *.log
+
+coverage

@@ -20,10 +20,9 @@
  */
 
 .most-failed-launches {
-  margin: 0 -15px;
   .most-failed-launches-table {
     .most-failed-launch {
-      padding: 0 15px 15px;
+      padding: 15px;
       font: bold 13px $OpenSansSemibold;
     }
     .most-failed-head {

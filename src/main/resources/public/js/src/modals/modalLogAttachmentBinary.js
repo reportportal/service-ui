@@ -18,15 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var _ = require('underscore');
     var ModalView = require('modals/_modalView');
-
-    var Backbone = require('backbone');
-    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var Urls = require('dataUrlResolver');
     var App = require('app');
@@ -44,10 +40,10 @@ define(function (require, exports, module) {
             'click [data-js-cancel]': 'onClickCancel'
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             var self = this;
 
-            this.supportedLanguages = ['xml', 'javascript', 'json', 'html', 'css', 'php'];
+            this.supportedLanguages = options.supportedLanguages;
             this.binaryId = options.binaryId;
             this.language = (~this.supportedLanguages.indexOf(options.language)) ? options.language : 'plain';
 
@@ -59,24 +55,24 @@ define(function (require, exports, module) {
                 });
 
                 $('[data-js-binary-holder]', self.$el).html(codeBlock.el);
-                codeBlock.ready.done(function() {
+                codeBlock.ready.done(function () {
                     self.$modalWrapper.removeClass('loading');
-                })
+                });
             });
             this.render();
         },
 
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.tpl));
         },
 
         onShow: function () {
             this.$modalWrapper.addClass('loading');
         },
-        onClickClose: function(){
+        onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(509);
         },
-        onClickCancel: function(){
+        onClickCancel: function () {
             config.trackingDispatcher.trackEventNumber(511);
         },
         loadData: function () {
@@ -84,15 +80,15 @@ define(function (require, exports, module) {
             var self = this;
             $.ajax({
                 url: self.binarySource,
-                type: "GET",
-                dataType: "text",
+                type: 'GET',
+                dataType: 'text',
                 async: true,
                 success: function (response) {
                     async.resolve(response);
-                },
+                }
             });
             return async;
-        },
+        }
     });
 
     return ModalLogAttachmentBinary;

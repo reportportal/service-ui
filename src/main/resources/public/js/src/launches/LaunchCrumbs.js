@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
@@ -29,7 +29,6 @@ define(function (require, exports, module) {
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
-    var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
 
     var config = App.getInstance();
 
@@ -45,13 +44,13 @@ define(function (require, exports, module) {
             number: '',
             listView: false,
             failLoad: false,
-            nextModelId: '',
+            nextModelId: ''
         },
         computeds: {
             fullName: {
                 deps: ['name', 'number'],
-                get: function(name, number) {
-                    if(!number) {
+                get: function (name, number) {
+                    if (!number) {
                         return name;
                     }
                     return name + ' #' + number;
@@ -59,120 +58,127 @@ define(function (require, exports, module) {
             },
             clearUrl: {
                 deps: ['url'],
-                get: function(url) {
+                get: function (url) {
                     return url.split('|')[0];
                 }
             }
         },
-        initialize: function() {
+        initialize: function () {
             this.ready = $.Deferred();
-            var self = this;
             this.listenTo(this, 'change:id', this.onChangeId);
             this.updateData();
         },
-        getToInvestigate: function() {
-            if(this.get('parent_launch_investigate')) {
+        getToInvestigate: function () {
+            var statistics;
+            if (this.get('parent_launch_investigate')) {
                 return this.get('parent_launch_investigate');
             }
-            var statistics = this.get('statistics');
-            if(statistics && statistics.defects && statistics.defects.to_investigate) {
+            statistics = this.get('statistics');
+            if (statistics && statistics.defects && statistics.defects.to_investigate) {
                 return statistics.defects.to_investigate.total;
             }
             return 0;
         },
-        onChangeId: function() {
+        onChangeId: function () {
             this.ready && this.ready.resolve();
             this.ready = $.Deferred();
             this.updateData();
         },
-        updateData: function(force) {
+        updateData: function (force) {
             var self = this;
-            if(this.get('level') == 'filter') {
-                if(this.get('id') == 'all') {
-                    this.set({name: 'All'});
+            var launchFilterCollection;
+            var url;
+            if (this.get('level') === 'filter') {
+                if (this.get('id') === 'all') {
+                    this.set({ name: 'All' });
                 } else {
-                    var launchFilterCollection = new SingletonLaunchFilterCollection();
-                    launchFilterCollection.ready.done(function() {
+                    launchFilterCollection = new SingletonLaunchFilterCollection();
+                    launchFilterCollection.ready.done(function () {
                         var filterModel = launchFilterCollection.get(self.get('id'));
-                        self.set({name: filterModel.get('name'), failLoad: false});
-                    })
+                        self.set({ name: filterModel.get('name'), failLoad: false });
+                    });
                 }
                 this.ready.resolve();
             } else {
                 if (!force) {
-                    if(this.collection.cacheModel && this.collection.cacheModel.get('id') == this.get('id')) {
+                    if (this.collection.cacheModel && this.collection.cacheModel.get('id') === this.get('id')) {
                         this.set(this.collection.cacheModel.toJSON());
                         this.ready.resolve();
-                        return ;
+                        return;
                     }
-                    if(this.collection.lastLogItem && this.collection.lastLogItem == this.get('id')) {
+                    if (this.collection.lastLogItem && this.collection.lastLogItem === this.get('id')) {
                         this.ready.resolve();
-                        return ;
+                        return;
                     }
                 }
-                var url = Urls.getProjectBase() + '/' + this.get('level') + '/' + this.get('id');
+                url = Urls.getProjectBase() + '/' + this.get('level') + '/' + this.get('id');
                 call('GET', url)
-                    .done(function(data) {
+                    .done(function (data) {
                         data.type = data.type || 'LAUNCH';
                         data.failLoad = false;
                         self.set(data);
                         self.ready.resolve();
                     })
-                    .fail(function() {
-                        self.set({failLoad: true});
+                    .fail(function () {
+                        self.set({ failLoad: true });
                         self.ready.resolve();
                         // self.trigger('fail:load');
-                    })
+                    });
             }
         }
     });
 
     var LaunchCrumbCollection = Backbone.Collection.extend({
         model: LaunchCrumbModel,
-        
+
         initialize: function (models, options) {
             this.context = options.context;
         },
-        updateUrlModels: function() {
+        updateUrlModels: function () {
             var url = '';
-            _.each(this.models, function(model) {
+            _.each(this.models, function (model) {
                 url += model.get('partUrl');
-                model.set({url: url});
-            })
+                model.set({ url: url });
+            });
         },
-        update: function(newPath, cacheModel) {
-            this.cacheModel = cacheModel;
+        forceUpdate: function () {
+            _.each(this.models, function (model) {
+                model.updateData(true);
+            });
+        },
+        update: function (newPath, cacheModel) {
             var async = $.Deferred();
             var currentPath = [];
-            _.each(this.models, function(model) {
+            this.cacheModel = cacheModel;
+            _.each(this.models, function (model) {
                 currentPath.push(model.get('id'));
             });
 
-            for(var i = 0; i < Math.max(newPath.length, currentPath.length); i++) {
-                if(newPath[i]) {
+            for (var i = 0; i < Math.max(newPath.length, currentPath.length); i++) {
+                if (newPath[i]) {
                     var listView = false;
                     var partUrl = '';
                     var level = 'item';
                     var splitId = newPath[i].split('|');
                     var currentNewPath = splitId[0];
-                    if(i == 0) {
+                    if (i === 0) {
                         level = 'filter';
-                        partUrl = (new FilterModel({id: newPath[0], context: this.context})).get('url');
+                        partUrl = (new FilterModel({ id: newPath[0], context: this.context })).get('url');
                     } else {
                         partUrl += '/' + currentNewPath;
                         if (splitId[1]) {
                             partUrl += '|' + splitId[1] + '?' + decodeURIComponent(splitId[1]);
                             listView = true;
                         }
-                        level = (i == 1) ? 'launch' :'item';
+                        level = (i === 1) ? 'launch' : 'item';
                     }
-                    if(currentPath[i]) {
-                        this.get(currentPath[i]).set({id: currentNewPath, level: level, partUrl: partUrl, listView: listView});
+                    if (currentPath[i]) {
+                        this.get(currentPath[i]).set({ id: currentNewPath, level: level, partUrl: partUrl, listView: listView });
                     } else {
-                        this.add({id: currentNewPath, level: level, partUrl: partUrl, listView: listView});
+                        this.add({ id: currentNewPath, level: level, partUrl: partUrl, listView: listView });
                     }
-                    if(i > 0) {
-                        this.models[i-1].set({nextModelId: currentNewPath});
+                    if (i > 0) {
+                        this.models[i - 1].set({ nextModelId: currentNewPath });
                     }
                 } else {
                     this.remove(currentPath[i]);
@@ -182,63 +188,60 @@ define(function (require, exports, module) {
             var lastModel = this.models[this.models.length - 1];
             var launchModel = null;
             var parentModel = null;
-            if(this.models.length <= 1) {
+            if (this.models.length <= 1) {
                 // launch level
                 this.trigger('lost:launch', false);
                 async.resolve(launchModel, parentModel);
             } else {
                 var self = this;
-                this.models[1].ready.always(function() { // launch model
+                this.models[1].ready.always(function () { // launch model
                     launchModel = self.models[1];
-                    if(self.models.length > 2) {
-                        lastModel.ready.always(function() { // item model
+                    if (self.models.length > 2) {
+                        lastModel.ready.always(function () { // item model
                             parentModel = lastModel;
-                            if(!launchModel.get('failLoad')) {
+                            if (!launchModel.get('failLoad')) {
                                 self.trigger('lost:launch', false);
-                                if(lastModel.get('failLoad')) {
+                                if (lastModel.get('failLoad')) {
                                     async.reject(2);
-                                }else {
+                                } else {
                                     async.resolve(launchModel, parentModel);
                                 }
+                            } else if (!lastModel.get('failLoad')) {
+                                self.checkLostLaunch(async, launchModel, parentModel);
                             } else {
-                                if(!lastModel.get('failLoad')) {
-                                    self.checkLostLaunch(async, launchModel, parentModel);
-                                } else {
-                                    async.reject(1);
-                                }
+                                async.reject(1);
                             }
-                        })
+                        });
+                    } else if (launchModel.get('failLoad')) {
+                        async.reject(1);
                     } else {
-                        if (launchModel.get('failLoad')) {
-                            async.reject(1);
-                        } else {
-                            async.resolve(launchModel, parentModel);
-                        }
+                        async.resolve(launchModel, parentModel);
                     }
-                })
+                });
             }
             return async.promise();
         },
-        checkLostLaunch: function(async, launchModel, parentModel) {
+        checkLostLaunch: function (async, launchModel, parentModel) {
             var self = this;
-            $.when.apply(this, _.map(this.models, function(model) { return model.ready; })).always(function() {
-                var failModels = self.where({failLoad: true});
-                if(failModels.length == 1 && failModels[0].get('level') == 'launch' && self.models.length > 2) {
-                    self.models[1].set('id', self.models[2].get('launchId')).ready
-                        .done(function() {
+            $.when.apply(this, _.map(this.models, function (model) { return model.ready; }))
+                .always(function () {
+                    var failModels = self.where({ failLoad: true });
+                    if (failModels.length === 1 && failModels[0].get('level') === 'launch' && self.models.length > 2) {
+                        self.models[1].set('id', self.models[2].get('launchId')).ready
+                        .done(function () {
                             var newPartUrl = self.models[1].get('partUrl').split('|');
                             newPartUrl[0] = '/' + self.models[1].get('id');
-                            self.models[1].set({partUrl: newPartUrl.join('|')});
+                            self.models[1].set({ partUrl: newPartUrl.join('|') });
                             self.updateUrlModels();
                             async.resolve(self.models[1], parentModel);
                             self.trigger('lost:launch', true);
                         })
-                        .fail(function() {
+                        .fail(function () {
                             async.reject(1);
-                        })
-                }
-            })
-        },
+                        });
+                    }
+                });
+        }
     });
 
     var LaunchCrumbView = Epoxy.View.extend({
@@ -255,39 +258,37 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-link]': 'onClickItem'
         },
-        initialize: function(options) {
+        initialize: function () {
             this.render();
             this.listenTo(this.model, 'remove', this.onRemove);
             // this.listenTo(this.model, 'change:failLoad', this.render);
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {failLoad: this.model.get('failLoad')}))
+        render: function () {
+            this.$el.html(Util.templates(this.template, { failLoad: this.model.get('failLoad') }));
         },
-        onClickItem: function(e){
-            var collection = this.model.collection,
-                last = collection.last(),
-                type = last.get('type');
-            switch (type){
-                case 'LAUNCH':
-                case 'SUITE':
-                case 'TEST':
-                    if(this.model.get('id') == 'all'){
-                        config.trackingDispatcher.trackEventNumber(84);
-                    }
-                    else {
-                        config.trackingDispatcher.trackEventNumber(85);
-                    }
-                    break;
-                default:
-                    if(this.model.get('id') == 'all'){
-                        config.trackingDispatcher.trackEventNumber(184);
-                    }
-                    else {
-                        config.trackingDispatcher.trackEventNumber(185);
-                    }
+        onClickItem: function () {
+            var collection = this.model.collection;
+            var last = collection.last();
+            var type = last.get('type');
+            switch (type) {
+            case 'LAUNCH':
+            case 'SUITE':
+            case 'TEST':
+                if (this.model.get('id') === 'all') {
+                    config.trackingDispatcher.trackEventNumber(84);
+                } else {
+                    config.trackingDispatcher.trackEventNumber(85);
+                }
+                break;
+            default:
+                if (this.model.get('id') === 'all') {
+                    config.trackingDispatcher.trackEventNumber(184);
+                } else {
+                    config.trackingDispatcher.trackEventNumber(185);
+                }
             }
         },
-        onRemove: function() {
+        onRemove: function () {
             this.destroy();
         },
         destroy: function () {
@@ -296,41 +297,41 @@ define(function (require, exports, module) {
             this.stopListening();
             this.unbind();
             delete this;
-        },
+        }
     });
 
     var LaunchCrumbsView = Epoxy.View.extend({
         template: 'tpl-launch-crumbs',
         events: {
             'click [data-js-switch-mode]': 'onClickSwitchMode',
-            'click [data-js-restore-lost-path]': 'onClickRestorePath',
+            'click [data-js-restore-lost-path]': 'onClickRestorePath'
         },
-        initialize: function(options) {
+        initialize: function (options) {
             var self = this;
             this.context = options.context;
             this.lastModel = null;
-            this.collection = new LaunchCrumbCollection([],{context: this.context});
+            this.collection = new LaunchCrumbCollection([], { context: this.context });
             this.listenTo(this.collection, 'add', this.onAddCrumb);
-            this.listenTo(this.collection, 'lost:launch', function(active) {
+            this.listenTo(this.collection, 'lost:launch', function (active) {
                 if (active) {
-                    $('[data-js-crumbs-container]',self.$el).addClass('lost-path');
-                }else {
+                    $('[data-js-crumbs-container]', self.$el).addClass('lost-path');
+                } else {
                     $('[data-js-crumbs-container]', this.$el).removeClass('lost-path');
                 }
             });
             this.render();
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        cacheItem: function(itemModel) {
+        cacheItem: function (itemModel) {
             this.cacheModel = itemModel;
         },
-        update: function(partPath, optionsURL) {
-            $('#breadCrumbs', this.$el).addClass('load');
+        update: function (partPath, optionsURL) {
             var self = this;
+            $('#breadCrumbs', this.$el).addClass('load');
             this.collection.update(partPath, this.cacheModel)
-                .done(function(launchModel, parentModel) {
+                .done(function (launchModel, parentModel) {
                     $('#breadCrumbs', self.$el).removeClass('load');
                     self.lastModel = parentModel;
                     self.trigger('change:path',
@@ -339,50 +340,50 @@ define(function (require, exports, module) {
                         optionsURL,
                         self.collection.models[self.collection.models.length - 1].get('nextModelId'));
                 })
-                .fail(function(error) {
+                .fail(function (error) {
                     self.trigger('fail:load', error);
-                })
+                });
         },
-        setLogItem: function(itemModel, itemId) {
+        setLogItem: function (itemModel, itemId) {
+            var models;
             if (itemModel) {
-                if(this.collection.lastLogItem) {
+                if (this.collection.lastLogItem) {
                     this.collection.remove(this.collection.lastLogItem);
                 }
                 this.collection.lastLogItem = itemModel.get('id');
                 this.collection.add(itemModel.toJSON());
             } else {
                 this.collection.lastLogItem = itemId;
-                this.collection.add({id: itemId, failLoad: true});
+                this.collection.add({ id: itemId, failLoad: true });
             }
-            var models = this.collection.models;
-            if(models.length > 1) {
-                models[models.length -2].set({nextModelId: itemId});
+            models = this.collection.models;
+            if (models.length > 1) {
+                models[models.length - 2].set({ nextModelId: itemId });
             }
-
         },
-        onAddCrumb: function(model) {
+        onAddCrumb: function (model) {
             $('[data-js-crumbs-container]', this.$el).append((new LaunchCrumbView({
                 model: model
             })).$el);
         },
-        onClickSwitchMode: function() {
-            var last = this.collection.last(),
-                type = last.get('type');
-            switch (type){
-                case 'LAUNCH':
-                case 'SUITE':
-                case 'TEST':
-                    config.trackingDispatcher.trackEventNumber(83);
-                    break;
-                default:
-                    config.trackingDispatcher.trackEventNumber(183);
+        onClickSwitchMode: function () {
+            var last = this.collection.last();
+            var type = last.get('type');
+            switch (type) {
+            case 'LAUNCH':
+            case 'SUITE':
+            case 'TEST':
+                config.trackingDispatcher.trackEventNumber(83);
+                break;
+            default:
+                config.trackingDispatcher.trackEventNumber(183);
             }
-            $('[data-js-crumbs-container]',this.$el).toggleClass('min-size');
+            $('[data-js-crumbs-container]', this.$el).toggleClass('min-size');
         },
-        onClickRestorePath: function() {
+        onClickRestorePath: function () {
             var splitHash = window.location.hash.split('?');
             var options = (splitHash[1]) ? '?' + splitHash[1] : '';
-            config.router.navigate(this.lastModel.get('url') + options, {trigger: false});
+            config.router.navigate(this.lastModel.get('url') + options, { trigger: false });
             this.trigger('restore:path');
             $('[data-js-crumbs-container]', this.$el).removeClass('lost-path');
         },
@@ -392,7 +393,7 @@ define(function (require, exports, module) {
             this.stopListening();
             this.unbind();
             delete this;
-        },
+        }
     });
 
 

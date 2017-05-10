@@ -42,7 +42,6 @@ require.config({
         nicescroll: '../lib/jquery.nicescroll',
         bootstrap: '../lib/bootstrap.min',
         bootswitch: '../lib/bootstrap-switch.min',
-        elementQuery: '../lib/EQCSS',
         base64: '../lib/base64',
         nprogress: '../lib/nprogress',
         localization: 'localizations/default',
@@ -52,7 +51,6 @@ require.config({
         mainview: 'main-view',
         favorites: 'favorites',
         //register: 'register/register',
-        // filters: 'filter/filters',
         //components: 'core/components',
         lazyload: '../lib/jquery.lazyload.min',
         daterangepicker: '../lib/daterangepicker',
@@ -72,14 +70,12 @@ require.config({
         'DemoDataSettingsView': 'project/DemoDataSettingsView',
 
         dataUrlResolver: 'core/data-url-resolver',
-        project: 'project/project',
         'projectinfo': 'project/projectinfo',
         validators: 'core/validators',
         validate: '../lib/jquery.validate',
 
         filtersPanel: 'filter/filters-panel',
         filtersResolver: 'filter/filters-resolver',
-        filtersService: 'filter/filters-service',
         profile: 'login/user_profile',
         ace: '../lib/ace/ace.custom',
         aceDark: '../lib/ace/theme-dark',
@@ -117,7 +113,7 @@ require.config({
         admin: 'admin/admin',
         projects: 'admin/projects',
         users: 'admin/users',
-        settings: 'admin/settings',
+
         adminService: 'admin/service',
 
         'textile': '../lib/textile',
@@ -161,7 +157,7 @@ require.config({
         'validate': {deps: ["jquery"]},
         'elasticColumns': ['jquery'],
         'nvd3': {deps: ['d3'], exports: 'nv'},
-        'widgets': ['d3', 'nvd3', 'elementQuery'],
+        'widgets': ['d3', 'nvd3'],
         'markitup': ['jquery'],
         'markitupset': ['markitup'],
         'spectrum': ['jquery'],
@@ -180,8 +176,8 @@ require.config({
 
         //'../tests/spec/widgets/widgets',
 
-        '../tests/spec/post_bug_to_jira/post_bug_to_bts',
-        '../tests/spec/post_bug_to_jira/load_bug_to_bts',
+        //'../tests/spec/post_bug_to_jira/post_bug_to_bts',
+        //'../tests/spec/post_bug_to_jira/load_bug_to_bts',
 
         '../tests/spec/project/projectinfo',
 
@@ -197,7 +193,7 @@ require.config({
 
         '../tests/spec/wizard/widget-wizard',
 
-        '../tests/spec/project/project',
+        //'../tests/spec/project/project',
 
         //'../tests/spec/admin/admin',
 

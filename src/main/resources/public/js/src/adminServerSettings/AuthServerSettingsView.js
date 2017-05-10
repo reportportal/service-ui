@@ -1,29 +1,28 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/epam/ReportPortal
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
@@ -31,16 +30,26 @@ define(function(require, exports, module) {
     var AuthServerSettingsModel = require('adminServerSettings/AuthServerSettingsModel');
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
+    var _ = require('underscore');
 
     var config = App.getInstance();
 
     var AuthServerSettingsView = Epoxy.View.extend({
 
+        className: 'rp-auth-server-settings',
+
         template: 'tpl-auth-server-settings',
         orgTpl: 'tpl-auth-server-organizations',
 
+        events: {
+            'click [data-js-add-org-btn]': 'showAddOrganization',
+            'click [data-js-delete-org]': 'confirmDeleteOrg',
+            'click [data-js-remove-add-new-org]': 'hideAddOrganization',
+            'click [data-js-submit-auth-settings]': 'submitAuthSettings'
+        },
+
         bindings: {
-            //'[data-js-guest-enable]': 'checked: enableGuestAccount',
+            // '[data-js-guest-enable]': 'checked: enableGuestAccount',
             '[data-js-github-enable]': 'checked: gitHubAuthEnabled',
             '[data-js-github-enable-mobile]': 'html: getGitHubAuthState',
             '[data-js-github-config]': 'classes: {hide: not(gitHubAuthEnabled)}',
@@ -52,7 +61,7 @@ define(function(require, exports, module) {
         computeds: {
             getGitHubAuthState: {
                 deps: ['gitHubAuthEnabled'],
-                get: function(gitHubAuthEnabled) {
+                get: function (gitHubAuthEnabled) {
                     if (gitHubAuthEnabled) {
                         return 'ON';
                     }
@@ -61,46 +70,39 @@ define(function(require, exports, module) {
             },
             showAddOrg: {
                 deps: ['organizations'],
-                get: function(organizations){
+                get: function () {
                     var orgs = this.model.getOrganizations();
-                    return (orgs && !_.isEmpty(orgs)) ? true : false;
+                    return !!((orgs && !_.isEmpty(orgs)));
                 }
             }
         },
 
         bindingHandlers: {
             updateOrganizations: {
-                set: function($el, val){
+                set: function ($el) {
                     var orgs = this.view.model.getOrganizations();
                     $el.empty();
-                    _.each(orgs, function(item){
-                        $el.append(Util.templates(this.view.orgTpl, {name: item}));
+                    _.each(orgs, function (item) {
+                        $el.append(Util.templates(this.view.orgTpl, { name: item }));
                     }, this);
                 }
             }
         },
 
-        events: {
-            'click [data-js-add-org-btn]': 'showAddOrganization',
-            'click [data-js-delete-org]': 'confirmDeleteOrg',
-            'click [data-js-remove-add-new-org]': 'hideAddOrganization',
-            'click [data-js-submit-auth-settings]': 'submitAuthSettings'
-        },
-
-        initialize: function(options){
+        initialize: function () {
             this.model = new AuthServerSettingsModel();
             this.getAuthSettings();
-            this.listenTo(this.model, 'change:gitHubAuthEnabled', function(){config.trackingDispatcher.trackEventNumber(494)});
+            this.listenTo(this.model, 'change:gitHubAuthEnabled', function () { config.trackingDispatcher.trackEventNumber(494); });
         },
 
-        render: function(){
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
             this.setupAnchors();
             this.bindValidators();
             this.applyBindings();
         },
 
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$addOrg = $('[data-js-add-org-btn]', this.$el);
             this.$addOrgForm = $('[data-js-add-org-form]', this.$el);
             this.$addOrgField = $('[data-js-new-org]', this.$el);
@@ -108,7 +110,7 @@ define(function(require, exports, module) {
             this.$clientSecret = $('[data-js-client-secret]', this.$el);
         },
 
-        bindValidators: function(){
+        bindValidators: function () {
             Util.hintValidator(this.$clientId, [
                 {
                     validator: 'required'
@@ -121,7 +123,7 @@ define(function(require, exports, module) {
             ]);
         },
 
-        updateModel: function(settings){
+        updateModel: function (settings) {
             this.model.set({
                 clientId: settings.clientId,
                 clientSecret: settings.clientSecret
@@ -129,14 +131,14 @@ define(function(require, exports, module) {
             this.model.setOrganizations(settings.restrictions && settings.restrictions.organizations ? settings.restrictions.organizations.split(',') : []);
         },
 
-        showAddOrganization: function(e){
+        showAddOrganization: function (e) {
             config.trackingDispatcher.trackEventNumber(495);
             e.preventDefault();
             this.$addOrg.addClass('hide');
             this.$addOrgForm.removeClass('hide');
         },
 
-        hideAddOrganization: function(e){
+        hideAddOrganization: function (e) {
             e && e.preventDefault();
             this.$addOrg.removeClass('hide');
             this.$addOrgForm.addClass('hide');
@@ -144,85 +146,84 @@ define(function(require, exports, module) {
             this.$addOrgField.closest('[data-js-add-org-row]').removeClass('validate-error');
         },
 
-        confirmDeleteOrg: function(e){
+        confirmDeleteOrg: function (e) {
+            var $el = $(e.currentTarget);
+            var field = $('[data-js-org-name]', $el.closest('[data-js-org-row]'));
+            var name = '' + field.data('js-org-name');
+            var self = this;
+            var modal;
             e.preventDefault();
-            var $el = $(e.currentTarget),
-                field = $('[data-js-org-name]', $el.closest('[data-js-org-row]')),
-                name = ''+field.data('js-org-name'),
-                self = this;
-
-            var modal = new ModalConfirm({
+            modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteOrg,
-                confirmText: Util.replaceTemplate(Localization.dialog.deleteOrg, name),
+                confirmText: '',
                 bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteOrg),
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
-                okButtonText: Localization.ui.delete,
+                okButtonText: Localization.ui.delete
             });
             modal.show()
-                .done(function() {
+                .done(function () {
                     self.deleteOrganization(name);
                 });
         },
 
-        deleteOrganization: function(name){
+        deleteOrganization: function (name) {
             var orgs = _.without(this.model.getOrganizations(), name);
             this.model.setOrganizations(orgs);
             this.updateAuthSettings('delete_org');
         },
 
-        deleteAuthSettings: function(){
+        deleteAuthSettings: function () {
             AdminService.deleteAuthSettings()
-                .done(function(data){
+                .done(function () {
                     this.updateModel(this.model.defaults);
                     Util.ajaxSuccessMessenger('deleteOAuthSettings');
                 }.bind(this))
-                .fail(function(error){
+                .fail(function (error) {
                     Util.ajaxFailMessenger(error, 'deleteOAuthSettings');
                 });
         },
 
-        updateAuthSettings: function(type){
-            var orgs = this.model.getOrganizations(),
-                authData = {};
-            if(this.$addOrgField.val()){
+        updateAuthSettings: function (type) {
+            var orgs = this.model.getOrganizations();
+            var authData = {};
+            if (this.$addOrgField.val()) {
                 orgs.push(this.$addOrgField.val());
             }
-            authData.restrictions = {organizations: orgs.join(',')};
+            authData.restrictions = { organizations: orgs.join(',') };
             authData.clientId = this.model.get('clientId');
             authData.clientSecret = this.model.get('clientSecret');
 
             AdminService.setAuthSettings(authData)
-                .done(function(data){
-                    this.updateModel(data.github)
+                .done(function (data) {
+                    this.updateModel(data.github);
                     this.hideAddOrganization();
-                    if(type == 'delete_org'){
+                    if (type === 'delete_org') {
                         Util.ajaxSuccessMessenger('deleteOrgOAuthSettings');
-                    }
-                    else {
+                    } else {
                         Util.ajaxSuccessMessenger('setOAuthSettings');
                     }
                 }.bind(this))
-                .fail(function(error){
+                .fail(function (error) {
                     Util.ajaxFailMessenger(error, 'setOAuthSettings');
                 });
         },
 
-        submitAuthSettings: function(e){
+        submitAuthSettings: function (e) {
+            var gitHubAuthEnabled;
             config.trackingDispatcher.trackEventNumber(496);
             e.preventDefault();
-            var gitHubAuthEnabled = this.model.get('gitHubAuthEnabled');
-            if(gitHubAuthEnabled){
-                if(this.validate()) {
+            gitHubAuthEnabled = this.model.get('gitHubAuthEnabled');
+            if (gitHubAuthEnabled) {
+                if (this.validate()) {
                     this.updateAuthSettings();
                 }
-            }
-            else {
+            } else {
                 this.deleteAuthSettings();
             }
         },
 
-        validate: function(){
+        validate: function () {
             this.$clientId.trigger('validate');
             this.$clientSecret.trigger('validate');
             return !(this.$clientId.data('validate-error') || this.$clientSecret.data('validate-error'));
@@ -234,15 +235,15 @@ define(function(require, exports, module) {
                     this.model.set('gitHubAuthEnabled', true);
                     this.updateModel(data);
                 }.bind(this))
-                .fail(function(error){
+                .fail(function () {
                     this.model.set('gitHubAuthEnabled', false);
                 }.bind(this))
-                .always(function(){
+                .always(function () {
                     this.render();
                 }.bind(this));
         },
 
-        destroy: function(){
+        destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
@@ -252,5 +253,4 @@ define(function(require, exports, module) {
     });
 
     return AuthServerSettingsView;
-
 });

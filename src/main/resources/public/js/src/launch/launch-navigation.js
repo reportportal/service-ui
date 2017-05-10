@@ -27,7 +27,6 @@ define(function (require, exports, module) {
     var Util = require('util');
     var Components = require('core/components');
     var LaunchGrid = require('launchgrid');
-    var Filters = require('filter/filters');
     var Widgets = require('widgets');
     var FiltersPanel = require('filtersPanel');
     var urls = require('dataUrlResolver');

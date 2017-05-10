@@ -22,11 +22,10 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
-    var WidgetsConfig = require('widget/widgetsConfig');
+    var WidgetService = require('newWidgets/WidgetService');
     var DropDownComponent = require('components/DropDownComponent');
     var Localization = require('localization');
 
@@ -37,23 +36,22 @@ define(function (require, exports, module) {
         },
         bindings: {
         },
-        initialize: function() {
-            this.widgetConfig = WidgetsConfig.getInstance();
-            this.curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
+        initialize: function () {
+            this.curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             if (!this.curWidget.actions) {
                 this.destroy();
                 return false;
             }
             this.render();
             var actionData = _.map(this.curWidget.actions, function (value) {
-                return {name: value.text, value: value.actions.join(',')};
+                return { name: value.text, value: value.actions.join(',') };
             });
-            var curWidgetOpt = this.model.getWidgetOptions(),
-                curActions = curWidgetOpt.actionType || [],
-                defActions = [];
-            _.each(curActions, function(action){
-                var def = _.find(actionData, function(d){ return _.contains(d.value.split(','), action);});
-                if(def){
+            var curWidgetOpt = this.model.getWidgetOptions();
+            var curActions = curWidgetOpt.actionType || [];
+            var defActions = [];
+            _.each(curActions, function (action) {
+                var def = _.find(actionData, function (d) { return _.contains(d.value.split(','), action); });
+                if (def) {
                     defActions.push(def.value);
                 }
             });
@@ -61,33 +59,33 @@ define(function (require, exports, module) {
                 data: actionData,
                 placeholder: Localization.wizard.actionSelectTitle,
                 multiple: true,
-                defaultValue: _.uniq(defActions),
+                defaultValue: _.uniq(defActions)
             });
             $('[data-js-select-action-container]', this.$el).html(this.selectAction.$el);
             this.listenTo(this.selectAction, 'change', this.onChangeSelectAction);
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {}))
+        render: function () {
+            this.$el.html(Util.templates(this.template, {}));
         },
-        onChangeSelectAction: function(actions) {
+        onChangeSelectAction: function (actions) {
             var values = [];
-            _.each(actions, function(item) {
+            var options = this.model.getWidgetOptions();
+            _.each(actions, function (item) {
                 values = values.concat(item.split(','));
             });
-            var options = this.model.getWidgetOptions();
             options.actionType = values;
             this.model.setWidgetOptions(options);
             this.validate();
         },
-        validate: function() {
+        validate: function () {
             var options = this.model.getWidgetOptions();
-            if(!options.actionType || _.isEmpty(options.actionType)) {
+            if (!options.actionType || _.isEmpty(options.actionType)) {
                 this.selectAction.setErrorState(Localization.validation.selectAtLeastOneAction);
                 return false;
             }
             return true;
         },
-        onDestroy: function() {
+        onDestroy: function () {
             this.selectCriteria && this.selectCriteria.destroy();
         }
     });

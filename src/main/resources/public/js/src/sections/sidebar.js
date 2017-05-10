@@ -82,7 +82,7 @@ define(function (require, exports, module) {
                 });
             return this;
         },
-        onClickToTop: function(){
+        onClickToTop: function () {
             config.trackingDispatcher.trackEventNumber(350);
         },
         setLastActivePage: function () {
@@ -113,8 +113,9 @@ define(function (require, exports, module) {
             }
             return lastActive;
         },
-        onClickSidebarLink: function(e) {
-            switch($(e.currentTarget).attr('id')) {
+        onClickSidebarLink: function (e) {
+            e.preventDefault();
+            switch ($(e.currentTarget).attr('id')) {
                 case 'dashboard': {
                     config.trackingDispatcher.trackEventNumber(1);
                     break;
@@ -138,6 +139,7 @@ define(function (require, exports, module) {
                     break;
             }
             this.closeMenu();
+            config.router.navigate($(e.currentTarget).attr('href'), {trigger: true});
         },
         closeMenu: function () {
             this.$bodyElement.removeClass('menu-open');
@@ -146,7 +148,7 @@ define(function (require, exports, module) {
         clearActives: function () {
             $("a.active", this.$el).removeClass('active');
         },
-        onClickLogout: function(e) {
+        onClickLogout: function (e) {
             e.preventDefault();
             e.stopPropagation();
             config.userModel.logout();

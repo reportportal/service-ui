@@ -32,7 +32,6 @@ define(function (require, exports, module) {
     var Storage = require('storageService');
     var Localization = require('localization');
     var Urls = require('dataUrlResolver');
-    var FiltersService = require('filtersService');
     var Widget = require('widgets');
     var Editor = require('launchEditor');
     var Moment = require('moment');
@@ -803,7 +802,7 @@ define(function (require, exports, module) {
                             widget = model.get('widget_template'),
                             revert = false;
 
-                        FiltersService.loadFilterIntoRequestParams(requestParams, filter);
+                        self.loadFilterIntoRequestParams(requestParams, filter);
                         filters = requestParams.getFilters();
                         filters.push({id: 'filter.!in.status', value: 'IN_PROGRESS'});
                         requestParams.setFilters(filters);
@@ -846,6 +845,25 @@ define(function (require, exports, module) {
                     self.noDataForPreview();
                     Util.ajaxFailMessenger(null, 'widgetPreviewData');
                 });
+        },
+
+        loadFilterIntoRequestParams: function (requestParams, filter) {
+            requestParams.setTab(filter.id);
+
+            var tmp_filters = [];
+            _.each(filter.entities, function (entrie) {
+                var negative = entrie.is_negative ? "!" : "";
+                tmp_filters.push({
+                    id: 'filter.' + negative + entrie.condition + "." + entrie.filtering_field,
+                    value: entrie.value
+                });
+            });
+            tmp_filters.length && requestParams.setFilters(tmp_filters);
+
+            requestParams.setPage(filter.selection_parameters.page_number || 1);
+            requestParams.setPageSize(filter.selection_parameters.quantity || 50);
+            var direction = filter.selection_parameters.is_asc ? "ASC" : "DESC";
+            requestParams.setSortInfo(filter.selection_parameters.sorting_column, direction);
         },
 
         validateLimitForPreview: function (widget, limit) {

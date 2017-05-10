@@ -22,12 +22,10 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
-    var WidgetsConfig = require('widget/widgetsConfig');
-    var Localization = require('localization');
+    var WidgetService = require('newWidgets/WidgetService');
     var App = require('app');
 
     var config = App.getInstance();
@@ -37,13 +35,12 @@ define(function (require, exports, module) {
         template: 'modal-add-widget-setting-switch-mode',
         events: {
             'click [data-js-launch-mode]': 'onClickLaunch',
-            'click [data-js-timeline-mode]': 'onClickTimeline',
+            'click [data-js-timeline-mode]': 'onClickTimeline'
         },
         bindings: {
         },
-        initialize: function() {
-            this.widgetConfig = WidgetsConfig.getInstance();
-            this.curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
+        initialize: function () {
+            this.curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             if (!this.curWidget.mode) {
                 this.destroy();
                 return false;
@@ -51,15 +48,15 @@ define(function (require, exports, module) {
             this.curWidget.mode.timeline = this.model.getWidgetOptions().timeline;
             this.render();
             this.$launchMode = $('[data-js-launch-mode]', this.$el);
-            this.timelineMode = $('[data-js-timeline-mode]', this.$el)
+            this.timelineMode = $('[data-js-timeline-mode]', this.$el);
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, this.curWidget.mode))
+        render: function () {
+            this.$el.html(Util.templates(this.template, this.curWidget.mode));
         },
-        onClickLaunch: function(e) {
+        onClickLaunch: function (e) {
             config.trackingDispatcher.trackEventNumber(300);
             e.preventDefault();
-            if(!this.$launchMode.hasClass('active')) {
+            if (!this.$launchMode.hasClass('active')) {
                 this.$launchMode.addClass('active');
                 this.timelineMode.removeClass('active');
                 var curOptions = this.model.getWidgetOptions();
@@ -67,10 +64,10 @@ define(function (require, exports, module) {
                 this.model.setWidgetOptions(curOptions);
             }
         },
-        onClickTimeline: function(e) {
+        onClickTimeline: function (e) {
             config.trackingDispatcher.trackEventNumber(300);
             e.preventDefault();
-            if(!this.timelineMode.hasClass('active')) {
+            if (!this.timelineMode.hasClass('active')) {
                 this.timelineMode.addClass('active');
                 this.$launchMode.removeClass('active');
                 var curOptions = this.model.getWidgetOptions();

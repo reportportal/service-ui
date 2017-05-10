@@ -17,15 +17,11 @@
 define(function (require, exports, module) {
     'use strict';
 
-
-    var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
     var Service = require('coreService');
-    var WidgetsConfig = require('widget/widgetsConfig');
     var Localization = require('localization');
-
-    var widgetConfig = WidgetsConfig.getInstance();
+    var WidgetService = require('newWidgets/WidgetService');
     var config = App.getInstance();
 
     var GadgetModel = Epoxy.Model.extend({
@@ -46,51 +42,51 @@ define(function (require, exports, module) {
             itemsCount: 50,
             widgetDescription: '',
             widgetOptions: '{}',
-            content_fields: '[]',
+            content_fields: '[]'
         },
         computeds: {
             gadgetName: {
                 deps: ['gadget'],
-                get: function(gadget) {
-                    if(!gadget) return '';
-                    return widgetConfig.widgetTypes[gadget].gadget_name;
+                get: function (gadget) {
+                    if (!gadget) return '';
+                    return WidgetService.getWidgetConfig(gadget).gadget_name;
                 }
             },
             gadgetDescription: {
                 deps: ['gadget'],
-                get: function(gadget) {
-                    if(!gadget) return '';
-                    return widgetConfig.widgetTypes[gadget].description.escapeScript();
+                get: function (gadget) {
+                    if (!gadget) return '';
+                    return WidgetService.getWidgetConfig(gadget).description.escapeScript();
                 }
             },
             gadgetPreviewImg: {
                 deps: ['gadget'],
-                get: function(gadget) {
-                    if(!gadget) return 'img/popup/' + widgetConfig.defaultWidgetImg;
-                    return 'img/popup/' + widgetConfig.widgetTypes[gadget].img;
+                get: function (gadget) {
+                    if (!gadget) return 'img/popup/' + WidgetService.getDefaultWidgetImg();
+                    return 'img/popup/' + WidgetService.getWidgetConfig(gadget).img;
                 }
             },
             gadgetIsFilter: {
                 deps: ['gadget'],
-                get: function(gadget) {
-                    if(!gadget) return false;
-                    return !widgetConfig.widgetTypes[gadget].noFilters;
+                get: function (gadget) {
+                    if (!gadget) return false;
+                    return !WidgetService.getWidgetConfig(gadget).noFilters;
                 }
             },
             gadgetIsFilterFill: {
                 deps: ['gadget', 'gadgetIsFilter', 'filter_id'],
-                get: function(gadget, gadgetIsFilter, filter_id) {
-                    if(!gadgetIsFilter) return true;
+                get: function (gadget, gadgetIsFilter, filter_id) {
+                    if (!gadgetIsFilter) return true;
                     return !!filter_id;
                 }
             },
             isMy: {
                 deps: ['owner'],
-                get: function(owner) {
-                    return owner == config.userModel.get('name');
+                get: function (owner) {
+                    return owner === config.userModel.get('name');
                 }
             },
-            isMyDashboard: function() {
+            isMyDashboard: function () {
                 if (!this.collection) {
                     return true;
                 }
@@ -98,8 +94,8 @@ define(function (require, exports, module) {
             },
             sharedTitle: {
                 deps: ['isMy', 'owner'],
-                get: function(isMy, owner) {
-                    if(isMy) {
+                get: function (isMy, owner) {
+                    if (isMy) {
                         return '';
                     }
                     return Localization.widgets.widgetCreatedBy + ' ' + owner;
@@ -107,46 +103,46 @@ define(function (require, exports, module) {
             },
             isTimeline: {
                 deps: ['widgetOptions'],
-                get: function(widgetOptions) {
+                get: function (widgetOptions) {
                     var options = this.getWidgetOptions();
-                    if( options.timeline && options.timeline.length ) {
+                    if (options.timeline && options.timeline.length) {
                         return true;
                     }
                     return false;
                 }
             }
         },
-        initialize: function() {
+        initialize: function () {
 
         },
-        update: function() {
+        update: function () {
             var self = this;
             return Service.loadDashboardWidget(this.get('id'))
-                .done(function(data) {
+                .done(function (data) {
                     self.parseData(data);
                 });
         },
-        getWidgetOptions: function() {
+        getWidgetOptions: function () {
             try {
                 return JSON.parse(this.get('widgetOptions'));
             } catch (err) {
                 return {};
             }
         },
-        setWidgetOptions: function(options) {
-            this.set({widgetOptions: JSON.stringify(options)});
+        setWidgetOptions: function (options) {
+            this.set({ widgetOptions: JSON.stringify(options) });
         },
-        getContentFields: function() {
+        getContentFields: function () {
             try {
                 return JSON.parse(this.get('content_fields'));
             } catch (err) {
                 return [];
             }
         },
-        setContentFields: function(options) {
-            this.set({content_fields: JSON.stringify(options)});
+        setContentFields: function (options) {
+            this.set({ content_fields: JSON.stringify(options) });
         },
-        parseData: function(data) {
+        parseData: function (data) {
             var modelData = {
                 name: data.name,
                 description: data.description,
@@ -155,21 +151,20 @@ define(function (require, exports, module) {
                 gadget: data.content_parameters && data.content_parameters.gadget,
                 widgetData: data,
                 widgetOptions: '{}',
-                filter_id: data.filter_id,
+                filter_id: data.filter_id
             };
-            if(data.content_parameters) {
-                if(data.content_parameters.content_fields) {
+            if (data.content_parameters) {
+                if (data.content_parameters.content_fields) {
                     modelData.content_fields = JSON.stringify(data.content_parameters.content_fields);
                 }
-                if(data.content_parameters.itemsCount) {
+                if (data.content_parameters.itemsCount) {
                     modelData.itemsCount = data.content_parameters.itemsCount;
                 }
-                if(data.content_parameters.widgetOptions) {
+                if (data.content_parameters.widgetOptions) {
                     modelData.widgetOptions = JSON.stringify(data.content_parameters.widgetOptions);
                 }
-
             }
-            this.set(modelData)
+            this.set(modelData);
         }
     });
 

@@ -29,7 +29,7 @@ define(function (require, exports, module) {
     var Moment = require('moment');
     var Localization = require('localization');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
-    var Filters = require('filter/filters');
+    var FilterEntities = require('filterEntities/FilterEntities');
 
     var config = App.getInstance();
 
@@ -97,7 +97,7 @@ define(function (require, exports, module) {
         if (entities) {
             var mapped = _.map(entities, function (item) {
                 if (item.filtering_field === 'start_time' /*&& item.value.split(',').length === 1*/) {
-                    item.value = (new Filters.TimerModel(item)).asValue().value;
+                    item.value = (new FilterEntities.EntityTimeRangeModel(item).getInfo().value);
                     if(~item.value.indexOf(',') || ~item.value.indexOf(';')) {
                         item.condition = '';
                     } else {

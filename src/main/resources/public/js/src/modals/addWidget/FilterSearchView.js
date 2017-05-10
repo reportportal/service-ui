@@ -19,13 +19,16 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
-    var WidgetsConfig = require('widget/widgetsConfig');
+    var _ = require('underscore');
+    var Backbone = require('backbone');
+    var WidgetService = require('newWidgets/WidgetService');
     var CoreService = require('coreService');
     var FilterModel = require('filters/FilterModel');
     var FilterItem = require('modals/addWidget/FilterSearchItemView');
@@ -44,20 +47,21 @@ define(function (require, exports, module) {
         onChangeActive: function (model, active) {
             if (active) {
                 _.each(this.models, function (curModel) {
-                    if (curModel != model) {
-                        curModel.set({active: false});
+                    if (curModel !== model) {
+                        curModel.set({ active: false });
                     }
-                })
+                });
             }
         },
         parse: function (data) {
             var self = this;
             return _.map(data, function (itemData) {
-                itemData.entities = JSON.stringify(itemData.entities);
-                itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
-                itemData.active = !!(itemData.id == self.mainModel.get('filter_id'));
-                return itemData;
-            })
+                var item = itemData;
+                item.entities = JSON.stringify(item.entities);
+                item.selection_parameters = JSON.stringify(item.selection_parameters);
+                item.active = !!(item.id === self.mainModel.get('filter_id'));
+                return item;
+            });
         }
     });
 
@@ -66,17 +70,27 @@ define(function (require, exports, module) {
         template: 'tpl-modal-add-widget-filter-search',
         events: {
             'validation:success [data-js-filter-name]': 'onChangeFilterName',
-            'click [data-js-add-filter]': 'onClickAddFilter',
+            'click [data-js-add-filter]': 'onClickAddFilter'
         },
         bindings: {
             ':el': 'classes: {hide: not(gadgetIsFilter)}',
-            '[data-js-seach-query]': 'text: search'
+            '[data-js-seach-query]': 'text: search',
+            '[data-js-filter-none]': 'classes: {hide:   filterMessage(search,empty)}',
+            '[data-js-filter-empty]': 'classes: { hide:  not(search)  }'
+
+        },
+        bindingFilters: {
+            filterMessage: function (search, empty) {
+                if (!search && empty) {
+                    return false;
+                }
+                return true;
+            }
         },
         initialize: function (options) {
             this.modalType = options.modalType;
-            this.widgetConfig = WidgetsConfig.getInstance();
-            this.firstActivate = true,
-                this.collection = new FilterCollection({mainModel: this.model});
+            this.firstActivate = true;
+            this.collection = new FilterCollection({ mainModel: this.model });
             this.renderViews = [];
             this.render();
             this.viewModel = new Epoxy.Model({
@@ -85,39 +99,39 @@ define(function (require, exports, module) {
                 notFound: false,
                 currentPage: 1,
                 pageSize: 10,
-                totalPage: 1,
-            }),
-                Util.hintValidator($('[data-js-filter-name]', this.$el), [{
-                    validator: 'minMaxNotRequired',
-                    type: 'filterName',
-                    min: 3,
-                    max: 128
-                }]);
+                totalPage: 1
+            });
+            Util.hintValidator($('[data-js-filter-name]', this.$el), [{
+                validator: 'minMaxNotRequired',
+                type: 'filterName',
+                min: 3,
+                max: 128
+            }]);
 
             this.listenTo(this.viewModel, 'change:search', _.debounce(this.updateFilters, 500));
             this.listenTo(this.collection, 'add', this.onAddCollectionItems);
             this.listenTo(this.collection, 'reset', this.onResetCollectionItems);
             this.listenTo(this.collection, 'change:active', this.onSelectFilterCheck);
             this.listenTo(this.collection, 'edit', this.onEditFilter);
-
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, {}))
+            this.$el.html(Util.templates(this.template, {}));
         },
         setFilterModel: function (model) {
             this.selectFilterView && this.selectFilterView.destroy();
             if (model) {
                 $('[data-js-select-filter-block]', this.$el).removeClass('empty-state');
-                this.selectFilterView = new FilterItem({model: model, searchModel: this.viewModel});
+                this.selectFilterView = new FilterItem({
+                    model: model, searchModel: this.viewModel
+                });
                 $('[data-js-select-filter-container]', this.$el).html(this.selectFilterView.$el);
                 this.selectedFilterModel = model;
-                this.selectFilterView.$el.on('mouseenter', function(){
+                this.selectFilterView.$el.on('mouseenter', function () {
                     config.trackingDispatcher.trackEventNumber(296);
                 });
             } else {
                 $('[data-js-select-filter-block]', this.$el).addClass('empty-state');
             }
-
         },
         getSelectedFilterModel: function () {
             return this.selectedFilterModel;
@@ -126,25 +140,28 @@ define(function (require, exports, module) {
             active && this.onSelectFilter(model);
         },
         onSelectFilter: function (filterModel) {
-            this.model.set({filter_id: filterModel.get('id')});
+            this.model.set({ filter_id: filterModel.get('id') });
             this.setFilterModel(filterModel);
         },
         onClickAddFilter: function (e) {
-            if(this.modalType == 'edit'){
+            var self = this;
+            if (this.modalType === 'edit') {
                 config.trackingDispatcher.trackEventNumber(328);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(295);
             }
             e.preventDefault();
             this.$el.addClass('hide-content');
-            this.addFilterView && this.stopListening(this.addFilterView) && this.addFilterView.destroy();
-            this.addFilterView = new FilterSearchAddView({gadgetModel: this.model, modalType: this.modalType});
+            this.addFilterView && this.stopListening(this.addFilterView) &&
+                this.addFilterView.destroy();
+            this.addFilterView = new FilterSearchAddView({
+                gadgetModel: this.model,
+                modalType: this.modalType
+            });
             this.listenTo(this.addFilterView, 'change:filter', this.onSelectFilter);
             this.addFilterView.activate();
             $('[data-js-filter-add-container]', this.$el).html(this.addFilterView.$el);
             this.trigger('disable:navigation', true);
-            var self = this;
             this.addFilterView.getReadyState()
                 .always(function () {
                     self.addFilterView.destroy();
@@ -153,42 +170,46 @@ define(function (require, exports, module) {
                     self.updateFilters();
                 })
                 .fail(function () {
-                    self.model.set({filter_id: ''});
+                    self.model.set({ filter_id: '' });
                     self.setFilterModel(null);
-                })
+                });
         },
         onEditFilter: function (model) {
+            var self = this;
             this.$el.addClass('hide-content');
             this.editFilterView && this.editFilterView.destroy();
-            this.editFilterView = new FilterSearchEditView({model: model, gadgetModel: this.model, modalType: this.modalType});
+            this.editFilterView = new FilterSearchEditView({
+                model: model,
+                gadgetModel: this.model,
+                modalType: this.modalType
+            });
             $('[data-js-filter-edit-container]', this.$el).html(this.editFilterView.$el);
             this.trigger('disable:navigation', true);
-            var self = this;
             this.editFilterView.getReadyState()
                 .always(function () {
                     self.editFilterView.destroy();
                     self.$el.removeClass('hide-content');
                     self.trigger('disable:navigation', false);
-                })
+                });
         },
         activate: function () {
+            var curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
+            var self = this;
             if (!this.firstActivate) {
                 return;
             }
-            var curWidget = this.widgetConfig.widgetTypes[this.model.get('gadget')];
             if (!curWidget.noFilters) {
                 this.firstActivate = false;
-                var self = this;
                 this.load().always(function () {
                     self.baronScroll = Util.setupBaronScroll($('[data-js-filter-list-scroll]', self.$el));
-                    Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 330});
-                    self.baronScroll.on('scroll', function (e) {
+                    Util.setupBaronScrollSize(self.baronScroll, { maxHeight: 330 });
+                    self.baronScroll.on('scroll', function () {
                         var elem = self.baronScroll.get(0);
                         if (elem.scrollHeight - elem.scrollTop < elem.offsetHeight * 2) {
                             self.addLoadData();
                         }
-                    })
-                })
+                    });
+                });
             }
         },
         addLoadData: function () {
@@ -199,15 +220,14 @@ define(function (require, exports, module) {
         },
         onChangeFilterName: function (e) {
             var value = $(e.currentTarget).val();
-            if(value){
-                if(this.modalType == 'edit'){
+            if (value) {
+                if (this.modalType === 'edit') {
                     config.trackingDispatcher.trackEventNumber(327);
-                }
-                else {
+                } else {
                     config.trackingDispatcher.trackEventNumber(294);
                 }
             }
-            this.viewModel.set({search: value});
+            this.viewModel.set({ search: value });
         },
         onAddCollectionItems: function (model) {
             this.renderFilter(model);
@@ -222,60 +242,73 @@ define(function (require, exports, module) {
             }, this);
         },
         renderFilter: function (model) {
-            var filterItem = new FilterItem({model: model, searchModel: this.viewModel, modalType: this.modalType});
+            var filterItem = new FilterItem({
+                model: model,
+                searchModel: this.viewModel,
+                modalType: this.modalType
+            });
             $('[data-js-filter-list]', this.$el).append(filterItem.$el);
             this.renderViews.push(filterItem);
         },
         updateFilters: function () {
+            var self = this;
             this.collection.reset([]);
             this.viewModel.set({
                 totalPage: 1,
-                currentPage: 1,
+                currentPage: 1
             });
-            var self = this;
             this.load()
                 .done(function () {
-                    Util.setupBaronScrollSize(self.baronScroll, {maxHeight: 330});
-                })
+                    Util.setupBaronScrollSize(self.baronScroll, { maxHeight: 330 });
+                });
         },
         load: function () {
-            this.$el.addClass('load');
             var self = this;
+            this.$el.addClass('load');
             return CoreService.saveFilter(this.getQueryString({
-                    search: encodeURIComponent(this.viewModel.get('search')),
-                    page: this.viewModel.get('currentPage'),
-                    size: this.viewModel.get('pageSize')
-                }))
+                search: encodeURIComponent(this.viewModel.get('search')),
+                page: this.viewModel.get('currentPage'),
+                size: this.viewModel.get('pageSize')
+            }))
                 .always(function () {
                     self.$el.removeClass('load');
                 })
                 .done(function (data) {
+                    var launchFilterCollection;
                     self.viewModel.set({
                         totalPage: data.page.totalPages,
-                        currentPage: data.page.number,
+                        currentPage: data.page.number
                     });
                     if (data.content.length) {
-                        self.viewModel.set({empty: false, notFound: false});
+                        self.viewModel.set({ empty: false, notFound: false });
                     } else if (!self.model.get('search')) {
-                        self.viewModel.set({empty: true, notFound: false});
+                        self.viewModel.set({ empty: true, notFound: false });
                     } else {
-                        self.viewModel.set({empty: false, notFound: true});
+                        self.viewModel.set({ empty: false, notFound: true });
                     }
-                    self.collection.add(data.content, {parse: true});
-                    if(self.model.get('filter_id')){
-                        self.setFilterModel(self.collection.get(self.model.get('filter_id')));
+                    self.collection.add(data.content, { parse: true });
+                    if (self.model.get('filter_id')) {
+                        if (self.collection.get(self.model.get('filter_id'))) {
+                            self.setFilterModel(self.collection.get(self.model.get('filter_id')));
+                        } else {
+                            launchFilterCollection = new SingletonLaunchFilterCollection();
+                            launchFilterCollection.ready.done(function () {
+                                self.setFilterModel(launchFilterCollection.get(self.model.get('filter_id')));
+                            });
+                        }
                     }
                     $('[data-js-select-filter-block]', self.$el)[(!data.content.length ? 'add' : 'remove') + 'Class']('hide');
-                    $('[data-js-filter-empty]', self.$el)[(data.content.length ? 'add' : 'remove') + 'Class']('hide');
                 });
         },
         getQueryString: function (query) {
-            if (!query) query = {};
-            if (!query.page) query.page = 1;
-            if (!query.size) query.size = 10;
-            var url = '?page.sort=name&page.page=' + query.page + '&page.size=' + query.size;
-            if (query.search) {
-                url += '&filter.cnt.name=' + query.search;
+            var url;
+            var Query = query;
+            if (!Query) Query = {};
+            if (!Query.page) Query.page = 1;
+            if (!Query.size) Query.size = 10;
+            url = '?page.sort=name&page.page=' + Query.page + '&page.size=' + Query.size;
+            if (Query.search) {
+                url += '&filter.cnt.name=' + Query.search;
             }
             return url;
         },

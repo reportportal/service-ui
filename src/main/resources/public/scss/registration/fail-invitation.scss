@@ -32,7 +32,18 @@
   -webkit-background-size: contain;
   background-size: contain;
 
-  @media (max-width: 1010px) {
+  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    height: 100%;
+    padding: 81px 47px 281px;
+    background:
+      url(../../img/registration/registration-fail-form-tablet.svg) 47px 81px no-repeat,
+      url(../../img/registration/registration-fail-tablet.svg) no-repeat;
+    background-size: initial;
+    background-color: $COLOR--light-blue;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
     left: 0;
     width: 320px;
     background-image: url(../../img/registration/registration-fail-mobile.svg);
@@ -48,8 +59,9 @@
     background-repeat: no-repeat;
     -webkit-background-size: 100%;
     background-size: 100%;
+    cursor: pointer;
 
-    @media (max-width: 1010px) {
+    @media (max-width: $SCREEN_XS_MAX) {
       top: 15px;
       left: 20px;
       width: 100px;
@@ -76,7 +88,12 @@
       font-size: 32px;
     }
 
-    @media (max-width: 1010px) {
+    @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+      top: 305px;
+      left: 50%;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
       top: 180px;
       left: 50%;
       width: 240px;
@@ -102,7 +119,12 @@
       color: #32b6ce;
     }
 
-    @media (max-width: 1010px) {
+    @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+      top: 465px;
+      left: 25%;
+    }
+
+    @media (max-width: $SCREEN_XS_MAX) {
       top: 290px;
       left: 0;
       width: 100%;

@@ -1,0 +1,23 @@
+<% if (data.items && !_.isEmpty(data.items)) { %>
+<div class="uniq-bugs-table rp-table-hover">
+    <div class="uniq-bugs-head">
+        <div class="uniq-bugs-id uniq-bugs-th">
+            <span class="uniq-bugs-th-name"><%= data.text.widgets.bugId %></span>
+        </div>
+        <div class="uniq-bugs-item uniq-bugs-th">
+            <span class="uniq-bugs-th-name"><%= data.text.widgets.foundIn %></span>
+        </div>
+        <div class="uniq-bugs-date uniq-bugs-th">
+            <span class="uniq-bugs-th-name"><%= data.text.widgets.submitDate %></span>
+        </div>
+        <div class="uniq-bugs-user uniq-bugs-th">
+            <span class="uniq-bugs-th-name"><%= data.text.widgets.submitter %></span>
+        </div>
+    </div>
+    <div class="uniq-bugs-list" data-js-bugs-list></div>
+    <div class="mobile-disabling-cover"></div>
+</div>
+<% } else { %>
+<div class="no-data-error"><%= data.text.widgets.noData %></div>
+<% } %>
+</div>
