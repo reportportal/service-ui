@@ -689,7 +689,7 @@ define(['util'], function () {
             deleteItemWarning: 'In case of delete the test item, all related data will be deleted. Are you sure you want to delete test item',
             finishAgree: 'I am sure I want to finish %%%',
             deleteAgree: 'I am sure I want to delete %%%',
-            deleteWarningAgree: 'Warning! You are going to delete data that is not your own. Other project users could be affected by the action.',
+            deleteWarningAgree: 'You are going to delete data that is not your own. Other project users could be affected by the action.',
             finishOneLaunch: 'Warning! You are going to stop launch that is not your own. Other project users could be affected by the action.',
             finishSelectedLaunch: 'Warning! You are going to stop launches that are not your own. Other project users could be affected by the action.',
 
@@ -1782,7 +1782,7 @@ define(['util'], function () {
             msgDeleteItems: 'In case of delete the %%%, all related data will be removed. Are you sure you want to delete %%%?',
             msgDeleteDefectType: 'I am sure I want to remove custom defect type',
             msgDeleteProject: 'I am sure I want to delete project',
-            msgDeleteOrg: 'In case of delete the GitHub organization, users from this organization could not be able to login Report Portal. Are you sure, you want to delete selected organization?',
+            msgDeleteOrg: 'In case of delete the GitHub organization, users from this organization could not be able to login Report Portal. Are you sure you want to delete selected organization?',
             deleteOrg: 'I am sure I want to delete organization',
             msgResetColorsDefectType: 'Are you sure you want to reset custom defect\'s colors to default?',
             msgMessageTop: 'In case of delete custom defect, all investigated as <strong>\'%%%\'</strong> defects will be marked as <strong>\'%%%\'</strong>'

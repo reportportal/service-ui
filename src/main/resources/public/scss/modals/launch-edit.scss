@@ -21,8 +21,11 @@
 
 .modal-launch-edit {
   .modal-content-wrapper {
+    .modal-header{
+      padding: 6px 10px 16px 10px;
+    }
     .modal-body {
-      padding: 30px 10px 15px 10px;
+      padding: 22px 10px 15px 10px;
       & > h2 {
         text-overflow: ellipsis;
         overflow: hidden;
@@ -41,7 +44,7 @@
       .fields {
         margin: 0;
         width: 100%;
-        margin-left: 18px;
+        margin-left: 8px;
         padding-top: 2px;
 
         & > label {
@@ -76,9 +79,10 @@
       }
 
       .warning-block {
-        margin-top: 16px;
-        margin-left: 10px;
+        margin-left: 8px;
+        margin-bottom: 15px;
         .warning {
+          font-family: "OpenSansSemibold", sans-serif;
           color: $COLOR--failed;
         }
         .warning-message {

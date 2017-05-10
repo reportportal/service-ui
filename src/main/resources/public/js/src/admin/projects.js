@@ -336,13 +336,12 @@ define(function (require, exports, module) {
             var el = $(e.currentTarget);
             var id = '' + el.data('id');
             var status = el.data('active');
-
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteProject,
                 bodyText: Util.replaceTemplate(Localization.dialog.deleteProject, id),
                 confirmText: Localization.dialog.msgDeleteProject,
                 cancelButtonText: Localization.ui.cancel,
-                okButtonDanger: true,
+                okButtonDanger: false,
                 okButtonText: Localization.ui.delete,
                 confirmFunction: function () {
                     return Service.deleteProject(id)

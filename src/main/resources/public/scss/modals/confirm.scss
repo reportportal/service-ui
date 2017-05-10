@@ -22,7 +22,7 @@
 .modal-confirm {
   .modal-content-wrapper {
     .modal-body {
-      padding: 35px 20px 20px 20px;
+      padding: 30px 20px 20px 20px;
       p{
         -ms-word-wrap: break-word;
         word-wrap: break-word;
@@ -32,6 +32,16 @@
       .confirm-block {
         font-family: OpenSansSemibold;
         margin-top: 12px;
+      }
+      .warning-block{
+        font-size: 12px;
+        margin-bottom: 10px;
+        margin-top: 20px;
+        .warning{
+          font-family: "OpenSansSemibold", sans-serif;
+          color: #f36c4a;
+          font-size: 13px;
+        }
       }
     }
   }
