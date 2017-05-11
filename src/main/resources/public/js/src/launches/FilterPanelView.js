@@ -18,12 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
-    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
     var ModalAddWidget = require('modals/addWidget/modalAddWidget');
@@ -44,7 +42,7 @@ define(function (require, exports, module) {
         },
         bindings: {
             '[data-js-filter-not-save-descr]': 'classes: {hide: all(not(temp), not(newEntities), not(newSelectionParameters))}',
-            '[data-js-filter-shared-descr]': 'classes: {hide: not(isShared)}',
+            '[data-js-filter-shared-descr]': 'classes: {hide: any(not(isShared), notMyFilter)}',
             '[data-js-save-filter]': 'attr: {disabled: any(all(not(newEntities), not(newSelectionParameters)), notMyFilter)}',
             '[data-js-discard-filter]': 'attr: {disabled: all(not(newEntities), not(newSelectionParameters))}',
             '[data-js-edit-filter]': 'attr: {disabled: any(temp, notMyFilter)}',
@@ -53,33 +51,33 @@ define(function (require, exports, module) {
             '[data-js-add-widget]': 'classes: {disabled: temp}'
         },
 
-        initialize: function(options) {
+        initialize: function () {
             this.render();
             this.createFilterEntities();
         },
         // changeFilterEntities: function(model) {
         //     // console.dir(JSON.stringify(model.changed));
         // },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        onClickEdit: function() {
+        onClickEdit: function () {
             config.trackingDispatcher.trackEventNumber(15);
             this.model.editMainInfo();
         },
-        onClickClone: function() {
+        onClickClone: function () {
             config.trackingDispatcher.trackEventNumber(14);
             var newFilter = this.model.collection.generateTempModel({
-                newEntities: this.model.get('newEntities') || this.model.get('entities'),
+                newEntities: this.model.get('newEntities') || this.model.get('entities')
             });
-            config.router.navigate(newFilter.get('url'), {trigger: true});
+            config.router.navigate(newFilter.get('url'), { trigger: true });
         },
-        onClickDiscard: function() {
+        onClickDiscard: function () {
             config.trackingDispatcher.trackEventNumber(13);
-            this.model.set({newEntities: '', newSelectionParameters: ''});
+            this.model.set({ newEntities: '', newSelectionParameters: '' });
             this.createFilterEntities();
         },
-        createFilterEntities: function() {
+        createFilterEntities: function () {
             this.filterEntities && this.filterEntities.destroy();
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-filter-entities]', this.$el),
@@ -88,15 +86,15 @@ define(function (require, exports, module) {
             });
             // this.listenTo(this.filterEntities.collection, 'change', this.changeFilterEntities);
         },
-        onClickSave: function() {
+        onClickSave: function () {
             config.trackingDispatcher.trackEventNumber(16);
             this.model.saveFilter();
         },
-        onClickAddWidget: function(e){
+        onClickAddWidget: function (e) {
             e.preventDefault();
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(17);
-            (new ModalAddWidget({model: new GadgetModel(), filter_id: this.model.get('id'), isNoDashboard: true})).show();
+            (new ModalAddWidget({ model: new GadgetModel(), filter_id: this.model.get('id'), isNoDashboard: true })).show();
         },
         destroy: function () {
             this.filterEntities.destroy();
@@ -105,7 +103,7 @@ define(function (require, exports, module) {
             this.unbind();
             this.$el.html('');
             delete this;
-        },
+        }
     });
 
 
