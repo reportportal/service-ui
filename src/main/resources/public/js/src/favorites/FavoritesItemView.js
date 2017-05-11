@@ -90,8 +90,10 @@ define(function (require, exports, module) {
             });
             modal.show()
                 .done(function () {
-                    self.destroy();
-                    return self.model.remove();
+                    self.model.remove().always(function() {
+                        self.destroy();
+                        self.model.trigger('click:remove', self.model);
+                    });
                 });
             modal.$el.on('click', function (e) {
                 var $target = $(e.target),
