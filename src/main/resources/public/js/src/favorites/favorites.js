@@ -68,13 +68,18 @@ define(function (require) {
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.listenTo(this.collection, 'reset', this.renderCollection);
             this.listenTo(this.collection, 'remove', this.updateFilters);
-            this.listenTo(this.launchFilterCollection, 'remove', this.updateFilters);
+            this.listenTo(this.launchFilterCollection, 'remove', this.removeLaunchFilters);
             this.context = options.context;
             this.$header = this.context.getMainView().$header;
             this.$el = this.context.getMainView().$body;
             this.debounceChange = _.debounce(function () {
                 $('[data-js-filter-name]', this.$el).trigger('change');
             }.bind(this), 800);
+        },
+        removeLaunchFilters: function (model) {
+            if (!this.collection.get(model.get('id'))) {
+                this.updateFilters();
+            }
         },
 
         render: function () {

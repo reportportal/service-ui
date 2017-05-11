@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function(require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Backbone = require('backbone');
@@ -37,7 +37,7 @@ define(function(require, exports, module) {
 
     var LaunchFilterCollection = Backbone.Collection.extend({
         model: FilterModel,
-        initialize: function(){
+        initialize: function () {
             this.listenTo(this, 'add', this.onAddFilter);
             this.listenTo(this, 'remove', this.onRemoveFilter);
             this.listenTo(this, 'change:temp', this.onChangeTemp);
@@ -45,74 +45,74 @@ define(function(require, exports, module) {
             // this.listenTo(this, 'change', this.onChangeLaunchFilter);
             this.ready = $.Deferred();
         },
-        onAddFilter: function(model) {
-            if(!model.get('temp')) {
-                call('PUT', Urls.getPreferences(), {filters: this.getFiltersId()})
-                    .done(function(data) {
+        onAddFilter: function (model) {
+            if (!model.get('temp')) {
+                call('PUT', Urls.getPreferences(), { filters: this.getFiltersId() })
+                    .done(function () {
                         Util.ajaxSuccessMessenger('savedLaunchFilter');
                     })
-                    .fail(function(error) {
+                    .fail(function (error) {
                         Util.ajaxFailMessenger(error, 'savedLaunchFilter');
-                    })
+                    });
             }
         },
-        onRemoveFilter: function(model) {
-            if(!model.get('temp') && model.get('owner')) {
-                call('PUT', Urls.getPreferences(), {filters: this.getFiltersId()});
+        onRemoveFilter: function (model) {
+            if (!model.get('temp') && model.get('owner')) {
+                call('PUT', Urls.getPreferences(), { filters: this.getFiltersId() });
             }
         },
-        getFiltersId: function() {
-            return _.map(this.models, function(model) {
-                if(model.id && !model.get('temp')) {
+        getFiltersId: function () {
+            return _.map(this.models, function (model) {
+                if (model.id && !model.get('temp')) {
                     return model.id;
                 }
-            })
+            });
         },
-        onChangeTemp: function(model, temp) {
+        onChangeTemp: function (model, temp) {
             var self = this;
-            if(!temp) {
-                this.saveFilter(model, function(data) {
-                    model.set({id: data[0].id});
+            if (!temp) {
+                this.saveFilter(model, function (data) {
+                    model.set({ id: data[0].id });
                     self.onAddFilter(model);
-                })
+                });
             }
         },
-        saveFilter: function(model, callback) {
+        saveFilter: function (model, callback) {
             var data = model.getDataFromServer();
             data.type = 'launch';
-            call('POST', Urls.saveFilter(), {elements: [data]})
-                .done(function(data) {
+            call('POST', Urls.saveFilter(), { elements: [data] })
+                .done(function (data) {
                     callback(data);
-                })
+                });
         },
-        onChangeLaunchFilter: function(model) {
+        onChangeLaunchFilter: function (model) {
             // console.log('change launch filter');
             // console.dir(model);
         },
-        parse: function(ids) {
+        parse: function (ids) {
             var self = this;
-            if(!ids) {
+            if (!ids) {
                 this.reset([]);
                 this.ready.resolve();
                 return;
             }
             this.update(ids)
-                .always(function() {
+                .always(function () {
                     self.ready.resolve();
-                })
+                });
         },
-        update: function(ids) {
+        update: function (ids) {
             var async = $.Deferred();
-            if(!ids) {
-                ids = _.map(this.models, function(model) {
+            if (!ids) {
+                ids = _.map(this.models, function (model) {
                     return model.get('id');
-                })
+                });
             }
             var self = this;
             call('GET', Urls.getFilters(ids))
-                .done(function(data) {
-                    (new SingletonDefectTypeCollection).ready.done(function () {
-                        self.reset(_.map(data, function(item){
+                .done(function (data) {
+                    (new SingletonDefectTypeCollection()).ready.done(function () {
+                        self.reset(_.map(data, function (item) {
                             item.isLaunch = true;
                             item.type = 'launch';
                             item.entities = JSON.stringify(item.entities);
@@ -120,16 +120,16 @@ define(function(require, exports, module) {
                             return item;
                         }));
                         async.resolve();
-                    })
-                })
+                    });
+                });
             return async;
         },
-        generateTempModel: function(data) {
+        generateTempModel: function (data) {
             var data = data || {};
             var startName = 'New_filter';
             var modelName = startName;
             var randomCounter = 1;
-            while(this.findWhere({name: modelName})) {
+            while (this.findWhere({ name: modelName })) {
                 modelName = startName + randomCounter;
                 randomCounter++;
             }
@@ -140,16 +140,16 @@ define(function(require, exports, module) {
             data.owner = config.userModel.get('name');
             return this.add(data);
         },
-        activateFilter: function(filterId) {
+        activateFilter: function (filterId) {
             var answer = $.Deferred();
             var self = this;
-            this.ready.done(function() {
-                _.each(self.models, function(model) {
-                    model.set({active: false});
+            this.ready.done(function () {
+                _.each(self.models, function (model) {
+                    model.set({ active: false });
                 });
-                var activeModel = self.findWhere({id: filterId});
-                if(activeModel) {
-                    activeModel.set({active: true});
+                var activeModel = self.findWhere({ id: filterId });
+                if (activeModel) {
+                    activeModel.set({ active: true });
                     answer.resolve(activeModel);
                 } else {
                     answer.reject();
