@@ -67,6 +67,7 @@ define(function (require, exports, module) {
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.listenTo(this.collection, 'reset', this.renderCollection);
             this.listenTo(this.collection, 'remove', this.updateFilters);
+            this.listenTo(this.launchFilterCollection, 'remove', this.updateFilters);
             this.context = options.context;
             this.$header = this.context.getMainView().$header;
             this.$el = this.context.getMainView().$body;
