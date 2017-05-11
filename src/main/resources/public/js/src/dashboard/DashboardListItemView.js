@@ -66,9 +66,8 @@ define(function (require, exports, module) {
             },
             canRemove: {
                 deps: ['isMy'],
-                get: function(isMy) {
-                    return (config.userModel.get('isAdmin') ||
-                    config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager ||
+                get: function (isMy) {
+                    return (config.userModel.getRoleForCurrentProject() === config.projectRolesEnum.project_manager ||
                     isMy);
                 }
             }
