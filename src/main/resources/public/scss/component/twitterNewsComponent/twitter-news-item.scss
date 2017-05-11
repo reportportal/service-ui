@@ -27,6 +27,9 @@
   border-radius: 2px;
   background-color: $COLOR--white-default;
   color: $COLOR--charcoal-grey;
+  &:last-child {
+    margin-bottom: 0;
+  }
   a {
     color: $COLOR--topaz;
     &:hover {
