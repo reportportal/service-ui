@@ -65,10 +65,10 @@ define(function (require) {
             '[data-js-time-exact]': 'text: startFormat',
             '[data-js-select-item]': 'checked: select, attr: {disabled: launch_isProcessing}',
             '[data-js-tags-container]': 'sortTags: tags',
-            '[data-js-statistics-total]': 'text: executionTotal, attr: {href: executionTotalLink}',
-            '[data-js-statistics-failed]': 'text: executionFailed, attr: {href: executionFailedLink}',
-            '[data-js-statistics-skipped]': 'text: executionSkipped, attr: {href: executionSkippedLink}',
-            '[data-js-statistics-passed]': 'text: executionPassed, attr: {href: executionPassedLink}',
+            '[data-js-statistics-total]': 'text: executionTotal, attr: {href: executionTotalLink}, classes: {"not-link": not(executionTotalLink)}',
+            '[data-js-statistics-failed]': 'text: executionFailed, attr: {href: executionFailedLink}, classes: {"not-link": not(executionTotalLink)}',
+            '[data-js-statistics-skipped]': 'text: executionSkipped, attr: {href: executionSkippedLink}, classes: {"not-link": not(executionTotalLink)}',
+            '[data-js-statistics-passed]': 'text: executionPassed, attr: {href: executionPassedLink}, classes: {"not-link": not(executionTotalLink)}',
             '[data-js-statistics-to-investigate]': 'text: defectToInvestigate'
         },
         bindingHandlers: {
