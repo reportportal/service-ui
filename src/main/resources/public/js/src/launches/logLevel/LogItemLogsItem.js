@@ -28,8 +28,6 @@ define(function (require) {
     var App = require('app');
     var Urls = require('dataUrlResolver');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
-    var ModalLogAttachmentImage = require('modals/modalLogAttachmentImage');
-    var ModalLogAttachmentBinary = require('modals/modalLogAttachmentBinary');
 
     var config = App.getInstance();
 
@@ -80,7 +78,6 @@ define(function (require) {
             this.markdownViewer = new MarkdownViewer({ text: this.model.get('message') });
             $('[data-js-message]', this.$el).html(this.markdownViewer.$el);
             this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
-            this.supportedLanguages = ['xml', 'javascript', 'json', 'html', 'css', 'php'];
         },
 
         resize: function () {
@@ -101,38 +98,9 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickImg: function (e) {
-            var contentType = this.model.get('binary_content').content_type;
-            var binaryId = this.model.get('binary_content').id;
-            var language = contentType.split('/')[1];
-            var isImage = contentType.indexOf('image/') > -1;
-            var isValidForModal = _.contains(this.supportedLanguages, language) || isImage;
-            var modal;
-            var url;
             e.preventDefault();
             config.trackingDispatcher.trackEventNumber(212);
-            if (contentType === 'text/html') {
-                e.preventDefault();
-                url = Urls.getFileById(binaryId);
-                window.open(url);
-            } else {
-                if (isValidForModal) {
-                    // this.model.trigger('click:attachment', this.model);
-                    // open's image in gallery.
-                    if (isImage) {
-                        modal = new ModalLogAttachmentImage({
-                            imageId: binaryId
-                        });
-                        modal.show();
-                    } else {
-                        modal = new ModalLogAttachmentBinary({
-                            binaryId: binaryId,
-                            language: language,
-                            supportedLanguages: this.supportedLanguages
-                        });
-                        modal.show();
-                    }
-                }
-            }
+            this.model.trigger('click:attachment', this.model);
         },
 
         activateAccordion: function () {

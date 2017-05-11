@@ -31,8 +31,6 @@ define(function (require) {
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
     var ItemAttachmentModel = require('launches/logLevel/LogItemModel');
-    var ModalLogAttachmentImage = require('modals/modalLogAttachmentImage');
-    var ModalLogAttachmentBinary = require('modals/modalLogAttachmentBinary');
     var App = require('app');
     var ItemAttachmentView;
     var ItemAttachmentMainView;
@@ -174,30 +172,8 @@ define(function (require) {
             this.listenTo(this.model, 'change:id', this.onChangeId);
         },
         onClickMainImage: function () {
-            var url;
-            var modal;
-            var language;
-            var contentType = this.model.get('binary_content').content_type;
-            var binaryId = this.model.get('binary_content').id;
             config.trackingDispatcher.trackEventNumber(507);
-            if (contentType === 'text/html') {
-                url = Urls.getFileById(binaryId);
-                window.open(url);
-            } else {
-                if (~contentType.indexOf('image/')) {
-                    modal = new ModalLogAttachmentImage({
-                        imageId: binaryId
-                    });
-                    modal.show();
-                } else {
-                    language = contentType.split('/')[1];
-                    modal = new ModalLogAttachmentBinary({
-                        binaryId: binaryId,
-                        language: language
-                    });
-                    modal.show();
-                }
-            }
+            this.model.trigger('click:attachment', this.model);
         },
         onChangeId: function (model, id) {
             this.rotate = 0;
@@ -255,12 +231,16 @@ define(function (require) {
                     loop: true
                 }
             });
+            this.listenTo(this.collectionMain, 'click:attachment', this.onClickMainImage);
             this.listenTo(this.collectionPreviews, 'change:itemModels', this.updateLoadItems);
             this.listenTo(this.galleryPreviews, 'change:slide', this.onChangeSlide);
 
             this.listenTo(this.currentLoadCollection, 'change:active:slide', this.onChangeMainActiveSlide);
             this.listenTo(this.currentLoadCollection, 'click:min:item', this.activateMainGallery);
             this.listenTo(this.galleryPreviews, 'after:click:right after:click:left', this.onClickPreviewNav);
+        },
+        onClickMainImage: function (model) {
+            this.trigger('click:attachment', model);
         },
         onShow: function (model, show) {
             if (show && !this.isLoad) {
