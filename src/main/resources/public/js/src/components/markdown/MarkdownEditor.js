@@ -135,8 +135,13 @@ define(function (require) {
                 ],
                 placeholder: options.placeholder || '',
                 spellChecker: false,
+                blockStyles: {
+                    bold: '**',
+                    italic: '*',
+                    code: '`'
+                },
                 previewRender: function (plainText) {
-                    return self.simplemde.markdown(plainText.escapeHtml().indentSpases());
+                    return self.simplemde.markdown(plainText.escapeHtml().indentSpases().replace('_', '&#95;'));
                 }
                 // insertTexts: {
                 //     link: ['[](', ')']

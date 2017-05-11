@@ -18,15 +18,25 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
+
     var $ = require('jquery');
 
     var instance = null;
     var SimpleMDE = require('simplemde');
     var el = $('<div><textarea></textarea></div>');
-    var getInstance = function(){
-        if(!instance) { instance = new SimpleMDE({element: $('textarea', el).get(0) }) };
+    var getInstance = function () {
+        if (!instance) {
+            instance = new SimpleMDE({
+                element: $('textarea', el).get(0),
+                blockStyles: {
+                    bold: '**',
+                    italic: '*',
+                    code: '`'
+                }
+            });
+        }
         return instance;
     };
 
