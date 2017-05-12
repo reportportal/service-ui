@@ -1,6 +1,7 @@
 <% var notAllowed = (!data.access) ? 'disabled="disabled"' : '' %>
 <% if (data.addRule) { %>
-    <div class="email-case-item local-item" data-email-case-id=<%= data.newCase.id || data.caseId %>>        <div class="rp-form-group notification-rule">
+    <div class="email-case-item local-item" data-email-case-id=<%= data.newCase.id || data.caseId %>>
+        <div class="rp-form-group notification-rule">
             <div class="col-md-3 col-sm-3 col-xs-12 rp-custom-col">
                 <div class="email-case-title">
                     <div class="remove-email-item-label">
@@ -14,7 +15,9 @@
             <div class="col-md-9 col-sm-9 col-xs-12 rp-custom-col">
                 <div class="duplicate-error"><%= data.text.project.duplicateEmailCase %></div>
             </div>
-        </div>        <div class="rp-form-group recipients-wrap">
+        </div>
+
+        <div class="rp-form-group recipients-wrap">
             <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col">
                 <%= data.text.project.emailRecipients %>
             </label>
@@ -25,7 +28,9 @@
                 <div class="error-block help-inline-pos-right"></div><!-- dell class - help-inline -->
             </div>
             <div class="col-md-5 hidden-sm hidden-xs"></div>
-        </div>        <div class="rp-form-group checkbox-launch-owner-wrap">
+        </div>
+
+        <div class="rp-form-group checkbox-launch-owner-wrap">
             <div class="col-md-3 col-sm-3 hidden-xs"></div>
             <div class="col-md-9 col-sm-9 col-xs-12 rp-custom-col">
                 <div class="checkbox-launch-owner">
@@ -37,39 +42,26 @@
                     <div class="error-block"></div><!-- dell class - help-inline -->
                 </div>
             </div>
-        </div>        <div class="rp-form-group">
+        </div>
+
+        <div class="rp-form-group">
             <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col">
                 <%= data.text.project.emailInCase %>
             </label>
             <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                <div class="rp-btn-group rp-width-100">
-                    <button type="button" class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle" data-toggle="dropdown"
-                    <% var sendCase = data.settings.emailInCase[0]; %> <%= notAllowed %> data-value="<%= '' %>"class="sendCase">
-                        <span class="select-value">
-                            <% if(!data.emailEnabled) { %>
-                                <%= data.settings.emailInCase[0].name %>
-                            <% } else { %>
-                                <%= sendCase.name %>
-                            <% } %>
-                        </span>
-                        <span class="rp-caret"></span>
-                    </button>
-                    <ul class="dropdown-menu">
-                        <% _.each(data.settings.emailInCase, function(c) { %>
-                            <li>
-                                <a href="#" data-value="<%= c.value %>"><%= c.name %></a>
-                            </li>
-                        <% }) %>
-                    </ul>
-                </div>
+                <div data-js-case-dropdown></div>
             </div>
             <div class="col-md-5 hidden-xs hidden-sm"></div>
-        </div>        <div class="rp-form-group rp-note-and">
+        </div>
+
+        <div class="rp-form-group rp-note-and">
             <div class="col-md-3 col-sm-3 hidden-xs"></div>
             <div class="col-md-9 col-sm-9 col-xs-12 rp-custom-col">
                 <span><%= data.text.comparators.andb %></span>
             </div>
-        </div>        <div class="rp-form-group">
+        </div>
+
+        <div class="rp-form-group">
             <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col">
                 <span class="mobile-note-and"><%= data.text.comparators.andb %></span>
                 <%= data.text.project.launchesNames %>
@@ -85,12 +77,16 @@
                     <%= data.text.project.sendLaunchNames %>
                 </span><!-- dell class - help-inline -->
             </div>
-        </div>        <div class="rp-form-group rp-note-and">
+        </div>
+
+        <div class="rp-form-group rp-note-and">
             <div class="col-md-3 col-sm-3 hidden-xs"></div>
             <div class="col-md-9 col-sm-9 col-xs-12 rp-custom-col">
                 <span><%= data.text.comparators.andb %></span>
             </div>
-        </div>        <div class="rp-form-group">
+        </div>
+
+        <div class="rp-form-group">
             <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col">
                 <span class="mobile-note-and"><%= data.text.comparators.andb %></span>
                 <%= data.text.forms.tags %>
@@ -106,13 +102,16 @@
                     <%= data.text.project.sendTags %>
                 </span>
             </div>
-        </div>        <div class="rp-form-group rp-wrap-underline">
+        </div>
+
+        <div class="rp-form-group rp-wrap-underline">
             <div class="rp-underline"></div>
         </div>
     </div>
 <% } else { %>
     <% _.forEach(data.emailCases, function(emailCase) { %>
-        <div class="email-case-item" data-email-case-id=<%= emailCase.id %>>            <div class="rp-form-group notification-rule">
+        <div class="email-case-item" data-email-case-id=<%= emailCase.id %>>
+            <div class="rp-form-group notification-rule">
                 <div class="col-md-3 col-sm-3 col-xs-12 rp-custom-col">
                     <div class="email-case-title">
                         <div class="checkbox">
@@ -156,38 +155,19 @@
                     <%= data.text.project.emailInCase %>
                 </label>
                 <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-                    <div class="rp-btn-group rp-width-100">
-                        <button type="button" class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle" data-toggle="dropdown" <%
-                            var sendCase = (emailCase.sendCase) 
-                                ? _.find(data.settings.emailInCase, function(c){ return c.value === emailCase.sendCase })
-                                : data.settings.emailInCase[0];
-                            %>
-                            <%= notAllowed %> data-value="<%= emailCase.sendCase %>" class="sendCase">
-                            <span class="select-value">
-                                <% if(!data.emailEnabled) { %>
-                                    <%= data.settings.emailInCase[0].name %>
-                                <% } else { %>
-                                    <%= sendCase.name %>
-                                <% } %>
-                            </span>
-                            <span class="rp-caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <% _.each(data.settings.emailInCase, function(c) { %>
-                                <li>
-                                    <a href="#" data-value="<%= c.value %>"><%= c.name %></a>
-                                </li>
-                            <% }) %>
-                        </ul>
-                    </div>
+                    <div data-js-case-dropdown></div>
                 </div>
                 <div class="col-md-5 hidden-xs hidden-sm"></div>
-            </div>            <div class="rp-form-group rp-note-and">
+            </div>
+
+            <div class="rp-form-group rp-note-and">
                 <div class="col-md-3 col-sm-3 hidden-xs"></div>
                 <div class="col-md-9 col-sm-9 col-xs-12 rp-custom-col">
                     <span><%= data.text.comparators.andb %></span>
                 </div>
-            </div>            <div class="rp-form-group">
+            </div>
+
+            <div class="rp-form-group">
                 <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col">
                     <span class="mobile-note-and"><%= data.text.comparators.andb %></span>
                     <%= data.text.project.launchesNames %>
