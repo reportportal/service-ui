@@ -27,8 +27,10 @@
       display: block;
     }
   }
-  label {
+  .switcher-label {
     font-weight: normal;
+    margin-top: 0;
+    cursor: pointer;
   }
   .filter-header {
     height: 70px;
