@@ -32,6 +32,7 @@ define(function (require) {
     var Urls = require('dataUrlResolver');
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
+    var DropDownComponent = require('components/DropDownComponent');
 
     var config = App.getInstance();
 
@@ -82,7 +83,6 @@ define(function (require) {
         },
 
         events: {
-            'click [data-js-dropdown-roles] a': 'updateProjectRole',
             'click [data-js-unassign]': 'confirmUnassign'
         },
 
@@ -96,6 +96,19 @@ define(function (require) {
                 roles: Util.getRolesMap(),
                 isPersonal: this.isPersonalProjectOwner()
             }));
+            this.setupSelectDropDown();
+        },
+
+        setupSelectDropDown: function () {
+            this.projectRoleSelector = new DropDownComponent({
+                data: _.map(Util.getRolesMap(), function (key, val) {
+                    return { name: key, value: val };
+                }),
+                multiple: false,
+                defaultValue: this.model.get('projectRole')
+            });
+            $('[data-js-user-select-role]', this.$el).html(this.projectRoleSelector.$el);
+            this.listenTo(this.projectRoleSelector, 'change', this.updateProjectRole);
         },
 
         isPersonalProjectOwner: function () {
@@ -108,16 +121,9 @@ define(function (require) {
             return Util.isUnassignedLock(this.userModel.toJSON(), this.model.toJSON());
         },
 
-        updateProjectRole: function (e) {
-            var $el;
-            var newRole;
-            e.preventDefault();
-            $el = $(e.currentTarget);
-            if ($el.hasClass('active') || $el.hasClass('disabled')) {
-                return;
-            }
+        updateProjectRole: function (role) {
+            var newRole = role;
             config.trackingDispatcher.trackEventNumber(465);
-            newRole = $el.data('value');
             memberService.updateMember(newRole, this.userModel.get('userId'), this.model.get('projectId'))
                 .done(function () {
                     this.model.set('projectRole', newRole);
