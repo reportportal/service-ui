@@ -26,6 +26,8 @@ define(function (require, exports, module) {
     var Util = require('util');
     var App = require('app');
     var Service = require('coreService');
+    var DropDownComponent = require('components/DropDownComponent');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -39,7 +41,6 @@ define(function (require, exports, module) {
 
         events: {
             'click #submit-settings': 'submitSettings',
-            'click .dropdown-menu a': 'selectProp'
         },
 
         initialize: function () {
@@ -61,26 +62,62 @@ define(function (require, exports, module) {
 
         render: function () {
             var params = _.merge(this.model.toJSON(), {
-                edit: config.project && config.project.projectId,
                 currentProject: config.project.projectId,
                 access: config.userModel.hasPermissions(),
-                settings: config.forSettings
             });
             this.$el.html(Util.templates(this.tpl, params));
+            this.setupDropdowns();
             return this;
         },
-
-        selectProp: function (e) {
-            e.preventDefault();
-            var link = $(e.target),
-                btn = link.closest('.open').find('.dropdown-toggle'),
-                val = (link.data('value')) ? link.data('value') : link.text(),
-                id = btn.attr('id');
-            if (id === 'isAutoAnalyzerEnabled') {
+        setupDropdowns: function () {
+            var interruptedJob = new DropDownComponent({
+                data: _.map(config.forSettings.interruptedJob, function (val) {
+                    return { name: val.name, value: val.value, disabled: false };
+                }),
+                multiple: false,
+                defaultValue: this.model.get('interruptedJob')
+            });
+            var keepLogs = new DropDownComponent({
+                data: _.map(config.forSettings.keepLogs, function (val) {
+                    return { name: val.name, value: val.value, disabled: false };
+                }),
+                multiple: false,
+                defaultValue: this.model.get('keepLogs')
+            });
+            var keepScreenshots = new DropDownComponent({
+                data: _.map(config.forSettings.keepScreenshots, function (val) {
+                    return { name: val.name, value: val.value, disabled: false };
+                }),
+                multiple: false,
+                defaultValue: this.model.get('keepScreenshots')
+            });
+            var isAutoAnalyzerEnabled = new DropDownComponent({
+                data: [
+                    { name: 'ON', value: 'ON' },
+                    { name: 'OFF', value: 'OFF' }
+                ],
+                multiple: false,
+                defaultValue: (this.model.get('isAutoAnalyzerEnabled') ? Localization.ui.on : Localization.ui.off)
+            });
+            $('[data-js-selector="interruptedJob"]', this.$el).html(interruptedJob.$el);
+            $('[data-js-selector="keepLogs"]', this.$el).html(keepLogs.$el);
+            $('[data-js-selector="keepScreenshots"]', this.$el).html(keepScreenshots.$el);
+            $('[data-js-selector="isAutoAnalyzerEnabled"]', this.$el).html(isAutoAnalyzerEnabled.$el);
+            this.listenTo(interruptedJob, 'change', this.selectProp);
+            this.listenTo(keepLogs, 'change', this.selectProp);
+            this.listenTo(keepScreenshots, 'change', this.selectProp);
+            this.listenTo(isAutoAnalyzerEnabled, 'change', this.selectProp);
+            if (!config.userModel.hasPermissions()) {
+                $('[data-js-selector] [data-js-dropdown]', this.$el).attr('disabled', 'disabled');
+            }
+        },
+        selectProp: function (value, event) {
+            var val = value;
+            var property = $(event.currentTarget).closest('[data-js-selector]').attr('data-js-selector');
+            if (property === 'isAutoAnalyzerEnabled') {
                 val = (val === 'ON');
             }
-            this.model.set(id, val);
-            $('.select-value', btn).text(link.text());
+            this.model.set(property, val);
         },
 
         clearFormErrors: function () {
