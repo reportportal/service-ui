@@ -37,7 +37,7 @@ define(function (require, exports, module) {
 
         initialize: function(options) {
             // options = {
-            //     data: [{name: '', value: ''}],
+            //     data: [{name: '', value: '', disabled: false}],
             //     placeholder: 'default text',
             //     multiple: false,
             //     defaultValue: ''
@@ -61,24 +61,28 @@ define(function (require, exports, module) {
         },
         onClickItem: function(e) { // simple select
             e.preventDefault();
-            if ($(e.currentTarget).parent().hasClass('active')) {
+            if ($(e.currentTarget).hasClass('selected') || $(e.currentTarget).hasClass('not-active')) {
                 return;
             }
             var value = $(e.currentTarget).data('value');
-            this.trigger('change', value);
+            this.trigger('change', value, e);
             this.activateItem(value);
         },
         activateItem: function(value) {  // simple select
             this.$el.removeClass('dropdown-error-state');
             var curName = '';
+            var curVal = '';
             _.each(this.options.data, function(item) {
                 if(item.value == value) {
                     curName = item.name;
+                    curVal = item.value;
+
                     return false;
                 }
             })
             $('[data-js-select-value]', this.$el).html(curName);
-            this.$el.addClass('selected');
+            $('[data-value]', this.$el).removeClass('selected');
+            $('[data-value="' + curVal + '"]', this.$el).addClass('selected');
         },
         setDefaultState: function(items) {
             var self = this;
