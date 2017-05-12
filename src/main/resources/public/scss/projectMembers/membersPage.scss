@@ -136,15 +136,13 @@
           .member-name, .member-login {
             margin: 0;
             font-weight: normal;
-            text-transform: capitalize;
             display: inline-block;
             max-width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
           }
           .member-login {
-            text-transform: none;
-            font-weight: 600;
+            font-family: $OpenSansSemibold;
           }
         }
       }
