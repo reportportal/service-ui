@@ -84,6 +84,8 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
   .step-status {
     font-family: $OpenSansSemibold;
     word-break: break-all;
+    width: 100%;
+    display: inline-block;
   }
     .rp-step-parents-line {
         padding: 10px 0;
