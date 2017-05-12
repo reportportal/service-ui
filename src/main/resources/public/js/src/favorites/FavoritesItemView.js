@@ -58,8 +58,8 @@ define(function (require, exports, module) {
             canRemove: {
                 deps: ['notMyFilter'],
                 get: function (notMyFilter) {
-                    return (config.userModel.get('isAdmin') ||
-                    config.userModel.getRoleForCurrentProject() === config.projectRolesEnum.project_manager ||
+                    return (config.userModel.getRoleForCurrentProject() ===
+                    config.projectRolesEnum.project_manager ||
                     !notMyFilter);
                 }
             }
