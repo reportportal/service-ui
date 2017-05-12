@@ -19,9 +19,11 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
-    "use strict";
+define(function (require) {
+    'use strict';
+
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
@@ -40,7 +42,7 @@ define(function (require, exports, module) {
         tpl: 'tpl-project-settings-general',
 
         events: {
-            'click #submit-settings': 'submitSettings',
+            'click #submit-settings': 'submitSettings'
         },
 
         initialize: function () {
@@ -63,7 +65,7 @@ define(function (require, exports, module) {
         render: function () {
             var params = _.merge(this.model.toJSON(), {
                 currentProject: config.project.projectId,
-                access: config.userModel.hasPermissions(),
+                access: config.userModel.hasPermissions()
             });
             this.$el.html(Util.templates(this.tpl, params));
             this.setupDropdowns();
@@ -139,12 +141,12 @@ define(function (require, exports, module) {
             $('div.error-block', cont).empty().hide();
         },
 
-        submitSettings: function (e) {
-            config.trackingDispatcher.trackEventNumber(385);
+        submitSettings: function () {
             var externalSystemData = this.model.getProjectSettings();
+            config.trackingDispatcher.trackEventNumber(385);
             this.clearFormErrors();
             Service.updateProject(externalSystemData)
-                .done(function (response) {
+                .done(function () {
                     _.merge(config.project.configuration, externalSystemData.configuration);
                     Util.ajaxSuccessMessenger('updateProjectSettings');
                 })
@@ -154,7 +156,7 @@ define(function (require, exports, module) {
         },
 
         onDestroy: function () {
-            $("body > #select2-drop-mask, body > .select2-sizer").remove();
+            $('body > #select2-drop-mask, body > .select2-sizer').remove();
         }
     });
 

@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
 
@@ -35,72 +35,73 @@ define(function (require, exports, module) {
             'change input': 'onChangeInput'
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             // options = {
             //     data: [{name: '', value: '', disabled: false}],
             //     placeholder: 'default text',
             //     multiple: false,
             //     defaultValue: ''
             // }
-            this.options = options
-            if(!this.options.data) {
+            this.options = options;
+            if (!this.options.data) {
                 console.log('DropDownComponent: data not found');
                 return;
             }
             this.render();
-            if(options.defaultValue) {
+            if (options.defaultValue) {
                 !options.multiple && this.activateItem(options.defaultValue);
                 options.multiple && this.setDefaultState(options.defaultValue);
             }
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, this.options));
         },
-        onClickLabel: function(e) {
+        onClickLabel: function (e) {
             e.stopPropagation();
         },
-        onClickItem: function(e) { // simple select
+        onClickItem: function (e) { // simple select
+            var value;
             e.preventDefault();
             if ($(e.currentTarget).hasClass('selected') || $(e.currentTarget).hasClass('not-active')) {
                 return;
             }
-            var value = $(e.currentTarget).data('value');
+            value = $(e.currentTarget).data('value');
             this.trigger('change', value, e);
             this.activateItem(value);
         },
-        activateItem: function(value) {  // simple select
-            this.$el.removeClass('dropdown-error-state');
+        activateItem: function (value) {  // simple select
             var curName = '';
             var curVal = '';
-            _.each(this.options.data, function(item) {
-                if(item.value == value) {
+            this.$el.removeClass('dropdown-error-state');
+            _.each(this.options.data, function (item) {
+                if (item.value === value) {
                     curName = item.name;
                     curVal = item.value;
 
                     return false;
                 }
-            })
+            });
             $('[data-js-select-value]', this.$el).html(curName);
             $('[data-value]', this.$el).removeClass('selected');
             $('[data-value="' + curVal + '"]', this.$el).addClass('selected');
         },
-        setDefaultState: function(items) {
+        setDefaultState: function (items) {
             var self = this;
-            _.each(items, function(item) {
-                $('[data-value="'+item+'"]', self.$el).prop({checked: 'checked'});
+            _.each(items, function (item) {
+                $('[data-value="' + item + '"]', self.$el).prop({ checked: 'checked' });
             });
             this.onChangeInput();
         },
-        onChangeInput: function() {  // multiple select
-            this.$el.removeClass('dropdown-error-state');
+        onChangeInput: function () {  // multiple select
             var curValue = [];
             var curName = [];
-            _.each($('input:checked', this.$el), function(item) {
+            this.$el.removeClass('dropdown-error-state');
+            _.each($('input:checked', this.$el), function (item) {
                 curValue.push($(item).data('value'));
-                curName.push($(item).data('name'))
-            })
+                curName.push($(item).data('name'));
+            });
             this.trigger('change', curValue);
-            if(curName.length){
+            if (curName.length) {
                 this.$el.addClass('selected');
                 $('[data-js-select-value]', this.$el).html(curName.join(', '));
             } else {
@@ -108,7 +109,7 @@ define(function (require, exports, module) {
                 $('[data-js-select-value]', this.$el).html(this.options.placeholder);
             }
         },
-        setErrorState: function(message) {
+        setErrorState: function (message) {
             this.$el.addClass('dropdown-error-state');
             $('[data-js-hint-message]', this.$el).html(message);
         },
@@ -118,7 +119,7 @@ define(function (require, exports, module) {
             this.unbind();
             this.$el.html('');
             delete this;
-        },
+        }
     });
 
 
