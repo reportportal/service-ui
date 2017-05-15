@@ -684,14 +684,14 @@ define(['util'], function () {
             problemInteracting: 'Error interacting with external system. Check the entered data',
             problemGeneral: 'Error occurred: ',
             forceFinish: 'Force finish',
-            finishWarning: 'In case of finish the %%%, all data will be missed. Are you sure you want to finish %%%?',
+            finishWarning: ' Are you sure you want to finish the %%%? All data will be missed.',
             deleteWarning: 'In case of delete the launch, all related data will be deleted. Are you sure you want to delete launch',
             deleteItemWarning: 'In case of delete the test item, all related data will be deleted. Are you sure you want to delete test item',
             finishAgree: 'I am sure I want to finish %%%',
             deleteAgree: 'I am sure I want to delete %%%',
-            deleteWarningAgree: 'You are going to delete data that is not your own. Other project users could be affected by the action.',
-            finishOneLaunch: 'Warning! You are going to stop launch that is not your own. Other project users could be affected by the action.',
-            finishSelectedLaunch: 'Warning! You are going to stop launches that are not your own. Other project users could be affected by the action.',
+            deleteWarningAgree: 'This may affect on other project users information.',
+            finishOneLaunch: 'You are going to stop not your own launch. This may affect on other project users information.',
+            finishSelectedLaunch: 'You are going to stop not your own launch. This may affect on other project users information.',
 
             errorItem: 'Error Item',
             jiraCredentials: 'Jira credentials',
@@ -1748,12 +1748,12 @@ define(['util'], function () {
             deleteBts: 'Are you sure you want to remove %%% project <b>\'%%%\'</b> from project settings?',
 
             dashboardDelete: 'Are you sure you want to delete dashboard <b>\'%%%\'</b>?',
-            dashboardDeleteDanger: 'As a user with PM privileges you can delete shared dashboards of other users. This can affect all users on the projects, if somebody else use it.<br>Are you sure you want to delete <b>\'%%%\'</b>?',
+            dashboardDeleteDanger: 'Are you sure you want to delete dashboard <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
 
-            dashboardDeleteDangerConfirmText: 'I am sure I want to delete the dashboard',
-            deletedWidget: 'Are you sure you want to remove widget <b>\'%%%\'</b>?',
-            deletedWidgetDanger: 'User with PM privileges you can delete shared widgets of other users. This can affect all users on the projects, if somebody else use it.<br>Are you sure you want to delete <b>\'%%%\'</b>?',
-            deletedWidgetDangerConfirmText: 'I am sure I want to delete the widget',
+            dashboardDeleteDangerConfirmText: 'This may affect on all users on the project.',
+            deletedWidget: 'Are you sure you want to delete widget <b>\'%%%\'</b>?',
+            deletedWidgetDanger: 'Are you sure you want to delete widget <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
+            deletedWidgetDangerConfirmText: 'This may affect on all users on the project.',
             deleteBtsBtn: 'Remove',
             dashboardDeleteBtn: 'Remove',
 
@@ -1779,13 +1779,13 @@ define(['util'], function () {
 
             filterOptions: 'Filter Options',
 
-            msgDeleteItems: 'In case of delete the %%%, all related data will be removed. Are you sure you want to delete %%%?',
+            msgDeleteItems: 'Are you sure you want to delete %%%? You will no longer have access to %%%. This action can\'t be undone.',
             msgDeleteDefectType: 'I am sure I want to remove custom defect type',
             msgDeleteProject: 'I am sure I want to delete project',
-            msgDeleteOrg: 'In case of delete the GitHub organization, users from this organization could not be able to login Report Portal. Are you sure you want to delete selected organization?',
+            msgDeleteOrg: 'Are you sure you want to delete selected organization? All assigned users could not be able to login Report Portal. ',
             deleteOrg: 'I am sure I want to delete organization',
             msgResetColorsDefectType: 'Are you sure you want to reset custom defect\'s colors to default?',
-            msgMessageTop: 'In case of delete custom defect, all investigated as <strong>\'%%%\'</strong> defects will be marked as <strong>\'%%%\'</strong>'
+            msgMessageTop: 'Are you sure you want to delete the defect type?  All investigated as <strong>\'%%%\'</strong> defects will be marked as <strong>\'%%%\'</strong>.'
         },
 
         time: {

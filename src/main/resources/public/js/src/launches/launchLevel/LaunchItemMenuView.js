@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     // var Editor = require('launchEditor');
@@ -54,21 +53,21 @@ define(function (require, exports, module) {
             '[data-js-can-match]': 'attr:{disabled:not(isMatchIssues)}',
             '[data-js-can-analyze]': 'attr:{disabled:not(isAnalyze)}',
             '[data-js-switch-mode]': 'text:itemModeText, attr:{title: titleChangeMode, disabled:not(isChangeMode)}',
-            '[data-js-remove]': 'attr: {title: removeTitle, disabled: any(removeTitle)}',
+            '[data-js-remove]': 'attr: {title: removeTitle, disabled: any(removeTitle)}'
         },
-        initialize: function(options) {
+        initialize: function (options) {
             this.model = options.model;
             this.exportFormats = {
-                'pdf': {name: 'PDF', code: 30},
-                'xls': {name: 'XLS', code: 31},
-                'html': {name: 'HTML', code: 32}
+                pdf: { name: 'PDF', code: 30 },
+                xls: { name: 'XLS', code: 31 },
+                html: { name: 'HTML', code: 32 }
             };
             this.render();
         },
         computeds: {
             isAnalyze: {
                 deps: ['launch_isProcessing'],
-                get: function(launch_isProcessing) {
+                get: function (launch_isProcessing) {
                     return !launch_isProcessing;
                 }
             },
@@ -86,37 +85,37 @@ define(function (require, exports, module) {
             },
             titleForceFinish: {
                 deps: ['status', 'launch_owner'],
-                get: function() {
+                get: function () {
                     return this.model.validate.forceFinish();
                 }
             },
             isExport: {
                 deps: ['launch_status'],
-                get: function(launchStatus) {
+                get: function (launchStatus) {
                     return (launchStatus != 'IN_PROGRESS');
                 }
             },
             removeTitle: {
                 deps: ['launch_owner', 'status'],
-                get: function() {
+                get: function () {
                     return this.model.validate.remove();
                 }
             },
             itemModeText: {
                 deps: ['mode'],
-                get: function(mode) {
+                get: function (mode) {
                     return (mode == 'DEBUG') ? Localization.launches.shiftToLaunches : Localization.launches.shiftToDebug;
                 }
             },
             isMatchIssues: {
                 deps: ['launch_status', 'launch_isProcessing', 'launch_toInvestigate'],
-                get: function(launchStatus, launchIsProcessing, launch_toInvestigate) {
+                get: function (launchStatus, launchIsProcessing, launch_toInvestigate) {
                     return (launchStatus != 'IN_PROGRESS' && !launchIsProcessing && launch_toInvestigate > 0);
                 }
-            },
+            }
         },
-        render: function() {
-            var model = this.model.toJSON({computed: true});
+        render: function () {
+            var model = this.model.toJSON({ computed: true });
             this.$el.html(Util.templates(this.template, {
                 isDebug: this.isDebug(),
                 isCustomer: Util.isCustomer(),
@@ -126,7 +125,7 @@ define(function (require, exports, module) {
                 item: model
             }));
         },
-        isDebug: function(){
+        isDebug: function () {
             return this.model.get('mode') === 'DEBUG';
         },
         startAnalyzeAction: function (e) {
@@ -134,38 +133,37 @@ define(function (require, exports, module) {
             var self = this,
                 el = $(e.currentTarget),
                 id = this.model.get('id'),
-                isLaunchAnalyze = el.data('analyze-type') === "analyze",
-                type = isLaunchAnalyze ? "startLaunchAnalyze" : "startLaunchMatch";
+                isLaunchAnalyze = el.data('analyze-type') === 'analyze',
+                type = isLaunchAnalyze ? 'startLaunchAnalyze' : 'startLaunchMatch';
             if (!el.hasClass('disabled')) {
                 config.trackingDispatcher.trackEventNumber(isLaunchAnalyze ? 28 : 27);
                 Service[type](id)
-                    .done(function(response){
+                    .done(function (response) {
                         self.model.set('isProcessing', true);
-                        Util.ajaxSuccessMessenger("startAnalyzeAction");
+                        Util.ajaxSuccessMessenger('startAnalyzeAction');
                     })
                     .fail(function (error) {
-                        Util.ajaxFailMessenger(error, "startAnalyzeAction");
-                    })
-            }
-            else {
+                        Util.ajaxFailMessenger(error, 'startAnalyzeAction');
+                    });
+            } else {
                 e.stopPropagation();
             }
         },
-        finishLaunch: function(){
+        finishLaunch: function () {
             config.trackingDispatcher.trackEventNumber(26);
             var self = this;
-            ForceFinish({items: [this.model]}).done(function() {
+            ForceFinish({ items: [this.model] }).done(function () {
                 self.model.collection.load(true);
             });
         },
-        onClickRemove: function() {
+        onClickRemove: function () {
             config.trackingDispatcher.trackEventNumber(29);
             var self = this;
-            RemoveAction({items: [this.model]}).done(function() {
+            RemoveAction({ items: [this.model] }).done(function () {
                 self.model.collection.load(true);
             });
         },
-        onClickExport: function(e){
+        onClickExport: function (e) {
             var $el = $(e.currentTarget),
                 format = $el.data('js-export-format');
             config.trackingDispatcher.trackEventNumber(this.exportFormats[format].code);
@@ -173,7 +171,7 @@ define(function (require, exports, module) {
         switchLaunchMode: function () {
             config.trackingDispatcher.trackEventNumber(25);
             var self = this;
-            ChangeModeAction({items: [this.model]}).done(function() {
+            ChangeModeAction({ items: [this.model] }).done(function () {
                 self.model.collection.load(true);
             });
         },

@@ -14,17 +14,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Util = require('util');
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
     var ModalEditDashboard = require('modals/modalEditDashboard');
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
+    var _ = require('underscore');
 
     var config = App.getInstance();
 
@@ -35,7 +35,7 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-edit]': 'onClickEdit',
             'click [data-js-remove]': 'onClickRemove',
-            'click': 'onClickItem',
+            'click': 'onClickItem'
         },
 
         bindings: {
@@ -46,7 +46,7 @@ define(function (require, exports, module) {
             '[data-js-icon-description]': 'text: sharedTitle',
             '[data-js-shared-container]': 'classes: {hide: not(isShared)}',
             '[data-js-edit]': 'classes: {hide: not(isMy)}',
-            '[data-js-remove]': 'classes: {hide: not(canRemove)}',
+            '[data-js-remove]': 'classes: {hide: not(canRemove)}'
         },
         computeds: {
             displayingDescription: {
@@ -60,7 +60,7 @@ define(function (require, exports, module) {
             },
             getName: {
                 deps: ['name', 'search'],
-                get: function(name, search){
+                get: function (name, search) {
                     return (search ? Util.textWrapper(name, search) : name).escapeScript();
                 }
             },
@@ -73,52 +73,52 @@ define(function (require, exports, module) {
             }
         },
 
-        initialize: function(options) {
+        initialize: function () {
             this.render();
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
             this.setPreview();
         },
-        onClickEdit: function(e) {
-            e.stopPropagation();
+        onClickEdit: function (e) {
             var self = this;
+            e.stopPropagation();
             (new ModalEditDashboard({
                 dashboardCollection: this.model.collection,
                 dashboardModel: this.model,
-                mode: 'edit',
-            })).show().done(function(newModel) {
+                mode: 'edit'
+            })).show().done(function (newModel) {
                 self.model.set(newModel.toJSON());
-            })
+            });
         },
-        onClickRemove: function(e) {
-            e.stopPropagation();
+        onClickRemove: function (e) {
             var self = this;
+            e.stopPropagation();
             (new ModalConfirm({
                 headerText: Localization.dialogHeader.dashboardDelete,
                 bodyText: Util.replaceTemplate(
-                    this.model.get('isMy')?Localization.dialog.dashboardDelete:Localization.dialog.dashboardDeleteDanger,
+                    this.model.get('isMy') ? Localization.dialog.dashboardDelete : Localization.dialog.dashboardDeleteDanger,
                     this.model.get('name')),
-                confirmText: this.model.get('isMy')?'':Localization.dialog.dashboardDeleteDangerConfirmText,
+                confirmText: this.model.get('isMy') ? '' : Localization.dialog.dashboardDeleteDangerConfirmText,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete,
-            })).show().done(function() {
+                safeRemoval: this.model.get('isMy')
+            })).show().done(function () {
                 self.model.collection.remove(self.model);
                 self.destroy();
-            })
+            });
         },
-        onClickItem: function() {
+        onClickItem: function () {
             if (this.model.get('isMy')) {
                 config.trackingDispatcher.trackEventNumber(262);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(265);
             }
-            config.router.navigate(this.model.get('url'), {trigger: true});
+            config.router.navigate(this.model.get('url'), { trigger: true });
         },
 
-        setPreview: function() {
+        setPreview: function () {
             var id = this.model.get('id');
             var result = 0;
             _.each(this.model.get('id'), function (item, i) {
@@ -129,7 +129,7 @@ define(function (require, exports, module) {
 
         onDestroy: function () {
             this.$el.remove();
-        },
+        }
     });
 
     return DashboardListItemView;

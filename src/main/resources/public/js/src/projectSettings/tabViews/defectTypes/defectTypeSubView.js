@@ -139,7 +139,8 @@ define(function (require) {
                 confirmText: '',
                 cancelButtonText: Localization.ui.cancel,
                 okButtonDanger: true,
-                okButtonText: Localization.ui.delete
+                okButtonText: Localization.ui.delete,
+                safeRemoval: true
             });
             $('[data-js-close]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(418);

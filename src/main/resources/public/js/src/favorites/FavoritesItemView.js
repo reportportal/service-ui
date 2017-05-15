@@ -88,7 +88,8 @@ define(function (require) {
         },
         onClickRemove: function () {
             var self = this;
-            var modal = new ModalConfirm({
+            var modal;
+            modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteFilter,
                 bodyText: Util.replaceTemplate(
                     this.model.get('notMyFilter') ? Localization.dialog.deleteFilterDanger : Localization.dialog.deleteFilter,
