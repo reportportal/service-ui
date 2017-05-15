@@ -17,7 +17,7 @@ node {
             parallel 'Build UI': {
              sh 'docker build -t node-onbuild-chromium -f ./docker/DockerfileNodeChrome ./docker/'
              docker.image('node-onbuild-chromium').inside('-u root') {
-                               sh 'Xvfb -ac :99 -screen 0 1280x1024x16 & && make build-statics'
+                               sh 'make build-statics'
              }
 
             }, 'Build Server': {
