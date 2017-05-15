@@ -75,12 +75,13 @@ define(function (require) {
         bindings: {
             ':el': 'classes: {hide: not(gadgetIsFilter)}',
             '[data-js-seach-query]': 'text: search',
-            '[data-js-filter-none]': 'classes: {hide:   filterMessage(search,empty)}',
-            '[data-js-filter-empty]': 'classes: { hide:  not(search)  }'
+            '[data-js-filter-none]': 'classes: {hide:    filtersAvailability(search,empty)}',
+            '[data-js-filter-empty]': 'classes: { hide:  not(search)  }',
+            '[data-js-filter-name]': 'attr: {disabled: not( filtersAvailability(search,empty))}'
 
         },
         bindingFilters: {
-            filterMessage: function (search, empty) {
+            filtersAvailability: function (search, empty) {
                 if (!search && empty) {
                     return false;
                 }

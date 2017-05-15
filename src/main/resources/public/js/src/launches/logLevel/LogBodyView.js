@@ -29,6 +29,9 @@ define(function (require) {
     var LogHistoryLine = require('launches/logLevel/LogHistoryLine');
     var LogItemInfoView = require('launches/logLevel/LogItemInfoView');
     var LogItemLogsTable = require('launches/logLevel/LogItemLogsTable');
+    var Urls = require('dataUrlResolver');
+    var ModalLogAttachmentImage = require('modals/modalLogAttachmentImage');
+    var ModalLogAttachmentBinary = require('modals/modalLogAttachmentBinary');
 
     var config = App.getInstance();
 
@@ -47,6 +50,7 @@ define(function (require) {
             if (this.context === 'userdebug') {
                 this.$el.find('[data-js-log-item-container]').addClass('debug-mode');
             }
+            this.supportedLogBinary = ['xml', 'javascript', 'json', 'css', 'php'];
         },
         onChangeLogItem: function () {
             $('[data-js-log-item-container]', this.$el).removeClass('not-found');
@@ -90,20 +94,23 @@ define(function (require) {
                 el: $('[data-js-item-info]', this.$el),
                 context: this.context,
                 itemModel: itemModel,
-                launchModel: this.launchModel
+                launchModel: this.launchModel,
+                supportedLogBinary: this.supportedLogBinary
             });
             this.listenTo(this.historyItem, 'goToLog', this.goToLog);
             this.listenTo(this.historyItem, 'change:issue', this.onChangeItemIssue);
+            this.listenTo(this.historyItem, 'click:attachment', this.onClickAttachments);
             this.logsItem && this.stopListening(this.logsItem) && this.logsItem.destroy();
             this.logsItem = new LogItemLogsTable({
                 el: $('[data-js-item-logs]', this.$el),
                 itemModel: itemModel,
                 collectionItems: this.collectionItems,
                 mainPath: this.collectionItems.getPathByLogItemId(curOptions.item),
-                options: this.collectionItems.getInfoLog()
+                options: this.collectionItems.getInfoLog(),
+                supportedLogBinary: this.supportedLogBinary
             });
             this.listenTo(this.logsItem, 'goToLog:end', this.onEndGoToLog);
-            // this.listenTo(this.logsItem, 'goToAttachment', this.onGoToAttachment);
+            this.listenTo(this.logsItem, 'click:attachment', this.onClickAttachments);
         },
         onChangeItemIssue: function () {
             _.each(this.launchModel.collection.models, function (model) {
@@ -115,8 +122,33 @@ define(function (require) {
         goToLog: function (logId) {
             this.logsItem && this.logsItem.goToLog(logId);
         },
-        onGoToAttachment: function (logId) {
-            this.historyItem.goToAttachment(logId);
+        onClickAttachments: function (model) {
+            var contentType = model.get('binary_content').content_type;
+            var binaryId = model.get('binary_content').id;
+            var language = contentType.split('/')[1];
+            var isImage = contentType.indexOf('image/') > -1;
+            var isValidForModal = _.contains(this.supportedLogBinary, language) || isImage;
+            var modal;
+            var url;
+
+            if (isValidForModal) {
+                if (isImage) {
+                    modal = new ModalLogAttachmentImage({
+                        imageId: binaryId
+                    });
+                    modal.show();
+                } else {
+                    modal = new ModalLogAttachmentBinary({
+                        binaryId: binaryId,
+                        language: language,
+                        supportedLanguages: this.supportedLogBinary
+                    });
+                    modal.show();
+                }
+            } else {
+                url = Urls.getFileById(binaryId);
+                window.open(url);
+            }
         },
         onEndGoToLog: function () {
             this.historyItem.endGoToLog();

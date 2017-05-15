@@ -57,33 +57,14 @@ define(function (require, exports, module) {
         bindings: {
             ':el': 'classes: {"not-my": not(isMy)}',
             '[data-js-owner-name]': 'text: owner'
-            // '[data-js-add-widget]': 'classes: {disabled: not(validateForAddWidget)}, attr: {title: getAddBtnTitle}',
-            // '[data-js-add-shared-widget]': 'classes: {disabled: not(validateForAddWidget)}, attr: {title: getAddBtnTitle}'
         },
 
-        computeds: {
-            // validateForAddWidget: {
-            //     deps: ['widgets'],
-            //     get: function(widgets) {
-            //         widgets = this.model.getWidgets();
-            //         return widgets.length < config.maxWidgetsOnDashboard;
-            //     }
-            // },
-            // getAddBtnTitle: {
-            //     deps: ['widgets'],
-            //     get: function(widgets){
-            //         widgets = this.model.getWidgets();
-            //         return widgets.length >= config.maxWidgetsOnDashboard ? Localization.dashboard.maxWidgetsAdded : '';
-            //     }
-            // }
-        },
-
-        initialize: function (options) {
+        initialize: function () {
+            var self = this;
             this.gadgetViews = [];
             this.scrollElement = config.mainScrollElement;
             this.onShowAsync = $.Deferred();
             this.render();
-            var self = this;
             if (this.model.get('notLoad')) {
                 this.$el.addClass('load');
                 this.model.update().done(function () {
@@ -104,7 +85,6 @@ define(function (require, exports, module) {
             this.listenTo(this.model, 'add:widget', this.onAddNewGadget);
             this.listenTo(this.model, 'change:isShared', this.onShareDashboard);
             this.updateGadgetsTimer(TIME_UPDATE);
-
         },
         render: function () {
             this.$el.html(Util.templates(this.template, { isMyDashboard: this.isMyDashboard() }));

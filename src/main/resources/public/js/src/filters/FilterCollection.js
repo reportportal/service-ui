@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var Backbone = require('backbone');
@@ -30,26 +30,26 @@ define(function(require, exports, module) {
 
     var FilterCollection = Backbone.Collection.extend({
         model: FilterModel,
-        initialize: function() {
+        initialize: function () {
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.defectTypeCollection = new SingletonDefectTypeCollection();
             this.listenTo(this, 'change:isLaunch', this.onChangeIsLaunch);
         },
-        onChangeIsLaunch: function(model, isLaunch) {
-            if(isLaunch) {
+        onChangeIsLaunch: function (model, isLaunch) {
+            if (isLaunch) {
                 model.collection = this.launchFilterCollection;
                 this.launchFilterCollection.add(model);
                 return;
             }
             this.launchFilterCollection.remove(model);
         },
-        parse: function(data) {
+        parse: function (data) {
             var self = this;
-            this.launchFilterCollection.ready.done(function() {
+            this.launchFilterCollection.ready.done(function () {
                 self.defectTypeCollection.ready.done(function () {
-                    self.reset(_.map(data, function(itemData) {
-                        var launchModelClone = self.launchFilterCollection.where({id: itemData.id})[0];
-                        if(launchModelClone) {
+                    self.reset(_.map(data, function (itemData) {
+                        var launchModelClone = self.launchFilterCollection.where({ id: itemData.id })[0];
+                        if (launchModelClone) {
                             return launchModelClone;
                         }
                         itemData.entities = JSON.stringify(itemData.entities);
@@ -58,7 +58,7 @@ define(function(require, exports, module) {
                     }));
                 });
             });
-        },
+        }
     });
 
     return FilterCollection;

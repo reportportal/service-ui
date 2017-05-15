@@ -40,7 +40,7 @@ define(function (require) {
             var doc = document.createElement('div');
             var self = this;
             if (text) {
-                html = this.simpleMDE.markdown(text.escapeHtml().indentSpases());
+                html = this.simpleMDE.markdown(text.escapeHtml().indentSpases().replace('_', '&#95;'));
                 doc.innerHTML = html;
                 $('img', doc).each(function () {
                     this.onload = function () {

@@ -21,7 +21,7 @@
 
 $step-name-cell-width: 37%;
 $step-time-cell-width: 12.5%;
-$step-status-cell-width: 8%;
+$step-status-cell-width: 9%;
 $step-select-cell-width: 2%;
 $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - $step-status-cell-width - $step-select-cell-width);
 .step-grid {
@@ -81,6 +81,12 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
             }
         }
     }
+  .step-status {
+    font-family: $OpenSansSemibold;
+    word-break: break-all;
+    width: 100%;
+    display: inline-block;
+  }
     .rp-step-parents-line {
         padding: 10px 0;
         background: $COLOR--white-four;

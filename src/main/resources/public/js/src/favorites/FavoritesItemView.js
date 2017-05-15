@@ -52,79 +52,78 @@ define(function (require, exports, module) {
             '[data-js-switch-to-launch-mobile]': 'checked: isLaunch',
             '[data-js-switch-to-launch-text]': 'text: isLaunchString',
             '[data-js-remove]': 'attr: {disabled: not(canRemove)}, classes: {disabled: not(canRemove)}',
-            '[data-js-filter-shared-icon]': 'classes: {disabled: notMyFilter}',
+            '[data-js-filter-shared-icon]': 'classes: {disabled: notMyFilter}'
         },
         computeds: {
             canRemove: {
                 deps: ['notMyFilter'],
-                get: function(notMyFilter) {
-                    return (config.userModel.get('isAdmin') ||
-                    config.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager ||
+                get: function (notMyFilter) {
+                    return (config.userModel.getRoleForCurrentProject() ===
+                    config.projectRolesEnum.project_manager ||
                     !notMyFilter);
                 }
             }
         },
-        initialize: function() {
+        initialize: function () {
             this.render();
             this.listenTo(this.model, 'change:isLaunch', this.onSwitchOnLaunches);
         },
         template: 'tpl-favorite-item',
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        onSwitchOnLaunches: function(){
+        onSwitchOnLaunches: function () {
             config.trackingDispatcher.trackEventNumber(243);
         },
-        onClickRemove: function() {
+        onClickRemove: function () {
             config.trackingDispatcher.trackEventNumber(244);
             var self = this;
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteFilter,
                 bodyText: Util.replaceTemplate(
-                    this.model.get('notMyFilter')?Localization.dialog.deleteFilterDanger:Localization.dialog.deleteFilter,
+                    this.model.get('notMyFilter') ? Localization.dialog.deleteFilterDanger : Localization.dialog.deleteFilter,
                     this.model.get('name').escapeHtml()),
-                confirmText: this.model.get('notMyFilter')?Localization.dialog.deleteFilterDangerConfirmText:'',
+                confirmText: this.model.get('notMyFilter') ? Localization.dialog.deleteFilterDangerConfirmText : '',
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
-                okButtonText: Localization.ui.delete,
+                okButtonText: Localization.ui.delete
             });
             modal.show()
-                .done(function() {
-                    self.destroy();
-                    return self.model.remove();
+                .done(function () {
+                    self.model.remove().always(function() {
+                        self.destroy();
+                        self.model.trigger('click:remove', self.model);
+                    });
                 });
-            modal.$el.on('click', function(e){
+            modal.$el.on('click', function (e) {
                 var $target = $(e.target),
                     isCancel = $target.is('[data-js-cancel]'),
                     isDelete = $target.is('[data-js-ok]'),
                     isClose = ($target.is('[data-js-close]') || $target.is('[data-js-close] i'));
-                if(isClose){
+                if (isClose) {
                     config.trackingDispatcher.trackEventNumber(252);
-                }
-                else if(isCancel){
+                } else if (isCancel) {
                     config.trackingDispatcher.trackEventNumber(253);
-                }
-                else if(isDelete){
+                } else if (isDelete) {
                     config.trackingDispatcher.trackEventNumber(254);
                 }
             });
         },
-        onClickShared: function(){
+        onClickShared: function () {
             config.trackingDispatcher.trackEventNumber(246);
             this.model.editMainInfo();
         },
-        onClickEdit: function() {
+        onClickEdit: function () {
             config.trackingDispatcher.trackEventNumber(245);
             this.model.editMainInfo();
         },
-        onClickName: function(e){
+        onClickName: function (e) {
             config.trackingDispatcher.trackEventNumber(242);
         },
-        onDestroy: function() {
+        onDestroy: function () {
             this.$el.remove();
         }
     });
 
-    return  FavoritesItemView;
-
+    return FavoritesItemView;
 });

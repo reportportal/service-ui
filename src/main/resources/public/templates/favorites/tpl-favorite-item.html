@@ -40,17 +40,21 @@
     </div>
     <div class="grid-cell display-launch-grid-cell switcher-block">
         <div class="text-center visible-md visible-lg">
-            <label class="rp-switcher">
-                <input type="checkbox" data-js-switch-to-launch>
-                <div class="slider"></div>
+            <label class="switcher-label">
+                <label class="rp-switcher">
+                    <input type="checkbox" data-js-switch-to-launch>
+                    <div class="slider"></div>
+                </label>
+                <span class="switcher-text" data-js-switch-to-launch-text></span>
             </label>
-            <span class="switcher-text" data-js-switch-to-launch-text></span>
         </div>
         <div class="visible-sm visible-xs">
-            <span class="description"><%- data.text.favorites.fDisplayOnLaunches %>: </span>
-            <label class="rp-switcher rp-switcher-sm">
-                <input type="checkbox" data-js-switch-to-launch-mobile>
-                <div class="slider"></div>
+            <label class="switcher-label">
+                <span class="description"><%- data.text.favorites.fDisplayOnLaunches %>: </span>
+                <label class="rp-switcher rp-switcher-sm">
+                    <input type="checkbox" data-js-switch-to-launch-mobile>
+                    <div class="slider"></div>
+                </label>
             </label>
         </div>
     </div>

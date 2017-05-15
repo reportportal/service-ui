@@ -1,31 +1,32 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var $ = require('jquery');
+    var _ = require('underscore');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
@@ -47,41 +48,43 @@ define(function (require, exports, module) {
             'keyup [data-js-filter-name]': 'debounceChange',
             'change [data-js-filter-name]': 'onChangeFilterName',
             'click [data-js-link-launch]': 'onClickLinkLaunch',
-            'click [data-js-add-filter]': 'onClickAddFilter',
+            'click [data-js-add-filter]': 'onClickAddFilter'
         },
         bindings: {
             '[data-js-filter-name]': 'attr: {disabled: empty}',
             '[data-js-empty-block]': 'classes: {hide: not(empty)}',
             '[data-js-filter-paginate]': 'classes: {hide: any(empty, notFound)}',
             '[data-js-not-found]': 'classes: {hide: not(notFound)}',
-            '[data-js-search-value]': 'text: search',
+            '[data-js-search-value]': 'text: search'
         },
-        initialize: function(options) {
+        initialize: function (options) {
             this.model = new Backbone.Model({
                 search: '',
                 empty: false,
-                notFound: false,
+                notFound: false
             });
             this.renderViews = [];
             this.collection = new FilterCollection();
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.listenTo(this.collection, 'reset', this.renderCollection);
-            this.listenTo(this.collection, 'remove', this.updateFilters);
+            this.listenTo(this.collection, 'click:remove', this.updateFilters);
+            // this.listenTo(this.launchFilterCollection, 'click:remove', this.updateFilters);
             this.context = options.context;
             this.$header = this.context.getMainView().$header;
             this.$el = this.context.getMainView().$body;
-            this.debounceChange = _.debounce(function() {
+            this.debounceChange = _.debounce(function () {
                 $('[data-js-filter-name]', this.$el).trigger('change');
-            }.bind(this), 800)
+            }.bind(this), 800);
         },
 
-        render: function() {
+        render: function () {
             var defectTypeCollection = new SingletonDefectTypeCollection();
             this.mainBreadcrumbs = new MainBreadcrumbsComponent({
-                data: [{name: Localization.favorites.title, link: ''}]
+                data: [{ name: Localization.favorites.title, link: '' }]
             });
             this.$header.html(this.mainBreadcrumbs.$el);
-            defectTypeCollection.ready.done(function() {
+            defectTypeCollection.ready.done(function () {
+                var self = this;
                 this.$el.html(Util.templates(this.template, {}));
                 this.$filterName = $('[data-js-filter-name]', this.$el);
                 this.$filterList = $('[data-js-filter-list]', this.$el);
@@ -99,11 +102,10 @@ define(function (require, exports, module) {
                 });
                 this.listenTo(this.paging, 'page', this.onPage);
                 this.listenTo(this.paging, 'count', this.onPageCount);
-                var self = this;
-                this.paging.ready.done(function(){
+                this.paging.ready.done(function () {
                     self.searchString = '';
-                    if(self.paging.urlModel.get('filter.cnt.name')) {
-                        self.model.set({search: self.paging.urlModel.get('filter.cnt.name')});
+                    if (self.paging.urlModel.get('filter.cnt.name')) {
+                        self.model.set({ search: self.paging.urlModel.get('filter.cnt.name') });
                         self.$filterName.val(self.model.get('search'));
                     }
                     self.listenTo(self.model, 'change:search', self.onChangeModelSearch);
@@ -113,30 +115,31 @@ define(function (require, exports, module) {
             }.bind(this));
             return this;
         },
-        onChangeModelSearch: function() {
+        onChangeModelSearch: function () {
             this.paging.trigger('page', 1);
         },
-        onChangeFilterName: function (e, data) {
+        onChangeFilterName: function () {
+            var name;
             if (!$('[data-js-filter-name]', this.$el).data('validate-error')) {
-                var name = $('[data-js-filter-name]', this.$el).val();
+                name = $('[data-js-filter-name]', this.$el).val();
                 config.trackingDispatcher.trackEventNumber(240);
-                this.paging.urlModel.set({'filter.cnt.name': name});
-                this.model.set({search: name});
+                this.paging.urlModel.set({ 'filter.cnt.name': name });
+                this.model.set({ search: name });
                 this.searchString = name;
             }
         },
-        onPage: function(page) {
+        onPage: function () {
             this.changeFilters();
         },
-        onPageCount: function(size) {
+        onPageCount: function () {
             this.changeFilters();
         },
-        changeFilters: function() {
+        changeFilters: function () {
             // this.paging.render();
             this.updateFilters();
         },
-        updateFilters: function() {
-            $('#filter-page',this.$el).addClass('load');
+        updateFilters: function () {
+            $('#filter-page', this.$el).addClass('load');
             this.collection.reset([]);
             this.paging.$el.html('');
             CoreService.saveFilter(this.getQueryString({
@@ -144,18 +147,18 @@ define(function (require, exports, module) {
                 page: this.paging.model.get('number'),
                 size: this.paging.model.get('size')
             }))
-                .always(function() {
-                    $('#filter-page',this.$el).removeClass('load');
+                .always(function () {
+                    $('#filter-page', this.$el).removeClass('load');
                 }.bind(this))
-                .done(function(data) {
+                .done(function (data) {
                     this.paging.model.set(data.page);
                     this.paging.render();
-                    if(data.content.length) {
-                        this.model.set({empty: false, notFound: false});
-                    } else if(!this.model.get('search')) {
-                        this.model.set({empty: true, notFound: false});
+                    if (data.content.length) {
+                        this.model.set({ empty: false, notFound: false });
+                    } else if (!this.model.get('search')) {
+                        this.model.set({ empty: true, notFound: false });
                     } else {
-                        this.model.set({empty: false, notFound: true});
+                        this.model.set({ empty: false, notFound: true });
                     }
                     this.collection.parse(data.content);
                 }.bind(this));
@@ -165,54 +168,57 @@ define(function (require, exports, module) {
             this.updateFilters();
         },
 
-        getQueryString: function(query){
-            if(!query) query = {};
-            if(!query.page) query.page = 1;
-            if(!query.size) query.size = 10;
-            var url = '?page.sort=name&page.page=' + query.page + '&page.size=' + query.size;
-            if(query.search) {
+        getQueryString: function (q) {
+            var query = q;
+            var url;
+            if (!query) query = {};
+            if (!query.page) query.page = 1;
+            if (!query.size) query.size = 10;
+            url = '?page.sort=name&page.page=' + query.page + '&page.size=' + query.size;
+            if (query.search) {
                 url += '&filter.cnt.name=' + query.search;
             }
             return url;
         },
-        renderCollection: function() {
+        renderCollection: function () {
             this.$filterList.html('');
-            _.each(this.renderViews, function(view) {
+            _.each(this.renderViews, function (view) {
                 view.destroy();
             });
             this.renderViews = [];
-            _.each(this.collection.models, function(model) {
-                var filterItem = new FavoritesItem({model: model, collection: this.collection});
+            _.each(this.collection.models, function (model) {
+                var filterItem = new FavoritesItem({ model: model, collection: this.collection });
                 this.$filterList.append(filterItem.$el);
                 this.renderViews.push(filterItem);
             }, this);
         },
-        onClickLinkLaunch: function(e) {
+        onClickLinkLaunch: function (e) {
+            var launchPath;
             e.preventDefault();
-            var launchPath = appModel.get('projectId') + '/launches/all';
-            config.router.navigate(launchPath, {trigger: true});
+            launchPath = appModel.get('projectId') + '/launches/all';
+            config.router.navigate(launchPath, { trigger: true });
         },
-        onClickAddFilter: function(e) {
+        onClickAddFilter: function (e) {
             var $target = $(e.currentTarget);
-            if($target.closest('[data-js-empty-block]').length){
+            var newFilter;
+            if ($target.closest('[data-js-empty-block]').length) {
                 config.trackingDispatcher.trackEventNumber(255);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(241);
             }
-            var newFilter = this.launchFilterCollection.generateTempModel();
-            config.router.navigate(newFilter.get('url'), {trigger: true});
+            newFilter = this.launchFilterCollection.generateTempModel();
+            config.router.navigate(newFilter.get('url'), { trigger: true });
         },
-        onDestroy: function() {
+        onDestroy: function () {
             this.$header.empty();
             this.mainBreadcrumbs && this.mainBreadcrumbs.destroy();
-            _.each(this.renderViews, function(view) {
+            _.each(this.renderViews, function (view) {
                 view.destroy();
             });
-        },
+        }
     });
 
     return {
-        ContentView: FavoritesPage,
-    }
+        ContentView: FavoritesPage
+    };
 });
