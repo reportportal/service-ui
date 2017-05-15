@@ -8,7 +8,7 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 
 
 ADD xvfb.sh /etc/init.d/xvfb
-ADD entrypoint.sh /entrypoint.sh
+ADD node-chrome-entrypoint.sh /entrypoint.sh
 
 ENV DISPLAY :99.0
 ENV CHROME_BIN /usr/bin/google-chrome
