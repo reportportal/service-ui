@@ -39,24 +39,7 @@
             <label class="rp-control-label">
                 <%= data.text.bts.authorizationType %>
             </label>
-            <div class="rp-btn-group bts-property input-group">
-                <button id="systemAuth"
-                <%= notAllowed %> data-toggle="dropdown" class="rp-btn rp-btn-with-dropdown rp-width-100
-                dropdown-toggle">
-                <span class="select-value">
-                            <%= data.text.ui[data.systemAuth] %>
-                        </span>
-                <span class="rp-caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <% _.each(data.authorizationTypes, function(type) { %>
-                    <% var isActive = type.value === data.systemAuth ? 'active' : ''; %>
-                    <li id="<%= type.value %>" class="<%= isActive %>">
-                        <a href="#" class="auth-type"><%= type.name %></a>
-                    </li>
-                    <% }) %>
-                </ul>
-            </div>
+            <div class="bts-property" data-js-auth-type-selector></div>
         </div>
         <div id="authorizationType" class="credentials clearfix"></div>
     </div>

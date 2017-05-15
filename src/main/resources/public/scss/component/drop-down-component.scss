@@ -36,6 +36,7 @@
         &.selected {
           background-color: $COLOR--gray-91;
           cursor: default;
+          color: $COLOR--charcoal-grey;
         }
         &.not-active {
           color: $COLOR--gray-60;
