@@ -214,7 +214,8 @@ define(function (require) {
                 confirmFunction: function () {
                     config.trackingDispatcher.trackEventNumber(456);
                     return this.model.delete();
-                }.bind(this)
+                }.bind(this),
+                safeRemoval: true
             });
             $('[data-js-close]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(456);

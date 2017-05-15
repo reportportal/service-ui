@@ -132,7 +132,7 @@ define(function (require) {
         onLoadDataError: function (error) {
             var message = Localization.widgets.unableLoadData;
             var owner;
-            var isShared
+            var isShared;
             if (error && error.status === 404) {
                 message = Localization.widgets.widgetNotFound;
             } else {
@@ -161,7 +161,8 @@ define(function (require) {
                 confirmText: !dangerRemove ? '' : Localization.dialog.deletedWidgetDangerConfirmText,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
-                okButtonText: Localization.ui.delete
+                okButtonText: Localization.ui.delete,
+                safeRemoval: !(!this.model.get('isMy') && !this.model.get('isMyDashboard'))
             });
             modal.show().done(function () {
                 self.model.trigger('remove:view', self); // for gridstack
@@ -171,7 +172,7 @@ define(function (require) {
             $('[data-js-close]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(339);
             });
-            $('[data-js-cancel]', modal.$el).on('click', function (e) {
+            $('[data-js-cancel]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(340);
             });
             $('[data-js-ok]', modal.$el).on('click', function () {

@@ -39,6 +39,8 @@ define(function (require) {
         var itemName;
         var modal;
         var confirmText = '';
+        var safe = true;
+        var quantity;
 
         if (items[0].get('type') !== 'LAUNCH') {
             typeItems = (items.length > 1) ? Localization.ui.items : Localization.ui.item;
@@ -54,13 +56,14 @@ define(function (require) {
             if ((itemType === 'LAUNCH' && itemOwner !== loginUser) || (itemParentOwner && itemParentOwner !== loginUser)) {
                 confirmText = Util.replaceTemplate(Localization.launches.deleteWarningAgree,
                     typeItems);
+                safe = false;
             }
         });
         itemName = (items.length > 1) ? typeItems : typeItems + ' \'' + items[0].get('name').bold() + itemNumber + '\'';
-
+        quantity = (items.length > 1) ? 'them' : 'it';
         modal = new ModalConfirm({
             headerText: Localization.ui.delete + ' ' + typeItems,
-            bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, typeItems, itemName),
+            bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, itemName, quantity),
             confirmText: confirmText,
             cancelButtonText: Localization.ui.cancel,
             okButtonText: Localization.ui.delete,
@@ -88,7 +91,8 @@ define(function (require) {
                 }).fail(function (err) {
                     Util.ajaxFailMessenger(err, message);
                 });
-            }
+            },
+            safeRemoval: safe
         });
         modal.$el.on('click', function (e) {
             var $target = $(e.target);
