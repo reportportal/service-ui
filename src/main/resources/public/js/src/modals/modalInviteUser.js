@@ -29,6 +29,7 @@ define(function (require) {
     var Localization = require('localization');
     var Urls = require('dataUrlResolver');
     var UserSearchComponent = require('components/UserSearchComponent');
+    var DropDownComponent = require('components/DropDownComponent');
 
     require('validate');
 
@@ -40,7 +41,6 @@ define(function (require) {
         events: {
             'click [data-js-load]': 'onClickInvite',
             'click [data-js-ok]': 'onClickOk',
-            'click [data-js-select-role-dropdown] a': 'selectRole',
             'focus [data-js-invite-link]': 'selectLink',
             'click [data-js-copy-link]': 'copyLink',
             'click [data-js-close]': 'onClickClose',
@@ -48,8 +48,7 @@ define(function (require) {
         },
         bindings: {
             '[data-js-user]': 'value: user',
-            '[data-js-user-project]': 'value: default_project',
-            '[data-js-user-project-role-text]': 'text: getProjectRole'
+            '[data-js-user-project]': 'value: default_project'
         },
         computeds: {
             getProjectRole: {
@@ -91,11 +90,21 @@ define(function (require) {
             this.successClose();
         },
         render: function () {
+            var self = this;
+            var projectRoleSelector;
             this.$el.html(Util.templates(this.template, {
-                roles: Util.getRolesMap(),
-                canSelectRole: this.canSelectRole.bind(this),
                 isUsers: this.isUsers()
             }));
+            projectRoleSelector = new DropDownComponent({
+                data: _.map(Util.getRolesMap(), function (key, val) {
+                    return { name: key, value: val, disabled: !self.canSelectRole.bind(self)(key) };
+                }),
+                multiple: false,
+                defaultValue: this.model.get('projectRole')
+            });
+            $('[data-js-role-selector]', this.$el).html(projectRoleSelector.$el);
+            $('[data-js-dropdown]', this.$el).attr('id', 'projectRole').addClass('rp-btn-group');
+            this.listenTo(projectRoleSelector, 'change', this.selectRole);
             this.setupAnchors();
             this.setupValidation();
             this.setupUserSearch();
@@ -203,12 +212,8 @@ define(function (require) {
                     && this.$selectProject.valid();
             }.bind(this));
         },
-        selectRole: function (e) {
-            var link = $(e.target);
-            var val = (link.data('value')) ? link.data('value') : link.text();
-            e.preventDefault();
-            if (link.hasClass('disabled-option')) { return; }
-            this.model.set('projectRole', val);
+        selectRole: function (value) {
+            this.model.set('projectRole', value);
         },
         setupProjectSearch: function () {
             var self = this;
@@ -254,7 +259,9 @@ define(function (require) {
             this.$inviteLink.select();
             try {
                 document.execCommand('copy');
-            } catch (e) {}
+            } catch (error) {
+                console.log(error);
+            }
         },
         getUserData: function () {
             var user = this.model.toJSON();
@@ -316,8 +323,13 @@ define(function (require) {
                                 error = JSON.parse(responce.responseText);
                             } catch (e) {}
                         }
-                        // if(error && (error.error_code == 40305 || error.message.indexOf(messages.serverNotConfigured) >=0)){
-                        //     Util.ajaxFailMessenger(null, 'inviteMember', messages.impossibleInvite);
+                        // if(error && (error.error_code == 40305
+                        // || error.message.indexOf(messages.serverNotConfigured) >=0)){
+                        //     Util.ajaxFailMessenger(
+                        //          null,
+                        //          'inviteMember',
+                        //          messages.impossibleInvite
+                        //     );
                         // }
                         // else {
                         // use server message
