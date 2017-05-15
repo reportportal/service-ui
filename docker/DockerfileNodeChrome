@@ -1,6 +1,6 @@
 FROM node:alpine
 
-RUN apk add --no-cache chromium
+RUN apk add --no-cache chromium alpine-sdk
 
 ENV CHROME_BIN=/usr/bin/chromium-browser
 
