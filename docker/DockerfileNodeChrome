@@ -7,6 +7,11 @@ RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key
 	sed -i 's/"$HERE\/chrome"/xvfb-run "$HERE\/chrome" --no-sandbox/g' /opt/google/chrome/google-chrome
 
 
+ADD xvfb.sh /etc/init.d/xvfb
+ADD entrypoint.sh /entrypoint.sh
 
-ENV CHROME_BIN=/opt/google/chrome/google-chrome
+ENV DISPLAY :99.0
+ENV CHROME_BIN /usr/bin/google-chrome
+
+ENTRYPOINT ["/entrypoint.sh"]
 
