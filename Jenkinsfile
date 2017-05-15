@@ -15,7 +15,8 @@ node {
             stage('Build') {
 
             parallel 'Build UI': {
-             docker.image('node:onbuild').inside('-u root') {
+             sh 'docker build -t node-onbuild-chromium -f ./docker/DockerfileNodeChrome ./docker/
+             docker.image('node-onbuild-chromium') {
                                sh 'make build-statics'
              }
 
