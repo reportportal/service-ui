@@ -29,7 +29,7 @@ define(function (require, exports, module) {
     var Util = require('util');
     var Service = require('coreService');
     var SingletonAppModel = require('model/SingletonAppModel');
-
+    var DropDownComponent = require('components/DropDownComponent');
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
 
@@ -120,7 +120,7 @@ define(function (require, exports, module) {
         className: 'modal-load-bug',
 
         events: {
-            'click [data-bts-select-item]': 'onClickBts',
+            //'click [data-bts-select-item]': 'onClickBts',
             'click [data-js-add-ticket]': 'onClickAddTicket',
             'click [data-js-load]': 'onClickLoad',
             'click [data-js-close]': 'onClickClose',
@@ -238,9 +238,8 @@ define(function (require, exports, module) {
         onAddTicket: function(model) {
             $('[data-js-load-items-container]', this.$el).append((new TicketView({model: model})).$el);
         },
-        onClickBts: function(e) {
-            e.preventDefault();
-            this.selectBts($(e.currentTarget).data('bts-select-item'));
+        onClickBts: function(value) {
+            this.selectBts(value);
         },
         selectBts: function(id) {
             var currentBts = null;
@@ -254,11 +253,19 @@ define(function (require, exports, module) {
                 return;
             }
             this.currentBts = currentBts;
-            $('[data-js-bts-value]', this.$el).text(currentBts.project);
             $('[data-js-bts-link]', this.$el).text(currentBts.url);
         },
         render: function() {
-            this.$el.html(Util.templates(this.template, {externalSystems: this.externalSystems}))
+            this.$el.html(Util.templates(this.template, {externalSystems: this.externalSystems}));
+            var btsSelector = new DropDownComponent({
+                data: _.map(this.externalSystems, function (val) {
+                    return { name: val.project, value: val.id, disabled: false };
+                }),
+                multiple: false,
+                defaultValue: this.externalSystems[0].id
+            });
+            $('[data-js-bts-selector]', this.$el).html(btsSelector.$el);
+            this.listenTo(btsSelector, 'change', this.onClickBts);
         }
     });
 
