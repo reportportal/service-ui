@@ -24,23 +24,7 @@
                             </select>
                         <% } else { %>
                         <% var value = field.value ? field.value[0] : (field.definedValues[0].valueName || ''); %>
-                        <div class="rp-btn-group rp-width-100">
-                            <button <%= notAllowed %> id="<%- field.id %>"
-                                data-id="<%- field.id.replaceAll('.', '') %>"
-                                data-toggle="dropdown" data-name="<%= field.fieldName %>"
-                                data-type="<%= field.fieldType %>"
-                                class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle default-value <%= field.required ? 'required-value' : '' %>" <%= isDisabled %>>
-                                    <span class="select-value dynamic-fields"><%- value %></span>
-                                    <span class="rp-caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <% _.forEach(field.definedValues, function(type) { %>
-                                    <li id="<%= type.valueId %>" class="<%= type.valueName === value ? 'active' : '' %>">
-                                        <a href="#" class="option-selector"><%= type.valueName %></a>
-                                    </li>
-                                <% }) %>
-                            </ul>
-                        </div>
+                        <div data-js-field-with-dropdown="<%- field.id %>"></div>
                         <% } %>
                     <% } %>
                 <% }else{ %>

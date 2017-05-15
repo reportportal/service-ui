@@ -30,8 +30,7 @@ define(function (require) {
     var Helpers = require('helpers');
     var Storage = require('storageService');
     var Service = require('coreService');
-
-
+    var DropDownComponent = require('components/DropDownComponent');
     var config = App.getInstance();
 
     var ModalPostBug = ModalView.extend({
@@ -42,7 +41,6 @@ define(function (require) {
         className: 'modal-post-bug',
 
         events: {
-            'click .option-selector': 'handleDropDown',
             'click .auth-type': 'handleDropDown',
             'click [data-js-post]': 'submit',
             'keyup .required-value': 'clearRequiredError',
@@ -65,10 +63,6 @@ define(function (require) {
             this.systemAuth = this.systems[0].systemAuth;
             this.setUserBts();
             this.render();
-        },
-
-        handleDropDown: function (e) {
-            Util.dropDownHandler(e);
         },
 
         render: function () {
@@ -157,12 +151,39 @@ define(function (require) {
                 access: true,
                 popup: true
             }));
+            this.setupFieldsDropdowns(this.user.bts.current.fields);
             if (this.user.bts.current.fields) {
                 Helpers.applyTypeForBtsFields(this.user.bts.current.fields, this.$dynamicContent);
                 this.$actionBtn.prop('disabled', false);
             } else {
                 this.$actionBtn.prop('disabled', true);
             }
+        },
+
+        setupFieldsDropdowns: function (fields) {
+            $('[data-js-field-with-dropdown]', this.$el).each(function (i, elem) {
+                var field = _.find(fields, function (item) {
+                    return $(elem).attr('data-js-field-with-dropdown') === item.id;
+                });
+                var fieldWithDropdown = new DropDownComponent({
+                    data: _.map(field.definedValues, function (val) {
+                        return { name: val.valueName, value: val.valueName, disabled: false };
+                    }),
+                    multiple: false,
+                    defaultValue: (field.value) ? _.find(field.definedValues, function (item) {
+                        return field.value[0] === item.valueName;
+                    }).valueName : (field.definedValues[0].valueName || '')
+                });
+                $(this).html(fieldWithDropdown.$el);
+                $('[data-js-dropdown]', $(this)).attr('id', $(this).attr('data-js-field-with-dropdown')).addClass('default-value');
+                if (!config.userModel.hasPermissions()
+                    || (config.forSettings.btsJIRA.disabledForEdit.indexOf(field.id) !== -1)) {
+                    $('[data-js-dropdown]', $(this)).attr('disabled', 'disabled');
+                }
+                if (field.required) {
+                    $('[data-js-dropdown]', $(this)).addClass('required-value');
+                }
+            });
         },
 
         renderCredentials: function () {
