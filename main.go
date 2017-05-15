@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/gorilla/handlers"
+	"github.com/reportportal/commons-go/commons"
 	"github.com/reportportal/commons-go/conf"
 	"github.com/reportportal/commons-go/server"
-	"github.com/reportportal/commons-go/commons"
 	"goji.io"
 	"goji.io/pat"
 	"log"
@@ -31,9 +31,6 @@ func main() {
 	srv := server.New(rpConf, info)
 	srv.AddRoute(func(router *goji.Mux) {
 		router.Use(func(next http.Handler) http.Handler {
-			return handlers.LoggingHandler(os.Stdout, next)
-		})
-		router.Use(func(next http.Handler) http.Handler {
 			return handlers.CompressHandler(next)
 		})
 
@@ -42,6 +39,10 @@ func main() {
 		if nil != err {
 			log.Fatalf("Dir %s not found", dir)
 		}
+
+		router.Use(func(next http.Handler) http.Handler {
+			return handlers.LoggingHandler(os.Stdout, next)
+		})
 
 		router.Use(func(next http.Handler) http.Handler {
 			return handlers.LoggingHandler(os.Stdout, next)
@@ -56,7 +57,7 @@ func main() {
 				w.Header().Add("Cache-Control", "no-cache")
 			}
 
-			http.FileServer(http.Dir(dir)).ServeHTTP(w, r)
+			http.FileServer(http.Dir(dir)).ServeHTTP(&redirectingRW{ResponseWriter: w, Request: r}, r)
 		}))
 
 	})
@@ -71,4 +72,31 @@ func trimQuery(s string, sep string) string {
 		return s[:sepIndex]
 	}
 	return s
+}
+
+type redirectingRW struct {
+	*http.Request
+	http.ResponseWriter
+	ignore bool
+}
+
+func (hrw *redirectingRW) Header() http.Header {
+	return hrw.ResponseWriter.Header()
+}
+
+func (hrw *redirectingRW) WriteHeader(status int) {
+	if status == 404 {
+		hrw.ignore = true
+		http.Redirect(hrw.ResponseWriter, hrw.Request, "/ui/404.html", http.StatusTemporaryRedirect)
+	} else {
+		hrw.ResponseWriter.WriteHeader(status)
+	}
+
+}
+
+func (hrw *redirectingRW) Write(p []byte) (int, error) {
+	if hrw.ignore {
+		return len(p), nil
+	}
+	return hrw.ResponseWriter.Write(p)
 }
