@@ -39,6 +39,9 @@
       background-size: 100%;
       background-image: url(../../img/login/login-tablet.svg);
     }
+    @media (max-width: $SCREEN_SM_MAX) {
+      overflow: hidden;
+    }
   }
   @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
     width: 768px;
@@ -72,7 +75,10 @@
       background-image: none;
     }
     @media (max-width: $SCREEN_XS_MAX) {
-      display: none;
+      visibility: hidden;
+      position: absolute;
+      left: 0;
+      top: -2000px;
     }
 
     .logo-label {
