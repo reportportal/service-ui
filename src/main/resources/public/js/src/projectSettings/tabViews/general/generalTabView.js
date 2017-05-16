@@ -47,6 +47,7 @@ define(function (require) {
 
         initialize: function () {
             this.model = new ProjectSettings(config.project.configuration);
+            this.dropdownComponents = [];
             this.listenTo(this.model, 'change:interruptedJob', function () {
                 config.trackingDispatcher.trackEventNumber(381);
             });
@@ -112,6 +113,12 @@ define(function (require) {
             if (!config.userModel.hasPermissions()) {
                 $('[data-js-selector] [data-js-dropdown]', this.$el).attr('disabled', 'disabled');
             }
+            this.dropdownComponents.push(
+                interruptedJob,
+                keepLogs,
+                keepScreenshots,
+                isAutoAnalyzerEnabled
+            );
         },
         selectProp: function (value, event) {
             var val = value;
@@ -156,6 +163,9 @@ define(function (require) {
         },
 
         onDestroy: function () {
+            _.each(this.dropdownComponents, function (item) {
+                item.destroy();
+            });
             $('body > #select2-drop-mask, body > .select2-sizer').remove();
         }
     });

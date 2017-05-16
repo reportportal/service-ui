@@ -44,6 +44,7 @@ define(function (require) {
             this.editable = options.editable;
             this.fields = options.fields;
             this.disabled = config.forSettings.btsJIRA.disabledForEdit;
+            this.dropdownComponents = [];
         },
 
         render: function () {
@@ -65,6 +66,7 @@ define(function (require) {
         },
 
         setupDropdowns: function (fields) {
+            var self = this;
             $('[data-js-field-with-dropdown]', this.$el).each(function (i, elem) {
                 var field = _.find(fields, function (item) {
                     return $(elem).attr('data-js-field-with-dropdown') === item.id;
@@ -87,6 +89,7 @@ define(function (require) {
                 if (field.required) {
                     $('[data-js-dropdown]', $(this)).addClass('required-value');
                 }
+                self.dropdownComponents.push(fieldWithDropdown);
             });
         },
 
@@ -136,6 +139,11 @@ define(function (require) {
             });
 
             return result;
+        },
+        onDestroy: function () {
+            _.each(this.dropdownComponents, function (item) {
+                item.destroy();
+            });
         }
     });
 

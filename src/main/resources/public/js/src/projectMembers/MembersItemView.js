@@ -262,10 +262,8 @@ define(function (require) {
             e.preventDefault();
             $el.closest('[data-js-members-table]').toggleClass('show-from-now');
         },
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
+            this.roleSelector.destroy();
             this.remove();
             delete this;
         }
