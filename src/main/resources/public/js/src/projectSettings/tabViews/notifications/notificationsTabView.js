@@ -30,6 +30,7 @@ define(function (require) {
     var Service = require('coreService');
     var _ = require('underscore');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var DropDownComponent = require('components/DropDownComponent');
 
     var config = App.getInstance();
 
@@ -47,7 +48,6 @@ define(function (require) {
 
         events: {
             'click #submit-notifications': 'submitNotifications',
-            'click .dropdown-menu a': 'selectProp',
             'click .launchOwner': 'selectOwner',
             'click #add-notification-rule': 'addRule',
             'click .remove-email-item': 'removeRule',
@@ -56,6 +56,7 @@ define(function (require) {
 
         initialize: function () {
             this.appModel = new SingletonAppModel();
+            this.dropdownComponents = [];
             this.updateIds();
             this.model = new NotificationsSettings(this.appModel.get('configuration').emailConfiguration);
             this.users = [];
@@ -80,12 +81,25 @@ define(function (require) {
 
         render: function () {
             var params = _.merge(this.model.toJSON(), {
-                edit: config.project && config.project.projectId,
-                currentProject: config.project.projectId,
                 access: config.userModel.hasPermissions(),
-                settings: config.forSettings
             });
             this.$el.html(Util.templates(this.tpl, params));
+            var emailNotificationsSwitcher = new DropDownComponent({
+                data: [
+                    { name: 'ON', value: 'ON' },
+                    { name: 'OFF', value: 'OFF' }
+                ],
+                multiple: false,
+                defaultValue: this.model.get('emailEnabled') ? Localization.ui.on : Localization.ui.off
+            });
+            this.dropdownComponents.push(emailNotificationsSwitcher);
+            $('[data-js-email-notifications-switcher]', this.$el).html(emailNotificationsSwitcher.$el);
+            $('[data-js-email-notifications-switcher] [data-js-dropdown]', this.$el).attr('id', 'emailEnabled');
+            if (!config.userModel.hasPermissions()) {
+                $('[data-js-email-notifications-switcher] [data-js-dropdown]', this.$el).attr('disabled', 'disabled');
+            }
+            this.listenTo(emailNotificationsSwitcher, 'change', this.selectProp);
+
             this.$notificationArray = $('#notificationArray', this.$el);
             this.$notificationArray.html(Util.templates(this.tplItem, params));
             this.$emailBlock = $('#emailNotificationsSettings', this.$el);
@@ -93,9 +107,9 @@ define(function (require) {
             if (this.model.get('emailEnabled')) {
                 this.$emailBlock.show();
             }
-
             return this;
         },
+      
         onShow: function () {
             this.renderEmailCases();
             this.validateRecipients();
@@ -129,6 +143,19 @@ define(function (require) {
         renderEmailCases: function () {
             var self = this;
             $('.email-case-item', this.$el).each(function (index) {
+                var casesDropdown = new DropDownComponent({
+                    data: _.map(config.forSettings.emailInCase, function (val) {
+                        return { name: val.name, value: val.value, disabled: false };
+                    }),
+                    multiple: false,
+                    defaultValue: self.model.get('emailCases')[index].sendCase
+                });
+                $('[data-js-case-dropdown]', $(this)).html(casesDropdown.$el);
+                if (!config.userModel.hasPermissions()) {
+                    $('[data-js-dropdown]', $(this)).attr('disabled', 'disabled');
+                }
+                self.listenTo(casesDropdown, 'change', self.selectProp);
+
                 if (Util.isCustomer() && !Util.isAdmin()) {
                     self.setupDisabledRecipients(index);
                 } else {
@@ -138,6 +165,7 @@ define(function (require) {
                     self.filterLaunches(index);
                     self.filterTags(index);
                 }
+                self.dropdownComponents.push(casesDropdown);
             });
             self.initValidators();
             self.updateRules();
@@ -167,10 +195,7 @@ define(function (require) {
             var newCase;
             var index;
             var params = _.merge(this.model.toJSON(), {
-                edit: config.project && config.project.projectId,
-                currentProject: config.project.projectId,
                 access: config.userModel.hasPermissions(),
-                settings: config.forSettings
             });
 
             params.addRule = true;
@@ -189,6 +214,20 @@ define(function (require) {
             this.model.set('emailCases', cases);
             this.$notificationArray.append(Util.templates(this.tplItem, params));
 
+            var casesDropdown = new DropDownComponent({
+                data: _.map(config.forSettings.emailInCase, function (val) {
+                    return { name: val.name, value: val.value, disabled: false };
+                }),
+                multiple: false,
+                defaultValue: config.forSettings.emailInCase[0].value
+            });
+
+            $('[data-email-case-id="' + this.emailCaseId + '"] [data-js-case-dropdown]', this.$el).html(casesDropdown.$el);
+            if (!config.userModel.hasPermissions()) {
+                $(' [data-email-case-id="' + this.emailCaseId + '"] [data-js-case-dropdown] [data-js-dropdown]', this.$el).attr('disabled', 'disabled');
+            }
+            this.listenTo(casesDropdown, 'change', this.selectProp);
+            this.dropdownComponents.push(casesDropdown);
             self.updateRules();
             self.emailCaseId += 1;
 
@@ -882,16 +921,14 @@ define(function (require) {
             this.checkCases();
         },
 
-        selectProp: function (e) {
+        selectProp: function (value, event) {
             var self = this;
             var blockAction;
             var emailCase;
-            var link = $(e.target);
-            var btn = link.closest('.open').find('.dropdown-toggle');
-            var val = (link.data('value')) ? link.data('value') : link.text();
-            var id = btn.attr('id');
-            e.preventDefault();
-
+            var val = value;
+            var caseBtn = $(event.target).closest('[data-js-case-dropdown]').find('[data-js-dropdown]');
+            var mainBtn = $(event.target).closest('[data-js-email-notifications-switcher]').find('[data-js-dropdown]');
+            var id = mainBtn.attr('id');
             if (id === 'emailEnabled') {
                 val = (val === 'ON');
                 blockAction = val ? 'show' : 'hide';
@@ -918,7 +955,7 @@ define(function (require) {
                 this.updateRules();
             } else {
                 emailCase = _.findWhere(this.model.get('emailCases'), {
-                    id: btn.closest('.email-case-item').data('email-case-id')
+                    id: caseBtn.closest('.email-case-item').data('email-case-id')
                 });
                 if (emailCase) {
                     config.trackingDispatcher.trackEventNumber(392);
@@ -926,7 +963,6 @@ define(function (require) {
                 }
                 this.checkCases();
             }
-            $('.select-value', btn).text(link.text());
         },
 
         setEmailToDefault: function () {
@@ -1070,6 +1106,9 @@ define(function (require) {
         },
 
         onDestroy: function () {
+            _.each(this.dropdownComponents, function (item) {
+                item.destroy();
+            });
             this.$recipients = $('input.recipients', this.$el);
             this.$launchContainer = $('input.launchNames', this.$el);
             this.$tagsContainer = $('input.tags', this.$el);

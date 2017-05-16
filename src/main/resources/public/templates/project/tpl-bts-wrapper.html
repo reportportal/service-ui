@@ -4,23 +4,7 @@
         <label class="rp-control-label">
             <%= data.text.project.bts %>
         </label>
-        <div class="rp-btn-group">
-            <button type="button"
-                    class="rp-btn rp-btn-with-dropdown dropdown-toggle"
-                    data-toggle="dropdown"
-            <%= notAllowed %>
-            id="systemType">
-            <span class="select-value"><%= data.systemType %></span>
-            <span class="rp-caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <% _.forEach(data.settings.btsList, function(item) {%>
-                <li>
-                    <a href="#" class="bts-option"><%= item.name %></a>
-                </li>
-                <% }) %>
-            </ul>
-        </div>
+        <div class="rp-btn-group" data-js-bts-switcher></div>
         <span class="no-bts-found hide" data-js-no-bts-message><%- data.text.bts.btsNotFound %></span>
     </div>
     <div class="rp-form-group tbs-change-warning-block">

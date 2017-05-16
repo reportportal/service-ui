@@ -23,27 +23,10 @@
     </div>
 </div>
 <div class="grid-cell role-grid-cell">
-    <div class="member-select-role" data-js-select-roles>
-        <button data-value="" type="button"
-                class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
-                data-toggle="dropdown" data-js-button-roles>
-            <span class="select-value" data-js-selected-role></span>
-            <span class="rp-caret"></span>
-        </button>
-        <ul class="dropdown-menu" data-js-dropdown-roles>
-            <% _.forEach(data.roles, function(val, key){ %>
-            <li class="">
-                <a href="#" class="project-roles"
-                   data-value="<%= key %>">
-                    <%= val %>
-                </a>
-            </li>
-            <% }); %>
-        </ul>
-        <div class="member-role-mobile">
-            <div class="member-title-mobile"><%= data.text.project.projectRole %>:</div>
-            <span data-js-member-role-mobile></span>
-        </div>
+    <div class="member-select-role" data-js-select-roles></div>
+    <div class="member-role-mobile">
+        <div class="member-title-mobile"><%= data.text.project.projectRole %>:</div>
+        <span data-js-member-role-mobile></span>
     </div>
     <div data-js-admin-role class="admin-role">
         <%= data.text.admin.privileges %>

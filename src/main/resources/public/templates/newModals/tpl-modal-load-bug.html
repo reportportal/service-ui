@@ -6,19 +6,7 @@
         <% if(data.externalSystems.length > 1) { %>
         <label class="bts-label">
             <span><%= data.text.forms.projectNameIn %></span>
-            <button class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                <span class="select-value" data-js-bts-value></span>
-                <span class="rp-caret"></span>
-            </button>
-            <ul class="dropdown-menu rp-width-100">
-                <% for(var i = 0; i < data.externalSystems.length; i++) { %>
-                <li>
-                    <a href="" data-bts-select-item="<%= data.externalSystems[i].id %>">
-                        <span class="text-ellipsis"><%= data.externalSystems[i].project %></span>
-                    </a>
-                </li>
-                <% } %>
-            </ul>
+            <div data-js-bts-selector class="bts-selector"></div>
         </label>
         <span class="bts-description"><%= data.text.forms.bugWillBeLoaded %> <span data-js-bts-link></span></span>
         <% } %>

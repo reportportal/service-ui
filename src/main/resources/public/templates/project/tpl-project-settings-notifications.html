@@ -4,17 +4,7 @@
         <%= data.text.project.emailNotifications %>
     </label>
     <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-        <div class="rp-btn-group rp-width-100">
-            <% var notifyEnabled = (data.emailEnabled) ? data.text.ui.on : data.text.ui.off %>
-            <button type="button" class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle" data-toggle="dropdown" <%= notAllowed %> data-value="<%= notifyEnabled %>" id="emailEnabled" >
-                <span class="select-value"><%= notifyEnabled %></span>
-                <span class="rp-caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li><a href="#"><%= data.text.ui.on %></a></li>
-                <li><a href="#"><%= data.text.ui.off %></a></li>
-            </ul>
-        </div>
+        <div data-js-email-notifications-switcher></div>
     </div>
     <div class="col-md-5 col-sm-9 col-xs-12 rp-custom-col rp-comment-block">
         <span class="rp-help-block"><%= data.text.project.sendNotification %></span>

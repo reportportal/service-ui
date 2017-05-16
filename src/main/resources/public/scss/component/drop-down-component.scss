@@ -22,15 +22,30 @@
 .drop-down-component {
   display: inline-block;
   position: relative;
+  width: 100%;
   button.rp-btn-with-dropdown {
     span.select-value {
-      color: $COLOR--gray-60;
+      color: $COLOR--charcoal-grey;
     }
   }
-  &.selected {
-    button.rp-btn-with-dropdown {
-      span.select-value {
+  .dropdown-menu {
+    width: 100%;
+    li {
+      a {
         color: $COLOR--charcoal-grey;
+        &.selected {
+          background-color: $COLOR--gray-91;
+          cursor: default;
+          color: $COLOR--charcoal-grey;
+        }
+        &.not-active {
+          color: $COLOR--gray-60;
+          cursor: not-allowed;
+
+          &:hover {
+            background: none;
+          }
+        }
       }
     }
   }
@@ -62,6 +77,12 @@
       .validate-hint-wrapper {
         display: block;
       }
+    }
+  }
+
+  &.open {
+    button.rp-btn-with-dropdown {
+      border-color: $COLOR--topaz;
     }
   }
 }
