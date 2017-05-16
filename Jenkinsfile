@@ -16,9 +16,7 @@ node {
 
             parallel 'Build UI': {
              sh 'docker build -t node-onbuild-chromium -f ./docker/DockerfileNodeChrome ./docker/'
-             docker.image('node-onbuild-chromium').inside('-u root') {
-                               sh 'make build-statics'
-             }
+             sh 'docker run --rm -it -v "$PWD":/usr/src/app -w /usr/src/app --security-opt node-onbuild-chromium xvfb-run make build-statics'
 
             }, 'Build Server': {
                  // Export environment variables pointing to the directory where Go was installed

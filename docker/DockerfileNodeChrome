@@ -1,16 +1,15 @@
 FROM node:7
 
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
-    sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' && \
-    apt-get update && apt-get install -y xvfb google-chrome-stable && \
+
+RUN apt-get update && apt-get install -y xvfb chromium && \
     rm -rf /var/lib/apt/lists/*
 
 
-ADD xvfb.sh /etc/init.d/xvfb
-ADD node-chrome-entrypoint.sh /entrypoint.sh
+ADD start-chromium.sh /start-chromium.sh
+#ADD node-chrome-entrypoint.sh /entrypoint.sh
 
-ENV DISPLAY :99.0
-ENV CHROME_BIN /usr/bin/google-chrome
+#ENV DISPLAY :99.0
+#ENV CHROME_BIN /usr/bin/chromium-browser --no-sandbox
+ENV CHROME_BIN=/start-chromium.sh
 
-ENTRYPOINT ["/entrypoint.sh"]
 
