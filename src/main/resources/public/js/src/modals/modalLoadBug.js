@@ -120,7 +120,6 @@ define(function (require, exports, module) {
         className: 'modal-load-bug',
 
         events: {
-            //'click [data-bts-select-item]': 'onClickBts',
             'click [data-js-add-ticket]': 'onClickAddTicket',
             'click [data-js-load]': 'onClickLoad',
             'click [data-js-close]': 'onClickClose',

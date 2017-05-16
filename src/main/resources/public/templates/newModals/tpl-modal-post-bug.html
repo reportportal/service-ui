@@ -9,26 +9,6 @@
                     <span class="text-uppercase"><%= data.source %></span>
                 </label>
                     <div data-js-project-selector class="project-selector"></div>
-                    <!--<div class="btn-group">-->
-                        <!--<button type="button"-->
-                            <!--class="rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"-->
-                            <!--data-toggle="dropdown"-->
-                            <!--id="">-->
-                            <!--<span class="select-value"><%= data.current.project %></span>-->
-                            <!--<span class="rp-caret"></span>-->
-                        <!--</button>-->
-                        <!--<ul class="dropdown-menu rp-width-100">-->
-                            <!--<% _.forEach(data.systems, function(system, index) { %>-->
-                                <!--<li class="<%= system.id === data.current.id ? 'active' : '' %>">-->
-                                    <!--<a href="#"-->
-                                        <!--id="<%= system.id %>"-->
-                                        <!--class="bts-project project-name">-->
-                                        <!--<%= system.project %>-->
-                                    <!--</a>-->
-                                <!--</li>-->
-                            <!--<% }) %>-->
-                        <!--</ul>-->
-                    <!--</div>-->
                     <div class="p-top-10 label-post-to">
                         <%= data.text.launches.willBePostedTo %>
                         <span id="postToUrl"><%= data.systems[0].url %></span>

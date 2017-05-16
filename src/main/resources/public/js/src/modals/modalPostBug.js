@@ -68,10 +68,8 @@ define(function (require) {
                 isMultiply: this.isMultiply,
                 source: Util.getExternalSystem(true),
                 systems: this.systems,
-                authorizationTypes: this.settings['bts' + this.systemType].authorizationType,
                 collapse: this.user.bts.hash[this.user.bts.current.id].submits > 0,
                 showCredentialsSoft: this.settings['bts' + this.systemType].canUseRPAuthorization,
-                current: this.user.bts.current
             }));
             this.setupDropdowns();
             this.setupAnchors();
