@@ -38,7 +38,7 @@
           display: inline !important;
         }
       }
-      .btn-group {
+      .project-selector {
         margin-left: 20px;
         width: 280px;
       }
@@ -124,14 +124,9 @@
             padding-left: 68px;
           }
 
-          .dropdown {
-            display: block;
+          .auth-selector {
             width: 280px;
             margin-left: 17px;
-
-            .input-group {
-              width: 100%;
-            }
           }
         }
 

@@ -41,10 +41,8 @@ define(function (require) {
         className: 'modal-post-bug',
 
         events: {
-            'click .auth-type': 'handleDropDown',
             'click [data-js-post]': 'submit',
             'keyup .required-value': 'clearRequiredError',
-            'click .project-name': 'updateFieldSet',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-is-included]': 'onClickIncludeData',
             'click [data-js-cancel]': 'onClickCancel'
@@ -75,16 +73,36 @@ define(function (require) {
                 showCredentialsSoft: this.settings['bts' + this.systemType].canUseRPAuthorization,
                 current: this.user.bts.current
             }));
-
+            this.setupDropdowns();
             this.setupAnchors();
-            // Util.switcheryInitialize(this.$includesBlock);
             $('[data-js-is-included]', this.$includesBlock).attr('checked', 'checked');
 
             this.renderFields();
             this.renderCredentials();
-
             this.delegateEvents();
             return this;
+        },
+
+        setupDropdowns: function () {
+            var projectSelector = new DropDownComponent({
+                data: _.map(this.systems, function (val) {
+                    return { name: val.project, value: val.id, disabled: false };
+                }),
+                multiple: false,
+                defaultValue: this.user.bts.current.id
+            });
+            var authTypeselector = new DropDownComponent({
+                data: _.map(this.settings['bts' + this.systemType].authorizationType, function (val) {
+                    return { name: val.name, value: val.value, disabled: false };
+                }),
+                multiple: false,
+                defaultValue: this.settings['bts' + this.systemType].authorizationType[0].value
+            });
+            $('[data-js-project-selector]', this.$el).html(projectSelector.$el);
+            $('[data-js-auth-selector]', this.$el).html(authTypeselector.$el);
+            $('[data-js-dropdown]', projectSelector.$el).attr('id', 'targetProject');
+            $('[data-js-dropdown]', authTypeselector.$el).attr('id', 'systemAuth');
+            this.listenTo(projectSelector, 'change', this.updateFieldSet);
         },
 
         setupAnchors: function () {
@@ -128,11 +146,8 @@ define(function (require) {
             }
         },
 
-        updateFieldSet: function (e) {
-            e.preventDefault();
-            if ($(e.currentTarget).parent().hasClass('active')) return;
-            Util.dropDownHandler(e);
-            this.user.bts.current = _.find(this.systems, { id: $(e.currentTarget).attr('id') });
+        updateFieldSet: function (value) {
+            this.user.bts.current = _.find(this.systems, { id: value });
             this.updateHash();
             this.renderFields();
             this.renderCredentials();
