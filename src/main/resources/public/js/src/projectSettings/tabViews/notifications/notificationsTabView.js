@@ -94,9 +94,11 @@ define(function (require) {
                 this.$emailBlock.show();
             }
 
+            return this;
+        },
+        onShow: function () {
             this.renderEmailCases();
             this.validateRecipients();
-            return this;
         },
 
         initValidators: function () {
@@ -304,85 +306,83 @@ define(function (require) {
             self = this;
 
             if (getAnyway || !recipients.hasClass('select2-offscreen')) {
-                _.defer(function () {
-                    Util.setupSelect2WhithScroll(recipients, {
-                        multiple: true,
-                        minimumInputLength: 1,
-                        maximumInputLength: 128,
-                        formatInputTooShort: function () {
-                            return Localization.ui.minPrefix +
-                            minimumInputLength + Localization.ui.minSufixAuto;
-                        },
-                        formatResultCssClass: function (state) {
-                            if ((remoteUsers.length === 0 || _.indexOf(remoteUsers, state.text) < 0)
-                                && $('.users-typeahead.recipients:not(input)', self.$el).eq(index).find('input').val() === state.text) {
-                                return 'exact-match';
-                            }
-                            return undefined;
-                        },
-                        allowClear: true,
-                        createSearchChoice: function (term, data) {
-                            if ($(data).filter(function () {
-                                return this.text.localeCompare(term) === 0;
-                            }).length === 0) {
-                                if (Util.validateEmail(term)) {
-                                    return {
-                                        id: term,
-                                        text: term
-                                    };
-                                }
-                                return null;
-                            }
-                            return undefined;
-                        },
-                        initSelection: function (element, callback) {
-                            callback({
-                                id: element.val(),
-                                text: element.val()
-                            });
-                        },
-                        formatNoMatches: function () {
-                            return Localization.project.notFoundRecipients;
-                        },
-                        query: function (query) {
-                            var queryLength;
-                            var data;
-                            queryLength = query.term.length;
-                            data = { results: [] };
-
-                            if (queryLength >= minimumInputLength) {
-                                if (queryLength > 256) {
-                                    self.validateRecipients();
-                                } else {
-                                    if (queryLength <= 256) {
-                                        self.validateRecipients();
-                                    }
-                                    Service.getProjectUsersById(query.term)
-                                    .done(function (response) {
-                                        remoteUsers = [];
-                                        _.each(response, function (item) {
-                                            remoteUsers.push(item);
-                                            data.results.push({
-                                                id: item,
-                                                text: item
-                                            });
-                                        });
-                                        query.callback(data);
-                                    })
-                                    .fail(function (error) {
-                                        Util.ajaxFailMessenger(error);
-                                    });
-                                }
-                            } else {
-                                remoteUsers = [];
-                                data.results.push({
-                                    id: query.term,
-                                    text: query.term
-                                });
-                                query.callback(data);
-                            }
+                Util.setupSelect2WhithScroll(recipients, {
+                    multiple: true,
+                    minimumInputLength: 1,
+                    maximumInputLength: 128,
+                    formatInputTooShort: function () {
+                        return Localization.ui.minPrefix +
+                        minimumInputLength + Localization.ui.minSufixAuto;
+                    },
+                    formatResultCssClass: function (state) {
+                        if ((remoteUsers.length === 0 || _.indexOf(remoteUsers, state.text) < 0)
+                            && $('.users-typeahead.recipients:not(input)', self.$el).eq(index).find('input').val() === state.text) {
+                            return 'exact-match';
                         }
-                    });
+                        return undefined;
+                    },
+                    allowClear: true,
+                    createSearchChoice: function (term, data) {
+                        if ($(data).filter(function () {
+                            return this.text.localeCompare(term) === 0;
+                        }).length === 0) {
+                            if (Util.validateEmail(term)) {
+                                return {
+                                    id: term,
+                                    text: term
+                                };
+                            }
+                            return null;
+                        }
+                        return undefined;
+                    },
+                    initSelection: function (element, callback) {
+                        callback({
+                            id: element.val(),
+                            text: element.val()
+                        });
+                    },
+                    formatNoMatches: function () {
+                        return Localization.project.notFoundRecipients;
+                    },
+                    query: function (query) {
+                        var queryLength;
+                        var data;
+                        queryLength = query.term.length;
+                        data = { results: [] };
+
+                        if (queryLength >= minimumInputLength) {
+                            if (queryLength > 256) {
+                                self.validateRecipients();
+                            } else {
+                                if (queryLength <= 256) {
+                                    self.validateRecipients();
+                                }
+                                Service.getProjectUsersById(query.term)
+                                .done(function (response) {
+                                    remoteUsers = [];
+                                    _.each(response, function (item) {
+                                        remoteUsers.push(item);
+                                        data.results.push({
+                                            id: item,
+                                            text: item
+                                        });
+                                    });
+                                    query.callback(data);
+                                })
+                                .fail(function (error) {
+                                    Util.ajaxFailMessenger(error);
+                                });
+                            }
+                        } else {
+                            remoteUsers = [];
+                            data.results.push({
+                                id: query.term,
+                                text: query.term
+                            });
+                            query.callback(data);
+                        }
+                    }
                 });
                 this.$recipients.eq(index).on('select2-open', function () {
                     $('.select2-drop-mask', self.$el).remove();
@@ -497,7 +497,6 @@ define(function (require) {
                     rejected = _.reject(recipients, function (r) {
                         return r === this.$launchOwner.eq(index).val();
                     }, this);
-
                     _.each(rejected, function (m) {
                         var em = _.find(this.users, function (e) {
                             return e.id === m;
@@ -550,85 +549,84 @@ define(function (require) {
 
             this.$tagsContainer = $('input.users-typeahead.tags', this.$el);
             if (this.$tagsContainer.eq(index)) {
-                _.defer(function () {
-                    Util.setupSelect2WhithScroll(self.$tagsContainer.eq(index), {
-                        multiple: true,
-                        minimumInputLength: 1,
-                        maximumInputLength: 128,
-                        formatInputTooShort: function () {
-                            return Localization.ui.enterChars;
-                        },
-                        formatResultCssClass: function (state) {
-                            if ((remoteTags.length === 0 || _.indexOf(remoteTags, state.text) < 0)
-                                && $('.users-typeahead.tags:not(input)', self.$el).eq(index).find('input').val() === state.text) {
-                                return 'exact-match';
-                            }
-                            return undefined;
-                        },
-                        tags: true,
-                        initSelection: function (item, callback) {
-                            var data;
-                            tags = item.val().split(',');
-                            data = _.map(tags, function (tag) {
-                                var tagData = tag.trim();
-                                return {
-                                    id: tagData,
-                                    text: tagData
-                                };
-                            });
-                            callback(data);
-                        },
-                        createSearchChoice: function (term, data) {
-                            if ($(data).filter(function () {
-                                return this.text.localeCompare(term) === 0;
-                            }).length === 0) {
-                                return {
-                                    id: term,
-                                    text: term
-                                };
-                            }
-                            return undefined;
-                        },
-                        query: function (query) {
-                            var queryLength = query.term.length;
-                            var data = {
-                                results: []
-                            };
-
-                            if (queryLength >= 1) {
-                                if (queryLength > 256) {
-                                    self.validateTags(null, true);
-                                } else {
-                                    if (queryLength === 256) {
-                                        self.validateTags(null, true);
-                                    }
-                                    Service.searchTags(query)
-                                        .done(function (response) {
-                                            remoteTags = [];
-                                            _.each(response, function (item) {
-                                                remoteTags.push(item);
-                                                data.results.push({
-                                                    id: item,
-                                                    text: item
-                                                });
-                                            });
-                                            query.callback(data);
-                                        })
-                                        .fail(function (error) {
-                                            Util.ajaxFailMessenger(error);
-                                        });
-                                }
-                            } else {
-                                remoteTags = [];
-                                data.results.push({
-                                    id: query.term,
-                                    text: query.term
-                                });
-                                query.callback(data);
-                            }
+                Util.setupSelect2WhithScroll(self.$tagsContainer.eq(index), {
+                    multiple: true,
+                    minimumInputLength: 1,
+                    maximumInputLength: 128,
+                    formatInputTooShort: function () {
+                        return Localization.ui.enterChars;
+                    },
+                    formatResultCssClass: function (state) {
+                        if ((remoteTags.length === 0 || _.indexOf(remoteTags, state.text) < 0)
+                            && $('.users-typeahead.tags:not(input)', self.$el).eq(index).find('input').val() === state.text) {
+                            return 'exact-match';
                         }
-                    });
+                        return undefined;
+                    },
+                    tags: true,
+                    initSelection: function (item, callback) {
+                        var data;
+                        tags = item.val().split(',');
+                        data = _.map(tags, function (tag) {
+                            var tagData = tag.trim();
+                            return {
+                                id: tagData,
+                                text: tagData
+                            };
+                        });
+                        callback(data);
+                    },
+                    createSearchChoice: function (term, data) {
+                        if ($(data).filter(function () {
+                            return this.text.localeCompare(term) === 0;
+                        }).length === 0) {
+                            return {
+                                id: term,
+                                text: term
+                            };
+                        }
+                        return undefined;
+                    },
+                    query: function (query) {
+                        var queryLength = query.term.length;
+                        var data = {
+                            results: []
+                        };
+
+                        if (queryLength >= 1) {
+                            if (queryLength > 256) {
+                                self.validateTags(null, true);
+                            } else {
+                                if (queryLength === 256) {
+                                    self.validateTags(null, true);
+                                }
+                                Service.searchTags(query)
+                                    .done(function (response) {
+                                        remoteTags = [];
+                                        _.each(response, function (item) {
+                                            remoteTags.push(item);
+                                            data.results.push({
+                                                id: item,
+                                                text: item
+                                            });
+                                        });
+                                        query.callback(data);
+                                    })
+                                    .fail(function (error) {
+                                        Util.ajaxFailMessenger(error);
+                                    });
+                            }
+                        } else {
+                            remoteTags = [];
+                            data.results.push({
+                                id: query.term,
+                                text: query.term
+                            });
+                            query.callback(data);
+                        }
+                    }
                 });
+
                 this.$tagsContainer.eq(index).on('select2-loaded', function () {
                     $('.select2-drop-active', self.$el).removeClass('select2-drop-above');
                     self.$tagsContainer.eq(index).select2('positionDropdown');
@@ -674,83 +672,82 @@ define(function (require) {
 
             this.$launchContainer = $('input.users-typeahead.launches', this.$el);
             if (this.$launchContainer.eq(index)) {
-                _.defer(function () {
-                    Util.setupSelect2WhithScroll(self.$launchContainer.eq(index), {
-                        multiple: true,
-                        minimumInputLength: 1,
-                        maximumInputLength: 128,
+                Util.setupSelect2WhithScroll(self.$launchContainer.eq(index), {
+                    multiple: true,
+                    minimumInputLength: 1,
+                    maximumInputLength: 128,
 
-                        formatInputTooShort: function () {
-                            return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto;
-                        },
-                        formatResultCssClass: function (state) {
-                            if ((remoteLaunches.length === 0 ||
-                                _.indexOf(remoteLaunches, state.text) < 0) &&
-                                $('.users-typeahead.launches:not(input)', self.$el).eq(index).find('input').val() === state.text) {
-                                return 'exact-match';
-                            }
-                            return undefined;
-                        },
-                        allowClear: true,
-                        createSearchChoice: function (term, data) {
-                            if ($(data).filter(function () {
-                                    return this.text.localeCompare(term) === 0;
-                                }).length === 0) {
-                                return {
-                                    id: term,
-                                    text: term
-                                };
-                            }
-                            return undefined;
-                        },
-                        initSelection: function (element, callback) {
-                            callback({
-                                id: element.val(),
-                                text: element.val()
-                            });
-                        },
-                        query: function (query) {
-                            var queryLength = query.term.length;
-                            var data = {
-                                results: []
-                            };
-
-                            if (queryLength >= 3) {
-                                if (queryLength > 256) {
-                                    self.toggleLaunchNamesErrors(true, false,
-                                        self.$launchContainer.eq(index));
-                                } else {
-                                    if (queryLength === 256) {
-                                        self.toggleLaunchNamesErrors(false, false,
-                                            self.$launchContainer.eq(index));
-                                    }
-                                    Service.searchLaunches(query)
-                                        .done(function (response) {
-                                            remoteLaunches = [];
-                                            _.each(response, function (item) {
-                                                remoteLaunches.push(item);
-                                                data.results.push({
-                                                    id: item,
-                                                    text: item
-                                                });
-                                            });
-                                            query.callback(data);
-                                        })
-                                        .fail(function (error) {
-                                            Util.ajaxFailMessenger(error);
-                                        });
-                                }
-                            } else {
-                                remoteLaunches = [];
-                                data.results.push({
-                                    id: query.term,
-                                    text: query.term
-                                });
-                                query.callback(data);
-                            }
+                    formatInputTooShort: function () {
+                        return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto;
+                    },
+                    formatResultCssClass: function (state) {
+                        if ((remoteLaunches.length === 0 ||
+                            _.indexOf(remoteLaunches, state.text) < 0) &&
+                            $('.users-typeahead.launches:not(input)', self.$el).eq(index).find('input').val() === state.text) {
+                            return 'exact-match';
                         }
-                    });
+                        return undefined;
+                    },
+                    allowClear: true,
+                    createSearchChoice: function (term, data) {
+                        if ($(data).filter(function () {
+                            return this.text.localeCompare(term) === 0;
+                        }).length === 0) {
+                            return {
+                                id: term,
+                                text: term
+                            };
+                        }
+                        return undefined;
+                    },
+                    initSelection: function (element, callback) {
+                        callback({
+                            id: element.val(),
+                            text: element.val()
+                        });
+                    },
+                    query: function (query) {
+                        var queryLength = query.term.length;
+                        var data = {
+                            results: []
+                        };
+
+                        if (queryLength >= 3) {
+                            if (queryLength > 256) {
+                                self.toggleLaunchNamesErrors(true, false,
+                                    self.$launchContainer.eq(index));
+                            } else {
+                                if (queryLength === 256) {
+                                    self.toggleLaunchNamesErrors(false, false,
+                                        self.$launchContainer.eq(index));
+                                }
+                                Service.searchLaunches(query)
+                                    .done(function (response) {
+                                        remoteLaunches = [];
+                                        _.each(response, function (item) {
+                                            remoteLaunches.push(item);
+                                            data.results.push({
+                                                id: item,
+                                                text: item
+                                            });
+                                        });
+                                        query.callback(data);
+                                    })
+                                    .fail(function (error) {
+                                        Util.ajaxFailMessenger(error);
+                                    });
+                            }
+                        } else {
+                            remoteLaunches = [];
+                            data.results.push({
+                                id: query.term,
+                                text: query.term
+                            });
+                            query.callback(data);
+                        }
+                    }
                 });
+
                 this.$launchContainer.eq(index).on('select2-open', function () {
                     $('.select2-drop-mask', self.$el).remove();
                 })
@@ -908,6 +905,7 @@ define(function (require) {
                     Service.getProject()
                         .done(function () {
                             self.render();
+                            self.onShow();
                             Util.ajaxSuccessMessenger('updateProjectSettings');
                         })
                         .fail(function (error) {
@@ -1022,7 +1020,7 @@ define(function (require) {
                 delete conf.tags;
             }
             data.configuration = conf;
-            console.log(JSON.stringify(data));
+            // console.log(JSON.stringify(data));
             return data;
         },
 
@@ -1062,6 +1060,7 @@ define(function (require) {
                     self.updateIds();
                     self.model.set(self.appModel.get('configuration').emailConfiguration);
                     self.render();
+                    self.onShow();
                     Util.ajaxSuccessMessenger('updateProjectSettings');
                 })
                 .fail(function (error) {
