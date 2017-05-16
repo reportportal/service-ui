@@ -56,6 +56,7 @@ define(function (require) {
 
         initialize: function () {
             this.appModel = new SingletonAppModel();
+            this.dropdownComponents = [];
             this.updateIds();
             this.model = new NotificationsSettings(this.appModel.get('configuration').emailConfiguration);
             this.users = [];
@@ -91,7 +92,7 @@ define(function (require) {
                 multiple: false,
                 defaultValue: this.model.get('emailEnabled') ? Localization.ui.on : Localization.ui.off
             });
-
+            this.dropdownComponents.push(emailNotificationsSwitcher);
             $('[data-js-email-notifications-switcher]', this.$el).html(emailNotificationsSwitcher.$el);
             $('[data-js-email-notifications-switcher] [data-js-dropdown]', this.$el).attr('id', 'emailEnabled');
             if (!config.userModel.hasPermissions()) {
@@ -161,6 +162,7 @@ define(function (require) {
                     self.filterLaunches(index);
                     self.filterTags(index);
                 }
+                self.dropdownComponents.push(casesDropdown);
             });
             self.initValidators();
             self.updateRules();
@@ -216,12 +218,13 @@ define(function (require) {
                 multiple: false,
                 defaultValue: config.forSettings.emailInCase[0].value
             });
+
             $('[data-email-case-id="' + this.emailCaseId + '"] [data-js-case-dropdown]', this.$el).html(casesDropdown.$el);
             if (!config.userModel.hasPermissions()) {
                 $(' [data-email-case-id="' + this.emailCaseId + '"] [data-js-case-dropdown] [data-js-dropdown]', this.$el).attr('disabled', 'disabled');
             }
             this.listenTo(casesDropdown, 'change', this.selectProp);
-
+            this.dropdownComponents.push(casesDropdown);
             self.updateRules();
             self.emailCaseId += 1;
 
@@ -1103,6 +1106,9 @@ define(function (require) {
         },
 
         onDestroy: function () {
+            _.each(this.dropdownComponents, function (item) {
+                item.destroy();
+            });
             this.$recipients = $('input.recipients', this.$el);
             this.$launchContainer = $('input.launchNames', this.$el);
             this.$tagsContainer = $('input.tags', this.$el);

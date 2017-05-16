@@ -165,10 +165,8 @@ define(function (require) {
                 });
         },
 
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
+            this.projectRoleSelector.destroy();
             this.$el.html('');
             delete this;
         }

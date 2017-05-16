@@ -66,6 +66,7 @@ define(function (require) {
 
         initialize: function () {
             var modelsData = [];
+            this.dropdownComponents = [];
             this.appModel = new SingletonAppModel();
             this.settings = config.forSettings;
             this.access = Util.isInPrivilegedGroup();
@@ -101,6 +102,7 @@ define(function (require) {
             });
             $('[data-js-bts-switcher]', this.$el).html(btsSwitcher.$el);
             this.listenTo(btsSwitcher, 'change', this.changeBts);
+            this.dropdownComponents.push(btsSwitcher);
 
             this.$instanceHead = $('#instanceHead', this.$el);
             this.$instanceBoby = $('#instanceBody', this.$el);
@@ -158,6 +160,7 @@ define(function (require) {
             $('[data-js-dropdown]', authTypeSelector.$el).attr('id', 'systemAuth').attr('disabled', !this.access ? 'disabled' : '');
             $('[data-js-auth-type-selector]', this.$el).html(authTypeSelector.$el);
             this.listenTo(authTypeSelector, 'change', this.updateAuthType);
+            this.dropdownComponents.push(authTypeSelector);
 
             this.setupAnchors();
             this.setAuthBlock(params);
@@ -701,6 +704,9 @@ define(function (require) {
         },
 
         onDestroy: function () {
+            _.each(this.dropdownComponents, function (item) {
+                item.destroy();
+            });
             if (this.defaultFields) {
                 this.defaultFields = null;
             }

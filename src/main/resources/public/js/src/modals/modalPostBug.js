@@ -59,6 +59,7 @@ define(function (require) {
             this.user = {}; // only bts field use  WTF?
             this.systemType = this.systems[0].systemType;
             this.systemAuth = this.systems[0].systemAuth;
+            this.dropdownComponents = [];
             this.setUserBts();
             this.render();
         },
@@ -69,7 +70,7 @@ define(function (require) {
                 source: Util.getExternalSystem(true),
                 systems: this.systems,
                 collapse: this.user.bts.hash[this.user.bts.current.id].submits > 0,
-                showCredentialsSoft: this.settings['bts' + this.systemType].canUseRPAuthorization,
+                showCredentialsSoft: this.settings['bts' + this.systemType].canUseRPAuthorization
             }));
             this.setupDropdowns();
             this.setupAnchors();
@@ -101,6 +102,7 @@ define(function (require) {
             $('[data-js-dropdown]', projectSelector.$el).attr('id', 'targetProject');
             $('[data-js-dropdown]', authTypeselector.$el).attr('id', 'systemAuth');
             this.listenTo(projectSelector, 'change', this.updateFieldSet);
+            this.dropdownComponents.push(projectSelector, authTypeselector);
         },
 
         setupAnchors: function () {
@@ -174,6 +176,7 @@ define(function (require) {
         },
 
         setupFieldsDropdowns: function (fields) {
+            var self = this;
             $('[data-js-field-with-dropdown]', this.$el).each(function (i, elem) {
                 var field = _.find(fields, function (item) {
                     return $(elem).attr('data-js-field-with-dropdown') === item.id;
@@ -196,6 +199,7 @@ define(function (require) {
                 if (field.required) {
                     $('[data-js-dropdown]', $(this)).addClass('required-value');
                 }
+                self.dropdownComponents.push(fieldWithDropdown);
             });
         },
 
@@ -574,6 +578,12 @@ define(function (require) {
                 backLink[item.id] = backlinkFirstPart + backlinkMiddlePart + '&log.item=' + item.id;
             });
             return backLink;
+        },
+
+        onDestroy: function () {
+            _.each(this.dropdownComponents, function (item) {
+                item.destroy();
+            });
         }
     });
 

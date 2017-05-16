@@ -67,6 +67,7 @@ define(function (require) {
                 default_project: '',
                 projectRole: config.defaultProjectRole
             });
+            this.dropdownComponents = [];
             this.render();
         },
         onKeySuccess: function () {
@@ -105,6 +106,7 @@ define(function (require) {
             $('[data-js-role-selector]', this.$el).html(projectRoleSelector.$el);
             $('[data-js-dropdown]', this.$el).attr('id', 'projectRole').addClass('rp-btn-group');
             this.listenTo(projectRoleSelector, 'change', this.selectRole);
+            this.dropdownComponents.push(projectRoleSelector);
             this.setupAnchors();
             this.setupValidation();
             this.setupUserSearch();
@@ -353,6 +355,11 @@ define(function (require) {
             this.$form.addClass('hide');
             this.$successFrom.removeClass('hide');
             $('[data-js-email]', this.$successFrom).text(this.model.get('user'));
+        },
+        onDestroy: function () {
+            _.each(this.dropdownComponents, function (item) {
+                item.destroy();
+            });
         }
     });
 

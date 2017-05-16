@@ -113,10 +113,7 @@ define(function (require) {
             this.$el.addClass('dropdown-error-state');
             $('[data-js-hint-message]', this.$el).html(message);
         },
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
             this.$el.html('');
             delete this;
         }
