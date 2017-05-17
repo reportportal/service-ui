@@ -102,7 +102,8 @@ define(function (require) {
                     .done(function (dataModel) {
                         self.filterListener.trigger(self.filterEvents.ON_ADD_FILTER, {
                             cid: self.model.cid,
-                            data: self.model.getDataFromServer(dataModel.attributes)
+                            data: self.model.getDataFromServer(dataModel.attributes),
+                            isLaunch: true
                         });
                     });
             } else {

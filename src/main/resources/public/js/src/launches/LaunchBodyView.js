@@ -87,9 +87,10 @@ define(function (require) {
         },
         onChangeParamsFilter: function (params) {
             var mainHash = window.location.hash.split('?')[0];
-            setTimeout(function () {
-                config.router.navigate(mainHash + '?' + params, { trigger: false, replace: true });
-            });
+            config.router.navigate(mainHash + '?' + params, { trigger: false, replace: true });
+            // setTimeout(function () {
+            //     config.router.navigate(mainHash + '?' + params, { trigger: false, replace: true });
+            // });
         },
         onChangeLogItem: function (logItemId) {
             this.crumbs.setLogItem(this.collectionItems.get(logItemId));

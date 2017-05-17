@@ -48,13 +48,15 @@ define(function (require) {
             this.ready = $.Deferred();
         },
         onChangeIsLaunch: function (options) {
-            var model = options.model;
+            var id = options.data.id;
             if (options.isLaunch) {
-                if (!this.get(model.get('id'))) {
-                    this.add(model.attributes);
+                if (!this.get(id)) {
+                    this.add(options.data);
+                } else {
+                    this.get(id).set({ temp: false });
                 }
             } else {
-                this.remove(model);
+                this.remove(id);
             }
             call('PUT', Urls.getPreferences(), { filters: this.getFiltersId() })
                 .done(function () {

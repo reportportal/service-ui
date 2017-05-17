@@ -81,7 +81,7 @@ define(function (require) {
             this.filterListener.trigger(
                 this.filterEvents.ON_CHANGE_IS_LAUNCH,
                 {
-                    model: this.model,
+                    data: this.model.attributes,
                     isLaunch: isLaunch
                 }
             );

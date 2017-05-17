@@ -63,6 +63,7 @@ define(function (require) {
         },
         addFilter: function (options) {
             var self = this;
+            var data = options.data;
             call('POST', urls.saveFilter(), { elements: [options.data] })
                 .done(function (response) {
                     Util.ajaxSuccessMessenger('savedFilter');
@@ -71,6 +72,13 @@ define(function (require) {
                         id: response[0].id,
                         data: options.data
                     });
+                    if (options.isLaunch) {
+                        data.id = response[0].id;
+                        self.listener.trigger(self.events.CHANGE_IS_LAUNCH, {
+                            data: data,
+                            isLaunch: true
+                        });
+                    }
                 })
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, 'savedFilter');
