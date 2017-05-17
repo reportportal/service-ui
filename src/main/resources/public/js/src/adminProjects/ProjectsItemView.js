@@ -207,15 +207,14 @@ define(function (require) {
             modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteProject,
                 bodyText: Util.replaceTemplate(Localization.dialog.deleteProject, this.model.get('projectId')),
-                confirmText: Localization.dialog.msgDeleteProject,
+                confirmText: '',
                 cancelButtonText: Localization.ui.cancel,
                 okButtonDanger: true,
                 okButtonText: Localization.ui.delete,
                 confirmFunction: function () {
                     config.trackingDispatcher.trackEventNumber(456);
                     return this.model.delete();
-                }.bind(this),
-                safeRemoval: true
+                }.bind(this)
             });
             $('[data-js-close]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(456);

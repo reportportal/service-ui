@@ -102,8 +102,7 @@ define(function (require) {
                 confirmText: this.model.get('isMy') ? '' : Localization.dialog.dashboardDeleteDangerConfirmText,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
-                okButtonText: Localization.ui.delete,
-                safeRemoval: this.model.get('isMy')
+                okButtonText: Localization.ui.delete
             })).show().done(function () {
                 self.model.collection.remove(self.model);
                 self.destroy();

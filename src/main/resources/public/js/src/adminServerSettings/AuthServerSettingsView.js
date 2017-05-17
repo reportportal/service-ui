@@ -159,8 +159,7 @@ define(function (require) {
                 bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteOrg),
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
-                okButtonText: Localization.ui.delete,
-                safeRemoval: true
+                okButtonText: Localization.ui.delete
             });
             modal.show()
                 .done(function () {
