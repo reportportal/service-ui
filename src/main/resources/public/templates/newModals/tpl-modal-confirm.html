@@ -1,8 +1,7 @@
 <%= data.includeTemplate('_tpl-modal-header', {headerText: data.headerText})  %>
-<% console.log(data  )%>
 <div class="modal-body qqq">
     <p><%= data.bodyText %></p>
-    <% if (!data.safeRemoval ) { %>
+    <% if (data.confirmText ) { %>
     <div class="warning-block">
         <div class="warning"><i class="rp-icons rp-icons-warning"></i> Warning!</div>
         <div class="warning-message"><%= data.confirmText %></div>

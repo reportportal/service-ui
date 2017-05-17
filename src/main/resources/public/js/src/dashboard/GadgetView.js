@@ -161,8 +161,7 @@ define(function (require) {
                 confirmText: !dangerRemove ? '' : Localization.dialog.deletedWidgetDangerConfirmText,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
-                okButtonText: Localization.ui.delete,
-                safeRemoval: !(!this.model.get('isMy') && !this.model.get('isMyDashboard'))
+                okButtonText: Localization.ui.delete
             });
             modal.show().done(function () {
                 self.model.trigger('remove:view', self); // for gridstack
