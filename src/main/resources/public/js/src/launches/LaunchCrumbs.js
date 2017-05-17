@@ -294,11 +294,8 @@ define(function (require) {
         onRemove: function () {
             this.destroy();
         },
-        destroy: function () {
+        onDestroy: function () {
             this.$el.remove();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
             delete this;
         }
     });
@@ -390,11 +387,8 @@ define(function (require) {
             this.trigger('restore:path');
             $('[data-js-crumbs-container]', this.$el).removeClass('lost-path');
         },
-        destroy: function () {
+        onDestroy: function () {
             this.$el.html('');
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
             delete this;
         }
     });

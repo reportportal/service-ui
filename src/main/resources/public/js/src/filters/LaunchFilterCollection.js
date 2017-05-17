@@ -51,7 +51,7 @@ define(function (require) {
             var model = options.model;
             if (options.isLaunch) {
                 if (!this.get(model.get('id'))) {
-                    this.add(model);
+                    this.add(model.attributes);
                 }
             } else {
                 this.remove(model);
