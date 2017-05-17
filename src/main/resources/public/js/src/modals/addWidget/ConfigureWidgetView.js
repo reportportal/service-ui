@@ -32,36 +32,39 @@ define(function (require, exports, module) {
     var ConfigureWidgetView = Epoxy.View.extend({
         className: 'modal-add-widget-configure-widget',
         template: 'tpl-modal-add-widget-configure-widget',
-        initialize: function() {
-
+        initialize: function () {
             this.render();
-            this.filterSearch = new FilterSearchView({model: this.model});
+            this.filterSearch = new FilterSearchView({ model: this.model });
             $('[data-js-filter-search]', this.$el).html(this.filterSearch.$el);
             this.listenTo(this.filterSearch, 'disable:navigation', this.onChangeDisableNavigation);
-            this.widgetCriteria = new WidgetSettingsView({model: this.model});
+            this.widgetCriteria = new WidgetSettingsView({ model: this.model });
             $('[data-js-enter-criteria]', this.$el).html(this.widgetCriteria.$el);
         },
-        onChangeDisableNavigation: function(state) {
+        onChangeDisableNavigation: function (state) {
             this.trigger('disable:navigation', state);
-            if(state) {
+            if (state) {
                 $('[data-js-enter-criteria]', this.$el).addClass('hide');
             } else {
                 $('[data-js-enter-criteria]', this.$el).removeClass('hide');
             }
         },
-        getSelectedFilterModel: function() {
+        getSelectedFilterModel: function () {
             return this.filterSearch.getSelectedFilterModel();
         },
-        activate: function() {
+        activate: function () {
             this.filterSearch.activate();
             this.widgetCriteria.activate();
         },
-        validate: function() {
+        validate: function () {
             return this.widgetCriteria.validate();
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {}))
+        render: function () {
+            this.$el.html(Util.templates(this.template, {}));
         },
+        onDestroy: function () {
+            this.filterSearch && this.filterSearch.destroy();
+            this.widgetCriteria && this.widgetCriteria.destroy();
+        }
     });
 
     return ConfigureWidgetView;

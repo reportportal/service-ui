@@ -1,20 +1,20 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/epam/ReportPortal
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -27,14 +27,26 @@ define(function (require, exports, module) {
     var _ = require('underscore');
     require('../lib/modernizr-custom');
 
-    Backbone.View.prototype.destroy = function() {
+    Backbone.View.prototype.destroy = function () {
         this.onDestroy && this.onDestroy();
         this.undelegateEvents();
         this.removeBindings && this.removeBindings();
         this.stopListening();
         this.unbind();
     };
-    Backbone.Model.prototype.destroy = function() {
+    Backbone.Model.prototype.destroy = function () {
+        this.onDestroy && this.onDestroy();
+        this.stopListening();
+    };
+    Backbone.Collection.prototype._removeReference = function (model, options) {
+        if (this === model.collection) delete model.collection;
+        model.off('all', this._onModelEvent, this);
+        model.destroy();
+    };
+    Backbone.Collection.prototype.destroy = function () {
+        _.each(this.models, function (model) {
+            model.destroy();
+        });
         this.onDestroy && this.onDestroy();
         this.stopListening();
     };
@@ -90,22 +102,19 @@ define(function (require, exports, module) {
                             $(e.currentTarget).removeClass(CLASSNAME);
                         }
                     });
-                })(method);
+                }(method));
             } else {
                 bindEvent.call(this, match[1], match[2], _.bind(method, this));
             }
         }
         return this;
-    }
+    };
 
     function bindEvent(eventName, selector, buildMethod) {
         eventName += '.delegateEvents' + this.cid;
         if (selector === '') {
             return this.$el.on(eventName, buildMethod);
-        } else {
-            return this.$el.on(eventName, selector, buildMethod);
         }
-    };
-
-
+        return this.$el.on(eventName, selector, buildMethod);
+    }
 });

@@ -149,6 +149,7 @@ define(function (require) {
         update: function (newPath, cacheModel) {
             var async = $.Deferred();
             var currentPath = [];
+            var tempFilterModel;
             this.cacheModel = cacheModel;
             _.each(this.models, function (model) {
                 currentPath.push(model.get('id'));
@@ -163,7 +164,9 @@ define(function (require) {
                     var currentNewPath = splitId[0];
                     if (i === 0) {
                         level = 'filter';
-                        partUrl = (new FilterModel({ id: newPath[0], context: this.context })).get('url');
+                        tempFilterModel = new FilterModel({ id: newPath[0], context: this.context });
+                        partUrl = tempFilterModel.get('url');
+                        tempFilterModel.destroy();
                     } else {
                         partUrl += '/' + currentNewPath;
                         if (splitId[1]) {

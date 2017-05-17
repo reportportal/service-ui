@@ -27,6 +27,7 @@ define(function (require) {
     var Util = require('util');
     var FilterSearchItemView = require('modals/addWidget/FilterSearchItemView');
     var FilterModel = require('filters/FilterModel');
+    var FilterListener = require('controlers/filterControler/FilterListener');
 
     var FilterSearchItem = Epoxy.View.extend({
         className: 'modal-add-widget-selected-filter',
@@ -36,6 +37,8 @@ define(function (require) {
         },
         initialize: function () {
             var self = this;
+            this.filterListener = new FilterListener();
+            this.filterEvents = this.filterListener.events;
             this.async = $.Deferred();
             this.render();
             this.filterModel = new FilterModel({
@@ -44,13 +47,19 @@ define(function (require) {
                 active: true
             });
             this.$el.addClass('load');
-            this.filterModel.load()
-                .always(function () {
-                    self.$el.removeClass('load');
-                    self.filterView = new FilterSearchItemView({ model: self.filterModel });
-                    $('[data-js-filter-info]', self.$el).html(self.filterView.$el);
-                    self.async.resolve();
-                });
+            self.filterListener.trigger(self.filterEvents.ON_LOAD_FILTER,
+                this.model.get('filter_id')
+            );
+            this.listenTo(this.filterModel, 'change:load', this.onChangeLoadFilter);
+        },
+        onChangeLoadFilter: function (model, load) {
+            if (!load) {
+                this.$el.removeClass('load');
+                this.filterView && this.filterView.destroy();
+                this.filterView = new FilterSearchItemView({ model: this.filterModel });
+                $('[data-js-filter-info]', this.$el).html(this.filterView.$el);
+                this.async.resolve();
+            }
         },
         getFilterModel: function () {
             return this.filterModel;
@@ -72,11 +81,9 @@ define(function (require) {
         onClickFilterEdit: function () {
             this.trigger('edit', this.filterModel);
         },
-        destroy: function () {
+        onDestroy: function () {
             this.filterView && this.filterView.destroy();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+            this.filterModel.destroy();
             this.$el.remove();
         }
     });

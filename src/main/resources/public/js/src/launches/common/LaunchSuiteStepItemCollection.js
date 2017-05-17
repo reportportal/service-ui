@@ -142,7 +142,7 @@ define(function (require) {
             this.stopListening(this.filterModel);
 
             this.filterModel = filterModel;
-            this.listenTo(this.filterModel, 'change:newEntities', this.changeFilterOptions);
+            this.listenTo(this.filterModel, 'change:newEntities change:entities', this.changeFilterOptions);
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.changeSelectionParameters);
             this.activateChangeParamsTrigger();
             return this.load();
@@ -206,7 +206,8 @@ define(function (require) {
             this.activateChangeParamsTrigger();
         },
         changeFilterOptions: function (model, value) {
-            if (value !== '' || !model.changed.entities) {
+            if (model.get('newEntities') !== '' ||
+                (model.changed.entities && model.get('entities') !== model._previousAttributes.newEntities)) {
                 this.pagingPage = 1;
                 this.load();
             }

@@ -19,21 +19,23 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
     var App = require('app');
+    var FilterListener = require('controlers/filterControler/FilterListener');
+    var ModalFilterEdit = require('modals/modalFilterEdit');
 
     var config = App.getInstance();
 
     var FavoritesItemView = Epoxy.View.extend({
         className: 'row rp-table-row',
+        template: 'tpl-favorite-item',
         events: {
             'click [data-js-remove]': 'onClickRemove',
             'click [data-js-filter-edit]': 'onClickEdit',
@@ -65,18 +67,26 @@ define(function (require, exports, module) {
             }
         },
         initialize: function () {
+            this.filterListener = new FilterListener();
+            this.filterEvents = this.filterListener.events;
             this.render();
             this.listenTo(this.model, 'change:isLaunch', this.onSwitchOnLaunches);
+            this.listenTo(this.model, 'remove', this.destroy);
         },
-        template: 'tpl-favorite-item',
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        onSwitchOnLaunches: function () {
+        onSwitchOnLaunches: function (model, isLaunch) {
             config.trackingDispatcher.trackEventNumber(243);
+            this.filterListener.trigger(
+                this.filterEvents.ON_CHANGE_IS_LAUNCH,
+                {
+                    model: this.model,
+                    isLaunch: isLaunch
+                }
+            );
         },
         onClickRemove: function () {
-            config.trackingDispatcher.trackEventNumber(244);
             var self = this;
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteFilter,
@@ -90,16 +100,14 @@ define(function (require, exports, module) {
             });
             modal.show()
                 .done(function () {
-                    self.model.remove().always(function() {
-                        self.destroy();
-                        self.model.trigger('click:remove', self.model);
-                    });
+                    self.filterListener.trigger(self.filterEvents.ON_REMOVE_FILTER, self.model.get('id'));
                 });
+            config.trackingDispatcher.trackEventNumber(244);
             modal.$el.on('click', function (e) {
-                var $target = $(e.target),
-                    isCancel = $target.is('[data-js-cancel]'),
-                    isDelete = $target.is('[data-js-ok]'),
-                    isClose = ($target.is('[data-js-close]') || $target.is('[data-js-close] i'));
+                var $target = $(e.target);
+                var isCancel = $target.is('[data-js-cancel]');
+                var isDelete = $target.is('[data-js-ok]');
+                var isClose = ($target.is('[data-js-close]') || $target.is('[data-js-close] i'));
                 if (isClose) {
                     config.trackingDispatcher.trackEventNumber(252);
                 } else if (isCancel) {
@@ -111,13 +119,30 @@ define(function (require, exports, module) {
         },
         onClickShared: function () {
             config.trackingDispatcher.trackEventNumber(246);
-            this.model.editMainInfo();
+            this.onEditMainInfo();
         },
         onClickEdit: function () {
             config.trackingDispatcher.trackEventNumber(245);
-            this.model.editMainInfo();
+            this.onEditMainInfo();
         },
-        onClickName: function (e) {
+        onEditMainInfo: function () {
+            var self = this;
+            var modal = new ModalFilterEdit({
+                mode: 'edit',
+                filterModel: this.model
+            });
+            modal.show()
+                .done(function (dataModel) {
+                    self.filterListener.trigger(
+                        self.filterEvents.ON_SET_FILTER,
+                        {
+                            id: self.model.get('id'),
+                            data: self.model.getDataFromServer(dataModel.attributes)
+                        }
+                    );
+                });
+        },
+        onClickName: function () {
             config.trackingDispatcher.trackEventNumber(242);
         },
         onDestroy: function () {

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Backbone = require('backbone');
@@ -26,35 +26,37 @@ define(function (require, exports, module) {
     var FilterModel = require('filters/FilterModel');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var FilterListener = require('controlers/filterControler/FilterListener');
 
 
     var FilterCollection = Backbone.Collection.extend({
         model: FilterModel,
         initialize: function () {
+            this.filterListener = new FilterListener();
+            this.filterEvents = this.filterListener.events;
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.defectTypeCollection = new SingletonDefectTypeCollection();
-            this.listenTo(this, 'change:isLaunch', this.onChangeIsLaunch);
+            this.listenTo(this.filterListener, this.filterEvents.REMOVE_FILTER, this.onRemoveFilter);
         },
-        onChangeIsLaunch: function (model, isLaunch) {
-            if (isLaunch) {
-                model.collection = this.launchFilterCollection;
-                this.launchFilterCollection.add(model);
-                return;
+        onRemoveFilter: function (id) {
+            var model = this.get(id);
+            if (model) {
+                this.remove(model);
             }
-            this.launchFilterCollection.remove(model);
         },
         parse: function (data) {
             var self = this;
             this.launchFilterCollection.ready.done(function () {
                 self.defectTypeCollection.ready.done(function () {
                     self.reset(_.map(data, function (itemData) {
-                        var launchModelClone = self.launchFilterCollection.where({ id: itemData.id })[0];
-                        if (launchModelClone) {
-                            return launchModelClone;
+                        var modelData = itemData;
+                        var launchFilterModel = self.launchFilterCollection.get(itemData.id);
+                        if (launchFilterModel) {
+                            modelData.isLaunch = true;
                         }
-                        itemData.entities = JSON.stringify(itemData.entities);
-                        itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
-                        return itemData;
+                        modelData.entities = JSON.stringify(itemData.entities);
+                        modelData.selection_parameters = JSON.stringify(itemData.selection_parameters);
+                        return modelData;
                     }));
                 });
             });

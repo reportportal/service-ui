@@ -40,7 +40,7 @@ define(function (require) {
 
     var FilterCollection = Backbone.Collection.extend({
         model: FilterModel,
-        initialize: function (options) {
+        initialize: function (data, options) {
             this.mainModel = options.mainModel;
             this.listenTo(this, 'change:active', this.onChangeActive);
         },
@@ -91,7 +91,7 @@ define(function (require) {
         initialize: function (options) {
             this.modalType = options.modalType;
             this.firstActivate = true;
-            this.collection = new FilterCollection({ mainModel: this.model });
+            this.collection = new FilterCollection([], { mainModel: this.model });
             this.renderViews = [];
             this.render();
             this.viewModel = new Epoxy.Model({
@@ -314,6 +314,7 @@ define(function (require) {
             return url;
         },
         onDestroy: function () {
+            this.collection.destroy();
             this.$el.remove();
         }
     });

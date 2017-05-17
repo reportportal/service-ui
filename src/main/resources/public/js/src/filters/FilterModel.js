@@ -18,24 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
-    var CallService = require('callService');
-    var urls = require('dataUrlResolver');
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var Localization = require('localization');
-    var Util = require('util');
     var Moment = require('moment');
-    var ModalFilterEdit = require('modals/modalFilterEdit');
     var App = require('app');
-    var Urls = require('dataUrlResolver');
+    var FilterListener = require('controlers/filterControler/FilterListener');
 
     var config = App.getInstance();
-    var call = CallService.call;
     var appModel = new SingletonAppModel();
 
     var FilterEntities = require('filterEntities/FilterEntities');
@@ -57,7 +52,8 @@ define(function (require, exports, module) {
             isLaunch: false,
             active: false,
             url: '',
-            temp: false
+            temp: false,
+            load: false
         },
         computeds: {
             optionsString: {
@@ -112,12 +108,17 @@ define(function (require, exports, module) {
         },
 
         initialize: function (options) {
+            this.filterListener = new FilterListener();
+            this.filterEvents = this.filterListener.events;
             this.context = options.context;
-            this.listenTo(this, 'change:name change:isShared change:description change:entities change:selection_parameters', this.onChangeFilterInfo);
             this.listenTo(this, 'change:id', this.computedsUrl);
             this.listenTo(appModel, 'change:projectId', this.computedsUrl.bind(this));
             this.listenTo(this, 'change:temp', this.onChangeTemp);
             this.computedsUrl();
+            this.listenTo(this.filterListener, this.filterEvents.FILTER_LOAD_START, this.onLoadStartFilter);
+            this.listenTo(this.filterListener, this.filterEvents.FILTER_LOAD_END, this.onLoadEndFilter);
+            this.listenTo(this.filterListener, this.filterEvents.SET_FILTER, this.onSetFilter);
+            this.listenTo(this.filterListener, this.filterEvents.ADD_FILTER, this.onAddFilter);
         },
 
         getLastKey: function (keyArray) {
@@ -259,19 +260,23 @@ define(function (require, exports, module) {
             var contextUrlPart = (this.context === 'userdebug') ? '/userdebug/' : '/launches/';
             this.set({ url: '#' + appModel.get('projectId') + contextUrlPart + this.get('id') });
         },
-        onChangeFilterInfo: function () {
-            if (!this.get('temp')) {
-                call('PUT', urls.filterById(this.get('id')), this.getDataFromServer())
-                    .done(function () {
-                        Util.ajaxSuccessMessenger('editFilter');
-                    })
-                    .fail(function (error) {
-                        Util.ajaxFailMessenger(error, 'editFilter');
-                    });
-            }
-        },
-        getDataFromServer: function () {
-            var entities = this.getEntitiesObj();
+        // onChangeFilterInfo: function () {
+        //     if (!this.get('temp')) {
+        //         call('PUT', urls.filterById(this.get('id')), this.getDataFromServer())
+        //             .done(function () {
+        //                 Util.ajaxSuccessMessenger('editFilter');
+        //             })
+        //             .fail(function (error) {
+        //                 Util.ajaxFailMessenger(error, 'editFilter');
+        //             });
+        //     }
+        // },
+        getDataFromServer: function (changes) {
+            var cloneModel = this.clone();
+            var entities;
+            var result;
+            changes && cloneModel.set(changes);
+            entities = cloneModel.getEntitiesObj();
             if (!entities.length) {
                 entities.push({
                     condition: 'cnt',
@@ -279,103 +284,131 @@ define(function (require, exports, module) {
                     value: ''
                 });
             }
-            return {
-                name: this.get('name'),
-                description: this.get('description') || null,
+            result = {
+                name: cloneModel.get('name'),
+                description: cloneModel.get('description') || null,
                 entities: entities,
-                share: this.get('isShared'),
-                selection_parameters: this.getParametersObj(),
-                type: this.get('type')
+                share: cloneModel.get('isShared'),
+                selection_parameters: cloneModel.getParametersObj(),
+                type: cloneModel.get('type')
             };
+            cloneModel.destroy();
+            return result;
         },
-        editMainInfo: function () {
-            var self = this;
-            this.showPopupMyInfo(function (dataModel) {
-                self.set({
-                    name: dataModel.get('name'),
-                    isShared: dataModel.get('isShared'),
-                    description: dataModel.get('description')
-                });
-            }, 'update');
-        },
-        onChangeTemp: function (model, temp) {
-            var self = this;
-            var data;
-            if (temp || this.collection) {
-                return;
-            }
-            data = model.getDataFromServer();
-            data.type = 'launch';
-            call('POST', Urls.saveFilter(), { elements: [data] })
-                .done(function (response) {
-                    Util.ajaxSuccessMessenger('savedFilter');
-                    self.set({ id: response[0].id });
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, 'savedFilter');
-                });
-        },
-        saveFilter: function () {
-            var self = this;
-            if (this.get('temp')) {
-                this.showPopupMyInfo(function (dataModel) {
-                    self.set({
-                        name: dataModel.get('name'),
-                        isShared: dataModel.get('isShared'),
-                        description: dataModel.get('description'),
-                        entities: self.get('newEntities') || self.get('entities'),
-                        newEntities: '',
-                        selection_parameters: self.get('newSelectionParameters') || self.get('selection_parameters'),
-                        newSelectionParameters: ''
-                    });
-                    // for right work listeners
-                    self.set({ temp: false });
-                }, 'save');
-            } else {
-                this.set({
-                    entities: this.get('newEntities') || this.get('entities'),
-                    newEntities: '',
-                    selection_parameters: this.get('newSelectionParameters') || this.get('selection_parameters'),
-                    newSelectionParameters: ''
-                });
-            }
-        },
-        showPopupMyInfo: function (callback, mode) {
-            var modal = new ModalFilterEdit({
-                mode: mode,
-                filterModel: this
-            });
-            modal.show()
-                .done(function (dataModel) {
-                    callback(dataModel);
-                });
-        },
-        load: function () {
-            var self = this;
-            return call('GET', Urls.getFilters([this.get('id')]))
-                .done(function (data) {
-                    var itemData;
-                    if (data.length) {
-                        itemData = data[0];
-                        itemData.entities = JSON.stringify(itemData.entities);
-                        itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
-                        self.set(itemData);
-                    }
-                });
-        },
+        // editMainInfo: function () {
+        //     var self = this;
+        //     this.showPopupMyInfo(function (dataModel) {
+        //         self.set({
+        //             name: dataModel.get('name'),
+        //             isShared: dataModel.get('isShared'),
+        //             description: dataModel.get('description')
+        //         });
+        //     }, 'update');
+        // },
+        // onChangeTemp: function (model, temp) {
+        //     var self = this;
+        //     var data;
+        //     if (temp || this.collection) {
+        //         return;
+        //     }
+        //     data = model.getDataFromServer();
+        //     data.type = 'launch';
+        //     call('POST', Urls.saveFilter(), { elements: [data] })
+        //         .done(function (response) {
+        //             Util.ajaxSuccessMessenger('savedFilter');
+        //             self.set({ id: response[0].id });
+        //         })
+        //         .fail(function (error) {
+        //             Util.ajaxFailMessenger(error, 'savedFilter');
+        //         });
+        // },
+        // saveFilter: function () {
+        //     var self = this;
+        //     if (this.get('temp')) {
+        //         this.showPopupMyInfo(function (dataModel) {
+        //             self.set({
+        //                 name: dataModel.get('name'),
+        //                 isShared: dataModel.get('isShared'),
+        //                 description: dataModel.get('description'),
+        //                 entities: self.get('newEntities') || self.get('entities'),
+        //                 newEntities: '',
+        //                 selection_parameters: self.get('newSelectionParameters') || self.get('selection_parameters'),
+        //                 newSelectionParameters: ''
+        //             });
+        //             // for right work listeners
+        //             self.set({ temp: false });
+        //         }, 'save');
+        //     } else {
+        //         this.set({
+        //             entities: this.get('newEntities') || this.get('entities'),
+        //             newEntities: '',
+        //             selection_parameters: this.get('newSelectionParameters') || this.get('selection_parameters'),
+        //             newSelectionParameters: ''
+        //         });
+        //     }
+        // },
+        // showPopupMyInfo: function (callback, mode) {
+        //     var modal = new ModalFilterEdit({
+        //         mode: mode,
+        //         filterModel: this
+        //     });
+        //     modal.show()
+        //         .done(function (dataModel) {
+        //             callback(dataModel);
+        //         });
+        // },
+        // load: function () {
+        //     var self = this;
+        //     return call('GET', Urls.getFilters([this.get('id')]))
+        //         .done(function (data) {
+        //             var itemData;
+        //             if (data.length) {
+        //                 itemData = data[0];
+        //                 itemData.entities = JSON.stringify(itemData.entities);
+        //                 itemData.selection_parameters = JSON.stringify(itemData.selection_parameters);
+        //                 self.set(itemData);
+        //             }
+        //         });
+        // },
 
-        remove: function () {
-            var self = this;
-            return call('DELETE', urls.filterById(this.get('id')))
-                .done(function () {
-                    Util.ajaxSuccessMessenger('deleteFilter');
-                    if (self.collection) {
-                        self.collection.remove(self);
-                    }
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, 'editFilter');
+        // remove: function () {
+        //     console.log('old method remove model');
+        // },
+        parseServerData: function (data) {
+            this.set({
+                name: data.name,
+                description: data.description,
+                entities: JSON.stringify(data.entities),
+                isShared: data.share,
+                selection_parameters: JSON.stringify(data.selection_parameters),
+                type: data.type,
+
+                newEntities: '',
+                newSelectionParameters: ''
+            });
+        },
+        onAddFilter: function (options) {
+            if (this.cid === options.cid) {
+                this.parseServerData(options.data);
+                this.set({
+                    id: options.id
                 });
+            }
+        },
+        onSetFilter: function (options) {
+            if (this.get('id') === options.id) {
+                this.parseServerData(options.data);
+            }
+        },
+        onLoadStartFilter: function (id) {
+            if (id === this.get('id')) {
+                this.set({ load: true });
+            }
+        },
+        onLoadEndFilter: function (id) {
+            if (id === this.get('id')) {
+                this.set({ load: false });
+            }
         }
     });
 

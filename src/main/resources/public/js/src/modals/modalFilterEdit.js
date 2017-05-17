@@ -19,9 +19,11 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
+    var $ = require('jquery');
+    var _ = require('underscore');
     var ModalView = require('modals/_modalView');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
@@ -37,7 +39,7 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-name-input]': 'value: updateName',
             '[data-js-is-shared]': 'checked: isShared',
-            '[data-js-description]': 'value: description',
+            '[data-js-description]': 'value: description'
         },
         events: {
             'click [data-js-ok]': 'onClickOk',
@@ -48,74 +50,74 @@ define(function (require, exports, module) {
         computeds: {
             updateName: {
                 deps: ['name'],
-                get: function(name){
+                get: function (name) {
                     return name.trim();
                 },
-                set: function(value){
+                set: function (value) {
                     this.model.set('name', value.trim());
                 }
             }
         },
 
-        initialize: function(options) {
-            var filterNames = [],
-                self = this,
-                filterModel = options.filterModel;
+        initialize: function (options) {
+            var filterNames = [];
+            var self = this;
+            var filterModel = options.filterModel;
             this.model = new Epoxy.Model({
                 name: filterModel.get('name'),
                 isShared: filterModel.get('isShared'),
-                description: filterModel.get('description'),
+                description: filterModel.get('description')
             });
             this.render(options);
             this.listenTo(this.model, 'change:description', this.onChangeDescription);
             this.listenTo(this.model, 'change:isShared', this.onChangeShared);
             Service.getFilterNames()
-                .done(function(data){
-                    _.each(data, function(filter){
-                        if(filter.name !== self.model.get('name')){
+                .done(function (data) {
+                    _.each(data, function (filter) {
+                        if (filter.name !== self.model.get('name')) {
                             filterNames.push(filter.name);
                         }
                     });
                 })
-                .always(function(){
+                .always(function () {
                     self.addValidators(filterNames);
                 });
         },
-        addValidators: function(filterNames){
+        addValidators: function (filterNames) {
             Util.hintValidator($('[data-js-name-input]', this.$el), [{
                 validator: 'minMaxRequired',
                 type: 'filterName',
                 min: 3,
                 max: 128
-            }, {validator: 'noDuplications', type: 'filterName', source: filterNames, isCaseSensitive: true}]);
+            }, { validator: 'noDuplications', type: 'filterName', source: filterNames, isCaseSensitive: true }]);
             Util.hintValidator($('[data-js-description]', this.$el), {
                 validator: 'maxRequired',
                 type: 'filterDescription',
                 max: 256
             });
         },
-        render: function(options) {
+        render: function (options) {
             this.$el.html(Util.templates(this.template, options));
         },
         onKeySuccess: function () {
             $('[data-js-ok]', this.$el).focus().trigger('click');
         },
-        onChangeDescription: function(){
+        onChangeDescription: function () {
             config.trackingDispatcher.trackEventNumber(248);
         },
-        onChangeShared: function(){
+        onChangeShared: function () {
             config.trackingDispatcher.trackEventNumber(249);
         },
-        onClickClose: function(){
+        onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(247);
         },
-        onClickCancel: function(){
+        onClickCancel: function () {
             config.trackingDispatcher.trackEventNumber(250);
         },
-        validate: function(){
+        validate: function () {
             return !($('[data-js-description]', this.$el).trigger('validate').data('validate-error') || $('[data-js-name-input]', this.$el).trigger('validate').data('validate-error'));
         },
-        onClickOk: function() {
+        onClickOk: function () {
             if (!this.validate()) return;
             config.trackingDispatcher.trackEventNumber(251);
             this.successClose(this.model);
