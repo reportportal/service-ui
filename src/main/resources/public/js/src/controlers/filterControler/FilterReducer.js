@@ -48,12 +48,14 @@ define(function (require) {
                 })
                 .done(function (data) {
                     var itemData = data[0];
-                    itemData.isShared = itemData.share;
-                    delete itemData.share;
-                    self.listener.trigger(self.events.SET_FILTER, {
-                        id: id,
-                        data: itemData
-                    });
+                    if (itemData) {
+                        itemData.isShared = itemData.share;
+                        delete itemData.share;
+                        self.listener.trigger(self.events.SET_FILTER, {
+                            id: id,
+                            data: itemData
+                        });
+                    }
                 });
         },
         changeIsLaunch: function (options) {
