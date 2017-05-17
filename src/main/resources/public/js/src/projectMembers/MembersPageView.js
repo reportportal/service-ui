@@ -38,6 +38,7 @@ define(function(require, exports, module) {
         templateHeader: 'tpl-project-members-header',
 
         initialize: function(options){
+            this.contextName = options.contextName;
             this.context = options.context;
             this.$header = this.context.getMainView().$header;
             this.$el = this.context.getMainView().$body;
@@ -52,6 +53,13 @@ define(function(require, exports, module) {
             this.listenTo(this.body, 'remove:member invite:member', this.onChangeMembers);
         },
 
+        update: function () {
+            this.body && this.body.destroy();
+            this.body = new MembersTableView({});
+            $('[data-js-members]', this.$el).append(this.body.$el);
+            this.listenTo(this.body, 'remove:member invite:member', this.onChangeMembers);
+        },
+
         onChangeMembers: function() {
             this.appModel.update();
         },
@@ -60,11 +68,9 @@ define(function(require, exports, module) {
             this.$header.html(Util.templates(this.templateHeader), {});
         },
 
-        destroy: function(){
+        onDestroy: function(){
             this.$header.empty();
             this.body && this.body.destroy();
-            this.undelegateEvents();
-            this.stopListening();
         }
     });
 

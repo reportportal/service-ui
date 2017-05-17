@@ -243,7 +243,10 @@
       .role-grid-cell {
         width: 100%;
         .member-role-mobile {
-          display: block;
+          display: inline;
+        }
+        .admin-role {
+          display: inline;
         }
       }
       .action-grid-cell {

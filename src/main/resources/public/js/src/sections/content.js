@@ -59,7 +59,7 @@ define(function (require) {
                 this.$container = $('#dynamic-content', this.$el);
             }
             this.setupPageView(options);
-            if (this.pageView.contextName === 'settings' || this.isAdminPage) {
+            if (this.pageView.contextName === 'settings' || this.pageView.contextName === 'members' || this.isAdminPage) {
                 this.$el.find('.rp-main-panel').addClass('mobile-without-content-header');
             }
             return this;
@@ -76,8 +76,7 @@ define(function (require) {
             } else {
                 this.pageView.update(options);
             }
-
-            if (this.isAdminPage || this.pageView.contextName === 'settings') {
+            if (this.isAdminPage || this.pageView.contextName === 'settings' || this.pageView.contextName === 'members') {
                 this.$el.find('.rp-main-panel').addClass('mobile-without-content-header');
             } else {
                 this.$el.find('.rp-main-panel').removeClass('mobile-without-content-header');
@@ -150,11 +149,9 @@ define(function (require) {
             return Projects.ContentView;
         },
 
-        destroy: function () {
+        onDestroy: function () {
             this.pageView.destroy();
             this.$el.off().empty();
-            this.undelegateEvents();
-            this.stopListening();
         }
     });
 
