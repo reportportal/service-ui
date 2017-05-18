@@ -137,8 +137,8 @@ define(function (require) {
         updateUrlModels: function () {
             var url = '';
             _.each(this.models, function (model) {
+                model.set({ url: url + model.get('partUrl').replace('|', '?')});
                 url += model.get('partUrl');
-                model.set({ url: url });
             });
         },
         forceUpdate: function () {
@@ -162,15 +162,15 @@ define(function (require) {
                     var level = 'item';
                     var splitId = newPath[i].split('|');
                     var currentNewPath = splitId[0];
+                    var currentUrlFilters = splitId[1] ? '|' + decodeURIComponent(splitId[1]).replace(',', '%2C') : '';
                     if (i === 0) {
                         level = 'filter';
-                        tempFilterModel = new FilterModel({ id: newPath[0], context: this.context });
-                        partUrl = tempFilterModel.get('url');
+                        tempFilterModel = new FilterModel({ id: currentNewPath, context: this.context });
+                        partUrl = tempFilterModel.get('url') + currentUrlFilters;
                         tempFilterModel.destroy();
                     } else {
-                        partUrl += '/' + currentNewPath;
-                        if (splitId[1]) {
-                            partUrl += '|' + splitId[1] + '?' + decodeURIComponent(splitId[1]);
+                        partUrl += '/' + currentNewPath + currentUrlFilters;
+                        if (~currentUrlFilters.indexOf('filter.eq.has_child')) {
                             listView = true;
                         }
                         level = (i === 1) ? 'launch' : 'item';
