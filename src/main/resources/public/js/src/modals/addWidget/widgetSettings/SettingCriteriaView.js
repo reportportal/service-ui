@@ -50,7 +50,7 @@ define(function (require, exports, module) {
                 data: criteriaData,
                 placeholder: Localization.widgets.selectCriteria,
                 multiple: this.curWidget.criteriaSelectType !== 'radio',
-                defaultValue: this.getDefaultValue()
+                defaultValue: (this.curWidget.criteriaSelectType !== 'radio') ? this.getDefaultValue() : this.getDefaultValue()[0]
             });
             $('[data-js-select-criteria-container]', this.$el).html(this.selectCriteria.$el);
             this.listenTo(this.selectCriteria, 'change', this.onChangeSelectCriteria);
