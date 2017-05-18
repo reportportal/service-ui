@@ -121,14 +121,19 @@ define(function (require) {
             return mainHash + '?' + options.join('&');
         },
         setPaging: function (curPage, size) {
+            var self = this;
+            var partUrl = '';
             this.pagingPage = curPage;
             this.pagingTotalPages = curPage;
             if (size) {
                 this.pagingSize = size;
                 this.userStorage.set('launchPageSize', size);
             }
-            this.activateChangeParamsTrigger();
-            this.load();
+            partUrl = this.activateChangeParamsTrigger();
+            this.load()
+                .done(function () {
+                    self.setPartUrl(partUrl);
+                });
         },
         setLogItem: function (logItemId, silent) {
             if (!this.get(logItemId)) {
@@ -139,13 +144,18 @@ define(function (require) {
             !silent && this.trigger('change:log:item', logItemId);
         },
         setSelfModels: function (filterModel) {
+            var self = this;
+            var partUrl = '';
             this.stopListening(this.filterModel);
 
             this.filterModel = filterModel;
             this.listenTo(this.filterModel, 'change:newEntities change:entities', this.changeFilterOptions);
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.changeSelectionParameters);
-            this.activateChangeParamsTrigger();
-            return this.load();
+            partUrl = this.activateChangeParamsTrigger();
+            return this.load()
+                .done(function () {
+                    self.setPartUrl(partUrl);
+                });
         },
         activateLogsItem: function (itemId) {
             var parentItemModel = this.get(itemId);
@@ -202,16 +212,31 @@ define(function (require) {
             return answer;
         },
         changeSelectionParameters: function () {
-            this.load();
-            this.activateChangeParamsTrigger();
+            var partUrl = '';
+            var self = this;
+            this.load()
+                .done(function () {
+                    self.setPartUrl(partUrl);
+                });
+            partUrl = this.activateChangeParamsTrigger();
         },
         changeFilterOptions: function (model, value) {
+            var partUrl = '';
+            var self = this;
             if (model.get('newEntities') !== '' ||
                 (model.changed.entities && model.get('entities') !== model._previousAttributes.newEntities)) {
                 this.pagingPage = 1;
-                this.load();
+                this.load()
+                    .done(function () {
+                        self.setPartUrl(partUrl);
+                    });
             }
-            this.activateChangeParamsTrigger();
+            partUrl = this.activateChangeParamsTrigger();
+        },
+        setPartUrl: function (partUrl) {
+            _.each(this.models, function (model) {
+                model.set({ filter_url: partUrl });
+            });
         },
         getInfoByCollection: function () {
             var async = $.Deferred();
@@ -295,9 +320,11 @@ define(function (require) {
         activateChangeParamsTrigger: function () {
             var params;
             var logParams;
+            var paramsUrl = '';
             if (!this.historyOptions.item && !this.logOptions.item) {
                 if (!this.launchModel) {
-                    this.trigger('change:params', this.getParamsFilter(true).join('&'));
+                    paramsUrl = this.getParamsFilter(true).join('&');
+                    this.trigger('change:params', paramsUrl);
                 }
                 params = this.getParamsFilter();
                 if (this.launchModel) {
@@ -306,9 +333,11 @@ define(function (require) {
                         logParams.push('log.' + key + '=' + value);
                     });
                     logParams = logParams.concat(params);
-                    this.trigger('change:params', logParams.join('&'));
+                    paramsUrl = logParams.join('&');
+                    this.trigger('change:params', paramsUrl);
                 }
             }
+            return paramsUrl;
         },
         load: function (dynamicPge) {  // double load page if content = []
             var self = this;
