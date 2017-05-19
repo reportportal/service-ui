@@ -109,7 +109,7 @@ define(function (require) {
         update: function () {
             var self = this;
             $.ajax({
-                url: '//evbyminsd6293.minsk.epam.com:8081/twitter',
+                url: 'http://status.rp.epam.com/twitter',
                 dataType: 'jsonp',
                 jsonp: 'jsonp',
                 crossDomain: true,
