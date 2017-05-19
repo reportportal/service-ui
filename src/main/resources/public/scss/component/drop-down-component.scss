@@ -47,6 +47,13 @@
           }
         }
       }
+      label.rp-checkbox-wrap {
+        span {
+          -ms-text-overflow: ellipsis;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
+      }
     }
   }
   .validate-hint-wrapper {
