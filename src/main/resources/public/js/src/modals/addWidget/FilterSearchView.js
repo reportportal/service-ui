@@ -135,6 +135,10 @@ define(function (require) {
             }
         },
         getSelectedFilterModel: function () {
+            if (!this.selectedFilterModel && this.model.get('filter_id')) {
+                this.launchFilterCollection = new SingletonLaunchFilterCollection();
+                this.setFilterModel(this.launchFilterCollection.get(this.model.get('filter_id')));
+            }
             return this.selectedFilterModel;
         },
         onSelectFilterCheck: function (model, active) {
