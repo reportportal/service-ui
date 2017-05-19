@@ -253,6 +253,7 @@ define(function (require) {
         },
         updateFilters: function () {
             var self = this;
+            this.collection.destroyModels();
             this.collection.reset([]);
             this.viewModel.set({
                 totalPage: 1,
@@ -314,7 +315,7 @@ define(function (require) {
             return url;
         },
         onDestroy: function () {
-            this.collection.destroy();
+            this.collection.destroy(true);
             this.$el.remove();
         }
     });

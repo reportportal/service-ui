@@ -252,7 +252,7 @@ define(function (require) {
         onDestroy: function () {
             this.$header.empty();
             this.mainBreadcrumbs && this.mainBreadcrumbs.destroy();
-            this.collection.destroy();
+            this.collection.destroy(true);
             _.each(this.renderViews, function (view) {
                 view.destroy();
             });

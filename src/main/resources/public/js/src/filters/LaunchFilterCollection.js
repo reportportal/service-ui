@@ -129,6 +129,7 @@ define(function (require) {
             call('GET', Urls.getFilters(ids))
                 .done(function (data) {
                     (new SingletonDefectTypeCollection()).ready.done(function () {
+                        self.destroyModels();
                         self.reset(_.map(data, function (item) {
                             item.isLaunch = true;
                             item.type = 'launch';

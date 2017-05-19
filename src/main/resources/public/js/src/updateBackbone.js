@@ -38,15 +38,15 @@ define(function (require, exports, module) {
         this.onDestroy && this.onDestroy();
         this.stopListening();
     };
-    Backbone.Collection.prototype._removeReference = function (model, options) {
-        if (this === model.collection) delete model.collection;
-        model.off('all', this._onModelEvent, this);
-        model.destroy();
-    };
-    Backbone.Collection.prototype.destroy = function () {
+    Backbone.Collection.prototype.destroyModels = function () {
         _.each(this.models, function (model) {
             model.destroy();
         });
+    };
+    Backbone.Collection.prototype.destroy = function (withModels) {
+        if (withModels) {
+            this.destroyModels();
+        }
         this.onDestroy && this.onDestroy();
         this.stopListening();
     };
