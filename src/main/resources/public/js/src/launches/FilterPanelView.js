@@ -68,8 +68,8 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(15);
             (new ModalFilterEdit({ mode: 'edit', filterModel: self.model })).show()
                 .done(function (dataModel) {
-                    self.filterListener.trigger(self.filterEvents.ON_ADD_FILTER, {
-                        cid: self.model.cid,
+                    self.filterListener.trigger(self.filterEvents.ON_SET_FILTER, {
+                        id: self.model.get('id'),
                         data: self.model.getDataFromServer(dataModel.attributes)
                     });
                 });
