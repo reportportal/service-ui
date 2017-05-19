@@ -381,6 +381,7 @@ define(function (require) {
                 entities: JSON.stringify(data.entities),
                 isShared: data.share,
                 selection_parameters: JSON.stringify(data.selection_parameters),
+                owner: data.owner || this.get('owner'),
                 type: data.type,
 
                 newEntities: '',
