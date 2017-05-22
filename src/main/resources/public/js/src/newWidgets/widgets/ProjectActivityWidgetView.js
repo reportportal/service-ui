@@ -171,6 +171,7 @@ define(function (require) {
             Util.hoverFullTime(this.$el);
             !this.isPreview && Util.setupBaronScroll($('.project-activity-panel', this.$el));
             this.getItemsInfo(_.uniq(this.testItems));
+            if (this.getData().length === 0) { this.addNoAvailableBock(); }
         },
         getTickets: function (item) {
             var newTickets = item.ticketId$newValue ? item.ticketId$newValue.split(',') : [];

@@ -87,6 +87,7 @@ define(function (require) {
                     }
                 });
             }
+            if (this.getData().length === 0) { this.addNoAvailableBock(); }
         },
         addPackItems: function () {
             var currentItemCount = 0;

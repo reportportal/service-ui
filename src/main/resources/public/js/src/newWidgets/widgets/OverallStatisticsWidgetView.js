@@ -76,6 +76,7 @@ define(function (require, exports, module) {
             };
             this.$el.html(Util.templates(this.tpl, params));
             !this.isPreview && Util.setupBaronScroll($('.statistics-panel', this.$el));
+            if(this.getData().length === 0) { this.addNoAvailableBock(); }
         }
     });
 

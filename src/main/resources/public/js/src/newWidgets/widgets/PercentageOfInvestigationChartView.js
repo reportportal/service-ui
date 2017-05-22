@@ -167,7 +167,9 @@ define(function (require, exports, module) {
                 .call(this.chart);
 
             vis.filter(function (filterData) {
+
                 if (_.isEmpty(filterData)) {
+                    alert();
                     $(this).closest('div').append('<div class="no-data-available"></div>');
                 }
             }, this)

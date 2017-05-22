@@ -32,7 +32,6 @@ define(function (require, exports, module) {
             var data = this.getData();
             var self = this;
             var tooltip = this.tooltipContent();
-
             this.addSVG();
 
             this.chart = nvd3.models.multiBarChart()
@@ -108,6 +107,12 @@ define(function (require, exports, module) {
                 this.disabeLegendEvents();
             }
             this.updateInvalidCriteria(vis);
+
+            var emptyData = this.model.getContent().result;
+            if (_.isEmpty(emptyData)) {
+                this.showNoDataBlock();
+            }
+
             return this;
         }
     });

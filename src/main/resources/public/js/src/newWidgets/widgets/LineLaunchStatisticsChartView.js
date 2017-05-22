@@ -172,6 +172,10 @@ define(function (require, exports, module) {
                 this.disabeLegendEvents();
             }
             this.updateInvalidCriteria(vis);
+            var emptyData = this.model.getContent().result;
+            if (_.isEmpty(emptyData)) {
+                this.showNoDataBlock();
+            }
         }
     });
 
