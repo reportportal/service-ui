@@ -40,7 +40,6 @@ require.config({
         nicescroll: '../lib/jquery.nicescroll',
         bootstrap: '../lib/bootstrap.min',
         bootswitch: '../lib/bootstrap-switch.min',
-        base64: '../lib/base64',
         nprogress: '../lib/nprogress',
         localization: 'localizations/default',
         moment: '../lib/moment.2.10.2',

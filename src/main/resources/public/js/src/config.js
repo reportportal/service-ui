@@ -34,7 +34,6 @@ require.config({
         // 'nicescroll': '../lib/jquery.nicescroll',
         'bootswitch': '../lib/bootstrap-switch.min',
         'baron': '../lib/baron-scroll',
-        'base64': '../lib/base64',
         'util': 'core/util',
         'nprogress': '../lib/nprogress',
         'localization': 'localizations/default',
