@@ -20,7 +20,6 @@
  */
 
 define(function (require, exports, module) {
-    "use strict";
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Util = require('util');
@@ -31,7 +30,7 @@ define(function (require, exports, module) {
     var config = App.getInstance();
 
     var Footer = Backbone.View.extend({
-        el: "#pageFooter",
+        el: '#pageFooter',
         tpl: 'tpl-footer',
 
         initialize: function () {
@@ -50,7 +49,7 @@ define(function (require, exports, module) {
         render: function () {
             var self = this;
 
-            this.$el.html(Util.templates(this.tpl, {moment: Moment, util: Util})).show();
+            this.$el.html(Util.templates(this.tpl, { moment: Moment, util: Util })).show();
             this.viewModel.ready
                 .done(function () {
                     $('#buildVersion', self.$el).text(self.viewModel.get('uiBuildVersion'));
@@ -58,22 +57,22 @@ define(function (require, exports, module) {
             Util.setupBaronScroll($('#ComponentsModal .modal-dialog', this.$el));
             return this;
         },
-        onClickForkUs: function(e){
+        onClickForkUs: function (e) {
             config.trackingDispatcher.trackEventNumber(351);
         },
-        onClickChatSlack: function(){
+        onClickChatSlack: function () {
             config.trackingDispatcher.trackEventNumber(352);
         },
-        onClickContactUs: function(){
+        onClickContactUs: function () {
             config.trackingDispatcher.trackEventNumber(353);
         },
-        onClickEpamLink: function(){
+        onClickEpamLink: function () {
             config.trackingDispatcher.trackEventNumber(354);
         },
-        onClickDocs: function(){
+        onClickDocs: function () {
             config.trackingDispatcher.trackEventNumber(355);
         },
-        onClickApi: function(){
+        onClickApi: function () {
             config.trackingDispatcher.trackEventNumber(356);
         },
         destroy: function () {

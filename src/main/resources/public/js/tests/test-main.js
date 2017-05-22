@@ -39,7 +39,6 @@ require.config({
         cookie: '../lib/jquery.cookie',
         nicescroll: '../lib/jquery.nicescroll',
         bootstrap: '../lib/bootstrap.min',
-        bootswitch: '../lib/bootstrap-switch.min',
         nprogress: '../lib/nprogress',
         localization: 'localizations/default',
         moment: '../lib/moment.2.10.2',
@@ -53,7 +52,6 @@ require.config({
         daterangepicker: '../lib/daterangepicker',
         'readmore-js': '../lib/readmore',
         select2: '../lib/select2.custom',
-        //launch: 'launch/launch-navigation',
         //launchgrid: 'launch/launch-grid',
         //launchCrumbs: 'launch/launch-crumbs',
         defectEditor: 'defect/defect-editor',
@@ -83,7 +81,6 @@ require.config({
         callService: 'core/call-service',
         coreService: 'core/core-service',
         storageService: 'core/storage-service',
-        widgetWizard: 'wizard/widget',
         widgets: 'widget/widgets',
         //dashboard: 'dashboard/dashboard-view',
         'fullscreen': '../lib/jquery.fullscreen',
@@ -137,8 +134,6 @@ require.config({
         'jquery-ui': ['jquery'],
         'bootstrap': ['jquery'],
         'equalHeightRows':  ['jquery'],
-        'bootswitch': ['jquery', 'bootstrap'],
-        'base64': {exports: 'Base64'},
         'cookie': ['jquery'],
         'isLoading': ['jquery'],
         'lazyload': ['jquery'],
@@ -185,7 +180,7 @@ require.config({
 
         '../tests/spec/user_profile/user_profile',
 
-        '../tests/spec/wizard/widget-wizard',
+        // '../tests/spec/wizard/widget-wizard',
 
         //'../tests/spec/project/project',
 

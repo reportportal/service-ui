@@ -36,7 +36,6 @@ define(function (require, exports, module) {
     require('baron');
     require('cookie');
     // require('nicescroll');
-    require('bootswitch');
     require('isLoading');
     require('select2');
 
@@ -551,15 +550,6 @@ define(function (require, exports, module) {
                     e.preventDefault();
                 }
             });
-        },
-
-        switcheryInitialize: function (parent) {
-            if (parent) {
-                $('.js-switch', parent).bootstrapSwitch({
-                    onText: Localization.ui.on,
-                    offText: Localization.ui.off
-                });
-            }
         },
 
         dropDownHandler: function (e) {
