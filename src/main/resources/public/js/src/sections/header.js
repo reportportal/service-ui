@@ -67,7 +67,11 @@ define(function (require) {
         update: function (options) {
             if (this.currentPage !== options.contextName) {
                 if (options.contextName === 'project-details') {
-                    this.$el.find('[data-js-admin-header-crumb]').html(' / ' + this.getCrumbPart('projects'));
+                    this.$el.find('[data-js-admin-header-crumb]').html(
+                        ' / '
+                        + this.getCrumbPart('projects')
+                        + ((this.project && this.project.projectId) ? ' / ' + this.project.projectId : '')
+                    );
                     return;
                 }
                 this.$el.find('[data-js-admin-header-crumb]').html(' / ' + this.getCrumbPart(options.contextName));
@@ -126,10 +130,13 @@ define(function (require) {
                 self.scrollerProjects.removeClass('open');
                 self.blockHeightProjects.removeClass('open').height(0);
             });
-
             if (this.isAdminPage) {
                 if (this.currentPage === 'project-details') {
-                    this.$el.find('[data-js-admin-header-crumb]').html(' / ' + this.getCrumbPart('projects'));
+                    this.$el.find('[data-js-admin-header-crumb]').html(
+                        ' / '
+                        + this.getCrumbPart('projects')
+                        + ((this.project && this.project.projectId) ? ' / ' + this.project.projectId : '')
+                    );
                 } else {
                     this.$el.find('[data-js-admin-header-crumb]').html(' / ' + this.getCrumbPart(this.currentPage));
                 }
