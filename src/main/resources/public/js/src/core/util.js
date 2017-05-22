@@ -36,7 +36,7 @@ define(function (require, exports, module) {
     require('baron');
     require('cookie');
     // require('nicescroll');
-    require('isLoading');
+    // require('isLoading');
     require('select2');
 
     var config = App.getInstance(),
@@ -375,14 +375,14 @@ define(function (require, exports, module) {
                 this.messages.close();
             }
         },
-        showOverlay: function (element, deleting) {
-            $(element).LoadingOverlay('show', {
-                image: 'img/graph_loader.gif'
-            });
-        },
-        hideOverlay: function (element) {
-            $(element).LoadingOverlay('hide');
-        },
+        // showOverlay: function (element, deleting) {
+        //     $(element).LoadingOverlay('show', {
+        //         image: 'img/graph_loader.gif'
+        //     });
+        // },
+        // hideOverlay: function (element) {
+        //     $(element).LoadingOverlay('hide');
+        // },
         hideMessagePanel: function () {
             var self = this;
             $('.cancel, [type="cancel"]').on('click', function () {

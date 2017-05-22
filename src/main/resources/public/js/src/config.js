@@ -43,7 +43,6 @@ require.config({
         'app': 'core/app-config',
         'validators': 'core/validators',
         'fullscreen': '../lib/jquery.fullscreen',
-        'isLoading': '../lib/jquery.isLoading',
         'popup': '../lib/jquery.magnific-popup',
 	    'lunr': '../lib/lunr',
 
@@ -114,7 +113,6 @@ require.config({
         },
         'cookie': ['jquery'],
         'popup': ['jquery'],
-        'isLoading': ['jquery'],
         'fullscreen': ['jquery'],
         // 'nicescroll': ['jquery'],
         'customScroll': ['jquery'],
