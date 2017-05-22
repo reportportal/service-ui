@@ -152,10 +152,7 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(288);
             modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deletedWidget,
-                bodyText: Util.replaceTemplate(
-                    !dangerRemove
-                        ? Localization.dialog.deletedWidget
-                        : Localization.dialog.deletedWidgetDanger,
+                bodyText: Util.replaceTemplate(Localization.dialog.deletedWidget,
                     this.model.get('name')
                 ),
                 confirmText: !dangerRemove ? '' : Localization.dialog.deletedWidgetDangerConfirmText,
