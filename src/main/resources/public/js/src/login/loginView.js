@@ -34,7 +34,7 @@ define(function (require) {
     var LoginRestoreView = require('login/loginRestoreView');
     var LoginResetView = require('login/loginResetView');
 
-    // var TwitterNewsComponent = require('components/twitterNewsComponent/TwitterNewsComponent');
+    var TwitterNewsComponent = require('components/twitterNewsComponent/TwitterNewsComponent');
     var LoginVersionsView = require('login/loginVersions/LoginVersionsView');
 
     var LoginView = Epoxy.View.extend({
@@ -63,8 +63,8 @@ define(function (require) {
             }
 
             this.render();
-            // this.twitterComponent = new TwitterNewsComponent();
-            // $('[data-js-twitter-container]', this.$el).html(this.twitterComponent.$el);
+            this.twitterComponent = new TwitterNewsComponent();
+            $('[data-js-twitter-container]', this.$el).html(this.twitterComponent.$el);
             this.versionsServices = new LoginVersionsView();
             $('[data-js-service-versions-container]', this.$el).html(this.versionsServices.$el);
             var urlModel = new SingletonURLParamsModel();
@@ -155,7 +155,7 @@ define(function (require) {
 
         onDestroy: function () {
             clearInterval(this.timer);
-            // this.twitterComponent && this.twitterComponent.destroy();
+            this.twitterComponent && this.twitterComponent.destroy();
             this.versionsServices && this.versionsServices.destroy();
             this.remove();
         }
