@@ -43,10 +43,7 @@ require.config({
         'app': 'core/app-config',
         'validators': 'core/validators',
         'fullscreen': '../lib/jquery.fullscreen',
-        'popup': '../lib/jquery.magnific-popup',
 	    'lunr': '../lib/lunr',
-
-        // 'lazyload': '../lib/jquery.lazyload.min',
         'select2': '../lib/select2.custom',
         'daterangepicker': '../lib/daterangepicker',
         'readmore-js': '../lib/readmore',
@@ -91,8 +88,6 @@ require.config({
         'simplemde': '../lib/markdown/simplemde.min',
 
         'textile': '../lib/textile',
-        'markitup': '../lib/jquery.markitup.custom',
-        'markitupset': '../lib/jquery.markitup.textile',
 
         // TODO - not used
         //'stickyHeader': 'core/StickyHeader',
@@ -112,7 +107,6 @@ require.config({
             exports: 'jQuery.fn.slick'
         },
         'cookie': ['jquery'],
-        'popup': ['jquery'],
         'fullscreen': ['jquery'],
         // 'nicescroll': ['jquery'],
         'customScroll': ['jquery'],
@@ -122,8 +116,6 @@ require.config({
         'gridstackUi': ['gridstack'],
         'validate': { deps : ['jquery'] },
         'nvd3': {deps: ['d3'], exports : 'nv'},
-        'markitup': ['jquery'],
-        'markitupset': ['markitup'],
         'underscore': {
             exports: '_'
         },

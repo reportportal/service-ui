@@ -53,7 +53,6 @@
             favorites: 'favorites/favorites',
             register: 'register/register',
             //npm runcomponents: 'core/components',
-            lazyload: '../lib/jquery.lazyload.min',
             daterangepicker: '../lib/daterangepicker',
             'readmore-js': '../lib/readmore',
             select2: '../lib/select2.custom',
@@ -89,7 +88,6 @@
             storageService: 'core/storage-service',
             dashboard: 'dashboard/dashboard-view',
             'fullscreen': '../lib/jquery.fullscreen',
-            'popup': '../lib/jquery.magnific-popup',
             'highlight': '../lib/highlight.pack',
             'gridstack': '../lib/gridstack/gridstack.custom',
             helpers: 'core/helpers',
@@ -109,8 +107,6 @@
             adminService: 'admin/service',
 
             'textile': '../lib/textile',
-            'markitup': '../lib/jquery.markitup.custom',
-            'markitupset': '../lib/jquery.markitup.textile',
             'stickyHeader': 'core/sticky-header',
             'cacheService': 'core/cache-service',
             'scrollable': 'core/scrollable-view',            
@@ -123,12 +119,10 @@
         shim: {
             backbone: { deps : ["underscore", "jquery"] },
             daterangepicker: { deps : ["jquery"] },
-            lazyload:  { deps : ["jquery"] },
             jasminejQuery: {exports: 'jasminejQuery', deps : ["jquery"] },
             bootstrap: { deps : ["jquery"] },
             select2: { deps: ["jquery"]},
             nvd3: { 'deps': ['d3'], exports : "nv"},
-            markitupset: ['markitup'],
             'gridstack': ['jquery', 'underscore'],
             'fullscreen': ['jquery']
         }
