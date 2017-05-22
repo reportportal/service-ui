@@ -19,10 +19,12 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
-    "use strict";
+define(function (require) {
+    'use strict';
+
     var $ = require('jquery');
     var Backbone = require('backbone');
+    var _ = require('underscore');
     var Util = require('util');
     var UserModel = require('model/UserModel');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
@@ -33,9 +35,8 @@ define(function (require, exports, module) {
     var config = App.getInstance();
 
 
-
     var Header = Backbone.View.extend({
-        el: "#topHeader",
+        el: '#topHeader',
 
         events: {
             'click .user-projects a': 'changeProject',
@@ -60,11 +61,11 @@ define(function (require, exports, module) {
             this.userModel = new UserModel();
             this.userStorage = new SingletonUserStorage();
 
-            this.listenTo(config.router, "route", this.updateActiveLink);
+            this.listenTo(config.router, 'route', this.updateActiveLink);
         },
 
         update: function (options) {
-            if(this.currentPage !== options.contextName) {
+            if (this.currentPage !== options.contextName) {
                 if (options.contextName === 'project-details') {
                     this.$el.find('[data-js-admin-header-crumb]').html(' / ' + this.getCrumbPart('projects'));
                     return;
@@ -76,14 +77,13 @@ define(function (require, exports, module) {
 
         getCrumbPart: function (page) {
             switch (page) {
-                case 'projects':
-                    return Localization.admin.titleAllProjects;
-                    break;
-                case 'users':
-                    return Localization.admin.users;
-                case 'settings':
-                    return Localization.admin.serverSettings;
-                    break;
+            case 'projects':
+                return Localization.admin.titleAllProjects;
+            case 'users':
+                return Localization.admin.users;
+            case 'settings':
+                return Localization.admin.serverSettings;
+            default:
             }
         },
 
@@ -98,7 +98,7 @@ define(function (require, exports, module) {
                 user: userAttributes,
                 isAdmin: Util.isAdmin(userAttributes),
                 canDebug: this.canDebug,
-                util: Util,
+                util: Util
             })).show();
             this.contentProjects = $('.user-projects', this.$el);
             this.scrollerProjects = Util.setupBaronScroll(this.contentProjects);
@@ -106,8 +106,9 @@ define(function (require, exports, module) {
             this.$el.find('#projectSelector a[data-href="' + this.project.projectId + '"]').parent().addClass('active'); // highlightes selected project in dropdown-list
             this.updateActiveLink();
 
-            $("#projectSelector", self.$el).on('shown.bs.dropdown', function () {
+            $('#projectSelector', self.$el).on('shown.bs.dropdown', function () {
                 var height = self.contentProjects.height();
+                var currentProject = $('#project-' + self.project.projectId);
                 if (height > 607) {
                     height = 607;
                     self.blockHeightProjects.addClass('_scrollbar');
@@ -116,14 +117,12 @@ define(function (require, exports, module) {
                     .width(self.contentProjects.width())
                     .addClass('open');
                 self.scrollerProjects.addClass('open');
-
-                var currentProject = $('#project-' + self.project.projectId);
                 if (currentProject.length) {
                     self.scrollerProjects.scrollTop(currentProject.position().top - 40);
                 }
             });
 
-            $("#projectSelector", self.$el).on('hide.bs.dropdown', function () {
+            $('#projectSelector', self.$el).on('hide.bs.dropdown', function () {
                 self.scrollerProjects.removeClass('open');
                 self.blockHeightProjects.removeClass('open').height(0);
             });
@@ -141,7 +140,7 @@ define(function (require, exports, module) {
 
         setLastActivePage: function () {
             var page = Backbone.history.getFragment();
-            (page == "user-profile") ? this.userStorage.set('lastActiveURL', this.project.projectId) : this.userStorage.set('lastActiveURL', page);
+            (page === 'user-profile') ? this.userStorage.set('lastActiveURL', this.project.projectId) : this.userStorage.set('lastActiveURL', page);
         },
 
         onClickLogout: function (e) {
@@ -150,75 +149,64 @@ define(function (require, exports, module) {
             e.stopPropagation();
             this.userModel.logout();
         },
-        onClickMembersIcon: function() {
+        onClickMembersIcon: function () {
             config.trackingDispatcher.trackEventNumber(4);
         },
-        onClickSettingsIcon: function() {
+        onClickSettingsIcon: function () {
             config.trackingDispatcher.trackEventNumber(5);
         },
-        onClickUserDropdown: function() {
+        onClickUserDropdown: function () {
             config.trackingDispatcher.trackEventNumber(6);
         },
-        onClickProfileLink: function() {
+        onClickProfileLink: function () {
             config.trackingDispatcher.trackEventNumber(7);
         },
-        onClickAdminLink: function() {
+        onClickAdminLink: function () {
             config.trackingDispatcher.trackEventNumber(8);
             this.setLastActivePage();
         },
-        onClickProjectDropdown: function() {
+        onClickProjectDropdown: function () {
             config.trackingDispatcher.trackEventNumber(10);
         },
 
         updateActiveLink: function () {
             this.clearActives();
-            this.currentHash = "#" + Backbone.history.getFragment().split('?')[0].split('/', 2).join('/');
-            if (this.currentHash === "#" + this.project.projectId) {
-                this.currentHash += "/dashboard";
+            this.currentHash = '#' + Backbone.history.getFragment().split('?')[0].split('/', 2).join('/');
+            if (this.currentHash === '#' + this.project.projectId) {
+                this.currentHash += '/dashboard';
             }
-            if (this.currentHash === "#" + this.project.projectId + "/") {
-                this.currentHash += "dashboard";
+            if (this.currentHash === '#' + this.project.projectId + '/') {
+                this.currentHash += 'dashboard';
             }
-            if (this.currentHash === "#administrate") {
-                this.currentHash += "/projects";
+            if (this.currentHash === '#administrate') {
+                this.currentHash += '/projects';
             }
             this.$el.find('a[href^="' + this.currentHash + '"]', this.$el).addClass('active');
             this.$el.find('#projectSelector a[data-href="' + this.project.projectId + '"]').parent().addClass('active'); // highlightes selected project in dropdown-list
         },
 
         clearActives: function () {
-            $("a.active", this.$el).removeClass('active');
-        },
-
-        openTopMenuItem: function (e) {
-            e.preventDefault();
-
-            var $el = $(e.currentTarget);
-            config.router.navigate($el.attr('href'), {trigger: true});
+            $('a.active', this.$el).removeClass('active');
         },
 
         changeProject: function (e) {
+            var $el;
             e.preventDefault();
-            var $el = $(e.currentTarget);
-            var project = $el.attr('data-href');
+            $el = $(e.currentTarget);
             if ($el.parent().hasClass('active')) {
                 return;
             }
-            // config.userModel.updateDefaultProject(project);
             config.userModel.set('bts', null);
             config.trackingDispatcher.trackEventNumber(11);
-            config.router.navigate($el.attr('data-href'), {trigger: true});
+            config.router.navigate($el.attr('data-href'), { trigger: true });
         },
 
         onClickMenuOpen: function () {
             $('body').toggleClass('menu-open');
         },
 
-        destroy: function () {
+        onDestroy: function () {
             this.$el.html('');
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
             delete this;
         }
     });
