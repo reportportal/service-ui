@@ -23,7 +23,6 @@ require.config({
     'paths': {
         'application': 'application',
         'jquery': '../lib/jquery-latest',
-        'jqueryUI': '../lib/jquery-ui',
         'jquery-ui': '../lib/jQuery-ui',
         'bootstrap': '../lib/bootstrap.min',
         'underscore': '../lib/lodash.min',
@@ -117,13 +116,10 @@ require.config({
         'templates': '../../compiled/templates/templates'
     },
     'shim': {
-        'jqueryUI': ['jquery'],
-
         'slick': {
             deps: ['jquery'],
             exports: 'jQuery.fn.slick'
         },
-        'bootstrap': ['jqueryUI'],
         'equalHeightRows':  ['jquery'],
         'bootswitch': ['jquery', 'bootstrap'],
         'base64': { exports : 'Base64' },

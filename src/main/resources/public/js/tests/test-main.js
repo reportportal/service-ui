@@ -27,8 +27,6 @@ require.config({
 
         app: 'core/app-config',
         jquery: '../lib/jquery-latest',
-        //jqueryUI: '../lib/old-jquery-ui',
-        'jqueryUI': '../lib/jquery-ui',
         'jquery-ui': '../lib/jQuery-ui',
         'jaddons': '../lib/jquery-addons',
         underscore: '../lib/lodash.min',
@@ -136,7 +134,7 @@ require.config({
             exports: '$'
         },
         'jasminejQuery': {exports: 'jasminejQuery', deps : ["jquery"] },
-        'jqueryUI': ['jquery'],
+
         'jquery-ui': ['jquery'],
         'bootstrap': ['jquery'],
         'equalHeightRows':  ['jquery'],
@@ -149,7 +147,7 @@ require.config({
         'nicescroll': ['jquery'],
         'select2': ['jquery'],
         'daterangepicker': ['jquery'],
-        'gridstack': ['jquery', 'jqueryUI', 'underscore'],
+        'gridstack': ['jquery', 'underscore'],
         'gridstackUi': ['gridstack'],
         'validate': {deps: ["jquery"]},
         'elasticColumns': ['jquery'],
