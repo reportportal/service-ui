@@ -109,7 +109,7 @@ define(function (require) {
         update: function () {
             var self = this;
             $.ajax({
-                url: 'http://status.rp.epam.com/twitter',
+                url: '//rpstatus.herokuapp.com/twitter',
                 dataType: 'jsonp',
                 jsonp: 'jsonp',
                 crossDomain: true,

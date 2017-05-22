@@ -46,20 +46,20 @@ define(function (require) {
                     self.collection.add(service.build);
                 });
             });
-            // $.ajax({
-            //     url: 'http://status.rp.epam.com/versions',
-            //     dataType: 'jsonp',
-            //     jsonp: 'jsonp',
-            //     crossDomain: true,
-            //     async: true
-            // })
-            //     .done(function (data) {
-            //         registryModel.ready.done(function () {
-            //             _.each(self.collection.models, function (model) {
-            //                 model.set({ updateInfo: data });
-            //             });
-            //         });
-            //     });
+            $.ajax({
+                url: '//rpstatus.herokuapp.com/versions',
+                dataType: 'jsonp',
+                jsonp: 'jsonp',
+                crossDomain: true,
+                async: true
+            })
+                .done(function (data) {
+                    registryModel.ready.done(function () {
+                        _.each(self.collection.models, function (model) {
+                            model.set({ updateInfo: data });
+                        });
+                    });
+                });
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
