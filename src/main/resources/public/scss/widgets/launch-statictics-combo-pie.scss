@@ -29,6 +29,7 @@
     width: 50%;
     height: 100%;
     float: left;
+    position: relative;
     @media (max-width: $SCREEN_XS_MAX) {
       width: 100%;
       height: 50%;

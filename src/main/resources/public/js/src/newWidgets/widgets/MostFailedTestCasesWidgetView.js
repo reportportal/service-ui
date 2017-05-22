@@ -66,6 +66,7 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.tpl, params));
             Util.hoverFullTime(this.$el);
             !this.isPreview && Util.setupBaronScroll($('.most-failed-launches', this.$el));
+            if(data.items.length === 0){this.addNoAvailableBock();}
         }
     });
 

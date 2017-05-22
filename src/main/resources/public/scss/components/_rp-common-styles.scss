@@ -349,14 +349,32 @@ a, a:hover {
 .no-data-error {
   position: absolute;
   font-family: $OpenSansSemibold;
-  font-size: 18px;
+  font-size: 14px;
   line-height: 18px;
   padding: 0;
-  color: #000000;
+  color: #777777;
   text-align: center;
-  top: 46%;
+  top: 0;
+  bottom: 0;
+  background: white;
   left: 0;
   right: 0;
+}
+
+.no-data-content{
+  position: absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+}
+.no-data-error .no-data-content::before{
+  margin: 0 auto 10px auto;
+  content: "";
+  background-image: url(../img/noDataAvailable.png);
+  width: 130px;
+  height: 31px;
+  display: block;
+  background-repeat: no-repeat;
 }
 
 a.itemsPerPage {

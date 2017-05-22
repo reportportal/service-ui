@@ -87,10 +87,10 @@ define(function (require, exports, module) {
         },
 
         render: function () {
+
             var data = this.getData();
             var self = this;
             var tooltip = this.tooltipContent();
-
             this.addSVG();
 
             this.chart = nvd3.models.multiBarChart()
@@ -164,6 +164,10 @@ define(function (require, exports, module) {
             this.addLegendClick(vis);
             if (self.isPreview) {
                 this.disabeLegendEvents();
+            }
+            var emptyData = this.model.getContent().result;
+            if (_.isEmpty(emptyData)) {
+                this.showNoDataBlock();
             }
         }
     });

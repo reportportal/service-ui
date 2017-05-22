@@ -27,6 +27,7 @@ define(function (require) {
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var $ = require('jquery');
     var _ = require('underscore');
+    var Localization = require('localization');
 
     var BaseWidgetView = Epoxy.View.extend({
         initialize: function (options) {
@@ -46,6 +47,9 @@ define(function (require) {
             this.defectsCollection.ready.done(function () {
                 self.render();
             });
+        },
+        addNoAvailableBock: function(){
+            this.$el.after('<div class="no-data-error"><div class="no-data-content">'+Localization.widgets.noData+'</div></div>');
         },
         getSeriesColor: function (name) {
             var defect = this.defectsCollection.getDefectType(name);
@@ -164,6 +168,9 @@ define(function (require) {
             };
             var resize = _.debounce(update, 500);
             $(window).on('resize.' + this.id, resize);
+        },
+        noDataAvailableShow: function (el) {
+            el.find('.no-data-error').removeClass('hide');
         },
         updateWidget: function () {
         },

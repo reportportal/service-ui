@@ -58,10 +58,10 @@ define(function (require, exports, module) {
         },
         // LAST LAUNCH STATISTIC
         renderPie: function (data, id, title) {
+
             var self = this;
             var chart;
             var vis;
-
             this.forLabels = { size: data.length, count: 0, sum: 0 };
             chart = nvd3.models.pieChart()
                 .x(function (d) {
@@ -113,6 +113,13 @@ define(function (require, exports, module) {
 
             // fix for no data message for "LAST LAUNCH STATISTIC WIDGET" on status page
             if (_.isEmpty(data)) {
+                var index = this.charts.length;
+                if(index == 1){
+                    this.noDataAvailableShow(this.$el.find(':nth-child(1)'));
+                } else{
+                    this.noDataAvailableShow(this.$el.find(':nth-child(2)'));
+                }
+
                 this.fixNoDataMessage(id);
             }
         },

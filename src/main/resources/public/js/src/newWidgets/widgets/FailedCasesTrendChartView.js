@@ -134,6 +134,10 @@ define(function (require, exports, module) {
             if (self.isPreview) {
                 this.disabeLegendEvents();
             }
+            var emptyData = this.model.getContent().result;
+            if (_.isEmpty(emptyData)) {
+                this.showNoDataBlock();
+            }
         }
     });
 

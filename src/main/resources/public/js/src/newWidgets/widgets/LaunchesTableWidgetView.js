@@ -101,6 +101,7 @@ define(function (require, exports, module) {
             this.addResize();
             !this.isPreview && Util.setupBaronScroll($('.launches-table-panel', this.$el));
             this.updateWidget();
+            if(params.noItems){this.addNoAvailableBock();}
         },
         getLink: function () {
             var project = '#' + this.appModel.get('projectId');
