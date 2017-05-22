@@ -18,6 +18,7 @@ define(function (require, exports, module) {
     'use strict';
 
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
     var FilterLabelView = require('launches/FilterLabelView');
     var FilterPanelView = require('launches/FilterPanelView');
     var Util = require('util');
@@ -31,22 +32,25 @@ define(function (require, exports, module) {
     var LaunchHeaderView = Epoxy.View.extend({
         events: {
             'click [data-js-add-filter]': 'onClickAddFilter',
-            'click [data-js-all-link]': 'onClickAllLink'
+            'click [data-js-all-link]': 'onClickAllLink',
+            'click [data-js-filter-entity-switcher]': 'onClickFilterEntitySwitcher'
         },
 
         bindings: {
-            '[data-js-filters-overflow]': 'classes: {"padding-bottom": not(active)}',
+            '[data-js-filter-entity-switcher]': 'classes: {"hide": active}',
             '[data-js-all-link]': 'attr: {href: url}, classes: {active: active}'
         },
 
         template: 'tpl-launch-header',
-        initialize: function (options) {
+        initialize: function () {
             this.ready = $.Deferred();
+            this.userStorage = new SingletonUserStorage();
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.model = new FilterModel({ id: 'all', active: true, name: 'All Launches', owner: config.userModel.get('name') });
             this.listenTo(this.launchFilterCollection, 'add', this.onAddFilter);
             this.listenTo(this.launchFilterCollection, 'change:activeFilter', this.onChangeActiveFilter);
             this.listenTo(this.launchFilterCollection, 'change:id', this.onChangeIdFilter);
+            this.listenTo(this.userStorage, 'change:launchFilterCriteriaHide', this.onChangeFilterCriteriaShow);
             this.render();
         },
         render: function () {
@@ -55,8 +59,16 @@ define(function (require, exports, module) {
                 this.$el.html(Util.templates(this.template));
                 this.applyBindings();
                 this.renderFilterList();
+                this.onChangeFilterCriteriaShow(null, this.userStorage.get('launchFilterCriteriaHide'));
                 this.ready.resolve();
             }.bind(this));
+        },
+        onChangeFilterCriteriaShow: function (model, hide) {
+            if (hide) {
+                $('.launches-header-block', this.$el).addClass('hide-criteria');
+            } else {
+                $('.launches-header-block', this.$el).removeClass('hide-criteria');
+            }
         },
         onChangeActiveFilter: function (filterModel) {
             if (filterModel) {
@@ -101,6 +113,10 @@ define(function (require, exports, module) {
             _.each(this.launchFilterCollection.models, function (model) {
                 this.onAddFilter(model);
             }, this);
+        },
+        onClickFilterEntitySwitcher: function () {
+            var curValue = this.userStorage.get('launchFilterCriteriaHide') || false;
+            this.userStorage.set({ launchFilterCriteriaHide: !curValue });
         },
         onClickAddFilter: function () {
             config.trackingDispatcher.trackEventNumber(12);

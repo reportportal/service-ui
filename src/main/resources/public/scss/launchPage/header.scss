@@ -30,7 +30,7 @@
   .filter-overflow {
     position: relative;
     overflow: hidden;
-    padding: 15px 15px 0 15px;
+    padding: 15px 105px 0 15px;
   }
   .filters-overflow-mobile {
     display: none;
@@ -40,25 +40,17 @@
     display: none;
   }
   .all-launches-overflow {
-    position:relative;
-    width: 175px;
-    height: 58px;
-    height: 58px;
-    display: block;
-    margin: -15px 30px 0 -15px;
-    padding-top: 15px;
-    float: left;
-    border-right: 2px solid $COLOR--gray-91;
-    text-align: center;
-    vertical-align: top;
+    position: relative;
+    display: inline-block;
+    margin-right: 20px;
     &:after {
       content: " ";
       display: block;
-      position:absolute;
-      left: 0;
-      right: -2px;
-      height: 2px;
-      bottom: -2px;
+      position: absolute;
+      right: -7px;
+      width: 1px;
+      top: -5px;
+      bottom: 8px;
       background-color: $COLOR--gray-91;
     }
     .filter-item {
@@ -68,7 +60,7 @@
   .new-filter-button {
     vertical-align: top;
     margin-bottom: 5px;
-    margin-right: 27px;
+    margin-right: 17px;
   }
   .filters-list {
     display: inline;
@@ -77,7 +69,7 @@
     height: 30px;
     display: inline-block;
     font-family: "OpenSansSemibold", sans-serif;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     margin-right: 10px;
     text-transform: uppercase;
     padding: 0 23px 0 10px;
@@ -130,10 +122,24 @@
       }
     }
   }
+  .filter-panel-switcher {
+    display: inline-block;
+    position: absolute;
+    top: 20px;
+    right: 15px;
+    color: $COLOR--windows-blue;
+    font-size: 11px;
+    cursor: pointer;
+    .open-panel {
+      display: none;
+    }
+    i {
+      vertical-align: middle;
+    }
+  }
   .filter-entities {
     width: 100%;
-    min-height: 80px;
-    padding: 10px;
+    padding: 10px 15px 0 15px;
   }
   .filter-block {
     position: relative;
@@ -141,13 +147,23 @@
     float: left;
     background-color: $COLOR--white-four;
     border: solid 1px $COLOR--gray-91;
-    margin: 15px 0;
+    margin: 0 0 15px 0;
 
     .filter-settings {
       width: 100%;
-      padding: 10px;
+      padding: 10px 15px;
       background-color: $COLOR--gray-91;
-      overflow: hidden;
+      .sorting-wrapper {
+        display: inline-block;
+        height: 30px;
+        vertical-align: top;
+        line-height: 28px;
+        margin-right: 15px;
+        .dropdown-menu {
+          left: auto;
+          right: 0;
+        }
+      }
       .description {
         display: inline-block;
         height: 30px;
@@ -167,18 +183,27 @@
         height: 100%;
         float: left;
       }
-      @media(max-width: 767px){
-        .left-items{
-          display:none;
-        }
-      }
       .right-items {
         height: 100%;
         float: right;
+        height: 30px;
         .rp-btn {
           margin-left: 8px;
         }
       }
+    }
+  }
+  &.hide-criteria {
+    .filter-panel-switcher {
+      span {
+        display: none;
+      }
+      .open-panel {
+        display: inline;
+      }
+    }
+    .filter-block {
+      display: none;
     }
   }
   &[data-js-state="SUITE"], &[data-js-state="STEP"] {
@@ -189,14 +214,17 @@
     .filter-panel-overflow {
       display: block;
     }
-    .filter-overflow.padding-bottom {
-      padding-bottom: 15px;
-    }
+    //.filter-overflow.padding-bottom {
+    //  padding-bottom: 15px;
+    //}
   }
   &[data-js-state="LOG"], &[data-js-state="MULTIPLE"] {
     display: none;
   }
   @media (max-width: 650px) {
+    .filter-panel-switcher {
+      display: none;
+    }
     .filters-overflow-mobile {
       display: block;
       position: relative;
@@ -217,6 +245,12 @@
       margin: 0 -5px 10px -5px;
       width: auto;
       float: none;
+      display: block;
+    }
+    &.hide-criteria {
+      .filter-block {
+        display: block;
+      }
     }
     .mobile-filter-add {
       float: right;

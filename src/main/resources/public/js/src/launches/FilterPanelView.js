@@ -24,12 +24,11 @@ define(function (require) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
-    var ModalAddWidget = require('modals/addWidget/modalAddWidget');
-    var GadgetModel = require('dashboard/GadgetModel');
     var Util = require('util');
     var App = require('app');
     var ModalFilterEdit = require('modals/modalFilterEdit');
     var FilterListener = require('controlers/filterControler/FilterListener');
+    var FilterSortingView = require('filterSelectionParameters/FilterSortingView');
 
     var config = App.getInstance();
 
@@ -39,8 +38,7 @@ define(function (require) {
             'click [data-js-edit-filter]': 'onClickEdit',
             'click [data-js-discard-filter]': 'onClickDiscard',
             'click [data-js-save-filter]': 'onClickSave',
-            'click [data-js-clone-filter]': 'onClickClone',
-            'click [data-js-add-widget]': 'onClickAddWidget'
+            'click [data-js-clone-filter]': 'onClickClone'
         },
         bindings: {
             '[data-js-filter-not-save-descr]': 'classes: {hide: all(not(temp), not(newEntities), not(newSelectionParameters))}',
@@ -93,6 +91,9 @@ define(function (require) {
                 filterLevel: 'launch',
                 model: this.model
             });
+            this.filterSorting && this.filterSorting.destroy();
+            this.filterSorting = new FilterSortingView({ model: this.model });
+            $('[data-js-filter-sorting]', this.$el).html(this.filterSorting.$el);
         },
         onClickSave: function () {
             var self = this;
@@ -116,14 +117,9 @@ define(function (require) {
                 );
             }
         },
-        onClickAddWidget: function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            config.trackingDispatcher.trackEventNumber(17);
-            (new ModalAddWidget({ model: new GadgetModel(), filter_id: this.model.get('id'), isNoDashboard: true })).show();
-        },
         onDestroy: function () {
-            this.filterEntities.destroy();
+            this.filterSorting && this.filterSorting.destroy();
+            this.filterEntities && this.filterEntities.destroy();
             this.$el.html('');
         }
     });

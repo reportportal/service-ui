@@ -1019,7 +1019,9 @@ define(['util'], function () {
             notSaveDescription: 'Filter is not saved',
             sharedBy: 'Filter is shared by',
             sharedDescription: 'Filter is shared',
-            globalDescription: 'Filter is shared by other user'
+            globalDescription: 'Filter is shared by other user',
+            hideCriteria: 'Hide criteria',
+            showCriteria: 'Show criteria'
         },
         filter: {
             name: 'Name',
