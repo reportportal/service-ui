@@ -30,7 +30,7 @@ require.config({
         'jquery-ui': '../lib/jQuery-ui',
         'jaddons': '../lib/jquery-addons',
         underscore: '../lib/lodash.min',
-        backbone: '../lib/backbone-min-my',
+        backbone: '../lib/backbone',
         'backbone-epoxy': '../lib/backbone-epoxy',
         util: 'core/util',
         'baron': '../lib/baron',
