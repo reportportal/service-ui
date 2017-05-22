@@ -75,8 +75,6 @@ require.config({
         "colorpicker": "../lib/colorpicker/bootstrap-colorpicker",
         "colorpickerConfig": "../lib/colorpicker/bootstrap-colorpicker-cfg-custom",
 
-        'lunr': '../lib/lunr',
-
         callService: 'core/call-service',
         coreService: 'core/core-service',
         storageService: 'core/storage-service',

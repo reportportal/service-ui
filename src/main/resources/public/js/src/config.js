@@ -43,7 +43,6 @@ require.config({
         'app': 'core/app-config',
         'validators': 'core/validators',
         'fullscreen': '../lib/jquery.fullscreen',
-	    'lunr': '../lib/lunr',
         'select2': '../lib/select2.custom',
         'daterangepicker': '../lib/daterangepicker',
         'readmore-js': '../lib/readmore',
