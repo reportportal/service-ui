@@ -44,7 +44,6 @@ require.config({
         'validators': 'core/validators',
         'fullscreen': '../lib/jquery.fullscreen',
         'isLoading': '../lib/jquery.isLoading',
-        'equalHeightRows': '../lib/grids',
         'popup': '../lib/jquery.magnific-popup',
 	    'lunr': '../lib/lunr',
 
@@ -113,7 +112,6 @@ require.config({
             deps: ['jquery'],
             exports: 'jQuery.fn.slick'
         },
-        'equalHeightRows':  ['jquery'],
         'cookie': ['jquery'],
         'popup': ['jquery'],
         'isLoading': ['jquery'],

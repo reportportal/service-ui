@@ -84,7 +84,6 @@ require.config({
         //dashboard: 'dashboard/dashboard-view',
         'fullscreen': '../lib/jquery.fullscreen',
         'isLoading': '../lib/jquery.isLoading',
-        'equalHeightRows': '../lib/grids',
         'popup': '../lib/jquery.magnific-popup',
         'highlight': '../lib/highlight.pack',
         'gridstack': '../lib/gridstack/gridstack.custom',
@@ -131,7 +130,6 @@ require.config({
 
         'jquery-ui': ['jquery'],
         'bootstrap': ['jquery'],
-        'equalHeightRows':  ['jquery'],
         'cookie': ['jquery'],
         'isLoading': ['jquery'],
         'lazyload': ['jquery'],
