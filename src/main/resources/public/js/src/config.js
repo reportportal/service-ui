@@ -45,7 +45,6 @@ require.config({
         'fullscreen': '../lib/jquery.fullscreen',
         'select2': '../lib/select2.custom',
         'daterangepicker': '../lib/daterangepicker',
-        'readmore-js': '../lib/readmore',
         'gridstack': '../lib/gridstack/gridstack.custom',
         'gridstackUi': '../lib/gridstack/gridstack.jQueryUI',
         'validate': '../lib/jquery.validate',
@@ -53,7 +52,6 @@ require.config({
         'd3Tip': '../lib/d3/d3.tip.custom',
         'nvd3': '../lib/nvd3/nv.d3.custom',
         'profile': 'login/user_profile',
-        'slick': '../lib/slick',
         //'landingPage': 'landing/LandingPage',
         
         // 'landingDocs': 'landing/documentation',
@@ -101,10 +99,6 @@ require.config({
         'templates': '../../compiled/templates/templates'
     },
     'shim': {
-        'slick': {
-            deps: ['jquery'],
-            exports: 'jQuery.fn.slick'
-        },
         'cookie': ['jquery'],
         'fullscreen': ['jquery'],
         // 'nicescroll': ['jquery'],
