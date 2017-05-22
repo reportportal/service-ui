@@ -33,7 +33,7 @@ require.config({
         backbone: '../lib/backbone',
         'backbone-epoxy': '../lib/backbone-epoxy',
         util: 'core/util',
-        'baron': '../lib/baron',
+        'baron': '../lib/baron-scroll',
         'TestRoute': 'router/TestRoute',
         'landingPage': 'landing/LandingPage',
         cookie: '../lib/jquery.cookie',

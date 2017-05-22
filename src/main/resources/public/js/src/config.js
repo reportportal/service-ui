@@ -33,7 +33,7 @@ require.config({
         'cookie': '../lib/jquery.cookie',
         // 'nicescroll': '../lib/jquery.nicescroll',
         'bootswitch': '../lib/bootstrap-switch.min',
-        'baron': '../lib/baron',
+        'baron': '../lib/baron-scroll',
         'base64': '../lib/base64',
         'util': 'core/util',
         'nprogress': '../lib/nprogress',
