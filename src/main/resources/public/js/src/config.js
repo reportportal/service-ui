@@ -48,7 +48,6 @@ require.config({
         'popup': '../lib/jquery.magnific-popup',
 	    'lunr': '../lib/lunr',
 
-        'elasticColumns': '../lib/elastic-columns.min',
         // 'lazyload': '../lib/jquery.lazyload.min',
         'select2': '../lib/select2.custom',
         'daterangepicker': '../lib/daterangepicker',
@@ -74,7 +73,6 @@ require.config({
         'launchEditor' : 'launch/launch-editor',
         'launchCrumbs': 'launch/launch-crumbs',
         'mainview': 'main-view',
-        'widgets': 'widget/widgets',
         //'favorites': 'favorites/favorites',
         // 'dashboard': 'dashboard/dashboard-view',
         'context': 'context',
@@ -127,9 +125,7 @@ require.config({
         'gridstack': ['jquery', 'underscore'],
         'gridstackUi': ['gridstack'],
         'validate': { deps : ['jquery'] },
-        'elasticColumns': ['jquery'],
         'nvd3': {deps: ['d3'], exports : 'nv'},
-        'widgets': ['d3', 'nvd3'],
         'markitup': ['jquery'],
         'markitupset': ['markitup'],
         'underscore': {
