@@ -102,6 +102,9 @@ define(function (require, exports, module) {
             if (this.currentHash === "#administrate") {
                 this.currentHash += "/projects";
             }
+            if (this.currentHash === "#administrate/project-details") {
+                this.currentHash = "#administrate/projects";
+            }
             this.$el.find('a[href^="' + this.currentHash + '"]', this.$el).addClass('active');
         },
 
