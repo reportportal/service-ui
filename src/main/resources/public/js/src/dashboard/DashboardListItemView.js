@@ -96,8 +96,7 @@ define(function (require) {
             e.stopPropagation();
             (new ModalConfirm({
                 headerText: Localization.dialogHeader.dashboardDelete,
-                bodyText: Util.replaceTemplate(
-                    this.model.get('isMy') ? Localization.dialog.dashboardDelete : Localization.dialog.dashboardDeleteDanger,
+                bodyText: Util.replaceTemplate(Localization.dialog.dashboardDelete,
                     this.model.get('name')),
                 confirmText: this.model.get('isMy') ? '' : Localization.dialog.dashboardDeleteDangerConfirmText,
                 okButtonDanger: true,
