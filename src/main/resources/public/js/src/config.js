@@ -51,9 +51,6 @@ require.config({
         'equalHeightRows': '../lib/grids',
         'popup': '../lib/jquery.magnific-popup',
 	    'lunr': '../lib/lunr',
-        //'ace': '../lib/ace/ace.custom',
-        //'aceDark': '../lib/ace/theme-dark',
-        //'mode-properties': '../lib/ace/mode-properties',
 
         'elasticColumns': '../lib/elastic-columns.min',
         // 'lazyload': '../lib/jquery.lazyload.min',

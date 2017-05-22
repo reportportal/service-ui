@@ -77,9 +77,6 @@ require.config({
         filtersPanel: 'filter/filters-panel',
         filtersResolver: 'filter/filters-resolver',
         profile: 'login/user_profile',
-        ace: '../lib/ace/ace.custom',
-        aceDark: '../lib/ace/theme-dark',
-        'mode-properties': '../lib/ace/mode-properties',
 
         "colorpicker": "../lib/colorpicker/bootstrap-colorpicker",
         "colorpickerConfig": "../lib/colorpicker/bootstrap-colorpicker-cfg-custom",
