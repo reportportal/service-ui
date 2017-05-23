@@ -36,6 +36,7 @@ define(function (require, exports, module) {
     var trackingDispatcher = require('dispatchers/TrackingDispatcher');
 
     var Header = require('sections/header');
+    require('updateBackbone');
 
     $('body > #sandbox').remove();
     $('body').append('<div id="sandbox"></div>');
