@@ -84,15 +84,12 @@ require.config({
 
         'simplemde': '../lib/markdown/simplemde.min',
 
-        'textile': '../lib/textile',
-
         // TODO - not used
         //'stickyHeader': 'core/StickyHeader',
         'stickyHeader': 'core/sticky-header',
 
         'cacheService': 'core/cache-service',
         'scrollable': 'core/scrollable-view',
-        "text": "../lib/text",
 
         "spectrum": "../lib/spectrum/spectrum",
 

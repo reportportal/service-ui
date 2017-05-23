@@ -97,11 +97,9 @@ require.config({
 
         adminService: 'admin/service',
 
-        'textile': '../lib/textile',
         'stickyHeader': 'core/sticky-header',
         'cacheService': 'core/cache-service',
         'scrollable': 'core/scrollable-view',
-        "text" : "../lib/text",
 
         'SwipeGallery': '../lib/SwipeGallery',
         'Hammer': '../lib/hammer',
