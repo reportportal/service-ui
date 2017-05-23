@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
@@ -40,17 +40,17 @@ define(function(require, exports, module) {
         },
 
         bindings: {
-            '[data-js-switcher]': 'attr: {checked: sendStatistics}',
+            '[data-js-switcher]': 'attr: {checked: sendStatistics}'
         },
 
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.model = new SingletonRegistryInfoModel();
             this.analyticsConnect = new SingletonAnalyticsConnect();
             this.render();
         },
 
-        render: function(){
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
             this.setupAnchors();
         },
@@ -71,8 +71,8 @@ define(function(require, exports, module) {
                 type: 'all'
             })
                 .done(function () {
-                    self.model.set({analyticsExtensions: {all: {enabled: enabled}}});
-                    if(enabled) {
+                    self.model.update();
+                    if (enabled) {
                         self.analyticsConnect.init();
                     } else {
                         self.analyticsConnect.destroy();
@@ -84,7 +84,7 @@ define(function(require, exports, module) {
                 });
         },
 
-        destroy: function(){
+        destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
@@ -94,5 +94,4 @@ define(function(require, exports, module) {
     });
 
     return StatisticsServerSettingsView;
-
 });
