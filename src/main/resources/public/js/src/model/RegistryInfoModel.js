@@ -81,20 +81,16 @@ define(function (require) {
         initialize: function () {
             var self = this;
             this.ready = $.Deferred();
-            coreService.getRegistryInfo()
+            this.update()
+                .always(function () {
+                    self.ready.resolve();
+                });
+        },
+        update: function () {
+            var self = this;
+            return coreService.getRegistryInfo()
                 .done(function (data) {
                     self.set({ services: data });
-                    // var fullServicesHtml = '';
-                    // _.each(data, function (service) {
-                    //     if (service.build && service.build.name && service.build.version) {
-                    //         fullServicesHtml += '<span class="service-name">' + service.build.name + ': </span><span>' + service.build.version + ';</span>';
-                    //     }
-                    // });
-                    // self.set({ fullServicesHtml: fullServicesHtml });
-                    self.ready.resolve();
-                })
-                .fail(function () {
-                    self.ready.resolve();
                 });
         }
     });
