@@ -286,12 +286,14 @@ define(function (require) {
             }
             result = {
                 name: cloneModel.get('name'),
-                description: cloneModel.get('description') || null,
                 entities: entities,
                 share: cloneModel.get('isShared'),
                 selection_parameters: cloneModel.getParametersObj(),
                 type: cloneModel.get('type')
             };
+            if (cloneModel.get('description')) {
+                result.description = cloneModel.get('description');
+            }
             cloneModel.destroy();
             return result;
         },
@@ -377,7 +379,7 @@ define(function (require) {
         parseServerData: function (data) {
             this.set({
                 name: data.name,
-                description: data.description,
+                description: data.description || '',
                 entities: JSON.stringify(data.entities),
                 isShared: data.share,
                 selection_parameters: JSON.stringify(data.selection_parameters),
