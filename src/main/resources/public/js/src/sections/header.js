@@ -66,16 +66,13 @@ define(function (require) {
 
         update: function (options) {
             if (this.currentPage !== options.contextName) {
+                this.currentPage = options.contextName;
                 if (options.contextName === 'project-details') {
-                    this.$el.find('[data-js-admin-header-crumb]').html(
-                        ' / '
-                        + this.getCrumbPart('projects')
-                        + ((this.project && this.project.projectId) ? ' / ' + this.project.projectId : '')
-                    );
+                    this.$el.find('[data-js-admin-header-crumb]').html(((this.project && this.project.projectId) ? ' / ' + this.project.projectId : ''));
                     return;
                 }
                 this.$el.find('[data-js-admin-header-crumb]').html(' / ' + this.getCrumbPart(options.contextName));
-                this.currentPage = options.contextName;
+
             }
         },
 
@@ -132,11 +129,7 @@ define(function (require) {
             });
             if (this.isAdminPage) {
                 if (this.currentPage === 'project-details') {
-                    this.$el.find('[data-js-admin-header-crumb]').html(
-                        ' / '
-                        + this.getCrumbPart('projects')
-                        + ((this.project && this.project.projectId) ? ' / ' + this.project.projectId : '')
-                    );
+                    this.$el.find('[data-js-admin-header-crumb]').html(((this.project && this.project.projectId) ? ' / ' + this.project.projectId : ''));
                 } else {
                     this.$el.find('[data-js-admin-header-crumb]').html(' / ' + this.getCrumbPart(this.currentPage));
                 }
