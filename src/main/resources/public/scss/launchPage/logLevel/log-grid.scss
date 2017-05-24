@@ -35,6 +35,10 @@
     position: relative;
     font-family: $FontMonacoMonospace;
     width: 18%;
+
+    &.rp-grid-th {
+      font-family: $OpenSansSemibold;
+    }
   }
   .mobile-block {
     display: none;
