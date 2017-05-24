@@ -50,6 +50,7 @@ define(function (require, exports, module) {
                     if(!binary_content) { return ''; }
                     if(!~binary_content.content_type.search('image/')) {
                         var type = binary_content.content_type.split('/')[1];
+                        console.log(type);
                         switch (type) {
                             case 'CSS':
                             case 'css': return 'img/launch/attachments/css.svg';
@@ -67,8 +68,10 @@ define(function (require, exports, module) {
                             case 'xml': return 'img/launch/attachments/xml.svg';
                             case 'PLAIN':
                             case 'plain': return 'img/launch/attachments/txt.svg';
+                            case 'ZIP':
+                            case 'zip': return 'img/launch/attachments/archive.svg';
+                            default: return 'img/launch/attachment.png';
                         }
-                        return 'img/launch/attachment.png'
                     }
                     return Urls.getFileById(binary_content.thumbnail_id);
                 }
