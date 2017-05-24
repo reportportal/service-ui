@@ -1334,7 +1334,8 @@ define(['util'], function () {
             enterLoginEmail: 'Enter Login or Email',
             alredyAdded: 'User has already assigned to the project',
             invitePref: 'Invite',
-            sendInvite: 'Send invite via e-mail'
+            sendInvite: 'Send invite via e-mail',
+            externalUserAdded: 'Impossible to assign %%% user to %%% project'
         },
 
         comparators: {
