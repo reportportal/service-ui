@@ -43,6 +43,7 @@ define(function (require) {
             this.minStartTime = renderObject.startTime;
             this.maxEndTime = renderObject.endTime;
             this.render(renderObject);
+            this.showLoading();
         },
 
         events: {
@@ -131,7 +132,8 @@ define(function (require) {
                     name: this.$name.val(),
                     description: this.$description.val(),
                     launches: _.map(this.launches, function (launchModel) { return launchModel.get('id'); }),
-                    extendSuitesDescription: this.$extendWithOriginal.is(':checked')
+                    extendSuitesDescription: this.$extendWithOriginal.is(':checked'),
+                    merge_type: 'BASIC'
                 };
                 config.trackingDispatcher.trackEventNumber(82);
                 this.showLoading();
