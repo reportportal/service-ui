@@ -165,7 +165,7 @@ define(function (require) {
             this.updateFilters();
         },
         onRemoveFilter: function () {
-            if (this.paging.model.get('totalPages') > 1) {
+            if (this.paging.model.get('totalPages') > 1 || this.collection.models.length === 0) {
                 this.updateFilters();
             }
         },
@@ -178,7 +178,6 @@ define(function (require) {
                     size: this.paging.model.get('size')
                 })
             );
-
             // $('#filter-page', this.$el).addClass('load');
             // this.collection.reset([]);
             // this.paging.$el.html('');
