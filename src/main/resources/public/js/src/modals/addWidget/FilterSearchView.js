@@ -69,15 +69,15 @@ define(function (require) {
         className: 'modal-add-widget-filter-search',
         template: 'tpl-modal-add-widget-filter-search',
         events: {
-            'validation:success [data-js-filter-name]': 'onChangeFilterName',
+            'validation:success [data-js-filter-name-search]': 'onChangeFilterName',
             'click [data-js-add-filter]': 'onClickAddFilter'
         },
         bindings: {
             ':el': 'classes: {hide: not(gadgetIsFilter)}',
-            '[data-js-seach-query]': 'text: search',
-            '[data-js-filter-none]': 'classes: {hide:    filtersAvailability(search,empty)}',
-            '[data-js-filter-empty]': 'classes: { hide:  not(search)  }',
-            '[data-js-filter-name]': 'attr: {disabled: not( filtersAvailability(search,empty))}'
+            '[data-js-search-query]': 'text: search',
+            '[data-js-filter-none]': 'classes: {hide:    not(empty)}',
+            '[data-js-filter-empty]': 'classes: { hide:  not(notFound)  }',
+            '[data-js-filter-name-search]': 'attr: {disabled: empty}'
 
         },
         bindingFilters: {
@@ -102,7 +102,7 @@ define(function (require) {
                 pageSize: 10,
                 totalPage: 1
             });
-            Util.hintValidator($('[data-js-filter-name]', this.$el), [{
+            Util.hintValidator($('[data-js-filter-name-search]', this.$el), [{
                 validator: 'minMaxNotRequired',
                 type: 'filterName',
                 min: 3,
@@ -123,7 +123,7 @@ define(function (require) {
             if (model) {
                 $('[data-js-select-filter-block]', this.$el).removeClass('empty-state');
                 this.selectFilterView = new FilterItem({
-                    model: model, searchModel: this.viewModel
+                    model: model, searchTerm: this.viewModel.get('search')
                 });
                 $('[data-js-select-filter-container]', this.$el).html(this.selectFilterView.$el);
                 this.selectedFilterModel = model;
@@ -249,7 +249,7 @@ define(function (require) {
         renderFilter: function (model) {
             var filterItem = new FilterItem({
                 model: model,
-                searchModel: this.viewModel,
+                searchTerm: this.viewModel.get('search'),
                 modalType: this.modalType
             });
             $('[data-js-filter-list]', this.$el).append(filterItem.$el);
@@ -271,6 +271,7 @@ define(function (require) {
         load: function () {
             var self = this;
             this.$el.addClass('load');
+            self.viewModel.set({ empty: false, notFound: false });
             return CoreService.saveFilter(this.getQueryString({
                 search: encodeURIComponent(this.viewModel.get('search')),
                 page: this.viewModel.get('currentPage'),
@@ -287,7 +288,7 @@ define(function (require) {
                     });
                     if (data.content.length) {
                         self.viewModel.set({ empty: false, notFound: false });
-                    } else if (!self.model.get('search')) {
+                    } else if (!self.viewModel.get('search')) {
                         self.viewModel.set({ empty: true, notFound: false });
                     } else {
                         self.viewModel.set({ empty: false, notFound: true });
