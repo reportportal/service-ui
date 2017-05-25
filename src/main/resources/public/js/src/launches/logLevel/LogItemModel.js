@@ -67,6 +67,14 @@ define(function (require) {
                         case 'xml': return 'img/launch/attachments/xml.svg';
                         case 'PLAIN':
                         case 'plain': return 'img/launch/attachments/txt.svg';
+                        case 'RAR':
+                        case 'rar':
+                        case 'TAZ':
+                        case 'taz':
+                        case 'TAR':
+                        case 'tar':
+                        case 'GZIP':
+                        case 'gzip':
                         case 'ZIP':
                         case 'zip': return 'img/launch/attachments/archive.svg';
                         default: return 'img/launch/attachment.png';
