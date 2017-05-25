@@ -97,6 +97,7 @@ require.config({
     },
     'shim': {
         'cookie': ['jquery'],
+        'bootstrap': ['jquery'],
         'fullscreen': ['jquery'],
         // 'nicescroll': ['jquery'],
         'customScroll': ['jquery'],

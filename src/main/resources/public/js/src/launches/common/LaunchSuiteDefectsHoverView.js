@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
-    var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var Localization = require('localization');
@@ -32,7 +31,7 @@ define(function (require, exports, module) {
 
     var LaunchSuiteDefectsTooltip = Epoxy.View.extend({
         template: 'tpl-launch-suite-defects-hover',
-        initialize: function(options) {
+        initialize: function (options) {
             this.type = options.type;
             this.noLink = options.noLink;
             this.render();
@@ -40,57 +39,56 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-defect-total]': 'onClickTotalStats'
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, this.getData()));
         },
-        onClickTotalStats: function(e){
-            if(this.model.get('type') == 'SUITE'){
-                switch (this.type){
-                    case ('product_bug'):
-                        config.trackingDispatcher.trackEventNumber(126.2);
-                        break;
-                    case ('automation_bug'):
-                        config.trackingDispatcher.trackEventNumber(128.2);
-                        break;
-                    case ('system_issue'):
-                        config.trackingDispatcher.trackEventNumber(130.2);
-                        break;
-                    default:
-                        break;
+        onClickTotalStats: function () {
+            if (this.model.get('type') === 'SUITE') {
+                switch (this.type) {
+                case ('product_bug'):
+                    config.trackingDispatcher.trackEventNumber(126.2);
+                    break;
+                case ('automation_bug'):
+                    config.trackingDispatcher.trackEventNumber(128.2);
+                    break;
+                case ('system_issue'):
+                    config.trackingDispatcher.trackEventNumber(130.2);
+                    break;
+                default:
+                    break;
                 }
-            }
-            else {
-                switch (this.type){
-                    case ('product_bug'):
-                        config.trackingDispatcher.trackEventNumber(55);
-                        break;
-                    case ('automation_bug'):
-                        config.trackingDispatcher.trackEventNumber(57);
-                        break;
-                    case ('system_issue'):
-                        config.trackingDispatcher.trackEventNumber(59);
-                        break;
-                    default:
-                        break;
+            } else {
+                switch (this.type) {
+                case ('product_bug'):
+                    config.trackingDispatcher.trackEventNumber(55);
+                    break;
+                case ('automation_bug'):
+                    config.trackingDispatcher.trackEventNumber(57);
+                    break;
+                case ('system_issue'):
+                    config.trackingDispatcher.trackEventNumber(59);
+                    break;
+                default:
+                    break;
                 }
             }
         },
-        getData: function(){
+        getData: function () {
             var defects = this.getDefectByType();
             var defectsCollection = new SingletonDefectTypeCollection();
             var subDefects = [];
 
-            var url = this.model.get('clearUrl');
+            var url = this.model.get('url');
             var appendFilter = 'filter.eq.has_childs=false&filter.in.issue$issue_type=';
-            _.each(defects, function(value, key) {
+            _.each(defects, function (value, key) {
                 var subDefectModel = defectsCollection.getDefectByLocator(key);
-                if(subDefectModel) {
+                if (subDefectModel) {
                     subDefects.push({
                         color: subDefectModel.get('color'),
                         name: subDefectModel.get('longName'),
                         value: value,
-                        url: url + '|' + encodeURIComponent(appendFilter + subDefectModel.get('locator')) + '?' + appendFilter + subDefectModel.get('locator')
-                    })
+                        url: url + '?' + appendFilter + subDefectModel.get('locator')
+                    });
                 }
             });
             var allSubDefects = defectsCollection.toJSON();
@@ -103,24 +101,21 @@ define(function (require, exports, module) {
                     color: defectsCollection.getMainColorByType(this.type),
                     name: Localization.infoLine[this.type],
                     value: defects.total,
-                    url: url + '|' + encodeURIComponent(appendFilter + allDefects) + '?' + appendFilter + allDefects,
-                }}
+                    url: url + '?' + appendFilter + allDefects
+                } };
         },
-        isNoSubDefects: function(){
+        isNoSubDefects: function () {
             var defectsCollection = new SingletonDefectTypeCollection();
             return !defectsCollection.checkForSubDefects() || this.type === 'to_investigate';
         },
-        getDefectByType: function(){
+        getDefectByType: function () {
             var statistics = this.model.get('statistics');
-            return statistics['defects'][this.type];
+            return statistics.defects[this.type];
         },
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
             this.$el.remove();
             delete this;
-        },
+        }
     });
 
 

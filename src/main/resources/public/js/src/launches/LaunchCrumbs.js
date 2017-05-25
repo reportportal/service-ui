@@ -55,12 +55,6 @@ define(function (require) {
                     }
                     return name + ' #' + number;
                 }
-            },
-            clearUrl: {
-                deps: ['url'],
-                get: function (url) {
-                    return url.split('|')[0];
-                }
             }
         },
         initialize: function () {
@@ -137,7 +131,7 @@ define(function (require) {
         updateUrlModels: function () {
             var url = '';
             _.each(this.models, function (model) {
-                model.set({ url: url + model.get('partUrl').replace('|', '?')});
+                model.set({ url: url + model.get('partUrl').replace('|', '?') });
                 url += model.get('partUrl');
             });
         },
@@ -162,7 +156,7 @@ define(function (require) {
                     var level = 'item';
                     var splitId = newPath[i].split('|');
                     var currentNewPath = splitId[0];
-                    var currentUrlFilters = splitId[1] ? '|' + decodeURIComponent(splitId[1]).replace(',', '%2C') : '';
+                    var currentUrlFilters = splitId[1] ? '|' + decodeURIComponent(splitId[1]).replace(/,/g, '%2C') : '';
                     if (i === 0) {
                         level = 'filter';
                         tempFilterModel = new FilterModel({ id: currentNewPath, context: this.context });
@@ -386,6 +380,9 @@ define(function (require) {
             config.router.navigate(this.lastModel.get('url') + options, { trigger: false });
             this.trigger('restore:path');
             $('[data-js-crumbs-container]', this.$el).removeClass('lost-path');
+        },
+        setListViewForLastItem: function () {
+            this.collection.last().set({ listView: true });
         },
         onDestroy: function () {
             this.$el.html('');

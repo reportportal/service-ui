@@ -121,6 +121,8 @@ define(function (require) {
                     self.onChangePathId();  // not valid filter
                     // config.router.show404Page();
                 });
+            this.collectionItems.noChildFilter && this.crumbs.setListViewForLastItem();
+            this.collectionItems.logOptions.item && this.trigger('change:level', 'LOG');
         },
         onRestoreItemCrumbs: function () {
             this.collectionItems.restorePath();

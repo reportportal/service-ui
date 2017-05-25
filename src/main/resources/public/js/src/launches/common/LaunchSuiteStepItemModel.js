@@ -107,10 +107,11 @@ define(function (require, exports, module) {
                 deps: ['id', 'has_childs', 'filter_url'],
                 get: function (id, hasChilds, filterUrl) {
                     var partUrl = filterUrl ? '|' + filterUrl : '';
+                    var urlSplit = window.location.hash.split('?');
                     if (hasChilds) {
-                        return window.location.hash.split('?')[0] + partUrl + '/' + id;
+                        return urlSplit[0] + partUrl + '/' + id;
                     }
-                    return window.location.hash + '&log.item=' + id;
+                    return urlSplit[0] + partUrl + '?' + filterUrl + '&log.item=' + id;
                 }
             },
             clearUrl: {
