@@ -141,8 +141,8 @@ common elements:
       &:before {
         content: " ";
         position: absolute;
-        width: 1px;
-        height: 1px;
+        width: 0;
+        height: 0;
         display: block;
         box-shadow: 0 0 66px 34px white;
         top: 50%;

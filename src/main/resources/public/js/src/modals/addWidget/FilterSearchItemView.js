@@ -56,7 +56,7 @@ define(function (require) {
             getName: {
                 deps: ['name'],
                 get: function (name) {
-                    var search = this.searchModel ? this.searchModel.get('search') : null;
+                    var search = this.searchTerm ? this.searchTerm : null;
                     return search ? Util.textWrapper(name, search) : name;
                 }
             }
@@ -64,7 +64,7 @@ define(function (require) {
         initialize: function (options) {
             var self = this;
             this.modalType = options.modalType;
-            this.searchModel = options.searchModel;
+            this.searchTerm = options.searchTerm;
             this.render();
             if (this.model.get('active')) {
                 setTimeout(function () {
