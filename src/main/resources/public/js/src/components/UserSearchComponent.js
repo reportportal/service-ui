@@ -111,9 +111,9 @@ define(function (require, exports, module) {
                             isExternalUser ? Util.replaceTemplate(Localization.members.externalUserAdded, item.account_type, projectConfig.entryType) : '';
                         remoteUsers.push(item);
                         data.results.push({
-                            id: item.userId,
-                            text: item.userId,
-                            name: item.full_name,
+                            id: item.userId || item.id,
+                            text: item.userId || item.id,
+                            name: item.full_name || item.fullName,
                             disabled: isAddedUser || isExternalUser,
                             isExternalUser: isExternalUser,
                             isAddedUser: isAddedUser,
