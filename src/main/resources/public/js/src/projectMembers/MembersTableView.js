@@ -34,7 +34,7 @@ define(function(require, exports, module) {
     var MemberService = require('projectMembers/MembersService');
     var MembersCollection = require('projectMembers/MembersCollection');
     var ModalAddUser = require('modals/modalAddUser');
-    var ModalInviteUser = require('modals/modalInviteUser');
+    var ModalInviteMember = require('modals/modalInviteMember');
     var ModalPermissionsMap = require('modals/modalPermissionsMap');
 
     var config = App.getInstance();
@@ -210,8 +210,8 @@ define(function(require, exports, module) {
         showInviteUser: function(e){
             config.trackingDispatcher.trackEventNumber(432);
             e.preventDefault();
-            var modal = new ModalInviteUser({});
-            this.listenToOnce(modal, 'add:user', this.onInviteMember);
+            var modal = new ModalInviteMember({});
+            this.listenToOnce(modal, 'invite:member', this.onInviteMember);
             modal.show();
         },
 
