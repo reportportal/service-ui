@@ -1,0 +1,30 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.members.inviteMember}) %>
+
+<div class="modal-body">
+    <h4><%= data.text.admin.inviteNewUser %></h4>
+    <div class="rp-form-group clearfix">
+        <label class="invite-member-label">
+            <%= data.text.forms.loginOrEmail %>
+        </label>
+        <div class="invite-member-field" data-js-member-field>
+            <input data-js-member name="member" type="text" value="">
+        </div>
+    </div>
+    <div class="rp-form-group clearfix">
+        <label class="invite-member-label">
+            <%= data.text.forms.projectRole %>
+        </label>
+        <div class="invite-member-field">
+            <div data-js-role-selector></div>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.cancel %>
+    </button>
+    <button class="rp-btn rp-btn-submit" type="button" data-js-invite>
+        <%= data.text.admin.invite %>
+    </button>
+</div>
