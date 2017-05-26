@@ -37,10 +37,14 @@ define(function (require) {
             this.render();
         },
         events: {
-            'click [data-js-defect-total]': 'onClickTotalStats'
+            'click [data-js-defect-total]': 'onClickTotalStats',
+            'click a': 'onClickLink'
         },
         render: function () {
             this.$el.html(Util.templates(this.template, this.getData()));
+        },
+        onClickLink: function () {
+            this.model.trigger('drill:item', this.model);
         },
         onClickTotalStats: function () {
             if (this.model.get('type') === 'SUITE') {

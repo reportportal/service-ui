@@ -55,6 +55,25 @@ define(function (require) {
             this.noChildFilter = false;
             this.context = options.context;
         },
+        checkForDifference: function (launchModel, parentModel, filterData) {
+            if (((!launchModel && this.launchModel) || (launchModel && !this.launchModel))
+                || ((!parentModel && this.parentModel) || (parentModel && !this.parentModel))) {
+                return true;
+            }
+            if ((launchModel && launchModel.id !== this.launchModel.id)
+                || (parentModel && parentModel.id !== this.parentModel.id)) {
+                return true;
+            }
+            if (!this.filterModel) {
+                return true;
+            }
+            !filterData.selection_parameters && (filterData.selection_parameters = '');
+            if (filterData.entities.replace(/ /g, '') !== this.filterModel.get('entities').replace(/ /g, '')
+                || filterData.selection_parameters.replace(/ /g, '') !== this.filterModel.get('selection_parameters').replace(/ /g, '')) {
+                return true;
+            }
+            return false;
+        },
         update: function (launchModel, parentModel, optionsURL, crumbs) {
             var async = $.Deferred();
             var optionsURLParam = optionsURL || '';
@@ -62,14 +81,17 @@ define(function (require) {
             var filterData;
             var activeFilter;
             var launchFilters;
+            var difference;
 
             this.crumbs = crumbs;
             this.pagingPage = 1;
             this.pagingTotalPages = 1;
+
+            filterData = this.calculateFilterOptions(optionsURLParam); // set this.logOptions
+            difference = this.checkForDifference(launchModel, parentModel, filterData);
             this.launchModel = launchModel;
             this.parentModel = parentModel;
 
-            filterData = this.calculateFilterOptions(optionsURLParam); // set this.logOptions
             if (!launchModel && !parentModel) {
                 launchFilters = new SingletonLaunchFilterCollection();
                 launchFilters.ready.done(function () {
@@ -79,10 +101,10 @@ define(function (require) {
                     }
                     self.setSelfModels(activeFilter)
                         .done(function () {
-                            async.resolve(activeFilter);
+                            async.resolve();
                         })
                         .fail(function () {
-                            async.reject(activeFilter);
+                            async.reject();
                         });
                 });
             } else {
@@ -92,16 +114,16 @@ define(function (require) {
                 if (!filterData.selection_parameters) {
                     activeFilter.set('selection_parameters', '{"is_asc": true, "sorting_column": "start_time"}');
                 }
-                if (parentModel && !parentModel.get('has_childs')) {
-                    self.reset([{ type: 'LOG' }]);
-                    async.resolve(activeFilter);
+                if (!difference) {
+                    this.afterLoadActions();
+                    async.resolve();
                 } else {
                     self.setSelfModels(activeFilter)
                         .done(function () {
-                            async.resolve(activeFilter);
+                            async.resolve();
                         })
                         .fail(function () {
-                            async.reject(activeFilter);
+                            async.reject();
                         });
                 }
             }
@@ -194,8 +216,8 @@ define(function (require) {
                     } else if (keySeparate[1] === 'sort') {
                         valueSeparate = optionSeparate[1].split('%2C');
                         answer.selection_parameters = JSON.stringify({
-                            sorting_column: valueSeparate[0],
-                            is_asc: (valueSeparate[1] === 'ASC')
+                            is_asc: (valueSeparate[1] === 'ASC'),
+                            sorting_column: valueSeparate[0]
                         });
                     }
                 }
@@ -321,7 +343,9 @@ define(function (require) {
             var params;
             var logParams;
             var paramsUrl = '';
-            if (!this.historyOptions.item && !this.logOptions.item) {
+            if (this.logOptions.item) {
+                return this.getParamsFilter().join('&');
+            } else if (!this.historyOptions.item) {
                 if (!this.launchModel) {
                     paramsUrl = this.getParamsFilter(true).join('&');
                     this.trigger('change:params', paramsUrl);
@@ -455,81 +479,6 @@ define(function (require) {
             } else {
                 this.reset(response.content);
             }
-            // this.reset([{
-            //         description: "dashboard_tests",
-            //         end_time: 1472205024785,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "IN_PROGRESS",
-            //         owner: 'Алешка',
-            //     },
-            //     {
-            //         description: "dashboard_tests",
-            //         end_time: null,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "IN_PROGRESS",
-            //         tags: ['вот_это_тег', 'test-teg', 'second-test-teg14'],
-            //     },
-            //     {
-            //         description: "dashboard_tests",
-            //         end_time: 1472205024785,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "SKIPPED",
-            //         owner: 'Superman',
-            //         tags: ['trerty', 'mifril', 'green_stone'],
-            //     },
-            //     {
-            //         description: "dashboard_tests",
-            //         end_time: null,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "FAILED",
-            //     },
-            //     {
-            //         description: "dashboard_tests",
-            //         end_time: 1472205024785,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "STOPPED",
-            //     },
-            //     {
-            //         description: "dashboard_tests",
-            //         end_time: 1472205024785,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "INTERRUPTED",
-            //     },
-            //     {
-            //         description: "dashboard_tests",
-            //         end_time: 1472205024785,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "FAILED",
-            //     }
-            // ])
         }
     });
 

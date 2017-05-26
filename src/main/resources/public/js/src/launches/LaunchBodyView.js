@@ -121,8 +121,11 @@ define(function (require) {
                     self.onChangePathId();  // not valid filter
                     // config.router.show404Page();
                 });
-            this.collectionItems.noChildFilter && this.crumbs.setListViewForLastItem();
-            this.collectionItems.logOptions.item && this.trigger('change:level', 'LOG');
+            if (this.collectionItems.logOptions.item) {
+                this.trigger('change:level', 'LOG');
+            } else if (this.collectionItems.noChildFilter) {
+                this.crumbs.setListViewForLastItem();
+            }
         },
         onRestoreItemCrumbs: function () {
             this.collectionItems.restorePath();

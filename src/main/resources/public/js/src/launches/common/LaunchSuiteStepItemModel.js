@@ -107,17 +107,15 @@ define(function (require, exports, module) {
                 deps: ['id', 'has_childs', 'filter_url'],
                 get: function (id, hasChilds, filterUrl) {
                     var partUrl = filterUrl ? '|' + filterUrl : '';
-                    var urlSplit = window.location.hash.split('?');
+                    var index1 = window.location.hash.lastIndexOf('/');
+                    var index2 = window.location.hash.lastIndexOf('|');
+                    var index3 = window.location.hash.lastIndexOf('?');
+                    var lastIndex = (index2 < index1) ? index3 : index2;
+                    var baseUrl = window.location.hash.substr(0, lastIndex);
                     if (hasChilds) {
-                        return urlSplit[0] + partUrl + '/' + id;
+                        return baseUrl + partUrl + '/' + id;
                     }
-                    return urlSplit[0] + partUrl + '?' + filterUrl + '&log.item=' + id;
-                }
-            },
-            clearUrl: {
-                deps: ['url'],
-                get: function (url) {
-                    return url.split('|')[0];
+                    return baseUrl + partUrl + '?' + filterUrl + '&log.item=' + id;
                 }
             },
             numberText: {

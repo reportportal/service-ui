@@ -35,6 +35,10 @@ define(function (require) {
     var LaunchSuiteDefectsView = Epoxy.View.extend({
         template: 'tpl-launch-suite-defects',
 
+        events: {
+            'mouseenter [data-js-hover-defect]': 'onHoverDefectType',
+            'click [data-js-link]': 'onClickDefectType'
+        },
         bindings: {
             '[data-js-defects-total]': 'text: totalDefects, attr: {style: defectBorderColor}',
             '[data-js-link]': 'attr: {href: allCasesUrl}'
@@ -63,12 +67,6 @@ define(function (require) {
                 return 'border-color: ' + this.defectsCollection.getMainColorByType(this.type);
             }
         },
-
-        events: {
-            'mouseenter [data-js-hover-defect]': 'onHoverDefectType',
-            'click [data-js-link]': 'onClickDefectType'
-        },
-
         initialize: function (options) {
             this.type = options.type;
             this.defectsCollection = new SingletonDefectTypeCollection();
@@ -93,7 +91,7 @@ define(function (require) {
             }
         },
         onHoverDefectType: function () {
-            if (this.model.get('type') == 'SUITE') {
+            if (this.model.get('type') === 'SUITE') {
                 switch (this.type) {
                 case ('product_bug'):
                     config.trackingDispatcher.trackEventNumber(125);
@@ -119,8 +117,9 @@ define(function (require) {
                 }
             }
         },
-        onClickDefectType: function (e) {
-            if (this.model.get('type') == 'SUITE') {
+        onClickDefectType: function () {
+            this.model.trigger('drill:item', this.model);
+            if (this.model.get('type') === 'SUITE') {
                 switch (this.type) {
                 case ('product_bug'):
                     config.trackingDispatcher.trackEventNumber(126.1);
@@ -200,12 +199,9 @@ define(function (require) {
                 .datum([data])
                 .call(this.chart);
         },
-        destroy: function () {
+        onDestroy: function () {
             this.hoverView && this.hoverView.destroy();
             this.chart = null;
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
             this.$el.remove();
             delete this;
         }
