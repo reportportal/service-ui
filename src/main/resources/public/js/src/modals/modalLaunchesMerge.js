@@ -128,12 +128,12 @@ define(function (require) {
                 data = {
                     tags: this.$tags.val().trim().split(','),
                     start_time: this.minStartTime,
-                    end_time: this.maxEndTime,
+                    // end_time: this.maxEndTime,
                     name: this.$name.val(),
                     description: this.$description.val(),
                     launches: _.map(this.launches, function (launchModel) { return launchModel.get('id'); }),
                     extendSuitesDescription: this.$extendWithOriginal.is(':checked'),
-                    merge_type: 'BASIC'
+                    // merge_type: 'BASIC'
                 };
                 config.trackingDispatcher.trackEventNumber(82);
                 this.showLoading();
