@@ -32,6 +32,7 @@ define(function (require) {
     var ConfigureWidgetView = require('modals/addWidget/ConfigureWidgetView');
     var SaveWidgetView = require('modals/addWidget/SaveWidgetView');
     var PreviewWidgetView = require('newWidgets/PreviewWidgetView');
+    var DashboardCollection = require('dashboard/DashboardCollection');
     var Service = require('coreService');
     var Urls = require('dataUrlResolver');
     var App = require('app');
@@ -168,6 +169,19 @@ define(function (require) {
                 break;
             }
         },
+        checkNewDashboard: function () {
+            var async = $.Deferred();
+            var collection;
+            if (this.dashboardModel.get('id') !== 'temp') {
+                async.resolve();
+            } else {
+                collection = new DashboardCollection({ startId: 0 });
+                collection.ready.resolve();
+                collection.add(this.dashboardModel);
+                this.listenToOnce(this.dashboardModel, 'change:id', function () { async.resolve(); });
+            }
+            return async;
+        },
         onClickAddWidget: function () {
             var self = this;
             var contentParameters = {};
@@ -197,18 +211,21 @@ define(function (require) {
                 if (this.model.get('description')) {
                     data.description = this.model.get('description');
                 }
-                Service.saveWidget(data)
-                    .done(function (responce) {
-                        self.model.set({ id: responce.id });
-                        self.dashboardModel.addWidget(self.model);
-                        if (self.isNoDashboard) {
-                            config.router.navigate(Urls.redirectToDashboard(self.dashboardModel.get('id')), { trigger: true });
-                        }
-                        self.successClose(responce.id);
-                    })
-                    .fail(function (error) {
-                        Util.ajaxFailMessenger(error, 'widgetSave');
-                    });
+                this.checkNewDashboard().done(function () {
+                    Service.saveWidget(data)
+                        .done(function (responce) {
+                            self.model.set({ id: responce.id });
+                            self.dashboardModel.addWidget(self.model).done(function () {
+                                if (self.isNoDashboard) {
+                                    config.router.navigate(Urls.redirectToDashboard(self.dashboardModel.get('id')), { trigger: true });
+                                }
+                            });
+                            self.successClose(responce.id);
+                        })
+                        .fail(function (error) {
+                            Util.ajaxFailMessenger(error, 'widgetSave');
+                        });
+                });
             }
         },
         onDestroy: function () {

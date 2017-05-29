@@ -684,14 +684,14 @@ define(['util'], function () {
             problemInteracting: 'Error interacting with external system. Check the entered data',
             problemGeneral: 'Error occurred: ',
             forceFinish: 'Force finish',
-            finishWarning: 'In case of finish the %%%, all data will be missed. Are you sure you want to finish %%%?',
+            finishWarning: ' Are you sure you want to finish the %%%? All data will be missed.',
             deleteWarning: 'In case of delete the launch, all related data will be deleted. Are you sure you want to delete launch',
             deleteItemWarning: 'In case of delete the test item, all related data will be deleted. Are you sure you want to delete test item',
             finishAgree: 'I am sure I want to finish %%%',
             deleteAgree: 'I am sure I want to delete %%%',
-            deleteWarningAgree: 'Warning! You are going to delete data that is not your own. Other project users could be affected by the action.',
-            finishOneLaunch: 'Warning! You are going to stop launch that is not your own. Other project users could be affected by the action.',
-            finishSelectedLaunch: 'Warning! You are going to stop launches that are not your own. Other project users could be affected by the action.',
+            deleteWarningAgree: 'You are going to delete not your own %%%. This may affect other users information on the project.',
+            finishOneLaunch: 'You are going to stop not your own launch. This may affect other users information on the project.',
+            finishSelectedLaunch: 'You are going to stop not your own launches.  This may affect other users information on the project.',
 
             errorItem: 'Error Item',
             jiraCredentials: 'Jira credentials',
@@ -1019,7 +1019,9 @@ define(['util'], function () {
             notSaveDescription: 'Filter is not saved',
             sharedBy: 'Filter is shared by',
             sharedDescription: 'Filter is shared',
-            globalDescription: 'Filter is shared by other user'
+            globalDescription: 'Filter is shared by other user',
+            hideCriteria: 'Hide criteria',
+            showCriteria: 'Show criteria'
         },
         filter: {
             name: 'Name',
@@ -1334,7 +1336,8 @@ define(['util'], function () {
             enterLoginEmail: 'Enter Login or Email',
             alredyAdded: 'User has already assigned to the project',
             invitePref: 'Invite',
-            sendInvite: 'Send invite via e-mail'
+            sendInvite: 'Send invite via e-mail',
+            externalUserAdded: 'Impossible to assign %%% user to %%% project'
         },
 
         comparators: {
@@ -1734,8 +1737,8 @@ define(['util'], function () {
             createNewDashboard: 'Create new Dashboard',
             dashboardSettings: 'Dashboard settings',
             deleteFilter: 'Are you sure you want to delete the filter <b>\'%%%\'</b>?',
-            deleteFilterDanger: 'As a user with PM/ADMIN privileges you can delete shared filter of other users. This can affect all users on the projects, if somebody else use it.<br>Are you sure you want to delete <b>\'%%%\'</b>?',
-            deleteFilterDangerConfirmText: 'I am sure I want to delete the filter',
+            deleteFilterDanger: 'Are you sure you want to delete the filter <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
+            deleteFilterDangerConfirmText: 'You are going to delete not your own filter. This may affect other users information on the project.',
             deleteProject: 'Are you sure you want to delete the project <b>\'%%%\'</b>?',
             deleteEmailRule: 'Are you sure you want to remove notification rule?',
             deleteEmailRuleBtn: 'Remove',
@@ -1747,13 +1750,10 @@ define(['util'], function () {
             deleteImage: 'Are you sure you want to delete profile photo?',
             deleteBts: 'Are you sure you want to remove %%% project <b>\'%%%\'</b> from project settings?',
 
-            dashboardDelete: 'Are you sure you want to delete dashboard <b>\'%%%\'</b>?',
-            dashboardDeleteDanger: 'As a user with PM privileges you can delete shared dashboards of other users. This can affect all users on the projects, if somebody else use it.<br>Are you sure you want to delete <b>\'%%%\'</b>?',
-
-            dashboardDeleteDangerConfirmText: 'I am sure I want to delete the dashboard',
-            deletedWidget: 'Are you sure you want to remove widget <b>\'%%%\'</b>?',
-            deletedWidgetDanger: 'User with PM privileges you can delete shared widgets of other users. This can affect all users on the projects, if somebody else use it.<br>Are you sure you want to delete <b>\'%%%\'</b>?',
-            deletedWidgetDangerConfirmText: 'I am sure I want to delete the widget',
+            dashboardDelete: 'Are you sure you want to delete dashboard <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
+            dashboardDeleteDangerConfirmText: 'You are going to delete not your own dashboard. This may affect other users information on the project.',
+            deletedWidget: 'Are you sure you want to delete widget <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
+            deletedWidgetDangerConfirmText: 'You are going to delete not your own widget. This may affect other users information on the project.',
             deleteBtsBtn: 'Remove',
             dashboardDeleteBtn: 'Remove',
 
@@ -1779,13 +1779,13 @@ define(['util'], function () {
 
             filterOptions: 'Filter Options',
 
-            msgDeleteItems: 'In case of delete the %%%, all related data will be removed. Are you sure you want to delete %%%?',
+            msgDeleteItems: 'Are you sure you want to delete %%%? You will no longer have access to %%%. This action can\'t be undone.',
             msgDeleteDefectType: 'I am sure I want to remove custom defect type',
             msgDeleteProject: 'I am sure I want to delete project',
-            msgDeleteOrg: 'In case of delete the GitHub organization, users from this organization could not be able to login Report Portal. Are you sure, you want to delete selected organization?',
+            msgDeleteOrg: 'Are you sure you want to delete selected organization? All assigned users could not be able to login Report Portal. ',
             deleteOrg: 'I am sure I want to delete organization',
             msgResetColorsDefectType: 'Are you sure you want to reset custom defect\'s colors to default?',
-            msgMessageTop: 'In case of delete custom defect, all investigated as <strong>\'%%%\'</strong> defects will be marked as <strong>\'%%%\'</strong>'
+            msgMessageTop: 'Are you sure you want to delete the defect type?  All investigated as <strong>\'%%%\'</strong> defects will be marked as <strong>\'%%%\'</strong>.'
         },
 
         time: {

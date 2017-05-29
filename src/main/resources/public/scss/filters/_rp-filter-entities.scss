@@ -23,9 +23,12 @@
   min-width: 235px;
   display: inline-block;
   float: left;
-  height: 60px;
+  //height: 60px;
   position: relative;
   margin: 0 10px 10px 0;
+  .form-group {
+    margin-bottom: 0;
+  }
   .filter-entities-select {
     width: 216px;
     .rp-btn-with-dropdown {
@@ -125,6 +128,7 @@
   float: left;
   padding-top: 23px;
   margin-right: 100px;
+  margin-bottom: 10px;
   ul.dropdown-menu.filters-criteria {
     li > label {
       line-height: 20px;

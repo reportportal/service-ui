@@ -72,12 +72,8 @@ define(function (require) {
 
             this.model.set({ select: false, invalidMessage: '' });
         },
-        destroy: function () {
+        onDestroy: function () {
             this.$el.remove();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            delete this;
         }
     });
 
@@ -345,12 +341,9 @@ define(function (require) {
         onAddItem: function (model) {
             $('[data-js-multi-select-items]', this.$el).append((new LaunchMultipleSelectItem({ model: model })).$el);
         },
-        destroy: function () {
+        onDestroy: function () {
+            this.collection.destroy();
             this.$el.html('');
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            delete this;
         }
     });
 

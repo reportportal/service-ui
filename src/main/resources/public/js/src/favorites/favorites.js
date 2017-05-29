@@ -22,6 +22,8 @@
 define(function (require) {
     'use strict';
 
+    var FilterListener = require('controlers/filterControler/FilterListener');
+
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
@@ -33,7 +35,6 @@ define(function (require) {
     var Components = require('core/components');
     var Util = require('util');
     var MainBreadcrumbsComponent = require('components/MainBreadcrumbsComponent');
-    var CoreService = require('coreService');
     var FilterCollection = require('filters/FilterCollection');
     var Localization = require('localization');
     var FavoritesItem = require('favorites/FavoritesItemView');
@@ -58,6 +59,9 @@ define(function (require) {
             '[data-js-search-value]': 'text: search'
         },
         initialize: function (options) {
+            var context = options.context;
+            this.filterListener = new FilterListener();
+            this.filterEvents = this.filterListener.events;
             this.model = new Backbone.Model({
                 search: '',
                 empty: false,
@@ -67,14 +71,16 @@ define(function (require) {
             this.collection = new FilterCollection();
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.listenTo(this.collection, 'reset', this.renderCollection);
-            this.listenTo(this.collection, 'click:remove', this.updateFilters);
-            // this.listenTo(this.launchFilterCollection, 'click:remove', this.updateFilters);
-            this.context = options.context;
-            this.$header = this.context.getMainView().$header;
-            this.$el = this.context.getMainView().$body;
+            this.listenTo(this.collection, 'remove', this.onRemoveFilter);
+
+            this.$header = context.getMainView().$header;
+            this.$el = context.getMainView().$body;
             this.debounceChange = _.debounce(function () {
                 $('[data-js-filter-name]', this.$el).trigger('change');
             }.bind(this), 800);
+            this.listenTo(this.filterListener, this.filterEvents.FILTERS_LOAD_START, this.onStartLoad);
+            this.listenTo(this.filterListener, this.filterEvents.FILTERS_LOAD_END, this.onEndLoad);
+            this.listenTo(this.filterListener, this.filterEvents.LOAD_FILTERS, this.onSetFilters);
         },
 
         render: function () {
@@ -115,6 +121,26 @@ define(function (require) {
             }.bind(this));
             return this;
         },
+        onStartLoad: function () {
+            this.collection.reset([]);
+            this.paging.$el.html('');
+            $('#filter-page', this.$el).addClass('load');
+        },
+        onEndLoad: function () {
+            $('#filter-page', this.$el).removeClass('load');
+        },
+        onSetFilters: function (data) {
+            this.paging.model.set(data.page);
+            this.paging.render();
+            if (data.content.length) {
+                this.model.set({ empty: false, notFound: false });
+            } else if (!this.model.get('search')) {
+                this.model.set({ empty: true, notFound: false });
+            } else {
+                this.model.set({ empty: false, notFound: true });
+            }
+            this.collection.parse(data.content);
+        },
         onChangeModelSearch: function () {
             this.paging.trigger('page', 1);
         },
@@ -138,30 +164,43 @@ define(function (require) {
             // this.paging.render();
             this.updateFilters();
         },
+        onRemoveFilter: function () {
+            if (this.paging.model.get('totalPages') > 1 || this.collection.models.length === 0) {
+                this.updateFilters();
+            }
+        },
         updateFilters: function () {
-            $('#filter-page', this.$el).addClass('load');
-            this.collection.reset([]);
-            this.paging.$el.html('');
-            CoreService.saveFilter(this.getQueryString({
-                search: encodeURIComponent(this.model.get('search')),
-                page: this.paging.model.get('number'),
-                size: this.paging.model.get('size')
-            }))
-                .always(function () {
-                    $('#filter-page', this.$el).removeClass('load');
-                }.bind(this))
-                .done(function (data) {
-                    this.paging.model.set(data.page);
-                    this.paging.render();
-                    if (data.content.length) {
-                        this.model.set({ empty: false, notFound: false });
-                    } else if (!this.model.get('search')) {
-                        this.model.set({ empty: true, notFound: false });
-                    } else {
-                        this.model.set({ empty: false, notFound: true });
-                    }
-                    this.collection.parse(data.content);
-                }.bind(this));
+            this.filterListener.trigger(
+                this.filterEvents.ON_LOAD_FILTERS,
+                this.getQueryString({
+                    search: encodeURIComponent(this.model.get('search')),
+                    page: this.paging.model.get('number'),
+                    size: this.paging.model.get('size')
+                })
+            );
+            // $('#filter-page', this.$el).addClass('load');
+            // this.collection.reset([]);
+            // this.paging.$el.html('');
+            // CoreService.saveFilter(this.getQueryString({
+            //     search: encodeURIComponent(this.model.get('search')),
+            //     page: this.paging.model.get('number'),
+            //     size: this.paging.model.get('size')
+            // }))
+            //     .always(function () {
+            //         $('#filter-page', this.$el).removeClass('load');
+            //     }.bind(this))
+            //     .done(function (data) {
+            //         this.paging.model.set(data.page);
+            //         this.paging.render();
+            //         if (data.content.length) {
+            //             this.model.set({ empty: false, notFound: false });
+            //         } else if (!this.model.get('search')) {
+            //             this.model.set({ empty: true, notFound: false });
+            //         } else {
+            //             this.model.set({ empty: false, notFound: true });
+            //         }
+            //         this.collection.parse(data.content);
+            //     }.bind(this));
         },
 
         update: function () {
@@ -212,6 +251,7 @@ define(function (require) {
         onDestroy: function () {
             this.$header.empty();
             this.mainBreadcrumbs && this.mainBreadcrumbs.destroy();
+            this.collection.destroy(true);
             _.each(this.renderViews, function (view) {
                 view.destroy();
             });

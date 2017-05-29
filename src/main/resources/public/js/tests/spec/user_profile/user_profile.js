@@ -34,7 +34,6 @@ define(function (require, exports, module) {
     var UserModel = require('model/UserModel');
     var trackingDispatcher = require('dispatchers/TrackingDispatcher');
     var initialState = require('initialState');
-    require('mode-properties');
     require('bootstrap');
 
     $('body > #sandbox').remove();

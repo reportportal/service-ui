@@ -42,6 +42,7 @@ define(function (require) {
                okButtonDanger: false, //optional
                okButtonText: '',  //optional
                confirmFunction: function() { return $.Deferred()},
+               safeRemoval: true
             }*/
             this.render(options);
             this.confirmFunction = options.confirmFunction;

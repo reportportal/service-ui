@@ -183,9 +183,9 @@
             }
           }
         }
-        .member-role-mobile {
-          display: none;
-        }
+      }
+      .member-role-mobile {
+        display: none;
       }
       .members-actions {
         text-align: right;
@@ -242,6 +242,12 @@
       }
       .role-grid-cell {
         width: 100%;
+        .member-role-mobile {
+          display: inline;
+        }
+        .admin-role {
+          display: inline;
+        }
       }
       .action-grid-cell {
         display: none;
@@ -257,17 +263,14 @@
       }
       .member-title-mobile {
         font-size: 12px;
-        display: inline-block;
+        display: inline-block !important;
       }
       .member-select-role {
+        display: none;
         font-size: 14px;
 
         .rp-btn-with-dropdown {
-          display: none;
 
-        }
-        .member-role-mobile {
-          display: block;
         }
       }
     }

@@ -59,6 +59,9 @@ define(function (require, exports, module) {
         initialize: function(options) {
             this.filterModel = options.filterModel;
             this.collectionItems = options.collectionItems;
+            if (this.collectionItems.noChildFilter) {
+                options.crumbs
+            }
             this.render();
 
             this.tableItems = new LaunchSuiteStepItemsView({

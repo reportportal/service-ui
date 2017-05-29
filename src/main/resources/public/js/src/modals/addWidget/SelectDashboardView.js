@@ -28,6 +28,7 @@ define(function (require) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var DashboardCollection = require('dashboard/DashboardCollection');
+    var DashboardModel = require('dashboard/DashboardModel');
     var SelectDashboardItemView = require('modals/addWidget/SelectDashboardItemView');
     var Localization = require('localization');
     var App = require('app');
@@ -59,11 +60,11 @@ define(function (require) {
             var active;
             $('[data-js-dashboard-items]', this.$el).removeClass('hide');
             if (this.collection.isEmpty()) {
-                this.collection.add({
-                    id: _.uniqueId(),
+                var newDashboard = new DashboardModel({
+                    id: 'temp',
                     name: Localization.dashboard.firstDashboard,
-                    owner: config.userModel.get('name')
-                });
+                    owner: config.userModel.get('name') });
+                this.collection.add(newDashboard);
                 $('[data-js-auto-created]', this.$el).removeClass('hide');
             }
             active = this.collection.first();

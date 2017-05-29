@@ -1,5 +1,9 @@
 <% var isDebug = (data.context === 'userdebug'); %>
 <div class="control-buttons rp-nav rp-nav-right">
+    <a class="rp-btn mobile-hide rp-btn-default rp-button-with-icon" title="Add Widget" data-js-add-widget>
+        <i class="material-icons">add_circle</i>
+        <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.widgets.addNewWidget %></span>
+    </a>
     <a class="rp-btn mobile-hide rp-btn-default rp-button-with-icon rp-button-dropdown disabled" data-js-multi-button aria-expanded="true" data-toggle="dropdown" title="<%= data.text.launches.actionTitle %>">
         <i class="material-icons">menu</i>
         <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.ui.actions %></span>

@@ -33,20 +33,7 @@
                     <%= data.text.forms.projectRole %>
                 </label>
                 <div class="rp-custom-col invite-user-field">
-                    <div class="rp-btn-group rp-width-100">
-                        <button data-js-user-project-role id="projectRole" name="projectRole" type="button"
-                                class="rp-btn-group rp-btn rp-btn-with-dropdown rp-width-100 dropdown-toggle"
-                                data-toggle="dropdown">
-                            <span class="select-value" data-js-user-project-role-text></span>
-                            <span class="rp-caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" data-js-select-role-dropdown>
-                            <% _.each(data.roles, function(val, key){ %>
-                            <% var isDisabled = !data.canSelectRole(key) ? 'disabled-option' : '' %>
-                            <li><a href="#" data-value="<%= key %>" class="<%= isDisabled %>"><%= val %></a></li>
-                            <% }); %>
-                        </ul>
-                    </div>
+                    <div data-js-role-selector></div>
                 </div>
             </div>
         </form>

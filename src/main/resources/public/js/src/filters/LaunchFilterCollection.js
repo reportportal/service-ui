@@ -30,6 +30,7 @@ define(function (require) {
     var App = require('app');
     var Util = require('util');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var FilterListener = require('controlers/filterControler/FilterListener');
 
     var config = App.getInstance();
     var call = CallService.call;
@@ -38,45 +39,61 @@ define(function (require) {
     var LaunchFilterCollection = Backbone.Collection.extend({
         model: FilterModel,
         initialize: function () {
-            this.listenTo(this, 'add', this.onAddFilter);
-            this.listenTo(this, 'remove', this.onRemoveFilter);
-            this.listenTo(this, 'change:temp', this.onChangeTemp);
-
-            // this.listenTo(this, 'change', this.onChangeLaunchFilter);
+            this.filterListener = new FilterListener();
+            this.filterEvents = this.filterListener.events;
+            // this.listenTo(this, 'add', this.onAddFilter);
+            // this.listenTo(this, 'change:temp', this.onChangeTemp);
+            this.listenTo(this.filterListener, this.filterEvents.REMOVE_FILTER, this.onRemoveFilter);
+            this.listenTo(this.filterListener, this.filterEvents.CHANGE_IS_LAUNCH, this.onChangeIsLaunch);
             this.ready = $.Deferred();
         },
-        onAddFilter: function (model) {
-            if (!model.get('temp')) {
-                call('PUT', Urls.getPreferences(), { filters: this.getFiltersId() })
-                    .done(function () {
-                        Util.ajaxSuccessMessenger('savedLaunchFilter');
-                    })
-                    .fail(function (error) {
-                        Util.ajaxFailMessenger(error, 'savedLaunchFilter');
-                    });
+        onChangeIsLaunch: function (options) {
+            var id = options.data.id;
+            if (options.isLaunch) {
+                if (!this.get(id)) {
+                    this.add(options.data);
+                } else {
+                    this.get(id).set({ temp: false });
+                }
+            } else {
+                this.remove(id);
+            }
+            call('PUT', Urls.getPreferences(), { filters: this.getFiltersId() })
+                .done(function () {
+                    Util.ajaxSuccessMessenger('savedLaunchFilter');
+                })
+                .fail(function (error) {
+                    Util.ajaxFailMessenger(error, 'savedLaunchFilter');
+                });
+        },
+        onRemoveFilter: function (id) {
+            var model = this.get(id);
+            if (model) {
+                this.remove(model);
+                if (!model.get('temp') && model.get('owner')) {
+                    call('PUT', Urls.getPreferences(), { filters: this.getFiltersId() });
+                }
             }
         },
-        onRemoveFilter: function (model) {
-            if (!model.get('temp') && model.get('owner')) {
-                call('PUT', Urls.getPreferences(), { filters: this.getFiltersId() });
-            }
-        },
+
         getFiltersId: function () {
-            return _.map(this.models, function (model) {
+            var ids = [];
+            _.each(this.models, function (model) {
                 if (model.id && !model.get('temp')) {
-                    return model.id;
+                    ids.push(model.id);
                 }
             });
+            return ids;
         },
-        onChangeTemp: function (model, temp) {
-            var self = this;
-            if (!temp) {
-                this.saveFilter(model, function (data) {
-                    model.set({ id: data[0].id });
-                    self.onAddFilter(model);
-                });
-            }
-        },
+        // onChangeTemp: function (model, temp) {
+        //     var self = this;
+        //     if (!temp) {
+        //         this.saveFilter(model, function (data) {
+        //             model.set({ id: data[0].id });
+        //             self.onAddFilter(model);
+        //         });
+        //     }
+        // },
         saveFilter: function (model, callback) {
             var data = model.getDataFromServer();
             data.type = 'launch';
@@ -112,6 +129,7 @@ define(function (require) {
             call('GET', Urls.getFilters(ids))
                 .done(function (data) {
                     (new SingletonDefectTypeCollection()).ready.done(function () {
+                        self.destroyModels();
                         self.reset(_.map(data, function (item) {
                             item.isLaunch = true;
                             item.type = 'launch';

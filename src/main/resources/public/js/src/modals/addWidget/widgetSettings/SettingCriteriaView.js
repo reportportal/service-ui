@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     var Util = require('util');
     var $ = require('jquery');
     var _ = require('underscore');
@@ -39,18 +39,19 @@ define(function (require, exports, module) {
             $.when(WidgetService.getFullWidgetConfig(this.model.get('gadget'))).done(this.onRedyWidgetConfig.bind(this));
         },
         onRedyWidgetConfig: function (widget) {
+            var criteriaData;
             this.curWidget = widget;
             if (this.curWidget.noCriteria || !this.curWidget.criteria) {
                 this.destroy();
                 return false;
             }
             this.render();
-            var criteriaData = this.getCriteriaData();
+            criteriaData = this.getCriteriaData();
             this.selectCriteria = new DropDownComponent({
                 data: criteriaData,
                 placeholder: Localization.widgets.selectCriteria,
                 multiple: this.curWidget.criteriaSelectType !== 'radio',
-                defaultValue: this.getDefaultValue()
+                defaultValue: (this.curWidget.criteriaSelectType !== 'radio') ? this.getDefaultValue() : this.getDefaultValue()[0]
             });
             $('[data-js-select-criteria-container]', this.$el).html(this.selectCriteria.$el);
             this.listenTo(this.selectCriteria, 'change', this.onChangeSelectCriteria);
@@ -64,11 +65,12 @@ define(function (require, exports, module) {
             });
         },
         getDefaultValue: function () {
-            var gadget = this.model.get('gadget'),
-                contentFields = this.model.getContentFields();
+            var gadget = this.model.get('gadget');
+            var contentFields = this.model.getContentFields();
+            var content = [];
+            var criteriaData;
             if (gadget === 'launches_table') {
-                var criteriaData = this.getCriteriaData();
-                var content = [];
+                criteriaData = this.getCriteriaData();
                 _.each(contentFields, function (field) {
                     var criteria = _.find(criteriaData, function (c) {
                         return c.value.indexOf(field) >= 0;

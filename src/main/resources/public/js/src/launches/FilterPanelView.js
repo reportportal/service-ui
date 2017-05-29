@@ -24,10 +24,11 @@ define(function (require) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
-    var ModalAddWidget = require('modals/addWidget/modalAddWidget');
-    var GadgetModel = require('dashboard/GadgetModel');
     var Util = require('util');
     var App = require('app');
+    var ModalFilterEdit = require('modals/modalFilterEdit');
+    var FilterListener = require('controlers/filterControler/FilterListener');
+    var FilterSortingView = require('filterSelectionParameters/FilterSortingView');
 
     var config = App.getInstance();
 
@@ -37,8 +38,7 @@ define(function (require) {
             'click [data-js-edit-filter]': 'onClickEdit',
             'click [data-js-discard-filter]': 'onClickDiscard',
             'click [data-js-save-filter]': 'onClickSave',
-            'click [data-js-clone-filter]': 'onClickClone',
-            'click [data-js-add-widget]': 'onClickAddWidget'
+            'click [data-js-clone-filter]': 'onClickClone'
         },
         bindings: {
             '[data-js-filter-not-save-descr]': 'classes: {hide: all(not(temp), not(newEntities), not(newSelectionParameters))}',
@@ -52,25 +52,32 @@ define(function (require) {
         },
 
         initialize: function () {
+            this.filterListener = new FilterListener();
+            this.filterEvents = this.filterListener.events;
             this.render();
             this.createFilterEntities();
+            this.listenTo(this.model, 'change:entities change:selection_parameters', this.createFilterEntities);
         },
-        // changeFilterEntities: function(model) {
-        //     // console.dir(JSON.stringify(model.changed));
-        // },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickEdit: function () {
+            var self = this;
             config.trackingDispatcher.trackEventNumber(15);
-            this.model.editMainInfo();
+            (new ModalFilterEdit({ mode: 'edit', filterModel: self.model })).show()
+                .done(function (dataModel) {
+                    self.filterListener.trigger(self.filterEvents.ON_SET_FILTER, {
+                        id: self.model.get('id'),
+                        data: self.model.getDataFromServer(dataModel.attributes)
+                    });
+                });
         },
         onClickClone: function () {
-            config.trackingDispatcher.trackEventNumber(14);
             var newFilter = this.model.collection.generateTempModel({
                 newEntities: this.model.get('newEntities') || this.model.get('entities')
             });
             config.router.navigate(newFilter.get('url'), { trigger: true });
+            config.trackingDispatcher.trackEventNumber(14);
         },
         onClickDiscard: function () {
             config.trackingDispatcher.trackEventNumber(13);
@@ -84,25 +91,36 @@ define(function (require) {
                 filterLevel: 'launch',
                 model: this.model
             });
-            // this.listenTo(this.filterEntities.collection, 'change', this.changeFilterEntities);
+            this.filterSorting && this.filterSorting.destroy();
+            this.filterSorting = new FilterSortingView({ model: this.model });
+            $('[data-js-filter-sorting]', this.$el).html(this.filterSorting.$el);
         },
         onClickSave: function () {
+            var self = this;
             config.trackingDispatcher.trackEventNumber(16);
-            this.model.saveFilter();
+            if (this.model.get('temp')) {
+                (new ModalFilterEdit({ mode: 'save', filterModel: self.model })).show()
+                    .done(function (dataModel) {
+                        self.filterListener.trigger(self.filterEvents.ON_ADD_FILTER, {
+                            cid: self.model.cid,
+                            data: self.model.getDataFromServer(dataModel.attributes),
+                            isLaunch: true
+                        });
+                    });
+            } else {
+                self.filterListener.trigger(
+                    self.filterEvents.ON_SET_FILTER,
+                    {
+                        id: self.model.get('id'),
+                        data: self.model.getDataFromServer()
+                    }
+                );
+            }
         },
-        onClickAddWidget: function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            config.trackingDispatcher.trackEventNumber(17);
-            (new ModalAddWidget({ model: new GadgetModel(), filter_id: this.model.get('id'), isNoDashboard: true })).show();
-        },
-        destroy: function () {
-            this.filterEntities.destroy();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
+            this.filterSorting && this.filterSorting.destroy();
+            this.filterEntities && this.filterEntities.destroy();
             this.$el.html('');
-            delete this;
         }
     });
 

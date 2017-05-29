@@ -1,25 +1,25 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -35,6 +35,7 @@ define(function (require, exports, module) {
     var MemberService = require('memberService');
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
+    var _ = require('underscore');
 
     var config = App.getInstance();
 
@@ -43,7 +44,8 @@ define(function (require, exports, module) {
             this.action = options.action || 'internal';
             this.$el = options.el;
             this.$header = options.header;
-            this.currentTpl = config.currentProjectsSettings.listView || config.defaultProjectsSettings.listView;
+            this.currentTpl = config.currentProjectsSettings.listView ||
+                config.defaultProjectsSettings.listView;
         },
 
         getDefaultFilter: function () {
@@ -58,19 +60,19 @@ define(function (require, exports, module) {
         headerTpl: 'tpl-admin-projects-header',
         listShellTpl: 'tpl-admin-projects-list-shell',
 
-        render: function (options) {
-            this.$el.html(Util.templates(this.shellTpl, {query: 'internal'}));
-            this.$body = $("#contentBody", this.$el);
+        render: function () {
+            this.$el.html(Util.templates(this.shellTpl, { query: 'internal' }));
+            this.$body = $('#contentBody', this.$el);
             this.fillContent();
             return this;
         },
 
-        update: function(){
+        update: function () {
             this.fillContent();
         },
 
-        renderTab: function(){
-            if(this.tabView){
+        renderTab: function () {
+            if (this.tabView) {
                 this.tabView.destroy();
                 this.clearSearch();
             }
@@ -84,7 +86,7 @@ define(function (require, exports, module) {
             if (el.parent().hasClass('active')) {
                 return;
             }
-            config.router.navigate(el.attr('href'), {silent: true});
+            config.router.navigate(el.attr('href'), { silent: true });
             this.action = query;
             this.renderTab();
         },
@@ -93,12 +95,12 @@ define(function (require, exports, module) {
             return new ProjectsList({
                 viewType: this.currentView,
                 projectsType: tab,
-                total: $('[data-js-'+tab+'-qty]', this.$el),
-                container: $('[data-js-'+tab+'-content]', this.$el),
+                total: $('[data-js-' + tab + '-qty]', this.$el),
+                container: $('[data-js-' + tab + '-content]', this.$el),
                 filter: this.filter || this.getDefaultFilter()
             });
         },
-        clearSearch: function(){
+        clearSearch: function () {
             this.filter.search = config.defaultProjectsSettings.search;
             this.$searchString.val('');
         },
@@ -106,7 +108,7 @@ define(function (require, exports, module) {
             this.filter = this.filter || this.getDefaultFilter();
 
             this.$header.html(Util.templates(this.headerTpl, options));
-            this.$body.html(Util.templates(this.listShellTpl, {query: this.action}));
+            this.$body.html(Util.templates(this.listShellTpl, { query: this.action }));
 
             this.setupAnchors();
 
@@ -121,9 +123,9 @@ define(function (require, exports, module) {
             this.listenTo(this.tabView, 'loadProjectsReady', this.onLoadProjectsReady);
         },
 
-        setupAnchors: function(){
-            this.$sortBlock = $("[data-js-sort-block]", this.$body);
-            this.$searchString = $("[data-js-filter-projects]", this.$body);
+        setupAnchors: function () {
+            this.$sortBlock = $('[data-js-sort-block]', this.$body);
+            this.$searchString = $('[data-js-filter-projects]', this.$body);
         },
 
         events: {
@@ -134,12 +136,13 @@ define(function (require, exports, module) {
         },
 
         changeProjectsView: function (event) {
+            var $target = $(event.currentTarget);
+            var viewType = $target.data('view-type');
             event.preventDefault();
-            var $target = $(event.currentTarget),
-                viewType = $target.data('view-type');
             $('.projects-view').removeClass('active');
             $target.addClass('active');
-            this.currentView = config.currentProjectsSettings.listView = viewType;
+            this.currentView = viewType;
+            config.currentProjectsSettings.listView = viewType;
             this.tabView.updateView({
                 viewType: viewType
             });
@@ -153,12 +156,15 @@ define(function (require, exports, module) {
             var btn = $(e.currentTarget);
             if (btn.hasClass('active')) {
                 btn.toggleClass('desc');
-                this.filter.direction = config.currentProjectsSettings.sortingDirection = btn.hasClass('desc') ? 'desc' : 'asc';
+                this.filter.direction = btn.hasClass('desc') ? 'desc' : 'asc';
+                config.currentProjectsSettings.sortingDirection = btn.hasClass('desc') ? 'desc' : 'asc';
             } else {
-                $(".active, .desc", this.$sortBlock).removeClass('active').removeClass('desc');
+                $('.active, .desc', this.$sortBlock).removeClass('active').removeClass('desc');
                 btn.addClass('active');
-                this.filter.direction = config.currentProjectsSettings.sortingDirection = 'asc';
-                this.filter.sort = config.currentProjectsSettings.sorting = btn.data('type');
+                this.filter.direction = 'asc';
+                config.currentProjectsSettings.sortingDirection = 'asc';
+                this.filter.sort = btn.data('type');
+                config.currentProjectsSettings.sorting = btn.data('type');
             }
             this.tabView.update({
                 direction: this.filter.direction,
@@ -172,7 +178,8 @@ define(function (require, exports, module) {
             clearTimeout(this.searching);
             this.searching = setTimeout(function () {
                 if (data.valid && self.filter.search !== data.value) {
-                    self.filter.search = config.currentProjectsSettings.search = data.value;
+                    self.filter.search = data.value;
+                    config.currentProjectsSettings.search = data.value;
                     self.tabView.update({
                         direction: self.filter.direction,
                         sort: self.filter.sort,
@@ -189,8 +196,8 @@ define(function (require, exports, module) {
         }
     });
 
-    var ProjectsList =  Components.BaseView.extend({
-        initialize: function(options){
+    var ProjectsList = Components.BaseView.extend({
+        initialize: function (options) {
             this.projectsType = options.projectsType;
             this.$total = options.total;
             this.$container = options.container;
@@ -207,7 +214,7 @@ define(function (require, exports, module) {
             'click .assign-to-project': 'assignAdminToProject'
         },
 
-        render: function(){
+        render: function () {
             this.$container.append(this.$el.html(Util.templates(this.tpl)));
             this.setupAnchors();
 
@@ -221,7 +228,7 @@ define(function (require, exports, module) {
 
             this.loadProjects();
         },
-        renderProjects: function(){
+        renderProjects: function () {
             var tpl = this.getCurrentTpl();
             this.$listEl.append(Util.templates(tpl, {
                 collection: this.collection.toJSON(),
@@ -238,41 +245,41 @@ define(function (require, exports, module) {
             }));
             this.trigger('loadProjectsReady');
         },
-        updateView: function(data){
+        updateView: function (data) {
             this.viewType = data.viewType;
             this.$listEl.empty();
             this.renderProjects();
         },
-        isPersonalProject: function(project){
+        isPersonalProject: function (project) {
             return project.entryType === 'PERSONAL';
         },
-        isNew: function(stamp){
+        isNew: function (stamp) {
             return Util.daysBetween(new Date(), new Date(stamp)) <= 7;
         },
-        getCurrentTpl: function(){
+        getCurrentTpl: function () {
             return this.viewType === 'table' ? this.listTableTpl : this.listListTpl;
         },
-        update: function(options){
+        update: function (options) {
             this.filter = options || this.filter;
             this.$listEl.empty();
             this.loadProjects();
         },
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$loaderEl = $('[data-js-projects-loader]', this.$el);
             this.$listEl = $('[data-js-projects-list]', this.$el);
             this.$pagingEl = $('[data-js-projects-paging]', this.$el);
         },
-        getDefaultPaging: function(){
-            return {number: 1, size: 12};
+        getDefaultPaging: function () {
+            return { number: 1, size: 12 };
         },
-        onPage: function(page) {
+        onPage: function () {
             this.update();
         },
-        onPageCount: function(size) {
+        onPageCount: function () {
             this.update();
         },
-        onLoadProjects: function(data){
-            if(data.page.totalPages < data.page.number && data.page.totalPages != 0){
+        onLoadProjects: function (data) {
+            if (data.page.totalPages < data.page.number && data.page.totalPages !== 0) {
                 this.paging.trigger('page', data.page.totalPages);
                 return;
             }
@@ -281,17 +288,17 @@ define(function (require, exports, module) {
             this.collection = new Backbone.Collection(data.content ? data.content : data);
             this.renderProjects();
 
-            this.$total.html('('+data.page.totalElements+')');
+            this.$total.html('(' + data.page.totalElements + ')');
         },
-        getQueryData: function(){
-            var query = this.projectsType == 'personal' ? '?filter.eq.configuration$entryType=PERSONAL' : '?filter.in.configuration$entryType=INTERNAL,UPSA';
-            if(this.filter.search){
+        getQueryData: function () {
+            var query = this.projectsType === 'personal' ? '?filter.eq.configuration$entryType=PERSONAL' : '?filter.in.configuration$entryType=INTERNAL,UPSA';
+            if (this.filter.search) {
                 query += '&filter.cnt.name=' + this.filter.search;
             }
-            if(this.filter.sort){
-                query += '&page.sort='+this.filter.sort;
-                if(this.filter.direction){
-                    query += ','+this.filter.direction;
+            if (this.filter.sort) {
+                query += '&page.sort=' + this.filter.sort;
+                if (this.filter.direction) {
+                    query += ',' + this.filter.direction;
                 }
             }
             query += '&page.page=' + this.paging.model.get('number') + '&page.size=' + this.paging.model.get('size');
@@ -308,21 +315,21 @@ define(function (require, exports, module) {
                     .fail(function (error) {
                         Util.ajaxFailMessenger(error, 'adminLoadProjects');
                     })
-                    .always(function(){
+                    .always(function () {
                         this.toggleLoader('hide');
                     }.bind(this));
             }.bind(this));
         },
-        toggleLoader: function(action){
+        toggleLoader: function (action) {
             this.$loaderEl[action]();
         },
         searchFilter: function (item, searchString) {
+            var regex;
             if (!searchString) {
                 return true;
-            } else {
-                var regex = new RegExp(searchString.escapeRE(), 'i');
-                return regex.test(item.projectId);
             }
+            regex = new RegExp(searchString.escapeRE(), 'i');
+            return regex.test(item.projectId);
         },
         hasRunsLastWeek: function (stamp) {
             return Util.daysBetween(new Date(), new Date(stamp)) < 7;
@@ -331,18 +338,15 @@ define(function (require, exports, module) {
             return !Util.isDeleteLock(item);
         },
         removeProject: function (e) {
-            e.preventDefault();
             var self = this;
             var el = $(e.currentTarget);
             var id = '' + el.data('id');
-            var status = el.data('active');
-
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteProject,
                 bodyText: Util.replaceTemplate(Localization.dialog.deleteProject, id),
                 confirmText: Localization.dialog.msgDeleteProject,
                 cancelButtonText: Localization.ui.cancel,
-                okButtonDanger: true,
+                okButtonDanger: false,
                 okButtonText: Localization.ui.delete,
                 confirmFunction: function () {
                     return Service.deleteProject(id)
@@ -351,34 +355,34 @@ define(function (require, exports, module) {
                             delete curProjects[id];
                             config.userModel.set('projects', curProjects);
                             self.update();
-                            Util.ajaxSuccessMessenger("deleteProject");
+                            Util.ajaxSuccessMessenger('deleteProject');
                         })
                         .fail(function (error) {
-                            Util.ajaxFailMessenger(error, "deleteProject");
+                            Util.ajaxFailMessenger(error, 'deleteProject');
                         });
                 }
             });
+            e.preventDefault();
             modal.show();
         },
         assignAdminToProject: function (e) {
-            e.preventDefault();
             var el = $(e.currentTarget);
             var projectId = el.data('project');
             var data = {};
             var defaultRole = config.projectRoles[1];
-
+            e.preventDefault();
             data[config.userModel.get('name')] = defaultRole;
             MemberService.assignMember(data, projectId)
                 .done(function () {
                     el.closest('.no-assigned').removeClass('no-assigned');
-                    config.userModel.get('projects')[projectId] = {projectRole: defaultRole};
-                    Util.ajaxSuccessMessenger("assignYourSelf", (projectId + '').toUpperCase());
+                    config.userModel.get('projects')[projectId] = { projectRole: defaultRole };
+                    Util.ajaxSuccessMessenger('assignYourSelf', (projectId + '').toUpperCase());
                 })
                 .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "assignYourSelf");
+                    Util.ajaxFailMessenger(error, 'assignYourSelf');
                 });
         },
-        destroy: function(){
+        destroy: function () {
             this.paging = null;
             Components.BaseView.prototype.destroy.call(this);
         }
@@ -404,14 +408,16 @@ define(function (require, exports, module) {
         permissionsTpl: 'tpl-permissions-map',
 
         render: function () {
+            var tab;
+            var self;
             this.$el.html(Util.templates(this.shellTpl));
-            this.$body = $("#contentBody", this.$el);
+            this.$body = $('#contentBody', this.$el);
 
-            var tab = this.action === 'members' ? 'members' : 'settings';
+            tab = this.action === 'members' ? 'members' : 'settings';
 
             this.$header.html(Util.templates(this.headerTpl, {
                 projectName: this.id,
-                tab: tab,
+                tab: tab
             }));
 
             if (this.action !== 'add') {
@@ -433,13 +439,13 @@ define(function (require, exports, module) {
                 query: this.query
             }));
 
-            this.$settings = $("#projectSettings", this.$body);
+            this.$settings = $('#projectSettings', this.$body);
 
-            this.$users = $("#projectUsers", this.$body);
+            this.$users = $('#projectUsers', this.$body);
 
             if (this.id) {
-                config.project = {projectId: this.id};
-                var self = this;
+                config.project = { projectId: this.id };
+                self = this;
                 Service.getProjectInfo()
                     .done(function (data) {
                         config.project = data;
@@ -449,7 +455,7 @@ define(function (require, exports, module) {
                         Util.ajaxFailMessenger(error, 'projectLoad');
                     });
             } else {
-                var self = this;
+                self = this;
                 Service.getProjectNames()
                     .done(function (data) {
                         self.allNames = _.map(data, function (n) {
@@ -457,7 +463,7 @@ define(function (require, exports, module) {
                         });
                         self.setupAddProject();
                     })
-                    .fail(function (error) {
+                    .fail(function () {
 
                     });
                 this.setupAddProject();
@@ -485,7 +491,6 @@ define(function (require, exports, module) {
                     adminPage: true,
                     tab: this.query
                 }).render();
-
             } else {
                 this.settingsBlock.update(this.query);
             }
@@ -509,12 +514,12 @@ define(function (require, exports, module) {
         },
 
         setupAddProject: function () {
-            this.$name = $("#projectName", this.$body);
+            this.$name = $('#projectName', this.$body);
             Util.bootValidator(this.$name, [
-                {validator: 'required', type: 'projectName', noTrim: true},
-                {validator: 'minMaxNotRequired', type: 'addProjectName', min: 3, max: 256, noTrim: true},
-                {validator: 'matchRegex', type: 'projectNameRegex', pattern: '^[a-zA-Z0-9_-]*$', arg: 'i', noTrim: true},
-                {validator: 'noDuplications', type: 'projectName', source: this.allNames || []}
+                { validator: 'required', type: 'projectName', noTrim: true },
+                { validator: 'minMaxNotRequired', type: 'addProjectName', min: 3, max: 256, noTrim: true },
+                { validator: 'matchRegex', type: 'projectNameRegex', pattern: '^[a-zA-Z0-9_-]*$', arg: 'i', noTrim: true },
+                { validator: 'noDuplications', type: 'projectName', source: this.allNames || [] }
             ]);
         },
 
@@ -528,19 +533,20 @@ define(function (require, exports, module) {
         events: {
             'click .tab': 'updateRoute',
             'click .rp-nav-tabs .disabled': 'stopPropagation',
-            'click #create-project': 'createProject',
+            'click #create-project': 'createProject'
         },
 
         createProject: function () {
-            this.$name.trigger('validate');
             var self = this;
+            var name;
+            this.$name.trigger('validate');
             if (this.$name.data('valid')) {
-                var name = this.$name.val().toLowerCase();
+                name = this.$name.val().toLowerCase();
                 Service.createProject(name)
-                    .done(function (data) {
-                        config.userModel.get('projects')[name] = {projectRole: "MEMBER", entryType: "INTERNAL"};
+                    .done(function () {
+                        config.userModel.get('projects')[name] = { projectRole: 'MEMBER', entryType: 'INTERNAL' };
                         Util.ajaxSuccessMessenger('projectCreated', name);
-                        config.router.navigate(self.getUrl(name, 'settings'), {trigger: true});
+                        config.router.navigate(self.getUrl(name, 'settings'), { trigger: true });
                     })
                     .fail(function (error) {
                         Util.ajaxFailMessenger(error, 'projectCreate');
@@ -562,13 +568,12 @@ define(function (require, exports, module) {
         updateRoute: function (e) {
             var el = $(e.currentTarget);
             var action = el.data('action');
-            var query = el.data('query');
 
             if (el.parent().hasClass('active') || el.hasClass('disabled') || el.hasClass('settings')) {
                 return;
             }
 
-            config.router.navigate(el.attr('href'), {silent: true});
+            config.router.navigate(el.attr('href'), { silent: true });
 
             this.query = el.data('query');
             if (action) {
@@ -617,27 +622,28 @@ define(function (require, exports, module) {
             this.$header = options.header;
         },
 
-        headerTpl: "tpl-admin-project-details-header",
-        bodyTpl: "tpl-admin-project-details",
+        headerTpl: 'tpl-admin-project-details-header',
+        bodyTpl: 'tpl-admin-project-details',
 
         getInterval: function (query) {
             return query ? +query.split('=')[1] : 3;
         },
 
         render: function () {
+            var self;
             this.$el.html(Util.templates(this.bodyTpl, {}));
-            /*this.$header.html(Util.templates(this.headerTpl, {
+            /* this.$header.html(Util.templates(this.headerTpl, {
                 projectId: this.id,
                 interval: this.interval
             }));*/
-            this.$content = $("#contentTarget", this.$el);
+            this.$content = $('#contentTarget', this.$el);
             this.$content.html(Util.templates(this.tpl));
-            this.$interval = $(".btn-group:first", this.$el);
+            this.$interval = $('.btn-group:first', this.$el);
 
             this.setupAnchors();
 
-            var self = this;
-            config.project = {projectId: this.project};
+            self = this;
+            config.project = { projectId: this.project };
             $.when(Service.getProjectInfo())
                 .done(function (data) {
                     config.project = data;
@@ -656,14 +662,14 @@ define(function (require, exports, module) {
         },
 
         setActiveInterval: function () {
-            $(".active", this.$interval).removeClass('active');
-            $("#interval" + this.interval, this.$interval).prop('checked', true).parent().addClass('active');
+            $('.active', this.$interval).removeClass('active');
+            $('#interval' + this.interval, this.$interval).prop('checked', true).parent().addClass('active');
         },
 
-        updateInterval: function (e) {
-            var value = $("input[name=interval]:checked", this.$interval).data('value');
+        updateInterval: function () {
+            var value = $('input[name=interval]:checked', this.$interval).data('value');
             this.interval = value;
-            config.router.navigate(urls.detailsInterval(this.id, value), {silent: true});
+            config.router.navigate(urls.detailsInterval(this.id, value), { silent: true });
             this.loadProjectInfo();
             this.loadWidgets();
         },

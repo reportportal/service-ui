@@ -31,6 +31,7 @@ define(function (require) {
     var Service = require('coreService');
     var SingletonAppModel = require('model/SingletonAppModel');
     var ModalConfirm = require('modals/modalConfirm');
+    var DropDownComponent = require('components/DropDownComponent');
 
     var config = App.getInstance();
 
@@ -48,8 +49,6 @@ define(function (require) {
         authTpl: 'tpl-bts-auth-type',
 
         events: {
-            'click .bts-option': 'changeBts',
-            'click .auth-type': 'updateAuthType',
             'keyup .bts-property': 'updateModel',
             'blur .bts-property': 'updateModel',
             'click #submitBtsProperties': 'saveProperties',
@@ -67,6 +66,7 @@ define(function (require) {
 
         initialize: function () {
             var modelsData = [];
+            this.dropdownComponents = [];
             this.appModel = new SingletonAppModel();
             this.settings = config.forSettings;
             this.access = Util.isInPrivilegedGroup();
@@ -87,11 +87,23 @@ define(function (require) {
         },
 
         render: function () {
+            var btsSwitcher;
             this.$el.html(Util.templates(this.wrapperTpl, {
                 settings: this.settings,
                 systemType: this.model.get('systemType'),
                 access: this.access
             }));
+            btsSwitcher = new DropDownComponent({
+                data: _.map(this.settings.btsList, function (val) {
+                    return { name: val.name, value: val.value, disabled: false };
+                }),
+                multiple: false,
+                defaultValue: this.model.get('systemType')
+            });
+            $('[data-js-bts-switcher]', this.$el).html(btsSwitcher.$el);
+            this.listenTo(btsSwitcher, 'change', this.changeBts);
+            this.dropdownComponents.push(btsSwitcher);
+
             this.$instanceHead = $('#instanceHead', this.$el);
             this.$instanceBoby = $('#instanceBody', this.$el);
 
@@ -127,13 +139,29 @@ define(function (require) {
 
         renderInstance: function () {
             var params = this.model.toJSON();
+            var authTypeSelector;
             this.$instanceBoby.empty();
-            params.authorizationTypes = this.settings['bts' + this.model.get('systemType')].authorizationType;
             params.access = this.access;
             params.settings = this.settings;
             params.projectType = this.model.isRally() ? 'projectId' : 'projectName';
 
             this.$instanceBoby.html(Util.templates(this.instanceTpl, params));
+
+            authTypeSelector = new DropDownComponent({
+                data: _.map(this.settings['bts' + this.model.get('systemType')].authorizationType, function (val) {
+                    return { name: val.name, value: val.value, disabled: false };
+                }),
+                multiple: false,
+                defaultValue: this.model.get('systemAuth')
+            });
+            $('li', authTypeSelector.$el).each(function (i, elem) {
+                $(elem).attr('id', $('a', $(elem)).data('value'));
+            });
+            $('[data-js-dropdown]', authTypeSelector.$el).attr('id', 'systemAuth').attr('disabled', !this.access ? 'disabled' : '');
+            $('[data-js-auth-type-selector]', this.$el).html(authTypeSelector.$el);
+            this.listenTo(authTypeSelector, 'change', this.updateAuthType);
+            this.dropdownComponents.push(authTypeSelector);
+
             this.setupAnchors();
             this.setAuthBlock(params);
             this.bindValidators();
@@ -153,19 +181,9 @@ define(function (require) {
             return (this.settings['bts' + system] && this.settings['bts' + system].multiple);
         },
 
-        changeBts: function (e) {
-            var el;
-            var value;
-            e.preventDefault();
-            el = $(e.currentTarget);
-            value = el.text();
-
-            if (el.hasClass('active')) {
-                return;
-            }
+        changeBts: function (val) {
             config.trackingDispatcher.trackEventNumber(398);
-            Util.flipActiveLi(el);
-            this.validateBtsChange(value);
+            this.validateBtsChange(val);
         },
 
         validateBtsChange: function (value) {
@@ -676,18 +694,8 @@ define(function (require) {
             }
         },
 
-        updateAuthType: function (e) {
-            var $el;
-            var type;
-            e.preventDefault();
-            $el = $(e.currentTarget).parent();
-            type = $el.attr('id');
-            if ($el.hasClass('active')) {
-                return;
-            }
-            Util.flipActiveLi($el);
-
-            this.model.set('systemAuth', type);
+        updateAuthType: function (val) {
+            this.model.set('systemAuth', val);
             this.setAuthBlock();
         },
 
@@ -696,6 +704,9 @@ define(function (require) {
         },
 
         onDestroy: function () {
+            _.each(this.dropdownComponents, function (item) {
+                item.destroy();
+            });
             if (this.defaultFields) {
                 this.defaultFields = null;
             }

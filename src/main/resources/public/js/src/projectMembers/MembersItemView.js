@@ -33,6 +33,7 @@ define(function (require) {
     var MemberService = require('projectMembers/MembersService');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
+    var DropDownComponent = require('components/DropDownComponent');
 
     var config = App.getInstance();
 
@@ -50,10 +51,9 @@ define(function (require) {
             '[data-js-member-unassign]': 'classes: {disabled: not(canUnAssign)}, attr: {disabled: not(canUnAssign), title: getUnAssignTitle}',
             '[data-js-select-roles]': 'classes: {hide: isAdmin}',
             '[data-js-admin-role]': 'classes: {hide: not(isAdmin)}',
-            '[data-js-selected-role]': 'text: getProjectRole',
-            '[data-js-member-role-mobile]': 'text: getProjectRole',
-            '[data-js-dropdown-roles]': 'updateRoleDropDown: assigned_projects',
-            '[data-js-button-roles] ': 'classes: {disabled: not(canChangeRole)}, attr: {disabled: not(canChangeRole)}',
+            '[data-js-member-role-mobile]': 'text: getProjectRole, classes: {hide: isAdmin}',
+            '[data-js-select-roles] [data-js-dropdown-menu]': 'updateRoleDropDown: assigned_projects',
+            '[data-js-select-roles] [data-js-dropdown]': 'classes: {disabled: not(canChangeRole)}, attr: {disabled: not(canChangeRole)}',
             '[data-js-make-admin]': 'classes: {hide: hideMakeAdmin}'
         },
         computeds: {
@@ -130,10 +130,7 @@ define(function (require) {
                     var role = assignedProjects[projectId].projectRole;
                     _.each($('a', $el), function (a) {
                         var itemRole = $(a).data('value');
-                        var activeAction = itemRole === role ? 'add' : 'remove';
                         var disabledAction = !this.view.validateForPermissions(itemRole) ? 'add' : 'remove';
-                        $(a)[activeAction + 'Class']('active');
-                        $(a)[disabledAction + 'Class']('notlink');
                         $(a)[disabledAction === 'add' ? 'attr' : 'removeAttr']('title', Localization.members.unAssignTitleNoPermission);
                     }, this);
                 }
@@ -154,7 +151,17 @@ define(function (require) {
             this.render();
         },
         render: function () {
-            this.$el.html(Util.templates(this.tpl, { roles: this.roles }));
+            var self = this;
+            this.$el.html(Util.templates(this.tpl));
+            this.roleSelector = new DropDownComponent({
+                data: _.map(this.roles, function (key, val) {
+                    return { name: key, value: val, disabled: !self.validateForPermissions(val) };
+                }),
+                multiple: false,
+                defaultValue: this.model.getProjectRole(this.appModel.get('projectId'))
+            });
+            $('[data-js-select-roles]', this.$el).html(this.roleSelector.$el);
+            this.listenTo(this.roleSelector, 'change', this.updateProjectRole);
         },
         confirmChangeAccountRole: function (e) {
             var modal;
@@ -207,17 +214,11 @@ define(function (require) {
             return Util.isUnassignedLock(member, member.assigned_projects[projectId]);
         },
         updateProjectRole: function (e) {
-            var $el = $(e.currentTarget);
-            var newRole;
+            var newRole = e;
             var userId;
             var projectId;
             var assignedProjects;
-            e.preventDefault();
-            if ($el.hasClass('active') || $el.hasClass('notlink')) {
-                return;
-            }
             config.trackingDispatcher.trackEventNumber(433);
-            newRole = $el.data('value');
             userId = this.model.get('userId');
             projectId = this.appModel.get('projectId');
             assignedProjects = this.model.getAssignedProjects();
@@ -261,10 +262,8 @@ define(function (require) {
             e.preventDefault();
             $el.closest('[data-js-members-table]').toggleClass('show-from-now');
         },
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
+            this.roleSelector.destroy();
             this.remove();
             delete this;
         }

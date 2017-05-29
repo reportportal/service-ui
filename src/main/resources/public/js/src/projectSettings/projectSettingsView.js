@@ -89,8 +89,6 @@ define(function (require) {
             this.tabSelector.activateItem(this.tab);
             $('[data-js-tab-action]', this.$el).closest('li.active').removeClass('active');
             $('[data-js-tab-action="' + this.tab + '"]', this.$el).closest('li').addClass('active');
-            $('[data-js-nav-tabs-mobile] li.active', this.$el).removeClass('active');
-            $('[data-js-nav-tabs-mobile] [data-value="' + this.tab + '"]', this.$el).parent().addClass('active');
         },
 
         update: function (tab) {

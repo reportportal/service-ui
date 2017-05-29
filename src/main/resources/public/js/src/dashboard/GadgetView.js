@@ -132,7 +132,7 @@ define(function (require) {
         onLoadDataError: function (error) {
             var message = Localization.widgets.unableLoadData;
             var owner;
-            var isShared
+            var isShared;
             if (error && error.status === 404) {
                 message = Localization.widgets.widgetNotFound;
             } else {
@@ -152,10 +152,7 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(288);
             modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deletedWidget,
-                bodyText: Util.replaceTemplate(
-                    !dangerRemove
-                        ? Localization.dialog.deletedWidget
-                        : Localization.dialog.deletedWidgetDanger,
+                bodyText: Util.replaceTemplate(Localization.dialog.deletedWidget,
                     this.model.get('name')
                 ),
                 confirmText: !dangerRemove ? '' : Localization.dialog.deletedWidgetDangerConfirmText,
@@ -171,7 +168,7 @@ define(function (require) {
             $('[data-js-close]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(339);
             });
-            $('[data-js-cancel]', modal.$el).on('click', function (e) {
+            $('[data-js-cancel]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(340);
             });
             $('[data-js-ok]', modal.$el).on('click', function () {

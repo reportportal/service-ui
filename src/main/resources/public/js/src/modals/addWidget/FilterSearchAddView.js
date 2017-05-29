@@ -19,11 +19,11 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
@@ -31,6 +31,7 @@ define(function (require, exports, module) {
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var FilterModel = require('filters/FilterModel');
     var App = require('app');
+    var FilterListener = require('controlers/filterControler/FilterListener');
 
     var config = App.getInstance();
 
@@ -40,26 +41,28 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-cancel-edit]': 'onClickCancel',
             'click [data-js-ok-edit]': 'onClickOk',
-            'click [data-js-cancel]': 'onClick',
+            'click [data-js-cancel]': 'onClick'
         },
         bindings: {
-            '[data-js-filter-name]': 'text: name',
+            '[data-js-filter-name]': 'text: name'
         },
-        initialize: function(options) {
+        initialize: function (options) {
             this.modalType = options.modalType;
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.render();
             this.async = $.Deferred();
+            this.filterListener = new FilterListener();
+            this.filterEvents = this.filterListener.events;
         },
-        activate: function() {
+        activate: function () {
             var self = this;
-            this.launchFilterCollection.ready.done(function() {
+            this.launchFilterCollection.ready.done(function () {
                 self.model = new FilterModel({
                     temp: true,
                     active: true,
-                    owner: config.userModel.get('name'),
+                    owner: config.userModel.get('name')
                 });
-                var filterNames = _.map(self.launchFilterCollection.models, function(model) {
+                var filterNames = _.map(self.launchFilterCollection.models, function (model) {
                     return model.get('name');
                 });
                 self.trigger('change:filter', self.model);
@@ -68,91 +71,87 @@ define(function (require, exports, module) {
                     type: 'filterName',
                     min: 3,
                     max: 128
-                }, {validator: 'noDuplications', type: 'filterName', source: filterNames}]);
+                }, { validator: 'noDuplications', type: 'filterName', source: filterNames }]);
                 self.filterEntities = new FilterEntitiesView({
                     el: $('[data-js-entities-container]', self.$el),
                     filterLevel: 'launch',
                     model: self.model
                 });
-                $('input', $('[data-js-entity-choice-list] [data-js-link]', self.filterEntities.$el)).on('click', function(e){
-                    if(this.modalType == 'edit'){
+                $('input', $('[data-js-entity-choice-list] [data-js-link]', self.filterEntities.$el)).on('click', function () {
+                    if (this.modalType === 'edit') {
                         config.trackingDispatcher.trackEventNumber(332);
-                    }
-                    else {
+                    } else {
                         config.trackingDispatcher.trackEventNumber(302);
                     }
                 });
-                self.filterSorting = new FilterSortingView({model: self.model});
+                self.filterSorting = new FilterSortingView({ model: self.model });
                 $('[data-js-filter-sorting]', self.$el).append(self.filterSorting.$el);
                 self.listenTo(self.model, 'change:id', self.onChangeId);
-                $('[data-js-sorting-list] a', self.filterSorting.$el).on('click', function(){
-                    if(this.modalType == 'edit'){
+                $('[data-js-sorting-list] a', self.filterSorting.$el).on('click', function () {
+                    if (this.modalType === 'edit') {
                         config.trackingDispatcher.trackEventNumber(333);
-                    }
-                    else {
+                    } else {
                         config.trackingDispatcher.trackEventNumber(303);
                     }
                 });
             });
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        onClick: function(e) {
+        onClick: function (e) {
             e.stopPropagation();
         },
-        onClickCancel: function() {
-            if(this.modalType == 'edit'){
+        onClickCancel: function () {
+            if (this.modalType === 'edit') {
                 config.trackingDispatcher.trackEventNumber(334);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(304);
             }
-            this.model.set({newEntities: ''});
+            this.model.set({ newEntities: '' });
             this.launchFilterCollection.remove(this.model);
             this.async.reject();
         },
-        onClickOk: function() {
-            if(this.modalType == 'edit'){
+        onClickOk: function () {
+            var $filterName = $('[data-js-name-input]', this.$el);
+            if (this.modalType === 'edit') {
                 config.trackingDispatcher.trackEventNumber(335);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(305);
             }
-            var $filterName = $('[data-js-name-input]', this.$el);
             $filterName.trigger('validate');
-            if(!$filterName.data('validate-error')) {
-                this.model.set({
-                    name: $filterName.val(),
-                    isShared: false,
-                    description: '',
-                    entities: this.model.get('newEntities') || this.model.get('entities'),
-                    newEntities: '',
-                    selection_parameters: this.model.get('newSelectionParameters') || this.model.get('selection_parameters'),
-                    newSelectionParameters: '',
+            if (!$filterName.data('validate-error')) {
+                this.filterListener.trigger(this.filterEvents.ON_ADD_FILTER, {
+                    cid: this.model.cid,
+                    data: this.model.getDataFromServer({ name: $filterName.val() })
                 });
-                // for right work listeners
-                this.model.set({temp: false});
-
+                // this.model.set({
+                //     name: $filterName.val(),
+                //     isShared: false,
+                //     description: '',
+                //     entities: this.model.get('newEntities') || this.model.get('entities'),
+                //     newEntities: '',
+                //     selection_parameters: this.model.get('newSelectionParameters') || this.model.get('selection_parameters'),
+                //     newSelectionParameters: ''
+                // });
+                // // for right work listeners
+                // this.model.set({ temp: false });
             }
         },
-        onChangeId: function() {
+        onChangeId: function () {
             this.trigger('change:filter', this.model);
             this.async.resolve();
         },
-        getReadyState: function() {
+        getReadyState: function () {
             return this.async;
         },
-        destroy: function() {
+        onDestroy: function () {
             this.filterEntities && this.filterEntities.destroy();
             this.filterSorting && this.filterSorting.destroy();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+            this.model && this.model.destroy();
             this.$el.remove();
         }
     });
-
 
 
     return FilterSearchAddView;

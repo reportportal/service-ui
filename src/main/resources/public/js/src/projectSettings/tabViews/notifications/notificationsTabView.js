@@ -30,6 +30,7 @@ define(function (require) {
     var Service = require('coreService');
     var _ = require('underscore');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var DropDownComponent = require('components/DropDownComponent');
 
     var config = App.getInstance();
 
@@ -47,7 +48,6 @@ define(function (require) {
 
         events: {
             'click #submit-notifications': 'submitNotifications',
-            'click .dropdown-menu a': 'selectProp',
             'click .launchOwner': 'selectOwner',
             'click #add-notification-rule': 'addRule',
             'click .remove-email-item': 'removeRule',
@@ -56,6 +56,7 @@ define(function (require) {
 
         initialize: function () {
             this.appModel = new SingletonAppModel();
+            this.dropdownComponents = [];
             this.updateIds();
             this.model = new NotificationsSettings(this.appModel.get('configuration').emailConfiguration);
             this.users = [];
@@ -80,12 +81,25 @@ define(function (require) {
 
         render: function () {
             var params = _.merge(this.model.toJSON(), {
-                edit: config.project && config.project.projectId,
-                currentProject: config.project.projectId,
                 access: config.userModel.hasPermissions(),
-                settings: config.forSettings
             });
             this.$el.html(Util.templates(this.tpl, params));
+            var emailNotificationsSwitcher = new DropDownComponent({
+                data: [
+                    { name: 'ON', value: 'ON' },
+                    { name: 'OFF', value: 'OFF' }
+                ],
+                multiple: false,
+                defaultValue: this.model.get('emailEnabled') ? Localization.ui.on : Localization.ui.off
+            });
+            this.dropdownComponents.push(emailNotificationsSwitcher);
+            $('[data-js-email-notifications-switcher]', this.$el).html(emailNotificationsSwitcher.$el);
+            $('[data-js-email-notifications-switcher] [data-js-dropdown]', this.$el).attr('id', 'emailEnabled');
+            if (!config.userModel.hasPermissions()) {
+                $('[data-js-email-notifications-switcher] [data-js-dropdown]', this.$el).attr('disabled', 'disabled');
+            }
+            this.listenTo(emailNotificationsSwitcher, 'change', this.selectProp);
+
             this.$notificationArray = $('#notificationArray', this.$el);
             this.$notificationArray.html(Util.templates(this.tplItem, params));
             this.$emailBlock = $('#emailNotificationsSettings', this.$el);
@@ -93,10 +107,12 @@ define(function (require) {
             if (this.model.get('emailEnabled')) {
                 this.$emailBlock.show();
             }
-
+            return this;
+        },
+      
+        onShow: function () {
             this.renderEmailCases();
             this.validateRecipients();
-            return this;
         },
 
         initValidators: function () {
@@ -127,6 +143,19 @@ define(function (require) {
         renderEmailCases: function () {
             var self = this;
             $('.email-case-item', this.$el).each(function (index) {
+                var casesDropdown = new DropDownComponent({
+                    data: _.map(config.forSettings.emailInCase, function (val) {
+                        return { name: val.name, value: val.value, disabled: false };
+                    }),
+                    multiple: false,
+                    defaultValue: self.model.get('emailCases')[index].sendCase
+                });
+                $('[data-js-case-dropdown]', $(this)).html(casesDropdown.$el);
+                if (!config.userModel.hasPermissions()) {
+                    $('[data-js-dropdown]', $(this)).attr('disabled', 'disabled');
+                }
+                self.listenTo(casesDropdown, 'change', self.selectProp);
+
                 if (Util.isCustomer() && !Util.isAdmin()) {
                     self.setupDisabledRecipients(index);
                 } else {
@@ -136,6 +165,7 @@ define(function (require) {
                     self.filterLaunches(index);
                     self.filterTags(index);
                 }
+                self.dropdownComponents.push(casesDropdown);
             });
             self.initValidators();
             self.updateRules();
@@ -165,10 +195,7 @@ define(function (require) {
             var newCase;
             var index;
             var params = _.merge(this.model.toJSON(), {
-                edit: config.project && config.project.projectId,
-                currentProject: config.project.projectId,
                 access: config.userModel.hasPermissions(),
-                settings: config.forSettings
             });
 
             params.addRule = true;
@@ -187,6 +214,20 @@ define(function (require) {
             this.model.set('emailCases', cases);
             this.$notificationArray.append(Util.templates(this.tplItem, params));
 
+            var casesDropdown = new DropDownComponent({
+                data: _.map(config.forSettings.emailInCase, function (val) {
+                    return { name: val.name, value: val.value, disabled: false };
+                }),
+                multiple: false,
+                defaultValue: config.forSettings.emailInCase[0].value
+            });
+
+            $('[data-email-case-id="' + this.emailCaseId + '"] [data-js-case-dropdown]', this.$el).html(casesDropdown.$el);
+            if (!config.userModel.hasPermissions()) {
+                $(' [data-email-case-id="' + this.emailCaseId + '"] [data-js-case-dropdown] [data-js-dropdown]', this.$el).attr('disabled', 'disabled');
+            }
+            this.listenTo(casesDropdown, 'change', this.selectProp);
+            this.dropdownComponents.push(casesDropdown);
             self.updateRules();
             self.emailCaseId += 1;
 
@@ -304,85 +345,83 @@ define(function (require) {
             self = this;
 
             if (getAnyway || !recipients.hasClass('select2-offscreen')) {
-                _.defer(function () {
-                    Util.setupSelect2WhithScroll(recipients, {
-                        multiple: true,
-                        minimumInputLength: 1,
-                        maximumInputLength: 128,
-                        formatInputTooShort: function () {
-                            return Localization.ui.minPrefix +
-                            minimumInputLength + Localization.ui.minSufixAuto;
-                        },
-                        formatResultCssClass: function (state) {
-                            if ((remoteUsers.length === 0 || _.indexOf(remoteUsers, state.text) < 0)
-                                && $('.users-typeahead.recipients:not(input)', self.$el).eq(index).find('input').val() === state.text) {
-                                return 'exact-match';
-                            }
-                            return undefined;
-                        },
-                        allowClear: true,
-                        createSearchChoice: function (term, data) {
-                            if ($(data).filter(function () {
-                                return this.text.localeCompare(term) === 0;
-                            }).length === 0) {
-                                if (Util.validateEmail(term)) {
-                                    return {
-                                        id: term,
-                                        text: term
-                                    };
-                                }
-                                return null;
-                            }
-                            return undefined;
-                        },
-                        initSelection: function (element, callback) {
-                            callback({
-                                id: element.val(),
-                                text: element.val()
-                            });
-                        },
-                        formatNoMatches: function () {
-                            return Localization.project.notFoundRecipients;
-                        },
-                        query: function (query) {
-                            var queryLength;
-                            var data;
-                            queryLength = query.term.length;
-                            data = { results: [] };
-
-                            if (queryLength >= minimumInputLength) {
-                                if (queryLength > 256) {
-                                    self.validateRecipients();
-                                } else {
-                                    if (queryLength <= 256) {
-                                        self.validateRecipients();
-                                    }
-                                    Service.getProjectUsersById(query.term)
-                                    .done(function (response) {
-                                        remoteUsers = [];
-                                        _.each(response, function (item) {
-                                            remoteUsers.push(item);
-                                            data.results.push({
-                                                id: item,
-                                                text: item
-                                            });
-                                        });
-                                        query.callback(data);
-                                    })
-                                    .fail(function (error) {
-                                        Util.ajaxFailMessenger(error);
-                                    });
-                                }
-                            } else {
-                                remoteUsers = [];
-                                data.results.push({
-                                    id: query.term,
-                                    text: query.term
-                                });
-                                query.callback(data);
-                            }
+                Util.setupSelect2WhithScroll(recipients, {
+                    multiple: true,
+                    minimumInputLength: 1,
+                    maximumInputLength: 128,
+                    formatInputTooShort: function () {
+                        return Localization.ui.minPrefix +
+                        minimumInputLength + Localization.ui.minSufixAuto;
+                    },
+                    formatResultCssClass: function (state) {
+                        if ((remoteUsers.length === 0 || _.indexOf(remoteUsers, state.text) < 0)
+                            && $('.users-typeahead.recipients:not(input)', self.$el).eq(index).find('input').val() === state.text) {
+                            return 'exact-match';
                         }
-                    });
+                        return undefined;
+                    },
+                    allowClear: true,
+                    createSearchChoice: function (term, data) {
+                        if ($(data).filter(function () {
+                            return this.text.localeCompare(term) === 0;
+                        }).length === 0) {
+                            if (Util.validateEmail(term)) {
+                                return {
+                                    id: term,
+                                    text: term
+                                };
+                            }
+                            return null;
+                        }
+                        return undefined;
+                    },
+                    initSelection: function (element, callback) {
+                        callback({
+                            id: element.val(),
+                            text: element.val()
+                        });
+                    },
+                    formatNoMatches: function () {
+                        return Localization.project.notFoundRecipients;
+                    },
+                    query: function (query) {
+                        var queryLength;
+                        var data;
+                        queryLength = query.term.length;
+                        data = { results: [] };
+
+                        if (queryLength >= minimumInputLength) {
+                            if (queryLength > 256) {
+                                self.validateRecipients();
+                            } else {
+                                if (queryLength <= 256) {
+                                    self.validateRecipients();
+                                }
+                                Service.getProjectUsersById(query.term)
+                                .done(function (response) {
+                                    remoteUsers = [];
+                                    _.each(response, function (item) {
+                                        remoteUsers.push(item);
+                                        data.results.push({
+                                            id: item,
+                                            text: item
+                                        });
+                                    });
+                                    query.callback(data);
+                                })
+                                .fail(function (error) {
+                                    Util.ajaxFailMessenger(error);
+                                });
+                            }
+                        } else {
+                            remoteUsers = [];
+                            data.results.push({
+                                id: query.term,
+                                text: query.term
+                            });
+                            query.callback(data);
+                        }
+                    }
                 });
                 this.$recipients.eq(index).on('select2-open', function () {
                     $('.select2-drop-mask', self.$el).remove();
@@ -497,7 +536,6 @@ define(function (require) {
                     rejected = _.reject(recipients, function (r) {
                         return r === this.$launchOwner.eq(index).val();
                     }, this);
-
                     _.each(rejected, function (m) {
                         var em = _.find(this.users, function (e) {
                             return e.id === m;
@@ -550,85 +588,84 @@ define(function (require) {
 
             this.$tagsContainer = $('input.users-typeahead.tags', this.$el);
             if (this.$tagsContainer.eq(index)) {
-                _.defer(function () {
-                    Util.setupSelect2WhithScroll(self.$tagsContainer.eq(index), {
-                        multiple: true,
-                        minimumInputLength: 1,
-                        maximumInputLength: 128,
-                        formatInputTooShort: function () {
-                            return Localization.ui.enterChars;
-                        },
-                        formatResultCssClass: function (state) {
-                            if ((remoteTags.length === 0 || _.indexOf(remoteTags, state.text) < 0)
-                                && $('.users-typeahead.tags:not(input)', self.$el).eq(index).find('input').val() === state.text) {
-                                return 'exact-match';
-                            }
-                            return undefined;
-                        },
-                        tags: true,
-                        initSelection: function (item, callback) {
-                            var data;
-                            tags = item.val().split(',');
-                            data = _.map(tags, function (tag) {
-                                var tagData = tag.trim();
-                                return {
-                                    id: tagData,
-                                    text: tagData
-                                };
-                            });
-                            callback(data);
-                        },
-                        createSearchChoice: function (term, data) {
-                            if ($(data).filter(function () {
-                                return this.text.localeCompare(term) === 0;
-                            }).length === 0) {
-                                return {
-                                    id: term,
-                                    text: term
-                                };
-                            }
-                            return undefined;
-                        },
-                        query: function (query) {
-                            var queryLength = query.term.length;
-                            var data = {
-                                results: []
-                            };
-
-                            if (queryLength >= 1) {
-                                if (queryLength > 256) {
-                                    self.validateTags(null, true);
-                                } else {
-                                    if (queryLength === 256) {
-                                        self.validateTags(null, true);
-                                    }
-                                    Service.searchTags(query)
-                                        .done(function (response) {
-                                            remoteTags = [];
-                                            _.each(response, function (item) {
-                                                remoteTags.push(item);
-                                                data.results.push({
-                                                    id: item,
-                                                    text: item
-                                                });
-                                            });
-                                            query.callback(data);
-                                        })
-                                        .fail(function (error) {
-                                            Util.ajaxFailMessenger(error);
-                                        });
-                                }
-                            } else {
-                                remoteTags = [];
-                                data.results.push({
-                                    id: query.term,
-                                    text: query.term
-                                });
-                                query.callback(data);
-                            }
+                Util.setupSelect2WhithScroll(self.$tagsContainer.eq(index), {
+                    multiple: true,
+                    minimumInputLength: 1,
+                    maximumInputLength: 128,
+                    formatInputTooShort: function () {
+                        return Localization.ui.enterChars;
+                    },
+                    formatResultCssClass: function (state) {
+                        if ((remoteTags.length === 0 || _.indexOf(remoteTags, state.text) < 0)
+                            && $('.users-typeahead.tags:not(input)', self.$el).eq(index).find('input').val() === state.text) {
+                            return 'exact-match';
                         }
-                    });
+                        return undefined;
+                    },
+                    tags: true,
+                    initSelection: function (item, callback) {
+                        var data;
+                        tags = item.val().split(',');
+                        data = _.map(tags, function (tag) {
+                            var tagData = tag.trim();
+                            return {
+                                id: tagData,
+                                text: tagData
+                            };
+                        });
+                        callback(data);
+                    },
+                    createSearchChoice: function (term, data) {
+                        if ($(data).filter(function () {
+                            return this.text.localeCompare(term) === 0;
+                        }).length === 0) {
+                            return {
+                                id: term,
+                                text: term
+                            };
+                        }
+                        return undefined;
+                    },
+                    query: function (query) {
+                        var queryLength = query.term.length;
+                        var data = {
+                            results: []
+                        };
+
+                        if (queryLength >= 1) {
+                            if (queryLength > 256) {
+                                self.validateTags(null, true);
+                            } else {
+                                if (queryLength === 256) {
+                                    self.validateTags(null, true);
+                                }
+                                Service.searchTags(query)
+                                    .done(function (response) {
+                                        remoteTags = [];
+                                        _.each(response, function (item) {
+                                            remoteTags.push(item);
+                                            data.results.push({
+                                                id: item,
+                                                text: item
+                                            });
+                                        });
+                                        query.callback(data);
+                                    })
+                                    .fail(function (error) {
+                                        Util.ajaxFailMessenger(error);
+                                    });
+                            }
+                        } else {
+                            remoteTags = [];
+                            data.results.push({
+                                id: query.term,
+                                text: query.term
+                            });
+                            query.callback(data);
+                        }
+                    }
                 });
+
                 this.$tagsContainer.eq(index).on('select2-loaded', function () {
                     $('.select2-drop-active', self.$el).removeClass('select2-drop-above');
                     self.$tagsContainer.eq(index).select2('positionDropdown');
@@ -674,83 +711,82 @@ define(function (require) {
 
             this.$launchContainer = $('input.users-typeahead.launches', this.$el);
             if (this.$launchContainer.eq(index)) {
-                _.defer(function () {
-                    Util.setupSelect2WhithScroll(self.$launchContainer.eq(index), {
-                        multiple: true,
-                        minimumInputLength: 1,
-                        maximumInputLength: 128,
+                Util.setupSelect2WhithScroll(self.$launchContainer.eq(index), {
+                    multiple: true,
+                    minimumInputLength: 1,
+                    maximumInputLength: 128,
 
-                        formatInputTooShort: function () {
-                            return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto;
-                        },
-                        formatResultCssClass: function (state) {
-                            if ((remoteLaunches.length === 0 ||
-                                _.indexOf(remoteLaunches, state.text) < 0) &&
-                                $('.users-typeahead.launches:not(input)', self.$el).eq(index).find('input').val() === state.text) {
-                                return 'exact-match';
-                            }
-                            return undefined;
-                        },
-                        allowClear: true,
-                        createSearchChoice: function (term, data) {
-                            if ($(data).filter(function () {
-                                    return this.text.localeCompare(term) === 0;
-                                }).length === 0) {
-                                return {
-                                    id: term,
-                                    text: term
-                                };
-                            }
-                            return undefined;
-                        },
-                        initSelection: function (element, callback) {
-                            callback({
-                                id: element.val(),
-                                text: element.val()
-                            });
-                        },
-                        query: function (query) {
-                            var queryLength = query.term.length;
-                            var data = {
-                                results: []
-                            };
-
-                            if (queryLength >= 3) {
-                                if (queryLength > 256) {
-                                    self.toggleLaunchNamesErrors(true, false,
-                                        self.$launchContainer.eq(index));
-                                } else {
-                                    if (queryLength === 256) {
-                                        self.toggleLaunchNamesErrors(false, false,
-                                            self.$launchContainer.eq(index));
-                                    }
-                                    Service.searchLaunches(query)
-                                        .done(function (response) {
-                                            remoteLaunches = [];
-                                            _.each(response, function (item) {
-                                                remoteLaunches.push(item);
-                                                data.results.push({
-                                                    id: item,
-                                                    text: item
-                                                });
-                                            });
-                                            query.callback(data);
-                                        })
-                                        .fail(function (error) {
-                                            Util.ajaxFailMessenger(error);
-                                        });
-                                }
-                            } else {
-                                remoteLaunches = [];
-                                data.results.push({
-                                    id: query.term,
-                                    text: query.term
-                                });
-                                query.callback(data);
-                            }
+                    formatInputTooShort: function () {
+                        return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto;
+                    },
+                    formatResultCssClass: function (state) {
+                        if ((remoteLaunches.length === 0 ||
+                            _.indexOf(remoteLaunches, state.text) < 0) &&
+                            $('.users-typeahead.launches:not(input)', self.$el).eq(index).find('input').val() === state.text) {
+                            return 'exact-match';
                         }
-                    });
+                        return undefined;
+                    },
+                    allowClear: true,
+                    createSearchChoice: function (term, data) {
+                        if ($(data).filter(function () {
+                            return this.text.localeCompare(term) === 0;
+                        }).length === 0) {
+                            return {
+                                id: term,
+                                text: term
+                            };
+                        }
+                        return undefined;
+                    },
+                    initSelection: function (element, callback) {
+                        callback({
+                            id: element.val(),
+                            text: element.val()
+                        });
+                    },
+                    query: function (query) {
+                        var queryLength = query.term.length;
+                        var data = {
+                            results: []
+                        };
+
+                        if (queryLength >= 3) {
+                            if (queryLength > 256) {
+                                self.toggleLaunchNamesErrors(true, false,
+                                    self.$launchContainer.eq(index));
+                            } else {
+                                if (queryLength === 256) {
+                                    self.toggleLaunchNamesErrors(false, false,
+                                        self.$launchContainer.eq(index));
+                                }
+                                Service.searchLaunches(query)
+                                    .done(function (response) {
+                                        remoteLaunches = [];
+                                        _.each(response, function (item) {
+                                            remoteLaunches.push(item);
+                                            data.results.push({
+                                                id: item,
+                                                text: item
+                                            });
+                                        });
+                                        query.callback(data);
+                                    })
+                                    .fail(function (error) {
+                                        Util.ajaxFailMessenger(error);
+                                    });
+                            }
+                        } else {
+                            remoteLaunches = [];
+                            data.results.push({
+                                id: query.term,
+                                text: query.term
+                            });
+                            query.callback(data);
+                        }
+                    }
                 });
+
                 this.$launchContainer.eq(index).on('select2-open', function () {
                     $('.select2-drop-mask', self.$el).remove();
                 })
@@ -885,16 +921,14 @@ define(function (require) {
             this.checkCases();
         },
 
-        selectProp: function (e) {
+        selectProp: function (value, event) {
             var self = this;
             var blockAction;
             var emailCase;
-            var link = $(e.target);
-            var btn = link.closest('.open').find('.dropdown-toggle');
-            var val = (link.data('value')) ? link.data('value') : link.text();
-            var id = btn.attr('id');
-            e.preventDefault();
-
+            var val = value;
+            var caseBtn = $(event.target).closest('[data-js-case-dropdown]').find('[data-js-dropdown]');
+            var mainBtn = $(event.target).closest('[data-js-email-notifications-switcher]').find('[data-js-dropdown]');
+            var id = mainBtn.attr('id');
             if (id === 'emailEnabled') {
                 val = (val === 'ON');
                 blockAction = val ? 'show' : 'hide';
@@ -908,6 +942,7 @@ define(function (require) {
                     Service.getProject()
                         .done(function () {
                             self.render();
+                            self.onShow();
                             Util.ajaxSuccessMessenger('updateProjectSettings');
                         })
                         .fail(function (error) {
@@ -920,7 +955,7 @@ define(function (require) {
                 this.updateRules();
             } else {
                 emailCase = _.findWhere(this.model.get('emailCases'), {
-                    id: btn.closest('.email-case-item').data('email-case-id')
+                    id: caseBtn.closest('.email-case-item').data('email-case-id')
                 });
                 if (emailCase) {
                     config.trackingDispatcher.trackEventNumber(392);
@@ -928,7 +963,6 @@ define(function (require) {
                 }
                 this.checkCases();
             }
-            $('.select-value', btn).text(link.text());
         },
 
         setEmailToDefault: function () {
@@ -1022,7 +1056,7 @@ define(function (require) {
                 delete conf.tags;
             }
             data.configuration = conf;
-            console.log(JSON.stringify(data));
+            // console.log(JSON.stringify(data));
             return data;
         },
 
@@ -1062,6 +1096,7 @@ define(function (require) {
                     self.updateIds();
                     self.model.set(self.appModel.get('configuration').emailConfiguration);
                     self.render();
+                    self.onShow();
                     Util.ajaxSuccessMessenger('updateProjectSettings');
                 })
                 .fail(function (error) {
@@ -1071,6 +1106,9 @@ define(function (require) {
         },
 
         onDestroy: function () {
+            _.each(this.dropdownComponents, function (item) {
+                item.destroy();
+            });
             this.$recipients = $('input.recipients', this.$el);
             this.$launchContainer = $('input.launchNames', this.$el);
             this.$tagsContainer = $('input.tags', this.$el);

@@ -18,4 +18,5 @@
 * EPMRPP-25373 - Open link in a new browser tab by Ctrl+click combination
 * EPMRPP-25182 - fixed backlinks after bug posting
 * EPMRPP-25348 - fixed email validation for invite user modal
+* EPMRPP-25331 - fixed twitter messages on login page for mobile
 * EPMRPP-25364 - fixed link for test item containing logs

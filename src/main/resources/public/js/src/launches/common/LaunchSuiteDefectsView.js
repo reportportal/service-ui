@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
@@ -36,51 +35,49 @@ define(function (require, exports, module) {
     var LaunchSuiteDefectsView = Epoxy.View.extend({
         template: 'tpl-launch-suite-defects',
 
+        events: {
+            'mouseenter [data-js-hover-defect]': 'onHoverDefectType',
+            'click [data-js-link]': 'onClickDefectType'
+        },
         bindings: {
             '[data-js-defects-total]': 'text: totalDefects, attr: {style: defectBorderColor}',
-            '[data-js-link]': 'attr: {href: allCasesUrl}',
+            '[data-js-link]': 'attr: {href: allCasesUrl}'
         },
         computeds: {
             totalDefects: {
                 deps: ['statistics'],
-                get: function(statistics) {
-                    if (statistics && statistics['defects'] && statistics['defects'][this.type]
-                        && statistics['defects'][this.type].total) {
-                        return statistics['defects'][this.type].total;
+                get: function (statistics) {
+                    if (statistics && statistics.defects && statistics.defects[this.type]
+                        && statistics.defects[this.type].total) {
+                        return statistics.defects[this.type].total;
                     }
                     return 0;
                 }
             },
-            allCasesUrl: function(){
-                var url = this.model.get('clearUrl');
+            allCasesUrl: function () {
+                var url = this.model.get('url');
                 var statusFilter = '&filter.in.issue$issue_type=';
                 var subDefects = this.defectsCollection.toJSON();
                 var defects = Util.getSubDefectsLocators(this.type, subDefects).join('%2C');
 
                 var appendFilter = 'filter.eq.has_childs=false' + statusFilter + defects;
-                return url + '|' + encodeURIComponent(appendFilter) + '?' + appendFilter;
+                return url + '?' + appendFilter;
             },
-            defectBorderColor: function(){
+            defectBorderColor: function () {
                 return 'border-color: ' + this.defectsCollection.getMainColorByType(this.type);
-            },
+            }
         },
-
-        events: {
-            'mouseenter [data-js-hover-defect]': 'onHoverDefectType',
-            'click [data-js-link]': 'onClickDefectType'
-        },
-
-        initialize: function(options) {
+        initialize: function (options) {
             this.type = options.type;
             this.defectsCollection = new SingletonDefectTypeCollection();
-            this.defectsCollection.ready.done(function(){
+            this.defectsCollection.ready.done(function () {
                 this.render();
             }.bind(this));
         },
 
-        render: function() {
+        render: function () {
             this.applyBindings();
-            if(this.getBinding('totalDefects')) {
+            if (this.getBinding('totalDefects')) {
                 this.$el.html(Util.templates(this.template, {}));
                 this.drawPieChart();
                 var self = this;
@@ -93,78 +90,77 @@ define(function (require, exports, module) {
                 this.applyBindings();
             }
         },
-        onHoverDefectType: function(){
-            if(this.model.get('type') == 'SUITE'){
-                switch (this.type){
-                    case ('product_bug'):
-                        config.trackingDispatcher.trackEventNumber(125);
-                        break;
-                    case ('automation_bug'):
-                        config.trackingDispatcher.trackEventNumber(127);
-                        break;
-                    case ('system_issue'):
-                        config.trackingDispatcher.trackEventNumber(129);
-                        break;
+        onHoverDefectType: function () {
+            if (this.model.get('type') === 'SUITE') {
+                switch (this.type) {
+                case ('product_bug'):
+                    config.trackingDispatcher.trackEventNumber(125);
+                    break;
+                case ('automation_bug'):
+                    config.trackingDispatcher.trackEventNumber(127);
+                    break;
+                case ('system_issue'):
+                    config.trackingDispatcher.trackEventNumber(129);
+                    break;
                 }
-            }
-            else {
-                switch (this.type){
-                    case ('product_bug'):
-                        config.trackingDispatcher.trackEventNumber(54.1);
-                        break;
-                    case ('automation_bug'):
-                        config.trackingDispatcher.trackEventNumber(56.1);
-                        break;
-                    case ('system_issue'):
-                        config.trackingDispatcher.trackEventNumber(58.1);
-                        break;
-                }
-            }
-        },
-        onClickDefectType: function(e){
-            if(this.model.get('type') == 'SUITE'){
-                switch (this.type){
-                    case ('product_bug'):
-                        config.trackingDispatcher.trackEventNumber(126.1);
-                        break;
-                    case ('automation_bug'):
-                        config.trackingDispatcher.trackEventNumber(128.1);
-                        break;
-                    case ('system_issue'):
-                        config.trackingDispatcher.trackEventNumber(130.1);
-                        break;
-                }
-            }
-            else {
-                switch (this.type){
-                    case ('product_bug'):
-                        config.trackingDispatcher.trackEventNumber(54.2);
-                        break;
-                    case ('automation_bug'):
-                        config.trackingDispatcher.trackEventNumber(56.2);
-                        break;
-                    case ('system_issue'):
-                        config.trackingDispatcher.trackEventNumber(58.2);
-                        break;
+            } else {
+                switch (this.type) {
+                case ('product_bug'):
+                    config.trackingDispatcher.trackEventNumber(54.1);
+                    break;
+                case ('automation_bug'):
+                    config.trackingDispatcher.trackEventNumber(56.1);
+                    break;
+                case ('system_issue'):
+                    config.trackingDispatcher.trackEventNumber(58.1);
+                    break;
                 }
             }
         },
-        getDefectByType: function(){
+        onClickDefectType: function () {
+            this.model.trigger('drill:item', this.model);
+            if (this.model.get('type') === 'SUITE') {
+                switch (this.type) {
+                case ('product_bug'):
+                    config.trackingDispatcher.trackEventNumber(126.1);
+                    break;
+                case ('automation_bug'):
+                    config.trackingDispatcher.trackEventNumber(128.1);
+                    break;
+                case ('system_issue'):
+                    config.trackingDispatcher.trackEventNumber(130.1);
+                    break;
+                }
+            } else {
+                switch (this.type) {
+                case ('product_bug'):
+                    config.trackingDispatcher.trackEventNumber(54.2);
+                    break;
+                case ('automation_bug'):
+                    config.trackingDispatcher.trackEventNumber(56.2);
+                    break;
+                case ('system_issue'):
+                    config.trackingDispatcher.trackEventNumber(58.2);
+                    break;
+                }
+            }
+        },
+        getDefectByType: function () {
             var statistics = this.model.get('statistics');
-            return statistics['defects'][this.type];
+            return statistics.defects[this.type];
         },
-        getStatisticsByType: function(){
+        getStatisticsByType: function () {
             return parseInt(this.getDefectByType().total);
         },
         getDefectChartData: function (defect) {
             var data = [];
             var defect = this.getDefectByType();
 
-            _.each(defect, function(v, k){
-                if(k !== 'total'){
+            _.each(defect, function (v, k) {
+                if (k !== 'total') {
                     var customDefect = this.defectsCollection.getDefectType(k);
-                    if(customDefect){
-                        data.push({color: customDefect.color, key: customDefect.longName, value: parseInt(v)});
+                    if (customDefect) {
+                        data.push({ color: customDefect.color, key: customDefect.longName, value: parseInt(v) });
                     }
                 }
             }, this);
@@ -176,10 +172,10 @@ define(function (require, exports, module) {
             var data = this.getDefectChartData();
 
             this.chart = nvd3.models.pie()
-                .x(function(d) {
+                .x(function (d) {
                     return d.key;
                 })
-                .y(function(d) {
+                .y(function (d) {
                     return d.value;
                 })
                 .width(pieWidth)
@@ -188,11 +184,11 @@ define(function (require, exports, module) {
                 .donut(true)
                 .growOnHover(false)
                 .donutRatio(0.40)
-                .startAngle(function(d){
-                    return d.startAngle - Math.PI/2;
+                .startAngle(function (d) {
+                    return d.startAngle - Math.PI / 2;
                 })
-                .endAngle(function(d){
-                    return d.endAngle - Math.PI/2;
+                .endAngle(function (d) {
+                    return d.endAngle - Math.PI / 2;
                 })
                 .color(function (d) {
                     return d.data.color;
@@ -203,12 +199,9 @@ define(function (require, exports, module) {
                 .datum([data])
                 .call(this.chart);
         },
-        destroy: function () {
+        onDestroy: function () {
             this.hoverView && this.hoverView.destroy();
             this.chart = null;
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
             this.$el.remove();
             delete this;
         }

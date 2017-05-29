@@ -17,8 +17,8 @@
 define(function (require, exports, module) {
     'use strict';
 
-    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
     var FilterLabelView = require('launches/FilterLabelView');
     var FilterPanelView = require('launches/FilterPanelView');
     var Util = require('util');
@@ -33,95 +33,112 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-add-filter]': 'onClickAddFilter',
             'click [data-js-all-link]': 'onClickAllLink',
+            'click [data-js-filter-entity-switcher]': 'onClickFilterEntitySwitcher'
         },
 
         bindings: {
-            '[data-js-filters-overflow]': 'classes: {"padding-bottom": not(active)}',
-            '[data-js-all-link]': 'attr: {href: url}, classes: {active: active}',
+            '[data-js-filter-entity-switcher]': 'classes: {"hide": active}',
+            '[data-js-all-link]': 'attr: {href: url}, classes: {active: active}'
         },
 
         template: 'tpl-launch-header',
-        initialize: function(options) {
+        initialize: function () {
             this.ready = $.Deferred();
+            this.userStorage = new SingletonUserStorage();
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
-            this.model = new FilterModel({id: 'all', active: true, name: 'All Launches', owner: config.userModel.get('name')});
+            this.model = new FilterModel({ id: 'all', active: true, name: 'All Launches', owner: config.userModel.get('name') });
             this.listenTo(this.launchFilterCollection, 'add', this.onAddFilter);
             this.listenTo(this.launchFilterCollection, 'change:activeFilter', this.onChangeActiveFilter);
             this.listenTo(this.launchFilterCollection, 'change:id', this.onChangeIdFilter);
+            this.listenTo(this.userStorage, 'change:launchFilterCriteriaHide', this.onChangeFilterCriteriaShow);
             this.render();
         },
-        render: function() {
-            this.launchFilterCollection.ready.done(function() {
+        render: function () {
+            this.launchFilterCollection.ready.done(function () {
                 this.listenTo(this.launchFilterCollection, 'reset', this.renderFilterList);
                 this.$el.html(Util.templates(this.template));
                 this.applyBindings();
                 this.renderFilterList();
+                this.onChangeFilterCriteriaShow(null, this.userStorage.get('launchFilterCriteriaHide'));
                 this.ready.resolve();
             }.bind(this));
         },
-        onChangeActiveFilter: function(filterModel) {
-            if(filterModel) {
-                this.activateFilter(filterModel)
+        onChangeFilterCriteriaShow: function (model, hide) {
+            if (hide) {
+                $('.launches-header-block', this.$el).addClass('hide-criteria');
+            } else {
+                $('.launches-header-block', this.$el).removeClass('hide-criteria');
+            }
+        },
+        onChangeActiveFilter: function (filterModel) {
+            if (filterModel) {
+                this.activateFilter(filterModel);
                 this.renderActiveFilter(filterModel);
             } else {
-                this.model.set({active: true});
+                this.model.set({ active: true });
                 this.renderActiveFilter(this.model);
-                if(this.filterPanel) {
+                if (this.filterPanel) {
                     this.filterPanel.destroy();
                 }
             }
         },
-        renderActiveFilter: function(model) {
+        renderActiveFilter: function (model) {
             var $container = $('[data-js-active-filter]', this.$el);
             $container.html('');
-            var mobileFilterActive = new FilterLabelView({model: model});
+            var mobileFilterActive = new FilterLabelView({ model: model });
             $container.append(mobileFilterActive.$el);
         },
-        setState: function(level) {
+        setState: function (level) {
             $('.launches-header-block', this.$el).attr('data-js-state', level);
         },
-        activateFilter: function(filterModel) {
-            this.model.set({active: false});
-            if(this.filterPanel) {
+        activateFilter: function (filterModel) {
+            this.model.set({ active: false });
+            if (this.filterPanel) {
                 this.filterPanel.destroy();
             }
-            this.filterPanel = new FilterPanelView({model: filterModel});
+            this.filterPanel = new FilterPanelView({ model: filterModel });
             $('[data-js-filter-panel]', this.$el).html(this.filterPanel.$el);
         },
-        onAddFilter: function(model) {
-            var filter = new FilterLabelView({model: model});
+        onAddFilter: function (model) {
+            var filter = new FilterLabelView({ model: model });
             $('[data-js-filter-list]', this.$el).append(filter.$el);
-            var mobileFilter = new FilterLabelView({model: model});
+            var mobileFilter = new FilterLabelView({ model: model });
             $('[data-js-filter-list-mobile]', this.$el).append(mobileFilter.$el);
         },
-        renderFilterList: function() {
+        renderFilterList: function () {
             $('[data-js-filter-list]', this.$el).html('');
             $('[data-js-filter-list-mobile]', this.$el).html('');
-            var mobileFilter = new FilterLabelView({model: this.model});
+            var mobileFilter = new FilterLabelView({ model: this.model });
             $('[data-js-filter-list-mobile]', this.$el).append(mobileFilter.$el);
-            _.each(this.launchFilterCollection.models, function(model){
+            _.each(this.launchFilterCollection.models, function (model) {
                 this.onAddFilter(model);
-            }, this)
+            }, this);
         },
-        onClickAddFilter: function() {
+        onClickFilterEntitySwitcher: function () {
+            var curValue = this.userStorage.get('launchFilterCriteriaHide') || false;
+            this.userStorage.set({ launchFilterCriteriaHide: !curValue });
+        },
+        onClickAddFilter: function () {
             config.trackingDispatcher.trackEventNumber(12);
             var newFilter = this.launchFilterCollection.generateTempModel();
-            config.router.navigate(newFilter.get('url'), {trigger: true});
+            config.router.navigate(newFilter.get('url'), { trigger: true });
         },
-        onClickAllLink: function() {
+        onClickAllLink: function () {
             config.trackingDispatcher.trackEventNumber(22);
         },
-        onChangeIdFilter: function(filterModel) {
-            config.router.navigate(filterModel.get('url'), {trigger: false});
+        onChangeIdFilter: function (filterModel) {
+            config.router.navigate(filterModel.get('url'), { trigger: false });
         },
         discardTemporaryFiltersChanges: function () {
-            var toRemove = this.launchFilterCollection.where({temp: true});
+            var toRemove = this.launchFilterCollection.where({ temp: true });
             this.launchFilterCollection.remove(toRemove);
             _.each(this.launchFilterCollection.models, function (item) {
                 item.set('newEntities', '');
             });
         },
         onDestroy: function () {
+            this.filterPanel && this.filterPanel.destroy();
+            this.model.destroy();
             this.discardTemporaryFiltersChanges();
             this.$el.empty();
         }

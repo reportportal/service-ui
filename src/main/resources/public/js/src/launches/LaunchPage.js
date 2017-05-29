@@ -51,8 +51,9 @@ define(function (require) {
             var pathPart;
             var query = options.subContext[3];
             var self = this;
-            this.filterId = options.subContext[1];
-            pathPart = [this.filterId];
+            var filterUrl = options.subContext[1];
+            this.filterId = filterUrl.split('|')[0];
+            pathPart = [filterUrl];
             if (options.subContext[2]) {
                 pathPart = pathPart.concat(options.subContext[2].split('/'));
             }

@@ -30,8 +30,7 @@ define(function (require) {
     var Helpers = require('helpers');
     var Storage = require('storageService');
     var Service = require('coreService');
-
-
+    var DropDownComponent = require('components/DropDownComponent');
     var config = App.getInstance();
 
     var ModalPostBug = ModalView.extend({
@@ -42,11 +41,8 @@ define(function (require) {
         className: 'modal-post-bug',
 
         events: {
-            'click .option-selector': 'handleDropDown',
-            'click .auth-type': 'handleDropDown',
             'click [data-js-post]': 'submit',
             'keyup .required-value': 'clearRequiredError',
-            'click .project-name': 'updateFieldSet',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-is-included]': 'onClickIncludeData',
             'click [data-js-cancel]': 'onClickCancel'
@@ -63,12 +59,9 @@ define(function (require) {
             this.user = {}; // only bts field use  WTF?
             this.systemType = this.systems[0].systemType;
             this.systemAuth = this.systems[0].systemAuth;
+            this.dropdownComponents = [];
             this.setUserBts();
             this.render();
-        },
-
-        handleDropDown: function (e) {
-            Util.dropDownHandler(e);
         },
 
         render: function () {
@@ -76,21 +69,40 @@ define(function (require) {
                 isMultiply: this.isMultiply,
                 source: Util.getExternalSystem(true),
                 systems: this.systems,
-                authorizationTypes: this.settings['bts' + this.systemType].authorizationType,
                 collapse: this.user.bts.hash[this.user.bts.current.id].submits > 0,
-                showCredentialsSoft: this.settings['bts' + this.systemType].canUseRPAuthorization,
-                current: this.user.bts.current
+                showCredentialsSoft: this.settings['bts' + this.systemType].canUseRPAuthorization
             }));
-
+            this.setupDropdowns();
             this.setupAnchors();
-            // Util.switcheryInitialize(this.$includesBlock);
             $('[data-js-is-included]', this.$includesBlock).attr('checked', 'checked');
 
             this.renderFields();
             this.renderCredentials();
-
             this.delegateEvents();
             return this;
+        },
+
+        setupDropdowns: function () {
+            var projectSelector = new DropDownComponent({
+                data: _.map(this.systems, function (val) {
+                    return { name: val.project, value: val.id, disabled: false };
+                }),
+                multiple: false,
+                defaultValue: this.user.bts.current.id
+            });
+            var authTypeselector = new DropDownComponent({
+                data: _.map(this.settings['bts' + this.systemType].authorizationType, function (val) {
+                    return { name: val.name, value: val.value, disabled: false };
+                }),
+                multiple: false,
+                defaultValue: this.settings['bts' + this.systemType].authorizationType[0].value
+            });
+            $('[data-js-project-selector]', this.$el).html(projectSelector.$el);
+            $('[data-js-auth-selector]', this.$el).html(authTypeselector.$el);
+            $('[data-js-dropdown]', projectSelector.$el).attr('id', 'targetProject');
+            $('[data-js-dropdown]', authTypeselector.$el).attr('id', 'systemAuth');
+            this.listenTo(projectSelector, 'change', this.updateFieldSet);
+            this.dropdownComponents.push(projectSelector, authTypeselector);
         },
 
         setupAnchors: function () {
@@ -134,11 +146,8 @@ define(function (require) {
             }
         },
 
-        updateFieldSet: function (e) {
-            e.preventDefault();
-            if ($(e.currentTarget).parent().hasClass('active')) return;
-            Util.dropDownHandler(e);
-            this.user.bts.current = _.find(this.systems, { id: $(e.currentTarget).attr('id') });
+        updateFieldSet: function (value) {
+            this.user.bts.current = _.find(this.systems, { id: value });
             this.updateHash();
             this.renderFields();
             this.renderCredentials();
@@ -157,12 +166,41 @@ define(function (require) {
                 access: true,
                 popup: true
             }));
+            this.setupFieldsDropdowns(this.user.bts.current.fields);
             if (this.user.bts.current.fields) {
                 Helpers.applyTypeForBtsFields(this.user.bts.current.fields, this.$dynamicContent);
                 this.$actionBtn.prop('disabled', false);
             } else {
                 this.$actionBtn.prop('disabled', true);
             }
+        },
+
+        setupFieldsDropdowns: function (fields) {
+            var self = this;
+            $('[data-js-field-with-dropdown]', this.$el).each(function (i, elem) {
+                var field = _.find(fields, function (item) {
+                    return $(elem).attr('data-js-field-with-dropdown') === item.id;
+                });
+                var fieldWithDropdown = new DropDownComponent({
+                    data: _.map(field.definedValues, function (val) {
+                        return { name: val.valueName, value: val.valueName, disabled: false };
+                    }),
+                    multiple: false,
+                    defaultValue: (field.value) ? _.find(field.definedValues, function (item) {
+                        return field.value[0] === item.valueName;
+                    }).valueName : (field.definedValues[0].valueName || '')
+                });
+                $(this).html(fieldWithDropdown.$el);
+                $('[data-js-dropdown]', $(this)).attr('id', $(this).attr('data-js-field-with-dropdown')).addClass('default-value');
+                if (!config.userModel.hasPermissions()
+                    || (config.forSettings.btsJIRA.disabledForEdit.indexOf(field.id) !== -1)) {
+                    $('[data-js-dropdown]', $(this)).attr('disabled', 'disabled');
+                }
+                if (field.required) {
+                    $('[data-js-dropdown]', $(this)).addClass('required-value');
+                }
+                self.dropdownComponents.push(fieldWithDropdown);
+            });
         },
 
         renderCredentials: function () {
@@ -540,6 +578,12 @@ define(function (require) {
                 backLink[item.id] = backlinkFirstPart + backlinkMiddlePart + '&log.item=' + item.id;
             });
             return backLink;
+        },
+
+        onDestroy: function () {
+            _.each(this.dropdownComponents, function (item) {
+                item.destroy();
+            });
         }
     });
 

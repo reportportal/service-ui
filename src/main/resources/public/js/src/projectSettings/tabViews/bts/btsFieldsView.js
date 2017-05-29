@@ -19,14 +19,16 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
-    "use strict";
+define(function (require) {
+    'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
     var Helpers = require('helpers');
+    var DropDownComponent = require('components/DropDownComponent');
 
     var config = App.getInstance();
 
@@ -35,7 +37,6 @@ define(function (require, exports, module) {
         fieldsTpl: 'tpl-dynamic-fields',
 
         events: {
-            'click .option-selector': 'handleDropDown'
         },
 
         initialize: function (options) {
@@ -43,10 +44,7 @@ define(function (require, exports, module) {
             this.editable = options.editable;
             this.fields = options.fields;
             this.disabled = config.forSettings.btsJIRA.disabledForEdit;
-        },
-
-        handleDropDown: function (e) {
-            Util.dropDownHandler(e);
+            this.dropdownComponents = [];
         },
 
         render: function () {
@@ -57,7 +55,7 @@ define(function (require, exports, module) {
                 editable: this.editable,
                 access: config.userModel.hasPermissions()
             }));
-
+            this.setupDropdowns(this.fields);
             this.setupMultiSelect(this.fields);
 
             return this;
@@ -67,6 +65,34 @@ define(function (require, exports, module) {
             Helpers.applyTypeForBtsFields(fields, this.$el);
         },
 
+        setupDropdowns: function (fields) {
+            var self = this;
+            $('[data-js-field-with-dropdown]', this.$el).each(function (i, elem) {
+                var field = _.find(fields, function (item) {
+                    return $(elem).attr('data-js-field-with-dropdown') === item.id;
+                });
+                var fieldWithDropdown = new DropDownComponent({
+                    data: _.map(field.definedValues, function (val) {
+                        return { name: val.valueName, value: val.valueName, disabled: false };
+                    }),
+                    multiple: false,
+                    defaultValue: (field.value) ? _.find(field.definedValues, function (item) {
+                        return field.value[0] === item.valueName;
+                    }).valueName : (field.definedValues[0].valueName || '')
+                });
+                $(this).html(fieldWithDropdown.$el);
+                $('[data-js-dropdown]', $(this)).attr('id', $(this).attr('data-js-field-with-dropdown')).addClass('default-value');
+                if (!config.userModel.hasPermissions()
+                    || (config.forSettings.btsJIRA.disabledForEdit.indexOf(field.id) !== -1)) {
+                    $('[data-js-dropdown]', $(this)).attr('disabled', 'disabled');
+                }
+                if (field.required) {
+                    $('[data-js-dropdown]', $(this)).addClass('required-value');
+                }
+                self.dropdownComponents.push(fieldWithDropdown);
+            });
+        },
+
         update: function (fields) {
             this.$el.html(Util.templates(this.fieldsTpl, {
                 collection: fields,
@@ -74,7 +100,7 @@ define(function (require, exports, module) {
                 disabled: this.disabled,
                 access: config.userModel.hasPermissions()
             }));
-
+            this.setupDropdowns(fields);
             this.setupMultiSelect(fields);
 
             return this;
@@ -88,34 +114,38 @@ define(function (require, exports, module) {
         getDefaultValues: function () {
             var result = {};
 
-            _.forEach($(".default-selector:checked", this.$el), function (el) {
-                var checkbox = $(el),
-                    element, value;
+            _.forEach($('.default-selector:checked', this.$el), function (el) {
+                var checkbox = $(el);
+                var element;
+                var value;
+                var select;
 
                 if (checkbox.data('type') === 'array') {
                     element = checkbox.closest('.rp-form-group').find('input.default-value:first');
                     value = element.val();
                 } else {
-                    var select = checkbox.closest('.rp-form-group').find('select:first');
+                    select = checkbox.closest('.rp-form-group').find('select:first');
 
                     if (select.length) {
                         element = select;
                     } else {
                         element = checkbox.closest('.rp-form-group').find('.default-value:first');
                     }
-
                     value = element.is('button')
                         ? element.parent().find('.select-value:first').text()
                         : element.val();
                 }
-
                 result[element.attr('id')] = value.trim();
             });
 
             return result;
+        },
+        onDestroy: function () {
+            _.each(this.dropdownComponents, function (item) {
+                item.destroy();
+            });
         }
     });
 
     return FieldsView;
-
 });

@@ -70,13 +70,13 @@ define(function (require, exports, module) {
             expect($('#pageFooter.footer', sandbox).html()).toEqual('');
         });
 
-        it ('should trigger click event after clicking on links', function () {
+        /*it ('should trigger click event after clicking on links', function () {
             var links = $('.breadcrumbs a', sandbox);
             links.each(function (index) {
                 spyOnEvent($(this), 'click')
                 $(this).click();
                 expect('click').toHaveBeenTriggeredOn(this);
             })
-        })
+        })*/
     });
 });
