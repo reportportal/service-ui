@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="102" height="48" viewBox="0 0 102 48">
+    <g fill="none" fill-rule="evenodd" transform="translate(-1)">
+        <rect width="30" height="9" x="37" fill="#A3C644" rx="3"/>
+        <path stroke="#A3C644" d="M10 16.5h82M51.5 9v7"/>
+        <g transform="translate(0 17)">
+            <rect width="9" height="9" x="6" y="5" fill="#39C2D7" rx="4.5"/>
+            <path stroke="#A3C644" d="M10.5 0v5"/>
+            <g transform="translate(.728 14)">
+                <rect width="7" height="7" x=".272" y="9" fill="#39C2D7" rx="3.5"/>
+                <rect width="7" height="7" x="12.272" y="9" fill="#39C2D7" rx="3.5"/>
+                <path stroke="#39C2D7" d="M3.772 4v5M9.772 0v4M15.772 4v5M3.772 4.5h12"/>
+            </g>
+        </g>
+        <g transform="translate(28 17)">
+            <rect width="9" height="9" x="5" y="5" fill="#39C2D7" rx="4.5"/>
+            <path stroke="#A3C644" d="M9.5 0v5"/>
+            <rect width="7" height="7" y="23" fill="#39C2D7" rx="3.5"/>
+            <rect width="7" height="7" x="12" y="23" fill="#39C2D7" rx="3.5"/>
+            <path stroke="#39C2D7" d="M3.5 18v5M9.5 14v4M15.5 18v5M3.5 18.5h12"/>
+        </g>
+        <path fill="#F7D63E" d="M70.691 22.995L64.327 32.2l-6.364-9.204z"/>
+        <path stroke="#A3C644" d="M64.5 16v7"/>
+        <path fill="#F7D63E" d="M63.45 40.01l-4.95 7.44-4.95-7.44zM75.45 40.01l-4.95 7.44-4.95-7.44z"/>
+        <path stroke="#F7D63E" d="M58.5 35v5M64.5 32v4M70.5 35v5M58.5 35.5h12"/>
+        <g>
+            <path fill="#F7D63E" d="M97.691 22.995L91.327 32.2l-6.364-9.204z"/>
+            <path stroke="#A3C644" d="M91.5 16v7"/>
+            <path fill="#F7D63E" d="M90.45 40.01l-4.95 7.44-4.95-7.44zM102.45 40.01l-4.95 7.44-4.95-7.44z"/>
+            <path stroke="#F7D63E" d="M85.5 35v5M91.5 32v4M97.5 35v5M85.5 35.5h12"/>
+        </g>
+    </g>
+</svg>
