@@ -4,9 +4,9 @@ node {
 
        load "$JENKINS_HOME/jobvars.env"
 
-       dir('src/github.com/reportportal') {
+    dir('src/github.com/reportportal/service-ui') {
 
-           stage('Checkout'){
+        stage('Checkout'){
                 checkout scm
                 sh 'git checkout golang'
                 sh 'git pull'
