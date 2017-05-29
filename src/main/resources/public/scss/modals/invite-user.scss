@@ -18,39 +18,100 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 .modal-invite-user {
+  .modal-content-wrapper {
     .modal-body {
-        padding: 40px 10px 10px 10px;
-        .rp-invite-user-form {
-            h4 {
-                margin: 0 0 20px;
-            }
-            .invite-user-label {
-                width: 35%;
-                padding: 8px 15px;
-            }
-            .invite-user-field {
-                width: 65%;
-                padding: 0 15px;
+      padding: 30px 10px 0 10px;
+      .invite-user-form {
+        display: block;
+        margin-top: 20px;
+        width: 100%;
 
-                .rp-input-default, .rp-btn-group, .select2-container {
-                    max-width: 320px;
-                }
-                .error-bottom {
-                    .help-inline {
-                        color: $COLOR--orange-red;
-                        label {
-                            color: $COLOR--orange-red;
-                        }
-                    }
-                }
-            }
-            .invite-send-email {
-                font-weight: 600;
-            }
-            .copy-invite-link {
-
-            }
+        label {
+          & > span:first-child {
+            width: 150px;
+            padding-right: 30px;
+            color: $COLOR--charcoal-grey;
+            font-size: 13px;
+            text-align: right;
+            font-family: $OpenSansRegular;
+          }
+          .rp-input {
+            width: 350px;
+          }
+          .role-selector {
+            width: 350px;
+            float: left;
+          }
+          .validate-hint {
+            width: 350px;
+            left: 150px;
+          }
         }
+      }
+      .success-form {
+        display: none;
+        width: 100%;
+        margin-top: 20px;
+
+        label:first-child {
+          & > span:first-child {
+            line-height: 1.28;
+            padding-left: 20px;
+          }
+        }
+        label {
+          .invite-sent-email {
+            line-height: 32px;
+            font-family: $OpenSansSemibold;
+            font-size: 13px;
+            color: $COLOR--charcoal-grey;
+          }
+          .rp-input {
+            background-color: $COLOR--gray-91;
+            width: 350px;
+
+            &:hover {
+              border-color: $COLOR--gray-80;
+            }
+          }
+          .copy-invite-link {
+            margin-top: 35px;
+            display: block;
+            clear: both;
+            margin-left: 145px;
+            color: $COLOR--windows-blue;
+          }
+        }
+      }
     }
+    .modal-footer {
+      .button-ok {
+        display: none;
+      }
+    }
+
+    &.success-invite {
+      .modal-body {
+        .invite-user-form {
+          display: none;
+        }
+        .success-form {
+          display: block;
+        }
+      }
+      .modal-footer {
+        .button-cancel {
+          display: none;
+        }
+        .button-invite {
+          display: none;
+        }
+        .button-ok {
+          display: inline-block;
+        }
+      }
+    }
+  }
 }

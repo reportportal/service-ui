@@ -180,9 +180,7 @@ define(function (require) {
             var modal;
             config.trackingDispatcher.trackEventNumber(461);
             e.preventDefault();
-            modal = new ModalInviteUser({
-                type: 'users'
-            });
+            modal = new ModalInviteUser();
             modal.show();
         },
 
