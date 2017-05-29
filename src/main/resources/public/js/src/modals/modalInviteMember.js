@@ -56,20 +56,21 @@ define(function (require) {
         },
         setupDropdown: function () {
             var self = this;
-            var projectRoleSelector = new DropDownComponent({
+            this.projectRoleSelector = new DropDownComponent({
                 data: _.map(Util.getRolesMap(), function (key, val) {
                     return { name: key, value: val, disabled: !self.canSelectRole.bind(self)(key) };
                 }),
                 multiple: false,
                 defaultValue: this.model.get('projectRole')
             });
-            this.dropdownComponents = [];
-            $('[data-js-role-selector]', this.$el).html(projectRoleSelector.$el);
-            this.listenTo(projectRoleSelector, 'change', this.selectRole);
-            this.dropdownComponents.push(projectRoleSelector);
+            $('[data-js-role-selector]', this.$el).html(this.projectRoleSelector.$el);
+            this.listenTo(this.projectRoleSelector, 'change', this.selectRole);
         },
         setupUserSearch: function () {
             UserSearchComponent.setupUserSearch($('[data-js-member]', this.$el));
+        },
+        selectRole: function (role) {
+            this.model.set('projectRole', role);
         },
         canSelectRole: function (role) {
             var user = config.userModel;
@@ -80,9 +81,11 @@ define(function (require) {
             return isAdmin || (user.hasPermissions() && userRoleIndex >= roleIndex);
         },
         validate: function () {
-            ($('[data-js-member]', this.$el).val() === '')
-            ? $('[data-js-member-field]', this.$el).addClass('not-valid')
-            : $('[data-js-member-field]', this.$el).removeClass('not-valid');
+            if (!$('[data-js-member]', this.$el).val()) {
+                $('[data-js-invite-form]', this.$el).addClass('not-valid');
+                return;
+            }
+            $('[data-js-invite-form]', this.$el).removeClass('not-valid');
         },
         inviteMember: function () {
             var userData = this.getUserData();
@@ -106,20 +109,19 @@ define(function (require) {
             }
         },
         getUserData: function () {
-            var user = this.model.toJSON();
             return {
                 default_project: this.appModel.get('projectId'),
-                email: user.user,
-                role: user.projectRole
+                email: this.model.get('user'),
+                role: this.model.get('projectRole')
             };
         },
         onKeySuccess: function () {
-            $('[data-js-invite]', this.$el).trigger('click');
+            $('[data-js-invite]', this.$el).focus().trigger('click');
         },
         onClickInvite: function () {
             config.trackingDispatcher.trackEventNumber(437);
             this.validate();
-            if (!$('.not-valid', this.$el).length) {
+            if (!$('[data-js-invite-form]', this.$el).hasClass('not-valid')) {
                 this.inviteMember();
             }
         },
@@ -130,9 +132,7 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(435);
         },
         onDestroy: function () {
-            _.each(this.dropdownComponents, function (item) {
-                item.destroy();
-            });
+            this.projectRoleSelector.destroy();
         }
     });
     return ModalInviteMember;

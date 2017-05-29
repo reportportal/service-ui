@@ -2,34 +2,28 @@
   .modal-content {
     .modal-body {
       padding: 30px 10px 0 10px;
-      h4 {
-        display: inline-block;
-        margin-bottom: 20px;
-        width: 100%;
-      }
-      .rp-form-group {
-        width: 100%;
-        .invite-member-label {
-          display: inline-block;
-          float: left;
-          width: 130px;
-          line-height: 32px;
-          text-align: right;
-          padding-right: 30px;
-          margin-bottom: 0;
-          font-family: $OpenSansRegular;
-          font-size: 13px;
-          color: $COLOR--charcoal-grey;
-          font-weight: normal;
-        }
-        .invite-member-field {
-          width: 350px;
-          float: left;
 
-          &.not-valid {
-            a.select2-choice {
-              border-color: $COLOR--failed;
-            }
+      .rp-form {
+        width: 100%;
+        margin-top: 20px;
+        label {
+          & > span:first-child {
+            width: 150px;
+            padding-right: 30px;
+            color: $COLOR--charcoal-grey;
+            font-size: 13px;
+            text-align: right;
+            font-family: $OpenSansRegular;
+          }
+          .form-field {
+            width: 350px;
+            float: left;
+          }
+        }
+
+        &.not-valid {
+          .select2-choice {
+            border-color: $COLOR--failed;
           }
         }
       }
