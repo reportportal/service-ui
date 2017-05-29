@@ -9,7 +9,7 @@ BINARY_DIR=bin
 BUILD_DEPS:= github.com/alecthomas/gometalinter
 GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
-PACKAGE_COMMONS=github.com/reportportal/service-index/vendor/github.com/reportportal/commons-go
+PACKAGE_COMMONS=github.com/reportportal/service-ui/vendor/github.com/reportportal/commons-go
 
 UI_BUILD_ROOT=src/main/resources/public/
 BUILD_INFO_LDFLAGS=-ldflags "-X ${PACKAGE_COMMONS}/commons.branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.version=${v}"
