@@ -149,28 +149,28 @@
 			"revisionTime": "2017-04-05T01:41:05Z"
 		},
 		{
-			"checksumSHA1": "gyEog1DTwEiisSLfz9f5Z/vkMDA=",
+			"checksumSHA1": "ErktbWZUMcNOH6Y5KHZZaoAtiNk=",
 			"path": "github.com/reportportal/commons-go/commons",
-			"revision": "a0edaf6bca7b2088d44f6b2aed5f4167d43244d6",
-			"revisionTime": "2017-05-10T07:24:12Z"
+			"revision": "e82d4fe36aa4e93a35b793850a9cdaec61d785f2",
+			"revisionTime": "2017-05-18T12:17:59Z"
 		},
 		{
 			"checksumSHA1": "bzchFLaFj437o3GeWr1fWTGahpU=",
 			"path": "github.com/reportportal/commons-go/conf",
-			"revision": "a0edaf6bca7b2088d44f6b2aed5f4167d43244d6",
-			"revisionTime": "2017-05-10T07:24:12Z"
+			"revision": "e82d4fe36aa4e93a35b793850a9cdaec61d785f2",
+			"revisionTime": "2017-05-18T12:17:59Z"
 		},
 		{
 			"checksumSHA1": "K0WzXnxX9779QLKjZ0mdu7pPU38=",
 			"path": "github.com/reportportal/commons-go/registry",
-			"revision": "a0edaf6bca7b2088d44f6b2aed5f4167d43244d6",
-			"revisionTime": "2017-05-10T07:24:12Z"
+			"revision": "e82d4fe36aa4e93a35b793850a9cdaec61d785f2",
+			"revisionTime": "2017-05-18T12:17:59Z"
 		},
 		{
 			"checksumSHA1": "pRZVGLYWXgKuvAeqC4wdkPn5cUw=",
 			"path": "github.com/reportportal/commons-go/server",
-			"revision": "a0edaf6bca7b2088d44f6b2aed5f4167d43244d6",
-			"revisionTime": "2017-05-10T07:24:12Z"
+			"revision": "e82d4fe36aa4e93a35b793850a9cdaec61d785f2",
+			"revisionTime": "2017-05-18T12:17:59Z"
 		},
 		{
 			"checksumSHA1": "lBehULzb2/kIK3wZ0gz2yNmHq9s=",
