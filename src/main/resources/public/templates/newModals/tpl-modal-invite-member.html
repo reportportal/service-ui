@@ -2,22 +2,17 @@
 
 <div class="modal-body">
     <h4><%= data.text.admin.inviteNewUser %></h4>
-    <div class="rp-form-group clearfix">
-        <label class="invite-member-label">
-            <%= data.text.forms.loginOrEmail %>
+
+    <form data-js-invite-form class="rp-form">
+        <label>
+            <span><%= data.text.forms.loginOrEmail %></span>
+            <input class="form-field" data-js-member name="member" type="text" value="">
         </label>
-        <div class="invite-member-field" data-js-member-field>
-            <input data-js-member name="member" type="text" value="">
-        </div>
-    </div>
-    <div class="rp-form-group clearfix">
-        <label class="invite-member-label">
-            <%= data.text.forms.projectRole %>
+        <label>
+            <span><%= data.text.forms.projectRole %></span>
+            <div class="form-field" data-js-role-selector></div>
         </label>
-        <div class="invite-member-field">
-            <div data-js-role-selector></div>
-        </div>
-    </div>
+    </form>
 </div>
 
 <div class="modal-footer">
