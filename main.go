@@ -23,10 +23,10 @@ func main() {
 
 	rpConf := conf.LoadConfig("", map[string]interface{}{"staticsPath": currDir})
 
-	rpConf.AppName = "service-ui"
+	rpConf.AppName = "ui"
 
 	info := commons.GetBuildInfo()
-	info.Name = rpConf.AppName
+	info.Name = "Service UI"
 
 	srv := server.New(rpConf, info)
 	srv.AddRoute(func(router *goji.Mux) {
