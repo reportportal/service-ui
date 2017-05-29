@@ -44,7 +44,8 @@ define(function (require) {
             number: '',
             listView: false,
             failLoad: false,
-            nextModelId: ''
+            nextModelId: '',
+            afterListView: false
         },
         computeds: {
             fullName: {
@@ -170,9 +171,20 @@ define(function (require) {
                         level = (i === 1) ? 'launch' : 'item';
                     }
                     if (currentPath[i]) {
-                        this.get(currentPath[i]).set({ id: currentNewPath, level: level, partUrl: partUrl, listView: listView });
+                        this.get(currentPath[i]).set({
+                            id: currentNewPath,
+                            level: level,
+                            partUrl: partUrl,
+                            listView: listView,
+                            afterListView: false
+                        });
                     } else {
-                        this.add({ id: currentNewPath, level: level, partUrl: partUrl, listView: listView });
+                        this.add({
+                            id: currentNewPath,
+                            level: level,
+                            partUrl: partUrl,
+                            listView: listView
+                        });
                     }
                     if (i > 0) {
                         this.models[i - 1].set({ nextModelId: currentNewPath });
@@ -245,23 +257,47 @@ define(function (require) {
         tagName: 'li',
         className: 'crumb',
         template: 'tpl-launch-crumb',
+        templatePath: 'tpl-launch-crumb-path',
         bindings: {
             '[data-js-name]': 'text: fullName',
             '[data-js-link]': 'text: fullName, attr: {href: url}',
             '[data-js-auto-analize]': 'classes: {visible: isProcessing}',
             '[data-js-list-view-icon]': 'classes: {hide: not(listView)}',
+            '[data-js-arrow-next]': 'classes: {"hide-opacity": listView}',
             ':el': 'classes: {"fail-load": failLoad}'
         },
         events: {
             'click [data-js-link]': 'onClickItem'
         },
         initialize: function () {
-            this.render();
             this.listenTo(this.model, 'remove', this.onRemove);
-            // this.listenTo(this.model, 'change:failLoad', this.render);
+            this.listenTo(this.model, 'change:afterListView', this.onChangeAfterListView);
+            this.onChangeAfterListView();
+        },
+        onChangeAfterListView: function () {
+            if (this.model.get('afterListView')) {
+                this.renderPathNames();
+            } else {
+                this.render();
+            }
+            this.applyBindings();
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, { failLoad: this.model.get('failLoad') }));
+            this.$el.html(Util.templates(this.template, {}));
+        },
+        renderPathNames: function () {
+            var allFilterModel = new FilterModel({ id: 'all' });
+            var url = allFilterModel.get('url') + '/' + this.model.get('launchId');
+            var data = [];
+            allFilterModel.destroy();
+            _.each(this.model.get('path_names'), function (value, key) {
+                url += '/' + key;
+                data.push({
+                    name: value,
+                    link: url
+                });
+            });
+            this.$el.html(Util.templates(this.templatePath, { pathData: data }));
         },
         onClickItem: function () {
             var collection = this.model.collection;
@@ -340,12 +376,19 @@ define(function (require) {
         },
         setLogItem: function (itemModel, itemId) {
             var models;
+            var afterListView = false;
+            var data;
+            if (this.collection.last().get('listView')) {
+                afterListView = true;
+            }
             if (itemModel) {
                 if (this.collection.lastLogItem) {
                     this.collection.remove(this.collection.lastLogItem);
                 }
                 this.collection.lastLogItem = itemModel.get('id');
-                this.collection.add(itemModel.toJSON());
+                data = itemModel.toJSON();
+                data.afterListView = afterListView;
+                this.collection.add(data);
             } else {
                 this.collection.lastLogItem = itemId;
                 this.collection.add({ id: itemId, failLoad: true });

@@ -53,9 +53,16 @@
           display: none;
         }
       }
+      .hide-opacity {
+        opacity: 0;
+      }
       a {
         color: $COLOR--topaz;
         display: inline-block;
+      }
+      span {
+        display: inline-block;
+        vertical-align: top;
       }
       span.link-as-element {
         display: none;
@@ -84,7 +91,7 @@
         span.link-as-element {
           display: inline-block
         }
-        a, i.arrow {
+        a.link-crumb, i.arrow-next {
           display: none;
         }
       }
