@@ -1,0 +1,32 @@
+.modal-invite-member {
+  .modal-content {
+    .modal-body {
+      padding: 30px 10px 0 10px;
+
+      .rp-form {
+        width: 100%;
+        margin-top: 20px;
+        label {
+          & > span:first-child {
+            width: 150px;
+            padding-right: 30px;
+            color: $COLOR--charcoal-grey;
+            font-size: 13px;
+            text-align: right;
+            font-family: $OpenSansRegular;
+          }
+          .form-field {
+            width: 350px;
+            float: left;
+          }
+        }
+
+        &.not-valid {
+          .select2-choice {
+            border-color: $COLOR--failed;
+          }
+        }
+      }
+    }
+  }
+}

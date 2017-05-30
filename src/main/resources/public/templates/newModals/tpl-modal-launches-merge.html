@@ -1,58 +1,71 @@
 <%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.launches.mergeLaunches}) %>
 <div class="modal-body">
-
-    <h4><%= data.text.launches.mergeLaunchesModalTitle %></h4>
-    <div class="fields">
-        <div class="rp-form">
+    <h4><%= data.text.launches.mergeLaunchesSelectTypeTitle %></h4>
+    <div class="select-type-wrapper">
+        <div class="type-buttons">
             <label>
-                <span><%= data.text.launches.launchName %></span>
-                <input data-js-merge-name class="rp-input" type="text" value="<%- data.name %>">
-                <span class="validate-hint"></span>
+                <input name="select-type" type="radio" value="BASIC" data-js-select-type-input>
+                <span><%= data.text.launches.linearMerge %></span>
             </label>
             <label>
-                <span><%= data.text.forms.owner %></span>
-                <input class="rp-input" type="text" value="<%- data.owner %>" disabled="disabled">
-                <span class="validate-hint"></span>
+                <input name="select-type" type="radio" value="DEEP" data-js-select-type-input>
+                <span><%= data.text.launches.deepMerge %></span>
             </label>
-            <label>
-                <span><%= data.text.forms.description %></span>
-                <textarea class="rp-input" rows="3" data-js-description><%= data.description
-                    %></textarea>
-                <span class="validate-hint"></span>
-            </label>
-            <label>
-                <span><%= data.text.forms.tags %></span>
-                <input class="rp-input" type="text" data-warning="<%= data.text.ui.enterChars %>"
-                       placeholder="" value="<%= data.tags.join(',') %>" data-js-merge-tags>
-                <span class="validate-hint"></span>
-            </label>
-            <label>
-                <span><%= data.text.forms.startTime %></span>
-                <input class="rp-input" type="text" value="<%- data.dateFormat(data.startTime) %>" disabled="disabled">
-                <span class="validate-hint"></span>
-            </label>
-            <label>
-                <span><%= data.text.forms.endTime %></span>
-                <input class="rp-input" type="text" value="<%- data.dateFormat(data.endTime) %>" disabled="disabled">
-                <span class="validate-hint"></span>
-            </label>
-            <div class="rp-field">
-                <span></span>
-                <label class="rp-checkbox-wrap">
-                    <input class="rp-input-checkbox" type="checkbox" data-js-extend-checkbox name="extendWithOriginal">
-                    <span><%= data.text.launches.extendWithOriginal %></span>
+        </div>
+        <div class="current-type" data-js-current-type></div>
+    </div>
+    <div class="on-disable-block">
+        <h4><%= data.text.launches.mergeLaunchesModalTitle %></h4>
+        <div class="fields">
+            <div class="rp-form">
+                <label>
+                    <span><%= data.text.launches.launchName %></span>
+                    <input data-js-merge-name class="rp-input" type="text" value="<%- data.name %>">
+                    <span class="validate-hint"></span>
                 </label>
+                <label>
+                    <span><%= data.text.forms.owner %></span>
+                    <input class="rp-input" type="text" value="<%- data.owner %>" disabled="disabled">
+                    <span class="validate-hint"></span>
+                </label>
+                <label>
+                    <span><%= data.text.forms.description %></span>
+                    <textarea class="rp-input" rows="3" data-js-description><%= data.description
+                        %></textarea>
+                    <span class="validate-hint"></span>
+                </label>
+                <label>
+                    <span><%= data.text.forms.tags %></span>
+                    <input class="rp-input" type="text" data-warning="<%= data.text.ui.enterChars %>"
+                           placeholder="" value="<%= data.tags.join(',') %>" data-js-merge-tags>
+                    <span class="validate-hint"></span>
+                </label>
+                <label>
+                    <span><%= data.text.forms.startTimeEndTime %></span>
+                    <input class="rp-input half-width" type="text" value="<%- data.dateFormat(data.startTime) %>" disabled="disabled">
+                    <span class="time-separator">/</span>
+                    <input class="rp-input half-width" type="text" value="<%- data.dateFormat(data.endTime) %>" disabled="disabled">
+                </label>
+                <div class="rp-field">
+                    <span></span>
+                    <label class="rp-checkbox-wrap">
+                        <input class="rp-input-checkbox" type="checkbox" data-js-extend-checkbox name="extendWithOriginal">
+                        <span><%= data.text.launches.extendWithOriginal %></span>
+                    </label>
+                </div>
+
             </div>
 
         </div>
-
     </div>
 </div>
 <div class="modal-footer">
-    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
-        <%= data.text.ui.cancel %>
-    </button>
-    <button class="rp-btn rp-btn-submit" type="button" data-js-submit>
-        <%= data.text.ui.merge %>
-    </button>
+    <div class="on-disable-block">
+        <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+            <%= data.text.ui.cancel %>
+        </button>
+        <button class="rp-btn rp-btn-submit" type="button" data-js-submit>
+            <%= data.text.ui.merge %>
+        </button>
+    </div>
 </div>

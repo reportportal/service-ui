@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="102" height="48" viewBox="0 0 102 48">
+    <defs>
+        <rect id="a" width="15" height="9" x="69" rx="3"/>
+        <rect id="b" width="15" height="9" x="16" rx="3"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g transform="translate(-1)">
+            <use fill="#F9E071" xlink:href="#a"/>
+            <rect width="14" height="8" x="69.5" y=".5" stroke="#F9E071" rx="3"/>
+        </g>
+        <path stroke="#8CDCE7" d="M9 16.5h28"/>
+        <path stroke="#F8DF6E" d="M63 16.5h28"/>
+        <path stroke="#F9E071" d="M75.5 9v7"/>
+        <g transform="translate(-1)">
+            <use fill="#8CDCE7" xlink:href="#b"/>
+            <rect width="14" height="8" x="16.5" y=".5" stroke="#8CDCE7" rx="3"/>
+        </g>
+        <path stroke="#8CDCE7" d="M22.5 9v7"/>
+        <g transform="translate(-1 17)">
+            <rect width="9" height="9" x="6" y="5" fill="#8CDCE7" rx="4.5"/>
+            <path stroke="#8CDCE7" d="M10.5 0v5"/>
+            <g transform="translate(.728 14)">
+                <rect width="7" height="7" x=".272" y="9" fill="#8CDCE7" rx="3.5"/>
+                <rect width="7" height="7" x="11.272" y="9" fill="#8CDCE7" rx="3.5"/>
+                <path stroke="#8CDCE7" d="M3.772 4v5M9.772 0v4M14.772 4v5M3.772 4.5h11"/>
+            </g>
+        </g>
+        <g transform="translate(27 17)">
+            <rect width="9" height="9" x="5" y="5" fill="#8CDCE7" rx="4.5"/>
+            <path stroke="#8CDCE7" d="M9.5 0v5"/>
+            <rect width="7" height="7" y="23" fill="#8CDCE7" rx="3.5"/>
+            <rect width="7" height="7" x="11" y="23" fill="#8CDCE7" rx="3.5"/>
+            <path stroke="#8CDCE7" d="M3.5 18v5M9.5 14v4M14.5 18v5M3.5 18.5h11"/>
+        </g>
+        <path fill="#F9E071" d="M69.691 22.995L63.327 32.2l-6.364-9.204z"/>
+        <path stroke="#F8DF6E" d="M63.5 16v7"/>
+        <path fill="#F9E071" d="M62.45 40.01l-4.95 7.44-4.95-7.44zM74.45 40.01l-4.95 7.44-4.95-7.44z"/>
+        <path stroke="#F9E071" d="M57.5 35v5M63.5 32v4M69.5 35v5M57.5 35.5h12"/>
+        <g>
+            <path fill="#F9E071" d="M96.691 22.995L90.327 32.2l-6.364-9.204z"/>
+            <path stroke="#F8DF6E" d="M90.5 16v7"/>
+            <path fill="#F9E071" d="M89.45 40.01l-4.95 7.44-4.95-7.44zM101.45 40.01l-4.95 7.44-4.95-7.44z"/>
+            <path stroke="#F9E071" d="M84.5 35v5M90.5 32v4M96.5 35v5M84.5 35.5h12"/>
+        </g>
+    </g>
+</svg>

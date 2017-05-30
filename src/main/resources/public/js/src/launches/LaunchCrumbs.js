@@ -378,7 +378,7 @@ define(function (require) {
             var models;
             var afterListView = false;
             var data;
-            if (this.collection.last().get('listView')) {
+            if (this.collection.last().get('listView') || this.collection.last().get('afterListView')) {
                 afterListView = true;
             }
             if (itemModel) {
