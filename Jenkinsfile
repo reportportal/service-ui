@@ -28,7 +28,7 @@ node {
                 }
             }
 
-           withEnv(["IMAGE_POSTFIX=dev-golang"]) {
+           withEnv(["IMAGE_POSTFIX=-dev"]) {
                  docker.withServer("$DOCKER_HOST") {
                                   stage('Build Docker Image') {
                                           sh 'make build-image'
