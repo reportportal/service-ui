@@ -1,26 +1,26 @@
-sudo: required
-
 dist: trusty
+sudo: false
+language: go
 
-language: java
+go:
+  - 1.8.1
 
-install:
-  - wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-  - sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
-  - sudo apt-get update -q
-  - sudo apt-get install -q google-chrome-stable
+env:
+  - TRAVIS_NODE_VERSION="7"
+
+addons:
+  apt:
+    packages:
+      - google-chrome-stable
+
+before_install:
+  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
 
 before_script:
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 
-script: 
-  - ./gradlew build
-  - cd src/main/resources/public
-  - npm run test
-
-jdk:
-  - oraclejdk8
+script: make build
 
 notifications:
   slack: reportportal-dev:fl6xWHVQp1jvsMmCJxYW9YKP

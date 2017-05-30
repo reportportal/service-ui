@@ -10,3 +10,13 @@ build/
 *.log
 
 coverage
+
+## Binaries
+bin/
+
+##Vendor
+vendor/*/
+!vendor/vendor.json
+
+## Data
+data/
