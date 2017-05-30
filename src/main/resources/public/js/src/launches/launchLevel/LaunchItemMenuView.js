@@ -160,6 +160,7 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(29);
             var self = this;
             RemoveAction({ items: [this.model] }).done(function () {
+                self.model.set('select', false);
                 self.model.collection.load(true);
             });
         },
