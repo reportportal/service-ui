@@ -218,6 +218,11 @@
     //  padding-bottom: 15px;
     //}
   }
+  &:not([data-js-state="LAUNCH"]) {
+    .filter-panel-switcher {
+      display: none;
+    }
+  }
   &[data-js-state="LOG"], &[data-js-state="MULTIPLE"] {
     display: none;
   }
