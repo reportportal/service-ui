@@ -57,7 +57,7 @@ define(function (require, exports, module) {
                 items: data.items,
                 lastLaunch: {
                     id: data.lastLaunch.id,
-                    link: this.linkToRedirectService(null, data.lastLaunch.id),
+                    link: this.linkToRedirectService('most_failed', data.lastLaunch.id),
                     name: launchNameFilter.length ? launchNameFilter[0] : ''
                 },
                 dateFormat: Util.dateFormat,
