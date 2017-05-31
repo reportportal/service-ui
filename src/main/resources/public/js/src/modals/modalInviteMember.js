@@ -36,6 +36,9 @@ define(function (require) {
             'click [data-js-invite]': 'onClickInvite',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel',
+            'click [data-js-ok]': 'onClickOk',
+            'focus [data-js-invite-link]': 'selectLink',
+            'click [data-js-copy-link]': 'copyLink',
             'change [data-js-member]': 'validate'
         },
         bindings: {
@@ -71,6 +74,19 @@ define(function (require) {
         },
         selectRole: function (role) {
             this.model.set('projectRole', role);
+        },
+        selectLink: function (e) {
+            e.preventDefault();
+            $(e.currentTarget).select();
+        },
+        copyLink: function (e) {
+            e.preventDefault();
+            $('[data-js-invite-link]', this.$el).select();
+            try {
+                document.execCommand('copy');
+            } catch (error) {
+                console.log(error);
+            }
         },
         canSelectRole: function (role) {
             var user = config.userModel;
@@ -108,6 +124,40 @@ define(function (require) {
                     }.bind(this));
             }
         },
+        inviteUser: function () {
+            var userData = this.getUserData();
+            if (userData) {
+                this.showLoading();
+                MembersService.inviteMember(userData)
+                    .done(function (data) {
+                        this.showSuccess(data);
+                        Util.ajaxSuccessMessenger('inviteMember');
+                    }.bind(this))
+                    .fail(function (response) {
+                        var error;
+                        if (response) {
+                            try {
+                                error = JSON.parse(response.responseText);
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        }
+                        if (error) {
+                            Util.addMessage({ clazz: 'alert', message: error.message });
+                        } else {
+                            Util.ajaxFailMessenger(response, 'inviteMember');
+                        }
+                    })
+                    .always(function () {
+                        this.hideLoading();
+                    }.bind(this));
+            }
+        },
+        showSuccess: function (data) {
+            this.$el.addClass('success-invite');
+            $('[data-js-invite-link]', this.$el).val(data.backLink);
+            $('[data-js-email-sent]', this.$el).text(this.model.get('user'));
+        },
         getUserData: function () {
             return {
                 default_project: this.appModel.get('projectId'),
@@ -116,13 +166,21 @@ define(function (require) {
             };
         },
         onKeySuccess: function () {
-            $('[data-js-invite]', this.$el).focus().trigger('click');
+            if (this.$el.hasClass('success-invite')) {
+                $('[data-js-ok]', this.$el).focus().trigger('click');
+            } else {
+                $('[data-js-invite]', this.$el).focus().trigger('click');
+            }
         },
         onClickInvite: function () {
             config.trackingDispatcher.trackEventNumber(437);
             this.validate();
             if (!$('[data-js-invite-form]', this.$el).hasClass('not-valid')) {
-                this.inviteMember();
+                if (Util.validateEmail(this.model.get('user'))) {
+                    this.inviteUser();
+                } else {
+                    this.inviteMember();
+                }
             }
         },
         onClickCancel: function () {
@@ -130,6 +188,9 @@ define(function (require) {
         },
         onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(435);
+        },
+        onClickOk: function () {
+            this.successClose();
         },
         onDestroy: function () {
             this.projectRoleSelector.destroy();

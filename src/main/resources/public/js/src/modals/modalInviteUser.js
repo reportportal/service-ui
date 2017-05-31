@@ -127,6 +127,10 @@ define(function (require) {
                 validator: 'required'
             });
         },
+        selectLink: function (e) {
+            e.preventDefault();
+            $(e.currentTarget).select();
+        },
         getSearchQuery: function (query) {
             return '?page.sort=name,asc&page.page=1&page.size=' + config.autocompletePageSize + '&filter.cnt.name=' + query;
         },

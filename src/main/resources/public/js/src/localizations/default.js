@@ -1337,6 +1337,7 @@ define(['util'], function () {
             titleNameLogin: 'Name / Login',
             titleNameLoginEmail: 'Name / Login / Email',
             enterLoginEmail: 'Enter Login or Email',
+            enterEmail: 'Enter Email',
             alredyAdded: 'User has already assigned to the project',
             invitePref: 'Invite',
             sendInvite: 'Send invite via e-mail',

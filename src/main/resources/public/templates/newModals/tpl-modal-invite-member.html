@@ -3,7 +3,7 @@
 <div class="modal-body">
     <h4><%= data.text.admin.inviteNewUser %></h4>
 
-    <form data-js-invite-form class="rp-form">
+    <form data-js-invite-form class="rp-form invite-member-form">
         <label>
             <span><%= data.text.forms.loginOrEmail %></span>
             <input class="form-field" data-js-member name="member" type="text" value="">
@@ -13,13 +13,28 @@
             <div class="form-field" data-js-role-selector></div>
         </label>
     </form>
+
+    <form class="rp-form success-form" data-js-success-form>
+        <label>
+            <span><%= data.text.members.invitationSent %></span>
+            <div class="invite-sent-email" data-js-email-sent></div>
+        </label>
+        <label>
+            <span><%= data.text.forms.linkInvitation %></span>
+            <input class="rp-input" data-js-invite-link name="link" type="text" readonly>
+            <a href="" class="copy-invite-link" data-js-copy-link><%= data.text.forms.copyLink %></a>
+        </label>
+    </form>
 </div>
 
 <div class="modal-footer">
-    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+    <button class="rp-btn rp-btn-cancel button-cancel" type="button" data-js-cancel>
         <%= data.text.ui.cancel %>
     </button>
-    <button class="rp-btn rp-btn-submit" type="button" data-js-invite>
+    <button class="rp-btn rp-btn-submit button-invite" type="button" data-js-invite>
         <%= data.text.admin.invite %>
+    </button>
+    <button class="rp-btn rp-btn-submit button-ok" type="button" data-js-ok>
+        <%= data.text.ui.ok %>
     </button>
 </div>
