@@ -89,6 +89,7 @@ define(function (require) {
             case 'total':
             case 'Grow test cases':
             case 'grow_test_cases':
+            case 'most_failed':
                 filterStatus = getFilter('filter.in.type=STEP&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED');
                 break;
             case 'Passed':
