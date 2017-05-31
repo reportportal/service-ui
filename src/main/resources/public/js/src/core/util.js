@@ -1043,16 +1043,18 @@ define(function (require, exports, module) {
                 _.each(validators, function (validator) {
                     var val = validator.options.noTrim ? $el.val() : $el.val().trim();
                     if (validator.options.remote) {
-                        $.when(validator.validate(val, validator.options, Util))
-                            .done(function (data) {
-                                if (!data.valid) {
-                                    message = validator.options.message;
-                                    result += message + '</br>';
-                                    $holder.addClass('validate-error');
-                                }
-                                showResult(result);
-                                $el.trigger('validation::change');
-                            });
+                        if (val) {
+                            $.when(validator.validate(val, validator.options, Util))
+                                .done(function (data) {
+                                    if (!data.valid) {
+                                        message = validator.options.message;
+                                        result += message + '</br>';
+                                        $holder.addClass('validate-error');
+                                    }
+                                    showResult(result);
+                                    $el.trigger('validation::change');
+                                });
+                        }
                     } else {
                         message = validator.validate(val, validator.options, Util);
                         if (message) {
