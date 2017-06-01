@@ -413,7 +413,7 @@ define(function (require, exports, module) {
             checkboxMas.prop('checked', !allChecked);
             if(!allChecked){
                 _.each($('.rp-input-checkbox[data-subtype]', this.$el), function(checkbox) {
-                    self.onChangeMainType({currentTarget: checkbox.get(0)});
+                    self.onChangeMainType({currentTarget: $(checkbox).get(0)});
                 });
             }
             this.onChangeState();
