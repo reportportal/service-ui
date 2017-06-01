@@ -165,9 +165,7 @@ define(function (require) {
             this.updateFilters();
         },
         onRemoveFilter: function () {
-            if (this.paging.model.get('totalPages') > 1 || this.collection.models.length === 0) {
-                this.updateFilters();
-            }
+            this.updateFilters();
         },
         updateFilters: function () {
             this.filterListener.trigger(
