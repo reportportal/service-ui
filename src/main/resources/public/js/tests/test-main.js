@@ -82,7 +82,6 @@ require.config({
         'highlight': '../lib/highlight.pack',
         'gridstack': '../lib/gridstack/gridstack.custom',
         'gridstackUi': '../lib/gridstack/gridstack.jQueryUI',
-        helpers: 'core/helpers',
 
         d3: '../lib/d3/d3.v3.min',
         nvd3: '../lib/nvd3/nv.d3.custom',

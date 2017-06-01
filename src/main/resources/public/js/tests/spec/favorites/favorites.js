@@ -26,7 +26,6 @@ define(function (require, exports, module) {
     var _ = require('underscore');
     var Backbone = require('backbone');
     var Components = require('core/components');
-    var Helpers = require('helpers');
     var Util = require('util');
     var coreService = require('coreService');
     var App = require('app');
@@ -123,16 +122,16 @@ define(function (require, exports, module) {
             expect(cell.text().trim()).toEqual(filter.name);
         });
 
-        it('should be render favorite filter options', function () {
-            spyOn(Helpers, 'getFilterOptions').and.callFake(function () {
-            });
-            renderView();
-            var row = $('#dynamic-content .row.rp-table-row', sandbox).eq(0),
-                cell = $('.filter-adv', row);
-            expect(cell.length).toEqual(1);
-            expect(cell).not.toBeEmpty();
-            expect(Helpers.getFilterOptions).toHaveBeenCalled();
-        });
+        // it('should be render favorite filter options', function () {
+        //     spyOn(Helpers, 'getFilterOptions').and.callFake(function () {
+        //     });
+        //     renderView();
+        //     var row = $('#dynamic-content .row.rp-table-row', sandbox).eq(0),
+        //         cell = $('.filter-adv', row);
+        //     expect(cell.length).toEqual(1);
+        //     expect(cell).not.toBeEmpty();
+        //     expect(Helpers.getFilterOptions).toHaveBeenCalled();
+        // });
 
         it('should be render favorite filter owner', function () {
             renderView();

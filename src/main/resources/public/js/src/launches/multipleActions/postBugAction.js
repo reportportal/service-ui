@@ -18,13 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var ModalPostBug = require('modals/modalPostBug');
-    var App = require('app');
-
-    var config = App.getInstance();
 
     var PostBugAction = function(options) {
         var items = options.items;

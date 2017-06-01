@@ -78,7 +78,6 @@ require.config({
         'users': 'admin/users',
         'settings': 'admin/settings',
         'adminService': 'admin/service',
-        'helpers': 'core/helpers',
         'storageService': 'core/storage-service',
         //'register': 'register/register',
 
