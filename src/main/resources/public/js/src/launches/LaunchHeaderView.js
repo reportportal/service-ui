@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
@@ -23,6 +23,7 @@ define(function (require, exports, module) {
     var FilterPanelView = require('launches/FilterPanelView');
     var Util = require('util');
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var FilterModel = require('filters/FilterModel');
     var App = require('app');
@@ -74,6 +75,7 @@ define(function (require, exports, module) {
             if (filterModel) {
                 this.activateFilter(filterModel);
                 this.renderActiveFilter(filterModel);
+                this.onChangeFilterCriteriaShow(null, filterModel.get('temp') ? false : this.userStorage.get('launchFilterCriteriaHide'));
             } else {
                 this.model.set({ active: true });
                 this.renderActiveFilter(this.model);
@@ -84,8 +86,8 @@ define(function (require, exports, module) {
         },
         renderActiveFilter: function (model) {
             var $container = $('[data-js-active-filter]', this.$el);
-            $container.html('');
             var mobileFilterActive = new FilterLabelView({ model: model });
+            $container.html('');
             $container.append(mobileFilterActive.$el);
         },
         setState: function (level) {
@@ -101,14 +103,14 @@ define(function (require, exports, module) {
         },
         onAddFilter: function (model) {
             var filter = new FilterLabelView({ model: model });
-            $('[data-js-filter-list]', this.$el).append(filter.$el);
             var mobileFilter = new FilterLabelView({ model: model });
+            $('[data-js-filter-list]', this.$el).append(filter.$el);
             $('[data-js-filter-list-mobile]', this.$el).append(mobileFilter.$el);
         },
         renderFilterList: function () {
+            var mobileFilter = new FilterLabelView({ model: this.model });
             $('[data-js-filter-list]', this.$el).html('');
             $('[data-js-filter-list-mobile]', this.$el).html('');
-            var mobileFilter = new FilterLabelView({ model: this.model });
             $('[data-js-filter-list-mobile]', this.$el).append(mobileFilter.$el);
             _.each(this.launchFilterCollection.models, function (model) {
                 this.onAddFilter(model);
@@ -119,8 +121,8 @@ define(function (require, exports, module) {
             this.userStorage.set({ launchFilterCriteriaHide: !curValue });
         },
         onClickAddFilter: function () {
-            config.trackingDispatcher.trackEventNumber(12);
             var newFilter = this.launchFilterCollection.generateTempModel();
+            config.trackingDispatcher.trackEventNumber(12);
             config.router.navigate(newFilter.get('url'), { trigger: true });
         },
         onClickAllLink: function () {
