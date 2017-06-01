@@ -181,7 +181,7 @@ define(function (require) {
         },
         onClickGadgetEdit: function () {
             var self = this;
-            if (this.model.get('isMy')) {
+            if (this.model.get('isMy') || config.userModel.get('isAdmin')) {
                 config.trackingDispatcher.trackEventNumber(286);
                 (new ModalEditWidget({
                     model: this.model
