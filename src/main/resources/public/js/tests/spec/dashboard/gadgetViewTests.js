@@ -36,7 +36,6 @@ define(function (require) {
     var ModalEditWidget = require('modals/addWidget/modalEditWidget');
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
-    var FilterModel = require('filters/FilterModel');
     require('updateBackbone');
 
     $('body > #sandbox').remove();
