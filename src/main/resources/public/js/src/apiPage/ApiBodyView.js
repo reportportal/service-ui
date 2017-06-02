@@ -20,6 +20,7 @@ define(function (require) {
     var Util = require('util');
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
+    var UserModel = require('model/UserModel');
 
     var ApiBodyView = Epoxy.View.extend({
         className: 'api-body',
@@ -31,6 +32,7 @@ define(function (require) {
 
         initialize: function () {
             this.render();
+            this.userModel = new UserModel();
             this.onChangeType();
         },
         render: function () {
@@ -56,6 +58,9 @@ define(function (require) {
                 };
                 iframe.contentWindow.changeInfoCallback = function (info, path) {
                     $('[data-js-status]', self.$el).text('[ base url: ' + path + ' , api version: ' + info.version + ' ]');
+                };
+                iframe.contentWindow.failRequestCallback = function () {
+                    self.userModel.logout();
                 };
             };
             this.$el.addClass('load');
