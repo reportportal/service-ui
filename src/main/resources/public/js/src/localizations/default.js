@@ -323,7 +323,8 @@ define(['util'], function () {
             filters: 'Filters',
             projects: 'My Projects:',
             administrate: 'Administrate',
-            profile: 'Profile'
+            profile: 'Profile',
+            api: 'API'
         },
 
         widgets: {
@@ -1847,7 +1848,12 @@ define(['util'], function () {
             oneAttention: 'Action can be done for a user with similar and lower role only (E.g. Lead cannot change role for a Project Manager).',
             twoAttention: 'Action can be done for a user with similar and lower role only (E.g. Lead cannot assign/unassign a Project Manager) and for user with Administrator account role.',
             threeAttention: 'Action can be done for a Internal user.'
-        }
+        },
 
+        api: {
+            apiDocumentation: 'Api Documentation',
+            api: 'API',
+            uat: 'UAT'
+        }
     };
 });

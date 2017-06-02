@@ -230,9 +230,10 @@ module.exports = function (grunt) {
                     style: 'compressed',
                     includePaths: require('node-bourbon').includePaths
                 },
-                files: {
-                    'compiled/scss/main.css': 'scss/main.scss'
-                }
+                files: [
+                    { 'compiled/scss/main.css': 'scss/main.scss' },
+                    { 'compiled/scss/swagger.css': 'scss/swagger.scss' }
+                ]
             },
             develop: {
                 options: {
@@ -240,9 +241,10 @@ module.exports = function (grunt) {
                     style: 'expanded',
                     includePaths: require('node-bourbon').includePaths
                 },
-                files: {
-                    'compiled/scss/main.css': 'scss/main.scss'
-                }
+                files: [
+                    { 'compiled/scss/main.css': 'scss/main.scss' },
+                    { 'compiled/scss/swagger.css': 'scss/swagger.scss' }
+                ]
             }
         },
         requirejs: {

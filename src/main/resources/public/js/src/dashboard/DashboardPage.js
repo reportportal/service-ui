@@ -31,39 +31,39 @@ define(function (require, exports, module) {
     var launchFilterCollection = new SingletonLaunchFilterCollection();
 
     var DashboardPage = Epoxy.View.extend({
-        initialize: function(options) {
+        initialize: function (options) {
             this.contextName = options.contextName; // for context check
             this.context = options.context;
-            this.collection = new DashboardCollection({startId: options.subContext});
+            this.collection = new DashboardCollection({ startId: options.subContext });
             this.header = new DashboardHeaderView({
-                collection: this.collection,
+                collection: this.collection
             });
             this.body = new DashboardBodyView({
-                collection: this.collection,
+                collection: this.collection
             });
             this.context.getMainView().$header.html(this.header.$el);
             this.context.getMainView().$body.html(this.body.$el);
             this.body.onShow && this.body.onShow();
             this.listenTo(this.collection, 'after:update', this.onChangeShare);
         },
-        onChangeShare: function(model) {
-            if(typeof model.changed.isShared != 'undefined') {
-                launchFilterCollection.ready.done(function() {
+        onChangeShare: function (model) {
+            if (typeof model.changed.isShared !== 'undefined') {
+                launchFilterCollection.ready.done(function () {
                     launchFilterCollection.update();
-                })
+                });
             }
         },
-        update: function(options) {
+        update: function (options) {
             this.collection.resetActive();
             if (options.subContext) {
                 if (this.collection.get(options.subContext)) {
-                    this.collection.get(options.subContext).set({active: true});
+                    this.collection.get(options.subContext).set({ active: true });
                 } else {
                     console.log('dashboard not found');
                 }
             }
         },
-        render: function() {
+        render: function () {
             return this;
         },
         destroy: function () {
@@ -74,11 +74,11 @@ define(function (require, exports, module) {
             this.stopListening();
             this.unbind();
             delete this;
-        },
+        }
     });
 
 
     return {
-        ContentView: DashboardPage,
-    }
+        ContentView: DashboardPage
+    };
 });

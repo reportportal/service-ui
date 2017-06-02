@@ -31,6 +31,7 @@ define(function (require) {
     var LaunchPage = require('launches/LaunchPage');
     var LaunchDebugPage = require('launches/LaunchDebugPage');
     var DashboardPage = require('dashboard/DashboardPage');
+    var ApiPage = require('apiPage/ApiPage');
     var ProjectSettingsPage = require('projectSettings/projectSettingsPage');
     var ProjectInfo = require('projectinfo');
     var Member = require('projectMembers/MembersPageView');
@@ -135,6 +136,8 @@ define(function (require) {
                 return Profile;
             case 'info':
                 return ProjectInfo;
+            case 'api':
+                return ApiPage;
             default:
                 break;
             }

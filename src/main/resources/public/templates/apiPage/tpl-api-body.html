@@ -1,0 +1,18 @@
+<div class="buttons-container">
+    <div class="type-buttons">
+        <label>
+            <input name="select-type" type="radio" value="/api/v1/api-docs" checked="true" data-js-select-type-input>
+            <span><%= data.text.api.api %></span>
+        </label>
+        <label>
+            <input name="select-type" type="radio" value="/uat/api-docs" data-js-select-type-input>
+            <span><%= data.text.api.uat %></span>
+        </label>
+    </div>
+    <span class="status-text" data-js-status></span>
+</div>
+
+<div data-js-iframe-container></div>
+<div class="preloader">
+    <i class="material-icons loader-animation">refresh</i>
+</div>

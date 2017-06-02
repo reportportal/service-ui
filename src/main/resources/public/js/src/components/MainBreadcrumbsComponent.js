@@ -29,11 +29,11 @@ define(function (require, exports, module) {
     var MainBreadcrumbsModel = Epoxy.Model.extend({
         defaults: {
             name: '',
-            link: '',
+            link: ''
         }
     });
     var MainBreadcrumbsCollection = Backbone.Collection.extend({
-        model:  MainBreadcrumbsModel
+        model: MainBreadcrumbsModel
     });
     var MainBreadcrumbsItem = Epoxy.View.extend({
         tagName: 'li',
@@ -41,13 +41,13 @@ define(function (require, exports, module) {
 
         bindings: {
             '[data-js-link]': 'attr: {href: link}, text: name',
-            '[data-js-name]': 'text: name',
+            '[data-js-name]': 'text: name'
         },
 
-        initialize: function() {
+        initialize: function () {
             this.render();
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
         destroy: function () {
@@ -64,7 +64,7 @@ define(function (require, exports, module) {
         events: {
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.renderedViews = [];
             this.collection = new MainBreadcrumbsCollection();
             this.listenTo(this.collection, 'reset', this.render);
@@ -72,18 +72,18 @@ define(function (require, exports, module) {
             this.listenTo(this.collection, 'remove', this.render);
             options.data && this.collection.reset(options.data);
         },
-        render: function() {
-            _.each(this.renderedViews, function(view) {
+        render: function () {
+            _.each(this.renderedViews, function (view) {
                 view.destroy();
             });
             this.renderedViews = [];
             var self = this;
-            _.each(this.collection.models, function(model) {
+            _.each(this.collection.models, function (model) {
                 self.addItem(model);
-            })
+            });
         },
-        addItem: function(model) {
-            var view = new MainBreadcrumbsItem({model: model});
+        addItem: function (model) {
+            var view = new MainBreadcrumbsItem({ model: model });
             this.renderedViews.push(view);
             this.$el.append(view.$el);
         },
@@ -95,7 +95,7 @@ define(function (require, exports, module) {
             this.unbind();
             this.$el.html('');
             delete this;
-        },
+        }
     });
 
 

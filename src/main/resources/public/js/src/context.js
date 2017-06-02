@@ -1,23 +1,23 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 define(function (require, exports, module) {
     'use strict';
@@ -66,7 +66,7 @@ define(function (require, exports, module) {
 
         loadProject: function () {
             var self = this;
-            return appModel.update().done(function(response) {
+            return appModel.update().done(function (response) {
                 self.currentProjectId = response.projectId;
                 config.project = response;
             });
@@ -81,19 +81,19 @@ define(function (require, exports, module) {
 
         openAdmin: function (page, id, action, queryString) {
             if (!config.userModel.get('isAdmin')) {
-                config.router.navigate(config.userModel.get('defaultProject'), {trigger: true});
+                config.router.navigate(config.userModel.get('defaultProject'), { trigger: true });
                 return;
             }
             this.prepareInsideView();
             this.currentContext = page;
-            if(id) {
-                appModel.set({projectId: id});
+            if (id) {
+                appModel.set({ projectId: id });
             }
             this.checkForContextChange(page);
-            var data = {page: page, id: id, action: action, contextName: this.currentContext, queryString: queryString};
+            var data = { page: page, id: id, action: action, contextName: this.currentContext, queryString: queryString };
             this.currentProjectId = null;
             this.validateMainViewByContextName();
-            this.bodyContainer = $("#bodyContainer");
+            this.bodyContainer = $('#bodyContainer');
             if (!this.mainView) {
                 this.mainView = new Admin.MainView({
                     el: this.bodyContainer
@@ -111,9 +111,9 @@ define(function (require, exports, module) {
             this.checkForContextChange(contextName);
             this.validateMainViewForAdmin();
             this.container = $('#mainContainer');
-            //TODO config.project deprecated
-            config.project['projectId'] = projectId || config.userModel.get('defaultProject');
-            var data = {container: this.container, projectId: projectId, contextName: contextName, subContext: subContext, queryString: queryString};
+            // TODO config.project deprecated
+            config.project.projectId = projectId || config.userModel.get('defaultProject');
+            var data = { container: this.container, projectId: projectId, contextName: contextName, subContext: subContext, queryString: queryString };
 
             var dependenciesCalls = [];
             if (this.preferencesAreNotLoaded()) {
@@ -125,7 +125,7 @@ define(function (require, exports, module) {
             }
             this.destroyInvalidView();
             var self = this;
-            var renderPage = function() {
+            var renderPage = function () {
                 if (!self.mainView) {
                     self.mainView = new Main.MainView({
                         el: self.container,
@@ -176,12 +176,12 @@ define(function (require, exports, module) {
             });
             $('[data-js-notapplication-container]').html(this.outsideView.$el);
         },
-        prepareOutsideView: function() {
+        prepareOutsideView: function () {
             this.destroyViews();
             this.outsideView && this.outsideView.destroy();
             $('[data-js-application-container]').addClass('hide');
         },
-        prepareInsideView: function() {
+        prepareInsideView: function () {
             this.outsideView && this.outsideView.destroy();
             $('[data-js-application-container]').removeClass('hide');
         },
@@ -263,7 +263,7 @@ define(function (require, exports, module) {
                 getMainView: function () {
                     return mainView;
                 }
-            }
+            };
         }
     };
 
