@@ -106,7 +106,7 @@ define(function (require) {
             var active = $el.is(':checked');
             var title = Localization.launches.showPreconditionMethods;
             this.userStorage.set('statusPreconditions', active);
-            this.collectionItems.trigger('change:collapse', active);
+            this.collectionItems.setPredefinedFilter(active ? 'collapsed' : null);
             $('[data-js-collapse-label]', this.$el).attr('title', title);
         },
         applyPreconditionsStatus: function () {
