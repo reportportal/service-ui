@@ -31,11 +31,31 @@ define(function (require) {
     var Service = require('coreService');
     var DropDownComponent = require('components/DropDownComponent');
     var config = App.getInstance();
+    var BtsFieldsCommonView = require('bts/BtsFieldsCommonView');
+    var PostBugFieldsView;
+    var ModalPostBug;
     require('jquery-ui/widgets/datepicker');
 
-    var ModalPostBug = ModalView.extend({
+    PostBugFieldsView = BtsFieldsCommonView.extend({
+        template: 'tpl-dynamic-fields',
+        initialize: function (options) {
+            this.render(options);
+        },
+        render: function (options) {
+            this.$el.html(Util.templates(this.template, {
+                collection: options.collection,
+                disabled: options.disabled,
+                update: false,
+                access: true,
+                popup: true
+            }));
+        },
+        onDestroy: function () {
+        }
+    });
+
+    ModalPostBug = ModalView.extend({
         contentBody: 'tpl-modal-post-bug',
-        fieldsTpl: 'tpl-dynamic-fields',
         authTpl: 'tpl-bts-auth-type',
 
         className: 'modal-post-bug',
@@ -160,85 +180,20 @@ define(function (require) {
         },
 
         renderFields: function () {
-            this.$dynamicContent.html(Util.templates(this.fieldsTpl, {
+            this.postBugFieldsView = new PostBugFieldsView({
                 collection: this.user.bts.current.fields,
-                disabled: this.systemSettings.disabledForEdit,
-                update: false,
-                access: true,
-                popup: true
-            }));
+                disabled: this.systemSettings.disabledForEdit
+            });
+            this.$dynamicContent.html(this.postBugFieldsView.$el);
             this.setupFieldsDropdowns(this.user.bts.current.fields);
             if (this.user.bts.current.fields) {
-                this.applyTypeForBtsFields(this.user.bts.current.fields, this.$dynamicContent);
+                this.postBugFieldsView.applyTypeForBtsFields(
+                    this.user.bts.current.fields, this.$dynamicContent
+                );
                 this.$actionBtn.prop('disabled', false);
             } else {
                 this.$actionBtn.prop('disabled', true);
             }
-        },
-
-        applyTypeForBtsFields: function (fields, holder) {
-            var self = this;
-            _.forEach(fields, function (field) {
-                var clearId = field.id.replaceAll('.', '');
-                if (self.validForMultiSelect(field)) {
-                    var values = _.map(field.definedValues, function (option) {
-                            var name = option.valueName.trim();
-                            return { id: name, text: name };
-                        }),
-                        element = $('#' + field.id, holder);
-                    Util.setupSelect2WhithScroll(element, { tags: false, data: values });
-                    element.on('remove', function () {
-                        element.select2('destroy');
-                        element = null;
-                        values = null;
-                        $('body > #select2-drop-mask, body > .select2-sizer').remove();
-                    });
-                } else if (self.validForDatePicker(field)) {
-                    $('[data-id=' + clearId + ']')
-                        .prop('readonly', true)
-                        .datepicker({ dateFormat: config.dateTimeFormat })
-                        .on('remove', function () {
-                            $(this).datepicker('destroy');
-                        });
-                } else if (self.validForIntegers(field)) {
-                    Util.bootValidator($('[data-id=' + clearId + ']', holder), [{
-                        validator: 'matchRegex',
-                        type: 'onlyIntegersRegex',
-                        pattern: config.patterns.onlyIntegers
-                    }]);
-                } else if (self.validForDropDown(field)) {
-                    if (field.definedValues && field.definedValues.length
-                        > config.dynamicDropDownVisible) {
-                        Util.setupSelect2WhithScroll($('[data-id=' + clearId + ']', holder), {
-                            allowClear: true
-                        });
-                        $('[data-id=' + clearId + ']', holder).on('remove', function () {
-                            $(this).select2('destroy');
-                            $('body > #select2-drop-mask, body > .select2-sizer').remove();
-                        });
-                    }
-                } else if (self.validForDouble(field)) {
-                    Util.bootValidator($('[data-id=' + clearId + ']', holder), [
-                        { validator: 'matchRegex', type: 'doublesRegex', pattern: config.patterns.doubles }
-                    ]);
-                }
-            });
-        },
-
-        validForMultiSelect: function (field) {
-            return field.fieldType === 'array' && field.definedValues && field.definedValues.length;
-        },
-        validForDatePicker: function (field) {
-            return field.fieldType === 'date' || field.fieldType.toLowerCase() === 'datetime';
-        },
-        validForIntegers: function (field) {
-            return field.fieldType === 'Integer' || field.fieldType === 'number';
-        },
-        validForDropDown: function (field) {
-            return field.definedValues && field.definedValues.length && field.fieldType !== 'array';
-        },
-        validForDouble: function (field) {
-            return field.fieldType === 'Double';
         },
 
         setupFieldsDropdowns: function (fields) {
@@ -651,6 +606,7 @@ define(function (require) {
             _.each(this.dropdownComponents, function (item) {
                 item.destroy();
             });
+            this.postBugFieldsView.destroy();
         }
     });
 
