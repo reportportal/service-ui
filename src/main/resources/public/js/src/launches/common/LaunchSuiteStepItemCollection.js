@@ -150,6 +150,7 @@ define(function (require) {
         },
         setPredefinedFilter: function (filterName) {
             this.predefinedFilter = filterName;
+            this.trigger('change:predefined_filter', filterName);
             this.load();
         },
         setPaging: function (curPage, size) {

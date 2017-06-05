@@ -60,7 +60,7 @@ define(function (require) {
             this.listenTo(this.collectionItems, 'change:params', this.onChangeParamsFilter);
             this.listenTo(this.collectionItems, 'drill:item', this.onDrillItem);
             this.listenTo(this.collectionItems, 'change:log:item', this.onChangeLogItem);
-            this.listenTo(this.collectionItems, 'change:collapse', this.onChangeCollapse);
+            this.listenTo(this.collectionItems, 'change:predefined_filter', this.onChangeCollapse);
             this.listenTo(this.collectionItems, 'set:log:item', this.onSetLogItem);
             this.listenTo(this.crumbs, 'change:path', this.onChangeItemCrumbs);
             this.listenTo(this.crumbs, 'restore:path', this.onRestoreItemCrumbs);
@@ -93,20 +93,11 @@ define(function (require) {
             //     config.router.navigate(mainHash + '?' + params, { trigger: false, replace: true });
             // });
         },
-        onChangeCollapse: function (collapsed) {
-            if (collapsed) {
-                config.router.navigate(
-                    this.collectionItems.getPathByPredefinedFilter('collapsed'),
-                    { trigger: false, replace: true }
-                );
-                this.collectionItems.setPredefinedFilter('collapsed');
-            } else {
-                config.router.navigate(
-                    this.collectionItems.getPathByPredefinedFilter(null),
-                    { trigger: false, replace: true }
-                );
-                this.collectionItems.setPredefinedFilter(null);
-            }
+        onChangeCollapse: function (filterName) {
+            config.router.navigate(
+                this.collectionItems.getPathByPredefinedFilter(filterName),
+                { trigger: false, replace: true }
+            );
         },
         onChangeLogItem: function (logItemId) {
             this.crumbs.setLogItem(this.collectionItems.get(logItemId));
