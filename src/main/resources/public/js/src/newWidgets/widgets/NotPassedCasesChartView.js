@@ -27,7 +27,7 @@ define(function (require, exports, module) {
     var Localization = require('localization');
     var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
+    var nvd3New = require('nvd3New');
 
     var config = App.getInstance();
 
@@ -68,7 +68,7 @@ define(function (require, exports, module) {
 
             this.addSVG();
 
-            this.chart = nvd3.models.lineChart()
+            this.chart = nvd3New.models.lineChart()
                 .x(function (d) {
                     return d.num;
                 })

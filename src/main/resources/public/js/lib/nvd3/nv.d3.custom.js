@@ -2,8 +2,8 @@
 (function(){
 
 // set up main nv object on window
-var nv = window.nv || {};
-window.nv = nv;
+var nv = window._nv || {};
+window._nv = nv;
 
 // the major global objects under the nv namespace
 nv.dev = false; //set false when in production
@@ -398,14 +398,14 @@ nv.nearestValueIndex = function (values, searchVal, threshold) {
     return indexToHighlight;
 };
 /* Tooltip rendering model for nvd3 charts.
- window.nv.models.tooltip is the updated,new way to render tooltips.
+ window._nv.models.tooltip is the updated,new way to render tooltips.
 
- window.nv.tooltip.show is the old tooltip code.
- window.nv.tooltip.* also has various helper methods.
+ window._nv.tooltip.show is the old tooltip code.
+ window._nv.tooltip.* also has various helper methods.
  */
 (function() {
     "use strict";
-    window.nv.tooltip = {};
+    window._nv.tooltip = {};
 
     /* Model which can be instantiated to handle tooltip rendering.
      Example usage:
@@ -414,7 +414,7 @@ nv.nearestValueIndex = function (values, searchVal, threshold) {
 
      tip();    //just invoke the returned function to render tooltip.
      */
-    window.nv.models.tooltip = function() {
+    window._nv.models.tooltip = function() {
         //HTML contents of the tooltip.  If null, the content is generated via the data variable.
         var content = null;
 
