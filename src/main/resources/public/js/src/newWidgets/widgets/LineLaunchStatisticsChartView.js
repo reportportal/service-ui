@@ -27,7 +27,7 @@ define(function (require, exports, module) {
     var Moment = require('moment');
     var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
+    var nvd3New = require('nvd3New');
 
     var config = App.getInstance();
 
@@ -88,7 +88,7 @@ define(function (require, exports, module) {
 
             this.addSVG();
 
-            this.chart = nvd3.models.stackedAreaChart()
+            this.chart = nvd3New.models.stackedAreaChart()
                 .margin({ left: 70 })
                 .x(function (d) {
                     return d.x;
@@ -114,7 +114,7 @@ define(function (require, exports, module) {
                 .axisLabel('cases')
             ;
 
-            this.chart.yAxisTickFormat(d3.format('d'));
+            this.chart.yAxis.tickFormat(d3.format('d'));
 
             var vis = d3.select($('svg', this.$el).get(0))
                 .datum(data)
