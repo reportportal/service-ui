@@ -789,7 +789,8 @@ define(['util'], function () {
             noItemInLaunch: 'No Item<br> in Launch',
             emptyItem: 'Item is Empty',
             severalItems: 'There’re several items with the same names, descriptions and tags',
-            multipleSelectHeader: 'YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:'
+            multipleSelectHeader: 'YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:',
+            selectMoreItem: 'You must select more than one item'
         },
 
         launchStatus: {

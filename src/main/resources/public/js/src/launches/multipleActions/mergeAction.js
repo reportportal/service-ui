@@ -18,30 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
-    var $ = require('jquery');
-    var _ = require('underscore');
-    var Util = require('util');
-    var Components = require('core/components');
-    var Service = require('coreService');
-    var App = require('app');
     var Epoxy = require('backbone-epoxy');
     var ModalLaunchesMerge = require('modals/modalLaunchesMerge');
 
-    var config = App.getInstance();
-
     var MergeAction = Epoxy.View.extend({
-        initialize: function(options) {
+        initialize: function (options) {
             var modal = new ModalLaunchesMerge({
-                items: options.items,
+                items: options.items
             });
             this.async = modal.show();
         },
-        getAsync: function() {
+        getAsync: function () {
             return this.async;
-        },
+        }
     });
 
     return MergeAction;

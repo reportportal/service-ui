@@ -32,6 +32,7 @@ define(function (require) {
     var ChangeModeAction = require('launches/multipleActions/changeModeAction');
     var PostBugAction = require('launches/multipleActions/postBugAction');
     var LoadBugAction = require('launches/multipleActions/loadBugAction');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -91,9 +92,15 @@ define(function (require) {
 
         actionValidators: {
             merge: function () {
-                _.each(this.collection.models, function (model) {
-                    model.set({ invalidMessage: model.validate.merge() });
-                });
+                if (this.collection.models.length === 1) {
+                    this.collection.models[0].set({
+                        invalidMessage: Localization.launches.selectMoreItem
+                    });
+                } else {
+                    _.each(this.collection.models, function (model) {
+                        model.set({ invalidMessage: model.validate.merge() });
+                    });
+                }
             },
             compare: function () {
                 _.each(this.collection.models, function (model) {
