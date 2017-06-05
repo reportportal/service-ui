@@ -636,14 +636,15 @@ define(function (require) {
         },
 
         getLinks: function () {
-            var backLink = {};
-            var backlinkFirstPart = window.location.protocol + '//' + window.location.host + '/#' + this.appModel.get('projectId') + '/launches/';
-            var backlinkMiddlePart;
+            var backLinks = {};
             _.forEach(this.items, function (item) {
-                backlinkMiddlePart = item.get('urlMiddlePart');
-                backLink[item.id] = backlinkFirstPart + backlinkMiddlePart + '&log.item=' + item.id;
+                if (item.get('filter_url')) {
+                    backLinks[item.id] = window.location.protocol + '//' + window.location.host + '/' + item.get('url').replaceAll('|', encodeURIComponent('|'));
+                } else {
+                    backLinks[item.id] = window.location.href.replaceAll('|', encodeURIComponent('|'));
+                }
             });
-            return backLink;
+            return backLinks;
         },
 
         onDestroy: function () {

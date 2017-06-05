@@ -142,6 +142,16 @@ define(function (require) {
 
             return mainHash + '?' + options.join('&');
         },
+        getPathByPredefinedFilter: function (value) {
+            var options = this.getParamsFilter();
+            var mainHash = window.location.hash.split('?')[0];
+            value && options.push('predefined_filter=' + value);
+            return mainHash + '?' + options.join('&');
+        },
+        setPredefinedFilter: function (filterName) {
+            this.predefinedFilter = filterName;
+            this.load();
+        },
         setPaging: function (curPage, size) {
             var self = this;
             var partUrl = '';
@@ -378,6 +388,7 @@ define(function (require) {
                     !this.noChildFilter && params.push('filter.size.path=0');
                 }
             }
+            this.predefinedFilter && params.push('predefined_filter=' + this.predefinedFilter);
             if (params && params.length) {
                 path += '?' + params.join('&');
             }
@@ -430,28 +441,11 @@ define(function (require) {
         },
         parse: function (response) {
             var self = this;
-            var filterOptions = this.filterModel.getOptions();
             _.each(response.content, function (modelData) {
                 var modelItemData = modelData;
-                var urlPart;
 
                 modelItemData.issue && (modelItemData.issue = JSON.stringify(modelItemData.issue));
                 modelItemData.tags && (modelItemData.tags = JSON.stringify(modelItemData.tags));
-
-                if (self.context !== 'userdebug') {
-                    urlPart = self.crumbs.collection.models[self.crumbs.collection.length - 1].get('url').split('#' + (new SingletonAppModel()).get('projectId') + '/launches/')[1];
-                    modelItemData.urlMiddlePart =
-                        urlPart
-                        + ((~urlPart.indexOf('?')) ? '&' : '?')
-                        + 'page.page=' + self.pagingData.number
-                        + '&page.size=' + self.pagingData.size;
-                    _.each(filterOptions, function (item) {
-                        if (!~modelItemData.urlMiddlePart.indexOf(item)) {
-                            modelItemData.urlMiddlePart += '&' + item;
-                        }
-                        modelItemData.urlMiddlePart = modelItemData.urlMiddlePart.replace('|', encodeURIComponent('|'));
-                    });
-                }
 
                 if (self.launchModel) {
                     modelItemData.parent_launch_owner = self.launchModel.get('owner');
