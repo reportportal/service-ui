@@ -29,57 +29,47 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
     display: none;
   }
     .grid-cell {
-        &.name-grid-cell {
-            padding-left: 20px;
-            width: $step-name-cell-width;
-            &.rp-grid-th {
-                .text-overflow {
-                    //padding-left: 25px;
-                }
-            }
-        }
+      &.name-grid-cell {
+          padding-left: 20px;
+          width: $step-name-cell-width;
+          &.rp-grid-th {
+              .text-overflow {
+                  //padding-left: 25px;
+              }
+          }
+      }
 
-        @media (min-width: $SCREEN_SM_MIN) {
-            &.method-type-grid-cell {
-                padding-left: 45px;
-            }
-        }
-        &.time-grid-cell {
-            width: $step-time-cell-width;
-        }
-        &.status-grid-cell {
-            width: $step-status-cell-width;
-        }
-        &.type-grid-cell {
-            width: $step-type-cell-width;
-        }
-        &.select-grid-cell {
-            width: $step-select-cell-width;
-            text-align: center;
-            padding: 0;
-            .rp-checkbox-wrap span {
-                height: 11px;
-            }
-        }
-        &.add-collapse-methods-btn {
-            padding-left: 44px;
-            .rp-switcher {
-                position: absolute;
-                left: 7px;
-                top: 50%;
-                margin-top: -6px;
-            }
-        }
-    }
-    &.hide-collapsed-methods {
-        .collapse-method {
-            overflow: hidden;
-            height: 0;
-            padding: 1px;
-            .grid-cell {
-                display: none;
-            }
-        }
+      @media (min-width: $SCREEN_SM_MIN) {
+          &.method-type-grid-cell {
+              padding-left: 45px;
+          }
+      }
+      &.time-grid-cell {
+          width: $step-time-cell-width;
+      }
+      &.status-grid-cell {
+          width: $step-status-cell-width;
+      }
+      &.type-grid-cell {
+          width: $step-type-cell-width;
+      }
+      &.select-grid-cell {
+          width: $step-select-cell-width;
+          text-align: center;
+          padding: 0;
+          .rp-checkbox-wrap span {
+              height: 11px;
+          }
+      }
+      &.add-collapse-methods-btn {
+          padding-left: 44px;
+          .rp-switcher {
+              position: absolute;
+              left: 7px;
+              top: 50%;
+              margin-top: -6px;
+          }
+      }
     }
   .step-status {
     font-family: $OpenSansSemibold;
