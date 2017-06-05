@@ -172,7 +172,7 @@ define(function (require, exports, module) {
                     .each(function (d) {
                         d3.select(this)
                             .on('mouseover.' + self.id, function (event) {
-                                if (d3.select(this).style('opacity') === 1) {
+                                if (+d3.select(this).style('opacity') === 1) {
                                     var category = self.categories[event - 1] || {};
                                     if (!category.name && !category.number) return;
                                     tip
