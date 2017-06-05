@@ -85,7 +85,6 @@ define(function (require) {
             );
             itemModelFromCollection = this.collectionItems.get(itemModel.id);
             if (itemModelFromCollection) {
-                itemModel.set('urlMiddlePart', itemModelFromCollection.get('urlMiddlePart'));
                 itemModel.set('path_names', itemModelFromCollection.get('path_names'));
             }
 

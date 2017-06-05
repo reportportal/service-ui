@@ -102,14 +102,9 @@ define(function (require, exports, module) {
         },
         onChangeCollapseInput: function($el, silent) {
             var active = $el.is(':checked');
-            this.userStorage.set('statusPreconditions', active);
             var title = Localization.launches.showPreconditionMethods;
-            if(active) {
-                title = Localization.launches.hidePreconditionMethods;
-                $('[data-js-table-container]', this.$el).addClass('hide-collapsed-methods');
-            } else {
-                $('[data-js-table-container]', this.$el).removeClass('hide-collapsed-methods');
-            }
+            this.userStorage.set('statusPreconditions', active);
+            this.collectionItems.trigger('change:collapse', active);
             $('[data-js-collapse-label]', this.$el).attr('title', title);
         },
         applyPreconditionsStatus: function(){
