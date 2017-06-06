@@ -122,7 +122,7 @@ define(function (require) {
             _.each(this.model.get('id'), function (item, i) {
                 result += id.charCodeAt(i);
             });
-            $('[data-js-description-wrapper]', this.$el).addClass('preview-' + result % 14);
+            $('[data-js-description-wrapper]', this.$el).addClass('preview-' + (result % 14));
         },
 
         onDestroy: function () {

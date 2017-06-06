@@ -30,24 +30,24 @@ define(function (require, exports, module) {
     var storageService = require('storageService');
     var SingletonAppModel = require('model/SingletonAppModel');
     var Main = require('mainview');
+    var trackingDispatcher = require('dispatchers/TrackingDispatcher');
     var Footer = require('sections/footer');
-
-
 
     $('body > #sandbox').remove();
     $('body').append('<div id="sandbox"></div>');
 
     describe('footer section test', function () {
+        var sandbox;
+        var footerView;
+        var config;
 
-        var sandbox,
-            footerView;
-
-        beforeEach(function() {
-
-            sandbox = $("#sandbox");
-            sandbox.append('<section id="pageFooter" class="footer"></section>')
-            footerView = new Footer({el: $('#sandbox > #pageFooter.footer')}).render();
-
+        beforeEach(function () {
+            sandbox = $('#sandbox');
+            sandbox.append('<section id="pageFooter" class="footer"></section>');
+            config = App.getInstance();
+            config.trackingDispatcher = trackingDispatcher;
+            spyOn(config.trackingDispatcher, 'trackEventNumber').and.stub();
+            footerView = new Footer({ el: $('#sandbox > #pageFooter.footer') }).render();
         });
 
         afterEach(function () {
@@ -56,12 +56,12 @@ define(function (require, exports, module) {
             sandbox.off().empty();
         });
 
-        it ('should render footer view', function () {
+        it('should render footer view', function () {
             expect(footerView).toBeDefined();
             expect($('#pageFooter.footer', sandbox).length).toEqual(1);
         });
 
-        it ('should render footer breadcrumbs', function () {
+        it('should render footer breadcrumbs', function () {
             expect($('.breadcrumbs', sandbox).length).toEqual(1);
         });
 
@@ -73,7 +73,7 @@ define(function (require, exports, module) {
         /*it ('should trigger click event after clicking on links', function () {
             var links = $('.breadcrumbs a', sandbox);
             links.each(function (index) {
-                spyOnEvent($(this), 'click')
+                spyOnEvent($(this), 'click');
                 $(this).click();
                 expect('click').toHaveBeenTriggeredOn(this);
             })

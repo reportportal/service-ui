@@ -19,9 +19,11 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
+    var $ = require('jquery');
+    var _ = require('underscore');
     var ModalView = require('modals/_modalView');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
@@ -37,7 +39,7 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-name-input]': 'value: name',
             '[data-js-is-shared]': 'checked: isShared',
-            '[data-js-description]': 'value: description',
+            '[data-js-description]': 'value: description'
         },
 
         events: {
@@ -46,11 +48,11 @@ define(function (require, exports, module) {
             'click [data-js-cancel]': 'onClickCancel'
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             var dashboardModel = options.dashboardModel;
             var currentUserName = (dashboardModel.get('owner') === '') ? (new UserModel().get('name')) : dashboardModel.get('owner');
-            var dashboardNames = _.map(options.dashboardCollection.models, function(model) {
-                if (dashboardModel.get('name') != model.get('name') && currentUserName === model.get('owner')) {
+            var dashboardNames = _.map(options.dashboardCollection.models, function (model) {
+                if (dashboardModel.get('name') !== model.get('name') && currentUserName === model.get('owner')) {
                     return model.get('name');
                 }
             });
@@ -60,14 +62,14 @@ define(function (require, exports, module) {
             this.model = new Epoxy.Model({
                 name: dashboardModel.get('name'),
                 isShared: dashboardModel.get('isShared'),
-                description: dashboardModel.get('description'),
+                description: dashboardModel.get('description')
             });
             Util.hintValidator($('[data-js-name-input]', this.$el), [{
                 validator: 'minMaxRequired',
                 type: 'dashboardName',
                 min: 3,
                 max: 128
-            }, {validator: 'noDuplications', type: 'dashboardName', source: dashboardNames, isCaseSensitive: true}]);
+            }, { validator: 'noDuplications', type: 'dashboardName', source: dashboardNames, isCaseSensitive: true }]);
             Util.hintValidator($('[data-js-description]', this.$el), {
                 validator: 'maxRequired',
                 type: '',
@@ -76,51 +78,46 @@ define(function (require, exports, module) {
             this.listenTo(this.model, 'change:isShared', this.onChangeShared);
             this.listenTo(this.model, 'change:description', this.onChangeDescription);
         },
-        render: function(options) {
+        render: function (options) {
             this.$el.html(Util.templates(this.template, options));
         },
         onKeySuccess: function () {
             $('[data-js-ok]', this.$el).focus().trigger('click');
         },
-        onChangeShared: function(){
-            if(this.isNew){
+        onChangeShared: function () {
+            if (this.isNew) {
                 config.trackingDispatcher.trackEventNumber(268);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(273);
             }
         },
-        onChangeDescription: function(){
-            if(this.isNew){
+        onChangeDescription: function () {
+            if (this.isNew) {
                 config.trackingDispatcher.trackEventNumber(267);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(272);
             }
         },
-        onClickClose: function(){
-            if(this.isNew){
+        onClickClose: function () {
+            if (this.isNew) {
                 config.trackingDispatcher.trackEventNumber(266);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(271);
             }
         },
-        onClickCancel: function(){
-            if(this.isNew){
+        onClickCancel: function () {
+            if (this.isNew) {
                 config.trackingDispatcher.trackEventNumber(269);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(274);
             }
         },
-        onClickOk: function() {
+        onClickOk: function () {
             $('[data-js-name-input]', this.$el).trigger('validate');
             if ($('.validate-error', this.$el).length) return;
-            if(this.isNew){
+            if (this.isNew) {
                 config.trackingDispatcher.trackEventNumber(270);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(275);
             }
             this.successClose(this.model);
