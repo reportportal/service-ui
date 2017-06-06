@@ -24,7 +24,7 @@ define(function (require, exports, module) {
     var $ = require('jquery');
     var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
+    var nvd3New = require('nvd3New');
 
     var TrendLaunchStatisticsChart = ChartWidgetView.extend({
 
@@ -35,7 +35,7 @@ define(function (require, exports, module) {
 
             this.addSVG();
 
-            this.chart = nvd3.models.multiBarChart()
+            this.chart = nvd3New.models.multiBarChart()
                 .x(function (d) {
                     return d.x;
                 })
@@ -47,11 +47,13 @@ define(function (require, exports, module) {
                 .showControls(false)
                 .clipEdge(true)
                 .showXAxis(true)
-                .tooltips(!self.isPreview)
                 .showLegend(!self.isPreview)
             ;
 
-            this.chart.tooltipContent(tooltip);
+            this.chart.tooltip
+                .contentGenerator(tooltip)
+                .enabled(!self.isPreview)
+            ;
 
             this.chart.yAxis
                 .tickFormat(d3.format('d'))

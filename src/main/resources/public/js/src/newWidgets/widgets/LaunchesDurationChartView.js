@@ -28,7 +28,7 @@ define(function (require, exports, module) {
     var Localization = require('localization');
     var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
+    var nvd3New = require('nvd3New');
 
     var config = App.getInstance();
 
@@ -103,14 +103,15 @@ define(function (require, exports, module) {
         tooltipContent: function () {
             var self = this;
             var type = this.getTimeType(this.max);
-            return function (key, x, y, e, graph) {
-                config.trackingDispatcher.trackEventNumber(343);
-                var index = e.pointIndex;
-                var time = Moment.duration(Math.abs(e.value), type.type).humanize(true);
+            return function (props) {
+                var index = props.index;
+                var key = props.data.key;
+                var time = Moment.duration(Math.abs(props.value), type.type).humanize(true);
                 var cat = self.categories[index];
-                var status = e.point.status;
+                var status = props.data.status;
                 var tipTitle = '<p style="text-align:left;"><b>' + cat.name + ' ' + cat.number + '</b><br/>';
-                var tipVal = '<b>' + ((status !== self.ITERUPT) ? e.series.key + ':' : '<span style="color: ' + self.getSeriesColor(status) + ';">Run ' + self.ITERUPT.toLowerCase().capitalize() + '</span>') + ' </b> ' + ((status !== self.ITERUPT) ? time : '') + ' <br/></p>';
+                var tipVal = '<b>' + ((status !== self.ITERUPT) ? key + ':' : '<span style="color: ' + self.getSeriesColor(status) + ';">Run ' + self.ITERUPT.toLowerCase().capitalize() + '</span>') + ' </b> ' + ((status !== self.ITERUPT) ? time : '') + ' <br/></p>';
+                config.trackingDispatcher.trackEventNumber(343);
                 return tipTitle + tipVal;
             };
         },
@@ -122,7 +123,7 @@ define(function (require, exports, module) {
 
             this.addSVG();
 
-            this.chart = nvd3.models.multiBarHorizontalChart()
+            this.chart = nvd3New.models.multiBarHorizontalChart()
                 .x(function (d) {
                     return d.num;
                 })
@@ -130,16 +131,17 @@ define(function (require, exports, module) {
                     return parseInt(d.duration, 10) / type.value;
                 })
                 .showValues(false)
-                .tooltips(!self.isPreview)
                 .showControls(false)
-                .reduceXTicks(true)
                 .barColor(this.colors)
                 .valueFormat(d3.format(',.2f'))
                 .showXAxis(true)
                 .showLegend(false)
             ;
 
-            this.chart.tooltipContent(tooltip);
+            this.chart.tooltip
+                .contentGenerator(tooltip)
+                .enabled(!self.isPreview)
+            ;
 
             this.chart.xAxis
                 .tickFormat(function (d) {

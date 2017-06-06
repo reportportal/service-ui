@@ -108,8 +108,10 @@ define(function (require, exports, module) {
         tooltipLabel: Localization.widgets.casesLabel,
         tooltipContent: function () {
             var self = this;
-            return function (key, x, y, e, graph) {
-                var index = e.pointIndex;
+            return function (props) {
+                var index = props.index;
+                var y = props.data.y;
+                var key = props.data.key;
                 var cat = self.categories[index];
                 var date;
                 config.trackingDispatcher.trackEventNumber(343);
