@@ -154,19 +154,14 @@ define(function (require) {
             this.load();
         },
         setPaging: function (curPage, size) {
-            var self = this;
-            var partUrl = '';
             this.pagingPage = curPage;
             this.pagingTotalPages = curPage;
             if (size) {
                 this.pagingSize = size;
                 this.userStorage.set('launchPageSize', size);
             }
-            partUrl = this.activateChangeParamsTrigger();
-            this.load()
-                .done(function () {
-                    self.setPartUrl(partUrl);
-                });
+            this.activateChangeParamsTrigger();
+            this.load();
         },
         setLogItem: function (logItemId, silent) {
             if (!this.get(logItemId)) {
@@ -177,18 +172,13 @@ define(function (require) {
             !silent && this.trigger('change:log:item', logItemId);
         },
         setSelfModels: function (filterModel) {
-            var self = this;
-            var partUrl = '';
             this.stopListening(this.filterModel);
 
             this.filterModel = filterModel;
             this.listenTo(this.filterModel, 'change:newEntities change:entities', this.changeFilterOptions);
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.changeSelectionParameters);
-            partUrl = this.activateChangeParamsTrigger();
-            return this.load()
-                .done(function () {
-                    self.setPartUrl(partUrl);
-                });
+            this.activateChangeParamsTrigger();
+            return this.load();
         },
         activateLogsItem: function (itemId) {
             var parentItemModel = this.get(itemId);
@@ -245,26 +235,16 @@ define(function (require) {
             return answer;
         },
         changeSelectionParameters: function () {
-            var partUrl = '';
-            var self = this;
-            this.load()
-                .done(function () {
-                    self.setPartUrl(partUrl);
-                });
-            partUrl = this.activateChangeParamsTrigger();
+            this.load();
+            this.activateChangeParamsTrigger();
         },
         changeFilterOptions: function (model, value) {
-            var partUrl = '';
-            var self = this;
             if (model.get('newEntities') !== '' ||
                 (model.changed.entities && model.get('entities') !== model._previousAttributes.newEntities)) {
                 this.pagingPage = 1;
-                this.load()
-                    .done(function () {
-                        self.setPartUrl(partUrl);
-                    });
+                this.load();
             }
-            partUrl = this.activateChangeParamsTrigger();
+            this.activateChangeParamsTrigger();
         },
         setPartUrl: function (partUrl) {
             _.each(this.models, function (model) {
@@ -442,9 +422,10 @@ define(function (require) {
         },
         parse: function (response) {
             var self = this;
+            var filterUrl = this.getParamsFilter().join('&');
             _.each(response.content, function (modelData) {
                 var modelItemData = modelData;
-
+                modelItemData.filter_url = filterUrl;
                 modelItemData.issue && (modelItemData.issue = JSON.stringify(modelItemData.issue));
                 modelItemData.tags && (modelItemData.tags = JSON.stringify(modelItemData.tags));
 

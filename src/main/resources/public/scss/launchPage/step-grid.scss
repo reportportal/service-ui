@@ -88,6 +88,14 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
             .parents-line-item {
                 padding: 0 5px;
                 display: inline-block;
+              &:after {
+                content: '/';
+                display: inline-block;
+                padding-left: 10px;
+              }
+              &:last-child:after {
+                display: none;
+              }
             }
             a {
                 color: $COLOR--topaz;

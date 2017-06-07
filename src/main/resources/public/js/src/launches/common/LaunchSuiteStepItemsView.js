@@ -126,7 +126,10 @@ define(function (require, exports, module) {
                     var needParentLine = self.isValidForParent(model, parentPath);
                     if(needParentLine){
                         parentPath = needParentLine;
-                        var prentItem = new ParentStepItemView({ model: new Backbone.Model({parentPath:parentPath})});
+                        var prentItem = new ParentStepItemView({
+                            parentPath: needParentLine,
+                            launchId: model.get('launchId')
+                        });
                         $itemsContainer.append(prentItem.$el);
                         self.renderedItems.push(prentItem);
                     }

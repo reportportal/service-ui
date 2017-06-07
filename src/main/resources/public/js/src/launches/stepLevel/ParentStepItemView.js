@@ -18,48 +18,35 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
-    var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var App = require('app');
-    var Localization = require('localization');
-    var ItemDurationView = require('launches/common/ItemDurationView');
-    var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
-    var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
-
-    var config = App.getInstance();
+    var FilterModel = require('filters/FilterModel');
 
     var ParentStepItemView = Epoxy.View.extend({
         template: 'tpl-launch-step-parent',
-        events: {
+
+        initialize: function (options) {
+            this.render(options);
         },
-        bindings: {
+        render: function (options) {
+            var startUrl = '';
+            var allFilterModel;
+            if (options.launchId) {
+                allFilterModel = new FilterModel({ id: 'all' });
+                startUrl = allFilterModel.get('url') + '/' + options.launchId;
+                allFilterModel.destroy();
+            }
+            this.$el.html(Util.templates(this.template, {
+                parentPath: options.parentPath,
+                startUrl: startUrl
+            }));
         },
-        bindingHandlers: {
-        },
-        computeds: {
-        },
-        initialize: function(options) {
-            this.render();
-        },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {model: this.model.toJSON(), getParentUrl: this.getParentUrl}));
-        },
-        getParentUrl: function(id){
-            var url = window.location.hash;
-            return url.split('|')[0].split('?')[0] + "/" + id;
-        },
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
             this.$el.html('');
-            delete this;
-        },
+        }
     });
 
     return ParentStepItemView;
