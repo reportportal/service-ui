@@ -51,6 +51,7 @@ define(function (require) {
             this.listenTo(this.launchFilterCollection, 'add', this.onAddFilter);
             this.listenTo(this.launchFilterCollection, 'change:activeFilter', this.onChangeActiveFilter);
             this.listenTo(this.launchFilterCollection, 'change:id', this.onChangeIdFilter);
+            this.listenTo(this.launchFilterCollection, 'add_entity change:newSelectionParameters', this.showFilterCriteriaPanel);
             this.listenTo(this.userStorage, 'change:launchFilterCriteriaHide', this.onChangeFilterCriteriaShow);
             this.render();
         },
@@ -70,6 +71,9 @@ define(function (require) {
             } else {
                 $('.launches-header-block', this.$el).removeClass('hide-criteria');
             }
+        },
+        showFilterCriteriaPanel: function () {
+            this.userStorage.set({ launchFilterCriteriaHide: false });
         },
         onChangeActiveFilter: function (filterModel) {
             if (filterModel) {
@@ -104,6 +108,7 @@ define(function (require) {
         onAddFilter: function (model) {
             var filter = new FilterLabelView({ model: model });
             var mobileFilter = new FilterLabelView({ model: model });
+            this.listenTo(filter, 'showCriteria', this.showFilterCriteriaPanel);
             $('[data-js-filter-list]', this.$el).append(filter.$el);
             $('[data-js-filter-list-mobile]', this.$el).append(mobileFilter.$el);
         },

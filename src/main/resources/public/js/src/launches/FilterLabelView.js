@@ -37,7 +37,9 @@ define(function (require) {
         template: 'tpl-launch-filter-label',
 
         events: {
-            'click [data-js-filter-close]': 'onClickRemove'
+            'click [data-js-filter-close]': 'onClickRemove',
+            click: 'onClickLabel',
+            dblclick: 'showCriteria'
         },
         bindings: {
             '[data-js-filter-shared]': 'classes: {hide: any(not(isShared), notMyFilter)}',
@@ -51,6 +53,14 @@ define(function (require) {
             this.render();
             this.setTooltip();
             this.listenTo(this.model, 'change', this.update);
+        },
+        onClickLabel: function (e) {
+            e.preventDefault();
+            config.router.navigate(this.model.get('url'), { trigger: true });
+        },
+        showCriteria: function (e) {
+            e.preventDefault();
+            this.trigger('showCriteria');
         },
         setTooltip: function () {
             var self = this;
@@ -95,9 +105,7 @@ define(function (require) {
             this.model.collection.remove(this.model);
             this.destroy();
         },
-        destroy: function () {
-            this.undelegateEvents();
-            this.unbind();
+        onDestroy: function () {
             this.$el.remove();
             delete this;
         }
