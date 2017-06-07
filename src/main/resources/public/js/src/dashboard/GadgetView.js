@@ -58,7 +58,8 @@ define(function (require) {
             canRemove: {
                 deps: ['isMy', 'isMyDashboard'],
                 get: function (isMy, isMyDashboard) {
-                    return (config.userModel.getRoleForCurrentProject()
+                    return (config.userModel.get('isAdmin')
+                        || config.userModel.getRoleForCurrentProject()
                         === config.projectRolesEnum.project_manager
                         || isMyDashboard
                         || (isMy && isMyDashboard)

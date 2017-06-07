@@ -60,7 +60,8 @@ define(function (require) {
             canRemove: {
                 deps: ['notMyFilter'],
                 get: function (notMyFilter) {
-                    return (config.userModel.getRoleForCurrentProject() ===
+                    return (config.userModel.get('isAdmin') ||
+                    config.userModel.getRoleForCurrentProject() ===
                     config.projectRolesEnum.project_manager ||
                     !notMyFilter);
                 }

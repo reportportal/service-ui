@@ -35,7 +35,7 @@ define(function (require) {
         events: {
             'click [data-js-edit]': 'onClickEdit',
             'click [data-js-remove]': 'onClickRemove',
-            'click': 'onClickItem'
+            click: 'onClickItem'
         },
 
         bindings: {
@@ -67,7 +67,8 @@ define(function (require) {
             canRemove: {
                 deps: ['isMy'],
                 get: function (isMy) {
-                    return (config.userModel.getRoleForCurrentProject() === config.projectRolesEnum.project_manager ||
+                    return (config.userModel.get('isAdmin') ||
+                    config.userModel.getRoleForCurrentProject() === config.projectRolesEnum.project_manager ||
                     isMy);
                 }
             }
