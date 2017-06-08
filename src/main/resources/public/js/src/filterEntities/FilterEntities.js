@@ -19,15 +19,13 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
-    var Backbone = require('backbone');
-    var Components = require('core/components');
     var Util = require('util');
-    var urls = require('dataUrlResolver');
     var Localization = require('localization');
     var Moment = require('moment');
     var Service = require('coreService');
@@ -386,6 +384,7 @@ define(function (require, exports, module) {
         events: {
             'change .rp-input-checkbox': 'onChangeState',
             'change input[data-subtype]': 'onChangeMainType',
+            'change input[data-maintype]': 'onChangeSubType',
             'click [data-js-toggle-all]': 'onClickToggle',
         },
         initialize: function() {
@@ -401,7 +400,7 @@ define(function (require, exports, module) {
             var checked = $(e.currentTarget).is(':checked');
             var subType = $(e.currentTarget).data('subtype');
             var subTypeElements = $('input[data-maintype="'+ subType +'"]', this.$el);
-            subTypeElements.prop('checked', checked).prop('disabled', checked);
+            subTypeElements.prop('checked', checked);
         },
         onClickToggle: function() {
             var allChecked = true;
@@ -444,7 +443,16 @@ define(function (require, exports, module) {
 
             this.onChangeState();
         },
-        onChangeState: function() {
+        onChangeSubType: function () {
+            var self = this;
+            _.each($('.rp-input-checkbox[data-subtype]', this.$el), function (input) {
+                $(input).prop('checked', _.every($('.rp-input-checkbox[data-maintype=' + $(input).data('subtype') + ']', self.$el),
+                function (item) {
+                    return $(item).prop('checked');
+                }));
+            });
+        },
+        onChangeState: function () {
             var nameMas = [];
             var valueMas = [];
             _.each($('.rp-input-checkbox', this.$el), function(checkbox) {
@@ -719,8 +727,6 @@ define(function (require, exports, module) {
         });
 
     };
-
-
 
     return {
         EntityInputModel: EntityInputModel,
