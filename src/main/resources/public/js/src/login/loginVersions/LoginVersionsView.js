@@ -47,7 +47,7 @@ define(function (require) {
                 });
             });
             $.ajax({
-                url: '//rpstatus.herokuapp.com/versions',
+                url: '//status.reportportal.io/versions',
                 dataType: 'jsonp',
                 jsonp: 'jsonp',
                 crossDomain: true,

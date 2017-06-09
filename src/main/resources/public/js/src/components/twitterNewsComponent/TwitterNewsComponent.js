@@ -109,7 +109,7 @@ define(function (require) {
         update: function () {
             var self = this;
             $.ajax({
-                url: '//rpstatus.herokuapp.com/twitter',
+                url: '//status.reportportal.io/twitter',
                 dataType: 'jsonp',
                 jsonp: 'jsonp',
                 crossDomain: true,
