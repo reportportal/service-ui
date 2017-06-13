@@ -14,29 +14,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
-
-    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
 
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
-
-    var Backbone = require('backbone');
-    var Epoxy = require('backbone-epoxy');
     var App = require('app');
     var Util = require('util');
     var CoreService = require('coreService');
-    var SingletonAppModel = require('model/SingletonAppModel');
     var Localization = require('localization');
-    var Markitup = require('markitup');
-    var MarkitupSettings = require('markitupset');
     var MarkdownEditor = require('components/markdown/MarkdownEditor');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
 
     var config = App.getInstance();
-    var appModel = new SingletonAppModel();
 
     var ModalDefectEditor = ModalView.extend({
         template: 'tpl-modal-defect-editor',
@@ -49,17 +40,17 @@ define(function (require, exports, module) {
             'click [data-js-cancel]': 'onClickCancel'
         },
 
-        initialize: function(option) {
+        initialize: function (option) {
             this.items = option.items;
             this.defectTypesCollection = new SingletonDefectTypeCollection();
-            this.defectTypesCollection.ready.done(function(){
+            this.defectTypesCollection.ready.done(function () {
                 this.render();
             }.bind(this));
             this.selectedIssue = null;
             this.inProcess = false;
         },
 
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {
                 item: this.items[0],
                 isMultipleEdit: this.isMultipleEdit(),
@@ -74,47 +65,46 @@ define(function (require, exports, module) {
             this.setupMarkdownEditor();
         },
 
-        isMultipleEdit: function(){
+        isMultipleEdit: function () {
             return this.items.length > 1;
         },
 
         setupAnchors: function () {
-            this.$type = $("[data-js-issue-name]", this.$el);
-            this.$replaceComments = $("[data-js-replace-comment]", this.$el);
+            this.$type = $('[data-js-issue-name]', this.$el);
+            this.$replaceComments = $('[data-js-replace-comment]', this.$el);
         },
 
         onKeySuccess: function () {
             this.updateDefectType();
         },
 
-        getIssueType: function(item){
+        getIssueType: function (item) {
             var data = item.getIssue();
             return data.issue_type;
         },
 
-        getIssueComment: function(item){
+        getIssueComment: function (item) {
             var data = item.getIssue();
             return data.comment ? data.comment : '';
         },
 
-        getDefectType: function(){
+        getDefectType: function () {
             var self = this;
-            return function(item){
+            return function (item) {
                 var issue = self.getIssueType(item),
                     issueType = self.defectTypesCollection.getDefectType(issue);
                 return issueType;
             };
         },
 
-        getSubDefects: function(){
+        getSubDefects: function () {
             var def = {},
-                defectTypes =  this.defectTypesCollection.toJSON();
-            _.each(defectTypes, function(d){
+                defectTypes = this.defectTypesCollection.toJSON();
+            _.each(defectTypes, function (d) {
                 var type = d.typeRef;
-                if(def[type]){
+                if (def[type]) {
                     def[type].push(d);
-                }
-                else {
+                } else {
                     def[type] = [d];
                 }
             });
@@ -136,22 +126,22 @@ define(function (require, exports, module) {
             $('[data-js-issue-title]', this.$el).show();
             $('[data-js-issue-title] i', this.$el).css('background', issueType.color);
         },
-        setupMarkdownEditor: function(){
+        setupMarkdownEditor: function () {
             this.markdownEditor = new MarkdownEditor({
                 value: (this.items.length != 1) ? '' : this.getIssueComment(this.items[0]),
-                placeholder: Localization.dialog.commentForDefect,
+                placeholder: Localization.dialog.commentForDefect
             });
-            $("[data-js-issue-comment]", this.$el).html(this.markdownEditor.$el);
+            $('[data-js-issue-comment]', this.$el).html(this.markdownEditor.$el);
         },
-        onShown: function() {
+        onShown: function () {
             this.markdownEditor.update();
             this.initState = {
                 comment: this.markdownEditor.getValue(),
                 selectedIssue: this.selectedIssue,
-                replaceComments: this.$replaceComments.is(':checked'),
-            }
+                replaceComments: this.$replaceComments.is(':checked')
+            };
         },
-        isChanged: function() {
+        isChanged: function () {
             if (this.initState.comment === this.markdownEditor.getValue() &&
             this.initState.selectedIssue === this.selectedIssue &&
             this.initState.replaceComments === this.$replaceComments.is(':checked')) {
@@ -159,17 +149,17 @@ define(function (require, exports, module) {
             }
             return true;
         },
-        onClickClose: function(e){
+        onClickClose: function (e) {
             config.trackingDispatcher.trackEventNumber(157);
         },
-        onClickCancel: function(e){
+        onClickCancel: function (e) {
             config.trackingDispatcher.trackEventNumber(159);
         },
         updateDefectType: function () {
             if (this.inProcess) {
                 return;
             }
-            if(!this.isChanged()) {
+            if (!this.isChanged()) {
                 this.successClose();
                 return true;
             }
@@ -177,11 +167,11 @@ define(function (require, exports, module) {
             this.inProcess = true;
             var comment = this.markdownEditor.getValue();
             var selectedIssue = this.selectedIssue;
-            var issues = []
+            var issues = [];
             var replaceComments = this.$replaceComments.is(':checked');
             _.forEach(this.items, function (item) {
                 var issue = item.getIssue();
-                if((replaceComments && this.isMultipleEdit()) || (!this.isMultipleEdit())){
+                if ((replaceComments && this.isMultipleEdit()) || (!this.isMultipleEdit())) {
                     config.trackingDispatcher.trackEventNumber(158);
                     issue.comment = comment;
                 }
@@ -192,16 +182,16 @@ define(function (require, exports, module) {
                 });
             }, this);
             var self = this;
-            CoreService.updateDefect({issues: issues})
+            CoreService.updateDefect({ issues: issues })
                 .done(function () {
                     var itemIssue = this.getIssueType(this.items[0]);
                     if (selectedIssue && itemIssue !== selectedIssue) {
                         // config.trackingDispatcher.defectStateChange(itemIssue, selectedIssue);
                     }
-                    Util.ajaxSuccessMessenger("updateDefect");
+                    Util.ajaxSuccessMessenger('updateDefect');
                     _.forEach(self.items, function (item) {
                         var issue = item.getIssue();
-                        if((replaceComments && this.isMultipleEdit()) || (!this.isMultipleEdit())){
+                        if ((replaceComments && this.isMultipleEdit()) || (!this.isMultipleEdit())) {
                             issue.comment = comment;
                         }
                         issue.issue_type = selectedIssue || this.getIssueType(item);
@@ -210,12 +200,12 @@ define(function (require, exports, module) {
                     this.successClose();
                 }.bind(this))
                 .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "updateDefect");
+                    Util.ajaxFailMessenger(error, 'updateDefect');
                 }).always(function () {
-                this.inProcess = false;
-            }.bind(this));
+                    this.inProcess = false;
+                }.bind(this));
         }
     });
 
     return ModalDefectEditor;
-})
+});

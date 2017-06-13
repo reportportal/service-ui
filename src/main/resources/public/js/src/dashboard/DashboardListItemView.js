@@ -35,7 +35,7 @@ define(function (require) {
         events: {
             'click [data-js-edit]': 'onClickEdit',
             'click [data-js-remove]': 'onClickRemove',
-            'click': 'onClickItem'
+            click: 'onClickItem'
         },
 
         bindings: {
@@ -67,7 +67,8 @@ define(function (require) {
             canRemove: {
                 deps: ['isMy'],
                 get: function (isMy) {
-                    return (config.userModel.getRoleForCurrentProject() === config.projectRolesEnum.project_manager ||
+                    return (config.userModel.get('isAdmin') ||
+                    config.userModel.getRoleForCurrentProject() === config.projectRolesEnum.project_manager ||
                     isMy);
                 }
             }
@@ -96,8 +97,7 @@ define(function (require) {
             e.stopPropagation();
             (new ModalConfirm({
                 headerText: Localization.dialogHeader.dashboardDelete,
-                bodyText: Util.replaceTemplate(
-                    this.model.get('isMy') ? Localization.dialog.dashboardDelete : Localization.dialog.dashboardDeleteDanger,
+                bodyText: Util.replaceTemplate(Localization.dialog.dashboardDelete,
                     this.model.get('name')),
                 confirmText: this.model.get('isMy') ? '' : Localization.dialog.dashboardDeleteDangerConfirmText,
                 okButtonDanger: true,
@@ -123,7 +123,7 @@ define(function (require) {
             _.each(this.model.get('id'), function (item, i) {
                 result += id.charCodeAt(i);
             });
-            $('[data-js-description-wrapper]', this.$el).addClass('preview-' + result % 14);
+            $('[data-js-description-wrapper]', this.$el).addClass('preview-' + (result % 14));
         },
 
         onDestroy: function () {

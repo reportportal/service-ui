@@ -1,28 +1,29 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/epam/ReportPortal
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
@@ -34,7 +35,7 @@ define(function(require, exports, module) {
     var MemberService = require('projectMembers/MembersService');
     var MembersCollection = require('projectMembers/MembersCollection');
     var ModalAddUser = require('modals/modalAddUser');
-    var ModalInviteUser = require('modals/modalInviteUser');
+    var ModalInviteMember = require('modals/modalInviteMember');
     var ModalPermissionsMap = require('modals/modalPermissionsMap');
 
     var config = App.getInstance();
@@ -51,13 +52,13 @@ define(function(require, exports, module) {
         },
 
         computeds: {
-            getPlaceHolder: function(){
+            getPlaceHolder: function () {
                 return Localization.members.searchName;
             },
-            showAddMemberBtn: function(){
+            showAddMemberBtn: function () {
                 return this.isGrandAdmin;
             },
-            canInviteUser: function(){
+            canInviteUser: function () {
                 return config.userModel.get('isAdmin') || config.userModel.hasPermissions();
             }
         },
@@ -67,12 +68,12 @@ define(function(require, exports, module) {
             this.model = new Backbone.Model({
                 search: '',
                 empty: false,
-                notFound: false,
+                notFound: false
             });
             this.renderViews = [];
             this.appModel = new SingletonAppModel();
-            if(options.project){
-                this.appModel.set(options.project); //need for members on admin page
+            if (options.project) {
+                this.appModel.set(options.project); // need for members on admin page
             }
 
             this.collection = new MembersCollection();
@@ -108,9 +109,9 @@ define(function(require, exports, module) {
             this.listenTo(this.paging, 'page', this.updateMembers);
             this.listenTo(this.paging, 'count', this.updateMembers);
 
-            this.paging.ready.done(function(){
-                if(this.paging.urlModel.get('filter.cnt.name')) {
-                    this.model.set({search: this.paging.urlModel.get('filter.cnt.name')});
+            this.paging.ready.done(function () {
+                if (this.paging.urlModel.get('filter.cnt.name')) {
+                    this.model.set({ search: this.paging.urlModel.get('filter.cnt.name') });
                     this.$searchFilter.val(this.model.get('search'));
                 }
                 this.listenTo(this.model, 'change:search', this.onChangeModelSearch);
@@ -119,30 +120,30 @@ define(function(require, exports, module) {
             return this;
         },
 
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$membersList = $('[data-js-members-list]', this.$el);
             this.$pagingBlock = $('[data-js-members-paginate]', this.$el);
             this.$searchFilter = $('[data-js-members-search]', this.$el);
         },
 
-        onRemoveMember: function(model) {
+        onRemoveMember: function (model) {
             this.trigger('remove:member', model);
             this.updateMembers();
         },
-        onInviteMember: function() {
+        onInviteMember: function () {
             this.trigger('invite:member');
             this.updateMembers();
         },
 
-        updateMembers: function(){
+        updateMembers: function () {
             this.paging.render();
             this.loadMembers();
         },
 
-        loadMembers: function(){
+        loadMembers: function () {
             MemberService.getMembers(this.appModel.get('projectId'), this.getSearchQuery())
                 .done(function (data) {
-                    if(data.page.totalPages < data.page.number && data.page.totalPages != 0){
+                    if (data.page.totalPages < data.page.number && data.page.totalPages !== 0) {
                         this.paging.trigger('page', data.page.totalPages);
                         return;
                     }
@@ -152,93 +153,92 @@ define(function(require, exports, module) {
                 }.bind(this))
                 .fail(function (error) {
                     this.collection.parse([]);
-                    Util.ajaxFailMessenger(error, "loadMembers");
+                    Util.ajaxFailMessenger(error, 'loadMembers');
                 }.bind(this))
-                .always(function() {
-                    $('#filter-page',this.$el).removeClass('load');
+                .always(function () {
+                    $('#filter-page', this.$el).removeClass('load');
                 }.bind(this));
         },
 
-        onChangeModelSearch: function(){
+        onChangeModelSearch: function () {
             this.paging.trigger('page', 1);
         },
 
         onChangeFilterName: function (e, data) {
             if (data.valid) {
-                if(data.value){
+                if (data.value) {
                     config.trackingDispatcher.trackEventNumber(430);
                 }
-                this.model.set({search: data.value});
-                this.paging.urlModel.set({'filter.cnt.name': data.value});
+                this.model.set({ search: data.value });
+                this.paging.urlModel.set({ 'filter.cnt.name': data.value });
             }
         },
 
-        getSearchQuery: function(){
+        getSearchQuery: function () {
             return {
                 search: encodeURIComponent(this.model.get('search')),
                 page: this.paging.model.get('number'),
                 size: this.paging.model.get('size')
-            }
+            };
         },
 
-        renderEmptyMembers: function(){
+        renderEmptyMembers: function () {
             this.clearMembers();
             this.$membersList.append(Util.templates(this.emptyMembersTpl, {}));
         },
 
-        renderMembersList: function() {
+        renderMembersList: function () {
             this.clearMembers();
-            if(_.isEmpty(this.collection.models)){
+            if (_.isEmpty(this.collection.models)) {
                 this.renderEmptyMembers();
                 return;
             }
-            _.each(this.collection.models, function(model) {
-                var memberItem = new MembersItemView({model: model, searchString: this.model.get('search'), isAdminContext: this.isGrandAdmin});
+            _.each(this.collection.models, function (model) {
+                var memberItem = new MembersItemView({ model: model, searchString: this.model.get('search'), isAdminContext: this.isGrandAdmin });
                 this.$membersList.append(memberItem.$el);
                 this.renderViews.push(memberItem);
             }, this);
         },
 
-        clearMembers: function(){
-            _.each(this.renderViews, function(view) {
+        clearMembers: function () {
+            _.each(this.renderViews, function (view) {
                 view.destroy();
             });
             this.$membersList.html('');
             this.renderViews = [];
         },
 
-        showInviteUser: function(e){
+        showInviteUser: function (e) {
+            var modal;
             config.trackingDispatcher.trackEventNumber(432);
             e.preventDefault();
-            var modal = new ModalInviteUser({});
-            this.listenToOnce(modal, 'add:user', this.onInviteMember);
+            modal = new ModalInviteMember({});
+            this.listenToOnce(modal, 'invite:member', this.onInviteMember);
             modal.show();
         },
 
-        showAddUser: function(e){
+        showAddUser: function (e) {
+            var modal;
             e.preventDefault();
-            var modal = new ModalAddUser({});
+            modal = new ModalAddUser({});
             this.listenToOnce(modal, 'add:user', this.updateMembers);
             modal.show();
         },
 
-        showPermissionsModal: function(e){
+        showPermissionsModal: function (e) {
+            var modal;
             config.trackingDispatcher.trackEventNumber(431);
             e.preventDefault();
-            var modal = new ModalPermissionsMap({});
+            modal = new ModalPermissionsMap({});
             modal.show();
         },
 
-        destroy: function(){
+        onDestroy: function () {
             this.clearMembers();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
             this.remove();
             delete this;
         }
     });
 
     return MembersTableView;
-
 });

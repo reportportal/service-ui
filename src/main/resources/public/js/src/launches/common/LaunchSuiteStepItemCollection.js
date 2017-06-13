@@ -55,6 +55,25 @@ define(function (require) {
             this.noChildFilter = false;
             this.context = options.context;
         },
+        checkForDifference: function (launchModel, parentModel, filterData) {
+            if (((!launchModel && this.launchModel) || (launchModel && !this.launchModel))
+                || ((!parentModel && this.parentModel) || (parentModel && !this.parentModel))) {
+                return true;
+            }
+            if ((launchModel && launchModel.id !== this.launchModel.id)
+                || (parentModel && parentModel.id !== this.parentModel.id)) {
+                return true;
+            }
+            if (!this.filterModel) {
+                return true;
+            }
+            !filterData.selection_parameters && (filterData.selection_parameters = '');
+            if (filterData.entities.replace(/ /g, '') !== this.filterModel.get('entities').replace(/ /g, '')
+                || filterData.selection_parameters.replace(/ /g, '') !== this.filterModel.get('selection_parameters').replace(/ /g, '')) {
+                return true;
+            }
+            return false;
+        },
         update: function (launchModel, parentModel, optionsURL, crumbs) {
             var async = $.Deferred();
             var optionsURLParam = optionsURL || '';
@@ -62,14 +81,17 @@ define(function (require) {
             var filterData;
             var activeFilter;
             var launchFilters;
+            var difference;
 
             this.crumbs = crumbs;
             this.pagingPage = 1;
             this.pagingTotalPages = 1;
+
+            filterData = this.calculateFilterOptions(optionsURLParam); // set this.logOptions
+            difference = this.checkForDifference(launchModel, parentModel, filterData);
             this.launchModel = launchModel;
             this.parentModel = parentModel;
 
-            filterData = this.calculateFilterOptions(optionsURLParam); // set this.logOptions
             if (!launchModel && !parentModel) {
                 launchFilters = new SingletonLaunchFilterCollection();
                 launchFilters.ready.done(function () {
@@ -79,10 +101,10 @@ define(function (require) {
                     }
                     self.setSelfModels(activeFilter)
                         .done(function () {
-                            async.resolve(activeFilter);
+                            async.resolve();
                         })
                         .fail(function () {
-                            async.reject(activeFilter);
+                            async.reject();
                         });
                 });
             } else {
@@ -92,16 +114,16 @@ define(function (require) {
                 if (!filterData.selection_parameters) {
                     activeFilter.set('selection_parameters', '{"is_asc": true, "sorting_column": "start_time"}');
                 }
-                if (parentModel && !parentModel.get('has_childs')) {
-                    self.reset([{ type: 'LOG' }]);
-                    async.resolve(activeFilter);
+                if (!difference) {
+                    this.afterLoadActions();
+                    async.resolve();
                 } else {
                     self.setSelfModels(activeFilter)
                         .done(function () {
-                            async.resolve(activeFilter);
+                            async.resolve();
                         })
                         .fail(function () {
-                            async.reject(activeFilter);
+                            async.reject();
                         });
                 }
             }
@@ -119,6 +141,17 @@ define(function (require) {
             this.logOptions.history && options.push('log.history=' + this.logOptions.history);
 
             return mainHash + '?' + options.join('&');
+        },
+        getPathByPredefinedFilter: function (value) {
+            var options = this.getParamsFilter();
+            var mainHash = window.location.hash.split('?')[0];
+            value && options.push('predefined_filter=' + value);
+            return mainHash + '?' + options.join('&');
+        },
+        setPredefinedFilter: function (filterName) {
+            this.predefinedFilter = filterName;
+            this.trigger('change:predefined_filter', filterName);
+            this.load();
         },
         setPaging: function (curPage, size) {
             this.pagingPage = curPage;
@@ -184,8 +217,8 @@ define(function (require) {
                     } else if (keySeparate[1] === 'sort') {
                         valueSeparate = optionSeparate[1].split('%2C');
                         answer.selection_parameters = JSON.stringify({
-                            sorting_column: valueSeparate[0],
-                            is_asc: (valueSeparate[1] === 'ASC')
+                            is_asc: (valueSeparate[1] === 'ASC'),
+                            sorting_column: valueSeparate[0]
                         });
                     }
                 }
@@ -212,6 +245,11 @@ define(function (require) {
                 this.load();
             }
             this.activateChangeParamsTrigger();
+        },
+        setPartUrl: function (partUrl) {
+            _.each(this.models, function (model) {
+                model.set({ filter_url: partUrl });
+            });
         },
         getInfoByCollection: function () {
             var async = $.Deferred();
@@ -295,9 +333,13 @@ define(function (require) {
         activateChangeParamsTrigger: function () {
             var params;
             var logParams;
-            if (!this.historyOptions.item && !this.logOptions.item) {
+            var paramsUrl = '';
+            if (this.logOptions.item) {
+                return this.getParamsFilter().join('&');
+            } else if (!this.historyOptions.item) {
                 if (!this.launchModel) {
-                    this.trigger('change:params', this.getParamsFilter(true).join('&'));
+                    paramsUrl = this.getParamsFilter(true).join('&');
+                    this.trigger('change:params', paramsUrl);
                 }
                 params = this.getParamsFilter();
                 if (this.launchModel) {
@@ -306,9 +348,11 @@ define(function (require) {
                         logParams.push('log.' + key + '=' + value);
                     });
                     logParams = logParams.concat(params);
-                    this.trigger('change:params', logParams.join('&'));
+                    paramsUrl = logParams.join('&');
+                    this.trigger('change:params', paramsUrl);
                 }
             }
+            return paramsUrl;
         },
         load: function (dynamicPge) {  // double load page if content = []
             var self = this;
@@ -325,6 +369,7 @@ define(function (require) {
                     !this.noChildFilter && params.push('filter.size.path=0');
                 }
             }
+            this.predefinedFilter && params.push('predefined_filter=' + this.predefinedFilter);
             if (params && params.length) {
                 path += '?' + params.join('&');
             }
@@ -377,28 +422,12 @@ define(function (require) {
         },
         parse: function (response) {
             var self = this;
-            var filterOptions = this.filterModel.getOptions();
+            var filterUrl = this.getParamsFilter().join('&');
             _.each(response.content, function (modelData) {
                 var modelItemData = modelData;
-                var urlPart;
-
+                modelItemData.filter_url = filterUrl;
                 modelItemData.issue && (modelItemData.issue = JSON.stringify(modelItemData.issue));
                 modelItemData.tags && (modelItemData.tags = JSON.stringify(modelItemData.tags));
-
-                if (self.context !== 'userdebug') {
-                    urlPart = self.crumbs.collection.models[self.crumbs.collection.length - 1].get('url').split('#' + (new SingletonAppModel()).get('projectId') + '/launches/')[1];
-                    modelItemData.urlMiddlePart =
-                        urlPart
-                        + ((~urlPart.indexOf('?')) ? '&' : '?')
-                        + 'page.page=' + self.pagingData.number
-                        + '&page.size=' + self.pagingData.size;
-                    _.each(filterOptions, function (item) {
-                        if (!~modelItemData.urlMiddlePart.indexOf(item)) {
-                            modelItemData.urlMiddlePart += '&' + item;
-                        }
-                        modelItemData.urlMiddlePart = modelItemData.urlMiddlePart.replace('|', encodeURIComponent('|'));
-                    });
-                }
 
                 if (self.launchModel) {
                     modelItemData.parent_launch_owner = self.launchModel.get('owner');
@@ -426,81 +455,6 @@ define(function (require) {
             } else {
                 this.reset(response.content);
             }
-            // this.reset([{
-            //         description: "dashboard_tests",
-            //         end_time: 1472205024785,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "IN_PROGRESS",
-            //         owner: 'Алешка',
-            //     },
-            //     {
-            //         description: "dashboard_tests",
-            //         end_time: null,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "IN_PROGRESS",
-            //         tags: ['вот_это_тег', 'test-teg', 'second-test-teg14'],
-            //     },
-            //     {
-            //         description: "dashboard_tests",
-            //         end_time: 1472205024785,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "SKIPPED",
-            //         owner: 'Superman',
-            //         tags: ['trerty', 'mifril', 'green_stone'],
-            //     },
-            //     {
-            //         description: "dashboard_tests",
-            //         end_time: null,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "FAILED",
-            //     },
-            //     {
-            //         description: "dashboard_tests",
-            //         end_time: 1472205024785,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "STOPPED",
-            //     },
-            //     {
-            //         description: "dashboard_tests",
-            //         end_time: 1472205024785,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "INTERRUPTED",
-            //     },
-            //     {
-            //         description: "dashboard_tests",
-            //         end_time: 1472205024785,
-            //         has_childs: true,
-            //         launchId: "57c00fc79194be0001739df5",
-            //         name: "dashboard_tests",
-            //         path_names: {},
-            //         start_time: 1472205000619,
-            //         status: "FAILED",
-            //     }
-            // ])
         }
     });
 

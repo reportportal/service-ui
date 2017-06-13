@@ -2,7 +2,6 @@
 // Generated on Fri Jul 03 2015 10:13:11 GMT+0300 (FLE Daylight Time)
 
 module.exports = function (config) {
-
     config.set({
 
         // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -16,19 +15,19 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
-            {pattern: 'js/lib/**/*.js', included: false},
-            {pattern: 'js/src/**/*.js', included: false},
-            {pattern: 'js/tests/spec/**', included: false},
-            {pattern: 'js/tests/mocks/**', included: false},
-            {pattern: 'js/tests/lib/**', included: false},
-            {pattern: 'compiled/templates/*.js', included: false},
+            { pattern: 'js/lib/**/*.js', included: false },
+            { pattern: 'js/src/**/*.js', included: false },
+            { pattern: 'js/tests/spec/**', included: false },
+            { pattern: 'js/tests/mocks/**', included: false },
+            { pattern: 'js/tests/lib/**', included: false },
+            { pattern: 'compiled/templates/*.js', included: false },
             'js/tests/test-main.js'
         ],
 
 
         // list of files to exclude
         exclude: [
-            'js/src/config.js',
+            'js/src/config.js'
             // 'js/src/application.js'
         ],
 
@@ -52,9 +51,9 @@ module.exports = function (config) {
         coverageReporter: {
             reporters: [
                 // generates ./coverage/lcov.info
-                {type:'lcovonly', subdir: '.'},
+                { type: 'lcovonly', subdir: '.' },
                 // generates ./coverage/coverage-final.json
-                {type:'json', subdir: '.'},
+                { type: 'json', subdir: '.' },
             ]
         },
 
@@ -89,7 +88,7 @@ module.exports = function (config) {
             captureConsole: false
         },
 
-        proxies:  {
+        proxies: {
             '/img/popup/overall_statistics_panel.png': 'img/popup/overall_statistics_panel.png',
             '/img/popup/filter_results.png': 'img/popup/filter_results.png',
             '/img/popup/activity_stream.png': 'img/popup/activity_stream.png',
@@ -104,5 +103,5 @@ module.exports = function (config) {
             '/img/popup/test-cases_growth_trend_chart.png': 'img/popup/test-cases_growth_trend_chart.png',
             '/img/popup/launch_statistics_pie.png': 'img/popup/launch_statistics_pie.png'
         }
-    })
-}
+    });
+};

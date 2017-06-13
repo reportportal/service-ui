@@ -1,0 +1,156 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.swagger-section {
+
+  .access { float: right; }
+
+  .auth { float: right; }
+
+  .api-ic {
+    height: 18px;
+    vertical-align: middle;
+    display: inline-block;
+    background: url(../../swagger-ui/images/explorer_icons.png) no-repeat;
+  }
+
+  .api-ic .api_information_panel {
+    position: relative;
+    margin-top: 20px;
+    margin-left: -5px;
+    background: #FFF;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: none;
+    font-size: 13px;
+    max-width: 300px;
+    line-height: 30px;
+    color: black;
+    padding: 5px;
+  }
+
+  .api-ic .api_information_panel p .api-msg-enabled { color: green; }
+  .api-ic .api_information_panel p .api-msg-disabled { color: red; }
+
+  .api-ic:hover .api_information_panel {
+    position: absolute;
+    display: block;
+  }
+
+  .ic-info {
+    background-position: 0 0;
+    width: 18px;
+    margin-top: -6px;
+    margin-left: 4px;
+  }
+
+  .ic-warning {
+    background-position: -60px 0;
+    width: 18px;
+    margin-top: -6px;
+    margin-left: 4px;
+  }
+
+  .ic-error {
+    background-position: -30px 0;
+    width: 18px;
+    margin-top: -6px;
+    margin-left: 4px;
+  }
+
+  .ic-off {
+    background-position: -90px 0;
+    width: 58px;
+    margin-top: -4px;
+    cursor: pointer;
+  }
+
+  .ic-on {
+    background-position: -160px 0;
+    width: 58px;
+    margin-top: -4px;
+    cursor: pointer;
+  }
+
+  #input_baseUrl { width: 400px; }
+
+  #api_selector {
+    display: block;
+    clear: none;
+    float: right;
+  }
+
+  #api_selector .input {
+    display: inline-block;
+    clear: none;
+    margin: 0 10px 0 0;
+  }
+
+  #api_selector input {
+    font-size: 0.9em;
+    padding: 3px;
+    margin: 0;
+  }
+
+  #input_apiKey { width: 200px; }
+
+  #explore, #auth_container .authorize__btn {
+    display: block;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 6px 8px;
+    font-size: 0.9em;
+    color: white;
+    background-color: #547f00;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -o-border-radius: 4px;
+    -ms-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    border-radius: 4px;
+
+    &:hover { background-color: #547f00; }
+  }
+
+  #content_message {
+    margin: 10px 15px;
+    font-style: italic;
+    color: #999999;
+  }
+
+  .swagger-collapse:before {
+    content: "-";
+  }
+
+  .swagger-expand:before {
+    content: "+";
+  }
+
+  .error {
+    outline-color: #cc0000;
+    background-color: #f2dede;
+  }
+  .response_body {
+    img {
+      height: 100px;
+    }
+  }
+}

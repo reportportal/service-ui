@@ -30,7 +30,6 @@ define(function (require, exports, module) {
     var App = require('app');
     var Localization = require('localization');
     var Service = require('coreService');
-    var Helpers = require('helpers');
     var AdminService = require('adminService');
     var WidgetModel = require('newWidgets/WidgetModel');
     var WidgetService = require('newWidgets/WidgetService');

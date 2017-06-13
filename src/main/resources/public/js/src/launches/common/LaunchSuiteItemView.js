@@ -111,11 +111,14 @@ define(function (require) {
                     return this.getExecution(statistics, 'total');
                 }
             },
-            executionTotalLink: function () {
-                if (this.hasChild(this.model)) {
-                    return this.allCasesUrl('total');
+            executionTotalLink: {
+                deps: ['url', 'has_childs'],
+                get: function (url, hasChilds) {
+                    if (hasChilds) {
+                        return this.allCasesUrl('total');
+                    }
+                    return undefined;
                 }
-                return undefined;
             },
             executionPassed: {
                 deps: ['statistics'],
@@ -123,11 +126,14 @@ define(function (require) {
                     return this.getExecution(statistics, 'passed');
                 }
             },
-            executionPassedLink: function () {
-                if (this.hasChild(this.model)) {
-                    return this.allCasesUrl('passed');
+            executionPassedLink: {
+                deps: ['url', 'has_childs'],
+                get: function (url, hasChilds) {
+                    if (hasChilds) {
+                        return this.allCasesUrl('passed');
+                    }
+                    return undefined;
                 }
-                return undefined;
             },
             executionSkipped: {
                 deps: ['statistics'],
@@ -135,11 +141,14 @@ define(function (require) {
                     return this.getExecution(statistics, 'skipped');
                 }
             },
-            executionSkippedLink: function () {
-                if (this.hasChild(this.model)) {
-                    return this.allCasesUrl('skipped');
+            executionSkippedLink: {
+                deps: ['url', 'has_childs'],
+                get: function (url, hasChilds) {
+                    if (hasChilds) {
+                        return this.allCasesUrl('skipped');
+                    }
+                    return undefined;
                 }
-                return undefined;
             },
             executionFailed: {
                 deps: ['statistics'],
@@ -147,11 +156,14 @@ define(function (require) {
                     return this.getExecution(statistics, 'failed');
                 }
             },
-            executionFailedLink: function () {
-                if (this.hasChild(this.model)) {
-                    return this.allCasesUrl('failed');
+            executionFailedLink: {
+                deps: ['url', 'has_childs'],
+                get: function (url, hasChilds) {
+                    if (hasChilds) {
+                        return this.allCasesUrl('failed');
+                    }
+                    return undefined;
                 }
-                return undefined;
             },
             defectToInvestigate: {
                 deps: ['statistics'],
@@ -163,9 +175,6 @@ define(function (require) {
                     return '';
                 }
             }
-        },
-        hasChild: function (item) {
-            return item.attributes.has_childs;
         },
         getExecution: function (statistics, executionType) {
             if (statistics.executions && statistics.executions[executionType] &&
@@ -190,8 +199,7 @@ define(function (require) {
             default:
                 break;
             }
-            return url + '|' + decodeURIComponent('filter.eq.has_childs=false' + statusFilter) + '?'
-                + '&filter.eq.has_childs=false' + statusFilter;
+            return url + '?filter.eq.has_childs=false' + statusFilter;
         },
         initialize: function (options) {
             var defectCollection = new SingletonDefectTypeCollection();
@@ -203,11 +211,13 @@ define(function (require) {
             this.applyBindings();
 
             defectCollection.ready.done(function () {
+                var investigateFilter = '';
                 if (self.getBinding('defectToInvestigate')) {
                     toInvest = defectCollection.findWhere({ typeRef: 'TO_INVESTIGATE' });
                     if (toInvest) {
+                        investigateFilter = 'filter.eq.has_childs=false&filter.in.issue$issue_type=' + toInvest.get('locator');
                         $('[data-js-statistics-to-investigate]', self.$el).attr({
-                            href: self.model.get('url') + '?filter.eq.has_childs=false&filter.in.issue$issue_type=' + toInvest.get('locator')
+                            href: self.model.get('url') + '?' + investigateFilter
                         });
                     }
                 }

@@ -1,32 +1,31 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
     var Backbone = require('backbone');
     var Context = require('context');
     var App = require('app');
-    //var LandingController = require('landing/LandingController');
     var TestRoute = require('TestRoute');
     var UserModel = require('model/UserModel');
 
@@ -44,26 +43,25 @@ define(function (require, exports, module) {
                 var async = $.Deferred();
                 self.user.isAuth()
                     .done(function () {
-                        //self.landingController.hideLanding();
+                        // self.landingController.hideLanding();
                         async.resolve();
-                        self.user.set({lastInsideHash: window.location.hash});
+                        self.user.set({ lastInsideHash: window.location.hash });
                     })
                     .fail(function () {
-                        if(window.location.hash.indexOf('registration') >= 0) {
-                            self.navigate(window.location.hash, {trigger: true});
-                        }
-                        else {
-                            self.user.set({lastInsideHash: window.location.hash});
-                            self.navigate('login', {trigger: true});
+                        if (window.location.hash.indexOf('registration') >= 0) {
+                            self.navigate(window.location.hash, { trigger: true });
+                        } else {
+                            self.user.set({ lastInsideHash: window.location.hash });
+                            self.navigate('login', { trigger: true });
                         }
                     });
                 return async.promise();
             });
-            testRoute.addTest('outsidePage', function() {
+            testRoute.addTest('outsidePage', function () {
                 var async = $.Deferred();
                 self.user.isAuth()
                     .done(function () {
-                        self.navigate(self.user.get('lastInsideHash'), {trigger: true});
+                        self.navigate(self.user.get('lastInsideHash'), { trigger: true });
                     })
                     .fail(function () {
                         async.resolve();
@@ -71,7 +69,7 @@ define(function (require, exports, module) {
                 return async.promise();
             });
 
-            //this.landingController = new LandingController();
+            // this.landingController = new LandingController();
 
             this.user.ready.done(function () {
                 self.listenTo(self.user, 'change:auth', self.onChangeUserAuth.bind(self));
@@ -85,17 +83,16 @@ define(function (require, exports, module) {
                     lowerThan: 'transform',
                     languagePath: ''
                 });
-                this.navigate(model.get('lastInsideHash'), {trigger: true});
+                this.navigate(model.get('lastInsideHash'), { trigger: true });
             } else {
-                this.navigate('', {trigger: true});
+                this.navigate('', { trigger: true });
                 Context.logout();
             }
         },
         routes: {
             '': 'openLogin',
-            'login': 'openLogin',
-            // 'documentation': 'openDocumentation',
-            // 'documentation/:id': 'openDocumentation',
+            login: 'openLogin',
+            api: 'openApi',
             'user-profile': 'userProfile',
             'registration?*queryString': 'registerUser',
 
@@ -103,7 +100,7 @@ define(function (require, exports, module) {
             'administrate/project-details/:id': 'openAdminProjectDetails',
             'administrate/project-details/:id/:action': 'openAdminProjectDetails',
             'administrate/project-details/:id/:action/:userAction': 'openAdminProjectDetails',
-            'administrate': 'openAdminPage',
+            administrate: 'openAdminPage',
             'administrate/:page': 'openAdminPage',
             'administrate/:page?*queryString': 'openAdminPage',
             'administrate/:page/:action': 'openAdminPageAction',
@@ -123,7 +120,7 @@ define(function (require, exports, module) {
             ':project/dashboard/:id?*queryString': 'openDashboard',
 
             ':project(/)': 'openDashboard',
-            '*invalidRoute': "show404Page"
+            '*invalidRoute': 'show404Page'
         },
         show404Page: function (route) {
             Context.openInvalid(route);
@@ -142,6 +139,9 @@ define(function (require, exports, module) {
         }),
         openFilters: testRoute.checkTest('insidePage', function (project, queryString) {
             Context.openRouted(project, 'filters', null, queryString);
+        }),
+        openApi: testRoute.checkTest('insidePage', function () {
+            Context.openRouted(config.project.projectId, 'api', null, null);
         }),
         userProfile: testRoute.checkTest('insidePage', function () {
             Context.openRouted(config.project.projectId, 'user-profile', null, null);
@@ -175,8 +175,8 @@ define(function (require, exports, module) {
             Context.openAdmin(page, id, action, query);
         }),
         openAdminProjectDetails: testRoute.checkTest('insidePage', function (id, action, queryString) {
-            Context.openAdmin("project-details", id, action, queryString);
-        }),
+            Context.openAdmin('project-details', id, action, queryString);
+        })
     });
 
     return {

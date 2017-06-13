@@ -1,0 +1,85 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/epam/ReportPortal
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.api-body {
+  .buttons-container {
+    position: relative;
+    margin: 30px 15px 20px 15px;
+    overflow: hidden;
+  }
+  .status-text {
+    display: inline-block;
+    color: $COLOR--gray-47;
+    font-family: $OpenSansSemibold;
+    font-size: 14px;
+    line-height: 28px;
+  }
+  .type-buttons {
+    float: left;
+    width: 216px;
+    margin-right: 30px;
+    label {
+      display: block;
+      float: left;
+      width: 108px;
+      height: 30px;
+      font-weight: normal;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin: 0;
+      input {
+        position: absolute;
+        opacity: 0;
+        &:checked + span {
+          background: $COLOR--gray-91;
+          color: $COLOR--charcoal-grey;
+          border: 1px solid $COLOR--gray-91;
+        }
+      }
+      span {
+        display: inline-block;
+        border: 1px solid $COLOR--gray-80;
+        width: 100%;
+        height: 100%;
+        line-height: 28px;
+        text-align: center;
+        font-family: $OpenSansSemibold;
+        font-size: 13px;
+        color: $COLOR--gray-47
+      }
+    }
+  }
+
+  iframe {
+    width: 100%;
+  }
+  &.load {
+    .preloader {
+      display: block;
+    }
+    iframe {
+      display: none;
+    }
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-bottom: 40px;
+  }
+}

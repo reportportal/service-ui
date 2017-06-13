@@ -24,15 +24,13 @@ define(function (require) {
 
     var $ = require('jquery');
     var _ = require('underscore');
-    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
-    var Helpers = require('helpers');
     var DropDownComponent = require('components/DropDownComponent');
-
     var config = App.getInstance();
+    var BtsFieldsCommonView = require('bts/BtsFieldsCommonView');
 
-    var FieldsView = Epoxy.View.extend({
+    var FieldsView = BtsFieldsCommonView.extend({
 
         fieldsTpl: 'tpl-dynamic-fields',
 
@@ -62,7 +60,7 @@ define(function (require) {
         },
 
         setupMultiSelect: function (fields) {
-            Helpers.applyTypeForBtsFields(fields, this.$el);
+            this.applyTypeForBtsFields(fields, this.$el);
         },
 
         setupDropdowns: function (fields) {

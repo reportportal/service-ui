@@ -1,6 +1,3 @@
-
-
-
 var allTestFiles = [];
 var TEST_REGEXP = /\/spec\//i;
 
@@ -27,22 +24,18 @@ require.config({
 
         app: 'core/app-config',
         jquery: '../lib/jquery-latest',
-        //jqueryUI: '../lib/old-jquery-ui',
-        'jqueryUI': '../lib/jquery-ui',
         'jquery-ui': '../lib/jQuery-ui',
-        'jaddons': '../lib/jquery-addons',
+        jaddons: '../lib/jquery-addons',
         underscore: '../lib/lodash.min',
-        backbone: '../lib/backbone-min-my',
+        backbone: '../lib/backbone',
         'backbone-epoxy': '../lib/backbone-epoxy',
         util: 'core/util',
-        'baron': '../lib/baron',
+        'baron': '../lib/baron-scroll',
         'TestRoute': 'router/TestRoute',
         'landingPage': 'landing/LandingPage',
         cookie: '../lib/jquery.cookie',
         nicescroll: '../lib/jquery.nicescroll',
         bootstrap: '../lib/bootstrap.min',
-        bootswitch: '../lib/bootstrap-switch.min',
-        base64: '../lib/base64',
         nprogress: '../lib/nprogress',
         localization: 'localizations/default',
         moment: '../lib/moment.2.10.2',
@@ -52,60 +45,43 @@ require.config({
         favorites: 'favorites',
         //register: 'register/register',
         //components: 'core/components',
-        lazyload: '../lib/jquery.lazyload.min',
         daterangepicker: '../lib/daterangepicker',
-        'readmore-js': '../lib/readmore',
         select2: '../lib/select2.custom',
-        //launch: 'launch/launch-navigation',
         //launchgrid: 'launch/launch-grid',
         //launchCrumbs: 'launch/launch-crumbs',
         defectEditor: 'defect/defect-editor',
-        log: 'log/logs',
         member: 'member/member',
         memberService: 'member/service',
         launchEditor: 'launch/launch-editor',
         stickyHeader: 'core/sticky-header',
-        'launchCrumbs': 'launch/launch-crumbs',
+        launchCrumbs: 'launch/launch-crumbs',
         log: 'log/logs',
-        'DemoDataSettingsView': 'project/DemoDataSettingsView',
+        DemoDataSettingsView: 'project/DemoDataSettingsView',
 
         dataUrlResolver: 'core/data-url-resolver',
-        'projectinfo': 'project/projectinfo',
+        projectinfo: 'project/projectinfo',
         validators: 'core/validators',
         validate: '../lib/jquery.validate',
 
         filtersPanel: 'filter/filters-panel',
         filtersResolver: 'filter/filters-resolver',
         profile: 'login/user_profile',
-        ace: '../lib/ace/ace.custom',
-        aceDark: '../lib/ace/theme-dark',
-        'mode-properties': '../lib/ace/mode-properties',
 
-        "colorpicker": "../lib/colorpicker/bootstrap-colorpicker",
-        "colorpickerConfig": "../lib/colorpicker/bootstrap-colorpicker-cfg-custom",
-
-        'lunr': '../lib/lunr',
+        colorpicker: '../lib/colorpicker/bootstrap-colorpicker',
+        colorpickerConfig: '../lib/colorpicker/bootstrap-colorpicker-cfg-custom',
 
         callService: 'core/call-service',
         coreService: 'core/core-service',
         storageService: 'core/storage-service',
-        widgetWizard: 'wizard/widget',
-        widgets: 'widget/widgets',
         //dashboard: 'dashboard/dashboard-view',
         'fullscreen': '../lib/jquery.fullscreen',
-        'isLoading': '../lib/jquery.isLoading',
-        'equalHeightRows': '../lib/grids',
-        'popup': '../lib/jquery.magnific-popup',
         'highlight': '../lib/highlight.pack',
         'gridstack': '../lib/gridstack/gridstack.custom',
         'gridstackUi': '../lib/gridstack/gridstack.jQueryUI',
-        helpers: 'core/helpers',
 
         d3: '../lib/d3/d3.v3.min',
         nvd3: '../lib/nvd3/nv.d3.custom',
         d3Tip: '../lib/d3/d3.tip.custom',
-        elasticColumns: '../lib/elastic-columns.min',
-        'slick': '../lib/slick',
         'landingMain': 'landing/main',
         'landingUI': 'landing/ui',
         'landingDocs': 'landing/documentation',
@@ -116,50 +92,37 @@ require.config({
 
         adminService: 'admin/service',
 
-        'textile': '../lib/textile',
-        'markitup': '../lib/jquery.markitup.custom',
-        'markitupset': '../lib/jquery.markitup.textile',
         'stickyHeader': 'core/sticky-header',
         'cacheService': 'core/cache-service',
         'scrollable': 'core/scrollable-view',
-        "text" : "../lib/text",
 
-        'SwipeGallery': '../lib/SwipeGallery',
-        'Hammer': '../lib/hammer',
-        'spectrum': '../lib/spectrum/spectrum',
-        'simplemde': '../lib/markdown/simplemde.min',
+        SwipeGallery: '../lib/SwipeGallery',
+        Hammer: '../lib/hammer',
+        spectrum: '../lib/spectrum/spectrum',
+        simplemde: '../lib/markdown/simplemde.min',
 
         fakeData: '../tests/mocks/data',
         adminFakeData: '../tests/mocks/adminData',
-        jasminejQuery: '../tests/lib/jasmine-jquery.2.0.5',
+        jasminejQuery: '../tests/lib/jasmine-jquery.2.0.5'
 
     },
     shim: {
-        'jquery': {
+        jquery: {
             exports: '$'
         },
         'jasminejQuery': {exports: 'jasminejQuery', deps : ["jquery"] },
-        'jqueryUI': ['jquery'],
+
         'jquery-ui': ['jquery'],
         'bootstrap': ['jquery'],
-        'equalHeightRows':  ['jquery'],
-        'bootswitch': ['jquery', 'bootstrap'],
-        'base64': {exports: 'Base64'},
         'cookie': ['jquery'],
-        'isLoading': ['jquery'],
-        'lazyload': ['jquery'],
         'fullscreen': ['jquery'],
         'nicescroll': ['jquery'],
         'select2': ['jquery'],
         'daterangepicker': ['jquery'],
-        'gridstack': ['jquery', 'jqueryUI', 'underscore'],
+        'gridstack': ['jquery', 'underscore'],
         'gridstackUi': ['gridstack'],
         'validate': {deps: ["jquery"]},
-        'elasticColumns': ['jquery'],
         'nvd3': {deps: ['d3'], exports: 'nv'},
-        'widgets': ['d3', 'nvd3'],
-        'markitup': ['jquery'],
-        'markitupset': ['markitup'],
         'spectrum': ['jquery'],
         'simplemde': ['jquery']
     },
@@ -167,46 +130,54 @@ require.config({
     // dynamically load all test files
     // deps: allTestFiles,
     deps: [
-        //'../tests/spec/login/login',
+
+        '../tests/spec/dashboard/dashboardListItemViewTests',
+        '../tests/spec/dashboard/gadgetViewTests',
+        '../tests/spec/dashboard/dashboardItemViewTests',
+
+        '../tests/spec/components/paging',
+
+        '../tests/spec/user_profile/user_profile',
+
+        '../tests/spec/sections/header',
+        '../tests/spec/sections/sidebar',
+        '../tests/spec/sections/footer',
+        '../tests/spec/sections/content'
+
+        // old tests
 
         // '../tests/spec/dashboards/add-dashboard',
         // '../tests/spec/dashboards/edit-dashboard',
         // '../tests/spec/dashboards/dashboards-menu',
         // '../tests/spec/dashboards/dashboards',
 
-        //'../tests/spec/widgets/widgets',
+        // '../tests/spec/login/login',
 
-        //'../tests/spec/post_bug_to_jira/post_bug_to_bts',
-        //'../tests/spec/post_bug_to_jira/load_bug_to_bts',
+        // '../tests/spec/widgets/widgets',
 
-        '../tests/spec/project/projectinfo',
+        // '../tests/spec/post_bug_to_jira/post_bug_to_bts',
+        // '../tests/spec/post_bug_to_jira/load_bug_to_bts',
 
-        //'../tests/spec/favorites/favorites',
+        // '../tests/spec/project/projectinfo',
 
-        '../tests/spec/components/paging',
+        // '../tests/spec/favorites/favorites',
 
-        '../tests/spec/test_item_editor/testItemEditor',
+        // '../tests/spec/wizard/widget-wizard',
 
-        //'../tests/spec/launches/historyGrid',
+        // '../tests/spec/project/project',
 
-        '../tests/spec/user_profile/user_profile',
+        // '../tests/spec/admin/admin',
 
-        '../tests/spec/wizard/widget-wizard',
+        // '../tests/spec/member/member_assigned',
+        // '../tests/spec/member/assign_member',
+        // '../tests/spec/member/invite_member',
 
-        //'../tests/spec/project/project',
-
-        //'../tests/spec/admin/admin',
-
-        '../tests/spec/member/member_assigned',
-        '../tests/spec/member/assign_member',
-        '../tests/spec/member/invite_member',
-
-        //
         // '../tests/spec/filter/filters-panel',
-        '../tests/spec/sections/header',
-        '../tests/spec/sections/sidebar',
-        '../tests/spec/sections/footer',
-        '../tests/spec/sections/content'
+
+        // '../tests/spec/test_item_editor/testItemEditor',
+
+        // '../tests/spec/launches/historyGrid',
+
     ],
 
     // we have to kickoff jasmine, as it is asynchronous

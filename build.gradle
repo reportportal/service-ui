@@ -8,7 +8,7 @@ buildscript {
         classpath "io.spring.gradle:dependency-management-plugin:1.0.0.RELEASE"
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
         classpath 'com.github.jengelman.gradle.plugins:gradle-processes:0.3.0'
-        classpath 'com.bmuschko:gradle-docker-plugin:3.0.5'
+        classpath 'com.bmuschko:gradle-docker-plugin:3.0.7'
     }
 }
 
@@ -104,7 +104,7 @@ task runJsTests(type: NodeTask) {
 idea {
     module {
         //and some extra dirs that should be excluded by IDEAn
-        excludeDirs += [file("${staticsInputDir}/node_modules"), file("${staticsInputDir}/compiled")];
+        excludeDirs += [file("${project.projectDir}/src"), file("${project.projectDir}/vendor"), file("${staticsInputDir}/node_modules"), file("${staticsInputDir}/compiled")];
 
     }
 }

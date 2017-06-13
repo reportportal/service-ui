@@ -36,8 +36,7 @@ define(function (require, exports, module) {
     require('baron');
     require('cookie');
     // require('nicescroll');
-    require('bootswitch');
-    require('isLoading');
+    // require('isLoading');
     require('select2');
 
     var config = App.getInstance(),
@@ -376,14 +375,14 @@ define(function (require, exports, module) {
                 this.messages.close();
             }
         },
-        showOverlay: function (element, deleting) {
-            $(element).LoadingOverlay('show', {
-                image: 'img/graph_loader.gif'
-            });
-        },
-        hideOverlay: function (element) {
-            $(element).LoadingOverlay('hide');
-        },
+        // showOverlay: function (element, deleting) {
+        //     $(element).LoadingOverlay('show', {
+        //         image: 'img/graph_loader.gif'
+        //     });
+        // },
+        // hideOverlay: function (element) {
+        //     $(element).LoadingOverlay('hide');
+        // },
         hideMessagePanel: function () {
             var self = this;
             $('.cancel, [type="cancel"]').on('click', function () {
@@ -551,15 +550,6 @@ define(function (require, exports, module) {
                     e.preventDefault();
                 }
             });
-        },
-
-        switcheryInitialize: function (parent) {
-            if (parent) {
-                $('.js-switch', parent).bootstrapSwitch({
-                    onText: Localization.ui.on,
-                    offText: Localization.ui.off
-                });
-            }
         },
 
         dropDownHandler: function (e) {
@@ -1053,16 +1043,18 @@ define(function (require, exports, module) {
                 _.each(validators, function (validator) {
                     var val = validator.options.noTrim ? $el.val() : $el.val().trim();
                     if (validator.options.remote) {
-                        $.when(validator.validate(val, validator.options, Util))
-                            .done(function (data) {
-                                if (!data.valid) {
-                                    message = validator.options.message;
-                                    result += message + '</br>';
-                                    $holder.addClass('validate-error');
-                                }
-                                showResult(result);
-                                $el.trigger('validation::change');
-                            });
+                        if (val) {
+                            $.when(validator.validate(val, validator.options, Util))
+                                .done(function (data) {
+                                    if (!data.valid) {
+                                        message = validator.options.message;
+                                        result += message + '</br>';
+                                        $holder.addClass('validate-error');
+                                    }
+                                    showResult(result);
+                                    $el.trigger('validation::change');
+                                });
+                        }
                     } else {
                         message = validator.validate(val, validator.options, Util);
                         if (message) {

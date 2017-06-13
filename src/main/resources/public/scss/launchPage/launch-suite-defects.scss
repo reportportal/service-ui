@@ -47,6 +47,14 @@
       color: $COLOR--windows-blue;
       font-family: "OpenSansSemibold", sans-serif;
     }
+    &:after {
+      content: '';
+      position: absolute;
+      display: block;
+      width: 100%;
+      height: 100%;
+      top: 0;
+    }
   }
   .defect-hover {
     position: absolute;

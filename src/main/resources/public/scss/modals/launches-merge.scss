@@ -24,7 +24,75 @@
     .modal-body {
       min-height: 470px;
       padding: 30px 12px 0 12px;
-
+      .rp-form {
+        width: 454px;
+        .time-separator {
+          margin: 0 6px 0 8px;
+        }
+        label {
+          .half-width {
+            width: 156px;
+          }
+        }
+      }
+      .select-type-wrapper {
+        position: relative;
+        overflow: hidden;
+        margin: 20px auto;
+        width: 350px;
+        .type-buttons {
+          float: left;
+          width: 165px;
+        }
+        label {
+          width: 165px;
+          height: 30px;
+          font-weight: normal;
+          text-transform: uppercase;
+          margin-bottom: 20px;
+          cursor: pointer;
+          &:last-child {
+            margin-bottom: 0;
+          }
+          input {
+            position: absolute;
+            opacity: 0;
+            &:checked + span {
+              background: $COLOR--gray-91;
+              color: $COLOR--charcoal-grey;
+              border: 1px solid $COLOR--gray-91;
+            }
+          }
+          span {
+            display: inline-block;
+            border: 1px solid $COLOR--gray-80;
+            width: 100%;
+            height: 100%;
+            line-height: 28px;
+            text-align: center;
+            font-family: $OpenSansSemibold;
+            font-size: 12px;
+            color: $COLOR--gray-47
+          }
+        }
+        .current-type {
+          float: left;
+          margin-left: 20px;
+          width: 165px;
+          height: 80px;
+          border: solid 1px $COLOR--gray-80;
+          background: url('../../img/popup/launch-merge.svg') center no-repeat;
+          &.deep-merge {
+            background: $COLOR--gray-91 url('../../img/popup/launch-deep-merge.svg') center no-repeat;
+          }
+          &.linear-merge {
+            background: $COLOR--gray-91 url('../../img/popup/launch-linear-merge.svg') center no-repeat;
+          }
+          &.deep-merge, &.linear-merge {
+            border: solid 1px $COLOR--gray-91;
+          }
+        }
+      }
       .fields {
         margin-top: 18px;
 
@@ -102,6 +170,20 @@
     &.load {
       .preloader {
         display: block;
+      }
+    }
+    &.disable-state {
+      .on-disable-block {
+        position: relative;
+        opacity: 0.3;
+        &:after {
+          content: ' ';
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+        }
       }
     }
   }

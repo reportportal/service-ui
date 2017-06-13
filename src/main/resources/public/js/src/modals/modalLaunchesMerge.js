@@ -44,9 +44,11 @@ define(function (require) {
             this.maxEndTime = renderObject.endTime;
             this.render(renderObject);
             this.showLoading();
+            this.$el.addClass('disable-state');
         },
 
         events: {
+            'change [data-js-select-type-input]': 'onChangeType',
             'click [data-js-submit]': 'submit',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel'
@@ -104,7 +106,16 @@ define(function (require) {
             Util.setupSelect2Tags(this.$tags);
             this.delegateEvents();
         },
-
+        onChangeType: function (e) {
+            this.$el.removeClass('disable-state');
+            this.mergeType = $(e.currentTarget).val();
+            $('[data-js-current-type]', this.$el).removeClass('deep-merge linear-merge');
+            if (this.mergeType === 'BASIC') {
+                $('[data-js-current-type]', this.$el).addClass('linear-merge');
+            } else {
+                $('[data-js-current-type]', this.$el).addClass('deep-merge');
+            }
+        },
         onKeySuccess: function () {
             this.submit();
         },
@@ -128,12 +139,12 @@ define(function (require) {
                 data = {
                     tags: this.$tags.val().trim().split(','),
                     start_time: this.minStartTime,
-                    // end_time: this.maxEndTime,
+                    end_time: this.maxEndTime,
                     name: this.$name.val(),
                     description: this.$description.val(),
                     launches: _.map(this.launches, function (launchModel) { return launchModel.get('id'); }),
                     extendSuitesDescription: this.$extendWithOriginal.is(':checked'),
-                    // merge_type: 'BASIC'
+                    merge_type: this.mergeType
                 };
                 config.trackingDispatcher.trackEventNumber(82);
                 this.showLoading();

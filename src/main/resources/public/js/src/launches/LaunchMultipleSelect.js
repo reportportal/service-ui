@@ -32,6 +32,7 @@ define(function (require) {
     var ChangeModeAction = require('launches/multipleActions/changeModeAction');
     var PostBugAction = require('launches/multipleActions/postBugAction');
     var LoadBugAction = require('launches/multipleActions/loadBugAction');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -67,9 +68,8 @@ define(function (require) {
                 break;
             default:
                 config.trackingDispatcher.trackEventNumber(161);
-
             }
-
+            this.model.trigger('deleteTicket', this.model);
             this.model.set({ select: false, invalidMessage: '' });
         },
         onDestroy: function () {
@@ -92,9 +92,15 @@ define(function (require) {
 
         actionValidators: {
             merge: function () {
-                _.each(this.collection.models, function (model) {
-                    model.set({ invalidMessage: model.validate.merge() });
-                });
+                if (this.collection.models.length === 1) {
+                    this.collection.models[0].set({
+                        invalidMessage: Localization.launches.selectMoreItem
+                    });
+                } else {
+                    _.each(this.collection.models, function (model) {
+                        model.set({ invalidMessage: model.validate.merge() });
+                    });
+                }
             },
             compare: function () {
                 _.each(this.collection.models, function (model) {
@@ -217,6 +223,7 @@ define(function (require) {
             this.listenTo(this.collectionItems, 'reset', this.onResetCollectionItems);
             this.listenTo(this.collection, 'change:select', this.onUnCheckItem);
             this.listenTo(this.collection, 'add', this.onAddItem);
+            this.listenTo(this.collection, 'deleteTicket', this.onDeleteTicket);
             this.currentAction = '';
             this.scrollItems = Util.setupBaronScroll($('[data-js-multi-select-items]', this.$el));
         },
@@ -229,6 +236,11 @@ define(function (require) {
             this.checkStatus();
             Util.setupBaronScrollSize(this.scrollItems, { maxHeight: 120 });
             this.scrollItems.scrollTop(this.scrollItems.get(0).scrollHeight);
+        },
+        onDeleteTicket: function (ticketModel) {
+            var commonModel = this.collectionItems.get(ticketModel.get('id'));
+            this.collection.remove(ticketModel);
+            commonModel && commonModel.set('select', false);
         },
         onResetCollectionItems: function () {
             var self = this;

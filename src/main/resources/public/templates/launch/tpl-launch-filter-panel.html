@@ -2,13 +2,7 @@
     <div class="filter-entities clearfix" data-js-filter-entities>
 
     </div>
-    <div class="filter-settings">
-        <div class="left-items">
-            <a class="rp-btn rp-btn-default rp-button-with-icon" title="Add Widget" data-js-add-widget>
-                <i class="material-icons">add_circle</i>
-                <span class="rp-btn-val hidden-sm hidden-xs"><%= data.text.widgets.addNewWidget %></span>
-            </a>
-        </div>
+    <div class="filter-settings clearfix">
         <div class="right-items">
             <a class="rp-btn rp-btn-default rp-button-with-icon" title="Discard" data-js-discard-filter>
                 <i class="rp-icons rp-icons-discard"></i>
@@ -28,6 +22,11 @@
             </a>
         </div>
         <div class="right-items">
+            <div class="sorting-wrapper">
+                <span><%- data.text.ui.sortBy %>:</span>&nbsp;&nbsp;<span data-js-filter-sorting></span>
+            </div>
+        </div>
+        <div class="left-items">
             <div class="description" data-js-filter-shared-descr><i class="material-icons" title="<%= data.text.filters.sharedDescription %>">share</i><span><%= data.text.filters.sharedDescription %></span></div>
             <div class="description" data-js-filter-not-save-descr><span class="obligatory-field"></span><span><%= data.text.filters.notSaveDescription %></span></div>
             <div class="description" data-js-filter-not-my-descr><i class="material-icons" title="<%= data.text.filters.globalDescription %>">public</i><span><%= data.text.filters.globalDescription %></span></div>

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
@@ -47,13 +47,13 @@ define(function(require, exports, module) {
             end_time: 0,
             statistics: {
                 defects: {},
-                executions: {},
+                executions: {}
             },
             status: '',
             tags: '',
             type: '',
 
-            //test step append
+            // test step append
             has_childs: true,
             issue: '',
 
@@ -66,6 +66,7 @@ define(function(require, exports, module) {
             parent_launch_status: null,
             parent_launch_isProcessing: null,
             parent_launch_investigate: null,
+            filter_url: ''
         },
         computeds: {
             launch_owner: {
@@ -91,37 +92,37 @@ define(function(require, exports, module) {
             },
             launch_toInvestigate: {
                 deps: ['parent_launch_investigate', 'statistics'],
-                get: function(parentLaunchInvestigate, statistics) {
-                    if(parentLaunchInvestigate != null) {
+                get: function (parentLaunchInvestigate, statistics) {
+                    if (parentLaunchInvestigate != null) {
                         return parentLaunchInvestigate;
                     }
                     var statistics = this.get('statistics');
-                    if(statistics && statistics.defects && statistics.defects.to_investigate) {
+                    if (statistics && statistics.defects && statistics.defects.to_investigate) {
                         return statistics.defects.to_investigate.total;
                     }
                     return 0;
                 }
             },
             url: {
-                deps: ['id', 'has_childs'],
-                get: function (id, has_childs) {
-                    if (has_childs) {
-                        return window.location.hash.split('?')[0] + '/' + id;
+                deps: ['id', 'has_childs', 'filter_url'],
+                get: function (id, hasChilds, filterUrl) {
+                    var partUrl = filterUrl ? '|' + filterUrl : '';
+                    var index1 = window.location.hash.lastIndexOf('/');
+                    var index2 = window.location.hash.lastIndexOf('|');
+                    var index3 = window.location.hash.lastIndexOf('?');
+                    var lastIndex = (index2 < index1) ? index3 : index2;
+                    var baseUrl = window.location.hash.substr(0, lastIndex);
+                    if (hasChilds) {
+                        return baseUrl + partUrl + '/' + id;
                     }
-                    return window.location.hash + '&log.item=' + id;
-                }
-            },
-            clearUrl: {
-                deps: ['url'],
-                get: function(url) {
-                    return url.split('|')[0];
+                    return baseUrl + partUrl + '?' + filterUrl + '&log.item=' + id;
                 }
             },
             numberText: {
                 deps: ['number'],
                 get: function (number) {
                     if (!number) {
-                        return ''
+                        return '';
                     }
                     return ' #' + number;
                 }
@@ -137,13 +138,13 @@ define(function(require, exports, module) {
             startFormat: {
                 deps: ['start_time'],
                 get: function (startTime) {
-                    return Util.dateFormat(startTime)
+                    return Util.dateFormat(startTime);
                 }
             },
             startFromNow: {
                 deps: ['startFormat'],
                 get: function (startFormat) {
-                    return Util.fromNowFormat(startFormat)
+                    return Util.fromNowFormat(startFormat);
                 }
             },
             formatEndTime: {
@@ -151,15 +152,15 @@ define(function(require, exports, module) {
                 get: function (endTime) {
                     return Util.dateFormat(endTime, true);
                 }
-            },
+            }
         },
-        initialize: function() {
+        initialize: function () {
             this.validate = this.getValidate();
             this.listenTo(this, 'change:description change:tags', _.debounce(this.onChangeItemInfo, 10));
             this.appModel = new SingletonAppModel();
             this.userModel = new UserModel();
         },
-        restorePath: function() {
+        restorePath: function () {
             this.initComputeds();
         },
         getIssue: function () {
@@ -170,7 +171,7 @@ define(function(require, exports, module) {
             }
         },
         setIssue: function (issue) {
-            this.set({issue: JSON.stringify(issue)});
+            this.set({ issue: JSON.stringify(issue) });
         },
         getTags: function () {
             try {
@@ -180,73 +181,73 @@ define(function(require, exports, module) {
             }
         },
         setTags: function (tags) {
-            this.set({issue: JSON.stringify(tags)});
+            this.set({ issue: JSON.stringify(tags) });
         },
         getValidate: function () {
             var self = this;
-            var isAdminLeadProjectMenedger = function() {
-                return ( self.userModel.get('isAdmin') ||
-                    self.userModel.getRoleForCurrentProject() == config.projectRolesEnum.lead ||
-                    self.userModel.getRoleForCurrentProject() == config.projectRolesEnum.project_manager)
+            var isAdminLeadProjectMenedger = function () {
+                return (self.userModel.get('isAdmin') ||
+                    self.userModel.getRoleForCurrentProject() === config.projectRolesEnum.lead ||
+                    self.userModel.getRoleForCurrentProject() === config.projectRolesEnum.project_manager);
             };
             var result = {
-                edit: function() {
-                    if (self.get('launch_owner') != config.userModel.get('name') &&
+                edit: function () {
+                    if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
                         return 'You are not a launch owner';
                     }
                     return '';
                 },
                 merge: function () {
-                    if (self.get('launch_owner') != config.userModel.get('name') &&
+                    if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
                         return 'You are not a launch owner';
                     }
-                    if (self.get('launch_status') == 'IN_PROGRESS') {
+                    if (self.get('launch_status') === 'IN_PROGRESS') {
                         return 'Launch should not be in the status IN PROGRESS';
                     }
                     if (self.get('launch_isProcessing')) {
                         return 'Launch should not be processing by Auto Analysis';
                     }
-                    return ''
+                    return '';
                 },
                 changeMode: function () {
-                    if (self.get('launch_owner') != config.userModel.get('name') &&
-                        !isAdminLeadProjectMenedger()) {
-                        return 'You are not a launch owner';
-                    }
-                    return ''
-                },
-                forceFinish: function() {
-                    if (self.get('status') != 'IN_PROGRESS') {
-                        return 'Launch is already finished';
-                    }
-                    if (self.get('launch_owner') != config.userModel.get('name') &&
+                    if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
                         return 'You are not a launch owner';
                     }
                     return '';
                 },
-                editDefect: function(){
+                forceFinish: function () {
+                    if (self.get('status') !== 'IN_PROGRESS') {
+                        return 'Launch is already finished';
+                    }
+                    if (self.get('launch_owner') !== config.userModel.get('name') &&
+                        !isAdminLeadProjectMenedger()) {
+                        return 'You are not a launch owner';
+                    }
+                    return '';
+                },
+                editDefect: function () {
                     if (!self.get('issue')) {
                         return 'Item not has issue for edit';
                     }
                     return '';
                 },
-                remove: function() {
-                    if (self.get('launch_owner') != config.userModel.get('name') &&
+                remove: function () {
+                    if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
                         return 'You are not a launch owner';
                     }
-                    if (self.get('launch_status') == 'IN_PROGRESS') {
+                    if (self.get('launch_status') === 'IN_PROGRESS') {
                         return 'Launch should not be in the status IN PROGRESS';
                     }
                     return '';
                 },
-                loadbug: function() {
+                loadbug: function () {
                     var issue = self.getIssue();
                     if (!issue || !issue.issue_type) {
-                        return Localization.launches.noIssuesLoad
+                        return Localization.launches.noIssuesLoad;
                     }
                     if (!self.appModel.get('isBtsAdded')) {
                         return Localization.launches.configureTBSLoad;
@@ -256,10 +257,10 @@ define(function(require, exports, module) {
                     }
                     return '';
                 },
-                postbug: function() {
+                postbug: function () {
                     var issue = self.getIssue();
                     if (!issue || !issue.issue_type) {
-                        return Localization.launches.noIssues
+                        return Localization.launches.noIssues;
                     }
                     if (!self.appModel.get('isBtsConfigure')) {
                         return Localization.launches.configureTBS;
@@ -269,25 +270,25 @@ define(function(require, exports, module) {
                     }
                     return '';
                 }
-            }
+            };
             return result;
         },
-        onChangeItemInfo: function() {
+        onChangeItemInfo: function () {
             var action = 'updateLaunch';
-            if (this.get('type') != 'LAUNCH') {
+            if (this.get('type') !== 'LAUNCH') {
                 action = 'updateTestItem';
             }
             Service[action]({
                 description: this.get('description'),
-                tags: this.getTags(),
+                tags: this.getTags()
             }, this.get('id'))
                 .done(function () {
                     Util.ajaxSuccessMessenger(action);
                 })
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error);
-                })
-        },
+                });
+        }
 
     });
 

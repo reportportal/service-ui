@@ -27,15 +27,35 @@ define(function (require) {
     var Util = require('util');
     var SingletonAppModel = require('model/SingletonAppModel');
     var App = require('app');
-    var Helpers = require('helpers');
     var Storage = require('storageService');
     var Service = require('coreService');
     var DropDownComponent = require('components/DropDownComponent');
     var config = App.getInstance();
+    var BtsFieldsCommonView = require('bts/BtsFieldsCommonView');
+    var PostBugFieldsView;
+    var ModalPostBug;
+    require('jquery-ui/widgets/datepicker');
 
-    var ModalPostBug = ModalView.extend({
+    PostBugFieldsView = BtsFieldsCommonView.extend({
+        template: 'tpl-dynamic-fields',
+        initialize: function (options) {
+            this.render(options);
+        },
+        render: function (options) {
+            this.$el.html(Util.templates(this.template, {
+                collection: options.collection,
+                disabled: options.disabled,
+                update: false,
+                access: true,
+                popup: true
+            }));
+        },
+        onDestroy: function () {
+        }
+    });
+
+    ModalPostBug = ModalView.extend({
         contentBody: 'tpl-modal-post-bug',
-        fieldsTpl: 'tpl-dynamic-fields',
         authTpl: 'tpl-bts-auth-type',
 
         className: 'modal-post-bug',
@@ -72,14 +92,15 @@ define(function (require) {
                 collapse: this.user.bts.hash[this.user.bts.current.id].submits > 0,
                 showCredentialsSoft: this.settings['bts' + this.systemType].canUseRPAuthorization
             }));
+            return this;
+        },
+        onShow: function () {
             this.setupDropdowns();
             this.setupAnchors();
             $('[data-js-is-included]', this.$includesBlock).attr('checked', 'checked');
-
             this.renderFields();
             this.renderCredentials();
             this.delegateEvents();
-            return this;
         },
 
         setupDropdowns: function () {
@@ -159,16 +180,16 @@ define(function (require) {
         },
 
         renderFields: function () {
-            this.$dynamicContent.html(Util.templates(this.fieldsTpl, {
+            this.postBugFieldsView = new PostBugFieldsView({
                 collection: this.user.bts.current.fields,
-                disabled: this.systemSettings.disabledForEdit,
-                update: false,
-                access: true,
-                popup: true
-            }));
+                disabled: this.systemSettings.disabledForEdit
+            });
+            this.$dynamicContent.html(this.postBugFieldsView.$el);
             this.setupFieldsDropdowns(this.user.bts.current.fields);
             if (this.user.bts.current.fields) {
-                Helpers.applyTypeForBtsFields(this.user.bts.current.fields, this.$dynamicContent);
+                this.postBugFieldsView.applyTypeForBtsFields(
+                    this.user.bts.current.fields, this.$dynamicContent
+                );
                 this.$actionBtn.prop('disabled', false);
             } else {
                 this.$actionBtn.prop('disabled', true);
@@ -570,20 +591,22 @@ define(function (require) {
         },
 
         getLinks: function () {
-            var backLink = {};
-            var backlinkFirstPart = window.location.protocol + '//' + window.location.host + '/#' + this.appModel.get('projectId') + '/launches/';
-            var backlinkMiddlePart;
+            var backLinks = {};
             _.forEach(this.items, function (item) {
-                backlinkMiddlePart = item.get('urlMiddlePart');
-                backLink[item.id] = backlinkFirstPart + backlinkMiddlePart + '&log.item=' + item.id;
+                if (item.get('filter_url')) {
+                    backLinks[item.id] = window.location.protocol + '//' + window.location.host + '/' + item.get('url').replaceAll('|', encodeURIComponent('|'));
+                } else {
+                    backLinks[item.id] = window.location.href.replaceAll('|', encodeURIComponent('|'));
+                }
             });
-            return backLink;
+            return backLinks;
         },
 
         onDestroy: function () {
             _.each(this.dropdownComponents, function (item) {
                 item.destroy();
             });
+            this.postBugFieldsView.destroy();
         }
     });
 

@@ -60,6 +60,7 @@ define(function (require) {
             this.listenTo(this.collectionItems, 'change:params', this.onChangeParamsFilter);
             this.listenTo(this.collectionItems, 'drill:item', this.onDrillItem);
             this.listenTo(this.collectionItems, 'change:log:item', this.onChangeLogItem);
+            this.listenTo(this.collectionItems, 'change:predefined_filter', this.onChangeCollapse);
             this.listenTo(this.collectionItems, 'set:log:item', this.onSetLogItem);
             this.listenTo(this.crumbs, 'change:path', this.onChangeItemCrumbs);
             this.listenTo(this.crumbs, 'restore:path', this.onRestoreItemCrumbs);
@@ -92,6 +93,12 @@ define(function (require) {
             //     config.router.navigate(mainHash + '?' + params, { trigger: false, replace: true });
             // });
         },
+        onChangeCollapse: function (filterName) {
+            config.router.navigate(
+                this.collectionItems.getPathByPredefinedFilter(filterName),
+                { trigger: false, replace: true }
+            );
+        },
         onChangeLogItem: function (logItemId) {
             this.crumbs.setLogItem(this.collectionItems.get(logItemId));
             config.router.navigate(
@@ -121,6 +128,11 @@ define(function (require) {
                     self.onChangePathId();  // not valid filter
                     // config.router.show404Page();
                 });
+            if (this.collectionItems.logOptions.item) {
+                this.trigger('change:level', 'LOG');
+            } else if (this.collectionItems.noChildFilter) {
+                this.crumbs.setListViewForLastItem();
+            }
         },
         onRestoreItemCrumbs: function () {
             this.collectionItems.restorePath();

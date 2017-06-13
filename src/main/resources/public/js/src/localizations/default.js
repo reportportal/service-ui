@@ -323,7 +323,8 @@ define(['util'], function () {
             filters: 'Filters',
             projects: 'My Projects:',
             administrate: 'Administrate',
-            profile: 'Profile'
+            profile: 'Profile',
+            api: 'API'
         },
 
         widgets: {
@@ -689,9 +690,9 @@ define(['util'], function () {
             deleteItemWarning: 'In case of delete the test item, all related data will be deleted. Are you sure you want to delete test item',
             finishAgree: 'I am sure I want to finish %%%',
             deleteAgree: 'I am sure I want to delete %%%',
-            deleteWarningAgree: 'This may affect on other project users information.',
-            finishOneLaunch: 'You are going to stop not your own launch. This may affect on other project users information.',
-            finishSelectedLaunch: 'You are going to stop not your own launch. This may affect on other project users information.',
+            deleteWarningAgree: 'You are going to delete not your own %%%. This may affect other users information on the project.',
+            finishOneLaunch: 'You are going to stop not your own launch. This may affect other users information on the project.',
+            finishSelectedLaunch: 'You are going to stop not your own launches.  This may affect other users information on the project.',
 
             errorItem: 'Error Item',
             jiraCredentials: 'Jira credentials',
@@ -752,8 +753,11 @@ define(['util'], function () {
             compareLaunches: 'Compare Launches',
             inProgress: 'In Progress',
             merge: 'Merge',
+            linearMerge: 'Linear Merge',
+            deepMerge: 'Deep Merge',
             mergeLaunches: 'Merge Launches',
             mergeLaunchesModalTitle: 'All selected launches will be merged in one',
+            mergeLaunchesSelectTypeTitle: 'CHOOSE TYPE OF MERGE',
             clickToLoadMore: 'Click here to load more items',
             clickToMerge: 'Click on two or more launches in table to select for merge!',
             filterIsShared: 'Filter is shared',
@@ -785,7 +789,8 @@ define(['util'], function () {
             noItemInLaunch: 'No Item<br> in Launch',
             emptyItem: 'Item is Empty',
             severalItems: 'There’re several items with the same names, descriptions and tags',
-            multipleSelectHeader: 'YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:'
+            multipleSelectHeader: 'YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:',
+            selectMoreItem: 'You must select more than one item'
         },
 
         launchStatus: {
@@ -1019,7 +1024,9 @@ define(['util'], function () {
             notSaveDescription: 'Filter is not saved',
             sharedBy: 'Filter is shared by',
             sharedDescription: 'Filter is shared',
-            globalDescription: 'Filter is shared by other user'
+            globalDescription: 'Filter is shared by other user',
+            hideCriteria: 'Hide criteria',
+            showCriteria: 'Show criteria'
         },
         filter: {
             name: 'Name',
@@ -1332,6 +1339,7 @@ define(['util'], function () {
             titleNameLogin: 'Name / Login',
             titleNameLoginEmail: 'Name / Login / Email',
             enterLoginEmail: 'Enter Login or Email',
+            enterEmail: 'Enter Email',
             alredyAdded: 'User has already assigned to the project',
             invitePref: 'Invite',
             sendInvite: 'Send invite via e-mail',
@@ -1618,6 +1626,7 @@ define(['util'], function () {
             description: 'Description',
             startTime: 'Start time',
             endTime: 'End time',
+            startTimeEndTime: 'Time Start/End',
             user: 'User',
             finishTime: 'Finish time',
             number: 'Number',
@@ -1736,7 +1745,7 @@ define(['util'], function () {
             dashboardSettings: 'Dashboard settings',
             deleteFilter: 'Are you sure you want to delete the filter <b>\'%%%\'</b>?',
             deleteFilterDanger: 'Are you sure you want to delete the filter <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
-            deleteFilterDangerConfirmText: 'This may affect on other project users information.',
+            deleteFilterDangerConfirmText: 'You are going to delete not your own filter. This may affect other users information on the project.',
             deleteProject: 'Are you sure you want to delete the project <b>\'%%%\'</b>?',
             deleteEmailRule: 'Are you sure you want to remove notification rule?',
             deleteEmailRuleBtn: 'Remove',
@@ -1748,13 +1757,10 @@ define(['util'], function () {
             deleteImage: 'Are you sure you want to delete profile photo?',
             deleteBts: 'Are you sure you want to remove %%% project <b>\'%%%\'</b> from project settings?',
 
-            dashboardDelete: 'Are you sure you want to delete dashboard <b>\'%%%\'</b>?',
-            dashboardDeleteDanger: 'Are you sure you want to delete dashboard <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
-
-            dashboardDeleteDangerConfirmText: 'This may affect on all users on the project.',
-            deletedWidget: 'Are you sure you want to delete widget <b>\'%%%\'</b>?',
-            deletedWidgetDanger: 'Are you sure you want to delete widget <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
-            deletedWidgetDangerConfirmText: 'This may affect on all users on the project.',
+            dashboardDelete: 'Are you sure you want to delete dashboard <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
+            dashboardDeleteDangerConfirmText: 'You are going to delete not your own dashboard. This may affect other users information on the project.',
+            deletedWidget: 'Are you sure you want to delete widget <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
+            deletedWidgetDangerConfirmText: 'You are going to delete not your own widget. This may affect other users information on the project.',
             deleteBtsBtn: 'Remove',
             dashboardDeleteBtn: 'Remove',
 
@@ -1843,7 +1849,12 @@ define(['util'], function () {
             oneAttention: 'Action can be done for a user with similar and lower role only (E.g. Lead cannot change role for a Project Manager).',
             twoAttention: 'Action can be done for a user with similar and lower role only (E.g. Lead cannot assign/unassign a Project Manager) and for user with Administrator account role.',
             threeAttention: 'Action can be done for a Internal user.'
-        }
+        },
 
+        api: {
+            apiDocumentation: 'Api Documentation',
+            api: 'API',
+            uat: 'UAT'
+        }
     };
 });

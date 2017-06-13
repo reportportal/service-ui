@@ -58,7 +58,8 @@ define(function (require) {
             canRemove: {
                 deps: ['isMy', 'isMyDashboard'],
                 get: function (isMy, isMyDashboard) {
-                    return (config.userModel.getRoleForCurrentProject()
+                    return (config.userModel.get('isAdmin')
+                        || config.userModel.getRoleForCurrentProject()
                         === config.projectRolesEnum.project_manager
                         || isMyDashboard
                         || (isMy && isMyDashboard)
@@ -152,10 +153,7 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(288);
             modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deletedWidget,
-                bodyText: Util.replaceTemplate(
-                    !dangerRemove
-                        ? Localization.dialog.deletedWidget
-                        : Localization.dialog.deletedWidgetDanger,
+                bodyText: Util.replaceTemplate(Localization.dialog.deletedWidget,
                     this.model.get('name')
                 ),
                 confirmText: !dangerRemove ? '' : Localization.dialog.deletedWidgetDangerConfirmText,
@@ -184,10 +182,11 @@ define(function (require) {
         },
         onClickGadgetEdit: function () {
             var self = this;
-            config.trackingDispatcher.trackEventNumber(286);
-            (new ModalEditWidget({
-                model: this.model
-            })).show()
+            if (this.model.get('isMy')) {
+                config.trackingDispatcher.trackEventNumber(286);
+                (new ModalEditWidget({
+                    model: this.model
+                })).show()
                 .done(function () {
                     if (typeof self.model.changed.isShared !== 'undefined') {
                         launchFilterCollection.ready.done(function () {
@@ -196,6 +195,7 @@ define(function (require) {
                     }
                     self.update();
                 });
+            }
         },
         getDataForGridStack: function () {
             return [this.el, this.model.get('x'), this.model.get('y'), this.model.get('width'), this.model.get('height')];

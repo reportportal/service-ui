@@ -49,7 +49,53 @@
         }
       }
     }
+    .preloader-wrapper {
+      position: absolute;
+      width: 81px;
+      margin-left: 10px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: $COLOR--white-default;
+      border: solid 1px $COLOR--topaz;
+      display: none;
+
+      @media (max-width: $SCREEN_MD_MAX) {
+        width: 77px;
+      }
+      @media (max-width: $SCREEN_XS_MAX) {
+        width: 75px;
+      }
+
+      .custom-preloader {
+        width: 70px;
+
+        margin: 14px auto;
+        div {
+          background: $COLOR--white-default;
+          float: left;
+          height: 2px;
+          margin-left: 10px;
+          width: 11px;
+          animation-name: log-item-custom-preloader;
+          animation-duration: 1s;
+          animation-iteration-count: infinite;
+          animation-direction: normal;
+          &.custom-preloader-1 {
+            animation-delay: 0s;
+          }
+          &.custom-preloader-2 {
+            animation-delay: 0.25s;
+          }
+          &.custom-preloader-3 {
+            animation-delay: 0.5s;
+          }
+        }
+      }
+    }
   }
+
   .rp-btn.disabled {
     .counter {
       display: none;
@@ -156,5 +202,17 @@
     &.selected:last-child {
       border-bottom: 1px solid #999;
     }
+  }
+}
+
+@keyframes log-item-custom-preloader {
+  0% {
+  }
+
+  50% {
+    background-color: $COLOR--topaz;
+  }
+
+  100% {
   }
 }
