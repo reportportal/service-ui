@@ -50,6 +50,9 @@ define(function (require) {
                 $('a', doc).each(function () {
                     $(this).attr({ target: '_blank' });
                 });
+                $('code', doc).each(function () {
+                    $(this).html($(this).text());
+                });
                 this.$el.html(doc.innerHTML);
             } else {
                 this.$el.html('');

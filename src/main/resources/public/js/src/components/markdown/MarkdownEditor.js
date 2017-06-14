@@ -24,6 +24,7 @@ define(function (require) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var SimpleMDE = require('simplemde');
+    var MarkdownViewer = require('components/markdown/MarkdownViewer');
     var Util = require('util');
 
 
@@ -141,7 +142,10 @@ define(function (require) {
                     code: '`'
                 },
                 previewRender: function (plainText) {
-                    return self.simplemde.markdown(plainText.escapeHtml().indentSpases().replace('_', '&#95;'));
+                    var view = new MarkdownViewer({ text: plainText });
+                    var html = view.$el.html();
+                    view.destroy();
+                    return html;
                 }
                 // insertTexts: {
                 //     link: ['[](', ')']
