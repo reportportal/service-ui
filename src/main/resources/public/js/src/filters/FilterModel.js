@@ -42,7 +42,7 @@ define(function (require) {
             entities: '',
             selection_parameters: '{"is_asc": false, "sorting_column": "start_time"}',
             owner: '',
-            isShared: '',
+            share: '',
             id: '',
             type: 'launch',
 
@@ -287,7 +287,7 @@ define(function (require) {
             result = {
                 name: cloneModel.get('name'),
                 entities: entities,
-                share: cloneModel.get('isShared'),
+                share: cloneModel.get('share'),
                 selection_parameters: cloneModel.getParametersObj(),
                 type: cloneModel.get('type')
             };
@@ -381,7 +381,7 @@ define(function (require) {
                 name: data.name,
                 description: data.description || '',
                 entities: JSON.stringify(data.entities),
-                isShared: data.share,
+                share: data.share,
                 selection_parameters: JSON.stringify(data.selection_parameters),
                 owner: data.owner || this.get('owner'),
                 type: data.type,

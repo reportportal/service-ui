@@ -343,8 +343,8 @@ define(function (require) {
                 defectBadge = $('.inline-editor .rp-defect-type-dropdown .pr-defect-type-badge');
                 chosenIssue = defectBadge.length > 0 ? defectBadge.data('id') : null;
                 issue = {
-                    issue_type: chosenIssue || JSON.parse(item.get('issue')).issue_type,
-                    comment: item.get('issue').comment,
+                    issue_type: chosenIssue || item.getIssue().issue_type,
+                    comment: item.getIssue().comment,
                     externalSystemIssues: item.getIssue().externalSystemIssues || []
                 };
 

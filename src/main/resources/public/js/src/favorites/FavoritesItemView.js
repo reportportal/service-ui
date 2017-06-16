@@ -49,7 +49,7 @@ define(function (require) {
             '[data-js-description]': 'text: description',
             '[data-js-filter-options]': 'html: optionsString',
             '[data-js-owner]': 'text: owner',
-            '[data-js-filter-shared]': 'classes: {hide: not(isShared)}, attr: {disabled: notMyFilter}',
+            '[data-js-filter-shared]': 'classes: {hide: not(share)}, attr: {disabled: notMyFilter}',
             '[data-js-switch-to-launch]': 'checked: isLaunch',
             '[data-js-switch-to-launch-mobile]': 'checked: isLaunch',
             '[data-js-switch-to-launch-text]': 'text: isLaunchString',

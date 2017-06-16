@@ -39,7 +39,7 @@ define(function (require) {
         bindings: {
             '[data-js-filter-name]': 'html: getName',
             '[data-js-filter-options]': 'html: optionsString',
-            '[data-js-filter-shared]': 'classes: {hide: any(not(isShared), notMyFilter)}',
+            '[data-js-filter-shared]': 'classes: {hide: any(not(share), notMyFilter)}',
             '[data-js-filter-not-my]': 'classes: {hide: not(notMyFilter)}, attr: {title: sharedByTitle}',
             '[data-js-filter-edit]': 'classes: {hide: notMyFilter}',
             '[data-js-filter-select]': 'checked: active',

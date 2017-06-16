@@ -42,7 +42,7 @@ define(function (require) {
         },
         bindings: {
             '[data-js-filter-not-save-descr]': 'classes: {hide: all(not(temp), not(newEntities), not(newSelectionParameters))}',
-            '[data-js-filter-shared-descr]': 'classes: {hide: any(not(isShared), notMyFilter)}',
+            '[data-js-filter-shared-descr]': 'classes: {hide: any(not(share), notMyFilter)}',
             '[data-js-save-filter]': 'attr: {disabled: any(all(not(newEntities), not(newSelectionParameters)), notMyFilter)}',
             '[data-js-discard-filter]': 'attr: {disabled: all(not(newEntities), not(newSelectionParameters))}',
             '[data-js-edit-filter]': 'attr: {disabled: any(temp, notMyFilter)}',
