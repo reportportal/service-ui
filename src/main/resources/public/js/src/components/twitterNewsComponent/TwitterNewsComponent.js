@@ -96,11 +96,15 @@ define(function (require) {
         },
 
         initialize: function () {
+            var self = this;
             this.renderViews = [];
             this.collection = new TwitterCollection();
             this.listenTo(this.collection, 'reset', this.renderTwits);
             this.render();
             this.update();
+            $(window).on('resize.twitter', function() {
+                self.resize();
+            });
         },
         render: function () {
             this.$el.html(Util.templates(this.template, this.options));
@@ -119,6 +123,9 @@ define(function (require) {
                     self.collection.reset(data);
                 });
         },
+        resize: function () {
+            Util.setupBaronScrollSize(this.scrollEl, { maxHeight: 450 });
+        },
         renderTwits: function () {
             var self = this;
             this.destroyTwits();
@@ -127,7 +134,7 @@ define(function (require) {
                 self.renderViews.push(view);
                 $('[data-js-items-container]', self.$el).append(view.$el);
             });
-            Util.setupBaronScrollSize(this.scrollEl, { maxHeight: 450 });
+            this.resize();
         },
         destroyTwits: function () {
             _.each(this.renderViews, function (view) {
@@ -136,6 +143,7 @@ define(function (require) {
             this.renderViews = [];
         },
         onDestroy: function () {
+            $(window).off('resize.twitter');
             this.destroyTwits();
         }
     });
