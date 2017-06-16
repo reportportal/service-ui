@@ -38,7 +38,7 @@ define(function (require) {
 
         bindings: {
             '[data-js-name-input]': 'value: updateName',
-            '[data-js-is-shared]': 'checked: isShared',
+            '[data-js-is-shared]': 'checked: share',
             '[data-js-description]': 'value: description'
         },
         events: {
@@ -65,12 +65,12 @@ define(function (require) {
             var filterModel = options.filterModel;
             this.model = new Epoxy.Model({
                 name: filterModel.get('name'),
-                isShared: filterModel.get('isShared'),
+                share: filterModel.get('share'),
                 description: filterModel.get('description')
             });
             this.render(options);
             this.listenTo(this.model, 'change:description', this.onChangeDescription);
-            this.listenTo(this.model, 'change:isShared', this.onChangeShared);
+            this.listenTo(this.model, 'change:share', this.onChangeShared);
             Service.getFilterNames()
                 .done(function (data) {
                     _.each(data, function (filter) {

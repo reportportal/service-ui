@@ -49,8 +49,6 @@ define(function (require) {
                 .done(function (data) {
                     var itemData = data[0];
                     if (itemData) {
-                        itemData.share = itemData.isShared;
-                        delete itemData.isShared;
                         self.listener.trigger(self.events.SET_FILTER, {
                             id: id,
                             data: itemData

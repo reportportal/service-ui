@@ -42,7 +42,7 @@ define(function (require) {
             dblclick: 'showCriteria'
         },
         bindings: {
-            '[data-js-filter-shared]': 'classes: {hide: any(not(isShared), notMyFilter)}',
+            '[data-js-filter-shared]': 'classes: {hide: any(not(share), notMyFilter)}',
             '[data-js-filter-name]': 'text: name',
             '[data-js-filter-comment]': 'classes: {hide: not(description)}',
             '[data-js-filter-not-my]': 'classes: {hide: not(notMyFilter)}',
