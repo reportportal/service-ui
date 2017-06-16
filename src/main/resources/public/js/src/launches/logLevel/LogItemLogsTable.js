@@ -299,6 +299,7 @@ define(function (require, exports, module) {
             _.each(this.items, function (view) {
                 view.destroy();
             });
+            this.collection.reset();
             this.items = null;
             this.$el.html('');
         }
