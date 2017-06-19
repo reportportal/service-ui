@@ -19,9 +19,9 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
-    "use strict";
-    var $ = require('jquery');
+define(function (require) {
+    'use strict';
+
     var Backbone = require('backbone');
     var App = require('app');
 
@@ -30,15 +30,15 @@ define(function (require, exports, module) {
     var BtsPropertiesModel = Backbone.Model.extend({
         defaults: {
             id: 0,
-            url: "",
-            project: "",
+            url: '',
+            project: '',
             systemType: '',
-            systemAuth: "",
-            username: "",
+            systemAuth: '',
+            username: '',
             password: config.forSettings.defaultPassword,
-            accessKey: "",
+            accessKey: '',
             fields: [],
-            domain: "",
+            domain: '',
 
             mode: '',
             modelCache: null,
@@ -46,16 +46,16 @@ define(function (require, exports, module) {
         },
 
         initialize: function (modelData) {
-            if (!modelData) {
-                var defaultBts = config.forSettings.btsList[0];
-                if (!defaultBts) {
-                    //console.log('no bts');
-                    return;
-                } else {
-                    this.set({systemType: defaultBts.name})
-                }
-            }
             var params;
+            var defaultBts;
+            if (!modelData) {
+                defaultBts = config.forSettings.btsList[0];
+                if (!defaultBts) {
+                    // console.log('no bts');
+                    return;
+                }
+                this.set({ systemType: defaultBts.name });
+            }
             if (!this.get('systemAuth')) {
                 params = config.forSettings['bts' + this.get('systemType')].authorizationType[0].value;
                 this.set('systemAuth', params);
@@ -67,7 +67,7 @@ define(function (require, exports, module) {
             var credentials;
 
             if (this.validForBasic()) {
-                if (!!this.get('id')) {
+                if (this.get('id')) {
                     credentials = this.hasCredentials();
                 } else {
                     credentials = this.hasCredentials() && this.get('password') !== config.forSettings.defaultPassword;
@@ -115,9 +115,9 @@ define(function (require, exports, module) {
         },
 
         resetCredentials: function () {
-            this.set('username', "");
-            this.set('password', "");
-            this.set('token', "");
+            this.set('username', '');
+            this.set('password', '');
+            this.set('token', '');
         },
 
         validForApiKey: function () {
@@ -150,11 +150,11 @@ define(function (require, exports, module) {
         },
 
         getBtsSettings: function () {
-            var model = this.toJSON(),
-                clearBasicCredentials = function () {
-                    delete model.username;
-                    delete model.password;
-                };
+            var model = this.toJSON();
+            var clearBasicCredentials = function () {
+                delete model.username;
+                delete model.password;
+            };
             delete model.mode;
             delete model.modelCache;
             delete model.restorable;
@@ -165,7 +165,8 @@ define(function (require, exports, module) {
             delete model.hasPassword;
             delete model.projectRef;
 
-            if (model.id && model.password && model.password === config.forSettings.defaultPassword) {
+            if (model.id && model.password && model.password
+                === config.forSettings.defaultPassword) {
                 clearBasicCredentials();
             }
             if (this.validForApiKey()) {
@@ -182,5 +183,4 @@ define(function (require, exports, module) {
     });
 
     return BtsPropertiesModel;
-
 });
