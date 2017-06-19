@@ -163,6 +163,8 @@ define(function (require, exports, module) {
             delete model.text;
             delete model.defaultPassword;
             delete model.hasPassword;
+            delete model.projectRef;
+
             if (model.id && model.password && model.password === config.forSettings.defaultPassword) {
                 clearBasicCredentials();
             }
