@@ -44,7 +44,7 @@ define(function (require) {
             '[data-js-share-icon]': 'classes: {hide: not(isMy)}, attr: {title: sharedTitle}',
             '[data-js-global-icon]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
             '[data-js-icon-description]': 'text: sharedTitle',
-            '[data-js-shared-container]': 'classes: {hide: not(isShared)}',
+            '[data-js-shared-container]': 'classes: {hide: not(share)}',
             '[data-js-edit]': 'classes: {hide: not(isMy)}',
             '[data-js-remove]': 'classes: {hide: not(canRemove)}'
         },

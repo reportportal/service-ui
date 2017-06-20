@@ -205,7 +205,7 @@ define(function (require) {
                 data = {
                     filter_id: this.model.get('filter_id'),
                     name: this.model.get('name').trim(),
-                    share: this.model.get('isShared'),
+                    share: this.model.get('share'),
                     content_parameters: contentParameters
                 };
                 if (this.model.get('description')) {

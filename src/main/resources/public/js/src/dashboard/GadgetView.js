@@ -47,7 +47,7 @@ define(function (require) {
         bindings: {
             '[data-js-name]': 'text: name',
             '[data-js-comment]': 'classes: {hide: not(description)}',
-            '[data-js-shared]': 'classes: {hide: any(not(isShared), not(isMy))}',
+            '[data-js-shared]': 'classes: {hide: any(not(share), not(isMy))}',
             '[data-js-widget-type]': 'text: gadgetName',
             '[data-js-public]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
             '[data-js-gadget-remove]': 'classes: {hide: not(canRemove)}',
@@ -133,13 +133,13 @@ define(function (require) {
         onLoadDataError: function (error) {
             var message = Localization.widgets.unableLoadData;
             var owner;
-            var isShared;
+            var share;
             if (error && error.status === 404) {
                 message = Localization.widgets.widgetNotFound;
             } else {
                 owner = this.model.get('owner');
-                isShared = this.model.get('isShared');
-                if (!isShared && (owner !== config.userModel.get('name'))) {
+                share = this.model.get('share');
+                if (!share && (owner !== config.userModel.get('name'))) {
                     message = Localization.widgets.unsharedWidget;
                 }
             }
@@ -188,7 +188,7 @@ define(function (require) {
                     model: this.model
                 })).show()
                 .done(function () {
-                    if (typeof self.model.changed.isShared !== 'undefined') {
+                    if (typeof self.model.changed.share !== 'undefined') {
                         launchFilterCollection.ready.done(function () {
                             launchFilterCollection.update();
                         });

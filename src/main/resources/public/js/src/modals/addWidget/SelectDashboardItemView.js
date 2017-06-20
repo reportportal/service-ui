@@ -34,7 +34,7 @@ define(function (require) {
         bindings: {
             '[data-js-dashboard-item]': 'attr: {"data-dashboard-id": id}, classes: {active: active}',
             '[data-js-dashboard-item] span': 'text: name',
-            '[data-js-share-icon]': 'classes: {hide: not(isShared)}'
+            '[data-js-share-icon]': 'classes: {hide: not(share)}'
         },
         initialize: function () {
             this.render();

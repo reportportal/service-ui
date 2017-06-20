@@ -35,7 +35,7 @@ define(function (require, exports, module) {
             description: '',
             gadget: '',
             owner: '',
-            isShared: false,
+            share: false,
 
             // widgetData
             filter_id: '',
@@ -147,7 +147,7 @@ define(function (require, exports, module) {
                 name: data.name,
                 description: data.description,
                 owner: data.owner,
-                isShared: data.isShared,
+                share: data.share,
                 gadget: data.content_parameters && data.content_parameters.gadget,
                 widgetData: data,
                 widgetOptions: '{}',

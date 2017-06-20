@@ -205,7 +205,7 @@ define(function (require, exports, module) {
                 dashboard_id: "54d24925d4ba3b620a20cf85",
                 filter_id: "53d201dee4b05f5e609a9840",
                 id: "54d347c9d4ba9fd74458808c",
-                isShared: true,
+                share: true,
                 content: {},
                 content_parameters: {
                     type: "statistics_panel",
