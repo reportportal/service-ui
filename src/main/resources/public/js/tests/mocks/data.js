@@ -71,7 +71,7 @@ define([], function () {
         return {
             links: [],
             owner: 'demo',
-            isShared: true,
+            share: true,
             id: '5234523452435sgf',
             name: 'test me',
             content_parameters: {
@@ -578,7 +578,7 @@ define([], function () {
                 href: 'https://localhost:8443/reportportal-ws/api/v1/epm-sign/widget/557ef8fed4ba3184d25b33b4'
             }],
             owner: 'test',
-            isShared: false,
+            share: false,
             id: '5562c651d4ba7f043fa15722',
             name: 'my_dash',
             widgets: [{ widgetId: '5562c669d4ba7f043fa15723', widgetSize: [12, 7], widgetPosition: [0, 7] },
@@ -611,7 +611,7 @@ define([], function () {
         return [
             {
                 id: '559263abe4b0eeaae6629a29',
-                isShared: true,
+                share: true,
                 links: [],
                 name: '778',
                 description: 'description',
@@ -623,7 +623,7 @@ define([], function () {
             },
             {
                 id: '559e3491e4b052008d80a9c7',
-                isShared: false,
+                share: false,
                 links: [],
                 name: 'Title',
                 owner: 'demo',
@@ -635,7 +635,7 @@ define([], function () {
             },
             {
                 id: '559263abe4b0eeaae6629a20',
-                isShared: false,
+                share: false,
                 links: [],
                 name: '77888',
                 description: 'descriptionzzz',
@@ -647,7 +647,7 @@ define([], function () {
             },
             {
                 id: '559263abe4b0eeaae6629a21',
-                isShared: false,
+                share: false,
                 links: [],
                 name: '778800',
                 description: '',
@@ -1076,7 +1076,7 @@ define([], function () {
                 description: '',
                 filter_id: '5888c3d81aa841000790e20a',
                 id: '58f8ad8908813b000746c046',
-                isShared: true,
+                share: true,
                 name: 'widget title',
                 owner: 'default',
                 content_parameters: {
@@ -1090,7 +1090,7 @@ define([], function () {
                 description: '',
                 filter_id: '5888c3d81aa841000790e20b',
                 id: '58f8ad8908813b000746c047',
-                isShared: false,
+                share: false,
                 name: 'widget title2',
                 owner: 'default',
                 content_parameters: {
@@ -1102,7 +1102,7 @@ define([], function () {
                 description: 'widget description',
                 filter_id: '5888c3d81aa841000790e20c',
                 id: '58f8ad8908813b000746c048',
-                isShared: false,
+                share: false,
                 name: 'widget title3',
                 owner: 'default',
                 content_parameters: {
@@ -1113,7 +1113,7 @@ define([], function () {
             {
                 filter_id: '58c28fdb8b87bc0007d972cf',
                 id: '58ec988f97a1c0000792868c',
-                isShared: true,
+                share: true,
                 name: '12121211',
                 owner: 'superadmin'
             }

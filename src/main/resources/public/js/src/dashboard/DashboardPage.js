@@ -47,7 +47,7 @@ define(function (require, exports, module) {
             this.listenTo(this.collection, 'after:update', this.onChangeShare);
         },
         onChangeShare: function (model) {
-            if (typeof model.changed.isShared !== 'undefined') {
+            if (typeof model.changed.share !== 'undefined') {
                 launchFilterCollection.ready.done(function () {
                     launchFilterCollection.update();
                 });

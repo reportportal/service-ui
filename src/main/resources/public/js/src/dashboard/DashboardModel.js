@@ -31,7 +31,7 @@ define(function (require, exports, module) {
 
     var DashboardModel = Epoxy.Model.extend({
         defaults: {
-            isShared: false,
+            share: false,
             name: '',
             description: null,
             owner: '',
@@ -64,13 +64,13 @@ define(function (require, exports, module) {
             }
         },
         initialize: function() {
-            this.listenTo(this, 'change:isShared change:description change:name', _.debounce(this.onChangeData, 10)) ;
+            this.listenTo(this, 'change:share change:description change:name', _.debounce(this.onChangeData, 10)) ;
             this.listenTo(this, 'change:widgets', this.onChangeWidgets);
         },
         onChangeData: function() {
             var data = {
                 name: this.get('name'),
-                share: this.get('isShared'),
+                share: this.get('share'),
             };
             if(this.get('description')) {
                 data.description = this.get('description');
