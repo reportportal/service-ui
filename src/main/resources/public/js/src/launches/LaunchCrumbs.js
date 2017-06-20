@@ -269,7 +269,8 @@ define(function (require) {
         events: {
             'click [data-js-link]': 'onClickItem'
         },
-        initialize: function () {
+        initialize: function (options) {
+            this.context = options.context;
             this.listenTo(this.model, 'remove', this.onRemove);
             this.listenTo(this.model, 'change:afterListView', this.onChangeAfterListView);
             this.onChangeAfterListView();
@@ -286,7 +287,7 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, {}));
         },
         renderPathNames: function () {
-            var allFilterModel = new FilterModel({ id: 'all' });
+            var allFilterModel = new FilterModel({ id: 'all', context: this.context });
             var url = allFilterModel.get('url') + '/' + this.model.get('launchId');
             var data = [];
             allFilterModel.destroy();
@@ -400,7 +401,8 @@ define(function (require) {
         },
         onAddCrumb: function (model) {
             $('[data-js-crumbs-container]', this.$el).append((new LaunchCrumbView({
-                model: model
+                model: model,
+                context: this.context
             })).$el);
         },
         onClickSwitchMode: function () {
