@@ -38,7 +38,7 @@ define(function (require) {
 
         bindings: {
             '[data-js-name-input]': 'value: name',
-            '[data-js-is-shared]': 'checked: isShared',
+            '[data-js-is-shared]': 'checked: share',
             '[data-js-description]': 'value: description'
         },
 
@@ -61,7 +61,7 @@ define(function (require) {
 
             this.model = new Epoxy.Model({
                 name: dashboardModel.get('name'),
-                isShared: dashboardModel.get('isShared'),
+                share: dashboardModel.get('share'),
                 description: dashboardModel.get('description')
             });
             Util.hintValidator($('[data-js-name-input]', this.$el), [{
@@ -75,7 +75,7 @@ define(function (require) {
                 type: '',
                 max: 256
             });
-            this.listenTo(this.model, 'change:isShared', this.onChangeShared);
+            this.listenTo(this.model, 'change:share', this.onChangeShared);
             this.listenTo(this.model, 'change:description', this.onChangeDescription);
         },
         render: function (options) {

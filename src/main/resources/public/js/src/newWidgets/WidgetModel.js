@@ -28,7 +28,7 @@ define(function (require, exports, module) {
             content: {},
             content_parameters: {},
             filter_id: '',
-            isShared: false,
+            share: false,
             name: '',
             owner: '',
             interval: 3 // default interval for status page widgets
@@ -91,7 +91,7 @@ define(function (require, exports, module) {
                 content: JSON.stringify(data.content),
                 content_parameters: JSON.stringify(data.content_parameters),
                 filter_id: data.filter_id,
-                isShared: data.isShared,
+                share: data.share,
                 name: data.name,
                 owner: data.owner,
                 interval: data.interval || 3

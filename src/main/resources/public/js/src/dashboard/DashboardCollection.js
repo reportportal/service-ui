@@ -48,7 +48,7 @@ define(function (require) {
         onAddDashboard: function (model) {
             var dashboard = {
                 name: model.get('name'),
-                share: model.get('isShared'),
+                share: model.get('share'),
                 description: model.get('description')
             };
             Service.addOwnDashboard(dashboard)
@@ -121,7 +121,7 @@ define(function (require) {
                 if (key === startId) {
                     newValue.active = true;
                 }
-                newValue.isShared = true;
+                newValue.share = true;
                 newValue.id = key;
                 newValue.notLoad = true;
                 widgetsData.push(value);

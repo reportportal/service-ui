@@ -8,7 +8,7 @@
                     class="dashboard-selector dashboard-project-link clearfix disabled"
                     title="<%= dashboard.name %>">
                     <span class="dashboard-project-name"><%- dashboard.name %></span>
-                    <% if(dashboard.isShared) { %>
+                    <% if(dashboard.share) { %>
                         <i class="material-icons mi-share">reply</i>
                     <% } %>
                 </a>
@@ -16,7 +16,7 @@
                 <% var cls = data.validateForMaxWidgts(dashboard) ? 'class="dashboard-selector dashboard-project-link clearfix disabled" title="'+ data.text.dashboard.maxWidgetsAdded +'" ' : 'class="dashboard-selector dashboard-project-link clearfix ' + (data.model.dashboard_id === dashboard.id ? 'active' : '') +'"' %>
                 <a href="#" <%= cls %> id="<%= dashboard.id %>">
                     <span class="dashboard-project-name"><%- dashboard.name %></span>
-                    <% if(dashboard.isShared) { %>
+                    <% if(dashboard.share) { %>
                         <i class="material-icons mi-share">reply</i>
                     <% } %>
                 </a>

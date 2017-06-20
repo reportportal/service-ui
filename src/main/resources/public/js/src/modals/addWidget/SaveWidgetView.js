@@ -38,13 +38,13 @@ define(function (require) {
         bindings: {
             '[data-js-name-input]': 'value: name',
             '[data-js-description]': 'value: description',
-            '[data-js-is-shared]': 'checked: isShared'
+            '[data-js-is-shared]': 'checked: share'
         },
         initialize: function (options) {
             this.dashboardModel = options.dashboardModel;
             this.isNoDashboard = options.isNoDashboard;
-            if (this.dashboardModel && this.dashboardModel.get('isShared')) {
-                this.model.set('isShared', true);
+            if (this.dashboardModel && this.dashboardModel.get('share')) {
+                this.model.set('share', true);
             }
             this.render();
             Util.hintValidator($('[data-js-name-input]', this.$el), [
@@ -58,7 +58,7 @@ define(function (require) {
             });
             this.listenTo(this.model, 'change:name', this.onChangeName);
             this.listenTo(this.model, 'change:description', this.onChangeDescription);
-            this.listenTo(this.model, 'change:isShared', this.onChangeShared);
+            this.listenTo(this.model, 'change:share', this.onChangeShared);
             this.updateSharedSwitcher();
         },
         onChangeDashboard: function (model) {
@@ -67,7 +67,7 @@ define(function (require) {
             this.trigger('change::dashboard', this.dashboardModel);
         },
         isSharedDashboard: function () {
-            return this.dashboardModel && this.dashboardModel.get('isShared');
+            return this.dashboardModel && this.dashboardModel.get('share');
         },
         onChangeDescription: function () {
             if (this.dashboardModel) {
@@ -94,11 +94,11 @@ define(function (require) {
         updateSharedSwitcher: function () {
             if (this.dashboardModel) {
                 if (this.isSharedDashboard()) {
-                    this.model.set('isShared', true);
+                    this.model.set('share', true);
                     $('[data-js-is-shared]', this.$el).prop('disabled', true);
                     $('[data-js-shared-control]', this.$el).addClass('disabled').attr('title', Localization.wizard.widgetOnSharedDashboard);
                 } else {
-                    this.model.set('isShared', false);
+                    this.model.set('share', false);
                     $('[data-js-is-shared]', this.$el).prop('disabled', false);
                     $('[data-js-shared-control]', this.$el).removeClass('disabled').attr('title', '');
                 }
