@@ -397,7 +397,7 @@ define(function (require, exports, module) {
         },
         setupBaronScroll: function ($element, inner, options) {
             var direction = options && options.direction ? options.direction : 'v';
-            var wrapHtml = '<div class="baron baron__root baron__clipper ' + (direction == 'h' ? 'baron__horizontal' : '') + '"><div class="baron_scroller"></div></div>';
+            var wrapHtml = '<div class="baron baron__root baron__clipper ' + (direction == 'h' ? 'baron__horizontal' : '') + '"><div class="baron_scroller" tabindex="-1"></div></div>';
             var $rootElement = null;
             if (inner) {
                 $element.wrapInner(wrapHtml);

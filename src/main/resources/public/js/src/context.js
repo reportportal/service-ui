@@ -102,6 +102,7 @@ define(function (require, exports, module) {
             } else {
                 this.mainView.update(data);
             }
+            config.mainScrollElement.focus();
         },
 
         openRouted: function (projectId, contextName, subContext, queryString) {
@@ -136,6 +137,7 @@ define(function (require, exports, module) {
                 } else {
                     self.mainView.update(data);
                 }
+                config.mainScrollElement.focus();
             };
             this.validateContentViewByContextName(contextName);
             if (dependenciesCalls.length) {
