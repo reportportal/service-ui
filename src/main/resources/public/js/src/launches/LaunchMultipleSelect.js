@@ -233,7 +233,7 @@ define(function (require) {
             } else {
                 this.collection.remove(model.get('id'));
             }
-            this.checkStatus();
+            this.checkStatus(model);
             Util.setupBaronScrollSize(this.scrollItems, { maxHeight: 120 });
             this.scrollItems.scrollTop(this.scrollItems.get(0).scrollHeight);
         },
@@ -249,7 +249,8 @@ define(function (require) {
                 commonModel && commonModel.set({ select: true });
             });
         },
-        checkStatus: function () {
+        checkStatus: function (model) {
+            model.trigger('before:toggle:multipleSelect');
             if (this.collection.models.length && !this.activate) {
                 this.trigger('activate:true');
                 this.activate = true;
@@ -258,13 +259,14 @@ define(function (require) {
                 this.trigger('activate:false');
                 this.activate = false;
             }
+            model.trigger('toggle:multipleSelect');
         },
         onUnCheckItem: function (model) {
             var commonModel = this.collectionItems.get(model.get('id'));
             model.set({ invalidMessage: '' });
             if (!commonModel) {
                 this.collection.remove(model);
-                this.checkStatus();
+                this.checkStatus(model);
             }
             if (this.currentAction) {
                 this.actionValidators[this.currentAction].call(this);

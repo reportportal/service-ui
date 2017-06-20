@@ -22,7 +22,6 @@ define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
     var _ = require('underscore');
@@ -31,14 +30,15 @@ define(function (require) {
     var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
+    var CommonItemView = require('launches/common/CommonItemView');
 
     var config = App.getInstance();
 
-    var StepItemView = Epoxy.View.extend({
+    var StepItemView = CommonItemView.extend({
         template: 'tpl-launch-step-item',
         className: 'row rp-table-row',
         events: {
-            'click [data-js-name-link]': 'onClickName',
+            'click [data-js-name-link]': 'onClickName', // common method
             'click [data-js-time-format]': 'toggleStartTimeView',
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
@@ -107,6 +107,8 @@ define(function (require) {
             this.listenTo(this.model, 'change:description', function (model, description) { self.markdownViewer.update(description); });
             this.listenTo(this.model, 'change:description change:tags change:issue', this.activateAccordion);
             this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
+            this.listenTo(this.model, 'before:toggle:multipleSelect', this.afterChangeScrollTop);
+            this.listenTo(this.model, 'toggle:multipleSelect', this.changeScrollTop);
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {
@@ -156,12 +158,6 @@ define(function (require) {
         },
         addFastFilter: function (filterId, value) {
             this.filterModel.trigger('add_entity', filterId, value);
-        },
-        onClickName: function () {
-            config.trackingDispatcher.trackEventNumber(23);
-            if (this.model.get('has_childs')) {
-                this.model.trigger('drill:item', this.model);
-            }
         },
         onClickEdit: function () {
             config.trackingDispatcher.trackEventNumber(149);

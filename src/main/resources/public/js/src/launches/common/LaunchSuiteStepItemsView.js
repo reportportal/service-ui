@@ -18,25 +18,24 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var App = require('app');
     var Components = require('core/components');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var ParentStepItemView = require('launches/stepLevel/ParentStepItemView');
-
-    var config = App.getInstance();
 
     var LaunchSuiteTestItemsView = Epoxy.View.extend({
         className: 'launch-suite-step-items',
         template: 'tpl-launch-suite-step-items',
 
-        initialize: function(options) {
+        initialize: function (options) {
+            var self = this;
             this.itemView = options.itemView;
             this.filterModel = options.filterModel;
             this.userStorage = new SingletonUserStorage();
@@ -50,81 +49,79 @@ define(function (require, exports, module) {
 
             this.paging = new Components.PagingToolbar({
                 el: $('[data-js-paginate-container]', this.$el),
-                model: this.pagingModel,
+                model: this.pagingModel
             });
             this.renderItems();
 
             this.listenTo(this.paging, 'page', this.onChangePage);
             this.listenTo(this.paging, 'count', this.onChangePageCount);
-            if(!this.collection.models.length) {
+            if (!this.collection.models.length) {
                 this.$el.addClass('not-found');
             }
-            var self = this;
             $(window)
                 .off('resize.launchItems')
-                .on('resize.launchItems', _.debounce(self.activateAccordions.bind(self), 100))
+                .on('resize.launchItems', _.debounce(self.activateAccordions.bind(self), 100));
         },
-        activateNextId: function(id) {
+        activateNextId: function (id) {
             var activeItem = this.collection.get(id);
             if (activeItem) {
                 activeItem.trigger('scrollToAndHighlight');
             }
         },
-        onChangeTimeFormat: function(silent) {
+        onChangeTimeFormat: function (silent) {
             var timeFormat = this.userStorage.get('startTimeFormat');
             if (!silent) {
-                if(timeFormat === 'exact'){
-                    timeFormat = ''
-                }
-                else {
+                if (timeFormat === 'exact') {
+                    timeFormat = '';
+                } else {
                     timeFormat = 'exact';
                 }
                 this.userStorage.set('startTimeFormat', timeFormat);
             }
-            if(timeFormat) {
+            if (timeFormat) {
                 this.$el.addClass('exact-driven');
             } else {
                 this.$el.removeClass('exact-driven');
             }
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        onShow: function() {
+        onShow: function () {
             this.activateAccordions();
         },
-        activateAccordions: function() {
-            _.each(this.renderedItems, function(view) {
+        activateAccordions: function () {
+            _.each(this.renderedItems, function (view) {
                 view.activateAccordion && view.activateAccordion();
             });
         },
-        onLoadingCollection: function(state) {
-            if(state) {
+        onLoadingCollection: function (state) {
+            if (state) {
                 this.$el.addClass('load').removeClass('not-found');
                 return;
             }
             this.activateAccordions();
             this.$el.removeClass('load');
-            if(!this.collection.models.length) {
+            if (!this.collection.models.length) {
                 this.$el.addClass('not-found');
             }
         },
-        onChangePage: function(page) {
+        onChangePage: function (page) {
             this.collection.setPaging(page);
         },
-        onChangePageCount: function(count) {
+        onChangePageCount: function (count) {
             this.collection.setPaging(1, count);
         },
-        renderItems: function() {
+        renderItems: function () {
             var $itemsContainer = $('[data-js-launches-container]', this.$el),
                 isAllCases = this.collection.validateForAllCases(),
                 self = this;
             $itemsContainer.html('');
-            if(isAllCases){
+            if (isAllCases) {
                 var parentPath = {};
-                _.each(self.collection.models, function(model) {
+                _.each(self.collection.models, function (model) {
                     var needParentLine = self.isValidForParent(model, parentPath);
-                    if(needParentLine){
+                    if (needParentLine) {
                         parentPath = needParentLine;
                         var prentItem = new ParentStepItemView({
                             parentPath: needParentLine,
@@ -133,14 +130,13 @@ define(function (require, exports, module) {
                         $itemsContainer.append(prentItem.$el);
                         self.renderedItems.push(prentItem);
                     }
-                    var item = new self.itemView({model: model, filterModel: self.filterModel})
+                    var item = new self.itemView({ model: model, filterModel: self.filterModel });
                     $itemsContainer.append(item.$el);
                     self.renderedItems.push(item);
                 });
-            }
-            else {
-                _.each(self.collection.models, function(model) {
-                    var item = new self.itemView({model: model, filterModel: self.filterModel})
+            } else {
+                _.each(self.collection.models, function (model) {
+                    var item = new self.itemView({ model: model, filterModel: self.filterModel });
                     $itemsContainer.append(item.$el);
                     self.renderedItems.push(item);
                 });
@@ -152,13 +148,12 @@ define(function (require, exports, module) {
             if (_.isEmpty(parentLine) || !_.isEqual(item.get('path_names'), parentLine)) {
                 parentLine = item.get('path_names');
                 return parentLine;
-            } else {
-                return false;
             }
+            return false;
         },
         destroy: function () {
             $(window).off('resize.launchItems');
-            while(this.renderedItems.length) {
+            while (this.renderedItems.length) {
                 this.renderedItems.pop().destroy();
             }
             this.undelegateEvents();
