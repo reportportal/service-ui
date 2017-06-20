@@ -310,7 +310,7 @@
              .dropdown-menu {
                min-width: 140px;
                margin-top: 0;
-               top: 44px;
+               top: 45px;
                padding: 0;
                border-radius: 0;
                border-color: #d9d9d9;
@@ -318,6 +318,10 @@
                li {
                  position: relative;
                  padding: 0;
+
+                 &:nth-last-child(1) {
+                   border-top: 1px solid $COLOR--gray-91;
+                 }
 
                  a {
                    @include fontHeader;
