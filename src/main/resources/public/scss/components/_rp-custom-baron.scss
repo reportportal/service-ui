@@ -146,6 +146,11 @@
       left: 0;
     }
   }
+  .baron_scroller {
+    &:focus {
+      outline: none;
+    }
+  }
 }
 
 .baron .baron__track:hover,
