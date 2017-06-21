@@ -18,21 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 'use strict';
 
-define(function(require, exports, module) {
+define(function (require) {
     var AnalyticsObject = require('analytics/AnalyticsObject');
-    var $ = require('jquery');
 
     var AnalyticsGA = AnalyticsObject.extend({
-        initialize: function() {
-            if('DEBUG_STATE') {
+        initialize: function () {
+            if ('DEBUG_STATE') {
                 return;
             }
             window.ga = window.ga || function () {
-                    (ga.q = ga.q || []).push(arguments)
-                };
-            ga.l = +new Date;
+                (ga.q = ga.q || []).push(arguments);
+            };
+            ga.l = +new Date();
             ga('create', 'UA-96321031-1', 'auto');
             ga('send', 'pageview');
             var script = document.createElement('script');
@@ -41,16 +41,15 @@ define(function(require, exports, module) {
             script.src = 'https://www.google-analytics.com/analytics.js';
             var lastScript = document.getElementsByTagName('script')[0];
             lastScript.parentNode.insertBefore(script, lastScript);
-
         },
-        send: function(data) {
-            if('DEBUG_STATE') {
+        send: function (data) {
+            if ('DEBUG_STATE') {
                 return;
             }
             ga('send', 'event', data[0], data[1], data[2]);
         },
-        pageView: function(data) {
-            if('DEBUG_STATE') {
+        pageView: function (data) {
+            if ('DEBUG_STATE') {
                 return;
             }
             ga('send', 'pageview', data[0]);

@@ -1,26 +1,27 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
+
 'use strict';
 
-define(function(require, exports, module) {
+define(function (require) {
     var Backbone = require('backbone');
 
     var eventTable = {
@@ -102,7 +103,7 @@ define(function(require, exports, module) {
 
         67: ['Launches', 'Click on Close Icon on Tag of Launch', 'Remove launch from  selection'],
         68: ['Launches', 'Click on Close Icon of all selection', 'Unselect all launches'],
-        //69: ['Launches', 'Click on Close Icon on Error Tag of Launch', 'Remove launch from  selection'],
+        // 69: ['Launches', 'Click on Close Icon on Error Tag of Launch', 'Remove launch from  selection'],
         70: ['Launches', 'Click on Bttn "Proceed Valid Items"', 'Remove invalid launches from selection'],
 
         71.1: ['Modal Launches', 'Click on Close Icon on Modal "Edit Launch"', 'Close modal "Edit Launch"'],
@@ -528,16 +529,19 @@ define(function(require, exports, module) {
         510: ['Log', 'Click on icon Rotate on Modal Attachment', 'Rotate Attachment'],
         511: ['Log', 'Click on Bttn Close on Modal Attachment', 'Close Modal Attachment'],
 
-    }
+        512: ['Server Settings', 'Edit checkbox Help make ReportPortal better on tab Statistics', 'Check Help make ReportPortal better on tab Statistics'],
+        512.5: ['Server Settings', 'Edit checkbox Help make ReportPortal better on tab Statistics', 'Uncheck Help make ReportPortal better on tab Statistics'],
+        513: ['Server Settings', 'Click on Bttn Submit on tab Statistics', 'Submit changes on tab Statistics']
+    };
 
-    function getExportTitle(type){
+    function getExportTitle(type) {
         return 'Click on "Export: ' + type + '" in Launch Menu';
     }
-    function getExportDescription(type){
+    function getExportDescription(type) {
         return 'Stars download of report in ' + type;
     }
     function getActionLaunchTitle(titleName) {
-        return 'Hover on Table title "' + titleName +'"';
+        return 'Hover on Table title "' + titleName + '"';
     }
     function getDescriptionLaunchTitle(titleName) {
         return 'Arise filter icon before Table title "' + titleName + '"';
@@ -548,19 +552,19 @@ define(function(require, exports, module) {
     function getDescriptionTableFilter() {
         return 'Arise new field in filter';
     }
-    function getTooltipDescription(){
+    function getTooltipDescription() {
         return 'Arise tooltip';
     }
 
     var TrackingDispatcher = {
-        trackEvent: function(){
+        trackEvent: function () {
             this.trigger('track:event', arguments);
         },
-        pageView: function() {
+        pageView: function () {
             this.trigger('page:view', arguments);
         },
-        trackEventNumber: function(num) {
-            if(!eventTable[num]) {
+        trackEventNumber: function (num) {
+            if (!eventTable[num]) {
                 console.log('event "' + num + '" not found');
                 return;
             }
