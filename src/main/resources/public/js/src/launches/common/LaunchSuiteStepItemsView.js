@@ -37,6 +37,7 @@ define(function (require, exports, module) {
         template: 'tpl-launch-suite-step-items',
 
         initialize: function(options) {
+            this.context = options.context;
             this.itemView = options.itemView;
             this.filterModel = options.filterModel;
             this.userStorage = new SingletonUserStorage();
@@ -127,6 +128,7 @@ define(function (require, exports, module) {
                     if(needParentLine){
                         parentPath = needParentLine;
                         var prentItem = new ParentStepItemView({
+                            context: self.context,
                             parentPath: needParentLine,
                             launchId: model.get('launchId')
                         });
