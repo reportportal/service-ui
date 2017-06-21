@@ -36,6 +36,7 @@ define(function (require) {
 
         initialize: function (options) {
             var self = this;
+            this.context = options.context;
             this.itemView = options.itemView;
             this.filterModel = options.filterModel;
             this.userStorage = new SingletonUserStorage();
@@ -124,6 +125,7 @@ define(function (require) {
                     if (needParentLine) {
                         parentPath = needParentLine;
                         var prentItem = new ParentStepItemView({
+                            context: self.context,
                             parentPath: needParentLine,
                             launchId: model.get('launchId')
                         });

@@ -29,13 +29,14 @@ define(function (require) {
         template: 'tpl-launch-step-parent',
 
         initialize: function (options) {
+            this.context = options.context;
             this.render(options);
         },
         render: function (options) {
             var startUrl = '';
             var allFilterModel;
             if (options.launchId) {
-                allFilterModel = new FilterModel({ id: 'all' });
+                allFilterModel = new FilterModel({ id: 'all', context: this.context });
                 startUrl = allFilterModel.get('url') + '/' + options.launchId;
                 allFilterModel.destroy();
             }

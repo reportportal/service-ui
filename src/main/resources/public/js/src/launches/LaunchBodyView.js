@@ -260,6 +260,7 @@ define(function (require) {
             });
             this.body = new StepTableView({
                 el: $('[data-js-info-container]', this.$el),
+                context: this.context,
                 filterModel: info.filterModel,
                 model: (info.launchModel || info.parentModel),
                 collectionItems: this.collectionItems,

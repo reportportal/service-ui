@@ -60,6 +60,7 @@ define(function (require) {
         },
         initialize: function (options) {
             var self = this;
+            this.context = options.context;
             this.filterModel = options.filterModel;
             this.collectionItems = options.collectionItems;
             if (this.collectionItems.noChildFilter) {
@@ -68,6 +69,7 @@ define(function (require) {
             this.render();
 
             this.tableItems = new LaunchSuiteStepItemsView({
+                context: this.context,
                 collection: this.collectionItems,
                 itemView: StepItemView,
                 filterModel: this.filterModel
