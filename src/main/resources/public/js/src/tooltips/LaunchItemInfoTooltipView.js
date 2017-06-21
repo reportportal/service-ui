@@ -84,8 +84,8 @@ define(function (require, exports, module) {
 
         initialize: function(options) {
             this.render();
-            var markdownViewer = new MarkdownViewer({text: this.model.get('description')});
-            $('[data-js-description]', this.$el).html(markdownViewer.$el);
+            this.markdownViewer = new MarkdownViewer({text: this.model.get('description')});
+            $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
             this.duration = new ItemDurationView({
                 model: this.model,
                 el: $('[data-js-item-status]', this.$el)
@@ -94,6 +94,9 @@ define(function (require, exports, module) {
 
         render: function() {
             this.$el.html(Util.templates(this.template));
+        },
+        onDestroy: function () {
+            this.markdownViewer && this.markdownViewer.destroy();
         }
     });
 

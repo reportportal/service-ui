@@ -179,12 +179,10 @@ define(function (require) {
         onClickOpen: function () {
             this.$el.toggleClass('open');
         },
-        destroy: function () {
+        onDestroy: function () {
             this.issueView && this.issueView.destroy();
             this.duration && this.duration.destroy();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+            this.markdownViewer && this.markdownViewer.destroy();
             this.$el.html('');
             delete this;
         }

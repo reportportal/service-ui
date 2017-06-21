@@ -22,7 +22,7 @@
 .modal-filter-edit {
   .modal-content-wrapper {
     .modal-body {
-      padding: 30px 20px 21px 29px;
+      padding: 30px 20px 21px 20px;
 
       & > .modal-field {
         width: 100%;
@@ -40,24 +40,19 @@
           display: block;
           float: left;
           margin-right: 30px;
-          min-width: 80px;
+          min-width: 35px;
           text-align: right;
           line-height: 30px;
 
         }
-        & > input, textarea {
+        & > input {
           margin-top: 0;
           display: block;
-          width: 350px;
+          width: 473px;
         }
         .validate-hint {
-          width: 350px;
-          margin-left: 110px;
-        }
-      }
-      .description-label {
-        textarea {
-          height: 68px;
+          width: 473px;
+          margin-left: 66px;
         }
       }
       .share-label {
@@ -74,7 +69,7 @@
             text-align: left;
           }
 
-          & > input, textarea {
+          & > input {
             width: 100%;
           }
         }

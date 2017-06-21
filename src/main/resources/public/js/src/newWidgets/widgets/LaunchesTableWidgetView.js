@@ -368,10 +368,8 @@ define(function (require, exports, module) {
                 .call(chart)
             ;
         },
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
+            this.markdownViewer && this.markdownViewer.destroy();
             this.$el.remove();
             delete this;
         }

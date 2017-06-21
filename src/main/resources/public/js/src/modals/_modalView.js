@@ -94,6 +94,7 @@ define(function (require) {
             this.closeAsync && this.closeAsync.resolve(data);
         },
         onDestroy: function () {
+            this.onHide && this.onHide();
             $(window).off('keydown.modal');
             delete this;
         }

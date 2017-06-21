@@ -29,7 +29,8 @@ define(function (require) {
     var Util = require('util');
     var Service = require('coreService');
     var App = require('app');
-
+    var MarkdownEditor = require('components/markdown/MarkdownEditor');
+    var Localization = require('localization');
     var config = App.getInstance();
 
     var ModalFilterEdit = ModalView.extend({
@@ -69,6 +70,7 @@ define(function (require) {
                 description: filterModel.get('description')
             });
             this.render(options);
+            this.markdownEditorSetup();
             this.listenTo(this.model, 'change:description', this.onChangeDescription);
             this.listenTo(this.model, 'change:share', this.onChangeShared);
             Service.getFilterNames()
@@ -82,6 +84,15 @@ define(function (require) {
                 .always(function () {
                     self.addValidators(filterNames);
                 });
+        },
+        markdownEditorSetup: function () {
+            var self = this;
+            this.markdownEditor = new MarkdownEditor({
+                value: this.model.get('description'),
+                placeholder: Localization.filter.descriptionPlaceholder
+            });
+            $('[data-js-markdown-container]', this.$el).html(this.markdownEditor.$el);
+            this.listenTo(this.markdownEditor, 'change', function (value) { self.model.set({ description: value }); });
         },
         addValidators: function (filterNames) {
             Util.hintValidator($('[data-js-name-input]', this.$el), [{
@@ -98,6 +109,12 @@ define(function (require) {
         },
         render: function (options) {
             this.$el.html(Util.templates(this.template, options));
+        },
+        onShown: function() {
+            this.markdownEditor.update();
+        },
+        onHide: function () {
+            this.markdownEditor.destroy();
         },
         onKeySuccess: function () {
             $('[data-js-ok]', this.$el).focus().trigger('click');

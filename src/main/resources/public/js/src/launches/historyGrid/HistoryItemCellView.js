@@ -91,8 +91,8 @@ define(function (require, exports, module) {
             getIssue: {
                 set: function ($el) {
                     function getMarkdownHtml(value) {
-                        var markdownViewer = new MarkdownViewer({text: value});
-                        return markdownViewer.$el.wrap('<p/>').parent().html();
+                        this.markdownViewer = new MarkdownViewer({text: value});
+                        return this.markdownViewer.$el.wrap('<p/>').parent().html();
                     }
                     var model = this.view.model,
                         issue = model.get('issue');
@@ -166,10 +166,8 @@ define(function (require, exports, module) {
 
             }
         },
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
+            this.markdownViewer && this.markdownViewer.destroy();
             this.$el.html('');
             delete this;
         }
