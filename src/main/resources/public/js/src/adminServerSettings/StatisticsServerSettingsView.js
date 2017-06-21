@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -28,6 +28,9 @@ define(function (require, exports, module) {
     var Service = require('coreService');
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
     var SingletonAnalyticsConnect = require('analytics/SingletonAnalyticsConnect');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var StatisticsServerSettingsView = Epoxy.View.extend({
 
@@ -36,7 +39,8 @@ define(function (require, exports, module) {
 
         events: {
             'click [statistics-list-toggler]': 'toggleList',
-            'click [data-js-submit]': 'submit'
+            'click [data-js-submit]': 'submit',
+            'change [data-js-switcher]': 'onChangeSwitcher'
         },
 
         bindings: {
@@ -44,7 +48,7 @@ define(function (require, exports, module) {
         },
 
 
-        initialize: function (options) {
+        initialize: function () {
             this.model = new SingletonRegistryInfoModel();
             this.analyticsConnect = new SingletonAnalyticsConnect();
             this.render();
@@ -62,10 +66,17 @@ define(function (require, exports, module) {
         toggleList: function () {
             $('.statistics-list', this.$el).toggleClass('list-shown');
         },
-
+        onChangeSwitcher: function () {
+            if (this.$switcher.prop('checked')) {
+                config.trackingDispatcher.trackEventNumber(512);
+            } else {
+                config.trackingDispatcher.trackEventNumber(512.5);
+            }
+        },
         submit: function () {
             var self = this;
             var enabled = self.$switcher.prop('checked');
+            config.trackingDispatcher.trackEventNumber(513);
             Service.toggleAnalytics({
                 enabled: enabled,
                 type: 'all'
