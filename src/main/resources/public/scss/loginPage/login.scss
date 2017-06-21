@@ -140,25 +140,66 @@
 
         &.gh-icon {
           background-image: url(../../img/login/socials/socialGh.svg);
+          &:hover {
+            background-image: url(../../img/login/socials/socialGh-hv.svg);
+          }
+          &:active {
+            background-image: url(../../img/login/socials/socialGh-act.svg);
+          }
         }
         &.fb-icon {
           background-image: url(../../img/login/socials/social-cuk.svg);
+          &:hover {
+            background-image: url(../../img/login/socials/social-cuk-hv.svg);
+          }
+          &:active {
+            background-image: url(../../img/login/socials/social-cuk-act.svg);
+          }
         }
         &.tw-icon {
           background-image: url(../../img/login/socials/socialTw.svg);
+          &:hover {
+            background-image: url(../../img/login/socials/socialTw-hv.svg);
+          }
+          &:active {
+            background-image: url(../../img/login/socials/socialTw-act.svg);
+          }
         }
         &.vk-icon {
           background-image: url(../../img/login/socials/socialVk.svg);
+          &:hover {
+            background-image: url(../../img/login/socials/socialVk-hv.svg);
+          }
+          &:active {
+            background-image: url(../../img/login/socials/socialVk-act.svg);
+          }
         }
         &.yt-icon {
           background-image: url(../../img/login/socials/socialYt.svg);
+          &:hover {
+            background-image: url(../../img/login/socials/socialYt-hv.svg);
+          }
+          &:active {
+            background-image: url(../../img/login/socials/socialYt-act.svg);
+          }
         }
         &.slk-icon {
           background-image: url(../../img/login/socials/socialSl.svg);
+          &:hover {
+            background-image: url(../../img/login/socials/socialSl-hv.svg);
+          }
+          &:active {
+            background-image: url(../../img/login/socials/socialSl-act.svg);
+          }
         }
         &.mail-icon {
           background-image: url(../../img/login/socials/socialMl.svg);
-          opacity: 0.75;
+          &:hover {
+            background-image: url(../../img/login/socials/socialMl-hv.svg);
+          }
+          &:active {
+            background-image: url(../../img/login/socials/socialMl-act.svg);
+          }
           margin-right: 0;
         }
       }
