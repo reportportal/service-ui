@@ -164,6 +164,9 @@ define(function (require, exports, module) {
         render: function () {
             this.$el.html(Util.templates(this.template, {isEditLaunch: this.isEditLaunch()}));
         },
+        onHide: function () {
+            this.markdownEditor.destroy();
+        },
         onClickClose: function(e){
             switch (this.itemModel.get('type')) {
                 case 'SUITE':

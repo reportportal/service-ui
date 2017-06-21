@@ -271,10 +271,8 @@ define(function (require, exports, module) {
                     Util.ajaxFailMessenger(error);
                 });
         },
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
+            this.markdownViewer && this.markdownViewer.destroy();
             this.$el.html('');
             delete this;
         }

@@ -109,6 +109,9 @@ define(function (require) {
             } else {
                 this.$el.removeClass('show-accordion');
             }
+        },
+        onDestroy: function () {
+            this.markdownViewer && this.markdownViewer.destroy();
         }
     });
 

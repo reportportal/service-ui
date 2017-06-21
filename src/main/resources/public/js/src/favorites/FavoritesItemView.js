@@ -30,7 +30,7 @@ define(function (require) {
     var App = require('app');
     var FilterListener = require('controlers/filterControler/FilterListener');
     var ModalFilterEdit = require('modals/modalFilterEdit');
-
+    var MarkdownViewer = require('components/markdown/MarkdownViewer');
     var config = App.getInstance();
 
     var FavoritesItemView = Epoxy.View.extend({
@@ -46,7 +46,6 @@ define(function (require) {
             ':el': 'classes: {"not-owner": notMyFilter}',
             '[data-js-filter-link]': 'text: name, attr: {href: url}, classes: {hide: not(isLaunch)}',
             '[data-js-filter-name]': 'text: name, classes: {hide: isLaunch}',
-            '[data-js-description]': 'text: description',
             '[data-js-filter-options]': 'html: optionsString',
             '[data-js-owner]': 'text: owner',
             '[data-js-filter-shared]': 'classes: {hide: not(share)}, attr: {disabled: notMyFilter}',
@@ -71,11 +70,18 @@ define(function (require) {
             this.filterListener = new FilterListener();
             this.filterEvents = this.filterListener.events;
             this.render();
+            this.setupMarkdownViewer();
             this.listenTo(this.model, 'change:isLaunch', this.onSwitchOnLaunches);
             this.listenTo(this.model, 'remove', this.destroy);
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        setupMarkdownViewer: function () {
+            var self = this;
+            this.markdownViewer = new MarkdownViewer({ text: this.model.get('description') });
+            $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
+            this.listenTo(this.model, 'change:description', function (model, description) { self.markdownViewer.update(description); });
         },
         onSwitchOnLaunches: function (model, isLaunch) {
             config.trackingDispatcher.trackEventNumber(243);
@@ -148,6 +154,7 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(242);
         },
         onDestroy: function () {
+            this.markdownViewer.destroy();
             this.$el.remove();
         }
     });

@@ -1,4 +1,5 @@
 <%= data.includeTemplate('_tpl-modal-header', {headerText: ((data.mode == 'save')?data.text.dialog.addFilter:data.text.dialog.editFilter)}) %>
+
 <div class="modal-body">
     <label class="name-label modal-field form-group">
         <span class="field-title"><%= data.text.filter.name %></span>
@@ -7,9 +8,7 @@
     </label>
 
     <label class="description-label modal-field">
-        <span class="field-title"><%= data.text.filter.description %></span>
-        <textarea class="rp-input form-control" placeholder="<%= data.text.filter.descriptionPlaceholder %>" data-js-description></textarea>
-        <!--<span class="help-inline"></span>-->
+        <div data-js-markdown-container></div>
     </label>
     <label class="share-label modal-field form-group">
         <span class="field-title"><%= data.text.filter.share %></span>
@@ -20,9 +19,8 @@
             <div class="slider"></div>
         </label>
     </label>
-
-
 </div>
+
 </div>
 <div class="modal-footer">
     <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>

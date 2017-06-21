@@ -358,6 +358,7 @@ define(function (require) {
             }
         },
         onDestroy: function () {
+            this.markdownViewer && this.markdownViewer.destroy();
             this.menu && this.menu.destroy();
             this.duration && this.duration.destroy();
             _.each(this.statistics, function (v) {

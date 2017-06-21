@@ -149,6 +149,9 @@ define(function (require) {
             }
             return true;
         },
+        onHide: function () {
+            this.markdownEditor.destroy();
+        },
         onClickClose: function (e) {
             config.trackingDispatcher.trackEventNumber(157);
         },
