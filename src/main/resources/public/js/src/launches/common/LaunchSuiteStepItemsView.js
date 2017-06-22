@@ -43,6 +43,7 @@ define(function (require) {
             this.listenTo(this.collection, 'reset', this.renderItems);
             this.listenTo(this.collection, 'loading', this.onLoadingCollection);
             this.listenTo(this.collection, 'change:time:format', this.onChangeTimeFormat);
+            this.listenTo(this.collection, 'change', this.checkForFiltersAndReloadCollection);
             this.onChangeTimeFormat(true);
             this.render();
             this.renderedItems = [];
@@ -114,9 +115,9 @@ define(function (require) {
             this.collection.setPaging(1, count);
         },
         renderItems: function () {
-            var $itemsContainer = $('[data-js-launches-container]', this.$el),
-                isAllCases = this.collection.validateForAllCases(),
-                self = this;
+            var $itemsContainer = $('[data-js-launches-container]', this.$el);
+            var isAllCases = this.collection.validateForAllCases();
+            var self = this;
             $itemsContainer.html('');
             if (isAllCases) {
                 var parentPath = {};
@@ -153,14 +154,31 @@ define(function (require) {
             }
             return false;
         },
-        destroy: function () {
+        checkForFiltersAndReloadCollection: function (model) {
+            var self = this;
+            var reload = false;
+            _.each(model.changedAttributes(), function (attr, key) {
+                _.each(self.filterModel.getEntitiesObj(), function (entity) {
+                    var entityField = entity.filtering_field;
+                    if (entityField === 'issue$issue_type' || entityField === 'issue$issue_comment') {
+                        entityField = 'issue';
+                    }
+                    if (key === entityField) {
+                        reload = true;
+                    }
+                });
+            });
+            if (reload) {
+                this.listenToOnce(model, 'updated', function () {
+                    self.collection.load();
+                });
+            }
+        },
+        onDestroy: function () {
             $(window).off('resize.launchItems');
             while (this.renderedItems.length) {
                 this.renderedItems.pop().destroy();
             }
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
             this.$el.remove();
             delete this;
         }
