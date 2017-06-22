@@ -156,7 +156,7 @@ define(function (require, exports, module) {
         },
         initialize: function () {
             this.validate = this.getValidate();
-            this.listenTo(this, 'change:description change:tags', _.debounce(this.onChangeItemInfo, 10));
+            this.listenTo(this, 'change:description change:tags change:issue', _.debounce(this.onChangeItemInfo, 10));
             this.appModel = new SingletonAppModel();
             this.userModel = new UserModel();
         },
@@ -274,6 +274,7 @@ define(function (require, exports, module) {
             return result;
         },
         onChangeItemInfo: function () {
+            var self = this;
             var action = 'updateLaunch';
             if (this.get('type') !== 'LAUNCH') {
                 action = 'updateTestItem';
@@ -283,6 +284,7 @@ define(function (require, exports, module) {
                 tags: this.getTags()
             }, this.get('id'))
                 .done(function () {
+                    self.trigger('updated');
                     Util.ajaxSuccessMessenger(action);
                 })
                 .fail(function (error) {

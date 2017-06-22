@@ -94,7 +94,6 @@ define(function (require) {
                     refreshItems: 0
                 }
             }))();
-            this.listenTo(this.collectionItems, 'change:issue change:description change:tags', this.increaseRefreshItemsCount);
             this.listenTo(this.collectionItems, 'loading', this.resetRefreshItems);
             this.listenTo(this.collectionItems, 'change:issue', this.updateInfoLine);
             this.render();
@@ -152,50 +151,6 @@ define(function (require) {
         },
         resetRefreshItems: function () {
             this.model.set({ refreshItems: 0 });
-        },
-        increaseRefreshItemsCount: function (model) {
-            if (this.isAnyFilterEnabled() && this.isFilteredAttrChanged(model)) {
-                this.model.set({ refreshItems: this.model.get('refreshItems') + 1 });
-            }
-        },
-        isFilteredAttrChanged: function (model) {
-            var self = this;
-            var isFilteredAttrChanged = false;
-            _.each(this.getFilterEntities(), function (filter) {
-                _.each(self.getChangedAttrs(model), function (changedAttrVal, changedAttrKey) {
-                    if (changedAttrKey === 'issue$issue_type' && filter.filtering_field == 'issue$issue_type') {
-                        if (!_.contains(filter.value.split(','), changedAttrVal) && _.isMatch(filter, { filtering_field: changedAttrKey })) {
-                            isFilteredAttrChanged = true;
-                        }
-                    } else if (_.isMatch(filter, { filtering_field: changedAttrKey })) {
-                        isFilteredAttrChanged = true;
-                    }
-                });
-            });
-            return isFilteredAttrChanged;
-        },
-        getFilterEntities: function () {
-            if (this.filterModel.get('newEntities') !== '') {
-                return JSON.parse(this.filterModel.get('newEntities'));
-            }
-            return JSON.parse(this.filterModel.get('entities'));
-        },
-        getChangedAttrs: function (model) {
-            var changedAttrs = model.changedAttributes();
-            if (changedAttrs.issue) {
-                if (JSON.parse(changedAttrs.issue).issue_type !== JSON.parse(model.previousAttributes().issue).issue_type) {
-                    changedAttrs.issue$issue_type = JSON.parse(changedAttrs.issue).issue_type;
-                }
-                if (JSON.parse(changedAttrs.issue).comment !== JSON.parse(model.previousAttributes().issue).comment) {
-                    changedAttrs.issue$issue_comment = JSON.parse(changedAttrs.issue).comment;
-                }
-                delete changedAttrs.issue;
-            }
-            return changedAttrs;
-        },
-        isAnyFilterEnabled: function () {
-            return !((this.filterModel.get('newEntities') === '' && this.filterModel.get('entities') === '[]') ||
-            (this.filterModel.get('newEntities') === '[]' && this.filterModel.get('entities') === '[]'));
         },
         getHistoryLink: function () {
             var currentPath = window.location.hash;
