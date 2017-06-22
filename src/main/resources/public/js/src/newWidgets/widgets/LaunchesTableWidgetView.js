@@ -104,8 +104,7 @@ define(function (require, exports, module) {
         },
         getLink: function () {
             var project = '#' + this.appModel.get('projectId');
-            var filterId = this.model.get('filter_id');
-            var arrLink = [project, 'launches', filterId];
+            var arrLink = [project, 'launches/all'];
             return arrLink.join('/');
         },
         renderItems: function () {
@@ -211,7 +210,6 @@ define(function (require, exports, module) {
         allCasesUrl: function (type) {
             var url = this.link + '/' + this.model.get('id');
             var statusFilter = '';
-
             switch (type) {
             case 'total':
                 statusFilter = '&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED&filter.in.type=STEP';
