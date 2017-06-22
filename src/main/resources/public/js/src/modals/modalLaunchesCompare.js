@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -67,7 +67,7 @@ define(function (require, exports, module) {
                 delete criteria.statistics$defects$no_defect$total;
                 widgetData.content_parameters.content_fields = _.keys(criteria);
                 self.widget = new LaunchesComparisonChart({
-                    isPreview: true,
+                    isPreview: false,
                     model: new WidgetModel(widgetData, { parse: true })
                 });
                 self.$el.addClass('ready');
@@ -80,6 +80,9 @@ define(function (require, exports, module) {
 
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
+        },
+        onHide: function () {
+            this.widget.destroy();
         }
     });
 
