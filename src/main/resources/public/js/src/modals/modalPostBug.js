@@ -468,7 +468,11 @@ define(function (require) {
                 }
 
                 required = element.hasClass('required-value');
-                value = element.hasClass('rp-btn') ? $('.select-value', element).text() : element.val().trim();
+                if (element.hasClass('rp-btn')) {
+                  value = element.parent().find('ul.dropdown-menu > li > a.selected').data("value") || $('.select-value', element).text();
+                } else {
+                  value = element.val().trim();
+                }
                 if (isMultiSelect) {
                     tmp = value.split(',');
                     value = tmp[0] === '' ? [] : tmp;
