@@ -71,12 +71,15 @@ define(function (require) {
                 });
                 var fieldWithDropdown = new DropDownComponent({
                     data: _.map(field.definedValues, function (val) {
-                        return { name: val.valueName, value: val.valueName, disabled: false };
+                        return { name: val.valueName, value: (val.valueId || val.valueName), disabled: false };
                     }),
                     multiple: false,
-                    defaultValue: (field.value) ? _.find(field.definedValues, function (item) {
-                        return field.value[0] === item.valueName;
-                    }).valueName : (field.definedValues[0].valueName || '')
+                    defaultValue: (field.value) ? (function () {
+                      var defaultValue = _.find(field.definedValues, function (item) {
+                        return (field.value[0] === item.valueId) || (field.value[0] === item.valueName);
+                      });
+                      return defaultValue.valueId || defaultValue.valueName;
+                    })() : (field.definedValues[0].valueId || field.definedValues[0].valueName || '')
                 });
                 $(this).html(fieldWithDropdown.$el);
                 $('[data-js-dropdown]', $(this)).attr('id', $(this).attr('data-js-field-with-dropdown')).addClass('default-value');
@@ -130,7 +133,7 @@ define(function (require) {
                         element = checkbox.closest('.rp-form-group').find('.default-value:first');
                     }
                     value = element.is('button')
-                        ? element.parent().find('.select-value:first').text()
+                        ? (element.parent().find('ul.dropdown-menu > li > a.selected').data("value") || element.parent().find('.select-value:first').text())
                         : element.val();
                 }
                 result[element.attr('id')] = value.trim();
