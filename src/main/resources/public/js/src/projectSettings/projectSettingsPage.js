@@ -54,6 +54,9 @@ define(function (require) {
             this.$el.html(Util.templates(this.tpl));
             $('[data-js-main-breadcrumbs]', this.$el).append(this.mainBreadcrumbs.$el);
             return this;
+        },
+        onDestroy: function () {
+            this.$el.empty();
         }
     });
 
