@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -83,7 +83,7 @@ define(function (require, exports, module) {
         },
         redirectToLaunch: function (e) {
             var key = e.series.key;
-            var seria = _.find(this.series, function (v, k) {
+            var seria = _.find(this.series, function (v) {
                 return v.key === key;
             });
             var seriesId = seria ? seria.seriesId : '';
@@ -101,14 +101,14 @@ define(function (require, exports, module) {
                 .attr({ class: 'd3-tip', id: 'd3-tip-' + this.id })
                 .style('display', 'none')
                 .offset([-10, 0])
-                .html(function (d) {
+                .html(function () {
                     return content;
                 });
         },
         tooltipLabel: Localization.widgets.casesLabel,
         tooltipContent: function () {
             var self = this;
-            return function (key, x, y, e, graph) {
+            return function (key, x, y, e) {
                 var index = e.pointIndex;
                 var cat = self.categories[index];
                 var date;
@@ -156,8 +156,9 @@ define(function (require, exports, module) {
             return Util.dateFormat(new Date(time));
         },
         disabeLegendEvents: function () {
+            var property;
             if (this.chart.legend) {
-                for (var property in this.chart.legend.dispatch) {
+                for (property in this.chart.legend.dispatch) {
                     this.chart.legend.dispatch[property] = function () {
                     };
                 }
@@ -171,14 +172,15 @@ define(function (require, exports, module) {
             }
         },
         addLaunchNameTip: function (svg, tip) {
+            var self = this;
+            var category;
             if (!this.isPreview) {
-                var self = this;
                 svg.selectAll('.nv-x .tick text, .nv-x .nv-axisMaxMin text')
-                    .each(function (d) {
+                    .each(function () {
                         d3.select(this)
                             .on('mouseover.' + self.id, function (event) {
                                 if (+d3.select(this).style('opacity') === 1) {
-                                    var category = self.categories[event - 1] || {};
+                                    category = self.categories[event - 1] || {};
                                     if (!category.name && !category.number) return;
                                     tip
                                         .style('display', 'block')
@@ -219,6 +221,8 @@ define(function (require, exports, module) {
             var series = {};
             var gadget = this.model.get('gadget');
             var contentFields = this.model.getContentFields();
+            var n;
+            var subDefect;
             this.invalid = 0;
 
             _.each(contentFields, function (i) {
@@ -226,19 +230,19 @@ define(function (require, exports, module) {
                 var seriesId = fieldName;
                 var name = Localization.launchesHeaders[seriesId];
                 if (gadget === 'launches_comparison_chart' || gadget === 'last_launch') {
-                    var n = seriesId.split('_');
+                    n = seriesId.split('_');
                     if (n[1]) {
                         n[1] = n[1].capitalize();
                     }
                     seriesId = n.join('');
                 }
                 if (!name) {
-                    var subDefect = this.defectsCollection.getDefectType(seriesId);
+                    subDefect = this.defectsCollection.getDefectType(seriesId);
                     name = subDefect.longName;
                     if (!subDefect) {
                         name = Localization.widgets.invalidCriteria;
                         seriesId = 'invalid';
-                        this.invalid++;
+                        this.invalid += 1;
                     }
                 }
                 series[fieldName] = {
@@ -256,7 +260,7 @@ define(function (require, exports, module) {
         },
         updateInvalidCriteria: function (vis) {
             if (this.invalid) {
-                vis.selectAll('.nv-legend .nv-legend-text').each(function (d, i) {
+                vis.selectAll('.nv-legend .nv-legend-text').each(function (d) {
                     if (d.seriesId === 'invalid') {
                         d3.select(this).attr('fill', d.color);
                         d3.select(this.previousSibling).attr('r', '2');
@@ -269,11 +273,11 @@ define(function (require, exports, module) {
         },
         getData: function () {
             var contentData = this.model.getContent() || [];
+            var criteria = this.model.getContentFields();
+            var series = this.getSeries(criteria);
+            var pairs;
             this.categories = [];
             if (!_.isEmpty(contentData)) {
-                var criteria = this.model.getContentFields();
-                var series = this.getSeries(criteria);
-
                 if (!this.model.get('isTimeline')) {
                     _.each(contentData.result, function (d, i) {
                         var cat = {
@@ -290,7 +294,7 @@ define(function (require, exports, module) {
                         });
                     }, this);
                 } else {
-                    var pairs = _.pairs(contentData);
+                    pairs = _.pairs(contentData);
                     pairs.sort(function (a, b) {
                         return Moment(a[0], 'YYYY-MM-DD').unix() - Moment(b[0], 'YYYY-MM-DD').unix();
                     });

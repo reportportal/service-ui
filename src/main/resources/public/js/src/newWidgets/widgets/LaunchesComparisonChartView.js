@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -113,6 +113,7 @@ define(function (require, exports, module) {
             var tooltip = this.tooltipContent();
             var vis;
             var tip;
+            var emptyData;
             this.addSVG();
 
             this.chart = nvd3.models.multiBarChart()
@@ -158,7 +159,7 @@ define(function (require, exports, module) {
             if (self.isPreview) {
                 this.disabeLegendEvents();
             }
-            var emptyData = this.model.getContent().result;
+            emptyData = this.model.getContent().result;
             if (_.isEmpty(emptyData)) {
                 this.showNoDataBlock();
             }

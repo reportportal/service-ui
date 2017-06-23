@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -47,7 +47,7 @@ define(function (require, exports, module) {
         roundLabels: function (d) {
             var label = (d % 2 === 0) ? d * 100 : d3.round(d * 100, 2);
             var sum = d3.round(this.forLabels.sum + label, 2);
-            ++this.forLabels.count;
+            this.forLabels.count += 1;
             if (this.forLabels.count === this.forLabels.size) {
                 if (sum > 100 || sum < 100) {
                     label = d3.round(100 - this.forLabels.sum, 2);
@@ -58,10 +58,10 @@ define(function (require, exports, module) {
         },
         // LAST LAUNCH STATISTIC
         renderPie: function (data, id, title) {
-
             var self = this;
             var chart;
             var vis;
+            var index;
             this.forLabels = { size: data.length, count: 0, sum: 0 };
             chart = nvd3.models.pieChart()
                 .x(function (d) {
@@ -96,7 +96,7 @@ define(function (require, exports, module) {
                 .call(chart)
             ;
 
-            vis.selectAll('.nvd3.nv-wrap.nv-pie').each(function (d, i) {
+            vis.selectAll('.nvd3.nv-wrap.nv-pie').each(function () {
                 $(this).on('mouseenter', function () {
                     config.trackingDispatcher.trackEventNumber(343);
                 });
@@ -113,10 +113,10 @@ define(function (require, exports, module) {
 
             // fix for no data message for "LAST LAUNCH STATISTIC WIDGET" on status page
             if (_.isEmpty(data)) {
-                var index = this.charts.length;
-                if(index == 1){
+                index = this.charts.length;
+                if (index === 1) {
                     this.noDataAvailableShow(this.$el.find(':nth-child(1)'));
-                } else{
+                } else {
                     this.noDataAvailableShow(this.$el.find(':nth-child(2)'));
                 }
 
@@ -143,10 +143,10 @@ define(function (require, exports, module) {
             });
         },
         disabeLegendEvents: function (chart) {
+            var property;
             if (chart.legend) {
-                for (var property in chart.legend.dispatch) {
-                    chart.legend.dispatch[property] = function () {
-                    };
+                for (property in chart.legend.dispatch) {
+                    chart.legend.dispatch[property] = function () {};
                 }
             }
         },
@@ -160,7 +160,7 @@ define(function (require, exports, module) {
             if (!this.isPreview) {
                 chart[type].dispatch.on('elementClick', function (e) {
                     var key = e.label;
-                    var seria = _.find(self.series, function (v, k) {
+                    var seria = _.find(self.series, function (v) {
                         return v.key === key;
                     });
                     var seriesId = seria ? seria.seriesId : '';
@@ -176,14 +176,18 @@ define(function (require, exports, module) {
         },
         getData: function () {
             var contentData = this.model.getContent() || [];
+            var series;
+            var data;
+            var stats;
+            var pairs;
             if (!_.isEmpty(contentData) && !_.isEmpty(contentData.result)) {
-                var series = this.getSeries();
-                var data = contentData.result[0];
-                var stats = {
+                series = this.getSeries();
+                data = contentData.result[0];
+                stats = {
                     issues: [],
                     exec: []
                 };
-                var pairs = _.pairs(data.values);
+                pairs = _.pairs(data.values);
 
                 pairs.sort(function (a, b) {
                     return a[0] === b[0] ? 0 : a[0] < b[0] ? -1 : 1;

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -39,12 +39,12 @@ define(function (require, exports, module) {
             _.each(this.model.getContent(), function (val, key) {
                 var value = val[0];
                 var item = _.extend({}, value.values);
+                var arr = key.split('-');
+                var week = parseInt(arr[1].substr(1));
+                var date = Moment(key);
                 if (this.model.get('interval') === 1) {
                     item.startTime = Moment(key, 'YYYY-MM-DD').unix();
                 } else {
-                    var arr = key.split('-');
-                    var week = parseInt(arr[1].substr(1));
-                    var date = Moment(key);
                     item.week = week;
                     item.startTime = date.unix();
                     item.endTime = date.add('day', 6).unix();
@@ -58,13 +58,13 @@ define(function (require, exports, module) {
         },
         getData: function () {
             var data = [];
+            var items = this.getSortedItems();
+            var series = {
+                toInvestigate: { key: Localization.widgets.toInvestigate },
+                investigated: { key: Localization.widgets.investigated }
+            };
             this.categories = [];
             if (!_.isEmpty(this.model.getContent())) {
-                var items = this.getSortedItems();
-                var series = {
-                    toInvestigate: { key: Localization.widgets.toInvestigate },
-                    investigated: { key: Localization.widgets.investigated }
-                };
                 _.each(series, function (val, key) {
                     val.color = this.getSeriesColor(key === 'toInvestigate' ? 'to_investigate' : key);
                     val.values = [];
@@ -93,11 +93,12 @@ define(function (require, exports, module) {
                 }
                 return Moment.unix(date.startTime).format('DD');
             }
+            return undefined;
         },
         tooltipContent: function (data) {
             var self = this;
             var format = config.widgetTimeFormat;
-            return function (key, x, y, e, graph) {
+            return function (key, x, y, e) {
                 var toolTip = '';
                 var index = e.pointIndex;
                 var start = Moment.unix(e.point.startTime).format(format);
@@ -106,7 +107,7 @@ define(function (require, exports, module) {
                 toolTip = '<p style="text-align:left"><strong>' + time + '</strong><br/></p>';
                 _.each(data, function (val, i) {
                     if (!self.disabledSeries[i]) {
-                        toolTip += '<div style="text-align:left; margin-right: 14px; margin-bottom: 10px;"><div style="width: 8px; height: 8px; display: inline-block; margin: 0 7px 0 14px; background: ' + val.color + '"></div>' + val.key + ':<strong> ' + val.values[index].y + '% ' + '</strong></div>';
+                        toolTip += '<div style="text-align:left; margin-right: 14px; margin-bottom: 10px;"><div style="width: 8px; height: 8px; display: inline-block; margin: 0 7px 0 14px; background: ' + val.color + '"></div>' + val.key + ':<strong> ' + val.values[index].y + '% </strong></div>';
                     }
                 });
                 return toolTip;
@@ -166,14 +167,11 @@ define(function (require, exports, module) {
                 .datum(data)
                 .call(this.chart);
 
-            vis.filter(function (filterData) {
-
+            vis.filter( function (filterData) {
                 if (_.isEmpty(filterData)) {
-                    alert();
                     $(this).closest('div').append('<div class="no-data-available"></div>');
                 }
-            }, this)
-            ;
+            }, this);
             this.addResize();
         }
     });

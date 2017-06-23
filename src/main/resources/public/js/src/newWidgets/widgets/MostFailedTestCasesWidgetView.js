@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -33,8 +33,9 @@ define(function (require, exports, module) {
         getData: function () {
             var contentData = this.model.getContent() || {};
             var lastLaunch = contentData.lastLaunch;
+            var items;
             delete contentData.lastLaunch;
-            var items = _.map(contentData, function (val, key) {
+            items = _.map(contentData, function (val, key) {
                 return {
                     name: key,
                     runs: val[0].values['All runs'],
@@ -66,7 +67,7 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.tpl, params));
             Util.hoverFullTime(this.$el);
             !this.isPreview && Util.setupBaronScroll($('.most-failed-launches', this.$el));
-            if(data.items.length === 0){this.addNoAvailableBock();}
+            if (data.items.length === 0) { this.addNoAvailableBock(); }
         }
     });
 

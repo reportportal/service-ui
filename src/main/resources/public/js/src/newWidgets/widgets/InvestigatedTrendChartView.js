@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -37,9 +37,11 @@ define(function (require, exports, module) {
 
         getData: function () {
             var contentData = this.model.getContent() || [];
+            var series;
+            var pairs;
             this.categories = [];
             if (!_.isEmpty(contentData)) {
-                var series = {
+                series = {
                     to_investigate: { key: Localization.widgets.toInvestigate, seriesId: 'to_investigate' },
                     investigated: { key: Localization.widgets.investigated, seriesId: 'investigated' }
                 };
@@ -62,7 +64,7 @@ define(function (require, exports, module) {
                         });
                     }, this);
                 } else {
-                    var pairs = _.pairs(contentData);
+                    pairs = _.pairs(contentData);
                     pairs.sort(function (a, b) {
                         return Moment(a[0], 'YYYY-MM-DD').unix() - Moment(b[0], 'YYYY-MM-DD').unix();
                     });
@@ -87,10 +89,14 @@ define(function (require, exports, module) {
         },
 
         render: function () {
-
             var data = this.getData();
             var self = this;
             var tooltip = this.tooltipContent();
+            var tip;
+            var vis;
+            var cup;
+            var update;
+            var emptyData;
             this.addSVG();
 
             this.chart = nvd3.models.multiBarChart()
@@ -126,8 +132,8 @@ define(function (require, exports, module) {
                     return self.formatNumber(d);
                 });
 
-            var tip = this.createTooltip();
-            var vis = d3.select($('svg', this.$el).get(0))
+            tip = this.createTooltip();
+            vis = d3.select($('svg', this.$el).get(0))
                 .datum(data)
                 .call(this.chart)
                 .call(tip);
@@ -142,8 +148,8 @@ define(function (require, exports, module) {
                 .tickFormat(function (d) {
                     return self.formatCategories(d);
                 });
-            var cup = self.chart.update;
-            var update = function () {
+            cup = self.chart.update;
+            update = function () {
                 self.chart.xAxis.tickFormat(function (d) {
                     return self.formatNumber(d);
                 });
@@ -165,7 +171,7 @@ define(function (require, exports, module) {
             if (self.isPreview) {
                 this.disabeLegendEvents();
             }
-            var emptyData = this.model.getContent().result;
+            emptyData = this.model.getContent().result;
             if (_.isEmpty(emptyData)) {
                 this.showNoDataBlock();
             }

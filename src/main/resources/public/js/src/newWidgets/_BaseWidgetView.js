@@ -48,8 +48,8 @@ define(function (require) {
                 self.render();
             });
         },
-        addNoAvailableBock: function(){
-            this.$el.after('<div class="no-data-error"><div class="no-data-content">'+Localization.widgets.noData+'</div></div>');
+        addNoAvailableBock: function () {
+            this.$el.after('<div class="no-data-error"><div class="no-data-content">' + Localization.widgets.noData + '</div></div>');
         },
         getSeriesColor: function (name) {
             var defect = this.defectsCollection.getDefectType(name);

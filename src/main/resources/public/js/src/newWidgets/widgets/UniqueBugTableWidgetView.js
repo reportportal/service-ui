@@ -104,11 +104,11 @@ define(function (require) {
                         )
                     );
                     addedPack.push(this.currentBug.items[this.currentBugItemIndex]);
-                    this.currentBugItemIndex++;
+                    this.currentBugItemIndex += 1;
                 } else {
                     this.currentBugItemIndex = 0;
                 }
-                currentItemCount++;
+                currentItemCount += 1;
             }
             this.getItemsInfo(addedPack);
         },
@@ -128,7 +128,7 @@ define(function (require) {
             Util.hoverFullTime($listElement);
             this.listContainer.append($listElement);
             this.lastBugContainer = $('[data-js-bugs-item]:last', this.listContainer);
-            this.currentBugIndex++;
+            this.currentBugIndex += 1;
             return true;
         },
         renderTags: function (tags) {

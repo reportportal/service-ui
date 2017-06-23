@@ -62,15 +62,32 @@ define(function (require) {
             if (contentData.result) {
                 _.each(this.isReverse ? contentData.result : contentData.result.reverse(),
                     function (val) {
+                        var date;
+                        var dateWoTime;
+                        var dateKey;
+                        var isEmail = null;
+                        var emailAction = null;
+                        var values;
+                        var contains;
+                        var now;
+                        var today;
+                        var dayTitle;
+                        var yesterday;
+                        var dt;
+                        var months;
+                        var days;
+                        var obj;
                         if (!(!Util.hasValidBtsSystem() && val.values.objectType === 'testItem' && val.values.actionType.indexOf('issue') > 0)) {
-                            var isEmail = null;
-                            var emailAction = null;
-                            var values = {
+                            values = {
                                 id: val.id
                             };
                             if (val.values.actionType === 'update_project') {
                                 values.history = {};
                                 _.each(val.values, function (v, k) {
+                                    var a = k.split('$');
+                                    var name = a[0];
+                                    var type = a[1];
+                                    obj = {};
                                     if (k.indexOf('Value') > 0) {
                                         if (k === 'emailEnabled$newValue') {
                                             isEmail = 'email';
@@ -79,10 +96,10 @@ define(function (require) {
                                             isEmail = 'email';
                                             emailAction = 'update_email';
                                         } else {
-                                            var a = k.split('$');
-                                            var name = a[0];
-                                            var type = a[1];
-                                            var obj = {};
+                                            a = k.split('$');
+                                            name = a[0];
+                                            type = a[1];
+                                            obj = {};
                                             obj[type] = v;
                                             if (values.history[name]) {
                                                 _.extend(values.history[name], obj);
@@ -106,31 +123,31 @@ define(function (require) {
                                 this.testItems.push(values.loggedObjectRef);
                             }
 
-                            var date = new Date(parseFloat(values.last_modified));
-                            var dateWoTime = new Date(date.getFullYear(),
+                            date = new Date(parseFloat(values.last_modified));
+                            dateWoTime = new Date(date.getFullYear(),
                                 date.getMonth(),
                                 date.getDate());
-                            var dateKey = '' + Date.parse(dateWoTime);
+                            dateKey = '' + Date.parse(dateWoTime);
 
                             values.fullTime = Util.dateFormat(parseFloat(values.last_modified));
                             values.momentTime = Moment(values.fullTime).fromNow();
                             values.userRef = (values.userRef) ? values.userRef.split('_').join(' ') : '';
 
-                            var contains = _.find(dates, function (item) {
+                            contains = _.find(dates, function (item) {
                                 return item.day === dateKey;
                             });
                             if (contains) {
                                 contains.items.push(values);
                             } else {
-                                var now = new Date();
-                                var today = new Date(now.getFullYear(),
+                                now = new Date();
+                                today = new Date(now.getFullYear(),
                                     now.getMonth(),
                                     now.getDate()).valueOf();
-                                var dayTitle = '';
-                                var yesterday = new Date(today - 86400000).valueOf();
-                                var dt = new Date(parseFloat(dateKey));
-                                var months = Localization.ui.months;
-                                var days = Localization.ui.days;
+                                dayTitle = '';
+                                yesterday = new Date(today - 86400000).valueOf();
+                                dt = new Date(parseFloat(dateKey));
+                                months = Localization.ui.months;
+                                days = Localization.ui.days;
                                 if (dateKey === today) {
                                     dayTitle = Localization.ui.today;
                                 } else if (dateKey === yesterday) {
@@ -140,7 +157,7 @@ define(function (require) {
                                 } else {
                                     dayTitle = months[dt.getMonth()] + ' ' + dt.getDate();
                                 }
-                                var obj = {
+                                obj = {
                                     day: dateKey,
                                     dayTitle: dayTitle,
                                     items: [values]

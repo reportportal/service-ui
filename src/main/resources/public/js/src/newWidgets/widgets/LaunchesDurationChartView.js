@@ -18,10 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
-    var $ = require('jquery');
     var _ = require('underscore');
     var App = require('app');
     var Moment = require('moment');
@@ -53,19 +52,19 @@ define(function (require, exports, module) {
         },
         getData: function () {
             var contentData = this.model.getContent() || [];
+            var size = 0;
+            var sum = 0;
+            var avg = 0;
+            var key = 'duration';
+            var inKey = 'interrupted';
+            var data = _.clone(contentData.result).reverse();
+            var series = {
+                key: Localization.widgets[key],
+                color: this.getSeriesColor(key),
+                seriesId: 'duration',
+                values: []
+            };
             if (!_.isEmpty(contentData) && contentData.result) {
-                var size = 0;
-                var sum = 0;
-                var avg = 0;
-                var key = 'duration';
-                var inKey = 'interrupted';
-                var data = _.clone(contentData.result).reverse();
-                var series = {
-                    key: Localization.widgets[key],
-                    color: this.getSeriesColor(key),
-                    seriesId: 'duration',
-                    values: []
-                };
                 _.each(data, function (d, i) {
                     var values = d.values;
                     var duration = parseInt(values.duration, 10);
@@ -79,7 +78,7 @@ define(function (require, exports, module) {
                     if (!this.isInterupt(values)) {
                         this.max = duration > this.max ? duration : this.max;
                         sum += duration;
-                        ++size;
+                        size += 1;
                     }
                 }, this);
 
@@ -103,23 +102,30 @@ define(function (require, exports, module) {
         tooltipContent: function () {
             var self = this;
             var type = this.getTimeType(this.max);
-            return function (key, x, y, e, graph) {
+            var index;
+            var time;
+            var cat;
+            var status;
+            var tipTitle;
+            var tipVal;
+            return function (key, x, y, e) {
                 config.trackingDispatcher.trackEventNumber(343);
-                var index = e.pointIndex;
-                var time = Moment.duration(Math.abs(e.value), type.type).humanize(true);
-                var cat = self.categories[index];
-                var status = e.point.status;
-                var tipTitle = '<p style="text-align:left;"><b>' + cat.name + ' ' + cat.number + '</b><br/>';
-                var tipVal = '<b>' + ((status !== self.ITERUPT) ? e.series.key + ':' : '<span style="color: ' + self.getSeriesColor(status) + ';">Run ' + self.ITERUPT.toLowerCase().capitalize() + '</span>') + ' </b> ' + ((status !== self.ITERUPT) ? time : '') + ' <br/></p>';
+                index = e.pointIndex;
+                time = Moment.duration(Math.abs(e.value), type.type).humanize(true);
+                cat = self.categories[index];
+                status = e.point.status;
+                tipTitle = '<p style="text-align:left;"><b>' + cat.name + ' ' + cat.number + '</b><br/>';
+                tipVal = '<b>' + ((status !== self.ITERUPT) ? e.series.key + ':' : '<span style="color: ' + self.getSeriesColor(status) + ';">Run ' + self.ITERUPT.toLowerCase().capitalize() + '</span>') + ' </b> ' + ((status !== self.ITERUPT) ? time : '') + ' <br/></p>';
                 return tipTitle + tipVal;
             };
         },
         render: function () {
-            var data = this.getData();
             var self = this;
             var type = this.getTimeType(this.max);
             var tooltip = this.tooltipContent();
-
+            var cup;
+            var update;
+            var emptyData;
             this.addSVG();
 
             this.chart = nvd3.models.multiBarHorizontalChart()
@@ -149,13 +155,8 @@ define(function (require, exports, module) {
                 .tickFormat(d3.format(',.2f'))
                 .axisLabel(type.type);
 
-            var vis = d3.select($('svg', this.$el).get(0))
-                .datum(data)
-                .call(this.chart)
-                ;
-
-            var cup = self.chart.update;
-            var update = function () {
+            cup = self.chart.update;
+            update = function () {
                 self.chart.xAxis.tickFormat(function (d) {
                     return self.formatNumber(d);
                 });
@@ -172,7 +173,7 @@ define(function (require, exports, module) {
             if (self.isPreview) {
                 this.disabeLegendEvents();
             }
-            var emptyData = this.model.getContent().result;
+            emptyData = this.model.getContent().result;
             if (_.isEmpty(emptyData)) {
                 this.showNoDataBlock();
             }

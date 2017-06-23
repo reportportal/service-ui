@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -31,13 +31,14 @@ define(function (require, exports, module) {
         tpl: 'tpl-widget-statistics-panel',
         getData: function () {
             var contentData = this.model.getContent();
+            var contentFields = this.model.getContentFields();
+            var values;
+            var data = {
+                executions: [],
+                defects: []
+            };
             if (!_.isEmpty(contentData.result) && !_.isEmpty(contentData.result[0].values)) {
-                var contentFields = this.model.getContentFields();
-                var values = contentData.result[0].values;
-                var data = {
-                    executions: [],
-                    defects: []
-                };
+                values = contentData.result[0].values;
                 this.invalid = 0;
 
                 _.each(contentFields, function (i) {
@@ -46,13 +47,14 @@ define(function (require, exports, module) {
                     var seriesId = _.last(a);
                     var name = Localization.launchesHeaders[seriesId];
                     var value = values[seriesId];
+                    var subDefect;
                     if (!name) {
-                        var subDefect = this.defectsCollection.getDefectType(seriesId);
+                        subDefect = this.defectsCollection.getDefectType(seriesId);
                         name = subDefect.longName;
                         if (!subDefect) {
                             name = Localization.widgets.invalidCriteria;
                             seriesId = 'invalid';
-                            this.invalid++;
+                            this.invalid += 1;
                         }
                     }
                     data[type].push({
@@ -76,7 +78,7 @@ define(function (require, exports, module) {
             };
             this.$el.html(Util.templates(this.tpl, params));
             !this.isPreview && Util.setupBaronScroll($('.statistics-panel', this.$el));
-            if(this.getData().length === 0) { this.addNoAvailableBock(); }
+            if (this.getData().length === 0) { this.addNoAvailableBock(); }
         }
     });
 
