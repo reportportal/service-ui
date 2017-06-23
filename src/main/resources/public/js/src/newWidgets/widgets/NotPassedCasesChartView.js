@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -41,9 +41,10 @@ define(function (require, exports, module) {
         },
         getChartData: function () {
             var contentData = this.model.getContent() || [];
+            var series;
             this.categories = [];
             if (!_.isEmpty(contentData)) {
-                var series = {
+                series = {
                     key: this.seriesTotal,
                     color: this.getSeriesColor('not_passed'),
                     values: []
@@ -56,7 +57,8 @@ define(function (require, exports, module) {
                         startTime: parseInt(d.startTime)
                     };
                     this.categories.push(cat);
-                    series.values.push(_.extend({ value: parseFloat(d.values[series.key]), num: i + 1 }, cat));
+                    series.values.push(_.extend({ value: parseFloat(d.values[series.key]),
+                        num: i + 1 }, cat));
                 }, this);
                 return [series];
             }
@@ -65,6 +67,11 @@ define(function (require, exports, module) {
         render: function () {
             var data = this.getChartData();
             var self = this;
+            var tip;
+            var vis;
+            var cup;
+            var update;
+            var emptyData;
 
             this.addSVG();
 
@@ -97,14 +104,14 @@ define(function (require, exports, module) {
                 this.chart.yDomain(this.yDomain);
             }
 
-            var tip = this.createTooltip();
-            var vis = d3.select($('svg', this.$el).get(0))
+            tip = this.createTooltip();
+            vis = d3.select($('svg', this.$el).get(0))
                 .datum(data)
                 .call(this.chart)
                 .call(tip)
             ;
 
-            vis.selectAll('.nv-line').each(function (d, i) {
+            vis.selectAll('.nv-line').each(function () {
                 $(this).on('mouseenter', function () {
                     config.trackingDispatcher.trackEventNumber(343);
                 });
@@ -117,8 +124,8 @@ define(function (require, exports, module) {
                     return self.formatCategories(d);
                 });
 
-            var cup = self.chart.update;
-            var update = function () {
+            cup = self.chart.update;
+            update = function () {
                 self.chart.xAxis
                 .tickFormat(function (d) {
                     return self.formatNumber(d);
@@ -136,7 +143,7 @@ define(function (require, exports, module) {
             if (self.isPreview) {
                 this.disabeLegendEvents();
             }
-            var emptyData = this.model.getContent().result;
+            emptyData = this.model.getContent().result;
             if (_.isEmpty(emptyData)) {
                 this.showNoDataBlock();
             }

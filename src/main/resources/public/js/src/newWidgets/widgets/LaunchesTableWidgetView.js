@@ -37,110 +37,6 @@ define(function (require, exports, module) {
 
     var config = App.getInstance();
 
-    var LaunchesTableView = BaseWidgetView.extend({
-        tpl: 'tpl-widget-filters-table',
-        getData: function () {
-            var contentData = this.model.getContent() || [];
-            if (!_.isEmpty(contentData) && !_.isEmpty(contentData.result)) {
-                var data = _.map(contentData.result, function (i) {
-                    var stats = {};
-                    var launchInfo = {
-                        id: i.id,
-                        name: i.name,
-                        number: i.number,
-                        startTime: i.startTime
-                    };
-
-                    _.forEach(i.values, function (v, k) {
-                        if (k.indexOf('statistics$issueCounter') >= 0) {
-                            var a = k.split('$');
-                            var group = _.initial(a).join('$');
-                            var defect = _.last(a);
-                            var val = parseInt(v, 10);
-                            if (stats[group]) {
-                                stats[group].total += val;
-                            } else {
-                                stats[group] = {};
-                                stats[group].total = val;
-                            }
-                            stats[group][defect] = val;
-                        } else {
-                            stats[k] = v;
-                        }
-                    });
-                    return _.extend(launchInfo, stats);
-                }, this);
-                return data.reverse();
-            }
-            return [];
-        },
-        getCriteria: function () {
-            var criteria = {};
-            _.each(this.model.getContentFields(), function (c) {
-                var key = c;
-                if (c.indexOf('statistics') >= 0 && !criteria[key]) {
-                    var a = c.split('$');
-                    var type = a[1];
-                    key = type === 'defects' ? a[2] : _.last(a);
-                }
-                criteria[key] = true;
-            });
-            return criteria;
-        },
-        render: function () {
-            this.renderedItems = [];
-            this.items = this.getData();
-
-            var params = {
-                criteria: this.getCriteria(),
-                noItems: !this.items.length
-            };
-            this.$el.html(Util.templates(this.tpl, params));
-            this.renderItems();
-            Util.hoverFullTime(this.$el);
-            this.addResize();
-            !this.isPreview && Util.setupBaronScroll($('.launches-table-panel', this.$el));
-            this.updateWidget();
-            if(params.noItems){this.addNoAvailableBock();}
-        },
-        getLink: function () {
-            var project = '#' + this.appModel.get('projectId');
-            var arrLink = [project, 'launches/all'];
-            return arrLink.join('/');
-        },
-        renderItems: function () {
-            _.each(this.items, function (launch) {
-                var item = new LaunchesTableItem({
-                    model: new Epoxy.Model(launch),
-                    criteria: this.getCriteria(),
-                    widgetId: this.id,
-                    link: this.getLink()
-                });
-                $('[data-js-items]', this.$el).append(item.$el);
-
-                this.renderedItems.push(item);
-            }, this);
-        },
-        activateAccordions: function () {
-            _.each(this.renderedItems, function (view) {
-                view.activateAccordion && view.activateAccordion();
-            });
-        },
-        updateWidget: function () {
-            if (this.$el.width() <= 768) {
-                $('[data-js-launches-table]', this.$el).addClass('launches-table-mobile');
-            } else {
-                $('[data-js-launches-table]', this.$el).removeClass('launches-table-mobile');
-            }
-        },
-        onDestroy: function () {
-            $(window).off('resize.' + this.id);
-            _.each(this.renderedItems, function (view) {
-                view.destroy && view.destroy();
-            });
-        }
-    });
-
     var LaunchesTableItem = Epoxy.View.extend({
         className: 'row rp-table-row',
         tpl: 'tpl-widget-filters-table-item',
@@ -211,6 +107,9 @@ define(function (require, exports, module) {
         allCasesUrl: function (type) {
             var url = this.link + '/' + this.model.get('id');
             var statusFilter = '';
+            var subDefects;
+            var defects;
+
             switch (type) {
             case 'total':
                 statusFilter = '&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED&filter.in.type=STEP';
@@ -221,8 +120,8 @@ define(function (require, exports, module) {
                 statusFilter = '&filter.in.status=' + type.toUpperCase() + '&filter.in.type=STEP';
                 break;
             default:
-                var subDefects = this.defectTypes.toJSON(),
-                    defects = Util.getSubDefectsLocators(type, subDefects).join('%2C');
+                subDefects = this.defectTypes.toJSON();
+                defects = Util.getSubDefectsLocators(type, subDefects).join('%2C');
                 statusFilter = '&filter.in.issue$issue_type=' + defects;
             }
             return url + '?filter.eq.has_childs=false' + statusFilter;
@@ -287,10 +186,12 @@ define(function (require, exports, module) {
                 url: this.allCasesUrl(type)
             };
             _.each(defect, function (v, k) {
+                var defects;
+                var issueType;
                 if (k !== 'total') {
                     if (v || sd.test(k)) {
-                        var defects = this.defectTypes;
-                        var issueType = defects.getDefectType(k);
+                        defects = this.defectTypes;
+                        issueType = defects.getDefectType(k);
                         if (issueType) {
                             issueType.val = parseInt(v, 10);
                             params.defects.push(issueType);
@@ -306,8 +207,9 @@ define(function (require, exports, module) {
             var defectType = _.findKey(defect, function (v, k) {
                 return sd.test(k);
             });
+            var issueType;
             if (defectType) {
-                var issueType = defectTypes.getDefectType(defectType);
+                issueType = defectTypes.getDefectType(defectType);
                 if (issueType) {
                     return issueType.color;
                 }
@@ -316,10 +218,12 @@ define(function (require, exports, module) {
         },
         getDefectChartData: function (defect) {
             var data = [];
+            var defects;
+            var customDefect;
             _.each(defect, function (v, k) {
                 if (k !== 'total') {
-                    var defects = this.defectTypes;
-                    var customDefect = defects.getDefectType(k);
+                    defects = this.defectTypes;
+                    customDefect = defects.getDefectType(k);
                     if (customDefect) {
                         data.push({
                             color: customDefect.color,
@@ -373,6 +277,113 @@ define(function (require, exports, module) {
             delete this;
         }
     });
+    var LaunchesTableView = BaseWidgetView.extend({
+        tpl: 'tpl-widget-filters-table',
+        getData: function () {
+            var contentData = this.model.getContent() || [];
+            var data;
+            if (!_.isEmpty(contentData) && !_.isEmpty(contentData.result)) {
+                data = _.map(contentData.result, function (i) {
+                    var stats = {};
+                    var launchInfo = {
+                        id: i.id,
+                        name: i.name,
+                        number: i.number,
+                        startTime: i.startTime
+                    };
 
+                    _.forEach(i.values, function (v, k) {
+                        var a = k.split('$');
+                        var group = _.initial(a).join('$');
+                        var defect = _.last(a);
+                        var val = parseInt(v, 10);
+                        if (k.indexOf('statistics$issueCounter') >= 0) {
+                            if (stats[group]) {
+                                stats[group].total += val;
+                            } else {
+                                stats[group] = {};
+                                stats[group].total = val;
+                            }
+                            stats[group][defect] = val;
+                        } else {
+                            stats[k] = v;
+                        }
+                    });
+                    return _.extend(launchInfo, stats);
+                }, this);
+                return data.reverse();
+            }
+            return [];
+        },
+        getCriteria: function () {
+            var criteria = {};
+            var a;
+            var type;
+            _.each(this.model.getContentFields(), function (c) {
+                var key = c;
+                if (c.indexOf('statistics') >= 0 && !criteria[key]) {
+                    a = c.split('$');
+                    type = a[1];
+                    key = type === 'defects' ? a[2] : _.last(a);
+                }
+                criteria[key] = true;
+            });
+            return criteria;
+        },
+        render: function () {
+            var params;
+            this.renderedItems = [];
+            this.items = this.getData();
+
+            params = {
+                criteria: this.getCriteria(),
+                noItems: !this.items.length
+            };
+            this.$el.html(Util.templates(this.tpl, params));
+            this.renderItems();
+            Util.hoverFullTime(this.$el);
+            this.addResize();
+            !this.isPreview && Util.setupBaronScroll($('.launches-table-panel', this.$el));
+            this.updateWidget();
+            if (params.noItems) { this.addNoAvailableBock(); }
+        },
+        getLink: function () {
+            var project = '#' + this.appModel.get('projectId');
+            var filterId = this.model.get('filter_id');
+            var arrLink = [project, 'launches', filterId];
+            return arrLink.join('/');
+        },
+        renderItems: function () {
+            _.each(this.items, function (launch) {
+                var item = new LaunchesTableItem({
+                    model: new Epoxy.Model(launch),
+                    criteria: this.getCriteria(),
+                    widgetId: this.id,
+                    link: this.getLink()
+                });
+                $('[data-js-items]', this.$el).append(item.$el);
+
+                this.renderedItems.push(item);
+            }, this);
+        },
+        activateAccordions: function () {
+            _.each(this.renderedItems, function (view) {
+                view.activateAccordion && view.activateAccordion();
+            });
+        },
+        updateWidget: function () {
+            if (this.$el.width() <= 768) {
+                $('[data-js-launches-table]', this.$el).addClass('launches-table-mobile');
+            } else {
+                $('[data-js-launches-table]', this.$el).removeClass('launches-table-mobile');
+            }
+        },
+        onDestroy: function () {
+            $(window).off('resize.' + this.id);
+            _.each(this.renderedItems, function (view) {
+                view.destroy && view.destroy();
+            });
+        }
+    });
     return LaunchesTableView;
 });

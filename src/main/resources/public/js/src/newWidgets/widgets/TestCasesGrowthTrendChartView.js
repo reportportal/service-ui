@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var _ = require('underscore');
@@ -48,13 +48,16 @@ define(function (require, exports, module) {
             }
         },
         getData: function () {
+            var key = Localization.widgets.growTestCases;
+            var series;
             var contentData = this.model.getContent() || [];
+            var pairs;
             this.categories = [];
             this.colors = [];
             this.startVal = 0;
             if (!_.isEmpty(contentData)) {
-                var key = Localization.widgets.growTestCases;
-                var series = {
+                key = Localization.widgets.growTestCases;
+                series = {
                     key: key,
                     color: this.getSeriesColor(key),
                     seriesId: 'grow_test_cases',
@@ -79,7 +82,7 @@ define(function (require, exports, module) {
                         series.values.push(_.extend({ y: added, value: val, x: i + 1 }, cat));
                     }, this);
                 } else {
-                    var pairs = _.pairs(contentData);
+                    pairs = _.pairs(contentData);
                     pairs.sort(function (a, b) {
                         return Moment(a[0], 'YYYY-MM-DD').unix() - Moment(b[0], 'YYYY-MM-DD').unix();
                     });
@@ -113,20 +116,23 @@ define(function (require, exports, module) {
         },
         tooltipContent: function () {
             var self = this;
-            return function (key, x, y, e, graph) {
+            var index;
+            var cat;
+            var date;
+            return function (key, x, y, e) {
                 config.trackingDispatcher.trackEventNumber(343);
-                var index = e.pointIndex;
-                var cat = self.categories[index];
+                index = e.pointIndex;
+                cat = self.categories[index];
                 if (self.model.get('isTimeline')) {
                     return '<p style="text-align:left">' + cat.time + '<br/>' + key + ': <strong>' + y + '</strong><br/>' + Localization.widgets.totalTestCases + ': <strong>' + e.point.value + '</strong></p>';
                 }
-                var date = self.formatDateTime(cat.startTime);
-                return '<p style="text-align:left"><strong>' + cat.name + ' ' + cat.number + '</strong><br/>' + date + '<br/>' + key + ': <strong>' + y + '</strong>' + '<br/>' + Localization.widgets.totalTestCases + ': <strong>' + e.point.value + '</strong></p>';
+                date = self.formatDateTime(cat.startTime);
+                return '<p style="text-align:left"><strong>' + cat.name + ' ' + cat.number + '</strong><br/>' + date + '<br/>' + key + ': <strong>' + y + '</strong><br/>' + Localization.widgets.totalTestCases + ': <strong>' + e.point.value + '</strong></p>';
             };
         },
         getDomain: function (data) {
             var y = this.startVal;
-            var m = !_.isEmpty(data) ? _.map(data[0].values, function (a, i) {
+            var m = !_.isEmpty(data) ? _.map(data[0].values, function (a) {
                 return (y += a.y);
             }) : 0;
             var max = _.max(m);
@@ -141,7 +147,11 @@ define(function (require, exports, module) {
             var self = this;
             var tooltip = this.tooltipContent();
             var yDomain = this.getDomain(data);
-
+            var tip;
+            var vis;
+            var cup;
+            var update;
+            var emptyData;
             this.addSVG();
 
             this.chart = nvd3.models.trendBarChart()
@@ -173,8 +183,8 @@ define(function (require, exports, module) {
                 })
             ;
 
-            var tip = this.createTooltip();
-            var vis = d3.select($('svg', this.$el).get(0))
+            tip = this.createTooltip();
+            vis = d3.select($('svg', this.$el).get(0))
                 .datum(data)
                 .call(this.chart)
                 .call(tip)
@@ -190,8 +200,8 @@ define(function (require, exports, module) {
                     return self.formatCategories(d);
                 });
 
-            var cup = self.chart.update;
-            var update = function () {
+            cup = self.chart.update;
+            update = function () {
                 self.chart.xAxis
                     .tickFormat(function (d) {
                         return self.formatNumber(d);
@@ -212,7 +222,7 @@ define(function (require, exports, module) {
             if (self.isPreview) {
                 this.disabeLegendEvents();
             }
-            var emptyData = this.model.getContent().result;
+            emptyData = this.model.getContent().result;
             if (_.isEmpty(emptyData)) {
                 this.showNoDataBlock();
             }

@@ -18,13 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
     var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
     var nvd3 = require('nvd3');
+    var _ = require('underscore');
 
     var TrendLaunchStatisticsChart = ChartWidgetView.extend({
 
@@ -32,6 +33,11 @@ define(function (require, exports, module) {
             var data = this.getData();
             var self = this;
             var tooltip = this.tooltipContent();
+            var tip;
+            var vis;
+            var cup;
+            var update;
+            var emptyData;
             this.addSVG();
 
             this.chart = nvd3.models.multiBarChart()
@@ -65,8 +71,8 @@ define(function (require, exports, module) {
                 })
             ;
 
-            var tip = this.createTooltip();
-            var vis = d3.select($('svg', this.$el).get(0))
+            tip = this.createTooltip();
+            vis = d3.select($('svg', this.$el).get(0))
                 .datum(data)
                 .call(this.chart)
                 .call(tip)
@@ -82,8 +88,8 @@ define(function (require, exports, module) {
                 .tickFormat(function (d) {
                     return self.formatCategories(d);
                 });
-            var cup = self.chart.update;
-            var update = function () {
+            cup = self.chart.update;
+            update = function () {
                 self.updateInvalidCriteria(vis);
                 self.chart.xAxis.tickFormat(function (d) {
                     return self.formatNumber(d);
@@ -108,7 +114,7 @@ define(function (require, exports, module) {
             }
             this.updateInvalidCriteria(vis);
 
-            var emptyData = this.model.getContent().result;
+            emptyData = this.model.getContent().result;
             if (_.isEmpty(emptyData)) {
                 this.showNoDataBlock();
             }

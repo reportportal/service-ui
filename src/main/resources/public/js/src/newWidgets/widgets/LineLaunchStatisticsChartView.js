@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -34,12 +34,15 @@ define(function (require, exports, module) {
     var LaunchStatisticsLineChart = ChartWidgetView.extend({
 
         redirectOnElementClick: function () {
+            var self;
+            var svg;
+            var point;
             this.chart.stacked.dispatch.on('areaClick', null);
             this.chart.stacked.dispatch.on('areaClick.toggle', null);
             if (!this.isPreview) {
-                var self = this;
-                var svg = d3.select('#' + this.id + ' svg');
-                var point = svg.select('.nv-scatterWrap').selectAll('path.nv-point');
+                self = this;
+                svg = d3.select('#' + this.id + ' svg');
+                point = svg.select('.nv-scatterWrap').selectAll('path.nv-point');
 
                 this.chart.stacked.dispatch.on('areaClick', function (e) {
                     config.trackingDispatcher.trackEventNumber(344);
@@ -55,17 +58,21 @@ define(function (require, exports, module) {
         },
         redirectTo: function (e) {
             var o = { series: {} };
+            var svg;
+            var data;
+            var cat;
             if (!_.has(e, 'pointIndex')) {
-                var svg = d3.select('#' + this.id + ' svg');
-                var data = svg.data();
-                o.series.key = (data && data[0] && data[0][e.seriesIndex]) ? data[0][e.seriesIndex].key : null;
+                svg = d3.select('#' + this.id + ' svg');
+                data = svg.data();
+                o.series.key = (data && data[0] && data[0][e.seriesIndex]) ?
+                    data[0][e.seriesIndex].key : null;
                 o.pointIndex = parseInt(e.index, 10);
             } else {
                 o.series.key = e.series;
                 o.pointIndex = parseInt(e.pointIndex, 10);
             }
             if (this.model.get('isTimeline')) {
-                var cat = this.categories[o.pointIndex];
+                cat = this.categories[o.pointIndex];
                 o.point = { startTime: cat.startTime };
                 this.redirectForTimeLine(o);
             } else {
@@ -85,7 +92,11 @@ define(function (require, exports, module) {
         render: function () {
             var data = this.getData();
             var self = this;
-
+            var vis;
+            var tip;
+            var cup;
+            var update;
+            var emptyData;
             this.addSVG();
 
             this.chart = nvd3.models.stackedAreaChart()
@@ -116,10 +127,10 @@ define(function (require, exports, module) {
 
             this.chart.yAxisTickFormat(d3.format('d'));
 
-            var vis = d3.select($('svg', this.$el).get(0))
+            vis = d3.select($('svg', this.$el).get(0))
                 .datum(data)
                 .call(this.chart);
-            var tip = this.createTooltip();
+            tip = this.createTooltip();
 
             if (self.model.get('isTimeline')) {
                 self.updateTooltips();
@@ -127,7 +138,7 @@ define(function (require, exports, module) {
                 vis.call(tip);
             }
 
-            vis.selectAll('.nv-stackedarea').each(function (d, i) {
+            vis.selectAll('.nv-stackedarea').each(function () {
                 $(this).on('mouseenter', function () {
                     config.trackingDispatcher.trackEventNumber(343);
                 });
@@ -144,8 +155,8 @@ define(function (require, exports, module) {
                     return self.formatCategories(d);
                 });
 
-            var cup = self.chart.update;
-            var update = function () {
+            cup = self.chart.update;
+            update = function () {
                 self.updateInvalidCriteria(vis);
                 self.chart.xAxis.tickFormat(function (d) {
                     return self.formatNumber(d);
@@ -172,7 +183,7 @@ define(function (require, exports, module) {
                 this.disabeLegendEvents();
             }
             this.updateInvalidCriteria(vis);
-            var emptyData = this.model.getContent().result;
+            emptyData = this.model.getContent().result;
             if (_.isEmpty(emptyData)) {
                 this.showNoDataBlock();
             }
