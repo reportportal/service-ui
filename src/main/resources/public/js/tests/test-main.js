@@ -81,6 +81,7 @@ require.config({
 
         d3: '../lib/d3/d3.v3.min',
         nvd3: '../lib/nvd3/nv.d3.custom',
+        'nvd3New': '../lib/nvd3/nv.d3',
         d3Tip: '../lib/d3/d3.tip.custom',
         'landingMain': 'landing/main',
         'landingUI': 'landing/ui',
@@ -122,7 +123,8 @@ require.config({
         'gridstack': ['jquery', 'underscore'],
         'gridstackUi': ['gridstack'],
         'validate': {deps: ["jquery"]},
-        'nvd3': {deps: ['d3'], exports: 'nv'},
+        'nvd3': {deps: ['d3'], exports: '_nv'},
+        'nvd3New': {deps: ['d3'], exports : 'nv'},
         'spectrum': ['jquery'],
         'simplemde': ['jquery']
     },

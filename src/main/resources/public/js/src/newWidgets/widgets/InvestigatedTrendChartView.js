@@ -27,7 +27,7 @@ define(function (require, exports, module) {
     var Localization = require('localization');
     var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
+    var nvd3New = require('nvd3New');
 
     var InvestigatedTrendChart = ChartWidgetView.extend({
         initialize: function (options) {
@@ -93,7 +93,7 @@ define(function (require, exports, module) {
 
             this.addSVG();
 
-            this.chart = nvd3.models.multiBarChart()
+            this.chart = nvd3New.models.multiBarChart()
                 .x(function (d) {
                     return d.x;
                 })
@@ -106,11 +106,13 @@ define(function (require, exports, module) {
                 .clipEdge(true)
                 .showXAxis(true)
                 .yDomain([0, 100])
-                .tooltips(!self.isPreview)
                 .showLegend(!self.isPreview)
             ;
 
-            this.chart.tooltipContent(tooltip);
+            this.chart.tooltip
+                .contentGenerator(tooltip)
+                .enabled(!self.isPreview)
+            ;
 
             this.chart.yAxis
                 .tickFormat(function (d) {
