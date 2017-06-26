@@ -76,9 +76,12 @@ define(function (require) {
                 invalidDataMessage: this.invalidDataMessage(this.invalid),
                 invalid: this.invalid
             };
-            this.$el.html(Util.templates(this.tpl, params));
-            !this.isPreview && Util.setupBaronScroll($('.statistics-panel', this.$el));
-            if (this.getData().length === 0) { this.addNoAvailableBock(); }
+            if (!this.isEmptyData(this.getData())) {
+                this.$el.html(Util.templates(this.tpl, params));
+                !this.isPreview && Util.setupBaronScroll($('.statistics-panel', this.$el));
+            } else {
+                this.addNoAvailableBock(this.$el);
+            }
         }
     });
 

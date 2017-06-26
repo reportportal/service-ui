@@ -113,55 +113,55 @@ define(function (require) {
             var tooltip = this.tooltipContent();
             var vis;
             var tip;
-            var emptyData;
-            this.addSVG();
+            var emptyData = this.model.getContent().result;
+            if (!this.isEmptyData(emptyData)) {
+                this.addSVG();
 
-            this.chart = nvd3.models.multiBarChart()
-                .x(function (d) {
-                    return d.x;
-                })
-                .y(function (d) {
-                    return d.y;
-                })
-                .forceY([0, 1])
-                .showControls(false)
-                .clipEdge(true)
-                .showXAxis(true)
-                .yDomain([0, 100])
-                .tooltips(!self.isPreview)
-                .showLegend(!self.isPreview)
-            ;
+                this.chart = nvd3.models.multiBarChart()
+                    .x(function (d) {
+                        return d.x;
+                    })
+                    .y(function (d) {
+                        return d.y;
+                    })
+                    .forceY([0, 1])
+                    .showControls(false)
+                    .clipEdge(true)
+                    .showXAxis(true)
+                    .yDomain([0, 100])
+                    .tooltips(!self.isPreview)
+                    .showLegend(!self.isPreview)
+                ;
 
-            this.chart.tooltipContent(tooltip);
-            this.chart.yAxis
-                .axisLabelDistance(-10)
-                .tickFormat(function (d) {
-                    return d;
-                })
-                .tickValues(_.range(0, 101, 10))
-                .axisLabel('% ' + Localization.widgets.ofTestCases);
+                this.chart.tooltipContent(tooltip);
+                this.chart.yAxis
+                    .axisLabelDistance(-10)
+                    .tickFormat(function (d) {
+                        return d;
+                    })
+                    .tickValues(_.range(0, 101, 10))
+                    .axisLabel('% ' + Localization.widgets.ofTestCases);
 
-            this.chart.xAxis
-                .tickFormat(function (d) {
-                    return self.formatNumber(d);
-                });
+                this.chart.xAxis
+                    .tickFormat(function (d) {
+                        return self.formatNumber(d);
+                    });
 
-            tip = this.createTooltip();
-            vis = d3.select($('svg', this.$el).get(0))
-                .datum(data)
-                .call(this.chart)
-                .call(tip);
+                tip = this.createTooltip();
+                vis = d3.select($('svg', this.$el).get(0))
+                    .datum(data)
+                    .call(this.chart)
+                    .call(tip);
 
-            this.addLaunchNameTip(vis, tip);
-            this.addLegendClick(vis);
-            this.redirectOnElementClick('multibar');
-            this.addResize();
-            if (self.isPreview) {
-                this.disabeLegendEvents();
-            }
-            emptyData = this.model.getContent().result;
-            if (_.isEmpty(emptyData)) {
-                this.showNoDataBlock();
+                this.addLaunchNameTip(vis, tip);
+                this.addLegendClick(vis);
+                this.redirectOnElementClick('multibar');
+                this.addResize();
+                if (self.isPreview) {
+                    this.disabeLegendEvents();
+                }
+            } else {
+                this.addNoAvailableBock(this.$el);
             }
         }
     });

@@ -151,80 +151,80 @@ define(function (require) {
             var vis;
             var cup;
             var update;
-            var emptyData;
-            this.addSVG();
+            var emptyData = this.model.getContent().result;
+            if (!this.isEmptyData(emptyData)) {
+                this.addSVG();
 
-            this.chart = nvd3.models.trendBarChart()
-                .x(function (d) {
-                    return d.x;
-                })
-                .y(function (d) {
-                    return d.y;
-                })
-                .yDomain(yDomain)
-                .valueFormat(d3.format('f'))
-                .tooltips(!self.isPreview)
-                .showValues(true)
-                .color(this.colors)
-            ;
-
-            this.chart.tooltipContent(tooltip);
-
-            this.chart.yAxis
-                .tickFormat(d3.format('d'))
-                .axisLabelDistance(-10)
-                .axisLabel('cases')
-            ;
-
-            this.chart.xAxis
-                .staggerLabels(false)
-                .tickFormat(function (d) {
-                    return self.formatNumber(d);
-                })
-            ;
-
-            tip = this.createTooltip();
-            vis = d3.select($('svg', this.$el).get(0))
-                .datum(data)
-                .call(this.chart)
-                .call(tip)
+                this.chart = nvd3.models.trendBarChart()
+                    .x(function (d) {
+                        return d.x;
+                    })
+                    .y(function (d) {
+                        return d.y;
+                    })
+                    .yDomain(yDomain)
+                    .valueFormat(d3.format('f'))
+                    .tooltips(!self.isPreview)
+                    .showValues(true)
+                    .color(this.colors)
                 ;
 
-            if (self.model.get('isTimeline')) {
-                this.updateTickForTimeLine(vis);
-            }
-            this.addLaunchNameTip(vis, tip);
+                this.chart.tooltipContent(tooltip);
 
-            this.chart.xAxis
-                .tickFormat(function (d) {
-                    return self.formatCategories(d);
-                });
+                this.chart.yAxis
+                    .tickFormat(d3.format('d'))
+                    .axisLabelDistance(-10)
+                    .axisLabel('cases')
+                ;
 
-            cup = self.chart.update;
-            update = function () {
-                self.chart.xAxis
+                this.chart.xAxis
+                    .staggerLabels(false)
                     .tickFormat(function (d) {
                         return self.formatNumber(d);
-                    });
-                cup();
-                self.chart.xAxis
+                    })
+                ;
+
+                tip = this.createTooltip();
+                vis = d3.select($('svg', this.$el).get(0))
+                    .datum(data)
+                    .call(this.chart)
+                    .call(tip)
+                ;
+
+                if (self.model.get('isTimeline')) {
+                    this.updateTickForTimeLine(vis);
+                }
+                this.addLaunchNameTip(vis, tip);
+
+                this.chart.xAxis
                     .tickFormat(function (d) {
                         return self.formatCategories(d);
                     });
-                self.chart.update = update;
-                if (self.model.get('isTimeline')) {
-                    self.updateTickForTimeLine(vis);
+
+                cup = self.chart.update;
+                update = function () {
+                    self.chart.xAxis
+                        .tickFormat(function (d) {
+                            return self.formatNumber(d);
+                        });
+                    cup();
+                    self.chart.xAxis
+                        .tickFormat(function (d) {
+                            return self.formatCategories(d);
+                        });
+                    self.chart.update = update;
+                    if (self.model.get('isTimeline')) {
+                        self.updateTickForTimeLine(vis);
+                    }
+                };
+                this.chart.update = update;
+                this.addResize();
+                this.redirectOnElementClick('trendbar');
+                if (self.isPreview) {
+                    this.disabeLegendEvents();
                 }
-            };
-            this.chart.update = update;
-            this.addResize();
-            this.redirectOnElementClick('trendbar');
-            if (self.isPreview) {
-                this.disabeLegendEvents();
-            }
-            emptyData = this.model.getContent().result;
-            if (_.isEmpty(emptyData)) {
-                this.showNoDataBlock();
+            } else {
+                this.addNoAvailableBock(this.$el);
             }
         }
     });

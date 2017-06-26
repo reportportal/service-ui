@@ -71,81 +71,80 @@ define(function (require) {
             var vis;
             var cup;
             var update;
-            var emptyData;
+            var emptyData = this.model.getContent().result;
+            if (!this.isEmptyData(emptyData)) {
+                this.addSVG();
 
-            this.addSVG();
+                this.chart = nvd3.models.lineChart()
+                    .x(function (d) {
+                        return d.num;
+                    })
+                    .y(function (d) {
+                        return d.value;
+                    })
+                    .interactive(false)
+                    .useInteractiveGuideline(!self.isPreview)
+                    .showLegend(!self.isPreview)
+                ;
 
-            this.chart = nvd3.models.lineChart()
-                .x(function (d) {
-                    return d.num;
-                })
-                .y(function (d) {
-                    return d.value;
-                })
-                .interactive(false)
-                .useInteractiveGuideline(!self.isPreview)
-                .showLegend(!self.isPreview)
-            ;
+                this.chart.yAxis
+                    .tickFormat(function (d) {
+                        return d.toFixed();
+                    })
+                    .axisLabelDistance(-10)
+                    .axisLabel(this.labelName)
+                ;
 
-            this.chart.yAxis
-                .tickFormat(function (d) {
-                    return d.toFixed();
-                })
-                .axisLabelDistance(-10)
-                .axisLabel(this.labelName)
-            ;
+                this.chart.xAxis
+                    .tickFormat(function (d) {
+                        return self.formatNumber(d);
+                    });
 
-            this.chart.xAxis
-                .tickFormat(function (d) {
-                    return self.formatNumber(d);
+                if (this.yDomain) {
+                    this.chart.yDomain(this.yDomain);
+                }
+
+                tip = this.createTooltip();
+                vis = d3.select($('svg', this.$el).get(0))
+                    .datum(data)
+                    .call(this.chart)
+                    .call(tip)
+                ;
+
+                vis.selectAll('.nv-line').each(function () {
+                    $(this).on('mouseenter', function () {
+                        config.trackingDispatcher.trackEventNumber(343);
+                    });
                 });
 
-            if (this.yDomain) {
-                this.chart.yDomain(this.yDomain);
-            }
+                this.addLaunchNameTip(vis, tip);
 
-            tip = this.createTooltip();
-            vis = d3.select($('svg', this.$el).get(0))
-                .datum(data)
-                .call(this.chart)
-                .call(tip)
-            ;
-
-            vis.selectAll('.nv-line').each(function () {
-                $(this).on('mouseenter', function () {
-                    config.trackingDispatcher.trackEventNumber(343);
-                });
-            });
-
-            this.addLaunchNameTip(vis, tip);
-
-            this.chart.xAxis
-                .tickFormat(function (d) {
-                    return self.formatCategories(d);
-                });
-
-            cup = self.chart.update;
-            update = function () {
-                self.chart.xAxis
-                .tickFormat(function (d) {
-                    return self.formatNumber(d);
-                });
-                cup();
-                self.chart.xAxis
+                this.chart.xAxis
                     .tickFormat(function (d) {
                         return self.formatCategories(d);
                     });
-                self.chart.update = update;
-                self.addLaunchNameTip(vis, tip);
-            };
-            this.chart.update = update;
-            this.addResize();
-            if (self.isPreview) {
-                this.disabeLegendEvents();
-            }
-            emptyData = this.model.getContent().result;
-            if (_.isEmpty(emptyData)) {
-                this.showNoDataBlock();
+
+                cup = self.chart.update;
+                update = function () {
+                    self.chart.xAxis
+                        .tickFormat(function (d) {
+                            return self.formatNumber(d);
+                        });
+                    cup();
+                    self.chart.xAxis
+                        .tickFormat(function (d) {
+                            return self.formatCategories(d);
+                        });
+                    self.chart.update = update;
+                    self.addLaunchNameTip(vis, tip);
+                };
+                this.chart.update = update;
+                this.addResize();
+                if (self.isPreview) {
+                    this.disabeLegendEvents();
+                }
+            } else {
+                this.addNoAvailableBock(this.$el);
             }
         }
     });

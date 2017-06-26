@@ -122,12 +122,7 @@ define(function (require) {
             };
         },
         addSVG: function () {
-            this.$el.css('overflow', 'visible').attr(this.attributes()).append('<svg></svg>')
-                .parent()
-                    .append('<div class="no-data-error hide"><div class="no-data-content">' + Localization.widgets.noData + '</div></div>');
-        },
-        showNoDataBlock: function () {
-            this.$el.parent().find('.no-data-error').removeClass('hide');
+            this.$el.css('overflow', 'visible').attr(this.attributes()).append('<svg></svg>');
         },
         formatNumber: function (d) {
             var cat;
