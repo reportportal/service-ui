@@ -70,24 +70,27 @@ define(function (require) {
             };
             var self = this;
             var scrollEl;
-            this.items = this.getData();
-            params.items = this.items;
-            this.$el.html(Util.templates(this.tpl, params));
-            this.listContainer = $('[data-js-bugs-list]', this.$el);
+            if (!this.isEmptyData(this.getData())) {
+                this.items = this.getData();
+                params.items = this.items;
+                this.$el.html(Util.templates(this.tpl, params));
+                this.listContainer = $('[data-js-bugs-list]', this.$el);
 
-            this.currentBugIndex = 0;
-            this.currentBugItemIndex = 0;
-            this.addPackItems();
-            if (!this.isPreview) {
-                scrollEl = Util.setupBaronScroll($('.uniq-bugs-table', this.$el));
-                scrollEl.scroll(function () {
-                    var elem = scrollEl.get(0);
-                    if (elem.scrollHeight - elem.scrollTop < elem.offsetHeight * 2) {
-                        self.addPackItems();
-                    }
-                });
+                this.currentBugIndex = 0;
+                this.currentBugItemIndex = 0;
+                this.addPackItems();
+                if (!this.isPreview) {
+                    scrollEl = Util.setupBaronScroll($('.uniq-bugs-table', this.$el));
+                    scrollEl.scroll(function () {
+                        var elem = scrollEl.get(0);
+                        if (elem.scrollHeight - elem.scrollTop < elem.offsetHeight * 2) {
+                            self.addPackItems();
+                        }
+                    });
+                }
+            } else {
+                this.addNoAvailableBock(this.$el);
             }
-            if (this.getData().length === 0) { this.addNoAvailableBock(); }
         },
         addPackItems: function () {
             var currentItemCount = 0;

@@ -183,12 +183,14 @@ define(function (require) {
                 imageRoot: urls.getAvatar,
                 dates: dates
             };
-
-            this.$el.html(Util.templates(this.tpl, params));
-            Util.hoverFullTime(this.$el);
-            !this.isPreview && Util.setupBaronScroll($('.project-activity-panel', this.$el));
-            this.getItemsInfo(_.uniq(this.testItems));
-            if (this.getData().length === 0) { this.addNoAvailableBock(); }
+            if (!this.isEmptyData(this.getData())) {
+                this.$el.html(Util.templates(this.tpl, params));
+                Util.hoverFullTime(this.$el);
+                !this.isPreview && Util.setupBaronScroll($('.project-activity-panel', this.$el));
+                this.getItemsInfo(_.uniq(this.testItems));
+            } else {
+                this.addNoAvailableBock(this.$el);
+            }
         },
         getTickets: function (item) {
             var newTickets = item.ticketId$newValue ? item.ticketId$newValue.split(',') : [];

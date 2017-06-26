@@ -339,13 +339,16 @@ define(function (require, exports, module) {
                 criteria: this.getCriteria(),
                 noItems: !this.items.length
             };
-            this.$el.html(Util.templates(this.tpl, params));
-            this.renderItems();
-            Util.hoverFullTime(this.$el);
-            this.addResize();
-            !this.isPreview && Util.setupBaronScroll($('.launches-table-panel', this.$el));
-            this.updateWidget();
-            if (params.noItems) { this.addNoAvailableBock(); }
+            if (!this.isEmptyData(this.items)) {
+                this.$el.html(Util.templates(this.tpl, params));
+                this.renderItems();
+                Util.hoverFullTime(this.$el);
+                this.addResize();
+                !this.isPreview && Util.setupBaronScroll($('.launches-table-panel', this.$el));
+                this.updateWidget();
+            } else {
+                this.addNoAvailableBock(this.$el);
+            }
         },
         getLink: function () {
             var project = '#' + this.appModel.get('projectId');

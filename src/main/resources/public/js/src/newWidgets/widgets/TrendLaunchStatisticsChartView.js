@@ -37,88 +37,86 @@ define(function (require) {
             var vis;
             var cup;
             var update;
-            var emptyData;
-            this.addSVG();
+            var emptyData = this.model.getContent().result;
+            if (!this.isEmptyData(emptyData)) {
+                this.addSVG();
 
-            this.chart = nvd3.models.multiBarChart()
-                .x(function (d) {
-                    return d.x;
-                })
-                .y(function (d) {
-                    return d.y;
-                })
-                .forceY([0, 1])
-                .stacked(true)
-                .showControls(false)
-                .clipEdge(true)
-                .showXAxis(true)
-                .tooltips(!self.isPreview)
-                .showLegend(!self.isPreview)
-            ;
-
-            this.chart.tooltipContent(tooltip);
-
-            this.chart.yAxis
-                .tickFormat(d3.format('d'))
-                .axisLabelDistance(-10)
-                .axisLabel('cases')
-            ;
-
-            this.chart.xAxis
-                .showMaxMin(false)
-                .tickFormat(function (d) {
-                    return self.formatNumber(d);
-                })
-            ;
-
-            tip = this.createTooltip();
-            vis = d3.select($('svg', this.$el).get(0))
-                .datum(data)
-                .call(this.chart)
-                .call(tip)
+                this.chart = nvd3.models.multiBarChart()
+                    .x(function (d) {
+                        return d.x;
+                    })
+                    .y(function (d) {
+                        return d.y;
+                    })
+                    .forceY([0, 1])
+                    .stacked(true)
+                    .showControls(false)
+                    .clipEdge(true)
+                    .showXAxis(true)
+                    .tooltips(!self.isPreview)
+                    .showLegend(!self.isPreview)
                 ;
 
-            if (self.model.get('isTimeline')) {
-                this.updateTickForTimeLine(vis);
-            }
+                this.chart.tooltipContent(tooltip);
 
-            this.addLaunchNameTip(vis, tip);
+                this.chart.yAxis
+                    .tickFormat(d3.format('d'))
+                    .axisLabelDistance(-10)
+                    .axisLabel('cases')
+                ;
 
-            this.chart.xAxis
-                .tickFormat(function (d) {
-                    return self.formatCategories(d);
-                });
-            cup = self.chart.update;
-            update = function () {
-                self.updateInvalidCriteria(vis);
-                self.chart.xAxis.tickFormat(function (d) {
-                    return self.formatNumber(d);
-                });
-                cup();
-                self.chart.xAxis
+                this.chart.xAxis
+                    .showMaxMin(false)
+                    .tickFormat(function (d) {
+                        return self.formatNumber(d);
+                    })
+                ;
+
+                tip = this.createTooltip();
+                vis = d3.select($('svg', this.$el).get(0))
+                    .datum(data)
+                    .call(this.chart)
+                    .call(tip)
+                ;
+
+                if (self.model.get('isTimeline')) {
+                    this.updateTickForTimeLine(vis);
+                }
+
+                this.addLaunchNameTip(vis, tip);
+
+                this.chart.xAxis
                     .tickFormat(function (d) {
                         return self.formatCategories(d);
                     });
-                self.chart.update = update;
+                cup = self.chart.update;
+                update = function () {
+                    self.updateInvalidCriteria(vis);
+                    self.chart.xAxis.tickFormat(function (d) {
+                        return self.formatNumber(d);
+                    });
+                    cup();
+                    self.chart.xAxis
+                        .tickFormat(function (d) {
+                            return self.formatCategories(d);
+                        });
+                    self.chart.update = update;
 
-                if (self.model.get('isTimeline')) {
-                    self.updateTickForTimeLine(vis);
+                    if (self.model.get('isTimeline')) {
+                        self.updateTickForTimeLine(vis);
+                    }
+                };
+                this.chart.update = update;
+                this.addResize();
+                this.redirectOnElementClick('multibar');
+                this.addLegendClick(vis);
+                if (self.isPreview) {
+                    this.disabeLegendEvents();
                 }
-            };
-            this.chart.update = update;
-            this.addResize();
-            this.redirectOnElementClick('multibar');
-            this.addLegendClick(vis);
-            if (self.isPreview) {
-                this.disabeLegendEvents();
+                this.updateInvalidCriteria(vis);
+            } else {
+                this.addNoAvailableBock(this.$el);
             }
-            this.updateInvalidCriteria(vis);
-
-            emptyData = this.model.getContent().result;
-            if (_.isEmpty(emptyData)) {
-                this.showNoDataBlock();
-            }
-
             return this;
         }
     });

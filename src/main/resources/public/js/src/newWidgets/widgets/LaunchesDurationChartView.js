@@ -125,57 +125,57 @@ define(function (require) {
             var tooltip = this.tooltipContent();
             var cup;
             var update;
-            var emptyData;
-            this.addSVG();
+            var emptyData = this.model.getContent().result;
+            if (!this.isEmptyData(emptyData)) {
+                this.addSVG();
 
-            this.chart = nvd3.models.multiBarHorizontalChart()
-                .x(function (d) {
-                    return d.num;
-                })
-                .y(function (d) {
-                    return parseInt(d.duration, 10) / type.value;
-                })
-                .showValues(false)
-                .tooltips(!self.isPreview)
-                .showControls(false)
-                .reduceXTicks(true)
-                .barColor(this.colors)
-                .valueFormat(d3.format(',.2f'))
-                .showXAxis(true)
-                .showLegend(false)
-            ;
+                this.chart = nvd3.models.multiBarHorizontalChart()
+                    .x(function (d) {
+                        return d.num;
+                    })
+                    .y(function (d) {
+                        return parseInt(d.duration, 10) / type.value;
+                    })
+                    .showValues(false)
+                    .tooltips(!self.isPreview)
+                    .showControls(false)
+                    .reduceXTicks(true)
+                    .barColor(this.colors)
+                    .valueFormat(d3.format(',.2f'))
+                    .showXAxis(true)
+                    .showLegend(false)
+                ;
 
-            this.chart.tooltipContent(tooltip);
+                this.chart.tooltipContent(tooltip);
 
-            this.chart.xAxis
-                .tickFormat(function (d) {
-                    return self.formatNumber(d, self.categories);
-                });
-            this.chart.yAxis
-                .tickFormat(d3.format(',.2f'))
-                .axisLabel(type.type);
-
-            cup = self.chart.update;
-            update = function () {
-                self.chart.xAxis.tickFormat(function (d) {
-                    return self.formatNumber(d);
-                });
-                cup();
-                self.chart.xAxis
+                this.chart.xAxis
                     .tickFormat(function (d) {
-                        return self.formatCategories(d);
+                        return self.formatNumber(d, self.categories);
                     });
-                self.chart.update = update;
-            };
-            this.chart.update = update;
-            this.addResize();
-            this.redirectOnElementClick('multibar');
-            if (self.isPreview) {
-                this.disabeLegendEvents();
-            }
-            emptyData = this.model.getContent().result;
-            if (_.isEmpty(emptyData)) {
-                this.showNoDataBlock();
+                this.chart.yAxis
+                    .tickFormat(d3.format(',.2f'))
+                    .axisLabel(type.type);
+
+                cup = self.chart.update;
+                update = function () {
+                    self.chart.xAxis.tickFormat(function (d) {
+                        return self.formatNumber(d);
+                    });
+                    cup();
+                    self.chart.xAxis
+                        .tickFormat(function (d) {
+                            return self.formatCategories(d);
+                        });
+                    self.chart.update = update;
+                };
+                this.chart.update = update;
+                this.addResize();
+                this.redirectOnElementClick('multibar');
+                if (self.isPreview) {
+                    this.disabeLegendEvents();
+                }
+            } else {
+                this.addNoAvailableBock(this.$el);
             }
         }
     });

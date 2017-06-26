@@ -62,54 +62,58 @@ define(function (require) {
             var chart;
             var vis;
             var index;
-            this.forLabels = { size: data.length, count: 0, sum: 0 };
-            chart = nvd3.models.pieChart()
-                .x(function (d) {
-                    return d.key;
-                })
-                .y(function (d) {
-                    return d.value;
-                })
-                .margin({ top: !self.isPreview ? 30 : 0, right: 20, bottom: 0, left: 20 })
-                .valueFormat(d3.format('f'))
-                .showLabels(!self.isPreview)
-                .color(function (d) {
-                    return d.data.color;
-                })
-                .title(!self.isPreview ? title + ':' : '')
-                .titleOffset(-10)
-                .growOnHover(false)
-                .labelThreshold(0)
-                .labelType('percent')
-                .legendPosition(title === 'Issues' && data.length > 9 ? 'right' : 'top')
-                .labelFormat(function (d) {
-                    return self.roundLabels(d);
-                })
-                .donut(true)
-                .donutRatio(0.4)
-                .tooltips(!self.isPreview)
-                .showLegend(!self.isPreview)
-            ;
+            if (!this.isEmptyData(data)) {
+                this.forLabels = {size: data.length, count: 0, sum: 0};
+                chart = nvd3.models.pieChart()
+                    .x(function (d) {
+                        return d.key;
+                    })
+                    .y(function (d) {
+                        return d.value;
+                    })
+                    .margin({top: !self.isPreview ? 30 : 0, right: 20, bottom: 0, left: 20})
+                    .valueFormat(d3.format('f'))
+                    .showLabels(!self.isPreview)
+                    .color(function (d) {
+                        return d.data.color;
+                    })
+                    .title(!self.isPreview ? title + ':' : '')
+                    .titleOffset(-10)
+                    .growOnHover(false)
+                    .labelThreshold(0)
+                    .labelType('percent')
+                    .legendPosition(title === 'Issues' && data.length > 9 ? 'right' : 'top')
+                    .labelFormat(function (d) {
+                        return self.roundLabels(d);
+                    })
+                    .donut(true)
+                    .donutRatio(0.4)
+                    .tooltips(!self.isPreview)
+                    .showLegend(!self.isPreview)
+                ;
 
-            vis = d3.select($(id, this.$el).get(0))
-                .datum(data)
-                .call(chart)
-            ;
+                vis = d3.select($(id, this.$el).get(0))
+                    .datum(data)
+                    .call(chart)
+                ;
 
-            vis.selectAll('.nvd3.nv-wrap.nv-pie').each(function () {
-                $(this).on('mouseenter', function () {
-                    config.trackingDispatcher.trackEventNumber(343);
+                vis.selectAll('.nvd3.nv-wrap.nv-pie').each(function () {
+                    $(this).on('mouseenter', function () {
+                        config.trackingDispatcher.trackEventNumber(343);
+                    });
                 });
-            });
 
-            this.charts.push(chart);
-            this.addResize();
-            this.redirectOnElementClick(chart, 'pie');
-            this.updateOnLegendClick(chart, id);
-            if (self.isPreview) {
-                this.disabeLegendEvents(chart);
+                this.charts.push(chart);
+                this.addResize();
+                this.redirectOnElementClick(chart, 'pie');
+                this.updateOnLegendClick(chart, id);
+                if (self.isPreview) {
+                    this.disabeLegendEvents(chart);
+                }
+                this.updateInvalidCriteria(vis);
+            } else {
+                this.addNoAvailableBock(this.$el.find(id));
             }
-            this.updateInvalidCriteria(vis);
 
             // fix for no data message for "LAST LAUNCH STATISTIC WIDGET" on status page
             if (_.isEmpty(data)) {

@@ -54,20 +54,24 @@ define(function (require) {
             var data = this.getData();
             var widgetOptions = this.model.getWidgetOptions();
             var launchNameFilter = widgetOptions.launchNameFilter || [];
-            var params = {
-                items: data.items,
-                lastLaunch: {
-                    id: data.lastLaunch.id,
-                    link: this.linkToRedirectService('most_failed', data.lastLaunch.id),
-                    name: launchNameFilter.length ? launchNameFilter[0] : ''
-                },
-                dateFormat: Util.dateFormat,
-                moment: Moment
-            };
-            this.$el.html(Util.templates(this.tpl, params));
-            Util.hoverFullTime(this.$el);
-            !this.isPreview && Util.setupBaronScroll($('.most-failed-launches', this.$el));
-            if (data.items.length === 0) { this.addNoAvailableBock(); }
+            var params;
+            if (!this.isEmptyData(data.items)) {
+                params = {
+                    items: data.items,
+                    lastLaunch: {
+                        id: data.lastLaunch.id,
+                        link: this.linkToRedirectService('most_failed', data.lastLaunch.id),
+                        name: launchNameFilter.length ? launchNameFilter[0] : ''
+                    },
+                    dateFormat: Util.dateFormat,
+                    moment: Moment
+                };
+                this.$el.html(Util.templates(this.tpl, params));
+                Util.hoverFullTime(this.$el);
+                !this.isPreview && Util.setupBaronScroll($('.most-failed-launches', this.$el));
+            } else {
+                this.addNoAvailableBock(this.$el);
+            }
         }
     });
 

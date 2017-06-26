@@ -96,84 +96,84 @@ define(function (require) {
             var vis;
             var cup;
             var update;
-            var emptyData;
-            this.addSVG();
+            var emptyData = this.model.getContent().result;
+            if (!this.isEmptyData(emptyData)) {
+                this.addSVG();
 
-            this.chart = nvd3.models.multiBarChart()
-                .x(function (d) {
-                    return d.x;
-                })
-                .y(function (d) {
-                    return d.y;
-                })
-                .stacked(true)
-                .forceY([0, 1])
-                .showControls(false)
-                .clipEdge(true)
-                .showXAxis(true)
-                .yDomain([0, 100])
-                .tooltips(!self.isPreview)
-                .showLegend(!self.isPreview)
-            ;
+                this.chart = nvd3.models.multiBarChart()
+                    .x(function (d) {
+                        return d.x;
+                    })
+                    .y(function (d) {
+                        return d.y;
+                    })
+                    .stacked(true)
+                    .forceY([0, 1])
+                    .showControls(false)
+                    .clipEdge(true)
+                    .showXAxis(true)
+                    .yDomain([0, 100])
+                    .tooltips(!self.isPreview)
+                    .showLegend(!self.isPreview)
+                ;
 
-            this.chart.tooltipContent(tooltip);
+                this.chart.tooltipContent(tooltip);
 
-            this.chart.yAxis
-                .tickFormat(function (d) {
-                    return d;
-                })
-                .axisLabelDistance(-10)
-                .axisLabel(Localization.widgets.ofInvestigation)
-            ;
+                this.chart.yAxis
+                    .tickFormat(function (d) {
+                        return d;
+                    })
+                    .axisLabelDistance(-10)
+                    .axisLabel(Localization.widgets.ofInvestigation)
+                ;
 
-            this.chart.xAxis
-                .showMaxMin(false)
-                .tickFormat(function (d) {
-                    return self.formatNumber(d);
-                });
+                this.chart.xAxis
+                    .showMaxMin(false)
+                    .tickFormat(function (d) {
+                        return self.formatNumber(d);
+                    });
 
-            tip = this.createTooltip();
-            vis = d3.select($('svg', this.$el).get(0))
-                .datum(data)
-                .call(this.chart)
-                .call(tip);
+                tip = this.createTooltip();
+                vis = d3.select($('svg', this.$el).get(0))
+                    .datum(data)
+                    .call(this.chart)
+                    .call(tip);
 
-            if (self.model.get('isTimeline')) {
-                this.updateTickForTimeLine(vis);
-            }
+                if (self.model.get('isTimeline')) {
+                    this.updateTickForTimeLine(vis);
+                }
 
-            this.addLaunchNameTip(vis, tip);
+                this.addLaunchNameTip(vis, tip);
 
-            this.chart.xAxis
-                .tickFormat(function (d) {
-                    return self.formatCategories(d);
-                });
-            cup = self.chart.update;
-            update = function () {
-                self.chart.xAxis.tickFormat(function (d) {
-                    return self.formatNumber(d);
-                });
-                cup();
-                self.chart.xAxis
+                this.chart.xAxis
                     .tickFormat(function (d) {
                         return self.formatCategories(d);
                     });
-                self.chart.update = update;
+                cup = self.chart.update;
+                update = function () {
+                    self.chart.xAxis.tickFormat(function (d) {
+                        return self.formatNumber(d);
+                    });
+                    cup();
+                    self.chart.xAxis
+                        .tickFormat(function (d) {
+                            return self.formatCategories(d);
+                        });
+                    self.chart.update = update;
 
-                if (self.model.get('isTimeline')) {
-                    self.updateTickForTimeLine(vis);
+                    if (self.model.get('isTimeline')) {
+                        self.updateTickForTimeLine(vis);
+                    }
+                };
+                this.chart.update = update;
+                this.addResize();
+                this.redirectOnElementClick('multibar');
+                this.addLegendClick(vis);
+                if (self.isPreview) {
+                    this.disabeLegendEvents();
                 }
-            };
-            this.chart.update = update;
-            this.addResize();
-            this.redirectOnElementClick('multibar');
-            this.addLegendClick(vis);
-            if (self.isPreview) {
-                this.disabeLegendEvents();
-            }
-            emptyData = this.model.getContent().result;
-            if (_.isEmpty(emptyData)) {
-                this.showNoDataBlock();
+            } else {
+                this.addNoAvailableBock(this.$el);
             }
         }
     });

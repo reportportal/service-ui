@@ -96,96 +96,84 @@ define(function (require) {
             var tip;
             var cup;
             var update;
-            var emptyData;
-            this.addSVG();
-
-            this.chart = nvd3.models.stackedAreaChart()
-                .margin({ left: 70 })
-                .x(function (d) {
-                    return d.x;
-                })
-                .y(function (d) {
-                    return d.y;
-                })
-                .useInteractiveGuideline(!self.isPreview)
-                .showControls(false)
-                .clipEdge(true)
-                .showLegend(!self.isPreview)
-            ;
-
-            this.chart.xAxis
-                .showMaxMin(false)
-                .tickFormat(function (d) {
-                    return self.formatNumber(d);
-                })
-            ;
-
-            this.chart.yAxis
-                .axisLabelDistance(-10)
-                .axisLabel('cases')
-            ;
-
-            this.chart.yAxisTickFormat(d3.format('d'));
-
-            vis = d3.select($('svg', this.$el).get(0))
-                .datum(data)
-                .call(this.chart);
-            tip = this.createTooltip();
-
-            if (self.model.get('isTimeline')) {
-                self.updateTooltips();
-            } else {
-                vis.call(tip);
-            }
-
-            vis.selectAll('.nv-stackedarea').each(function () {
-                $(this).on('mouseenter', function () {
-                    config.trackingDispatcher.trackEventNumber(343);
+            var emptyData = this.model.getContent().result;
+            if (!this.isEmptyData(emptyData)) {
+                this.addSVG();
+                this.chart = nvd3.models.stackedAreaChart()
+                    .margin({ left: 70 })
+                    .x(function (d) {
+                        return d.x;
+                    })
+                    .y(function (d) {
+                        return d.y;
+                    })
+                    .useInteractiveGuideline(!self.isPreview)
+                    .showControls(false)
+                    .clipEdge(true)
+                    .showLegend(!self.isPreview)
+                ;
+                this.chart.xAxis
+                    .showMaxMin(false)
+                    .tickFormat(function (d) {
+                        return self.formatNumber(d);
+                    })
+                ;
+                this.chart.yAxis
+                    .axisLabelDistance(-10)
+                    .axisLabel('cases')
+                ;
+                this.chart.yAxisTickFormat(d3.format('d'));
+                vis = d3.select($('svg', this.$el).get(0))
+                    .datum(data)
+                    .call(this.chart);
+                tip = this.createTooltip();
+                if (self.model.get('isTimeline')) {
+                    self.updateTooltips();
+                } else {
+                    vis.call(tip);
+                }
+                vis.selectAll('.nv-stackedarea').each(function () {
+                    $(this).on('mouseenter', function () {
+                        config.trackingDispatcher.trackEventNumber(343);
+                    });
                 });
-            });
-
-            if (self.model.get('isTimeline')) {
-                this.updateTickForTimeLine(vis);
-            }
-
-            this.addLaunchNameTip(vis, tip);
-
-            this.chart.xAxis
-                .tickFormat(function (d) {
-                    return self.formatCategories(d);
-                });
-
-            cup = self.chart.update;
-            update = function () {
-                self.updateInvalidCriteria(vis);
-                self.chart.xAxis.tickFormat(function (d) {
-                    return self.formatNumber(d);
-                });
-                cup();
-                self.chart.xAxis
+                if (self.model.get('isTimeline')) {
+                    this.updateTickForTimeLine(vis);
+                }
+                this.addLaunchNameTip(vis, tip);
+                this.chart.xAxis
                     .tickFormat(function (d) {
                         return self.formatCategories(d);
                     });
-                self.chart.update = update;
-                if (self.model.get('isTimeline')) {
-                    self.updateTickForTimeLine(vis);
+                cup = self.chart.update;
+                update = function () {
+                    self.updateInvalidCriteria(vis);
+                    self.chart.xAxis.tickFormat(function (d) {
+                        return self.formatNumber(d);
+                    });
+                    cup();
+                    self.chart.xAxis
+                        .tickFormat(function (d) {
+                            return self.formatCategories(d);
+                        });
+                    self.chart.update = update;
+                    if (self.model.get('isTimeline')) {
+                        self.updateTickForTimeLine(vis);
+                    }
+                    self.addLaunchNameTip(vis, tip);
+                    self.redirectOnElementClick();
+                    self.addLegendClick(vis);
+                };
+                this.chart.update = update;
+                this.addResize();
+                this.redirectOnElementClick();
+                this.addLegendClick(vis);
+                if (self.isPreview) {
+                    this.disabeLegendEvents();
                 }
-                self.addLaunchNameTip(vis, tip);
-                self.redirectOnElementClick();
-                self.addLegendClick(vis);
-            };
-            this.chart.update = update;
-
-            this.addResize();
-            this.redirectOnElementClick();
-            this.addLegendClick(vis);
-            if (self.isPreview) {
-                this.disabeLegendEvents();
-            }
-            this.updateInvalidCriteria(vis);
-            emptyData = this.model.getContent().result;
-            if (_.isEmpty(emptyData)) {
-                this.showNoDataBlock();
+                this.updateInvalidCriteria(vis);
+            } else {
+                this.addNoAvailableBock(this.$el);
             }
         }
     });
