@@ -382,10 +382,10 @@ define(function (require) {
         className: 'input-group-btn btn-group-fix-font filter-entities-select',
         template: 'tpl-entity-select',
         events: {
-            'change .rp-input-checkbox': 'onChangeState',
             'change input[data-subtype]': 'onChangeMainType',
             'change input[data-maintype]': 'onChangeSubType',
             'click [data-js-toggle-all]': 'onClickToggle',
+            'change .rp-input-checkbox': 'onChangeState',
         },
         initialize: function() {
             this.render();
@@ -401,6 +401,7 @@ define(function (require) {
             var subType = $(e.currentTarget).data('subtype');
             var subTypeElements = $('input[data-maintype="'+ subType +'"]', this.$el);
             subTypeElements.prop('checked', checked);
+
         },
         onClickToggle: function() {
             var allChecked = true;
@@ -455,14 +456,23 @@ define(function (require) {
         onChangeState: function () {
             var nameMas = [];
             var valueMas = [];
-            _.each($('.rp-input-checkbox', this.$el), function(checkbox) {
-                var $checkbox = $(checkbox);
-                if($checkbox.is(':checked:not(:disabled)')) {
-                    nameMas.push($checkbox.data('name'));
-                    valueMas.push($checkbox.data('value'));
+            var self = this;
+            _.each($('[data-js-option]', this.$el), function (optCheckbox) {
+                var $optCheckbox = $(optCheckbox);
+                if ($optCheckbox.is(':checked')) {
+                    nameMas.push($optCheckbox.data('name'));
+                    valueMas.push($optCheckbox.data('value'));
+                } else {
+                    _.each($('[data-maintype="' + $optCheckbox.data('subtype') + '"]', self.$el), function (subOptCheckbox) {
+                        var $subOptCheckbox = $(subOptCheckbox);
+                        if ($subOptCheckbox.is(':checked')) {
+                            nameMas.push($subOptCheckbox.data('name'));
+                            valueMas.push($subOptCheckbox.data('value'));
+                        }
+                    });
                 }
             });
-            this.model.set({value: valueMas.join(',')});
+            this.model.set({ value: valueMas.join(',') });
             $('[data-js-value]', this.$el).text(nameMas.join(', ') || 'All');
         }
     });
