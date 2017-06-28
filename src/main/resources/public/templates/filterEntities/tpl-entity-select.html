@@ -12,6 +12,7 @@
                 <input class="rp-input-checkbox"
                        data-value="<%- option.value %>"
                        data-name="<%- option.name %>"
+                <%= (option.subOption) ? 'data-js-sub-option' : 'data-js-option'%>
                 <%= (option.subType) ? 'data-subtype="'+option.subType+'"' : '' %>
                 <%= (option.mainType) ? 'data-maintype="'+option.mainType+'"' : '' %>
                 type="checkbox" />
