@@ -19,7 +19,7 @@
                             <select id="<%- field.id %>" data-id="<%- field.id.replaceAll('.', '') %>" class="to-100-width">
                                 <option value=""><%= data.text.ui.selectValue %></option>
                                 <% _.forEach(field.definedValues, function(option) { %>
-                                    <option value="<%= option.valueId %>" <%= option.valueId === id ? 'selected' : '' %>><%= option.valueName %></option>
+                                    <option value="<%= option.valueId || option.valueName %>" <%= (option.valueId || option.valueName) === id ? 'selected' : '' %>><%= option.valueName %></option>
                                 <% }); %>
                             </select>
                         <% } else { %>
