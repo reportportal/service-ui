@@ -29,7 +29,6 @@ define(function (require) {
     var LaunchPage = Epoxy.View.extend({
         initialize: function (options) {
             this.contextName = options.contextName; // for context check
-
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.context = options.context;
             this.header = new LaunchHeaderView({
@@ -61,6 +60,9 @@ define(function (require) {
                 this.onChangeLevel('LAUNCH');
             }
             this.launchFilterCollection.ready.done(function () {
+                if (!self.launchFilterCollection.get(self.filterId)) {
+                    self.filterId = 'all';
+                }
                 if (self.filterId === 'all') {
                     self.launchFilterCollection.activateFilter(self.filterId);
                     self.body.update(pathPart, query);
