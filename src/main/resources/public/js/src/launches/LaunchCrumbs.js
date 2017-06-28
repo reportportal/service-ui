@@ -90,7 +90,11 @@ define(function (require) {
                     launchFilterCollection = new SingletonLaunchFilterCollection();
                     launchFilterCollection.ready.done(function () {
                         var filterModel = launchFilterCollection.get(self.get('id'));
-                        self.set({ name: filterModel.get('name'), failLoad: false });
+                        if (filterModel) {
+                            self.set({ name: filterModel.get('name'), failLoad: false });
+                        } else {
+                            self.set({ name: 'All' });
+                        }
                     });
                 }
                 this.ready.resolve();
