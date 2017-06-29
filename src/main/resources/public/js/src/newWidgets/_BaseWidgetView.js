@@ -33,6 +33,7 @@ define(function (require) {
         initialize: function (options) {
             this.id = 'widget-' + this.model.get('id');
             this.isPreview = options.isPreview;
+            this.unclickableChart = options.unclickableChart;
             this.appModel = new SingletonAppModel();
             this.defectsCollection = new SingletonDefectTypeCollection();
         },

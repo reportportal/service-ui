@@ -62,12 +62,13 @@ define(function (require) {
                 var widgetData = {
                     id: _.uniqueId() + '-' + gadget,
                     content_parameters: { gadget: gadget },
-                    content: response
+                    content: response,
                 };
                 delete criteria.statistics$defects$no_defect$total;
                 widgetData.content_parameters.content_fields = _.keys(criteria);
                 self.widget = new LaunchesComparisonChart({
                     isPreview: false,
+                    unclickableChart: true,
                     model: new WidgetModel(widgetData, { parse: true })
                 });
                 self.$el.addClass('ready');
