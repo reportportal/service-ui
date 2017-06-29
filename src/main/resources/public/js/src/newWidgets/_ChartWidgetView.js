@@ -42,7 +42,7 @@ define(function (require) {
         },
         redirectOnElementClick: function (type) {
             var self;
-            if (!this.isPreview) {
+            if (!this.isPreview && !this.unclickableChart) {
                 self = this;
                 this.chart[type].dispatch.on('elementClick', function (e) {
                     config.trackingDispatcher.trackEventNumber(344);
