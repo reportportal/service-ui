@@ -273,21 +273,21 @@ define(['util'], function () {
                 linkYouResultAnalysis: 'Team work',
                 linkDocumentation: 'Documentation'
             },
-            GroupIdeasBehindRP: {
-                titleIdeasBehindReportPortal: 'Product Benefits',
-                titleLiveVisibility: 'Relatime visibility',
-                titleReduceEffort: 'Reduce Effort',
-                titleSupportsTools: 'Out of box support',
-                titleNiceReports: 'Modern reports',
-                titleEasyIntegrate: 'Quick startup',
-                titleNoRefactoring: 'Team work',
-                descLiveVisibility: 'Into your test automation status',
-                descReduceEffort: 'Accelerate results analysis leveraging historical data',
-                descSupportsTools: 'Out of the box integration with mainstream automation and bugtracking',
-                descNiceReports: 'Out of the box analytics and custom dashboards',
-                descEasyIntegrate: 'Integrate your existing automation results in same day. On premise or cloud',
-                descNoRefactoring: 'Collaborative environment for your entire team'
-            },
+            // GroupIdeasBehindRP: {
+            //     titleIdeasBehindReportPortal: 'Product Benefits',
+            //     titleLiveVisibility: 'Relatime visibility',
+            //     titleReduceEffort: 'Reduce Effort',
+            //     titleSupportsTools: 'Out of box support',
+            //     titleNiceReports: 'Modern reports',
+            //     titleEasyIntegrate: 'Quick startup',
+            //     titleNoRefactoring: 'Team work',
+            //     descLiveVisibility: 'Into your test automation status',
+            //     descReduceEffort: 'Accelerate results analysis leveraging historical data',
+            //     descSupportsTools: 'Out of the box integration with mainstream automation and bugtracking',
+            //     descNiceReports: 'Out of the box analytics and custom dashboards',
+            //     descEasyIntegrate: 'Integrate your existing automation results in same day. On premise or cloud',
+            //     descNoRefactoring: 'Collaborative environment for your entire team'
+            // },
             sitesUsingFoundation: 'Sites using foundation:',
             clients: {
                 altToday: 'Today',
