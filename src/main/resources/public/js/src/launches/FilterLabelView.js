@@ -27,7 +27,7 @@ define(function (require) {
     var App = require('app');
     var Localization = require('localization');
     var SimpleTooltipView = require('tooltips/SimpleTooltipView');
-
+    var MarkdownViewer = require('components/markdown/MarkdownViewer');
     var config = App.getInstance();
 
 
@@ -66,10 +66,9 @@ define(function (require) {
             var self = this;
             if (this.model.get('description')) {
                 Util.appendTooltip(function () {
-                    var tooltip = new SimpleTooltipView({
-                        message: self.model.get('description')
-                    });
-                    return tooltip.$el;
+                    self.markdownViewer && self.markdownViewer.destroy();
+                    self.markdownViewer = new MarkdownViewer({ text: self.model.get('description') });
+                    return self.markdownViewer.$el;
                 }, $('[data-js-filter-comment]', this.$el), this.$el,
                 function () { config.trackingDispatcher.trackEventNumber(18); });
             }
@@ -106,6 +105,7 @@ define(function (require) {
             this.destroy();
         },
         onDestroy: function () {
+            this.markdownViewer && this.markdownViewer.destroy();
             this.$el.remove();
             delete this;
         }
