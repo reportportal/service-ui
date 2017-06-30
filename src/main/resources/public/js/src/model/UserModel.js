@@ -275,8 +275,8 @@ define(function (require, exports, module) {
 
 
         logout: function () {
-            Service.userLogout();
             Util.clearXhrPool();
+            Service.userLogout();
             config.project = {};
             this.clearSession();
         }
