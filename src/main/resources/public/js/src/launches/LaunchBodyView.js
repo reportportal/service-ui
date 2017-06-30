@@ -79,6 +79,7 @@ define(function (require) {
         onDisableMultipleSelect: function () {
             this.trigger('change:level', this.currentLevel);
             $('[data-js-header-bar]', this.$el).removeClass('multiple-select');
+            this.multipleSelected.resetDefaultState();
             this.body && this.body.setupStickyHeader();
             this.stickyHeader && this.stickyHeader.destroy();
             this.control && this.control.disableMultiple();
@@ -90,7 +91,7 @@ define(function (require) {
             var mainHash = window.location.hash.split('?')[0];
             config.router.navigate(mainHash + '?' + params, { trigger: false, replace: true });
             // setTimeout(function () {
-            //     config.router.navigate(mainHash + '?' + params, { trigger: false, replace: true });
+            // config.router.navigate(mainHash + '?' + params, { trigger: false, replace: true });
             // });
         },
         onChangeCollapse: function (filterName) {
