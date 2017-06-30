@@ -1,14 +1,15 @@
 <%= data.includeTemplate('_tpl-modal-header', {headerText: data.headerText})  %>
 <div class="modal-body">
     <p><%= data.bodyText %></p>
-    <% if (data.confirmText ) { %>
-    <div class="warning-block">
-        <div class="warning"><i class="rp-icons rp-icons-warning"></i> Warning!</div>
-        <div class="warning-message"><%= data.confirmText %></div>
-    </div>
-    <% } %>
+
 </div>
 <div class="modal-footer ">
+    <% if (data.confirmText ) { %>
+    <div class="warning-block">
+        <i class="rp-icons rp-icons-warning"></i>
+        <p><%= data.confirmText %></p>
+    </div>
+    <% } %>
     <% if(data.cancelButtonText) { %>
     <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
         <%= data.cancelButtonText %>

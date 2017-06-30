@@ -105,6 +105,22 @@ common elements:
     .modal-footer {
       border: none;
       padding: 10px 6px;
+      .warning-block{
+        font-size: 12px;
+        color: #f36c4a;
+        width: 400px;
+        float: left;
+        text-align: left;
+        display: table;
+        padding-left: 15px;
+        i,p{
+          display: table-cell;
+        }
+        i{
+          padding-right: 5px;
+          font-size: 13px;
+        }
+      }
       .rp-btn {
         min-width: 68px;
         margin: 0 3px;
