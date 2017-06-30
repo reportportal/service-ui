@@ -309,6 +309,11 @@ define(function (require) {
                 this.collection.at(0).set({ select: false });
             }
         },
+        resetDefaultState: function () {
+            this.reset();
+            this.currentAction = '';
+            this.checkInvalidStatus();
+        },
         onClickProceed: function () {
             var invalidItems = _.filter(this.collection.models, function (model) {
                 return model.get('invalidMessage') !== '';
