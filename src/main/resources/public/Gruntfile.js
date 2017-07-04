@@ -30,7 +30,10 @@ module.exports = function (grunt) {
         'compiled/scss/main.css',
         'css/animate.min.css',
 
-        'css/markdown/simplemde.min.css'
+        'css/markdown/simplemde.min.css',
+
+        'css/dropzone/dropzone.min.css',
+        'css/dropzone/basic.min.css'
     ];
 
     grunt.initConfig({

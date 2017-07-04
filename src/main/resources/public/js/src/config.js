@@ -91,6 +91,7 @@ require.config({
         'scrollable': 'core/scrollable-view',
 
         "spectrum": "../lib/spectrum/spectrum",
+        "dropzone": "../lib/dropzone-amd-module.min",
 
         'templates': '../../compiled/templates/templates'
     },

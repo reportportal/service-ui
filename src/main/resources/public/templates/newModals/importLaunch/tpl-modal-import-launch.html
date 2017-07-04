@@ -1,0 +1,23 @@
+<%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.dialogHeader.importLaunch}) %>
+
+<div class="modal-body">
+    <div class="drop-area dropzone" data-js-drop-area>
+        <i class="material-icons icon">file_upload</i>
+    </div>
+    <div class="note-block">
+        <span> <%= data.text.ui.note %></span>
+        <span> <%= data.text.dialog.msgImportLaunch %></span>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
+        <%= data.text.ui.cancel %>
+    </button>
+    <button class="rp-btn rp-btn-submit btn-import" type="button" data-js-import>
+        <%= data.text.ui.import %>
+    </button>
+    <button class="rp-btn rp-btn-submit btn-ok" type="button" data-js-ok>
+        <%= data.text.ui.ok %>
+    </button>
+</div>

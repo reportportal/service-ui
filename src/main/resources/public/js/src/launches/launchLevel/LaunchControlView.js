@@ -25,6 +25,7 @@ define(function (require) {
     var Service = require('coreService');
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
     var ModalAddWidget = require('modals/addWidget/modalAddWidget');
+    var ModalImportLaunch = require('modals/importLaunch/modalImportLaunch');
     var GadgetModel = require('dashboard/GadgetModel');
 
     var config = App.getInstance();
@@ -34,7 +35,8 @@ define(function (require) {
             'click [data-js-refresh]': 'onClickRefresh',
             'click [data-js-multi-action]': 'onClickMultiAction',
             'click [data-js-multi-button]': 'onShowMultiActon',
-            'click [data-js-add-widget]': 'onClickAddWidget'
+            'click [data-js-add-widget]': 'onClickAddWidget',
+            'click [data-js-import]': 'onClickImport'
         },
 
         bindings: {
@@ -147,7 +149,9 @@ define(function (require) {
         onClickRefresh: function () {
             this.collectionItems.load();
         },
-
+        onClickImport: function () {
+            (new ModalImportLaunch()).show();
+        },
         onDestroy: function () {
             this.request && this.request.abort();
             clearTimeout(this.timeout);

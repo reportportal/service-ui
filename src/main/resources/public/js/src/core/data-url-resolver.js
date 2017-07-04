@@ -452,6 +452,10 @@ define(['app'], function (App) {
     var toggleAnalytics = function() {
         return config.apiVersion + 'settings/default/analytics';
     };
+    var importLaunch = function() {
+        var token = config.userModel.get('token');
+        return getProjectBase() + '/launch/import' + '?access_token=' + token.split(' ')[1];
+    };
 
     return {
         getApiToken: getApiToken,
@@ -460,7 +464,6 @@ define(['app'], function (App) {
         userLogin: userLogin,
 
         getRegistryInfo: getRegistryInfo,
-        
         getAvatar: getAvatar,
         getProjectBase: getProjectBase,
         getChartProjectBase: getChartProjectBase,
@@ -573,15 +576,14 @@ define(['app'], function (App) {
 
         getDefectTypes: getDefectTypes,
         postDefectTypes: postDefectTypes,
-        
         getGridUrl: getGridUrl,
         getLogsUrl: getLogsUrl,
         getLaunchItemUrl: getLaunchItemUrl,
 
-        userByEmail:userByEmail,
+        userByEmail: userByEmail,
         postDemoDataUrl: postDemoDataUrl,
         adminAuthSettings: adminAuthSettings,
-        toggleAnalytics: toggleAnalytics
-
+        toggleAnalytics: toggleAnalytics,
+        importLaunch: importLaunch
     };
 });

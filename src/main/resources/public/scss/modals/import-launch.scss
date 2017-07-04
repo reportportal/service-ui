@@ -1,0 +1,230 @@
+.modal-import-launch {
+  .modal-content-wrapper {
+    .modal-body {
+      padding: 30px 20px 20px 20px;
+      .drop-area {
+        position: relative;
+        width: 100%;
+        min-height: 106px;
+        margin-bottom: 20px;
+        background-color: $COLOR--white-four;
+        padding: 20px;
+        border: 0;
+        cursor: pointer;
+        .icon {
+          font-size: 35px;
+          color: $COLOR--skipped;
+          position: absolute;
+          top: 20px;
+          left: calc(50% - 18px);
+          cursor: default;
+        }
+        .dz-message {
+          position: absolute;
+          bottom: 0;
+          width: calc(100% - 40px);
+          font-family: $OpenSansRegular;
+          font-size: 12px;
+          color: $COLOR--gray-60;
+          strong {
+            font-family: $OpenSansSemibold;
+            color: $COLOR--gray-47;
+          }
+          .blue {
+            color: $COLOR--windows-blue;
+          }
+        }
+        .dz-file-preview {
+          width: 66px;
+          height: 66px;
+          border-radius: 0;
+          min-height: 0;
+          margin: 20px 20px 0 0;
+          padding: 0;
+          background-image: url(../../img/modals/importLaunch/dropzone-file.svg);
+          .dz-image {
+            display: none;
+          }
+          .dz-details {
+            font-family: $OpenSansRegular;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+
+            .dz-size {
+              font-size: 10px;
+              line-height: 10px;
+              color: $COLOR--gray-47;
+              margin: 0;
+              position: absolute;
+              top: 10px;
+              width: 100%;
+            }
+            .dz-filename {
+              font-size: 11px;
+              line-height: 11px;
+              color: $COLOR--charcoal-grey;
+              position: absolute;
+              bottom: 13px;
+              width: 100%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              padding: 0 10px;
+              span {
+                border: 0;
+                padding: 0;
+                margin: 0;
+              }
+              &:hover {
+                span {
+                  border: 0;
+                  background-color: transparent;
+                }
+              }
+            }
+          }
+          .dz-progress {
+            display: none;
+            width: 43px;
+            height: 8px;
+            top: 53px;
+            left: 53px;
+            border: none;
+            .dz-upload {
+              background: #d7f3f7;;
+            }
+          }
+          .dz-success-mark{
+            opacity: 1;
+            animation: none;
+            transition: none;
+            transform: none;
+            width: 50px;
+            height: 16px;
+            margin: 0;
+            background: #f9f9f9;
+            top: 23px;
+            left: 8px;
+            text-align: center;
+            .material-icons {
+              font-size: 27px;
+              line-height: 16px;
+              color: #39C2D7;
+            }
+          }
+          .dz-error-mark {
+            opacity: 1;
+            animation: none;
+            transition: none;
+            transform: none;
+            width: 50px;
+            height: 16px;
+            margin: 0;
+            background: #f9f9f9;
+            top: 23px;
+            left: 8px;
+            text-align: center;
+            .material-icons {
+              font-size: 21px;
+              line-height: 16px;
+              color: #F36C4A;
+            }
+          }
+          .dz-error-message {
+            top: 70px;
+            left: -38px;
+            border-radius: 0;
+            font-family: $OpenSansRegular;
+            font-size: 12px;
+            color: $COLOR--failed;
+            background: $COLOR--white-default;
+            border: solid 1px $COLOR--gray-80;
+            &:after {
+              border-bottom-color: $COLOR--white-default;
+            }
+            &:before {
+              content: '';
+              position: absolute;
+              top: -8px;
+              left: 62px;
+              width: 0;
+              height: 0;
+              border-left: 8px solid transparent;
+              border-right: 8px solid transparent;
+              border-bottom: 8px solid $COLOR--gray-80;
+            }
+          }
+          .dz-remove {
+            display: none;
+            color: $COLOR--charcoal-grey;
+            font-size: 10px;
+            width: 10px;
+            height: 10px;
+            float: right;
+            position: absolute;
+            right: 7px;
+            top: 2px;
+            cursor: pointer;
+            z-index: 30;
+            .material-icons{
+              cursor: pointer;
+            }
+          }
+
+          &.dz-processing {
+            .dz-details {
+              .dz-filename {
+                display: none;
+              }
+            }
+            .dz-progress {
+              display: block;
+            }
+          }
+          &.dz-complete {
+            .dz-details {
+              .dz-filename {
+                display: block;
+              }
+            }
+          }
+          &:hover {
+            .dz-remove {
+              display: block;
+            }
+          }
+        }
+
+        &.dz-started {
+          padding: 0 0 20px 20px;
+          .icon {
+            display: none;
+          }
+        }
+      }
+      .note-block {
+        span {
+          &:nth-child(1) {
+            display: inline-block;
+            width: 100%;
+            font-family: $OpenSansSemibold;
+            font-size: 13px;
+            color: $COLOR--tealish;
+          }
+          &:nth-child(2) {
+            font-family: $OpenSansRegular;
+            font-size: 12px;
+            color: $COLOR--charcoal-grey;
+          }
+        }
+      }
+    }
+
+    .modal-footer {
+      .rp-btn {
+        width: 70px;
+      }
+    }
+  }
+}
+

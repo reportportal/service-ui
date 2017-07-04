@@ -152,6 +152,8 @@ define(['util'], function () {
             sortBy: 'Sort by',
             name: 'Name',
             description: 'Description',
+            import: 'Import',
+            note: 'Note:',
             days: [
                 'Sunday',
                 'Monday',
@@ -1735,7 +1737,8 @@ define(['util'], function () {
             addDashboard: 'Add New Dashboard',
             regenerateUUID: 'REGENERATE UUID',
             deleteOrg: 'Delete GitHub organization',
-            logAttachment: 'ATTACHMENT'
+            logAttachment: 'ATTACHMENT',
+            importLaunch: 'Import Launch'
         },
 
         dialog: {
@@ -1792,7 +1795,9 @@ define(['util'], function () {
             msgDeleteOrg: 'Are you sure you want to delete selected organization? All assigned users could not be able to login Report Portal. ',
             deleteOrg: 'I am sure I want to delete organization',
             msgResetColorsDefectType: 'Are you sure you want to reset custom defect\'s colors to default?',
-            msgMessageTop: 'Are you sure you want to delete the defect type?  All investigated as <strong>\'%%%\'</strong> defects will be marked as <strong>\'%%%\'</strong>.'
+            msgMessageTop: 'Are you sure you want to delete the defect type?  All investigated as <strong>\'%%%\'</strong> defects will be marked as <strong>\'%%%\'</strong>.',
+            msgImportLaunch: 'If your runner does not write the test start date in the .xml file, then the current server time will be substituted automatically.',
+            importLaunchTip: 'Drop only <strong>.zip</strong> file under 64 MB to upload or <span class="blue">click</span> to add it'
         },
 
         time: {
