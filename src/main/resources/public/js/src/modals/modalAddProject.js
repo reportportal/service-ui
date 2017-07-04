@@ -23,6 +23,7 @@ define(function (require) {
     var App = require('app');
     var Util = require('util');
     var AdminService = require('adminService');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -33,13 +34,26 @@ define(function (require) {
         events: {
             'click [data-js-add]': 'addProject',
             'click [data-js-close]': 'onClickClose',
-            'click [data-js-cancel]': 'onClickCancel'
+            'click [data-js-cancel]': 'onClickCancel',
+            'change [data-js-project-name]': 'activateHide'
         },
         initialize: function () {
             this.render();
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, {}));
+            var footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: Localization.ui.add,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-add'
+                }
+            ];
+            this.$el.html(Util.templates(this.template, {footerButtons: footerButtons}));
             this.setupAnchors();
         },
         onShow: function () {

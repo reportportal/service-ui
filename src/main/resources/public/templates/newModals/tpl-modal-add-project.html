@@ -11,11 +11,4 @@
         </form>
     </div>
 </div>
-<div class="modal-footer">
-    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel>
-        <%= data.text.ui.cancel %>
-    </button>
-    <button class="rp-btn rp-btn-submit" type="button" data-js-add>
-        <%= data.text.ui.add %>
-    </button>
-</div>
+<%= data.includeTemplate('_tpl-modal-footer', data.footerButtons)  %>

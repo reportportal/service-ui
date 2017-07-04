@@ -43,9 +43,9 @@ define(function (require, exports, module) {
         events: {
             'click [data-js-save]': 'onClickSave',
             'click [data-js-close]': 'onClickClose',
-            'click [data-js-cancel]': 'onClickCancel'
+            'click [data-js-cancel]': 'onClickCancel',
+            'change [data-js-tags]': 'activateHide'
         },
-
         initialize: function (option) {
             this.itemModel = option.item;
             this.viewModel = new Backbone.Model({
@@ -68,8 +68,11 @@ define(function (require, exports, module) {
                 placeholder: this.isEditLaunch() ? Localization.dialog.launchDescrPlaceholder : Localization.dialog.testItemDescrPlaceholder,
             });
             $('[data-js-markdown-container]', this.$el).html(this.markdownEditor.$el);
-            this.listenTo(this.markdownEditor, 'change', function(value) { self.viewModel.set({description: value}); });
+            this.listenTo(this.markdownEditor, 'change', function(value) { self.viewModel.set({description: value});
+                this.activateHide();
+                 });
             this.listenTo(this.itemModel, 'change:description', this.onChangeDescription);
+
             var remoteTags = [];
             var timeOut = null;
             Util.setupSelect2WhithScroll($('[data-js-tags]', this.$el), {
@@ -162,7 +165,25 @@ define(function (require, exports, module) {
             return this.itemModel.get('type') == 'LAUNCH';
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, {isEditLaunch: this.isEditLaunch()}));
+            var footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: Localization.ui.save,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-save'
+                }
+            ];
+            this.$el.html(Util.templates(this.template,
+                {   isEditLaunch: this.isEditLaunch(),
+                    footerButtons: footerButtons
+                }));
+            if(this.isEditLaunch()){
+                this.showWarningBlock(Localization.launches.disclaimerChangeDescription);
+            }
         },
         onHide: function () {
             this.markdownEditor.destroy();

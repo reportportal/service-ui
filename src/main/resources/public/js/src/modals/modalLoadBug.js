@@ -29,6 +29,7 @@ define(function (require) {
     var DropDownComponent = require('components/DropDownComponent');
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
+    var Localization = require('localization');
 
     var TicketModel = Epoxy.Model.extend({
         defaults: {
@@ -120,7 +121,8 @@ define(function (require) {
             'click [data-js-add-ticket]': 'onClickAddTicket',
             'click [data-js-load]': 'onClickLoad',
             'click [data-js-close]': 'onClickClose',
-            'click [data-js-cancel]': 'onClickCancel'
+            'click [data-js-cancel]': 'onClickCancel',
+            'change [data-js-load-items-container]': 'activateHide'
         },
 
         initialize: function (options) {
@@ -252,7 +254,22 @@ define(function (require) {
         },
         render: function () {
             var btsSelector;
-            this.$el.html(Util.templates(this.template, { externalSystems: this.externalSystems }));
+            var footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: Localization.ui.load,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-load'
+                }
+            ];
+            this.$el.html(Util.templates(this.template,
+                { externalSystems: this.externalSystems,
+                    footerButtons: footerButtons
+                }));
             btsSelector = new DropDownComponent({
                 data: _.map(this.externalSystems, function (val) {
                     return { name: val.project, value: val.id, disabled: false };
@@ -263,6 +280,7 @@ define(function (require) {
             $('[data-js-bts-selector]', this.$el).html(btsSelector.$el);
             this.listenTo(btsSelector, 'change', this.onClickBts);
             this.dropdownComponents.push(btsSelector);
+
         },
         onDestroy: function () {
             _.each(this.dropdownComponents, function (item) {
