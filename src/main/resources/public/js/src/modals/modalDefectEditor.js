@@ -156,6 +156,7 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(157);
         },
         onClickCancel: function (e) {
+            this.enableCancel = true;
             config.trackingDispatcher.trackEventNumber(159);
         },
         updateDefectType: function () {
@@ -207,6 +208,14 @@ define(function (require) {
                 }).always(function () {
                     this.inProcess = false;
                 }.bind(this));
+        },
+        hide: function () {
+            if (this.enableCancel || !this.isChanged()) {
+                this.$modalWrapper && this.$modalWrapper.modal('hide');
+                this.closeAsync && this.closeAsync.reject();
+            } else {
+                $(this.$el).find('.modal-footer div').show();
+            }
         }
     });
 
