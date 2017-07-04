@@ -1776,6 +1776,7 @@ define(['util'], function () {
             defectEditor: 'Edit defect',
             choseDefectType: 'Choose Defect Type',
             commentForDefect: 'Leave Comment to Defect Type',
+            warningForDefect: 'You have to save changes or cancel them before closing the window',
             defectType: 'Defect Type',
             mergeLaunches: 'Merge Launches',
             postBug: 'Post bug',

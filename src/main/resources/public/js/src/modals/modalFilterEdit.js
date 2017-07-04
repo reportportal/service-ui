@@ -92,7 +92,7 @@ define(function (require) {
                 placeholder: Localization.filter.descriptionPlaceholder
             });
             $('[data-js-markdown-container]', this.$el).html(this.markdownEditor.$el);
-            this.listenTo(this.markdownEditor, 'change', function (value) { self.model.set({ description: value }); });
+            this.listenTo(this.markdownEditor, 'change', function (value) { self.model.set({ description: value }); this.activateHide(); });
         },
         addValidators: function (filterNames) {
             Util.hintValidator($('[data-js-name-input]', this.$el), [{
@@ -108,6 +108,19 @@ define(function (require) {
             });
         },
         render: function (options) {
+            var footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: (options.mode == 'save')?Localization.ui.add:Localization.ui.update,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-ok'
+                }
+            ];
+            options.footerButtons = footerButtons;
             this.$el.html(Util.templates(this.template, options));
         },
         onShown: function() {
@@ -121,9 +134,11 @@ define(function (require) {
         },
         onChangeDescription: function () {
             config.trackingDispatcher.trackEventNumber(248);
+            this.activateHide();
         },
         onChangeShared: function () {
             config.trackingDispatcher.trackEventNumber(249);
+            this.activateHide();
         },
         onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(247);

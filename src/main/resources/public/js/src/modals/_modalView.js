@@ -25,12 +25,21 @@ define(function (require) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
+    var Localization = require('localization');
 
     var ModalView = Epoxy.View.extend({
         templateWrapper: '_tpl-modal',
-
+        enableHide: true,
+        showWarningBlock: function (warning) {
+            $(this.$el).find('[data-js-warning-text]').text(warning);
+            $(this.$el).find('[data-js-warning]').show();
+        },
+        activateHide: function () {
+            this.enableHide = false;
+        },
         show: function () {
             var self = this;
+            this.modalBlock = true;
             this.closeAsync = $.Deferred();
             $('.rp-modal-dialog, .modal-backdrop').remove();
             this.$modalWrapper = $(Util.templates(this.templateWrapper, {}));
@@ -41,8 +50,7 @@ define(function (require) {
             $('body').append(this.$modalWrapper);
             $('[data-js-modal-content]', this.$modalWrapper).html(this.$el);
             Util.setupBaronScroll($('[data-js-scroll-container]', this.$modalWrapper));
-            $('.baron_scroller', this.$modalWrapper).attr('data-js-cancel', true);
-            var self = this;
+            $('.baron_scroller', this.$modalWrapper).attr('data-js-cancel-backdrop', true);
             this.$modalWrapper
                 .on('shown.bs.modal', function () {
                     self.onShown && self.onShown();
@@ -56,7 +64,15 @@ define(function (require) {
                     if ($target.is('[data-js-cancel]')) {
                         self.hide();
                     }
-                }).keydown(function (e) {
+                    if ($target.is('[data-js-cancel-backdrop]')) {
+                        if (self.enableHide) {
+                            self.hide();
+                        } else {
+                            self.showWarningBlock(Localization.dialog.warningForDefect);
+                        }
+                    }
+                })
+                .keydown(function (e) {
                     if (e.keyCode === 27) {
                         self.hide();
                     }

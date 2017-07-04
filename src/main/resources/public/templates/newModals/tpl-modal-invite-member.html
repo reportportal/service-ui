@@ -26,15 +26,4 @@
         </label>
     </form>
 </div>
-
-<div class="modal-footer">
-    <button class="rp-btn rp-btn-cancel button-cancel" type="button" data-js-cancel>
-        <%= data.text.ui.cancel %>
-    </button>
-    <button class="rp-btn rp-btn-submit button-invite" type="button" data-js-invite>
-        <%= data.text.admin.invite %>
-    </button>
-    <button class="rp-btn rp-btn-submit button-ok" type="button" data-js-ok>
-        <%= data.text.ui.ok %>
-    </button>
-</div>
+<%= data.includeTemplate('_tpl-modal-footer', data.footerButtons)  %>

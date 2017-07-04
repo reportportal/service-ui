@@ -106,13 +106,13 @@ common elements:
       border: none;
       padding: 10px 6px;
       .warning-block{
-        font-size: 12px;
+        font-size: 10px;
         color: #f36c4a;
         width: 400px;
+        line-height: 1.4;
         float: left;
         text-align: left;
-        display: table;
-        padding-left: 15px;
+        display: none;
         i,p{
           display: table-cell;
         }

@@ -39,18 +39,29 @@ define(function (require) {
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel'
         },
-
         initialize: function (option) {
             this.items = option.items;
             this.defectTypesCollection = new SingletonDefectTypeCollection();
             this.defectTypesCollection.ready.done(function () {
-                this.render();
+                this.render(option);
             }.bind(this));
             this.selectedIssue = null;
             this.inProcess = false;
         },
 
         render: function () {
+            var footerButtons = [
+                {
+                    btnText: 'Cancel',
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: 'Save',
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-save'
+                }
+            ];
             this.$el.html(Util.templates(this.template, {
                 item: this.items[0],
                 isMultipleEdit: this.isMultipleEdit(),
@@ -58,11 +69,13 @@ define(function (require) {
                 subDefects: this.getSubDefects(),
                 getIssueType: this.getIssueType,
                 getIssueComment: this.getIssueComment,
-                getDefectType: this.getDefectType()
+                getDefectType: this.getDefectType(),
+                footerButtons: footerButtons
             }));
             this.applyBindings();
             this.setupAnchors();
             this.setupMarkdownEditor();
+            this.listenTo(this.markdownEditor, 'change', this.activateHide);
         },
 
         isMultipleEdit: function () {
@@ -125,6 +138,9 @@ define(function (require) {
             $('[data-js-noissue-name]', this.$el).hide();
             $('[data-js-issue-title]', this.$el).show();
             $('[data-js-issue-title] i', this.$el).css('background', issueType.color);
+            if (this.isChanged()) {
+                this.activateHide();
+            }
         },
         setupMarkdownEditor: function () {
             this.markdownEditor = new MarkdownEditor({

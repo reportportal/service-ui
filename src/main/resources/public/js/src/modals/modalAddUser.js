@@ -38,7 +38,11 @@ define(function (require) {
             'click [data-js-load]': 'onClickLoad',
             'click [data-js-generate-password]': 'generatePassword',
             'click [data-js-close]': 'onClickClose',
-            'click [data-js-cancel]': 'onClickCancel'
+            'click [data-js-cancel]': 'onClickCancel',
+            'change [data-js-add-user]': 'blockModal'
+        },
+        blockModal: function(){
+            this.activateHide();
         },
         bindings: {
             '[data-js-user-login]': 'value: userId',
@@ -75,8 +79,21 @@ define(function (require) {
             }
         },
         render: function () {
+            var footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: Localization.ui.add,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-load'
+                }
+            ];
             this.$el.html(Util.templates(this.template, {
-                isUsers: this.isUsers()
+                isUsers: this.isUsers(),
+                footerButtons: footerButtons
             }));
             this.setupAnchors();
             this.setupDropDowns();
@@ -117,6 +134,7 @@ define(function (require) {
         },
         onChangeProjectRole: function (val) {
             this.model.set('projectRole', val);
+            this.activateHide();
         },
         onChangeAccountRole: function (val) {
             var role = val === config.accountRolesEnum.administrator
@@ -124,6 +142,7 @@ define(function (require) {
                 : config.defaultProjectRole;
             this.model.set('accountRole', val);
             this.updateProjectRole(role);
+            this.activateHide();
         },
         updateProjectRole: function (role) {
             this.model.set('projectRole', role);
@@ -234,6 +253,7 @@ define(function (require) {
             ]);
             this.$selectProject.on('change', function () {
                 this.$selectProject.trigger('validate');
+                this.activateHide();
             }.bind(this));
         },
         getSearchQuery: function (query) {

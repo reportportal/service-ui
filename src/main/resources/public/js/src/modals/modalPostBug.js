@@ -34,6 +34,7 @@ define(function (require) {
     var BtsFieldsCommonView = require('bts/BtsFieldsCommonView');
     var PostBugFieldsView;
     var ModalPostBug;
+    var Localization = require('localization');
     require('jquery-ui/widgets/datepicker');
 
     PostBugFieldsView = BtsFieldsCommonView.extend({
@@ -65,9 +66,11 @@ define(function (require) {
             'keyup .required-value': 'clearRequiredError',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-is-included]': 'onClickIncludeData',
-            'click [data-js-cancel]': 'onClickCancel'
+            'click [data-js-cancel]': 'onClickCancel',
+            'change [data-js-is-included]': 'activateHide',
+            'click [data-js-dropdown-menu]' : 'activateHide',
+            'click [data-id]' : 'activateHide'
         },
-
         initialize: function (options) {
             this.from = options.from;
             this.appModel = new SingletonAppModel();
@@ -85,12 +88,25 @@ define(function (require) {
         },
 
         render: function () {
+            var footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: Localization.ui.post,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-post'
+                }
+            ];
             this.$el.html(Util.templates(this.contentBody, {
                 isMultiply: this.isMultiply,
                 source: Util.getExternalSystem(true),
                 systems: this.systems,
                 collapse: this.user.bts.hash[this.user.bts.current.id].submits > 0,
-                showCredentialsSoft: this.settings['bts' + this.systemType].canUseRPAuthorization
+                showCredentialsSoft: this.settings['bts' + this.systemType].canUseRPAuthorization,
+                footerButtons: footerButtons
             }));
             return this;
         },
@@ -178,7 +194,6 @@ define(function (require) {
             this.$credentialsLink.removeClass('collapsed');
             this.$collapseCredentials.addClass('in');
         },
-
         renderFields: function () {
             this.postBugFieldsView = new PostBugFieldsView({
                 collection: this.user.bts.current.fields,
@@ -195,6 +210,7 @@ define(function (require) {
                 this.$actionBtn.prop('disabled', true);
             }
         },
+
 
         setupFieldsDropdowns: function (fields) {
             var self = this;
