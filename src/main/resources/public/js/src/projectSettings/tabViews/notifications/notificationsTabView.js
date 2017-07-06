@@ -1087,7 +1087,7 @@ define(function (require) {
                 externalSystemData = self.model.getProjectSettings();
             }
             externalSystemData = this.checkTagsAndLaunches(externalSystemData);
-            Service.updateEmailProjectSettings(externalSystemData)
+            Service.updateEmailProjectSettings(externalSystemData.configuration)
                 .done(function () {
                     self.appModel.get('configuration').emailConfiguration =
                         externalSystemData.configuration;
