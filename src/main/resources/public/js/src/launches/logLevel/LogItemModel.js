@@ -24,6 +24,9 @@ define(function (require) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var Urls = require('dataUrlResolver');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var LogItemModel = Epoxy.Model.extend({
         defaults: {
@@ -47,7 +50,7 @@ define(function (require) {
                 deps: ['binary_content'],
                 get: function (binary_content) {
                     var type;
-                    if (!binary_content) { return ''; }
+                    if (!binary_content || config.userModel.get('token') === config.userModel.defaults.token) { return ''; }
                     if (!~binary_content.content_type.search('image/')) {
                         type = binary_content.content_type.split('/')[1];
                         switch (type) {
