@@ -18,11 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
@@ -38,8 +38,8 @@ define(function (require, exports, module) {
         template: 'tpl-launch-history-item-cell',
         issueTpl: 'tpl-launch-history-item-issue',
         statisticsTpl: 'tpl-launch-history-item-stats',
-        attributes: function(){
-            return {'data-js-history-cell': ''}
+        attributes: function () {
+            return { 'data-js-history-cell': '' };
         },
         bindings: {
             '[data-js-history-cell]': 'getClass: status',
@@ -48,30 +48,34 @@ define(function (require, exports, module) {
         },
         bindingHandlers: {
             getClass: {
-                set: function($el, status) {
-                    var cellWidth = this.view.getCellWidth(),
-                        statusCls = 'history-status-' + status;
+                set: function ($el, status) {
+                    var cellWidth = this.view.getCellWidth();
+                    var statusCls = 'history-status-' + status;
                     $el.css('width', cellWidth + '%');
                     $el.addClass('history-col ' + statusCls);
-
                 }
             },
             getStatistics: {
                 set: function ($el, stats) {
-                    var model = this.view.model,
-                        issue = model.get('issue');
+                    var model = this.view.model;
+                    var issue = model.get('issue');
+                    var defects;
+                    var defectsByType = {};
+                    var sd;
+                    var defectType;
+                    var issueType;
                     if (!issue) {
                         $el.html('');
-                        var defects = stats.defects,
-                            defectsByType = {};
+                        defects = stats.defects;
                         _.each(defects, function (val, defect) {
-                            if (val.total != 0) {
-                                var sd = config.patterns.defectsLocator,
-                                    defectType = _.findKey(val, function (v, k) {
-                                        return sd.test(k);
-                                    });
+                            if (val.total !== 0) {
+                                sd = config.patterns.defectsLocator;
+                                defectType = _.findKey(val, function (v, k) {
+                                    return sd.test(k);
+                                });
                                 if (defectType) {
-                                    var issueType = this.view.defectsCollection.getDefectType(defectType);
+                                    issueType = this.view.defectsCollection
+                                        .getDefectType(defectType);
                                     if (issueType) {
                                         defectsByType[defect] = {
                                             shortName: issueType.shortName,
@@ -83,30 +87,37 @@ define(function (require, exports, module) {
                                 }
                             }
                         }, this);
-                        $el.append(Util.templates(this.view.statisticsTpl, {stats: defectsByType}))
+                        $el.append(Util.templates(this.view.statisticsTpl, {
+                            stats: defectsByType
+                        }));
                     }
                     return '';
                 }
             },
             getIssue: {
                 set: function ($el) {
+                    var objIssue;
+                    var issueType;
+                    var data;
+                    var model = this.view.model;
+                    var issue = model.get('issue');
                     function getMarkdownHtml(value) {
-                        this.markdownViewer = new MarkdownViewer({text: value});
-                        return this.markdownViewer.$el.wrap('<p/>').parent().html();
+                        var markdownViewer = new MarkdownViewer({ text: value });
+                        var html = markdownViewer.$el.wrap('<p/>').parent().html();
+                        markdownViewer.destroy();
+                        return html;
                     }
-                    var model = this.view.model,
-                        issue = model.get('issue');
                     if (issue) {
                         $el.html('');
-                        var objIssue = model.getIssue(),
-                            issueType = this.view.defectsCollection.getDefectType(objIssue.issue_type),
-                            data = {
-                                tickets: _.map(objIssue.externalSystemIssues, function(t){ return t.ticketId; }).join(', '),
-                                comment: objIssue.comment ? getMarkdownHtml(objIssue.comment.setMaxLength(256)) : '',
-                                issueType: issueType,
-                                cls: Util.getDefectCls(issueType.typeRef.toLocaleLowerCase())
-                            };
-                        $el.append(Util.templates(this.view.issueTpl, {stats: data}));
+                        objIssue = model.getIssue();
+                        issueType = this.view.defectsCollection.getDefectType(objIssue.issue_type);
+                        data = {
+                            tickets: _.map(objIssue.externalSystemIssues, function (t) { return t.ticketId; }).join(', '),
+                            comment: objIssue.comment ? getMarkdownHtml(objIssue.comment.setMaxLength(256)) : '',
+                            issueType: issueType,
+                            cls: Util.getDefectCls(issueType.typeRef.toLocaleLowerCase())
+                        };
+                        $el.append(Util.templates(this.view.issueTpl, { stats: data }));
                     }
                     return '';
                 }
@@ -130,19 +141,19 @@ define(function (require, exports, module) {
             return this.cellWidth;
         },
         showTooltip: function (e) {
+            var el = $(e.currentTarget);
+            var type = el.data('tooltipType');
             config.trackingDispatcher.trackEventNumber(134);
-            var el = $(e.currentTarget),
-                type = el.data('tooltipType');
-            if(!el.data('tooltip')){
+            if (!el.data('tooltip')) {
                 el.data('tooltip', 'tooltip');
                 this.createTooltip(el, type);
             }
         },
         createTooltip: function (el, type) {
-            var $hoverElement = el,
-                self = this;
-            if(type == 'warning' || type == 'comment' || type == 'tickets' || type == 'issue') {
-                Util.appendTooltip(function() {
+            var $hoverElement = el;
+            var self = this;
+            if (type === 'warning' || type === 'comment' || type === 'tickets' || type === 'issue') {
+                Util.appendTooltip(function () {
                     var tooltip = new SimpleTooltipView({
                         width: 200,
                         message: (type === 'issue') ?
@@ -151,10 +162,9 @@ define(function (require, exports, module) {
                     });
                     return tooltip.$el;
                 }, $hoverElement, $hoverElement);
-                el.uitooltip('option', 'position', {my: "center+7.5 top+10", collision: "flipfit" }).uitooltip('open');
-            }
-            else {
-                Util.appendTooltip(function() {
+                el.uitooltip('option', 'position', { my: 'center+7.5 top+10', collision: 'flipfit' }).uitooltip('open');
+            } else {
+                Util.appendTooltip(function () {
                     var hoverView = new LaunchSuiteDefectsHoverView({
                         type: type,
                         noLink: true,
@@ -162,8 +172,7 @@ define(function (require, exports, module) {
                     });
                     return hoverView.$el;
                 }, $hoverElement, $hoverElement);
-                el.uitooltip('option', 'position', {my: "center+7.5 top+10", collision: "flipfit" }).uitooltip('open');
-
+                el.uitooltip('option', 'position', { my: 'center+7.5 top+10', collision: 'flipfit' }).uitooltip('open');
             }
         },
         onDestroy: function () {
