@@ -506,6 +506,8 @@ define(['util'], function () {
             launchStatisticsChart: 'Launch Statistics',
             trendChart: 'Trend Chart',
             lineChart: 'Line Chart',
+            lineMode: 'Line Mode',
+            chartMode: 'Chart Mode',
 
             defaultName: 'Widget template name',
             defaultDescription: 'Select widget template and filter to render data trough - and you\'ll see preview at the right side',

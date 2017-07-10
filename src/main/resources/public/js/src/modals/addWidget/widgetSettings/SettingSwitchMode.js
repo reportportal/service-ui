@@ -54,23 +54,23 @@ define(function (require, exports, module) {
             this.$el.html(Util.templates(this.template, this.curWidget.mode));
         },
         onClickLaunch: function (e) {
+            var curOptions = this.model.getWidgetOptions();
             config.trackingDispatcher.trackEventNumber(300);
             e.preventDefault();
             if (!this.$launchMode.hasClass('active')) {
                 this.$launchMode.addClass('active');
                 this.timelineMode.removeClass('active');
-                var curOptions = this.model.getWidgetOptions();
                 delete curOptions.timeline;
                 this.model.setWidgetOptions(curOptions);
             }
         },
         onClickTimeline: function (e) {
+            var curOptions = this.model.getWidgetOptions();
             config.trackingDispatcher.trackEventNumber(300);
             e.preventDefault();
             if (!this.timelineMode.hasClass('active')) {
                 this.timelineMode.addClass('active');
                 this.$launchMode.removeClass('active');
-                var curOptions = this.model.getWidgetOptions();
                 curOptions.timeline = ['DAY'];
                 this.model.setWidgetOptions(curOptions);
             }

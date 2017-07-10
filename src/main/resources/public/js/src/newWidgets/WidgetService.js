@@ -111,6 +111,14 @@ define(function (require, exports, module) {
                     widget_type: 'statistics_panel',
                     gadget: 'overall_statistics',
                     criteria: {}, // this.getExecutionsAndDefects(),
+                    // mode: {
+                    //     type: 'radio',
+                    //     defaultVal: 'line',
+                    //     items: {
+                    //         line: Localization.widgets.lineMode,
+                    //         chart: Localization.widgets.chartMode
+                    //     }
+                    // },
                     limit: {
                         display: true,
                         min: 1,

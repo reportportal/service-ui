@@ -113,7 +113,7 @@ define(function (require) {
             var tooltip = this.tooltipContent();
             var vis;
             var tip;
-            var emptyData = this.model.getContent().result;
+            var emptyData = this.model.getContent();
             if (!this.isEmptyData(emptyData)) {
                 this.addSVG();
 
