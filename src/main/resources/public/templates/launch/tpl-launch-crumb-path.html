@@ -1,7 +1,10 @@
 <span>(</span>
-<% _.each(data.pathData, function (item) { %>
+<% _.each(data.pathData, function (item, num) { %>
 <a class="ellipse" href="<%- item.link %>"><%= item.name %></a>
+<% if (data.pathData.length - 1 !== num) { %>
 <i class="arrow material-icons">keyboard_arrow_right</i>
+<% } %>
 <% }) %>
-<span class="ellipse" data-js-name></span>
 <span>)</span>
+<i class="arrow material-icons">keyboard_arrow_right</i>
+<span class="ellipse" data-js-name></span>
