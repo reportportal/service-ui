@@ -176,7 +176,6 @@ define(function (require) {
             }
         },
         onDestroy: function () {
-            this.markdownViewer && this.markdownViewer.destroy();
             this.$el.html('');
             delete this;
         }
