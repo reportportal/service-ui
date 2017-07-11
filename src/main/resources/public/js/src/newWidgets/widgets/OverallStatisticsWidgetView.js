@@ -24,11 +24,23 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Util = require('util');
-    var BaseWidgetView = require('newWidgets/_BaseWidgetView');
+    var ChartWidgetView = require('newWidgets/_ChartWidgetView');
+    var SingletonAppModel = require('model/SingletonAppModel');
     var Localization = require('localization');
+    var d3 = require('d3');
+    var nvd3 = require('nvd3');
+    var App = require('app');
 
-    var OverallStatisticsWidget = BaseWidgetView.extend({
+    var config = App.getInstance();
+
+    var OverallStatisticsWidget = ChartWidgetView.extend({
         tpl: 'tpl-widget-statistics-panel',
+        pieGrid: 'tpl-pie-grid',
+        addComboSVG: function (data) {
+            this.$el.attr(this.attributes()).append(
+                Util.templates(this.pieGrid, { id: this.id, stats: data })
+            );
+        },
         getData: function () {
             var contentData = this.model.getContent();
             var contentFields = this.model.getContentFields();
@@ -70,18 +82,102 @@ define(function (require) {
             }
             return [];
         },
+        roundLabels: function (d) {
+            var label = (d % 2 === 0) ? d * 100 : d3.round(d * 100, 2);
+            var sum = d3.round(this.forLabels.sum + label, 2);
+            this.forLabels.count += 1;
+            if (this.forLabels.count === this.forLabels.size) {
+                if (sum > 100 || sum < 100) {
+                    label = d3.round(100 - this.forLabels.sum, 2);
+                }
+            }
+            this.forLabels.sum = sum;
+            return label + '%';
+        },
         render: function () {
+            var widgetOptions = this.model.getParameters().widgetOptions;
             var params = {
                 statistics: this.getData(),
                 invalidDataMessage: this.invalidDataMessage(this.invalid),
                 invalid: this.invalid
             };
-            if (!this.isEmptyData(this.getData())) {
-                this.$el.html(Util.templates(this.tpl, params));
-                !this.isPreview && Util.setupBaronScroll($('.statistics-panel', this.$el));
+            var data = this.getData();
+            this.charts = [];
+            if (data.defects.length || data.executions.length) {
+                if (widgetOptions && widgetOptions.chartMode) {
+                    this.appModel = new SingletonAppModel();
+                    this.forLabels = { size: data.length, count: 0, sum: 0 };
+                    if (!data.defects.length || !data.executions.length) {
+                        this.addSVG();
+                        var curData = data.defects.length ? data.defects : data.executions;
+                        this.renderPieChart(curData, 'svg');
+                    } else {
+                        this.addComboSVG(data);
+                        this.renderPieChart(data.defects, '#' + this.id + '-svg1');
+                        this.renderPieChart(data.executions, '#' + this.id + '-svg2');
+                    }
+                    this.addResize();
+                } else {
+                    this.$el.html(Util.templates(this.tpl, params));
+                    !this.isPreview && Util.setupBaronScroll($('.statistics-panel', this.$el));
+                }
             } else {
                 this.addNoAvailableBock(this.$el);
             }
+        },
+        renderPieChart: function (data, id) {
+            var self = this;
+            var chart = nvd3.models.pieChart()
+                .x(function (d) {
+                    return d.key;
+                })
+                .y(function (d) {
+                    return d.value;
+                })
+                .margin({ top: !self.isPreview ? 10 : 0, right: 20, bottom: 10, left: 20 })
+                .valueFormat(d3.format('f'))
+                .showLabels(!self.isPreview)
+                .color(function (d) {
+                    return d.data.color;
+                })
+                .title('')
+                .titleOffset(-10)
+                .growOnHover(false)
+                .labelThreshold(0)
+                .labelType('percent')
+                .legendPosition('right')
+                .labelFormat(function (d) {
+                    return self.roundLabels(d);
+                })
+                .donut(true)
+                .donutRatio(0.4)
+                .tooltips(!self.isPreview)
+                .showLegend(!self.isPreview)
+            ;
+
+            d3.select($(id, this.$el).get(0))
+                .datum(data)
+                .call(chart);
+            this.charts.push(chart);
+            this.redirectOnElementClick(chart, 'pie');
+        },
+        redirectOnElementClick: function (chart, type) {
+            var self = this;
+            chart[type].dispatch.on('elementClick', null);
+            if (!this.isPreview) {
+                chart[type].dispatch.on('elementClick', function (e) {
+                    var project = '#' + self.appModel.get('projectId');
+                    var link = project + '/launches/' + self.model.get('filter_id');
+                    config.trackingDispatcher.trackEventNumber(344);
+                    nvd3.tooltip.cleanup();
+                    document.location.hash = link;
+                });
+            }
+        },
+        updateWidget: function () {
+            _.each(this.charts, function (chart) {
+                chart && chart.update();
+            }, this);
         }
     });
 
