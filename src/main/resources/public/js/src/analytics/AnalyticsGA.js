@@ -23,6 +23,7 @@
 
 define(function (require) {
     var AnalyticsObject = require('analytics/AnalyticsObject');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
 
     var AnalyticsGA = AnalyticsObject.extend({
         initialize: function () {
@@ -41,6 +42,15 @@ define(function (require) {
             script.src = 'https://www.google-analytics.com/analytics.js';
             var lastScript = document.getElementsByTagName('script')[0];
             lastScript.parentNode.insertBefore(script, lastScript);
+            var registryInfoModel = new SingletonRegistryInfoModel();
+            registryInfoModel.ready.done(function () {
+                var services = registryInfoModel.get('services');
+                var instanceId = '';
+                if (services && services.API && services.API.extensions && services.API.extensions.instanceId) {
+                    instanceId = services.API.extensions.instanceId;
+                }
+                ga('set', 'campaignId', instanceId);
+            });
         },
         send: function (data) {
             if ('DEBUG_STATE') {
