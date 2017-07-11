@@ -21,6 +21,7 @@
 define(function (require) {
     'use strict';
 
+    var $ = require('jquery');
     var _ = require('underscore');
     var App = require('app');
     var Moment = require('moment');
@@ -123,10 +124,12 @@ define(function (require) {
             var self = this;
             var type = this.getTimeType(this.max);
             var tooltip = this.tooltipContent();
+            var data = this.getData();
             var cup;
             var update;
             var emptyData = this.model.getContent();
-            if (!this.isEmptyData(emptyData)) {
+            var emptyResult = this.model.getContent().result;
+            if (!this.isEmptyData(emptyData) && !this.isEmptyData(emptyResult)) {
                 this.addSVG();
 
                 this.chart = nvd3.models.multiBarHorizontalChart()
@@ -156,6 +159,9 @@ define(function (require) {
                     .tickFormat(d3.format(',.2f'))
                     .axisLabel(type.type);
 
+                d3.select($('svg', this.$el).get(0))
+                    .datum(data)
+                    .call(this.chart);
                 cup = self.chart.update;
                 update = function () {
                     self.chart.xAxis.tickFormat(function (d) {
@@ -166,7 +172,6 @@ define(function (require) {
                         .tickFormat(function (d) {
                             return self.formatCategories(d);
                         });
-                    self.chart.update = update;
                 };
                 this.chart.update = update;
                 this.addResize();

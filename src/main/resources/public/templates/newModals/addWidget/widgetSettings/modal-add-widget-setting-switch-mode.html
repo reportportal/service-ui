@@ -1,4 +1,3 @@
-<a href="#" <% if (!data.timeline) { %> class="active" <% } %> data-js-launch-mode><%- data.text.widgets.launchMode
-%></a>
-<a href="#" <% if (data.timeline) { %> class="active" <% } %> data-js-timeline-mode><%-
-data.text.widgets.timelineMode %></a>
+<% _.each(data.items, function(value, key) { %>
+<a href="#" data-js-switch-item data-key="<%= key %>"><%- value %></a>
+<% }) %>

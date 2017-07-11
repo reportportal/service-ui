@@ -24,6 +24,7 @@ define(function (require, exports, module) {
 
     var Util = require('util');
     var $ = require('jquery');
+    var _ = require('underscore');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
     var WidgetService = require('newWidgets/WidgetService');
     var App = require('app');
@@ -34,8 +35,7 @@ define(function (require, exports, module) {
         className: 'modal-add-widget-setting-switch-mode',
         template: 'modal-add-widget-setting-switch-mode',
         events: {
-            'click [data-js-launch-mode]': 'onClickLaunch',
-            'click [data-js-timeline-mode]': 'onClickTimeline'
+            'click [data-js-switch-item]': 'onClickItem'
         },
         bindings: {
         },
@@ -45,34 +45,60 @@ define(function (require, exports, module) {
                 this.destroy();
                 return false;
             }
-            this.curWidget.mode.timeline = this.model.getWidgetOptions().timeline;
             this.render();
-            this.$launchMode = $('[data-js-launch-mode]', this.$el);
-            this.timelineMode = $('[data-js-timeline-mode]', this.$el);
+            this.setDefaultState();
+            return true;
         },
         render: function () {
             this.$el.html(Util.templates(this.template, this.curWidget.mode));
         },
-        onClickLaunch: function (e) {
+        onClickItem: function (e) {
+            var $el = $(e.currentTarget);
+            var key = $el.data('key');
             var curOptions = this.model.getWidgetOptions();
             config.trackingDispatcher.trackEventNumber(300);
             e.preventDefault();
-            if (!this.$launchMode.hasClass('active')) {
-                this.$launchMode.addClass('active');
-                this.timelineMode.removeClass('active');
-                delete curOptions.timeline;
-                this.model.setWidgetOptions(curOptions);
+            if (!$el.hasClass('active')) {
+                $('[data-js-switch-item]', this.$el).removeClass('active');
+                $el.addClass('active');
+                switch (key) {
+                case 'launch':
+                    delete curOptions.timeline;
+                    this.model.setWidgetOptions(curOptions);
+                    break;
+                case 'timeline':
+                    curOptions.timeline = ['DAY'];
+                    this.model.setWidgetOptions(curOptions);
+                    break;
+                case 'lineMode':
+                    delete curOptions.chartMode;
+                    this.model.setWidgetOptions(curOptions);
+                    break;
+                case 'chartMode':
+                    curOptions.chartMode = [];
+                    this.model.setWidgetOptions(curOptions);
+                    break;
+                default:
+                    break;
+                }
             }
         },
-        onClickTimeline: function (e) {
+        setDefaultState: function () {
             var curOptions = this.model.getWidgetOptions();
-            config.trackingDispatcher.trackEventNumber(300);
-            e.preventDefault();
-            if (!this.timelineMode.hasClass('active')) {
-                this.timelineMode.addClass('active');
-                this.$launchMode.removeClass('active');
-                curOptions.timeline = ['DAY'];
-                this.model.setWidgetOptions(curOptions);
+            var keys = _.keys(curOptions);
+            if (keys.length) {
+                switch (keys[0]) {
+                case 'timeline':
+                    $('[data-key="timeline"]', this.$el).addClass('active');
+                    break;
+                case 'chartMode':
+                    $('[data-key="chartMode"]', this.$el).addClass('active');
+                    break;
+                default:
+                    break;
+                }
+            } else {
+                $('[data-key="' + this.curWidget.mode.defaultVal + '"]', this.$el).addClass('active');
             }
         }
     });
