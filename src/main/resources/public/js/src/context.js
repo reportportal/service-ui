@@ -36,6 +36,7 @@ define(function (require, exports, module) {
 
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
 
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
@@ -106,7 +107,15 @@ define(function (require, exports, module) {
         },
 
         openRouted: function (projectId, contextName, subContext, queryString) {
-            config.trackingDispatcher.pageView(contextName);
+            var registryInfoModel = new SingletonRegistryInfoModel();
+            registryInfoModel.ready.done(function () {
+                var services = registryInfoModel.get('services');
+                var instanceId = '';
+                if (services && services.API && services.API.extensions && services.API.extensions.instanceId) {
+                    instanceId = services.API.extensions.instanceId;
+                }
+                config.trackingDispatcher.pageView(contextName, { instanceId: instanceId });
+            });
             this.prepareInsideView();
             this.currentContext = contextName;
             this.checkForContextChange(contextName);
