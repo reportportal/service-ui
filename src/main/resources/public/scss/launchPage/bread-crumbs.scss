@@ -41,7 +41,6 @@
     float: left;
     &.crumb {
       margin-left: 5px;
-      margin-bottom: 10px;
       .fail-load-container {
         display: none;
       }
@@ -72,6 +71,7 @@
         overflow: hidden;
         white-space: nowrap;
         max-width: 100%;
+        margin-bottom: 10px;
       }
       .autoanalyze {
         width: auto;
