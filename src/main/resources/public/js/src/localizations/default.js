@@ -695,6 +695,7 @@ define(['util'], function () {
             finishAgree: 'I am sure I want to finish %%%',
             deleteAgree: 'I am sure I want to delete %%%',
             deleteWarningAgree: 'You are going to delete not your own %%%. This may affect other users information on the project.',
+            deleteItemsWarningAgree: 'You are going to delete %%% not in your own launch. This may affect other users information on the project.',
             finishOneLaunch: 'You are going to stop not your own launch. This may affect other users information on the project.',
             finishSelectedLaunch: 'You are going to stop not your own launches.  This may affect other users information on the project.',
 
@@ -1748,8 +1749,7 @@ define(['util'], function () {
             unableSelectForMerge: 'Error: Unable to select launch for merge!',
             createNewDashboard: 'Create new Dashboard',
             dashboardSettings: 'Dashboard settings',
-            deleteFilter: 'Are you sure you want to delete the filter <b>\'%%%\'</b>?',
-            deleteFilterDanger: 'Are you sure you want to delete the filter <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
+            deleteFilter: 'Are you sure to delete filter <b>\'%%%\'</b>? It will no longer exist.',
             deleteFilterDangerConfirmText: 'You are going to delete not your own filter. This may affect other users information on the project.',
             deleteProject: 'Are you sure you want to delete the project <b>\'%%%\'</b>?',
             deleteEmailRule: 'Are you sure you want to remove notification rule?',
@@ -1762,7 +1762,7 @@ define(['util'], function () {
             deleteImage: 'Are you sure you want to delete profile photo?',
             deleteBts: 'Are you sure you want to remove %%% project <b>\'%%%\'</b> from project settings?',
 
-            dashboardDelete: 'Are you sure you want to delete dashboard <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
+            dashboardDelete: 'Are you sure to delete dashboard  <b>\'%%%\'</b>? It will no longer exist.',
             dashboardDeleteDangerConfirmText: 'You are going to delete not your own dashboard. This may affect other users information on the project.',
             deletedWidget: 'Are you sure you want to delete widget <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
             deletedWidgetDangerConfirmText: 'You are going to delete not your own widget. This may affect other users information on the project.',
@@ -1792,7 +1792,7 @@ define(['util'], function () {
 
             filterOptions: 'Filter Options',
 
-            msgDeleteItems: 'Are you sure you want to delete %%%? You will no longer have access to %%%. This action can\'t be undone.',
+            msgDeleteItems: 'Are you sure to delete %%%? %%% will no longer exist.',
             msgDeleteDefectType: 'I am sure I want to remove custom defect type',
             msgDeleteProject: 'I am sure I want to delete project',
             msgDeleteOrg: 'Are you sure you want to delete selected organization? All assigned users could not be able to login Report Portal. ',
