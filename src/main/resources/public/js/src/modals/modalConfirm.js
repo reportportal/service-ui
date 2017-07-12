@@ -65,11 +65,8 @@ define(function (require) {
             ];
             options.footerButtons = footerButtons;
             this.$el.html(Util.templates(this.template, options));
-            this.showWarning(options.confirmText);
-        },
-        showWarning: function (confirmText) {
-            if (confirmText) {
-                this.showWarningBlock(confirmText);
+            if (options.confirmText) {
+                this.showWarningBlock(options.confirmText);
             }
         },
         onClickSuccess: function () {

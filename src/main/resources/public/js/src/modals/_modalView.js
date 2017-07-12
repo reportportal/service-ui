@@ -31,7 +31,7 @@ define(function (require) {
         templateWrapper: '_tpl-modal',
         enableHide: true,
         showWarningBlock: function (warning) {
-            $(this.$el).find('[data-js-warning-text]').text(warning);
+            $('[data-js-warning-text]', this.$el).text(warning);
             $(this.$el).find('[data-js-warning]').show();
         },
         activateHide: function () {
