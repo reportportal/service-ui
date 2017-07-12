@@ -2,11 +2,18 @@
   .modal-content-wrapper {
     .modal-body {
       padding: 30px 20px 20px 20px;
+      .baron__root {
+        margin-bottom: 20px;
+        min-height: 106px;
+      }
+      .drop-area-wrapper {
+        position: relative;
+        overflow: hidden;
+      }
       .drop-area {
         position: relative;
         width: 100%;
         min-height: 106px;
-        margin-bottom: 20px;
         background-color: $COLOR--white-four;
         padding: 20px;
         border: 0;
