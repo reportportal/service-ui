@@ -99,7 +99,7 @@ require.config({
         'cookie': ['jquery'],
         'bootstrap': ['jquery'],
         'fullscreen': ['jquery'],
-        // 'nicescroll': ['jquery'],
+        'dropzone': ['jquery'],
         'customScroll': ['jquery'],
         'select2': ['jquery'],
         'daterangepicker': ['jquery'],
