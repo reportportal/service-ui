@@ -38,7 +38,6 @@ define(function (require) {
             this.$el.html(Util.templates(this.tpl));
             $('[data-js-ok]', this.$el).addClass('hide');
             $('[data-js-import]', this.$el).attr('disabled', 'disabled');
-            this.droppScrollEl = Util.setupBaronScroll($('[data-js-scroll-block]', this.$el));
         },
         onShow: function () {
             this.initDropzone();
@@ -63,13 +62,11 @@ define(function (require) {
                         (thisDropzone.files.length) ?
                             $('[data-js-import]', self.$el).removeAttr('disabled') :
                             $('[data-js-import]', self.$el).attr('disabled', 'disabled');
-                        Util.setupBaronScrollSize(self.droppScrollEl, { maxHeight: 300 });
                     });
                     this.on('removedfile', function () {
                         (thisDropzone.files.length) ?
                             $('[data-js-import]', self.$el).removeAttr('disabled') :
                             $('[data-js-import]', self.$el).attr('disabled', 'disabled');
-                        Util.setupBaronScrollSize(self.droppScrollEl, { maxHeight: 300 });
                     });
                 },
                 url: Urls.importLaunch(),
