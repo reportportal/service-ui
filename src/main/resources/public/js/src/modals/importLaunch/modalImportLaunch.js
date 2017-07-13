@@ -34,7 +34,7 @@ define(function (require) {
         initialize: function () {
             this.uploadProcess = false;
             this.warningShow = false;
-            this.aprivHide = false;
+            this.approvalHide = false;
             this.render();
         },
         render: function () {
@@ -155,18 +155,18 @@ define(function (require) {
         },
         hide: function () {
             var self = this;
-            if (this.uploadProcess && !this.aprivHide) {
+            if (this.uploadProcess && !this.approvalHide) {
                 if (this.warningShow) {
                     return false;
                 }
-                this.showWarningBlock('Are you sure you want to interrupt import launches?' +
+                this.showWarningBlock(Localization.launches.interruptImportWarning +
                     '<label class="rp-checkbox-wrap">' +
                     '<input class="rp-input-checkbox" type="checkbox" data-js-apruv-close>' +
-                    '<span>Confirm cancel import.</span>' +
+                    '<span>' + Localization.launches.approvalInterruptImportWarning + '</span>' +
                 '</label>');
                 this.warningShow = true;
                 $('[data-js-apruv-close]', this.$el).change(function (e) {
-                    self.aprivHide = $(e.currentTarget).prop('checked');
+                    self.approvalHide = $(e.currentTarget).prop('checked');
                 });
                 return false;
             }
