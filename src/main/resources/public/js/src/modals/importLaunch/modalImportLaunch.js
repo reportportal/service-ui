@@ -95,7 +95,7 @@ define(function (require) {
                 parallelUploads: 10,
                 timeout: false,
                 uploadMultiple: false,
-                maxFilesize: 64,
+                maxFilesize: 32,
                 acceptedFiles: '.zip',
                 autoProcessQueue: false,
                 addRemoveLinks: true,

@@ -1800,7 +1800,7 @@ define(['util'], function () {
             msgResetColorsDefectType: 'Are you sure you want to reset custom defect\'s colors to default?',
             msgMessageTop: 'Are you sure you want to delete the defect type?  All investigated as <strong>\'%%%\'</strong> defects will be marked as <strong>\'%%%\'</strong>.',
             msgImportLaunch: 'If your runner does not write the test start date in the .xml file, then the current server time will be substituted automatically.',
-            importLaunchTip: 'Drop only <strong>.zip</strong> file under 64 MB to upload or <span class="blue">click</span> to add it'
+            importLaunchTip: 'Drop only <strong>.zip</strong> file under 32 MB to upload or <span class="blue">click</span> to add it'
         },
 
         time: {
