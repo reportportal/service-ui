@@ -52,7 +52,7 @@ define(function (require) {
             '[data-js-public]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
             '[data-js-gadget-remove]': 'classes: {hide: not(canRemove)}',
             '[data-js-gadget-edit]': 'classes: {hide: not(isMy)}',
-            '[data-js-timeline]': 'classes: {hide: not(isTimeline)}'
+            '[data-js-timeline]': 'text: specialModeText,classes: {hide: not(specialMode)}'
         },
         computeds: {
             canRemove: {

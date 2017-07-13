@@ -115,7 +115,7 @@ define(function (require, exports, module) {
                         type: 'radio',
                         defaultVal: 'lineMode',
                         items: {
-                            lineMode: Localization.widgets.lineMode,
+                            lineMode: Localization.widgets.panelMode,
                             chartMode: Localization.widgets.chartMode
                         }
                     },

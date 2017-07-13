@@ -47,7 +47,9 @@ define(function (require) {
             var values;
             var data = {
                 executions: [],
-                defects: []
+                defects: [],
+                executionsCount: 0,
+                defectsCount: 0
             };
             if (!_.isEmpty(contentData.result) && !_.isEmpty(contentData.result[0].values)) {
                 values = contentData.result[0].values;
@@ -69,18 +71,25 @@ define(function (require) {
                             this.invalid += 1;
                         }
                     }
-                    data[type].push({
-                        key: name,
-                        seriesId: seriesId,
-                        type: type,
-                        color: this.getSeriesColor(seriesId),
-                        value: value
-                    });
+                    if (name !== 'Total') {
+                        data[type].push({
+                            key: name,
+                            seriesId: seriesId,
+                            type: type,
+                            color: this.getSeriesColor(seriesId),
+                            value: value
+                        });
+                        data[type + 'Count'] += +value;
+                    }
                 }, this);
 
                 return data;
             }
-            return [];
+            return data;
+        },
+        renderTitle: function (id, type) {
+            var ts = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            $('.nv-pie-title', id).append($(ts).attr({ x: '0', dy: '1.2em' }).text(type));
         },
         roundLabels: function (d) {
             var label = (d % 2 === 0) ? d * 100 : d3.round(d * 100, 2);
@@ -113,8 +122,10 @@ define(function (require) {
                         this.renderPieChart(curData, 'svg');
                     } else {
                         this.addComboSVG(data);
-                        this.renderPieChart(data.defects, '#' + this.id + '-svg1');
-                        this.renderPieChart(data.executions, '#' + this.id + '-svg2');
+                        this.renderPieChart(data.executions, '#' + this.id + '-svg1', 'Sum');
+                        this.renderPieChart(data.defects, '#' + this.id + '-svg2', 'Issues');
+                        this.renderTitle('#' + this.id + '-svg1', data.executionsCount);
+                        this.renderTitle('#' + this.id + '-svg2', data.defectsCount);
                     }
                     this.addResize();
                 } else {
@@ -125,7 +136,7 @@ define(function (require) {
                 this.addNoAvailableBock(this.$el);
             }
         },
-        renderPieChart: function (data, id) {
+        renderPieChart: function (data, id, title) {
             var self = this;
             var chart = nvd3.models.pieChart()
                 .x(function (d) {
@@ -134,18 +145,18 @@ define(function (require) {
                 .y(function (d) {
                     return d.value;
                 })
-                .margin({ top: !self.isPreview ? 10 : 0, right: 20, bottom: 10, left: 20 })
+                .margin({ top: !self.isPreview ? 30 : 0, right: 20, bottom: 0, left: 20 })
                 .valueFormat(d3.format('f'))
                 .showLabels(!self.isPreview)
                 .color(function (d) {
                     return d.data.color;
                 })
-                .title('')
+                .title(!self.isPreview ? title + ':' : '')
                 .titleOffset(-10)
                 .growOnHover(false)
                 .labelThreshold(0)
                 .labelType('percent')
-                .legendPosition('right')
+                .legendPosition(title === 'Issues' && data.length > 9 ? 'right' : 'top')
                 .labelFormat(function (d) {
                     return self.roundLabels(d);
                 })

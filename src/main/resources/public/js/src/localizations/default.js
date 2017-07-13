@@ -458,7 +458,7 @@ define(['util'], function () {
             off_email: 'switched off',
             update_email: 'updated',
 
-            overallStatisticsPanel: 'Overall statistics panel',
+            overallStatisticsPanel: 'Overall statistics',
             overallStatisticsPanelDescription: 'shows summary of test cases with each statuses in the selected launches.',
             TestCasesStatisticsUniqueLaunches: 'Test-cases statistics in unique launches',
 
@@ -506,8 +506,8 @@ define(['util'], function () {
             launchStatisticsChart: 'Launch Statistics',
             trendChart: 'Trend Chart',
             lineChart: 'Line Chart',
-            lineMode: 'Line Mode',
-            chartMode: 'Chart Mode',
+            panelMode: 'Panel view',
+            chartMode: 'Pie chart view',
 
             defaultName: 'Widget template name',
             defaultDescription: 'Select widget template and filter to render data trough - and you\'ll see preview at the right side',

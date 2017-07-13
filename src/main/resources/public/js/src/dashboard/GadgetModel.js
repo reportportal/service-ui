@@ -110,6 +110,25 @@ define(function (require, exports, module) {
                     }
                     return false;
                 }
+            },
+            specialModeText: {
+                deps: ['widgetOptions'],
+                get: function () {
+                    var options = this.getWidgetOptions();
+                    if (options.timeline && options.timeline.length) {
+                        return Localization.widgets.timelineModeTitle;
+                    }
+                    if (options.chartMode) {
+                        return Localization.widgets.chartMode;
+                    }
+                    return '';
+                }
+            },
+            specialMode: {
+                deps: ['specialModeText'],
+                get: function (specialModeText) {
+                    return !!specialModeText;
+                }
             }
         },
         initialize: function () {
