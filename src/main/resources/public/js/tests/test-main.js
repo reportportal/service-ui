@@ -57,7 +57,7 @@ require.config({
         launchCrumbs: 'launch/launch-crumbs',
         log: 'log/logs',
         DemoDataSettingsView: 'project/DemoDataSettingsView',
-        dropzone: '../lib/dropzone-amd-module.min',
+        dropzone: '../lib/dropzone-amd-module',
 
         dataUrlResolver: 'core/data-url-resolver',
         projectinfo: 'project/projectinfo',
