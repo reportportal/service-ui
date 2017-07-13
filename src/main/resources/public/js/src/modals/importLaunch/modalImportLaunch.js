@@ -32,10 +32,30 @@ define(function (require) {
         },
 
         initialize: function () {
+            this.uploadProcess = false;
+            this.warningShow = false;
+            this.aprivHide = false;
             this.render();
         },
         render: function () {
-            this.$el.html(Util.templates(this.tpl));
+            var footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: Localization.ui.import,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-import'
+                },
+                {
+                    btnText: Localization.ui.ok,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-ok'
+                }
+            ];
+            this.$el.html(Util.templates(this.tpl, { footerButtons: footerButtons }));
             $('[data-js-ok]', this.$el).addClass('hide');
             $('[data-js-import]', this.$el).attr('disabled', 'disabled');
         },
@@ -55,6 +75,7 @@ define(function (require) {
                             return element.classList.remove('dz-clickable');
                         });
                         self.dropzone.removeEventListeners();
+                        self.uploadProcess = true;
                     });
                     this.on('processing', function () {
                         $('[data-js-import]', self.$el).addClass('hide');
@@ -62,6 +83,7 @@ define(function (require) {
                     });
                     this.on('queuecomplete', function () {
                         $('[data-js-ok]', self.$el).removeAttr('disabled');
+                        self.uploadProcess = false;
                     });
                     this.on('addedfile', function () {
                         (thisDropzone.files.length) ?
@@ -128,14 +150,29 @@ define(function (require) {
                 }
             });
         },
-        onKeySuccess: function () {
-        },
-        onClickClose: function () {
-        },
         onClickOk: function () {
             this.successClose();
         },
-        onClickCancel: function () {
+        hide: function () {
+            var self = this;
+            if (this.uploadProcess && !this.aprivHide) {
+                if (this.warningShow) {
+                    return false;
+                }
+                this.showWarningBlock('Are you sure you want to interrupt import launches?' +
+                    '<label class="rp-checkbox-wrap">' +
+                    '<input class="rp-input-checkbox" type="checkbox" data-js-apruv-close>' +
+                    '<span>Confirm cancel import.</span>' +
+                '</label>');
+                this.warningShow = true;
+                $('[data-js-apruv-close]', this.$el).change(function (e) {
+                    self.aprivHide = $(e.currentTarget).prop('checked');
+                });
+                return false;
+            }
+            this.$modalWrapper && this.$modalWrapper.modal('hide');
+            this.closeAsync && this.closeAsync.reject();
+            return false;
         }
     });
 

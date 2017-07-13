@@ -1,7 +1,9 @@
 <div class="modal-footer">
     <div class="warning-block" data-js-warning>
-        <i class="rp-icons rp-icons-warning"></i>
-        <p data-js-warning-text></p>
+        <div class="warning-block-content">
+            <i class="rp-icons rp-icons-warning"></i>
+            <p data-js-warning-text></p>
+        </div>
     </div>
     <% _.forEach(data, function(button){ %>
         <button class="rp-btn <%=button.btnClass %>" type="button" <%= button.label %> >

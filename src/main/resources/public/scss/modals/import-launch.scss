@@ -234,6 +234,14 @@
     }
 
     .modal-footer {
+      label.rp-checkbox-wrap {
+        margin: 0;
+        padding-left: 5px;
+        span {
+          padding-left: 20px !important;
+          color: $COLOR--charcoal-grey;
+        }
+      }
       .rp-btn {
         width: 70px;
       }
