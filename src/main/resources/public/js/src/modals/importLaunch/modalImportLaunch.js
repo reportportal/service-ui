@@ -22,7 +22,7 @@ define(function (require) {
     var Localization = require('localization');
     var Urls = require('dataUrlResolver');
     var Util = require('util');
-    require('dropzone');
+    var Dropzone = require('dropzone');
 
     var ModalImportLaunch = ModalView.extend({
         tpl: 'tpl-modal-import-launch',
@@ -44,12 +44,17 @@ define(function (require) {
         },
         initDropzone: function () {
             var self = this;
-            $('[data-js-drop-area]', this.$el).dropzone({
+            this.dropzone = new Dropzone($('[data-js-drop-area]', this.$el).get(0), {
                 init: function () {
                     var submitButton = $('[data-js-import]', self.$el)[0];
                     var thisDropzone = this;
                     submitButton.addEventListener('click', function () {
                         thisDropzone.processQueue();
+                        $('[data-js-drop-area]', self.$el).addClass('finish-loading');
+                        self.dropzone.clickableElements.forEach(function (element) {
+                            return element.classList.remove('dz-clickable');
+                        });
+                        self.dropzone.removeEventListeners();
                     });
                     this.on('processing', function () {
                         $('[data-js-import]', self.$el).addClass('hide');
@@ -67,6 +72,11 @@ define(function (require) {
                         (thisDropzone.files.length) ?
                             $('[data-js-import]', self.$el).removeAttr('disabled') :
                             $('[data-js-import]', self.$el).attr('disabled', 'disabled');
+                    });
+                    this.on('uploadprogress', function (file, progress) {
+                        if (progress === 100) {
+                            $(file.previewElement).addClass('file-upload-complete');
+                        }
                     });
                 },
                 url: Urls.importLaunch(),
@@ -93,7 +103,29 @@ define(function (require) {
                 hiddenInputContainer: '[data-js-drop-area]',
                 dictDefaultMessage: Localization.dialog.importLaunchTip,
                 dictRemoveFile: '<i class="material-icons">close</i>',
-                dictCancelUpload: '<i class="material-icons">close</i>'
+                dictCancelUpload: '<i class="material-icons">close</i>',
+                error: function (file, message) {
+                    var j;
+                    var len;
+                    var node;
+                    var ref;
+                    var results;
+                    var resultMessage = message;
+                    if (file.previewElement) {
+                        file.previewElement.classList.add('dz-error');
+                        if (typeof message !== 'string' && message.message) {
+                            resultMessage = message.message;
+                        }
+                        ref = file.previewElement.querySelectorAll('[data-dz-errormessage]');
+                        results = [];
+                        for (j = 0, len = ref.length; j < len; j++) {
+                            node = ref[j];
+                            results.push(node.textContent = resultMessage);
+                        }
+                        return results;
+                    }
+                    return false;
+                }
             });
         },
         onKeySuccess: function () {

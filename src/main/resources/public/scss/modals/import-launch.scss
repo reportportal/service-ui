@@ -11,6 +11,12 @@
         padding: 20px;
         border: 0;
         cursor: pointer;
+        &.finish-loading {
+          cursor: default;
+          .dz-hidden-input, .dz-remove {
+            display: none !important;
+          }
+        }
         .icon {
           font-size: 35px;
           color: $COLOR--skipped;
@@ -179,6 +185,13 @@
             }
             .dz-progress {
               display: block;
+            }
+          }
+          &.file-upload-complete {
+            .dz-progress {
+              .dz-upload {
+                background: url('../../img/time-in-progress.gif') center no-repeat;
+              }
             }
           }
           &.dz-complete {
