@@ -33,7 +33,7 @@ get-build-deps: vendor
 	gometalinter --install
 
 test: vendor
-	govendor test +local
+	$(GO) test $(glide novendor)
 
 checkstyle: get-build-deps
 	gometalinter --vendor ./... --fast --disable=gas --disable=errcheck --disable=gotype --deadline 10m
