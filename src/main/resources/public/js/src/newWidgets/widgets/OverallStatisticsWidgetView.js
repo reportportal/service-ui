@@ -42,6 +42,7 @@ define(function (require) {
             );
         },
         getData: function () {
+            var widgetOptions = this.model.getParameters().widgetOptions;
             var contentData = this.model.getContent();
             var contentFields = this.model.getContentFields();
             var values;
@@ -71,16 +72,17 @@ define(function (require) {
                             this.invalid += 1;
                         }
                     }
-                    if (name !== 'Total') {
-                        data[type].push({
-                            key: name,
-                            seriesId: seriesId,
-                            type: type,
-                            color: this.getSeriesColor(seriesId),
-                            value: value
-                        });
-                        data[type + 'Count'] += +value;
+                    if (widgetOptions && widgetOptions.chartMode && name === 'Total') {
+                        return;
                     }
+                    data[type].push({
+                        key: name,
+                        seriesId: seriesId,
+                        type: type,
+                        color: this.getSeriesColor(seriesId),
+                        value: value
+                    });
+                    data[type + 'Count'] += +value;
                 }, this);
 
                 return data;
