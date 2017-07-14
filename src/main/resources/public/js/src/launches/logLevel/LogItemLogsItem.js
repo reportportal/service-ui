@@ -104,7 +104,11 @@ define(function (require) {
         },
 
         activateAccordion: function () {
-            if (this.$el.innerHeight() > 128) {
+            var minHeight = 148;
+            if (this.model.get('level') === 'ERROR') {
+                minHeight = 238;
+            }
+            if (this.$el.innerHeight() > minHeight) {
                 this.$el.addClass('show-accordion');
             } else {
                 this.$el.removeClass('show-accordion');
