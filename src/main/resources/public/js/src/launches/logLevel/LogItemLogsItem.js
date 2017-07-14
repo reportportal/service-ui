@@ -27,7 +27,7 @@ define(function (require) {
     var Util = require('util');
     var App = require('app');
     var Urls = require('dataUrlResolver');
-    var MarkdownViewer = require('components/markdown/MarkdownViewer');
+    var LogMessageView = require('launches/logLevel/LogMessageView');
 
     var config = App.getInstance();
 
@@ -75,11 +75,13 @@ define(function (require) {
         initialize: function () {
             this.render();
             this.listenTo(this.model, 'scrollTo', this.scrollTo);
-            this.markdownViewer = new MarkdownViewer({ text: this.model.get('message') });
-            $('[data-js-message]', this.$el).html(this.markdownViewer.$el);
-            this.listenTo(this.markdownViewer, 'load', this.activateAccordion);
+            this.messageView = new LogMessageView({ message: this.model.get('message') });
+            $('[data-js-message]', this.$el).html(this.messageView.$el);
+            this.listenTo(this.messageView, 'load', this.activateAccordion);
         },
-
+        supportMarkdown: function () {
+            return false;
+        },
         resize: function () {
             this.activateAccordion();
         },
@@ -115,7 +117,7 @@ define(function (require) {
             }
         },
         onDestroy: function () {
-            this.markdownViewer && this.markdownViewer.destroy();
+            this.messageView && this.messageView.destroy();
         }
     });
 
