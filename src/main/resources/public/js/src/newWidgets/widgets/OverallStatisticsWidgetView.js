@@ -120,8 +120,10 @@ define(function (require) {
                     this.forLabels = { size: data.length, count: 0, sum: 0 };
                     if (!data.defects.length || !data.executions.length) {
                         this.addSVG();
-                        var curData = data.defects.length ? data.defects : data.executions;
-                        this.renderPieChart(curData, 'svg');
+                        var curDataName = data.defects.length ? 'defects' : 'executions';
+                        var curTitle = data.defects.length ? 'Issues' : 'Sum';
+                        this.renderPieChart(data[curDataName], 'svg', curTitle);
+                        this.renderTitle('svg', data[curDataName + 'Count']);
                     } else {
                         this.addComboSVG(data);
                         this.renderPieChart(data.executions, '#' + this.id + '-svg1', 'Sum');
