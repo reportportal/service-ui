@@ -173,6 +173,26 @@ define(function (require) {
                 .call(chart);
             this.charts.push(chart);
             this.redirectOnElementClick(chart, 'pie');
+            this.updateOnLegendClick(chart, id);
+        },
+        updateTotal: function (id) {
+            var data = d3.select($(id, this.$el).get(0)).data()[0];
+            var total = 0;
+            _.each(data, function (item) {
+                total = item.disabled ? total : total + parseInt(item.value, 10);
+            });
+            $('.nv-pie-title tspan', id).text(total);
+        },
+        updateOnLegendClick: function (chart, id) {
+            var self = this;
+            chart.legend.dispatch.on('legendClick', function (d, i) {
+                config.trackingDispatcher.trackEventNumber(342);
+                self.updateTotal(id);
+            });
+            chart.legend.dispatch.on('legendDblclick', function (d, i) {
+                config.trackingDispatcher.trackEventNumber(342);
+                self.updateTotal(id);
+            });
         },
         redirectOnElementClick: function (chart, type) {
             var self = this;
