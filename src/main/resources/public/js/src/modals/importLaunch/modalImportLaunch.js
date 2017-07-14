@@ -124,8 +124,10 @@ define(function (require) {
                 createImageThumbnails: false,
                 hiddenInputContainer: '[data-js-drop-area]',
                 dictDefaultMessage: Localization.dialog.importLaunchTip,
-                dictRemoveFile: '<i class="material-icons">close</i>',
-                dictCancelUpload: '<i class="material-icons">close</i>',
+                dictInvalidFileType: Localization.dialog.invalidFileType,
+                dictFileTooBig: Localization.dialog.invalidFileSize,
+                dictRemoveFile: 'x',
+                dictCancelUpload: 'x',
                 error: function (file, message) {
                     var j;
                     var len;

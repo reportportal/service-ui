@@ -169,11 +169,14 @@
             float: right;
             position: absolute;
             right: 7px;
-            top: 2px;
+            top: 0px;
             cursor: pointer;
             z-index: 30;
             .material-icons{
               cursor: pointer;
+            }
+            &:hover {
+              text-decoration: none;
             }
           }
 
