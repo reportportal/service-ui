@@ -49,7 +49,7 @@ define(function (require) {
                 if (services && services.API && services.API.extensions && services.API.extensions.instanceId) {
                     instanceId = services.API.extensions.instanceId;
                 }
-                ga('set', 'campaignId', instanceId);
+                ga('set', 'hostname', instanceId);
             });
         },
         send: function (data) {
