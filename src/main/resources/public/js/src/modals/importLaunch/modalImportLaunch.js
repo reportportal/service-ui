@@ -116,6 +116,7 @@ define(function (require) {
                 '</div>',
                 parallelUploads: 10,
                 timeout: false,
+                filesizeBase: 1024,
                 uploadMultiple: false,
                 maxFilesize: 32,
                 acceptedFiles: '.zip',
