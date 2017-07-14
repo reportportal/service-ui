@@ -21,9 +21,10 @@
 
 define(function (require) {
     'use strict';
-
+    var $ = require('jquery');
     var ModalView = require('modals/_modalView');
     var Util = require('util');
+    var Localization = require('localization');
 
     var ModalConfirm = ModalView.extend({
         template: 'tpl-modal-confirm',
@@ -48,7 +49,25 @@ define(function (require) {
             this.confirmFunction = options.confirmFunction;
         },
         render: function (options) {
+            var footerButtons = [
+                {
+                    btnText: options.cancelButtonText,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: options.okButtonText,
+                    btnClass: (options.okButtonText === Localization.ui.move ||
+                        options.okButtonText === Localization.ui.update ||
+                        options.okButtonText === Localization.dialog.changeRoleBtn )? 'rp-btn-submit' : 'rp-btn-danger',
+                    label: 'data-js-ok'
+                }
+            ];
+            options.footerButtons = footerButtons;
             this.$el.html(Util.templates(this.template, options));
+            if (options.confirmText) {
+                this.showWarningBlock(options.confirmText);
+            }
         },
         onClickSuccess: function () {
             var self = this;

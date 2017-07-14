@@ -53,14 +53,18 @@ define(function (require) {
             var itemOwner = item.attributes.owner;
             var loginUser = config.userModel.attributes.name;
             var itemParentOwner = item.attributes.parent_launch_owner;
-            if ((itemType === 'LAUNCH' && itemOwner !== loginUser) || (itemParentOwner && itemParentOwner !== loginUser)) {
+            if ((itemType === 'LAUNCH' && itemOwner !== loginUser) ) {
                 confirmText = Util.replaceTemplate(Localization.launches.deleteWarningAgree,
+                    typeItems);
+                safe = false;
+            } else if (itemParentOwner && itemParentOwner !== loginUser){
+                confirmText = Util.replaceTemplate(Localization.launches.deleteItemsWarningAgree,
                     typeItems);
                 safe = false;
             }
         });
         itemName = (items.length > 1) ? typeItems : typeItems + ' \'' + items[0].get('name').bold() + itemNumber + '\'';
-        quantity = (items.length > 1) ? 'them' : 'it';
+        quantity = (items.length > 1) ? 'They' : 'It';
         modal = new ModalConfirm({
             headerText: Localization.ui.delete + ' ' + typeItems,
             bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, itemName, quantity),

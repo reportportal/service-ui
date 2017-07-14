@@ -267,7 +267,7 @@ define(function (require) {
             '[data-js-link]': 'text: fullName, attr: {href: url}',
             '[data-js-auto-analize]': 'classes: {visible: isProcessing}',
             '[data-js-list-view-icon]': 'classes: {hide: not(listView)}',
-            '[data-js-arrow-next]': 'classes: {"hide-opacity": listView}',
+            '[data-js-arrow-next]': 'classes: {"hide": listView}',
             ':el': 'classes: {"fail-load": failLoad}'
         },
         events: {

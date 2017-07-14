@@ -252,61 +252,61 @@ define(['util'], function () {
             error: 'Error'
         },
 
-        landing: {
-            threes: {
-                subHeader: 'collaborative test automation',
-                ciCd: 'Integral part of CI/CD strategy',
-                ciCdText: 'we build RP as result of our 15 year experience in test automation for our clients. We believe that it\'s a missing component in true agile environment, especially with extensive TA',
-                architecture: 'Extendible architecture',
-                architectureText: 'With extendible architecture Report Portal can accommodate new ideas and implementation from the community',
-                realtime: 'relatime reporting and analitics',
-                realtimeText: 'Report Portal captures and collect data in realtime for collaborative and fast work',
-                analysis: 'Intelligent results analysis',
-                analysisText: 'learns from the history. So that with can \'understand\' root cause of new day test results'
-
-            },
-            header: {
-                btnLogin: 'Login',
-                returnToRP: 'Return to RP',
-                linkFeatures: 'Benefits',
-                linkAutoAnalysis: 'Accelerated analysis',
-                linkProductionUsage: 'Real time Analysis',
-                linkDistributionOfFails: 'Root cause',
-                linkYouResultAnalysis: 'Team work',
-                linkDocumentation: 'Documentation'
-            },
-            // GroupIdeasBehindRP: {
-            //     titleIdeasBehindReportPortal: 'Product Benefits',
-            //     titleLiveVisibility: 'Relatime visibility',
-            //     titleReduceEffort: 'Reduce Effort',
-            //     titleSupportsTools: 'Out of box support',
-            //     titleNiceReports: 'Modern reports',
-            //     titleEasyIntegrate: 'Quick startup',
-            //     titleNoRefactoring: 'Team work',
-            //     descLiveVisibility: 'Into your test automation status',
-            //     descReduceEffort: 'Accelerate results analysis leveraging historical data',
-            //     descSupportsTools: 'Out of the box integration with mainstream automation and bugtracking',
-            //     descNiceReports: 'Out of the box analytics and custom dashboards',
-            //     descEasyIntegrate: 'Integrate your existing automation results in same day. On premise or cloud',
-            //     descNoRefactoring: 'Collaborative environment for your entire team'
-            // },
-            sitesUsingFoundation: 'Sites using foundation:',
-            clients: {
-                altToday: 'Today',
-                altCocaCola: 'Coca Cola',
-                altMTV: 'MTV',
-                altLibertyGlobal: 'Liberty Global',
-                altInterContinentalsHotelsGroup: 'InterContinentals Hotels Group',
-                altGloboforce: 'Globoforce',
-                altWiggle: 'Wiggle',
-                altThomsonReuters: 'Thomson Reuters',
-                altCanadianTire: 'Canadian Tire',
-                altWoltersKluwer: 'Wolters Kluwer',
-                altKrux: 'Krux',
-                altAccellion: 'Accellion',
-                altPlex: 'Plex'
-            }
-        },
+        // landing: {
+        //     threes: {
+        //         subHeader: 'collaborative test automation',
+        //         ciCd: 'Integral part of CI/CD strategy',
+        //         ciCdText: 'we build RP as result of our 15 year experience in test automation for our clients. We believe that it\'s a missing component in true agile environment, especially with extensive TA',
+        //         architecture: 'Extendible architecture',
+        //         architectureText: 'With extendible architecture Report Portal can accommodate new ideas and implementation from the community',
+        //         realtime: 'relatime reporting and analitics',
+        //         realtimeText: 'Report Portal captures and collect data in realtime for collaborative and fast work',
+        //         analysis: 'Intelligent results analysis',
+        //         analysisText: 'learns from the history. So that with can \'understand\' root cause of new day test results'
+        //
+        //     },
+        //     header: {
+        //         btnLogin: 'Login',
+        //         returnToRP: 'Return to RP',
+        //         linkFeatures: 'Benefits',
+        //         linkAutoAnalysis: 'Accelerated analysis',
+        //         linkProductionUsage: 'Real time Analysis',
+        //         linkDistributionOfFails: 'Root cause',
+        //         linkYouResultAnalysis: 'Team work',
+        //         linkDocumentation: 'Documentation'
+        //     },
+        //     // GroupIdeasBehindRP: {
+        //     //     titleIdeasBehindReportPortal: 'Product Benefits',
+        //     //     titleLiveVisibility: 'Relatime visibility',
+        //     //     titleReduceEffort: 'Reduce Effort',
+        //     //     titleSupportsTools: 'Out of box support',
+        //     //     titleNiceReports: 'Modern reports',
+        //     //     titleEasyIntegrate: 'Quick startup',
+        //     //     titleNoRefactoring: 'Team work',
+        //     //     descLiveVisibility: 'Into your test automation status',
+        //     //     descReduceEffort: 'Accelerate results analysis leveraging historical data',
+        //     //     descSupportsTools: 'Out of the box integration with mainstream automation and bugtracking',
+        //     //     descNiceReports: 'Out of the box analytics and custom dashboards',
+        //     //     descEasyIntegrate: 'Integrate your existing automation results in same day. On premise or cloud',
+        //     //     descNoRefactoring: 'Collaborative environment for your entire team'
+        //     // },
+        //     sitesUsingFoundation: 'Sites using foundation:',
+        //     clients: {
+        //         altToday: 'Today',
+        //         altCocaCola: 'Coca Cola',
+        //         altMTV: 'MTV',
+        //         altLibertyGlobal: 'Liberty Global',
+        //         altInterContinentalsHotelsGroup: 'InterContinentals Hotels Group',
+        //         altGloboforce: 'Globoforce',
+        //         altWiggle: 'Wiggle',
+        //         altThomsonReuters: 'Thomson Reuters',
+        //         altCanadianTire: 'Canadian Tire',
+        //         altWoltersKluwer: 'Wolters Kluwer',
+        //         altKrux: 'Krux',
+        //         altAccellion: 'Accellion',
+        //         altPlex: 'Plex'
+        //     }
+        // },
 
         topMenu: {
             reportPortal: 'Report Portal',
@@ -458,7 +458,7 @@ define(['util'], function () {
             off_email: 'switched off',
             update_email: 'updated',
 
-            overallStatisticsPanel: 'Overall statistics panel',
+            overallStatisticsPanel: 'Overall statistics',
             overallStatisticsPanelDescription: 'shows summary of test cases with each statuses in the selected launches.',
             TestCasesStatisticsUniqueLaunches: 'Test-cases statistics in unique launches',
 
@@ -506,8 +506,8 @@ define(['util'], function () {
             launchStatisticsChart: 'Launch Statistics',
             trendChart: 'Trend Chart',
             lineChart: 'Line Chart',
-            lineMode: 'Line Mode',
-            chartMode: 'Chart Mode',
+            panelMode: 'Panel view',
+            chartMode: 'Pie chart view',
 
             defaultName: 'Widget template name',
             defaultDescription: 'Select widget template and filter to render data trough - and you\'ll see preview at the right side',
@@ -695,6 +695,7 @@ define(['util'], function () {
             finishAgree: 'I am sure I want to finish %%%',
             deleteAgree: 'I am sure I want to delete %%%',
             deleteWarningAgree: 'You are going to delete not your own %%%. This may affect other users information on the project.',
+            deleteItemsWarningAgree: 'You are going to delete %%% not in your own launch. This may affect other users information on the project.',
             finishOneLaunch: 'You are going to stop not your own launch. This may affect other users information on the project.',
             finishSelectedLaunch: 'You are going to stop not your own launches.  This may affect other users information on the project.',
 
@@ -794,7 +795,9 @@ define(['util'], function () {
             emptyItem: 'Item is Empty',
             severalItems: 'There’re several items with the same names, descriptions and tags',
             multipleSelectHeader: 'YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:',
-            selectMoreItem: 'You must select more than one item'
+            selectMoreItem: 'You must select more than one item',
+            interruptImportWarning: 'Are you sure you want to interrupt import launches?',
+            approvalInterruptImportWarning: 'Confirm cancel import'
         },
 
         launchStatus: {
@@ -1748,8 +1751,7 @@ define(['util'], function () {
             unableSelectForMerge: 'Error: Unable to select launch for merge!',
             createNewDashboard: 'Create new Dashboard',
             dashboardSettings: 'Dashboard settings',
-            deleteFilter: 'Are you sure you want to delete the filter <b>\'%%%\'</b>?',
-            deleteFilterDanger: 'Are you sure you want to delete the filter <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
+            deleteFilter: 'Are you sure to delete filter <b>\'%%%\'</b>? It will no longer exist.',
             deleteFilterDangerConfirmText: 'You are going to delete not your own filter. This may affect other users information on the project.',
             deleteProject: 'Are you sure you want to delete the project <b>\'%%%\'</b>?',
             deleteEmailRule: 'Are you sure you want to remove notification rule?',
@@ -1762,7 +1764,7 @@ define(['util'], function () {
             deleteImage: 'Are you sure you want to delete profile photo?',
             deleteBts: 'Are you sure you want to remove %%% project <b>\'%%%\'</b> from project settings?',
 
-            dashboardDelete: 'Are you sure you want to delete dashboard <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
+            dashboardDelete: 'Are you sure to delete dashboard  <b>\'%%%\'</b>? It will no longer exist.',
             dashboardDeleteDangerConfirmText: 'You are going to delete not your own dashboard. This may affect other users information on the project.',
             deletedWidget: 'Are you sure you want to delete widget <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
             deletedWidgetDangerConfirmText: 'You are going to delete not your own widget. This may affect other users information on the project.',
@@ -1776,6 +1778,7 @@ define(['util'], function () {
             defectEditor: 'Edit defect',
             choseDefectType: 'Choose Defect Type',
             commentForDefect: 'Leave Comment to Defect Type',
+            warningForDefect: 'You have to save changes or cancel them before closing the window',
             defectType: 'Defect Type',
             mergeLaunches: 'Merge Launches',
             postBug: 'Post bug',
@@ -1791,7 +1794,7 @@ define(['util'], function () {
 
             filterOptions: 'Filter Options',
 
-            msgDeleteItems: 'Are you sure you want to delete %%%? You will no longer have access to %%%. This action can\'t be undone.',
+            msgDeleteItems: 'Are you sure to delete %%%? %%% will no longer exist.',
             msgDeleteDefectType: 'I am sure I want to remove custom defect type',
             msgDeleteProject: 'I am sure I want to delete project',
             msgDeleteOrg: 'Are you sure you want to delete selected organization? All assigned users could not be able to login Report Portal. ',
@@ -1799,7 +1802,9 @@ define(['util'], function () {
             msgResetColorsDefectType: 'Are you sure you want to reset custom defect\'s colors to default?',
             msgMessageTop: 'Are you sure you want to delete the defect type?  All investigated as <strong>\'%%%\'</strong> defects will be marked as <strong>\'%%%\'</strong>.',
             msgImportLaunch: 'If your runner does not write the test start date in the .xml file, then the current server time will be substituted automatically.',
-            importLaunchTip: 'Drop only <strong>.zip</strong> file under 64 MB to upload or <span class="blue">click</span> to add it'
+            importLaunchTip: 'Drop only <strong>.zip</strong> file under 32 MB to upload or <span class="blue">click</span> to add it',
+            invalidFileType: 'Incorrect file format',
+            invalidFileSize: 'File size is more than 32 Mb'
         },
 
         time: {

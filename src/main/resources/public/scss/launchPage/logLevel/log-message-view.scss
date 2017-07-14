@@ -1,0 +1,10 @@
+.log-message-view {
+  position: relative;
+  width: 100%;
+  &.line-log-mode {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    color: #464547;
+    font-size: 12px;
+    word-break: break-all;
+  }
+}

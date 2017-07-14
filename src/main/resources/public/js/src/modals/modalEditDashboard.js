@@ -29,6 +29,7 @@ define(function (require) {
     var Util = require('util');
     var UserModel = require('model/UserModel');
     var App = require('app');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -77,8 +78,22 @@ define(function (require) {
             });
             this.listenTo(this.model, 'change:share', this.onChangeShared);
             this.listenTo(this.model, 'change:description', this.onChangeDescription);
+            this.listenTo(this.model, 'change:name', this.activateHide);
         },
         render: function (options) {
+            var footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: (options.mode === 'save')?Localization.ui.add:Localization.ui.update,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-ok'
+                }
+            ];
+            options.footerButtons = footerButtons;
             this.$el.html(Util.templates(this.template, options));
         },
         onKeySuccess: function () {
@@ -90,6 +105,7 @@ define(function (require) {
             } else {
                 config.trackingDispatcher.trackEventNumber(273);
             }
+            this.activateHide();
         },
         onChangeDescription: function () {
             if (this.isNew) {
@@ -97,6 +113,7 @@ define(function (require) {
             } else {
                 config.trackingDispatcher.trackEventNumber(272);
             }
+            this.activateHide();
         },
         onClickClose: function () {
             if (this.isNew) {

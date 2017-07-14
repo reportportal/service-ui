@@ -55,7 +55,20 @@ define(function (require, exports, module) {
         },
 
         render: function() {
-            this.$el.html(Util.templates(this.tpl));
+            var options = {};
+            options.footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: Localization.ui.submit,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-ok'
+                }
+            ];
+            this.$el.html(Util.templates(this.tpl, options));
             this.setupAnchors();
             this.setupValidation();
         },
@@ -96,9 +109,11 @@ define(function (require, exports, module) {
         },
         onChangeName: function(){
             config.trackingDispatcher.trackEventNumber(374);
+            this.activateHide();
         },
         onChangeEmail: function(){
             config.trackingDispatcher.trackEventNumber(375);
+            this.activateHide();
         },
         onClickClose: function(){
             config.trackingDispatcher.trackEventNumber(373);

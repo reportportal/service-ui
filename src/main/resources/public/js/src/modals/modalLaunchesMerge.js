@@ -29,6 +29,7 @@ define(function (require) {
     var Util = require('util');
     var Service = require('coreService');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var Localization = require('localization');
 
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
@@ -51,7 +52,11 @@ define(function (require) {
             'change [data-js-select-type-input]': 'onChangeType',
             'click [data-js-submit]': 'submit',
             'click [data-js-close]': 'onClickClose',
-            'click [data-js-cancel]': 'onClickCancel'
+            'click [data-js-cancel]': 'onClickCancel',
+            'change [data-js-merge-tags]': 'activateHide',
+            'change [data-js-description]': 'activateHide',
+            'change [data-js-merge-name]': 'activateHide',
+            'change [data-js-extend-checkbox]': 'activateHide'
         },
 
         getRenderOptions: function (launches) {
@@ -86,6 +91,19 @@ define(function (require) {
         },
 
         render: function (renderObject) {
+            var footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: Localization.ui.merge,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-submit'
+                }
+            ];
+            renderObject.footerButtons = footerButtons;
             this.$el.html(Util.templates(this.template, renderObject));
             this.setupAnchors();
             Util.hintValidator(this.$name, {

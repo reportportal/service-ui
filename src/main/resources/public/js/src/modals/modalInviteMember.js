@@ -26,6 +26,7 @@ define(function (require) {
     var config = App.getInstance();
     var Util = require('util');
     var MembersService = require('projectMembers/MembersService');
+    var Localization = require('localization');
     var DropDownComponent = require('components/DropDownComponent');
     var UserSearchComponent = require('components/UserSearchComponent');
 
@@ -53,7 +54,24 @@ define(function (require) {
             this.render();
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, {}));
+            var footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel button-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: Localization.admin.invite,
+                    btnClass: 'rp-btn-submit button-invite',
+                    label: 'data-js-invite'
+                },
+                {
+                    btnText: Localization.ui.ok,
+                    btnClass: 'rp-btn-submit button-ok',
+                    label: 'data-js-ok'
+                }
+            ];
+            this.$el.html(Util.templates(this.template, {footerButtons: footerButtons}));
             this.setupDropdown();
             this.setupUserSearch();
         },
@@ -74,6 +92,7 @@ define(function (require) {
         },
         selectRole: function (role) {
             this.model.set('projectRole', role);
+            this.activateHide();
         },
         selectLink: function (e) {
             e.preventDefault();
@@ -102,6 +121,7 @@ define(function (require) {
                 return;
             }
             $('[data-js-invite-form]', this.$el).removeClass('not-valid');
+            this.activateHide();
         },
         inviteMember: function () {
             var userData = this.getUserData();

@@ -106,19 +106,34 @@ common elements:
       border: none;
       padding: 10px 6px;
       .warning-block{
-        font-size: 12px;
+        position: relative;
+        font-size: 10px;
         color: #f36c4a;
         width: 400px;
+        height: 30px;
+        line-height: 1.4;
         float: left;
         text-align: left;
-        display: table;
-        padding-left: 15px;
-        i,p{
+        display: none;
+        &.activate {
+          display: table;
+        }
+        .warning-block-content {
           display: table-cell;
+          width: 100%;
+          height: 100%;
+          vertical-align: middle;
         }
         i{
-          padding-right: 5px;
+          position:absolute;
+          top: 8px;
+          left: 0;
           font-size: 13px;
+        }
+        p {
+          padding-left: 25px;
+          line-height: 16px;
+          margin: 0;
         }
       }
       .rp-btn {

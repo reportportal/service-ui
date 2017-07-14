@@ -26,6 +26,7 @@ define(function (require, exports, module) {
     var App = require('app');
     var Util = require('util');
     var Service = require('coreService');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -47,7 +48,20 @@ define(function (require, exports, module) {
         },
 
         render: function() {
-            this.$el.html(Util.templates(this.tpl));
+            var options = {};
+            options.footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: Localization.ui.submit,
+                    btnClass: 'rp-btn-submit disabled',
+                    label: 'data-js-ok'
+                }
+            ];
+            this.$el.html(Util.templates(this.tpl, options));
             this.setupAnchors();
         },
         setupAnchors: function(){
@@ -72,6 +86,7 @@ define(function (require, exports, module) {
                     ? 'remove' : 'add';
             }
             this.$submitBtn[action + "Class"]('disabled');
+            this.activateHide();
         },
         showPassword: function (e) {
             var action = $(e.currentTarget).is(':checked') ? 'text' : 'password';

@@ -22,7 +22,7 @@ define(function (require) {
     var Localization = require('localization');
     var Urls = require('dataUrlResolver');
     var Util = require('util');
-    require('dropzone');
+    var Dropzone = require('dropzone');
 
     var ModalImportLaunch = ModalView.extend({
         tpl: 'tpl-modal-import-launch',
@@ -32,10 +32,30 @@ define(function (require) {
         },
 
         initialize: function () {
+            this.uploadProcess = false;
+            this.warningShow = false;
+            this.approvalHide = false;
             this.render();
         },
         render: function () {
-            this.$el.html(Util.templates(this.tpl));
+            var footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: Localization.ui.import,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-import'
+                },
+                {
+                    btnText: Localization.ui.ok,
+                    btnClass: 'rp-btn-submit',
+                    label: 'data-js-ok'
+                }
+            ];
+            this.$el.html(Util.templates(this.tpl, { footerButtons: footerButtons }));
             $('[data-js-ok]', this.$el).addClass('hide');
             $('[data-js-import]', this.$el).attr('disabled', 'disabled');
         },
@@ -44,12 +64,18 @@ define(function (require) {
         },
         initDropzone: function () {
             var self = this;
-            $('[data-js-drop-area]', this.$el).dropzone({
+            this.dropzone = new Dropzone($('[data-js-drop-area]', this.$el).get(0), {
                 init: function () {
                     var submitButton = $('[data-js-import]', self.$el)[0];
                     var thisDropzone = this;
                     submitButton.addEventListener('click', function () {
                         thisDropzone.processQueue();
+                        $('[data-js-drop-area]', self.$el).addClass('finish-loading');
+                        self.dropzone.clickableElements.forEach(function (element) {
+                            return element.classList.remove('dz-clickable');
+                        });
+                        self.dropzone.removeEventListeners();
+                        self.uploadProcess = true;
                     });
                     this.on('processing', function () {
                         $('[data-js-import]', self.$el).addClass('hide');
@@ -57,6 +83,7 @@ define(function (require) {
                     });
                     this.on('queuecomplete', function () {
                         $('[data-js-ok]', self.$el).removeAttr('disabled');
+                        self.uploadProcess = false;
                     });
                     this.on('addedfile', function () {
                         (thisDropzone.files.length) ?
@@ -67,6 +94,11 @@ define(function (require) {
                         (thisDropzone.files.length) ?
                             $('[data-js-import]', self.$el).removeAttr('disabled') :
                             $('[data-js-import]', self.$el).attr('disabled', 'disabled');
+                    });
+                    this.on('uploadprogress', function (file, progress) {
+                        if (progress === 100) {
+                            $(file.previewElement).addClass('file-upload-complete');
+                        }
                     });
                 },
                 url: Urls.importLaunch(),
@@ -84,26 +116,66 @@ define(function (require) {
                 '</div>',
                 parallelUploads: 10,
                 timeout: false,
+                filesizeBase: 1024,
                 uploadMultiple: false,
-                maxFilesize: 64,
+                maxFilesize: 32,
                 acceptedFiles: '.zip',
                 autoProcessQueue: false,
                 addRemoveLinks: true,
                 createImageThumbnails: false,
                 hiddenInputContainer: '[data-js-drop-area]',
                 dictDefaultMessage: Localization.dialog.importLaunchTip,
-                dictRemoveFile: '<i class="material-icons">close</i>',
-                dictCancelUpload: '<i class="material-icons">close</i>'
+                dictInvalidFileType: Localization.dialog.invalidFileType,
+                dictFileTooBig: Localization.dialog.invalidFileSize,
+                dictRemoveFile: 'x',
+                dictCancelUpload: 'x',
+                error: function (file, message) {
+                    var j;
+                    var len;
+                    var node;
+                    var ref;
+                    var results;
+                    var resultMessage = message;
+                    if (file.previewElement) {
+                        file.previewElement.classList.add('dz-error');
+                        if (typeof message !== 'string' && message.message) {
+                            resultMessage = message.message;
+                        }
+                        ref = file.previewElement.querySelectorAll('[data-dz-errormessage]');
+                        results = [];
+                        for (j = 0, len = ref.length; j < len; j++) {
+                            node = ref[j];
+                            results.push(node.textContent = resultMessage);
+                        }
+                        return results;
+                    }
+                    return false;
+                }
             });
-        },
-        onKeySuccess: function () {
-        },
-        onClickClose: function () {
         },
         onClickOk: function () {
             this.successClose();
         },
-        onClickCancel: function () {
+        hide: function () {
+            var self = this;
+            if (this.uploadProcess && !this.approvalHide) {
+                if (this.warningShow) {
+                    return false;
+                }
+                this.showWarningBlock(Localization.launches.interruptImportWarning +
+                    '<label class="rp-checkbox-wrap">' +
+                    '<input class="rp-input-checkbox" type="checkbox" data-js-apruv-close>' +
+                    '<span>' + Localization.launches.approvalInterruptImportWarning + '</span>' +
+                '</label>');
+                this.warningShow = true;
+                $('[data-js-apruv-close]', this.$el).change(function (e) {
+                    self.approvalHide = $(e.currentTarget).prop('checked');
+                });
+                return false;
+            }
+            this.$modalWrapper && this.$modalWrapper.modal('hide');
+            this.closeAsync && this.closeAsync.reject();
+            return false;
         }
     });
 

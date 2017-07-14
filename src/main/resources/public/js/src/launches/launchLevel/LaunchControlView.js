@@ -56,8 +56,11 @@ define(function (require) {
             this.render();
             if (this.filterModel.get('id') === 'all') {
                 $('[data-js-add-widget]', this.$el).addClass('hide');
+            } else {
+                $('[data-js-import]', this.$el).addClass('hide');
             }
             if (this.context === 'userdebug') {
+                $('[data-js-import]', this.$el).addClass('hide');
                 $('[data-js-add-widget]', this.$el).addClass('hide');
                 this.filterEntities = new FilterEntitiesView({
                     el: $('[data-js-refine-entities]', this.$el),

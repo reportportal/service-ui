@@ -11,6 +11,12 @@
         padding: 20px;
         border: 0;
         cursor: pointer;
+        &.finish-loading {
+          cursor: default;
+          .dz-hidden-input, .dz-remove {
+            display: none !important;
+          }
+        }
         .icon {
           font-size: 35px;
           color: $COLOR--skipped;
@@ -163,11 +169,14 @@
             float: right;
             position: absolute;
             right: 7px;
-            top: 2px;
+            top: 0px;
             cursor: pointer;
             z-index: 30;
             .material-icons{
               cursor: pointer;
+            }
+            &:hover {
+              text-decoration: none;
             }
           }
 
@@ -179,6 +188,13 @@
             }
             .dz-progress {
               display: block;
+            }
+          }
+          &.file-upload-complete {
+            .dz-progress {
+              .dz-upload {
+                background: url('../../img/time-in-progress.gif') center no-repeat;
+              }
             }
           }
           &.dz-complete {
@@ -221,6 +237,14 @@
     }
 
     .modal-footer {
+      label.rp-checkbox-wrap {
+        margin: 0;
+        padding-left: 5px;
+        span {
+          padding-left: 20px !important;
+          color: $COLOR--charcoal-grey;
+        }
+      }
       .rp-btn {
         width: 70px;
       }

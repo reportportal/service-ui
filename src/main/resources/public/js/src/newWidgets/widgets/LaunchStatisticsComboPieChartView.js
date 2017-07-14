@@ -63,7 +63,7 @@ define(function (require) {
             var vis;
             var index;
             if (!this.isEmptyData(data)) {
-                this.forLabels = {size: data.length, count: 0, sum: 0};
+                this.forLabels = { size: data.length, count: 0, sum: 0 };
                 chart = nvd3.models.pieChart()
                     .x(function (d) {
                         return d.key;
@@ -71,7 +71,7 @@ define(function (require) {
                     .y(function (d) {
                         return d.value;
                     })
-                    .margin({top: !self.isPreview ? 30 : 0, right: 20, bottom: 0, left: 20})
+                    .margin({ top: !self.isPreview ? 30 : 0, right: 20, bottom: 0, left: 20 })
                     .valueFormat(d3.format('f'))
                     .showLabels(!self.isPreview)
                     .color(function (d) {
