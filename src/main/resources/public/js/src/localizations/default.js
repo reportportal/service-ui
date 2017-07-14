@@ -1804,7 +1804,7 @@ define(['util'], function () {
             msgImportLaunch: 'If your runner does not write the test start date in the .xml file, then the current server time will be substituted automatically.',
             importLaunchTip: 'Drop only <strong>.zip</strong> file under 32 MB to upload or <span class="blue">click</span> to add it',
             invalidFileType: 'Incorrect file format',
-            invalidFileSize: 'File size is more then 32 Mb'
+            invalidFileSize: 'File size is more than 32 Mb'
         },
 
         time: {
