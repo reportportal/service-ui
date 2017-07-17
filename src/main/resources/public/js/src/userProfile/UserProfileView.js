@@ -350,6 +350,7 @@ define(function (require, exports, module) {
                             '<h1>'+Localization.userProfile.notRequired+'</h1>' +
                             '<div class="options">'+
                             '<p>rp.enable = true</p>' +
+                            '<p>rp.description = My awesome launch</p>'+
                             '<p>rp.tags = TAG1;TAG2</p>' +
                             '<p>rp.convertimage = true</p>' +
                             '<p>rp.mode = DEFAULT</p>' +
