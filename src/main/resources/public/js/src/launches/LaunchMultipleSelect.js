@@ -165,9 +165,15 @@ define(function (require) {
                 this.editDefectAction = new EditDefectAction({
                     items: this.collection.models
                 });
-                this.editDefectAction.getAsync().done(function () {
+                this.editDefectAction.getAsync().done(function (actionType) {
+                    if (actionType.action === 'postBug') {
+                        self.actionCall.postbug.call(self);
+                    } else if (actionType.action === 'loadBug') {
+                        self.actionCall.loadbug.call(self);
+                    } else {
+                        self.reset();
+                    }
                     self.editDefectAction = null;
-                    self.reset();
                 });
             },
             changemode: function () {

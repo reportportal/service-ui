@@ -18,11 +18,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
 
@@ -40,6 +39,7 @@ define(function (require, exports, module) {
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
+    var _ = require('underscore');
 
     var config = App.getInstance();
 
@@ -98,13 +98,14 @@ define(function (require, exports, module) {
             validateMatchIssues: {
                 deps: ['parent_launch_isProcessing', 'parent_launch_status'],
                 get: function (parent_launch_isProcessing, parent_launch_status) {
-                    return (!parent_launch_isProcessing && parent_launch_status != config.launchStatus.inProgress);
+                    return (!parent_launch_isProcessing &&
+                    parent_launch_status !== config.launchStatus.inProgress);
                 }
             },
             matchIssuesTitle: {
                 deps: ['parent_launch_isProcessing', 'parent_launch_status'],
                 get: function (parent_launch_isProcessing, parent_launch_status) {
-                    if (parent_launch_status == config.launchStatus.inProgress) {
+                    if (parent_launch_status === config.launchStatus.inProgress) {
                         return Localization.launches.launchNotInProgress;
                     }
                     if (parent_launch_isProcessing) {
@@ -228,10 +229,10 @@ define(function (require, exports, module) {
             LoadBugAction({ items: [this.viewModel], from: 'logs' });
         },
         onClickMatch: function () {
-            config.trackingDispatcher.trackEventNumber(195);
             var self = this;
+            config.trackingDispatcher.trackEventNumber(195);
             call('POST', Urls.launchMatchUrl(this.viewModel.get('launchId')))
-                .done(function (response) {
+                .done(function () {
                     self.launchModel.set({ isProcessing: true });
                     Util.ajaxSuccessMessenger('startAnalyzeAction');
                 })
