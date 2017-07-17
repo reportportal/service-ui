@@ -34,10 +34,24 @@ define(function (require) {
         className: 'modal-defect-editor',
 
         events: {
-            'click [data-js-save]': 'updateDefectType',
+            'click [data-js-save]': 'onClickSave',
             'click [data-js-select-issue]': 'selectIssueType',
             'click [data-js-close]': 'onClickClose',
-            'click [data-js-cancel]': 'onClickCancel'
+            'click [data-js-cancel]': 'onClickCancel',
+            'click [data-js-save-post]': 'onClickSavePost',
+            'click [data-js-save-load]': 'onClickSaveLoad'
+        },
+        onClickSavePost: function () {
+            var self = this;
+            this.onClickAction(function () {
+                self.successClose({ action: 'postBug' });
+            });
+        },
+        onClickSaveLoad: function () {
+            var self = this;
+            this.onClickAction(function () {
+                self.successClose({ action: 'loadBug' });
+            });
         },
         initialize: function (option) {
             this.items = option.items;
@@ -55,11 +69,6 @@ define(function (require) {
                     btnText: 'Cancel',
                     btnClass: 'rp-btn-cancel',
                     label: 'data-js-cancel'
-                },
-                {
-                    btnText: 'Save',
-                    btnClass: 'rp-btn-submit',
-                    label: 'data-js-save'
                 }
             ];
             this.$el.html(Util.templates(this.template, {
@@ -70,7 +79,8 @@ define(function (require) {
                 getIssueType: this.getIssueType,
                 getIssueComment: this.getIssueComment,
                 getDefectType: this.getDefectType(),
-                footerButtons: footerButtons
+                footerButtons: footerButtons,
+                dropdownButton: true
             }));
             this.applyBindings();
             this.setupAnchors();
@@ -104,15 +114,15 @@ define(function (require) {
         getDefectType: function () {
             var self = this;
             return function (item) {
-                var issue = self.getIssueType(item),
-                    issueType = self.defectTypesCollection.getDefectType(issue);
+                var issue = self.getIssueType(item);
+                var issueType = self.defectTypesCollection.getDefectType(issue);
                 return issueType;
             };
         },
 
         getSubDefects: function () {
-            var def = {},
-                defectTypes = this.defectTypesCollection.toJSON();
+            var def = {};
+            var defectTypes = this.defectTypesCollection.toJSON();
             _.each(defectTypes, function (d) {
                 var type = d.typeRef;
                 if (def[type]) {
@@ -125,10 +135,10 @@ define(function (require) {
         },
 
         selectIssueType: function (e) {
-            var el = $(e.currentTarget),
-                locator = el.data('locator'),
-                issueType = this.defectTypesCollection.getDefectType(locator),
-                menu = el.closest('.dropdown-menu');
+            var el = $(e.currentTarget);
+            var locator = el.data('locator');
+            var issueType = this.defectTypesCollection.getDefectType(locator);
+            var menu = el.closest('.dropdown-menu');
 
             $('label', menu).removeClass('selected');
             el.addClass('selected');
@@ -144,7 +154,7 @@ define(function (require) {
         },
         setupMarkdownEditor: function () {
             this.markdownEditor = new MarkdownEditor({
-                value: (this.items.length != 1) ? '' : this.getIssueComment(this.items[0]),
+                value: (this.items.length !== 1) ? '' : this.getIssueComment(this.items[0]),
                 placeholder: Localization.dialog.commentForDefect
             });
             $('[data-js-issue-comment]', this.$el).html(this.markdownEditor.$el);
@@ -168,26 +178,42 @@ define(function (require) {
         onHide: function () {
             this.markdownEditor.destroy();
         },
-        onClickClose: function (e) {
+        onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(157);
         },
-        onClickCancel: function (e) {
+        onClickCancel: function () {
             config.trackingDispatcher.trackEventNumber(159);
         },
-        updateDefectType: function () {
+        onClickAction: function (successCalback) {
+            var self = this;
             if (this.inProcess) {
                 return;
             }
-            if (!this.isChanged()) {
-                this.successClose();
-                return true;
-            }
-            config.trackingDispatcher.trackEventNumber(160);
             this.inProcess = true;
+            this.updateDefectType().done(function () {
+                successCalback();
+            }).fail(function (error) {
+                Util.ajaxFailMessenger(error, 'updateDefect');
+            }).always(function () {
+                self.inProcess = false;
+            });
+        },
+        onClickSave: function () {
+            var self = this;
+            this.onClickAction(function () { self.successClose(); });
+        },
+        updateDefectType: function () {
+            var promise = $.Deferred();
             var comment = this.markdownEditor.getValue();
             var selectedIssue = this.selectedIssue;
             var issues = [];
             var replaceComments = this.$replaceComments.is(':checked');
+            var self = this;
+            if (!this.isChanged()) {
+                promise.resolve();
+                return promise;
+            }
+            config.trackingDispatcher.trackEventNumber(160);
             _.forEach(this.items, function (item) {
                 var issue = item.getIssue();
                 if ((replaceComments && this.isMultipleEdit()) || (!this.isMultipleEdit())) {
@@ -200,7 +226,6 @@ define(function (require) {
                     issue: issue
                 });
             }, this);
-            var self = this;
             CoreService.updateDefect({ issues: issues })
                 .done(function () {
                     var itemIssue = this.getIssueType(this.items[0]);
@@ -210,19 +235,19 @@ define(function (require) {
                     Util.ajaxSuccessMessenger('updateDefect');
                     _.forEach(self.items, function (item) {
                         var issue = item.getIssue();
-                        if ((replaceComments && this.isMultipleEdit()) || (!this.isMultipleEdit())) {
+                        if ((replaceComments && this.isMultipleEdit()) ||
+                            (!this.isMultipleEdit())) {
                             issue.comment = comment;
                         }
                         issue.issue_type = selectedIssue || this.getIssueType(item);
                         item.setIssue(issue);
                     }, self);
-                    this.successClose();
+                    promise.resolve();
                 }.bind(this))
                 .fail(function (error) {
-                    Util.ajaxFailMessenger(error, 'updateDefect');
-                }).always(function () {
-                    this.inProcess = false;
-                }.bind(this));
+                    promise.reject(error);
+                });
+            return promise;
         }
     });
 

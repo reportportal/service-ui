@@ -5,10 +5,26 @@
             <p data-js-warning-text></p>
         </div>
     </div>
-    <% _.forEach(data, function(button){ %>
+    <% _.forEach(data.footerButtons, function(button){ %>
         <button class="rp-btn <%=button.btnClass %>" type="button" <%= button.label %> >
             <%= button.btnText %>
         </button>
     </button>
     <% }) %>
+    <% if ( data.dropdownButton) { %>
+        <div class="dropdown-button">
+            <button class="rp-btn rp-btn-submit" type="button" data-js-save >Save</button>
+            <button class=" rp-btn rp-button-dropdown" data-toggle="dropdown" data-js-dropdown>
+                <i class="material-icons">keyboard_arrow_down</i>
+            </button>
+            <ul class="dropdown-menu" data-js-dropdown-menu>
+                <li>
+                    <a data-js-save-post>Save and Post Bug</a>
+                </li>
+                <li>
+                   <a data-js-save-load>Load and Post Bug</a>
+                </li>
+            </ul>
+        </div>
+    <% } %>
 </div>

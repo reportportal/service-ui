@@ -18,35 +18,32 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
-    var Util = require('util');
-    var Components = require('core/components');
-    var Service = require('coreService');
-    var App = require('app');
     var modalDefectEditor = require('modals/modalDefectEditor');
 
-    var config = App.getInstance();
 
     var EditDefectAction = Epoxy.View.extend({
-        initialize: function(options) {
+        initialize: function (options) {
             var self = this;
-            this.async = $.Deferred();
             var modal = new modalDefectEditor({
-                items: options.items,
+                items: options.items
             });
+            this.async = $.Deferred();
             modal.show()
-                .always(function() {
-                    self.async.resolve();
+                .done(function (actionType) {
+                    self.async.resolve(actionType);
                 })
+                .fail(function () {
+                    self.async.resolve();
+                });
         },
-        getAsync: function() {
+        getAsync: function () {
             return this.async;
-        },
+        }
     });
 
     return EditDefectAction;

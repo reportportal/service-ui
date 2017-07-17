@@ -23,7 +23,7 @@ define(function (require) {
 
     var ModalPostBug = require('modals/modalPostBug');
 
-    var PostBugAction = function(options) {
+    var PostBugAction = function (options) {
         var items = options.items;
         var modal = (new ModalPostBug({
             items: items,
