@@ -53,5 +53,31 @@
         </div>
     </div>
 </div>
-<%= data.includeTemplate('_tpl-modal-footer', {footerButtons: data.footerButtons, dropdownButton: data.dropdownButton})  %>
-
+<div class="modal-footer">
+    <div class="warning-block" data-js-warning>
+        <div class="warning-block-content">
+            <i class="rp-icons rp-icons-warning"></i>
+            <p data-js-warning-text></p>
+        </div>
+    </div>
+    <% _.forEach(data.footerButtons, function(button){ %>
+    <button class="rp-btn <%=button.btnClass %>" type="button" <%= button.label %> >
+    <%= button.btnText %>
+    </button>
+    </button>
+    <% }) %>
+    <div class="dropdown-button">
+        <button class="rp-btn rp-btn-submit" type="button" data-js-save >Save</button>
+        <button class=" rp-btn rp-button-dropdown" data-toggle="dropdown" data-js-dropdown>
+            <i class="material-icons">keyboard_arrow_down</i>
+        </button>
+        <ul class="dropdown-menu" data-js-dropdown-menu>
+            <li <% if(data.isBtsConfigure) { %> class='disabled'  <%} %>>
+                <a data-js-save-post>Save and Post Bug</a>
+            </li>
+            <li <% if(data.isBtsAdded) { %> class='disabled'  <%} %>>
+                <a data-js-save-load>Save and Load Bug</a>
+            </li>
+        </ul>
+    </div>
+</div>
