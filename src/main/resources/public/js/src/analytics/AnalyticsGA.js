@@ -27,9 +27,9 @@ define(function (require) {
 
     var AnalyticsGA = AnalyticsObject.extend({
         initialize: function () {
-            // if ('DEBUG_STATE') {
-            //     return;
-            // }
+            if ('DEBUG_STATE') {
+                return;
+            }
             window.ga = window.ga || function () {
                 (ga.q = ga.q || []).push(arguments);
             };
@@ -53,15 +53,15 @@ define(function (require) {
             });
         },
         send: function (data) {
-            // if ('DEBUG_STATE') {
-            //     return;
-            // }
+            if ('DEBUG_STATE') {
+                return;
+            }
             ga('send', 'event', data[0], data[1], data[2]);
         },
         pageView: function (data) {
-            // if ('DEBUG_STATE') {
-            //     return;
-            // }
+            if ('DEBUG_STATE') {
+                return;
+            }
             ga('send', 'pageview', data[0]);
         }
     });
