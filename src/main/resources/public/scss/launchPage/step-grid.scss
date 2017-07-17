@@ -19,8 +19,8 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-$step-name-cell-width: 37%;
-$step-time-cell-width: 12.5%;
+$step-name-cell-width: 45%;
+$step-time-cell-width: 11%;
 $step-status-cell-width: 9%;
 $step-select-cell-width: 2%;
 $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - $step-status-cell-width - $step-select-cell-width);
