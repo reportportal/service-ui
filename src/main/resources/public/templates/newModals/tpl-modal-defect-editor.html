@@ -54,12 +54,7 @@
     </div>
 </div>
 <div class="modal-footer">
-    <div class="warning-block" data-js-warning>
-        <div class="warning-block-content">
-            <i class="rp-icons rp-icons-warning"></i>
-            <p data-js-warning-text></p>
-        </div>
-    </div>
+    <%= data.includeTemplate('tpl-modal-footer-warning') %>
     <% _.forEach(data.footerButtons, function(button){ %>
     <button class="rp-btn <%=button.btnClass %>" type="button" <%= button.label %> >
     <%= button.btnText %>
