@@ -26,6 +26,7 @@ define(function (require) {
     var Localization = require('localization');
     var MarkdownEditor = require('components/markdown/MarkdownEditor');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var SingletonAppModel = require('model/SingletonAppModel');
 
     var config = App.getInstance();
 
@@ -55,6 +56,7 @@ define(function (require) {
         },
         initialize: function (option) {
             this.items = option.items;
+            this.appModel = new SingletonAppModel();
             this.defectTypesCollection = new SingletonDefectTypeCollection();
             this.defectTypesCollection.ready.done(function () {
                 this.render(option);
@@ -80,7 +82,8 @@ define(function (require) {
                 getIssueComment: this.getIssueComment,
                 getDefectType: this.getDefectType(),
                 footerButtons: footerButtons,
-                dropdownButton: true
+                isBtsAdded: (!this.appModel.get('isBtsAdded'))? true: false,
+                isBtsConfigure: (!this.appModel.get('isBtsConfigure'))? true: false
             }));
             this.applyBindings();
             this.setupAnchors();
