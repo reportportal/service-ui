@@ -30,39 +30,44 @@ define(function (require) {
             if ('DEBUG_STATE') {
                 return;
             }
-            window.ga = window.ga || function () {
-                (ga.q = ga.q || []).push(arguments);
-            };
-            ga.l = +new Date();
-            ga('create', 'UA-96321031-1', 'auto');
-            ga('send', 'pageview');
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.async = true;
-            script.src = 'https://www.google-analytics.com/analytics.js';
-            var lastScript = document.getElementsByTagName('script')[0];
-            lastScript.parentNode.insertBefore(script, lastScript);
-            var registryInfoModel = new SingletonRegistryInfoModel();
-            registryInfoModel.ready.done(function () {
-                var services = registryInfoModel.get('services');
+            var self = this;
+            this.registryInfoModel = new SingletonRegistryInfoModel();
+            this.registryInfoModel.ready.done(function () {
+                var services = self.registryInfoModel.get('services');
                 var instanceId = '';
                 if (services && services.API && services.API.extensions && services.API.extensions.instanceId) {
                     instanceId = services.API.extensions.instanceId;
                 }
+                window.ga = window.ga || function () {
+                        (ga.q = ga.q || []).push(arguments);
+                    };
+                ga.l = +new Date();
+                ga('create', 'UA-96321031-1', 'auto');
                 ga('set', 'dimension1', instanceId);
+                ga('send', 'pageview');
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.async = true;
+                script.src = 'https://www.google-analytics.com/analytics.js';
+                var lastScript = document.getElementsByTagName('script')[0];
+                lastScript.parentNode.insertBefore(script, lastScript);
             });
         },
         send: function (data) {
             if ('DEBUG_STATE') {
                 return;
             }
-            ga('send', 'event', data[0], data[1], data[2]);
+            this.registryInfoModel.ready.done(function () {
+                ga('send', 'event', data[0], data[1], data[2]);
+            });
         },
         pageView: function (data) {
             if ('DEBUG_STATE') {
                 return;
             }
-            ga('send', 'pageview', data[0]);
+            this.registryInfoModel.ready.done(function () {
+                ga('send', 'pageview', data[0]);
+            });
         }
     });
 
