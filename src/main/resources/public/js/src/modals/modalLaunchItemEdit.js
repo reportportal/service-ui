@@ -37,7 +37,7 @@ define(function (require, exports, module) {
         bindings: {
             '[data-js-launch-name]': 'text: name',
             '[data-js-description]': 'value: description',
-            '[data-js-tags]': 'value: tagsString',
+            '[data-js-tags]': 'value: tagsString'
         },
 
         events: {
@@ -65,12 +65,9 @@ define(function (require, exports, module) {
             var self = this;
             this.markdownEditor = new MarkdownEditor({
                 value: this.viewModel.get('description'),
-                placeholder: this.isEditLaunch() ? Localization.dialog.launchDescrPlaceholder : Localization.dialog.testItemDescrPlaceholder,
+                placeholder: this.isEditLaunch() ? Localization.dialog.launchDescrPlaceholder : Localization.dialog.testItemDescrPlaceholder
             });
             $('[data-js-markdown-container]', this.$el).html(this.markdownEditor.$el);
-            this.listenTo(this.markdownEditor, 'change', function(value) { self.viewModel.set({description: value});
-                this.activateHide();
-                 });
             this.listenTo(this.itemModel, 'change:description', this.onChangeDescription);
 
             var remoteTags = [];
@@ -93,22 +90,21 @@ define(function (require, exports, module) {
                 initSelection: function (item, callback) {
                     var data = _.map(self.viewModel.get('tags'), function (tag) {
                         tag = tag.trim();
-                        return {id: tag, text: tag};
+                        return { id: tag, text: tag };
                     });
                     callback(data);
                 },
                 createSearchChoice: function (term, data) {
                     if (_.filter(data, function (opt) {
-                            return opt.text.localeCompare(term) === 0;
-                        }).length === 0) {
-                        return {id: term, text: term};
+                        return opt.text.localeCompare(term) === 0;
+                    }).length === 0) {
+                        return { id: term, text: term };
                     }
                 },
                 query: function (query) {
+                    if (query.term === '?') return;
 
-                    if (query.term === "?") return;
-
-                    var data = {results: []};
+                    var data = { results: [] };
                     clearTimeout(timeOut);
                     timeOut = setTimeout(function () {
                         Service.searchTags(query)
@@ -123,8 +119,7 @@ define(function (require, exports, module) {
                                             text: item.full_name
                                         });
                                         item = item.full_name;
-                                    }
-                                    else {
+                                    } else {
                                         data.results.push({
                                             id: item,
                                             text: item
@@ -142,27 +137,32 @@ define(function (require, exports, module) {
 
             });
         },
-        onShown: function() {
+        onShown: function () {
+            var self = this;
             this.markdownEditor.update();
+            this.listenTo(this.markdownEditor, 'change', function (value) {
+                self.viewModel.set({ description: value });
+                this.activateHide();
+            });
         },
-        onKeySuccess: function() {
+        onKeySuccess: function () {
             $('[data-js-save]', this.$el).focus().trigger('click');
         },
-        onChangeDescription: function(){
+        onChangeDescription: function () {
             switch (this.itemModel.get('type')) {
-                case 'SUITE':
-                    config.trackingDispatcher.trackEventNumber(102);
-                    break;
-                case 'TEST':
-                    config.trackingDispatcher.trackEventNumber(154);
-                    break;
-                default:
-                    config.trackingDispatcher.trackEventNumber(71.2);
-                    break;
+            case 'SUITE':
+                config.trackingDispatcher.trackEventNumber(102);
+                break;
+            case 'TEST':
+                config.trackingDispatcher.trackEventNumber(154);
+                break;
+            default:
+                config.trackingDispatcher.trackEventNumber(71.2);
+                break;
             }
         },
-        isEditLaunch: function(){
-            return this.itemModel.get('type') == 'LAUNCH';
+        isEditLaunch: function () {
+            return this.itemModel.get('type') === 'LAUNCH';
         },
         render: function () {
             var footerButtons = [
@@ -178,55 +178,55 @@ define(function (require, exports, module) {
                 }
             ];
             this.$el.html(Util.templates(this.template,
-                {   isEditLaunch: this.isEditLaunch(),
+                { isEditLaunch: this.isEditLaunch(),
                     footerButtons: footerButtons
                 }));
-            if(this.isEditLaunch()){
+            if (this.isEditLaunch()) {
                 this.showWarningBlock(Localization.launches.disclaimerChangeDescription);
             }
         },
         onHide: function () {
             this.markdownEditor.destroy();
         },
-        onClickClose: function(e){
+        onClickClose: function (e) {
             switch (this.itemModel.get('type')) {
-                case 'SUITE':
-                    config.trackingDispatcher.trackEventNumber(101);
-                    break;
-                case 'TEST':
-                    config.trackingDispatcher.trackEventNumber(153);
-                    break;
-                default:
-                    config.trackingDispatcher.trackEventNumber(71.1);
-                    break;
+            case 'SUITE':
+                config.trackingDispatcher.trackEventNumber(101);
+                break;
+            case 'TEST':
+                config.trackingDispatcher.trackEventNumber(153);
+                break;
+            default:
+                config.trackingDispatcher.trackEventNumber(71.1);
+                break;
             }
         },
-        onClickCancel: function(e){
+        onClickCancel: function (e) {
             switch (this.itemModel.get('type')) {
-                case 'SUITE':
-                    config.trackingDispatcher.trackEventNumber(103);
-                    break;
-                case 'TEST':
-                    config.trackingDispatcher.trackEventNumber(155);
-                    break;
-                default:
-                    config.trackingDispatcher.trackEventNumber(72);
-                    break;
+            case 'SUITE':
+                config.trackingDispatcher.trackEventNumber(103);
+                break;
+            case 'TEST':
+                config.trackingDispatcher.trackEventNumber(155);
+                break;
+            default:
+                config.trackingDispatcher.trackEventNumber(72);
+                break;
             }
         },
-        onClickSave: function() {
+        onClickSave: function () {
             $('.form-control', this.$el).trigger('validate');
             if (!$('.has-error', this.$el).length) {
                 switch (this.itemModel.get('type')) {
-                    case 'SUITE':
-                        config.trackingDispatcher.trackEventNumber(104);
-                        break;
-                    case 'TEST':
-                        config.trackingDispatcher.trackEventNumber(156);
-                        break;
-                    default:
-                        config.trackingDispatcher.trackEventNumber(73);
-                        break;
+                case 'SUITE':
+                    config.trackingDispatcher.trackEventNumber(104);
+                    break;
+                case 'TEST':
+                    config.trackingDispatcher.trackEventNumber(156);
+                    break;
+                default:
+                    config.trackingDispatcher.trackEventNumber(73);
+                    break;
                 }
                 var tags = [];
                 if (this.viewModel.get('tagsString') != '') {

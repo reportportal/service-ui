@@ -1801,7 +1801,7 @@ define(['util'], function () {
             deleteOrg: 'I am sure I want to delete organization',
             msgResetColorsDefectType: 'Are you sure you want to reset custom defect\'s colors to default?',
             msgMessageTop: 'Are you sure you want to delete the defect type?  All investigated as <strong>\'%%%\'</strong> defects will be marked as <strong>\'%%%\'</strong>.',
-            msgImportLaunch: 'If your runner does not write the test start date in the .xml file, then the current server time will be substituted automatically.',
+            msgImportLaunch: 'If your runner does not write the test start time in .xml file, then the current server time will be used.',
             importLaunchTip: 'Drop only <strong>.zip</strong> file under 32 MB to upload or <span class="blue">click</span> to add it',
             invalidFileType: 'Incorrect file format',
             invalidFileSize: 'File size is more than 32 Mb'
