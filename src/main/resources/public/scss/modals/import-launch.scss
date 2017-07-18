@@ -97,7 +97,8 @@
             left: 53px;
             border: none;
             .dz-upload {
-              background: #d7f3f7;;
+              background: $COLOR--booger;
+              opacity: 0.7;
             }
           }
           .dz-success-mark{
@@ -115,7 +116,7 @@
             .material-icons {
               font-size: 27px;
               line-height: 16px;
-              color: #39C2D7;
+              color: $COLOR--booger;
             }
           }
           .dz-error-mark {
