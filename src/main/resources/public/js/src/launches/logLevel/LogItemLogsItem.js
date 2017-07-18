@@ -106,7 +106,7 @@ define(function (require) {
         },
 
         activateAccordion: function () {
-            var minHeight = 148;
+            var minHeight = 133;
             if (this.model.get('level') === 'ERROR') {
                 minHeight = 238;
             }

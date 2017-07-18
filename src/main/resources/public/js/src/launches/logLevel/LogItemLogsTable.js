@@ -18,10 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
@@ -197,10 +198,7 @@ define(function (require, exports, module) {
         onStopLoading: function () {
             $('[data-js-logs-wrapper]', this.$el).removeClass('load');
             _.each(this.items, function (item) {
-                var level = item.model.get('level');
-                if (level === 'ERROR' || level === 'TRACE' || level === 'DEBUG') {
-                    item.activateAccordion();
-                }
+                item.activateAccordion();
             });
         },
         onChangePage: function (page) {

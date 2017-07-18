@@ -48,9 +48,8 @@
     overflow: hidden;
     padding: 10px 0;
     line-height: 18px;
-    &.level-TRACE, &.level-DEBUG {
-      max-height: 150px;
-    }
+    max-height: 135px;
+
     &.level-ERROR {
       max-height: 240px;
     }
