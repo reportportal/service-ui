@@ -122,16 +122,15 @@ define(function (require) {
         },
         render: function () {
             var self = this;
-            var type = this.getTimeType(this.max);
-            var tooltip = this.tooltipContent();
             var data = this.getData();
+            var tooltip = this.tooltipContent();  // should call after this.max calculation in get data.
+            var type = this.getTimeType(this.max); // should call after this.max calculation in get data.
             var cup;
             var update;
             var emptyData = this.model.getContent();
             var emptyResult = this.model.getContent().result;
             if (!this.isEmptyData(emptyData) && !this.isEmptyData(emptyResult)) {
                 this.addSVG();
-
                 this.chart = nvd3.models.multiBarHorizontalChart()
                     .x(function (d) {
                         return d.num;
@@ -158,7 +157,6 @@ define(function (require) {
                 this.chart.yAxis
                     .tickFormat(d3.format(',.2f'))
                     .axisLabel(type.type);
-
                 d3.select($('svg', this.$el).get(0))
                     .datum(data)
                     .call(this.chart);
