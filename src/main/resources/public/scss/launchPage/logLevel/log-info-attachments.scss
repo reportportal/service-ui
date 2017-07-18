@@ -40,7 +40,7 @@
 
             &.active {
               .gallery-image img{
-                border: 2px solid $COLOR--charcoal-grey;
+                border: 1px solid $COLOR--skipped;
                 cursor: default;
               }
             }
@@ -64,7 +64,7 @@
               max-height: 100%;
               display: inline-block;
               vertical-align: middle;
-              border: 1px solid $COLOR--dark-pastel-green;
+              //border: 1px solid $COLOR--dark-pastel-green;
             }
           }
           &.load {
@@ -186,7 +186,7 @@
       height: 300px;
       overflow: hidden;
       margin: 20px auto 0 auto;
-      border: 1px solid $COLOR--dark-pastel-green;
+      //border: 1px solid $COLOR--dark-pastel-green;
       text-align: center;
       cursor: pointer;
       &:before {

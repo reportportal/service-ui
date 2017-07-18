@@ -93,6 +93,13 @@
       list-style: inherit;
     }
   }
+  table {
+    border-collapse: collapse;
+    th, td {
+      border: 1px solid $COLOR--gray-80;
+      padding: 5px;
+    }
+  }
   code.lang-error {
     position: relative;
     padding-left: 15px;

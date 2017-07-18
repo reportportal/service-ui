@@ -19,7 +19,11 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 .launch-log-info-details{
-  padding: 10px 15px 0 15px;
+  padding: 10px 15px 10px 15px;
+  overflow: hidden;
+  @media (max-width: 900px) {
+    padding: 0;
+  }
   .rp-grid-name .btn-group, .type-grid-cell, .accordion-block{
     display: none;
   }
