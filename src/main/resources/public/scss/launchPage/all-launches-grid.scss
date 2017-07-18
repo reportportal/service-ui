@@ -24,7 +24,7 @@
     padding: 0;
     .overflow-wrapper {
       position: relative;
-      padding: 13px 0;
+      padding: 13px 0 3px 0;
       max-height: 200px;
       overflow: hidden;
     }
@@ -67,18 +67,19 @@
           content: '';
           top: 7px;
           width: 50px;
-          border-top: 2px dotted $COLOR--gray-60;
+          height: 5px;
+          background: url(../../img/launch/dots.svg) center top no-repeat;
         }
         &:before {
-          left: 0px;
+          left: 0;
         }
         &:after {
-          right: 0px;
+          right: 2px;
         }
         &:hover {
           color: $COLOR--charcoal-grey;
           &:after, &:before {
-            border-color: $COLOR--charcoal-grey;
+            background: url(../../img/launch/dots-hover.svg) center top no-repeat;
           }
         }
         &.little {
