@@ -41,7 +41,8 @@ define(function (require) {
             'click [data-js-copy-link]': 'copyLink',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel',
-            'change [data-js-user-project]': 'validate'
+            'change [data-js-user-project]': 'validate',
+            'change [data-js-email]': 'disableHideBackdrop',
         },
         bindings: {
             '[data-js-email]': 'value: email',
@@ -57,7 +58,24 @@ define(function (require) {
             this.render();
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, {}));
+            var footerButtons = [
+                {
+                    btnText: Localization.ui.cancel,
+                    btnClass: 'rp-btn-cancel button-cancel',
+                    label: 'data-js-cancel'
+                },
+                {
+                    btnText: Localization.admin.invite,
+                    btnClass: 'rp-btn-submit button-invite',
+                    label: 'data-js-invite'
+                },
+                {
+                    btnText: Localization.ui.ok,
+                    btnClass: 'rp-btn-submit button-ok',
+                    label: 'data-js-ok'
+                }
+            ];
+            this.$el.html(Util.templates(this.template, {footerButtons: footerButtons}));
             this.setupDropDowns();
             this.setupProjectSearch();
             this.setupValidators();
@@ -182,6 +200,7 @@ define(function (require) {
         },
         selectRole: function (value) {
             this.model.set('projectRole', value);
+            this.disableHideBackdrop();
         },
         getUserData: function () {
             return {
@@ -193,6 +212,7 @@ define(function (require) {
         validate: function () {
             $('[data-js-email]', this.$el).trigger('validate');
             $('[data-js-user-project]', this.$el).trigger('validate');
+            this.disableHideBackdrop();
         },
         showSuccess: function (data) {
             this.$el.addClass('success-invite');

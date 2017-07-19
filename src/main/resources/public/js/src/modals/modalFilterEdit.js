@@ -45,7 +45,9 @@ define(function (require) {
         events: {
             'click [data-js-ok]': 'onClickOk',
             'click [data-js-close]': 'onClickClose',
-            'click [data-js-cancel]': 'onClickCancel'
+            'click [data-js-cancel]': 'onClickCancel',
+            'change [data-js-name-input]': 'disableHideBackdrop',
+            'change [data-js-is-shared]': 'disableHideBackdrop'
         },
 
         computeds: {

@@ -50,7 +50,11 @@ define(function (require) {
             'click [data-js-next-last-step]': 'onClickLastStep',
             'click [data-js-previous-second-step]': 'onClickSecondStep',
             'click [data-js-add-widget]': 'onClickAddWidget',
-            'click [data-js-close]': 'onClickClose'
+            'click [data-js-close]': 'onClickClose',
+            'change [data-js-step-1]': 'disableHideBackdrop',
+            'change [data-js-step-2]': 'disableHideBackdrop',
+            'change [data-js-step-3]': 'disableHideBackdrop',
+            'click [data-js-dashboard-item]': 'disableHideBackdrop'
         },
         bindings: {
             '[data-js-widget-type]': 'text: gadgetName',
