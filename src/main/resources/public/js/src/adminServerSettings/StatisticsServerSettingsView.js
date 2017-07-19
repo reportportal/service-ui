@@ -80,6 +80,7 @@ define(function (require) {
                 .done(function () {
                     self.model.update();
                     if (enabled) {
+                        self.analyticsConnect.destroy();
                         self.analyticsConnect.init();
                     } else {
                         self.analyticsConnect.destroy();
