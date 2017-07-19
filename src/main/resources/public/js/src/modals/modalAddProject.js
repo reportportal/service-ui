@@ -35,7 +35,7 @@ define(function (require) {
             'click [data-js-add]': 'addProject',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel',
-            'change [data-js-project-name]': 'activateHide'
+            'change [data-js-project-name]': 'disableHideBackdrop'
         },
         initialize: function () {
             this.render();

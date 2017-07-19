@@ -78,7 +78,7 @@ define(function (require) {
             });
             this.listenTo(this.model, 'change:share', this.onChangeShared);
             this.listenTo(this.model, 'change:description', this.onChangeDescription);
-            this.listenTo(this.model, 'change:name', this.activateHide);
+            this.listenTo(this.model, 'change:name', this.disableHideBackdrop);
         },
         render: function (options) {
             var footerButtons = [
@@ -105,7 +105,7 @@ define(function (require) {
             } else {
                 config.trackingDispatcher.trackEventNumber(273);
             }
-            this.activateHide();
+            this.disableHideBackdrop();
         },
         onChangeDescription: function () {
             if (this.isNew) {
@@ -113,7 +113,7 @@ define(function (require) {
             } else {
                 config.trackingDispatcher.trackEventNumber(272);
             }
-            this.activateHide();
+            this.disableHideBackdrop();
         },
         onClickClose: function () {
             if (this.isNew) {

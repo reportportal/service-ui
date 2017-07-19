@@ -34,9 +34,13 @@ define(function (require) {
             $('[data-js-warning-text]', this.$el).html(warning);
             $('[data-js-warning]', this.$el).addClass('activate');
         },
-        activateHide: function () {
+        disableHideBackdrop: function () {
             this.enableHide = false;
         },
+        enableHideBackdrop: function () {
+            this.enableHide = true;
+        },
+
         show: function () {
             var self = this;
             this.modalBlock = true;

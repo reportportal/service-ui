@@ -109,11 +109,11 @@ define(function (require, exports, module) {
         },
         onChangeName: function(){
             config.trackingDispatcher.trackEventNumber(374);
-            this.activateHide();
+            this.disableHideBackdrop();
         },
         onChangeEmail: function(){
             config.trackingDispatcher.trackEventNumber(375);
-            this.activateHide();
+            this.disableHideBackdrop();
         },
         onClickClose: function(){
             config.trackingDispatcher.trackEventNumber(373);

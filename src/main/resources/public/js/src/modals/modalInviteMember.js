@@ -92,7 +92,7 @@ define(function (require) {
         },
         selectRole: function (role) {
             this.model.set('projectRole', role);
-            this.activateHide();
+            this.disableHideBackdrop();
         },
         selectLink: function (e) {
             e.preventDefault();
@@ -121,7 +121,7 @@ define(function (require) {
                 return;
             }
             $('[data-js-invite-form]', this.$el).removeClass('not-valid');
-            this.activateHide();
+            this.disableHideBackdrop();
         },
         inviteMember: function () {
             var userData = this.getUserData();

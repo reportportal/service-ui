@@ -53,10 +53,10 @@ define(function (require) {
             'click [data-js-submit]': 'submit',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel',
-            'change [data-js-merge-tags]': 'activateHide',
-            'change [data-js-description]': 'activateHide',
-            'change [data-js-merge-name]': 'activateHide',
-            'change [data-js-extend-checkbox]': 'activateHide'
+            'change [data-js-merge-tags]': 'disableHideBackdrop',
+            'change [data-js-description]': 'disableHideBackdrop',
+            'change [data-js-merge-name]': 'disableHideBackdrop',
+            'change [data-js-extend-checkbox]': 'disableHideBackdrop'
         },
 
         getRenderOptions: function (launches) {

@@ -86,7 +86,7 @@ define(function (require, exports, module) {
                     ? 'remove' : 'add';
             }
             this.$submitBtn[action + "Class"]('disabled');
-            this.activateHide();
+            this.disableHideBackdrop();
         },
         showPassword: function (e) {
             var action = $(e.currentTarget).is(':checked') ? 'text' : 'password';

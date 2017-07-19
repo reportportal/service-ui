@@ -44,7 +44,7 @@ define(function (require, exports, module) {
             'click [data-js-save]': 'onClickSave',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel',
-            'change [data-js-tags]': 'activateHide'
+            'change [data-js-tags]': 'disableHideBackdrop'
         },
         initialize: function (option) {
             this.itemModel = option.item;
@@ -142,7 +142,7 @@ define(function (require, exports, module) {
             this.markdownEditor.update();
             this.listenTo(this.markdownEditor, 'change', function (value) {
                 self.viewModel.set({ description: value });
-                this.activateHide();
+                this.disableHideBackdrop();
             });
         },
         onKeySuccess: function () {

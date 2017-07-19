@@ -92,7 +92,7 @@ define(function (require) {
                 placeholder: Localization.filter.descriptionPlaceholder
             });
             $('[data-js-markdown-container]', this.$el).html(this.markdownEditor.$el);
-            this.listenTo(this.markdownEditor, 'change', function (value) { self.model.set({ description: value }); this.activateHide(); });
+            this.listenTo(this.markdownEditor, 'change', function (value) { self.model.set({ description: value }); this.disableHideBackdrop(); });
         },
         addValidators: function (filterNames) {
             Util.hintValidator($('[data-js-name-input]', this.$el), [{
@@ -134,11 +134,11 @@ define(function (require) {
         },
         onChangeDescription: function () {
             config.trackingDispatcher.trackEventNumber(248);
-            this.activateHide();
+            this.disableHideBackdrop();
         },
         onChangeShared: function () {
             config.trackingDispatcher.trackEventNumber(249);
-            this.activateHide();
+            this.disableHideBackdrop();
         },
         onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(247);

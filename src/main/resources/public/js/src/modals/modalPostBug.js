@@ -67,9 +67,9 @@ define(function (require) {
             'click [data-js-close]': 'onClickClose',
             'click [data-js-is-included]': 'onClickIncludeData',
             'click [data-js-cancel]': 'onClickCancel',
-            'change [data-js-is-included]': 'activateHide',
-            'click [data-js-dropdown-menu]': 'activateHide',
-            'click [data-id]': 'activateHide'
+            'change [data-js-is-included]': 'disableHideBackdrop',
+            'click [data-js-dropdown-menu]': 'disableHideBackdrop',
+            'click [data-id]': 'disableHideBackdrop'
         },
         initialize: function (options) {
             this.from = options.from;

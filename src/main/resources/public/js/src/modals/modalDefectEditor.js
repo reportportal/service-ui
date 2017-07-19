@@ -150,7 +150,7 @@ define(function (require) {
             $('[data-js-issue-title]', this.$el).show();
             $('[data-js-issue-title] i', this.$el).css('background', issueType.color);
             if (this.isChanged()) {
-                this.activateHide();
+                this.disableHideBackdrop();
             }
         },
         setupMarkdownEditor: function () {
@@ -162,7 +162,7 @@ define(function (require) {
         },
         onShown: function () {
             this.markdownEditor.update();
-            this.listenTo(this.markdownEditor, 'change', this.activateHide);
+            this.listenTo(this.markdownEditor, 'change', this.disableHideBackdrop);
             this.initState = {
                 comment: this.markdownEditor.getValue(),
                 selectedIssue: this.selectedIssue,

@@ -123,7 +123,7 @@ define(function (require) {
             'click [data-js-load]': 'onClickLoad',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel',
-            'change [data-js-load-items-container]': 'activateHide'
+            'change [data-js-load-items-container]': 'disableHideBackdrop'
         },
 
         initialize: function (options) {

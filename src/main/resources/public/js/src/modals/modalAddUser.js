@@ -42,7 +42,7 @@ define(function (require) {
             'change [data-js-add-user]': 'blockModal'
         },
         blockModal: function(){
-            this.activateHide();
+            this.disableHideBackdrop();
         },
         bindings: {
             '[data-js-user-login]': 'value: userId',
@@ -134,7 +134,7 @@ define(function (require) {
         },
         onChangeProjectRole: function (val) {
             this.model.set('projectRole', val);
-            this.activateHide();
+            this.disableHideBackdrop();
         },
         onChangeAccountRole: function (val) {
             var role = val === config.accountRolesEnum.administrator
@@ -142,7 +142,7 @@ define(function (require) {
                 : config.defaultProjectRole;
             this.model.set('accountRole', val);
             this.updateProjectRole(role);
-            this.activateHide();
+            this.disableHideBackdrop();
         },
         updateProjectRole: function (role) {
             this.model.set('projectRole', role);
@@ -253,7 +253,7 @@ define(function (require) {
             ]);
             this.$selectProject.on('change', function () {
                 this.$selectProject.trigger('validate');
-                this.activateHide();
+                this.disableHideBackdrop();
             }.bind(this));
         },
         getSearchQuery: function (query) {
