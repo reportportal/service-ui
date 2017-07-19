@@ -50,9 +50,6 @@ define(function (require) {
                     && !this.collectionItems.validateForAllCases()
                     && !_.isEmpty(this.collectionItems.models);
             },
-            activeMultiDelete: function () {
-                return !(this.launchModel.get('status') === config.launchStatus.inProgress);
-            },
             getHistoryHref: function () {
                 return this.getHistoryLink();
             }
@@ -83,9 +80,12 @@ define(function (require) {
                 el: $('[data-js-info-line]', this.$el),
                 model: this.parentModel
             });
-            if (!this.getBinding('activeMultiDelete')) {
+            if (!this.activeMultiDelete()) {
                 $('[data-js-milti-delete]', this.$el).attr({ title: Localization.launches.launchNotInProgress });
             }
+        },
+        activeMultiDelete: function () {
+            return !(this.launchModel.get('status') === config.launchStatus.inProgress);
         },
         render: function () {
             this.$el.html(Util.templates(this.template, { context: this.context }));
@@ -95,7 +95,7 @@ define(function (require) {
         },
         activateMultiple: function () {
             $('[data-js-refresh]', this.$el).addClass('disabled');
-            if (this.getBinding('activeMultiDelete')) {
+            if (this.activeMultiDelete()) {
                 $('[data-js-milti-delete]', this.$el).removeClass('disabled').attr({ title: Localization.launches.deleteBulk });
                 $('[data-js-history]', this.$el).addClass('disabled');
             }
@@ -106,7 +106,7 @@ define(function (require) {
         },
         disableMultiple: function () {
             $('[data-js-refresh]', this.$el).removeClass('disabled');
-            if (this.getBinding('activeMultiDelete')) {
+            if (this.activeMultiDelete()) {
                 $('[data-js-milti-delete]', this.$el).addClass('disabled').attr({ title: Localization.launches.actionTitle });
                 $('[data-js-history]', this.$el).removeClass('disabled');
             }
