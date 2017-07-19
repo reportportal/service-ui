@@ -311,8 +311,18 @@ define(function (require) {
             }
         },
         reset: function () {
+            var model;
+            var commonModel;
             while (this.collection.models.length) {
-                this.collection.at(0).set({ select: false });
+                model = this.collection.at(0);
+                if (model.get('select')) {
+                    model.set({ select: false });
+                } else {
+                    commonModel = this.collectionItems.get(model.get('id'));
+                    commonModel && commonModel.set({ issue: model.get('issue') });
+                    this.collection.remove(model);
+                    this.checkStatus(model);
+                }
             }
         },
         resetDefaultState: function () {

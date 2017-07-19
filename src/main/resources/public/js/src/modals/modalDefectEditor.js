@@ -62,7 +62,6 @@ define(function (require) {
                 this.render(option);
             }.bind(this));
             this.selectedIssue = null;
-            this.inProcess = false;
         },
 
         render: function () {
@@ -88,7 +87,6 @@ define(function (require) {
             this.applyBindings();
             this.setupAnchors();
             this.setupMarkdownEditor();
-            this.listenTo(this.markdownEditor, 'change', this.activateHide);
         },
 
         isMultipleEdit: function () {
@@ -164,6 +162,7 @@ define(function (require) {
         },
         onShown: function () {
             this.markdownEditor.update();
+            this.listenTo(this.markdownEditor, 'change', this.activateHide);
             this.initState = {
                 comment: this.markdownEditor.getValue(),
                 selectedIssue: this.selectedIssue,
@@ -189,16 +188,13 @@ define(function (require) {
         },
         onClickAction: function (successCalback) {
             var self = this;
-            if (this.inProcess) {
-                return;
-            }
-            this.inProcess = true;
+            self.showLoading();
             this.updateDefectType().done(function () {
                 successCalback();
             }).fail(function (error) {
                 Util.ajaxFailMessenger(error, 'updateDefect');
             }).always(function () {
-                self.inProcess = false;
+                self.hideLoading();
             });
         },
         onClickSave: function () {

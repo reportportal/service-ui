@@ -16,6 +16,7 @@
  */
 define(function (require) {
     'use strict';
+
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
@@ -280,9 +281,8 @@ define(function (require) {
             $('[data-js-bts-selector]', this.$el).html(btsSelector.$el);
             this.listenTo(btsSelector, 'change', this.onClickBts);
             this.dropdownComponents.push(btsSelector);
-
         },
-        onDestroy: function () {
+        onHide: function () {
             _.each(this.dropdownComponents, function (item) {
                 item.destroy();
             });
