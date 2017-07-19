@@ -70,6 +70,7 @@ define(function (require) {
                     var thisDropzone = this;
                     submitButton.addEventListener('click', function () {
                         thisDropzone.processQueue();
+                        thisDropzone.options.autoProcessQueue = true;
                         $('[data-js-drop-area]', self.$el).addClass('finish-loading');
                         self.dropzone.clickableElements.forEach(function (element) {
                             return element.classList.remove('dz-clickable');
@@ -114,7 +115,7 @@ define(function (require) {
                     '<div class="dz-error-mark"><i class="material-icons">warning</i></div>' +
                     '<div class="dz-error-message"><span data-dz-errormessage></span></div>' +
                 '</div>',
-                parallelUploads: 10,
+                parallelUploads: 5,
                 timeout: false,
                 filesizeBase: 1024,
                 uploadMultiple: false,
