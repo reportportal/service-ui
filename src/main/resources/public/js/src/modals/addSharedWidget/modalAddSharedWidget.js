@@ -102,7 +102,8 @@ define(function (require) {
         events: {
             'click [data-js-add-widget]': 'onClickAddWidget',
             'click [data-js-close]': 'onClickClose',
-            'click [data-js-cancel]': 'onClickCancel'
+            'click [data-js-cancel]': 'onClickCancel',
+            'click [data-js-widget-select]': 'disableHideBackdrop'
         },
         bindings: {
             '[data-js-preview-block]': 'classes: {hide: not(name)}',

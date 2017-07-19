@@ -46,12 +46,12 @@ define(function (require) {
                 },
                 {
                     btnText: Localization.ui.import,
-                    btnClass: 'rp-btn-submit',
+                    btnClass: 'rp-btn-submit btn-import',
                     label: 'data-js-import'
                 },
                 {
                     btnText: Localization.ui.ok,
-                    btnClass: 'rp-btn-submit',
+                    btnClass: 'rp-btn-submit btn-ok',
                     label: 'data-js-ok'
                 }
             ];
@@ -87,9 +87,12 @@ define(function (require) {
                         self.uploadProcess = false;
                     });
                     this.on('addedfile', function () {
-                        (thisDropzone.files.length) ?
-                            $('[data-js-import]', self.$el).removeAttr('disabled') :
+                        if (thisDropzone.files.length) {
+                            $('[data-js-import]', self.$el).removeAttr('disabled');
+                            self.disableHideBackdrop();
+                        } else {
                             $('[data-js-import]', self.$el).attr('disabled', 'disabled');
+                        }
                     });
                     this.on('removedfile', function () {
                         (thisDropzone.files.length) ?
@@ -153,6 +156,10 @@ define(function (require) {
                     return false;
                 }
             });
+        },
+        onKeySuccess: function () {
+        },
+        onClickClose: function () {
         },
         onClickOk: function () {
             this.successClose();
