@@ -24,10 +24,10 @@ define(function (require) {
     var Backbone = require('backbone');
     var $ = require('jquery');
     var _ = require('underscore');
-    var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var FilterModel = require('filters/FilterModel');
 
+    var SingletonAppStorage = require('storage/SingletonAppStorage');
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var CallService = require('callService');
@@ -54,6 +54,11 @@ define(function (require) {
             this.pagingSize = this.userStorage.get('launchPageSize') || 50;
             this.noChildFilter = false;
             this.context = options.context;
+            this.appStorage = new SingletonAppStorage();
+            this.listenTo(this.appStorage, 'change:launchDistinct', this.changeLaunchDistinct);
+        },
+        changeLaunchDistinct: function () {
+            this.load();
         },
         checkForDifference: function (launchModel, parentModel, filterData) {
             if (((!launchModel && this.launchModel) || (launchModel && !this.launchModel))
@@ -172,7 +177,7 @@ define(function (require) {
             !silent && this.trigger('change:log:item', logItemId);
         },
         setSelfModels: function (filterModel) {
-            this.stopListening(this.filterModel);
+            this.filterModel && this.stopListening(this.filterModel);
 
             this.filterModel = filterModel;
             this.listenTo(this.filterModel, 'change:newEntities change:entities', this.changeFilterOptions);
@@ -357,7 +362,12 @@ define(function (require) {
         },
         load: function (dynamicPge) {  // double load page if content = []
             var self = this;
-            var path = Urls.getGridUrl('launch', (this.context === 'userdebug'));
+            var path;
+            if (this.appStorage.get('launchDistinct') === 'latest' && !(this.context === 'userdebug')) {
+                path = Urls.getGridUrl('launch/latest');
+            } else {
+                path = Urls.getGridUrl('launch', (this.context === 'userdebug'));
+            }
             var params = this.getParamsFilter();
             var async;
             if (this.launchModel) {
