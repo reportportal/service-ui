@@ -34,6 +34,12 @@ define(function (require) {
         template: 'tpl-modal-defect-editor',
         className: 'modal-defect-editor',
 
+        bindings: {
+            '[data-js-save-post-wrapper]': 'classes: {disabled: not(isBtsConfigure)}',
+            '[data-js-save-load-wrapper]': 'classes: {disabled: not(isBtsAdded)}',
+            '[data-js-save-post]': 'attr: {disabled: not(isBtsConfigure)}',
+            '[data-js-save-load]': 'attr: {disabled: not(isBtsAdded)}'
+        },
         events: {
             'click [data-js-save]': 'onClickSave',
             'click [data-js-select-issue]': 'selectIssueType',
@@ -41,6 +47,14 @@ define(function (require) {
             'click [data-js-cancel]': 'onClickCancel',
             'click [data-js-save-post]': 'onClickSavePost',
             'click [data-js-save-load]': 'onClickSaveLoad'
+        },
+        computeds: {
+            isBtsAdded: function () {
+                return this.appModel.get('isBtsAdded');
+            },
+            isBtsConfigure: function () {
+                return this.appModel.get('isBtsConfigure');
+            }
         },
         onClickSavePost: function () {
             var self = this;
@@ -65,13 +79,6 @@ define(function (require) {
         },
 
         render: function () {
-            var footerButtons = [
-                {
-                    btnText: 'Cancel',
-                    btnClass: 'rp-btn-cancel',
-                    label: 'data-js-cancel'
-                }
-            ];
             this.$el.html(Util.templates(this.template, {
                 item: this.items[0],
                 isMultipleEdit: this.isMultipleEdit(),
@@ -79,10 +86,7 @@ define(function (require) {
                 subDefects: this.getSubDefects(),
                 getIssueType: this.getIssueType,
                 getIssueComment: this.getIssueComment,
-                getDefectType: this.getDefectType(),
-                footerButtons: footerButtons,
-                isBtsAdded: (!this.appModel.get('isBtsAdded'))? true: false,
-                isBtsConfigure: (!this.appModel.get('isBtsConfigure'))? true: false
+                getDefectType: this.getDefectType()
             }));
             this.applyBindings();
             this.setupAnchors();

@@ -55,23 +55,18 @@
 </div>
 <div class="modal-footer">
     <%= data.includeTemplate('tpl-modal-footer-warning') %>
-    <% _.forEach(data.footerButtons, function(button){ %>
-    <button class="rp-btn <%=button.btnClass %>" type="button" <%= button.label %> >
-    <%= button.btnText %>
-    </button>
-    </button>
-    <% }) %>
+    <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel><%- data.text.ui.cancel %></button>
     <div class="dropdown-button">
         <button class="rp-btn rp-btn-submit" type="button" data-js-save >Save</button>
         <button class=" rp-btn rp-button-dropdown" data-toggle="dropdown" data-js-dropdown>
             <i class="material-icons">keyboard_arrow_down</i>
         </button>
         <ul class="dropdown-menu" data-js-dropdown-menu>
-            <li <% if(data.isBtsConfigure) { %> class='disabled'  <%} %>>
-                <a data-js-save-post>Save and Post Bug</a>
+            <li data-js-save-post-wrapper>
+                <a data-js-save-post> <%- data.text.modalDefectEditor.saveAndPost %></a>
             </li>
-            <li <% if(data.isBtsAdded) { %> class='disabled'  <%} %>>
-                <a data-js-save-load>Save and Load Bug</a>
+            <li data-js-save-load-wrapper>
+                <a data-js-save-load><%- data.text.modalDefectEditor.saveAndLoad %></a>
             </li>
         </ul>
     </div>

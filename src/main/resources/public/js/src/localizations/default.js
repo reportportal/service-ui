@@ -252,62 +252,6 @@ define(['util'], function () {
             error: 'Error'
         },
 
-        // landing: {
-        //     threes: {
-        //         subHeader: 'collaborative test automation',
-        //         ciCd: 'Integral part of CI/CD strategy',
-        //         ciCdText: 'we build RP as result of our 15 year experience in test automation for our clients. We believe that it\'s a missing component in true agile environment, especially with extensive TA',
-        //         architecture: 'Extendible architecture',
-        //         architectureText: 'With extendible architecture Report Portal can accommodate new ideas and implementation from the community',
-        //         realtime: 'relatime reporting and analitics',
-        //         realtimeText: 'Report Portal captures and collect data in realtime for collaborative and fast work',
-        //         analysis: 'Intelligent results analysis',
-        //         analysisText: 'learns from the history. So that with can \'understand\' root cause of new day test results'
-        //
-        //     },
-        //     header: {
-        //         btnLogin: 'Login',
-        //         returnToRP: 'Return to RP',
-        //         linkFeatures: 'Benefits',
-        //         linkAutoAnalysis: 'Accelerated analysis',
-        //         linkProductionUsage: 'Real time Analysis',
-        //         linkDistributionOfFails: 'Root cause',
-        //         linkYouResultAnalysis: 'Team work',
-        //         linkDocumentation: 'Documentation'
-        //     },
-        //     // GroupIdeasBehindRP: {
-        //     //     titleIdeasBehindReportPortal: 'Product Benefits',
-        //     //     titleLiveVisibility: 'Relatime visibility',
-        //     //     titleReduceEffort: 'Reduce Effort',
-        //     //     titleSupportsTools: 'Out of box support',
-        //     //     titleNiceReports: 'Modern reports',
-        //     //     titleEasyIntegrate: 'Quick startup',
-        //     //     titleNoRefactoring: 'Team work',
-        //     //     descLiveVisibility: 'Into your test automation status',
-        //     //     descReduceEffort: 'Accelerate results analysis leveraging historical data',
-        //     //     descSupportsTools: 'Out of the box integration with mainstream automation and bugtracking',
-        //     //     descNiceReports: 'Out of the box analytics and custom dashboards',
-        //     //     descEasyIntegrate: 'Integrate your existing automation results in same day. On premise or cloud',
-        //     //     descNoRefactoring: 'Collaborative environment for your entire team'
-        //     // },
-        //     sitesUsingFoundation: 'Sites using foundation:',
-        //     clients: {
-        //         altToday: 'Today',
-        //         altCocaCola: 'Coca Cola',
-        //         altMTV: 'MTV',
-        //         altLibertyGlobal: 'Liberty Global',
-        //         altInterContinentalsHotelsGroup: 'InterContinentals Hotels Group',
-        //         altGloboforce: 'Globoforce',
-        //         altWiggle: 'Wiggle',
-        //         altThomsonReuters: 'Thomson Reuters',
-        //         altCanadianTire: 'Canadian Tire',
-        //         altWoltersKluwer: 'Wolters Kluwer',
-        //         altKrux: 'Krux',
-        //         altAccellion: 'Accellion',
-        //         altPlex: 'Plex'
-        //     }
-        // },
-
         topMenu: {
             reportPortal: 'Report Portal',
             rpp: 'RPP',
@@ -640,7 +584,6 @@ define(['util'], function () {
             notMyDashboardEmptyHeader: 'There are no Widgets on this Dashboard',
             dashboardEmptyText: 'Add your first Widget to analyse statistics'
         },
-
 
         favorites: {
             title: 'Filters',
@@ -1867,6 +1810,11 @@ define(['util'], function () {
             apiDocumentation: 'Api Documentation',
             api: 'API',
             uat: 'UAT'
+        },
+
+        modalDefectEditor: {
+            saveAndPost: 'Save and Post Bug',
+            saveAndLoad: 'Save and Load Bug'
         }
     };
 });
