@@ -27,6 +27,8 @@ define(function (require) {
     var Epoxy = require('backbone-epoxy');
     var FilterModel = require('filters/FilterModel');
     var App = require('app');
+    var SingletonAppStorage = require('storage/SingletonAppStorage');
+    var DropdownButton = require('components/dropdownbutton/DropdownButton');
 
     var config = App.getInstance();
 
@@ -46,6 +48,7 @@ define(function (require) {
         initialize: function () {
             this.ready = $.Deferred();
             this.userStorage = new SingletonUserStorage();
+            this.appStorage = new SingletonAppStorage();
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.model = new FilterModel({ id: 'all', active: true, name: 'All Launches', owner: config.userModel.get('name') });
             this.listenTo(this.launchFilterCollection, 'add', this.onAddFilter);
@@ -63,7 +66,25 @@ define(function (require) {
                 this.renderFilterList();
                 this.onChangeFilterCriteriaShow(null, this.userStorage.get('launchFilterCriteriaHide'));
                 this.ready.resolve();
+                this.selectButton = new DropdownButton({
+                    links: [
+                        {
+                            name:'All Launches',
+                            value: 'all'
+                        },
+                        {
+                            name:'Latest Launches',
+                            value: 'latest'
+                        }
+                    ],
+                    defaultValue: this.appStorage.get('launchDistinct') || 'all'
+                });
+                this.listenTo(this.selectButton, 'change', this.onChangeSelectButton);
+                $('[data-js-launch-selector]', this.$el).html(this.selectButton.$el);
             }.bind(this));
+        },
+        onChangeSelectButton: function (value) {
+            this.appStorage.set({launchDistinct: value});
         },
         onChangeFilterCriteriaShow: function (model, hide) {
             if (hide) {

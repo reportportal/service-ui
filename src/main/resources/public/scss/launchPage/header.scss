@@ -29,8 +29,70 @@
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
   .filter-overflow {
     position: relative;
-    overflow: hidden;
     padding: 15px 105px 0 15px;
+    .launch-selector{
+      position: relative;
+      display: inline-block;
+      vertical-align: top;
+      .drop-down-button{
+        display: inline-block;
+        font-size: 0;
+        vertical-align: top;
+        ul{
+          width: 100%;
+        }
+        button.rp-btn.rp-btn-submit{
+          margin-right: 0;
+          min-width: unset;
+          width: 140px;
+          text-transform: uppercase;
+          font-size: 13px;
+          font-weight: 600;
+          text-align: center;
+          color: #464547;
+          background: #e9e9e9;
+          border-color: #e9e9e9;
+          padding: 8px 0;
+        }
+        .rp-button-dropdown{
+          background: #e9e9e9;
+          border: none;
+          margin: 0;
+          vertical-align: bottom;
+          width: 30px;
+          min-width: unset;
+          padding: 0;
+          font-size: 13px;
+          font-weight: 600;
+          text-align: left;
+          color: #464547;
+          i{
+            top: 6px;
+            right: 5px;
+            font-size: 18px;
+          }
+          &:before{
+            content: '';
+            background: #999999;
+            width: 2px;
+            height: 22px;
+            opacity: 0.6;
+            display: block;
+          }
+        }
+      }
+    }
+    .separator{
+      display: inline-block;
+      width: 1px;
+      height: 40px;
+      font-size: 0;
+      vertical-align: top;
+      position: relative;
+      margin: 0px 12px 0 15px;
+      bottom: 5px;
+      background: #e9e9e9;
+    }
   }
   .filters-overflow-mobile {
     display: none;

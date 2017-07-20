@@ -37,6 +37,7 @@ define(function (require) {
             this.body = new LaunchBodyView({
                 el: this.context.getMainView().$body
             });
+
             this.listenTo(this.body, 'change:level', this.onChangeLevel);
             this.update({ subContext: options.subContext });
         },
