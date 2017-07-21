@@ -1855,6 +1855,10 @@ define(['util'], function () {
             apiDocumentation: 'Документация Api',
             api: 'API',
             uat: 'UAT'
+        },
+        modalDefectEditor: {
+            saveAndPost: 'Save and Post Bug',
+            saveAndLoad: 'Save and Load Bug'
         }
     };
 });
