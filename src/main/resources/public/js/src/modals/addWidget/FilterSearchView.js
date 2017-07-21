@@ -146,6 +146,9 @@ define(function (require) {
         },
         onSelectFilter: function (filterModel) {
             this.model.set({ filter_id: filterModel.get('id') });
+            var curOptions = this.model.getWidgetOptions();
+            curOptions.filterName = [filterModel.get('name')];
+            this.model.setWidgetOptions(curOptions);
             this.setFilterModel(filterModel);
         },
         onClickAddFilter: function (e) {

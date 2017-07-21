@@ -178,6 +178,25 @@ define(function (require) {
         },
         updateWidget: function () {
         },
+        addSizeClasses: function (gadgetSize) {
+            var widthClasses = [];
+            var heightClasses = [];
+            for (var i = 12; i > gadgetSize.width; i--) {
+                widthClasses.push('w-less-then-' + i);
+            }
+            for (var i = 10; i > gadgetSize.height; i--) {
+                heightClasses.push('h-less-then-' + i);
+            }
+            this.$el.addClass(widthClasses.concat(heightClasses).join(' '));
+        },
+        updateSizeClasses: function (newGadgetSize) {
+            var oldSizeClasses = _.filter(this.$el.attr('class').split(' '), function (item) {
+                return (item.indexOf('less-then-') + 1);
+            });
+            this.$el.removeClass(oldSizeClasses.join(' '));
+            this.addSizeClasses(newGadgetSize);
+            this.updateWidget();
+        },
         onDestroy: function () {
             $(window).off('resize.' + this.id);
         }

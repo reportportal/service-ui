@@ -19,6 +19,7 @@ define(function (require) {
 
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
@@ -100,7 +101,7 @@ define(function (require) {
             this.$el.addClass('hide-widget');
         },
         stopResize: function () {
-            this.widgetView && this.widgetView.resize();
+            this.widgetView && this.widgetView.resize({ width: this.model.get('width'), height: this.model.get('height') });
             this.$el.removeClass('hide-widget');
         },
         update: function (silent) {
@@ -125,7 +126,10 @@ define(function (require) {
                 this.onLoadDataError();
                 return;
             }
-            this.widgetView = new WidgetView({ model: (new WidgetModel(this.model.get('widgetData'), { parse: true })) });
+            this.widgetView = new WidgetView({
+                gadgetSize: { width: this.model.get('width'), height: this.model.get('height') },
+                model: (new WidgetModel(this.model.get('widgetData'), { parse: true }))
+            });
             $('[data-js-widget-container]', this.$el).html(this.widgetView.$el);
             this.widgetView.onShow();
             this.appendTooltip();

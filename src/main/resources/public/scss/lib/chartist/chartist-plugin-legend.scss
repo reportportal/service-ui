@@ -1,0 +1,38 @@
+.ct-legend {
+  position: relative;
+  z-index: 10;
+
+  li {
+    position: relative;
+    padding-left: 23px;
+    margin-bottom: 3px;
+    &:before {
+      width: 12px;
+      height: 12px;
+      position: absolute;
+      left: 0;
+      content: '';
+      border: 3px solid transparent;
+      border-radius: 100%;
+    }
+    &.passed:before {
+      background-color: #8ab77a;
+      border-color: #8ab77a;
+    }
+
+    &.notPassed:before {
+      background-color: #ed6c49;
+      border-color: #ed6c49;
+    }
+    &.inactive:before {
+      background: transparent;
+    }
+  }
+
+  @for $i from 0 to length($ct-series-colors) {
+    .ct-series-#{$i}:before {
+      background-color: nth($ct-series-colors, $i + 1);
+      border-color: nth($ct-series-colors, $i + 1);
+    }
+  }
+}

@@ -33,7 +33,8 @@ module.exports = function (grunt) {
         'css/markdown/simplemde.min.css',
 
         'css/dropzone/dropzone.min.css',
-        'css/dropzone/basic.min.css'
+        'css/dropzone/basic.min.css',
+        'css/chartist.css'
     ];
 
     grunt.initConfig({

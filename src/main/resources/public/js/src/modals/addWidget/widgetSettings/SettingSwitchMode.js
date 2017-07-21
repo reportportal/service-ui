@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Util = require('util');
@@ -78,6 +78,12 @@ define(function (require, exports, module) {
                     curOptions.chartMode = [];
                     this.model.setWidgetOptions(curOptions);
                     break;
+                    // -------- New widget's cases (Chartist) --------
+                case 'pieChartMode':
+                case 'barMode':
+                    curOptions.chartMode = [key];
+                    this.model.setWidgetOptions(curOptions);
+                    break;
                 default:
                     break;
                 }
@@ -86,6 +92,20 @@ define(function (require, exports, module) {
         setDefaultState: function () {
             var curOptions = this.model.getWidgetOptions();
             var keys = _.keys(curOptions);
+
+            // -------- New widget's functionality (Chartist) --------
+            if (this.model.get('gadget') === 'passing_rate_per_launch' || this.model.get('gadget') === 'passing_rate_summary') {
+                if (curOptions.chartMode && curOptions.chartMode.length) {
+                    $('[data-key="' + curOptions.chartMode[0] + '"]', this.$el).addClass('active');
+                } else {
+                    $('[data-key="' + this.curWidget.mode.defaultVal + '"]', this.$el).addClass('active');
+                    curOptions.chartMode = [this.curWidget.mode.defaultVal];
+                    this.model.setWidgetOptions(curOptions);
+                }
+                return;
+            }
+            // -----------------------------------------------
+
             if (keys.length) {
                 switch (keys[0]) {
                 case 'timeline':
