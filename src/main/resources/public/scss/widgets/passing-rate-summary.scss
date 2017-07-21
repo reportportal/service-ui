@@ -1,0 +1,109 @@
+.passing-rate-summary {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  .widget-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 60px 20px 20px 20px;
+
+    .legend {
+      position: absolute;
+      top: 25px;
+      right: 20px;
+      ul {
+        li {
+          padding-left: 17px;
+          margin-left: 20px;
+          float: left;
+          font-family: $OpenSansRegular;
+          font-size: 11px;
+          color: $COLOR--charcoal-grey;
+          line-height: 15px;
+          &:before {
+            top: 2px;
+          }
+        }
+      }
+    }
+    .info-block {
+      display: block;
+      position: absolute;
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      top: 25px;
+      font-family: $OpenSansSemibold;
+      font-size: 12px;
+      color: $COLOR--gray-47;
+      span {
+        font-size: 13px;
+        color: $COLOR--charcoal-grey;
+      }
+    }
+    &.passing-rate-bar-view {
+      svg {
+        .ct-bar-label {
+          font-size: 12px;
+          font-family: $OpenSansCondBold;
+          fill: $COLOR--charcoal-grey;
+        }
+        .ct-series {
+          .ct-bar {
+            stroke-opacity: 1;
+            -webkit-transition: stroke-opacity 0.5s ease-in-out;
+            -moz-transition: stroke-opacity 0.5s ease-in-out;
+            -ms-transition: stroke-opacity 0.5s ease-in-out;
+            -o-transition: stroke-opacity 0.5s ease-in-out;
+            transition: stroke-opacity 0.5s ease-in-out;
+            &:hover {
+              stroke-opacity: 0.6;
+            }
+          }
+        }
+
+      }
+    }
+    &.passing-rate-pie-view {
+      svg {
+        .ct-label {
+          font-size: 12px;
+          font-family: $OpenSansCondBold;
+          fill: $COLOR--charcoal-grey;
+        }
+        .ct-series{
+          .ct-slice-pie {
+            fill-opacity: 1;
+            -webkit-transition: fill-opacity 0.5s ease-in-out;
+            -moz-transition: fill-opacity 0.5s ease-in-out;
+            -ms-transition: fill-opacity 0.5s ease-in-out;
+            -o-transition: fill-opacity 0.5s ease-in-out;
+            transition: fill-opacity 0.5s ease-in-out;
+            &:hover {
+              fill-opacity: 0.6;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.w-less-then-12 {}
+  &.w-less-then-11 {}
+  &.w-less-then-10 {}
+  &.w-less-then-9 {}
+  &.w-less-then-8 {}
+  &.w-less-then-7 {}
+  &.w-less-then-6 {
+    .widget-wrapper {
+      padding-top: 70px;
+      .legend {
+        left: 0;
+        top: 50px;
+      }
+    }
+  }
+  &.w-less-then-5 {}
+}

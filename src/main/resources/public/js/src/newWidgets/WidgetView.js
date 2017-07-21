@@ -27,6 +27,7 @@ define(function (require) {
     var WidgetView = Epoxy.View.extend({
         className: 'widget-view',
         initialize: function (options) {
+            this.gadgetSize = options.gadgetSize;
             this.render(options);
         },
         render: function (options) {
@@ -42,9 +43,11 @@ define(function (require) {
         },
         onShow: function () {
             this.widget.onShow();
+            this.widget.addSizeClasses(this.gadgetSize);
         },
-        resize: function () {
+        resize: function (newGadgetSize) {
             this.widget.updateWidget();
+            this.widget.updateSizeClasses(newGadgetSize);
         },
         onDestroy: function () {
             this.widget && this.widget.destroy();

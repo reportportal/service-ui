@@ -36,6 +36,8 @@ define(function (require, exports, module) {
     var NotPassedCasesChart = require('newWidgets/widgets/NotPassedCasesChartView');
     var FailedCasesTrendChart = require('newWidgets/widgets/FailedCasesTrendChartView');
     var LaunchStatisticsComboPieChart = require('newWidgets/widgets/LaunchStatisticsComboPieChartView');
+    var PassingRateSummaryChart = require('newWidgets/widgets/PassingRateSummaryChartView');
+    var PassingRatePerLaunchChart = require('newWidgets/widgets/PassingRatePerLaunchChartView');
 
     var LastLaunchPieChart = require('newWidgets/widgets/LastLaunchPieChartView');
     var PercentageOfInvestigationChart = require('newWidgets/widgets/PercentageOfInvestigationChartView');
@@ -373,6 +375,57 @@ define(function (require, exports, module) {
                         max: 2,
                         def: 2
                     }
+                },
+                passing_rate_per_launch: {
+                    gadget_name: Localization.widgets.passingRatePerLaunchChart,
+                    img: 'passing_rate_per_launch.png',
+                    description: Localization.widgets.passingRatePerLaunchChartDescription,
+                    widget_type: 'bar_chart',
+                    gadget: 'passing_rate_per_launch',
+                    noCriteria: true,
+                    noFilters: true,
+                    launchesFilter: true,
+                    staticCriteria: {},
+                    mode: {
+                        type: 'radio',
+                        defaultVal: 'barMode',
+                        items: {
+                            barMode: Localization.widgets.barMode,
+                            pieChartMode: Localization.widgets.pieChartMode
+                        }
+                    },
+                    limit: {
+                        display: false,
+                        min: 30,
+                        max: 30,
+                        def: 30
+                    }
+                },
+                passing_rate_summary: {
+                    gadget_name: Localization.widgets.passingRateSummaryChart,
+                    img: 'passing_rate_summary.png',
+                    description: Localization.widgets.passingRateSummaryChartDescription,
+                    widget_type: 'bar_chart',
+                    gadget: 'passing_rate_summary',
+                    noCriteria: true,
+                    staticCriteria: {
+                        statistics$executions$total: Localization.launchesHeaders.total,
+                        statistics$executions$passed: Localization.launchesHeaders.passed
+                    },
+                    mode: {
+                        type: 'radio',
+                        defaultVal: 'barMode',
+                        items: {
+                            barMode: Localization.widgets.barMode,
+                            pieChartMode: Localization.widgets.pieChartMode
+                        }
+                    },
+                    limit: {
+                        display: true,
+                        min: 1,
+                        max: 150,
+                        def: 50
+                    }
                 }
             };
         },
@@ -564,6 +617,10 @@ define(function (require, exports, module) {
                 return LaunchesTableWidget;
             case 'most_failed_test_cases':
                 return MostFailedTestCases;
+            case 'passing_rate_per_launch':
+                return PassingRatePerLaunchChart;
+            case 'passing_rate_summary':
+                return PassingRateSummaryChart;
 
                 // status page widgets
             case 'activities':

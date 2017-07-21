@@ -119,6 +119,9 @@ define(function (require, exports, module) {
                         return Localization.widgets.timelineModeTitle;
                     }
                     if (options.chartMode) {
+                        if (options.chartMode.length) {
+                            return Localization.widgets[options.chartMode[0]];
+                        }
                         return Localization.widgets.chartMode;
                     }
                     return '';

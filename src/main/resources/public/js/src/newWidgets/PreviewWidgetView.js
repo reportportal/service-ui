@@ -44,7 +44,7 @@ define(function (require) {
 
             gadget = this.model.get('gadget');
             if ((!this.filterModel && !options.sharedWidgetModel) || gadget === 'activity_stream' || gadget === 'launches_table' ||
-                gadget === 'unique_bug_table' || gadget === 'most_failed_test_cases') {
+                gadget === 'unique_bug_table' || gadget === 'most_failed_test_cases' || gadget === 'passing_rate_summary') {
                 this.$el.css('background-image', 'url(' + this.model.get('gadgetPreviewImg') + ')');
                 return true;
             }

@@ -70,6 +70,7 @@ define(['util'], function () {
             settings: 'Settings',
             members: 'Members',
             action: 'Action',
+            filter: 'Filter',
             clickToSubmit: 'Click to submit this form',
             clickToCancel: 'Click to cancel',
             noResultsFound: 'No results found',
@@ -370,6 +371,8 @@ define(['util'], function () {
             timelineMode: 'Timeline Mode',
             timelineModeTitle: 'Timeline mode',
 
+            launchPassed: 'Passed',
+            launchNotPassed:'Not Passed',
             startLaunch: 'started launch',
             finishLaunch: 'finished launch',
             deleteLaunch: 'deleted launch',
@@ -445,6 +448,12 @@ define(['util'], function () {
             projectActivityPanel: 'Project activity panel',
             projectActivityPanelDescription: 'shows all activities occurring on the project.',
 
+            passingRatePerLaunchChart: 'Passing rate per launch',
+            passingRatePerLaunchChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
+
+            passingRateSummaryChart: 'Passing rate summary',
+            passingRateSummaryChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
+
             percentageOfInvestigationsChart: 'Percentage of investigations',
             percentageOfProductBugsChart: 'Percentage of product bugs',
             launchStatisticsChart: 'Launch Statistics',
@@ -452,6 +461,8 @@ define(['util'], function () {
             lineChart: 'Line Chart',
             panelMode: 'Panel view',
             chartMode: 'Pie chart view',
+            barMode: 'Bar view',
+            pieChartMode: 'Pie chart view',
 
             defaultName: 'Widget template name',
             defaultDescription: 'Select widget template and filter to render data trough - and you\'ll see preview at the right side',
