@@ -525,7 +525,7 @@ define(['util'], function () {
 
         userProfile: {
             userProfile: 'Профиль пользователя',
-            projectAndRoles: 'Назначен на проект',
+            projectAndRoles: 'Доступ к проекту',
             regenerateUUID: 'Сгенерировать UUID заново',
             updateDataFromUPSA: 'Обновить данные из UPSA',
             updateUserDataFrom: 'Обновить данные из',
@@ -558,8 +558,8 @@ define(['util'], function () {
             soapConfigTitle: 'УСТАНОВИТЕ СЛЕДУЮЩИЕ СВОЙСТВА В СВОЙСТВАХ ПРОЕКТА ИЛИ УСТАНОВИТЕ ИХ КАК СИСТЕМНЫЕ ПЕРЕМЕННЫЕ',
             dotnetConfigTitle: 'СЛЕДУЙТЕ ИНСТРУКЦИИ ПО УСТАНОВКЕ',
             defaultConfigTitle: 'СКОПИРУЙТЕ И СОХРАНИТЕ ЭТО КАК ФАЙЛ REPORTPORTAL.PROPERTIES',
-            required: 'ТРЕБУЕТСЯ',
-            notRequired: 'НЕ ТРЕБУЕТСЯ',
+            required: 'ОБЯЗАТЕЛЬНЫЕ',
+            notRequired: 'НЕ ОБЯЗАТЕЛЬНЫЕ',
             personalInfo: 'Личная информация',
             configExamples: 'Примеры конфигурации',
             uuidTitle: 'Универсальный уникальный идентификатор',
@@ -919,7 +919,7 @@ define(['util'], function () {
             failed_short: 'Неудачно',
             skipped: 'Пропущено',
             skipped_short: 'Проп',
-            product_bug: 'Ошибка продукты',
+            product_bug: 'Ошибка продукта',
             product_bug_short: 'Ошибка продукта',
             product_bug_super_short: 'ОП',
             auto_bug: 'Ошибка автоматизации',
@@ -1147,7 +1147,7 @@ define(['util'], function () {
 
             addSubType: 'Добавить Тип дефекта',
             addSubTypeShort: 'Добавить',
-            canBeAdded: 'можно добавить подтипы',
+            canBeAdded: 'подтипов можно добавить',
             limitReached: 'Все 10 подтипов уже добавлены',
             inputValLongName: 'Название подтипа',
             inputValShortName: 'Аббревиатура',
