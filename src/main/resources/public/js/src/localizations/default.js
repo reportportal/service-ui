@@ -976,7 +976,12 @@ define(['util'], function () {
             sharedDescription: 'Filter is shared',
             globalDescription: 'Filter is shared by other user',
             hideCriteria: 'Hide criteria',
-            showCriteria: 'Show criteria'
+            showCriteria: 'Show criteria',
+            timeRangeToday: 'Today',
+            timeRangeLast2Days: 'Last 2 Days',
+            timeRangeLast7Days: 'Last 7 Days',
+            timeRangeLast30Days: 'Last 30 Days',
+            timeCustomRange: 'Custom Range'
         },
         filter: {
             name: 'Name',
