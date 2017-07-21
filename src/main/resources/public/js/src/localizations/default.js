@@ -1090,7 +1090,7 @@ define(['util'], function () {
                 titleProductBug: 'Product bugs group',
                 titleSystemIssue: 'System issues group',
                 titleAutomationBug: 'Automation Bugs Group',
-                titleNoDefect: 'No defect bugs group',
+                titleNoDefect: 'No defect group',
                 titleToInvestigate: 'To investigate'
             },
 
