@@ -35,7 +35,7 @@ require.config({
         'baron': '../lib/baron-scroll',
         'util': 'core/util',
         'nprogress': '../lib/nprogress',
-        'localization': 'localizations/default',
+        'localization': 'localizations/ru-RU',
         'moment': '../lib/moment.2.10.2',
         'SwipeGallery': '../lib/SwipeGallery',
         'Hammer': '../lib/hammer',
