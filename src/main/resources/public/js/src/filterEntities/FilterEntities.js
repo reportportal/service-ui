@@ -320,8 +320,8 @@ define(function (require) {
                     fromLabel: Localization.ui.from,
                     toLabel: Localization.ui.to,
                     customRangeLabel: Localization.filters.timeCustomRange,
-                    daysOfWeek: Localization.date.days,
-                    monthNames: Localization.date.months,
+                    daysOfWeek: Localization.ui.daysShort,
+                    monthNames: Localization.ui.months,
                     firstDay: 1
                 }
             },

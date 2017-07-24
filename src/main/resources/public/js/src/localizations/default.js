@@ -1837,10 +1837,6 @@ define(['util'], function () {
         modalDefectEditor: {
             saveAndPost: 'Save and Post Bug',
             saveAndLoad: 'Save and Load Bug'
-        },
-        date: {
-            days: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
         }
     };
 });

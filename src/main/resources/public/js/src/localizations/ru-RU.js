@@ -153,6 +153,8 @@ define(['util'], function () {
             sortBy: 'Сортировать по',
             name: 'Имя',
             description: 'Описание',
+            import: 'Импорт',
+            note: 'Note:',
             days: [
                 'Воскресенье',
                 'Понедельник',
@@ -1817,7 +1819,11 @@ define(['util'], function () {
             msgDeleteOrg: 'Вы уверены, что хотите удалить выбранную организацию? Все назначенные пользователи не смогут авторизоваться на Report Portal. ',
             deleteOrg: 'Я уверен, что хочу удалить организацию',
             msgResetColorsDefectType: 'Вы уверены, что хотите вернуть цвета дефектов по умолчанию?',
-            msgMessageTop: 'Вы уверены, что хотите удалить тип дефекта? Все дефекты, которые признаны <strong>\'%%%\'</strong>, будут отмечены как <strong>\'%%%\'</strong>.'
+            msgMessageTop: 'Вы уверены, что хотите удалить тип дефекта? Все дефекты, которые признаны <strong>\'%%%\'</strong>, будут отмечены как <strong>\'%%%\'</strong>.',
+            msgImportLaunch: 'If your runner does not write the test start time in .xml file, then the current server time will be used.',
+            importLaunchTip: 'Drop only <strong>.zip</strong> file under 32 MB to upload or <span class="blue">click</span> to add it',
+            invalidFileType: 'Incorrect file format',
+            invalidFileSize: 'File size is more than 32 Mb'
         },
 
         time: {
@@ -1884,10 +1890,6 @@ define(['util'], function () {
         modalDefectEditor: {
             saveAndPost: 'Save and Post Bug',
             saveAndLoad: 'Save and Load Bug'
-        },
-        date: {
-            days: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
         }
     };
 });
