@@ -372,7 +372,7 @@ define(['util'], function () {
             timelineModeTitle: 'Timeline mode',
 
             launchPassed: 'Passed',
-            launchNotPassed:'Not Passed',
+            launchNotPassed: 'Not Passed',
             startLaunch: 'started launch',
             finishLaunch: 'finished launch',
             deleteLaunch: 'deleted launch',
