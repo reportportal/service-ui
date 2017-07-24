@@ -144,7 +144,7 @@ define(function (require) {
             });
         },
         render: function () {
-            this.$el.html(Util.templates(this.template), {});
+            this.$el.html(Util.templates(this.template, {}));
             $('[data-js-select-filter]', this.$el).html((new this.selectModel.view({ model: this.selectModel })).$el);
             $('[data-js-name-filter]', this.$el).html((new this.nameModel.view({ model: this.nameModel })).$el);
             this.paging = new Components.PagingToolbar({
