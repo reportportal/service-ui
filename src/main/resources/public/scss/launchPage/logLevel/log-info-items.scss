@@ -22,10 +22,11 @@
   .filters-block {
     width: 100%;
     margin: 30px 0 17px 0;
-    height: 30px;
+    label {
+      margin-bottom: 0;
+    }
     .filter-entity-wrapper {
       float: left;
-      width: 300px;
       margin: 0;
       min-width: 0;
       height: 30px;
@@ -64,9 +65,11 @@
     float: right;
   }
   .filter-name-block {
-    position: absolute;
-    top: 0;
-    left: 115px;
+    display: inline-block;
+    vertical-align: bottom;
+    .filter-hint {
+      position: absolute;
+    }
     .form-group {
       margin: 0;
     }
@@ -80,10 +83,9 @@
       box-shadow: none !important;
       color: $COLOR--gray-47 !important;
       padding: 0 25px 0 3px;
-      height: 22px;
+      height: 17px;
       display: block;
       width: 200px;
-      margin-top: 13px;
     }
     i {
       position: absolute;
