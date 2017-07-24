@@ -53,8 +53,8 @@ define(function (require) {
                     blockTime: 0
                 }
             }))();
-            if (this.storage.getItem('login_block_time')) {
-                var secondsFromLastBlocking = ((Date.now() - this.storage.getItem('login_block_time')) / 1000).toFixed();
+            if (this.storage.get('login_block_time')) {
+                var secondsFromLastBlocking = ((Date.now() - this.storage.get('login_block_time')) / 1000).toFixed();
 
                 if (secondsFromLastBlocking <= 30) {
                     this.model.set('blockTime', 30 - secondsFromLastBlocking);
@@ -126,7 +126,7 @@ define(function (require) {
         },
         blockLoginForm: function () {
             var date = Date.now();
-            this.storage.setItem('login_block_time', date);
+            this.storage.set('login_block_time', date);
             this.blockFormCountdown(30);
         },
 

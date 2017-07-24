@@ -19,26 +19,26 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Storage = require('storage/Storage');
-    var $ = require('jquery');
 
     var AppStorage = Storage.extend({
-        initialize: function() {
+        initialize: function () {
             this.saveKey = 'application_settings';
-            this.listenTo(this, 'change', this.onChangeSettings);
             var data = this.getItem(this.saveKey);
+            var settings;
+            this.listenTo(this, 'change', this.onChangeSettings);
             try {
-                var settings = JSON.parse(data);
-                this.set(settings, {silent: true});
-            } catch(e) {
+                settings = JSON.parse(data);
+                this.set(settings);
+            } catch (e) {
                 console.log('AppStorage: failed parse JSON');
                 console.log(e.message);
             }
         },
-        onChangeSettings: function() {
+        onChangeSettings: function () {
             this.setItem(this.saveKey, JSON.stringify(this.toJSON()));
         }
     });
