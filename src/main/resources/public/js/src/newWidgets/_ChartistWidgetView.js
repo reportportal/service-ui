@@ -119,6 +119,9 @@ define(function (require) {
 
             return async;
         },
+        isDataExists: function () {
+            return !_.isEmpty(this.model.getContent().result[0].values);
+        },
         updateWidget: function () {
             this.chart && this.chart.update();
         }
