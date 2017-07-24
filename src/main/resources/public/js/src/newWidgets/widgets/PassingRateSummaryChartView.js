@@ -133,7 +133,7 @@ define(function (require) {
                         position: $('[data-js-legend]', this.$el)[0],
                         legendNames: [
                             Localization.widgets.launchPassed,
-                            Localization.widgets.launchPassed
+                            Localization.widgets.launchNotPassed
                         ],
                         classNames: ['passed', 'notPassed'],
                         clickable: false
