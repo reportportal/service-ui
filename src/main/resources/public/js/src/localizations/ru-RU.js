@@ -1160,7 +1160,7 @@ define(['util'], function () {
                 titleProductBug: 'Группа ошибок продукта',
                 titleSystemIssue: 'Группа системных ошибок',
                 titleAutomationBug: 'Группа ошибок автоматизации',
-                titleNoDefect: 'No defect group',
+                titleNoDefect: 'No defects group',
                 titleToInvestigate: 'Исследовать'
             },
 
