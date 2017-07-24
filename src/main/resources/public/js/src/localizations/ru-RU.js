@@ -70,6 +70,7 @@ define(['util'], function () {
             settings: 'Установки',
             members: 'Участники',
             action: 'Действие',
+            filter: 'Filter',
             clickToSubmit: 'Нажмите, чтобы подтвердить отправку формы',
             clickToCancel: 'Нажмите для отмены',
             noResultsFound: 'Результатов не найдено',
@@ -424,6 +425,8 @@ define(['util'], function () {
             timelineMode: 'Режим графика',
             timelineModeTitle: 'Режим графика',
 
+            launchPassed: 'Passed',
+            launchNotPassed: 'Not Passed',
             startLaunch: 'начатый запуск',
             finishLaunch: 'оконченный запуск',
             deleteLaunch: 'исключенный запуск',
@@ -499,11 +502,22 @@ define(['util'], function () {
             projectActivityPanel: 'Панель активностей проекта',
             projectActivityPanelDescription: 'показывает все действия, производимые над проектом.',
 
+            passingRatePerLaunchChart: 'Passing rate per launch',
+            passingRatePerLaunchChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
+
+            passingRateSummaryChart: 'Passing rate summary',
+            passingRateSummaryChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
+
             percentageOfInvestigationsChart: 'Процент исследований',
             percentageOfProductBugsChart: 'Процент ошибок продукта',
+
             launchStatisticsChart: 'Статистика запусков',
             trendChart: 'Диаграмма тенденций',
             lineChart: 'Линейная диаграмма',
+            panelMode: 'Panel view',
+            chartMode: 'Pie chart view',
+            barMode: 'Bar view',
+            pieChartMode: 'Pie chart view',
 
             defaultName: 'Название шаблона виджета',
             defaultDescription: 'Выберите шаблон виджета и отфильтруйте, чтобы воспроизвести данные - и вы увидите окошко предпросмотра справа',
