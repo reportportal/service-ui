@@ -33,8 +33,14 @@ define(function (require) {
 
         render: function () {
             var self = this;
-            var widgetOptions = this.model.getParameters().widgetOptions;
-            var contentData = this.model.getContent().result[0].values;
+            var widgetOptions;
+            var contentData;
+            if (!this.isDataExists()) {
+                this.addNoAvailableBock(this.$el);
+                return;
+            }
+            widgetOptions = this.model.getParameters().widgetOptions;
+            contentData = this.model.getContent().result[0].values;
             this.total = contentData.total;
             this.passed = contentData.passed;
             this.notPassed = contentData.total - contentData.passed;
