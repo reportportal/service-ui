@@ -51,6 +51,10 @@ define(function (require) {
                         function () {
                             self.drawPieChart();
                         }
+                    ).fail(
+                        function () {
+                            self.addNoAvailableBock(self.$el);
+                        }
                     );
                 } else if (widgetOptions && widgetOptions.chartMode[0] === 'barMode') {
                     self.$el.html(Util.templates(self.template, {
@@ -64,6 +68,10 @@ define(function (require) {
                     ).done(
                         function () {
                             self.drawBarChart();
+                        }
+                    ).fail(
+                        function () {
+                            self.addNoAvailableBock(self.$el);
                         }
                     );
                 }
