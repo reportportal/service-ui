@@ -236,7 +236,7 @@ define(function (require) {
             $('span.timerange', this.$el).data('daterangepicker').show();
         },
         parseValue: function (value) {
-            var val = 'Any';
+            var val = Localization.filters.any;
             var dynamicUpdateRange = false;
             var date = [];
             if (!value) {
@@ -312,15 +312,16 @@ define(function (require) {
                 applyClass: 'btn-sm btn-success',
                 cancelClass: 'btn-sm rp-btn-danger pull-right ',
                 format: config.dateRangeFormat,
-                separator: ' to ',
+                dynamicUpdateText: Localization.filters.dynamicUpdate,
+                separator: ' ' + Localization.ui.to + ' ',
                 locale: {
                     applyLabel: Localization.ui.submit,
                     cancelLabel: Localization.ui.cancel,
-                    fromLabel: 'From',
-                    toLabel: 'To',
+                    fromLabel: Localization.ui.from,
+                    toLabel: Localization.ui.to,
                     customRangeLabel: Localization.filters.timeCustomRange,
-                    daysOfWeek: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-                    monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                    daysOfWeek: Localization.date.days,
+                    monthNames: Localization.date.months,
                     firstDay: 1
                 }
             },

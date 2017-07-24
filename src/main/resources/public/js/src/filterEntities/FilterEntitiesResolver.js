@@ -61,24 +61,24 @@ define(function (require, exports, module) {
         return filters;
     };
 
-    var getDefectSubTypeFilters = function(type){
+    var getDefectSubTypeFilters = function (type) {
         var subTypes = getDefectSubTypes(type);
-        var filters = _.map(subTypes, function(subType) {
-            return new  Filters.EntityConditionInputModel({
+        var filters = _.map(subTypes, function (subType) {
+            return new Filters.EntityConditionInputModel({
                 id: 'statistics$defects$' + type + '$' + subType.get('locator'),
                 condition: 'gte',
                 label: subType.get('longName'),
                 name: Localization.filterNameById[type] + ' ' + subType.get('shortName'),
                 subEntity: true,
                 options: filterStatsOptions()
-            })
+            });
         });
         var totalName = 'Total ' + Localization.filterNamePluralById[type];
-        if(filters.length == 1) {
+        if (filters.length == 1) {
             totalName = Localization.filterNameById[type];
             filters = [];
         }
-        filters.unshift(new  Filters.EntityConditionInputModel({
+        filters.unshift(new Filters.EntityConditionInputModel({
             id: 'statistics$defects$' + type + '$total',
             condition: 'gte',
             label: totalName,
@@ -90,36 +90,35 @@ define(function (require, exports, module) {
         return filters;
     };
 
-    var getDefectSubTypes = function(type) {
-        return defectTypeCollection.filter(function(subtype) {
+    var getDefectSubTypes = function (type) {
+        return defectTypeCollection.filter(function (subtype) {
             return subtype.get('typeRef').toUpperCase() == type.toUpperCase();
         });
     };
 
-    var getDefectSubTypeList = function(type) {
+    var getDefectSubTypeList = function (type) {
         var subTypes = getDefectSubTypes(type);
-        return _.map(subTypes, function(subType) {
+        return _.map(subTypes, function (subType) {
             return {
                 name: subType.get('longName'),
                 value: subType.get('locator'),
                 subOption: true,
                 mainType: type
-            }
+            };
         });
     };
-    var getJoinDefectTypeList = function(types) {
+    var getJoinDefectTypeList = function (types) {
         var result = [];
-        _.each(types, function(type) {
-
+        _.each(types, function (type) {
             var sybTypes = getDefectSubTypeList(type);
-            var locators = _.map(sybTypes, function(subtype) {
+            var locators = _.map(sybTypes, function (subtype) {
                 return subtype.value;
             });
             var types = locators.join(',');
-            if(sybTypes.length <= 1) {
+            if (sybTypes.length <= 1) {
                 result.push({
                     name: Localization.filterNameById[type],
-                    value: types,
+                    value: types
                 });
             } else {
                 result.push({
@@ -129,13 +128,12 @@ define(function (require, exports, module) {
                 });
                 result = result.concat(sybTypes);
             }
-
         });
         return result;
     };
 
     var TestFilters = function () {
-        var issueTypes = [{name: 'All', value: 'All'}];
+        var issueTypes = [{ name: 'All', value: 'All' }];
         issueTypes = issueTypes.concat(getJoinDefectTypeList([
             'to_investigate',
             'product_bug',
@@ -149,19 +147,19 @@ define(function (require, exports, module) {
                 id: 'type',
                 condition: 'in',
                 values: [
-                    {name: 'All', value: 'All'},
-                    {name:'Before Suite', value: 'BEFORE_SUITE'},
-                    {name: 'Before Groups', value: 'BEFORE_GROUPS'},
-                    {name: 'Before Class', value: 'BEFORE_CLASS'},
-                    {name: 'Before Test', value: 'BEFORE_TEST'},
-                    {name: 'Test Class', value: 'TEST'},
-                    {name: 'Before Method', value: 'BEFORE_METHOD'},
-                    {name: 'Test', value: 'STEP'},
-                    {name: 'After Method', value: 'AFTER_METHOD'},
-                    {name: 'After Test', value: 'AFTER_TEST'},
-                    {name: 'After Class', value: 'AFTER_CLASS'},
-                    {name: 'After Groups', value: 'AFTER_GROUPS'},
-                    {name: 'After Suite', value: 'AFTER_SUITE'},
+                    { name: 'All', value: 'All' },
+                    { name: 'Before Suite', value: 'BEFORE_SUITE' },
+                    { name: 'Before Groups', value: 'BEFORE_GROUPS' },
+                    { name: 'Before Class', value: 'BEFORE_CLASS' },
+                    { name: 'Before Test', value: 'BEFORE_TEST' },
+                    { name: 'Test Class', value: 'TEST' },
+                    { name: 'Before Method', value: 'BEFORE_METHOD' },
+                    { name: 'Test', value: 'STEP' },
+                    { name: 'After Method', value: 'AFTER_METHOD' },
+                    { name: 'After Test', value: 'AFTER_TEST' },
+                    { name: 'After Class', value: 'AFTER_CLASS' },
+                    { name: 'After Groups', value: 'AFTER_GROUPS' },
+                    { name: 'After Suite', value: 'AFTER_SUITE' }
                 ],
                 value: 'All'
             }),
@@ -169,18 +167,18 @@ define(function (require, exports, module) {
                 id: 'description',
                 condition: 'cnt',
                 options: filterNameOptions(),
-                valueOnlyDigits: false,
+                valueOnlyDigits: false
             }),
             new Filters.EntitySelectModel({
                 id: 'status',
                 condition: 'in',
                 values: [
-                    {name: 'All', value: 'All'},
-                    {name: 'Passed', value: 'PASSED'},
-                    {name: 'Failed', value: 'FAILED'},
-                    {name: 'Skipped', value: 'SKIPPED'},
-                    {name: 'Interrupted', value: 'INTERRUPTED'},
-                    {name: 'In Progress', value: 'IN_PROGRESS'},
+                    { name: 'All', value: 'All' },
+                    { name: 'Passed', value: 'PASSED' },
+                    { name: 'Failed', value: 'FAILED' },
+                    { name: 'Skipped', value: 'SKIPPED' },
+                    { name: 'Interrupted', value: 'INTERRUPTED' },
+                    { name: 'In Progress', value: 'IN_PROGRESS' }
                 ],
                 value: 'All'
             }),
@@ -201,7 +199,7 @@ define(function (require, exports, module) {
                 valueMinLength: 3,
                 condition: 'cnt',
                 options: filterNameOptions(),
-                valueOnlyDigits: false,
+                valueOnlyDigits: false
             }),
             new Filters.EntityConditionTagModel({
                 id: 'tags',
@@ -214,7 +212,7 @@ define(function (require, exports, module) {
     var UserDebugFilters = function (userId) {
         var launchFilters = LaunchStepFilters();
         // place user filter on the second place but first is required Name filter so we insert at index 2
-        launchFilters.add(new Filters.EntityUserTagModel({id: 'user', condition: 'in', mode: 'DEBUG'}), {at: 1});
+        launchFilters.add(new Filters.EntityUserTagModel({ id: 'user', condition: 'in', mode: 'DEBUG' }), { at: 1 });
         return launchFilters;
     };
 
@@ -223,13 +221,13 @@ define(function (require, exports, module) {
             [
                 new Filters.EntityConditionInputModel({
                     id: 'name',
-                    name: 'Launch Name',
+                    name: Localization.filters.launchName,
                     required: true,
                     condition: 'cnt',
                     options: filterNameOptions(),
                     valueMinLength: 3,
                     valueMaxLength: 256,
-                    valueOnlyDigits: false,
+                    valueOnlyDigits: false
                 }),
                 new Filters.EntityTimeRangeModel({
                     id: 'start_time',
@@ -242,7 +240,7 @@ define(function (require, exports, module) {
                     condition: 'cnt',
                     options: filterNameOptions(),
                     valueMinLength: 3,
-                    valueOnlyDigits: false,
+                    valueOnlyDigits: false
                 }),
                 new Filters.EntityConditionTagModel({
                     id: 'tags',
@@ -257,32 +255,32 @@ define(function (require, exports, module) {
         var launchSuiteEntitiesCollection = LaunchSuiteEntities();
         launchSuiteEntitiesCollection.unshift(new Filters.EntityConditionInputModel({
             id: 'name',
-            name: 'Launch Name',
+            name: Localization.filters.launchName,
             required: true,
             condition: 'cnt',
             options: filterNameOptions(),
             valueMinLength: 3,
             valueMaxLength: 256,
-            valueOnlyDigits: false,
+            valueOnlyDigits: false
         }));
-        launchSuiteEntitiesCollection.add(new Filters.EntityUserTagModel({id: 'user', condition: 'in'}), {at: 1});
+        launchSuiteEntitiesCollection.add(new Filters.EntityUserTagModel({ id: 'user', condition: 'in' }), { at: 1 });
         return launchSuiteEntitiesCollection;
     };
-    var SuiteEntities = function() {
+    var SuiteEntities = function () {
         var launchSuiteEntitiesCollection = LaunchSuiteEntities();
         launchSuiteEntitiesCollection.unshift(new Filters.EntityConditionInputModel({
             id: 'name',
-            name: 'Suite Name',
+            name: Localization.filters.suiteName,
             required: true,
             condition: 'cnt',
             options: filterNameOptions(),
             valueMinLength: 3,
             valueMaxLength: 256,
-            valueOnlyDigits: false,
+            valueOnlyDigits: false
         }));
         return launchSuiteEntitiesCollection;
     };
-    var LaunchSuiteEntities = function() {
+    var LaunchSuiteEntities = function () {
         return new Backbone.Collection(
             [
                 new Filters.EntityTimeRangeModel({
@@ -296,7 +294,7 @@ define(function (require, exports, module) {
                     condition: 'cnt',
                     options: filterNameOptions(),
                     valueMinLength: 3,
-                    valueOnlyDigits: false,
+                    valueOnlyDigits: false
                 }),
                 new Filters.EntityConditionTagModel({
                     id: 'tags',
@@ -312,13 +310,13 @@ define(function (require, exports, module) {
             [
                 new Filters.EntityConditionInputModel({
                     id: 'name',
-                    name: 'Test Name',
+                    name: Localization.filters.testName,
                     required: true,
                     condition: 'cnt',
                     options: filterNameOptions(),
                     valueMinLength: 3,
                     valueMaxLength: 256,
-                    valueOnlyDigits: false,
+                    valueOnlyDigits: false
                 })
             ].concat(TestFilters())
         );
@@ -332,7 +330,7 @@ define(function (require, exports, module) {
                 values: ['Any', 'Trace', 'Debug', 'Info', 'Warn', 'Error'],
                 value: 'Any'
             }),
-            new Filters.Model({id: 'ex.binary_content'})
+            new Filters.Model({ id: 'ex.binary_content' })
         ];
     };
 
@@ -342,7 +340,7 @@ define(function (require, exports, module) {
                 id: 'message',
                 condition: 'cnt',
                 valueMinLength: 3,
-                valueOnlyDigits: false,
+                valueOnlyDigits: false
             })].concat(LogFilters())
         );
     };
@@ -355,7 +353,7 @@ define(function (require, exports, module) {
                     id: 'history_depth',
                     noConditions: true,
                     required: true,
-                    options: [{value: '3', name: '3'}, {value: '5', name: '5'}, {value: '10', name: '10'}],
+                    options: [{ value: '3', name: '3' }, { value: '5', name: '5' }, { value: '10', name: '10' }],
                     value: '10'
                 })
             ]
@@ -364,59 +362,59 @@ define(function (require, exports, module) {
 
     var filterNameOptions = function () {
         return [
-            {id: 'cnt', shortCut: 'cnt'},
-            {id: '!cnt', shortCut: '!cnt'},
-            {id: 'eq', shortCut: 'eq'},
-            {id: 'ne', shortCut: '!eq'}
+            { id: 'cnt', shortCut: 'cnt' },
+            { id: '!cnt', shortCut: '!cnt' },
+            { id: 'eq', shortCut: 'eq' },
+            { id: 'ne', shortCut: '!eq' }
         ];
     };
 
     var filterTagsOptions = function () {
         return [
-            {id: 'has', shortCut: 'and'},
-            {id: 'in', shortCut: 'or'}
-        ]
+            { id: 'has', shortCut: 'and' },
+            { id: 'in', shortCut: 'or' }
+        ];
     };
 
     var filterStatsOptions = function () {
         return [
-            {id: 'gte', shortCut: '&ge;'},
-            {id: 'lte', shortCut: '&le;'},
-            {id: 'eq', shortCut: '='}
-        ]
+            { id: 'gte', shortCut: '&ge;' },
+            { id: 'lte', shortCut: '&le;' },
+            { id: 'eq', shortCut: '=' }
+        ];
     };
 
     var getDefaults = function (type, userId) {
         defectTypeCollection = new SingletonDefectTypeCollection();
         var async = $.Deferred();
-        var type = type || "launch";
+        var type = type || 'launch';
         if (userId) {
             type = 'userdebug';
         }
-        defectTypeCollection.ready.done(function() {
+        defectTypeCollection.ready.done(function () {
             if (type) {
                 var filtersSet = null;
                 switch (type) {
-                    case 'launch':
-                        filtersSet = LaunchEntities();
-                        break;
-                    case 'suit':
-                        filtersSet = SuiteEntities();
-                        break;
-                    case 'userdebug':
-                        filtersSet = UserDebugFilters(userId);
-                        break;
-                    case 'test':
-                        filtersSet = TestStepFilters();
-                        break;
-                    case 'log':
-                        filtersSet = LogStepFilters();
-                        break;
-                    case 'history':
-                        filtersSet = HistoryStepFilters();
-                        break;
-                    default:
-                        break;
+                case 'launch':
+                    filtersSet = LaunchEntities();
+                    break;
+                case 'suit':
+                    filtersSet = SuiteEntities();
+                    break;
+                case 'userdebug':
+                    filtersSet = UserDebugFilters(userId);
+                    break;
+                case 'test':
+                    filtersSet = TestStepFilters();
+                    break;
+                case 'log':
+                    filtersSet = LogStepFilters();
+                    break;
+                case 'history':
+                    filtersSet = HistoryStepFilters();
+                    break;
+                default:
+                    break;
                 }
                 async.resolve(filtersSet);
             }
@@ -424,7 +422,7 @@ define(function (require, exports, module) {
         return async.promise();
     };
 
-    var getInvalidModel = function() {
+    var getInvalidModel = function () {
         return Filters.EntityInvalidModel;
     };
 

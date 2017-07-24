@@ -68,7 +68,7 @@
                     '<div class="dynamic_update">'+
                         '<label>'+
                             '<input class="rp-input-checkbox" type="checkbox"/>'+
-                            '<span>Dynamic update</span>'+
+                            '<span>' + options.dynamicUpdateText + '</span>'+
                         '</label>'+
                         '<p>Your time range will be updated every day</p>'+
                     '</div>'+

@@ -1026,7 +1026,18 @@ define(['util'], function () {
             sharedDescription: 'Фильтр предоставлен',
             globalDescription: 'Фильтр предоставлен другим пользователем',
             hideCriteria: 'Спрятать критерии',
-            showCriteria: 'Показать критерии'
+            showCriteria: 'Показать критерии',
+            timeRangeToday: 'Today',
+            timeRangeLast2Days: 'Last 2 Days',
+            timeRangeLast7Days: 'Last 7 Days',
+            timeRangeLast30Days: 'Last 30 Days',
+            timeCustomRange: 'Custom Range',
+            any: 'Any',
+            dynamicUpdate: 'Dynamic update',
+            launchName: 'Launch Name',
+            suiteName: 'Suite Name',
+            testName: 'Test Name',
+            refine: 'REFINE:'
         },
         filter: {
             name: 'Название',
@@ -1859,6 +1870,10 @@ define(['util'], function () {
         modalDefectEditor: {
             saveAndPost: 'Save and Post Bug',
             saveAndLoad: 'Save and Load Bug'
+        },
+        date: {
+            days: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
         }
     };
 });

@@ -18,43 +18,39 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
-    var Util = require('util');
-    var _ = require('underscore');
-    var FilterEntities = require('filterEntities/FilterEntities');
     var App = require('app');
 
     var config = App.getInstance();
 
     var FilterEntityView = Epoxy.View.extend({
         className: 'filter-entity-wrapper',
-        initialize: function(options) {
+        initialize: function (options) {
             this.filterLevel = options.filterLevel;
             this.render();
             this.listenTo(this.model, 'change:visible', this.onChangeVisible);
             this.listenTo(this.model, 'change:value', this.onChangeValue);
         },
-        onChangeVisible: function(model, visible) {
-            if(!visible) {
-                model.set({value: model.defaults.value});
+        onChangeVisible: function (model, visible) {
+            if (!visible) {
+                model.set({ value: model.defaults.value });
                 this.destroy();
             }
         },
-        onChangeValue: function(model){
-            if(model.get('id') == 'name' && model.get('value')){
-                if(this.filterLevel == 'suit'){
+        onChangeValue: function (model) {
+            if (model.get('id') === 'name' && model.get('value')) {
+                if (this.filterLevel === 'suit') {
                     config.trackingDispatcher.trackEventNumber(96);
-                }
-                else if(this.filterLevel == 'test'){
+                } else if (this.filterLevel === 'test') {
                     config.trackingDispatcher.trackEventNumber(135);
                 }
             }
         },
-        render: function() {
-            var view = new this.model.view({model: this.model});
+        render: function () {
+            var view = new this.model.view({ model: this.model });
             this.$el.html(view.$el);
         },
         destroy: function () {
@@ -62,7 +58,7 @@ define(function (require, exports, module) {
             this.unbind();
             this.$el.remove();
             delete this;
-        },
+        }
     });
 
 

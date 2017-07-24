@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -31,10 +31,6 @@ define(function (require, exports, module) {
     var Components = require('core/components');
     var FilterEntityView = require('filterEntities/FilterEntityView');
     var FilterEntitiesChoiceView = require('filterEntities/FilterEntitiesChoiceView');
-    var App = require('app');
-
-    var config = App.getInstance();
-
 
     var FilterEntitiesView = Components.RemovableView.extend({
         template: 'tpl-filter-entities',
@@ -48,64 +44,64 @@ define(function (require, exports, module) {
             this.listenTo(this.invalidCollection, 'change:visible', this.changeVisibleInvalidEntity);
             this.hiddenFields = [];
             FilterEntitiesResolver.getDefaults(this.filterLevel)
-                .done(function(collection) {
+                .done(function (collection) {
                     this.collection.reset(collection.models);
                     this.render();
                 }.bind(this));
         },
-        changeVisibleInvalidEntity: function(model, visible) {
-            if(visible) { return; }
+        changeVisibleInvalidEntity: function (model, visible) {
+            if (visible) { return; }
             this.invalidCollection.remove(model);
             this.onChangeFilterEntities();
         },
-        onChangeVisible: function(model, visible) {
-            if(!visible) { return; }
+        onChangeVisible: function (model, visible) {
+            if (!visible) { return; }
             this.renderEntity(model);
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
             this.$entities = $('[data-js-entities]', this.$el);
             new FilterEntitiesChoiceView({
                 el: $('[data-js-entities-choice]', this.$el),
                 filterLevel: this.filterLevel,
-                collection: this.collection,
+                collection: this.collection
             });
-            _.each(this.collection.where({required: true}), function(model) {
-                model.set({visible: true});
+            _.each(this.collection.where({ required: true }), function (model) {
+                model.set({ visible: true });
             }, this);
             this.parseModelEntities();
-            this.listenTo(this.collection, 'change:condition change:value', this.onChangeFilterEntities)
+            this.listenTo(this.collection, 'change:condition change:value', this.onChangeFilterEntities);
         },
-        onAddEntityById: function(entityId, value) {
-            var currentEntity = this.collection.where({id: entityId})[0];
+        onAddEntityById: function (entityId, value) {
+            var currentEntity = this.collection.where({ id: entityId })[0];
             if (currentEntity) {
                 if (value) {
                     var values = currentEntity.get('value');
-                    if(currentEntity.get('id') == 'tags' || currentEntity.get('id') == 'user') {
+                    if (currentEntity.get('id') === 'tags' || currentEntity.get('id') === 'user') {
                         values = values ? values + ',' + value : value;
                     }
-                    currentEntity.set({visible: true, value: values});
+                    currentEntity.set({ visible: true, value: values });
                 } else {
-                    currentEntity.set({visible: true});
+                    currentEntity.set({ visible: true });
                 }
                 currentEntity.trigger('focus', true);
             }
         },
-        renderEntity: function(model) {
-            this.$entities.append((new FilterEntityView({model: model, filterLevel: this.filterLevel})).$el);
+        renderEntity: function (model) {
+            this.$entities.append((new FilterEntityView({ model: model, filterLevel: this.filterLevel })).$el);
         },
-        parseModelEntities: function() {
-            _.each(this.model.getEntitiesObj(), function(entity) {
-                var models = this.collection.where({id: entity.filtering_field});
-                if(models.length){
+        parseModelEntities: function () {
+            _.each(this.model.getEntitiesObj(), function (entity) {
+                var models = this.collection.where({ id: entity.filtering_field });
+                if (models.length) {
                     models[0].set({
                         condition: entity.condition,
                         value: entity.value,
-                        visible: true,
+                        visible: true
                     });
-                } else if(entity.filtering_field == 'has_childs') {
+                } else if (entity.filtering_field === 'has_childs') {
                     this.hiddenFields.push(entity);
-                } else {// hidden fields
+                } else { // hidden fields
                     this.invalidCollection.add(new (FilterEntitiesResolver.getInvalidModel())({
                         condition: entity.condition,
                         value: entity.value,
@@ -114,29 +110,29 @@ define(function (require, exports, module) {
                         id: entity.filtering_field
                     }));
                 }
-            }, this)
+            }, this);
         },
-        onChangeFilterEntities: function() {
+        onChangeFilterEntities: function () {
             var newEntities = [];
-            _.each(this.collection.models, function(model) {
-                if((model.get('visible') || model.get('required')) && model.get('value') != '') {
+            _.each(this.collection.models, function (model) {
+                if ((model.get('visible') || model.get('required')) && model.get('value') !== '') {
                     newEntities.push(model.getInfo());
                 }
             }, this);
-            _.each(this.invalidCollection.models, function(model) {
+            _.each(this.invalidCollection.models, function (model) {
                 newEntities.push(model.getInfo());
             }, this);
-            _.each(this.hiddenFields, function(field) {
+            _.each(this.hiddenFields, function (field) {
                 newEntities.push(field);
             });
-            this.model.set({newEntities: JSON.stringify(newEntities)});
+            this.model.set({ newEntities: JSON.stringify(newEntities) });
         },
         destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
             delete this;
-        },
+        }
     });
 
     return FilterEntitiesView;
