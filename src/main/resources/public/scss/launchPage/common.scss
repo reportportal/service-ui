@@ -217,6 +217,7 @@
       font-size: 14px;
       font-family: OpenSansSemiBold;
       color: $COLOR--windows-blue;
+      word-wrap: break-word;
       a {
         word-wrap: break-word;
         &.not-link {
