@@ -26,8 +26,10 @@ define(function (require) {
     var UserStorage = require('storage/UserStorage');
 
     var getInstance = function () {
-        if (instance) return instance;
-        return new UserStorage();
+        if (!instance) {
+            instance = new UserStorage();
+        }
+        return instance;
     };
 
     return getInstance;

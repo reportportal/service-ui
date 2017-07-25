@@ -19,15 +19,17 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var instance = null;
     var AppStorage = require('storage/AppStorage');
 
-    var getInstance = function() {
-        if(instance) return instance;
-        return new AppStorage();
+    var getInstance = function () {
+        if (!instance) {
+            instance = new AppStorage();
+        }
+        return instance;
     };
 
     return getInstance;
