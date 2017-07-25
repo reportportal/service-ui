@@ -269,6 +269,7 @@ define(function (require) {
                 this.$password.trigger('validate');
                 this.model.set('password', pass);
             }
+            this.disableHideBackdrop();
         },
         validate: function () {
             var els = [

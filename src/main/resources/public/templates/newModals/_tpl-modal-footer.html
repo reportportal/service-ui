@@ -1,12 +1,12 @@
 <div class="modal-footer">
-    <%= data.includeTemplate('tpl-modal-footer-warning') %>
-    <% _.forEach(data, function(button){ %>
+    <div class="footer-buttons">
+        <% _.forEach(data, function(button){ %>
         <button class="rp-btn <%=button.btnClass %>" type="button" <%= button.label %> >
-            <%= button.btnText %>
+        <%= button.btnText %>
         </button>
-    </button>
-    <% }) %>
-    <% if ( data.dropdownButton) { %>
+        </button>
+        <% }) %>
+        <% if ( data.dropdownButton) { %>
         <div class="dropdown-button">
             <button class="rp-btn rp-btn-submit" type="button" data-js-save >Save</button>
             <button class=" rp-btn rp-button-dropdown" data-toggle="dropdown" data-js-dropdown>
@@ -17,9 +17,11 @@
                     <a data-js-save-post>Save and Post Bug</a>
                 </li>
                 <li>
-                   <a data-js-save-load>Load and Post Bug</a>
+                    <a data-js-save-load>Load and Post Bug</a>
                 </li>
             </ul>
         </div>
-    <% } %>
+        <% } %>
+    </div>
+    <%= data.includeTemplate('tpl-modal-footer-warning') %>
 </div>

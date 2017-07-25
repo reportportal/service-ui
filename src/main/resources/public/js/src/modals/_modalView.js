@@ -34,6 +34,10 @@ define(function (require) {
             $('[data-js-warning-text]', this.$el).html(warning);
             $('[data-js-warning]', this.$el).addClass('activate');
         },
+        hideWarningBlock: function () {
+            $('[data-js-warning-text]', this.$el).html('');
+            $('[data-js-warning]', this.$el).removeClass('activate');
+        },
         disableHideBackdrop: function () {
             this.enableHide = false;
         },
