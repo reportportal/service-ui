@@ -70,7 +70,7 @@ define(['util'], function () {
             settings: 'Settings',
             members: 'Members',
             action: 'Action',
-            filter: 'Filter',
+            filter: 'FILTER',
             clickToSubmit: 'Click to submit this form',
             clickToCancel: 'Click to cancel',
             noResultsFound: 'No results found',
@@ -449,7 +449,7 @@ define(['util'], function () {
             projectActivityPanelDescription: 'shows all activities occurring on the project.',
 
             passingRatePerLaunchChart: 'Passing rate per launch',
-            passingRatePerLaunchChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
+            passingRatePerLaunchChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for last run of selected launch.',
 
             passingRateSummaryChart: 'Passing rate summary',
             passingRateSummaryChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
@@ -479,7 +479,8 @@ define(['util'], function () {
             invalidCriteria: 'Invalid criterion',
             criteria: 'criteria',
             criterion: 'criterion',
-            saveWidgetDashboard: 'Save Widget on Dashboard'
+            saveWidgetDashboard: 'Save Widget on Dashboard',
+            launchName: 'LAUNCH NAME'
         },
 
         userProfile: {

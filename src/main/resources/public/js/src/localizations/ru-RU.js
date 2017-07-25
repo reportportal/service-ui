@@ -70,7 +70,7 @@ define(['util'], function () {
             settings: 'Установки',
             members: 'Участники',
             action: 'Действие',
-            filter: 'Filter',
+            filter: 'FILTER',
             clickToSubmit: 'Нажмите, чтобы подтвердить отправку формы',
             clickToCancel: 'Нажмите для отмены',
             noResultsFound: 'Результатов не найдено',
@@ -505,7 +505,7 @@ define(['util'], function () {
             projectActivityPanelDescription: 'показывает все действия, производимые над проектом.',
 
             passingRatePerLaunchChart: 'Passing rate per launch',
-            passingRatePerLaunchChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
+            passingRatePerLaunchChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for last run of selected launch.',
 
             passingRateSummaryChart: 'Passing rate summary',
             passingRateSummaryChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
@@ -536,7 +536,8 @@ define(['util'], function () {
             invalidCriteria: 'Недопустимый критерий',
             criteria: 'критерии',
             criterion: 'критерий',
-            saveWidgetDashboard: 'Сохраните Виджет на Панели управления'
+            saveWidgetDashboard: 'Сохраните Виджет на Панели управления',
+            launchName: 'ИМЯ ЗАПУСКА'
         },
 
         userProfile: {
