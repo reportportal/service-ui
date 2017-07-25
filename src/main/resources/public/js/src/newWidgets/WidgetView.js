@@ -43,7 +43,9 @@ define(function (require) {
         },
         onShow: function () {
             this.widget.onShow();
-            this.widget.addSizeClasses(this.gadgetSize);
+            if (!this.widget.isPreview) {
+                this.widget.addSizeClasses(this.gadgetSize);
+            }
         },
         resize: function (newGadgetSize) {
             this.widget.updateSizeClasses(newGadgetSize);
