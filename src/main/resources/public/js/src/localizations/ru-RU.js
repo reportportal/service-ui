@@ -1047,7 +1047,7 @@ define(['util'], function () {
             timeRangeLast7Days: 'За 7 дней',
             timeRangeLast30Days: 'За 30 дней',
             timeCustomRange: 'За выбранный период',
-            any: 'Любой',
+            any: 'Любое',
             dynamicUpdate: 'Динамическое обновление',
             launchName: 'Имя запуска',
             suiteName: 'Имя набора',
