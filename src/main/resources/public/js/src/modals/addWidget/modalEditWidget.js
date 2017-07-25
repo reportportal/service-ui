@@ -47,7 +47,12 @@ define(function (require, exports, module) {
             'click [data-js-cancel-filter]': 'onClickCancelFilterEdit',
             'click [data-js-save-filter]': 'onClickSaveFilterEdit',
             'click [data-js-close]': 'onClickClose',
-            'click [data-js-cancel]': 'onClickCancel'
+            'click [data-js-cancel]': 'onClickCancel',
+            'change [data-js-filter-list]': 'disableHideBackdrop',
+            'change [data-js-filter-add-container]': 'disableHideBackdrop',
+            'change [data-js-filter-info]': 'disableHideBackdrop',
+            'change [data-js-widget-settings]': 'disableHideBackdrop',
+            'change [data-js-widget-save]': 'disableHideBackdrop'
         },
         bindings: {
             '[data-js-widget-type]': 'text: gadgetName',
@@ -148,6 +153,8 @@ define(function (require, exports, module) {
             this.model.set({ filter_id: this.selectedFilterView.getFilterModel().get('id') });
             this.destroyFilterSelect();
             this.closeFilterEdit();
+            this.enableHideBackdrop();
+            this.hideWarningBlock();
         },
         onClickSaveFilterEdit: function () {
             if (this.filterSelectView && this.filterSelectView.getSelectedFilterModel()) {
