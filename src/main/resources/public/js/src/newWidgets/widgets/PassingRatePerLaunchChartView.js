@@ -36,15 +36,15 @@ define(function (require) {
             var self = this;
             var widgetOptions;
             var contentData;
-            if (!this.isDataExists()) {
-                this.addNoAvailableBock(this.$el);
-                return;
-            }
             widgetOptions = this.model.getParameters().widgetOptions;
             contentData = this.model.getContent().result[0].values;
             this.total = +contentData.total;
             this.passed = +contentData.passed;
             this.notPassed = (contentData.total - contentData.passed);
+            if (!this.isDataExists() || this.total === 0) {
+                this.addNoAvailableBock(this.$el);
+                return;
+            }
             this.loadChartist().done(function () {
                 if (widgetOptions && widgetOptions.chartMode[0] === 'pieChartMode') {
                     self.$el.html(Util.templates(self.template, {
@@ -107,6 +107,7 @@ define(function (require) {
                 chartPadding: (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) ? 15 : 30,
                 labelOffset: (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) ? 10 : 20,
                 labelPosition: 'outside',
+                ignoreEmptyValues: true,
                 plugins: [
                     Chartist.plugins.legend({
                         position: $('[data-js-legend]', this.$el)[0],
@@ -174,6 +175,7 @@ define(function (require) {
                     bottom: 0,
                     left: 0
                 },
+                ignoreEmptyValues: true,
                 plugins: [
                     Chartist.plugins.legend({
                         position: $('[data-js-legend]', this.$el)[0],
@@ -186,6 +188,9 @@ define(function (require) {
                     }),
                     Chartist.plugins.ctBarLabels({
                         labelInterpolationFnc: function (value) {
+                            if (!value) {
+                                return '';
+                            }
                             return Math.round((value / self.total) * 100) + '%';
                         },
                         position: {
