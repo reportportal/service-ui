@@ -37,7 +37,7 @@ require.config({
         nicescroll: '../lib/jquery.nicescroll',
         bootstrap: '../lib/bootstrap.min',
         nprogress: '../lib/nprogress',
-        localization: 'localizations/default',
+        'localization': 'localizations/localizationController',
         moment: '../lib/moment.2.10.2',
         message: 'message/message-panel',
         templates: '../../compiled/templates/templates',
