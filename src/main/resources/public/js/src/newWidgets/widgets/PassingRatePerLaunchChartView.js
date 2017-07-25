@@ -104,7 +104,8 @@ define(function (require) {
                 labelInterpolationFnc: function (value) {
                     return Math.round((value / self.total) * 100) + '%';
                 },
-                labelOffset: 30,
+                chartPadding: (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) ? 15 : 30,
+                labelOffset: (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) ? 10 : 20,
                 labelPosition: 'outside',
                 plugins: [
                     Chartist.plugins.legend({
@@ -207,6 +208,23 @@ define(function (require) {
                     });
                 }
             });
+        },
+        updateWidget: function () {
+            if ($(this.chart.container).hasClass('passing-rate-pie-view')) {
+                if (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) {
+                    this.chart && this.chart.update(null, {
+                        chartPadding: 15,
+                        labelOffset: 10
+                    }, true);
+                } else {
+                    this.chart && this.chart.update(null, {
+                        chartPadding: 30,
+                        labelOffset: 20
+                    }, true);
+                }
+            } else {
+                this.chart && this.chart.update();
+            }
         }
     });
 
