@@ -285,6 +285,7 @@ define(function (require) {
                 })
                 .done(function (data) {
                     var launchFilterCollection;
+                    var curOptions = self.model.getWidgetOptions();
                     self.viewModel.set({
                         totalPage: data.page.totalPages,
                         currentPage: data.page.number
@@ -299,10 +300,14 @@ define(function (require) {
                     self.collection.add(data.content, { parse: true });
                     if (self.model.get('filter_id')) {
                         if (self.collection.get(self.model.get('filter_id'))) {
+                            curOptions.filterName = [self.collection.get(self.model.get('filter_id')).get('name')];
+                            self.model.setWidgetOptions(curOptions);
                             self.setFilterModel(self.collection.get(self.model.get('filter_id')));
                         } else {
                             launchFilterCollection = new SingletonLaunchFilterCollection();
                             launchFilterCollection.ready.done(function () {
+                                curOptions.filterName = [launchFilterCollection.get(self.model.get('filter_id')).get('name')];
+                                self.model.setWidgetOptions(curOptions);
                                 self.setFilterModel(launchFilterCollection.get(self.model.get('filter_id')));
                             });
                         }
