@@ -36,12 +36,16 @@ define(function (require) {
             var self = this;
             var widgetOptions;
             var contentData;
+            if (!this.isDataExists()) {
+                this.addNoAvailableBock(this.$el);
+                return;
+            }
             widgetOptions = this.model.getParameters().widgetOptions;
             contentData = this.model.getContent().result[0].values;
             this.total = +contentData.total;
             this.passed = +contentData.passed;
             this.notPassed = (contentData.total - contentData.passed);
-            if (!this.isDataExists() || this.total === 0) {
+            if (this.total === 0) {
                 this.addNoAvailableBock(this.$el);
                 return;
             }
@@ -215,6 +219,9 @@ define(function (require) {
             });
         },
         updateWidget: function () {
+            if (!this.chart) {
+                return;
+            }
             if ($(this.chart.container).hasClass('passing-rate-pie-view')) {
                 if (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) {
                     this.chart && this.chart.update(null, {
