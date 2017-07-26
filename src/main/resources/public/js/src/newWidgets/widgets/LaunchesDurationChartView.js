@@ -166,10 +166,10 @@ define(function (require) {
                         return self.formatNumber(d);
                     });
                     cup();
-                    self.chart.xAxis
-                        .tickFormat(function (d) {
-                            return self.formatCategories(d);
-                        });
+                    // self.chart.xAxis
+                    //     .tickFormat(function (d) {
+                    //         return self.formatCategories(d);
+                    //     });
                 };
                 this.chart.update = update;
                 this.addResize();
