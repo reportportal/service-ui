@@ -68,6 +68,13 @@
       }
     }
     &.passing-rate-pie-view {
+      .legend {
+        ul {
+          li {
+            float: right;
+          }
+        }
+      }
       svg {
         .ct-label {
           font-size: 12px;
