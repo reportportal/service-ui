@@ -176,11 +176,11 @@ define(function (require) {
                     self.$el.removeClass('hide-content');
                     self.trigger('disable:navigation', false);
                     self.updateFilters();
-                })
-                .fail(function () {
-                    self.model.set({ filter_id: '' });
-                    self.setFilterModel(null);
                 });
+                // .fail(function () {
+                //     self.model.set({ filter_id: '' });
+                //     self.setFilterModel(null);
+                // });
         },
         onEditFilter: function (model) {
             var self = this;

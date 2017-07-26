@@ -65,7 +65,7 @@ define(function (require) {
                 var filterNames = _.map(self.launchFilterCollection.models, function (model) {
                     return model.get('name');
                 });
-                self.trigger('change:filter', self.model);
+                //self.trigger('change:filter', self.model);
                 Util.hintValidator($('[data-js-name-input]', self.$el), [{
                     validator: 'minMaxRequired',
                     type: 'filterName',
