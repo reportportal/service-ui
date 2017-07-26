@@ -89,16 +89,18 @@ define(function (require) {
         drawPieChart: function () {
             var self = this;
             var chartData = {
-                series: [{
-                    value: this.passed,
-                    meta: Localization.widgets.launchPassed + ': ',
-                    className: 'ct-series-passed'
-                },
-                {
-                    value: this.notPassed,
-                    meta: Localization.widgets.launchNotPassed + ': ',
-                    className: 'ct-series-notPassed'
-                }]
+                series: [
+                    {
+                        value: this.notPassed,
+                        meta: Localization.widgets.launchNotPassed + ': ',
+                        className: 'ct-series-notPassed'
+                    },
+                    {
+                        value: this.passed,
+                        meta: Localization.widgets.launchPassed + ': ',
+                        className: 'ct-series-passed'
+                    }
+                ]
             };
             this.chart = new Chartist.Pie($('[data-js-chart-container]', this.$el)[0], chartData, {
                 labelInterpolationFnc: function (value) {
@@ -112,10 +114,10 @@ define(function (require) {
                     Chartist.plugins.legend({
                         position: $('[data-js-legend]', this.$el)[0],
                         legendNames: [
-                            Localization.widgets.launchPassed,
-                            Localization.widgets.launchNotPassed
+                            Localization.widgets.launchNotPassed,
+                            Localization.widgets.launchPassed
                         ],
-                        classNames: ['passed', 'notPassed'],
+                        classNames: ['notPassed', 'passed'],
                         clickable: false
                     }),
                     Chartist.plugins.tooltip({
