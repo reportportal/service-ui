@@ -19,14 +19,14 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Backbone = require('backbone');
     var App = require('app');
     var Main = require('mainview');
-    var LaunchPage = require('launches/LaunchPage');
     var Util = require('util');
     var Service = require('coreService');
     var Admin = require('admin');
@@ -73,13 +73,22 @@ define(function (require, exports, module) {
         },
 
         loadPreferences: function () {
-            return Service.getPreferences().done(function (response) {
-                config.preferences = response;
-                launchFilterCollection.parse(response.filters);
-            });
+            var async = $.Deferred();
+            Service.getPreferences()
+                .done(function (response) {
+                    config.preferences = response;
+                    launchFilterCollection.parse(response.filters).always(function () {
+                        async.resolve();
+                    });
+                })
+                .fail(function () {
+                    async.resolve();
+                });
+            return async;
         },
 
         openAdmin: function (page, id, action, queryString) {
+            var data;
             if (!config.userModel.get('isAdmin')) {
                 config.router.navigate(config.userModel.get('defaultProject'), { trigger: true });
                 return;
@@ -90,7 +99,13 @@ define(function (require, exports, module) {
                 appModel.set({ projectId: id });
             }
             this.checkForContextChange(page);
-            var data = { page: page, id: id, action: action, contextName: this.currentContext, queryString: queryString };
+            data = {
+                page: page,
+                id: id,
+                action: action,
+                contextName: this.currentContext,
+                queryString: queryString
+            };
             this.currentProjectId = null;
             this.validateMainViewByContextName();
             this.bodyContainer = $('#bodyContainer');
@@ -106,6 +121,10 @@ define(function (require, exports, module) {
         },
 
         openRouted: function (projectId, contextName, subContext, queryString) {
+            var dependenciesCalls = [];
+            var data;
+            var self = this;
+            var renderPage;
             config.trackingDispatcher.pageView(contextName);
             this.prepareInsideView();
             this.currentContext = contextName;
@@ -114,9 +133,13 @@ define(function (require, exports, module) {
             this.container = $('#mainContainer');
             // TODO config.project deprecated
             config.project.projectId = projectId || config.userModel.get('defaultProject');
-            var data = { container: this.container, projectId: projectId, contextName: contextName, subContext: subContext, queryString: queryString };
-
-            var dependenciesCalls = [];
+            data = {
+                container: this.container,
+                projectId: projectId,
+                contextName: contextName,
+                subContext: subContext,
+                queryString: queryString
+            };
             if (this.preferencesAreNotLoaded()) {
                 dependenciesCalls.push(this.loadPreferences());
             }
@@ -125,8 +148,7 @@ define(function (require, exports, module) {
                 dependenciesCalls.push(this.loadProject());
             }
             this.destroyInvalidView();
-            var self = this;
-            var renderPage = function () {
+            renderPage = function () {
                 if (!self.mainView) {
                     self.mainView = new Main.MainView({
                         el: self.container,
@@ -153,7 +175,8 @@ define(function (require, exports, module) {
         },
 
         preferencesAreNotLoaded: function () {
-            return !config.preferences || config.preferences.projectRef !== config.project.projectId;
+            return !config.preferences ||
+                config.preferences.projectRef !== config.project.projectId;
         },
 
         checkForContextChange: function (newContext) {
