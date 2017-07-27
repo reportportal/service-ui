@@ -541,7 +541,7 @@ define(['util'], function () {
         userProfile: {
             userProfile: 'Профиль пользователя',
             projectAndRoles: 'Доступ к проекту',
-            regenerateUUID: 'Сгенерировать UUID заново',
+            regenerateUUID: 'Создать новый UUID',
             updateDataFromUPSA: 'Обновить данные из UPSA',
             updateUserDataFrom: 'Обновить данные из',
             reloginRequired: 'требуется повторная авторизация',
@@ -564,8 +564,8 @@ define(['util'], function () {
             newPass: 'Новый пароль',
             enter: 'Ввод',
             confirmPass: 'Подтвердить',
-            uploadPhoto: 'Загрузить фотографию',
-            removePhoto: 'Удалить фотографию',
+            uploadPhoto: 'Загрузить фото',
+            removePhoto: 'Удалить фото',
             userName: 'Имя пользователя',
             email: 'Электронный адрес',
             selectPhoto: 'Выбрать фотографию',
@@ -582,7 +582,7 @@ define(['util'], function () {
             personalInfo: 'Личная информация',
             configExamples: 'Примеры конфигурации',
             uuidTitle: 'Универсальный уникальный идентификатор',
-            regenerateBtn: 'Сгенерировать заново',
+            regenerateBtn: 'Создать новый',
             projectRole: 'Проектная роль',
             oldClientComment: '<div class="comment"><p>Поддержка клиентских версий до 2.2.3 на <b>com.epam.ta.reportportal.ws.*</b> формат названий параметров.</p>' +
             '<p>Поддержка клиентских версий до 2.2.3 на <b>rp.*</b> и <b>com.epam.ta.reportportal.ws.*</b> формат названий параметров.</p>' +
