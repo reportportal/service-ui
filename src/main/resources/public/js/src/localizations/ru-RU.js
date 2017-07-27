@@ -1445,7 +1445,7 @@ define(['util'], function () {
             updateSubTypesColores: 'Цвета типов дефектов успешно обновлены',
             assignMember: 'Участник \'%%%\' назначен на проект',
             assignYourSelf: 'Вы назначены на проект ',
-            matchIssueInLog: 'Match issues in launch is over. Navigate to the launch root to see results.',
+            matchIssueInLog: 'Сравнение ошибок запуска закончено. Перейдите в запуск, чтобы увидеть результаты.',
             changeRole: 'Роль пользователя для \'%%%\' изменена',
             submitForgotPass: 'Инструкции по восстановлению пароля отправлены на электронный адрес %%%',
             submitChangePass: 'Ваш пароль успешно изменен',
