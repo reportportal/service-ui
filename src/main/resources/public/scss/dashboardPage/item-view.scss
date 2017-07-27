@@ -91,10 +91,10 @@
   }
   .fullscreen-overflow {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    top: -15px;
+    left: -15px;
+    right: -15px;
+    bottom: -15px;
     display: none;
     i {
       font-size: 22px;
