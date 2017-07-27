@@ -60,21 +60,20 @@ define(function (require) {
             e.stopPropagation();
         },
         onClickItem: function (e) { // simple select
-            var value;
+            var curValueOriginal;
             e.preventDefault();
             if ($(e.currentTarget).hasClass('selected') || $(e.currentTarget).hasClass('not-active')) {
                 return;
             }
-            value = $(e.currentTarget).data('value');
-            this.trigger('change', value, e);
-            this.activateItem(value);
+            curValueOriginal = this.activateItem($(e.currentTarget).data('value')); // type key mistakes
+            this.trigger('change', curValueOriginal, e);
         },
         activateItem: function (value) {  // simple select
             var curName = '';
             var curVal = '';
             this.$el.removeClass('dropdown-error-state');
             _.each(this.options.data, function (item) {
-                if (item.value === value) {
+                if (item.value == value) { // Comparison with conversion
                     curName = item.name;
                     curVal = item.value;
 
@@ -84,6 +83,7 @@ define(function (require) {
             $('[data-js-select-value]', this.$el).html(curName);
             $('[data-value]', this.$el).removeClass('selected');
             $('[data-value="' + curVal + '"]', this.$el).addClass('selected');
+            return curVal;
         },
         setDefaultState: function (items) {
             var self = this;

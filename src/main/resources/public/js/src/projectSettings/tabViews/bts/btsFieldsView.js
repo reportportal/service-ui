@@ -78,6 +78,9 @@ define(function (require) {
                       var defaultValue = _.find(field.definedValues, function (item) {
                         return (field.value[0] === item.valueId) || (field.value[0] === item.valueName);
                       });
+                      if (!defaultValue) {
+                          return '';
+                      }
                       return defaultValue.valueId || defaultValue.valueName;
                     })() : (field.definedValues[0].valueId || field.definedValues[0].valueName || '')
                 });
@@ -133,10 +136,10 @@ define(function (require) {
                         element = checkbox.closest('.rp-form-group').find('.default-value:first');
                     }
                     value = element.is('button')
-                        ? ('' + (element.parent().find('ul.dropdown-menu > li > a.selected').data("value")) || element.parent().find('.select-value:first').text())
+                        ? (element.parent().find('ul.dropdown-menu > li > a.selected').data('value') || element.parent().find('.select-value:first').text())
                         : element.val();
                 }
-                result[element.attr('id')] = value.trim();
+                result[element.attr('id')] = ('' + value).trim();
             });
 
             return result;
