@@ -19,12 +19,12 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'setting-criteria';
-@import 'setting-items';
-@import 'setting-switch-mode';
-@import 'setting-action';
-@import 'setting-users';
-@import 'setting-launch';
-@import 'setting-input-items';
-@import 'setting-drop-down';
-@import 'setting-checkbox';
+.modal-add-widget-setting-checkbox {
+  float: left;
+  margin-top: 17px;
+  padding: 0 10px;
+  .rp-checkbox-wrap {
+    margin-bottom: 0;
+    padding: 6px 0;
+  }
+}

@@ -3,7 +3,7 @@
  *
  *
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,13 +18,18 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function (require) {
+    'use strict';
 
-@import 'setting-criteria';
-@import 'setting-items';
-@import 'setting-switch-mode';
-@import 'setting-action';
-@import 'setting-users';
-@import 'setting-launch';
-@import 'setting-input-items';
-@import 'setting-drop-down';
-@import 'setting-checkbox';
+    var $ = require('jquery');
+    var _ = require('underscore');
+    var Util = require('util');
+    var urls = require('dataUrlResolver');
+    var coreService = require('coreService');
+    var Moment = require('moment');
+    var BaseWidgetView = require('newWidgets/_BaseWidgetView');
+
+    var ProductStatusView = BaseWidgetView.extend({});
+
+    return ProductStatusView;
+});

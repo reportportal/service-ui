@@ -22,22 +22,39 @@
 define(function (require) {
     'use strict';
 
+    var Util = require('util');
     var Epoxy = require('backbone-epoxy');
+    var _ = require('underscore');
+    var SettingView = require('modals/addWidget/widgetSettings/_settingView');
 
-    var SettingView = Epoxy.View.extend({
+    var SettingDropDownView = SettingView.extend({
+        className: 'modal-add-widget-setting-checkbox',
+        template: 'modal-add-widget-setting-checkbox',
+        bindings: {
+            '[data-js-label-name]': 'html:label',
+            '[data-js-checkbox-item]': 'checked:value'
+        },
+        initialize: function (data) {
+            var options = _.extend({
+                label: '',
+                value: false
+            }, data.options);
+            this.model = new Epoxy.Model(options);
+            this.gadgetModel = data.gadgetModel;
+            this.render();
+        },
+        render: function () {
+            this.$el.html(Util.templates(this.template, {}));
+        },
+        activate: function () {
+
+        },
         validate: function () {
             return true;
         },
-        destroy: function () {
-            this.onDestroy && this.onDestroy();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            this.$el.remove();
-            this.unActive = true;
+        onDestroy: function () {
         }
-
     });
 
-    return SettingView;
+    return SettingDropDownView;
 });

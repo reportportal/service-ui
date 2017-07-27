@@ -19,12 +19,12 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
-    var Util = require('util');
-    var $ = require('jquery');
+    var WidgetService = require('newWidgets/WidgetService');
     var SettingCriteriaView = require('modals/addWidget/widgetSettings/SettingCriteriaView');
     var SettingItemsView = require('modals/addWidget/widgetSettings/SettingItemsView');
     var SettingSwitchMode = require('modals/addWidget/widgetSettings/SettingSwitchMode');
@@ -32,7 +32,9 @@ define(function (require, exports, module) {
     var SettingUsersView = require('modals/addWidget/widgetSettings/SettingUsersView');
     var SettingLaunchView = require('modals/addWidget/widgetSettings/SettingLaunchView');
 
-
+    var SettingInputItemsView = require('modals/addWidget/widgetSettings/SettingInputItemsView');
+    var SettingDropDownView = require('modals/addWidget/widgetSettings/SettingDropDownView');
+    var SettingCheckBoxView = require('modals/addWidget/widgetSettings/SettingCheckBoxView');
 
     var WidgetCriteriaView = Epoxy.View.extend({
         className: 'modal-add-widget-criteria-list rp-form',
@@ -40,21 +42,19 @@ define(function (require, exports, module) {
         },
         bindings: {
         },
-        initialize: function() {
+        initialize: function () {
             this.renderedView = [];
-
         },
-        renderView: function(viewConstructor, data) {
-            var view = new viewConstructor({model: this.model});
-            if(!view.unActive) {
+        renderView: function (ViewConstructor, data) {
+            var view = new ViewConstructor({ model: this.model });
+            if (!view.unActive) {
                 this.renderedView.push(view);
                 this.$el.append(view.$el);
                 view.activate && view.activate();
             }
-
         },
-        activate: function() {
-            _.each(this.renderedView, function(view) {
+        activate: function () {
+            _.each(this.renderedView, function (view) {
                 view.destroy();
             });
             this.renderedView = [];
@@ -64,14 +64,42 @@ define(function (require, exports, module) {
             this.renderView(SettingSwitchMode);
             this.renderView(SettingUsersView);
             this.renderView(SettingLaunchView);
+
+            var widgetConfig = WidgetService.getWidgetConfig(this.model.get('gadget'));
+            _.each(widgetConfig.uiControl, function (controlObg) {
+                var constructor;
+                switch (controlObg.control) {
+                case 'inputItems':
+                    constructor = SettingInputItemsView;
+                    break;
+                case 'dropDown':
+                    constructor = SettingDropDownView;
+                    break;
+                case 'checkbox':
+                    constructor = SettingCheckBoxView;
+                    break;
+                default:
+                    break;
+                }
+                constructor && this.renderSetting(constructor, controlObg.options);
+            }, this);
         },
-        validate: function() {
+        renderSetting: function (ViewConstructor, options) {
+            var view = new ViewConstructor({
+                gadgetModel: this.model,
+                options: options
+            });
+            this.renderedView.push(view);
+            this.$el.append(view.$el);
+            view.activate && view.activate();
+        },
+        validate: function () {
             var result = true;
-            _.each(this.renderedView, function(view) {
-                if(!view.validate()) {
+            _.each(this.renderedView, function (view) {
+                if (!view.validate()) {
                     result = false;
                 }
-            })
+            });
             return result;
         }
 

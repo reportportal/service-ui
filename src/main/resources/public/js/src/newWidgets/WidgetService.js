@@ -38,6 +38,7 @@ define(function (require, exports, module) {
     var LaunchStatisticsComboPieChart = require('newWidgets/widgets/LaunchStatisticsComboPieChartView');
     var PassingRateSummaryChart = require('newWidgets/widgets/PassingRateSummaryChartView');
     var PassingRatePerLaunchChart = require('newWidgets/widgets/PassingRatePerLaunchChartView');
+    var ProductStatus = require('newWidgets/widgets/ProductStatusView');
 
     var LastLaunchPieChart = require('newWidgets/widgets/LastLaunchPieChartView');
     var PercentageOfInvestigationChart = require('newWidgets/widgets/PercentageOfInvestigationChartView');
@@ -426,7 +427,46 @@ define(function (require, exports, module) {
                         max: 150,
                         def: 50
                     }
-                }
+                },
+                // product_status: {
+                //     gadget_name: 'product status',
+                //     img: 'passing_rate_summary.png',
+                //     description: 'product status description',
+                //     gadget: 'product_status',
+                //     noFilters: true,
+                //     uiControl: [
+                //         {
+                //             control: 'inputItems',
+                //             options: {
+                //                 entity: 'filter',
+                //                 label: 'Select filters'
+                //             }
+                //         },
+                //         {
+                //             control: 'dropDown',
+                //             options: {
+                //                 label: 'Basic column',
+                //                 items: [
+                //                     { name: 'Test', value: 'test' },
+                //                     { name: 'Test2', value: 'test2' }
+                //                 ],
+                //                 multiple: true
+                //             }
+                //         },
+                //         {
+                //             control: 'checkbox',
+                //             options: {
+                //                 label: 'Distinct launches'
+                //             }
+                //         },
+                //         {
+                //             control: 'checkbox',
+                //             options: {
+                //                 label: 'Latest launches'
+                //             }
+                //         }
+                //     ]
+                // }
             };
         },
 
@@ -434,7 +474,6 @@ define(function (require, exports, module) {
             var config = this.getDefaultConfig();
             return config[gadget];
         },
-
         getFullWidgetConfig: function (gadget) {
             var widget = this.getWidgetConfig(gadget);
             var def = $.Deferred();
@@ -582,7 +621,6 @@ define(function (require, exports, module) {
             var defects = this.getGroupDefects(['no_defect']);
             return exec.concat(defects, this.getDefaultTableData());
         },
-
         getDefaultWidgetImg: function () {
             return 'no_chart.png';
         },
@@ -621,6 +659,8 @@ define(function (require, exports, module) {
                 return PassingRatePerLaunchChart;
             case 'passing_rate_summary':
                 return PassingRateSummaryChart;
+            case 'product_status':
+                return ProductStatus;
 
                 // status page widgets
             case 'activities':

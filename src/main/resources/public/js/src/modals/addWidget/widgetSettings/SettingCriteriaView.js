@@ -36,9 +36,9 @@ define(function (require) {
         bindings: {
         },
         initialize: function () {
-            $.when(WidgetService.getFullWidgetConfig(this.model.get('gadget'))).done(this.onRedyWidgetConfig.bind(this));
+            $.when(WidgetService.getFullWidgetConfig(this.model.get('gadget'))).done(this.onReadyWidgetConfig.bind(this));
         },
-        onRedyWidgetConfig: function (widget) {
+        onReadyWidgetConfig: function (widget) {
             var criteriaData;
             this.curWidget = widget;
             if (this.curWidget.noCriteria || !this.curWidget.criteria) {

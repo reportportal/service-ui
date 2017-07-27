@@ -59,7 +59,7 @@ define(function (require, exports, module) {
             var defaultActions = [];
             this.model.set({
                 gadget: gadget,
-                itemsCount: curWidget.limit.def,
+                itemsCount: (curWidget.limit && curWidget.limit.def) || 50,
                 widgetDescription: '',
                 widgetOptions: '{}',
                 content_fields: '[]'
