@@ -5,8 +5,9 @@ BUILD_DATE = `date +%FT%T%z`
 
 GO = go
 BINARY_DIR=bin
+RELEASE_DIR=release
 
-BUILD_DEPS:= github.com/alecthomas/gometalinter
+BUILD_DEPS:= github.com/alecthomas/gometalinter github.com/avarabyeu/releaser
 GODIRS_NOVENDOR = $(shell go list ./... | grep -v /vendor/)
 GOFILES_NOVENDOR = $(shell find . -type f -name '*.go' -not -path "./vendor/*")
 PACKAGE_COMMONS=github.com/reportportal/service-ui/vendor/github.com/reportportal/commons-go
@@ -56,10 +57,22 @@ build-statics:
 # Builds the project
 build: build-statics build-server
 
+# Builds server
+build-release: #checkstyle test build-statics
+	$(eval v := $(shell releaser bump))
+	CGO_ENABLED=0 GOARCH=amd64 GOOS=linux $(GO) build ${BUILD_INFO_LDFLAGS} -o ${RELEASE_DIR}/service-index_linux_amd64 ./
+	CGO_ENABLED=0 GOARCH=amd64 GOOS=windows $(GO) build ${BUILD_INFO_LDFLAGS} -o ${RELEASE_DIR}/service-index_win_amd64.exe ./
+	#gox -output "release/{{.Dir}}_{{.OS}}_{{.Arch}}" -os "linux windows" -arch "amd64" ${BUILD_INFO_LDFLAGS}
+
+	$(eval wd := $(shell pwd))
+	cd build/resources/main && tar -czvf ${wd}/${RELEASE_DIR}/ui.tar.gz ./
+
 # Builds the container
 build-image:
-	docker build -t "$(IMAGE_NAME)" -f docker/Dockerfile .
+	docker build -t "$(IMAGE_NAME)" -f docker/DockerfileDev .
 
+release: build-release
+	releaser release --bintray.token ${BINTRAY_TOKEN}
 
 # Builds the container and pushes to private registry
 pushDev:
@@ -70,5 +83,6 @@ pushDev:
 
 clean:
 	if [ -d ${BINARY_DIR} ] ; then rm -r ${BINARY_DIR} ; fi
+	if [ -d ${RELEASE_DIR} ] ; then rm -r ${RELEASE_DIR} ; fi
 	if [ -d 'node_modules' ] ; then rm -r 'node_modules' ; fi
 	if [ -d 'build' ] ; then rm -r 'build' ; fi

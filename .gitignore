@@ -20,3 +20,6 @@ vendor/*/
 
 ## Data
 data/
+
+##Release dir
+release/
