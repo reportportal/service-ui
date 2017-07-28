@@ -45,6 +45,7 @@ define(function (require) {
             this.total = +contentData.total;
             this.passed = +contentData.passed;
             this.notPassed = (contentData.total - contentData.passed);
+
             if (this.total === 0) {
                 this.addNoAvailableBock(this.$el);
                 return;
