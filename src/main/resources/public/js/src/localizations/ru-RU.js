@@ -588,10 +588,10 @@ define(['util'], function () {
             oldClientComment: '<div class="comment"><p>Поддержка клиентских версий до 2.2.3 на <b>com.epam.ta.reportportal.ws.*</b> формат названий параметров.</p>' +
             '<p>Поддержка клиентских версий до 2.2.3 на <b>rp.*</b> и <b>com.epam.ta.reportportal.ws.*</b> формат названий параметров.</p>' +
             '<p>Пожалуйста, используйте новый формат названий, поскольку старые будут отклоняться.</p></div>',
-            language: 'Language',
+            language: 'Язык',
             english: 'English (United States)',
-            russian: 'Russian'
-
+            russian: 'Русский',
+            reloadPage: 'Изменения вступят в силу после перезагрузки страницы'
         },
 
         dashboard: {

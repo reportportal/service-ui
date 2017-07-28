@@ -74,7 +74,9 @@
         </div>
         <div class="change-language-block">
             <span><%= data.text.userProfile.language %></span>
-            <div class="dropdown-container" data-js-language-container></div>
+            <div class="dropdown-container" data-js-language-container>
+                <span class="discl hide" data-js-disclamer><%= data.text.userProfile.reloadPage %></span>
+            </div>
         </div>
     </div>
     <div class="col-xs-12 col-md-6" data-js-block-is-token>

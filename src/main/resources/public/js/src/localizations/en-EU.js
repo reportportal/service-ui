@@ -535,7 +535,8 @@ define(['util'], function () {
             '<p>Please use new names format, because old ones will be deprecated.</p></div>',
             language: 'Language',
             english: 'English (United States)',
-            russian: 'Russian'
+            russian: 'Russian',
+            reloadPage: 'Changes will take effect after the page reloads'
         },
 
         dashboard: {

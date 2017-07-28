@@ -85,7 +85,7 @@ define(function (require, exports, module) {
                 multiple: false,
                 defaultValue: this.appStorage.get('appLanguage') || 'en'
             });
-            $('[data-js-language-container]', this.$el).html(this.dropDown.$el);
+            $('[data-js-language-container]', this.$el).append(this.dropDown.$el);
             this.listenTo(this.dropDown, 'change', this.onChangeLanguage);
         },
         render: function () {
@@ -100,7 +100,7 @@ define(function (require, exports, module) {
         },
         onChangeLanguage: function (lang) {
             this.appStorage.set('appLanguage', lang);
-
+            $('[data-js-disclamer]', this.$el).removeClass('hide');
         },
         getParams: function () {
             var params = this.model.toJSON();

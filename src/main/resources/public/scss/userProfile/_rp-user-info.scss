@@ -351,6 +351,13 @@
       vertical-align: middle;
       margin-left: 30px;
       width: 310px;
+      position: relative;
+      .discl {
+        position: absolute;
+        top: 31px;
+        font-size: 11px;
+        color: $COLOR--gray-47;
+      }
     }
   }
 }
