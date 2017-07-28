@@ -26,7 +26,7 @@ help:
 
 vendor: ## Install govendor and sync vendored dependencies
 	$(GO) get -v github.com/Masterminds/glide
-	cd $(GOPATH)/src/github.com/Masterminds/glide && git checkout tags/v0.12.3 && go install && cd -
+	cd "$(GOPATH)/src/github.com/Masterminds/glide" && git checkout tags/v0.12.3 && go install && cd -
 	glide install
 
 get-build-deps: vendor
@@ -65,7 +65,7 @@ build-release: checkstyle test
 	#gox -output "release/{{.Dir}}_{{.OS}}_{{.Arch}}" -os "linux windows" -arch "amd64" ${BUILD_INFO_LDFLAGS}
 
 	$(eval wd := $(shell pwd))
-	cd build/resources/main && tar -czvf ${wd}/${RELEASE_DIR}/ui.tar.gz ./
+	cd build/resources/main && tar -czvf "${wd}/${RELEASE_DIR}/ui.tar.gz" ./
 
 # Builds the container
 build-image:
