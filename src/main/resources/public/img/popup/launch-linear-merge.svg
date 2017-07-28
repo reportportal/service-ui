@@ -1,10 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="165" height="80" viewBox="0 0 165 80">
-  <defs>
-    <rect id="linear-merge-pic-small-a" width="165" height="80"/>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="165" height="80" viewBox="0 0 165 80">
   <g fill="none" fill-rule="evenodd">
-    <use fill="#F5F5F5" xlink:href="#linear-merge-pic-small-a"/>
-    <rect width="164" height="79" x=".5" y=".5" stroke="#E9E9E9"/>
     <g transform="translate(32 14)">
       <path fill="#A3C644" d="M41,0 L60,0 L60,0 C61.6568542,1.167223e-15 63,1.34314575 63,3 L63,6 L63,6 C63,7.65685425 61.6568542,9 60,9 L41,9 L41,9 C39.3431458,9 38,7.65685425 38,6 L38,3 L38,3 C38,1.34314575 39.3431458,3.04359188e-16 41,0 Z"/>
       <path stroke="#B5D169" d="M11 13.5L90 13.5M5 31.5L18 31.5M50.5 9L50.5 14"/>

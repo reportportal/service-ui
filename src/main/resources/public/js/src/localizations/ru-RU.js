@@ -153,6 +153,7 @@ define(['util'], function () {
             sortBy: 'Сортировать по',
             name: 'Имя',
             description: 'Описание',
+            note: 'Замечание:',
             days: [
                 'Воскресенье',
                 'Понедельник',
@@ -591,7 +592,7 @@ define(['util'], function () {
             language: 'Язык',
             english: 'English (United States)',
             russian: 'Русский',
-            reloadPage: 'Изменения вступят в силу после перезагрузки страницы'
+            reloadPage: 'Изменения вступят в силу если <a href="">обновить</a> страницу'
         },
 
         dashboard: {

@@ -72,10 +72,13 @@
                 </div>
             <% }); %>
         </div>
-        <div class="change-language-block">
+        <div class="change-language-block clearfix">
             <span><%= data.text.userProfile.language %></span>
-            <div class="dropdown-container" data-js-language-container>
-                <span class="discl hide" data-js-disclamer><%= data.text.userProfile.reloadPage %></span>
+            <div class="dropdown-container">
+                <span data-js-language-container></span>
+                <span class="discl hide" data-js-disclamer>
+                    <span class="note"><%= data.text.ui.note %></span>
+                    <%= data.text.userProfile.reloadPage %></span>
             </div>
         </div>
     </div>

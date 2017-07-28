@@ -347,16 +347,23 @@
     }
     .dropdown-container {
       display: inline-block;
-      height: 30px;
-      vertical-align: middle;
+      vertical-align: top;
+      margin-top: -4px;
       margin-left: 30px;
       width: 310px;
       position: relative;
       .discl {
-        position: absolute;
-        top: 31px;
-        font-size: 11px;
+        font-size: 12px;
         color: $COLOR--gray-47;
+        color: $COLOR--charcoal-grey;
+        a {
+          color: $COLOR--windows-blue;
+        }
+        .note {
+          color: $COLOR--tealish;
+          font-size: 13px;
+          display: block;
+        }
       }
     }
   }

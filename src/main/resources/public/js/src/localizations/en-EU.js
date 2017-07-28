@@ -536,7 +536,7 @@ define(['util'], function () {
             language: 'Language',
             english: 'English (United States)',
             russian: 'Russian',
-            reloadPage: 'Changes will take effect after the page reloads'
+            reloadPage: 'You have to <a href="">Reload</a> the page to implement language change.'
         },
 
         dashboard: {

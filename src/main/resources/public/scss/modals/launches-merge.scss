@@ -83,10 +83,10 @@
           border: solid 1px $COLOR--gray-80;
           background: url('../../img/popup/launch-merge.svg') center no-repeat;
           &.deep-merge {
-            background: $COLOR--gray-91 url('../../img/popup/launch-deep-merge.svg') center no-repeat;
+            background: url('../../img/popup/launch-deep-merge.svg') center no-repeat;
           }
           &.linear-merge {
-            background: $COLOR--gray-91 url('../../img/popup/launch-linear-merge.svg') center no-repeat;
+            background: url('../../img/popup/launch-linear-merge.svg') center no-repeat;
           }
           &.deep-merge, &.linear-merge {
             border: solid 1px $COLOR--gray-91;

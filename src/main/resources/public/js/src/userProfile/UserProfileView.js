@@ -85,7 +85,7 @@ define(function (require, exports, module) {
                 multiple: false,
                 defaultValue: this.appStorage.get('appLanguage') || 'en'
             });
-            $('[data-js-language-container]', this.$el).append(this.dropDown.$el);
+            $('[data-js-language-container]', this.$el).before(this.dropDown.$el);
             this.listenTo(this.dropDown, 'change', this.onChangeLanguage);
         },
         render: function () {
@@ -347,6 +347,7 @@ define(function (require, exports, module) {
                             '<p>rp.launch = ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
                             '<p>rp.project = ' + this.model.get('defaultProject') + '</p>' +
                             '<p>rp.tags = TAG1;TAG2</p>' +
+                            '<p>rp.description = My awesome launch</p>' +
                             '</div>';
                     break;
                 case '.net':
