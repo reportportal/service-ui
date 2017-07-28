@@ -10,6 +10,7 @@ ADD ${APP_DOWNLOAD_URL}/ui.tar.gz /
 
 RUN chmod +x /service-ui
 RUN chmod -R +r /public
+RUN ls -la
 
 ENV RP_STATICSPATH=/public
 
