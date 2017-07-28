@@ -23,6 +23,7 @@ define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Util = require('util');
     var Localization = require('localization');
     var ChartistWidgetView = require('newWidgets/_ChartistWidgetView');
@@ -45,6 +46,10 @@ define(function (require) {
             this.total = +contentData.total;
             this.passed = +contentData.passed;
             this.notPassed = (contentData.total - contentData.passed);
+            this.valuesInPercent = this.getValuesInPercents(
+                    this.total,
+                    { passed: this.passed, notPassed: this.notPassed }
+                );
             if (this.total === 0) {
                 this.addNoAvailableBock(this.$el);
                 return;
@@ -95,20 +100,31 @@ define(function (require) {
             var chartData = {
                 series: [
                     {
-                        value: this.notPassed,
-                        meta: Localization.widgets.launchNotPassed + ': ',
+                        value: this.valuesInPercent.notPassed,
+                        meta: Localization.widgets.launchNotPassed,
                         className: 'ct-series-notPassed'
                     },
                     {
-                        value: this.passed,
-                        meta: Localization.widgets.launchPassed + ': ',
+                        value: this.valuesInPercent.passed,
+                        meta: Localization.widgets.launchPassed,
                         className: 'ct-series-passed'
                     }
                 ]
             };
             this.chart = new Chartist.Pie($('[data-js-chart-container]', this.$el)[0], chartData, {
                 labelInterpolationFnc: function (value) {
-                    return Math.round((value / self.total) * 100) + '%';
+                    var result = value + '%';
+                    if (value === 1 || value === 99) {
+                        _.each(self.valuesInPercent, function (val, key) {
+                            if (value === 1 && (((self[key] / self.total) * 100) < 1)) {
+                                result = '<1%';
+                            }
+                            if (value === 99 && (((self[key] / self.total) * 100) > 99)) {
+                                result = '>99%';
+                            }
+                        });
+                    }
+                    return result;
                 },
                 chartPadding: (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) ? 15 : 30,
                 labelOffset: (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) ? 10 : 20,
@@ -125,6 +141,15 @@ define(function (require) {
                         clickable: false
                     }),
                     Chartist.plugins.tooltip({
+                        tooltipFnc: function (meta) {
+                            var tooltipString = '';
+                            if (meta === Localization.widgets.launchPassed) {
+                                tooltipString = meta + ': ' + self.passed;
+                            } else if (meta === Localization.widgets.launchNotPassed) {
+                                tooltipString = meta + ': ' + self.notPassed;
+                            }
+                            return tooltipString;
+                        },
                         tooltipOffset: {
                             x: 0,
                             y: -5
@@ -142,8 +167,8 @@ define(function (require) {
                         className: 'ct-series-passed',
                         data: [
                             {
-                                value: this.passed,
-                                meta: Localization.widgets.launchPassed + ': '
+                                value: this.valuesInPercent.passed,
+                                meta: Localization.widgets.launchPassed
                             }
                         ]
                     },
@@ -151,8 +176,8 @@ define(function (require) {
                         className: 'ct-series-notPassed',
                         data: [
                             {
-                                value: this.notPassed,
-                                meta: Localization.widgets.launchNotPassed + ': '
+                                value: this.valuesInPercent.notPassed,
+                                meta: Localization.widgets.launchNotPassed
                             }
                         ]
                     }
@@ -177,9 +202,9 @@ define(function (require) {
                 horizontalBars: true,
                 chartPadding: {
                     top: 0,
-                    right: 0,
+                    right: (this.valuesInPercent.passed > 97 && this.valuesInPercent.passed !== 100) ? 10 : 0,
                     bottom: 0,
-                    left: 0
+                    left: (this.valuesInPercent.passed < 3 && this.valuesInPercent.passed !== 0) ? 10 : 0
                 },
                 ignoreEmptyValues: true,
                 plugins: [
@@ -194,10 +219,21 @@ define(function (require) {
                     }),
                     Chartist.plugins.ctBarLabels({
                         labelInterpolationFnc: function (value) {
+                            var result = value + '%';
                             if (!value) {
                                 return '';
                             }
-                            return Math.round((value / self.total) * 100) + '%';
+                            if (value === 1 || value === 99) {
+                                _.each(self.valuesInPercent, function (val, key) {
+                                    if (value === 1 && (((self[key] / self.total) * 100) < 1)) {
+                                        result = '<1%';
+                                    }
+                                    if (value === 99 && (((self[key] / self.total) * 100) > 99)) {
+                                        result = '>99%';
+                                    }
+                                });
+                            }
+                            return result;
                         },
                         position: {
                             y: function (data) {
@@ -206,6 +242,15 @@ define(function (require) {
                         }
                     }),
                     Chartist.plugins.tooltip({
+                        tooltipFnc: function (meta) {
+                            var tooltipString = '';
+                            if (meta === Localization.widgets.launchPassed) {
+                                tooltipString = meta + ': ' + self.passed;
+                            } else if (meta === Localization.widgets.launchNotPassed) {
+                                tooltipString = meta + ': ' + self.notPassed;
+                            }
+                            return tooltipString;
+                        },
                         tooltipOffset: {
                             x: 0,
                             y: -5
