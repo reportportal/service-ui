@@ -1,0 +1,34 @@
+#!groovy
+
+node {
+
+       load "$JENKINS_HOME/jobvars.env"
+
+    dir('src/github.com/reportportal/service-ui') {
+
+        stage('Checkout'){
+                checkout scm
+                sh 'git checkout develop'
+                sh 'git pull'
+            }
+
+            stage('Build') {
+                docker.image('node:onbuild').inside('-u root') {
+                    sh 'make build-statics'
+                }
+            }
+            stage ('Build Server') {
+                withEnv(["GOPATH=${JENKINS_HOME}/workspace/${JOB_NAME}", "BINTRAY_TOKEN=${BINTRAY_TOKEN}"]) {
+                        env.PATH="${GOPATH}/bin:$PATH"
+                        sh 'go version'
+                        sh 'make release'
+                        sh 'file release/service-index_linux_amd64'
+
+                }
+
+            }
+
+
+        }
+}
+
