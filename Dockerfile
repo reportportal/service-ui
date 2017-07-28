@@ -9,6 +9,7 @@ ADD ${APP_DOWNLOAD_URL}/service-ui_linux_amd64 /service-ui
 ADD ${APP_DOWNLOAD_URL}/ui.tar.gz /
 
 RUN chmod +x /service-ui
+RUN tar -zxvf ui.tar.gz -C /
 
 ENV RP_STATICSPATH=/public
 
