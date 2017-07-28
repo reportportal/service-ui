@@ -6,7 +6,7 @@ LABEL version=3.1.0
 ENV APP_DOWNLOAD_URL https://dl.bintray.com/epam/reportportal/3.1.0
 
 ADD ${APP_DOWNLOAD_URL}/service-ui_linux_amd64 /service-ui
-ADD ${APP_DOWNLOAD_URL}/ui.tar.gz /service-ui
+ADD ${APP_DOWNLOAD_URL}/ui.tar.gz /
 
 RUN chmod +x /service-ui
 
