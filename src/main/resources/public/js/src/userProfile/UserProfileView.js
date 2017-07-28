@@ -28,6 +28,8 @@ define(function (require, exports, module) {
     var ModalEditUserInfo = require('modals/modalEditUserInfo');
     var ModalConfirm = require('modals/modalConfirm');
     var RegenerateUUIDTooltipView = require('tooltips/RegenerateUUIDTooltipView');
+    var DropDownComponent = require('components/DropDownComponent');
+    var SingletonAppStorage = require('storage/SingletonAppStorage');
     var ModalForceUpdate = require('modals/modalForceUpdate');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
@@ -38,25 +40,6 @@ define(function (require, exports, module) {
 
     var UserProfileView = Components.BaseView.extend({
         tpl: 'tpl-user-profile-view',
-        initialize: function (options) {
-            this.$el = options.body;
-            this.context = options.context;
-            this.model = config.userModel;
-            this.apiTokenModel = new Backbone.Model({
-                apiToken: null
-            });
-            this.listenTo(this.apiTokenModel, 'change:apiToken', this.setEditorValue);
-            var self = this;
-            Service.getApiToken()
-                .done(function (data) {
-                    self.apiTokenModel.set({ apiToken: data.access_token });
-                    self.$apiToken.val(data.access_token);
-                })
-                .fail(function () {
-                    self.generateApiToken();
-                });
-            this.render();
-        },
         bindings: {
             '[data-js-user-name]': 'text: fullName',
             '[data-js-user-email]': 'text: email',
@@ -75,6 +58,36 @@ define(function (require, exports, module) {
             'click [data-js-update-token]': 'updateToken',
             'click [data-js-force-update]': 'forceUpdate'
         },
+        initialize: function (options) {
+            this.$el = options.body;
+            this.context = options.context;
+            this.model = config.userModel;
+            this.apiTokenModel = new Backbone.Model({
+                apiToken: null
+            });
+            this.listenTo(this.apiTokenModel, 'change:apiToken', this.setEditorValue);
+            var self = this;
+            Service.getApiToken()
+                .done(function (data) {
+                    self.apiTokenModel.set({ apiToken: data.access_token });
+                    self.$apiToken.val(data.access_token);
+                })
+                .fail(function () {
+                    self.generateApiToken();
+                });
+            this.render();
+            this.appStorage = new SingletonAppStorage();
+            this.dropDown = new DropDownComponent({
+                data: [
+                    { name: '<span class="en-flag"></span>' + Localization.userProfile.english, value: 'en' },
+                    { name: '<span class="ru-flag"></span>' + Localization.userProfile.russian, value: 'ru' }
+                ],
+                multiple: false,
+                defaultValue: this.appStorage.get('appLanguage') || 'en'
+            });
+            $('[data-js-language-container]', this.$el).html(this.dropDown.$el);
+            this.listenTo(this.dropDown, 'change', this.onChangeLanguage);
+        },
         render: function () {
             this.model.ready.done(function () {
                 var params = this.getParams();
@@ -84,6 +97,10 @@ define(function (require, exports, module) {
                 this.loadRegenerateUUIDTooltip();
             }.bind(this));
             return this;
+        },
+        onChangeLanguage: function (lang) {
+            this.appStorage.set('appLanguage', lang);
+
         },
         getParams: function () {
             var params = this.model.toJSON();
@@ -377,12 +394,9 @@ define(function (require, exports, module) {
                 this.$editor.html(value);
             }
         },
-        destroy: function () {
+        onDestroy: function () {
+            this.dropDown && this.dropDown.destroy();
             this.$el.html('');
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
-            delete this;
         }
     });
 

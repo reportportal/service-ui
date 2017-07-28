@@ -327,6 +327,32 @@
       }
     }
   }
+  .change-language-block {
+    margin-top: 30px;
+    padding-left: 15px;
+    margin-bottom: 30px;
+    .en-flag, .ru-flag {
+      display: inline-block;
+      vertical-align: middle;
+      width: 24px;
+      height: 24px;
+      margin-top: -2px;
+      margin-right: 5px;
+    }
+    .en-flag {
+      background: url('../../img/user-profile/en-flag.svg') center no-repeat;
+    }
+    .ru-flag {
+      background: url('../../img/user-profile/ru-flag.svg') center no-repeat;
+    }
+    .dropdown-container {
+      display: inline-block;
+      height: 30px;
+      vertical-align: middle;
+      margin-left: 30px;
+      width: 310px;
+    }
+  }
 }
 
 .warning_modal {

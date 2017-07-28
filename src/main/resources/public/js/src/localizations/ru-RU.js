@@ -556,6 +556,7 @@ define(['util'], function () {
             msgRegenFoot: 'Все настроенные агенты со старыми UUID не будут работать после этого',
             userConfig: 'Настройки пользователя:',
             java: 'Java',
+            ruby: 'Ruby',
             soapUI: 'SoapUI',
             donNet: '.NET',
             nodeJS: 'nodeJS',
@@ -586,7 +587,10 @@ define(['util'], function () {
             projectRole: 'Проектная роль',
             oldClientComment: '<div class="comment"><p>Поддержка клиентских версий до 2.2.3 на <b>com.epam.ta.reportportal.ws.*</b> формат названий параметров.</p>' +
             '<p>Поддержка клиентских версий до 2.2.3 на <b>rp.*</b> и <b>com.epam.ta.reportportal.ws.*</b> формат названий параметров.</p>' +
-            '<p>Пожалуйста, используйте новый формат названий, поскольку старые будут отклоняться.</p></div>'
+            '<p>Пожалуйста, используйте новый формат названий, поскольку старые будут отклоняться.</p></div>',
+            language: 'Language',
+            english: 'English (United States)',
+            russian: 'Russian'
 
         },
 

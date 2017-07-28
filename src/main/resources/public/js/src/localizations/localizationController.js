@@ -19,20 +19,17 @@ define(function (require) {
 
     var langEn = require('localizations/en-EU');
     var langRu = require('localizations/ru-RU');
+    var SingletonAppStorage = require('storage/SingletonAppStorage');
 
-    var Localization;
-    function changeLang(lang) {
-        switch (lang) {
-        case 'ru':
-            Localization = langRu;
-            break;
-        default:
-            Localization = langEn;
-        }
-        Localization.changeLang = changeLang;
+    var appStorage = new SingletonAppStorage();
+    var lang = appStorage.get('appLanguage') || 'en';
+    var Localization = {};
+    switch (lang) {
+    case 'ru':
+        Localization = langRu;
+        break;
+    default:
+        Localization = langEn;
     }
-    changeLang();
-
-
     return Localization;
 });

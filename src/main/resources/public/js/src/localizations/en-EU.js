@@ -532,7 +532,10 @@ define(['util'], function () {
             projectRole: 'Project Role',
             oldClientComment: '<div class="comment"><p>Client versions before 2.2.3 support <b>com.epam.ta.reportportal.ws.*</b> parameters name format.</p>' +
             '<p>Client versions from 2.2.3 support <b>rp.*</b> and <b>com.epam.ta.reportportal.ws.*</b> parameters name formats.</p>' +
-            '<p>Please use new names format, because old ones will be deprecated.</p></div>'
+            '<p>Please use new names format, because old ones will be deprecated.</p></div>',
+            language: 'Language',
+            english: 'English (United States)',
+            russian: 'Russian'
         },
 
         dashboard: {

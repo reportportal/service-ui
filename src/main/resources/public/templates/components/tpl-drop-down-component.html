@@ -11,10 +11,10 @@
         <% if(data.multiple) {%>
         <label class="checkbox rp-checkbox-wrap" data-js-label>
             <input class="criteria-option rp-input-checkbox" type="checkbox" data-value="<%- item.value %>", data-name="<%- item.name %>">
-            <span><%- item.name %></span>
+            <span><%= item.name %></span>
         </label>
         <% } else {%>
-        <a href="#" data-value="<%- item.value %>" class="<%= item.disabled ? 'not-active' : ''%>"><%- item.name %></a>
+        <a href="#" data-value="<%- item.value %>" class="<%= item.disabled ? 'not-active' : ''%>"><%= item.name %></a>
         <% } %>
     </li>
     <% }) %>

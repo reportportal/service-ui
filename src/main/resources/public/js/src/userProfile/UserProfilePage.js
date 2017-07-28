@@ -37,6 +37,9 @@ define(function (require, exports, module) {
             this.createBody();
             return this;
         },
+        update: function () {
+            this.render();
+        },
         createHeader: function (model) {
             if (this.$header) {
                 this.$header.destroy();
