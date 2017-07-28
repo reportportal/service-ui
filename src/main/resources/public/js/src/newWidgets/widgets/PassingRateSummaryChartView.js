@@ -91,6 +91,7 @@ define(function (require) {
                     );
                 }
             });
+            this.addResize();
         },
         drawBarChart: function () {
             var self = this;
