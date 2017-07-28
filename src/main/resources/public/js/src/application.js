@@ -36,6 +36,7 @@ define(function (require) {
     var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
     var config = App.getInstance();
 
+    require('polyfills/index');
     require('../lib/outdatedbrowser');
     require('cookie');
     require('jquery-ui/widgets/tooltip');
