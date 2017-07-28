@@ -94,6 +94,7 @@ define(function (require) {
                     );
                 }
             });
+            this.addResize();
         },
         drawPieChart: function () {
             var self = this;
