@@ -153,7 +153,7 @@ define(function (require) {
             $('[data-js-noissue-name]', this.$el).hide();
             $('[data-js-issue-title]', this.$el).show();
             $('[data-js-issue-title] i', this.$el).css('background', issueType.color);
-            if (this.isChanged()) {
+            if (this.getIssueType(this.items[0]) !== this.selectedIssue ) {
                 this.disableHideBackdrop();
             }
         },
