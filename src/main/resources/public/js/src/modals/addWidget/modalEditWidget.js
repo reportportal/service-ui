@@ -47,18 +47,12 @@ define(function (require, exports, module) {
             'click [data-js-cancel-filter]': 'onClickCancelFilterEdit',
             'click [data-js-save-filter]': 'onClickSaveFilterEdit',
             'click [data-js-close]': 'onClickClose',
-            'click [data-js-cancel]': 'onClickCancel',
-            'change [data-js-filter-list]': 'disableHideBackdrop',
-            'change [data-js-filter-add-container]': 'disableHideBackdrop',
-            'change [data-js-filter-info]': 'disableHideBackdrop',
-            'change [data-js-widget-settings]': 'disableHideBackdrop',
-            'change [data-js-widget-save]': 'disableHideBackdrop'
+            'click [data-js-cancel]': 'onClickCancel'
         },
         bindings: {
             '[data-js-widget-type]': 'text: gadgetName',
             '[data-js-widget-description]': 'html: gadgetDescription'
         },
-
         initialize: function (options) {
             var self;
             if (!options.model) {
@@ -88,6 +82,7 @@ define(function (require, exports, module) {
             } else {
                 this.filterReadyAsync.resolve();
             }
+            this.listenTo(this.model, 'change', this.disableHideBackdrop);
         },
         onChangeModel: function (model) {
             this.curWidget = WidgetService.getWidgetConfig(model.get('gadget'));
