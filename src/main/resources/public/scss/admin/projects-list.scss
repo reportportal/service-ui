@@ -378,6 +378,7 @@
                 }
             }
             .project-name {
+                line-height: 18px;
                 margin: 13px 0 0;
             }
             .project-members,
@@ -462,7 +463,8 @@
 
                 .project-name {
                     margin: 0;
-                    padding: 12px 22px 8px 12px;
+                    padding: 11px 22px 8px 12px;
+                    line-height: 18px;
                     border-bottom: 1px solid $COLOR--gray-91;
                 }
 
