@@ -90,6 +90,8 @@
     padding: 10px 0;
     a, span, p {
       word-wrap: break-word;
+      display: inline-block;
+      width: 100%;
     }
     & > div {
       padding-top: 5px;
