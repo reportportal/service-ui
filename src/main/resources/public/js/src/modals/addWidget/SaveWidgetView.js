@@ -122,7 +122,7 @@ define(function (require) {
         render: function () {
             var self = this;
             this.$el.html(Util.templates(this.template, {}));
-            $('[data-js-name-input]', this.$el).on('keydown', function (event) {
+            $('[data-js-name-input]', this.$el).on('keydown.modal', function (event) {
                 if (event.keyCode === 13) {
                     event.preventDefault();
                     $('[data-js-name-input]', self.$el).blur();
@@ -131,7 +131,7 @@ define(function (require) {
             });
         },
         onDestroy: function () {
-            $('[data-js-name-input]', this.$el).off('keydown');
+            $('[data-js-name-input]', this.$el).off('keydown.modal');
             this.selectDashboard && this.selectDashboard.destroy();
         }
     });
