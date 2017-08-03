@@ -177,6 +177,7 @@ define(function (require) {
             this.filterModel = filterModel;
             this.listenTo(this.filterModel, 'change:newEntities change:entities', this.changeFilterOptions);
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.changeSelectionParameters);
+            this.listenTo(this.filterModel, 'discard', this.load);
             this.activateChangeParamsTrigger();
             return this.load();
         },

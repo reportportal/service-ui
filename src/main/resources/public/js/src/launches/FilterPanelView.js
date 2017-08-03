@@ -83,6 +83,7 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(13);
             this.model.set({ newEntities: '', newSelectionParameters: '' });
             this.createFilterEntities();
+            this.model.trigger('discard');
         },
         createFilterEntities: function () {
             this.filterEntities && this.filterEntities.destroy();
