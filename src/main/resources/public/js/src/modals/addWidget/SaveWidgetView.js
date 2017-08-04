@@ -120,9 +120,18 @@ define(function (require) {
             }
         },
         render: function () {
+            var self = this;
             this.$el.html(Util.templates(this.template, {}));
+            $('[data-js-name-input]', this.$el).on('keydown.modal', function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    $('[data-js-name-input]', self.$el).blur();
+                    self.$el.focus();
+                }
+            });
         },
         onDestroy: function () {
+            $('[data-js-name-input]', this.$el).off('keydown.modal');
             this.selectDashboard && this.selectDashboard.destroy();
         }
     });
