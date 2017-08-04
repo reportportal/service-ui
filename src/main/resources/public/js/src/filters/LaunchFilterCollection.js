@@ -111,21 +111,21 @@ define(function (require) {
             if (!ids) {
                 this.reset([]);
                 this.ready.resolve();
-                return;
+                return this.ready;
             }
-            this.update(ids)
+            return this.update(ids)
                 .always(function () {
                     self.ready.resolve();
                 });
         },
         update: function (ids) {
             var async = $.Deferred();
+            var self = this;
             if (!ids) {
                 ids = _.map(this.models, function (model) {
                     return model.get('id');
                 });
             }
-            var self = this;
             call('GET', Urls.getFilters(ids))
                 .done(function (data) {
                     (new SingletonDefectTypeCollection()).ready.done(function () {
@@ -142,8 +142,8 @@ define(function (require) {
                 });
             return async;
         },
-        generateTempModel: function (data) {
-            var data = data || {};
+        generateTempModel: function (opts) {
+            var data = opts || {};
             var startName = 'New_filter';
             var modelName = startName;
             var randomCounter = 1;

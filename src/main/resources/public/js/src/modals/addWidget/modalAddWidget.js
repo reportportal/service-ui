@@ -199,6 +199,9 @@ define(function (require) {
                 if (this.model.get('gadget') === 'most_failed_test_cases') {
                     contentParameters.metadata_fields = ['name', 'start_time'];
                 }
+                if (_.contains(['passing_rate_per_launch', 'activity_stream', 'most_failed_test_cases'], this.model.get('gadget'))) {
+                    this.model.set('filter_id', '');
+                }
                 contentParameters.type = this.curWidget.widget_type;
                 contentParameters.gadget = this.model.get('gadget');
                 contentParameters.itemsCount = this.model.get('itemsCount');

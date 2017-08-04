@@ -92,6 +92,7 @@ define(function (require) {
         setDefaultState: function () {
             var curOptions = this.model.getWidgetOptions();
             var keys = _.keys(curOptions);
+            var mode = this.curWidget.mode.defaultVal;
 
             // -------- New widget's functionality (Chartist) --------
             if (this.model.get('gadget') === 'passing_rate_per_launch' || this.model.get('gadget') === 'passing_rate_summary') {
@@ -107,19 +108,13 @@ define(function (require) {
             // -----------------------------------------------
 
             if (keys.length) {
-                switch (keys[0]) {
-                case 'timeline':
-                    $('[data-key="timeline"]', this.$el).addClass('active');
-                    break;
-                case 'chartMode':
-                    $('[data-key="chartMode"]', this.$el).addClass('active');
-                    break;
-                default:
-                    break;
-                }
-            } else {
-                $('[data-key="' + this.curWidget.mode.defaultVal + '"]', this.$el).addClass('active');
+                _.each(keys, function (val) {
+                    if (val === 'timeline' || val === 'chartMode') {
+                        mode = val;
+                    }
+                });
             }
+            $('[data-key="' + mode + '"]', this.$el).addClass('active');
         }
     });
 

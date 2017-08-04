@@ -31,6 +31,9 @@
   .defect-name {
     display: inline-block;
     width: 175px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .defect-color {
     width: 12px;

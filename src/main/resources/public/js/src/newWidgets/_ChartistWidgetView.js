@@ -120,7 +120,21 @@ define(function (require) {
             return async;
         },
         isDataExists: function () {
-            return (!_.isEmpty(this.model.getContent()) && !_.isEmpty(this.model.getContent().result[0].values));
+            return (!_.isEmpty(this.model.getContent()) &&
+                !_.isEmpty(this.model.getContent().result[0].values));
+        },
+        getValuesInPercents: function (total, values) {
+            var rounded;
+            return _.mapValues(values, function (value) {
+                rounded = Math.round((value / total) * 100);
+                if (rounded === 0 && value) {
+                    rounded = 1;
+                }
+                if (rounded === 100 && value !== total) {
+                    rounded = 99;
+                }
+                return rounded;
+            });
         },
         updateWidget: function () {
             this.chart && this.chart.update();
