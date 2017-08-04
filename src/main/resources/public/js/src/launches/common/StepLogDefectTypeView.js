@@ -131,8 +131,7 @@ define(function (require, exports, module) {
     var StepLogDefectTypeView = Epoxy.View.extend({
         template: 'tpl-launch-step-log-defect-type',
         events: {
-            'click [data-js-edit-defect]': 'onClickEditDefect',
-            'mouseenter [data-js-edit-defect]': 'onHoverDefect'
+            'click [data-js-edit-defect]': 'onClickEditDefect'
         },
         bindings: {
             // '[data-js-issue-comment]': 'html: issueComment',
@@ -235,11 +234,6 @@ define(function (require, exports, module) {
                 tickets = issue.externalSystemIssues;
             }
             this.ticketCollection.reset(tickets);
-        },
-        onHoverDefect: function(){
-            if(this.pageType == 'logs'){
-                config.trackingDispatcher.trackEventNumber(191);
-            }
         },
         onClickEditDefect: function() {
             if(this.pageType == 'logs'){

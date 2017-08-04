@@ -53,10 +53,10 @@ define(function (require) {
                             }
                         });
                     }
-                    parseEntitie(entities.urls, function (entity) { return '<a target="_blank" href="' + entity.url + '">' + entity.display_url + '</a>'; });
-                    parseEntitie(entities.user_mentions, function (entity) { return '<a target="_blank" href="https://twitter.com/intent/user?user_id=' + entity.id + '">@' + entity.screen_name + '</a>'; });
-                    parseEntitie(entities.hashtags, function (entity) { return '<a target="_blank" href="https://twitter.com/hashtag/' + entity.text + '">#' + entity.text + '</a>'; });
-                    parseEntitie(entities.media, function (entity) { return '<a target="_blank" href="' + entity.url + '">' + entity.display_url + '</a>'; });
+                    parseEntitie(entities.urls, function (entity) { return '<a data-js-social-link target="_blank" href="' + entity.url + '">' + entity.display_url + '</a>'; });
+                    parseEntitie(entities.user_mentions, function (entity) { return '<a data-js-social-link target="_blank" href="https://twitter.com/intent/user?user_id=' + entity.id + '">@' + entity.screen_name + '</a>'; });
+                    parseEntitie(entities.hashtags, function (entity) { return '<a data-js-social-link target="_blank" href="https://twitter.com/hashtag/' + entity.text + '">#' + entity.text + '</a>'; });
+                    parseEntitie(entities.media, function (entity) { return '<a data-js-social-link target="_blank" href="' + entity.url + '">' + entity.display_url + '</a>'; });
                     replaceObjects.sort(function (a, b) {
                         return a.start - b.start;
                     });

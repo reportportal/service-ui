@@ -46,7 +46,8 @@ define(function (require) {
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel',
             'click [data-js-save-post]': 'onClickSavePost',
-            'click [data-js-save-load]': 'onClickSaveLoad'
+            'click [data-js-save-load]': 'onClickSaveLoad',
+            'click [data-js-dropdown]': 'onClickDropdown'
         },
         computeds: {
             isBtsAdded: function () {
@@ -56,13 +57,18 @@ define(function (require) {
                 return this.appModel.get('isBtsConfigure');
             }
         },
+        onClickDropdown: function () {
+            config.trackingDispatcher.trackEventNumber(524);
+        },
         onClickSavePost: function () {
+            config.trackingDispatcher.trackEventNumber(525);
             var self = this;
             this.onClickAction(function () {
                 self.successClose({ action: 'postBug' });
             });
         },
         onClickSaveLoad: function () {
+            config.trackingDispatcher.trackEventNumber(526);
             var self = this;
             this.onClickAction(function () {
                 self.successClose({ action: 'loadBug' });

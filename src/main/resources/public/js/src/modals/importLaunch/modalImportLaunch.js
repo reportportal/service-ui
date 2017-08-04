@@ -28,7 +28,8 @@ define(function (require) {
         tpl: 'tpl-modal-import-launch',
         className: 'modal-import-launch',
         events: {
-            'click [data-js-ok]': 'onClickOk'
+            'click [data-js-ok]': 'onClickOk',
+            'click [data-js-cancel]': 'onClickClose'
         },
 
         initialize: function () {
@@ -159,9 +160,16 @@ define(function (require) {
         },
         onKeySuccess: function () {
         },
-        onClickClose: function () {
+        onClickClose: function (e) {
+            if(e.target.nodeName === 'BUTTON'){
+                config.trackingDispatcher.trackEventNumber(520);
+            } else {
+                config.trackingDispatcher.trackEventNumber(519);
+            }
+
         },
         onClickOk: function () {
+            config.trackingDispatcher.trackEventNumber(521);
             this.successClose();
         },
         hide: function () {

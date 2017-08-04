@@ -39,8 +39,7 @@ define(function (require) {
         events: {
             'click .rp-grid-th[data-sorter]': 'onClickSorter',
             'click .rp-grid-th[data-filter] .rp-icons-filter': 'onClickFilter',
-            'change [data-js-select-all]': 'onChangeSelectAll',
-            'mouseenter [data-js-launch-table-title]': 'onHoverTitle'
+            'change [data-js-select-all]': 'onChangeSelectAll'
         },
         bindings: {
             '.launch-suite-step-items': 'classes: {"exact-driven": updateTimeFormat}'
@@ -88,43 +87,6 @@ define(function (require) {
         },
         destroyStickyHeader: function () {
             this.stickyHeader && this.stickyHeader.destroy();
-        },
-        onHoverTitle: function (e) {
-            var filterId = $(e.currentTarget).closest('.rp-grid-th').data('filter');
-            switch (filterId) {
-            case 'name':
-                config.trackingDispatcher.trackEventNumber(33);
-                break;
-            case 'start_time':
-                config.trackingDispatcher.trackEventNumber(35);
-                break;
-            case 'statistics$executions$total':
-                config.trackingDispatcher.trackEventNumber(37);
-                break;
-            case 'statistics$executions$passed':
-                config.trackingDispatcher.trackEventNumber(39);
-                break;
-            case 'statistics$executions$failed':
-                config.trackingDispatcher.trackEventNumber(41);
-                break;
-            case 'statistics$executions$skipped':
-                config.trackingDispatcher.trackEventNumber(43);
-                break;
-            case 'statistics$defects$product_bug$total':
-                config.trackingDispatcher.trackEventNumber(45);
-                break;
-            case 'statistics$defects$automation_bug$total':
-                config.trackingDispatcher.trackEventNumber(47);
-                break;
-            case 'statistics$defects$system_issue$total':
-                config.trackingDispatcher.trackEventNumber(49);
-                break;
-            case 'statistics$defects$to_investigate$total':
-                config.trackingDispatcher.trackEventNumber(51);
-                break;
-            default:
-                break;
-            }
         },
         onChangeSelectAll: function (e) {
             var value = false;

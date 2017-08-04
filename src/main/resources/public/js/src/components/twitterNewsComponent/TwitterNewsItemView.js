@@ -29,6 +29,7 @@ define(function (require, exports, module) {
         className: 'post-news-item',
         template: 'tpl-twitter-news-item',
         events: {
+            'click [data-js-social-link]': 'onClickSocialLink'
         },
         bindings: {
             '[data-js-text]': 'html: textHtml',
@@ -40,6 +41,9 @@ define(function (require, exports, module) {
         render: function() {
             this.$el.html(Util.templates(this.template));
         },
+        onClickSocialLink: function () {
+            config.trackingDispatcher.trackEventNumber(527);
+        }
     });
 
 

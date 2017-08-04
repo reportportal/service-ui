@@ -97,12 +97,6 @@ define(function (require) {
                     .call(chart)
                 ;
 
-                vis.selectAll('.nvd3.nv-wrap.nv-pie').each(function () {
-                    $(this).on('mouseenter', function () {
-                        config.trackingDispatcher.trackEventNumber(343);
-                    });
-                });
-
                 this.charts.push(chart);
                 this.addResize();
                 this.redirectOnElementClick(chart, 'pie');

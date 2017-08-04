@@ -112,7 +112,6 @@ define(function (require) {
                 var index = e.pointIndex;
                 var cat = self.categories[index];
                 var date;
-                config.trackingDispatcher.trackEventNumber(343);
                 if (self.model.get('isTimeline')) {
                     date = Moment.unix(cat.startTime);
                     return '<p style="text-align:left"><strong>' + date.format('YYYY-MM-DD') + '</strong><br/>' + key + ': <strong>' + y + '</strong> ' + self.tooltipLabel + '</p>';

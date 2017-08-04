@@ -143,7 +143,6 @@ define(function (require) {
         showTooltip: function (e) {
             var el = $(e.currentTarget);
             var type = el.data('tooltipType');
-            config.trackingDispatcher.trackEventNumber(134);
             if (!el.data('tooltip')) {
                 el.data('tooltip', 'tooltip');
                 this.createTooltip(el, type);

@@ -42,9 +42,36 @@ define(function (require) {
         className: 'login-page',
         template: 'tpl-new-login',
         events: {
-            'click [data-js-logo]': 'onClickLogo'
+            'click [data-js-logo]': 'onClickLogo',
+            'click [data-js-gh-link]': 'onClickGitHub',
+            'click [data-js-fb-link]': 'onClickFaceBook',
+            'click [data-js-yt-link]': 'onClickYouTube',
+            'click [data-js-tw-link]': 'onClickTwitter',
+            'click [data-js-vk-link]': 'onClickVk',
+            'click [data-js-sl-link]': 'onClickSlack',
+            'click [data-js-ml-link]': 'onClickMail',
         },
-
+        onClickGitHub: function () {
+            config.trackingDispatcher.trackEventNumber(528);
+        },
+        onClickFaceBook: function () {
+            config.trackingDispatcher.trackEventNumber(529);
+        },
+        onClickYouTube: function () {
+            config.trackingDispatcher.trackEventNumber(531);
+        },
+        onClickTwitter: function () {
+            config.trackingDispatcher.trackEventNumber(530);
+        },
+        onClickVk: function () {
+            config.trackingDispatcher.trackEventNumber(532);
+        },
+        onClickSlack: function () {
+            config.trackingDispatcher.trackEventNumber(533);
+        },
+        onClickMail: function () {
+            config.trackingDispatcher.trackEventNumber(534);
+        },
         initialize: function () {
             var self = this;
             this.storage = new SingletonAppStorage();

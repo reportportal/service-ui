@@ -108,12 +108,6 @@ define(function (require) {
                     .call(tip)
                 ;
 
-                vis.selectAll('.nv-line').each(function () {
-                    $(this).on('mouseenter', function () {
-                        config.trackingDispatcher.trackEventNumber(343);
-                    });
-                });
-
                 this.addLaunchNameTip(vis, tip);
 
                 this.chart.xAxis

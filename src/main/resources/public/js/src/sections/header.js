@@ -47,7 +47,8 @@ define(function (require) {
             'click [data-js-settings-icon]': 'onClickSettingsIcon',
             'click [data-js-user-dropdown]': 'onClickUserDropdown',
             'click [data-js-profile-page-link]': 'onClickProfileLink',
-            'click [data-js-project-dropdown]': 'onClickProjectDropdown'
+            'click [data-js-project-dropdown]': 'onClickProjectDropdown',
+            'click [data-js-api-page-link]': 'onClickApiLink'
         },
 
         initialize: function (options) {
@@ -167,6 +168,9 @@ define(function (require) {
         },
         onClickProjectDropdown: function () {
             config.trackingDispatcher.trackEventNumber(10);
+        },
+        onClickApiLink: function () {
+            config.trackingDispatcher.trackEventNumber(514);
         },
 
         updateActiveLink: function () {
