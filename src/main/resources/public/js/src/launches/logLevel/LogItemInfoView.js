@@ -65,19 +65,7 @@ define(function (require) {
             },
             'click [data-js-match]': 'onClickMatch',
             'click [data-js-post-bug]': 'onClickPostBug',
-            'click [data-js-load-bug]': 'onClickLoadBug',
-            'mouseenter [data-js-item-stack-trace-label]': function () {
-                config.trackingDispatcher.trackEventNumber(196);
-            },
-            'mouseenter [data-js-item-gallery-label]': function () {
-                config.trackingDispatcher.trackEventNumber(197);
-            },
-            'mouseenter [data-js-item-details-label]': function () {
-                config.trackingDispatcher.trackEventNumber(198);
-            },
-            'mouseenter [data-js-item-activity-label]': function () {
-                config.trackingDispatcher.trackEventNumber(199);
-            }
+            'click [data-js-load-bug]': 'onClickLoadBug'
         },
 
         bindings: {

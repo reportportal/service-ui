@@ -39,8 +39,7 @@ define(function (require) {
         events: {
             'click [data-js-cancel-edit]': 'onClickCancel',
             'click [data-js-ok-edit]': 'onClickOk',
-            'click [data-js-cancel]': 'onClick',
-            'mouseenter [data-js-filter-name]': 'onHoverFilter'
+            'click [data-js-cancel]': 'onClick'
         },
         bindings: {
             '[data-js-filter-name]': 'text: name'
@@ -82,11 +81,6 @@ define(function (require) {
         },
         onClick: function (e) {
             e.stopPropagation();
-        },
-        onHoverFilter: function () {
-            if (this.modalType !== 'edit') {
-                config.trackingDispatcher.trackEventNumber(306);
-            }
         },
         onClickCancel: function () {
             if (this.modalType === 'edit') {

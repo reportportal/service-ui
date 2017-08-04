@@ -127,9 +127,6 @@ define(function (require) {
                 });
                 $('[data-js-select-filter-container]', this.$el).html(this.selectFilterView.$el);
                 this.selectedFilterModel = model;
-                this.selectFilterView.$el.on('mouseenter', function () {
-                    config.trackingDispatcher.trackEventNumber(296);
-                });
             } else {
                 $('[data-js-select-filter-block]', this.$el).addClass('empty-state');
             }

@@ -132,11 +132,6 @@ define(function (require) {
                 } else {
                     vis.call(tip);
                 }
-                vis.selectAll('.nv-stackedarea').each(function () {
-                    $(this).on('mouseenter', function () {
-                        config.trackingDispatcher.trackEventNumber(343);
-                    });
-                });
                 if (self.model.get('isTimeline')) {
                     this.updateTickForTimeLine(vis);
                 }

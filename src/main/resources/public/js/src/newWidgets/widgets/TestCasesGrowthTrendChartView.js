@@ -120,7 +120,6 @@ define(function (require) {
             var cat;
             var date;
             return function (key, x, y, e) {
-                config.trackingDispatcher.trackEventNumber(343);
                 index = e.pointIndex;
                 cat = self.categories[index];
                 if (self.model.get('isTimeline')) {

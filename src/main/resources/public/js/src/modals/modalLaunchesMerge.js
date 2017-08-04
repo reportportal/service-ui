@@ -130,8 +130,11 @@ define(function (require) {
             $('[data-js-current-type]', this.$el).removeClass('deep-merge linear-merge');
             if (this.mergeType === 'BASIC') {
                 $('[data-js-current-type]', this.$el).addClass('linear-merge');
+                config.trackingDispatcher.trackEventNumber(522);
+
             } else {
                 $('[data-js-current-type]', this.$el).addClass('deep-merge');
+                config.trackingDispatcher.trackEventNumber(523);
             }
         },
         onKeySuccess: function () {

@@ -110,7 +110,6 @@ define(function (require) {
             var tipTitle;
             var tipVal;
             return function (key, x, y, e) {
-                config.trackingDispatcher.trackEventNumber(343);
                 index = e.pointIndex;
                 time = Moment.duration(Math.abs(e.value), type.type).humanize(true);
                 cat = self.categories[index];

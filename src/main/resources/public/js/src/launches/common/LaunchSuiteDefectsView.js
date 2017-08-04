@@ -36,7 +36,6 @@ define(function (require) {
         template: 'tpl-launch-suite-defects',
 
         events: {
-            'mouseenter [data-js-hover-defect]': 'onHoverDefectType',
             'click [data-js-link]': 'onClickDefectType'
         },
         bindings: {
@@ -88,33 +87,6 @@ define(function (require) {
                     model: self.model
                 });
                 this.applyBindings();
-            }
-        },
-        onHoverDefectType: function () {
-            if (this.model.get('type') === 'SUITE') {
-                switch (this.type) {
-                case ('product_bug'):
-                    config.trackingDispatcher.trackEventNumber(125);
-                    break;
-                case ('automation_bug'):
-                    config.trackingDispatcher.trackEventNumber(127);
-                    break;
-                case ('system_issue'):
-                    config.trackingDispatcher.trackEventNumber(129);
-                    break;
-                }
-            } else {
-                switch (this.type) {
-                case ('product_bug'):
-                    config.trackingDispatcher.trackEventNumber(54.1);
-                    break;
-                case ('automation_bug'):
-                    config.trackingDispatcher.trackEventNumber(56.1);
-                    break;
-                case ('system_issue'):
-                    config.trackingDispatcher.trackEventNumber(58.1);
-                    break;
-                }
             }
         },
         onClickDefectType: function () {

@@ -103,8 +103,7 @@ define(function (require, exports, module) {
         className: 'history-line-item',
 
         events: {
-            'click': 'onClickItem',
-            'mouseenter': 'onHoverItem'
+            'click': 'onClickItem'
         },
         bindings: {
             '[data-js-launch-number]': 'text: launchNumber',
@@ -165,9 +164,6 @@ define(function (require, exports, module) {
                 this.model.trigger('activate', this.model);
                 this.model.trigger('hover:false');
             }
-        },
-        onHoverItem: function(){
-            config.trackingDispatcher.trackEventNumber(189);
         },
         render: function() {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));

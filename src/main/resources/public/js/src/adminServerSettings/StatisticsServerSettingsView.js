@@ -67,11 +67,7 @@ define(function (require) {
             $('.statistics-list', this.$el).toggleClass('list-shown');
         },
         onChangeSwitcher: function () {
-            if (this.$switcher.prop('checked')) {
-                config.trackingDispatcher.trackEventNumber(512);
-            } else {
-                config.trackingDispatcher.trackEventNumber(512.5);
-            }
+            config.trackingDispatcher.trackEventNumber(512);
         },
         submit: function () {
             var self = this;

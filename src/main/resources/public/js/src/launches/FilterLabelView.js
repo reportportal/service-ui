@@ -69,30 +69,26 @@ define(function (require) {
                     self.markdownViewer && self.markdownViewer.destroy();
                     self.markdownViewer = new MarkdownViewer({ text: self.model.get('description') });
                     return self.markdownViewer.$el;
-                }, $('[data-js-filter-comment]', this.$el), this.$el,
-                function () { config.trackingDispatcher.trackEventNumber(18); });
+                }, $('[data-js-filter-comment]', this.$el));
             }
             Util.appendTooltip(function () {
                 var tooltip = new SimpleTooltipView({
                     message: Localization.launches.filterIsSharedByOtherUser
                 });
                 return tooltip.$el;
-            }, $('[data-js-filter-not-my]', this.$el), this.$el,
-                function () { config.trackingDispatcher.trackEventNumber(19); });
+            }, $('[data-js-filter-not-my]', this.$el));
             Util.appendTooltip(function () {
                 var tooltip = new SimpleTooltipView({
                     message: Localization.launches.filterIsShared
                 });
                 return tooltip.$el;
-            }, $('[data-js-filter-shared]', this.$el), this.$el,
-                function () { config.trackingDispatcher.trackEventNumber(20); });
+            }, $('[data-js-filter-shared]', this.$el));
             Util.appendTooltip(function () {
                 var tooltip = new SimpleTooltipView({
                     message: Localization.filters.notSaveDescription
                 });
                 return tooltip.$el;
-            }, $('[data-js-filter-not-save]', this.$el), this.$el,
-                function () { config.trackingDispatcher.trackEventNumber(21); });
+            }, $('[data-js-filter-not-save]', this.$el));
         },
         update: function () {
             this.setTooltip();
