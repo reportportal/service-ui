@@ -146,6 +146,9 @@
             color: $COLOR--failed;
             background: $COLOR--white-default;
             border: solid 1px $COLOR--gray-80;
+            width: auto;
+            max-width: 200px;
+            white-space: nowrap;
             &:after {
               border-bottom-color: $COLOR--white-default;
             }
