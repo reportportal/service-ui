@@ -90,8 +90,7 @@
     padding: 10px 0;
     a, span, p {
       word-wrap: break-word;
-      display: inline-block;
-      width: 100%;
+      display: inline;
     }
     & > div {
       padding-top: 5px;
@@ -147,6 +146,8 @@
   }
   .name-grid-cell {
     width: 30%;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
     .filter-edit {
       display: inline;
       vertical-align: top;
