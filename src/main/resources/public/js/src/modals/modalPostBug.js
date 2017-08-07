@@ -231,6 +231,9 @@ define(function (require) {
                             return (field.value[0] === item.valueId)
                                 || (field.value[0] === item.valueName);
                         });
+                        if (!defaultValue) {
+                            return '';
+                        }
                         return defaultValue.valueId || defaultValue.valueName;
                     }()) : (field.definedValues[0].valueId || field.definedValues[0].valueName || '')
                 });
