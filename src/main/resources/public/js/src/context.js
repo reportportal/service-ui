@@ -35,10 +35,12 @@ define(function (require) {
     var InvalidPage = require('invalidPage/invalidPage');
 
     var SingletonAppModel = require('model/SingletonAppModel');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
 
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
+    var userStorage = new SingletonUserStorage();
     var launchFilterCollection = new SingletonLaunchFilterCollection();
 
     var Context = {
@@ -125,6 +127,9 @@ define(function (require) {
             var data;
             var self = this;
             var renderPage;
+            if (projectId) {
+                userStorage.set({ lastProject: projectId });
+            }
             config.trackingDispatcher.pageView(contextName);
             this.prepareInsideView();
             this.currentContext = contextName;

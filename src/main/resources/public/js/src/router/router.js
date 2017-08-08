@@ -28,9 +28,10 @@ define(function (require) {
     var App = require('app');
     var TestRoute = require('TestRoute');
     var UserModel = require('model/UserModel');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
 
     var config = App.getInstance();
-
+    var userStorage = new SingletonUserStorage();
     var testRoute = new TestRoute();
 
     var Router = Backbone.Router.extend({
@@ -141,10 +142,10 @@ define(function (require) {
             Context.openRouted(project, 'filters', null, queryString);
         }),
         openApi: testRoute.checkTest('insidePage', function () {
-            Context.openRouted(config.project.projectId, 'api', null, null);
+            Context.openRouted(userStorage.get('lastProject'), 'api', null, null);
         }),
         userProfile: testRoute.checkTest('insidePage', function () {
-            Context.openRouted(config.project.projectId, 'user-profile', null, null);
+            Context.openRouted(userStorage.get('lastProject'), 'user-profile', null, null);
         }),
         openMembers: testRoute.checkTest('insidePage', function (project, action) {
             Context.openRouted(project, 'members', action, null);

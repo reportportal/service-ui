@@ -25,12 +25,8 @@ define(function (require) {
         initialize: function (options) {
             this.contextName = options.contextName; // for context check
             this.context = options.context;
-            this.header = new ApiHeaderView({
-                collection: this.collection
-            });
-            this.body = new ApiBodyView({
-                collection: this.collection
-            });
+            this.header = new ApiHeaderView();
+            this.body = new ApiBodyView();
             this.context.getMainView().$header.html(this.header.$el);
             this.context.getMainView().$body.html(this.body.$el);
         },
