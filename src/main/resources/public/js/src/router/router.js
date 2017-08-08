@@ -96,7 +96,7 @@ define(function (require) {
             'user-profile': 'userProfile',
             'registration?*queryString': 'registerUser',
 
-            'administrate/project-details/:id?*queryString': 'openAdminProjectDetails',
+            'administrate/project-details/:id?*queryString': 'openAdminProjectDetailsQuery',
             'administrate/project-details/:id': 'openAdminProjectDetails',
             'administrate/project-details/:id/:action': 'openAdminProjectDetails',
             'administrate/project-details/:id/:action/:userAction': 'openAdminProjectDetails',
@@ -176,7 +176,11 @@ define(function (require) {
         }),
         openAdminProjectDetails: testRoute.checkTest('insidePage', function (id, action, queryString) {
             Context.openAdmin('project-details', id, action, queryString);
+        }),
+        openAdminProjectDetailsQuery: testRoute.checkTest('insidePage', function (id, queryString) {
+            Context.openAdmin('project-details', id, null, queryString);
         })
+
     });
 
     return {
