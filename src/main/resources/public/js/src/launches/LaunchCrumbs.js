@@ -149,6 +149,7 @@ define(function (require) {
             var async = $.Deferred();
             var currentPath = [];
             var tempFilterModel;
+            this.mainFilterId = 'all';
             this.cacheModel = cacheModel;
             _.each(this.models, function (model) {
                 currentPath.push(model.get('id'));
@@ -164,6 +165,7 @@ define(function (require) {
                     var currentUrlFilters = splitId[1] ? '|' + decodeURIComponent(splitId[1]).replace(/,/g, '%2C') : '';
                     if (i === 0) {
                         level = 'filter';
+                        this.mainFilterId = currentNewPath;
                         tempFilterModel = new FilterModel({ id: currentNewPath, context: this.context });
                         partUrl = tempFilterModel.get('url') + currentUrlFilters;
                         tempFilterModel.destroy();
@@ -291,7 +293,7 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, {}));
         },
         renderPathNames: function () {
-            var allFilterModel = new FilterModel({ id: 'all', context: this.context });
+            var allFilterModel = new FilterModel({ id: this.model.collection.mainFilterId, context: this.context });
             var url = allFilterModel.get('url') + '/' + this.model.get('launchId');
             var data = [];
             allFilterModel.destroy();
