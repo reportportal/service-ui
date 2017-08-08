@@ -46,7 +46,7 @@ define(function (require, exports, module) {
             redirectUrl: null,
             projects: null,
             defaultProject: null,
-            roles: null,
+            // roles: null,
             label: null,
             name: 'anonymous',
             fullName: '',

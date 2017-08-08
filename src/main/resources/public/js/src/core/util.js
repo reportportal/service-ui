@@ -899,7 +899,7 @@ define(function (require, exports, module) {
                 return true;
             }
             var role = config.userModel.get('projects')[config.project.projectId] && config.userModel.get('projects')[config.project.projectId].projectRole;
-            return role === config.projectRolesEnum.project_manager || role === config.projectRolesEnum.lead;
+            return role === config.projectRolesEnum.project_manager;
         },
 
         hasExternalSystem: function () {

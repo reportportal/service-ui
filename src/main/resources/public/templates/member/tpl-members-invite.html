@@ -61,7 +61,7 @@
                         <ul class="dropdown-menu">
                             <% _.each(data.roles, function(role){ %>
                                 <li>
-                                    <a href="#" class="<%= (data.isLead && role == data.memberOption) ? 'disabled-option' : '' %>" data-value="<%= role %>">
+                                    <a href="#" class="<%= (role == data.memberOption) ? 'disabled-option' : '' %>" data-value="<%= role %>">
                                         <%= role.split('_').join(' ') %>
                                     </a>
                                 </li>
