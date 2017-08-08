@@ -44,7 +44,7 @@ define(function (require) {
             }
         },
         safeMessage: function (message) {
-            return message.escapeScript().replace(/\n */g, function (str) {
+            return message.escapeScript().escapeHtml().replace(/\n */g, function (str) {
                 return str.replace(/\n/g, '<br/>').replace(/ /g, '&nbsp;');
             });
         },
