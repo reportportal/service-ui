@@ -52,7 +52,7 @@ define(function (require) {
             return message.replace(/^!!!MARKDOWN_MODE!!!/, '');
         },
         supportMarkdown: function () {
-            return this.message.search(/!!!MARKDOWN_MODE!!!/) + 1;
+            return this.message.search(/^!!!MARKDOWN_MODE!!!/) + 1;
         },
         onDestroy: function () {
             this.markdownViewer && this.markdownViewer.destroy();
