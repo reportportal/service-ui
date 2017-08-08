@@ -33,6 +33,8 @@ define(function (require, exports, module) {
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var ModalDefectEditor = require('modals/modalDefectEditor');
     var LaunchStepTicketTooltipView = require('tooltips/LaunchStepTicketTooltipView');
+    var PostBugAction = require('launches/multipleActions/postBugAction');
+    var LoadBugAction = require('launches/multipleActions/loadBugAction');
 
     var config = App.getInstance();
 
@@ -41,52 +43,52 @@ define(function (require, exports, module) {
         tagName: 'a',
         events: {
             'click [data-js-issue-remove-ticket]': 'onClickRemove',
-            'mouseenter': 'onMouseEnter',
+            mouseenter: 'onMouseEnter'
         },
         bindings: {
             ':el': 'attr: {href: url}',
-            '[data-js-ticket-id]': 'text: ticketId',
+            '[data-js-ticket-id]': 'text: ticketId'
         },
-        initialize: function() {
+        initialize: function () {
             this.render();
             this.$el.attr('target', '_blank');
             this.hoverAction = false;
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
             this.tooltip = new LaunchStepTicketTooltipView();
             var self = this;
-            Util.appendTooltip(function() {
+            Util.appendTooltip(function () {
                 return self.tooltip.$el;
             }, this.$el, this.$el);
         },
-        onClickRemove: function(e) {
+        onClickRemove: function (e) {
             e.stopPropagation();
             e.preventDefault();
             this.model.collection.remove(this.model);
         },
-        onMouseEnter: function() {
-            if(!this.hoverAction) {
+        onMouseEnter: function () {
+            if (!this.hoverAction) {
                 this.hoverAction = true;
                 var self = this;
                 this.model.collection.getTicketInfo(this.model.get('ticketId'), this.model.get('systemId'))
-                    .done(function(data) {
+                    .done(function (data) {
                         if (data.summary.length > 200) {
                             self.tooltip.$el.width(432);
                         }
                         self.tooltip.update('<span>' + Localization.logs.summary +
-                            '</span><br>' + data.summary +' <br><br>' +
+                            '</span><br>' + data.summary + ' <br><br>' +
                             '<span>' + Localization.logs.status + '</span><br>' +
-                            ((data.status === 'Closed' || data.status === 'Resolved')?'<s>' + data.status + '</s>' : data.status)
+                            ((data.status === 'Closed' || data.status === 'Resolved') ? '<s>' + data.status + '</s>' : data.status)
                         );
                     })
-                    .fail(function() {
-                        self.tooltip.update('<span> '+ Localization.logs.ticketNotFound
-                            +'</span><br>' + Localization.logs.ticketStatusProblem);
-                    })
+                    .fail(function () {
+                        self.tooltip.update('<span> ' + Localization.logs.ticketNotFound
+                            + '</span><br>' + Localization.logs.ticketStatusProblem);
+                    });
             }
         },
-        destroy: function() {
+        destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
@@ -100,15 +102,15 @@ define(function (require, exports, module) {
             submitter: '',
             systemId: '',
             ticketId: '',
-            url: '',
+            url: ''
         }
     });
     var TicketCollection = Backbone.Collection.extend({
         model: TicketModel,
-        initialize: function() {
+        initialize: function () {
             this.cacheAnswer = {};
         },
-        getTicketInfo: function(ticketId, systemId) {
+        getTicketInfo: function (ticketId, systemId) {
             var async = $.Deferred();
             var self = this;
             if (this.cacheAnswer[ticketId] && this.cacheAnswer[ticketId][systemId]) {
@@ -118,8 +120,8 @@ define(function (require, exports, module) {
                     .done(function (ticket) {
                         self.cacheAnswer[ticketId] = {};
                         self.cacheAnswer[ticketId][systemId] = ticket;
-                        async.resolve(ticket)
-                     })
+                        async.resolve(ticket);
+                    })
                     .fail(function () {
                         async.reject();
                     });
@@ -138,12 +140,12 @@ define(function (require, exports, module) {
             '[data-js-issue-name]': 'text: issueName',
             '[data-js-issue-color]': 'attr: {style: format("background-color: $1", issueColor)}',
             '[data-js-issue-title]': 'attr: {title: issueTitle}',
-            '[data-js-edit-defect]': 'attr: {disabled: launch_isProcessing, title: editIssueTitle}, classes: {disabled: launch_isProcessing}',
+            '[data-js-edit-defect]': 'attr: {disabled: launch_isProcessing, title: editIssueTitle}, classes: {disabled: launch_isProcessing}'
         },
         computeds: {
             issueComment: {
                 deps: ['issue'],
-                get: function(issue) {
+                get: function (issue) {
                     var issue = this.model.getIssue();
                     if (issue && issue.comment) {
                         return issue.comment;
@@ -153,7 +155,7 @@ define(function (require, exports, module) {
             },
             issueName: {
                 deps: ['issue'],
-                get: function(issue) {
+                get: function (issue) {
                     var issue = this.model.getIssue();
                     if (issue && issue.issue_type) {
                         var defectModel = this.defetTypesCollection.getDefectByLocator(issue.issue_type);
@@ -164,7 +166,7 @@ define(function (require, exports, module) {
             },
             issueTitle: {
                 deps: ['issue'],
-                get: function(issue) {
+                get: function (issue) {
                     var issue = this.model.getIssue();
                     if (issue && issue.issue_type) {
                         var defectModel = this.defetTypesCollection.getDefectByLocator(issue.issue_type);
@@ -175,7 +177,7 @@ define(function (require, exports, module) {
             },
             issueColor: {
                 deps: ['issue'],
-                get: function(issue) {
+                get: function (issue) {
                     var issue = this.model.getIssue();
                     if (issue && issue.issue_type) {
                         var defectModel = this.defetTypesCollection.getDefectByLocator(issue.issue_type);
@@ -186,16 +188,16 @@ define(function (require, exports, module) {
             },
             editIssueTitle: {
                 deps: 'launch_isProcessing',
-                get: function(launch_isProcessing) {
+                get: function (launch_isProcessing) {
                     return launch_isProcessing ? Localization.launches.forbiddenIsProcessing : '';
                 }
-            },
+            }
         },
-        initialize: function(options) {
+        initialize: function (options) {
             this.pageType = options.pageType;
             this.defetTypesCollection = new SingletonDefectTypeCollection();
             var self = this;
-            this.defetTypesCollection.ready.done(function(){
+            this.defetTypesCollection.ready.done(function () {
                 self.render();
                 self.ticketsView = [];
                 self.ticketCollection = new TicketCollection();
@@ -203,31 +205,31 @@ define(function (require, exports, module) {
                 self.listenTo(self.ticketCollection, 'remove', self.onRemoveTicket);
                 self.listenTo(self.model, 'change:issue', self.onChangeIssue);
                 self.onChangeIssue();
-                self.markdownViewer = new MarkdownViewer({text: self.getBinding('issueComment')});
+                self.markdownViewer = new MarkdownViewer({ text: self.getBinding('issueComment') });
                 $('[data-js-issue-comment]', self.$el).html(self.markdownViewer.$el);
-                self.listenTo(self.model, 'change:issue', function(){ self.markdownViewer.update(self.getBinding('issueComment')); });
-                self.listenTo(self.markdownViewer, 'load', function () { self.trigger('load:comment'); })
+                self.listenTo(self.model, 'change:issue', function () { self.markdownViewer.update(self.getBinding('issueComment')); });
+                self.listenTo(self.markdownViewer, 'load', function () { self.trigger('load:comment'); });
             });
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {
-                model: this.model.toJSON({computed: true})
+                model: this.model.toJSON({ computed: true })
             }));
             this.applyBindings();
         },
-        onResetTicketCollection: function() {
+        onResetTicketCollection: function () {
             var self = this;
-            while(self.ticketsView.length) {
+            while (self.ticketsView.length) {
                 (self.ticketsView.pop()).destroy();
             }
             var $container = $('[data-js-issue-tickets]', this.$el);
-            _.each(this.ticketCollection.models, function(model) {
-                var view = new TicketView({model: model});
+            _.each(this.ticketCollection.models, function (model) {
+                var view = new TicketView({ model: model });
                 $container.append(view.$el);
                 self.ticketsView.push(view);
-            })
+            });
         },
-        onChangeIssue: function() {
+        onChangeIssue: function () {
             var tickets = [];
             var issue = this.model.getIssue();
             if (issue && issue.externalSystemIssues) {
@@ -235,20 +237,27 @@ define(function (require, exports, module) {
             }
             this.ticketCollection.reset(tickets);
         },
-        onClickEditDefect: function() {
-            if(this.pageType == 'logs'){
+        onClickEditDefect: function () {
+            if (this.pageType == 'logs') {
                 config.trackingDispatcher.trackEventNumber(192);
-            }
-            else {
+            } else {
                 config.trackingDispatcher.trackEventNumber(150);
             }
             var defectEditor = new ModalDefectEditor({
                 items: [this.model]
             });
-            defectEditor.show();
+            var self = this;
+            defectEditor.show()
+                .done(function (actionType) {
+                    if (actionType && actionType.action === 'postBug') {
+                        PostBugAction({ items: defectEditor.items });
+                    } else if (actionType && actionType.action === 'loadBug') {
+                        LoadBugAction({ items: defectEditor.items });
+                    }
+                });
         },
 
-        onRemoveTicket: function(ticketModel){
+        onRemoveTicket: function (ticketModel) {
             var ticketId = ticketModel.get('ticketId');
             var issue = this.model.getIssue();
             var newExternalSystem = _.reject(issue.externalSystemIssues, function (tk) {
@@ -256,10 +265,10 @@ define(function (require, exports, module) {
             });
             issue.externalSystemIssues = newExternalSystem;
             var self = this;
-            CoreService.removeTicket({issues: [{issue: issue, test_item_id: this.model.get('id')}]})
+            CoreService.removeTicket({ issues: [{ issue: issue, test_item_id: this.model.get('id') }] })
                 .done(function (data) {
                     self.model.setIssue(issue);
-                    Util.ajaxSuccessMessenger("removeTicket");
+                    Util.ajaxSuccessMessenger('removeTicket');
                 })
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error);
