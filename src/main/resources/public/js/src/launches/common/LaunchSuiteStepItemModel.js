@@ -187,7 +187,6 @@ define(function (require, exports, module) {
             var self = this;
             var isAdminLeadProjectMenedger = function () {
                 return (self.userModel.get('isAdmin') ||
-                    self.userModel.getRoleForCurrentProject() === config.projectRolesEnum.lead ||
                     self.userModel.getRoleForCurrentProject() === config.projectRolesEnum.project_manager);
             };
             var result = {

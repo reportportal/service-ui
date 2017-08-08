@@ -1,25 +1,25 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require, exports, module) {
+define(function (require, exports, module) {
     'use strict';
 
     var $ = require('jquery');
@@ -47,8 +47,8 @@ define(function(require, exports, module) {
             this.$el = this.context.getMainView().$body;
         },
         render: function () {
-            this.header = new Header({action: this.subContext, holder: this.context.getMainView().$header}).render();
-            /*$("#headerBar").append(Util.templates(this.permissionsMapTpl, {
+            this.header = new Header({ action: this.subContext, holder: this.context.getMainView().$header }).render();
+            /* $("#headerBar").append(Util.templates(this.permissionsMapTpl, {
                 btnVisible: {
                     btnPermissionMap: true,
                     btnProjectSettings: false,
@@ -56,7 +56,7 @@ define(function(require, exports, module) {
                 }
             }));*/
 
-            $("#headerBar [data-js-show-permissions-map]").click(this.onClickShowPermissionsMap);
+            $('#headerBar [data-js-show-permissions-map]').click(this.onClickShowPermissionsMap);
 
             this.$el.html(Util.templates(this.membersNavigationTpl, {
                 canManage: Util.canManageMembers(),
@@ -65,32 +65,32 @@ define(function(require, exports, module) {
                 projectId: config.project.projectId
             }));
 
-            this.$assignedMembers = $("#assignedMembers", this.$el);
-            this.$inviteMember = $("#inviteMember", this.$el);
-            this.$assignMember = $("#assignMember", this.$el);
+            this.$assignedMembers = $('#assignedMembers', this.$el);
+            this.$inviteMember = $('#inviteMember', this.$el);
+            this.$assignMember = $('#assignMember', this.$el);
 
             this.renderPageView();
             return this;
         },
-        //permissionsMapTpl: 'tpl-permissions-map',
+        // permissionsMapTpl: 'tpl-permissions-map',
         membersNavigationTpl: 'tpl-members-navigation',
         events: {
             'click .tab': 'updateRoute',
             'click [data-js-show-permissions-map]': 'onClickShowPermissionsMap'
         },
-        onClickShowPermissionsMap: function(e) {
+        onClickShowPermissionsMap: function (e) {
             e.preventDefault();
-            Util.getDialog({name: 'tpl-permissions-map-modal'})
+            Util.getDialog({ name: 'tpl-permissions-map-modal' })
                 .modal('show');
         },
         updateRoute: function (e) {
             var el = $(e.currentTarget);
             var query = el.data('query');
-            //url = urls.getMembersTab(query);
+            // url = urls.getMembersTab(query);
             if (el.parent().hasClass('active')) {
                 return;
             }
-            config.router.navigate(el.attr('href'), {silent: true});
+            config.router.navigate(el.attr('href'), { silent: true });
 
             this.subContext = query;
             this.header.update(query);
@@ -105,10 +105,10 @@ define(function(require, exports, module) {
         },
         getMembersDataObject: function () {
             var data = {
-                container: this.membersTab,
+                container: this.membersTab
                 // isDefaultProject: config.project.projectId === config.demoProjectName
             };
-            if (this.subContext !== "invite") {
+            if (this.subContext !== 'invite') {
                 data.projectId = config.project.projectId;
                 data.user = config.userModel.toJSON();
                 data.roles = config.projectRoles;
@@ -121,18 +121,18 @@ define(function(require, exports, module) {
         getViewForPage: function () {
             this.membersTab = null;
             switch (this.subContext) {
-                case "invite":
-                    this.membersTab = this.$inviteMember;
-                    return MembersInvite;
-                    break;
-                case "assign":
-                    this.membersTab = this.$assignMember;
-                    return MembersViewAssign;
-                    break;
-                default:
-                    this.membersTab = this.$assignedMembers;
-                    return MembersView;
-                    break;
+            case 'invite':
+                this.membersTab = this.$inviteMember;
+                return MembersInvite;
+                break;
+            case 'assign':
+                this.membersTab = this.$assignMember;
+                return MembersViewAssign;
+                break;
+            default:
+                this.membersTab = this.$assignedMembers;
+                return MembersView;
+                break;
             }
         },
         destroy: function () {
@@ -148,7 +148,7 @@ define(function(require, exports, module) {
         tpl: 'tpl-members-header',
         initialize: function (options) {
             this.$el = options.holder;
-            this.defaultAction = "assigned";
+            this.defaultAction = 'assigned';
             this.action = options.action;
         },
         render: function () {
@@ -165,6 +165,9 @@ define(function(require, exports, module) {
     });
 
     var MembersForms = Components.BaseView.extend({
+        events: {
+            'click .dropdown-menu a': 'selectRole'
+        },
         initialize: function (options) {
             this.$container = options.container;
             this.validator = null;
@@ -178,16 +181,12 @@ define(function(require, exports, module) {
             this.$container.empty().append(this.$el.html(Util.templates(this.formTpl, {
                 roles: this.getRoles(),
                 defaultProjectRole: config.defaultProjectRole,
-                isLead: role.projectRole == config.projectRolesEnum.lead,
                 memberOption: config.projectRolesEnum.project_manager,
                 isDefaultProject: this.isDefaultProject
             })));
             this.setupAnchors();
             this.setupValidation();
             return this;
-        },
-        events: {
-            'click .dropdown-menu a': 'selectRole'
         },
         selectRole: function (e) {
             e.preventDefault();
@@ -202,7 +201,7 @@ define(function(require, exports, module) {
             $('.select-value', btn).text(link.text());
         },
         toggleIfAdminSelected: function (val) {
-            if (Util.isAdmin({userRole: val})) {
+            if (Util.isAdmin({ userRole: val })) {
                 $('.admin-privileges', this.$el).show();
                 this.$selectRole.length && this.$selectRole.attr('disabled', 'disabled');
                 this.$selectRole.length && this.$selectRole.data('value', config.projectRoles[1]) && $('.select-value', this.$selectRole).text(config.projectRoles[1]);
@@ -213,14 +212,14 @@ define(function(require, exports, module) {
         },
         remoteValidation: function () {
             return {
-                type: "GET",
+                type: 'GET',
                 url: urls.userInfoValidation(),
                 data: {},
                 dataFilter: function (response) {
                     var data = JSON.parse(response);
                     return !data.is;
                 }
-            }
+            };
         },
         resetForm: function (form) {
             $('#' + form + 'Form', this.$el)[0].reset();
@@ -266,10 +265,9 @@ define(function(require, exports, module) {
 
             if (Util.isInPrivilegedGroup()) {
                 return roles;
-            } else {
-                var inx = _.indexOf(projectRole) || 2;
-                return roles.slice(0, inx);
             }
+            var inx = _.indexOf(projectRole) || 2;
+            return roles.slice(0, inx);
         },
         setupValidation: function () {
         },
@@ -280,7 +278,7 @@ define(function(require, exports, module) {
         setupAnchors: function () {
             this.$selectRole = $('#projectRole', this.$el);
         },
-        destroy: function() {
+        onDestroy: function () {
             Util.clearMessage();
         }
     });
@@ -299,9 +297,9 @@ define(function(require, exports, module) {
             var self = this;
             $.validator.setDefaults({
                 debug: true,
-                success: "valid"
+                success: 'valid'
             });
-            this.validator = $("#addMemberForm").validate({
+            this.validator = $('#addMemberForm').validate({
                 errorClass: 'has-error',
                 label: $('.rp-form-group'),
                 rules: {
@@ -380,8 +378,7 @@ define(function(require, exports, module) {
                 var el = $(o);
                 if (el.is('a')) {
                     el.addClass('disabled');
-                }
-                else {
+                } else {
                     el.attr('disabled', 'disabled').prop('disabled', 'disabled');
                 }
             });
@@ -396,18 +393,16 @@ define(function(require, exports, module) {
                 var el = $(o);
                 if (el.is('a')) {
                     el.removeClass('disabled');
-                }
-                else if(el.is('button.dropdown-toggle')) {
+                } else if (el.is('button.dropdown-toggle')) {
                     el.removeAttr('disabled').removeProp('disabled');
                     $('.admin-privileges', el.closest('.rp-form-group')).hide();
                     var def = el.data('defaultvalue');
-                    if(def){
+                    if (def) {
                         el.attr('data-value', def);
                         el.data('value', def);
                         $('.select-value', el).text(def);
                     }
-                }
-                else {
+                } else {
                     el.removeAttr('disabled').removeProp('disabled');
                     if (el.hasClass('select2-control')) {
                         $('#' + el.attr('id')).select2('data', null, false);
@@ -428,7 +423,7 @@ define(function(require, exports, module) {
                 accountRole: 'USER',
                 full_name: fullName,
                 password: this.$password.val()
-            }
+            };
         },
         generatePassword: function (e) {
             e.preventDefault();
@@ -438,7 +433,7 @@ define(function(require, exports, module) {
             }
         },
         randomPassword: function () {
-            var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+            var chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
                 passSize = 6,
                 pass = '';
             for (var i = 0, n = chars.length; i < passSize; ++i) {
@@ -450,6 +445,10 @@ define(function(require, exports, module) {
 
     var MembersInvite = MembersForms.extend({
         formTpl: 'tpl-members-invite',
+        events: {
+            'click #cancelInvite': 'resetForm',
+            'click .dropdown-menu a': 'selectRole'
+        },
         getData: function () {
             var project = config.project.projectId,
                 email = $('#email', this.$el).val(),
@@ -458,15 +457,15 @@ define(function(require, exports, module) {
                 default_project: project,
                 email: email,
                 role: projectRole
-            }
+            };
         },
         setupValidation: function () {
             var self = this;
             $.validator.setDefaults({
                 debug: true,
-                success: "valid"
+                success: 'valid'
             });
-            this.validator = $("#inviteMemberForm").validate({
+            this.validator = $('#inviteMemberForm').validate({
                 errorClass: 'has-error',
                 label: $('.rp-form-group'),
                 rules: {
@@ -498,10 +497,6 @@ define(function(require, exports, module) {
                 }
             });
         },
-        events: {
-            'click #cancelInvite': 'resetForm',
-            'click .dropdown-menu a': 'selectRole'
-        },
         resetForm: function (e) {
             e && e.preventDefault();
             MembersForms.prototype.resetForm.call(this, 'inviteMember');
@@ -509,7 +504,7 @@ define(function(require, exports, module) {
             el.length && $('#' + el.attr('id')).select2('data', null, false);
             this.$projectRole.removeAttr('disabled').removeProp('disabled');
             var def = this.$projectRole.data('defaultvalue');
-            if(def){
+            if (def) {
                 this.$projectRole.attr('data-value', def);
                 this.$projectRole.data('value', def);
                 $('.select-value', this.$projectRole).text(def);
@@ -557,7 +552,7 @@ define(function(require, exports, module) {
             this.isGrandAdmin = options.grandAdmin;
             this.pageType = 'PaginateProjectMembers_' + this.memberAction + '_' + this.projectId;
             this.appModel = new SingletonAppModel();
-            if(options.project){
+            if (options.project) {
                 this.appModel.set(options.project);
             }
         },
@@ -566,16 +561,16 @@ define(function(require, exports, module) {
         actionHeaderTpl: 'tpl-members-action-header',
         actionTpl: 'tpl-members-action',
         render: function () {
-            //render shell
+            // render shell
             this.$el.html(Util.templates(this.shellTpl, {
                 actionTpl: this.actionHeaderTpl,
                 grandAdmin: this.isGrandAdmin || false,
                 projectId: this.projectId,
-                util: Util,
+                util: Util
             }));
-            this.$members = $("#membersList", this.$el);
-            this.$total = $(".rp-members-qty:first", this.$el);
-            this.$memberFilter = $("#userFilter", this.$el);
+            this.$members = $('#membersList', this.$el);
+            this.$total = $('.rp-members-qty:first', this.$el);
+            this.$memberFilter = $('#userFilter', this.$el);
 
             Util.bootValidator(this.$memberFilter, [{
                 validator: 'minMaxNotRequired',
@@ -585,20 +580,20 @@ define(function(require, exports, module) {
             }]);
 
             this.paging = new Components.PagingToolbarSaveUser({
-                el: $(".project_list_paginate", this.$el),
+                el: $('.project_list_paginate', this.$el),
                 model: new Backbone.Model(),
                 pageType: this.pageType
             });
             this.listenTo(this.paging, 'page', this.onPage);
             this.listenTo(this.paging, 'count', this.onPageCount);
             var self = this;
-            this.paging.ready.done(function(){
+            this.paging.ready.done(function () {
                 self.searchString = '';
                 // var userStorageData = self.paging.getSettingsStorageData();
                 // if(userStorageData && userStorageData['filter.cnt.login']){
                 //     self.searchString = decodeURIComponent(userStorageData['filter.cnt.login']);
                 // }
-                if(self.paging.urlModel.get('filter.cnt.login')) {
+                if (self.paging.urlModel.get('filter.cnt.login')) {
                     self.searchString = self.paging.urlModel.get('filter.cnt.login');
                 }
                 self.$memberFilter.val(self.searchString);
@@ -607,17 +602,17 @@ define(function(require, exports, module) {
             });
             return this;
         },
-        onPage: function(page) {
+        onPage: function (page) {
             this.changeMembers();
         },
-        onPageCount: function(size) {
+        onPageCount: function (size) {
             this.changeMembers();
         },
-        changeMembers: function() {
+        changeMembers: function () {
             this.paging.render();
             this.loadMembers();
         },
-        getMembers: function(projectId, query){
+        getMembers: function (projectId, query) {
             return Service.getMembers(this.projectId, query);
         },
         loadMembers: function () {
@@ -629,7 +624,7 @@ define(function(require, exports, module) {
             };
             this.getMembers(this.projectId, query)
                 .done(function (data) {
-                    if(data.page.totalPages < data.page.number && data.page.totalPages != 0){
+                    if (data.page.totalPages < data.page.number && data.page.totalPages != 0) {
                         self.paging.trigger('page', data.page.totalPages);
                         return;
                     }
@@ -641,17 +636,16 @@ define(function(require, exports, module) {
                     self.$total.html(data.page.totalElements);
                 })
                 .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "loadMembers");
+                    Util.ajaxFailMessenger(error, 'loadMembers');
                     self.renderContent([], 'html');
                 });
         },
         searchFilter: function (item, searchString) {
             if (!searchString) {
                 return true;
-            } else {
-                var regex = new RegExp(searchString.escapeRE(), 'i');
-                return regex.test(item.userId) || regex.test(item.email) || regex.test(item.full_name);
             }
+            var regex = new RegExp(searchString.escapeRE(), 'i');
+            return regex.test(item.userId) || regex.test(item.email) || regex.test(item.full_name);
         },
         canEdit: function (member, projectRole) {
             return !Util.isYou(member) && config.userModel.hasPermissions(projectRole);
@@ -660,26 +654,26 @@ define(function(require, exports, module) {
             var projectId = this.projectId;
             return function (member) {
                 return Util.isUnassignedLock(member, member.assigned_projects[projectId]);
-            }
+            };
         },
         getColorClass: function (member) {
-            var color = "",
+            var color = '',
                 projectOptions = member.assigned_projects[this.projectId];
             if (projectOptions) {
                 color = (projectOptions.proposedRole === projectOptions.projectRole) ? 'btn-gray' : 'btn-orange';
             }
             return color;
         },
-        isPersonalProjectOwner: function(){
+        isPersonalProjectOwner: function () {
             var project = this.appModel.get('projectId'),
                 isPersonalProject = this.appModel.isPersonalProject();
-            return function(user){
+            return function (user) {
                 return isPersonalProject && (project === user.userId + '_personal');
-            }
+            };
         },
         renderMembers: function (members) {
             members = members || this.members;
-            if(members) {
+            if (members) {
                 this.removeScrollView();
                 if (members.length > config.membersAtATime) {
                     this.scrollView = new Scrollable.View({
@@ -696,7 +690,7 @@ define(function(require, exports, module) {
                 this.$total.html(members.length);
 
                 if (window.sessionStorage) {
-                   var memberId = window.sessionStorage.getItem('activeMember');
+                    var memberId = window.sessionStorage.getItem('activeMember');
                     if (memberId) {
                         $('[data-js-view-projects][data-id="' + memberId + '"]').click();
                     }
@@ -726,7 +720,7 @@ define(function(require, exports, module) {
                 canEdit: this.canEdit,
                 isGrandAdmin: this.isGrandAdmin,
                 defaultRole: this.defaultRole,
-                projectRoleIndex: this.projectRoleIndex,
+                projectRoleIndex: this.projectRoleIndex
                 // isDefaultProject: this.isDefaultProject
             };
         },
@@ -750,12 +744,12 @@ define(function(require, exports, module) {
                 id = '' + el.data('id'),
                 index = -1,
                 member = _.find(this.members, function (m, i) {
-                        var valid = m.userId === id;
-                        if (valid) {
-                            index = i;
-                        }
-                        return valid;
-                    }) || {};
+                    var valid = m.userId === id;
+                    if (valid) {
+                        index = i;
+                    }
+                    return valid;
+                }) || {};
 
             Util.confirmDeletionDialog({
                 callback: function () {
@@ -763,19 +757,18 @@ define(function(require, exports, module) {
                         newRole = member.userRole == config.accountRolesEnum.user
                             ? config.accountRolesEnum.administrator
                             : config.accountRolesEnum.user;
-                    Service.updateUser({role: newRole}, member.userId, _.keys(member.assigned_projects))
-                        .done(function () {                            
+                    Service.updateUser({ role: newRole }, member.userId, _.keys(member.assigned_projects))
+                        .done(function () {
                             member.userRole = newRole;
                             var data = self.getRenderObject([member]);
                             el.closest('.rp-table-row').replaceWith(Util.templates(self.membersTpl, data));
-                            Util.ajaxSuccessMessenger("changeRole", member.full_name || member.userId);
+                            Util.ajaxSuccessMessenger('changeRole', member.full_name || member.userId);
                         })
                         .fail(function (error) {
-                            Util.ajaxFailMessenger(error, "changeRole", member.full_name || member.userId);
+                            Util.ajaxFailMessenger(error, 'changeRole', member.full_name || member.userId);
                         });
-
                 }.bind(this),
-                message: "changeRole",
+                message: 'changeRole',
                 format: [member.full_name || member.userId]
             });
         },
@@ -783,7 +776,7 @@ define(function(require, exports, module) {
         filterMembers: function (e, data) {
             var changedVal = $(e.target).val() != this.prevVal;
             if (data.valid && changedVal) {
-                this.paging.urlModel.set({'filter.cnt.login': data.value});
+                this.paging.urlModel.set({ 'filter.cnt.login': data.value });
                 this.searchString = data.value;
                 this.paging.trigger('page', 1);
             }
@@ -822,7 +815,7 @@ define(function(require, exports, module) {
                     Util.ajaxSuccessMessenger('updateProjectRole', member.full_name || member.userId);
                 })
                 .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "updateProjectRole");
+                    Util.ajaxFailMessenger(error, 'updateProjectRole');
                 });
         },
         applyMemberAction: function (e) {
@@ -831,12 +824,12 @@ define(function(require, exports, module) {
                 id = '' + el.data('id'),
                 index = -1,
                 member = _.find(this.members, function (m, i) {
-                        var valid = m.userId === id;
-                        if (valid) {
-                            index = i;
-                        }
-                        return valid;
-                    }) || {};
+                    var valid = m.userId === id;
+                    if (valid) {
+                        index = i;
+                    }
+                    return valid;
+                }) || {};
             this.doAction(member, index, el);
         },
         removeMember: function (index, el) {
@@ -853,14 +846,14 @@ define(function(require, exports, module) {
                 cancelButtonText: Localization.ui.cancel,
                 okButtonDanger: true,
                 okButtonText: Localization.dialog.unAssignMemberBtn,
-                confirmFunction: function() {
+                confirmFunction: function () {
                     return Service.unAssignMember(member.userId, self.projectId)
                         .done(function () {
-                            Util.ajaxSuccessMessenger("unAssignMember");
+                            Util.ajaxSuccessMessenger('unAssignMember');
                             self.removeMember();
                         })
                         .fail(function (error) {
-                            Util.ajaxFailMessenger(error, "unAssignMember");
+                            Util.ajaxFailMessenger(error, 'unAssignMember');
                         });
                 }
             });
@@ -887,13 +880,13 @@ define(function(require, exports, module) {
             this.defaultRole = options.roles[1];
             MembersView.prototype.initialize.call(this, options);
         },
-        getMembers: function(projectId, query){
+        getMembers: function (projectId, query) {
             return Service.getAssignableMembers(this.projectId, query);
         },
         canEdit: function () {
             return function (member) {
                 return !Util.isYou(member);
-            }
+            };
         },
         applyMemberAction: function (e) {
             e.preventDefault();
@@ -916,24 +909,24 @@ define(function(require, exports, module) {
             Service.assignMember(data, self.projectId)
                 .done(function () {
                     var member = self.removeMember(index, el);
-                    Util.ajaxSuccessMessenger("assignMember", member[0].full_name || member[0].userId);
+                    Util.ajaxSuccessMessenger('assignMember', member[0].full_name || member[0].userId);
                 })
                 .fail(function (error) {
-                    Util.ajaxFailMessenger(error, "assignMember");
+                    Util.ajaxFailMessenger(error, 'assignMember');
                 });
         },
         updateProjectRole: function (e) {
             e.preventDefault();
             var el = $(e.currentTarget),
-                btn = el.closest('.rp-btn-group').find(".select-value:first");
+                btn = el.closest('.rp-btn-group').find('.select-value:first');
             if (el.hasClass('active') || el.hasClass('disabled')) {
                 return;
             }
             el.closest('ul').find('a').removeClass('active');
             el.addClass('active');
             btn.text(el.text());
-            var member = _.find(this.members, {userId: '' + btn.data('id')});
-            member['selectedRole'] = el.data('value');
+            var member = _.find(this.members, { userId: '' + btn.data('id') });
+            member.selectedRole = el.data('value');
         }
     });
 
@@ -944,5 +937,4 @@ define(function(require, exports, module) {
         MembersInvite: MembersInvite,
         MembersViewAssign: MembersViewAssign
     };
-
 });
