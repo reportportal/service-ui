@@ -18,10 +18,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
@@ -55,9 +56,9 @@ define(function (require, exports, module) {
             this.hoverAction = false;
         },
         render: function () {
+            var self = this;
             this.$el.html(Util.templates(this.template, {}));
             this.tooltip = new LaunchStepTicketTooltipView();
-            var self = this;
             Util.appendTooltip(function () {
                 return self.tooltip.$el;
             }, this.$el, this.$el);
@@ -68,9 +69,9 @@ define(function (require, exports, module) {
             this.model.collection.remove(this.model);
         },
         onMouseEnter: function () {
+            var self = this;
             if (!this.hoverAction) {
                 this.hoverAction = true;
-                var self = this;
                 this.model.collection.getTicketInfo(this.model.get('ticketId'), this.model.get('systemId'))
                     .done(function (data) {
                         if (data.summary.length > 200) {
@@ -145,7 +146,7 @@ define(function (require, exports, module) {
         computeds: {
             issueComment: {
                 deps: ['issue'],
-                get: function (issue) {
+                get: function () {
                     var issue = this.model.getIssue();
                     if (issue && issue.comment) {
                         return issue.comment;
@@ -155,10 +156,12 @@ define(function (require, exports, module) {
             },
             issueName: {
                 deps: ['issue'],
-                get: function (issue) {
+                get: function () {
                     var issue = this.model.getIssue();
+                    var defectModel;
                     if (issue && issue.issue_type) {
-                        var defectModel = this.defetTypesCollection.getDefectByLocator(issue.issue_type);
+                        defectModel = this.defetTypesCollection
+                            .getDefectByLocator(issue.issue_type);
                         return defectModel.get('longName').setMaxLength(20);
                     }
                     return '';
@@ -166,10 +169,12 @@ define(function (require, exports, module) {
             },
             issueTitle: {
                 deps: ['issue'],
-                get: function (issue) {
+                get: function () {
                     var issue = this.model.getIssue();
+                    var defectModel;
                     if (issue && issue.issue_type) {
-                        var defectModel = this.defetTypesCollection.getDefectByLocator(issue.issue_type);
+                        defectModel = this.defetTypesCollection
+                            .getDefectByLocator(issue.issue_type);
                         return defectModel.get('longName');
                     }
                     return '';
@@ -177,10 +182,12 @@ define(function (require, exports, module) {
             },
             issueColor: {
                 deps: ['issue'],
-                get: function (issue) {
+                get: function () {
                     var issue = this.model.getIssue();
+                    var defectModel;
                     if (issue && issue.issue_type) {
-                        var defectModel = this.defetTypesCollection.getDefectByLocator(issue.issue_type);
+                        defectModel = this.defetTypesCollection
+                            .getDefectByLocator(issue.issue_type);
                         return defectModel.get('color');
                     }
                     return '';
@@ -194,9 +201,9 @@ define(function (require, exports, module) {
             }
         },
         initialize: function (options) {
+            var self = this;
             this.pageType = options.pageType;
             this.defetTypesCollection = new SingletonDefectTypeCollection();
-            var self = this;
             this.defetTypesCollection.ready.done(function () {
                 self.render();
                 self.ticketsView = [];
@@ -219,10 +226,10 @@ define(function (require, exports, module) {
         },
         onResetTicketCollection: function () {
             var self = this;
+            var $container = $('[data-js-issue-tickets]', this.$el);
             while (self.ticketsView.length) {
                 (self.ticketsView.pop()).destroy();
             }
-            var $container = $('[data-js-issue-tickets]', this.$el);
             _.each(this.ticketCollection.models, function (model) {
                 var view = new TicketView({ model: model });
                 $container.append(view.$el);
@@ -238,15 +245,14 @@ define(function (require, exports, module) {
             this.ticketCollection.reset(tickets);
         },
         onClickEditDefect: function () {
-            if (this.pageType == 'logs') {
+            var defectEditor = new ModalDefectEditor({
+                items: [this.model]
+            });
+            if (this.pageType === 'logs') {
                 config.trackingDispatcher.trackEventNumber(192);
             } else {
                 config.trackingDispatcher.trackEventNumber(150);
             }
-            var defectEditor = new ModalDefectEditor({
-                items: [this.model]
-            });
-            var self = this;
             defectEditor.show()
                 .done(function (actionType) {
                     if (actionType && actionType.action === 'postBug') {
@@ -260,13 +266,13 @@ define(function (require, exports, module) {
         onRemoveTicket: function (ticketModel) {
             var ticketId = ticketModel.get('ticketId');
             var issue = this.model.getIssue();
+            var self = this;
             var newExternalSystem = _.reject(issue.externalSystemIssues, function (tk) {
                 return tk.ticketId === ticketId;
             });
             issue.externalSystemIssues = newExternalSystem;
-            var self = this;
             CoreService.removeTicket({ issues: [{ issue: issue, test_item_id: this.model.get('id') }] })
-                .done(function (data) {
+                .done(function () {
                     self.model.setIssue(issue);
                     Util.ajaxSuccessMessenger('removeTicket');
                 })
