@@ -1,0 +1,24 @@
+.github-auth-config {
+  width: 100%;
+  max-width: 850px;
+  .title-block {
+    width: calc(100% - 65px);
+    height: 30px;
+    margin-left: 65px;
+    margin-bottom: 20px;
+    padding-left: 10px;
+    background-color: $COLOR--white-four;
+    font-family: $OpenSansSemibold;
+    font-size: 12px;
+    text-transform: uppercase;
+    line-height: 30px;
+    color: $COLOR--charcoal-grey;
+
+    @media (max-width: $SCREEN_XS_MAX) {
+      display: none;
+    }
+  }
+  .rp-form {
+
+  }
+}

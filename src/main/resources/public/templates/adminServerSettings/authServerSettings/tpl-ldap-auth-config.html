@@ -1,0 +1,85 @@
+<div class="title-block"><%= data.text.admin.ldap %></div>
+<form class="rp-form">
+    <div class="rp-field switcher-field">
+        <span><%= data.text.admin.activateLdapAuth %></span>
+        <div class="ldap-auth-state-mobile" data-js-ldap-enable-mobile></div>
+        <label class="rp-switcher-big">
+            <span class="turn-on">ON</span>
+            <span class="turn-off">OFF</span>
+            <input type="checkbox" data-js-ldap-enable>
+            <div class="slider"></div>
+        </label>
+    </div>
+    <div class="config-fields" data-js-ldap-config>
+        <label class="rp-field ldap-url-field">
+            <span class="required"><%= data.text.admin.url %></span>
+            <span class="ldap">ldap://</span>
+            <input type="text" class="rp-input" data-js-ldap-url>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
+            <span class="required"><%= data.text.admin.baseDN %></span>
+            <input type="text" class="rp-input" data-js-base-dn>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
+            <span><%= data.text.admin.userDnPattern %></span>
+            <input type="text" class="rp-input" data-js-user-dn-pattern>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
+            <span><%= data.text.admin.userSearchFilter %></span>
+            <input type="text" class="rp-input" data-js-user-search-filter>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
+            <span><%= data.text.admin.groupSearchBase %></span>
+            <input type="text" class="rp-input" data-js-group-search-base>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
+            <span><%= data.text.admin.groupSearchFilter %></span>
+            <input type="text" class="rp-input" data-js-group-search-filter>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
+            <span><%= data.text.admin.passwordAttribute %></span>
+            <input type="text" class="rp-input" data-js-password-attribute>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
+            <span><%= data.text.admin.managerDn %></span>
+            <input type="text" class="rp-input" data-js-manager-dn>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
+            <span><%= data.text.admin.managerPassword %></span>
+            <input type="text" class="rp-input" data-js-manager-password>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
+            <span><%= data.text.admin.passwordEncoderType %></span>
+            <div class="dropdown-container" data-js-pass-enc-type-dropdown></div>
+        </label>
+        <label class="rp-field">
+            <span><%= data.text.forms.email %></span>
+            <input type="text" class="rp-input" data-js-email>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
+            <span><%= data.text.forms.fullName %></span>
+            <input type="text" class="rp-input" data-js-full-name>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
+            <span><%= data.text.admin.photo %></span>
+            <input type="text" class="rp-input" data-js-photo>
+            <span class="validate-hint"></span>
+        </label>
+    </div>
+    <div class="rp-field">
+        <button type="button" class="rp-btn rp-btn-submit" disabled data-js-submit-ldap-auth-settings>
+            <%= data.text.ui.submit %>
+        </button>
+    </div>
+</form>

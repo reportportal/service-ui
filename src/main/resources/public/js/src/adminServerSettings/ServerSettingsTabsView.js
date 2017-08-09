@@ -19,17 +19,15 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */ 
 
-define(function(require, exports, module) {
+define(function(require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
-    var ServerSettingsTabsView = require('adminServerSettings/ServerSettingsTabsView');
     var EmailSettings = require('adminServerSettings/EmailServerSettingsView');
-    var AuthSettings = require('adminServerSettings/AuthServerSettingsView');
+    var AuthSettings = require('adminServerSettings/authServerSettings/AuthServerSettingsView');
     var StatisticsSettings = require('adminServerSettings/StatisticsServerSettingsView');
     var DropDownComponent = require('components/DropDownComponent');
 

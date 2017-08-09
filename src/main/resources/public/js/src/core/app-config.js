@@ -160,6 +160,7 @@ define(function (require) {
                 emailWrong: /wrong email/i,
                 login: /^[0-9a-zA-Z-_]{1,128}$/,
                 fullName: /^[a-z0-9._-\s\u0400-\u04FF]{3,256}$/i,
+                domain: /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/,
                 originalPass: /^(.){4,25}$/,
                 onlyIntegers: /^\d+$/,
                 doubles: /^[0-9]+(\.[0-9]+)?$/,
@@ -281,7 +282,13 @@ define(function (require) {
             },
 
             minNameLength: 3,
-            maxNameLength: 55
+            maxNameLength: 55,
+
+            authTypes: {
+                gitHub: 'github',
+                activeDirectory: 'ad',
+                ldap: 'ldap'
+            }
         };
     };
 

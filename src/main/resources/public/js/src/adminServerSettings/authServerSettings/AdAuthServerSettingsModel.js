@@ -19,9 +19,23 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'header';
-@import 'all-users';
-@import 'server-settings';
-@import 'projects-list';
-@import 'project-details';
-@import 'authServerSettings/main';
+define(function (require) {
+    'use strict';
+
+    var Epoxy = require('backbone-epoxy');
+
+    var AdAuthSettingsModel = Epoxy.Model.extend({
+        defaults: {
+            adAuthEnabled: false,
+            domain: '',
+            url: '',
+            baseDn: '',
+            // synchronization attributes
+            email: '',
+            fullName: '',
+            photo: ''
+        }
+    });
+
+    return AdAuthSettingsModel;
+});
