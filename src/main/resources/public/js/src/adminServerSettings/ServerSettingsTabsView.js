@@ -1,25 +1,25 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/epam/ReportPortal
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function(require) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -42,31 +42,31 @@ define(function(require) {
         },
 
         initialize: function (options) {
-            this.tab = options.action || "email";
+            this.tab = options.action || 'email';
             this.render();
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.tpl, {tab: this.tab}));
+            this.$el.html(Util.templates(this.tpl, { tab: this.tab }));
             this.setupAnchors();
             this.setupSelectDropDown();
             this.renderTabContent();
         },
 
-        update: function(tab){
-            this.tab = tab || "email";
+        update: function (tab) {
+            this.tab = tab || 'email';
             this.renderTabContent();
         },
 
         setupSelectDropDown: function () {
             this.tabSelector = new DropDownComponent({
                 data: [
-                    {name: 'E-MAIL SERVER', value: 'email'},
-                    {name: 'AUTHORIZATION CONFIGURATION', value: 'auth'},
-                    {name: 'STATISTICS', value: 'statistics'},
+                    { name: 'E-MAIL SERVER', value: 'email' },
+                    { name: 'AUTHORIZATION CONFIGURATION', value: 'auth' },
+                    { name: 'STATISTICS', value: 'statistics' }
                 ],
                 multiple: false,
-                defaultValue: this.tab,
+                defaultValue: this.tab
             });
             $('[data-js-nav-tabs-mobile]', this.$el).html(this.tabSelector.$el);
             this.listenTo(this.tabSelector, 'change', this.updateTabs);
@@ -79,22 +79,24 @@ define(function(require) {
 
         updateTabs: function (tab) {
             switch (tab) {
-                case 'auth':
-                    config.trackingDispatcher.trackEventNumber(491);
-                    break;
-                default:
-                    config.trackingDispatcher.trackEventNumber(490);
+            case 'auth':
+                config.trackingDispatcher.trackEventNumber(491);
+                break;
+            default:
+                config.trackingDispatcher.trackEventNumber(490);
 
             }
             config.router.navigate('#administrate/settings/' + tab);
             this.update(tab);
         },
 
-        renderTabContent: function(){
+        renderTabContent: function () {
+            var ViewTab;
+
             this.tabView && this.tabView.destroy();
 
-            var viewTab = this.getTabView(this.tab);
-            this.tabView = new viewTab();
+            ViewTab = this.getTabView(this.tab);
+            this.tabView = new ViewTab();
             this.$tabContent.html(this.tabView.$el);
 
             $('[data-js-tab-action]', this.$el).closest('li.active').removeClass('active');
@@ -102,16 +104,14 @@ define(function(require) {
             this.tabSelector.activateItem(this.tab);
         },
 
-        getTabView: function(tab) {
+        getTabView: function (tab) {
             switch (tab) {
-                case 'auth':
-                    return AuthSettings;
-                    break;
-                case 'statistics':
-                    return StatisticsSettings;
-                    break;
-                default :
-                    return EmailSettings;
+            case 'auth':
+                return AuthSettings;
+            case 'statistics':
+                return StatisticsSettings;
+            default :
+                return EmailSettings;
             }
         },
 
@@ -119,7 +119,7 @@ define(function(require) {
             this.$tabContent = $('[data-js-tab-content]', this.$el);
         },
 
-        destroy: function(){
+        destroy: function () {
             this.tabView && this.tabView.destroy();
             this.undelegateEvents();
             this.stopListening();
@@ -130,5 +130,4 @@ define(function(require) {
     });
 
     return ServerSettingsTabsView;
-
 });
