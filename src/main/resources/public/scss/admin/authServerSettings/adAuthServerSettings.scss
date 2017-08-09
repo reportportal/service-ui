@@ -2,6 +2,7 @@
   width: 100%;
   max-width: 850px;
   .title-block {
+    position: relative;
     width: calc(100% - 65px);
     height: 30px;
     margin-left: 65px;
@@ -17,9 +18,21 @@
     @media (max-width: $SCREEN_XS_MAX) {
       display: none;
     }
+
+    .beta-badge {
+      top: 3px;
+      left: 123px;
+    }
   }
   .rp-form {
     .switcher-field {
+      .beta-badge {
+        top: 3px;
+        left: 183px;
+        @media (min-width: $SCREEN_SM_MIN) {
+          display: none;
+        }
+      }
       .ad-auth-state-mobile {
         display: block;
         width: 100%;
