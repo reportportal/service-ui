@@ -273,8 +273,11 @@ define(['app'], function (App) {
         return config.apiVersion + "settings/" + id +'/email';
     };
 
-    var adminAuthSettings = function(){
-        return '/uat/settings/default/oauth/github';
+    var adminAuthSettings = function (type) {
+        if (type === 'github') {
+            return '/uat/settings/default/oauth/' + type;
+        }
+        return '/uat/settings/auth/' + type;
     };
 
     var adminProjects = function (data) {

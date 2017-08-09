@@ -19,9 +19,30 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'header';
-@import 'all-users';
-@import 'server-settings';
-@import 'projects-list';
-@import 'project-details';
-@import 'authServerSettings/main';
+define(function (require) {
+    'use strict';
+
+    var Epoxy = require('backbone-epoxy');
+
+    var GithubAuthSettingsModel = Epoxy.Model.extend({
+        defaults: {
+            gitHubAuthEnabled: false,
+            clientId: '',
+            clientSecret: '',
+            organizations: ''
+        },
+
+        getOrganizations: function () {
+            try {
+                return JSON.parse(this.get('organizations'));
+            } catch (err) {
+                return [];
+            }
+        },
+        setOrganizations: function (organizations) {
+            this.set({ organizations: JSON.stringify(organizations) });
+        }
+    });
+
+    return GithubAuthSettingsModel;
+});
