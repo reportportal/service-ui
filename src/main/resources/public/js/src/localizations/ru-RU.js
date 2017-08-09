@@ -83,7 +83,7 @@ define(['util'], function () {
             allRights: 'Все права защищены',
             admin: 'АДМИНИСТРАТОР',
             manager: 'МЕНЕДЖЕР',
-            lead: 'ВЕДУЩИЙ СПЕЦИАЛИСТ',
+            operator: 'ОПЕРАТОР',
             member: 'УЧАСТНИК',
             customer: 'ЗАКАЗЧИК',
             user: 'ПОЛЬЗОВАТЕЛЬ (ВЛАДЕЛЕЦ)',
