@@ -67,10 +67,11 @@ define(function (require) {
                 sortingDirection: '',
                 search: ''
             },
-            projectRoles: ['CUSTOMER', 'MEMBER', 'PROJECT_MANAGER'],
+            projectRoles: ['CUSTOMER', 'OPERATOR', 'MEMBER', 'PROJECT_MANAGER'],
             defaultProjectRole: 'MEMBER',
             projectRolesEnum: {
                 customer: 'CUSTOMER',
+                operator: 'OPERATOR',
                 member: 'MEMBER',
                 project_manager: 'PROJECT_MANAGER'
             },

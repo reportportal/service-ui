@@ -83,7 +83,7 @@ define(['util'], function () {
             allRights: 'All rights reserved',
             admin: 'ADMIN',
             manager: 'MANAGER',
-            lead: 'LEAD',
+            operator: 'OPERATOR',
             member: 'MEMBER',
             customer: 'CUSTOMER',
             user: 'USER(OWNER)',
