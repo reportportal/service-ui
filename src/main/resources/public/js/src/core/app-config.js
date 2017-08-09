@@ -1,25 +1,25 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var _ = require('underscore');
@@ -48,8 +48,8 @@ define(function (require, exports, module) {
             router: null,
             deletingLaunches: [],
             cacheDelays: {
-                getMembers: 5*60*1000,
-                getAssignableMembers: 5*60*1000
+                getMembers: 5 * 60 * 1000,
+                getAssignableMembers: 5 * 60 * 1000
             },
 
             projectUrl: '/api/v1/project/',
@@ -67,24 +67,24 @@ define(function (require, exports, module) {
                 sortingDirection: '',
                 search: ''
             },
-            projectRoles: ['CUSTOMER', 'MEMBER', 'LEAD', 'PROJECT_MANAGER'],
+            projectRoles: ['CUSTOMER', 'OPERATOR', 'MEMBER', 'PROJECT_MANAGER'],
             defaultProjectRole: 'MEMBER',
             projectRolesEnum: {
                 customer: 'CUSTOMER',
+                operator: 'OPERATOR',
                 member: 'MEMBER',
-                lead: 'LEAD',
                 project_manager: 'PROJECT_MANAGER'
             },
             accountRoles: ['USER', 'ADMINISTRATOR'],
             defaultAccountRole: 'USER',
-            accountRolesEnum: {user: 'USER', administrator: 'ADMINISTRATOR'},
-            accountTypesEnum: {internal: "INTERNAL"},
-            btsEnum: {jira: "JIRA", tfs: "TFS", rally: "RALLY"},
-            demoProjectName: "",  //TODO remove all
-            breadcrumbMode: {expanded: 'expanded'},
+            accountRolesEnum: { user: 'USER', administrator: 'ADMINISTRATOR' },
+            accountTypesEnum: { internal: 'INTERNAL' },
+            btsEnum: { jira: 'JIRA', tfs: 'TFS', rally: 'RALLY' },
+            demoProjectName: '',  // TODO remove all
+            breadcrumbMode: { expanded: 'expanded' },
             commentAnchor: '',
 
-            dashboardNameSize: {min: 3, max: 128},
+            dashboardNameSize: { min: 3, max: 128 },
             maxDashboards: 50,
             maxWidgetsOnDashboard: 20,
             defaultWidgetWidth: 12,
@@ -119,44 +119,44 @@ define(function (require, exports, module) {
                 triggerMin: 3,
                 filterName: [3, 128],
                 filterUser: 3,
-                projectNameRange: [3, 256],
+                projectNameRange: [3, 256]
             },
 
             launchVerifyDelay: 3000,
             launchStatus: {
-                inProgress: "IN_PROGRESS",
+                inProgress: 'IN_PROGRESS',
                 stopped: 'STOPPED',
                 interrupted: 'INTERRUPTED',
                 reseted: 'RESETED',
                 skipped: 'SKIPPED'
             },
 
-            defectsGroupSorted :['TO_INVESTIGATE', 'PRODUCT_BUG', 'AUTOMATION_BUG', 'SYSTEM_ISSUE', 'NO_DEFECT'],
+            defectsGroupSorted: ['TO_INVESTIGATE', 'PRODUCT_BUG', 'AUTOMATION_BUG', 'SYSTEM_ISSUE', 'NO_DEFECT'],
 
             defaultColors: {
-                'total': '#489BEB',
-                'passed': '#87b77b',
-                'failed': '#f36c4a',
-                'skipped': '#bdc7cc',
-                'automationBug': '#f7d63e',
-                'noDefect': '#777777',
-                'productBug': '#ec3900',
-                'systemIssue': '#0274d1',
-                'toInvestigate': '#ffb743',
-                'investigated': '#87b87f',
-                'duration': '#507fd5',
-                'interrupted': '#a94442',
-                'notPassed': '#CD1B00',
-                'negative': '#e52e2e',
-                'zero': '#486192',
-                'positive': '#63c93b',
-                'invalid': '#ff3222',
-                'numberLaunches': '#0F55FF'
+                total: '#489BEB',
+                passed: '#87b77b',
+                failed: '#f36c4a',
+                skipped: '#bdc7cc',
+                automationBug: '#f7d63e',
+                noDefect: '#777777',
+                productBug: '#ec3900',
+                systemIssue: '#0274d1',
+                toInvestigate: '#ffb743',
+                investigated: '#87b87f',
+                duration: '#507fd5',
+                interrupted: '#a94442',
+                notPassed: '#CD1B00',
+                negative: '#e52e2e',
+                zero: '#486192',
+                positive: '#63c93b',
+                invalid: '#ff3222',
+                numberLaunches: '#0F55FF'
             },
 
             patterns: {
                 email: /^[a-z0-9._-]+@[a-z0-9_-]+?\.[a-z0-9]{2,}$/i,
-                emailInternal: "^((?!(@epam.com)).)*$",
+                emailInternal: '^((?!(@epam.com)).)*$',
                 emailWrong: /wrong email/i,
                 login: /^[0-9a-zA-Z-_]{1,128}$/,
                 fullName: /^[a-z0-9._-\s\u0400-\u04FF]{3,256}$/i,
@@ -181,95 +181,95 @@ define(function (require, exports, module) {
                 defaultPassword: '11111111',
                 projectNotFoundPattern: 'No project could be found',
                 projectSpecific: [
-                    {name: 'DEFAULT', value: 'DEFAULT'},
-                    {name: 'BDD', value: 'BDD'}
+                    { name: 'DEFAULT', value: 'DEFAULT' },
+                    { name: 'BDD', value: 'BDD' }
                 ],
                 interruptedJob: [
-                    {name: '1 hour', value: '1 hour'},
-                    {name: '3 hours', value: '3 hours'},
-                    {name: '6 hours', value: '6 hours'},
-                    {name: '12 hours', value: '12 hours'},
-                    {name: '1 day', value: '1 day'},
-                    {name: '1 week', value: '1 week'}
+                    { name: '1 hour', value: '1 hour' },
+                    { name: '3 hours', value: '3 hours' },
+                    { name: '6 hours', value: '6 hours' },
+                    { name: '12 hours', value: '12 hours' },
+                    { name: '1 day', value: '1 day' },
+                    { name: '1 week', value: '1 week' }
                 ],
                 keepLogs: [
-                    {name: '2 weeks', value: '2 weeks'},
-                    {name: '1 month', value: '1 month'},
-                    {name: '3 months', value: '3 months'},
-                    {name: '6 months', value: '6 months'}
+                    { name: '2 weeks', value: '2 weeks' },
+                    { name: '1 month', value: '1 month' },
+                    { name: '3 months', value: '3 months' },
+                    { name: '6 months', value: '6 months' }
                 ],
                 keepScreenshots: [
-                    {name: '1 week', value: '1 week'},
-                    {name: '2 weeks', value: '2 weeks'},
-                    {name: '3 weeks', value: '3 weeks'},
-                    {name: '1 month', value: '1 month'},
-                    {name: '3 months', value: '3 months'}
+                    { name: '1 week', value: '1 week' },
+                    { name: '2 weeks', value: '2 weeks' },
+                    { name: '3 weeks', value: '3 weeks' },
+                    { name: '1 month', value: '1 month' },
+                    { name: '3 months', value: '3 months' }
                 ],
                 btsList: [
-                    //{name: 'NONE', value: 'NONE'},
-                    {name: 'JIRA', value: 'JIRA'},
-                    {name: 'RALLY', value: 'RALLY'}//,
+                    // {name: 'NONE', value: 'NONE'},
+                    { name: 'JIRA', value: 'JIRA' },
+                    { name: 'RALLY', value: 'RALLY' }// ,
                     // {name: 'TFS', value: 'TFS'}
                 ],
                 btsJIRA: {
                     multiple: true,
                     disabledForEdit: ['issuetype'],
-                    credentialsErrorPattern: "Unauthorized (401)",
+                    credentialsErrorPattern: 'Unauthorized (401)',
                     logsAmount: 50,
                     authorizationType: [
-                        {name: text.ui.BASIC, value: "BASIC"}
-                        //{ name: text.ui.OAUTH, value: "OAUTH" }
+                        { name: text.ui.BASIC, value: 'BASIC' }
+                        // { name: text.ui.OAUTH, value: "OAUTH" }
                     ],
                     ticketType: [
-                        {name: 'STORY', value: 'STORY'},
-                        {name: 'BUG', value: 'BUG'},
-                        {name: 'IMPROVEMENT', value: 'IMPROVEMENT'}
+                        { name: 'STORY', value: 'STORY' },
+                        { name: 'BUG', value: 'BUG' },
+                        { name: 'IMPROVEMENT', value: 'IMPROVEMENT' }
                     ],
                     defaultSeverity: [
-                        {name: 'BLOCKER', value: 'BLOCKER'},
-                        {name: 'CRITICAL', value: 'CRITICAL'},
-                        {name: 'MAJOR', value: 'MAJOR'},
-                        {name: 'MINOR', value: 'MINOR'},
-                        {name: 'TRIVIAL', value: 'TRIVIAL'}
+                        { name: 'BLOCKER', value: 'BLOCKER' },
+                        { name: 'CRITICAL', value: 'CRITICAL' },
+                        { name: 'MAJOR', value: 'MAJOR' },
+                        { name: 'MINOR', value: 'MINOR' },
+                        { name: 'TRIVIAL', value: 'TRIVIAL' }
                     ],
                     canUseRPAuthorization: true
                 },
                 btsTFS: {
-                    credentialsErrorPattern: "Access denied connecting to TFS",
+                    credentialsErrorPattern: 'Access denied connecting to TFS',
                     authorizationType: [
-                        {name: text.ui.NTLM, value: "NTLM"}
-                        //{ name: text.ui.OAUTH, value: "OAUTH" }
+                        { name: text.ui.NTLM, value: 'NTLM' }
+                        // { name: text.ui.OAUTH, value: "OAUTH" }
                     ],
                     ticketType: [
-                        {name: 'BUG', value: 'BUG'}
+                        { name: 'BUG', value: 'BUG' }
                     ],
                     disabledForEdit: [],
                     canUseRPAuthorization: true
                 },
                 btsRALLY: {
                     authorizationType: [
-                        {name: text.ui.APIKEY, value: "APIKEY"}
-                        //{ name: text.ui.OAUTH, value: "OAUTH" }
+                        { name: text.ui.APIKEY, value: 'APIKEY' }
+                        // { name: text.ui.OAUTH, value: "OAUTH" }
                     ],
                     ticketType: [
-                        {name: 'BUG', value: 'BUG'}
+                        { name: 'BUG', value: 'BUG' }
                     ],
                     disabledForEdit: [],
                     canUseRPAuthorization: false
                 },
                 emailInCase: [
-                    {value: 'ALWAYS', name: 'Always'},
-                    {value: 'TO_INVESTIGATE', name: 'Launch has "To Investigate" items'},
-                    {value: 'FAILED', name: 'Launch has issues'},
-                    {value: 'MORE_10', name: '> 10% of items have issues'},
-                    {value: 'MORE_20', name: '> 20% of items have issues'},
-                    {value: 'MORE_50', name: '> 50% of items have issues'}
+                    { value: 'ALWAYS', name: 'Always' },
+                    { value: 'TO_INVESTIGATE', name: 'Launch has "To Investigate" items' },
+                    { value: 'FAILED', name: 'Launch has issues' },
+                    { value: 'MORE_10', name: '> 10% of items have issues' },
+                    { value: 'MORE_20', name: '> 20% of items have issues' },
+                    { value: 'MORE_50', name: '> 50% of items have issues' }
                 ]
             },
 
             forAdminSettings: {
                 protocol: [
-                    {value: 'smtp', name: 'SMTP'}
+                    { value: 'smtp', name: 'SMTP' }
                 ],
                 defaultProtocol: 'smtp'
             },
@@ -282,7 +282,7 @@ define(function (require, exports, module) {
 
             minNameLength: 3,
             maxNameLength: 55
-        }
+        };
     };
 
     var instance = null;
