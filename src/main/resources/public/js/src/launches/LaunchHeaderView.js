@@ -28,7 +28,6 @@ define(function (require) {
     var FilterModel = require('filters/FilterModel');
     var App = require('app');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
-    var DropdownButton = require('components/dropdownbutton/DropdownButton');
 
     var config = App.getInstance();
 
@@ -36,7 +35,8 @@ define(function (require) {
         events: {
             'click [data-js-add-filter]': 'onClickAddFilter',
             'click [data-js-all-link]': 'onClickAllLink',
-            'click [data-js-filter-entity-switcher]': 'onClickFilterEntitySwitcher'
+            'click [data-js-filter-entity-switcher]': 'onClickFilterEntitySwitcher',
+            'click [data-js-select-launch-option] a': 'onClickDropdownItem'
         },
 
         bindings: {
@@ -46,6 +46,18 @@ define(function (require) {
 
         template: 'tpl-launch-header',
         initialize: function () {
+            this.dropdownButtonLinks = {
+                links: [
+                    {
+                        name: 'All Launches',
+                        value: 'all'
+                    },
+                    {
+                        name: 'Latest Launches',
+                        value: 'latest'
+                    }
+                ]
+            };
             this.ready = $.Deferred();
             this.userStorage = new SingletonUserStorage();
             this.appStorage = new SingletonAppStorage();
@@ -61,30 +73,38 @@ define(function (require) {
         render: function () {
             this.launchFilterCollection.ready.done(function () {
                 this.listenTo(this.launchFilterCollection, 'reset', this.renderFilterList);
-                this.$el.html(Util.templates(this.template));
+                this.$el.html(Util.templates(this.template, this.dropdownButtonLinks));
+                this.selectOptions(this.appStorage.get('launchDistinct') || 'all');
                 this.applyBindings();
                 this.renderFilterList();
                 this.onChangeFilterCriteriaShow(null, this.userStorage.get('launchFilterCriteriaHide'));
                 this.ready.resolve();
-                this.selectButton = new DropdownButton({
-                    links: [
-                        {
-                            name:'All Launches',
-                            value: 'all'
-                        },
-                        {
-                            name:'Latest Launches',
-                            value: 'latest'
-                        }
-                    ],
-                    defaultValue: this.appStorage.get('launchDistinct') || 'all'
-                });
-                this.listenTo(this.selectButton, 'change', this.onChangeSelectButton);
-                $('[data-js-launch-selector]', this.$el).html(this.selectButton.$el);
             }.bind(this));
         },
-        onChangeSelectButton: function (value) {
-            this.appStorage.set({launchDistinct: value});
+        onClickDropdownItem: function (e) {
+            var value;
+            e.preventDefault();
+            if ($(e.currentTarget).hasClass('selected')) {
+                return;
+            }
+            value = $(e.currentTarget).data('value');
+            this.appStorage.set({ launchDistinct: value });
+            this.selectOptions(value);
+        },
+        selectOptions: function (value) {
+            var curName = '';
+            var curVal = '';
+            _.each(this.dropdownButtonLinks.links, function (item) {
+                if (item.value === value) {
+                    curName = item.name;
+                    curVal = item.value;
+
+                    return false;
+                }
+            });
+            $('[data-js-select-value]', this.$el).html(curName);
+            $('[data-value]', this.$el).removeClass('selected');
+            $('[data-value="' + curVal + '"]', this.$el).addClass('selected');
         },
         onChangeFilterCriteriaShow: function (model, hide) {
             if (hide) {
