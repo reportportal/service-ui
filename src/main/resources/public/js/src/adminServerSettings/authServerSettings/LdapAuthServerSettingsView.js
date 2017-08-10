@@ -47,19 +47,29 @@ define(function (require) {
             '[data-js-ldap-enable]': 'checked: ldapAuthEnabled',
             '[data-js-ldap-enable-mobile]': 'html: getLdapAuthState',
             '[data-js-ldap-config]': 'classes: {hide: not(ldapAuthEnabled)}',
-            '[data-js-ldap-url]': 'value: url',
-            '[data-js-base-dn]': 'value: baseDn',
-            '[data-js-user-dn-pattern]': 'value: userDnPattern',
-            '[data-js-user-search-filter]': 'value: userSearchFilter',
-            '[data-js-group-search-base]': 'value: groupSearchBase',
-            '[data-js-group-search-filter]': 'value: groupSearchFilter',
-            '[data-js-password-attribute]': 'value: passwordAttribute',
-            '[data-js-manager-dn]': 'value: managerDn',
-            '[data-js-manager-password]': 'value: managerPassword',
+            '[data-js-ldap-url]': 'value: trimValue(url)',
+            '[data-js-base-dn]': 'value: trimValue(baseDn)',
+            '[data-js-user-dn-pattern]': 'value: trimValue(userDnPattern)',
+            '[data-js-user-search-filter]': 'value: trimValue(userSearchFilter)',
+            '[data-js-group-search-base]': 'value: trimValue(groupSearchBase)',
+            '[data-js-group-search-filter]': 'value: trimValue(groupSearchFilter)',
+            '[data-js-password-attribute]': 'value: trimValue(passwordAttribute)',
+            '[data-js-manager-dn]': 'value: trimValue(managerDn)',
+            '[data-js-manager-password]': 'value: trimValue(managerPassword)',
 
-            '[data-js-email]': 'value: email',
-            '[data-js-full-name]': 'value: fullName',
-            '[data-js-photo]': 'value: photo'
+            '[data-js-email]': 'value: trimValue(email)',
+            '[data-js-full-name]': 'value: trimValue(fullName)',
+            '[data-js-photo]': 'value: trimValue(photo)'
+        },
+        bindingFilters: {
+            trimValue: {
+                get: function (value) {
+                    return value.trim();
+                },
+                set: function (value) {
+                    return value.trim();
+                }
+            }
         },
         computeds: {
             getLdapAuthState: {
@@ -104,11 +114,6 @@ define(function (require) {
             Util.hintValidator(this.$email, [
                 {
                     validator: 'required'
-                },
-                {
-                    validator: 'matchRegex',
-                    type: 'emailMatchRegex',
-                    pattern: config.patterns.email
                 }
             ]);
         },
@@ -164,6 +169,9 @@ define(function (require) {
         submitAuthSettings: function (e) {
             var ldapAuthEnabled;
             e.preventDefault();
+            $.each($('[data-js-ldap-config] .rp-input', this.$el), function (key, input) {
+                input.value = input.value.trim();
+            });
             ldapAuthEnabled = this.model.get('ldapAuthEnabled');
             if (ldapAuthEnabled) {
                 if (this.validate()) {
