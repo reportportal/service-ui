@@ -1,23 +1,23 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 define([
     'jquery',
@@ -27,29 +27,29 @@ define([
     'use strict';
 
     var call = callService.call;
-    
-    var getApiToken = function() {
+
+    var getApiToken = function () {
         return call('GET', urls.getApiToken());
     };
-    var generateApiToken = function() {
+    var generateApiToken = function () {
         return call('POST', urls.getApiToken());
     };
 
-    var userLogout = function() {
+    var userLogout = function () {
         return call('DELETE', urls.userLogout());
     };
-    var userLogin = function(data) {
+    var userLogin = function (data) {
         return call('POST', urls.userLogin(data));
     };
 
 
-    var getRegistryInfo = function(){
+    var getRegistryInfo = function () {
         return call('GET', urls.getRegistryInfo());
     };
 
     var getPreferences = function () {
         return call('GET', urls.getPreferences());
-        return call('GET', urls.getPreferences())
+        return call('GET', urls.getPreferences());
     };
 
     var getProfileImage = function (url) {
@@ -64,7 +64,7 @@ define([
         return call('GET', urls.autocompleteUserUrl(query));
     };
 
-    var getUserByEmail = function(query){
+    var getUserByEmail = function (query) {
         return call('GET', urls.userByEmail(query));
     };
 
@@ -103,7 +103,7 @@ define([
     };
 
     var addSharedDashboard = function (id) {
-        return call('POST', urls.favorites(), {resource_id: id, resource_type: "DASHBOARD"});
+        return call('POST', urls.favorites(), { resource_id: id, resource_type: 'DASHBOARD' });
     };
 
     var saveWidget = function (data) {
@@ -115,11 +115,11 @@ define([
     };
 
     var addWidgetToDashboard = function (data, id) {
-        return call('PUT', urls.dashboardById(id), {addWidget: data});
+        return call('PUT', urls.dashboardById(id), { addWidget: data });
     };
 
     var updateWidgetsOnDashboard = function (data, id) {
-        return call('PUT', urls.dashboardById(id), {updateWidgets: data});
+        return call('PUT', urls.dashboardById(id), { updateWidgets: data });
     };
 
     var getBtsTicket = function (ticketId, systemId) {
@@ -142,13 +142,13 @@ define([
     var getSharedWidgetData = function (id) {
         return call('GET', urls.widgetById(id));
     };
-    var saveFilter = function(query) {
+    var saveFilter = function (query) {
         return call('GET', urls.saveFilter(query));
     };
     var getOwnFilters = function () {
         return call('GET', urls.ownFilters());
     };
-    var getFilterNames = function(){
+    var getFilterNames = function () {
         return call('GET', urls.filterNames());
     };
     var getSharedFilters = function () {
@@ -170,25 +170,25 @@ define([
     var loadWidget = function (url) {
         return call('GET', url);
     };
-    var loadDashboardWidget = function(widgetId) {
+    var loadDashboardWidget = function (widgetId) {
         return call('GET', urls.getProjectBase() + '/widget/' + widgetId);
-    }
+    };
 
     var updateDefaultProject = function (project) {
-        return call('PUT', urls.userUrl(), {default_project: project}, null, true);
+        return call('PUT', urls.userUrl(), { default_project: project }, null, true);
     };
 
     var getUserInfo = function (login) {
-        return call('GET', urls.addMemberUrl() + "/" + login);
+        return call('GET', urls.addMemberUrl() + '/' + login);
     };
 
-    var getCurrentUser = function(){
+    var getCurrentUser = function () {
         return call('GET', urls.addMemberUrl());
-    }
+    };
 
-    var getUserAssignedProjects = function(login) {
-        return call('GET', urls.addMemberUrl() + "/" + login + '/projects')
-    }
+    var getUserAssignedProjects = function (login) {
+        return call('GET', urls.addMemberUrl() + '/' + login + '/projects');
+    };
 
     var updateProject = function (data) {
         return call('PUT', urls.updateProject(), data);
@@ -220,6 +220,9 @@ define([
     var getBtsFields = function (id, type) {
         return call('GET', urls.btsFields(id, type));
     };
+    var getBtsTypes = function (id) {
+        return call('GET', urls.btsTypes(id));
+    };
 
     var postBugToBts = function (data, id) {
         return call('POST', urls.postBug(id), data);
@@ -250,7 +253,7 @@ define([
     };
 
     var finishLaunch = function (id) {
-        return call('PUT', urls.launchFinishUrl(id), {end_time: new Date().getTime()});
+        return call('PUT', urls.launchFinishUrl(id), { end_time: new Date().getTime() });
     };
 
     var removeTicket = function (data) {
@@ -283,11 +286,11 @@ define([
     };
 
     var initializePassChange = function (email) {
-        return call('POST', urls.initPassChange(), {email: email});
+        return call('POST', urls.initPassChange(), { email: email });
     };
 
     var submitPassReset = function (pass, uuid) {
-        return call('POST', urls.submitPassReset(), {password: pass, uuid: uuid});
+        return call('POST', urls.submitPassReset(), { password: pass, uuid: uuid });
     };
 
     var submitPassChange = function (data) {
@@ -310,7 +313,7 @@ define([
         return call('PUT', urls.generateUUID());
     };
 
-    var externalForceUpdate = function(accountType){
+    var externalForceUpdate = function (accountType) {
         return call('POST', urls.updateExternalProfile(accountType));
     };
 
@@ -318,48 +321,48 @@ define([
         return call('GET', urls.queryByLaunchName(query.term));
     };
 
-    var getTestItemInfo = function(id){
+    var getTestItemInfo = function (id) {
         return call('GET', urls.itemByKey(id));
     };
-    
-    var getTestItemsInfo = function(ids){
+
+    var getTestItemsInfo = function (ids) {
         return call('GET', urls.itemsByKeys(ids));
     };
 
-    var getLaunchItem = function(type, id){
+    var getLaunchItem = function (type, id) {
         return call('GET', urls.getLaunchItemUrl(type, id));
     };
 
-    var deleteLaunch = function(id){
+    var deleteLaunch = function (id) {
         return call('DELETE', urls.deleteLaunchUrl(id), null, null, true);
     };
 
-    var deleteTestItem = function(id){
+    var deleteTestItem = function (id) {
         return call('DELETE', urls.deleteTestItemUrl(id), null, null, true);
     };
-    
-    var getDefectTypes = function(projectId){
+
+    var getDefectTypes = function (projectId) {
         return call('GET', urls.getDefectTypes(projectId));
     };
-    
-    var postDefectTypes = function(projectId, data){
+
+    var postDefectTypes = function (projectId, data) {
         return call('POST', urls.postDefectTypes(projectId), data);
     };
-    
-    var putDefectType = function(projectId, data){
+
+    var putDefectType = function (projectId, data) {
         return call('PUT', urls.postDefectTypes(projectId), data);
     };
-    
-    var deleteDefectType = function(projectId, id){
+
+    var deleteDefectType = function (projectId, id) {
         return call('DELETE', urls.postDefectTypes(projectId) + id);
     };
-    var generateDemoData = function(data){
+    var generateDemoData = function (data) {
         return call('POST', urls.postDemoDataUrl(), data);
     };
     var toggleAnalytics = function (data) {
         return call('PUT', urls.toggleAnalytics(), data);
     };
-    
+
 
     return {
         getApiToken: getApiToken,
@@ -367,9 +370,9 @@ define([
 
         userLogout: userLogout,
         userLogin: userLogin,
-        
+
         getRegistryInfo: getRegistryInfo,
-        
+
         getPreferences: getPreferences,
         getProfileImage: getProfileImage,
         getProject: getProject,
@@ -433,6 +436,7 @@ define([
         getBtsFields: getBtsFields,
         postBugToBts: postBugToBts,
         loadBugs: loadBugs,
+        getBtsTypes: getBtsTypes,
 
         checkForStatusUpdate: checkForStatusUpdate,
 
@@ -448,8 +452,8 @@ define([
 
         deleteLaunch: deleteLaunch,
         deleteTestItem: deleteTestItem,
-        
-        getDefectTypes:getDefectTypes,
+
+        getDefectTypes: getDefectTypes,
         postDefectTypes: postDefectTypes,
         putDefectType: putDefectType,
         deleteDefectType: deleteDefectType,
@@ -457,6 +461,6 @@ define([
         getUserByEmail: getUserByEmail,
         generateDemoData: generateDemoData,
 
-        toggleAnalytics: toggleAnalytics,
-    }
+        toggleAnalytics: toggleAnalytics
+    };
 });

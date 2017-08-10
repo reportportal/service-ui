@@ -67,15 +67,18 @@
     <div id="externalError" class="external-error alert alert-danger"
          data-casual="<%= data.text.bts.errorInteracting %>"
          data-noproject="<%= data.text.bts.projectNotFound %>"></div>
-    <div id="fieldsLoader" class="fields-loader">
+    <div class="fields-loader" data-js-issue-type-loader>
         <div class="loader">
             <i class="material-icons loader-animation">autorenew</i>
         </div>
     </div>
-    <div id="fieldsWrapper" class="bts-fields-wrapper">
+    <div id="fieldsWrapper" class="bts-fields-wrapper" data-js-bts-fields-wrapper>
         <div class="rp-form-group clearfix"><!--DO NOT REMOVE--></div>
-        <div class="rp-form-group clearfix title-block-wrapper">
+        <div class="rp-form-group clearfix title-block-wrapper edit-title">
             <h4 class="common-title"><%= data.text.bts.selectType %></h4>
+        </div>
+        <div class="rp-form-group clearfix title-block-wrapper not-edit-title">
+            <h4 class="common-title"><%= data.text.bts.defaultProperties %></h4>
         </div>
         <div class="rp-form-group clearfix group-title-block">
             <div class="inputs-caption">
@@ -86,9 +89,9 @@
             </div>
         </div>
 
-        <div class="bts-fields">
+        <div class="bts-fields edit-field">
             <div class="rp-form-group">
-                <label class="bts-field-label rp-control-label obligatory-field custom-style-1" for="issuetype">Issue Type</label>
+                <label class="bts-field-label rp-control-label obligatory-field custom-style-1">Issue Type</label>
                 <div class="bts-field-input custom-style-1">
                     <div data-js-issue-type-select></div>
                 </div>
@@ -103,8 +106,13 @@
         </div>
 
 
-        <div class="rp-form-group clearfix title-block-wrapper">
+        <div class="rp-form-group clearfix title-block-wrapper edit-title">
             <h4 class="common-title"><%= data.text.bts.defaultProperties %></h4>
+        </div>
+        <div id="fieldsLoader" class="fields-loader">
+            <div class="loader">
+                <i class="material-icons loader-animation">autorenew</i>
+            </div>
         </div>
         <div id="dynamicFields" class="bts-fields"></div>
         <div class="rp-form-group clearfix btn-controls fields-controls">

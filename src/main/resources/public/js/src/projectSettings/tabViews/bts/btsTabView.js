@@ -214,32 +214,37 @@ define(function (require) {
         },
 
         renderFields: function () {
+            var self = this;
             if (this.model.get('id')) {
-                this.selectIssueType && this.selectIssueType.destroy();
-                this.selectIssueType = new DropDownComponent({
-                    data: [
-                        { name: 'Bug', value: 'BUG' },
-                        { name: 'Issue', value: 'ISSUE' }
-                    ],
-                    defaultValue: 'BUG'
-                });
-                $('[data-js-issue-type-select]', this.$el).html(this.selectIssueType.$el);
-                if (this.model.get('fields').length) {
-                    this.fieldsView && this.fieldsView.destroy();
-                    this.fieldsView = new BtsFieldsView({
-                        holder: this.$dynamicFieldsWrapper,
-                        fields: this.model.get('fields'),
+                if (self.model.get('fields').length) {
+                    self.fieldsView = new BtsFieldsView({
+                        holder: self.$dynamicFieldsWrapper,
+                        fields: self.model.get('fields'),
                         editable: true
                     }).render();
-                    this.$fieldsWrapper.show();
+                    $('[data-js-bts-fields-wrapper]', this.$el).removeClass('edit-mode');
                 } else {
-                    this.fieldsView = new BtsFieldsView({
-                        holder: this.$dynamicFieldsWrapper,
-                        fields: [],
-                        editable: true
+                    if (this.selectIssueType) {
+                        this.stopListening(this.selectIssueType);
+                        this.selectIssueType.destroy();
+                    }
+                    $('[data-js-issue-type-loader]', self.$el).show();
+                    Service.getBtsTypes(this.model.get('id')).done(function (types) {
+                        self.selectIssueType = new DropDownComponent({
+                            data: _.map(types, function (type) {
+                                return { name: type, value: type };
+                            }),
+                            defaultValue: types[0]
+                        });
+                        $('[data-js-issue-type-select]', self.$el).html(self.selectIssueType.$el);
+                        self.listenTo(self.selectIssueType, 'change', self.loadDefaultBtsFields);
+                        self.loadDefaultBtsFields();
+                    }).always(function () {
+                        $('[data-js-issue-type-loader]', self.$el).hide();
                     });
-                    this.loadDefaultBtsFields();
+                    $('[data-js-bts-fields-wrapper]', this.$el).addClass('edit-mode');
                 }
+                self.$fieldsWrapper.show();
             }
         },
 
@@ -343,6 +348,12 @@ define(function (require) {
             var self = this;
             config.trackingDispatcher.trackEventNumber(409);
             this.$fieldsLoader.show();
+            this.fieldsView && this.fieldsView.destroy();
+            this.fieldsView = new BtsFieldsView({
+                holder: this.$dynamicFieldsWrapper,
+                fields: [],
+                editable: true
+            });
             Service.getBtsFields(this.model.get('id'), this.selectIssueType.getValue())
                 .done(function (data) {
                     self.$fieldsLoader.hide();

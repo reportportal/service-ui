@@ -1,41 +1,41 @@
 /*
  * Copyright 2016 EPAM Systems
- * 
- * 
+ *
+ *
  * This file is part of EPAM Report Portal.
  * https://github.com/reportportal/service-ui
- * 
+ *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Report Portal is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
- */ 
+ */
 
 define(['app'], function (App) {
     'use strict';
 
     var config = App.getInstance();
 
-    var getApiToken = function() {
+    var getApiToken = function () {
         return '/uat/sso/me/apitoken';
     };
-    
-    var userLogout = function() {
-          return '/uat/sso/me'
+
+    var userLogout = function () {
+        return '/uat/sso/me';
     };
-    var userLogin = function(data) {
-        return '/uat/sso/oauth/token?grant_type=password&password='+ data.password + '&username='+ data.login;
+    var userLogin = function (data) {
+        return '/uat/sso/oauth/token?grant_type=password&password=' + data.password + '&username=' + data.login;
     };
 
-    var getRegistryInfo = function() {
+    var getRegistryInfo = function () {
         return '/composite/info';
     };
 
@@ -52,16 +52,16 @@ define(['app'], function (App) {
     };
     var getFilters = function (ids) {
         var idsString = ids.join(',');
-        return getProjectBase() + "/filter/filters?ids=" + idsString;
+        return getProjectBase() + '/filter/filters?ids=' + idsString;
     };
     var saveFilter = function (query) {
-        if(query) {
+        if (query) {
             return getProjectBase() + '/filter' + query;
         }
         return getProjectBase() + '/filter';
     };
     var filterById = function (id) {
-        return saveFilter() + "/" + id;
+        return saveFilter() + '/' + id;
     };
     var filterNames = function () {
         return saveFilter() + '/names';
@@ -86,35 +86,35 @@ define(['app'], function (App) {
         return saveFilter() + '/' + id;
     };
     var filtersBase = function () {
-        return "#" + config.project.projectId + "/filters";
+        return '#' + config.project.projectId + '/filters';
     };
     var getPreferences = function () {
         var userAttr = config.userModel.toJSON();
-        return config.apiVersion + "project/" + (config.project.projectId || userAttr.defaultProject) + "/preference/" + userAttr.name;
+        return config.apiVersion + 'project/' + (config.project.projectId || userAttr.defaultProject) + '/preference/' + userAttr.name;
     };
     var getProject = function (id) {
         return config.projectUrl + (id || config.project.projectId || config.userModel.get('defaultProject'));
     };
     var launchesBase = function () {
-        return "#" + config.project.projectId + "/launches";
+        return '#' + config.project.projectId + '/launches';
     };
     var userDebugBade = function () {
-        return "#" + config.project.projectId + "/userdebug";
+        return '#' + config.project.projectId + '/userdebug';
     };
     var tabUrl = function (filtersUrl) {
-        return launchesBase() + "/all?" + filtersUrl;
+        return launchesBase() + '/all?' + filtersUrl;
     };
 
-    var getLaunchBase = function() {
+    var getLaunchBase = function () {
         return getProjectBase() + '/launch';
     };
     var getLaunchMerge = function () {
         return getLaunchBase() + '/merge';
     };
-    var getLaunchUpdate = function() {
+    var getLaunchUpdate = function () {
         return getLaunchBase() + '/update';
     };
-    var getLaunchStop = function() {
+    var getLaunchStop = function () {
         return getLaunchBase() + '/stop';
     };
 
@@ -127,7 +127,7 @@ define(['app'], function (App) {
     var userAutoCompleteUrl = function (term, mode) {
         return getProjectBase() + '/launch/owners?filter.cnt.user=' + encodeURI(term) + (mode ? '&mode=' + mode : '');
     };
-    var autocompleteUserUrl = function(term){
+    var autocompleteUserUrl = function (term) {
         return config.apiVersion + 'project/' + config.project.projectId + '/usernames?filter.cnt.users=' + encodeURI(term);
     };
     var tagsLaunchAutoCompleteUrl = function (term, id) {
@@ -165,13 +165,13 @@ define(['app'], function (App) {
     };
 
     var createExternalSystem = function () {
-        return getProjectBase() + "/external-system";
+        return getProjectBase() + '/external-system';
     };
     var updateExternalSystem = function (id) {
-        return getProjectBase() + "/external-system/" + id;
+        return getProjectBase() + '/external-system/' + id;
     };
     var clearExternalSystem = function () {
-        return getProjectBase() + "/external-system/clear";
+        return getProjectBase() + '/external-system/clear';
     };
     var projectUsers = function (query) {
         return updateProject() + '/users' + (query ? '?page.page=1&page.size=50&page.sort=login,ASC&filter.cnt.name=' + query : '');
@@ -192,10 +192,10 @@ define(['app'], function (App) {
         return getChartProjectBase() + '/widget';
     };
     var widgetById = function (id) {
-        return widget() + "/" + id;
+        return widget() + '/' + id;
     };
     var chartById = function (id) {
-        return chart() + "/" + id;
+        return chart() + '/' + id;
     };
     var widgetNames = function () {
         return getProjectBase() + '/widget/names/all';
@@ -222,7 +222,7 @@ define(['app'], function (App) {
         return dashboard() + '/shared';
     };
     var redirectToDashboard = function (id) {
-        return "#" + config.project.projectId + '/dashboard' + (id ? '/' + id : '');
+        return '#' + config.project.projectId + '/dashboard' + (id ? '/' + id : '');
     };
     var favorites = function () {
         return getProjectBase() + '/favorites';
@@ -240,6 +240,9 @@ define(['app'], function (App) {
         }
         return url;
     };
+    var btsTypes = function (id) {
+        return getProjectBase() + '/external-system/' + id + '/issue_types';
+    };
     var postBug = function (id) {
         return getProjectBase() + '/external-system/' + id + '/ticket';
     };
@@ -247,34 +250,34 @@ define(['app'], function (App) {
         return itemBase() + '/issue/add';
     };
     var getBtsTicket = function (ticketId, systemId) {
-        return getProjectBase() + "/external-system/" + systemId + "/ticket/" + ticketId;
+        return getProjectBase() + '/external-system/' + systemId + '/ticket/' + ticketId;
     };
     var itemBase = function () {
-        return getProjectBase() + "/item";
+        return getProjectBase() + '/item';
     };
     var historyGrid = function (ids, depth) {
-        return itemBase() + "/history?ids=" + ids.toString() + "&history_depth=" + depth;
+        return itemBase() + '/history?ids=' + ids.toString() + '&history_depth=' + depth;
     };
     var historyGridUrl = function (ids, depth) {
-        return window.location.hash + "/history?ids=" + ids.join(',') + "&history_depth=" + depth;
+        return window.location.hash + '/history?ids=' + ids.join(',') + '&history_depth=' + depth;
     };
     var adminProjectRoot = function () {
-        return config.apiVersion + "project";
+        return config.apiVersion + 'project';
     };
     var adminProjectRootId = function (id) {
-        return adminProjectRoot() + "/" + id;
+        return adminProjectRoot() + '/' + id;
     };
 
     var getAdminSettings = function (id) {
-        return config.apiVersion + "settings/" + id;
+        return config.apiVersion + 'settings/' + id;
     };
 
     var setAdminSettings = function (id) {
-        return config.apiVersion + "settings/" + id +'/email';
+        return config.apiVersion + 'settings/' + id + '/email';
     };
 
-    var deleteEmailSettings = function(id){
-        return config.apiVersion + "settings/" + id +'/email';
+    var deleteEmailSettings = function (id) {
+        return config.apiVersion + 'settings/' + id + '/email';
     };
 
     var adminAuthSettings = function (type) {
@@ -285,16 +288,16 @@ define(['app'], function (App) {
     };
 
     var adminProjects = function (data) {
-        return adminProjectRoot() + "/list" + (data ? data : '');
+        return adminProjectRoot() + '/list' + (data || '');
     };
     var adminProject = function (id) {
-        return adminProjects() + "/" + id;
+        return adminProjects() + '/' + id;
     };
     var addMemberUrl = function () {
-        return config.apiVersion + "user";
+        return config.apiVersion + 'user';
     };
     var userUrl = function () {
-        return addMemberUrl() + "/" + config.userModel.get('name');
+        return addMemberUrl() + '/' + config.userModel.get('name');
     };
     var sendInviteUrl = function () {
         return config.apiVersion + 'user/bid';
@@ -307,38 +310,38 @@ define(['app'], function (App) {
     };
 
     var allUsersUrl = function (query) {
-        if(query) return config.apiVersion + 'user/all?'+query;
+        if (query) return config.apiVersion + 'user/all?' + query;
         return config.apiVersion + 'user/all';
     };
-    
-    var searchUsersUrl = function(query) {
+
+    var searchUsersUrl = function (query) {
         var query = query;
-        if(!query) query = {};
-        if(!query.page) query.page = 1;
-        if(!query.size) query.size = 10;
+        if (!query) query = {};
+        if (!query.page) query.page = 1;
+        if (!query.size) query.size = 10;
         var startUrl = config.apiVersion + 'user/';
         var sort = '';
-        if(query.search){
-            startUrl += 'search/' + query.search
+        if (query.search) {
+            startUrl += 'search/' + query.search;
             sort = '&page.sort=login,ASC';
-        }else {
+        } else {
             startUrl += 'all';
             sort = '&page.sort=login,ASC';
         }
         return startUrl + '?page.page=' + query.page + '&page.size=' + query.size + sort;
     };
-    var searchUsersSafe = function(query) {
+    var searchUsersSafe = function (query) {
         var query = query;
-        if(!query) query = {};
-        if(!query.page) query.page = 1;
-        if(!query.size) query.size = 10;
+        if (!query) query = {};
+        if (!query.page) query.page = 1;
+        if (!query.size) query.size = 10;
         var startUrl = config.apiVersion + 'project/' + (config.project.projectId || config.userModel.get('defaultProject'))
             + '/usernames/';
         var sort = '';
-        if(query.search){
+        if (query.search) {
             startUrl += 'search/' + query.search;
             sort = '&page.sort=login,ASC';
-        }else {
+        } else {
             startUrl += 'all';
             sort = '&page.sort=login,ASC';
         }
@@ -354,26 +357,26 @@ define(['app'], function (App) {
     };
 
     var getProjectNames = function () {
-        return adminProjectRoot() + "/names";
+        return adminProjectRoot() + '/names';
     };
     var getMembers = function (projectId, query) {
-        return updateProject(projectId) + "/users" + query;
+        return updateProject(projectId) + '/users' + query;
     };
     var getAssignableMembers = function (projectId, query) {
-        return updateProject(projectId) + "/assignable" + query;
+        return updateProject(projectId) + '/assignable' + query;
     };
     var getMembersTab = function (tab) {
-        return "#" + config.project.projectId + "/members/" + tab;
+        return '#' + config.project.projectId + '/members/' + tab;
     };
     var checkStatusUpdate = function (ids) {
-        return getProjectBase() + "/launch/status?ids=" + ids;
+        return getProjectBase() + '/launch/status?ids=' + ids;
     };
 
     var detailsInterval = function (id, value) {
-        return "#administrate/project-details/" + id + "?interval=" + value;
+        return '#administrate/project-details/' + id + '?interval=' + value;
     };
     var detailsIntervalCall = function (id, value) {
-        return adminProject(id) + "?interval=" + value + "M";
+        return adminProject(id) + '?interval=' + value + 'M';
     };
 
     var initPassChange = function () {
@@ -401,10 +404,10 @@ define(['app'], function (App) {
     var getFile = function () {
         return getProjectBase() + '/data/';
     };
-    var getFileById = function(dataId) {
+    var getFileById = function (dataId) {
         var token = config.userModel.get('token');
         var params = '';
-        if(token) {
+        if (token) {
             params = '?access_token=' + token.split(' ')[1];
         }
         return getProjectBase() + '/data/' + dataId + params;
@@ -415,51 +418,51 @@ define(['app'], function (App) {
     var generateUUID = function () {
         return config.apiVersion + 'user/uuid';
     };
-    var updateExternalProfile  = function(accountType){
+    var updateExternalProfile = function (accountType) {
         return '/uat/sso/me/' + accountType + '/synchronize';
     };
     var exportLaunchUrl = function (id, format) {
         return config.apiVersion + config.project.projectId + '/launch/' + id + '/report?view=' + (format || 'xls');
     };
 
-    var getDefectTypes = function(projectId){
+    var getDefectTypes = function (projectId) {
         return config.apiVersion + projectId + '/settings/';
-    }
-    
-    var postDefectTypes = function(projectId){
-        return config.apiVersion + projectId + '/settings/sub-type/';
-    }
-    
-    var getGridUrl = function (type, isDebug) {
-        switch (type) {
-            case 'suit':
-            case 'test':
-                type = 'item';
-                break;
-            case 'launch':
-                type = isDebug ? (type + '/mode') : type;
-                break;
-            default :
-                break;
-        }
-        return getProjectBase() + "/" + type;
-    };
-    var getLogsUrl = function() {
-        return getProjectBase() + "/log";
     };
 
-    var getLaunchItemUrl = function(type, id){
+    var postDefectTypes = function (projectId) {
+        return config.apiVersion + projectId + '/settings/sub-type/';
+    };
+
+    var getGridUrl = function (type, isDebug) {
+        switch (type) {
+        case 'suit':
+        case 'test':
+            type = 'item';
+            break;
+        case 'launch':
+            type = isDebug ? (type + '/mode') : type;
+            break;
+        default :
+            break;
+        }
+        return getProjectBase() + '/' + type;
+    };
+    var getLogsUrl = function () {
+        return getProjectBase() + '/log';
+    };
+
+    var getLaunchItemUrl = function (type, id) {
         return getGridUrl(type) + '/' + id;
     };
 
-    var postDemoDataUrl = function(){
+    var postDemoDataUrl = function () {
         return config.apiVersion + 'demo/' + config.project.projectId;
     };
 
-    var toggleAnalytics = function() {
+    var toggleAnalytics = function () {
         return config.apiVersion + 'settings/default/analytics';
     };
-    var importLaunch = function() {
+    var importLaunch = function () {
         var token = config.userModel.get('token');
         return getProjectBase() + '/launch/import' + '?access_token=' + token.split(' ')[1];
     };
@@ -534,6 +537,7 @@ define(['app'], function (App) {
         compareByIds: compareByIds,
 
         btsFields: btsFields,
+        btsTypes: btsTypes,
         postBug: postBug,
         loadBugs: loadBugs,
         itemBase: itemBase,

@@ -148,6 +148,7 @@ define(function (require) {
             _.each(this.dropdownComponents, function (item) {
                 item.destroy();
             });
+            this.$el.html('');
         }
     });
 
