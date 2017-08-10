@@ -34,6 +34,13 @@ define(function (require) {
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
 
+    var App = require('app');
+
+    var config = App.getInstance();
+
+    var SingletonAppModel = require('model/SingletonAppModel');
+    var appModel = new SingletonAppModel();
+
 
     /*  TRIGGERS:
     *   loading(true or false) - start or end loading
