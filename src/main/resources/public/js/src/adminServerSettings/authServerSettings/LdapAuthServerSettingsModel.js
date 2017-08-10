@@ -36,7 +36,7 @@ define(function (require) {
             passwordAttribute: '',
             managerDn: '',
             managerPassword: '',
-            passwordEncoderType: '',
+            passwordEncoderType: 'disabled',
             // synchronization attributes
             email: '',
             fullName: '',
