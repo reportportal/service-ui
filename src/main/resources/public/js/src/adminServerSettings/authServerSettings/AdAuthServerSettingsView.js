@@ -117,13 +117,14 @@ define(function (require) {
         bindValidators: function () {
             Util.hintValidator(this.$domain, [
                 {
+                    validator: 'required'
+                },
+                {
                     validator: 'matchRegex',
                     type: 'domainMatchRegex',
                     pattern: config.patterns.domain
-                },
-                {
-                    validator: 'required'
                 }
+
             ]);
             Util.hintValidator(this.$url, [
                 {
@@ -172,6 +173,7 @@ define(function (require) {
             AdminService.deleteAuthSettings(this.authType)
                 .done(function () {
                     this.updateModel(this.model.defaults);
+                    $('.validate-error', this.$el).removeClass('validate-error');
                     Util.ajaxSuccessMessenger('deleteOAuthSettings');
                 }.bind(this))
                 .fail(function (error) {
@@ -196,6 +198,7 @@ define(function (require) {
             AdminService.setAuthSettings(this.authType, authData)
                 .done(function (data) {
                     this.updateModel(data);
+                    $('.validate-error', this.$el).removeClass('validate-error');
                 }.bind(this))
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, 'setOAuthSettings');
