@@ -147,7 +147,6 @@ define(function (require) {
             $.each($('[data-js-ad-config] .rp-input', this.$el), function (key, input) {
                 input.value = input.value.trim();
             });
-            console.log(this.model);
             adAuthEnabled = this.model.get('adAuthEnabled');
             if (adAuthEnabled) {
                 if (this.validate()) {
