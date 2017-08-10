@@ -217,8 +217,8 @@ define([
         return call('DELETE', urls.clearExternalSystem());
     };
 
-    var getBtsFields = function (id) {
-        return call('GET', urls.btsFields(id));
+    var getBtsFields = function (id, type) {
+        return call('GET', urls.btsFields(id, type));
     };
 
     var postBugToBts = function (data, id) {

@@ -80,6 +80,7 @@ define(function (require) {
                     return false;
                 }
             });
+            this.currentValue = curVal;
             $('[data-js-select-value]', this.$el).html(curName);
             $('[data-value]', this.$el).removeClass('selected');
             $('[data-value="' + curVal + '"]', this.$el).addClass('selected');
@@ -100,6 +101,7 @@ define(function (require) {
                 curValue.push($(item).data('value'));
                 curName.push($(item).data('name'));
             });
+            this.currentValue = curValue;
             this.trigger('change', curValue);
             if (curName.length) {
                 this.$el.addClass('selected');
@@ -108,6 +110,9 @@ define(function (require) {
                 this.$el.removeClass('selected');
                 $('[data-js-select-value]', this.$el).html(this.options.placeholder);
             }
+        },
+        getValue: function () {
+            return this.currentValue;
         },
         setErrorState: function (message) {
             this.$el.addClass('dropdown-error-state');

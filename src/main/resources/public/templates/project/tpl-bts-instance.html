@@ -5,7 +5,7 @@
             <label class="rp-control-label obligatory-field" for="url">
                 <%= data.text.bts.linkTo %>
             </label>
-            <input type="text" class="rp-input-default bts-property" id="url"
+            <input class="rp-input-default bts-property" id="url"
                    value="<%- data.url || '' %>" <%= notAllowed %>>
             <span class="help-inline"></span>
             <% if (data.access) { %>
@@ -31,7 +31,7 @@
             <label class="rp-control-label obligatory-field" for="project">
                 <%= data.text.bts[data.projectType] %>
             </label>
-            <input type="text" class="rp-input-default form-control rp-width-100 bts-property" id="project"
+            <input class="rp-input-default form-control rp-width-100 bts-property" id="project"
                    value="<%- data.project || '' %>" <%= notAllowed %> />
             <span class="help-inline"></span>
         </div>
@@ -75,7 +75,7 @@
     <div id="fieldsWrapper" class="bts-fields-wrapper">
         <div class="rp-form-group clearfix"><!--DO NOT REMOVE--></div>
         <div class="rp-form-group clearfix title-block-wrapper">
-            <h4 class="common-title"><%= data.text.bts.defaultProperties %></h4>
+            <h4 class="common-title"><%= data.text.bts.selectType %></h4>
         </div>
         <div class="rp-form-group clearfix group-title-block">
             <div class="inputs-caption">
@@ -84,6 +84,27 @@
             <div class="checkboxes-caption">
                 <span class="title-block"><%= data.text.bts.showFields %></span>
             </div>
+        </div>
+
+        <div class="bts-fields">
+            <div class="rp-form-group">
+                <label class="bts-field-label rp-control-label obligatory-field custom-style-1" for="issuetype">Issue Type</label>
+                <div class="bts-field-input custom-style-1">
+                    <div data-js-issue-type-select></div>
+                </div>
+                <div class="bts-field-checkbox">
+                    <label class="rp-checkbox-wrap">
+                        <input type="checkbox" class="rp-input-checkbox form-control default-selector" data-type="issuetype" checked disabled="">
+                        <span class="span-empty"></span>
+                    </label>
+                </div>
+
+            </div>
+        </div>
+
+
+        <div class="rp-form-group clearfix title-block-wrapper">
+            <h4 class="common-title"><%= data.text.bts.defaultProperties %></h4>
         </div>
         <div id="dynamicFields" class="bts-fields"></div>
         <div class="rp-form-group clearfix btn-controls fields-controls">

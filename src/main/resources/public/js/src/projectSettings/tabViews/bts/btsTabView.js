@@ -215,6 +215,15 @@ define(function (require) {
 
         renderFields: function () {
             if (this.model.get('id')) {
+                this.selectIssueType && this.selectIssueType.destroy();
+                this.selectIssueType = new DropDownComponent({
+                    data: [
+                        { name: 'Bug', value: 'BUG' },
+                        { name: 'Issue', value: 'ISSUE' }
+                    ],
+                    defaultValue: 'BUG'
+                });
+                $('[data-js-issue-type-select]', this.$el).html(this.selectIssueType.$el);
                 if (this.model.get('fields').length) {
                     this.fieldsView && this.fieldsView.destroy();
                     this.fieldsView = new BtsFieldsView({
@@ -334,7 +343,7 @@ define(function (require) {
             var self = this;
             config.trackingDispatcher.trackEventNumber(409);
             this.$fieldsLoader.show();
-            Service.getBtsFields(this.model.get('id'))
+            Service.getBtsFields(this.model.get('id'), this.selectIssueType.getValue())
                 .done(function (data) {
                     self.$fieldsLoader.hide();
 
@@ -457,6 +466,10 @@ define(function (require) {
                 response = JSON.parse(error.responseText); // expect JSON format
             } catch (e) {
                 console.log(e);
+            }
+            if (response && response.message) {
+                this.$externalSystemWarning.text(response.message).show();
+                return;
             }
             if (error.status === 404) {
                 message = 'Impossible interact with external system. External system with type JIRA is not deployed or not available';

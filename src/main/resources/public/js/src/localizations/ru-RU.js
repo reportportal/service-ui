@@ -1198,6 +1198,7 @@ define(['util'], function () {
         bts: {
             oAuthToken: 'Токены OAuth',
             apiKey: 'ApiKey',
+            selectType: 'Issue types available on server',
             defaultProperties: 'Свойства по умолчанию для Формы Ошибок',
             fieldsReset: '! Свойства по умолчанию для ошибки будут переустановлены',
             showFields: 'Показать поля',

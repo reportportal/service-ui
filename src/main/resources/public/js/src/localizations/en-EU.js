@@ -1144,6 +1144,7 @@ define(['util'], function () {
         bts: {
             oAuthToken: 'OAuth token',
             apiKey: 'ApiKey',
+            selectType: 'Issue types available on server',
             defaultProperties: 'Default properties for Issue Form',
             fieldsReset: '! The default properties for issue will be reset',
             showFields: 'Show fields',

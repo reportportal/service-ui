@@ -233,8 +233,12 @@ define(['app'], function (App) {
     var compareByIds = function (ids) {
         return getProjectBase() + '/launch/compare?ids=' + ids;
     };
-    var btsFields = function (id) {
-        return getProjectBase() + '/external-system/' + id + '/fields-set?issuetype=BUG';
+    var btsFields = function (id, type) {
+        var url = getProjectBase() + '/external-system/' + id + '/fields-set';
+        if (type) {
+            url += '?issuetype=' + type;
+        }
+        return url;
     };
     var postBug = function (id) {
         return getProjectBase() + '/external-system/' + id + '/ticket';
