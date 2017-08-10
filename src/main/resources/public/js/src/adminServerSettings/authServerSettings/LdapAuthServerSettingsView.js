@@ -184,6 +184,7 @@ define(function (require) {
         validate: function () {
             this.$url.trigger('validate');
             this.$baseDn.trigger('validate');
+            this.$email.trigger('validate');
             return !(
                 this.$url.data('validate-error') ||
                 this.$baseDn.data('validate-error') ||
@@ -194,6 +195,7 @@ define(function (require) {
             AdminService.deleteAuthSettings(this.authType)
                 .done(function () {
                     this.updateModel(this.model.defaults);
+                    $('.validate-error', this.$el).removeClass('validate-error');
                     Util.ajaxSuccessMessenger('deleteOAuthSettings');
                 }.bind(this))
                 .fail(function (error) {
@@ -225,6 +227,7 @@ define(function (require) {
             AdminService.setAuthSettings(this.authType, authData)
                 .done(function (data) {
                     this.updateModel(data);
+                    $('.validate-error', this.$el).removeClass('validate-error');
                 }.bind(this))
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, 'setOAuthSettings');
