@@ -44,12 +44,23 @@ define(function (require) {
             '[data-js-ad-enable]': 'checked: adAuthEnabled',
             '[data-js-ad-enable-mobile]': 'html: getAdAuthState',
             '[data-js-ad-config]': 'classes: {hide: not(adAuthEnabled)}',
-            '[data-js-domain]': 'value: domain',
-            '[data-js-ldap-url]': 'value: url',
-            '[data-js-base-dn]': 'value: baseDn',
-            '[data-js-email]': 'value: email',
-            '[data-js-full-name]': 'value: fullName',
-            '[data-js-photo]': 'value: photo'
+            '[data-js-domain]': 'value: trimValue(domain)',
+            '[data-js-ldap-url]': 'value: trimValue(url)',
+            '[data-js-base-dn]': 'value: trimValue(baseDn)',
+
+            '[data-js-email]': 'value:  trimValue(email)',
+            '[data-js-full-name]': 'value: trimValue(fullName)',
+            '[data-js-photo]': 'value: trimValue(photo)'
+        },
+        bindingFilters: {
+            trimValue: {
+                get: function (value) {
+                    return value.trim();
+                },
+                set: function (value) {
+                    return value.trim();
+                }
+            }
         },
         computeds: {
             getAdAuthState: {
@@ -133,6 +144,10 @@ define(function (require) {
         submitAuthSettings: function (e) {
             var adAuthEnabled;
             e.preventDefault();
+            $.each($('[data-js-ad-config] .rp-input', this.$el), function (key, input) {
+                input.value = input.value.trim();
+            });
+            console.log(this.model);
             adAuthEnabled = this.model.get('adAuthEnabled');
             if (adAuthEnabled) {
                 if (this.validate()) {
