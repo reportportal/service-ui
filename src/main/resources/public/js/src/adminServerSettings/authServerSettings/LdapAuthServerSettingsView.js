@@ -88,6 +88,7 @@ define(function (require) {
         setupAnchors: function () {
             this.$url = $('[data-js-ldap-url]', this.$el);
             this.$baseDn = $('[data-js-base-dn]', this.$el);
+            this.$email = $('[data-js-email]', this.$el);
         },
         bindValidators: function () {
             Util.hintValidator(this.$url, [
@@ -98,6 +99,16 @@ define(function (require) {
             Util.hintValidator(this.$baseDn, [
                 {
                     validator: 'required'
+                }
+            ]);
+            Util.hintValidator(this.$email, [
+                {
+                    validator: 'required'
+                },
+                {
+                    validator: 'matchRegex',
+                    type: 'emailMatchRegex',
+                    pattern: config.patterns.email
                 }
             ]);
         },
@@ -165,7 +176,11 @@ define(function (require) {
         validate: function () {
             this.$url.trigger('validate');
             this.$baseDn.trigger('validate');
-            return !(this.$url.data('validate-error') || this.$baseDn.data('validate-error'));
+            return !(
+                this.$url.data('validate-error') ||
+                this.$baseDn.data('validate-error') ||
+                this.$email.data('validate-error')
+            );
         },
         deleteAuthSettings: function () {
             AdminService.deleteAuthSettings(this.authType)
@@ -183,7 +198,9 @@ define(function (require) {
                 enabled: this.model.get('ldapAuthEnabled'),
                 baseDn: this.model.get('baseDn'),
                 url: 'ldap://' + this.model.get('url'),
-                synchronizationAttributes: {}
+                synchronizationAttributes: {
+                    email: this.model.get('email')
+                }
             };
             // optional fields
             this.model.get('userDnPattern') && (authData.userDnPattern = this.model.get('userDnPattern'));
@@ -194,7 +211,6 @@ define(function (require) {
             this.model.get('managerDn') && (authData.managerDn = this.model.get('managerDn'));
             this.model.get('managerPassword') && (authData.managerPassword = this.model.get('managerPassword'));
             this.model.get('passwordEncoderType') && (authData.passwordEncoderType = this.model.get('passwordEncoderType'));
-            this.model.get('email') && (authData.synchronizationAttributes.email = this.model.get('email'));
             this.model.get('fullName') && (authData.synchronizationAttributes.fullName = this.model.get('fullName'));
             this.model.get('photo') && (authData.synchronizationAttributes.photo = this.model.get('photo'));
 

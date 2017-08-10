@@ -101,6 +101,7 @@ define(function (require) {
             this.$domain = $('[data-js-domain]', this.$el);
             this.$url = $('[data-js-ldap-url]', this.$el);
             this.$baseDn = $('[data-js-base-dn]', this.$el);
+            this.$email = $('[data-js-email]', this.$el);
         },
         bindValidators: function () {
             Util.hintValidator(this.$domain, [
@@ -123,6 +124,16 @@ define(function (require) {
                     validator: 'required'
                 }
             ]);
+            Util.hintValidator(this.$email, [
+                {
+                    validator: 'required'
+                },
+                {
+                    validator: 'matchRegex',
+                    type: 'emailMatchRegex',
+                    pattern: config.patterns.email
+                }
+            ]);
         },
         submitAuthSettings: function (e) {
             var adAuthEnabled;
@@ -140,7 +151,13 @@ define(function (require) {
             this.$domain.trigger('validate');
             this.$url.trigger('validate');
             this.$baseDn.trigger('validate');
-            return !(this.$domain.data('validate-error') || this.$url.data('validate-error') || this.$baseDn.data('validate-error'));
+            this.$email.trigger('validate');
+            return !(
+                this.$domain.data('validate-error') ||
+                this.$url.data('validate-error') ||
+                this.$baseDn.data('validate-error') ||
+                this.$email.data('validate-error')
+            );
         },
         deleteAuthSettings: function () {
             AdminService.deleteAuthSettings(this.authType)
@@ -159,10 +176,11 @@ define(function (require) {
                 domain: this.model.get('domain'),
                 baseDn: this.model.get('baseDn'),
                 url: 'ldap://' + this.model.get('url'),
-                synchronizationAttributes: {}
+                synchronizationAttributes: {
+                    email: this.model.get('email')
+                }
             };
             // optional fields
-            this.model.get('email') && (authData.synchronizationAttributes.email = this.model.get('email'));
             this.model.get('fullName') && (authData.synchronizationAttributes.fullName = this.model.get('fullName'));
             this.model.get('photo') && (authData.synchronizationAttributes.photo = this.model.get('photo'));
 
