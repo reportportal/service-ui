@@ -141,7 +141,7 @@ define(function (require) {
                 passwordAttribute: (settings.passwordAttribute) ? settings.passwordAttribute : '',
                 managerDn: (settings.managerDn) ? settings.managerDn : '',
                 managerPassword: (settings.managerPassword) ? settings.managerPassword : '',
-                passwordEncoderType: (settings.passwordEncoderType) ? settings.passwordEncoderType : '',
+                passwordEncoderType: (settings.passwordEncoderType) ? settings.passwordEncoderType : 'LDAP_SHA',
                 email: (settings.synchronizationAttributes && settings.synchronizationAttributes.email) ? settings.synchronizationAttributes.email : '',
                 fullName: (settings.synchronizationAttributes && settings.synchronizationAttributes.fullName) ? settings.synchronizationAttributes.fullName : '',
                 photo: (settings.synchronizationAttributes && settings.synchronizationAttributes.photo) ? settings.synchronizationAttributes.photo : ''
@@ -150,7 +150,6 @@ define(function (require) {
         setupEncTypeDropDown: function () {
             this.encTypeSelector = new DropDownComponent({
                 data: [
-                    { name: Localization.admin.noPasswordEncoder, value: '' },
                     { name: 'PLAIN', value: 'PLAIN' },
                     { name: 'SHA', value: 'SHA' },
                     { name: 'LDAP_SHA', value: 'LDAP_SHA' },
@@ -158,7 +157,7 @@ define(function (require) {
                     { name: 'MD5', value: 'MD5' }
                 ],
                 multiple: false,
-                defaultValue: this.model.get('passwordEncoderType') ? this.model.get('passwordEncoderType') : ''
+                defaultValue: this.model.get('passwordEncoderType') ? this.model.get('passwordEncoderType') : 'LDAP_SHA'
             });
             $('[data-js-pass-enc-type-dropdown]', this.$el).html(this.encTypeSelector.$el);
             this.listenTo(this.encTypeSelector, 'change', function (val) {
@@ -184,6 +183,7 @@ define(function (require) {
         validate: function () {
             this.$url.trigger('validate');
             this.$baseDn.trigger('validate');
+            this.$email.trigger('validate');
             return !(
                 this.$url.data('validate-error') ||
                 this.$baseDn.data('validate-error') ||
@@ -194,6 +194,8 @@ define(function (require) {
             AdminService.deleteAuthSettings(this.authType)
                 .done(function () {
                     this.updateModel(this.model.defaults);
+                    $('.validate-error', this.$el).removeClass('validate-error');
+                    this.encTypeSelector.activateItem('LDAP_SHA');
                     Util.ajaxSuccessMessenger('deleteOAuthSettings');
                 }.bind(this))
                 .fail(function (error) {
@@ -225,6 +227,7 @@ define(function (require) {
             AdminService.setAuthSettings(this.authType, authData)
                 .done(function (data) {
                     this.updateModel(data);
+                    $('.validate-error', this.$el).removeClass('validate-error');
                 }.bind(this))
                 .fail(function (error) {
                     Util.ajaxFailMessenger(error, 'setOAuthSettings');
