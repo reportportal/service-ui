@@ -127,11 +127,6 @@ define(function (require) {
             Util.hintValidator(this.$email, [
                 {
                     validator: 'required'
-                },
-                {
-                    validator: 'matchRegex',
-                    type: 'emailMatchRegex',
-                    pattern: config.patterns.email
                 }
             ]);
         },
