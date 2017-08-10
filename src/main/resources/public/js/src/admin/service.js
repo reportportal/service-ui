@@ -83,16 +83,16 @@ define(function (require, exports, module) {
         return call('POST', Urls.setAdminSettings(id), data);
     };
 
-    var getAuthSettings = function () {
-        return call('GET', Urls.adminAuthSettings());
+    var getAuthSettings = function (type) {
+        return call('GET', Urls.adminAuthSettings(type));
     };
 
-    var setAuthSettings = function (data) {
-        return call('PUT', Urls.adminAuthSettings(), data);
+    var setAuthSettings = function (type, data) {
+        return call('PUT', Urls.adminAuthSettings(type), data);
     };
 
-    var deleteAuthSettings = function(data){
-        return call('DELETE', Urls.adminAuthSettings());
+    var deleteAuthSettings = function(type){
+        return call('DELETE', Urls.adminAuthSettings(type));
     };
 
     var loadProjectInfo = function (id, value) {

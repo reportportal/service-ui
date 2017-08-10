@@ -1,0 +1,17 @@
+.rp-auth-server-settings {
+  .auth-server-settings-instance-container {
+    margin-bottom: 10px;
+    @media (max-width: $SCREEN_XS_MAX) {
+      margin-bottom: -10px;
+    }
+  }
+  .auth-server-settings-instance-separator {
+    width: 100%;
+    height: 2px;
+    margin-bottom: 10px;
+    background-color: $COLOR--gray-91;
+    @media (min-width: $SCREEN_SM_MIN) {
+      display: none;
+    }
+  }
+}

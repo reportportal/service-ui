@@ -18,38 +18,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
     var AdminService = require('adminService');
-    var AuthServerSettingsModel = require('adminServerSettings/AuthServerSettingsModel');
+    var GithubAuthServerSettingsModel = require('adminServerSettings/authServerSettings/GithubAuthServerSettingsModel');
     var ModalConfirm = require('modals/modalConfirm');
     var Localization = require('localization');
-    var _ = require('underscore');
 
     var config = App.getInstance();
 
-    var AuthServerSettingsView = Epoxy.View.extend({
+    var GithubAuthServerSettingsView = Epoxy.View.extend({
 
-        className: 'rp-auth-server-settings',
+        className: 'github-auth-config',
 
-        template: 'tpl-auth-server-settings',
+        template: 'tpl-github-auth-config',
         orgTpl: 'tpl-auth-server-organizations',
 
         events: {
             'click [data-js-add-org-btn]': 'showAddOrganization',
             'click [data-js-delete-org]': 'confirmDeleteOrg',
             'click [data-js-remove-add-new-org]': 'hideAddOrganization',
-            'click [data-js-submit-auth-settings]': 'submitAuthSettings'
+            'click [data-js-submit-github-auth-settings]': 'submitAuthSettings'
         },
 
         bindings: {
-            // '[data-js-guest-enable]': 'checked: enableGuestAccount',
             '[data-js-github-enable]': 'checked: gitHubAuthEnabled',
             '[data-js-github-enable-mobile]': 'html: getGitHubAuthState',
             '[data-js-github-config]': 'classes: {hide: not(gitHubAuthEnabled)}',
@@ -90,11 +88,11 @@ define(function (require) {
         },
 
         initialize: function () {
-            this.model = new AuthServerSettingsModel();
+            this.model = new GithubAuthServerSettingsModel();
+            this.authType = config.authTypes.gitHub;
             this.getAuthSettings();
             this.listenTo(this.model, 'change:gitHubAuthEnabled', function () { config.trackingDispatcher.trackEventNumber(494); });
         },
-
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
             this.setupAnchors();
@@ -109,7 +107,6 @@ define(function (require) {
             this.$clientId = $('[data-js-client-id]', this.$el);
             this.$clientSecret = $('[data-js-client-secret]', this.$el);
         },
-
         bindValidators: function () {
             Util.hintValidator(this.$clientId, [
                 {
@@ -122,7 +119,19 @@ define(function (require) {
                 }
             ]);
         },
-
+        getAuthSettings: function () {
+            AdminService.getAuthSettings(this.authType)
+                .done(function (data) {
+                    this.model.set('gitHubAuthEnabled', true);
+                    this.updateModel(data);
+                }.bind(this))
+                .fail(function () {
+                    this.model.set('gitHubAuthEnabled', false);
+                }.bind(this))
+                .always(function () {
+                    this.render();
+                }.bind(this));
+        },
         updateModel: function (settings) {
             this.model.set({
                 clientId: settings.clientId,
@@ -130,14 +139,12 @@ define(function (require) {
             });
             this.model.setOrganizations(settings.restrictions && settings.restrictions.organizations ? settings.restrictions.organizations.split(',') : []);
         },
-
         showAddOrganization: function (e) {
             config.trackingDispatcher.trackEventNumber(495);
             e.preventDefault();
             this.$addOrg.addClass('hide');
             this.$addOrgForm.removeClass('hide');
         },
-
         hideAddOrganization: function (e) {
             e && e.preventDefault();
             this.$addOrg.removeClass('hide');
@@ -145,7 +152,6 @@ define(function (require) {
             this.$addOrgField.val('');
             this.$addOrgField.closest('[data-js-add-org-row]').removeClass('validate-error');
         },
-
         confirmDeleteOrg: function (e) {
             var $el = $(e.currentTarget);
             var field = $('[data-js-org-name]', $el.closest('[data-js-org-row]'));
@@ -166,15 +172,13 @@ define(function (require) {
                     self.deleteOrganization(name);
                 });
         },
-
         deleteOrganization: function (name) {
             var orgs = _.without(this.model.getOrganizations(), name);
             this.model.setOrganizations(orgs);
             this.updateAuthSettings('delete_org');
         },
-
         deleteAuthSettings: function () {
-            AdminService.deleteAuthSettings()
+            AdminService.deleteAuthSettings(this.authType)
                 .done(function () {
                     this.updateModel(this.model.defaults);
                     Util.ajaxSuccessMessenger('deleteOAuthSettings');
@@ -183,7 +187,6 @@ define(function (require) {
                     Util.ajaxFailMessenger(error, 'deleteOAuthSettings');
                 });
         },
-
         updateAuthSettings: function (type) {
             var orgs = this.model.getOrganizations();
             var authData = {};
@@ -194,7 +197,7 @@ define(function (require) {
             authData.clientId = this.model.get('clientId');
             authData.clientSecret = this.model.get('clientSecret');
 
-            AdminService.setAuthSettings(authData)
+            AdminService.setAuthSettings(this.authType, authData)
                 .done(function (data) {
                     this.updateModel(data.github);
                     this.hideAddOrganization();
@@ -208,7 +211,6 @@ define(function (require) {
                     Util.ajaxFailMessenger(error, 'setOAuthSettings');
                 });
         },
-
         submitAuthSettings: function (e) {
             var gitHubAuthEnabled;
             config.trackingDispatcher.trackEventNumber(496);
@@ -222,35 +224,16 @@ define(function (require) {
                 this.deleteAuthSettings();
             }
         },
-
         validate: function () {
             this.$clientId.trigger('validate');
             this.$clientSecret.trigger('validate');
             return !(this.$clientId.data('validate-error') || this.$clientSecret.data('validate-error'));
         },
-
-        getAuthSettings: function () {
-            AdminService.getAuthSettings()
-                .done(function (data) {
-                    this.model.set('gitHubAuthEnabled', true);
-                    this.updateModel(data);
-                }.bind(this))
-                .fail(function () {
-                    this.model.set('gitHubAuthEnabled', false);
-                }.bind(this))
-                .always(function () {
-                    this.render();
-                }.bind(this));
-        },
-
-        destroy: function () {
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
+        onDestroy: function () {
             this.remove();
             delete this;
         }
     });
 
-    return AuthServerSettingsView;
+    return GithubAuthServerSettingsView;
 });
