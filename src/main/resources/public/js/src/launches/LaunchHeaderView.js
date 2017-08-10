@@ -41,7 +41,8 @@ define(function (require) {
 
         bindings: {
             '[data-js-filter-entity-switcher]': 'classes: {"hide": active}',
-            '[data-js-all-link]': 'attr: {href: url}, classes: {active: active}'
+            '[data-js-link-all]': 'attr: {href: url}',
+            '[data-js-launch-selector]': ' classes: {active: active}'
         },
 
         template: 'tpl-launch-header',
@@ -60,7 +61,6 @@ define(function (require) {
             };
             this.ready = $.Deferred();
             this.userStorage = new SingletonUserStorage();
-            this.appStorage = new SingletonAppStorage();
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.model = new FilterModel({ id: 'all', active: true, name: 'All Launches', owner: config.userModel.get('name') });
             this.listenTo(this.launchFilterCollection, 'add', this.onAddFilter);
@@ -68,7 +68,10 @@ define(function (require) {
             this.listenTo(this.launchFilterCollection, 'change:id', this.onChangeIdFilter);
             this.listenTo(this.launchFilterCollection, 'add_entity change:newSelectionParameters', this.showFilterCriteriaPanel);
             this.listenTo(this.userStorage, 'change:launchFilterCriteriaHide', this.onChangeFilterCriteriaShow);
+            this.appStorage = new SingletonAppStorage();
+            this.listenTo(this.appStorage, 'change:launchDistinct', this.onChangeSelectLink);
             this.render();
+
         },
         render: function () {
             this.launchFilterCollection.ready.done(function () {
@@ -80,6 +83,9 @@ define(function (require) {
                 this.onChangeFilterCriteriaShow(null, this.userStorage.get('launchFilterCriteriaHide'));
                 this.ready.resolve();
             }.bind(this));
+        },
+        onChangeSelectLink: function () {
+            config.router.navigate(this.model.get('url'), {trigger: true});
         },
         onClickDropdownItem: function (e) {
             var value;
