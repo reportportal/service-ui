@@ -60,7 +60,7 @@ define(function (require) {
             'click .close-add-action': 'discardAddNew',
 
             'click #submitFields': 'submitFields',
-            'click #updateFields': 'loadDefaultBtsFields',
+            'click #updateFields': 'onClickUpdate',
             'click #cancelFields': 'cancelFieldsUpdate'
         },
 
@@ -223,29 +223,46 @@ define(function (require) {
                         editable: true
                     }).render();
                     $('[data-js-bts-fields-wrapper]', this.$el).removeClass('edit-mode');
+                    self.$fieldsWrapper.show();
                 } else {
-                    if (this.selectIssueType) {
-                        this.stopListening(this.selectIssueType);
-                        this.selectIssueType.destroy();
-                    }
-                    $('[data-js-issue-type-loader]', self.$el).show();
-                    Service.getBtsTypes(this.model.get('id')).done(function (types) {
-                        self.selectIssueType = new DropDownComponent({
-                            data: _.map(types, function (type) {
-                                return { name: type, value: type };
-                            }),
-                            defaultValue: types[0]
-                        });
-                        $('[data-js-issue-type-select]', self.$el).html(self.selectIssueType.$el);
-                        self.listenTo(self.selectIssueType, 'change', self.loadDefaultBtsFields);
-                        self.loadDefaultBtsFields();
-                    }).always(function () {
-                        $('[data-js-issue-type-loader]', self.$el).hide();
-                    });
-                    $('[data-js-bts-fields-wrapper]', this.$el).addClass('edit-mode');
+                    self.renderDefaultBtsFields();
+                }
+            }
+        },
+        onClickUpdate: function () {
+            this.$fieldsWrapper.hide();
+            this.renderDefaultBtsFields();
+        },
+        renderDefaultBtsFields: function () {
+            var self = this;
+            if (this.selectIssueType) {
+                this.stopListening(this.selectIssueType);
+                this.selectIssueType.destroy();
+            }
+            $('[data-js-issue-type-loader]', self.$el).show();
+            this.fieldsView && this.fieldsView.destroy();
+            Service.getBtsTypes(this.model.get('id')).done(function (types) {
+                var defaultValue = types[0];
+                var selectItem = _.find(self.model.get('fields'), {
+                    id: 'issuetype'
+                });
+                if (selectItem) {
+                    defaultValue = selectItem.value[0];
                 }
                 self.$fieldsWrapper.show();
-            }
+                self.selectIssueType = new DropDownComponent({
+                    data: _.map(types, function (type) {
+                        return { name: type, value: type };
+                    }),
+                    defaultValue: defaultValue
+                });
+                $('[data-js-issue-type-select]', self.$el).html(self.selectIssueType.$el);
+                self.listenTo(self.selectIssueType, 'change', self.loadDefaultBtsFields);
+                self.loadDefaultBtsFields();
+            }).always(function () {
+                $('[data-js-issue-type-loader]', self.$el).hide();
+            });
+            $('[data-js-bts-fields-wrapper]', this.$el).addClass('edit-mode');
         },
 
         setupAnchors: function () {
@@ -364,7 +381,11 @@ define(function (require) {
                             id: field.id
                         });
                         if (item) {
-                            item.value = field.value;
+                            if (item.id === 'issuetype') {
+                                item.value = [self.selectIssueType.getValue()];
+                            } else {
+                                item.value = field.value;
+                            }
                             item.checked = true;
                         }
                     });
