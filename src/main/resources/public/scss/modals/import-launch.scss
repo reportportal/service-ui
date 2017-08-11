@@ -139,24 +139,24 @@
           }
           .dz-error-message {
             top: 70px;
-            left: -38px;
+            left: -48px;
             border-radius: 0;
             font-family: $OpenSansRegular;
             font-size: 12px;
             color: $COLOR--failed;
             background: $COLOR--white-default;
             border: solid 1px $COLOR--gray-80;
-            width: auto;
-            max-width: 200px;
-            white-space: nowrap;
+            width: 160px;
+
             &:after {
               border-bottom-color: $COLOR--white-default;
+              left: 74px;
             }
             &:before {
               content: '';
               position: absolute;
               top: -8px;
-              left: 62px;
+              left: 72px;
               width: 0;
               height: 0;
               border-left: 8px solid transparent;
