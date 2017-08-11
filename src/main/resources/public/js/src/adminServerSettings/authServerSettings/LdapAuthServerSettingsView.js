@@ -141,7 +141,7 @@ define(function (require) {
                 passwordAttribute: (settings.passwordAttribute) ? settings.passwordAttribute : '',
                 managerDn: (settings.managerDn) ? settings.managerDn : '',
                 managerPassword: (settings.managerPassword) ? settings.managerPassword : '',
-                passwordEncoderType: (settings.passwordEncoderType) ? settings.passwordEncoderType : 'LDAP_SHA',
+                passwordEncoderType: (settings.passwordEncoderType) ? settings.passwordEncoderType : 'disabled',
                 email: (settings.synchronizationAttributes && settings.synchronizationAttributes.email) ? settings.synchronizationAttributes.email : '',
                 fullName: (settings.synchronizationAttributes && settings.synchronizationAttributes.fullName) ? settings.synchronizationAttributes.fullName : '',
                 photo: (settings.synchronizationAttributes && settings.synchronizationAttributes.photo) ? settings.synchronizationAttributes.photo : ''
@@ -150,6 +150,7 @@ define(function (require) {
         setupEncTypeDropDown: function () {
             this.encTypeSelector = new DropDownComponent({
                 data: [
+                    { name: Localization.admin.noPasswordEncoder, value: 'disabled' },
                     { name: 'PLAIN', value: 'PLAIN' },
                     { name: 'SHA', value: 'SHA' },
                     { name: 'LDAP_SHA', value: 'LDAP_SHA' },
@@ -157,13 +158,19 @@ define(function (require) {
                     { name: 'MD5', value: 'MD5' }
                 ],
                 multiple: false,
-                defaultValue: this.model.get('passwordEncoderType') ? this.model.get('passwordEncoderType') : 'LDAP_SHA'
+                defaultValue: this.model.get('passwordEncoderType') ? this.model.get('passwordEncoderType') : 'disabled'
             });
             $('[data-js-pass-enc-type-dropdown]', this.$el).html(this.encTypeSelector.$el);
             this.listenTo(this.encTypeSelector, 'change', function (val) {
+                if (val === 'disabled') {
+                    $('[data-js-manager-password]', this.$el).val('').attr('disabled', 'disabled');
+                } else {
+                    $('[data-js-manager-password]', this.$el).attr('disabled', false);
+                }
                 this.model.set('passwordEncoderType', val);
                 this.enableSubmit();
             });
+            this.encTypeSelector.trigger('change', $('.selected', this.encTypeSelector.$el).data('value'));
         },
         submitAuthSettings: function (e) {
             var ldapAuthEnabled;
@@ -195,7 +202,7 @@ define(function (require) {
                 .done(function () {
                     this.updateModel(this.model.defaults);
                     $('.validate-error', this.$el).removeClass('validate-error');
-                    this.encTypeSelector.activateItem('LDAP_SHA');
+                    this.encTypeSelector.activateItem('disabled');
                     Util.ajaxSuccessMessenger('deleteOAuthSettings');
                 }.bind(this))
                 .fail(function (error) {
@@ -220,7 +227,7 @@ define(function (require) {
             this.model.get('passwordAttribute') && (authData.passwordAttribute = this.model.get('passwordAttribute'));
             this.model.get('managerDn') && (authData.managerDn = this.model.get('managerDn'));
             this.model.get('managerPassword') && (authData.managerPassword = this.model.get('managerPassword'));
-            this.model.get('passwordEncoderType') && (authData.passwordEncoderType = this.model.get('passwordEncoderType'));
+            (this.model.get('passwordEncoderType') !== 'disabled') && (authData.passwordEncoderType = this.model.get('passwordEncoderType'));
             this.model.get('fullName') && (authData.synchronizationAttributes.fullName = this.model.get('fullName'));
             this.model.get('photo') && (authData.synchronizationAttributes.photo = this.model.get('photo'));
 
