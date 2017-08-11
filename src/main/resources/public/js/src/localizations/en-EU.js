@@ -1276,7 +1276,7 @@ define(['util'], function () {
             managerDn: 'Manager DN',
             managerPassword: 'Manager Password',
             passwordEncoderType: 'Password Encoder Type',
-            noPasswordEncoder: 'NO PASSWORD ENCODER',
+            noPasswordEncoder: 'NO PASSWORD',
             gitHubClientId: 'Client ID',
             gitHubClientSecret: 'Client Secret',
             gitHubOrgName: 'Organization Name',
