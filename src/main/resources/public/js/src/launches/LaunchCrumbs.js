@@ -29,6 +29,7 @@ define(function (require) {
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
+    var SingletonAppStorage = require('storage/SingletonAppStorage');
 
     var config = App.getInstance();
 
@@ -59,8 +60,10 @@ define(function (require) {
             }
         },
         initialize: function () {
+            this.appStorage = new SingletonAppStorage();
             this.ready = $.Deferred();
             this.listenTo(this, 'change:id', this.onChangeId);
+            this.listenTo(this.appStorage, 'change', this.updateData);
             this.updateData();
         },
         getToInvestigate: function () {
@@ -85,15 +88,21 @@ define(function (require) {
             var url;
             if (this.get('level') === 'filter') {
                 if (this.get('id') === 'all') {
-                    this.set({ name: 'All' });
+                    if (this.appStorage.get('launchDistinct') === 'latest') {
+                        this.set({ name: 'Latest' });
+                    } else {
+                        this.set({ name: 'All' });
+                    }
                 } else {
                     launchFilterCollection = new SingletonLaunchFilterCollection();
                     launchFilterCollection.ready.done(function () {
                         var filterModel = launchFilterCollection.get(self.get('id'));
                         if (filterModel) {
                             self.set({ name: filterModel.get('name'), failLoad: false });
+                        } else if (this.appStorage.get('launchDistinct') === 'latest') {
+                            this.set({ name: 'Latest' });
                         } else {
-                            self.set({ name: 'All' });
+                            this.set({ name: 'All' });
                         }
                     });
                 }
