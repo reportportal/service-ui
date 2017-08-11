@@ -36,7 +36,7 @@ define(function (require) {
             passwordAttribute: '',
             managerDn: '',
             managerPassword: '',
-            passwordEncoderType: 'LDAP_SHA',
+            passwordEncoderType: 'disabled',
             // synchronization attributes
             email: '',
             fullName: '',
