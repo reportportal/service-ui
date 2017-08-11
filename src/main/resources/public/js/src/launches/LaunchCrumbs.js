@@ -63,7 +63,7 @@ define(function (require) {
             this.appStorage = new SingletonAppStorage();
             this.ready = $.Deferred();
             this.listenTo(this, 'change:id', this.onChangeId);
-            this.listenTo(this.appStorage, 'change', this.updateData);
+            this.listenTo(this.appStorage, 'change:launchDistinct', this.updateData);
             this.updateData();
         },
         getToInvestigate: function () {
@@ -99,10 +99,10 @@ define(function (require) {
                         var filterModel = launchFilterCollection.get(self.get('id'));
                         if (filterModel) {
                             self.set({ name: filterModel.get('name'), failLoad: false });
-                        } else if (this.appStorage.get('launchDistinct') === 'latest') {
-                            this.set({ name: 'Latest' });
+                        } else if (self.appStorage.get('launchDistinct') === 'latest') {
+                            self.set({ name: 'Latest' });
                         } else {
-                            this.set({ name: 'All' });
+                            self.set({ name: 'All' });
                         }
                     });
                 }
