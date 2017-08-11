@@ -217,6 +217,7 @@ define(function (require) {
             var self = this;
             if (this.model.get('id')) {
                 if (self.model.get('fields').length) {
+                    self.fieldsView && self.fieldsView.destroy();
                     self.fieldsView = new BtsFieldsView({
                         holder: self.$dynamicFieldsWrapper,
                         fields: self.model.get('fields'),
@@ -406,7 +407,7 @@ define(function (require) {
         },
 
         cancelFieldsUpdate: function () {
-            this.fieldsView.render();
+            this.renderFields();
             this.$updateFieldsBtn.show();
             this.$cancelFieldsBtn.hide();
         },
