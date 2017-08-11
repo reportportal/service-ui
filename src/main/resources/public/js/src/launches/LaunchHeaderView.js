@@ -27,6 +27,7 @@ define(function (require) {
     var Epoxy = require('backbone-epoxy');
     var FilterModel = require('filters/FilterModel');
     var App = require('app');
+    var SingletonAppStorage = require('storage/SingletonAppStorage');
 
     var config = App.getInstance();
 
@@ -34,16 +35,30 @@ define(function (require) {
         events: {
             'click [data-js-add-filter]': 'onClickAddFilter',
             'click [data-js-all-link]': 'onClickAllLink',
-            'click [data-js-filter-entity-switcher]': 'onClickFilterEntitySwitcher'
+            'click [data-js-filter-entity-switcher]': 'onClickFilterEntitySwitcher',
+            'click [data-js-select-launch-option] a': 'onClickDropdownItem'
         },
 
         bindings: {
             '[data-js-filter-entity-switcher]': 'classes: {"hide": active}',
-            '[data-js-all-link]': 'attr: {href: url}, classes: {active: active}'
+            '[data-js-link-all]': 'attr: {href: url}',
+            '[data-js-launch-selector]': ' classes: {active: active}'
         },
 
         template: 'tpl-launch-header',
         initialize: function () {
+            this.dropdownButtonLinks = {
+                links: [
+                    {
+                        name: 'All Launches',
+                        value: 'all'
+                    },
+                    {
+                        name: 'Latest Launches',
+                        value: 'latest'
+                    }
+                ]
+            };
             this.ready = $.Deferred();
             this.userStorage = new SingletonUserStorage();
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
@@ -53,17 +68,49 @@ define(function (require) {
             this.listenTo(this.launchFilterCollection, 'change:id', this.onChangeIdFilter);
             this.listenTo(this.launchFilterCollection, 'add_entity change:newSelectionParameters', this.showFilterCriteriaPanel);
             this.listenTo(this.userStorage, 'change:launchFilterCriteriaHide', this.onChangeFilterCriteriaShow);
+            this.appStorage = new SingletonAppStorage();
+            this.listenTo(this.appStorage, 'change:launchDistinct', this.onChangeSelectLink);
             this.render();
+
         },
         render: function () {
             this.launchFilterCollection.ready.done(function () {
                 this.listenTo(this.launchFilterCollection, 'reset', this.renderFilterList);
-                this.$el.html(Util.templates(this.template));
+                this.$el.html(Util.templates(this.template, this.dropdownButtonLinks));
+                this.selectOptions(this.appStorage.get('launchDistinct') || 'all');
                 this.applyBindings();
                 this.renderFilterList();
                 this.onChangeFilterCriteriaShow(null, this.userStorage.get('launchFilterCriteriaHide'));
                 this.ready.resolve();
             }.bind(this));
+        },
+        onChangeSelectLink: function () {
+            config.router.navigate(this.model.get('url'), {trigger: true});
+        },
+        onClickDropdownItem: function (e) {
+            var value;
+            e.preventDefault();
+            if ($(e.currentTarget).hasClass('selected')) {
+                return;
+            }
+            value = $(e.currentTarget).data('value');
+            this.appStorage.set({ launchDistinct: value });
+            this.selectOptions(value);
+        },
+        selectOptions: function (value) {
+            var curName = '';
+            var curVal = '';
+            _.each(this.dropdownButtonLinks.links, function (item) {
+                if (item.value === value) {
+                    curName = item.name;
+                    curVal = item.value;
+
+                    return false;
+                }
+            });
+            $('[data-js-select-value]', this.$el).html(curName);
+            $('[data-value]', this.$el).removeClass('selected');
+            $('[data-value="' + curVal + '"]', this.$el).addClass('selected');
         },
         onChangeFilterCriteriaShow: function (model, hide) {
             if (hide) {
