@@ -1855,9 +1855,7 @@ define(['util'], function () {
             moveToDebug: 'Move launch to debug/default mode',
             mergeLaunches: 'Merge launches',
             workWithFiltersEtc: 'Work with filters, widgets, dashboards (create, edit, delete, share)',
-            oneAttention: 'Action can be done for a user with similar and lower role only (E.g. Lead cannot change role for a Project Manager).',
-            twoAttention: 'Action can be done for a user with similar and lower role only (E.g. Lead cannot assign/unassign a Project Manager) and for user with Administrator account role.',
-            threeAttention: 'Action can be done for a Internal user.'
+            oneAttention: 'Action can be done for a Internal user.'
         },
 
         api: {
