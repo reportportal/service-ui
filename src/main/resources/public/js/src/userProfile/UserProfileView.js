@@ -120,8 +120,9 @@ define(function (require, exports, module) {
         },
         forceUpdate: function(e){
             e.preventDefault();
+
             var type = (this.model.get('account_type')).toLowerCase();
-            if(type !== 'internal'){
+            if(type !== 'internal' && type !== 'ldap'){
                 Service.externalForceUpdate(type)
                     .done(function(data){
                         this.showForceUpdateModal(data);
