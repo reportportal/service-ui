@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
     var Backbone = require('backbone');
-    var Epoxy = require('backbone-epoxy');
     var Components = require('core/components');
     var Service = require('coreService');
     var Localization = require('localization');
@@ -38,21 +37,21 @@ define(function (require, exports, module) {
 
     var UserProfileView = Components.BaseView.extend({
         tpl: 'tpl-user-profile-view',
-        initialize: function(options) {
+        initialize: function (options) {
+            var self = this;
             this.$el = options.body;
             this.context = options.context;
             this.model = config.userModel;
             this.apiTokenModel = new Backbone.Model({
-                apiToken: null,
+                apiToken: null
             });
             this.listenTo(this.apiTokenModel, 'change:apiToken', this.setEditorValue);
-            var self = this;
             Service.getApiToken()
-                .done(function(data) {
-                    self.apiTokenModel.set({apiToken: data.access_token});
+                .done(function (data) {
+                    self.apiTokenModel.set({ apiToken: data.access_token });
                     self.$apiToken.val(data.access_token);
                 })
-                .fail(function() {
+                .fail(function () {
                     self.generateApiToken();
                 });
             this.render();
@@ -75,7 +74,7 @@ define(function (require, exports, module) {
             'click [data-js-update-token]': 'updateToken',
             'click [data-js-force-update]': 'forceUpdate'
         },
-        render: function() {
+        render: function () {
             this.model.ready.done(function () {
                 var params = this.getParams();
                 this.$el.html(Util.templates(this.tpl, params));
@@ -85,72 +84,73 @@ define(function (require, exports, module) {
             }.bind(this));
             return this;
         },
-        getParams: function(){
+        getParams: function () {
             var params = this.model.toJSON();
             params.image = Util.updateImagePath(params.image);
             params.apiToken = this.apiTokenModel.get('apiToken');
             return params;
         },
-        setupAnchors: function(){
+        setupAnchors: function () {
             this.$editPhotoBlock = $('[data-js-edit-photo]', this.$el);
             this.$uploadPhotoBlock = $('[data-js-upload-block]', this.$el);
             this.$wrongImageMessage = $('[data-js-photo-error]', this.$el);
             this.$imgSelector = $('[data-js-select-photo]', this.$el);
-            this.$profileAvatar = $("[data-js-user-img]", this.$el);
+            this.$profileAvatar = $('[data-js-user-img]', this.$el);
             this.$editor = $('[data-js-editor]', this.$el);
-            this.$certificate = $("[data-js-certificate]", this.$el);
+            this.$certificate = $('[data-js-certificate]', this.$el);
             this.$apiToken = $('[data-js-input-token]', this.$el);
         },
         selectToken: function (ev) {
             $(ev.target).select();
         },
-        loadRegenerateUUIDTooltip: function(){
+        loadRegenerateUUIDTooltip: function () {
             var el = $('[data-js-update-token]', this.$el);
-            Util.appendTooltip(function() {
+            Util.appendTooltip(function () {
                 var tooltip = new RegenerateUUIDTooltipView({});
                 return tooltip.$el.html();
             }, el, el);
         },
         updateToken: function () {
-            config.trackingDispatcher.trackEventNumber(365);
             var self = this;
-            (new ModalRegenerateUUID()).show().done(function(){
+            config.trackingDispatcher.trackEventNumber(365);
+            (new ModalRegenerateUUID()).show().done(function () {
                 return self.generateApiToken();
             });
         },
-        forceUpdate: function(e){
+        forceUpdate: function (e) {
+            var type;
             e.preventDefault();
 
-            var type = (this.model.get('account_type')).toLowerCase();
-            if(type !== 'internal' && type !== 'ldap'){
+            type = (this.model.get('account_type')).toLowerCase();
+            if (type !== 'internal' && type !== 'ldap') {
                 Service.externalForceUpdate(type)
-                    .done(function(data){
+                    .done(function (data) {
                         this.showForceUpdateModal(data);
                     }.bind(this))
-                    .fail(function(error){
+                    .fail(function (error) {
                         Util.ajaxFailMessenger(error, 'forceUpdateGitHub');
-                    }.bind(this));
+                    });
             }
         },
-        showForceUpdateModal: function(data){
-            var self = this,
-                msg = data && data.msg ? data.msg : Localization.userProfile.infoSynchronized;
-            (new ModalForceUpdate({model: self.model, msg: msg})).show().done(function(){
+        showForceUpdateModal: function (data) {
+            var self = this;
+            var msg = data && data.msg ? data.msg : Localization.userProfile.infoSynchronized;
+            (new ModalForceUpdate({ model: self.model, msg: msg })).show().done(function () {
                 self.model.logout();
             });
         },
         showChangePass: function () {
-            config.trackingDispatcher.trackEventNumber(360);
             var modal = new ModalChangePassword({
                 model: this.model
             });
+            config.trackingDispatcher.trackEventNumber(360);
             modal.show();
         },
-        onEditUserName: function(){
+        onEditUserName: function () {
             config.trackingDispatcher.trackEventNumber(361);
             this.showEditUserInfo();
         },
-        onEditUserEmail: function(){
+        onEditUserEmail: function () {
             config.trackingDispatcher.trackEventNumber(362);
             this.showEditUserInfo();
         },
@@ -158,14 +158,14 @@ define(function (require, exports, module) {
             var modal = new ModalEditUserInfo();
             modal.show();
         },
-        onClickUploadPhoto: function(){
+        onClickUploadPhoto: function () {
             config.trackingDispatcher.trackEventNumber(363);
         },
-        generateApiToken: function() {
+        generateApiToken: function () {
             var self = this;
             Service.generateApiToken()
                 .done(function (data) {
-                    self.apiTokenModel.set({apiToken: data.access_token});
+                    self.apiTokenModel.set({ apiToken: data.access_token });
                     self.$apiToken.val(data.access_token);
                     Util.ajaxSuccessMessenger('updateUuid');
                 })
@@ -175,19 +175,21 @@ define(function (require, exports, module) {
                     }
                 })
                 .always(function () {
-                    if(self.modalToken) {
+                    if (self.modalToken) {
                         self.modalToken.$el.modal('hide');
                     }
                 });
         },
         previewPhoto: function (e) {
-            var file = e.currentTarget.files[0],
-                self = this;
+            var file = e.currentTarget.files[0];
+            var self = this;
+            var reader;
+            var image;
 
             if (file) {
                 if (this.validateFileExtension(file)) {
-                    var reader = new FileReader();
-                    var image = new Image();
+                    reader = new FileReader();
+                    image = new Image();
                     reader.readAsDataURL(file);
                     reader.onload = function (_file) {
                         image.src = _file.target.result;
@@ -197,44 +199,44 @@ define(function (require, exports, module) {
                                 self.$editPhotoBlock.hide();
                                 self.$uploadPhotoBlock.show();
                                 self.$wrongImageMessage.hide().removeClass('shown');
-                                //self.$profileAvatar.parent().removeClass('active');
+                                // self.$profileAvatar.parent().removeClass('active');
                             } else {
                                 self.$editPhotoBlock.show();
                                 self.$uploadPhotoBlock.hide();
                                 self.$wrongImageMessage.show().addClass('shown');
                             }
-                        }
-                    }
+                        };
+                    };
                 } else {
                     this.$wrongImageMessage.show();
                 }
             }
         },
         validateImageSize: function (image, file) {
-            var width = image.width,
-                height = image.height,
-                size = ~~(file.size / 1024);
+            var width = image.width;
+            var height = image.height;
+            var size = ~~(file.size / 1024);
             return size <= 1000
                 && width <= 300
                 && height <= 500;
         },
         validateFileExtension: function (file) {
-            return (/\.(gif|jpg|jpeg|png)$/i).test(file.name)
+            return (/\.(gif|jpg|jpeg|png)$/i).test(file.name);
         },
         uploadPhoto: function (e) {
             var formData = new FormData();
-            formData.append('file', this.$imgSelector[0].files[0]);
-
             var xhr = new XMLHttpRequest();
             var self = this;
             var srcPhoto = '';
+
+            formData.append('file', this.$imgSelector[0].files[0]);
 
             xhr.onreadystatechange = function () {
                 self.$editPhotoBlock.show();
                 self.$uploadPhotoBlock.hide();
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     srcPhoto = self.$profileAvatar.attr('src');
-                    $("#profileImage").attr('src', srcPhoto);
+                    $('#profileImage').attr('src', srcPhoto);
                     config.userModel.set('photo_loaded', true);
                     self.$profileAvatar.parent().addClass('active');
                     self.$imgSelector.wrap('<form></form>').parent().trigger('reset').children().unwrap('<form></form>');
@@ -250,7 +252,6 @@ define(function (require, exports, module) {
             e.preventDefault();
         },
         removePhoto: function (e) {
-            config.trackingDispatcher.trackEventNumber(364);
             var self = this;
             var modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deleteImage,
@@ -258,70 +259,73 @@ define(function (require, exports, module) {
                 cancelButtonText: Localization.ui.cancel,
                 okButtonDanger: true,
                 okButtonText: Localization.ui.delete,
-                confirmFunction: function() {
+                confirmFunction: function () {
                     config.trackingDispatcher.trackEventNumber(372);
-                    return CallService.call('DELETE', Urls.uploadPhoto()).done(function() {
+                    return CallService.call('DELETE', Urls.uploadPhoto()).done(function () {
                         config.userModel.set('photo_loaded', false);
                         Util.setProfileUrl();
 
-                        $("#profileImage").attr('src', config.userModel.get('image'));
+                        $('#profileImage').attr('src', config.userModel.get('image'));
                         self.$profileAvatar.attr('src', config.userModel.get('image'));
                         self.$profileAvatar.parent().removeClass('active');
                         self.$wrongImageMessage.hide().removeClass('shown');
-                        Util.ajaxSuccessMessenger("deletePhoto");
-                    }).fail(function(error) {
-                        Util.ajaxFailMessenger(error, "deletePhoto");
+                        Util.ajaxSuccessMessenger('deletePhoto');
+                    }).fail(function (error) {
+                        Util.ajaxFailMessenger(error, 'deletePhoto');
                     });
                 }
             });
-            $('[data-js-close]', modal.$el).on('click', function(){
+            config.trackingDispatcher.trackEventNumber(364);
+            $('[data-js-close]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(370);
             });
-            $('[data-js-cancel]', modal.$el).on('click', function(){
+            $('[data-js-cancel]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(371);
             });
             modal.show();
         },
         changeLangConfig: function (e) {
+            var el = $(e.target);
+            var elem;
+            var action;
             config.trackingDispatcher.trackEventNumber(366);
             e.preventDefault();
-            var el = $(e.target);
             if (!el.parent().hasClass('active')) {
-                var elem = el.attr("href") || el.find('a').attr('href');
+                elem = el.attr('href') || el.find('a').attr('href');
                 this.lang = _.last(elem.split('#'));
                 $('li', el.closest('ul')).removeClass('active');
                 el.parent().addClass('active');
                 this.setEditorValue();
 
-                var action = this.lang === 'testng' ? 'show' : 'hide';
+                action = this.lang === 'testng' ? 'show' : 'hide';
                 this.$certificate[action]();
             }
         },
         initEditor: function () {
             this.setEditorValue();
         },
-        setEditorValue: function(){
+        setEditorValue: function () {
+            var value;
             if (this.$editor) {
-                var value;
-                //var oldClientComment = Localization.userProfile.oldClientComment;
+                // var oldClientComment = Localization.userProfile.oldClientComment;
 
                 switch (this.lang) {
-                    case 'ruby':
-                        value =
-                            '<h1>'+Localization.userProfile.rubyConfigTitle+'</h1>' +
-                            '<br>'+
-                            '<div class="options">'+
+                case 'ruby':
+                    value =
+                            '<h1>' + Localization.userProfile.rubyConfigTitle + '</h1>' +
+                            '<br>' +
+                            '<div class="options">' +
                                 // '<p>username: ' + this.user.get('name') + '</p>' +
                             '<p>password: ' + this.apiTokenModel.get('apiToken') + '</p>' +
                             '<p>endpoint: ' + document.location.origin + '/api/v1' + '</p>' +
                             '<p>project: ' + this.model.get('defaultProject') + '</p>' +
                             '<p>launch: ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
                             '<p>tags:  [tag1, tag2]</p>' +
-                            '</div>'
-                        break;
-                    case 'soap':
-                        value =
-                            '<h1>'+Localization.userProfile.soapConfigTitle+'</h1>' +
+                            '</div>';
+                    break;
+                case 'soap':
+                    value =
+                            '<h1>' + Localization.userProfile.soapConfigTitle + '</h1>' +
                             '<br>' +
                             '<div class="options">' +
                                 // '<p>rp.username = ' + this.model.get('name') + '</p>' +
@@ -332,26 +336,26 @@ define(function (require, exports, module) {
                             '<p>rp.project = ' + this.model.get('defaultProject') + '</p>' +
                             '<p>rp.tags = TAG1;TAG2</p>' +
                             '</div>';
-                        break;
-                    case '.net':
-                        value =
-                            '<h1>'+Localization.userProfile.dotnetConfigTitle+'</h1>';
-                        break;
-                    default:
-                        value =
-                            '<h1>'+Localization.userProfile.defaultConfigTitle+'</h1>' +
-                            '<h1>'+Localization.userProfile.required+'</h1>' +
-                            '<div class="options">'+
+                    break;
+                case '.net':
+                    value =
+                            '<h1>' + Localization.userProfile.dotnetConfigTitle + '</h1>';
+                    break;
+                default:
+                    value =
+                            '<h1>' + Localization.userProfile.defaultConfigTitle + '</h1>' +
+                            '<h1>' + Localization.userProfile.required + '</h1>' +
+                            '<div class="options">' +
                             '<p>rp.endpoint = ' + document.location.origin + '</p>' +
                                 // '<p>rp.username = ' + this.model.get('name') + '</p>' +
                             '<p>rp.uuid = ' + this.apiTokenModel.get('apiToken') + '</p>' +
                             '<p>rp.launch = ' + this.model.get('name') + '_TEST_EXAMPLE</p>' +
                             '<p>rp.project = ' + this.model.get('defaultProject') + '</p>' +
                             '</div>' +
-                            '<h1>'+Localization.userProfile.notRequired+'</h1>' +
-                            '<div class="options">'+
+                            '<h1>' + Localization.userProfile.notRequired + '</h1>' +
+                            '<div class="options">' +
                             '<p>rp.enable = true</p>' +
-                            '<p>rp.description = My awesome launch</p>'+
+                            '<p>rp.description = My awesome launch</p>' +
                             '<p>rp.tags = TAG1;TAG2</p>' +
                             '<p>rp.convertimage = true</p>' +
                             '<p>rp.mode = DEFAULT</p>' +
@@ -360,11 +364,10 @@ define(function (require, exports, module) {
                             '<p>rp.keystore.resource = &lt;PATH_TO_YOUR_KEYSTORE&gt;</p>' +
                             '<p>rp.keystore.password = &lt;PASSWORD_OF_YOUR_KEYSTORE&gt;</p>' +
                             '</div>';
-                        break;
+                    break;
                 }
                 this.$editor.html(value);
             }
-
         },
         destroy: function () {
             this.$el.html('');
@@ -375,5 +378,5 @@ define(function (require, exports, module) {
         }
     });
 
-    return  UserProfileView;
+    return UserProfileView;
 });
