@@ -114,6 +114,15 @@ define(function (require, exports, module) {
                     widget_type: 'statistics_panel',
                     gadget: 'overall_statistics',
                     criteria: {}, // this.getExecutionsAndDefects(),
+                    uiControl: [
+                        {
+                            control: 'checkbox',
+                            options: {
+                                label: Localization.widgets.latestLaunches,
+                                action: 'latest_launches'
+                            }
+                        }
+                    ],
                     mode: {
                         type: 'radio',
                         defaultVal: 'lineMode',
@@ -427,7 +436,7 @@ define(function (require, exports, module) {
                         max: 150,
                         def: 50
                     }
-                },
+                }
                 // product_status: {
                 //     gadget_name: 'product status',
                 //     img: 'passing_rate_summary.png',

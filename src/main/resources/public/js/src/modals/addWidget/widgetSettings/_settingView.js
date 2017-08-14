@@ -28,6 +28,10 @@ define(function (require) {
         validate: function () {
             return true;
         },
+        getValue: function (model) {
+            return true;
+        },
+        setValue: function (value, model) {},
         destroy: function () {
             this.onDestroy && this.onDestroy();
             this.undelegateEvents();
