@@ -58,6 +58,18 @@ define(function (require, exports, module) {
 
     var appConfig = App.getInstance();
 
+    /* uiControls: [
+        {
+             control: 'checkbox',
+             options: {
+                label: 'Select filters' // label after checkbox
+                action: '' // default actions: 'latest_launches', ...
+                setValue(value, model) {}, // if you want to override method
+                getValue(model) {} // if you want to override method
+            }
+        },
+    ]*/
+
     var WidgetService = {
 
         getDefaultConfig: function () {
@@ -145,6 +157,15 @@ define(function (require, exports, module) {
                     widget_type: 'column_chart',
                     gadget: 'launches_duration_chart',
                     noCriteria: true,
+                    uiControl: [
+                        {
+                            control: 'checkbox',
+                            options: {
+                                label: Localization.widgets.latestLaunches,
+                                action: 'latest_launches'
+                            }
+                        }
+                    ],
                     staticCriteria: {
                         start_time: '',
                         end_time: '',
