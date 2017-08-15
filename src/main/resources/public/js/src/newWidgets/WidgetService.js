@@ -81,14 +81,18 @@ define(function (require, exports, module) {
                     widget_type: 'line_chart',
                     gadget: 'old_line_chart',
                     criteria: {}, // this.getExecutionsAndDefects(),
-                    mode: {
-                        type: 'radio',
-                        defaultVal: 'launch',
-                        items: {
-                            launch: Localization.widgets.launchMode,
-                            timeline: Localization.widgets.timelineMode
+                    uiControl: [
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.launchMode, value: 'launch' },
+                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
+                                ],
+                                action: 'switch_timeline_mode'
+                            }
                         }
-                    },
+                    ],
                     limit: {
                         display: true,
                         min: 1,
@@ -103,14 +107,18 @@ define(function (require, exports, module) {
                     widget_type: 'trends_chart',
                     gadget: 'statistic_trend',
                     criteria: {}, // this.getExecutionsAndDefects(),
-                    mode: {
-                        type: 'radio',
-                        defaultVal: 'launch',
-                        items: {
-                            launch: Localization.widgets.launchMode,
-                            timeline: Localization.widgets.timelineMode
+                    uiControl: [
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.launchMode, value: 'launch' },
+                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
+                                ],
+                                action: 'switch_timeline_mode'
+                            }
                         }
-                    },
+                    ],
                     limit: {
                         display: true,
                         min: 1,
@@ -128,6 +136,16 @@ define(function (require, exports, module) {
                     criteria: {}, // this.getExecutionsAndDefects(),
                     uiControl: [
                         {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.panelMode, value: 'panel' },
+                                    { name: Localization.widgets.chartMode, value: 'chart' }
+                                ],
+                                action: 'switch_chart_mode'
+                            }
+                        },
+                        {
                             control: 'checkbox',
                             options: {
                                 label: Localization.widgets.latestLaunches,
@@ -135,14 +153,6 @@ define(function (require, exports, module) {
                             }
                         }
                     ],
-                    mode: {
-                        type: 'radio',
-                        defaultVal: 'lineMode',
-                        items: {
-                            lineMode: Localization.widgets.panelMode,
-                            chartMode: Localization.widgets.chartMode
-                        }
-                    },
                     limit: {
                         display: true,
                         min: 1,
@@ -265,14 +275,18 @@ define(function (require, exports, module) {
                     staticCriteria: {
                         statistics$executions$total: Localization.launchesHeaders.total
                     },
-                    mode: {
-                        type: 'radio',
-                        defaultVal: 'launch',
-                        items: {
-                            launch: Localization.widgets.launchMode,
-                            timeline: Localization.widgets.timelineMode
+                    uiControl: [
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.launchMode, value: 'launch' },
+                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
+                                ],
+                                action: 'switch_timeline_mode'
+                            }
                         }
-                    },
+                    ],
                     limit: {
                         display: true,
                         min: 1,
@@ -288,14 +302,18 @@ define(function (require, exports, module) {
                     gadget: 'investigated_trend',
                     noCriteria: true,
                     staticCriteria: {}, // this.getTotalDefects(),
-                    mode: {
-                        type: 'radio',
-                        defaultVal: 'launch',
-                        items: {
-                            launch: Localization.widgets.launchMode,
-                            timeline: Localization.widgets.timelineMode
+                    uiControl: [
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.launchMode, value: 'launch' },
+                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
+                                ],
+                                action: 'switch_timeline_mode'
+                            }
                         }
-                    },
+                    ],
                     limit: {
                         display: true,
                         min: 1,
@@ -457,46 +475,50 @@ define(function (require, exports, module) {
                         max: 150,
                         def: 50
                     }
-                }
-                // product_status: {
-                //     gadget_name: 'product status',
-                //     img: 'passing_rate_summary.png',
-                //     description: 'product status description',
-                //     gadget: 'product_status',
-                //     noFilters: true,
-                //     uiControl: [
-                //         {
-                //             control: 'inputItems',
-                //             options: {
-                //                 entity: 'filter',
-                //                 label: 'Select filters'
-                //             }
-                //         },
-                //         {
-                //             control: 'dropDown',
-                //             options: {
-                //                 label: 'Basic column',
-                //                 items: [
-                //                     { name: 'Test', value: 'test' },
-                //                     { name: 'Test2', value: 'test2' }
-                //                 ],
-                //                 multiple: true
-                //             }
-                //         },
-                //         {
-                //             control: 'checkbox',
-                //             options: {
-                //                 label: 'Distinct launches'
-                //             }
-                //         },
-                //         {
-                //             control: 'checkbox',
-                //             options: {
-                //                 label: 'Latest launches'
-                //             }
-                //         }
-                //     ]
-                // }
+                }/*,
+                product_status: {
+                    gadget_name: 'product status',
+                    img: 'passing_rate_summary.png',
+                    description: 'product status description',
+                    gadget: 'product_status',
+                    noFilters: true,
+                    uiControl: [
+                        {
+                            control: 'inputItems',
+                            options: {
+                                entity: 'filter',
+                                label: 'Select filters'
+                            }
+                        },
+                        {
+                            control: 'dropDown',
+                            options: {
+                                label: 'Basic column',
+                                items: [
+                                    { name: 'Test', value: 'test' },
+                                    { name: 'Test2', value: 'test2' }
+                                ],
+                                multiple: true
+                            }
+                        },
+                        {
+                            control: 'checkbox',
+                            options: {
+                                label: 'Distinct launches'
+                            }
+                        },
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: 'All launches', value: 'all' },
+                                    { name: 'Latest launches', value: 'latest' }
+                                ],
+                                action: 'switch_chart_mode'
+                            }
+                        }
+                    ]
+                }*/
             };
         },
 

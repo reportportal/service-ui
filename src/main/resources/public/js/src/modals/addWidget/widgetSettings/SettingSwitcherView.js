@@ -23,38 +23,66 @@ define(function (require) {
     'use strict';
 
     var Util = require('util');
-    var Epoxy = require('backbone-epoxy');
+    var $ = require('jquery');
     var _ = require('underscore');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
+    var Epoxy = require('backbone-epoxy');
 
     var actionTypes = {
-        latest_launches: {
+        switch_chart_mode: {
             setValue: function (value, model) {
                 var widgetOptions = model.getWidgetOptions();
-                if (value) {
-                    widgetOptions.latest = [];
+                if (value === 'chart') {
+                    widgetOptions.chartMode = [];
                 } else {
-                    delete widgetOptions.latest;
+                    delete widgetOptions.chartMode;
                 }
                 model.setWidgetOptions(widgetOptions);
             },
-            getValue: function (model) {
-                return !!(model.getWidgetOptions().latest);
+            getValue: function (model, self) {
+                var chartMode = !!(model.getWidgetOptions().chartMode);
+                var curNum = 0;
+                var items = self.model.get('items');
+                if (items.length > 1 && items[0].value === 'chart' && chartMode) {
+                    curNum = 1;
+                }
+                return curNum;
+            }
+        },
+        switch_timeline_mode: {
+            setValue: function (value, model) {
+                var widgetOptions = model.getWidgetOptions();
+                if (value === 'timeline') {
+                    widgetOptions.timeline = ['DAY'];
+                } else {
+                    delete widgetOptions.timeline;
+                }
+                model.setWidgetOptions(widgetOptions);
+            },
+            getValue: function (model, self) {
+                var timelineMode = !!(model.getWidgetOptions().timeline);
+                var curNum = 0;
+                var items = self.model.get('items');
+                if (items.length > 1 && items[0].value === 'timeline' && timelineMode) {
+                    curNum = 1;
+                }
+                return curNum;
             }
         }
     };
 
-    var SettingDropDownView = SettingView.extend({
-        className: 'modal-add-widget-setting-checkbox',
-        template: 'modal-add-widget-setting-checkbox',
+    var SettingSwitcherView = SettingView.extend({
+        className: 'modal-add-widget-setting-switcher',
+        template: 'modal-add-widget-setting-switcher',
+        events: {
+            'click [data-js-switch-item]': 'onClickItem'
+        },
         bindings: {
-            '[data-js-label-name]': 'html:label',
-            '[data-js-checkbox-item]': 'checked:value'
         },
         initialize: function (data) {
             var options = _.extend({
-                label: '',
-                value: false
+                items: [],
+                value: 0
             }, data.options);
             this.model = new Epoxy.Model(options);
             this.gadgetModel = data.gadgetModel;
@@ -67,14 +95,20 @@ define(function (require) {
             options.getValue && (this.getValue = options.getValue);
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, this.model.get('items')));
         },
         activate: function () {
             this.model.set({ value: this.getValue(this.gadgetModel, this) });
             this.listenTo(this.model, 'change:value', this.onChangeValue);
+            this.onChangeValue();
         },
         onChangeValue: function () {
-            this.setValue(this.model.get('value'), this.gadgetModel, this);
+            $('[data-js-switch-item]', this.$el).removeClass('active').eq(this.model.get('value')).addClass('active');
+            this.setValue(this.model.get('items')[this.model.get('value')].value, this.gadgetModel, this);
+        },
+        onClickItem: function (e) {
+            var curNum = $(e.currentTarget).data('num');
+            this.model.set({ value: curNum });
         },
         validate: function () {
             return true;
@@ -83,5 +117,5 @@ define(function (require) {
         }
     });
 
-    return SettingDropDownView;
+    return SettingSwitcherView;
 });
