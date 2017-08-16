@@ -42,10 +42,10 @@ define(function (require) {
             this.$el.append(this.widget.$el);
         },
         onShow: function () {
-            this.widget.onShow();
             if (!this.widget.isPreview) {
                 this.widget.addSizeClasses(this.gadgetSize);
             }
+            this.widget.onShow();
         },
         resize: function (newGadgetSize) {
             this.widget.updateSizeClasses(newGadgetSize);

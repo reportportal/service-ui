@@ -25,7 +25,7 @@ define(function (require, exports, module) {
     var LaunchesTableWidget = require('newWidgets/widgets/LaunchesTableWidgetView');
     var MostFailedTestCases = require('newWidgets/widgets/MostFailedTestCasesWidgetView');
     var UniqueBugTable = require('newWidgets/widgets/UniqueBugTableWidgetView');
-    var OverallStatisticsWidget = require('newWidgets/widgets/OverallStatisticsWidgetView');
+    var OverallStatisticsWidget = require('newWidgets/widgets/OverallStatisticsWidgetView(C3)');
     var ProjectActivityWidget = require('newWidgets/widgets/ProjectActivityWidgetView');
     var LineLaunchStatisticsChart = require('newWidgets/widgets/LineLaunchStatisticsChartView');
     var TrendLaunchStatisticsChart = require('newWidgets/widgets/TrendLaunchStatisticsChartView');
@@ -134,6 +134,14 @@ define(function (require, exports, module) {
                     widget_type: 'statistics_panel',
                     gadget: 'overall_statistics',
                     criteria: {}, // this.getExecutionsAndDefects(),
+                    mode: {
+                        type: 'radio',
+                        defaultVal: 'lineMode',
+                        items: {
+                            trendChartMode: Localization.widgets.trendChartMode,
+                            donutChartMode: Localization.widgets.donutChartMode
+                        }
+                    },
                     uiControl: [
                         {
                             control: 'switcher',

@@ -51,6 +51,7 @@ require.config({
         'd3': '../lib/d3/d3.v3.min',
         'd3Tip': '../lib/d3/d3.tip.custom',
         'nvd3': '../lib/nvd3/nv.d3.custom',
+        'c3': '../lib/c3',
         'profile': 'login/user_profile',
         //'landingPage': 'landing/LandingPage',
         

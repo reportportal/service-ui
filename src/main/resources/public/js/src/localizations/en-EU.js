@@ -463,6 +463,8 @@ define(['util'], function () {
             chartMode: 'Pie chart view',
             barMode: 'Bar view',
             pieChartMode: 'Pie chart view',
+            donutChartMode: 'Donut view',
+            trendChartMode: 'Trend view',
 
             defaultName: 'Widget template name',
             defaultDescription: 'Select widget template and filter to render data trough - and you\'ll see preview at the right side',

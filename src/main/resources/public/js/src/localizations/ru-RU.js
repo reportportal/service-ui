@@ -519,6 +519,8 @@ define(['util'], function () {
             chartMode: 'Pie chart view',
             barMode: 'Bar view',
             pieChartMode: 'Pie chart view',
+            donutChartMode: 'Donut view',
+            trendChartMode: 'Trend view',
 
             defaultName: 'Название шаблона виджета',
             defaultDescription: 'Выберите шаблон виджета и отфильтруйте, чтобы воспроизвести данные - и вы увидите окошко предпросмотра справа',
