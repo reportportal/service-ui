@@ -78,9 +78,11 @@ define(function (require) {
                     curOptions.chartMode = [];
                     this.model.setWidgetOptions(curOptions);
                     break;
-                    // -------- New widget's cases (Chartist) --------
+                    // -------- New widget's cases (Chartist & C3) --------
                 case 'pieChartMode':
                 case 'barMode':
+                case 'donutChartMode':
+                case 'trendChartMode':
                     curOptions.chartMode = [key];
                     this.model.setWidgetOptions(curOptions);
                     break;

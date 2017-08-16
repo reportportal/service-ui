@@ -82,6 +82,10 @@ $urlFontOpenSansRegular: '../fonts/font-OpenSansRegular/open-sans-regular';
 $urlFontOpenSansSemibold: '../fonts/font-OpenSansSemibold/open-sans-semibold';
 @include font-face('OpenSansSemibold', $urlFontOpenSansSemibold, normal, normal);
 
+/* Font OpenSansBold */
+$urlFontOpenSansBold: '../fonts/font-OpenSansBold/open-sans-bold';
+@include font-face('OpenSansBold', $urlFontOpenSansBold, normal, normal);
+
 /* Font Slick (Icons) */
 $urlFontSlick: '../fonts/font-Slick/slick';
 @include font-face('Slick', $urlFontSlick, normal, normal);
@@ -94,6 +98,7 @@ $OpenSansCondBold: "OpenSansCondBold", sans-serif;
 
 $OpenSansRegular: "OpenSansRegular", sans-serif;
 $OpenSansSemibold: "OpenSansSemibold", sans-serif;
+$OpenSansBold: "OpenSansBold", sans-serif;
 
 $FontMonacoMonospace: Menlo, Monaco, Consolas, "Courier New", monospace;
 
