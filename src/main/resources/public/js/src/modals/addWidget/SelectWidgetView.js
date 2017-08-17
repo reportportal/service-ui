@@ -43,15 +43,28 @@ define(function (require, exports, module) {
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {
-                widgets: WidgetService.getDefaultConfig()
+                widgets: WidgetService.getAllWidgetsConfig()
             }));
         },
         onChangeType: function () {
             var gadget = $('input:checked', this.$el).val();
             var self = this;
             config.trackingDispatcher.trackEventNumber(291);
-            $.when(WidgetService.getFullWidgetConfig(gadget)).done(function (widget) {
-                self.updateModel(gadget, widget);
+            $.when(WidgetService.getSettingsGadget(gadget)).done(function (widget) {
+                if (widget.newWidget) {
+                    self.newUpdateModel(gadget, widget);
+                } else {
+                    self.updateModel(gadget, widget);
+                }
+            });
+        },
+        newUpdateModel: function (gadget, curWidget) {
+            this.model.set({
+                gadget: gadget,
+                itemsCount: (curWidget.limit && curWidget.limit.def) || 50,
+                widgetDescription: '',
+                widgetOptions: '{}',
+                content_fields: '[]',
             });
         },
         updateModel: function (gadget, curWidget) {

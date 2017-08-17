@@ -55,6 +55,7 @@ define(function (require) {
             }
         },
         activate: function () {
+            var self = this;
             _.each(this.renderedView, function (view) {
                 view.destroy();
             });
@@ -65,28 +66,28 @@ define(function (require) {
             this.renderView(SettingSwitchMode);
             this.renderView(SettingUsersView);
             this.renderView(SettingLaunchView);
-
-            var widgetConfig = WidgetService.getWidgetConfig(this.model.get('gadget'));
-            _.each(widgetConfig.uiControl, function (controlObg) {
-                var constructor;
-                switch (controlObg.control) {
-                case 'inputItems':
-                    constructor = SettingInputItemsView;
-                    break;
-                case 'dropDown':
-                    constructor = SettingDropDownView;
-                    break;
-                case 'checkbox':
-                    constructor = SettingCheckBoxView;
-                    break;
-                case 'switcher':
-                    constructor = SettingSwitcherView;
-                    break;
-                default:
-                    break;
-                }
-                constructor && this.renderSetting(constructor, controlObg.options);
-            }, this);
+            WidgetService.getSettingsGadget(this.model.get('gadget')).done(function (widgetConfig) {
+                _.each(widgetConfig.uiControl, function (controlObg) {
+                    var constructor;
+                    switch (controlObg.control) {
+                    case 'inputItems':
+                        constructor = SettingInputItemsView;
+                        break;
+                    case 'dropDown':
+                        constructor = SettingDropDownView;
+                        break;
+                    case 'checkbox':
+                        constructor = SettingCheckBoxView;
+                        break;
+                    case 'switcher':
+                        constructor = SettingSwitcherView;
+                        break;
+                    default:
+                        break;
+                    }
+                    constructor && self.renderSetting(constructor, controlObg.options);
+                }, self);
+            });
         },
         renderSetting: function (ViewConstructor, options) {
             var view = new ViewConstructor({

@@ -69,11 +69,13 @@ define(function (require) {
             }
         },
     ]*/
+    var WIDGETS = {
+        product_status: ProductStatus
+    };
 
     var WidgetService = {
-
-        getDefaultConfig: function () {
-            return {
+        getAllWidgetsConfig: function () {
+            var config = {
                 old_line_chart: {
                     gadget_name: Localization.widgets.statisticsLineChart,
                     img: 'trends_chart.png',
@@ -475,56 +477,33 @@ define(function (require) {
                         max: 150,
                         def: 50
                     }
-                }/*,
-                product_status: {
-                    gadget_name: 'product status',
-                    img: 'passing_rate_summary.png',
-                    description: 'product status description',
-                    gadget: 'product_status',
-                    noFilters: true,
-                    uiControl: [
-                        {
-                            control: 'inputItems',
-                            options: {
-                                entity: 'filter',
-                                label: 'Select filters'
-                            }
-                        },
-                        {
-                            control: 'dropDown',
-                            options: {
-                                label: 'Basic column',
-                                items: [
-                                    { name: 'Test', value: 'test' },
-                                    { name: 'Test2', value: 'test2' }
-                                ],
-                                multiple: true
-                            }
-                        },
-                        {
-                            control: 'checkbox',
-                            options: {
-                                label: 'Distinct launches'
-                            }
-                        },
-                        {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: 'All launches', value: 'all' },
-                                    { name: 'Latest launches', value: 'latest' }
-                                ],
-                                action: 'switch_chart_mode'
-                            }
-                        }
-                    ]
-                }*/
+                },
+                product_status: ProductStatus.getConfig()
             };
+            _.each(WIDGETS, function (widget, key) {
+                var conf = widget.getConfig();
+                conf.gadget = key;
+                config[key] = conf;
+            });
+            return config;
+        },
+        getSettingsGadget: function (gadget) {
+            var async = $.Deferred();
+            if (WIDGETS[gadget]) {
+                WIDGETS[gadget].getSettings().done(function (data) {
+                    async.resolve({
+                        newWidget: true,
+                        uiControl: data
+                    });
+                });
+                return async;
+            }
+            return this.getFullWidgetConfig(gadget);
         },
 
         getWidgetConfig: function (gadget) {
-            var config = this.getDefaultConfig();
-            return config[gadget];
+            var configs = this.getAllWidgetsConfig();
+            return configs[gadget];
         },
         getFullWidgetConfig: function (gadget) {
             var widget = this.getWidgetConfig(gadget);

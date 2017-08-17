@@ -30,6 +30,8 @@ define(function (require) {
     var DropDownComponent = require('components/DropDownComponent');
     var Localization = require('localization');
 
+    var actionTypes = {};
+
     var SettingDropDownView = SettingView.extend({
         className: 'modal-add-widget-setting-drop-down',
         template: 'modal-add-widget-setting-drop-down',
@@ -47,6 +49,12 @@ define(function (require) {
             this.model = new Epoxy.Model(options);
             this.gadgetModel = data.gadgetModel;
             this.render();
+            if (options.action && actionTypes[options.action]) {
+                this.setValue = actionTypes[options.action].setValue;
+                this.getValue = actionTypes[options.action].getValue;
+            }
+            options.setValue && (this.setValue = options.setValue);
+            options.getValue && (this.getValue = options.getValue);
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
@@ -56,25 +64,15 @@ define(function (require) {
                 data: this.model.get('items'),
                 placeholder: this.model.get('placeholder'),
                 multiple: this.model.get('multiple'),
-                defaultValue: this.model.get('value')
+                defaultValue: this.getValue(this.gadgetModel, this)
             });
             $('[data-js-drop-down-container]', this.$el).html(this.dropDown.$el);
             this.listenTo(this.dropDown, 'change', this.onChangeDropDown);
         },
-        onChangeDropDown: function (actions) {
-            var values = [];
-            _.each(actions, function (item) {
-                values = values.concat(item.split(','));
-            });
-            console.log(values);
-            this.validate();
+        onChangeDropDown: function (value) {
+            this.setValue(value, this.gadgetModel, true);
         },
         validate: function () {
-            var options = this.model.getWidgetOptions();
-            if (!options.actionType || _.isEmpty(options.actionType)) {
-                this.selectAction.setErrorState(Localization.validation.selectAtLeastOneAction);
-                return false;
-            }
             return true;
         },
         onDestroy: function () {

@@ -29,7 +29,92 @@ define(function (require) {
     var Moment = require('moment');
     var BaseWidgetView = require('newWidgets/_BaseWidgetView');
 
-    var ProductStatusView = BaseWidgetView.extend({});
+    var ProductStatusView = BaseWidgetView.extend({
 
+    });
+
+    ProductStatusView.getConfig = function () {
+        return {
+            gadget_name: 'Product status',
+            img: 'filter_results.png',
+            description: 'product status description',
+            noFilters: true // TODO remove after refactoring
+        };
+    };
+    ProductStatusView.getSettings = function () {
+        var async = $.Deferred();
+        async.resolve([
+            {
+                control: 'inputItems',
+                options: {
+                    entity: 'filter',
+                    label: 'Select filters',
+                    getValue: function (model) {
+                        var widgetOptions = model.getWidgetOptions();
+                        if (widgetOptions.filters) {
+                            return widgetOptions.filters;
+                        }
+                        return ['testert', 'test2', 'opana'];
+                    },
+                    setValue: function (value, model) {
+                        var widgetOptions = model.getWidgetOptions();
+                        widgetOptions.filters = value;
+                        model.setWidgetOptions(widgetOptions);
+                    }
+                }
+            },
+            {
+                control: 'dropDown',
+                options: {
+                    label: 'Basic column',
+                    items: [
+                        { name: 'Status', value: 'status' },
+                        { name: 'Total', value: 'total' },
+                        { name: 'Passed', value: 'passed' },
+                        { name: 'Failed', value: 'failed' },
+                        { name: 'Skipped', value: 'skipped' },
+                        { name: 'Product Bug', value: 'product_bug' },
+                        { name: 'Auto Bug', value: 'auto_bug' },
+                        { name: 'System Issue', value: 'system_issue' },
+                        { name: 'To Investigate', value: 'to_investigate' },
+                        { name: 'Passing Rate', value: 'Passing Rate' }
+                    ],
+                    multiple: true,
+                    getValue: function (model, self) {
+                        var widgetOptions = model.getWidgetOptions();
+                        if (widgetOptions.basicColumns) {
+                            return widgetOptions.basicColumns;
+                        }
+                        return _.map(self.model.get('items'), function (item) {
+                            return item.value;
+                        });
+                    },
+                    setValue: function (value, model) {
+                        var widgetOptions = model.getWidgetOptions();
+                        widgetOptions.basicColumns = value;
+                        model.setWidgetOptions(widgetOptions);
+                    }
+                }
+            },
+            {
+                control: 'checkbox',
+                options: {
+                    label: 'Distinct launches'
+                }
+            },
+            {
+                control: 'switcher',
+                options: {
+                    items: [
+                            { name: 'All launches', value: 'all' },
+                            { name: 'Latest launches', value: 'latest' }
+                    ],
+                    action: 'switch_chart_mode'
+                }
+            }
+        ]);
+
+        return async.promise();
+    };
     return ProductStatusView;
 });

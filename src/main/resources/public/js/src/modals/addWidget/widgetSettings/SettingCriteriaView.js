@@ -36,7 +36,7 @@ define(function (require) {
         bindings: {
         },
         initialize: function () {
-            $.when(WidgetService.getFullWidgetConfig(this.model.get('gadget'))).done(this.onReadyWidgetConfig.bind(this));
+            $.when(WidgetService.getSettingsGadget(this.model.get('gadget'))).done(this.onReadyWidgetConfig.bind(this));
         },
         onReadyWidgetConfig: function (widget) {
             var criteriaData;

@@ -56,7 +56,7 @@ define(function (require) {
         createChart: function (response) {
             var gadget = 'launches_comparison_chart';
             var self = this;
-            $.when(WidgetService.getFullWidgetConfig(gadget)).done(function (widget) {
+            $.when(WidgetService.getSettingsGadget(gadget)).done(function (widget) {
                 var curWidget = widget;
                 var criteria = curWidget.staticCriteria;
                 var widgetData = {

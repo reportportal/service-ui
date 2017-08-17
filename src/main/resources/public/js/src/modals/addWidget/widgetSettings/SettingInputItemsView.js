@@ -30,6 +30,8 @@ define(function (require) {
     var Localization = require('localization');
     var Service = require('coreService');
 
+    var actionTypes = {};
+
     var SettingInputItemsView = SettingView.extend({
         className: 'modal-add-widget-setting-input-items',
         template: 'modal-add-widget-setting-input-items',
@@ -52,6 +54,15 @@ define(function (require) {
             this.options = data.options;
             this.model = new Epoxy.Model(options);
             this.render();
+            if (options.action && actionTypes[options.action]) {
+                this.setValue = actionTypes[options.action].setValue;
+                this.getValue = actionTypes[options.action].getValue;
+            }
+            options.setValue && (this.setValue = options.setValue);
+            options.getValue && (this.getValue = options.getValue);
+            options.validate && (this.validate = options.validate.bind(this));
+            this.model.set({ value: this.getValue(this.gadgetModel, this) });
+            this.listenTo(this.model, 'change:value', this.onChangeValue);
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
@@ -99,6 +110,7 @@ define(function (require) {
             }
         },
         activate: function () {
+            var self = this;
             Util.setupSelect2WhithScroll($('[data-js-label-input]', this.$el), {
                 min: this.model.get('minItems'),
                 minimumInputLength: this.model.get('minItemLength'),
@@ -108,18 +120,19 @@ define(function (require) {
                 dropdownCssClass: 'rp-select2-separate-block',
                 allowClear: false,
                 placeholder: this.model.get('inputPlaceholder'),
+                tags: true,
                 initSelection: function (element, callback) {
-                    callback({ id: element.val(), text: element.val() });
+                    callback(_.map(self.getValue(self.gadgetModel, self), function (item) {
+                        return { id: item, text: item };
+                    }));
                 },
                 query: this.getQueryFunc()
             });
         },
+        onChangeValue: function (model, value) {
+            this.setValue(value.split(','), this.gadgetModel, this);
+        },
         validate: function () {
-            var options = this.model.getWidgetOptions();
-            if (!options.actionType || _.isEmpty(options.actionType)) {
-                this.selectAction.setErrorState(Localization.validation.selectAtLeastOneAction);
-                return false;
-            }
             return true;
         },
         onDestroy: function () {
