@@ -54,12 +54,12 @@ define(function (require) {
             this.charts = [];
             widgetOptions = this.model.getParameters().widgetOptions;
             contentData = this.model.getContent().result[0].values;
-            if (contentData.total === 0) {
+            statusChartData = _.pick(contentData, ['passed', 'failed', 'skipped', 'total']);
+            defectTypesChartData = _.omit(contentData, ['failed', 'passed', 'skipped', 'total']);
+            if (contentData.total === 0 || (_.isEmpty(defectTypesChartData) && _.isEmpty(statusChartData))) {
                 this.addNoAvailableBock(this.$el);
                 return;
             }
-            statusChartData = _.pick(contentData, ['passed', 'failed', 'skipped', 'total']);
-            defectTypesChartData = _.omit(contentData, ['failed', 'passed', 'skipped', 'total']);
             this.defetTypesCollection = new SingletonDefectTypeCollection();
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.defetTypesCollection.ready.done(function () {
@@ -70,16 +70,34 @@ define(function (require) {
                     ) {
                         this.$el.html(Util.templates(this.templateDonut, {}));
                         this.$el.addClass('donut-chart-view');
-                        $('[data-js-left-chart-container]', this.$el).addClass('status-chart');
-                        this.drawDonutChart($('[data-js-left-chart-container]', this.$el), statusChartData);
-                        $('[data-js-right-chart-container]', this.$el).addClass('issues-chart');
-                        this.drawDonutChart($('[data-js-right-chart-container]', this.$el), defectTypesChartData);
+                        if (_.isEmpty(statusChartData)) {
+                            this.$el.addClass('left-chart-hidden');
+                        }
+                        if (_.isEmpty(defectTypesChartData)) {
+                            this.$el.addClass('right-chart-hidden');
+                        }
+                        if (!_.isEmpty(statusChartData)) {
+                            $('[data-js-left-chart-container]', this.$el).addClass('status-chart');
+                            this.drawDonutChart($('[data-js-left-chart-container]', this.$el), statusChartData);
+                        }
+                        if (!_.isEmpty(defectTypesChartData)) {
+                            $('[data-js-right-chart-container]', this.$el).addClass('issues-chart');
+                            this.drawDonutChart($('[data-js-right-chart-container]', this.$el), defectTypesChartData);
+                        }
                         this.restyleDonutTitle();
                     } else if (widgetOptions && widgetOptions.viewMode && widgetOptions.viewMode[0] === 'panel') {
                         this.$el.html(Util.templates(this.templatePanel, {}));
                         this.$el.addClass('trend-chart-view');
-                        this.drawStackedBarChart($('[data-js-left-chart-container]', this.$el), statusChartData);
-                        this.drawDefectTypesPanel($('[data-js-right-chart-container]', this.$el), defectTypesChartData);
+                        if (!_.isEmpty(statusChartData)) {
+                            this.drawStackedBarChart($('[data-js-left-chart-container]', this.$el), statusChartData);
+                        } else {
+                            this.$el.addClass('left-chart-hidden');
+                        }
+                        if (!_.isEmpty(defectTypesChartData)) {
+                            this.drawDefectTypesPanel($('[data-js-right-chart-container]', this.$el), defectTypesChartData);
+                        } else {
+                            this.$el.addClass('right-chart-hidden');
+                        }
                     }
                 }.bind(this));
             }.bind(this));
@@ -222,13 +240,15 @@ define(function (require) {
                     chart.toggle(id);
                 });
             d3.select(chart.element).select('.legend')
-                .append('div').attr('class', 'legend-gradient')
-                .append('div').attr('class', 'legend-border');
+                .append('div')
+                .attr('class', 'legend-gradient')
+                .append('div')
+                .attr('class', 'legend-border');
             Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
 
             // Configuring custom donut chart title
             if ($el.hasClass('status-chart')) {
-                donutTitle = Localization.widgets.pieTotal;
+                donutTitle = Localization.widgets.pieSum;
             } else if ($el.hasClass('issues-chart')) {
                 donutTitle = Localization.widgets.pieIssues;
             }
@@ -239,10 +259,17 @@ define(function (require) {
                 .text(donutTitle);
         },
         drawStackedBarChart: function ($el, data) {
-            $('[data-js-total-value]', $el).html(data.total);
-            $('[data-js-legend-passed]', $el).html(data.passed);
-            $('[data-js-legend-failed]', $el).html(data.failed);
-            $('[data-js-legend-skipped]', $el).html(data.skipped);
+            if (data.total) {
+                $('[data-js-total-value]', $el).html(data.total);
+            } else {
+                $('[data-js-total]', $el).add($('[data-js-bar]', $el)).addClass('hidden');
+            }
+            if (!data.passed && !data.failed && !data.skipped) {
+                $('[data-js-bar]', $el).addClass('hidden');
+            }
+            (data.passed) ? $('[data-js-legend-passed-val]', $el).html(data.passed) : $('[data-js-legend-passed]', $el).addClass('hidden');
+            (data.failed) ? $('[data-js-legend-failed-val]', $el).html(data.failed) : $('[data-js-legend-failed]', $el).addClass('hidden');
+            (data.skipped) ? $('[data-js-legend-skipped-val]', $el).html(data.skipped) : $('[data-js-legend-skipped]', $el).addClass('hidden');
 
             $('[data-js-bar-passed]', $el).width(((data.passed / data.total) * 100) + '%');
             $('[data-js-bar-failed]', $el).width(((data.failed / data.total) * 100) + '%');

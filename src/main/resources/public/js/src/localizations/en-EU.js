@@ -329,6 +329,7 @@ define(['util'], function () {
             lastFailure: 'Last Failure',
             findLastLaunch: 'Find in last launch',
             pieTotal: 'Total',
+            pieSum: 'Sum',
             totalTestCases: 'Total test cases',
             pieIssues: 'Issues',
             addNewWidget: 'Add New Widget',

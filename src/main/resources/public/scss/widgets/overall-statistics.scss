@@ -4,6 +4,7 @@
 
   &.donut-chart-view {
     .widget-wrapper {
+      position: relative;
       width: 50%;
       height: 100%;
       float: left;
@@ -253,9 +254,13 @@
             .bar {
               width: 100%;
               height: 12px;
+              max-width: 245px;
               border-radius: 100px;
               margin-top: 15px;
               overflow: hidden;
+              -webkit-box-shadow:  0 0 1px $COLOR--charcoal-grey;
+              -moz-box-shadow:  0 30 1px $COLOR--charcoal-grey;
+              box-shadow:  0 0 1px $COLOR--charcoal-grey;
 
               .bar-item {
                 float: left;
@@ -279,6 +284,7 @@
 
               .legend-item {
                 display: inline-block;
+                min-width: 65px;
                 margin-right: 20px;
                 text-align: left;
 
@@ -327,7 +333,6 @@
       &.right-widget-wrapper {
         width: 100%;
         padding-left: 285px;
-        padding-right: 0;
         overflow: hidden;
 
         .item-wrapper {
@@ -398,6 +403,61 @@
         .left-widget-wrapper {
           .chart-container {
             top: 0;
+          }
+        }
+      }
+    }
+  }
+
+  &.left-chart-hidden {
+    .right-widget-wrapper {
+      width: 100%;
+    }
+    .left-widget-wrapper {
+      display: none;
+    }
+    &.trend-chart-view {
+      .right-widget-wrapper {
+        padding-left: 20px;
+        .item-wrapper {
+          margin-left: 0;
+          margin-right: 20px;
+        }
+      }
+    }
+  }
+  &.right-chart-hidden {
+    .left-widget-wrapper {
+      width: 100%;
+    }
+    .right-widget-wrapper {
+      display: none;
+    }
+    &.trend-chart-view {
+      .left-widget-wrapper {
+        width: 100%;
+
+        .chart-container {
+          .align-wrapper {
+            .bar {
+              margin: 15px auto 0 auto;
+            }
+          }
+        }
+      }
+      &.w-less-then-7 {
+        .left-widget-wrapper {
+          .chart-container {
+            .align-wrapper {
+              .legend-wrapper {
+                .legend-item {
+                  margin-right: 20px;
+                  &:last-child {
+                    margin-right: 0;
+                  }
+                }
+              }
+            }
           }
         }
       }
