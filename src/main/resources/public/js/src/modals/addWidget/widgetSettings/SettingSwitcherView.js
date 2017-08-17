@@ -29,26 +29,6 @@ define(function (require) {
     var Epoxy = require('backbone-epoxy');
 
     var actionTypes = {
-        switch_chart_mode: {
-            setValue: function (value, model) {
-                var widgetOptions = model.getWidgetOptions();
-                if (value === 'chart') {
-                    widgetOptions.chartMode = [];
-                } else {
-                    delete widgetOptions.chartMode;
-                }
-                model.setWidgetOptions(widgetOptions);
-            },
-            getValue: function (model, self) {
-                var chartMode = !!(model.getWidgetOptions().chartMode);
-                var curNum = 0; // number of item in widgetService -> widget -> uiControl -> options -> items.
-                var items = self.model.get('items');
-                if (items.length > 1 && items[0].value === 'chart' && chartMode) {
-                    curNum = 1;
-                }
-                return curNum;
-            }
-        },
         switch_view_mode: {
             setValue: function (value, model) {
                 var widgetOptions = model.getWidgetOptions();
