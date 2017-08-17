@@ -60,12 +60,14 @@ define(function (require) {
             }
             statusChartData = _.pick(contentData, ['passed', 'failed', 'skipped', 'total']);
             defectTypesChartData = _.omit(contentData, ['failed', 'passed', 'skipped', 'total']);
-
             this.defetTypesCollection = new SingletonDefectTypeCollection();
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.defetTypesCollection.ready.done(function () {
                 this.launchFilterCollection.ready.done(function () {
-                    if (widgetOptions && widgetOptions.chartMode[0] === 'donutChartMode') {
+                    if (
+                        (widgetOptions && widgetOptions.viewMode && widgetOptions.viewMode[0] === 'donut') ||
+                        (!widgetOptions.viewMode || !widgetOptions.viewMode.length)
+                    ) {
                         this.$el.html(Util.templates(this.templateDonut, {}));
                         this.$el.addClass('donut-chart-view');
                         $('[data-js-left-chart-container]', this.$el).addClass('status-chart');
@@ -73,7 +75,7 @@ define(function (require) {
                         $('[data-js-right-chart-container]', this.$el).addClass('issues-chart');
                         this.drawDonutChart($('[data-js-right-chart-container]', this.$el), defectTypesChartData);
                         this.restyleDonutTitle();
-                    } else if (widgetOptions && widgetOptions.chartMode[0] === 'trendChartMode') {
+                    } else if (widgetOptions && widgetOptions.viewMode && widgetOptions.viewMode[0] === 'panel') {
                         this.$el.html(Util.templates(this.templatePanel, {}));
                         this.$el.addClass('trend-chart-view');
                         this.drawStackedBarChart($('[data-js-left-chart-container]', this.$el), statusChartData);
@@ -146,7 +148,7 @@ define(function (require) {
                     title: total,
                     label: {
                         show: true,
-                        threshold: 0.1
+                        threshold: 0.05
                     }
                 },
                 tooltip: {

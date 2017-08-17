@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
@@ -115,6 +115,16 @@ define(function (require, exports, module) {
                 deps: ['widgetOptions'],
                 get: function () {
                     var options = this.getWidgetOptions();
+                    if (options.viewMode && options.viewMode.length) {
+                        switch (options.viewMode[0]) {
+                        case 'donut':
+                            return Localization.widgets.donutChartMode;
+                        case 'panel':
+                            return Localization.widgets.panelMode;
+                        default:
+                            break;
+                        }
+                    }
                     if (options.timeline && options.timeline.length) {
                         return Localization.widgets.timelineModeTitle;
                     }

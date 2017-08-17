@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var LaunchesTableWidget = require('newWidgets/widgets/LaunchesTableWidgetView');
@@ -134,23 +134,15 @@ define(function (require, exports, module) {
                     widget_type: 'statistics_panel',
                     gadget: 'overall_statistics',
                     criteria: {}, // this.getExecutionsAndDefects(),
-                    mode: {
-                        type: 'radio',
-                        defaultVal: 'lineMode',
-                        items: {
-                            trendChartMode: Localization.widgets.trendChartMode,
-                            donutChartMode: Localization.widgets.donutChartMode
-                        }
-                    },
                     uiControl: [
                         {
                             control: 'switcher',
                             options: {
                                 items: [
                                     { name: Localization.widgets.panelMode, value: 'panel' },
-                                    { name: Localization.widgets.chartMode, value: 'chart' }
+                                    { name: Localization.widgets.donutChartMode, value: 'donut' }
                                 ],
-                                action: 'switch_chart_mode'
+                                action: 'switch_view_mode'
                             }
                         },
                         {
