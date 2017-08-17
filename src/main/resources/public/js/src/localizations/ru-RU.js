@@ -384,6 +384,7 @@ define(['util'], function () {
             lastFailure: 'Последний Отказ',
             findLastLaunch: 'Найти в последнем запуске',
             pieTotal: 'Всего',
+            pieSum: 'Сумма',
             totalTestCases: 'Всего тестовых сценариев',
             pieIssues: 'Ошибки',
             addNewWidget: 'Добавить новый виджет',
