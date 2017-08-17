@@ -83,6 +83,7 @@ require.config({
         d3: '../lib/d3/d3.v3.min',
         nvd3: '../lib/nvd3/nv.d3.custom',
         d3Tip: '../lib/d3/d3.tip.custom',
+        'c3': '../lib/c3',
         landingMain: 'landing/main',
         landingUI: 'landing/ui',
         landingDocs: 'landing/documentation',
