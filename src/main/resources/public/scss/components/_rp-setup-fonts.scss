@@ -83,7 +83,7 @@ $urlFontOpenSansSemibold: '../fonts/font-OpenSansSemibold/open-sans-semibold';
 @include font-face('OpenSansSemibold', $urlFontOpenSansSemibold, normal, normal);
 
 /* Font OpenSansBold */
-$urlFontOpenSansBold: '../fonts/font-OpenSansBold/open-sans-bold';
+$urlFontOpenSansBold: '../fonts/font-OpenSansBold/OpenSans-Bold';
 @include font-face('OpenSansBold', $urlFontOpenSansBold, normal, normal);
 
 /* Font Slick (Icons) */

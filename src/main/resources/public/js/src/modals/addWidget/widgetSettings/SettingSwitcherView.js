@@ -41,10 +41,30 @@ define(function (require) {
             },
             getValue: function (model, self) {
                 var chartMode = !!(model.getWidgetOptions().chartMode);
-                var curNum = 0;
+                var curNum = 0; // number of item in widgetService -> widget -> uiControl -> options -> items.
                 var items = self.model.get('items');
                 if (items.length > 1 && items[0].value === 'chart' && chartMode) {
                     curNum = 1;
+                }
+                return curNum;
+            }
+        },
+        switch_view_mode: {
+            setValue: function (value, model) {
+                var widgetOptions = model.getWidgetOptions();
+                widgetOptions.viewMode = [value];
+                model.setWidgetOptions(widgetOptions);
+            },
+            getValue: function (model, self) {
+                var viewMode = model.getWidgetOptions().viewMode;
+                var curNum = 0; // number of item in widgetService -> widget -> uiControl -> options -> items.
+                if (viewMode) {
+                    _.each(self.model.get('items'), function (item, number) {
+                        if (item.value === viewMode[0]) {
+                            curNum = number;
+                            return false;
+                        }
+                    });
                 }
                 return curNum;
             }
@@ -61,7 +81,7 @@ define(function (require) {
             },
             getValue: function (model, self) {
                 var timelineMode = !!(model.getWidgetOptions().timeline);
-                var curNum = 0;
+                var curNum = 0; // number of item in widgetService -> widget -> uiControl -> options -> items.
                 var items = self.model.get('items');
                 if (items.length > 1 && items[0].value === 'timeline' && timelineMode) {
                     curNum = 1;
