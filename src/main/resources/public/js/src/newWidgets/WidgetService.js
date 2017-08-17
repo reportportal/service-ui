@@ -25,7 +25,7 @@ define(function (require) {
     var LaunchesTableWidget = require('newWidgets/widgets/LaunchesTableWidgetView');
     var MostFailedTestCases = require('newWidgets/widgets/MostFailedTestCasesWidgetView');
     var UniqueBugTable = require('newWidgets/widgets/UniqueBugTableWidgetView');
-    var OverallStatisticsWidget = require('newWidgets/widgets/OverallStatisticsWidgetView(C3)');
+    var OverallStatisticsWidget = require('newWidgets/widgets/OverallStatisticsWidgetView_C3');
     var ProjectActivityWidget = require('newWidgets/widgets/ProjectActivityWidgetView');
     var LineLaunchStatisticsChart = require('newWidgets/widgets/LineLaunchStatisticsChartView');
     var TrendLaunchStatisticsChart = require('newWidgets/widgets/TrendLaunchStatisticsChartView');
