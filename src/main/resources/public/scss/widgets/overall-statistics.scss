@@ -72,7 +72,8 @@
           content: '';
           position: absolute;
           top: 100%;
-          left: calc(50% - 5px);
+          left: 50%;
+          margin-left: -5px;
           border-top: 6px solid $COLOR--white-default;
           border-left: 6px solid transparent;
           border-right: 6px solid transparent;
@@ -81,7 +82,8 @@
           content: '';
           position: absolute;
           top: 100%;
-          left: calc(50% - 7px);
+          left: 50%;
+          margin-left: -7px;
           width: 0;
           height: 0;
           border-left: 8px solid transparent;
@@ -144,15 +146,21 @@
         }
         .legend-gradient {
           display: none;
-          width: calc(100% - 20px);
+          width: 100%;
           height: 10px;
           position: absolute;
           bottom: 0;
           left: 0;
           margin-right: 10px;
           margin-left: 10px;
-          border-bottom: 1px solid $COLOR--gray-91;
           background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), $COLOR--white-default);
+
+          .legend-border {
+            height: 100%;
+            width: 100%;
+            border-bottom: 1px solid $COLOR--gray-91;
+
+          }
         }
 
         ._scrollbar + .legend-gradient {
@@ -209,102 +217,116 @@
       padding: 20px;
 
       &.left-widget-wrapper {
-        position: relative;
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 285px;
         background-color: $COLOR--light-yellow;
 
         .chart-container {
-          position: absolute;
-          top: calc(50% - 90px);
-          left: 0;
-          right: 0;
-          height: 140px;
+          display: table;
+          height: 100%;
+          width: 100%;
 
-          .total {
-            margin-top: 10px;
-            text-align: center;
-
-            .total-value {
-              font-family: $OpenSansSemibold;
-              font-size: 20px;
-              color: $COLOR--charcoal-grey;
-            }
-            .total-title {
-              font-family: $OpenSansBold;
-              font-size: 12px;
-              color: $COLOR--gray-47;
-              text-transform: uppercase;
-            }
-          }
-          .bar {
+          .align-wrapper {
+            display: table-cell;
             width: 100%;
-            height: 12px;
-            border-radius: 100px;
-            margin-top: 15px;
-            overflow: hidden;
+            height: 100%;
+            vertical-align: middle;
 
-            .bar-item {
-              float: left;
-              height: 100%;
+            .total {
+              margin-top: 10px;
+              text-align: center;
 
-              &.bar-passed {
-                background-color: $COLOR--passed;
-              }
-              &.bar-failed {
-                background-color: $COLOR--failed;
-              }
-              &.bar-skipped {
-                background-color: $COLOR--skipped;
-              }
-            }
-          }
-          .legend-wrapper {
-            width: 100%;
-            margin-top: 15px;
-            .legend-item {
-              float: left;
-              width: 33.33%;
-
-              .legend-val {
-                font-family: $OpenSansRegular;
-                font-size: 18px;
+              .total-value {
+                font-family: $OpenSansSemibold;
+                font-size: 20px;
                 color: $COLOR--charcoal-grey;
               }
-              .legend-title {
-                position: relative;
-                padding-left: 17px;
-                font-family: $OpenSansSemibold;
+              .total-title {
+                font-family: $OpenSansBold;
                 font-size: 12px;
                 color: $COLOR--gray-47;
                 text-transform: uppercase;
+              }
+            }
+            .bar {
+              width: 100%;
+              height: 12px;
+              border-radius: 100px;
+              margin-top: 15px;
+              overflow: hidden;
 
-                &:before {
-                  content: '';
-                  display: block;
-                  position: absolute;
-                  top: 2px;
-                  left: 0;
-                  width: 12px;
-                  height: 12px;
-                  border-radius: 100%;
+              .bar-item {
+                float: left;
+                height: 100%;
+
+                &.bar-passed {
+                  background-color: $COLOR--passed;
+                }
+                &.bar-failed {
+                  background-color: $COLOR--failed;
+                }
+                &.bar-skipped {
+                  background-color: $COLOR--skipped;
                 }
               }
-              &.legend-passed .legend-title:before {
-                background-color: $COLOR--passed;
-              }
-              &.legend-failed .legend-title:before {
-                background-color: $COLOR--failed;
-              }
-              &.legend-skipped .legend-title:before {
-                background-color: $COLOR--skipped;
+            }
+            .legend-wrapper {
+              width: 100%;
+              margin-top: 15px;
+              text-align: center;
+
+              .legend-item {
+                display: inline-block;
+                margin-right: 20px;
+                text-align: left;
+
+                &:last-child {
+                  margin-right: 0;
+                }
+
+                .legend-val {
+                  font-family: $OpenSansRegular;
+                  font-size: 18px;
+                  color: $COLOR--charcoal-grey;
+                }
+                .legend-title {
+                  position: relative;
+                  padding-left: 17px;
+                  font-family: $OpenSansSemibold;
+                  font-size: 12px;
+                  color: $COLOR--gray-47;
+                  text-transform: uppercase;
+
+                  &:before {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    top: 2px;
+                    left: 0;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 100%;
+                  }
+                }
+                &.legend-passed .legend-title:before {
+                  background-color: $COLOR--passed;
+                }
+                &.legend-failed .legend-title:before {
+                  background-color: $COLOR--failed;
+                }
+                &.legend-skipped .legend-title:before {
+                  background-color: $COLOR--skipped;
+                }
               }
             }
           }
         }
       }
       &.right-widget-wrapper {
-        width: calc(100% - 285px);
-        padding-left: 0;
+        width: 100%;
+        padding-left: 285px;
         padding-right: 0;
         overflow: hidden;
 
@@ -352,25 +374,18 @@
         width: 130px;
 
         .chart-container {
-          height: 260px;
-          width: 100%;
-          top: calc(50% - 130px);
-          left: 0;
-          right: 0;
-
-          .legend-wrapper {
-            margin-left: 15px;
-
-            .legend-item {
-              float: none;
-              width: 100%;
-              margin-bottom: 15px;
+          .align-wrapper {
+            .legend-wrapper {
+              .legend-item {
+                margin-bottom: 15px;
+                margin-right: 0;
+              }
             }
           }
         }
       }
       .right-widget-wrapper {
-        width: calc(100% - 130px);
+        padding-left: 130px;
 
         .chart-container {
           .item-wrapper {

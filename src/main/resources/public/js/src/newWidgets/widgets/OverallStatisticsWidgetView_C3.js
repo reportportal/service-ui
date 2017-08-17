@@ -221,7 +221,9 @@ define(function (require) {
                     $('.color-mark', $(this)).toggleClass('unchecked');
                     chart.toggle(id);
                 });
-            d3.select(chart.element).select('.legend').append('div').attr('class', 'legend-gradient');
+            d3.select(chart.element).select('.legend')
+                .append('div').attr('class', 'legend-gradient')
+                .append('div').attr('class', 'legend-border');
             Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
 
             // Configuring custom donut chart title

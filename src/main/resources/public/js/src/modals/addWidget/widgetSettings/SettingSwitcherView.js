@@ -63,7 +63,7 @@ define(function (require) {
                 var timelineMode = !!(model.getWidgetOptions().timeline);
                 var curNum = 0; // number of item in widgetService -> widget -> uiControl -> options -> items.
                 var items = self.model.get('items');
-                if (items.length > 1 && items[0].value === 'timeline' && timelineMode) {
+                if (items.length > 1 && items[0].value !== 'timeline' && timelineMode) {
                     curNum = 1;
                 }
                 return curNum;
