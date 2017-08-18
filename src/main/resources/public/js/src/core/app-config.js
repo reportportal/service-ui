@@ -158,7 +158,7 @@ define(function (require) {
                 email: /^[a-z0-9._-]+@[a-z0-9_-]+?\.[a-z0-9]{2,}$/i,
                 emailInternal: '^((?!(@epam.com)).)*$',
                 emailWrong: /wrong email/i,
-                login: /^[0-9a-zA-Z-_]{1,128}$/,
+                login: /^[0-9a-zA-Z-_.]{1,128}$/,
                 fullName: /^[a-z0-9._-\s\u0400-\u04FF]{3,256}$/i,
                 domain: /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/,
                 originalPass: /^(.){4,25}$/,
