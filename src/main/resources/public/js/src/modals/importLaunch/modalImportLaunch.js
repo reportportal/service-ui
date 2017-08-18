@@ -23,6 +23,9 @@ define(function (require) {
     var Urls = require('dataUrlResolver');
     var Util = require('util');
     var Dropzone = require('dropzone');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     var ModalImportLaunch = ModalView.extend({
         tpl: 'tpl-modal-import-launch',

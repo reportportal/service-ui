@@ -130,7 +130,9 @@
     }
     &.level-INFO:after {
       background-color: $COLOR--windows-blue;
-    }
+    }&.level-WARN:after {
+       background-color: $COLOR--to-investigate;
+     }
     &.level-ERROR {
       background-color: $COLOR--light-red;
       .accordion-block {

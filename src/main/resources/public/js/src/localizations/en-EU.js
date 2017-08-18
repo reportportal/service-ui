@@ -484,7 +484,8 @@ define(['util'], function () {
             criterion: 'criterion',
             saveWidgetDashboard: 'Save Widget on Dashboard',
             launchName: 'LAUNCH NAME',
-            latestLaunches: 'Latest launches'
+            latestLaunches: 'Latest launches',
+            allLaunches: 'All launches'
         },
 
         userProfile: {

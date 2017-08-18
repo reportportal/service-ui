@@ -148,10 +148,13 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'checkbox',
+                            control: 'switcher',
                             options: {
-                                label: Localization.widgets.latestLaunches,
-                                action: 'latest_launches'
+                                items: [
+                                    { name: Localization.widgets.allLaunches, value: 'all' },
+                                    { name: Localization.widgets.latestLaunches, value: 'latest' }
+                                ],
+                                action: 'switch_latest_mode'
                             }
                         }
                     ],
@@ -171,10 +174,13 @@ define(function (require) {
                     noCriteria: true,
                     uiControl: [
                         {
-                            control: 'checkbox',
+                            control: 'switcher',
                             options: {
-                                label: Localization.widgets.latestLaunches,
-                                action: 'latest_launches'
+                                items: [
+                                    { name: Localization.widgets.allLaunches, value: 'all' },
+                                    { name: Localization.widgets.latestLaunches, value: 'latest' }
+                                ],
+                                action: 'switch_latest_mode'
                             }
                         }
                     ],
@@ -477,8 +483,7 @@ define(function (require) {
                         max: 150,
                         def: 50
                     }
-                },
-                product_status: ProductStatus.getConfig()
+                }
             };
             _.each(WIDGETS, function (widget, key) {
                 var conf = widget.getConfig();

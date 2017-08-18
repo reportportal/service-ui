@@ -540,7 +540,8 @@ define(['util'], function () {
             criterion: 'критерий',
             saveWidgetDashboard: 'Сохраните Виджет на Панели управления',
             launchName: 'ИМЯ ЗАПУСКА',
-            latestLaunches: 'Последние запуски'
+            latestLaunches: 'Последние запуски',
+            allLaunches: 'Все запуски'
         },
 
         userProfile: {
