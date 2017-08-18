@@ -303,9 +303,12 @@ define(function (require) {
                         } else {
                             launchFilterCollection = new SingletonLaunchFilterCollection();
                             launchFilterCollection.ready.done(function () {
-                                curOptions.filterName = [launchFilterCollection.get(self.model.get('filter_id')).get('name')];
-                                self.model.setWidgetOptions(curOptions);
-                                self.setFilterModel(launchFilterCollection.get(self.model.get('filter_id')));
+                                var filterModel = launchFilterCollection.get(self.model.get('filter_id'));
+                                if (filterModel) {
+                                    curOptions.filterName = [filterModel.get('name')];
+                                    self.model.setWidgetOptions(curOptions);
+                                    self.setFilterModel(launchFilterCollection.get(self.model.get('filter_id')));
+                                }
                             });
                         }
                     }
