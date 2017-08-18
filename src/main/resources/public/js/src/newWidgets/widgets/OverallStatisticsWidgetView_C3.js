@@ -65,8 +65,11 @@ define(function (require) {
             this.defetTypesCollection.ready.done(function () {
                 this.launchFilterCollection.ready.done(function () {
                     if (
-                        (widgetOptions && widgetOptions.viewMode && widgetOptions.viewMode[0] === 'donut') ||
-                        (!widgetOptions.viewMode || !widgetOptions.viewMode.length)
+                        widgetOptions &&
+                        (
+                            (widgetOptions.viewMode && widgetOptions.viewMode[0] === 'donut') ||
+                            (!widgetOptions.viewMode || !widgetOptions.viewMode.length)
+                        )
                     ) {
                         this.$el.html(Util.templates(this.templateDonut, {}));
                         this.$el.addClass('donut-chart-view');
@@ -220,7 +223,7 @@ define(function (require) {
                 .html(function (id) {
                     var name;
                     if (id === 'passed' || id === 'failed' || id === 'skipped') {
-                        name = id;
+                        name = id.capitalize();
                     } else {
                         name = self.defetTypesCollection.getDefectByLocator(id).get('longName');
                     }
