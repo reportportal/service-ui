@@ -70,7 +70,7 @@ define(function (require) {
         },
     ]*/
     var WIDGETS = {
-        product_status: ProductStatus
+        // product_status: ProductStatus
     };
 
     var WidgetService = {

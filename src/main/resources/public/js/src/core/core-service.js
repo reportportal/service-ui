@@ -49,7 +49,6 @@ define([
 
     var getPreferences = function () {
         return call('GET', urls.getPreferences());
-        return call('GET', urls.getPreferences());
     };
 
     var getProfileImage = function (url) {
@@ -108,6 +107,9 @@ define([
 
     var saveWidget = function (data) {
         return call('POST', urls.widget(), data);
+    };
+    var saveEmptyWidget = function (data) {
+        return call('POST', urls.emptyWidget(), data);
     };
 
     var updateWidget = function (data, id) {
@@ -412,6 +414,7 @@ define([
         saveFilter: saveFilter,
 
         saveWidget: saveWidget,
+        saveEmptyWidget: saveEmptyWidget,
         updateWidget: updateWidget,
         addWidgetToDashboard: addWidgetToDashboard,
         updateWidgetsOnDashboard: updateWidgetsOnDashboard,

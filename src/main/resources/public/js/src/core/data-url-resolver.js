@@ -188,6 +188,9 @@ define(['app'], function (App) {
     var widget = function () {
         return getProjectBase() + '/widget';
     };
+    var emptyWidget = function () {
+        return getProjectBase() + '/widget/empty';
+    };
     var chart = function () {
         return getChartProjectBase() + '/widget';
     };
@@ -520,6 +523,7 @@ define(['app'], function (App) {
         updateProjectUnassign: updateProjectUnassign,
         updateProjectAssign: updateProjectAssign,
         widget: widget,
+        emptyWidget: emptyWidget,
         chart: chart,
         widgetById: widgetById,
         chartById: chartById,

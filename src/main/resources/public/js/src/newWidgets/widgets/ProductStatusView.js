@@ -38,6 +38,7 @@ define(function (require) {
             gadget_name: 'Product status',
             img: 'filter_results.png',
             description: 'product status description',
+            widget_type: 'product_status', // TODO remove after refactoring
             noFilters: true // TODO remove after refactoring
         };
     };
@@ -49,12 +50,13 @@ define(function (require) {
                 options: {
                     entity: 'filter',
                     label: 'Select filters',
+                    minItems: 1,
                     getValue: function (model) {
                         var widgetOptions = model.getWidgetOptions();
                         if (widgetOptions.filters) {
                             return widgetOptions.filters;
                         }
-                        return ['testert', 'test2', 'opana'];
+                        return [];
                     },
                     setValue: function (value, model) {
                         var widgetOptions = model.getWidgetOptions();
@@ -109,7 +111,7 @@ define(function (require) {
                             { name: 'All launches', value: 'all' },
                             { name: 'Latest launches', value: 'latest' }
                     ],
-                    action: 'switch_chart_mode'
+                    action: 'switch_latest_mode'
                 }
             }
         ]);

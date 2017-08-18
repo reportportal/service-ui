@@ -49,6 +49,26 @@ define(function (require) {
                 return curNum;
             }
         },
+        switch_latest_mode: {
+            setValue: function (value, model) {
+                var widgetOptions = model.getWidgetOptions();
+                if (value === 'latest') {
+                    widgetOptions.latest = [];
+                } else {
+                    delete widgetOptions.latest;
+                }
+                model.setWidgetOptions(widgetOptions);
+            },
+            getValue: function (model, self) {
+                var latestMode = !!(model.getWidgetOptions().latest);
+                var curNum = 0; // number of item in widgetService -> widget -> uiControl -> options -> items.
+                var items = self.model.get('items');
+                if (items.length > 1 && items[0].value !== 'latest' && latestMode) {
+                    curNum = 1;
+                }
+                return curNum;
+            }
+        },
         switch_timeline_mode: {
             setValue: function (value, model) {
                 var widgetOptions = model.getWidgetOptions();

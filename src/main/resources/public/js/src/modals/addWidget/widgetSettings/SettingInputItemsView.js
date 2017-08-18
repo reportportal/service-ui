@@ -27,7 +27,6 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
-    var Localization = require('localization');
     var Service = require('coreService');
 
     var actionTypes = {};
@@ -67,11 +66,12 @@ define(function (require) {
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        getQueryFunc: function () {
+        getFunctions: function () {
             switch (this.model.get('entity')) {
             case 'filter':
-                return function (query) {
-                    Service.saveFilter('?page.sort=name&page.page=1&page.size=50&filter.cnt.name=' + query.term)
+                return {
+                    query: function (query) {
+                        Service.saveFilter('?page.sort=name&page.page=1&page.size=50&filter.cnt.name=' + query.term)
                             .done(function (response) {
                                 var data = { results: [] };
                                 _.each(response.content, function (item) {
@@ -85,6 +85,15 @@ define(function (require) {
                             .fail(function (error) {
                                 Util.ajaxFailMessenger(error);
                             });
+                    },
+                    getDataByIds: function (values, callback) {
+                        Service.getFilterData(values)
+                            .done(function (data) {
+                                callback(_.map(data, function (filter) {
+                                    return { id: filter.id, text: filter.name };
+                                }));
+                            });
+                    }
                 };
             case 'launch':
                 return function (query) {
@@ -122,17 +131,19 @@ define(function (require) {
                 placeholder: this.model.get('inputPlaceholder'),
                 tags: true,
                 initSelection: function (element, callback) {
-                    callback(_.map(self.getValue(self.gadgetModel, self), function (item) {
-                        return { id: item, text: item };
-                    }));
+                    self.getFunctions()
+                        .getDataByIds(self.getValue(self.gadgetModel, self), callback);
                 },
-                query: this.getQueryFunc()
+                query: this.getFunctions().query
             });
         },
         onChangeValue: function (model, value) {
             this.setValue(value.split(','), this.gadgetModel, this);
         },
         validate: function () {
+            if (this.model.get('minItems') > 0 && this.model.get('value') === '') {
+                return false;
+            }
             return true;
         },
         onDestroy: function () {

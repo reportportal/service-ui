@@ -375,14 +375,6 @@ define(function (require, exports, module) {
                 this.messages.close();
             }
         },
-        // showOverlay: function (element, deleting) {
-        //     $(element).LoadingOverlay('show', {
-        //         image: 'img/graph_loader.gif'
-        //     });
-        // },
-        // hideOverlay: function (element) {
-        //     $(element).LoadingOverlay('hide');
-        // },
         hideMessagePanel: function () {
             var self = this;
             $('.cancel, [type="cancel"]').on('click', function () {
@@ -470,22 +462,6 @@ define(function (require, exports, module) {
         setEqualHeightRow: function (elem) {
             $(elem).responsiveEqualHeightGrid();
         },
-        // attachNiceScrollToDropDown: function (options) {
-        //     var found = $("li", options.holder).length,
-        //         target = $("ul:first", options.holder);
-        //     if (found > options.acceptable) {
-        //         options.holder
-        //             .on('shown.bs.dropdown', function () {
-        //
-        //                 Util.setupNiceScroll(target);
-        //             }).on('hidden.bs.dropdown', function () {
-        //             target.getNiceScroll().remove();
-        //         }).on('remove', function () {
-        //             target = null;
-        //             options.holder = null;
-        //         });
-        //     }
-        // },
 
         scrollToHighlight: function (id, needPurification) {
             id = config.commentAnchor || id;
