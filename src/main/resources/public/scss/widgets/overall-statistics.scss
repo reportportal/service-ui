@@ -254,13 +254,13 @@
             .bar {
               width: 100%;
               height: 12px;
-              max-width: 245px;
+              max-width: 240px;
               border-radius: 100px;
-              margin-top: 15px;
+              margin: 15px auto 0 auto;
               overflow: hidden;
-              -webkit-box-shadow:  0 0 1px $COLOR--charcoal-grey;
-              -moz-box-shadow:  0 30 1px $COLOR--charcoal-grey;
-              box-shadow:  0 0 1px $COLOR--charcoal-grey;
+              -webkit-box-shadow: 0 0 1px $COLOR--charcoal-grey;
+              -moz-box-shadow: 0 0 1px $COLOR--charcoal-grey;
+              box-shadow: 0 0 1px $COLOR--charcoal-grey;
 
               .bar-item {
                 float: left;
@@ -380,6 +380,9 @@
 
         .chart-container {
           .align-wrapper {
+            .bar {
+              max-width: 87px;
+            }
             .legend-wrapper {
               .legend-item {
                 margin-bottom: 15px;
@@ -436,11 +439,10 @@
     &.trend-chart-view {
       .left-widget-wrapper {
         width: 100%;
-
         .chart-container {
           .align-wrapper {
             .bar {
-              margin: 15px auto 0 auto;
+              max-width: 240px;
             }
           }
         }
