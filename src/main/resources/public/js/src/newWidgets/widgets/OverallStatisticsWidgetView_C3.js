@@ -184,7 +184,7 @@ define(function (require) {
                     contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
                         var name;
                         if (d[0].id === 'passed' || d[0].id === 'failed' || d[0].id === 'skipped') {
-                            name = d[0].name.toUpperCase();
+                            name = Localization.launchesHeaders[d[0].name].toUpperCase();
                         } else {
                             name = self.defetTypesCollection.getDefectByLocator(d[0].id).get('longName');
                         }
@@ -223,7 +223,7 @@ define(function (require) {
                 .html(function (id) {
                     var name;
                     if (id === 'passed' || id === 'failed' || id === 'skipped') {
-                        name = id.capitalize();
+                        name = Localization.launchesHeaders[id];
                     } else {
                         name = self.defetTypesCollection.getDefectByLocator(id).get('longName');
                     }
