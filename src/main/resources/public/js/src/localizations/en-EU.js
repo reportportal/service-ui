@@ -1302,7 +1302,7 @@ define(['util'], function () {
             caption: 'It should only take a couple of minutes to get started',
             failCaption: '<span class="big">Oops,</span><br>this invitation has expired or already used',
             welcomeMsg: '<span class="big">Welcome,</span><br>complete the registration form',
-            loginHint: '1-128 symbols, Latin, numeric characters, symbols: hyphen, underscore',
+            loginHint: '1-128 symbols, Latin, numeric characters, symbols: hyphen, underscore, dot',
             nameHint: '3-256 symbols, Latin, Cyrillic, numeric characters, symbols: hyphen, underscore, dot, space',
             passwordHint: '4-25 symbols'
         },
