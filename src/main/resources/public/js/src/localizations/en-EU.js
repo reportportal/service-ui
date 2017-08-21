@@ -1462,7 +1462,6 @@ define(['util'], function () {
             errorUpdateWidget: 'Error when updating widget',
             filterNameDuplication: 'Error when updating widget',
             unAssignMember: 'Fail to unassign member from the project',
-            loadFilters: 'Could not load filters.',
             widgetSave: 'Could not save widget to the server',
             widgetAddToDashboard: 'Could not add selected widget to dashboard',
             widgetUpdate: 'Could not complete widget update',
@@ -1604,7 +1603,6 @@ define(['util'], function () {
             restorationExpired: 'The link to restore password has been expired or already used',
             tfsDomainLength: 'Domain should have size from \'1\' to \'255\' symbols',
             apiKeyLength: 'Api key should have size from \'4\' to \'128\' symbols',
-            passwordLength: 'Password should have size from \'4\' to \'25\' symbols',
             usernameLength: 'Username should have size from \'4\' to \'128\' symbols',
 
             onlyIntegersRegex: 'Only numbers are allowed',
@@ -1624,7 +1622,9 @@ define(['util'], function () {
 
             loginLength: 'Login length should have size from %%% to %%% characters.',
             passwordLength: 'Password length should have size from %%% to %%% characters.',
-            userNameLength: 'Name length should have size from %%% to %%% characters.'
+            userNameLength: 'Name length should have size from %%% to %%% characters.',
+
+            moreOneItem: 'You must select more than one item'
         },
 
         forms: {

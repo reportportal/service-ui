@@ -28,6 +28,7 @@ define(function (require) {
     var _ = require('underscore');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
     var Service = require('coreService');
+    var Localization = require('localization');
 
     var actionTypes = {};
 
@@ -136,15 +137,36 @@ define(function (require) {
                 },
                 query: this.getFunctions().query
             });
+            $('[data-js-label-input]', this.$el)
+                .on('select2-open', this.onEnterInput)
+                .on('select2-close', this.onOverInput);
         },
         onChangeValue: function (model, value) {
             this.setValue(value.split(','), this.gadgetModel, this);
+            this.hideErrorState();
+        },
+        onOverInput: function () {
+            $('[data-js-validate-hint]', this.$el).hide();
+        },
+        onEnterInput: function () {
+            if ($('[data-js-input-wrapper]', this.$el).hasClass('validate-error')) {
+                $('[data-js-validate-hint]', this.$el).show();
+            }
         },
         validate: function () {
-            if (this.model.get('minItems') > 0 && this.model.get('value') === '') {
+            if (this.model.get('minItems') > 0 && !this.model.get('value').length) {
+                this.showErrorState(Localization.validation.moreOneItem);
                 return false;
             }
             return true;
+        },
+        showErrorState: function (message) {
+            $('[data-js-input-wrapper]', this.$el).addClass('validate-error');
+            $('[data-js-validate-hint]', this.$el).html(message);
+        },
+        hideErrorState: function () {
+            $('[data-js-input-wrapper]', this.$el).removeClass('validate-error');
+            $('[data-js-validate-hint]', this.$el).html('').hide();
         },
         onDestroy: function () {
             this.selectCriteria && this.selectCriteria.destroy();
