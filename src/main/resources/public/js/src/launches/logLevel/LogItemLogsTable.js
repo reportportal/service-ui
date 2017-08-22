@@ -32,9 +32,11 @@ define(function (require) {
     var LogItemCollection = require('launches/logLevel/LogItemCollection');
     var Components = require('core/components');
     var StickyHeader = require('core/StickyHeader');
-    var LogItemLogsItem = require('launches/logLevel/LogItemLogsItem');
+    var LogItemLogsItemBlock = require('launches/logLevel/LogItemLogsItemBlock');
+    var LogItemLogsItemConsole = require('launches/logLevel/LogItemLogsItemConsole');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var LogItemNextErrorView = require('launches/logLevel/LogItemNextError/LogItemNextErrorView');
+    var SingletonAppStorage = require('storage/SingletonAppStorage');
 
     var config = App.getInstance();
 
@@ -43,16 +45,39 @@ define(function (require) {
 
         events: {
             'change [data-js-attachments-filter]': 'onChangeAttachments',
-            'click .rp-grid-th[data-sorter]': 'onClickSorter'
+            'click .rp-grid-th[data-sorter]': 'onClickSorter',
+            'change [data-js-switch-to-console-view]': 'onChangeView'
         },
-
+        onChangeView: function () {
+            var consoleView = $('[data-js-switch-to-console-view]', this.$el).prop('checked');
+            this.appStorage.set({ consoleView: consoleView });
+            this.updateHeader();
+            _.each(this.items, function (item) {
+                item.destroy();
+            });
+            this.onResetCollection();
+        },
+        updateHeader: function () {
+            var consoleView = this.appStorage.get('consoleView');
+            var $container = $('[data-js-fixed-header]', this.$el);
+            $container.removeClass('console-view');
+            $container.removeClass('block-view');
+            this.appStorage.set({ consoleView: consoleView });
+            if (consoleView) {
+                $container.addClass('console-view');
+            } else {
+                $container.addClass('block-view');
+            }
+        },
         initialize: function (options) {
+            var startOptions = options.options;
+            var isAscSort = 'true';
+            this.appStorage = new SingletonAppStorage();
+            this.consoleView = this.appStorage.get('consoleView') || false;
             this.itemModel = options.itemModel;
             this.mainPath = options.mainPath;
             this.collectionItems = options.collectionItems;
             this.userStorage = new SingletonUserStorage();
-            var startOptions = options.options;
-            var isAscSort = 'true';
             if (startOptions['page.sort'] && ~startOptions['page.sort'].indexOf('DESC')) {
                 isAscSort = 'false';
             }
@@ -85,7 +110,8 @@ define(function (require) {
 
 
             this.render();
-            if (startOptions['filter.ex.binary_content'] && startOptions['filter.ex.binary_content'] == 'true') {
+            $('[data-js-switch-to-console-view]', this.$el).prop('checked', this.consoleView);
+            if (startOptions['filter.ex.binary_content'] && startOptions['filter.ex.binary_content'] === 'true') {
                 $('[data-js-attachments-filter]', this.$el).prop('checked', true);
             }
             this.onChangeFilter();
@@ -144,7 +170,11 @@ define(function (require) {
             });
         },
         render: function () {
+            var $container;
             this.$el.html(Util.templates(this.template, {}));
+            $container = $('[data-js-fixed-header]', this.$el);
+            $container.html(Util.templates('tpl-launch-log-item-table-header', {}));
+            this.updateHeader();
             $('[data-js-select-filter]', this.$el).html((new this.selectModel.view({ model: this.selectModel })).$el);
             $('[data-js-name-filter]', this.$el).html((new this.nameModel.view({ model: this.nameModel })).$el);
             this.paging = new Components.PagingToolbar({
@@ -157,8 +187,8 @@ define(function (require) {
                 minMode: true
             });
             $('[data-js-paginate-min-container]', this.$el).on('click', function (e) {
-                var next = $(e.target).closest('.next'),
-                    prev = $(e.target).closest('.previous');
+                var next = $(e.target).closest('.next');
+                var prev = $(e.target).closest('.previous');
                 if (next.length && !next.hasClass('disabled')) {
                     config.trackingDispatcher.trackEventNumber(209);
                 } else if (prev.length && !prev.hasClass('disabled')) {
@@ -181,11 +211,12 @@ define(function (require) {
             this.onChangeFilter();
         },
         onChangeOptionsFilter: function (newParams) {
-            config.router.navigate(this.mainPath + '&' + newParams.join('&'), { trigger: false });
             var newLogOption = {};
+            config.router.navigate(this.mainPath + '&' + newParams.join('&'), { trigger: false });
             _.each(newParams, function (param) {
+                var splitParam;
                 param = param.replace('log.', '');
-                var splitParam = param.split('=');
+                splitParam = param.split('=');
                 newLogOption[splitParam[0]] = splitParam[1];
             });
             newLogOption.item = this.collectionItems.getInfoLog().item;
@@ -198,7 +229,7 @@ define(function (require) {
         onStopLoading: function () {
             $('[data-js-logs-wrapper]', this.$el).removeClass('load');
             _.each(this.items, function (item) {
-                item.activateAccordion();
+                item.activateAccordion && item.activateAccordion();
             });
         },
         onChangePage: function (page) {
@@ -235,18 +266,21 @@ define(function (require) {
                 config.trackingDispatcher.trackEventNumber(211);
                 break;
             }
-            if (filterParams.sorting_column == sorter) {
+            if (filterParams.sorting_column === sorter) {
                 filterParams.is_asc = !filterParams.is_asc;
             } else {
                 filterParams.is_asc = true;
                 filterParams.sorting_column = sorter;
             }
-            this.filterModel.set({ newSelectionParameters: JSON.stringify(filterParams), curPage: 1 });
+            this.filterModel.set({
+                newSelectionParameters: JSON.stringify(filterParams),
+                curPage: 1
+            });
         },
         onChangeSelectionParameters: function () {
-            $('[data-sorter]', this.$el).removeClass('sorting-asc sorting-desc');
             var filterParams = this.filterModel.getParametersObj();
             var $element = $('[data-sorter="' + filterParams.sorting_column + '"]', this.$el);
+            $('[data-sorter]', this.$el).removeClass('sorting-asc sorting-desc');
             if ($element && $element.length) {
                 $element.addClass((filterParams.is_asc) ? 'sorting-asc' : 'sorting-desc');
             }
@@ -254,6 +288,7 @@ define(function (require) {
 
         onResetCollection: function () {
             var $container = $('[data-js-table-container]', this.$el);
+            var consoleView = $('[data-js-switch-to-console-view]', this.$el).prop('checked');
             var self = this;
             $container.html('');
             if (!this.collection.models.length) {
@@ -263,10 +298,20 @@ define(function (require) {
             }
             this.items = [];
             _.each(this.collection.models, function (model) {
-                var item = new LogItemLogsItem({
-                    model: model
-                });
+                var item;
+                if (consoleView) {
+                    item = new LogItemLogsItemConsole({
+                        model: model
+                    });
+                    item.$el.addClass('console-view-row');
+                } else {
+                    item = new LogItemLogsItemBlock({
+                        model: model
+                    });
+                    item.$el.addClass('block-view-row');
+                }
                 $container.append(item.$el);
+                item.activateAccordion && item.activateAccordion();
                 self.items.push(item);
             });
         },
@@ -274,11 +319,11 @@ define(function (require) {
             this.trigger('click:attachment', model);
         },
         goToLog: function (logId) {
+            var self = this;
             if (this.collection.get(logId)) {
                 this.collection.get(logId).trigger('scrollTo');
                 this.trigger('goToLog:end');
             } else {
-                var self = this;
                 this.collection.findLogPage(logId, true)
                     .done(function (number) {
                         self.resetFilters();
