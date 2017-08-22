@@ -110,7 +110,7 @@ define(function (require) {
 
         onKeySuccess: function () {
             $('[data-js-save]', this.$el).focus().trigger('click');
-            this.updateDefectType();
+            // this.updateDefectType();
         },
 
         getIssueType: function (item) {
