@@ -32,7 +32,8 @@ define(function (require) {
     var LogItemCollection = require('launches/logLevel/LogItemCollection');
     var Components = require('core/components');
     var StickyHeader = require('core/StickyHeader');
-    var LogItemLogsItem = require('launches/logLevel/LogItemLogsItem');
+    var LogItemLogsItemBlock = require('launches/logLevel/LogItemLogsItemBlock');
+    var LogItemLogsItemConsole = require('launches/logLevel/LogItemLogsItemConsole');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var LogItemNextErrorView = require('launches/logLevel/LogItemNextError/LogItemNextErrorView');
 
@@ -43,16 +44,33 @@ define(function (require) {
 
         events: {
             'change [data-js-attachments-filter]': 'onChangeAttachments',
-            'click .rp-grid-th[data-sorter]': 'onClickSorter'
+            'click .rp-grid-th[data-sorter]': 'onClickSorter',
+            'change [data-js-switch-to-console-view]': 'onChangeView'
         },
-
+        onChangeView: function () {
+            this.renderTableHeader();
+            this.collection.load();
+        },
+        renderTableHeader: function () {
+            var consoleView = $('[data-js-switch-to-console-view]', this.$el).prop('checked');
+            var $container = $('[data-js-fixed-header]', this.$el);
+            $container.html('');
+            if (consoleView) {
+                $container.addClass('console-view');
+                $container.html(Util.templates('tpl-launch-log-item-table-header-console', {}));
+            } else {
+                $container.removeClass('console-view');
+                $container.html(Util.templates('tpl-launch-log-item-table-header-default', {}));
+            }
+            $('[data-js-name-filter]', this.$el).html((new this.nameModel.view({ model: this.nameModel })).$el);
+        },
         initialize: function (options) {
+            var startOptions = options.options;
+            var isAscSort = 'true';
             this.itemModel = options.itemModel;
             this.mainPath = options.mainPath;
             this.collectionItems = options.collectionItems;
             this.userStorage = new SingletonUserStorage();
-            var startOptions = options.options;
-            var isAscSort = 'true';
             if (startOptions['page.sort'] && ~startOptions['page.sort'].indexOf('DESC')) {
                 isAscSort = 'false';
             }
@@ -85,7 +103,7 @@ define(function (require) {
 
 
             this.render();
-            if (startOptions['filter.ex.binary_content'] && startOptions['filter.ex.binary_content'] == 'true') {
+            if (startOptions['filter.ex.binary_content'] && startOptions['filter.ex.binary_content'] === 'true') {
                 $('[data-js-attachments-filter]', this.$el).prop('checked', true);
             }
             this.onChangeFilter();
@@ -145,8 +163,8 @@ define(function (require) {
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
+            this.renderTableHeader();
             $('[data-js-select-filter]', this.$el).html((new this.selectModel.view({ model: this.selectModel })).$el);
-            $('[data-js-name-filter]', this.$el).html((new this.nameModel.view({ model: this.nameModel })).$el);
             this.paging = new Components.PagingToolbar({
                 el: $('[data-js-paginate-container]', this.$el),
                 model: this.pagingModel
@@ -181,8 +199,8 @@ define(function (require) {
             this.onChangeFilter();
         },
         onChangeOptionsFilter: function (newParams) {
-            config.router.navigate(this.mainPath + '&' + newParams.join('&'), { trigger: false });
             var newLogOption = {};
+            config.router.navigate(this.mainPath + '&' + newParams.join('&'), { trigger: false });
             _.each(newParams, function (param) {
                 param = param.replace('log.', '');
                 var splitParam = param.split('=');
@@ -254,6 +272,7 @@ define(function (require) {
 
         onResetCollection: function () {
             var $container = $('[data-js-table-container]', this.$el);
+            var consoleView = $('[data-js-switch-to-console-view]', this.$el).prop('checked');
             var self = this;
             $container.html('');
             if (!this.collection.models.length) {
@@ -263,9 +282,17 @@ define(function (require) {
             }
             this.items = [];
             _.each(this.collection.models, function (model) {
-                var item = new LogItemLogsItem({
-                    model: model
-                });
+                var item;
+                if (consoleView) {
+                    item = new LogItemLogsItemConsole({
+                        model: model
+                    });
+                    item.$el.addClass('console-view-row');
+                } else {
+                    item = new LogItemLogsItemBlock({
+                        model: model
+                    });
+                }
                 $container.append(item.$el);
                 self.items.push(item);
             });

@@ -65,7 +65,8 @@
           display: inline-block;
         }
       }
-    }.accordion-block {
+    }
+    .accordion-block {
        display: none;
        position: absolute;
        bottom: 0;
@@ -106,7 +107,7 @@
            display: none;
          }
        }
-     }
+    }
     &.show-accordion {
       .accordion-block {
         display: block;
@@ -125,7 +126,7 @@
       top: 0;
       bottom: 0;
       left: 0;
-      width: 5px;
+      width: 3px;
       display: block;
     }
     &.level-INFO:after {
@@ -151,6 +152,7 @@
       }
     }
   }
+
   @media(max-width: 720px) {
     .message-grid-cell {
       width: 100%;
