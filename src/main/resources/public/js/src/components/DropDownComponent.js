@@ -74,7 +74,7 @@ define(function (require) {
             this.$el.removeClass('dropdown-error-state');
             _.each(this.options.data, function (item) {
                 if (item.value == value) { // Comparison with conversion
-                    curName = item.name;
+                    curName = item.shortName ? item.shortName : item.name;
                     curVal = item.value;
 
                     return false;
