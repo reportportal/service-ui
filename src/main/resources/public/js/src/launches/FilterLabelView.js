@@ -24,14 +24,11 @@ define(function (require) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var CallService = require('callService');
-    var Urls = require('dataUrlResolver');
     var App = require('app');
+    var FilterListener = require('controlers/filterControler/FilterListener');
     var Localization = require('localization');
     var SimpleTooltipView = require('tooltips/SimpleTooltipView');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
-
-    var call = CallService.call;
     var config = App.getInstance();
 
 
@@ -62,6 +59,8 @@ define(function (require) {
             }
         },
         initialize: function () {
+            this.filterListener = new FilterListener();
+            this.filterEvents = this.filterListener.events;
             this.render();
             this.setTooltip();
             this.listenTo(this.model, 'change', this.update);
@@ -109,15 +108,13 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickRemove: function () {
-            var launchFilterCollection = this.model.collection;
-            launchFilterCollection.remove(this.model);
-            call('PUT', Urls.getPreferences(), { filters: launchFilterCollection.getFiltersId() })
-                .done(function () {
-                    Util.ajaxSuccessMessenger('savedLaunchFilter');
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, 'savedLaunchFilter');
-                });
+            this.filterListener.trigger(
+                this.filterEvents.ON_CHANGE_IS_LAUNCH,
+                {
+                    data: this.model.attributes,
+                    isLaunch: false
+                }
+            );
             this.destroy();
         },
         onDestroy: function () {
