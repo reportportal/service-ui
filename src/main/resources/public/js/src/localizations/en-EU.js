@@ -765,7 +765,12 @@ define(['util'], function () {
             multipleSelectHeader: 'YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:',
             selectMoreItem: 'You must select more than one item',
             interruptImportWarning: 'Are you sure you want to interrupt import launches?',
-            approvalInterruptImportWarning: 'Confirm cancel import'
+            approvalInterruptImportWarning: 'Confirm cancel import',
+            latestLaunches: 'Latest launches',
+            latestLaunches_short: 'Latest',
+            allLaunches: 'All launches',
+            allLaunches_short: 'All',
+            noFilter: 'NO FILTER'
         },
 
         launchStatus: {

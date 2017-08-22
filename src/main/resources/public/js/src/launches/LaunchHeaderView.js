@@ -28,6 +28,8 @@ define(function (require) {
     var FilterModel = require('filters/FilterModel');
     var App = require('app');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
+    var DropDownComponent = require('components/DropDownComponent');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -71,7 +73,6 @@ define(function (require) {
             this.appStorage = new SingletonAppStorage();
             this.listenTo(this.appStorage, 'change:launchDistinct', this.onChangeSelectLink);
             this.render();
-
         },
         render: function () {
             this.launchFilterCollection.ready.done(function () {
@@ -81,11 +82,27 @@ define(function (require) {
                 this.applyBindings();
                 this.renderFilterList();
                 this.onChangeFilterCriteriaShow(null, this.userStorage.get('launchFilterCriteriaHide'));
+                this.setupDropdowns();
                 this.ready.resolve();
             }.bind(this));
         },
+        setupDropdowns: function () {
+            this.launchModeSelector = new DropDownComponent({
+                data: [
+                    { name: Localization.launches.allLaunches, value: 'all', shortName: Localization.launches.allLaunches_short },
+                    { name: Localization.launches.latestLaunches, value: 'latest', shortName: Localization.launches.latestLaunches_short }
+                ],
+                multiple: false,
+                defaultValue: this.appStorage.get('launchDistinct')
+            });
+            $('[data-js-launches-mode-dropdown]', this.$el).html(this.launchModeSelector.$el);
+            this.listenTo(this.launchModeSelector, 'change', this.onLaunchModeSelect);
+        },
         onChangeSelectLink: function () {
             config.router.navigate(this.model.get('url'), {trigger: true});
+        },
+        onLaunchModeSelect: function (mode) {
+            this.appStorage.set({ launchDistinct: mode });
         },
         onClickDropdownItem: function (e) {
             var value;
@@ -160,10 +177,10 @@ define(function (require) {
             $('[data-js-filter-list-mobile]', this.$el).append(mobileFilter.$el);
         },
         renderFilterList: function () {
-            var mobileFilter = new FilterLabelView({ model: this.model });
+            var noFilterTicket = new FilterLabelView({ model: this.model });
             $('[data-js-filter-list]', this.$el).html('');
             $('[data-js-filter-list-mobile]', this.$el).html('');
-            $('[data-js-filter-list-mobile]', this.$el).append(mobileFilter.$el);
+            $('[data-js-filter-list-mobile]', this.$el).append(noFilterTicket.$el);
             _.each(this.launchFilterCollection.models, function (model) {
                 this.onAddFilter(model);
             }, this);

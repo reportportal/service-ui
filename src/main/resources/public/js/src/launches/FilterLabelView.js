@@ -24,10 +24,14 @@ define(function (require) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var CallService = require('callService');
+    var Urls = require('dataUrlResolver');
     var App = require('app');
     var Localization = require('localization');
     var SimpleTooltipView = require('tooltips/SimpleTooltipView');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
+
+    var call = CallService.call;
     var config = App.getInstance();
 
 
@@ -43,11 +47,19 @@ define(function (require) {
         },
         bindings: {
             '[data-js-filter-shared]': 'classes: {hide: any(not(share), notMyFilter)}',
-            '[data-js-filter-name]': 'text: name',
+            '[data-js-filter-name]': 'text: filterName(name, id)',
             '[data-js-filter-comment]': 'classes: {hide: not(description)}',
             '[data-js-filter-not-my]': 'classes: {hide: not(notMyFilter)}',
             '[data-js-filter-not-save]': 'classes: {hide: all(not(temp), not(newEntities), not(newSelectionParameters))}',
             ':el': 'attr: {href: url}, classes: {active: active}'
+        },
+        bindingFilters: {
+            filterName: function (name, id) {
+                if (id === 'all') {
+                    return Localization.launches.noFilter;
+                }
+                return name;
+            }
         },
         initialize: function () {
             this.render();
@@ -97,7 +109,15 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickRemove: function () {
-            this.model.collection.remove(this.model);
+            var launchFilterCollection = this.model.collection;
+            launchFilterCollection.remove(this.model);
+            call('PUT', Urls.getPreferences(), { filters: launchFilterCollection.getFiltersId() })
+                .done(function () {
+                    Util.ajaxSuccessMessenger('savedLaunchFilter');
+                })
+                .fail(function (error) {
+                    Util.ajaxFailMessenger(error, 'savedLaunchFilter');
+                });
             this.destroy();
         },
         onDestroy: function () {
