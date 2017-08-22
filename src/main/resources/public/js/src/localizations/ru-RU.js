@@ -1012,7 +1012,8 @@ define(['util'], function () {
             notFoundAttachments: 'Нет вложений для отображения',
             notFoundStackTrace: 'Нет Трассировки Стека для отображения',
             goToLog: 'Перейдите к Трассировке Стека в Записи Журнала',
-            nextError: 'Следующая ошибка'
+            nextError: 'Следующая ошибка',
+            consoleView: 'Консольный вид'
         },
 
         defectNameById: {

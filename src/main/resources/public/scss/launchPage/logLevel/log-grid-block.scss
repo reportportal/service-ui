@@ -1,0 +1,111 @@
+.log-grid {
+  .block-view {
+    .console-th{
+      display: none;
+    }
+    .message-grid-cell {
+      position: relative;
+      width: 78%;
+      i {
+        display: none;
+      }
+    }
+    .attachment-grid-cell {
+      position: relative;
+      width: 8%;
+    }
+    .time-grid-cell {
+      position: relative;
+      font-family: $FontMonacoMonospace;
+      width: 14%;
+
+      &.rp-grid-th {
+        font-family: $OpenSansSemibold;
+      }
+    }
+  }
+  .block-view-row{
+    padding: 10px 0;
+    .accordion-block {
+      display: none;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 19px;
+      i {
+        position: relative;
+        color: $COLOR--gray-60;
+        padding: 0 75px 8px 55px;
+        width: 20px;
+        display: inline-block;
+        cursor: pointer;
+        &:before, &:after {
+          position: absolute;
+          content: '';
+          top: 7px;
+          width: 50px;
+          height: 5px;
+          background: url(../../img/launch/dots.svg) center top no-repeat;
+        }
+        &:before {
+          left: 0;
+        }
+        &:after {
+          right: 2px;
+        }
+        &:hover {
+          color: $COLOR--charcoal-grey;
+          &:after, &:before {
+            background: url(../../img/launch/dots-hover.svg) center top no-repeat;
+          }
+        }
+        &.little {
+          display: none;
+        }
+      }
+    }
+    &.show-accordion {
+      .accordion-block {
+        display: block;
+      }
+    }
+    .message-grid-cell {
+      position: relative;
+      width: 78%;
+      i {
+        display: none;
+      }
+    }
+    .attachment-grid-cell {
+      position: relative;
+      width: 8%;
+    }
+    .time-grid-cell {
+      position: relative;
+      width: 14%;
+    }
+    &.level-ERROR {
+     max-height: 240px;
+     background-color: $COLOR--light-red;
+     &.open {
+       max-height: 100%;
+       padding-bottom: 40px;
+       .accordion-block {
+         box-shadow: none !important;
+         i {
+           display: none;
+         }
+         i.little {
+           display: inline-block;
+         }
+       }
+     }
+     .accordion-block {
+       background-color: $COLOR--light-red;
+       box-shadow: 0 0px 20px 15px $COLOR--light-red;
+     }
+    }
+  }
+}

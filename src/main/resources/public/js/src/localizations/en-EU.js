@@ -958,7 +958,8 @@ define(['util'], function () {
             notFoundAttachments: 'No attachments to display',
             notFoundStackTrace: 'No Stack Trace to display',
             goToLog: 'Go to Stack Trace in Log Message',
-            nextError: 'Next Error'
+            nextError: 'Next Error',
+            consoleView: 'Console view'
         },
 
         defectNameById: {
