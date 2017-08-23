@@ -156,7 +156,8 @@ define(function (require, exports, module) {
         },
         initialize: function () {
             this.validate = this.getValidate();
-            this.listenTo(this, 'change:description change:tags change:issue', _.debounce(this.onChangeItemInfo, 10));
+            this.listenTo(this, 'change:description change:tags', _.debounce(this.onChangeItemInfo, 10));
+            this.listenTo(this, 'change:issue', _.debounce(this.onChangeIssueType, 10));
             this.appModel = new SingletonAppModel();
             this.userModel = new UserModel();
         },
@@ -271,6 +272,9 @@ define(function (require, exports, module) {
                 }
             };
             return result;
+        },
+        onChangeIssueType: function () {
+            this.trigger('updated');
         },
         onChangeItemInfo: function () {
             var self = this;
