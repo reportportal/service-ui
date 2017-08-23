@@ -99,6 +99,12 @@ define(function (require) {
                 }
             },
             {
+                control: 'customColumns',
+                options: {
+                    action: 'custom_columns'
+                }
+            },
+            {
                 control: 'checkbox',
                 options: {
                     label: 'Distinct launches'

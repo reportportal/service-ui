@@ -36,6 +36,7 @@ define(function (require) {
     var SettingDropDownView = require('modals/addWidget/widgetSettings/SettingDropDownView');
     var SettingCheckBoxView = require('modals/addWidget/widgetSettings/SettingCheckBoxView');
     var SettingSwitcherView = require('modals/addWidget/widgetSettings/SettingSwitcherView');
+    var SettingCustomColumnsView = require('modals/addWidget/widgetSettings/SettingCustomColumn/SettingCustomColumnsView');
 
     var WidgetCriteriaView = Epoxy.View.extend({
         className: 'modal-add-widget-criteria-list rp-form',
@@ -81,6 +82,9 @@ define(function (require) {
                         break;
                     case 'switcher':
                         constructor = SettingSwitcherView;
+                        break;
+                    case 'customColumns':
+                        constructor = SettingCustomColumnsView;
                         break;
                     default:
                         break;
