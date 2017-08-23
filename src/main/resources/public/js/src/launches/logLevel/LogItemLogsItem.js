@@ -22,19 +22,15 @@ define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
     var Urls = require('dataUrlResolver');
-    var LogMessageView = require('launches/logLevel/LogMessageView');
 
     var config = App.getInstance();
 
     var LogItemLogsItem = Epoxy.View.extend({
         className: 'rp-table-row',
-        template: 'tpl-launch-log-item-logs-item',
-
         events: {
             'click [data-js-toggle-open]': 'onClickOpen',
             'click [data-js-link]': 'onClickImg'
@@ -72,13 +68,6 @@ define(function (require) {
             this.$el.toggleClass('open');
         },
 
-        initialize: function () {
-            this.render();
-            this.listenTo(this.model, 'scrollTo', this.scrollTo);
-            this.messageView = new LogMessageView({ message: this.model.get('message') });
-            $('[data-js-message]', this.$el).html(this.messageView.$el);
-            this.listenTo(this.messageView, 'load', this.activateAccordion);
-        },
         supportMarkdown: function () {
             return false;
         },
@@ -96,9 +85,6 @@ define(function (require) {
             });
         },
 
-        render: function () {
-            this.$el.html(Util.templates(this.template, {}));
-        },
         onClickImg: function (e) {
             e.preventDefault();
             config.trackingDispatcher.trackEventNumber(212);
