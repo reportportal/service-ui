@@ -199,6 +199,7 @@ define(function (require) {
         },
         onDestroy: function () {
             $(window).off('resize.' + this.id);
+            this.onBeforeDestroy && this.onBeforeDestroy();
         }
     });
 
