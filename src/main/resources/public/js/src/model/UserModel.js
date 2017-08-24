@@ -259,7 +259,7 @@ define(function (require, exports, module) {
             var projectRoleIndex = _.indexOf(config.projectRoles, projectRole);
             var incomingProjectRoleIndex = _.indexOf(config.projectRoles, incomingProjectRole);
             var permission = false;
-            if (projectRoleIndex > 1) {
+            if (projectRoleIndex > 2) {
                 permission = projectRoleIndex >= incomingProjectRoleIndex;
             }
             return permission;
