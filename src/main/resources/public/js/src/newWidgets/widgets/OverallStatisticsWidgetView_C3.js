@@ -65,13 +65,7 @@ define(function (require) {
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.defetTypesCollection.ready.done(function () {
                 this.launchFilterCollection.ready.done(function () {
-                    if (
-                        widgetOptions &&
-                        (
-                            (widgetOptions.viewMode && widgetOptions.viewMode[0] === 'donut') ||
-                            (!widgetOptions.viewMode || !widgetOptions.viewMode.length)
-                        )
-                    ) {
+                    if (this.isDrawDonut(widgetOptions)) {
                         this.$el.html(Util.templates(this.templateDonut, {}));
                         this.$el.addClass('donut-chart-view');
                         if (_.isEmpty(statusChartData)) {
@@ -89,7 +83,7 @@ define(function (require) {
                             this.drawDonutChart($('[data-js-right-chart-container]', this.$el), defectTypesChartData);
                         }
                         this.restyleDonutTitle();
-                    } else if (widgetOptions && widgetOptions.viewMode && widgetOptions.viewMode[0] === 'panel') {
+                    } else {
                         this.$el.html(Util.templates(this.templatePanel, {}));
                         this.$el.addClass('trend-chart-view');
                         if (!_.isEmpty(statusChartData)) {
@@ -159,6 +153,7 @@ define(function (require) {
                         }
                         config.router.navigate(url, { trigger: true });
                     },
+                    order: null,
                     colors: colors
                 },
                 padding: {
@@ -309,6 +304,12 @@ define(function (require) {
             } else {
                 $('.c3-chart-arcs-title', this.$el).attr('dy', '-5').find('tspan').attr('dy', '15');
             }
+        },
+        isDrawDonut: function (widgetOptions) {
+            if (widgetOptions && widgetOptions.viewMode && widgetOptions.viewMode.length && widgetOptions.viewMode[0] === 'donut') {
+                return true;
+            }
+            return false;
         },
         updateWidget: function () {
             _.each(this.charts, function (chart) {
