@@ -48,14 +48,14 @@
         var isMacFF = macosxffRe.test(scopedWindow.navigator && scopedWindow.navigator.userAgent);
 
         // removeIf(production)
-        var log = function() {
-            baron.fn.log.apply(this, arguments);
-        };
-        var liveBarons = 0;
-        var shownErrors = {
-            liveTooMany: false,
-            allTooMany: false
-        };
+        // var log = function() {
+        //     baron.fn.log.apply(this, arguments);
+        // };
+        // var liveBarons = 0;
+        // var shownErrors = {
+        //     liveTooMany: false,
+        //     allTooMany: false
+        // };
         // endRemoveIf(production)
 
         // window.baron and jQuery.fn.baron points to this function
@@ -86,19 +86,19 @@
             };
 
             // removeIf(production)
-            if (!params.$) {
-                log('error', [
-                    'no jQuery nor params.$ detected',
-                    'https://github.com/Diokuz/baron/blob/master/docs/logs/no-jquery-detected.md'
-                ].join(', '), params);
-            }
-            if (params.position == 'absolute' && params.impact == 'clipper') {
-                log('error', [
-                    'Simultaneous use of `absolute` position and `clipper` impact values detected.',
-                    'Those values cannot be used together.',
-                    'See more https://github.com/Diokuz/baron/issues/138'
-                ].join(' '), params);
-            }
+            // if (!params.$) {
+            //     log('error', [
+            //         'no jQuery nor params.$ detected',
+            //         'https://github.com/Diokuz/baron/blob/master/docs/logs/no-jquery-detected.md'
+            //     ].join(', '), params);
+            // }
+            // if (params.position == 'absolute' && params.impact == 'clipper') {
+            //     log('error', [
+            //         'Simultaneous use of `absolute` position and `clipper` impact values detected.',
+            //         'Those values cannot be used together.',
+            //         'See more https://github.com/Diokuz/baron/issues/138'
+            //     ].join(' '), params);
+            // }
             // endRemoveIf(production)
 
             // this - something or jQuery instance
@@ -140,7 +140,7 @@
         }
 
         // removeIf(production)
-        baron._instances = instances;
+        // baron._instances = instances;
         // endRemoveIf(production)
 
         baron.fn = {
@@ -165,12 +165,12 @@
                     // https://github.com/Diokuz/baron/issues/124
                     if (id == id && attr !== null && instances[id]) {
                         // removeIf(production)
-                        if (withParams) {
-                            log('error', [
-                                'repeated initialization for html-node detected',
-                                'https://github.com/Diokuz/baron/blob/master/docs/logs/repeated.md'
-                            ].join(', '), totalParams.root);
-                        }
+                        // if (withParams) {
+                        //     log('error', [
+                        //         'repeated initialization for html-node detected',
+                        //         'https://github.com/Diokuz/baron/blob/master/docs/logs/repeated.md'
+                        //     ].join(', '), totalParams.root);
+                        // }
                         // endRemoveIf(production)
 
                         this[i] = instances[id];
@@ -182,7 +182,7 @@
                             perInstanceParams.scroller = params.$(params.scroller, root);
                             if (!perInstanceParams.scroller.length) {
                                 // removeIf(production)
-                                console.log('Scroller not found!', root, params.scroller);
+                                // console.log('Scroller not found!', root, params.scroller);
                                 // endRemoveIf(production)
                                 return;
                             }
@@ -394,24 +394,24 @@
             instances.push(out);
 
             // removeIf(production)
-            liveBarons++;
-            if (liveBarons > 100 && !shownErrors.liveTooMany) {
-                log('warn', [
-                    'You have too many live baron instances on page (' + liveBarons + ')!',
-                    'Are you forget to dispose some of them?',
-                    'All baron instances can be found in baron._instances:'
-                ].join(' '), instances);
-                shownErrors.liveTooMany = true;
-            }
-            if (instances.length > 1000 && !shownErrors.allTooMany) {
-                log('warn', [
-                    'You have too many inited baron instances on page (' + instances.length + ')!',
-                    'Some of them are disposed, and thats good news.',
-                    'but baron.init was call too many times, and thats is bad news.',
-                    'All baron instances can be found in baron._instances:'
-                ].join(' '), instances);
-                shownErrors.allTooMany = true;
-            }
+            // liveBarons++;
+            // if (liveBarons > 100 && !shownErrors.liveTooMany) {
+            //     log('warn', [
+            //         'You have too many live baron instances on page (' + liveBarons + ')!',
+            //         'Are you forget to dispose some of them?',
+            //         'All baron instances can be found in baron._instances:'
+            //     ].join(' '), instances);
+            //     shownErrors.liveTooMany = true;
+            // }
+            // if (instances.length > 1000 && !shownErrors.allTooMany) {
+            //     log('warn', [
+            //         'You have too many inited baron instances on page (' + instances.length + ')!',
+            //         'Some of them are disposed, and thats good news.',
+            //         'but baron.init was call too many times, and thats is bad news.',
+            //         'All baron instances can be found in baron._instances:'
+            //     ].join(' '), instances);
+            //     shownErrors.allTooMany = true;
+            // }
             // endRemoveIf(production)
 
             out.update();
@@ -873,13 +873,13 @@
             // fires on any update and on init
             update: function(params) {
                 // removeIf(production)
-                if (this._disposed) {
-                    log('error', [
-                        'Update on disposed baron instance detected.',
-                        'You should clear your stored baron value for this instance:',
-                        this
-                    ].join(' '), params);
-                }
+                // if (this._disposed) {
+                //     log('error', [
+                //         'Update on disposed baron instance detected.',
+                //         'You should clear your stored baron value for this instance:',
+                //         this
+                //     ].join(' '), params);
+                // }
                 // endRemoveIf(production)
                 fire.call(this, 'upd', params); // Update all plugins' params
 
@@ -892,12 +892,12 @@
             // One instance
             dispose: function(params) {
                 // removeIf(production)
-                if (this._disposed) {
-                    log('error', [
-                        'Already disposed:',
-                        this
-                    ].join(' '), params);
-                }
+                // if (this._disposed) {
+                //     log('error', [
+                //         'Already disposed:',
+                //         this
+                //     ].join(' '), params);
+                // }
                 // endRemoveIf(production)
 
                 manageEvents(this, this.event, 'off');
@@ -970,9 +970,9 @@
         }
 
         // removeIf(production)
-        var log = function() {
-            scopedBaron.fn.log.apply(this, arguments);
-        };
+        // var log = function() {
+        //     scopedBaron.fn.log.apply(this, arguments);
+        // };
         // endRemoveIf(production)
 
         var fix = function(userParams) {
@@ -996,12 +996,12 @@
                 self = this;
 
             // removeIf(production)
-            if (this.position != 'static') {
-                log('error', [
-                    'Fix plugin cannot work properly in non-static baron position.',
-                    'See more https://github.com/Diokuz/baron/issues/135'
-                ].join(' '), this.params);
-            }
+            // if (this.position != 'static') {
+            //     log('error', [
+            //         'Fix plugin cannot work properly in non-static baron position.',
+            //         'See more https://github.com/Diokuz/baron/issues/135'
+            //     ].join(' '), this.params);
+            // }
             // endRemoveIf(production)
 
             // i - number of fixing element, pos - fix-position in px, flag - 1: top, 2: bottom

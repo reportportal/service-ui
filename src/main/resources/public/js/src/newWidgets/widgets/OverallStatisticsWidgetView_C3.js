@@ -52,6 +52,7 @@ define(function (require) {
                 return;
             }
             this.charts = [];
+            this.scrollers = [];
             widgetOptions = this.model.getParameters().widgetOptions;
             contentData = this.model.getContent().result[0].values;
             statusChartData = _.pick(contentData, ['passed', 'failed', 'skipped', 'total']);
@@ -114,6 +115,7 @@ define(function (require) {
             var colors = {};
             var total = 0;
             var donutTitle = '';
+            var legendScroller;
 
             _.each(data, function (val, key) {
                 var defectModel;
@@ -247,7 +249,8 @@ define(function (require) {
                 .attr('class', 'legend-gradient')
                 .append('div')
                 .attr('class', 'legend-border');
-            Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
+            legendScroller = Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
+            this.scrollers.push(legendScroller);
 
             // Configuring custom donut chart title
             if ($el.hasClass('status-chart')) {
@@ -262,6 +265,7 @@ define(function (require) {
                 .text(donutTitle);
         },
         drawStackedBarChart: function ($el, data) {
+            var legendScroller;
             if (data.total) {
                 $('[data-js-total-value]', $el).html(data.total);
             } else {
@@ -277,9 +281,11 @@ define(function (require) {
             $('[data-js-bar-passed]', $el).width(((data.passed / data.total) * 100) + '%');
             $('[data-js-bar-failed]', $el).width(((data.failed / data.total) * 100) + '%');
             $('[data-js-bar-skipped]', $el).width(((data.skipped / data.total) * 100) + '%');
-            Util.setupBaronScroll($el);
+            legendScroller = Util.setupBaronScroll($el);
+            this.scrollers.push(legendScroller);
         },
         drawDefectTypesPanel: function ($el, data) {
+            var legendScroller;
             var $fragment = $(document.createDocumentFragment());
             _.each(data, function (val, title) {
                 var color = _.find(this.defetTypesCollection.models, function (model) {
@@ -294,7 +300,8 @@ define(function (require) {
                 ));
             }.bind(this));
             $el.html($fragment);
-            Util.setupBaronScroll($el);
+            legendScroller = Util.setupBaronScroll($el);
+            this.scrollers.push(legendScroller);
         },
         restyleDonutTitle: function () {
             if (!(this.$el.hasClass('w-less-then-6') || this.$el.hasClass('h-less-then-6'))) {
@@ -306,6 +313,11 @@ define(function (require) {
         updateWidget: function () {
             _.each(this.charts, function (chart) {
                 chart.flush();
+            });
+        },
+        onBeforeDestroy: function () {
+            _.each(this.scrollers, function (baronScrollElem) {
+                baronScrollElem.baron && baronScrollElem.baron().dispose();
             });
         }
     });
