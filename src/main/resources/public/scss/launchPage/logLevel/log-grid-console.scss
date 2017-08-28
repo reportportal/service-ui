@@ -1,0 +1,53 @@
+.log-grid {
+  .console-view {
+    .block-th{
+      display: none;
+    }
+    .attachment-grid-cell.rp-grid-th {
+      width: 0;
+      padding: 0;
+    }
+    .time-grid-cell.rp-grid-th {
+      width: 170px;
+      padding-left: 30px;
+    }
+    .message-grid-cell.rp-grid-th{
+      width: auto;
+    }
+  }
+  .console-view-row{
+    width: 100%;
+    border-bottom: 1px solid #ffffff;
+    padding: 5px 0;
+    .attachment-grid-cell {
+      width: 30px;
+      padding: 0 7px;
+      vertical-align: top;
+      img {
+        cursor: pointer;
+        max-width: 63px;
+        float: right;
+      }
+      a{
+        font-size: 16px;
+        color: #999999;
+      }
+    }
+    &.level-ERROR {
+      background-color: #ffffff;
+      max-height: none;
+    }
+    .time-grid-cell{
+      width: auto;
+      padding: 0 15px 0 0;
+      float: left;
+    }
+    .message-grid-cell{
+      width: auto;
+      padding: 0 15px 0 0px;
+      float: none;
+      margin-left: 30px;
+    }
+  }
+}
+

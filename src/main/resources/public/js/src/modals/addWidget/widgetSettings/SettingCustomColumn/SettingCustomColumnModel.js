@@ -19,14 +19,17 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'setting-criteria';
-@import 'setting-items';
-@import 'setting-switch-mode';
-@import 'setting-action';
-@import 'setting-users';
-@import 'setting-launch';
-@import 'setting-input-items';
-@import 'setting-drop-down';
-@import 'setting-checkbox';
-@import 'setting-switcher';
-@import 'setting-custom-columns';
+define(function (require) {
+    'use strict';
+
+    var Epoxy = require('backbone-epoxy');
+
+    var SettingCustomColumnModel = Epoxy.Model.extend({
+        defaults: {
+            name: '',
+            value: ''
+        }
+    });
+
+    return SettingCustomColumnModel;
+});

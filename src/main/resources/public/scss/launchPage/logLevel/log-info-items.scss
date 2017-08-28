@@ -25,12 +25,28 @@
     label {
       margin-bottom: 0;
     }
+    .switcher-label{
+       float: right;
+      line-height: 30px;
+      margin-right: 30px;
+      cursor:pointer;
+       .switcher-text{
+         font-size: 12px;
+         font-weight: 600;
+         text-align: left;
+         color: #777777;
+         text-transform: uppercase;
+         display: inline-block;
+         vertical-align: bottom;
+       }
+     }
     .filter-entity-wrapper {
       float: left;
       margin: 0;
       min-width: 0;
       height: 30px;
       display: block;
+
       .form-group {
         margin: 0;
       }
@@ -60,9 +76,21 @@
       display: none;
     }
   }
-  .min-paging {
-    padding-left: 10px;
+  .right-block{
     float: right;
+    .min-paging {
+      padding-left: 10px;
+      float: right;
+    }
+  }
+  @media (max-width: 1200px) {
+    .right-block{
+      width: 100%;
+      margin-top: 10px;
+      .switcher-label{
+        float: left;
+      }
+    }
   }
   .filter-name-block {
     display: inline-block;
