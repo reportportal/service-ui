@@ -431,7 +431,7 @@ define(function (require, exports, module) {
             new Filters.EntityConditionInputModel({
                 label: Localization.projectEvents.tableHeaders.oldVal,
                 name: Localization.projectEvents.tableHeaders.oldVal,
-                id: 'oldValue',
+                id: 'history$oldValue',
                 condition: 'cnt',
                 options: filterNameOptions(),
                 valueMinLength: 3,
@@ -440,7 +440,7 @@ define(function (require, exports, module) {
             new Filters.EntityConditionInputModel({
                 label: Localization.projectEvents.tableHeaders.newVal,
                 name: Localization.projectEvents.tableHeaders.newVal,
-                id: 'newValue',
+                id: 'history$newValue',
                 condition: 'cnt',
                 options: filterNameOptions(),
                 valueMinLength: 3,
@@ -453,8 +453,8 @@ define(function (require, exports, module) {
                 condition: 'in'
             }),
             new Filters.EntityConditionInputModel({
-                label: Localization.projectEvents.tableHeaders.name,
-                name: Localization.projectEvents.tableHeaders.name,
+                label: Localization.projectEvents.tableHeaders.objectName,
+                name: Localization.projectEvents.tableHeaders.objectName,
                 id: 'name',
                 condition: 'cnt',
                 options: filterNameOptions(),
