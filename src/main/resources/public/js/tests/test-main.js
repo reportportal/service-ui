@@ -52,7 +52,6 @@ require.config({
         defectEditor: 'defect/defect-editor',
         member: 'member/member',
         memberService: 'member/service',
-        launchEditor: 'launch/launch-editor',
         stickyHeader: 'core/sticky-header',
         launchCrumbs: 'launch/launch-crumbs',
         log: 'log/logs',

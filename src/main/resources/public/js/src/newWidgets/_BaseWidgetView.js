@@ -36,6 +36,7 @@ define(function (require) {
             this.unclickableChart = options.unclickableChart;
             this.appModel = new SingletonAppModel();
             this.defectsCollection = new SingletonDefectTypeCollection();
+            this.afterInitialize && this.afterInitialize();
         },
         tpl: '',
         className: 'panel-body',
@@ -163,15 +164,15 @@ define(function (require) {
             }
             return encodeURI(getLink(filterStatus));
         },
-        addResize: function () {
-            var self = this;
-            var update = function (e) {
-                if ($(e.target).is($(window))) {
-                    self.updateWidget();
-                }
-            };
-            var resize = _.debounce(update, 500);
-            $(window).on('resize.' + this.id, resize);
+        addResize: function () {  // TODO remove this method from widgets. addSizeClasses - dublicat
+            // var self = this;
+            // var update = function (e) {
+            //     if ($(e.target).is($(window))) {
+            //         self.updateWidget();
+            //     }
+            // };
+            // var resize = _.debounce(update, 500);
+            // $(window).on('resize.' + this.id, resize);
         },
         noDataAvailableShow: function (el) {
             el.find('.no-data-error').removeClass('hide');
@@ -195,6 +196,9 @@ define(function (require) {
             });
             this.$el.removeClass(oldSizeClasses.join(' '));
             this.addSizeClasses(newGadgetSize);
+            this.afterUpdateSizeClasses();
+        },
+        afterUpdateSizeClasses: function () {
             this.updateWidget();
         },
         onDestroy: function () {

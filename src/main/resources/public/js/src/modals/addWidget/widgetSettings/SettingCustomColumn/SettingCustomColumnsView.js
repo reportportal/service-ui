@@ -34,15 +34,28 @@ define(function (require) {
         custom_columns: {
             setValue: function (value, model) {
                 var widgetOptions = model.getWidgetOptions();
+                var stringValues;
                 if (value) {
-                    widgetOptions.customColumns = value;
+                    stringValues = _.map(value, function (item) {
+                        return JSON.stringify(item);
+                    });
+                    widgetOptions.customColumns = stringValues;
                 } else {
                     widgetOptions.customColumns = [];
                 }
                 model.setWidgetOptions(widgetOptions);
             },
             getValue: function (model) {
-                return model.getWidgetOptions().customColumns || [];
+                var result = [];
+                if (model.getWidgetOptions().customColumns &&
+                    model.getWidgetOptions().customColumns.length) {
+                    _.each(model.getWidgetOptions().customColumns, function (stringItem) {
+                        try {
+                            result.push(JSON.parse(stringItem));
+                        } catch (error) {}
+                    });
+                }
+                return result;
             }
         }
     };

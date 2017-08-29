@@ -38,7 +38,7 @@ define(function (require) {
     var LaunchStatisticsComboPieChart = require('newWidgets/widgets/LaunchStatisticsComboPieChartView');
     var PassingRateSummaryChart = require('newWidgets/widgets/PassingRateSummaryChartView');
     var PassingRatePerLaunchChart = require('newWidgets/widgets/PassingRatePerLaunchChartView');
-    var ProductStatus = require('newWidgets/widgets/ProductStatusView');
+    var ProductStatus = require('newWidgets/widgets/productStatus/index');
 
     var LastLaunchPieChart = require('newWidgets/widgets/LastLaunchPieChartView');
     var PercentageOfInvestigationChart = require('newWidgets/widgets/PercentageOfInvestigationChartView');

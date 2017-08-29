@@ -24,7 +24,6 @@ define(function (require) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    // var Editor = require('launchEditor');
     var Urls = require('dataUrlResolver');
     var Service = require('coreService');
     var Localization = require('localization');

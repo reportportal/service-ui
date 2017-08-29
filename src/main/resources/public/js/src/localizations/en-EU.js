@@ -925,6 +925,7 @@ define(['util'], function () {
             message_short: 'Log Message',
             attachment: 'Attachment',
             attachment_short: 'ATH',
+            passing_rate: 'Passing Rate',
             interruptedAfter: 'Run INTERRUPTED after:',
             stoppedAt: 'Stopped at:',
             durationSpecific: 'Duration is interval between first child starts and last child ends. But if child run in parallel, end time is a time of longest child, in this case duration will not be equal to child duration sum.'

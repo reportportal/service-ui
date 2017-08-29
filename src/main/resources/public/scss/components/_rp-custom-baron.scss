@@ -78,6 +78,12 @@
       overflow-y: hidden !important;
     }
   }
+  &.baron__multidirection {
+    padding-bottom: 10px;
+    & > *:first-child {
+      overflow-x: scroll !important;
+    }
+  }
 }
 
 .no-zero-scroll {
@@ -119,6 +125,19 @@
   border-radius: 4px;
   opacity: 0;
   transition: opacity 0.5s ease 0.5s;
+  &.baron__track-multi {
+    width: 100%;
+    height: 8px;
+    bottom: 0;
+    left: 0;
+    top: auto;
+    .baron__bar {
+      height: 8px;
+    }
+    .baron__free {
+      left: 0;
+    }
+  }
 }
 
 .baron {
@@ -152,10 +171,14 @@
     }
   }
 }
-
+.baron:hover > .baron__track {
+  transition-delay: 0s;
+  opacity: .2;
+}
 .baron .baron__track:hover,
-.baron.baron__horizontal:hover .baron__track,
-.baron._scrolling > .baron__track {
+.baron._scrolling > .baron__track,
+.baron._scrolling:hover > .baron__track {
   transition-delay: 0s;
   opacity: .8;
 }
+

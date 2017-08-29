@@ -192,10 +192,6 @@ define(function (require) {
             var data = {};
             if (this.saveWidget.validate()) {
                 config.trackingDispatcher.trackEventNumber(314);
-                var saveFunc = Service.saveWidget;
-                if (this.model.get('gadget') === 'product_status') {
-                    saveFunc = Service.saveEmptyWidget;
-                }
                 this.$el.addClass('load');
                 if (!_.contains(['unique_bug_table', 'activity_stream', 'launches_table'], this.model.get('gadget'))) {
                     contentParameters.metadata_fields = ['name', 'number', 'start_time'];
@@ -223,7 +219,7 @@ define(function (require) {
                     data.description = this.model.get('description');
                 }
                 this.checkNewDashboard().done(function () {
-                    saveFunc(data)
+                    Service.saveWidget(data)
                         .done(function (responce) {
                             self.model.set({ id: responce.id });
                             self.dashboardModel.addWidget(self.model).done(function () {

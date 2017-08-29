@@ -63,7 +63,6 @@ require.config({
         'member': 'member/member',
         'memberService': 'member/service',
         'launchgrid': 'launch/launch-grid',
-        'launchEditor' : 'launch/launch-editor',
         'launchCrumbs': 'launch/launch-crumbs',
         'mainview': 'main-view',
         //'favorites': 'favorites/favorites',
