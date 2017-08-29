@@ -19,9 +19,4 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.rp-admin-project-details {
-    position: relative;
-    .project-intervals {
-      margin-top: 17px;
-    }
-}
+@import 'projectEventsView';

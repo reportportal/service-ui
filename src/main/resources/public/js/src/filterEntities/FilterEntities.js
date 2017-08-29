@@ -562,10 +562,18 @@ define(function (require) {
             })).$el);
         }
     });
-    var EntityUserTagView = EntityBaseView.extend({
+    var EntityOwnerTagView = EntityBaseView.extend({
         onRender: function () {
             this.$content.append((new UserTagEntityView({
                 model: this.model
+            })).$el);
+        }
+    });
+    var EntityMemberTagView = EntityBaseView.extend({
+        onRender: function () {
+            this.$content.append((new UserTagEntityView({
+                model: this.model,
+                type: 'autocompleteUserUrl'
             })).$el);
         }
     });
@@ -618,8 +626,11 @@ define(function (require) {
     var EntityConditionInputModel = Model.extend({
         view: EntityConditionInputView
     });
-    var EntityUserTagModel = Model.extend({
-        view: EntityUserTagView
+    var EntityOwnerTagModel = Model.extend({
+        view: EntityOwnerTagView
+    });
+    var EntityMemberTagModel = Model.extend({
+        view: EntityMemberTagView
     });
     var EntityConditionTagModel = Model.extend({
         view: EntityConditionTagView
@@ -734,7 +745,8 @@ define(function (require) {
     return {
         EntityInputModel: EntityInputModel,
         EntityConditionInputModel: EntityConditionInputModel,
-        EntityUserTagModel: EntityUserTagModel,
+        EntityOwnerTagModel: EntityOwnerTagModel,
+        EntityMemberTagModel: EntityMemberTagModel,
         EntityConditionTagModel: EntityConditionTagModel,
         EntityTimeRangeModel: EntityTimeRangeModel,
         EntityInvalidModel: EntityInvalidModel,

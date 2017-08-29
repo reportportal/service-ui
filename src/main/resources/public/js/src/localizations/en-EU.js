@@ -69,6 +69,7 @@ define(['util'], function () {
             restore: 'Restore',
             settings: 'Settings',
             members: 'Members',
+            events: 'Events Monitoring',
             action: 'Action',
             filter: 'FILTER',
             clickToSubmit: 'Click to submit this form',
@@ -854,7 +855,7 @@ define(['util'], function () {
             status: 'Status',
             type: 'Method Type',
             history_depth: 'History Depth',
-            user: 'Owner'
+            owner: 'Owner'
         },
         filterNamePluralById: {
             product_bug: 'Product Bugs',
@@ -863,7 +864,6 @@ define(['util'], function () {
             to_investigate: 'To Investigates',
             no_defect: 'No Defects'
         },
-
         filterNameByValue: {
             ALL: 'All',
             PASSED: 'Passed',
@@ -882,7 +882,61 @@ define(['util'], function () {
             ERROR: 'Error',
             Screenshot: 'Attachment'
         },
-
+        projectEvents: {
+            tableHeaders: {
+                time: 'Time',
+                time_short: 'Time',
+                user: 'User',
+                user_short: 'User',
+                action: 'Action',
+                action_short: 'Action',
+                objectType: 'Object Type',
+                objectType_short: 'Obj Type',
+                objectName: 'Object Name',
+                objectName_short: 'Obj Name',
+                oldVal: 'Old Value',
+                oldVal_short: 'Old Val',
+                newVal: 'New Value',
+                newVal_short: 'New Val'
+            },
+            eventTypes: {
+                all: 'all',
+                create_dashboard: 'Create dashboard',
+                update_dashboard: 'Update dashboard',
+                delete_dashboard: 'Delete dashboard',
+                create_widget: 'Create widget',
+                update_widget: 'Update widget',
+                delete_widget: 'Delete widget',
+                create_filter: 'Create filter',
+                update_filter: 'Update filter',
+                delete_filter: 'Delete filter',
+                update_defect: 'Update defect',
+                delete_defect: 'Delete defect',
+                create_bts: 'Create BTS',
+                update_bts: 'Update BTS',
+                delete_bts: 'Delete BTS',
+                start_launch: 'Start launch',
+                finish_launch: 'Finish launch',
+                delete_launch: 'Delete launch',
+                update_project: 'Update project',
+                post_issue: 'Post issue',
+                attach_issue: 'Attach issue',
+                update_item: 'Update item',
+                create_user: 'Create user'
+            },
+            objectTypes: {
+                all: 'all',
+                project: 'Project',
+                defect_type: 'Defect type',
+                testItem: 'Test item',
+                launch: 'Launch',
+                externalSystem: 'External System',
+                dashboard: 'Dashboard',
+                user: 'User',
+                widget: 'Widget',
+                userFilter: 'User filter'
+            }
+        },
         launchesHeaders: {
             start_time: 'Start Time',
             start_time_short: 'Start',
@@ -1227,6 +1281,7 @@ define(['util'], function () {
             addNewUser: 'Add new user',
             inviteNewUser: 'Invite user to the project',
             configPage: ' project configuration page',
+            projectEvents: 'Events',
             projectMembers: 'Members',
             enterProjectName: 'Enter Project Name',
             assigned: 'Assigned',
@@ -1260,6 +1315,7 @@ define(['util'], function () {
             titleAllProjects: 'All Projects',
             titleMembers: 'Members',
             titleSettings: 'Settings',
+            titleEvents: 'Events',
             internalProjects: 'Internal projects',
             personalProjects: 'Personal projects',
             searchByName: 'Search by Name',

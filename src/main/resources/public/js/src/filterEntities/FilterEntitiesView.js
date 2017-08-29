@@ -66,10 +66,10 @@ define(function (require) {
                 filterLevel: this.filterLevel,
                 collection: this.collection
             });
+            this.parseModelEntities();
             _.each(this.collection.where({ required: true }), function (model) {
                 model.set({ visible: true });
             }, this);
-            this.parseModelEntities();
             this.listenTo(this.collection, 'change:condition change:value', this.onChangeFilterEntities);
         },
         onAddEntityById: function (entityId, value) {

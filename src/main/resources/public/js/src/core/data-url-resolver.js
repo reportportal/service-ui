@@ -469,6 +469,9 @@ define(['app'], function (App) {
         var token = config.userModel.get('token');
         return getProjectBase() + '/launch/import' + '?access_token=' + token.split(' ')[1];
     };
+    var getProjectEvents = function (query) {
+        return getProjectBase() + '/activity' + query;
+    };
 
     return {
         getApiToken: getApiToken,
@@ -599,6 +602,7 @@ define(['app'], function (App) {
         postDemoDataUrl: postDemoDataUrl,
         adminAuthSettings: adminAuthSettings,
         toggleAnalytics: toggleAnalytics,
-        importLaunch: importLaunch
+        importLaunch: importLaunch,
+        getProjectEvents: getProjectEvents
     };
 });
