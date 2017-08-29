@@ -1734,7 +1734,6 @@ define(['util'], function () {
             updateDefects: 'Обновить типы дефектов',
             updateBts: 'Обновить СОД',
             projectNameIn: 'Имя проекта в',
-            bugWillBeLoaded: 'Ошибка будет загружена в ',
             copyLink: 'Копировать ссылку'
         },
 

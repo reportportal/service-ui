@@ -1678,7 +1678,6 @@ define(['util'], function () {
             updateDefects: 'Update defect types',
             updateBts: 'Update BTS',
             projectNameIn: 'Project Name in',
-            bugWillBeLoaded: 'Bug will be loaded to ',
             copyLink: 'Copy Link'
         },
 
