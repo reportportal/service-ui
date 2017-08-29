@@ -27,6 +27,7 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Filters = require('filterEntities/FilterEntities');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
     var Localization = require('localization');
 
     var defectTypeCollection = null;
@@ -212,7 +213,7 @@ define(function (require, exports, module) {
     var UserDebugFilters = function (userId) {
         var launchFilters = LaunchStepFilters();
         // place user filter on the second place but first is required Name filter so we insert at index 2
-        launchFilters.add(new Filters.EntityUserTagModel({ id: 'user', condition: 'in', mode: 'DEBUG' }), { at: 1 });
+        launchFilters.add(new Filters.EntityOwnerTagModel({ id: 'owner', condition: 'in', mode: 'DEBUG' }), { at: 1 });
         return launchFilters;
     };
 
@@ -263,7 +264,7 @@ define(function (require, exports, module) {
             valueMaxLength: 256,
             valueOnlyDigits: false
         }));
-        launchSuiteEntitiesCollection.add(new Filters.EntityUserTagModel({ id: 'user', condition: 'in' }), { at: 1 });
+        launchSuiteEntitiesCollection.add(new Filters.EntityOwnerTagModel({ id: 'owner', condition: 'in' }), { at: 1 });
         return launchSuiteEntitiesCollection;
     };
     var SuiteEntities = function () {
@@ -384,6 +385,85 @@ define(function (require, exports, module) {
         ];
     };
 
+    var ProjectEventsFilters = function () {
+        var infoModel = new SingletonRegistryInfoModel();
+        var actionTypeValues = [{ name: 'All', value: 'All' }];
+        var objectTypeValues = [{ name: 'All', value: 'All' }];
+
+        _.each(infoModel.get('activitiesEventsTypes'), function (item) {
+            actionTypeValues.push({
+                name: Localization.projectEvents.eventTypes[item] ? Localization.projectEvents.eventTypes[item] : item,
+                value: item
+            });
+        });
+        _.each(infoModel.get('activitiesObjectTypes'), function (item) {
+            objectTypeValues.push({
+                name: Localization.projectEvents.objectTypes[item] ? Localization.projectEvents.objectTypes[item] : item,
+                value: item
+            });
+        });
+        return new Backbone.Collection([
+            new Filters.EntityTimeRangeModel({
+                label: Localization.projectEvents.tableHeaders.time,
+                name: Localization.projectEvents.tableHeaders.time,
+                id: 'last_modified',
+                condition: 'btw',
+                values: ['Any'],
+                value: ''
+            }),
+            new Filters.EntitySelectModel({
+                label: Localization.projectEvents.tableHeaders.action,
+                name: Localization.projectEvents.tableHeaders.action,
+                id: 'actionType',
+                condition: 'in',
+                required: true,
+                values: actionTypeValues,
+                value: 'All'
+            }),
+            new Filters.EntitySelectModel({
+                label: Localization.projectEvents.tableHeaders.objectType,
+                name: Localization.projectEvents.tableHeaders.objectType,
+                id: 'objectType',
+                condition: 'in',
+                values: objectTypeValues,
+                value: 'All'
+            }),
+            new Filters.EntityConditionInputModel({
+                label: Localization.projectEvents.tableHeaders.oldVal,
+                name: Localization.projectEvents.tableHeaders.oldVal,
+                id: 'oldValue',
+                condition: 'cnt',
+                options: filterNameOptions(),
+                valueMinLength: 3,
+                valueOnlyDigits: false
+            }),
+            new Filters.EntityConditionInputModel({
+                label: Localization.projectEvents.tableHeaders.newVal,
+                name: Localization.projectEvents.tableHeaders.newVal,
+                id: 'newValue',
+                condition: 'cnt',
+                options: filterNameOptions(),
+                valueMinLength: 3,
+                valueOnlyDigits: false
+            }),
+            new Filters.EntityMemberTagModel({
+                label: Localization.projectEvents.tableHeaders.user,
+                name: Localization.projectEvents.tableHeaders.user,
+                id: 'userRef',
+                condition: 'in'
+            }),
+            new Filters.EntityConditionInputModel({
+                label: Localization.projectEvents.tableHeaders.name,
+                name: Localization.projectEvents.tableHeaders.name,
+                id: 'name',
+                condition: 'cnt',
+                options: filterNameOptions(),
+                valueMinLength: 3,
+                valueOnlyDigits: false
+            })
+        ]);
+    };
+
     var getDefaults = function (type, userId) {
         defectTypeCollection = new SingletonDefectTypeCollection();
         var async = $.Deferred();
@@ -412,6 +492,9 @@ define(function (require, exports, module) {
                     break;
                 case 'history':
                     filtersSet = HistoryStepFilters();
+                    break;
+                case 'projectEvents':
+                    filtersSet = ProjectEventsFilters();
                     break;
                 default:
                     break;

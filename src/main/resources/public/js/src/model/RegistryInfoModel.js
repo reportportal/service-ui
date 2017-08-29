@@ -75,6 +75,26 @@ define(function (require) {
                     }
                     return [];
                 }
+            },
+            activitiesEventsTypes: {
+                deps: ['services'],
+                get: function (services) {
+                    if (services && services.API && services.API.metadata
+                        && services.API.metadata.activitiesEventType) {
+                        return services.API.metadata.activitiesEventType;
+                    }
+                    return [];
+                }
+            },
+            activitiesObjectTypes: {
+                deps: ['services'],
+                get: function (services) {
+                    if (services && services.API && services.API.metadata
+                        && services.API.metadata.activitiesObjectType) {
+                        return services.API.metadata.activitiesObjectType;
+                    }
+                    return [];
+                }
             }
         },
 

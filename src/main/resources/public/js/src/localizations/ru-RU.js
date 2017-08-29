@@ -69,6 +69,7 @@ define(['util'], function () {
             restore: 'Восстановить',
             settings: 'Установки',
             members: 'Участники',
+            events: 'Events Monitoring',
             action: 'Действие',
             filter: 'FILTER',
             clickToSubmit: 'Нажмите, чтобы подтвердить отправку формы',
@@ -908,7 +909,7 @@ define(['util'], function () {
             status: 'Статус',
             type: 'Тип метода',
             history_depth: 'Глубина истории',
-            user: 'Владелец'
+            owner: 'Владелец'
         },
         filterNamePluralById: {
             product_bug: 'Дефекты продукта',
@@ -936,7 +937,61 @@ define(['util'], function () {
             ERROR: 'Ошибка',
             Screenshot: 'Приложение'
         },
-
+        projectEvents: {
+            tableHeaders: {
+                time: 'Time',
+                time_short: 'Time',
+                user: 'User',
+                user_short: 'User',
+                action: 'Action',
+                action_short: 'Action',
+                objectType: 'Object Type',
+                objectType_short: 'Obj Type',
+                objectName: 'Object Name',
+                objectName_short: 'Obj Name',
+                oldVal: 'Old Value',
+                oldVal_short: 'Old Val',
+                newVal: 'New Value',
+                newVal_short: 'New Val'
+            },
+            eventTypes: {
+                all: 'all',
+                create_dashboard: 'Create dashboard',
+                update_dashboard: 'Update dashboard',
+                delete_dashboard: 'Delete dashboard',
+                create_widget: 'Create widget',
+                update_widget: 'Update widget',
+                delete_widget: 'Delete widget',
+                create_filter: 'Create filter',
+                update_filter: 'Update filter',
+                delete_filter: 'Delete filter',
+                update_defect: 'Update defect',
+                delete_defect: 'Delete defect',
+                create_bts: 'Create BTS',
+                update_bts: 'Update BTS',
+                delete_bts: 'Delete BTS',
+                start_launch: 'Start launch',
+                finish_launch: 'Finish launch',
+                delete_launch: 'Delete launch',
+                update_project: 'Update project',
+                post_issue: 'Post issue',
+                attach_issue: 'Attach issue',
+                update_item: 'Update item',
+                create_user: 'Create user'
+            },
+            objectTypes: {
+                all: 'all',
+                project: 'Project',
+                defect_type: 'Defect type',
+                testItem: 'Test item',
+                launch: 'Launch',
+                externalSystem: 'External System',
+                dashboard: 'Dashboard',
+                user: 'User',
+                widget: 'Widget',
+                userFilter: 'User filter'
+            }
+        },
         launchesHeaders: {
             start_time: 'Время начала',
             start_time_short: 'Начало',
@@ -1281,6 +1336,7 @@ define(['util'], function () {
             addNewUser: 'Добавить нового пользователя',
             inviteNewUser: 'Пригласить пользователя на проект',
             configPage: ' страница настроек проекта',
+            projectEvents: 'Events',
             projectMembers: 'Участники',
             enterProjectName: 'Введите название проекта',
             assigned: 'Назначено',
@@ -1314,6 +1370,7 @@ define(['util'], function () {
             titleAllProjects: 'Все проекты',
             titleMembers: 'Участники',
             titleSettings: 'Настройки',
+            titleEvents: 'Events',
             internalProjects: 'Внутренние проекты',
             personalProjects: 'Персональные проекты',
             searchByName: 'Поиск по названию',

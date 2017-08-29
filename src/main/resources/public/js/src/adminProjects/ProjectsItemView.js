@@ -46,6 +46,7 @@ define(function (require) {
             '[data-js-project-last-run]': 'text: getLastRun',
             '[data-js-settings-link]': 'attr: {href: getSettingsUrl}',
             '[data-js-members-link]': 'attr: {href: getMembersUrl}',
+            '[data-js-events-link]': 'attr: {href: getEventsUrl}',
             '[data-js-go-to-project]': 'classes: {hide: not(assignToProject)}, attr: {href: openProjectUrl}',
             '[data-js-assign-to-project]': 'classes: {hide: assignToProject}',
             '[data-js-delete-project]': 'classes: {hide: not(canDeleteProject)}'
@@ -104,6 +105,12 @@ define(function (require) {
                     return '#administrate/project-details/' + projectId + '/members';
                 }
             },
+            getEventsUrl: {
+                deps: ['projectId'],
+                get: function (projectId) {
+                    return '#administrate/project-details/' + projectId + '/events';
+                }
+            },
             isNew: {
                 deps: ['creationDate'],
                 get: function (creationDate) {
@@ -131,6 +138,7 @@ define(function (require) {
             'click [data-js-project-name]': 'onClickProject',
             'click [data-js-settings-link]': 'onClickSettings',
             'click [data-js-members-link]': 'onClickMembers',
+            'click [data-js-events-link]': 'onClickEvents',
             'click [data-js-go-to-project]': 'onOpenProject'
         },
 
@@ -174,6 +182,8 @@ define(function (require) {
         },
         onClickMembers: function () {
             config.trackingDispatcher.trackEventNumber(450);
+        },
+        onClickEvents: function () {
         },
         onOpenProject: function () {
             config.trackingDispatcher.trackEventNumber(452);

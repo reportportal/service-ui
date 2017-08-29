@@ -28,6 +28,7 @@ define(function (require) {
     var App = require('app');
     var MembersTableView = require('projectMembers/MembersTableView');
     var ProjectSettingsView = require('projectSettings/projectSettingsView');
+    var ProjectEventsPage = require('projectEvents/projectEventsView');
     var ProjectsDetailsView = require('adminProjects/ProjectsDetailsView');
     var ProjectsTabsView = require('adminProjects/ProjectsTabsView');
     var AdminService = require('adminService');
@@ -114,6 +115,13 @@ define(function (require) {
                 this.body = new MembersTableView({
                     projectId: this.id,
                     grandAdmin: true
+                });
+                $('[data-js-admin-projects]', this.$el).append(this.body.$el);
+                break;
+            case 'events':
+                this.body = new ProjectEventsPage({
+                    projectId: this.id,
+                    adminPage: true
                 });
                 $('[data-js-admin-projects]', this.$el).append(this.body.$el);
                 break;

@@ -144,12 +144,14 @@ define(function (require) {
         },
 
         getViewForAdministratePage: function (options) {
-            if (options.page === 'users') {
+            switch (options.page) {
+            case 'users':
                 return Users.ContentView;
-            } else if (options.page === 'settings') {
+            case 'settings':
                 return Settings.ContentView;
+            default:
+                return Projects.ContentView;
             }
-            return Projects.ContentView;
         },
 
         onDestroy: function () {

@@ -364,6 +364,9 @@ define([
     var toggleAnalytics = function (data) {
         return call('PUT', urls.toggleAnalytics(), data);
     };
+    var getProjectEvents = function (query) {
+        return call('GET', urls.getProjectEvents(query));
+    };
 
 
     return {
@@ -464,6 +467,7 @@ define([
         getUserByEmail: getUserByEmail,
         generateDemoData: generateDemoData,
 
-        toggleAnalytics: toggleAnalytics
+        toggleAnalytics: toggleAnalytics,
+        getProjectEvents: getProjectEvents
     };
 });
