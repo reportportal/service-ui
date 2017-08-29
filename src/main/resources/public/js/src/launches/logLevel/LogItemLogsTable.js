@@ -60,9 +60,7 @@ define(function (require) {
         updateHeader: function () {
             var consoleView = this.appStorage.get('consoleView');
             var $container = $('[data-js-fixed-header]', this.$el);
-            $container.removeClass('console-view');
-            $container.removeClass('block-view');
-            this.appStorage.set({ consoleView: consoleView });
+            $container.removeClass('console-view block-view');
             if (consoleView) {
                 $container.addClass('console-view');
             } else {
@@ -73,7 +71,6 @@ define(function (require) {
             var startOptions = options.options;
             var isAscSort = 'true';
             this.appStorage = new SingletonAppStorage();
-            this.consoleView = this.appStorage.get('consoleView') || false;
             this.itemModel = options.itemModel;
             this.mainPath = options.mainPath;
             this.collectionItems = options.collectionItems;
@@ -108,9 +105,8 @@ define(function (require) {
                 value: startOptions['filter.cnt.message'] || ''
             });
 
-
             this.render();
-            $('[data-js-switch-to-console-view]', this.$el).prop('checked', this.consoleView);
+            $('[data-js-switch-to-console-view]', this.$el).prop('checked', this.appStorage.get('consoleView') || false);
             if (startOptions['filter.ex.binary_content'] && startOptions['filter.ex.binary_content'] === 'true') {
                 $('[data-js-attachments-filter]', this.$el).prop('checked', true);
             }

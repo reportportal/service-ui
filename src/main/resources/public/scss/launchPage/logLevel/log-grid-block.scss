@@ -107,5 +107,14 @@
        box-shadow: 0 0px 20px 15px $COLOR--light-red;
      }
     }
+    @media(max-width:1000px){
+      .attachment-grid-cell, .time-grid-cell{
+        width: 14%;
+      }
+      .message-grid-cell{
+        width: 72%;
+      }
+    }
   }
 }
+
