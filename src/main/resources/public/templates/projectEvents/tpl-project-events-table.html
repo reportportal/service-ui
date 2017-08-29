@@ -33,10 +33,10 @@ return '<div class="table-wrapper">' +
         <div class="grid-cell object-name-grid-cell rp-grid-th" data-sorter="name" data-filter="name">
             <%= getItemHtml(data.text.projectEvents.tableHeaders.objectName, data.text.projectEvents.tableHeaders.objectName_short) %>
         </div>
-        <div class="grid-cell old-val-grid-cell rp-grid-th" data-sorter="oldValue" data-filter="oldValue">
+        <div class="grid-cell old-val-grid-cell rp-grid-th" data-sorter="history$oldValue" data-filter="history$oldValue">
             <%= getItemHtml(data.text.projectEvents.tableHeaders.oldVal, data.text.projectEvents.tableHeaders.oldVal_short) %>
         </div>
-        <div class="grid-cell new-val-grid-cell rp-grid-th" data-sorter="newValue" data-filter="newValue">
+        <div class="grid-cell new-val-grid-cell rp-grid-th" data-sorter="history$newValue" data-filter="history$newValue">
             <%= getItemHtml(data.text.projectEvents.tableHeaders.newVal, data.text.projectEvents.tableHeaders.newVal_short) %>
         </div>
     </div>
