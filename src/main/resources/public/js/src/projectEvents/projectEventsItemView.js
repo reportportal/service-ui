@@ -30,8 +30,7 @@ define(function (require) {
 
     var ProjectEventsItemView = Epoxy.View.extend({
 
-        className: 'project-events-item',
-
+        className: 'project-events-item row rp-table-row',
         template: 'tpl-project-events-table-item',
         valueTemplate: 'tpl-project-events-item-value',
         events: {
@@ -77,9 +76,7 @@ define(function (require) {
         },
         initialize: function (options) {
             this.model = options.eventModel;
-            this.$el.addClass('row rp-table-row');
             this.render();
-            this.applyBindings();
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));

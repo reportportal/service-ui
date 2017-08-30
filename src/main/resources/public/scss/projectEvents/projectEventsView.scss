@@ -1,17 +1,27 @@
 .project-events {
   .events-page-wrapper {
+    position: relative;
+
     .events-refine-container {
       width: 100%;
-      padding: 12px 0;
-
+      padding: 12px 100px 12px 60px;
+      .filter-entities-choice {
+        margin-right: 10px;
+      }
       .refine-label {
         display: block;
-        float: left;
+        position: absolute;
+        left: 0;
+        top: 12px;
         font-size: 12px;
-        padding-right: 17px;
         color: $COLOR--gray-47;
         font-family: $OpenSansSemibold;
       }
+    }
+    .refresh-btn {
+      position: absolute;
+      right: 0;
+      top: 35px;
     }
     .events-table-container {
       clear: both;
