@@ -55,7 +55,7 @@ define(function (require) {
                 pagingModel: this.pagingModel
             });
             this.itemViews = [];
-            this.listenTo(this.filterModel, 'change:newSelectionParameters change:selection_parameters', this.onChangeSelectionParameters);
+            this.listenTo(this.filterModel, 'change:newSelectionParameters', this.onChangeSelectionParameters);
             this.listenTo(this.eventsCollection, 'loading', this.eventsLoadingHandler);
             this.listenTo(this.eventsCollection, 'change:time:format', this.onChangeTimeFormat);
             this.render();
@@ -80,7 +80,6 @@ define(function (require) {
                 }.bind(this));
             }
         },
-
         update: function () {
             _.each(this.itemViews, function (itemView) {
                 itemView.destroy();
@@ -106,6 +105,7 @@ define(function (require) {
             this.changePaging();
         },
         changePaging: function () {
+            this.trigger('changePaging');
             this.paging.render();
             this.update();
         },
@@ -132,6 +132,10 @@ define(function (require) {
                 this.paging.render();
             } else {
                 $('[data-js-preloader]', this.$el).show();
+                _.each(this.itemViews, function (itemView) {
+                    itemView.destroy();
+                });
+                this.itemViews = [];
                 $('[data-js-items-container]', this.$el).html('');
             }
         },
@@ -159,6 +163,9 @@ define(function (require) {
             this.filterModel.trigger('add_entity', $(e.currentTarget).closest('.rp-grid-th').data('filter'));
         },
         onDestroy: function () {
+            _.each(this.itemViews, function (itemView) {
+                itemView.destroy();
+            });
         }
     });
     return ProjectEventsTableView;

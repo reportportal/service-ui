@@ -28,11 +28,17 @@ define(function (require) {
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
     var FilterModel = require('filters/FilterModel');
     var ProjectEventsTableView = require('projectEvents/projectEventsTableView');
+    var App = require('app');
+    var config = App.getInstance();
 
     var ProjectEventsView = Epoxy.View.extend({
 
         className: 'project-events',
         template: 'tpl-project-events',
+
+        events: {
+            'click [data-js-refresh]': 'update'
+        },
 
         initialize: function () {
             var filterData = this.calculateFilterOptions(window.location.hash.split('?')[1]);
@@ -43,6 +49,9 @@ define(function (require) {
                 selection_parameters: filterData.selection_parameters
             });
             this.render();
+            this.listenTo(this.filterModel, 'change:newSelectionParameters change:newEntities', this.changeUrl);
+            this.listenTo(this.eventsTable, 'changePaging', this.changeUrl);
+            this.listenTo(this.eventsTable.eventsCollection, 'loading', this.handleRefreshButton);
         },
         calculateFilterOptions: function (optionsUrl) {
             var options;
@@ -90,6 +99,16 @@ define(function (require) {
             return this;
         },
         update: function () {
+            this.eventsTable && this.eventsTable.update();
+        },
+        changeUrl: function () {
+            var mainHash = window.location.hash.split('?')[0];
+            var params = this.eventsTable.eventsCollection.getParamsFilter();
+            var query = '?' + params.join('&');
+            config.router.navigate(mainHash + query, { trigger: false, replace: true });
+        },
+        handleRefreshButton: function (isLoading) {
+            (isLoading) ? $('[data-js-refresh]', this.$el).addClass('disabled') : $('[data-js-refresh]', this.$el).removeClass('disabled');
         },
         renderEntities: function () {
             this.filterEntities && this.filterEntities.destroy();

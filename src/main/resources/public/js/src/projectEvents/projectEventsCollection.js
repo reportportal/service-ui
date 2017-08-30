@@ -25,8 +25,6 @@ define(function (require) {
     var $ = require('jquery');
     var ProjectEventsItemModel = require('projectEvents/projectEventsItemModel');
     var Service = require('coreService');
-    var App = require('app');
-    var config = App.getInstance();
 
     var ProjectEventsCollection = Backbone.Collection.extend({
         model: ProjectEventsItemModel,
@@ -34,39 +32,28 @@ define(function (require) {
         initialize: function (options) {
             this.filterModel = options.filterModel;
             this.pagingModel = options.pagingModel;
-            this.listenTo(this.filterModel, 'change:newEntities change:entities', this.changeFilterOptions);
+            this.listenTo(this.filterModel, 'change:newEntities', this.changeFilterOptions);
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.changeSelectionParameters);
         },
-        changeFilterOptions: function (model, value) {
-            if (model.get('newEntities') !== '' ||
-                (model.changed.entities && model.get('entities') !== model._previousAttributes.newEntities)) {
-                this.pagingModel.set('number', 1);
-                this.load();
-            }
+        changeFilterOptions: function () {
+            this.pagingModel.set('number', 1);
+            this.load();
         },
         changeSelectionParameters: function () {
             this.load();
         },
-        getParamsFilter: function (onlyPage) {
+        getParamsFilter: function () {
             var params = [];
             params.push('page.page=' + this.pagingModel.get('number'));
             params.push('page.size=' + this.pagingModel.get('size'));
-            if (onlyPage) {
-                return params;
-            }
             params = params.concat(this.filterModel.getOptions());
             return params;
-        },
-        update: function () {
         },
         load: function () {
             var self = this;
             var async = $.Deferred();
-            var mainHash = window.location.hash.split('?')[0];
             var params = this.getParamsFilter();
             var query = '?' + params.join('&');
-
-            config.router.navigate(mainHash + query, { trigger: false, replace: true });
             this.trigger('loading', true);
 
             Service.getProjectEvents(query)
