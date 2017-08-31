@@ -840,6 +840,15 @@ define(['util'], function () {
             IN_PROGRESS: 'В процессе'
         },
 
+        testStatus:{
+            FAILED: 'НЕУДАЧНО',
+            PASSED: 'УСПЕШНО',
+            STOPPED: 'ОСТАНОВЛЕНО',
+            SKIPPED: 'ПРОПУЩЕНО',
+            INTERRUPTED: 'ПРЕРВАНО',
+            IN_PROGRESS: 'В ПРОЦЕССЕ'
+        },
+
         historyLine: {
             tooltips: {
                 FAILED: 'Неудачно',

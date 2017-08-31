@@ -785,6 +785,15 @@ define(['util'], function () {
             IN_PROGRESS: 'In Progress'
         },
 
+        testStatus:{
+            FAILED: 'FAILED',
+            PASSED: 'PASSED',
+            STOPPED: 'STOPPED',
+            SKIPPED: 'SKIPPED',
+            INTERRUPTED: 'INTERRUPTED',
+            IN_PROGRESS: 'IN PROGRESS'
+        },
+
         historyLine: {
             tooltips: {
                 FAILED: 'Failed',
