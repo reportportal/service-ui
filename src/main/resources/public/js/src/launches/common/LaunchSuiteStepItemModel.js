@@ -233,7 +233,7 @@ define(function (require, exports, module) {
                 },
                 forceFinish: function () {
                     if (self.get('status') !== 'IN_PROGRESS') {
-                        return 'Launch is already finished';
+                        return Localization.launches.launchFinished;
                     }
                     if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {

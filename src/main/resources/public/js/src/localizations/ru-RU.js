@@ -819,7 +819,7 @@ define(['util'], function () {
             approximateTimeLessMin: '<1 мин осталось',
             approximateTimeExpected: 'Среднее время выполнения -',
             approximateTimeOverLap: 'текущее наложение -',
-            launchFinished: 'Запуск закончен',
+            launchFinished: 'Запуск уже завершен',
             launchIsDeleting: 'Запуск - в процессе удаления!',
             noItemInLaunch: 'Нет элементов<br> в Запуске',
             emptyItem: 'Элемент пуст',
