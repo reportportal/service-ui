@@ -154,6 +154,7 @@ define(['util'], function () {
             sortBy: 'Сортировать по',
             name: 'Имя',
             description: 'Описание',
+            import: 'Импорт',
             note: 'Замечание:',
             days: [
                 'Воскресенье',
