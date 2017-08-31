@@ -173,6 +173,8 @@ define(['util'], function () {
             markdownQuote: 'Цитата',
             markdownCode: 'Добавить код',
             markdownPreview: 'Предварительный просмотр',
+            they: 'ним',
+            it: 'нему',
             days: [
                 'Воскресенье',
                 'Понедельник',

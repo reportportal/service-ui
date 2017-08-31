@@ -64,7 +64,7 @@ define(function (require) {
             }
         });
         itemName = (items.length > 1) ? typeItems : typeItems + ' \'' + items[0].get('name').bold() + itemNumber + '\'';
-        quantity = (items.length > 1) ? 'They' : 'It';
+        quantity = (items.length > 1) ? Localization.ui.they : Localization.ui.it;
         modal = new ModalConfirm({
             headerText: Localization.ui.delete + ' ' + typeItems,
             bodyText: Util.replaceTemplate(Localization.dialog.msgDeleteItems, itemName, quantity),
