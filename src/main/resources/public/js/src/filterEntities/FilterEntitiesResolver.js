@@ -174,12 +174,12 @@ define(function (require, exports, module) {
                 id: 'status',
                 condition: 'in',
                 values: [
-                    { name: 'All', value: 'All' },
-                    { name: 'Passed', value: 'PASSED' },
-                    { name: 'Failed', value: 'FAILED' },
-                    { name: 'Skipped', value: 'SKIPPED' },
-                    { name: 'Interrupted', value: 'INTERRUPTED' },
-                    { name: 'In Progress', value: 'IN_PROGRESS' }
+                    { name: Localization.launchStatus.ALL, value: 'All' },
+                    { name: Localization.launchStatus.PASSED, value: 'PASSED' },
+                    { name: Localization.launchStatus.FAILED, value: 'FAILED' },
+                    { name: Localization.launchStatus.SKIPPED, value: 'SKIPPED' },
+                    { name: Localization.launchStatus.INTERRUPTED, value: 'INTERRUPTED' },
+                    { name: Localization.launchStatus.IN_PROGRESS, value: 'IN_PROGRESS' }
                 ],
                 value: 'All'
             }),

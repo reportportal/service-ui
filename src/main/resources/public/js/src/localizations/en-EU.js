@@ -778,9 +778,11 @@ define(['util'], function () {
         },
 
         launchStatus: {
+            ALL: 'All',
             FAILED: 'Failed',
             PASSED: 'Passed',
             STOPPED: 'Stopped',
+            SKIPPED: 'Skipped',
             INTERRUPTED: 'Interrupted',
             IN_PROGRESS: 'In Progress'
         },
