@@ -835,9 +835,11 @@ define(['util'], function () {
         },
 
         launchStatus: {
+            ALL: 'Все',
             FAILED: 'Неудачно',
             PASSED: 'Успешно',
             STOPPED: 'Остановлено',
+            SKIPPED: 'Пропущено',
             INTERRUPTED: 'Прервано',
             IN_PROGRESS: 'В процессе'
         },
