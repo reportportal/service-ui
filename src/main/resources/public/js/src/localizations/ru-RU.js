@@ -860,6 +860,7 @@ define(['util'], function () {
         },
 
         testTableMethodTypes: {
+            ALL: 'Все',
             TEST: 'Тестовый класс',
             STEP: 'Тест',
             AFTER_CLASS: 'Пост-класс',

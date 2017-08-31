@@ -148,21 +148,21 @@ define(function (require, exports, module) {
                 id: 'type',
                 condition: 'in',
                 values: [
-                    { name: 'All', value: 'All' },
-                    { name: 'Before Suite', value: 'BEFORE_SUITE' },
-                    { name: 'Before Groups', value: 'BEFORE_GROUPS' },
-                    { name: 'Before Class', value: 'BEFORE_CLASS' },
-                    { name: 'Before Test', value: 'BEFORE_TEST' },
-                    { name: 'Test Class', value: 'TEST' },
-                    { name: 'Before Method', value: 'BEFORE_METHOD' },
-                    { name: 'Test', value: 'STEP' },
-                    { name: 'After Method', value: 'AFTER_METHOD' },
-                    { name: 'After Test', value: 'AFTER_TEST' },
-                    { name: 'After Class', value: 'AFTER_CLASS' },
-                    { name: 'After Groups', value: 'AFTER_GROUPS' },
-                    { name: 'After Suite', value: 'AFTER_SUITE' }
+                    { name: Localization.testTableMethodTypes.ALL, value: 'All' },
+                    { name: Localization.testTableMethodTypes.BEFORE_SUITE, value: 'BEFORE_SUITE' },
+                    { name: Localization.testTableMethodTypes.BEFORE_GROUPS, value: 'BEFORE_GROUPS' },
+                    { name: Localization.testTableMethodTypes.BEFORE_CLASS, value: 'BEFORE_CLASS' },
+                    { name: Localization.testTableMethodTypes.BEFORE_TEST, value: 'BEFORE_TEST' },
+                    { name: Localization.testTableMethodTypes.TEST, value: 'TEST' },
+                    { name: Localization.testTableMethodTypes.BEFORE_METHOD, value: 'BEFORE_METHOD' },
+                    { name: Localization.testTableMethodTypes.STEP, value: 'STEP' },
+                    { name: Localization.testTableMethodTypes.AFTER_METHOD, value: 'AFTER_METHOD' },
+                    { name: Localization.testTableMethodTypes.AFTER_TEST, value: 'AFTER_TEST' },
+                    { name: Localization.testTableMethodTypes.AFTER_CLASS, value: 'AFTER_CLASS' },
+                    { name: Localization.testTableMethodTypes.AFTER_GROUPS, value: 'AFTER_GROUPS' },
+                    { name: Localization.testTableMethodTypes.AFTER_SUITE, value: 'AFTER_SUITE' }
                 ],
-                value: 'All'
+                value: Localization.testTableMethodTypes.ALL
             }),
             new Filters.EntityConditionInputModel({
                 id: 'description',
