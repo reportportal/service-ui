@@ -30,6 +30,7 @@ define(function (require) {
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
     var SingletonAppStorage = require('storage/SingletonAppStorage');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -89,9 +90,9 @@ define(function (require) {
             if (this.get('level') === 'filter') {
                 if (this.get('id') === 'all') {
                     if (this.appStorage.get('launchDistinct') === 'latest') {
-                        this.set({ name: 'Latest' });
+                        this.set({ name: Localization.launches.latestLaunches_short});
                     } else {
-                        this.set({ name: 'All' });
+                        this.set({ name: Localization.launches.allLaunches_short  });
                     }
                 } else {
                     launchFilterCollection = new SingletonLaunchFilterCollection();
@@ -100,9 +101,9 @@ define(function (require) {
                         if (filterModel) {
                             self.set({ name: filterModel.get('name'), failLoad: false });
                         } else if (self.appStorage.get('launchDistinct') === 'latest') {
-                            self.set({ name: 'Latest' });
+                            self.set({ name: Localization.launches.latestLaunches_short});
                         } else {
-                            self.set({ name: 'All' });
+                            self.set({ name: Localization.launches.allLaunches_short  });
                         }
                     });
                 }
