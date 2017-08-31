@@ -738,6 +738,7 @@ define(['util'], function () {
             willBePostedTo: 'Ошибка будет отправлена в',
             willBeLoadedTo: 'Ошибка будет загружена в',
             noItemsInside: 'Внутри нет данных',
+            notYourOwnLaunch: 'Запуск был создан не Вами',
 
             actionTitle: 'Выберите несколько элементов для обработки',
             multiSelectError: 'Вы не можете выполнить операцию с недействительными элементами',

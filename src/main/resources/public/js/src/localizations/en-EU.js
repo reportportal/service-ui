@@ -681,6 +681,7 @@ define(['util'], function () {
             willBePostedTo: 'Bug will be posted to',
             willBeLoadedTo: 'Bug will be loaded to',
             noItemsInside: 'No items inside',
+            notYourOwnLaunch: 'You are not a launch owner',
 
             actionTitle: 'Select several items to processing',
             multiSelectError: 'You cannot perform operation to invalid items',

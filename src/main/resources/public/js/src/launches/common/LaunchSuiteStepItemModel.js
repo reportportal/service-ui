@@ -207,14 +207,14 @@ define(function (require, exports, module) {
                 edit: function () {
                     if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
-                        return 'You are not a launch owner';
+                        return Localization.launches.notYourOwnLaunch;
                     }
                     return '';
                 },
                 merge: function () {
                     if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
-                        return 'You are not a launch owner';
+                        return Localization.launches.notYourOwnLaunch;
                     }
                     if (self.get('launch_status') === 'IN_PROGRESS') {
                         return 'Launch should not be in the status IN PROGRESS';
@@ -227,7 +227,7 @@ define(function (require, exports, module) {
                 changeMode: function () {
                     if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
-                        return 'You are not a launch owner';
+                        return Localization.launches.notYourOwnLaunch;
                     }
                     return '';
                 },
@@ -237,7 +237,7 @@ define(function (require, exports, module) {
                     }
                     if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
-                        return 'You are not a launch owner';
+                        return Localization.launches.notYourOwnLaunch;
                     }
                     return '';
                 },
@@ -250,7 +250,7 @@ define(function (require, exports, module) {
                 remove: function () {
                     if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
-                        return 'You are not a launch owner';
+                        return Localization.launches.notYourOwnLaunch;
                     }
                     if (self.get('launch_status') === 'IN_PROGRESS') {
                         return 'Launch should not be in the status IN PROGRESS';
