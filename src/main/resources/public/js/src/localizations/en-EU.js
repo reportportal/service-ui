@@ -159,8 +159,6 @@ define(['util'], function () {
             searchName: 'Search by Name',
             perPage: 'per page',
             timeRangeChange: 'Your time range will be updated every day',
-            searchName: 'Search by Name',
-            perPage: 'per page',
             markdownBigHeading: 'Big Heading',
             markdownMediumHeading: 'Medium Heading',
             markdownSmallHeading: 'Small Heading',
@@ -175,6 +173,8 @@ define(['util'], function () {
             markdownQuote: 'Quote',
             markdownCode: 'Code',
             markdownPreview: 'Toggle Preview',
+            they: 'They',
+            it: 'It',
             days: [
                 'Sunday',
                 'Monday',
