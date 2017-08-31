@@ -470,7 +470,7 @@ define(function (require) {
                 }
             });
             this.model.set({ value: valueMas.join(',') });
-            $('[data-js-value]', this.$el).text(nameMas.join(', ') || 'All');
+            $('[data-js-value]', this.$el).text(nameMas.join(', ') || Localization.filterNameByValue.ALL);
         }
     });
 
