@@ -51,7 +51,7 @@ define(function (require, exports, module) {
             this.ids = _.map(this.collectionItems.models, function(i){ return i.get('id');});
             this.resetGrid();
             this.depthFilterModel = new Filters.EntityDropDownModel({
-                name: 'History Depth',
+                name: Localization.filterNameById.history_depth,
                 id: 'history_depth',
                 noConditions: true,
                 required: true,
