@@ -315,6 +315,7 @@ define(function (require) {
                 dynamicUpdateText: Localization.filters.dynamicUpdate,
                 separator: ' ' + Localization.ui.to + ' ',
                 locale: {
+                    timeRangeChange: Localization.ui.timeRangeChange,
                     applyLabel: Localization.ui.submit,
                     cancelLabel: Localization.ui.cancel,
                     fromLabel: Localization.ui.from,
