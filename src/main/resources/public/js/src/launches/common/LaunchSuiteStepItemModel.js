@@ -217,10 +217,10 @@ define(function (require, exports, module) {
                         return Localization.launches.notYourOwnLaunch;
                     }
                     if (self.get('launch_status') === 'IN_PROGRESS') {
-                        return 'Launch should not be in the status IN PROGRESS';
+                        return Localization.launches.launchNotInProgress;
                     }
                     if (self.get('launch_isProcessing')) {
-                        return 'Launch should not be processing by Auto Analysis';
+                        return Localization.launches.launchIsProcessing;
                     }
                     return '';
                 },
@@ -253,7 +253,7 @@ define(function (require, exports, module) {
                         return Localization.launches.notYourOwnLaunch;
                     }
                     if (self.get('launch_status') === 'IN_PROGRESS') {
-                        return 'Launch should not be in the status IN PROGRESS';
+                        return Localization.launches.launchNotInProgress;
                     }
                     return '';
                 },
