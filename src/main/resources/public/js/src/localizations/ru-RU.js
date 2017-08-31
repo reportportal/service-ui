@@ -1129,7 +1129,7 @@ define(['util'], function () {
             launchName: 'Имя запуска',
             suiteName: 'Имя набора',
             testName: 'Имя теста',
-            refine: 'УЛУЧШИТЬ:'
+            refine: 'УТОЧНИТЬ:'
         },
         filter: {
             name: 'Имя',
