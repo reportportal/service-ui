@@ -37,6 +37,7 @@ define(function (require) {
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var LogItemNextErrorView = require('launches/logLevel/LogItemNextError/LogItemNextErrorView');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -87,12 +88,12 @@ define(function (require) {
                 id: 'level',
                 condition: 'in',
                 values: [
-                    { name: 'All', value: 'All' },
-                    { name: 'Trace', value: 'TRACE' },
-                    { name: 'Debug', value: 'DEBUG' },
-                    { name: 'Info', value: 'INFO' },
-                    { name: 'Warn', value: 'WARN' },
-                    { name: 'Error', value: 'ERROR' }
+                    { name: Localization.filterNameByValue.ALL, value: 'All' },
+                    { name: Localization.filterNameByValue.TRACE, value: 'TRACE' },
+                    { name: Localization.filterNameByValue.DEBUG, value: 'DEBUG' },
+                    { name: Localization.filterNameByValue.INFO, value: 'INFO' },
+                    { name: Localization.filterNameByValue.WARN, value: 'WARN' },
+                    { name: Localization.filterNameByValue.ERROR, value: 'ERROR' }
                 ],
                 value: (startOptions['filter.in.level'] && decodeURIComponent(startOptions['filter.in.level'])) || 'All'
             });
