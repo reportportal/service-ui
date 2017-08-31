@@ -157,6 +157,7 @@ define(['util'], function () {
             import: 'Импорт',
             note: 'Замечание:',
             searchName: 'Поиск по Имени',
+            perPage: 'на странице',
             days: [
                 'Воскресенье',
                 'Понедельник',
