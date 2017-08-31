@@ -141,7 +141,7 @@ define(['util'], function () {
             selectValue: 'Выбрать значение',
             from: 'от',
             to: 'до',
-            launch: 'launch',
+            launch: 'запуск',
             selectedLaunches: 'избранные запуски',
             debug: 'Отладить',
             allLaunches: 'Все запуски',
