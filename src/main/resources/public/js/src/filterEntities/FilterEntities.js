@@ -586,7 +586,7 @@ define(function (require) {
                 model: this.model,
                 noResizeSearch: true,
                 startSearch: 1,
-                warning: 'Please enter 1 or more characters'
+                warning: Localization.ui.enterChars
             })).$el);
         }
     });
