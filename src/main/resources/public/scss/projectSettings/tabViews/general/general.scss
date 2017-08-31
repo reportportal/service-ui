@@ -24,6 +24,12 @@
   .general-project-settings {
     padding: 10px 0 20px;
     position: relative;
+    .rp-form-group{
+      label{
+        vertical-align: middle;
+        padding-top: 0;
+      }
+    }
     @media (max-width: $SCREEN_XS_MAX) {
       padding-top: 0;
     }

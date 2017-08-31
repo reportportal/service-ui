@@ -96,11 +96,11 @@ define(function (require) {
             });
             var isAutoAnalyzerEnabled = new DropDownComponent({
                 data: [
-                    { name: 'ON', value: 'ON' },
-                    { name: 'OFF', value: 'OFF' }
+                    { name: Localization.ui.on, value: 'ON' },
+                    { name: Localization.ui.off, value: 'OFF' }
                 ],
                 multiple: false,
-                defaultValue: (this.model.get('isAutoAnalyzerEnabled') ? Localization.ui.on : Localization.ui.off)
+                defaultValue: (this.model.get('isAutoAnalyzerEnabled') ? 'ON' : 'OFF')
             });
             $('[data-js-selector="interruptedJob"]', this.$el).html(interruptedJob.$el);
             $('[data-js-selector="keepLogs"]', this.$el).html(keepLogs.$el);
