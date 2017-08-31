@@ -482,7 +482,7 @@ define(['util'], function () {
             off_email: 'выключено',
             update_email: 'обновлено',
 
-            overallStatisticsPanel: 'Панель общей статистики',
+            overallStatisticsPanel: 'Общая статистика',
             overallStatisticsPanelDescription: 'показывает сводку тестовых сценариев с каждым статусом в избранных запусках.',
             TestCasesStatisticsUniqueLaunches: 'Статистика тестовых сценариев в уникальных запусках',
 
@@ -525,11 +525,11 @@ define(['util'], function () {
             projectActivityPanel: 'Панель активностей проекта',
             projectActivityPanelDescription: 'показывает все действия, производимые над проектом.',
 
-            passingRatePerLaunchChart: 'Passing rate per launch',
-            passingRatePerLaunchChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for last run of selected launch.',
+            passingRatePerLaunchChart: 'Процент пройденных тестов для одного запуска',
+            passingRatePerLaunchChartDescription: 'показывает процентное соотношение между пройденными тестами и их общим количеством для последнего запуска.',
 
-            passingRateSummaryChart: 'Passing rate summary',
-            passingRateSummaryChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
+            passingRateSummaryChart: 'Процент пройденных тестов для выбранных запусков',
+            passingRateSummaryChartDescription: 'показывает процентное соотношение между пройденными тестами и их общим количеством для выбранных запусков.',
 
             percentageOfInvestigationsChart: 'Процент исследований',
             percentageOfProductBugsChart: 'Процент дефектов продукта',
@@ -537,11 +537,11 @@ define(['util'], function () {
             launchStatisticsChart: 'Статистика запусков',
             trendChart: 'Диаграмма тенденций',
             lineChart: 'Линейная диаграмма',
-            panelMode: 'Panel view',
-            chartMode: 'Pie chart view',
-            barMode: 'Bar view',
-            pieChartMode: 'Pie chart view',
-            donutChartMode: 'Donut view',
+            panelMode: 'В виде групп',
+            chartMode: 'Круговая диаграмма',
+            barMode: 'Гистограмма',
+            pieChartMode: 'Круговая диаграмма',
+            donutChartMode: 'Круговая диаграмма',
             trendChartMode: 'Trend view',
 
             defaultName: 'Название шаблона виджета',
