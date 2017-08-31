@@ -156,6 +156,7 @@ define(['util'], function () {
             description: 'Описание',
             import: 'Импорт',
             note: 'Замечание:',
+            searchName: 'Поиск по Имени',
             days: [
                 'Воскресенье',
                 'Понедельник',
@@ -683,7 +684,7 @@ define(['util'], function () {
             fName: 'Название фильтра',
             fOptions: 'Опции',
             fOwner: 'Владелец',
-            fShared: 'Поделился',
+            fShared: 'Поделиться',
             fDisplayOnLaunches: 'Отобразить на запусках',
             fDelete: 'Удалить',
             addFilter: 'Добавить фильтр',
