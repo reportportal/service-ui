@@ -158,6 +158,7 @@ define(['util'], function () {
             note: 'Note:',
             searchName: 'Search by Name',
             perPage: 'per page',
+            timeRangeChange: 'Your time range will be updated every day',
             days: [
                 'Sunday',
                 'Monday',
