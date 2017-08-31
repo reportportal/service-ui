@@ -822,11 +822,11 @@ define(['util'], function () {
             severalItems: 'Существует несколько элементов с одинаковыми названиями, описаниями и ярлыками',
             multipleSelectHeader: 'ВЫ МОЖЕТЕ ВЫПОЛНЯТЬ ДЕЙСТВИЯ С ВЫБРАННЫМИ ЭЛЕМЕНТАМИ:',
             selectMoreItem: 'Вы можете выбрать более одного элемента',
-            latestLaunches: 'Latest launches',
-            latestLaunches_short: 'Latest',
-            allLaunches: 'All launches',
-            allLaunches_short: 'All',
-            noFilter: 'NO FILTER'
+            latestLaunches: 'Последние Запуски',
+            latestLaunches_short: 'Последние',
+            allLaunches: 'Все Запуски',
+            allLaunches_short: 'Все',
+            noFilter: 'ФИЛЬТР НЕ ВЫБРАН'
         },
 
         launchStatus: {

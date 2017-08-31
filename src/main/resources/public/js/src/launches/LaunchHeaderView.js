@@ -52,11 +52,11 @@ define(function (require) {
             this.dropdownButtonLinks = {
                 links: [
                     {
-                        name: 'All Launches',
+                        name: Localization.launches.allLaunches,
                         value: 'all'
                     },
                     {
-                        name: 'Latest Launches',
+                        name: Localization.launches.latestLaunches,
                         value: 'latest'
                     }
                 ]
@@ -93,7 +93,7 @@ define(function (require) {
                     { name: Localization.launches.latestLaunches, value: 'latest', shortName: Localization.launches.latestLaunches_short }
                 ],
                 multiple: false,
-                defaultValue: this.appStorage.get('launchDistinct')
+                defaultValue: this.appStorage.get('launchDistinct') || 'all'
             });
             $('[data-js-launches-mode-dropdown]', this.$el).html(this.launchModeSelector.$el);
             this.listenTo(this.launchModeSelector, 'change', this.onLaunchModeSelect);
