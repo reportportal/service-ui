@@ -821,7 +821,7 @@ define(['util'], function () {
             emptyItem: 'Элемент пуст',
             severalItems: 'Существует несколько элементов с одинаковыми названиями, описаниями и ярлыками',
             multipleSelectHeader: 'ВЫ МОЖЕТЕ ВЫПОЛНЯТЬ ДЕЙСТВИЯ С ВЫБРАННЫМИ ЭЛЕМЕНТАМИ:',
-            selectMoreItem: 'Вы можете выбрать более одного элемента',
+            selectMoreItem: 'Вам надо выбрать более одного элемента',
             latestLaunches: 'Последние Запуски',
             latestLaunches_short: 'Последние',
             allLaunches: 'Все Запуски',
