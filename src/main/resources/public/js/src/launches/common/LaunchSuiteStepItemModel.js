@@ -69,6 +69,19 @@ define(function (require, exports, module) {
             filter_url: ''
         },
         computeds: {
+            status_loc: {
+                deps: ['status'],
+                get: function (status) {
+                    switch (status) {
+                        case 'PASSED': return Localization.testStatus.PASSED;
+                        case 'FAILED': return Localization.testStatus.FAILED;
+                        case 'STOPPED': return Localization.testStatus.STOPPED;
+                        case 'SKIPPED': return Localization.testStatus.SKIPPED;
+                        case 'INTERRUPTED': return Localization.testStatus.INTERRUPTED;
+                        case 'IN PROGRESS': return Localization.testStatus.IN_PROGRESS;
+                    }
+                }
+            },
             launch_owner: {
                 deps: ['owner', 'parent_launch_owner'],
                 get: function (owner, parent_launch_owner) {

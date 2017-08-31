@@ -48,7 +48,7 @@ define(function (require) {
         bindings: {
             '[data-js-name-link]': 'attr: {href: url}',
             '[data-js-name]': 'text: name',
-            '[data-js-status]': 'text: status',
+            '[data-js-status]': 'text: status_loc',
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
             '[data-js-tags-container]': 'sortTags: tags',
