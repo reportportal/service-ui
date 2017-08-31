@@ -156,6 +156,8 @@ define(['util'], function () {
             description: 'Description',
             import: 'Import',
             note: 'Note:',
+            searchName: 'Search by Name',
+            perPage: 'per page',
             days: [
                 'Sunday',
                 'Monday',
