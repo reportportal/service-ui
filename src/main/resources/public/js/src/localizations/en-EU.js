@@ -1081,6 +1081,20 @@ define(['util'], function () {
             lte: 'less than or equal'
         },
 
+        filterShortCut: {
+            eq: 'eq',
+            '!eq': '!eq',
+            ne: '!eq',
+            cnt: 'cnt',
+            '!cnt': '!cnt',
+            and: 'and',
+            has: 'and',
+            in: 'or',
+            or: 'or',
+            gte: '&ge;',
+            lte: '&le;'
+        },
+
         filters: {
             moreCriteria: 'More Criteria',
             toSaveText: 'Apply any filter to save the filter to favorites',

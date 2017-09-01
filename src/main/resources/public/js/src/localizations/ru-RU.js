@@ -1138,6 +1138,20 @@ define(['util'], function () {
             lte: 'меньше или равно'
         },
 
+        filterShortCut: {
+            eq: 'рав',
+            '!eq': 'нрв',
+            ne: 'нсд',
+            cnt: 'сд',
+            '!cnt': 'нсд',
+            and: 'и',
+            has: 'и',
+            in: 'или',
+            or: 'или',
+            gte: '&ge;',
+            lte: '&le;'
+        },
+
         filters: {
             moreCriteria: 'Больше критериев',
             toSaveText: 'Примените любой фильтр, чтобы сохранить фильтр в избранное',
