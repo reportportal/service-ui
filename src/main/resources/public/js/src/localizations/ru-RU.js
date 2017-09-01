@@ -1540,7 +1540,7 @@ define(['util'], function () {
             btw: 'между',
             not: ' не ',
             and: ' и ',
-            andb: ' И '
+            andb: ' ВКЛЮЧАЯ '
         },
 
         successMessages: {
