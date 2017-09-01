@@ -621,7 +621,8 @@ define(['util'], function () {
             language: 'Язык',
             english: 'English (United States)',
             russian: 'Русский',
-            reloadPage: 'Изменения вступят в силу если <a href="">обновить</a> страницу'
+            reloadPage: 'Изменения вступят в силу если <a href="">обновить</a> страницу.<br>' +
+            'Русский язык находится в бета-версии. Пожалуйста помогите нам с переводом, отправьте Ваш ПР в <a target="blank" href ="https://github.com/reportportal/service-ui/blob/develop/src/main/resources/public/js/src/localizations/ru-RU.js">файл</a>.'
         },
 
         dashboard: {
