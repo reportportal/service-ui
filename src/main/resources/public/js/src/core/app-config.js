@@ -24,6 +24,7 @@ define(function (require) {
 
     var _ = require('underscore');
     var text = require('localization');
+    var Localization = require('localization');
 
     var config = function () {
         return {
@@ -259,12 +260,12 @@ define(function (require) {
                     canUseRPAuthorization: false
                 },
                 emailInCase: [
-                    { value: 'ALWAYS', name: 'Always' },
-                    { value: 'TO_INVESTIGATE', name: 'Launch has "To Investigate" items' },
-                    { value: 'FAILED', name: 'Launch has issues' },
-                    { value: 'MORE_10', name: '> 10% of items have issues' },
-                    { value: 'MORE_20', name: '> 20% of items have issues' },
-                    { value: 'MORE_50', name: '> 50% of items have issues' }
+                    { value: 'ALWAYS', name: Localization.bts.always },
+                    { value: 'TO_INVESTIGATE', name: Localization.bts.launchHasInvestigate },
+                    { value: 'FAILED', name: Localization.bts.launchHasIssue },
+                    { value: 'MORE_10', name:  Localization.bts.more10 },
+                    { value: 'MORE_20', name:  Localization.bts.more20 },
+                    { value: 'MORE_50', name:  Localization.bts.more50 }
                 ]
             },
 
