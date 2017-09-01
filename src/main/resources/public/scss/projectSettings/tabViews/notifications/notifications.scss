@@ -90,6 +90,12 @@
   .email-notifications-settings {
     .notification-array {
       .rp-form-group {
+        .drop-down-component{
+          .dropdown-menu{
+            width: auto;
+            min-width: 255px;
+          }
+        }
         &.rp-note-and {
           margin-bottom: 2px;
           @media (max-width: $SCREEN_XS_MAX) {
@@ -101,6 +107,7 @@
       .email-case-title {
         padding-left: 0px;
         margin-left: -15px;
+
         @media (max-width: $SCREEN_XS_MAX) {
           margin-left: 0;
           background: $COLOR--white-four;
