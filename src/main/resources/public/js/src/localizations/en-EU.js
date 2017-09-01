@@ -105,6 +105,7 @@ define(['util'], function () {
             minPrefix: 'At least ',
             minSufix: ' symbols required.',
             minSufixAuto: ' symbols required for autocomplete.',
+            minSufixAuto3: ' symbols required for autocomplete.',
             maxPrefix: 'No more than ',
             maxSufix: ' symbols allowed.',
             by: 'by',
@@ -1280,7 +1281,13 @@ define(['util'], function () {
             addNewIssue: 'Add New Issue',
             btsInstances: 'Bts Instances:',
             btsAddNewInstance: 'Add New Instance',
-            btsNotFound: 'To configure Bug Tracking System, please deploy appropriate micro-service'
+            btsNotFound: 'To configure Bug Tracking System, please deploy appropriate micro-service',
+            always: 'Always',
+            launchHasInvestigate: 'Launch has "To Investigate" items',
+            launchHasIssue: 'Launch has issues',
+            more10: '> 10% of items have issues',
+            more20: '> 20% of items have issues',
+            more50: '> 50% of items have issues'
         },
 
         admin: {

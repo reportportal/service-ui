@@ -351,7 +351,7 @@ define(function (require) {
                     maximumInputLength: 128,
                     formatInputTooShort: function () {
                         return Localization.ui.minPrefix +
-                        minimumInputLength + Localization.ui.minSufixAuto;
+                        minimumInputLength + Localization.ui.minSufixAuto3;
                     },
                     formatResultCssClass: function (state) {
                         if ((remoteUsers.length === 0 || _.indexOf(remoteUsers, state.text) < 0)
@@ -717,7 +717,7 @@ define(function (require) {
                     maximumInputLength: 128,
 
                     formatInputTooShort: function () {
-                        return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto;
+                        return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto3;
                     },
                     formatResultCssClass: function (state) {
                         if ((remoteLaunches.length === 0 ||
