@@ -1,7 +1,7 @@
 <button type="button" class="btn dropdown-toggle" data-value="<%= data.condition %>" data-toggle="dropdown" aria-expanded="false">
     <span class="select-value">
         <% var opt = _.find(data.options, function(o){ return data.condition == o.id }); %>
-        <%= opt.shortCut || data.condition %>
+        <%= data.text.filterShortCut[opt.id]  %>
     </span>
     <span class="caret"></span>
 </button>

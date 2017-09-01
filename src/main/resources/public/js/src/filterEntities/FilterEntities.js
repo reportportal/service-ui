@@ -186,9 +186,10 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));
         },
         conditionFlipper: function (e) {
-            e.preventDefault();
             var $el = $(e.currentTarget);
-            $el.closest('.input-group').find('.select-value:first').text($el.data('short'));
+            var newShortCut = Localization.filterShortCut[$el.data('short')] || $el.data('short');
+            e.preventDefault();
+            $el.closest('.input-group').find('.select-value:first').text(newShortCut);
             $el.closest('ul').find('.active').removeClass('active');
             $el.parent().addClass('active');
             this.model.set('condition', $el.data('value'));
