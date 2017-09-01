@@ -433,7 +433,7 @@ define(['util'], function () {
             // nonPassedCases: 'Непройденные тестовые сценарии',
             failedCases: 'неудавшиеся сценарии',
             // ofInvestigation: 'of investigation',
-            ofTestCases: ' из тестовых сценариев',
+            ofTestCases: ' тестовых сценариев',
             ofIssues: 'из ошибок',
             growTestCases: 'Прирост тестовых сценариев',
             toInvestigate: 'Требуется Анализ',
