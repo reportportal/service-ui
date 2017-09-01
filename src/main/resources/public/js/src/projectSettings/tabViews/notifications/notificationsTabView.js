@@ -86,11 +86,11 @@ define(function (require) {
             this.$el.html(Util.templates(this.tpl, params));
             var emailNotificationsSwitcher = new DropDownComponent({
                 data: [
-                    { name: 'ON', value: 'ON' },
-                    { name: 'OFF', value: 'OFF' }
+                    { name:  Localization.ui.on, value: 'ON' },
+                    { name:  Localization.ui.off, value: 'OFF' }
                 ],
                 multiple: false,
-                defaultValue: this.model.get('emailEnabled') ? Localization.ui.on : Localization.ui.off
+                defaultValue: this.model.get('emailEnabled') ? 'ON' : 'OFF'
             });
             this.dropdownComponents.push(emailNotificationsSwitcher);
             $('[data-js-email-notifications-switcher]', this.$el).html(emailNotificationsSwitcher.$el);
