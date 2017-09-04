@@ -28,6 +28,9 @@
     }
     .modal-body {
       padding: 30px 10px 10px 10px;
+      .add-button {
+        margin: 0 0 10px 170px;
+      }
     }
     label {
       font-weight: normal;
@@ -48,6 +51,8 @@
         .drop-down-component {
           width: 350px;
           margin-left: 21px;
+          float: right;
+          margin-right: 30px;
         }
       }
 
@@ -79,7 +84,8 @@
             .rp-input {
               margin-left: 30px;
               display: block;
-              float: left;
+              float: right;
+              margin-right: 30px;
               width: 350px;
             }
 
@@ -103,7 +109,8 @@
             .rp-input {
               margin-left: 33px;
               display: block;
-              float: left;
+              float: right;
+              margin-right: 30px;
               width: 350px;
             }
 
@@ -143,8 +150,6 @@
       }
     }
 
-    .add-button {
-      margin: 0 0 10px 129px;
-    }
+
   }
 }

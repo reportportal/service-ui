@@ -1792,7 +1792,7 @@ define(['util'], function () {
             createUser: 'Добавить, зарегистрировать пользователя',
             updateDefects: 'Обновить типы дефектов',
             updateBts: 'Обновить СОД',
-            projectNameIn: 'Имя проекта в',
+            projectNameIn: 'Имя проекта в СОД',
             copyLink: 'Копировать ссылку'
         },
 
