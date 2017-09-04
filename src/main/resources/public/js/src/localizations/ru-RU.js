@@ -565,7 +565,8 @@ define(['util'], function () {
             latestLaunches: 'Последние запуски',
             allLaunches: 'Все запуски',
 
-            addCustomColumn: 'Добавить колонку'
+            addCustomColumn: 'Добавить колонку',
+            groupLaunchesByFilter: 'Групировать запуски по фильтру'
         },
 
         userProfile: {

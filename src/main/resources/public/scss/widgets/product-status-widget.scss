@@ -128,6 +128,7 @@
     }
     .type-cell-passing_rate {
       width: 60px;
+      color: $COLOR--passed;
       .less-100 {
         color: $COLOR--failed;
       }

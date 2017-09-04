@@ -109,7 +109,7 @@ define(function (require) {
             var self = this;
             this.destroyItems();
             _.each(this.collection.models, function (model, number) {
-                var view = new SettingCustomColumnView({ model: model, number: number });
+                var view = new SettingCustomColumnView({ model: model, number: number + 1 });
                 self.renderedItems.push(view);
                 $('[data-js-items-container]', self.$el).append(view.$el);
             });

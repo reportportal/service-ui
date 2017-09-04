@@ -23,6 +23,7 @@ define(function (require) {
 
     var $ = require('jquery');
     var _ = require('underscore');
+    var Localization = require('localization');
 
     return {
         getConfig: function () {
@@ -118,7 +119,7 @@ define(function (require) {
                 {
                     control: 'checkbox',
                     options: {
-                        label: 'Distinct launches',
+                        label: Localization.widgets.groupLaunchesByFilter,
                         getValue: function (model, self) {
                             var widgetOptions = model.getWidgetOptions();
                             if (widgetOptions.distinctLaunches) {
