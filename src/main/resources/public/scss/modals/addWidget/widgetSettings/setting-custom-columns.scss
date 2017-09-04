@@ -21,13 +21,30 @@
 
 .modal-add-widget-setting-custom-columns {
   float: left;
-  margin-top: 17px;
-  padding: 0 10px;
+  padding: 17px 0 0 10px;
   width: 100%;
+  text-align: right;
+  .add-item {
+    color: $COLOR--windows-blue;
+    width: 276px;
+    text-align: left;
+    display: inline-block;
+    span {
+      cursor: pointer;
+    }
+  }
   .form-group {
     display: inline-block;
+    margin-left: 8px;
+    width: 119px;
     input {
-      width: 100px;
+      width: 100%;
     }
+  }
+  .remove-item {
+    display: inline-block;
+    width: 15px;
+    margin-left: 8px;
+    cursor: pointer;
   }
 }

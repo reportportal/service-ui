@@ -486,7 +486,9 @@ define(['util'], function () {
             saveWidgetDashboard: 'Save Widget on Dashboard',
             launchName: 'LAUNCH NAME',
             latestLaunches: 'Latest launches',
-            allLaunches: 'All launches'
+            allLaunches: 'All launches',
+
+            addCustomColumn: 'Add custom column'
         },
 
         userProfile: {
@@ -980,6 +982,7 @@ define(['util'], function () {
             attachment: 'Attachment',
             attachment_short: 'ATH',
             passing_rate: 'Passing Rate',
+            filter_name: 'Filter name',
             interruptedAfter: 'Run INTERRUPTED after:',
             stoppedAt: 'Stopped at:',
             durationSpecific: 'Duration is interval between first child starts and last child ends. But if child run in parallel, end time is a time of longest child, in this case duration will not be equal to child duration sum.'

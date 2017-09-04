@@ -542,7 +542,9 @@ define(['util'], function () {
             saveWidgetDashboard: 'Сохраните Виджет на Панели управления',
             launchName: 'ИМЯ ЗАПУСКА',
             latestLaunches: 'Последние запуски',
-            allLaunches: 'Все запуски'
+            allLaunches: 'Все запуски',
+
+            addCustomColumn: 'Добавить колонку'
         },
 
         userProfile: {
@@ -1035,6 +1037,7 @@ define(['util'], function () {
             attachment: 'Приложение',
             attachment_short: 'Прил',
             passing_rate: 'Passing Rate',
+            filter_name: 'Имя фильтра',
             interruptedAfter: 'Прогон ПРЕРВАН после:',
             stoppedAt: 'Остановлено в:',
             durationSpecific: 'Длительность - это интервал между началом первого подпрогона и окончанием последнего подпрогона. Но если подпрогоны происходят параллельно, время окончания - это окончание наиболее длительного подпрогона, в этом случае длительность не будет равна сумме длительностей подпрогонов.'

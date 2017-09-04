@@ -26,7 +26,124 @@
     width: 100%;
     height: 100%;
   }
-  table {
+  table.rp-table-grid {
     min-width: 100%;
+    overflow: hidden;
+    color: $COLOR--charcoal-grey;
+    th, td {
+      padding-right: 15px;
+    }
+    th:first-child {
+      padding-left: 20px;
+    }
+    td {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      &:first-child {
+        padding-left: 20px;
+      }
+    }
+
+    .type-cell-filter {
+      height: 40px;
+      color: $COLOR--gray-47;
+      font-family: $OpenSansSemibold;
+      .filter-name {
+        color: $COLOR--charcoal-grey;
+      }
+    }
+    .type-cell-name, .type-cell-filter_name {
+        h5 {
+          margin: 0;
+          font-size: 14px;
+          font-family: OpenSansSemiBold;
+          color: $COLOR--windows-blue;
+          word-wrap: break-word;
+          a {
+            word-wrap: break-word;
+          }
+        }
+
+        .rp-grid-tags {
+          margin-top: 10px;
+          font-size: 12px;
+          line-height: 18px;
+          & > li {
+            display: inline;
+            margin: 0 17px 2px 2px;
+            color: #999999;
+            word-break: break-word;
+            a {
+              color: $COLOR--gray-60;
+              cursor: pointer;
+              &:hover {
+                color: $COLOR--charcoal-grey;
+              }
+            }
+            i {
+              vertical-align: top;
+              font-size: 18px;
+              &.rp-icons-ticket {
+                font-size: 12px;
+                margin-top: 2px;
+              }
+            }
+          }
+          .launch-status-wrapper {
+            display: inline-block;
+            max-width: 100px;
+            vertical-align: middle;
+          }
+          .item_status {
+            float: left;
+            width: 4px;
+            height: 4px;
+            margin: 1px;
+            background: $COLOR--failed;
+            &.status_passed {
+              background: $COLOR--passed;
+            }
+          }
+        }
+    }
+    .type-cell-to_investigate {
+      span {
+        display: inline-block;
+        color: $COLOR--white-default;
+        font-family: $OpenSansSemibold;
+        background: $COLOR--to-investigate;
+        padding: 0 10px;
+        line-height: 19px;
+        border-radius: 10px;
+      }
+    }
+    .type-cell-total {
+      font-family: $OpenSansSemibold;
+    }
+    .type-cell-total, .type-cell-passed, .type-cell-failed, .type-cell-skipped {
+      width: 85px;
+    }
+    .type-cell-product_bug, .type-cell-auto_bug, .type-cell-system_issue, .type-cell-to_investigate {
+      width: 70px;
+    }
+    .type-cell-passing_rate {
+      width: 60px;
+      .less-100 {
+        color: $COLOR--failed;
+      }
+    }
+    .type-cell-status {
+      min-width: 70px;
+    }
+    td.type-cell-status {
+      word-break: break-word;
+    }
+    tr:last-child {
+      background: $COLOR--light-yellow;
+      font-family: $OpenSansSemibold;;
+      .type-cell-name {
+        text-transform: uppercase;
+      }
+    }
   }
 }

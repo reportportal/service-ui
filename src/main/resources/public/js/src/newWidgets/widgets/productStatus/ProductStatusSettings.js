@@ -97,19 +97,44 @@ define(function (require) {
                     }
                 },
                 {
-                    control: 'checkbox',
-                    options: {
-                        label: 'Distinct launches'
-                    }
-                },
-                {
                     control: 'switcher',
                     options: {
                         items: [
                             { name: 'All launches', value: 'all' },
                             { name: 'Latest launches', value: 'latest' }
                         ],
-                        action: 'switch_latest_mode'
+                        action: 'switch_latest_mode',
+                        getValue: function (model, self) {
+                            var latestMode = !!(model.getWidgetOptions().latest);
+                            var curNum = 1;
+                            var items = self.model.get('items');
+                            if (items.length > 1 && items[1].value !== 'latest' && latestMode) {
+                                curNum = 0;
+                            }
+                            return curNum;
+                        }
+                    }
+                },
+                {
+                    control: 'checkbox',
+                    options: {
+                        label: 'Distinct launches',
+                        getValue: function (model, self) {
+                            var widgetOptions = model.getWidgetOptions();
+                            if (widgetOptions.distinctLaunches) {
+                                return true;
+                            }
+                            return false;
+                        },
+                        setValue: function (value, model) {
+                            var widgetOptions = model.getWidgetOptions();
+                            if (value) {
+                                widgetOptions.distinctLaunches = [];
+                            } else {
+                                delete widgetOptions.distinctLaunches;
+                            }
+                            model.setWidgetOptions(widgetOptions);
+                        }
                     }
                 }
             ]);

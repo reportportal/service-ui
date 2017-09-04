@@ -3,7 +3,7 @@
  *
  *
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,39 +18,41 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 define(function (require) {
     'use strict';
 
-    var Util = require('util');
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
+    var ItemDurationView = require('launches/common/ItemDurationView');
+    var Util = require('util');
+    var SingletonAppModel = require('model/SingletonAppModel');
+    var Localization = require('localization');
 
+    var ProductStatusFilterNameView = Epoxy.View.extend({
+        template: 'tpl-product-status-filter-name',
+        className: 'product-status-filter-name',
 
-    var SettingCustomColumnView = Epoxy.View.extend({
-        className: 'modal-add-widget-setting-custom-column',
-        template: 'modal-add-widget-setting-custom-column',
         bindings: {
-            '[data-js-name-input]': 'value:name',
-            '[data-js-value-input]': 'value:value'
+            '[data-js-name]': 'text: name',
         },
-        events: {
-            'click [data-js-remove]': 'onClickRemove'
-        },
-        initialize: function (options) {
+
+        initialize: function () {
             this.render();
-            $('[data-js-number]', this.$el).text(options.number);
+            this.appModel = new SingletonAppModel();
+            this.duration && this.duration.destroy();
+            this.duration = new ItemDurationView({
+                model: this.model,
+                el: $('[data-js-item-status]', this.$el)
+            });
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, {}));
-        },
-        onClickRemove: function () {
-            this.model.collection.remove(this.model);
+            this.$el.html(Util.templates(this.template, this.model.get('launchesStatus')));
         },
         onDestroy: function () {
-            this.$el.remove();
+            this.duration && this.duration.destroy();
         }
     });
 
-    return SettingCustomColumnView;
+    return ProductStatusFilterNameView;
 });

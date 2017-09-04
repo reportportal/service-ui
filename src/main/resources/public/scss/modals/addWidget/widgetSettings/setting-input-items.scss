@@ -20,13 +20,16 @@
  */
 .modal-add-widget-setting-input-items {
   float: left;
-  margin: 17px 10px 0 10px;
+  padding: 17px 0 0 10px;
   position: relative;
+  width: 100%;
+  text-align: right;
   .input-wrapper {
     display: inline-block;
     margin-left: 8px;
-    width: 215px;
+    width: 276px;
     margin-bottom: 0;
+    text-align: left;
     .validate-hint {
       width: 100%;
       top: auto;

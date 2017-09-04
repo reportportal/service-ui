@@ -1,5 +1,5 @@
-<tr>
+<tr class="rp-grid-thead">
     <% _.each(data, function (columnName) { %>
-    <th><%= columnName %></th>
+    <th class="rp-grid-th type-cell-<%- columnName.type %>"><%= columnName.text %></th>
     <% }) %>
 </tr>

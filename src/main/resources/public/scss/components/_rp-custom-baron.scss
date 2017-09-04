@@ -19,44 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.baron__track {
-  display: none;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-}
-
-.baron._scrollbar > .baron__track {
-  display: block;
-}
-
-.baron__free {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-}
-
-.baron__bar {
-  display: none;
-  position: absolute;
-  right: 0;
-  z-index: 1;
-  width: 10px;
-  background: #999;
-}
-
-.baron._scrollbar .baron__bar {
-  display: block;
-}
-
-.baron__control {
-  display: none;
-}
-
-/*-------------------------------------*/
-
-.baron__root {
+.baron.baron__root {
   position: relative;
   width: 100%;
   height: 100%;
@@ -67,37 +30,95 @@
     left: 0;
     bottom: 0;
     right: 0;
-    overflow: auto;
-    overflow-x: hidden;
+    //overflow: auto;
     -webkit-overflow-scrolling: touch;
   }
-  &.baron__horizontal {
-    padding-bottom: 10px;
-    & > *:first-child {
-      position: relative;
-      overflow-y: hidden !important;
+  .baron_scroller {
+    &:focus {
+      outline: none;
     }
   }
-  &.baron__multidirection {
-    padding-bottom: 10px;
-    & > *:first-child {
-      overflow-x: scroll !important;
+  .baron__track {
+    display: none;
+    position: absolute;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.5s;
+    .baron__free {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
     }
+    .baron__bar {
+      position: absolute;
+      z-index: 1;
+      border-radius: 3px;
+      background: #333;
+      pointer-events: auto;
+      border: 1px solid #636363;
+      &.baron__bar-vertical {
+        right: 0;
+        width: 8px;
+      }
+      &.baron__bar-horizontal {
+        height: 8px;
+        bottom: 0;
+      }
+    }
+    &.baron__track-vertical {
+      width: 8px;
+      top: 0;
+      bottom: 0;
+      right: 0;
+    }
+    &.baron__track-horizontal {
+      height: 8px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+    &:hover {
+      transition-delay: 0s;
+      opacity: .8;
+    }
+  }
+  &._scrollbar_vertical {
+    & > .baron__track-vertical {
+      display: block;
+    }
+  }
+  &._scrollbar_horizontal {
+    padding-bottom: 10px;
+    & > .baron__track-horizontal {
+      display: block;
+    }
+  }
+  &:hover > .baron__track {
+    transition-delay: 0s;
+    opacity: .2;
+  }
+  &._scrolling:hover > .baron__track {
+    transition-delay: 0s;
+    opacity: .8;
   }
 }
-
 .no-zero-scroll {
-  .baron__root {
+  .baron.baron__root {
     & > *:first-child {
       right: -17px;
       overflow-y: scroll;
-      overflow-x: hidden;
       &::-webkit-scrollbar {
         width: 16px;
       }
     }
   }
 }
+
+
+/*-------------------------------------*/
+
 
 .select2-drop-active .baron.baron__root .select2-results {
   min-height: 34px !important;
@@ -114,71 +135,5 @@
 .select2-results .select2-no-results {
   font-size: 12px;
   padding: 5px;
-}
-
-.baron .baron__track {
-  position: absolute;
-  top: 2px;
-  bottom: 2px;
-  right: 2px;
-  width: 8px;
-  border-radius: 4px;
-  opacity: 0;
-  transition: opacity 0.5s ease 0.5s;
-  &.baron__track-multi {
-    width: 100%;
-    height: 8px;
-    bottom: 0;
-    left: 0;
-    top: auto;
-    .baron__bar {
-      height: 8px;
-    }
-    .baron__free {
-      left: 0;
-    }
-  }
-}
-
-.baron {
-  .baron__bar {
-    position: absolute;
-    z-index: 1;
-    width: 8px;
-    border-radius: 3px;
-    background: #333;
-    pointer-events: auto;
-    border: 1px solid #636363;
-  }
-  &.baron__horizontal {
-    .baron__track {
-      width: 100%;
-      height: 8px;
-      bottom: 0;
-      left: 0;
-      top: auto;
-    }
-    .baron__bar {
-      height: 8px;
-    }
-    .baron__free {
-      left: 0;
-    }
-  }
-  .baron_scroller {
-    &:focus {
-      outline: none;
-    }
-  }
-}
-.baron:hover > .baron__track {
-  transition-delay: 0s;
-  opacity: .2;
-}
-.baron .baron__track:hover,
-.baron._scrolling > .baron__track,
-.baron._scrolling:hover > .baron__track {
-  transition-delay: 0s;
-  opacity: .8;
 }
 

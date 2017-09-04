@@ -90,6 +90,7 @@ define(function (require) {
             this.collection.add(this.getValue(this.gadgetModel, this));
             this.renderItems();
             this.listenTo(this.collection, 'change', this.onChangeCollection);
+            this.listenTo(this.collection, 'remove', this.renderItems);
         },
         onChangeCollection: function () {
             var result = [];

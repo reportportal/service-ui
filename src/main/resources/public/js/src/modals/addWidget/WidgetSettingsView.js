@@ -100,6 +100,8 @@ define(function (require) {
             });
             this.renderedView.push(view);
             this.$el.append(view.$el);
+            // set default state for model
+            view.setValue(view.getValue(this.model, view), this.model);
             view.activate && view.activate();
         },
         validate: function () {

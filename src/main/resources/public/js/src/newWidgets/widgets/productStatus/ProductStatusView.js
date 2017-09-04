@@ -24,9 +24,6 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Util = require('util');
-    var urls = require('dataUrlResolver');
-    var coreService = require('coreService');
-    var Moment = require('moment');
     var BaseWidgetView = require('newWidgets/_BaseWidgetView');
     var ProductStatusService = require('newWidgets/widgets/productStatus/ProductStatusService');
     var ProductStatusRow = require('newWidgets/widgets/productStatus/ProductStatusRowView');
@@ -58,9 +55,19 @@ define(function (require) {
             this.render();
         },
         renderHeader: function (headerData) {
-            var columns = [Localization.launchesHeaders.name];
+            var columns = [];
             _.each(headerData, function (item) {
-                columns.push(Localization.launchesHeaders[item.text]);
+                if (item.type === 'basic') {
+                    columns.push({
+                        text: Localization.launchesHeaders[item.text],
+                        type: item.text
+                    });
+                } else if (item.type === 'custom') {
+                    columns.push({
+                        text: item.text,
+                        type: 'custom'
+                    });
+                }
             });
             $('[data-js-table-container]', this.$el).html(Util.templates(this.templateHeader, columns));
         },
@@ -70,6 +77,22 @@ define(function (require) {
                 text: 'name',
                 type: 'basic'
             }];
+            if (widgetOptions.distinctLaunches) {
+                answer = [{
+                    text: 'filter_name',
+                    type: 'basic'
+                }];
+            }
+            _.each(widgetOptions.customColumns, function (objString) {
+                try {
+                    var obj = JSON.parse(objString);
+                    answer.push({
+                        text: obj.name,
+                        type: 'custom',
+                        tag: obj.value
+                    });
+                } catch (e) {}
+            });
             _.each(widgetOptions.basicColumns, function (text) {
                 answer.push({
                     text: text,
@@ -79,65 +102,125 @@ define(function (require) {
             return answer;
         },
         renderRows: function (headerData, rowsData) {
-            console.dir(rowsData);
+            var widgetOptions = this.model.getWidgetOptions();
             var result = [];
             var self = this;
             var preRowsData = [];
+            var allLaunches = [];
             _.each(rowsData, function (rowData) {
-                preRowsData.push({
-                    type: 'filter',
-                    data: rowData.filterData
-                });
-                _.each(rowData.launches, function (launch) {
+                if (widgetOptions.distinctLaunches) {
                     preRowsData.push({
-                        type: 'launch',
-                        data: launch
+                        type: 'distinct_launch',
+                        data: self.getTotalLaunch(rowData.filterData, rowData.launches)
                     });
-                });
+                } else {
+                    preRowsData.push({
+                        type: 'filter',
+                        data: rowData.filterData
+                    });
+                    _.each(rowData.launches, function (launch) {
+                        preRowsData.push({
+                            type: 'launch',
+                            data: launch
+                        });
+                    });
+                }
+                allLaunches = allLaunches.concat(rowData.launches);
             });
             preRowsData.push({
                 type: 'total',
-                data: {}
+                data: this.getTotalStatistics(allLaunches)
             });
             _.each(preRowsData, function (data) {
                 var view = new ProductStatusRow(headerData, data);
                 $('[data-js-table-container]', self.$el).append(view.$el);
                 self.renderedRows.push(view);
             });
-            // _.each(this.getHeaderData(), function (headerKey, numKey) {
-            //     var total = '';
-            //     _.each(preRowsData, function (rowData, columnNum) {
-            //         var cellData;
-            //         if (!result[columnNum]) {
-            //             result[columnNum] = {
-            //                 rowData: rowData,
-            //                 cellData: []
-            //             };
-            //         }
-            //         if (rowData.type === 'filter') {
-            //             result[columnNum].cellData = [{
-            //                 type: 'filter',
-            //                 text: rowData.data.name,
-            //                 id: rowData.data.id
-            //             }];
-            //         } else if (rowData.type === 'total') {
-            //             result[columnNum].cellData.push({
-            //                 type: headerKey,
-            //                 text: total
-            //             });
-            //         } else {
-            //             cellData = self.getLaunchDataByColumn(rowData, headerKey);
-            //             total += parseInt(cellData.count, 10);
-            //             result[columnNum].cellData.push(cellData);
-            //         }
-            //     });
-            // });
-            // _.each(result, function (itemData) {
-            //     var view = new ProductStatusRow(itemData);
-            //     $('[data-js-table-container]', self.$el).append(view.$el);
-            //     self.renderedRows.push(view);
-            // });
-            console.dir(result);
+        },
+        getTotalStatistics: function (launches) {
+            var statisticData = {
+                total: 0,
+                passed: 0,
+                failed: 0,
+                skipped: 0,
+                product_bug: 0,
+                automation_bug: 0,
+                system_issue: 0,
+                to_investigate: 0
+            };
+            _.each(launches, function (launch) {
+                statisticData = {
+                    total: statisticData.total +
+                        parseInt(launch.statistics.executions.total, 10),
+                    passed: statisticData.passed +
+                        parseInt(launch.statistics.executions.passed, 10),
+                    failed: statisticData.failed +
+                        parseInt(launch.statistics.executions.failed, 10),
+                    skipped: statisticData.skipped +
+                        parseInt(launch.statistics.executions.skipped, 10),
+                    product_bug: statisticData.product_bug +
+                        parseInt(launch.statistics.defects.product_bug.total, 10),
+                    automation_bug: statisticData.automation_bug +
+                        parseInt(launch.statistics.defects.automation_bug.total, 10),
+                    system_issue: statisticData.system_issue +
+                        parseInt(launch.statistics.defects.system_issue.total, 10),
+                    to_investigate: statisticData.to_investigate +
+                        parseInt(launch.statistics.defects.to_investigate.total, 10)
+                };
+            });
+            return statisticData;
+        },
+        getTotalLaunch: function (filterData, launches) {
+            var result = {
+                name: filterData.name,
+                launchesStatus: [],
+                start_time: launches[0].start_time,
+                end_time: 0,
+                status: 'PASSED',
+                tags: [],
+                approximateDuration: 0,
+                statistics: {
+                    defects: {
+                        product_bug: {},
+                        automation_bug: {},
+                        no_defect: {},
+                        system_issue: {},
+                        to_investigate: {}
+                    },
+                    executions: {
+                        failed: 0,
+                        passed: 0,
+                        skipped: 0,
+                        total: 0
+                    }
+                }
+            };
+            _.each(launches, function (launch) {
+                result.launchesStatus.push(launch.status);
+                result.start_time = Math.min(result.start_time, launch.start_time);
+                result.end_time = Math.max(result.end_time, launch.end_time);
+                if (launch.status === 'FAILED') {
+                    result.status = 'FAILED';
+                }
+                launch.tags && (result.tags = result.tags.concat(launch.tags));
+                result.approximateDuration = Math.max(result.approximateDuration, launch.approximateDuration);
+                _.each(launch.statistics.defects, function (val, defect) {
+                    _.each(val, function (value, key) {
+                        var oldValue = result.statistics.defects[defect][key];
+                        var newValue = parseInt(value, 10);
+                        oldValue && (newValue += oldValue);
+                        result.statistics.defects[defect][key] = newValue;
+                    });
+                });
+                _.each(launch.statistics.executions, function (value, execution) {
+                    var oldValue = result.statistics.executions[execution];
+                    var newValue = parseInt(value, 10);
+                    oldValue && (newValue += oldValue);
+                    result.statistics.executions[execution] = newValue;
+                });
+            });
+            result.tags = _.uniq(result.tags);
+            return result;
         },
 
         destroyRows: function () {
