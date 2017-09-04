@@ -53,6 +53,7 @@
         background-color: $COLOR--orange-red;
       }
     .attachment-grid-cell {
+      position: relative;
        img {
          cursor: pointer;
          max-width: 63px;
@@ -60,6 +61,7 @@
      }
     .time-grid-cell{
       font-family: $FontMonacoMonospace;
+      position: relative;
     }
   }
 
