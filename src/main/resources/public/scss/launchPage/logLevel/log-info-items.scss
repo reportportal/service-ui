@@ -95,6 +95,7 @@
   .filter-name-block {
     display: inline-block;
     vertical-align: bottom;
+    position: relative;
     .filter-hint {
       position: absolute;
     }
@@ -117,7 +118,7 @@
     }
     i {
       position: absolute;
-      top: 14px;
+      top: -4px;
       font-size: 21px;
       right: 0;
       color: $COLOR--gray-60;

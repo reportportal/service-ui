@@ -3,24 +3,20 @@
     .console-th{
       display: none;
     }
-    .message-grid-cell {
-      position: relative;
-      width: 78%;
-      i {
-        display: none;
+    .rp-grid-th{
+      font-family: $OpenSansSemibold;
+      &.message-grid-cell {
+        position: relative;
+        width: 78%;
       }
-    }
-    .attachment-grid-cell {
-      position: relative;
-      width: 8%;
-    }
-    .time-grid-cell {
-      position: relative;
-      font-family: $FontMonacoMonospace;
-      width: 14%;
-
-      &.rp-grid-th {
-        font-family: $OpenSansSemibold;
+      &.attachment-grid-cell {
+        position: relative;
+        width: 8%;
+      }
+      &.time-grid-cell {
+        position: relative;
+        font-family: $FontMonacoMonospace;
+        width: 14%;
       }
     }
   }
