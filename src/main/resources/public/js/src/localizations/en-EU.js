@@ -1791,7 +1791,7 @@ define(['util'], function () {
             createUser: 'Add, register user',
             updateDefects: 'Update defect types',
             updateBts: 'Update BTS',
-            projectNameIn: 'Project Name in',
+            projectNameIn: 'Project Name in BTS',
             copyLink: 'Copy Link'
         },
 
