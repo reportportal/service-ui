@@ -28,7 +28,7 @@ $borderRadius100: 100px;
   border: none;
   margin: 0 -15px;
   position: relative;
-
+  overflow: hidden;
   .history-grid-names {
     float: left;
     .history-grid-table {
