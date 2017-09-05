@@ -95,7 +95,7 @@ define(function (require) {
                 }
             }))();
             this.listenTo(this.collectionItems, 'loading', this.resetRefreshItems);
-            this.listenTo(this.collectionItems, 'change:issue', this.updateInfoLine);
+            this.listenTo(this.collectionItems, 'change:issue', _.debounce(this.updateInfoLine.bind(this), 50));
             this.render();
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-refine-entities]', this.$el),

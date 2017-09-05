@@ -60,6 +60,9 @@ define(function (require) {
             if (!this.collection.models.length) {
                 this.$el.addClass('not-found');
             }
+            this.debounceCollectionLoad = _.debounce(function () {
+                self.collection.load();
+            }, 50);
             $(window)
                 .off('resize.launchItems')
                 .on('resize.launchItems', _.debounce(self.activateAccordions.bind(self), 100));
@@ -170,7 +173,7 @@ define(function (require) {
             });
             if (reload) {
                 this.listenToOnce(model, 'updated', function () {
-                    self.collection.load();
+                    self.debounceCollectionLoad();
                 });
             }
         },
