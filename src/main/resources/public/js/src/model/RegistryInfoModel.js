@@ -66,6 +66,15 @@ define(function (require) {
                     return {};
                 }
             },
+            loadExternalService: {
+                deps: ['authExtensions'],
+                get: function (authExtensions) {
+                    if (authExtensions.epam) {
+                        return true;
+                    }
+                    return false;
+                }
+            },
             bugTrackingExtensions: {
                 deps: ['services'],
                 get: function (services) {
