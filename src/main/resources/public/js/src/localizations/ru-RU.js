@@ -530,10 +530,13 @@ define(['util'], function () {
             passingRatePerLaunchChartDescription: 'показывает процентное соотношение между пройденными тестами и их общим количеством для последнего запуска.',
 
             passingRateSummaryChart: 'Процент пройденных тестов для выбранных запусков',
-            passingRateSummaryChartDescription: 'показывает процентное соотношение между пройденными тестами и их общим количеством для выбранных запусков.',
+            passingRateSummaryChartDescription: 'Показывает процентное соотношение между пройденными тестами и их общим количеством для выбранных запусков.',
 
             percentageOfInvestigationsChart: 'Процент исследований',
             percentageOfProductBugsChart: 'Процент дефектов продукта',
+
+            productStatus: 'Статус проекта',
+            productStatusDescription: 'Widget shows the configurable table that is representing launch statistics or group statistics by special filter',
 
             launchStatisticsChart: 'Статистика запусков',
             trendChart: 'Диаграмма тенденций',

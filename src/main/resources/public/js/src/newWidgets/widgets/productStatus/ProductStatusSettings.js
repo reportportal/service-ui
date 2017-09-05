@@ -28,9 +28,9 @@ define(function (require) {
     return {
         getConfig: function () {
             return {
-                gadget_name: 'Product status',
+                gadget_name: Localization.widgets.productStatus,
                 img: 'filter_results.png',
-                description: 'product status description',
+                description: Localization.widgets.productStatusDescription,
                 widget_type: 'clean_widget', // TODO remove after refactoring
                 noFilters: true // TODO remove after refactoring
             };
@@ -108,8 +108,7 @@ define(function (require) {
                         getValue: function (model, self) {
                             var latestMode = !!(model.getWidgetOptions().latest);
                             var curNum = 1;
-                            var items = self.model.get('items');
-                            if (items.length > 1 && items[1].value !== 'latest' && latestMode) {
+                            if (!latestMode) {
                                 curNum = 0;
                             }
                             return curNum;
