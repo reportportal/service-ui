@@ -206,6 +206,17 @@ define(function (require) {
                         }));
                     });
                     break;
+                case 'no_defect':
+                    answer.text = '';
+                    afterFuncs.push(function () {
+                        this.rendererViews.push(new LaunchSuiteDefectsView({
+                            model: this.launchModel,
+                            el: $('[data-js-cell-no_defect]', this.$el),
+                            type: 'no_defect',
+                            clickable: false
+                        }));
+                    });
+                    break;
                 case 'to_investigate':
                     answer.text = '<span>' + launchData.statistics.defects.to_investigate.total + '</span>';
                     break;
