@@ -31,6 +31,7 @@ define(function (require) {
     var LaunchItemMenuView = require('launches/launchLevel/LaunchItemMenuView');
     var LaunchSuiteDefectsView = require('launches/common/LaunchSuiteDefectsView');
     var ItemDurationView = require('launches/common/ItemDurationView');
+    var ItemStartTimeView = require('launches/common/ItemStartTimeView');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
     var CommonItemView = require('launches/common/CommonItemView');
@@ -44,7 +45,7 @@ define(function (require) {
         events: {
             'click [data-js-name-link]': 'onClickName', // common method
             'click [data-js-launch-menu]': 'showItemMenu',
-            'click [data-js-time-format]': 'toggleStartTimeView',
+            // 'click [data-js-time-format]': 'toggleStartTimeView',
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-owner-name]': 'onClickOwnerName',
@@ -62,7 +63,7 @@ define(function (require) {
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
             '[data-js-time-from-now]': 'text: startFromNow',
-            '[data-js-time-exact]': 'text: startFormat',
+            // '[data-js-time-exact]': 'text: startFormat',
             '[data-js-select-item]': 'checked: select, attr: {disabled: launch_isProcessing}',
             '[data-js-tags-container]': 'sortTags: tags',
             '[data-js-statistics-total]': 'text: executionTotal, attr: {href: executionTotalLink}, classes: {"not-link": not(executionTotalLink)}',
@@ -238,6 +239,7 @@ define(function (require) {
         render: function () {
             this.$el.html(Util.templates(this.template, { type: this.model.get('type') }));
             this.renderDuration();
+            this.renderStartTime();
             this.renderDefects();
 
             // this.renderStatistics();
@@ -250,15 +252,22 @@ define(function (require) {
                 self.$el.addClass('hide-highlight');
             });
         },
-        toggleStartTimeView: function () {
-            this.model.collection.trigger('change:time:format');
-        },
+        // toggleStartTimeView: function () {
+        //     this.model.collection.trigger('change:time:format');
+        // },
         renderDuration: function () {
             this.duration && this.duration.destroy();
             this.duration = new ItemDurationView({
                 model: this.model,
                 el: $('[data-js-item-status]', this.$el)
             });
+        },
+        renderStartTime: function () {
+            this.startTime && this.startTime.destroy();
+            this.startTime = new ItemStartTimeView({
+                model: this.model
+            });
+            $('[data-js-start-time-container]', this.$el).html(this.startTime.$el);
         },
         renderDefects: function () {
             this.productBug && this.productBug.destroy();
@@ -361,6 +370,7 @@ define(function (require) {
             this.markdownViewer && this.markdownViewer.destroy();
             this.menu && this.menu.destroy();
             this.duration && this.duration.destroy();
+            this.startTime && this.startTime.destroy();
             _.each(this.statistics, function (v) {
                 if (_.isFunction(v.destroy)) {
                     v.destroy();

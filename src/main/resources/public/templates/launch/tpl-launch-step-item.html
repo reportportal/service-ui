@@ -29,12 +29,7 @@
         </div>
     </div>
     <div class="grid-cell status-grid-cell"><span class="step-status" data-js-status></span></div>
-    <div class="grid-cell time-grid-cell">
-        <div data-js-time-format class="pr-grid-show-time">
-            <span class="hidden-sm hidden-md hidden-lg"><b><%= data.text.launches.prefixStartTime %></b></span>
-            <span class="from-now" data-js-time-from-now></span>
-            <span class="exact-time" data-js-time-exact></span>
-        </div>
+    <div class="grid-cell time-grid-cell" data-js-start-time-container>
     </div>
     <!--<div class="grid-cell status-grid-cell" data-js-item-status></div>-->
     <% if(!data.noIssue){ %>

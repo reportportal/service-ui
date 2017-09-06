@@ -65,11 +65,13 @@ define(function (require) {
                     options: {
                         label: 'Basic column',
                         items: [
-                            { name: 'Status', value: 'status' },
-                            { name: 'Product Bug', value: 'product_bug' },
-                            { name: 'Auto Bug', value: 'auto_bug' },
-                            { name: 'System Issue', value: 'system_issue' },
-                            { name: 'To Investigate', value: 'to_investigate' },
+                            { name: Localization.launchesHeaders.start_time, value: 'start_time' },
+                            { name: Localization.launchesHeaders.status, value: 'status' },
+                            { name: Localization.launchesHeaders.product_bug, value: 'product_bug' },
+                            { name: Localization.launchesHeaders.automation_bug, value: 'auto_bug' },
+                            { name: Localization.launchesHeaders.system_issue, value: 'system_issue' },
+                            { name: Localization.launchesHeaders.no_defect, value: 'no_defect' },
+                            { name: Localization.launchesHeaders.to_investigate, value: 'to_investigate' }
                         ],
                         multiple: true,
                         getValue: function (model, self) {
@@ -91,7 +93,10 @@ define(function (require) {
                             var widgetOptions = model.getWidgetOptions();
                             var cloneValue = _.clone(value);
                             var result = [];
-                            if (value[0] === 'status') {
+                            if (cloneValue[0] === 'start_time') {
+                                result = result.concat(cloneValue.shift());
+                            }
+                            if (cloneValue[0] === 'status') {
                                 result = result.concat(cloneValue.shift());
                             }
                             result = result.concat(staticColumns);

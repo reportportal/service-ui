@@ -28,6 +28,7 @@ define(function (require) {
     var LaunchSuiteDefectsView = require('launches/common/LaunchSuiteDefectsView');
     var ProductStatusLaunchName = require('newWidgets/widgets/productStatus/ProductStatusLaunchNameView');
     var ProductStatusFilterName = require('newWidgets/widgets/productStatus/ProductStatusFilterNameView');
+    var ItemStartTimeView = require('launches/common/ItemStartTimeView');
     var Util = require('util');
     var Localization = require('localization');
 
@@ -145,6 +146,16 @@ define(function (require) {
                             model: this.launchModel,
                             el: $('[data-js-cell-filter_name]', this.$el)
                         }));
+                    });
+                    break;
+                case 'start_time':
+                    answer.text = '';
+                    afterFuncs.push(function () {
+                        var view = new ItemStartTimeView({
+                            model: this.launchModel
+                        });
+                        this.rendererViews.push(view);
+                        $('[data-js-cell-start_time]', this.$el).html(view.$el);
                     });
                     break;
                 case 'status':

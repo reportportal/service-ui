@@ -30,6 +30,7 @@ define(function (require) {
     var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
+    var ItemStartTimeView = require('launches/common/ItemStartTimeView');
     var CommonItemView = require('launches/common/CommonItemView');
 
     var config = App.getInstance();
@@ -39,7 +40,7 @@ define(function (require) {
         className: 'row rp-table-row',
         events: {
             'click [data-js-name-link]': 'onClickName', // common method
-            'click [data-js-time-format]': 'toggleStartTimeView',
+            // 'click [data-js-time-format]': 'toggleStartTimeView',
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-toggle-open]': 'onClickOpen',
@@ -54,7 +55,7 @@ define(function (require) {
             '[data-js-tags-container]': 'sortTags: tags',
             '[data-js-method-type]': 'text: showMethodType',
             '[data-js-time-from-now]': 'text: startFromNow',
-            '[data-js-time-exact]': 'text: startFormat',
+            // '[data-js-time-exact]': 'text: startFormat',
             ':el': 'classes: {failed: highlightedFailed, "select-state": select, "collapse-method": validateForCollapsed}',
             '[data-js-select-item]': 'checked:select, attr: {disabled: launch_isProcessing}'
         },
@@ -117,6 +118,7 @@ define(function (require) {
                 isCollapsedMethod: this.isCollapsedMethod()
             }));
             this.renderDuration();
+            this.renderStartTime();
             if (this.hasIssue() && !this.noIssue) {
                 this.renderIssue();
             }
@@ -128,6 +130,13 @@ define(function (require) {
                 self.$el.addClass('hide-highlight');
             });
         },
+        renderStartTime: function () {
+            this.startTime && this.startTime.destroy();
+            this.startTime = new ItemStartTimeView({
+                model: this.model
+            });
+            $('[data-js-start-time-container]', this.$el).html(this.startTime.$el);
+        },
         renderDuration: function () {
             this.duration && this.duration.destroy();
             this.duration = new ItemDurationView({
@@ -135,9 +144,9 @@ define(function (require) {
                 el: $('[data-js-item-status]', this.$el)
             });
         },
-        toggleStartTimeView: function () {
-            this.model.collection.trigger('change:time:format');
-        },
+        // toggleStartTimeView: function () {
+        //     this.model.collection.trigger('change:time:format');
+        // },
         isCollapsedMethod: function () {
             return this.model.get('type') !== 'STEP' && this.model.get('status') !== 'FAILED';
         },
@@ -181,6 +190,7 @@ define(function (require) {
         },
         onDestroy: function () {
             this.issueView && this.issueView.destroy();
+            this.duration && this.duration.destroy();
             this.duration && this.duration.destroy();
             this.markdownViewer && this.markdownViewer.destroy();
             this.$el.html('');

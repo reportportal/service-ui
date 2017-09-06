@@ -42,9 +42,9 @@ define(function (require) {
             this.userStorage = new SingletonUserStorage();
             this.listenTo(this.collection, 'reset', this.renderItems);
             this.listenTo(this.collection, 'loading', this.onLoadingCollection);
-            this.listenTo(this.collection, 'change:time:format', this.onChangeTimeFormat);
+            // this.listenTo(this.collection, 'change:time:format', this.onChangeTimeFormat);
             this.listenTo(this.collection, 'change', this.checkForFiltersAndReloadCollection);
-            this.onChangeTimeFormat(true);
+            // this.onChangeTimeFormat(true);
             this.render();
             this.renderedItems = [];
             this.pagingModel = new Backbone.Model();
@@ -73,22 +73,22 @@ define(function (require) {
                 activeItem.trigger('scrollToAndHighlight');
             }
         },
-        onChangeTimeFormat: function (silent) {
-            var timeFormat = this.userStorage.get('startTimeFormat');
-            if (!silent) {
-                if (timeFormat === 'exact') {
-                    timeFormat = '';
-                } else {
-                    timeFormat = 'exact';
-                }
-                this.userStorage.set('startTimeFormat', timeFormat);
-            }
-            if (timeFormat) {
-                this.$el.addClass('exact-driven');
-            } else {
-                this.$el.removeClass('exact-driven');
-            }
-        },
+        // onChangeTimeFormat: function (silent) {
+        //     var timeFormat = this.userStorage.get('startTimeFormat');
+        //     if (!silent) {
+        //         if (timeFormat === 'exact') {
+        //             timeFormat = '';
+        //         } else {
+        //             timeFormat = 'exact';
+        //         }
+        //         this.userStorage.set('startTimeFormat', timeFormat);
+        //     }
+        //     if (timeFormat) {
+        //         this.$el.addClass('exact-driven');
+        //     } else {
+        //         this.$el.removeClass('exact-driven');
+        //     }
+        // },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
