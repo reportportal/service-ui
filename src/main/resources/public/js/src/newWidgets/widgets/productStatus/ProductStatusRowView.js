@@ -40,11 +40,15 @@ define(function (require) {
 
         initialize: function (headerData, cellData) {
             this.rendererViews = [];
+            this.clickable = true;
             if (cellData.type === 'filter') {
                 this.renderFilter(headerData, cellData.data);
             } else if (cellData.type === 'total') {
                 this.renderTotal(headerData, cellData.data);
             } else {
+                if (cellData.type === 'distinct_launch') {
+                    this.clickable = false;
+                }
                 this.renderLaunch(headerData, cellData.data);
             }
         },
@@ -180,7 +184,7 @@ define(function (require) {
                             model: this.launchModel,
                             el: $('[data-js-cell-product_bug]', this.$el),
                             type: 'product_bug',
-                            clickable: false
+                            clickable: this.clickable
                         }));
                     });
                     break;
@@ -191,7 +195,7 @@ define(function (require) {
                             model: this.launchModel,
                             el: $('[data-js-cell-auto_bug]', this.$el),
                             type: 'automation_bug',
-                            clickable: false
+                            clickable: this.clickable
                         }));
                     });
                     break;
@@ -202,7 +206,7 @@ define(function (require) {
                             model: this.launchModel,
                             el: $('[data-js-cell-system_issue]', this.$el),
                             type: 'system_issue',
-                            clickable: false
+                            clickable: this.clickable
                         }));
                     });
                     break;
@@ -213,7 +217,7 @@ define(function (require) {
                             model: this.launchModel,
                             el: $('[data-js-cell-no_defect]', this.$el),
                             type: 'no_defect',
-                            clickable: false
+                            clickable: this.clickable
                         }));
                     });
                     break;
@@ -222,10 +226,11 @@ define(function (require) {
                     break;
                 case 'passing_rate':
                     var count = 100;
+                    answer.text = '';
                     if (parseInt(launchData.statistics.executions.total, 10) !== 0) {
                         count = parseInt((launchData.statistics.executions.passed / launchData.statistics.executions.total) * 100, 10);
+                        answer.text = count + '%';
                     }
-                    answer.text = count + '%';
                     if (count < 100) {
                         answer.text = '<span class="less-100">' + answer.text + '</span>';
                     }

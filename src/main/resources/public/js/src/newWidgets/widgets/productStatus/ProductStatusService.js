@@ -77,7 +77,7 @@ define(function (require) {
             }
             var params = [];
             params.push('page.page=1');
-            params.push('page.size=50');
+            params.push('page.size=300');
             params = params.concat(filterModel.getOptions());
 
             path += '?' + params.join('&');

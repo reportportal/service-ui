@@ -24,10 +24,10 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
-    var ItemDurationView = require('launches/common/ItemDurationView');
+    // var ItemDurationView = require('launches/common/ItemDurationView');
     var Util = require('util');
-    var SingletonAppModel = require('model/SingletonAppModel');
-    var Localization = require('localization');
+    // var SingletonAppModel = require('model/SingletonAppModel');
+    // var Localization = require('localization');
 
     var ProductStatusFilterNameView = Epoxy.View.extend({
         template: 'tpl-product-status-filter-name',
@@ -39,18 +39,18 @@ define(function (require) {
 
         initialize: function () {
             this.render();
-            this.appModel = new SingletonAppModel();
-            this.duration && this.duration.destroy();
-            this.duration = new ItemDurationView({
-                model: this.model,
-                el: $('[data-js-item-status]', this.$el)
-            });
+            // this.appModel = new SingletonAppModel();
+            // this.duration && this.duration.destroy();
+            // this.duration = new ItemDurationView({
+            //     model: this.model,
+            //     el: $('[data-js-item-status]', this.$el)
+            // });
         },
         render: function () {
             this.$el.html(Util.templates(this.template, this.model.get('launchesStatus')));
         },
         onDestroy: function () {
-            this.duration && this.duration.destroy();
+            // this.duration && this.duration.destroy();
         }
     });
 

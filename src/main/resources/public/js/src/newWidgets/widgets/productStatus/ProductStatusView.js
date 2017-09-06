@@ -103,16 +103,17 @@ define(function (require) {
         },
         renderRows: function (headerData, rowsData) {
             var widgetOptions = this.model.getWidgetOptions();
-            var result = [];
             var self = this;
             var preRowsData = [];
             var allLaunches = [];
             _.each(rowsData, function (rowData) {
                 if (widgetOptions.distinctLaunches) {
-                    preRowsData.push({
-                        type: 'distinct_launch',
-                        data: self.getTotalLaunch(rowData.filterData, rowData.launches)
-                    });
+                    if (rowData.launches.length) {
+                        preRowsData.push({
+                            type: 'distinct_launch',
+                            data: self.getTotalLaunch(rowData.filterData, rowData.launches)
+                        });
+                    }
                 } else {
                     preRowsData.push({
                         type: 'filter',
@@ -174,7 +175,7 @@ define(function (require) {
             var result = {
                 name: filterData.name,
                 launchesStatus: [],
-                start_time: launches[0].start_time,
+                start_time: (launches[0] && launches[0].start_time) || 0,
                 end_time: 0,
                 status: 'PASSED',
                 tags: [],
