@@ -25,6 +25,8 @@ define(function (require) {
     var _ = require('underscore');
     var Localization = require('localization');
 
+    var staticColumns = ['total', 'passed', 'failed', 'skipped'];
+
     return {
         getConfig: function () {
             return {
@@ -64,21 +66,22 @@ define(function (require) {
                         label: 'Basic column',
                         items: [
                             { name: 'Status', value: 'status' },
-                            { name: 'Total', value: 'total' },
-                            { name: 'Passed', value: 'passed' },
-                            { name: 'Failed', value: 'failed' },
-                            { name: 'Skipped', value: 'skipped' },
                             { name: 'Product Bug', value: 'product_bug' },
                             { name: 'Auto Bug', value: 'auto_bug' },
                             { name: 'System Issue', value: 'system_issue' },
                             { name: 'To Investigate', value: 'to_investigate' },
-                            { name: 'Passing Rate', value: 'passing_rate' }
                         ],
                         multiple: true,
                         getValue: function (model, self) {
                             var widgetOptions = model.getWidgetOptions();
+                            var answer = [];
                             if (widgetOptions.basicColumns) {
-                                return widgetOptions.basicColumns;
+                                _.each(widgetOptions.basicColumns, function (item) {
+                                    if (!_.contains(staticColumns, item) && item !== 'passing_rate') {
+                                        answer.push(item);
+                                    }
+                                });
+                                return answer;
                             }
                             return _.map(self.model.get('items'), function (item) {
                                 return item.value;
@@ -86,7 +89,15 @@ define(function (require) {
                         },
                         setValue: function (value, model) {
                             var widgetOptions = model.getWidgetOptions();
-                            widgetOptions.basicColumns = value;
+                            var cloneValue = _.clone(value);
+                            var result = [];
+                            if (value[0] === 'status') {
+                                result = result.concat(cloneValue.shift());
+                            }
+                            result = result.concat(staticColumns);
+                            result = result.concat(cloneValue);
+                            result.push('passing_rate');
+                            widgetOptions.basicColumns = result;
                             model.setWidgetOptions(widgetOptions);
                         }
                     }
