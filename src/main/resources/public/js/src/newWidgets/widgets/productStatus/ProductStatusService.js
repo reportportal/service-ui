@@ -72,7 +72,7 @@ define(function (require) {
         getLaunchesByFilter: function (filterModel, widgetModel) {
             var path = Urls.getGridUrl('launch', false);
             var widgetOptions = widgetModel.getWidgetOptions();
-            if (widgetOptions.latest) {
+            if (widgetOptions.latest && widgetOptions.latest.length) {
                 path = Urls.getGridUrl('launch/latest');
             }
             var params = [];

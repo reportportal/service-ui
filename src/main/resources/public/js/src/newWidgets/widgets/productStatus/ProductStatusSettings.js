@@ -120,14 +120,23 @@ define(function (require) {
                             { name: 'All launches', value: 'all' },
                             { name: 'Latest launches', value: 'latest' }
                         ],
-                        action: 'switch_latest_mode',
                         getValue: function (model, self) {
-                            var latestMode = !!(model.getWidgetOptions().latest);
-                            var curNum = 1;
-                            if (!latestMode) {
-                                curNum = 0;
+                            if (!model.getWidgetOptions().latest) {
+                                return 'latest';
                             }
-                            return curNum;
+                            if (model.getWidgetOptions().latest[0]) {
+                                return 'latest';
+                            }
+                            return 'all';
+                        },
+                        setValue: function (value, model) {
+                            var widgetOptions = model.getWidgetOptions();
+                            if (value === 'latest') {
+                                widgetOptions.latest = [true];
+                            } else {
+                                widgetOptions.latest = [];
+                            }
+                            model.setWidgetOptions(widgetOptions);
                         }
                     }
                 },

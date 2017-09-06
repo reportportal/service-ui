@@ -33,8 +33,11 @@
     th, td {
       padding-right: 15px;
     }
-    th:first-child {
-      padding-left: 20px;
+    th {
+      font-weight: normal;
+      &:first-child {
+        padding-left: 20px;
+      }
     }
     td {
       padding-top: 10px;
