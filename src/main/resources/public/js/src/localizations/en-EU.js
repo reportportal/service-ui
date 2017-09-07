@@ -477,7 +477,7 @@ define(['util'], function () {
             passingRateSummaryChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
 
             productStatus: 'Product status',
-            productStatusDescription: 'Widget shows the configurable table that is representing launch statistics or group statistics by special filter',
+            productStatusDescription: 'shows the configurable table that is representing launch statistics or group statistics by special filter',
 
             percentageOfInvestigationsChart: 'Percentage of investigations',
             percentageOfProductBugsChart: 'Percentage of product bugs',
