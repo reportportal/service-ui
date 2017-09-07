@@ -26,6 +26,9 @@ define(function (require) {
     var Urls = require('dataUrlResolver');
     var Service = require('coreService');
     var FilterModel = require('filters/FilterModel');
+    var App = require('app');
+
+    var config = App.getInstance();
 
     return {
         getAllData: function (widgetModel) {
@@ -41,7 +44,13 @@ define(function (require) {
                         filterModel.parseServerData(filterData);
                         self.getLaunchesByFilter(filterModel, widgetModel)
                             .done(function (response) {
-                                result[filterData.id] = response.content;
+                                var finishedLaunches = [];
+                                _.each(response.content, function (item) {
+                                    if (item.status !== config.launchStatus.inProgress) {
+                                        finishedLaunches.push(item);
+                                    }
+                                });
+                                result[filterData.id] = finishedLaunches;
                                 filterModel.destroy();
                                 currentResolveAsync += 1;
                                 if (currentResolveAsync >= filtersData.length) {
