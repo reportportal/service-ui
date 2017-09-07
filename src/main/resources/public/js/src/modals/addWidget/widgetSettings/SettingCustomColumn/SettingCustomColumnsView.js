@@ -107,6 +107,9 @@ define(function (require) {
         },
         renderItems: function () {
             var self = this;
+            if(!this.collection.models.length) {
+                this.collection.add({});
+            }
             this.destroyItems();
             _.each(this.collection.models, function (model, number) {
                 var view = new SettingCustomColumnView({ model: model, number: number + 1 });

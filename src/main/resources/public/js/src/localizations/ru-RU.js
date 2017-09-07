@@ -568,6 +568,8 @@ define(['util'], function () {
             latestLaunches: 'Последние запуски',
             allLaunches: 'Все запуски',
 
+            columnName: 'Имя колонки',
+            tagPattern: 'Паттерн тега',
             addCustomColumn: 'Добавить колонку',
             groupLaunchesByFilter: 'Групировать запуски по фильтру'
         },
