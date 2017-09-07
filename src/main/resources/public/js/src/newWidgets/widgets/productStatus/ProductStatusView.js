@@ -173,6 +173,7 @@ define(function (require) {
         },
         getTotalLaunch: function (filterData, launches) {
             var result = {
+                id: filterData.id,
                 name: filterData.name,
                 launchesStatus: [],
                 start_time: (launches[0] && launches[0].start_time) || 0,

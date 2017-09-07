@@ -46,7 +46,9 @@
         padding-left: 20px;
       }
     }
-
+    a {
+      color: $COLOR--windows-blue;
+    }
     .type-cell-filter {
       height: 40px;
       color: $COLOR--gray-47;

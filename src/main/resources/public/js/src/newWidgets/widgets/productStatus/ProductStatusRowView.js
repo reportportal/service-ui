@@ -113,6 +113,24 @@ define(function (require) {
             });
             this.$el.html(Util.templates(this.template, renderData));
         },
+        allCasesUrl: function (type) {
+            var url = this.launchModel.get('url');
+            var statusFilter = '';
+
+            switch (type) {
+            case 'total':
+                statusFilter = '&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED&filter.in.type=STEP';
+                break;
+            case 'passed':
+            case 'failed':
+            case 'skipped':
+                statusFilter = '&filter.in.status=' + type.toUpperCase() + '&filter.in.type=STEP';
+                break;
+            default:
+                break;
+            }
+            return url + '?filter.eq.has_childs=false' + statusFilter;
+        },
         renderLaunch: function (headerData, data) {
             var self = this;
             var afterFuncs = [];
@@ -128,6 +146,7 @@ define(function (require) {
         },
         getLaunchDataByColumn: function (launchData, column, afterFuncs) {
             var columnKey = column.text;
+            var self = this;
             var answer = {
                 type: columnKey,
                 text: ''
@@ -166,16 +185,36 @@ define(function (require) {
                     answer.text = launchData.status;
                     break;
                 case 'total':
-                    answer.text = launchData.statistics.executions.total;
+                    if (this.clickable) {
+                        answer.text = '<a href="' + self.allCasesUrl('total') + '">' +
+                            launchData.statistics.executions.total + '</a>';
+                    } else {
+                        answer.text = launchData.statistics.executions.total;
+                    }
                     break;
                 case 'passed':
-                    answer.text = launchData.statistics.executions.passed;
+                    if (this.clickable) {
+                        answer.text = '<a href="' + self.allCasesUrl('passed') + '">' +
+                        launchData.statistics.executions.passed + '</a>';
+                    } else {
+                        answer.text = launchData.statistics.executions.passed;
+                    }
                     break;
                 case 'failed':
-                    answer.text = launchData.statistics.executions.failed;
+                    if (this.clickable) {
+                        answer.text = '<a href="' + self.allCasesUrl('failed') + '">' +
+                        launchData.statistics.executions.failed + '</a>';
+                    } else {
+                        answer.text = launchData.statistics.executions.failed;
+                    }
                     break;
                 case 'skipped':
-                    answer.text = launchData.statistics.executions.skipped;
+                    if (this.clickable) {
+                        answer.text = '<a href="' + self.allCasesUrl('skipped') + '">' +
+                        launchData.statistics.executions.skipped + '</a>';
+                    } else {
+                        answer.text = launchData.statistics.executions.skipped;
+                    }
                     break;
                 case 'product_bug':
                     answer.text = '';

@@ -73,12 +73,12 @@ define(function (require, exports, module) {
                 deps: ['status'],
                 get: function (status) {
                     switch (status) {
-                        case 'PASSED': return Localization.testStatus.PASSED;
-                        case 'FAILED': return Localization.testStatus.FAILED;
-                        case 'STOPPED': return Localization.testStatus.STOPPED;
-                        case 'SKIPPED': return Localization.testStatus.SKIPPED;
-                        case 'INTERRUPTED': return Localization.testStatus.INTERRUPTED;
-                        case 'IN PROGRESS': return Localization.testStatus.IN_PROGRESS;
+                    case 'PASSED': return Localization.testStatus.PASSED;
+                    case 'FAILED': return Localization.testStatus.FAILED;
+                    case 'STOPPED': return Localization.testStatus.STOPPED;
+                    case 'SKIPPED': return Localization.testStatus.SKIPPED;
+                    case 'INTERRUPTED': return Localization.testStatus.INTERRUPTED;
+                    case 'IN PROGRESS': return Localization.testStatus.IN_PROGRESS;
                     }
                 }
             },
@@ -125,6 +125,9 @@ define(function (require, exports, module) {
                     var index3 = window.location.hash.lastIndexOf('?');
                     var lastIndex = (index2 < index1) ? index3 : index2;
                     var baseUrl = window.location.hash.substr(0, lastIndex);
+                    if (!baseUrl) {
+                        baseUrl = '#' + this.appModel.get('projectId') + '/launches/all';
+                    }
                     if (hasChilds) {
                         return baseUrl + partUrl + '/' + id;
                     }

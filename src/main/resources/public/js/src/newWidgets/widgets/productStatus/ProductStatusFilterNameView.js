@@ -26,7 +26,7 @@ define(function (require) {
     var Epoxy = require('backbone-epoxy');
     // var ItemDurationView = require('launches/common/ItemDurationView');
     var Util = require('util');
-    // var SingletonAppModel = require('model/SingletonAppModel');
+    var SingletonAppModel = require('model/SingletonAppModel');
     // var Localization = require('localization');
 
     var ProductStatusFilterNameView = Epoxy.View.extend({
@@ -35,11 +35,20 @@ define(function (require) {
 
         bindings: {
             '[data-js-name]': 'text: name',
+            '[data-js-name-link]': 'attr: {href: linkToFilter}'
+        },
+        computeds: {
+            linkToFilter: {
+                deps: ['id'],
+                get: function (id) {
+                    return '#' + this.appModel.get('projectId') + '/launches/' + id;
+                }
+            }
         },
 
         initialize: function () {
             this.render();
-            // this.appModel = new SingletonAppModel();
+            this.appModel = new SingletonAppModel();
             // this.duration && this.duration.destroy();
             // this.duration = new ItemDurationView({
             //     model: this.model,
