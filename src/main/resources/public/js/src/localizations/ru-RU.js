@@ -1312,7 +1312,7 @@ define(['util'], function () {
             toInvestigate: 'Требуется анализ',
             automationBug: 'Ошибка теста',
 
-            addSubType: 'Добавить Тип дефекта',
+            addSubType: 'Добавить подтип',
             addSubTypeShort: 'Добавить',
             canBeAdded: 'подтипов можно добавить',
             limitReached: 'Все 10 подтипов уже добавлены',
