@@ -11,20 +11,21 @@
         </div>
     </div>
     <div class="history-grid-items" style="width: <%= (100 - data.nameWidth) %>%">
-        <div data-js-history-scroll>
-            <div class="history-grid-table" data-js-history-items-cells>
-                <div class="history-grid-thead">
-                    <% _.forEach(data.launches, function(launch){ %>
-                    <div class="history-col <% if(launch.launchStatus == 'IN_PROGRESS'){ %>in-progress<% } %>">
-                        <div class="history-grid-th">
+        <div class="history-grid-table" data-js-history-items-cells>
+            <div class="history-grid-thead">
+                <% _.forEach(data.launches, function(launch){ %>
+                <div class="history-col <% if(launch.launchStatus == 'IN_PROGRESS'){ %>in-progress<% } %>">
+                    <div class="history-grid-th">
                                 <span class="history-grid-th-name">
                                     <%= data.text.launches.launchHash %><%= launch.launchNumber %>
                                 </span>
-                        </div>
                     </div>
-                    <% }); %>
                 </div>
+                <% }); %>
             </div>
+        </div>
+        <div data-js-history-scroll>
+
         </div>
     </div>
 </div>

@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -28,11 +28,9 @@ define(function (require, exports, module) {
     var Localization = require('localization');
     var Service = require('coreService');
     var HistoryTableView = require('launches/historyGrid/HistoryTableView');
-    var FilterModel = require('filters/FilterModel');
     var Filters = require('filterEntities/FilterEntities');
-    //var SingletonUserStorage = require('storage/SingletonUserStorage');
+    var _ = require('underscore');
     var App = require('app');
-    //var StickyHeader = require('core/StickyHeader');
 
     var config = App.getInstance();
 
@@ -40,15 +38,15 @@ define(function (require, exports, module) {
         template: 'tpl-launch-history-body',
 
         events: {
-            'click [data-js-load-more]': 'onLoadMore',
+            'click [data-js-load-more]': 'onLoadMore'
         },
-        initialize: function(options) {
+        initialize: function (options) {
             this.filterModel = options.filterModel;
             this.collectionItems = options.collectionItems;
             this.conrol = options.control;
             this.depth = '10';
             this.qty = config.historyItemsToLoad;
-            this.ids = _.map(this.collectionItems.models, function(i){ return i.get('id');});
+            this.ids = _.map(this.collectionItems.models, function (i) { return i.get('id'); });
             this.resetGrid();
             this.depthFilterModel = new Filters.EntityDropDownModel({
                 name: Localization.filterNameById.history_depth,
@@ -56,13 +54,13 @@ define(function (require, exports, module) {
                 noConditions: true,
                 required: true,
                 options: [
-                    {value: '3', name: '3'},
-                    {value: '5', name: '5'},
-                    {value: '10', name: '10'},
-                    {value: '15', name: '15'},
-                    {value: '20', name: '20'},
-                    {value: '25', name: '25'},
-                    {value: '30', name: '30'}
+                    { value: '3', name: '3' },
+                    { value: '5', name: '5' },
+                    { value: '10', name: '10' },
+                    { value: '15', name: '15' },
+                    { value: '20', name: '20' },
+                    { value: '25', name: '25' },
+                    { value: '30', name: '30' }
                 ],
                 value: this.depth
             });
@@ -71,11 +69,11 @@ define(function (require, exports, module) {
             this.render();
             this.load();
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
-            $('[data-js-depth-filter]', this.$el).html((new this.depthFilterModel.view({model: this.depthFilterModel})).$el);
+            $('[data-js-depth-filter]', this.$el).html((new this.depthFilterModel.view({ model: this.depthFilterModel })).$el);
         },
-        updateHistory: function(){
+        updateHistory: function () {
             this.table = new HistoryTableView({
                 el: $('[data-js-history-table]', this.$el),
                 launches: this.launches,
@@ -83,7 +81,7 @@ define(function (require, exports, module) {
                 collectionItems: this.collectionItems
             });
         },
-        load: function(){
+        load: function () {
             this.table && this.table.destroy();
             this.toggleIsLoad('show');
             Service.getHistoryData(this.getItemsForLoad(), this.depth)
@@ -97,75 +95,77 @@ define(function (require, exports, module) {
                     Util.ajaxFailMessenger(error, 'loadHistory');
                 });
         },
-        parseHistoryItems: function(data){
-            var launches = [],
-                items = [];
+        parseHistoryItems: function (data) {
+            var launches = [];
+            var items = [];
             _.forEach(data, function (launch) {
                 var key = launch.launchNumber;
-                _.forEach(launch.resources, function(item){
+                launch.id = launch.launchId;
+                _.forEach(launch.resources, function (item) {
                     var newItem = {
-                        id: item.id, name: item.name, description: item.description || '' , tags: item.tags, launches: {}
+                        id: item.id, name: item.name, description: item.description || '', tags: item.tags, launches: {}
                     };
                     newItem.launches[key] = [item];
                     if (_.isEmpty(items)) {
                         items.push(newItem);
                     } else {
                         var oneName = _.find(items, function (obj) {
-                            var name = obj.name === newItem.name,
-                                description = obj.description === newItem.description,
-                                tags = _.size(obj.tags) === _.size(newItem.tags) && _.every(obj.tags, function(i){return _.contains(newItem.tags, i)});
+                            var name = obj.name === newItem.name;
+                            var description = obj.description === newItem.description;
+                            var tags = _.size(obj.tags) === _.size(newItem.tags) && _.every(obj.tags,
+                                    function (i) {
+                                        return _.contains(newItem.tags, i);
+                                    });
                             return (name && description && tags);
                         });
                         if (!oneName) {
                             items.push(newItem);
+                        } else if (oneName.launches[key]) {
+                            oneName.launches[key].push(item);
                         } else {
-                            if (oneName.launches[key]) {
-                                oneName.launches[key].push(item);
-                            } else {
-                                oneName.launches[key] = [item];
-                            }
+                            oneName.launches[key] = [item];
                         }
                     }
                 });
-                delete launch.resources
+                delete launch.resources;
                 launches.push(launch);
             });
-            launches.sort(function(a, b){ return parseInt(a.startTime) - parseInt(b.startTime); });
-            this.launches.add(launches, {merge: true});
-            this.items.add(items, {merge: true});
+            launches.sort(function (a, b) { return parseInt(a.startTime) - parseInt(b.startTime); });
+            this.launches.add(launches, { merge: true });
+            this.items.add(items, { merge: true });
         },
-        onLoadMore: function(e){
-            if(!$(e.currentTarget).hasClass('disabled')){
+        onLoadMore: function (e) {
+            if (!$(e.currentTarget).hasClass('disabled')) {
                 e.preventDefault();
                 this.load();
             }
         },
-        resetGrid: function(){
+        resetGrid: function () {
             this.launches = new Backbone.Collection();
             this.items = new Backbone.Collection();
             this.loaded = 0;
             this.toLoadIds = [];
         },
-        onRefreshGrid: function(){
+        onRefreshGrid: function () {
             this.resetGrid();
             this.load();
         },
-        onChangeDepth: function(){
+        onChangeDepth: function () {
             var info = this.depthFilterModel.getInfo();
             this.depth = info.value;
             config.trackingDispatcher.trackEventNumber(132);
             this.onRefreshGrid();
         },
-        getItemsForLoad: function(){
+        getItemsForLoad: function () {
             this.toLoadIds = this.ids.slice(this.loaded, this.loaded + this.qty);
             return this.toLoadIds;
         },
-        toggleIsLoad: function(action){
-            var $loadBtn = $('[data-js-load-more]', this.$el),
-                loader = $('[data-js-history-loader]', this.$el);
-            $loadBtn[(action == 'hide' ? 'remove' : 'add') + 'Class']('disabled');
+        toggleIsLoad: function (action) {
+            var $loadBtn = $('[data-js-load-more]', this.$el);
+            var loader = $('[data-js-history-loader]', this.$el);
+            $loadBtn[(action === 'hide' ? 'remove' : 'add') + 'Class']('disabled');
             loader[action]();
-            if(this.loaded >= this.ids.length){
+            if (this.loaded >= this.ids.length) {
                 $loadBtn.hide();
             }
         },
