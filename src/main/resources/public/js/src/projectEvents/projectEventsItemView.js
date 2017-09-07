@@ -59,13 +59,25 @@ define(function (require) {
             },
             valueString: {
                 set: function ($element, values) {
+                    var link;
                     var isOld = $element.hasClass('old-val-grid-cell');
                     var $wrapper = $(document.createElement('div')).addClass('values-wrapper');
+
                     _.each(values, function (value) {
+                        if (this.view.model.get('actionType') === 'post_issue' || this.view.model.get('actionType') === 'attach_issue') {
+                            _.each(value, function (val, key) {
+                                var linkParts = val.split(':');
+                                if (key === 'newValue' || key === 'oldValue') {
+                                    link = '<a target="_blank" href="' + linkParts[1] + ':' + linkParts[2] + '">' + linkParts[0] + '</a>';
+                                }
+                            });
+                        }
                         var $valueView = $(document.createElement('div')).addClass('value-item').html(
                             Util.templates(this.view.valueTemplate, {
                                 valueFieldName: value.field,
-                                value: isOld ? value.oldValue : value.newValue
+                                value: isOld ?
+                                    ((value.oldValue && link) ? link : value.oldValue) :
+                                    ((value.newValue && link) ? link : value.newValue)
                             })
                         );
                         $wrapper.append($valueView);
