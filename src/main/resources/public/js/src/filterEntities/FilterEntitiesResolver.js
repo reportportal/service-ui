@@ -435,6 +435,7 @@ define(function (require, exports, module) {
                 condition: 'cnt',
                 options: filterNameOptions(),
                 valueMinLength: 3,
+                valueMaxLength: 64,
                 valueOnlyDigits: false
             }),
             new Filters.EntityConditionInputModel({
@@ -444,6 +445,7 @@ define(function (require, exports, module) {
                 condition: 'cnt',
                 options: filterNameOptions(),
                 valueMinLength: 3,
+                valueMaxLength: 64,
                 valueOnlyDigits: false
             }),
             new Filters.EntityMemberTagModel({
