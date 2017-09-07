@@ -51,6 +51,9 @@ define(function (require) {
                             if (widgetOptions.filters) {
                                 return widgetOptions.filters;
                             }
+                            if (model.get('filter_id')) {
+                                return [model.get('filter_id')];
+                            }
                             return [];
                         },
                         setValue: function (value, model) {

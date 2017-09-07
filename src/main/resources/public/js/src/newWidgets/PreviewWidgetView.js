@@ -44,7 +44,7 @@ define(function (require) {
             gadget = this.model.get('gadget');
             if ((!this.filterModel && !options.sharedWidgetModel) || gadget === 'activity_stream' || gadget === 'launches_table' ||
                 gadget === 'unique_bug_table' || gadget === 'most_failed_test_cases' || gadget === 'passing_rate_summary' ||
-                gadget === 'passing_rate_per_launch' || gadget === 'overall_statistics') {
+                gadget === 'passing_rate_per_launch' || gadget === 'overall_statistics' || gadget === 'product_status') {
                 this.$el.css('background-image', 'url(' + this.model.get('gadgetPreviewImg') + ')');
                 return true;
             }
