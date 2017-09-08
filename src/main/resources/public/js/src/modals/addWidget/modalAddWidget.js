@@ -86,6 +86,7 @@ define(function (require) {
             $('[data-js-step-3]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.viewModel, 'change:step', this.setState);
             this.listenTo(this.saveWidget, 'change::dashboard', this.onChangeDashboard);
+            this.listenTo(this.configureWidgetView, 'send:event', this.sendEvent);
             this.setState();
             this.listenTo(
                 this.model,
@@ -95,6 +96,59 @@ define(function (require) {
         },
         onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(290);
+        },
+        sendEvent: function (eventOptions) {
+            switch (eventOptions.view) {
+            case 'filter':
+                switch (eventOptions.action) {
+                case 'add filter':
+                    config.trackingDispatcher.trackEventNumber(295);
+                    break;
+                case 'submit filter':
+                    config.trackingDispatcher.trackEventNumber(331);
+                    break;
+                case 'cancel filter':
+                    config.trackingDispatcher.trackEventNumber(330);
+                    break;
+                case 'change filter name':
+                    config.trackingDispatcher.trackEventNumber(294);
+                    break;
+                case 'edit filter item':
+                    config.trackingDispatcher.trackEventNumber(298);
+                    break;
+                case 'select filter item':
+                    config.trackingDispatcher.trackEventNumber(297);
+                    break;
+                case 'entity choice click':
+                    config.trackingDispatcher.trackEventNumber(302);
+                    break;
+                case 'sorting list click':
+                    config.trackingDispatcher.trackEventNumber(303);
+                    break;
+                case 'cancel add click':
+                    config.trackingDispatcher.trackEventNumber(304);
+                    break;
+                case 'ok add click':
+                    config.trackingDispatcher.trackEventNumber(305);
+                    break;
+                case 'edit entity':
+                    config.trackingDispatcher.trackEventNumber(307);
+                    break;
+                case 'edit entity choice click':
+                    config.trackingDispatcher.trackEventNumber(308);
+                    break;
+                case 'edit entity sorting list click':
+                    config.trackingDispatcher.trackEventNumber(309);
+                    break;
+                case 'cancel edit filter':
+                    config.trackingDispatcher.trackEventNumber(310);
+                    break;
+                case 'ok edit filter':
+                    config.trackingDispatcher.trackEventNumber(311);
+                    break;
+                }
+                break;
+            }
         },
         onChangePreview: function (model) {
             this.curWidget = WidgetService.getWidgetConfig(model.get('gadget'));

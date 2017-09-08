@@ -115,11 +115,15 @@ define(function (require) {
             });
 
             this.listenTo(view, 'showBaseViewMode', this.viewModeHandler);
+            this.listenTo(view, 'send:event', this.sendEvent);
             this.renderedView.push(view);
             this.$el.append(view.$el);
             // set default state for model
             view.setValue(view.getValue(this.model, view), this.model);
             view.activate && view.activate();
+        },
+        sendEvent: function (eventOptions) {
+            this.trigger('send:event', eventOptions);
         },
         viewModeHandler: function (showBaseViewMode, settingView) {
             if (showBaseViewMode) {

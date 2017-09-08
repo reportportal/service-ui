@@ -27,11 +27,7 @@ define(function (require) {
     var Util = require('util');
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
     var FilterSortingView = require('filterSelectionParameters/FilterSortingView');
-    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var FilterListener = require('controlers/filterControler/FilterListener');
-    var App = require('app');
-
-    var config = App.getInstance();
 
     var FilterSearchEditView = Epoxy.View.extend({
         className: 'setting-filter-search-edit',
@@ -44,19 +40,17 @@ define(function (require) {
         bindings: {
             '[data-js-filter-name]': 'text: name'
         },
-        initialize: function (options) {
+        initialize: function () {
             var self = this;
             this.filterListener = new FilterListener();
             this.filterEvents = this.filterListener.events;
-            this.modalType = options.modalType;
             this.render();
             this.async = $.Deferred();
             this.listenTo(this.model, 'change:entities', function () {
-                if (this.modalType === 'edit') {
-                    config.trackingDispatcher.trackEventNumber(336);
-                } else {
-                    config.trackingDispatcher.trackEventNumber(307);
-                }
+                self.trigger('send:event', {
+                    view: 'filter',
+                    action: 'edit entity'
+                });
             });
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-entities-container]', this.$el),
@@ -64,16 +58,18 @@ define(function (require) {
                 model: this.model
             });
             $('input', $('[data-js-entity-choice-list] [data-js-link]', this.filterEntities.$el)).on('click', function () {
-                if (self.modalType !== 'edit') {
-                    config.trackingDispatcher.trackEventNumber(308);
-                }
+                self.trigger('send:event', {
+                    view: 'filter',
+                    action: 'edit entity choice click'
+                });
             });
             this.filterSorting = new FilterSortingView({ model: this.model });
             $('[data-js-filter-sorting]', this.$el).append(this.filterSorting.$el);
             $('[data-js-sorting-list] a', this.filterSorting.$el).on('click', function () {
-                if (self.modalType !== 'edit') {
-                    config.trackingDispatcher.trackEventNumber(309);
-                }
+                self.trigger('send:event', {
+                    view: 'filter',
+                    action: 'edit entity sorting list click'
+                });
             });
         },
         render: function () {
@@ -83,23 +79,19 @@ define(function (require) {
             e.stopPropagation();
         },
         onClickCancel: function () {
-            if (this.modalType === 'edit') {
-                config.trackingDispatcher.trackEventNumber(337);
-            } else {
-                config.trackingDispatcher.trackEventNumber(310);
-            }
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'cancel edit filter'
+            });
             this.model.set({ newEntities: '' });
             this.trigger('returnToFiltersList');
             this.async.reject();
         },
         onClickOk: function () {
-            // var launchFilterCollection = new SingletonLaunchFilterCollection();
-            // var self = this;
-            if (this.modalType === 'edit') {
-                config.trackingDispatcher.trackEventNumber(338);
-            } else {
-                config.trackingDispatcher.trackEventNumber(311);
-            }
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'ok edit filter'
+            });
 
             this.filterListener.trigger(
                 this.filterEvents.ON_SET_FILTER,
@@ -109,9 +101,6 @@ define(function (require) {
                 }
             );
             this.trigger('returnToFiltersList');
-            // launchFilterCollection.ready.done(function () {
-            //     self.setFilterModel(launchFilterCollection.get(self.model.get('filter_id')));
-            // });
             this.async.resolve();
         },
         getReadyState: function () {

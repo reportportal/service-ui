@@ -36,12 +36,16 @@ define(function (require) {
             this.widgetSettingsView = new WidgetSettingsView({ model: this.model });
             $('[data-js-enter-criteria]', this.$el).html(this.widgetSettingsView.$el);
             this.listenTo(this.widgetSettingsView, 'change:view', this.onChangeSettingsViewMode);
+            this.listenTo(this.widgetSettingsView, 'send:event', this.sendEvent);
         },
         activate: function () {
             this.widgetSettingsView.activate();
         },
         validate: function () {
             return this.widgetSettingsView.validate();
+        },
+        sendEvent: function (eventOptions) {
+            this.trigger('send:event', eventOptions);
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));

@@ -60,6 +60,53 @@ define(function (require) {
 
             this.listenTo(this.model, 'change', this.disableHideBackdrop);
         },
+        sendEvent: function (eventOptions) {
+            switch (eventOptions.view) {
+            case 'filter':
+                switch (eventOptions.action) {
+                case 'add filter':
+                    config.trackingDispatcher.trackEventNumber(328);
+                    break;
+                case 'submit filter':
+                    config.trackingDispatcher.trackEventNumber(331);
+                    break;
+                case 'cancel filter':
+                    config.trackingDispatcher.trackEventNumber(330);
+                    break;
+                case 'change filter name':
+                    config.trackingDispatcher.trackEventNumber(327);
+                    break;
+                case 'edit filter item':
+                    config.trackingDispatcher.trackEventNumber(298);
+                    break;
+                case 'select filter item':
+                    config.trackingDispatcher.trackEventNumber(329);
+                    break;
+                case 'entity choice click':
+                    config.trackingDispatcher.trackEventNumber(332);
+                    break;
+                case 'sorting list click':
+                    config.trackingDispatcher.trackEventNumber(333);
+                    break;
+                case 'cancel add click':
+                    config.trackingDispatcher.trackEventNumber(334);
+                    break;
+                case 'ok add click':
+                    config.trackingDispatcher.trackEventNumber(335);
+                    break;
+                case 'edit entity':
+                    config.trackingDispatcher.trackEventNumber(336);
+                    break;
+                case 'cancel edit filter':
+                    config.trackingDispatcher.trackEventNumber(337);
+                    break;
+                case 'ok edit filter':
+                    config.trackingDispatcher.trackEventNumber(338);
+                    break;
+                }
+                break;
+            }
+        },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
             this.widgetSettingsView = new WidgetSettingsView({
@@ -68,6 +115,7 @@ define(function (require) {
             });
             $('[data-js-widget-settings]', this.$el).html(this.widgetSettingsView.$el);
             this.listenTo(this.widgetSettingsView, 'change:view', this.onChangeSettingsViewMode);
+            this.listenTo(this.widgetSettingsView, 'send:event', this.sendEvent);
 
             this.saveWidget = new SaveWidgetView({
                 model: this.model,

@@ -65,7 +65,7 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickFilterEdit: function () {
-            config.trackingDispatcher.trackEventNumber(321);
+            // config.trackingDispatcher.trackEventNumber(321);
             this.trigger('edit');
         },
         onDestroy: function () {

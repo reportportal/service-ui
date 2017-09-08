@@ -25,8 +25,8 @@ define(function (require) {
     var $ = require('jquery');
     var Util = require('util');
     var FilterSelectedView = require('modals/addWidget/widgetSettings/SettingFilters/SettingSelectedFilterView');
-    var SettingFilterSearchView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFilterSearchView')
-    var SettingView = require('modals/addWidget/widgetSettings/_settingView');;
+    var SettingFilterSearchView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFilterSearchView');
+    var SettingView = require('modals/addWidget/widgetSettings/_settingView');
 
     var SettingFiltersView = SettingView.extend({
         className: 'modal-add-widget-setting-filters',
@@ -45,6 +45,10 @@ define(function (require) {
             (this.isShortForm) ? this.renderShortForm() : this.renderBaseForm();
         },
         renderBaseForm: function () {
+            if (this.settingView) {
+                this.stopListening(this.settingView);
+                this.settingView.destroy();
+            }
             this.settingView = new SettingFilterSearchView({ gadgetModel: this.gadgetModel });
             $('[data-js-setting-filters-container]', this.$el).html(this.settingView.$el);
             if (!this.switchable) {
@@ -52,18 +56,27 @@ define(function (require) {
             }
             this.settingView.activate();
             this.listenTo(this.settingView, 'cancelFilter submitFilter', this.switchToShortForm);
+            this.listenTo(this.settingView, 'send:event', this.sendEvent);
             if (!this.switchable) {
                 this.listenTo(this.settingView, 'returnToFiltersList', this.hideToAddEditFilterForm);
                 this.listenTo(this.settingView, 'editFilterMode addFilterMode', this.showToAddEditFilterForm);
             }
         },
         renderShortForm: function () {
+            if (this.settingView) {
+                this.stopListening(this.settingView);
+                this.settingView.destroy();
+            }
             this.settingView = new FilterSelectedView({ gadgetModel: this.gadgetModel });
             $('[data-js-setting-filters-container]', this.$el).html(this.settingView.$el);
             if (!this.switchable) {
                 $('[data-js-filter-edit]', this.$el).hide();
             }
             this.listenTo(this.settingView, 'edit', this.switchToBaseForm);
+            this.listenTo(this.settingView, 'send:event', this.sendEvent);
+        },
+        sendEvent: function (eventOptions) {
+            this.trigger('send:event', eventOptions);
         },
         switchToBaseForm: function () {
             this.trigger('showBaseViewMode', true, 'settingFilters');

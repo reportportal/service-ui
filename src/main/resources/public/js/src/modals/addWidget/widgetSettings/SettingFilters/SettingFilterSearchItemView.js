@@ -25,9 +25,6 @@ define(function (require) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var App = require('app');
-
-    var config = App.getInstance();
 
     var FilterSearchItem = Epoxy.View.extend({
         className: 'setting-filter-search-item',
@@ -63,7 +60,6 @@ define(function (require) {
         },
         initialize: function (options) {
             var self = this;
-            this.modalType = options.modalType;
             this.searchTerm = options.searchTerm;
             this.render();
             if (this.model.get('active')) {
@@ -73,17 +69,19 @@ define(function (require) {
             }
         },
         onClickFilterEdit: function (e) {
-            config.trackingDispatcher.trackEventNumber(298);
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'edit filter item'
+            });
             e.preventDefault();
             e.stopPropagation();
             this.model.trigger('edit', this.model);
         },
         onSelectFilter: function () {
-            if (this.modalType === 'edit') {
-                config.trackingDispatcher.trackEventNumber(329);
-            } else {
-                config.trackingDispatcher.trackEventNumber(297);
-            }
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'select filter item'
+            });
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));

@@ -28,18 +28,13 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
-    var WidgetService = require('newWidgets/WidgetService');
     var CoreService = require('coreService');
     var FilterModel = require('filters/FilterModel');
     var FilterItemView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFilterSearchItemView');
     var FilterSearchEditView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFilterSearchEditView');
     var FilterSearchAddView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFilterSearchAddView');
 
-    var App = require('app');
-
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
-
-    var config = App.getInstance();
 
     var FilterCollection = Backbone.Collection.extend({
         model: FilterModel,
@@ -129,17 +124,24 @@ define(function (require) {
             }]);
         },
         setFilterModel: function (model) {
-            this.filterItemView && this.filterItemView.destroy();
+            if (this.filterItemView) {
+                this.stopListening(this.filterItemView);
+                this.filterItemView.destroy();
+            }
             if (model) {
                 $('[data-js-select-filter-block]', this.$el).removeClass('empty-state');
                 this.filterItemView = new FilterItemView({
                     model: model, searchTerm: this.viewModel.get('search')
                 });
                 $('[data-js-select-filter-container]', this.$el).html(this.filterItemView.$el);
+                this.listenTo(this.filterItemView, 'send:event', this.sendEvent);
                 this.selectedFilterModel = model;
             } else {
                 $('[data-js-select-filter-block]', this.$el).addClass('empty-state');
             }
+        },
+        sendEvent: function (eventOptions) {
+            this.trigger('send:event', eventOptions);
         },
         onSelectFilterCheck: function (model, active) {
             active && this.onSelectFilter(model);
@@ -154,20 +156,17 @@ define(function (require) {
         onClickAddFilter: function (e) {
             var self = this;
             this.trigger('addFilterMode');
-            if (this.modalType === 'edit') {
-                config.trackingDispatcher.trackEventNumber(328);
-            } else {
-                config.trackingDispatcher.trackEventNumber(295);
-            }
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'add filter'
+            });
             e.preventDefault();
             this.$el.addClass('hide-content');
             this.addFilterView && this.stopListening(this.addFilterView) &&
                 this.addFilterView.destroy();
-            this.addFilterView = new FilterSearchAddView({
-                gadgetModel: this.model,
-                modalType: this.modalType
-            });
+            this.addFilterView = new FilterSearchAddView();
             this.listenTo(this.addFilterView, 'change:filter', this.onSelectFilter);
+            this.listenTo(this.addFilterView, 'send:event', this.sendEvent);
             this.listenTo(this.addFilterView, 'returnToFiltersList', function () {
                 this.trigger('returnToFiltersList');
             });
@@ -181,11 +180,17 @@ define(function (require) {
                 });
         },
         onClickSubmitFilter: function () {
-            config.trackingDispatcher.trackEventNumber(331);
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'submit filter'
+            });
             this.trigger('submitFilter');
         },
         onClickCancelFilter: function () {
-            config.trackingDispatcher.trackEventNumber(330);
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'cancel filter'
+            });
             this.model.set('filter_id', this.currentFilterId);
             this.trigger('cancelFilter');
         },
@@ -193,12 +198,14 @@ define(function (require) {
             var self = this;
             this.trigger('editFilterMode');
             this.$el.addClass('hide-content');
-            this.editFilterView && this.editFilterView.destroy();
+            if (this.editFilterView) {
+                this.stopListening(this.editFilterView);
+                this.editFilterView.destroy();
+            }
             this.editFilterView = new FilterSearchEditView({
-                model: model,
-                gadgetModel: this.model,
-                modalType: this.modalType
+                model: model
             });
+            this.listenTo(this.editFilterView, 'send:event', this.sendEvent);
             this.listenTo(this.editFilterView, 'returnToFiltersList', function () {
                 this.trigger('returnToFiltersList');
             });
@@ -235,11 +242,10 @@ define(function (require) {
         onChangeFilterName: function (e) {
             var value = $(e.currentTarget).val();
             if (value) {
-                if (this.modalType === 'edit') {
-                    config.trackingDispatcher.trackEventNumber(327);
-                } else {
-                    config.trackingDispatcher.trackEventNumber(294);
-                }
+                this.trigger('send:event', {
+                    view: 'filter',
+                    action: 'change filter name'
+                });
             }
             this.viewModel.set({ search: value });
         },
@@ -258,8 +264,7 @@ define(function (require) {
         renderFilter: function (model) {
             var filterItemView = new FilterItemView({
                 model: model,
-                searchTerm: this.viewModel.get('search'),
-                modalType: this.modalType
+                searchTerm: this.viewModel.get('search')
             });
             $('[data-js-filter-list]', this.$el).append(filterItemView.$el);
             this.renderedFilterItems.push(filterItemView);
