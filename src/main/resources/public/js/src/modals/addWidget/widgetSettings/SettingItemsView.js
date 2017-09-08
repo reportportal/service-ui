@@ -33,7 +33,7 @@ define(function (require, exports, module) {
 
     var SettingItemsView = SettingView.extend({
         className: 'modal-add-widget-setting-items',
-        template: 'modal-add-widget-setting-items',
+        template: 'tpl-modal-add-widget-setting-items',
         events: {
         },
         bindings: {

@@ -34,8 +34,8 @@ define(function (require) {
     var config = App.getInstance();
 
     var FilterSearchEditView = Epoxy.View.extend({
-        className: 'modal-add-widget-filter-search-edit',
-        template: 'tpl-modal-add-widget-filter-search-edit',
+        className: 'setting-filter-search-edit',
+        template: 'tpl-modal-add-widget-setting-filter-search-edit',
         events: {
             'click [data-js-cancel-edit]': 'onClickCancel',
             'click [data-js-ok-edit]': 'onClickOk',
@@ -89,6 +89,7 @@ define(function (require) {
                 config.trackingDispatcher.trackEventNumber(310);
             }
             this.model.set({ newEntities: '' });
+            this.trigger('returnToFiltersList');
             this.async.reject();
         },
         onClickOk: function () {
@@ -107,6 +108,7 @@ define(function (require) {
                     data: this.model.getDataFromServer()
                 }
             );
+            this.trigger('returnToFiltersList');
             // launchFilterCollection.ready.done(function () {
             //     self.setFilterModel(launchFilterCollection.get(self.model.get('filter_id')));
             // });

@@ -34,7 +34,7 @@ define(function (require) {
 
     var SettingInputItemsView = SettingView.extend({
         className: 'modal-add-widget-setting-input-items',
-        template: 'modal-add-widget-setting-input-items',
+        template: 'tpl-modal-add-widget-setting-input-items',
         bindings: {
             '[data-js-label-name]': 'html:label',
             '[data-js-label-input]': 'value:value'
@@ -97,21 +97,31 @@ define(function (require) {
                     }
                 };
             case 'launch':
-                return function (query) {
-                    Service.searchLaunches(query)
-                        .done(function (response) {
-                            var data = { results: [] };
-                            _.each(response, function (item) {
-                                data.results.push({
-                                    id: item,
-                                    text: item
+                return {
+                    query: function (query) {
+                        Service.searchLaunches(query)
+                            .done(function (response) {
+                                var data = { results: [] };
+                                _.each(response, function (item) {
+                                    data.results.push({
+                                        id: item,
+                                        text: item
+                                    });
                                 });
+                                query.callback(data);
+                            })
+                            .fail(function (error) {
+                                Util.ajaxFailMessenger(error);
                             });
-                            query.callback(data);
-                        })
-                        .fail(function (error) {
-                            Util.ajaxFailMessenger(error);
-                        });
+                    },
+                    getDataByIds: function (values, callback) {
+                        Service.getLaunchItem(values)
+                            .done(function (data) {
+                                callback(_.map(data, function (launch) {
+                                    return { id: launch.id, text: launch.name };
+                                }));
+                            });
+                    }
                 };
             default:
                 return function (query) {
@@ -130,7 +140,7 @@ define(function (require) {
                 dropdownCssClass: 'rp-select2-separate-block',
                 allowClear: false,
                 placeholder: this.model.get('inputPlaceholder'),
-                tags: true,
+                tags: false,
                 initSelection: function (element, callback) {
                     self.getFunctions()
                         .getDataByIds(self.getValue(self.gadgetModel, self), callback);

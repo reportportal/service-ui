@@ -19,13 +19,12 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var $ = require('jquery');
-    var FilterSearchView = require('modals/addWidget/FilterSearchView');
     var WidgetSettingsView = require('modals/addWidget/WidgetSettingsView');
 
 
@@ -34,36 +33,30 @@ define(function (require, exports, module) {
         template: 'tpl-modal-add-widget-configure-widget',
         initialize: function () {
             this.render();
-            this.filterSearch = new FilterSearchView({ model: this.model });
-            $('[data-js-filter-search]', this.$el).html(this.filterSearch.$el);
-            this.listenTo(this.filterSearch, 'disable:navigation', this.onChangeDisableNavigation);
-            this.widgetCriteria = new WidgetSettingsView({ model: this.model });
-            $('[data-js-enter-criteria]', this.$el).html(this.widgetCriteria.$el);
-        },
-        onChangeDisableNavigation: function (state) {
-            this.trigger('disable:navigation', state);
-            if (state) {
-                $('[data-js-enter-criteria]', this.$el).addClass('hide');
-            } else {
-                $('[data-js-enter-criteria]', this.$el).removeClass('hide');
-            }
-        },
-        getSelectedFilterModel: function () {
-            return this.filterSearch.getSelectedFilterModel();
+            this.widgetSettingsView = new WidgetSettingsView({ model: this.model });
+            $('[data-js-enter-criteria]', this.$el).html(this.widgetSettingsView.$el);
+            this.listenTo(this.widgetSettingsView, 'change:view', this.onChangeSettingsViewMode);
         },
         activate: function () {
-            this.filterSearch.activate();
-            this.widgetCriteria.activate();
+            this.widgetSettingsView.activate();
         },
         validate: function () {
-            return this.widgetCriteria.validate();
+            return this.widgetSettingsView.validate();
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
+        onChangeSettingsViewMode: function (options) {
+            if (options.mode === 'expandedSettingView') {
+                this.$el.addClass('expanded-setting-view-mode');
+                $('[data-js-cancel]', this.$el).add('[data-js-save]', this.$el).attr('disabled', 'disabled');
+                return;
+            }
+            $('[data-js-cancel]', this.$el).add('[data-js-save]', this.$el).removeAttr('disabled');
+            this.$el.removeClass('expanded-setting-view-mode');
+        },
         onDestroy: function () {
-            this.filterSearch && this.filterSearch.destroy();
-            this.widgetCriteria && this.widgetCriteria.destroy();
+            this.widgetSettingsView && this.widgetSettingsView.destroy();
         }
     });
 

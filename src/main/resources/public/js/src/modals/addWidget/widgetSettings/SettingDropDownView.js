@@ -28,13 +28,12 @@ define(function (require) {
     var _ = require('underscore');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
     var DropDownComponent = require('components/DropDownComponent');
-    var Localization = require('localization');
 
     var actionTypes = {};
 
     var SettingDropDownView = SettingView.extend({
         className: 'modal-add-widget-setting-drop-down',
-        template: 'modal-add-widget-setting-drop-down',
+        template: 'tpl-modal-add-widget-setting-drop-down',
         bindings: {
             '[data-js-label-name]': 'html:label'
         },

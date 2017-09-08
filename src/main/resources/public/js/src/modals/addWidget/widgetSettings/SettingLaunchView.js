@@ -33,7 +33,7 @@ define(function (require, exports, module) {
 
     var SettingLaunchView = SettingView.extend({
         className: 'modal-add-widget-setting-launch',
-        template: 'modal-add-widget-setting-launch',
+        template: 'tpl-modal-add-widget-setting-launch',
         events: {
             'change [data-js-data-launch-input]': 'onChange'
         },

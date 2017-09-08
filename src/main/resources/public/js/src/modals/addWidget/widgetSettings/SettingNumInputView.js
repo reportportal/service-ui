@@ -24,38 +24,42 @@ define(function (require) {
 
     var Util = require('util');
     var Epoxy = require('backbone-epoxy');
+    var $ = require('jquery');
     var _ = require('underscore');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
-
+    var Localization = require('localization');
+    var App = require('app');
+    var config = App.getInstance();
     var actionTypes = {
-        latest_launches: {
-            setValue: function (value, model) {
-                var widgetOptions = model.getWidgetOptions();
-                if (value) {
-                    widgetOptions.latest = [];
-                } else {
-                    delete widgetOptions.latest;
+        limit: {
+            getValue: function (gadgetModel, self) {
+                if (!gadgetModel.get('itemsCount')) {
+                    return self.model.get('def');
                 }
-                model.setWidgetOptions(widgetOptions);
+                return gadgetModel.get('itemsCount');
             },
-            getValue: function (model) {
-                return !!(model.getWidgetOptions().latest);
+            setValue: function (value, gadgetModel) {
+                gadgetModel.set('itemsCount', value);
             }
         }
     };
-
-    var SettingDropDownView = SettingView.extend({
-        className: 'modal-add-widget-setting-checkbox',
-        template: 'tpl-modal-add-widget-setting-checkbox',
+    var SettingNumInputView = SettingView.extend({
+        className: 'modal-add-widget-setting-num-input',
+        template: 'tpl-modal-add-widget-setting-num-input',
+        events: {
+        },
         bindings: {
-            '[data-js-label-name]': 'html:label',
-            '[data-js-checkbox-item]': 'checked:value'
+            '[data-js-input]': 'value: value'
         },
         initialize: function (data) {
             var options = _.extend({
-                label: '',
-                value: false
+                name: Localization.widgets.items,
+                min: 1,
+                max: 150,
+                def: 50,
+                value: ''
             }, data.options);
+
             this.model = new Epoxy.Model(options);
             this.gadgetModel = data.gadgetModel;
             this.render();
@@ -67,21 +71,33 @@ define(function (require) {
             options.getValue && (this.getValue = options.getValue);
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, {
+                name: this.model.get('name')
+            }));
+            this.bindValidators();
+        },
+        bindValidators: function () {
+            Util.hintValidator($('[data-js-input]', this.$el), [{
+                validator: 'minMaxNumberRequired',
+                type: 'itemsSize',
+                min: this.model.get('min'),
+                max: this.model.get('max')
+            }]);
         },
         activate: function () {
-            this.model.set({ value: this.getValue(this.gadgetModel, this) });
             this.listenTo(this.model, 'change:value', this.onChangeValue);
+            this.model.set({ value: this.getValue(this.gadgetModel, this) });
         },
         onChangeValue: function () {
-            this.setValue(this.model.get('value'), this.gadgetModel, this);
+            if (this.validate()) {
+                this.setValue(this.model.get('value'), this.gadgetModel, this);
+                config.trackingDispatcher.trackEventNumber(299);
+            }
         },
         validate: function () {
-            return true;
-        },
-        onDestroy: function () {
+            return !$('[data-js-input]', this.$el).trigger('validate').data('validate-error');
         }
     });
 
-    return SettingDropDownView;
+    return SettingNumInputView;
 });

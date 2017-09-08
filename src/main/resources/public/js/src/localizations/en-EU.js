@@ -817,7 +817,7 @@ define(['util'], function () {
             IN_PROGRESS: 'In Progress'
         },
 
-        testStatus:{
+        testStatus: {
             FAILED: 'FAILED',
             PASSED: 'PASSED',
             STOPPED: 'STOPPED',
@@ -888,6 +888,7 @@ define(['util'], function () {
             no_defect: 'No Defect',
             tags: 'Tags',
             start_time: 'Start Time',
+            end_time: 'Finish Time',
             message: 'Message',
             description: 'Description',
             name: 'Launch Name',
@@ -899,7 +900,8 @@ define(['util'], function () {
             status: 'Status',
             type: 'Method Type',
             history_depth: 'History Depth',
-            owner: 'Owner'
+            owner: 'Owner',
+            user: 'User'
         },
         filterNamePluralById: {
             product_bug: 'Product Bugs',
@@ -1800,6 +1802,10 @@ define(['util'], function () {
             createUser: 'Add, register user',
             updateDefects: 'Update defect types',
             updateBts: 'Update BTS',
+            updateWidget: 'Update widget',
+            updateDashboard: 'Update dashboard',
+            updateFilter: 'Update filter',
+            import: 'Import',
             projectNameIn: 'Project Name in BTS',
             copyLink: 'Copy Link'
         },

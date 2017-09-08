@@ -61,7 +61,7 @@ define(function (require, exports, module) {
         newUpdateModel: function (gadget, curWidget) {
             this.model.set({
                 gadget: gadget,
-                itemsCount: (curWidget.limit && curWidget.limit.def) || 50,
+                //itemsCount: (curWidget.limit && curWidget.limit.def) || 50,
                 widgetDescription: '',
                 widgetOptions: '{}',
                 content_fields: '[]',
@@ -72,7 +72,7 @@ define(function (require, exports, module) {
             var defaultActions = [];
             this.model.set({
                 gadget: gadget,
-                itemsCount: (curWidget.limit && curWidget.limit.def) || 50,
+                //itemsCount: (curWidget.limit && curWidget.limit.def) || 50,
                 widgetDescription: '',
                 widgetOptions: '{}',
                 content_fields: '[]'

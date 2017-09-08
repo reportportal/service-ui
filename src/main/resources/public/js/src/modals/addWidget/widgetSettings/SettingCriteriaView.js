@@ -30,7 +30,7 @@ define(function (require) {
 
     var SettingCriteriaView = SettingView.extend({
         className: 'modal-add-widget-setting-criteria',
-        template: 'modal-add-widget-setting-criteria',
+        template: 'tpl-modal-add-widget-setting-criteria',
         events: {
         },
         bindings: {

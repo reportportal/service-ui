@@ -30,7 +30,7 @@ define(function (require, exports, module) {
 
     var SettingUsersView = SettingView.extend({
         className: 'modal-add-widget-setting-users',
-        template: 'modal-add-widget-setting-users',
+        template: 'tpl-modal-add-widget-setting-users',
         events: {
         },
         bindings: {

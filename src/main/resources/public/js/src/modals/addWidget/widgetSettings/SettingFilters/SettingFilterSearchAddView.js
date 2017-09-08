@@ -36,8 +36,8 @@ define(function (require) {
     var config = App.getInstance();
 
     var FilterSearchAddView = Epoxy.View.extend({
-        className: 'modal-add-widget-filter-search-add',
-        template: 'tpl-modal-add-widget-filter-search-add',
+        className: 'setting-filter-search-add',
+        template: 'tpl-modal-add-widget-setting-filter-search-add',
         events: {
             'click [data-js-cancel-edit]': 'onClickCancel',
             'click [data-js-ok-edit]': 'onClickOk',
@@ -110,6 +110,7 @@ define(function (require) {
             }
             this.model.set({ newEntities: '' });
             this.launchFilterCollection.remove(this.model);
+            this.trigger('returnToFiltersList');
             this.async.reject();
         },
         onClickOk: function () {
@@ -136,6 +137,7 @@ define(function (require) {
                 // });
                 // // for right work listeners
                 // this.model.set({ temp: false });
+                this.trigger('returnToFiltersList');
             }
         },
         onChangeId: function () {

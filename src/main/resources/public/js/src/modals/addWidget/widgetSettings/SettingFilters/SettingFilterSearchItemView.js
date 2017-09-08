@@ -30,8 +30,8 @@ define(function (require) {
     var config = App.getInstance();
 
     var FilterSearchItem = Epoxy.View.extend({
-        className: 'modal-add-widget-filter-search-item',
-        template: 'tpl-modal-add-widget-filter-search-item',
+        className: 'setting-filter-search-item',
+        template: 'tpl-modal-add-widget-setting-filter-search-item',
         events: {
             'click [data-js-filter-edit]': 'onClickFilterEdit',
             'click [data-js-filter-select]': 'onSelectFilter'

@@ -33,7 +33,7 @@ define(function (require) {
 
     var SettingSwitchMode = SettingView.extend({
         className: 'modal-add-widget-setting-switch-mode',
-        template: 'modal-add-widget-setting-switch-mode',
+        template: 'tpl-modal-add-widget-setting-switch-mode',
         events: {
             'click [data-js-switch-item]': 'onClickItem'
         },

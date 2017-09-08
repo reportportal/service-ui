@@ -944,6 +944,7 @@ define(['util'], function () {
             no_defect: 'Нет дефектов',
             tags: 'Метки',
             start_time: 'Время начала',
+            end_time: 'Время окончания',
             message: 'Сообщение',
             description: 'Описание',
             name: 'Имя запуска',
@@ -955,7 +956,8 @@ define(['util'], function () {
             status: 'Статус',
             type: 'Тип метода',
             history_depth: 'Глубина истории',
-            owner: 'Владелец'
+            owner: 'Владелец',
+            user: 'Пользователь'
         },
         filterNamePluralById: {
             product_bug: 'Дефекты продукта',
@@ -1859,6 +1861,10 @@ define(['util'], function () {
             createUser: 'Добавить, зарегистрировать пользователя',
             updateDefects: 'Обновить типы дефектов',
             updateBts: 'Обновить СОД',
+            updateWidget: 'Обновить виджет',
+            updateDashboard: 'Обновить панель управления',
+            updateFilter: 'Обновить фильтр',
+            import: 'Импорт',
             projectNameIn: 'Имя проекта в СОД',
             copyLink: 'Копировать ссылку'
         },

@@ -82,8 +82,32 @@ define(function (require) {
                     description: Localization.widgets.statisticsLineChartDescription,
                     widget_type: 'line_chart',
                     gadget: 'old_line_chart',
-                    criteria: {}, // this.getExecutionsAndDefects(),
                     uiControl: [
+                        {
+                            control: 'filters',
+                            options: {
+                            }
+                        },
+                        {
+                            control: 'dropDown',
+                            options: {
+                                label: Localization.widgets.widgetCriteria,
+                                items: this.getExecutionsAndDefects(true),
+                                multiple: true,
+                                getValue: function (model, self) {
+                                    var contentFields = model.getContentFields();
+                                    if (contentFields[0]) {
+                                        return contentFields;
+                                    }
+                                    return _.map(self.model.get('items'), function (item) {
+                                        return item.value;
+                                    });
+                                },
+                                setValue: function (value, model) {
+                                    model.setContentFields(value);
+                                }
+                            }
+                        },
                         {
                             control: 'switcher',
                             options: {
@@ -93,14 +117,18 @@ define(function (require) {
                                 ],
                                 action: 'switch_timeline_mode'
                             }
+                        },
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                action: 'limit'
+                            }
                         }
-                    ],
-                    limit: {
-                        display: true,
-                        min: 1,
-                        max: 150,
-                        def: 50
-                    }
+                    ]
                 },
                 statistic_trend: {
                     gadget_name: Localization.widgets.statisticsTrendChart,
@@ -108,8 +136,32 @@ define(function (require) {
                     description: Localization.widgets.statisticsTrendChartDescription,
                     widget_type: 'trends_chart',
                     gadget: 'statistic_trend',
-                    criteria: {}, // this.getExecutionsAndDefects(),
                     uiControl: [
+                        {
+                            control: 'filters',
+                            options: {
+                            }
+                        },
+                        {
+                            control: 'dropDown',
+                            options: {
+                                label: Localization.widgets.widgetCriteria,
+                                items: this.getExecutionsAndDefects(true),
+                                multiple: true,
+                                getValue: function (model, self) {
+                                    var contentFields = model.getContentFields();
+                                    if (contentFields[0]) {
+                                        return contentFields;
+                                    }
+                                    return _.map(self.model.get('items'), function (item) {
+                                        return item.value;
+                                    });
+                                },
+                                setValue: function (value, model) {
+                                    model.setContentFields(value);
+                                }
+                            }
+                        },
                         {
                             control: 'switcher',
                             options: {
@@ -119,15 +171,18 @@ define(function (require) {
                                 ],
                                 action: 'switch_timeline_mode'
                             }
+                        },
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                action: 'limit'
+                            }
                         }
-                    ],
-                    limit: {
-                        display: true,
-                        min: 1,
-                        max: 150,
-                        def: 50
-                    }
-
+                    ]
                 },
                 overall_statistics: {
                     gadget_name: Localization.widgets.overallStatisticsPanel,
@@ -135,8 +190,32 @@ define(function (require) {
                     description: Localization.widgets.overallStatisticsPanelDescription,
                     widget_type: 'statistics_panel',
                     gadget: 'overall_statistics',
-                    criteria: {}, // this.getExecutionsAndDefects(),
                     uiControl: [
+                        {
+                            control: 'filters',
+                            options: {
+                            }
+                        },
+                        {
+                            control: 'dropDown',
+                            options: {
+                                label: Localization.widgets.widgetCriteria,
+                                items: this.getExecutionsAndDefects(true),
+                                multiple: true,
+                                getValue: function (model, self) {
+                                    var contentFields = model.getContentFields();
+                                    if (contentFields.length) {
+                                        return contentFields;
+                                    }
+                                    return _.map(self.model.get('items'), function (item) {
+                                        return item.value;
+                                    });
+                                },
+                                setValue: function (value, model) {
+                                    model.setContentFields(value);
+                                }
+                            }
+                        },
                         {
                             control: 'switcher',
                             options: {
@@ -156,14 +235,18 @@ define(function (require) {
                                 ],
                                 action: 'switch_latest_mode'
                             }
+                        },
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                action: 'limit'
+                            }
                         }
-                    ],
-                    limit: {
-                        display: true,
-                        min: 1,
-                        max: 150,
-                        def: 50
-                    }
+                    ]
                 },
                 launches_duration_chart: {
                     gadget_name: Localization.widgets.durationChart,
@@ -174,6 +257,11 @@ define(function (require) {
                     noCriteria: true,
                     uiControl: [
                         {
+                            control: 'filters',
+                            options: {
+                            }
+                        },
+                        {
                             control: 'switcher',
                             options: {
                                 items: [
@@ -181,6 +269,16 @@ define(function (require) {
                                     { name: Localization.widgets.latestLaunches, value: 'latest' }
                                 ],
                                 action: 'switch_latest_mode'
+                            }
+                        },
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                action: 'limit'
                             }
                         }
                     ],
@@ -190,12 +288,6 @@ define(function (require) {
                         name: '',
                         number: '',
                         status: ''
-                    },
-                    limit: {
-                        display: true,
-                        min: 1,
-                        max: 150,
-                        def: 50
                     }
                 },
                 launch_statistics: {
@@ -206,6 +298,12 @@ define(function (require) {
                     gadget: 'launch_statistics',
                     noCriteria: true,
                     staticCriteria: {}, // this.getExecutionsAndDefects(),
+                    uiControl: [
+                        {
+                            control: 'filters',
+                            options: {}
+                        }
+                    ],
                     limit: {
                         display: false,
                         min: 1,
@@ -235,32 +333,76 @@ define(function (require) {
                     description: Localization.widgets.projectActivityPanelDescription,
                     widget_type: 'activity_panel',
                     gadget: 'activity_stream',
-                    noCriteria: true,
-                    noFilters: true,
-                    limit: {
-                        display: true,
-                        min: 1,
-                        max: 150,
-                        def: 50
-                    },
-                    actions: {
-                        start: { actions: ['start'], text: Localization.forms.startLaunch },
-                        finish: { actions: ['finish'], text: Localization.forms.finishLaunch },
-                        delete: { actions: ['delete'], text: Localization.forms.deleteLaunch },
-                        share: { actions: ['share'], text: Localization.forms.shareWidgetDashboard },
-                        unshare: { actions: ['unshare'], text: Localization.forms.unShareWidgetDashboard },
-                        post_issue: { actions: ['post_issue', 'attach_issue'], text: Localization.forms.postIssue },
-                        create_user: { actions: ['create_user'], text: Localization.forms.createUser },
-                        update_bts: {
-                            actions: ['create_bts', 'update_bts', 'delete_bts'],
-                            text: Localization.forms.updateBts
+                    uiControl: [
+                        {
+                            control: 'dropDown',
+                            options: {
+                                label: Localization.widgets.widgetCriteria,
+                                items: this.getProjectActivityEventsData(),
+                                multiple: true,
+                                getValue: function (model, self) {
+                                    var groupedActions = {
+                                        update_dashboard: ['create_dashboard', 'update_dashboard', 'delete_dashboard'],
+                                        update_widget: ['create_widget', 'update_widget', 'delete_widget'],
+                                        update_filter: ['create_filter', 'update_filter', 'delete_filter'],
+                                        update_bts: ['create_bts', 'update_bts', 'delete_bts'],
+                                        update_defects: ['update_defect', 'delete_defect'],
+                                        post_issue: ['post_issue', 'attach_issue'],
+                                        import: ['start_import', 'finish_import']
+                                    };
+                                    var widgetOptions = model.getWidgetOptions();
+                                    var result = [];
+                                    if (widgetOptions && widgetOptions.actionType) {
+                                        _.each(widgetOptions.actionType, function (action) {
+                                            _.each(groupedActions, function (groupedAction, groupedActionKey) {
+                                                if (~groupedAction.indexOf(action)) {
+                                                    result.push(groupedActionKey);
+                                                } else {
+                                                    result.push(action);
+                                                }
+                                            });
+                                        });
+                                        return _.uniq(result);
+                                    }
+                                    return _.map(self.model.get('items'), function (item) {
+                                        return item.value;
+                                    });
+                                },
+                                setValue: function (value, model) {
+                                    var widgetOptions = model.getWidgetOptions();
+                                    var result = [];
+                                    var groupedActions = {
+                                        update_dashboard: ['create_dashboard', 'update_dashboard', 'delete_dashboard'],
+                                        update_widget: ['create_widget', 'update_widget', 'delete_widget'],
+                                        update_filter: ['create_filter', 'update_filter', 'delete_filter'],
+                                        update_bts: ['create_bts', 'update_bts', 'delete_bts'],
+                                        update_defects: ['update_defect', 'delete_defect'],
+                                        post_issue: ['post_issue', 'attach_issue'],
+                                        import: ['start_import', 'finish_import']
+                                    };
+                                    _.each(value, function (activityType) {
+                                        if (_.has(groupedActions, activityType)) {
+                                            result = result.concat(groupedActions[activityType]);
+                                        } else {
+                                            result.push(activityType);
+                                        }
+                                    });
+                                    widgetOptions.actionType = result;
+                                    model.setWidgetOptions(widgetOptions);
+                                }
+                            }
                         },
-                        update_project: { actions: ['update_project'], text: Localization.forms.updateProject },
-                        update_defects: {
-                            actions: ['update_defect', 'delete_defect'],
-                            text: Localization.forms.updateDefects
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                action: 'limit'
+                            }
                         }
-                    },
+                    ],
                     usersFilter: true,
                     staticCriteria: {
                         name: 'name',
@@ -285,6 +427,10 @@ define(function (require) {
                     },
                     uiControl: [
                         {
+                            control: 'filters',
+                            options: {}
+                        },
+                        {
                             control: 'switcher',
                             options: {
                                 items: [
@@ -293,14 +439,18 @@ define(function (require) {
                                 ],
                                 action: 'switch_timeline_mode'
                             }
+                        },
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                action: 'limit'
+                            }
                         }
-                    ],
-                    limit: {
-                        display: true,
-                        min: 1,
-                        max: 150,
-                        def: 50
-                    }
+                    ]
                 },
                 investigated_trend: {
                     gadget_name: Localization.widgets.percentageOfLaunches,
@@ -312,6 +462,10 @@ define(function (require) {
                     staticCriteria: {}, // this.getTotalDefects(),
                     uiControl: [
                         {
+                            control: 'filters',
+                            options: {}
+                        },
+                        {
                             control: 'switcher',
                             options: {
                                 items: [
@@ -320,14 +474,18 @@ define(function (require) {
                                 ],
                                 action: 'switch_timeline_mode'
                             }
+                        },
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                action: 'limit'
+                            }
                         }
-                    ],
-                    limit: {
-                        display: true,
-                        min: 1,
-                        max: 150,
-                        def: 50
-                    }
+                    ]
                 },
                 launches_table: {
                     gadget_name: Localization.widgets.launchesTable,
@@ -335,19 +493,92 @@ define(function (require) {
                     description: Localization.widgets.launchesTableDescription,
                     widget_type: 'launches_table',
                     gadget: 'launches_table',
-                    criteria: [], // this.getExecutionsDefectsAndTableData(),
-                    staticCriteria: {
-                        name: Localization.forms.name,
-                        number: Localization.forms.number,
-                        last_modified: Localization.forms.lastModified,
-                        status: Localization.forms.status
-                    },
-                    limit: {
-                        display: true,
-                        min: 1,
-                        max: 150,
-                        def: 50
-                    }
+                    uiControl: [
+                        {
+                            control: 'filters',
+                            options: {}
+                        },
+                        {
+                            control: 'dropDown',
+                            options: {
+                                label: Localization.widgets.widgetCriteria,
+                                items: this.getLaunchesTableWidgetData(),
+                                multiple: true,
+                                getValue: function (model, self) {
+                                    var staticCriteria = ['name', 'number', 'last_modified', 'status'];
+                                    var defectLocatorPattern = appConfig.patterns.defectsLocator;
+                                    var contentFields = model.getContentFields();
+                                    var result;
+                                    if (!contentFields.length) {
+                                        result = _.map(self.model.get('items'), function (item) {
+                                            return item.value;
+                                        });
+                                    } else {
+                                        result = [];
+                                        _.each(contentFields, function (field) {
+                                            var splittedDefectField;
+                                            if (!~staticCriteria.indexOf(field)) {
+                                                if (~field.indexOf('statistics$defects$')) {
+                                                    splittedDefectField = field.split('$');
+                                                    if (defectLocatorPattern.test(splittedDefectField[3])) {
+                                                        splittedDefectField.length = 3;
+                                                        result.push(splittedDefectField.join('$') + '$total');
+                                                    }
+                                                } else {
+                                                    result.push(field);
+                                                }
+                                            }
+                                        });
+                                    }
+                                    return result;
+                                },
+                                setValue: function (value, model) {
+                                    var result;
+                                    var pref = 'statistics$defects$';
+                                    var typeRef;
+                                    var key;
+                                    var type;
+                                    var staticCriteria = ['name', 'number', 'last_modified', 'status'];
+                                    var defects = [];
+                                    var executions = [];
+                                    var launchCriteria = [];
+                                    var defectsCollection = new SingletonDefectTypeCollection();
+
+                                    defectsCollection.ready.done(function () {
+                                        _.each(value, function (criteria) {
+                                            if (~criteria.indexOf('statistics$defects$')) {
+                                                typeRef = criteria.split('$')[2].toUpperCase();
+                                                _.each(defectsCollection.models, function (defectModel) {
+                                                    if (defectModel.get('typeRef') === typeRef) {
+                                                        type = defectModel.get('typeRef').toLowerCase();
+                                                        key = pref + type + '$' + defectModel.get('locator');
+                                                        defects.push(key);
+                                                    }
+                                                });
+                                            } else if (~criteria.indexOf('statistics$executions$')) {
+                                                executions.push(criteria);
+                                            } else {
+                                                launchCriteria.push(criteria);
+                                            }
+                                        });
+                                    });
+
+                                    result = staticCriteria.concat(defects, launchCriteria, executions);
+                                    model.setContentFields(result);
+                                }
+                            }
+                        },
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                action: 'limit'
+                            }
+                        }
+                    ]
                 },
                 unique_bug_table: {
                     gadget_name: Localization.widgets.uniqueBugsTable,
@@ -356,13 +587,22 @@ define(function (require) {
                     widget_type: 'table',
                     gadget: 'unique_bug_table',
                     noCriteria: true,
-                    limit: {
-                        display: true,
-                        name: Localization.widgets.maxLaunches,
-                        min: 1,
-                        max: 150,
-                        def: 10
-                    }
+                    uiControl: [
+                        {
+                            control: 'filters',
+                            options: {}
+                        },
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.maxLaunches,
+                                min: 1,
+                                max: 150,
+                                def: 10,
+                                action: 'limit'
+                            }
+                        }
+                    ]
                 },
                 most_failed_test_cases: {
                     gadget_name: Localization.widgets.failedTestCasesTable,
@@ -370,18 +610,60 @@ define(function (require) {
                     gadget: 'most_failed_test_cases',
                     img: 'filter_results_failure.png',
                     description: Localization.widgets.failedTestCasesTableDescription,
-                    noFilters: true,
-                    launchesFilter: true,
-                    criteriaSelectType: 'radio',
-                    limit: {
-                        display: true,
-                        name: Localization.widgets.launchesCount,
-                        min: 2,
-                        max: 150,
-                        def: 30
-                    },
-                    defaultCriteria: ['statistics$executions$failed'],
-                    criteria: {} // this.getFailed()
+                    uiControl: [
+                        {
+                            control: 'dropDown',
+                            options: {
+                                label: Localization.widgets.widgetCriteria,
+                                items: this.getFailed(true),
+                                multiple: false,
+                                getValue: function (model, self) {
+                                    var contentFields = model.getContentFields();
+
+                                    if (contentFields.length) {
+                                        return contentFields;
+                                    }
+                                    return self.model.get('items')[0].value;
+                                },
+                                setValue: function (value, model) {
+                                    model.setContentFields([value]);
+                                }
+                            }
+                        },
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.launchesCount,
+                                min: 2,
+                                max: 150,
+                                def: 30,
+                                action: 'limit'
+                            }
+                        },
+                        {
+                            control: 'inputItems',
+                            options: {
+                                entity: 'launch',
+                                label: Localization.widgets.typeLaunchName,
+                                inputPlaceholder: Localization.widgets.selectLaunch,
+                                minItems: 1,
+                                maxItems: 1,
+                                getValue: function (model) {
+                                    var widgetOptions = model.getWidgetOptions();
+                                    if (widgetOptions.launchNameFilter) {
+                                        return widgetOptions.launchNameFilter;
+                                    }
+                                    return [];
+                                },
+                                setValue: function (value, model) {
+                                    var widgetOptions = model.getWidgetOptions();
+                                    widgetOptions.launchNameFilter = value;
+                                    model.setWidgetOptions(widgetOptions);
+                                }
+                            }
+                        }
+                    ],
+                    //launchesFilter: true
                 },
                 bug_trend: {
                     gadget_name: Localization.widgets.failedTrendChart,
@@ -391,12 +673,22 @@ define(function (require) {
                     gadget: 'bug_trend',
                     noCriteria: true,
                     staticCriteria: {}, // this.getTotalDefects(),
-                    limit: {
-                        display: true,
-                        min: 1,
-                        max: 150,
-                        def: 50
-                    }
+                    uiControl: [
+                        {
+                            control: 'filters',
+                            options: {}
+                        },
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                action: 'limit'
+                            }
+                        }
+                    ]
                 },
                 not_passed: {
                     gadget_name: Localization.widgets.nonPassedTrendChart,
@@ -411,12 +703,22 @@ define(function (require) {
                         statistics$executions$total: Localization.launchesHeaders.total
 
                     },
-                    limit: {
-                        display: true,
-                        min: 1,
-                        max: 150,
-                        def: 50
-                    }
+                    uiControl: [
+                        {
+                            control: 'filters',
+                            options: {}
+                        },
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                action: 'limit'
+                            }
+                        }
+                    ]
                 },
                 launches_comparison_chart: {
                     gadget_name: Localization.widgets.comparisonChart,
@@ -426,6 +728,12 @@ define(function (require) {
                     gadget: 'launches_comparison_chart',
                     noCriteria: true,
                     staticCriteria: {}, // this.getComparison(),
+                    uiControl: [
+                        {
+                            control: 'filters',
+                            options: {}
+                        }
+                    ],
                     limit: {
                         display: false,
                         min: 2,
@@ -477,12 +785,22 @@ define(function (require) {
                             pieChartMode: Localization.widgets.pieChartMode
                         }
                     },
-                    limit: {
-                        display: true,
-                        min: 1,
-                        max: 150,
-                        def: 50
-                    }
+                    uiControl: [
+                        {
+                            control: 'filters',
+                            options: {}
+                        },
+                        {
+                            control: 'numInput',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                action: 'limit'
+                            }
+                        }
+                    ]
                 }
             };
             _.each(WIDGETS, function (widget, key) {
@@ -517,32 +835,17 @@ define(function (require) {
             var self = this;
             defectTypes.ready.done(function () {
                 switch (gadget) {
-                case 'old_line_chart':
-                    widget.criteria = self.getExecutionsAndDefects();
-                    break;
-                case 'statistic_trend':
-                    widget.criteria = self.getExecutionsAndDefects();
-                    break;
                 case 'investigated_trend':
                     widget.staticCriteria = self.getTotalDefects();
                     break;
                 case 'launch_statistics':
                     widget.staticCriteria = self.getExecutionsAndDefects();
                     break;
-                case 'overall_statistics':
-                    widget.criteria = self.getExecutionsAndDefects();
-                    break;
                 case 'bug_trend':
                     widget.staticCriteria = self.getTotalDefects();
                     break;
                 case 'launches_comparison_chart':
                     widget.staticCriteria = self.getComparison();
-                    break;
-                case 'launches_table':
-                    widget.criteria = self.getExecutionsDefectsAndTableData();
-                    break;
-                case 'most_failed_test_cases':
-                    widget.criteria = self.getFailed();
                     break;
                 case 'last_launch':
                     widget.staticCriteria = self.getLastLaunchStats();
@@ -554,8 +857,16 @@ define(function (require) {
             });
             return def;
         },
-        getExecutionsAndDefects: function () {
-            return _.merge(this.getExecutions(), this.getSubDefects());
+        getExecutionsAndDefects: function (isFormatForControl) {
+            var result;
+            if (!isFormatForControl) {
+                result = _.merge(this.getExecutions(), this.getSubDefects());
+            } else {
+                result = _.map(_.merge(this.getExecutions(), this.getSubDefects()), function (key, val) {
+                    return { name: key, value: val };
+                });
+            }
+            return result;
         },
         getExecutions: function () {
             return {
@@ -565,14 +876,22 @@ define(function (require) {
                 statistics$executions$skipped: Localization.launchesHeaders.skipped
             };
         },
-        getFailed: function () {
+        getFailed: function (isFormatForControl) {
+            var result;
             var exec = {
                 statistics$executions$failed: Localization.launchesHeaders.failed,
                 statistics$executions$skipped: Localization.launchesHeaders.skipped
             };
             var defects = this.getTotalDefects();
             delete defects.statistics$defects$to_investigate$total;
-            return _.merge(exec, defects);
+            if (!isFormatForControl) {
+                result = _.merge(exec, defects);
+            } else {
+                result = _.map(_.merge(exec, defects), function (key, val) {
+                    return { name: key, value: val };
+                });
+            }
+            return result;
         },
         getDefects: function () {
             return {
@@ -606,6 +925,20 @@ define(function (require) {
                 { id: 'end_time', keys: ['end_time'], name: Localization.forms.finishTime },
                 { id: 'description', keys: ['description'], name: Localization.forms.description }
             ];
+        },
+        getLaunchesTableWidgetData: function () {
+            var launchData = {
+                tags: Localization.forms.tags,
+                user: Localization.forms.user,
+                start_time: Localization.forms.startTime,
+                end_time: Localization.forms.finishTime,
+                description: Localization.forms.description
+            };
+            var data = _.merge(this.getExecutions(), this.getTotalDefects(), launchData);
+
+            return _.map(data, function (key, val) {
+                return { name: key, value: val };
+            });
         },
         getGroupDefects: function (exceptionKeys) {
             var defects = {};
@@ -656,6 +989,23 @@ define(function (require) {
             });
             var defects = this.getGroupDefects(['no_defect']);
             return exec.concat(defects, this.getDefaultTableData());
+        },
+        getProjectActivityEventsData: function () {
+            return [
+                { value: 'start_launch', name: Localization.forms.startLaunch },
+                { value: 'finish_launch', name: Localization.forms.finishLaunch },
+                { value: 'delete_launch', name: Localization.forms.deleteLaunch },
+                { value: 'post_issue', name: Localization.forms.postIssue },
+                { value: 'create_user', name: Localization.forms.createUser },
+                { value: 'update_dashboard', name: Localization.forms.updateDashboard },
+                { value: 'update_widget', name: Localization.forms.updateWidget },
+                { value: 'update_filter', name: Localization.forms.updateFilter },
+                { value: 'update_bts', name: Localization.forms.updateBts },
+                { value: 'update_project', name: Localization.forms.updateProject },
+                { value: 'update_defects', name: Localization.forms.updateDefects },
+                { value: 'import', name: Localization.forms.import }
+
+            ];
         },
         getDefaultWidgetImg: function () {
             return 'no_chart.png';

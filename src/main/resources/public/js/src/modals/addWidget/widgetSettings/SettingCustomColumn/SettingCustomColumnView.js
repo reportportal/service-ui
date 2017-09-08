@@ -29,7 +29,7 @@ define(function (require) {
 
     var SettingCustomColumnView = Epoxy.View.extend({
         className: 'modal-add-widget-setting-custom-column',
-        template: 'modal-add-widget-setting-custom-column',
+        template: 'tpl-modal-add-widget-setting-custom-column',
         bindings: {
             '[data-js-name-input]': 'value:name',
             '[data-js-value-input]': 'value:value'

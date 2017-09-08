@@ -25,21 +25,21 @@ define(function (require) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var FilterSearchItemView = require('modals/addWidget/FilterSearchItemView');
+    var FilterSearchItemView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFilterSearchItemView');
     var FilterModel = require('filters/FilterModel');
     var FilterListener = require('controlers/filterControler/FilterListener');
 
     var FilterSearchItem = Epoxy.View.extend({
-        className: 'modal-add-widget-selected-filter',
-        template: 'tpl-modal-add-widget-selected-filter',
+        className: 'setting-filter-selected',
+        template: 'tpl-modal-add-widget-setting-filter-selected',
         events: {
             'click [data-js-filter-edit]': 'onClickFilterEdit'
         },
-        initialize: function () {
+        initialize: function (options) {
             var self = this;
+            this.model = options.gadgetModel;
             this.filterListener = new FilterListener();
             this.filterEvents = this.filterListener.events;
-            this.async = $.Deferred();
             this.render();
             this.filterModel = new FilterModel({
                 id: this.model.get('filter_id'),
@@ -53,33 +53,20 @@ define(function (require) {
             this.listenTo(this.filterModel, 'change:load', this.onChangeLoadFilter);
         },
         onChangeLoadFilter: function (model, load) {
+            this.model.set('filter_model', model);
             if (!load) {
                 this.$el.removeClass('load');
                 this.filterView && this.filterView.destroy();
                 this.filterView = new FilterSearchItemView({ model: this.filterModel });
                 $('[data-js-filter-info]', this.$el).html(this.filterView.$el);
-                this.async.resolve();
             }
-        },
-        getFilterModel: function () {
-            return this.filterModel;
-        },
-        getAsync: function () {
-            return this.async;
-        },
-        setFilterModel: function (model) {
-            this.filterView && this.filterView.destroy();
-            this.filterView = new FilterSearchItemView({ model: model });
-            $('[data-js-filter-info]', this.$el).html(this.filterView.$el);
-        },
-        getSelectedFilterModel: function () {
-            return this.filterModel;
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickFilterEdit: function () {
-            this.trigger('edit', this.filterModel);
+            config.trackingDispatcher.trackEventNumber(321);
+            this.trigger('edit');
         },
         onDestroy: function () {
             this.filterView && this.filterView.destroy();

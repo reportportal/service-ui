@@ -37,14 +37,17 @@ define(function (require) {
     var SettingCheckBoxView = require('modals/addWidget/widgetSettings/SettingCheckBoxView');
     var SettingSwitcherView = require('modals/addWidget/widgetSettings/SettingSwitcherView');
     var SettingCustomColumnsView = require('modals/addWidget/widgetSettings/SettingCustomColumn/SettingCustomColumnsView');
+    var SettingFiltersView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFiltersView');
+    var SettingNumInputView = require('modals/addWidget/widgetSettings/SettingNumInputView');
 
-    var WidgetCriteriaView = Epoxy.View.extend({
-        className: 'modal-add-widget-criteria-list rp-form',
+    var WidgetSettingsView = Epoxy.View.extend({
+        className: 'modal-add-widget-settings-list rp-form',
         events: {
         },
         bindings: {
         },
-        initialize: function () {
+        initialize: function (options) {
+            this.isShortForm = options.isShortForm || false;
             this.renderedView = [];
         },
         renderView: function (ViewConstructor, data) {
@@ -68,9 +71,11 @@ define(function (require) {
             this.renderView(SettingUsersView);
             this.renderView(SettingLaunchView);
             WidgetService.getSettingsGadget(this.model.get('gadget')).done(function (widgetConfig) {
-                _.each(widgetConfig.uiControl, function (controlObg) {
+                _.each(widgetConfig.uiControl, function (controlObj) {
                     var constructor;
-                    switch (controlObg.control) {
+                    var options = controlObj.options;
+                    options.isShortForm = this.isShortForm;
+                    switch (controlObj.control) {
                     case 'inputItems':
                         constructor = SettingInputItemsView;
                         break;
@@ -86,11 +91,21 @@ define(function (require) {
                     case 'customColumns':
                         constructor = SettingCustomColumnsView;
                         break;
+                    case 'filters':
+                        constructor = SettingFiltersView;
+                        options.switchable = self.isShortForm;
+                        break;
+                    case 'numInput':
+                        constructor = SettingNumInputView;
+                        break;
                     default:
                         break;
                     }
-                    constructor && self.renderSetting(constructor, controlObg.options);
+                    constructor && self.renderSetting(constructor, options);
                 }, self);
+                if (!self.model.get('itemsCount')) {
+                    self.model.set('itemsCount', 50);
+                }
             });
         },
         renderSetting: function (ViewConstructor, options) {
@@ -98,11 +113,22 @@ define(function (require) {
                 gadgetModel: this.model,
                 options: options
             });
+
+            this.listenTo(view, 'showBaseViewMode', this.viewModeHandler);
             this.renderedView.push(view);
             this.$el.append(view.$el);
             // set default state for model
             view.setValue(view.getValue(this.model, view), this.model);
             view.activate && view.activate();
+        },
+        viewModeHandler: function (showBaseViewMode, settingView) {
+            if (showBaseViewMode) {
+                this.trigger('change:view', { mode: 'expandedSettingView' });
+                this.$el.attr('expanded-setting', settingView);
+            } else {
+                this.trigger('change:view', { mode: 'allSettingsView' });
+                this.$el.removeAttr('expanded-setting');
+            }
         },
         validate: function () {
             var result = true;
@@ -112,9 +138,13 @@ define(function (require) {
                 }
             });
             return result;
+        },
+        onDestroy: function () {
+            _.each(this.renderedView, function (view) {
+                view.destroy();
+            });
         }
-
     });
 
-    return WidgetCriteriaView;
+    return WidgetSettingsView;
 });

@@ -39,7 +39,7 @@ define(function (require) {
 
             // widgetData
             filter_id: '',
-            itemsCount: 50,
+            itemsCount: 0,
             widgetDescription: '',
             widgetOptions: '{}',
             content_fields: '[]'
