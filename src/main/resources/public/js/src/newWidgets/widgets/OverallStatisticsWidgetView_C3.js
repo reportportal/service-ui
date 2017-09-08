@@ -47,6 +47,8 @@ define(function (require) {
             var contentData;
             var statusChartData;
             var defectTypesChartData;
+            var defectTypesChartDataOrdered = {};
+
             if (!this.isDataExists()) {
                 this.addNoAvailableBock(this.$el);
                 return;
@@ -57,7 +59,17 @@ define(function (require) {
             contentData = this.model.getContent().result[0].values;
             statusChartData = _.pick(contentData, ['passed', 'failed', 'skipped', 'total']);
             defectTypesChartData = _.omit(contentData, ['failed', 'passed', 'skipped', 'total']);
-            if (contentData.total === 0 || (_.isEmpty(defectTypesChartData) && _.isEmpty(statusChartData))) {
+
+            _.each(this.model.getContentFields(), function (field) {
+                var splitted = field.split('$');
+                _.each(defectTypesChartData, function (val, key) {
+                    if (key === splitted[splitted.length - 1]) {
+                        defectTypesChartDataOrdered[key] = val;
+                    }
+                });
+            });
+
+            if (contentData.total === 0 || (_.isEmpty(defectTypesChartDataOrdered) && _.isEmpty(statusChartData))) {
                 this.addNoAvailableBock(this.$el);
                 return;
             }
@@ -71,16 +83,16 @@ define(function (require) {
                         if (_.isEmpty(statusChartData)) {
                             this.$el.addClass('left-chart-hidden');
                         }
-                        if (_.isEmpty(defectTypesChartData)) {
+                        if (_.isEmpty(defectTypesChartDataOrdered)) {
                             this.$el.addClass('right-chart-hidden');
                         }
                         if (!_.isEmpty(statusChartData)) {
                             $('[data-js-left-chart-container]', this.$el).addClass('status-chart');
                             this.drawDonutChart($('[data-js-left-chart-container]', this.$el), statusChartData);
                         }
-                        if (!_.isEmpty(defectTypesChartData)) {
+                        if (!_.isEmpty(defectTypesChartDataOrdered)) {
                             $('[data-js-right-chart-container]', this.$el).addClass('issues-chart');
-                            this.drawDonutChart($('[data-js-right-chart-container]', this.$el), defectTypesChartData);
+                            this.drawDonutChart($('[data-js-right-chart-container]', this.$el), defectTypesChartDataOrdered);
                         }
                         this.restyleDonutTitle();
                     } else {
@@ -91,8 +103,8 @@ define(function (require) {
                         } else {
                             this.$el.addClass('left-chart-hidden');
                         }
-                        if (!_.isEmpty(defectTypesChartData)) {
-                            this.drawDefectTypesPanel($('[data-js-right-chart-container]', this.$el), defectTypesChartData);
+                        if (!_.isEmpty(defectTypesChartDataOrdered)) {
+                            this.drawDefectTypesPanel($('[data-js-right-chart-container]', this.$el), defectTypesChartDataOrdered);
                         } else {
                             this.$el.addClass('right-chart-hidden');
                         }
