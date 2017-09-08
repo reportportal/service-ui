@@ -162,6 +162,7 @@ define(function (require) {
                 product_bug: 0,
                 automation_bug: 0,
                 system_issue: 0,
+                no_defect: 0,
                 to_investigate: 0
             };
             _.each(launches, function (launch) {
@@ -180,6 +181,8 @@ define(function (require) {
                         parseInt(launch.statistics.defects.automation_bug.total, 10),
                     system_issue: statisticData.system_issue +
                         parseInt(launch.statistics.defects.system_issue.total, 10),
+                    no_defect: statisticData.no_defect +
+                        parseInt(launch.statistics.defects.no_defect.total, 10),
                     to_investigate: statisticData.to_investigate +
                         parseInt(launch.statistics.defects.to_investigate.total, 10)
                 };

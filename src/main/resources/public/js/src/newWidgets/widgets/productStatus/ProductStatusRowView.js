@@ -94,6 +94,9 @@ define(function (require) {
                 case 'system_issue':
                     answer.text = data.system_issue;
                     break;
+                case 'no_defect':
+                    answer.text = data.no_defect;
+                    break;
                 case 'to_investigate':
                     answer.text = data.to_investigate;
                     break;
@@ -270,7 +273,7 @@ define(function (require) {
                             defectCollection.ready.done(function () {
                                 var investigateFilter = '';
                                 if (launchData.statistics.defects.to_investigate.total) {
-                                    toInvest = defectCollection.findWhere({typeRef: 'TO_INVESTIGATE'});
+                                    toInvest = defectCollection.findWhere({ typeRef: 'TO_INVESTIGATE' });
                                     if (toInvest) {
                                         investigateFilter = 'filter.eq.has_childs=false&filter.in.issue$issue_type=' + toInvest.get('locator');
                                         $('[data-js-cell-to_investigate] a', self.$el).attr({
