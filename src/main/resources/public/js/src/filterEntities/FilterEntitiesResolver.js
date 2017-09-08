@@ -403,14 +403,6 @@ define(function (require, exports, module) {
             });
         });
         return new Backbone.Collection([
-            new Filters.EntityTimeRangeModel({
-                label: Localization.projectEvents.tableHeaders.time,
-                name: Localization.projectEvents.tableHeaders.time,
-                id: 'last_modified',
-                condition: 'btw',
-                values: ['Any'],
-                value: ''
-            }),
             new Filters.EntitySelectModel({
                 label: Localization.projectEvents.tableHeaders.action,
                 name: Localization.projectEvents.tableHeaders.action,
@@ -419,6 +411,14 @@ define(function (require, exports, module) {
                 required: true,
                 values: actionTypeValues,
                 value: 'All'
+            }),
+            new Filters.EntityTimeRangeModel({
+                label: Localization.projectEvents.tableHeaders.time,
+                name: Localization.projectEvents.tableHeaders.time,
+                id: 'last_modified',
+                condition: 'btw',
+                values: ['Any'],
+                value: ''
             }),
             new Filters.EntitySelectModel({
                 label: Localization.projectEvents.tableHeaders.objectType,
