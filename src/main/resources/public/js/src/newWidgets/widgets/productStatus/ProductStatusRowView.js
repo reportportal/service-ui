@@ -102,10 +102,11 @@ define(function (require) {
                     break;
                 case 'passing_rate':
                     var count = 100;
+                    answer.text = '';
                     if (parseInt(data.total, 10) !== 0) {
                         count = parseInt((data.passed / data.total) * 100, 10);
+                        answer.text = count + '%';
                     }
-                    answer.text = count + '%';
                     if (count < 100) {
                         answer.text = '<span class="less-100">' + answer.text + '</span>';
                     }
