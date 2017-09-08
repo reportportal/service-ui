@@ -115,7 +115,12 @@ define(function (require) {
         onChangeFilterEntities: function () {
             var newEntities = [];
             _.each(this.collection.models, function (model) {
-                if ((model.get('visible') || model.get('required')) && model.get('value') !== '') {
+                if (model.get('required')) {
+                    newEntities.push(model.getInfo());
+                }
+            }, this);
+            _.each(this.collection.models, function (model) {
+                if (model.get('visible') && model.get('value') !== '' && !model.get('required')) {
                     newEntities.push(model.getInfo());
                 }
             }, this);

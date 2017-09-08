@@ -246,10 +246,7 @@ define(function (require) {
         getOptions: function () {
             var data = [];
             _.each(this.getEntitiesObj(), function (entity) {
-                if (entity.value) {
-                    data.push('filter.' + entity.condition + '.' + entity.filtering_field +
-                        '=' + encodeURIComponent(entity.value));
-                }
+                data.push('filter.' + entity.condition + '.' + entity.filtering_field + '=' + encodeURIComponent(entity.value));
             });
             var selectionParameters = this.getParametersObj();
             var sortDirection = 'ASC';
