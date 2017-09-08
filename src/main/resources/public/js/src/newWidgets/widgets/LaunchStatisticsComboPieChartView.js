@@ -121,6 +121,9 @@ define(function (require) {
                 this.fixNoDataMessage(id);
             }
         },
+        noDataAvailableShow: function (el) {
+            el.find('.no-data-error').removeClass('hide');
+        },
         updateTotal: function (id) {
             var data = d3.select($(id, this.$el).get(0)).data()[0];
             var total = 0;

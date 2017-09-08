@@ -45,11 +45,26 @@ define(function (require) {
             return ProductStatusService.getData(this.model)
                 .done(function (data) {
                     $('[data-js-preloader-product-widget]', self.$el).removeClass('show');
-                    var headerData = self.getHeaderData();
-                    self.renderHeader(headerData);
-                    self.renderRows(headerData, data);
-                    Util.setupBaronScroll($('[data-js-table-container]', self.$el), false, { direction: 'm' });
+                    if (self.checkForEmptyData(data)) {
+                        self.addNoAvailableBock();
+                    } else {
+                        var headerData = self.getHeaderData();
+                        self.renderHeader(headerData);
+                        self.renderRows(headerData, data);
+                        Util.setupBaronScroll($('[data-js-table-container]', self.$el), false, { direction: 'm' });
+                    }
                 });
+        },
+        checkForEmptyData: function (data) {
+            var answer = true;
+            _.each(data, function (item) {
+                if (item.launches.length) {
+                    answer = false;
+                    return false;
+                }
+                return true;
+            });
+            return answer;
         },
         updateWidget: function () {
             this.render();

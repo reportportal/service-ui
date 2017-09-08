@@ -54,7 +54,8 @@ define(function (require) {
             return _.isEmpty(data);
         },
         addNoAvailableBock: function (el) {
-            $(el).after('<div class="no-data-error"><div class="no-data-content">' + Localization.widgets.noData + '</div></div>');
+            var $element = el ? $(el) : this.$el;
+            $element.after('<div class="no-data-error"><div class="no-data-content">' + Localization.widgets.noData + '</div></div>');
         },
         getSeriesColor: function (name) {
             var defect = this.defectsCollection.getDefectType(name);
@@ -173,9 +174,6 @@ define(function (require) {
             // };
             // var resize = _.debounce(update, 500);
             // $(window).on('resize.' + this.id, resize);
-        },
-        noDataAvailableShow: function (el) {
-            el.find('.no-data-error').removeClass('hide');
         },
         updateWidget: function () {
         },
