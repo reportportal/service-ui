@@ -1750,7 +1750,7 @@ define(['util'], function () {
             passwordLength: 'Password length should have size from %%% to %%% characters.',
             userNameLength: 'Name length should have size from %%% to %%% characters.',
 
-            moreOneItem: 'You must select more than one item'
+            moreAtItem: 'You must select at least one item'
         },
 
         forms: {

@@ -155,7 +155,7 @@ define(function (require) {
         },
         validate: function () {
             if (this.model.get('minItems') > 0 && !this.model.get('value').length) {
-                this.showErrorState(Localization.validation.moreOneItem);
+                this.showErrorState(Localization.validation.moreAtItem);
                 return false;
             }
             return true;
