@@ -50,9 +50,6 @@
         padding-left: 20px;
       }
     }
-    a {
-      color: $COLOR--windows-blue;
-    }
     .type-cell-filter {
       height: 40px;
       color: $COLOR--gray-47;
@@ -131,6 +128,9 @@
     }
     .type-cell-total, .type-cell-passed, .type-cell-failed, .type-cell-skipped {
       width: 85px;
+      a {
+        color: $COLOR--windows-blue;
+      }
     }
     .type-cell-product_bug, .type-cell-auto_bug, .type-cell-system_issue, .type-cell-to_investigate {
       width: 70px;
