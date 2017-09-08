@@ -729,6 +729,7 @@ define(['util'], function () {
             shiftToDebug: 'Move to Debug',
             owner: 'Owner',
             addToDashboard: 'Add to dashboard',
+            postIssue: 'Post Issue',
             postBug: 'Post Bug',
             postBugTo: 'Post Bug to',
             loadBug: 'Load Bug',

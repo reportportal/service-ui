@@ -786,6 +786,7 @@ define(['util'], function () {
             shiftToDebug: 'Перейти к Отладке',
             owner: 'Владелец',
             addToDashboard: 'Добавить на панель управления',
+            postIssue: 'Отправить ошибку',
             postBug: 'Отправить ошибку',
             postBugTo: 'Отправить ошибку в',
             loadBug: 'Загрузить ошибку',
