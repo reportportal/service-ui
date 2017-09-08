@@ -28,8 +28,12 @@
   }
   table.rp-table-grid {
     min-width: 100%;
-    overflow: hidden;
+    padding-bottom: 10px;
     color: $COLOR--charcoal-grey;
+    tr {
+      border-left: none;
+      border-right: none;
+    }
     th, td {
       padding-right: 15px;
     }

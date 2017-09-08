@@ -116,6 +116,7 @@ define(function (require) {
                 self.renderedItems.push(view);
                 $('[data-js-items-container]', self.$el).append(view.$el);
             });
+            this.onChangeCollection();
         },
         destroyItems: function () {
             _.each(this.renderedItems, function (view) {

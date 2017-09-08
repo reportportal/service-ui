@@ -568,6 +568,7 @@ define(['util'], function () {
             latestLaunches: 'Последние запуски',
             allLaunches: 'Все запуски',
 
+            customColumn: 'Кастомная колонка',
             columnName: 'Имя колонки',
             tagPattern: 'Паттерн тега',
             addCustomColumn: 'Добавить колонку',

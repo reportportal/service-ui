@@ -511,8 +511,9 @@ define(['util'], function () {
             latestLaunches: 'Latest launches',
             allLaunches: 'All launches',
 
+            customColumn: 'Custom column',
             columnName: 'Column name',
-            tagPattern: 'Tag pattern',
+            tagPattern: 'Tag prefix',
             addCustomColumn: 'Add custom column',
             groupLaunchesByFilter: 'Group launches by filter'
         },
