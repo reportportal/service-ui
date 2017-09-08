@@ -29,6 +29,7 @@ define(function (require) {
     var ProductStatusLaunchName = require('newWidgets/widgets/productStatus/ProductStatusLaunchNameView');
     var ProductStatusFilterName = require('newWidgets/widgets/productStatus/ProductStatusFilterNameView');
     var ItemStartTimeView = require('launches/common/ItemStartTimeView');
+    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var Util = require('util');
     var Localization = require('localization');
 
@@ -261,7 +262,27 @@ define(function (require) {
                     });
                     break;
                 case 'to_investigate':
-                    answer.text = '<span>' + launchData.statistics.defects.to_investigate.total + '</span>';
+                    if (this.clickable) {
+                        answer.text = '<a><span>' + launchData.statistics.defects.to_investigate.total + '</span></a>';
+                        afterFuncs.push(function () {
+                            var defectCollection = new SingletonDefectTypeCollection();
+                            var toInvest;
+                            defectCollection.ready.done(function () {
+                                var investigateFilter = '';
+                                if (launchData.statistics.defects.to_investigate.total) {
+                                    toInvest = defectCollection.findWhere({typeRef: 'TO_INVESTIGATE'});
+                                    if (toInvest) {
+                                        investigateFilter = 'filter.eq.has_childs=false&filter.in.issue$issue_type=' + toInvest.get('locator');
+                                        $('[data-js-cell-to_investigate] a', self.$el).attr({
+                                            href: self.launchModel.get('url') + '?' + investigateFilter
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    } else {
+                        answer.text = '<span>' + launchData.statistics.defects.to_investigate.total + '</span>';
+                    }
                     break;
                 case 'passing_rate':
                     var count = 100;
@@ -280,10 +301,8 @@ define(function (require) {
             } else if (column.type === 'custom') {
                 var values = [];
                 _.each(launchData.tags, function (tag) {
-                    var re = new RegExp('^' + column.tag);
-                    var value = tag.replace(re, '');
-                    if (value !== tag) {
-                        values.push(value);
+                    if (tag.indexOf(column.tag) === 0) {
+                        values.push(tag.replace(column.tag, ''));
                     }
                 });
                 answer.text = values.join(', ');
