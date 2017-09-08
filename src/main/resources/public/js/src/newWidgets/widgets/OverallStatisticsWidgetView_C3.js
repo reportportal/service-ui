@@ -165,7 +165,7 @@ define(function (require) {
                 donut: {
                     title: total,
                     label: {
-                        show: true,
+                        show: false,
                         threshold: 0.05
                     }
                 },
@@ -185,7 +185,7 @@ define(function (require) {
                         } else {
                             name = self.defetTypesCollection.getDefectByLocator(d[0].id).get('longName');
                         }
-                        return '<div class="tooltip-val">' + d[0].value + '</div>' +
+                        return '<div class="tooltip-val">' + d[0].value + ' (' + (d[0].ratio * 100).toFixed(2) + '%)</div>' +
                             '<div class="tooltip-title">' +
                                 '<div class="color-mark" style="background-color: ' + color(d[0].id) + ';"></div>' +
                                  name +
