@@ -514,8 +514,10 @@ define(['util'], function () {
             customColumn: 'Custom column',
             columnName: 'Column name',
             tagPattern: 'Tag prefix',
-            addCustomColumn: 'Add custom column',
-            groupLaunchesByFilter: 'Group launches by filter'
+            customColumnDiscl: 'You can add custom column to view tags with chosen tag prefix',
+            addCustomColumn: '+ Add custom column',
+            groupLaunchesByFilter: 'Group launches by filter',
+            launchesOnFilter: 'launches are included in the filter'
         },
 
         userProfile: {

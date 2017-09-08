@@ -2,7 +2,7 @@
     <a data-js-name-link><span data-js-name></span></span></a>
 </h5>
 <ul class="rp-grid-tags">
-    <li class="launch-status-wrapper">
+    <li class="launch-status-wrapper" title="<%= data.length + ' ' + data.text.widgets.launchesOnFilter%>">
         <% _.each(data, function(status) { %>
         <div class="item_status <%= (status === 'PASSED')?'status_passed':'' %>"></div>
         <% }) %>

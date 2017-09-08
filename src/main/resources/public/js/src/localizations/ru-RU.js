@@ -571,8 +571,10 @@ define(['util'], function () {
             customColumn: 'Кастомная колонка',
             columnName: 'Имя колонки',
             tagPattern: 'Паттерн тега',
-            addCustomColumn: 'Добавить колонку',
-            groupLaunchesByFilter: 'Групировать запуски по фильтру'
+            customColumnDiscl: 'Вы можете добавить свою колонкук для просмотра тегов с выбранным префиксом тега',
+            addCustomColumn: '+ Добавить колонку',
+            groupLaunchesByFilter: 'Групировать запуски по фильтру',
+            launchesOnFilter: 'запусков включает фильтр'
         },
 
         userProfile: {

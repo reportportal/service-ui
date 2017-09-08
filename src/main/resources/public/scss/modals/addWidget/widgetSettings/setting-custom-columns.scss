@@ -24,6 +24,16 @@
   padding: 17px 0 0 10px;
   width: 100%;
   text-align: right;
+  .description {
+    width: 276px;
+    display: inline-block;
+    text-align: left;
+    color: $COLOR--gray-60;
+    font-size: 12px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    line-height: 14px;
+  }
   .add-item {
     color: $COLOR--windows-blue;
     width: 276px;
