@@ -257,7 +257,6 @@ define(function (require) {
                     description: Localization.widgets.durationChartDescription,
                     widget_type: 'column_chart',
                     gadget: 'launches_duration_chart',
-                    noCriteria: true,
                     uiControl: [
                         {
                             control: 'filters',
@@ -284,15 +283,15 @@ define(function (require) {
                                 numOnly: true,
                                 action: 'limit'
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'criteria',
+                                fields: ['start_time', 'end_time', 'name', 'number', 'status']
+                            }
                         }
-                    ],
-                    staticCriteria: {
-                        start_time: '',
-                        end_time: '',
-                        name: '',
-                        number: '',
-                        status: ''
-                    }
+                    ]
                 },
                 launch_statistics: {
                     gadget_name: Localization.widgets.executionIssueStatistics,
@@ -301,19 +300,30 @@ define(function (require) {
                     widget_type: 'combine_pie_chart',
                     gadget: 'launch_statistics',
                     noCriteria: true,
-                    staticCriteria: {}, // this.getExecutionsAndDefects(),
                     uiControl: [
                         {
                             control: 'filters',
                             options: {}
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'criteria',
+                                fields: function () {
+                                    return _.map(this.getExecutionsAndDefects(true), function (item) {
+                                        return item.value;
+                                    });
+                                }.bind(this)
+                            }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'limit',
+                                value: 1
+                            }
                         }
-                    ],
-                    limit: {
-                        display: false,
-                        min: 1,
-                        max: 1,
-                        def: 1
-                    }
+                    ]
                 },
                 last_launch: {
                     gadget_name: Localization.widgets.executionIssueStatistics,
@@ -428,18 +438,15 @@ define(function (require) {
                                 numOnly: true,
                                 action: 'limit'
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'criteria',
+                                fields: ['name', 'userRef', 'last_modified', 'actionType', 'objectType', 'projectRef', 'loggedObjectRef', 'history']
+                            }
                         }
-                    ],
-                    staticCriteria: {
-                        name: 'name',
-                        userRef: Localization.forms.user,
-                        last_modified: 'Last_modified',
-                        actionType: 'ActionType',
-                        objectType: 'ObjectType',
-                        projectRef: Localization.forms.project,
-                        loggedObjectRef: 'LoggedObjectRef',
-                        history: Localization.forms.history
-                    }
+                    ]
                 },
                 cases_trend: {
                     gadget_name: Localization.widgets.growthTrendChart,
@@ -447,10 +454,6 @@ define(function (require) {
                     description: Localization.widgets.growthTrendChartDescription,
                     widget_type: 'cases_trend_chart',
                     gadget: 'cases_trend',
-                    noCriteria: true,
-                    staticCriteria: {
-                        statistics$executions$total: Localization.launchesHeaders.total
-                    },
                     uiControl: [
                         {
                             control: 'filters',
@@ -475,6 +478,13 @@ define(function (require) {
                                 def: 50,
                                 numOnly: true,
                                 action: 'limit'
+                            }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'criteria',
+                                fields: ['statistics$executions$total']
                             }
                         }
                     ]
@@ -485,8 +495,6 @@ define(function (require) {
                     description: Localization.widgets.percentageOfLaunchesDescription,
                     widget_type: 'column_chart',
                     gadget: 'investigated_trend',
-                    noCriteria: true,
-                    staticCriteria: {}, // this.getTotalDefects(),
                     uiControl: [
                         {
                             control: 'filters',
@@ -511,6 +519,15 @@ define(function (require) {
                                 def: 50,
                                 numOnly: true,
                                 action: 'limit'
+                            }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'criteria',
+                                fields: function () {
+                                    return _.keys(this.getTotalDefects());
+                                }.bind(this)
                             }
                         }
                     ]
@@ -615,7 +632,6 @@ define(function (require) {
                     description: Localization.widgets.uniqueBugsTableDescription,
                     widget_type: 'table',
                     gadget: 'unique_bug_table',
-                    noCriteria: true,
                     uiControl: [
                         {
                             control: 'filters',
@@ -701,8 +717,6 @@ define(function (require) {
                     description: Localization.widgets.failedTrendChartDescription,
                     widget_type: 'bug_trend',
                     gadget: 'bug_trend',
-                    noCriteria: true,
-                    staticCriteria: {}, // this.getTotalDefects(),
                     uiControl: [
                         {
                             control: 'filters',
@@ -717,6 +731,15 @@ define(function (require) {
                                 def: 50,
                                 numOnly: true,
                                 action: 'limit'
+                            }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'criteria',
+                                fields: function () {
+                                    return _.keys(this.getTotalDefects());
+                                }.bind(this)
                             }
                         }
                     ]
@@ -727,13 +750,6 @@ define(function (require) {
                     description: Localization.widgets.nonPassedTrendChartDescription,
                     widget_type: 'not_passed_chart',
                     gadget: 'not_passed',
-                    noCriteria: true,
-                    staticCriteria: {
-                        statistics$executions$failed: Localization.launchesHeaders.failed,
-                        statistics$executions$skipped: Localization.launchesHeaders.skipped,
-                        statistics$executions$total: Localization.launchesHeaders.total
-
-                    },
                     uiControl: [
                         {
                             control: 'filters',
@@ -749,6 +765,13 @@ define(function (require) {
                                 numOnly: true,
                                 action: 'limit'
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'criteria',
+                                fields: ['statistics$executions$failed', 'statistics$executions$skipped', 'statistics$executions$total']
+                            }
                         }
                     ]
                 },
@@ -758,20 +781,28 @@ define(function (require) {
                     description: Localization.widgets.comparisonChartDescription,
                     widget_type: 'column_chart',
                     gadget: 'launches_comparison_chart',
-                    noCriteria: true,
-                    staticCriteria: {}, // this.getComparison(),
                     uiControl: [
                         {
                             control: 'filters',
                             options: {}
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'criteria',
+                                fields: function () {
+                                    return _.keys(this.getComparison());
+                                }.bind(this)
+                            }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'limit',
+                                value: 2
+                            }
                         }
-                    ],
-                    limit: {
-                        display: false,
-                        min: 2,
-                        max: 2,
-                        def: 2
-                    }
+                    ]
                 },
                 passing_rate_per_launch: {
                     gadget_name: Localization.widgets.passingRatePerLaunchChart,
@@ -779,8 +810,6 @@ define(function (require) {
                     description: Localization.widgets.passingRatePerLaunchChartDescription,
                     widget_type: 'bar_chart',
                     gadget: 'passing_rate_per_launch',
-                    noCriteria: true,
-                    staticCriteria: {},
                     uiControl: [
                         {
                             control: 'inputItems',
@@ -813,14 +842,15 @@ define(function (require) {
                                 ],
                                 action: 'switch_view_mode'
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'limit',
+                                value: 30
+                            }
                         }
-                    ],
-                    limit: {
-                        display: false,
-                        min: 30,
-                        max: 30,
-                        def: 30
-                    }
+                    ]
                 },
                 passing_rate_summary: {
                     gadget_name: Localization.widgets.passingRateSummaryChart,
@@ -828,11 +858,6 @@ define(function (require) {
                     description: Localization.widgets.passingRateSummaryChartDescription,
                     widget_type: 'bar_chart',
                     gadget: 'passing_rate_summary',
-                    noCriteria: true,
-                    staticCriteria: {
-                        statistics$executions$total: Localization.launchesHeaders.total,
-                        statistics$executions$passed: Localization.launchesHeaders.passed
-                    },
                     uiControl: [
                         {
                             control: 'filters',
@@ -857,6 +882,13 @@ define(function (require) {
                                 def: 50,
                                 numOnly: true,
                                 action: 'limit'
+                            }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'criteria',
+                                fields: ['statistics$executions$total', 'statistics$executions$passed']
                             }
                         }
                     ]
@@ -894,18 +926,6 @@ define(function (require) {
             var self = this;
             defectTypes.ready.done(function () {
                 switch (gadget) {
-                case 'investigated_trend':
-                    widget.staticCriteria = self.getTotalDefects();
-                    break;
-                case 'launch_statistics':
-                    widget.staticCriteria = self.getExecutionsAndDefects();
-                    break;
-                case 'bug_trend':
-                    widget.staticCriteria = self.getTotalDefects();
-                    break;
-                case 'launches_comparison_chart':
-                    widget.staticCriteria = self.getComparison();
-                    break;
                 case 'last_launch':
                     widget.staticCriteria = self.getLastLaunchStats();
                     break;

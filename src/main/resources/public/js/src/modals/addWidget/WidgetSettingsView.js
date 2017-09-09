@@ -39,6 +39,7 @@ define(function (require) {
     var SettingCustomColumnsView = require('modals/addWidget/widgetSettings/SettingCustomColumn/SettingCustomColumnsView');
     var SettingFiltersView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFiltersView');
     var SettingInputView = require('modals/addWidget/widgetSettings/SettingInputView');
+    var SettingStaticData = require('modals/addWidget/widgetSettings/SettingStaticData');
 
     var WidgetSettingsView = Epoxy.View.extend({
         className: 'modal-add-widget-settings-list rp-form',
@@ -97,6 +98,9 @@ define(function (require) {
                         break;
                     case 'input':
                         constructor = SettingInputView;
+                        break;
+                    case 'static':
+                        constructor = SettingStaticData;
                         break;
                     default:
                         break;
