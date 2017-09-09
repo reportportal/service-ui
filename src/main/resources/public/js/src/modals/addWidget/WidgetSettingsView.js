@@ -38,7 +38,7 @@ define(function (require) {
     var SettingSwitcherView = require('modals/addWidget/widgetSettings/SettingSwitcherView');
     var SettingCustomColumnsView = require('modals/addWidget/widgetSettings/SettingCustomColumn/SettingCustomColumnsView');
     var SettingFiltersView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFiltersView');
-    var SettingNumInputView = require('modals/addWidget/widgetSettings/SettingNumInputView');
+    var SettingInputView = require('modals/addWidget/widgetSettings/SettingInputView');
 
     var WidgetSettingsView = Epoxy.View.extend({
         className: 'modal-add-widget-settings-list rp-form',
@@ -95,8 +95,8 @@ define(function (require) {
                         constructor = SettingFiltersView;
                         options.switchable = self.isShortForm;
                         break;
-                    case 'numInput':
-                        constructor = SettingNumInputView;
+                    case 'input':
+                        constructor = SettingInputView;
                         break;
                     default:
                         break;

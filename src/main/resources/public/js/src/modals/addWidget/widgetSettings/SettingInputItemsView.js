@@ -123,6 +123,38 @@ define(function (require) {
                             });
                     }
                 };
+            case 'user':
+                return {
+                    query: function (query) {
+                        Service.getProjectUsersById(query.term)
+                            .done(function (response) {
+                                var data = { results: [] };
+                                _.each(response, function (item) {
+                                    data.results.push({
+                                        id: item,
+                                        text: item
+                                    });
+                                });
+                                query.callback(data);
+                            })
+                            .fail(function (error) {
+                                Util.ajaxFailMessenger(error);
+                            });
+                    },
+                    getDataByIds: function (values, callback) {
+                        var callbackData = [];
+                        var calls = [];
+                        _.each(values, function (value) {
+                            calls.push(Service.getUserInfo(value)
+                                .done(function (data) {
+                                    callbackData.push({ id: data.userId, text: data.userId });
+                                }));
+                        });
+                        $.when.apply($, calls).then(function () {
+                            callback(callbackData);
+                        });
+                    }
+                };
             default:
                 return function (query) {
                     query.callback([]);

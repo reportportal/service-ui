@@ -43,9 +43,9 @@ define(function (require) {
             }
         }
     };
-    var SettingNumInputView = SettingView.extend({
-        className: 'modal-add-widget-setting-num-input',
-        template: 'tpl-modal-add-widget-setting-num-input',
+    var SettingInputView = SettingView.extend({
+        className: 'modal-add-widget-setting-input',
+        template: 'tpl-modal-add-widget-setting-input',
         events: {
         },
         bindings: {
@@ -57,6 +57,7 @@ define(function (require) {
                 min: 1,
                 max: 150,
                 def: 50,
+                numsOnly: false,
                 value: ''
             }, data.options);
 
@@ -77,12 +78,22 @@ define(function (require) {
             this.bindValidators();
         },
         bindValidators: function () {
-            Util.hintValidator($('[data-js-input]', this.$el), [{
-                validator: 'minMaxNumberRequired',
-                type: 'itemsSize',
-                min: this.model.get('min'),
-                max: this.model.get('max')
-            }]);
+            if (this.model.get('numOnly')) {
+                Util.hintValidator($('[data-js-input]', this.$el), [{
+                    validator: 'minMaxNumberRequired',
+                    type: 'itemsSize',
+                    min: this.model.get('min'),
+                    max: this.model.get('max')
+                }]);
+            } else {
+                Util.hintValidator($('[data-js-input]', this.$el), [{
+                    validator: 'minMaxRequired',
+                    type: 'itemsSize',
+                    min: this.model.get('min'),
+                    max: this.model.get('max')
+                }]);
+            }
+
         },
         activate: function () {
             this.listenTo(this.model, 'change:value', this.onChangeValue);
@@ -99,5 +110,5 @@ define(function (require) {
         }
     });
 
-    return SettingNumInputView;
+    return SettingInputView;
 });

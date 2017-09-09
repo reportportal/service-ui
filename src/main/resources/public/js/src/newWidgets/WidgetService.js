@@ -119,12 +119,13 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'numInput',
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.items,
                                 min: 1,
                                 max: 150,
                                 def: 50,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         }
@@ -173,12 +174,13 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'numInput',
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.items,
                                 min: 1,
                                 max: 150,
                                 def: 50,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         }
@@ -237,12 +239,13 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'numInput',
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.items,
                                 min: 1,
                                 max: 150,
                                 def: 50,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         }
@@ -272,12 +275,13 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'numInput',
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.items,
                                 min: 1,
                                 max: 150,
                                 def: 50,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         }
@@ -393,17 +397,39 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'numInput',
+                            control: 'inputItems',
+                            options: {
+                                entity: 'user',
+                                label: Localization.widgets.typeUserName,
+                                inputPlaceholder: Localization.widgets.selectUser,
+                                minItems: 1,
+                                maxItems: 64,
+                                getValue: function (model) {
+                                    var widgetOptions = model.getWidgetOptions();
+                                    if (widgetOptions.userRef) {
+                                        return widgetOptions.userRef;
+                                    }
+                                    return [];
+                                },
+                                setValue: function (value, model) {
+                                    var widgetOptions = model.getWidgetOptions();
+                                    widgetOptions.userRef = value;
+                                    model.setWidgetOptions(widgetOptions);
+                                }
+                            }
+                        },
+                        {
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.items,
                                 min: 1,
                                 max: 150,
                                 def: 50,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         }
                     ],
-                    usersFilter: true,
                     staticCriteria: {
                         name: 'name',
                         userRef: Localization.forms.user,
@@ -441,12 +467,13 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'numInput',
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.items,
                                 min: 1,
                                 max: 150,
                                 def: 50,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         }
@@ -476,12 +503,13 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'numInput',
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.items,
                                 min: 1,
                                 max: 150,
                                 def: 50,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         }
@@ -569,12 +597,13 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'numInput',
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.items,
                                 min: 1,
                                 max: 150,
                                 def: 50,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         }
@@ -593,12 +622,13 @@ define(function (require) {
                             options: {}
                         },
                         {
-                            control: 'numInput',
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.maxLaunches,
                                 min: 1,
                                 max: 150,
                                 def: 10,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         }
@@ -631,12 +661,13 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'numInput',
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.launchesCount,
                                 min: 2,
                                 max: 150,
                                 def: 30,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         },
@@ -662,8 +693,7 @@ define(function (require) {
                                 }
                             }
                         }
-                    ],
-                    //launchesFilter: true
+                    ]
                 },
                 bug_trend: {
                     gadget_name: Localization.widgets.failedTrendChart,
@@ -679,12 +709,13 @@ define(function (require) {
                             options: {}
                         },
                         {
-                            control: 'numInput',
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.items,
                                 min: 1,
                                 max: 150,
                                 def: 50,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         }
@@ -709,12 +740,13 @@ define(function (require) {
                             options: {}
                         },
                         {
-                            control: 'numInput',
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.items,
                                 min: 1,
                                 max: 150,
                                 def: 50,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         }
@@ -791,12 +823,13 @@ define(function (require) {
                             options: {}
                         },
                         {
-                            control: 'numInput',
+                            control: 'input',
                             options: {
                                 name: Localization.widgets.items,
                                 min: 1,
                                 max: 150,
                                 def: 50,
+                                numOnly: true,
                                 action: 'limit'
                             }
                         }

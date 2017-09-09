@@ -327,6 +327,7 @@ define(['util'], function () {
             widgetCreatedBy: 'Widget was created by',
             noData: 'No Data Available.',
             selectLaunch: 'Select launch',
+            selectUser: 'Select user',
             chooseFilter: 'Choose filter from the list below',
             selectedFilterNotFound: 'The filter not found. Please choose another one.',
             limit: 'Items count',
