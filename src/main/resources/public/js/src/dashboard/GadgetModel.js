@@ -121,6 +121,10 @@ define(function (require) {
                             return Localization.widgets.donutChartMode;
                         case 'panel':
                             return Localization.widgets.panelMode;
+                        case 'barMode':
+                            return Localization.widgets.barMode;
+                        case 'pieChartMode':
+                            return Localization.widgets.pieChartMode;
                         default:
                             break;
                         }

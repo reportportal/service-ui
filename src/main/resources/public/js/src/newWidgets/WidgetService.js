@@ -661,17 +661,6 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.launchesCount,
-                                min: 2,
-                                max: 150,
-                                def: 30,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
                             control: 'inputItems',
                             options: {
                                 entity: 'launch',
@@ -691,6 +680,17 @@ define(function (require) {
                                     widgetOptions.launchNameFilter = value;
                                     model.setWidgetOptions(widgetOptions);
                                 }
+                            }
+                        },
+                        {
+                            control: 'input',
+                            options: {
+                                name: Localization.widgets.launchesCount,
+                                min: 2,
+                                max: 150,
+                                def: 30,
+                                numOnly: true,
+                                action: 'limit'
                             }
                         }
                     ]
@@ -780,17 +780,41 @@ define(function (require) {
                     widget_type: 'bar_chart',
                     gadget: 'passing_rate_per_launch',
                     noCriteria: true,
-                    noFilters: true,
-                    launchesFilter: true,
                     staticCriteria: {},
-                    mode: {
-                        type: 'radio',
-                        defaultVal: 'barMode',
-                        items: {
-                            barMode: Localization.widgets.barMode,
-                            pieChartMode: Localization.widgets.pieChartMode
+                    uiControl: [
+                        {
+                            control: 'inputItems',
+                            options: {
+                                entity: 'launch',
+                                label: Localization.widgets.typeLaunchName,
+                                inputPlaceholder: Localization.widgets.selectLaunch,
+                                minItems: 1,
+                                maxItems: 1,
+                                getValue: function (model) {
+                                    var widgetOptions = model.getWidgetOptions();
+                                    if (widgetOptions.launchNameFilter) {
+                                        return widgetOptions.launchNameFilter;
+                                    }
+                                    return [];
+                                },
+                                setValue: function (value, model) {
+                                    var widgetOptions = model.getWidgetOptions();
+                                    widgetOptions.launchNameFilter = value;
+                                    model.setWidgetOptions(widgetOptions);
+                                }
+                            }
+                        },
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.barMode, value: 'barMode' },
+                                    { name: Localization.widgets.pieChartMode, value: 'pieChartMode' }
+                                ],
+                                action: 'switch_view_mode'
+                            }
                         }
-                    },
+                    ],
                     limit: {
                         display: false,
                         min: 30,
@@ -809,18 +833,20 @@ define(function (require) {
                         statistics$executions$total: Localization.launchesHeaders.total,
                         statistics$executions$passed: Localization.launchesHeaders.passed
                     },
-                    mode: {
-                        type: 'radio',
-                        defaultVal: 'barMode',
-                        items: {
-                            barMode: Localization.widgets.barMode,
-                            pieChartMode: Localization.widgets.pieChartMode
-                        }
-                    },
                     uiControl: [
                         {
                             control: 'filters',
                             options: {}
+                        },
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.barMode, value: 'barMode' },
+                                    { name: Localization.widgets.pieChartMode, value: 'pieChartMode' }
+                                ],
+                                action: 'switch_view_mode'
+                            }
                         },
                         {
                             control: 'input',

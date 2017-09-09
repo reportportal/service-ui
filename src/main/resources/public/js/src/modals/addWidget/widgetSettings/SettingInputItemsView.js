@@ -115,10 +115,11 @@ define(function (require) {
                             });
                     },
                     getDataByIds: function (values, callback) {
-                        Service.getLaunchItem(values)
+                        var query = { term: values[0] };
+                        Service.searchLaunches(query)
                             .done(function (data) {
                                 callback(_.map(data, function (launch) {
-                                    return { id: launch.id, text: launch.name };
+                                    return { id: launch, text: launch };
                                 }));
                             });
                     }
