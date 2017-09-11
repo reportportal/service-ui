@@ -861,7 +861,10 @@ define(['util'], function () {
             latestLaunches_short: 'Последние',
             allLaunches: 'Все Запуски',
             allLaunches_short: 'Все',
-            noFilter: 'ФИЛЬТР НЕ ВЫБРАН'
+            noFilter: 'ФИЛЬТР НЕ ВЫБРАН',
+            launchPassed: 'Успешно',
+            launchFailed: 'Неудачно',
+            launchSkipped: 'Пропущено'
         },
 
         launchStatus: {

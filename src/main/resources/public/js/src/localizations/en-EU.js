@@ -807,7 +807,10 @@ define(['util'], function () {
             latestLaunches_short: 'Latest',
             allLaunches: 'All launches',
             allLaunches_short: 'All',
-            noFilter: 'NO FILTER'
+            noFilter: 'NO FILTER',
+            launchPassed: 'Passed',
+            launchFailed: 'Failed',
+            launchSkipped: 'Skipped'
         },
 
         launchStatus: {
