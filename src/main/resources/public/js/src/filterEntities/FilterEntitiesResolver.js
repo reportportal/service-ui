@@ -74,7 +74,7 @@ define(function (require, exports, module) {
                 options: filterStatsOptions()
             });
         });
-        var totalName = 'Total ' + Localization.filterNamePluralById[type];
+        var totalName = Localization.favorites.total + ' ' + Localization.filterNamePluralById[type];
         if (filters.length == 1) {
             totalName = Localization.filterNameById[type];
             filters = [];
