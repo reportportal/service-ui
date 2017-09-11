@@ -25,12 +25,12 @@ define(function (require) {
     var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var WidgetService = require('newWidgets/WidgetService');
-    var SettingCriteriaView = require('modals/addWidget/widgetSettings/SettingCriteriaView');
-    var SettingItemsView = require('modals/addWidget/widgetSettings/SettingItemsView');
-    var SettingSwitchMode = require('modals/addWidget/widgetSettings/SettingSwitchMode');
-    var SettingActionView = require('modals/addWidget/widgetSettings/SettingActionView');
-    var SettingUsersView = require('modals/addWidget/widgetSettings/SettingUsersView');
-    var SettingLaunchView = require('modals/addWidget/widgetSettings/SettingLaunchView');
+    // var SettingCriteriaView = require('modals/addWidget/widgetSettings/SettingCriteriaView');
+    // var SettingItemsView = require('modals/addWidget/widgetSettings/SettingItemsView');
+    // var SettingSwitchMode = require('modals/addWidget/widgetSettings/SettingSwitchMode');
+    // var SettingActionView = require('modals/addWidget/widgetSettings/SettingActionView');
+    // var SettingUsersView = require('modals/addWidget/widgetSettings/SettingUsersView');
+    // var SettingLaunchView = require('modals/addWidget/widgetSettings/SettingLaunchView');
 
     var SettingInputItemsView = require('modals/addWidget/widgetSettings/SettingInputItemsView');
     var SettingDropDownView = require('modals/addWidget/widgetSettings/SettingDropDownView');
@@ -61,16 +61,13 @@ define(function (require) {
         },
         activate: function () {
             var self = this;
-            _.each(this.renderedView, function (view) {
-                view.destroy();
-            });
-            this.renderedView = [];
-            this.renderView(SettingCriteriaView);
-            this.renderView(SettingActionView);
-            this.renderView(SettingItemsView);
-            this.renderView(SettingSwitchMode);
-            this.renderView(SettingUsersView);
-            this.renderView(SettingLaunchView);
+            this.destroyViews();
+            // this.renderView(SettingCriteriaView);
+            // this.renderView(SettingActionView);
+            // this.renderView(SettingItemsView);
+            // this.renderView(SettingSwitchMode);
+            // this.renderView(SettingUsersView);
+            // this.renderView(SettingLaunchView);
             WidgetService.getSettingsGadget(this.model.get('gadget')).done(function (widgetConfig) {
                 _.each(widgetConfig.uiControl, function (controlObj) {
                     var constructor;
@@ -147,10 +144,14 @@ define(function (require) {
             });
             return result;
         },
-        onDestroy: function () {
+        destroyViews: function () {
             _.each(this.renderedView, function (view) {
                 view.destroy();
             });
+            this.renderedView = [];
+        },
+        onDestroy: function () {
+            this.destroyViews();
         }
     });
 
