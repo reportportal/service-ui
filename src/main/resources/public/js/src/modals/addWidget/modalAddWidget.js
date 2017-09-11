@@ -76,8 +76,6 @@ define(function (require) {
             this.render();
             this.selectWidgetView = new SelectWidgetView({ model: this.model });
             $('[data-js-step-1]', this.$el).html(this.selectWidgetView.$el);
-            this.configureWidgetView = new ConfigureWidgetView({ model: this.model });
-            $('[data-js-step-2]', this.$el).html(this.configureWidgetView.$el);
             this.saveWidget = new SaveWidgetView({
                 model: this.model,
                 dashboardModel: this.dashboardModel,
@@ -86,13 +84,26 @@ define(function (require) {
             $('[data-js-step-3]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.viewModel, 'change:step', this.setState);
             this.listenTo(this.saveWidget, 'change::dashboard', this.onChangeDashboard);
-            this.listenTo(this.configureWidgetView, 'send:event', this.sendEvent);
             this.setState();
+            this.listenTo(this.model, 'change:gadget', this.onChangeGadgetType);
             this.listenTo(
                 this.model,
                 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount',
                 _.debounce(this.onChangePreview, 10)
             );
+        },
+        onChangeGadgetType: function () {
+            this.hideWarningBlock();
+            this.renderConfigureWidget();
+        },
+        renderConfigureWidget: function () {
+            if (this.configureWidgetView) {
+                this.stopListening(this.configureWidgetView);
+                this.configureWidgetView.destroy();
+            }
+            this.configureWidgetView = new ConfigureWidgetView({ model: this.model });
+            $('[data-js-step-2]', this.$el).html(this.configureWidgetView.$el);
+            this.listenTo(this.configureWidgetView, 'send:event', this.sendEvent);
         },
         onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(290);
@@ -103,6 +114,7 @@ define(function (require) {
                 switch (eventOptions.action) {
                 case 'add filter':
                     config.trackingDispatcher.trackEventNumber(295);
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).attr('disabled', true);
                     break;
                 case 'submit filter':
                     config.trackingDispatcher.trackEventNumber(331);
@@ -115,6 +127,7 @@ define(function (require) {
                     break;
                 case 'edit filter item':
                     config.trackingDispatcher.trackEventNumber(298);
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).attr('disabled', true);
                     break;
                 case 'select filter item':
                     config.trackingDispatcher.trackEventNumber(297);
@@ -127,9 +140,11 @@ define(function (require) {
                     break;
                 case 'cancel add click':
                     config.trackingDispatcher.trackEventNumber(304);
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).attr('disabled', false);
                     break;
                 case 'ok add click':
                     config.trackingDispatcher.trackEventNumber(305);
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).attr('disabled', false);
                     break;
                 case 'edit entity':
                     config.trackingDispatcher.trackEventNumber(307);
@@ -142,9 +157,11 @@ define(function (require) {
                     break;
                 case 'cancel edit filter':
                     config.trackingDispatcher.trackEventNumber(310);
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).attr('disabled', false);
                     break;
                 case 'ok edit filter':
                     config.trackingDispatcher.trackEventNumber(311);
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).attr('disabled', false);
                     break;
                 }
                 break;
@@ -154,8 +171,7 @@ define(function (require) {
             this.curWidget = WidgetService.getWidgetConfig(model.get('gadget'));
             this.previewWidgetView && this.previewWidgetView.destroy();
             this.previewWidgetView = new PreviewWidgetView({
-                model: this.model,
-                filterModel: null
+                model: this.model
             });
             $('[data-js-widget-preview]', this.$el).html(this.previewWidgetView.$el);
         },
@@ -193,6 +209,7 @@ define(function (require) {
         },
         onClickSecondStep: function () {
             if (!this.model.get('gadget')) {
+                this.showWarningBlock('please select gadget');
                 return;
             }
             config.trackingDispatcher.trackEventNumber(292);

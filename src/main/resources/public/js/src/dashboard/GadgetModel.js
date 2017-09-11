@@ -148,9 +148,7 @@ define(function (require) {
                 }
             }
         },
-        initialize: function () {
-
-        },
+        initialize: function () {},
         update: function () {
             var self = this;
             return Service.loadDashboardWidget(this.get('id'))

@@ -19,21 +19,27 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 .modal-add-widget-setting-input {
-  float: left;
-  padding: 17px 0 0 10px;
+  padding: 20px 0 0 0;
   position: relative;
   width: 100%;
   text-align: right;
-  span {
-    min-width: 37px;
+  & > span {
     display: inline-block;
+    min-width: 37px;
+    max-width: 150px;
+    vertical-align: middle;
   }
   .input-wrapper {
     position: relative;
     display: inline-block;
-    margin-left: 8px;
+    margin-left: 18px;
+    width: 244px;
     margin-bottom: 0;
     text-align: left;
+    vertical-align: middle;
+    input {
+      width: 68px;
+    }
     .validate-hint {
       width: 100%;
       top: auto;

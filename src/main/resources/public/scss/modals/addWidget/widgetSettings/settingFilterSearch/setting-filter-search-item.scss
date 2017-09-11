@@ -22,7 +22,7 @@
 .setting-filter-search-item {
   color: $COLOR--charcoal-grey;
   border-bottom: 1px solid $COLOR--gray-91;
-  padding: 10px 10px 3px 10px;
+  padding: 10px 10px 3px 0;
   input:checked + span .filter-name {
     font-family: "OpenSansSemibold", sans-serif;
   }

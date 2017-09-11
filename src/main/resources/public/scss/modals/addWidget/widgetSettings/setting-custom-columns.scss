@@ -20,12 +20,11 @@
  */
 
 .modal-add-widget-setting-custom-columns {
-  float: left;
-  padding: 17px 0 0 10px;
+  padding: 20px 0 0 0;
   width: 100%;
   text-align: right;
   .description {
-    width: 276px;
+    width: 244px;
     display: inline-block;
     text-align: left;
     color: $COLOR--gray-60;
@@ -36,7 +35,7 @@
   }
   .add-item {
     color: $COLOR--windows-blue;
-    width: 276px;
+    width: 244px;
     text-align: left;
     display: inline-block;
     span {
@@ -45,16 +44,20 @@
   }
   .form-group {
     display: inline-block;
-    margin-left: 8px;
-    width: 119px;
+    margin-left: 6px;
+    width: 107px;
     input {
       width: 100%;
+    }
+    &.first-input {
+      margin-left: 18px;
     }
   }
   .remove-item {
     display: inline-block;
     width: 15px;
-    margin-left: 8px;
+    margin-left: 2px;
     cursor: pointer;
+    vertical-align: middle;
   }
 }

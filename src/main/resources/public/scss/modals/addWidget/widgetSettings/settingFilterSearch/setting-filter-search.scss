@@ -57,6 +57,11 @@
         display: block;
       }
     }
+    &.error-state {
+      .title {
+        color: $COLOR--orange-red;
+      }
+    }
     .setting-filter-search-item {
       position: relative;
       border: none;

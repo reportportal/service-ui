@@ -128,6 +128,7 @@ define(function (require) {
                 this.stopListening(this.filterItemView);
                 this.filterItemView.destroy();
             }
+            $('[data-js-select-filter-block]', this.$el).removeClass('error-state');
             if (model) {
                 $('[data-js-select-filter-block]', this.$el).removeClass('empty-state');
                 this.filterItemView = new FilterItemView({
@@ -253,7 +254,9 @@ define(function (require) {
             this.renderFilter(model);
         },
         onResetCollectionItems: function () {
+            var self = this;
             _.each(this.renderedFilterItems, function (view) {
+                self.stopListening(view);
                 view.destroy();
             });
             this.renderedFilterItems = [];
@@ -266,6 +269,7 @@ define(function (require) {
                 model: model,
                 searchTerm: this.viewModel.get('search')
             });
+            this.listenTo(filterItemView, 'send:event', this.sendEvent);
             $('[data-js-filter-list]', this.$el).append(filterItemView.$el);
             this.renderedFilterItems.push(filterItemView);
         },
@@ -342,7 +346,11 @@ define(function (require) {
             return url;
         },
         validate: function () {
-            return true;
+            if (this.selectedFilterModel) {
+                return true;
+            }
+            $('[data-js-select-filter-block]', this.$el).addClass('error-state');
+            return false;
         },
         onDestroy: function () {
             this.collection.destroy(true);

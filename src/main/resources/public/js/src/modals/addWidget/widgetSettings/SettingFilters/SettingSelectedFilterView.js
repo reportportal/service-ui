@@ -68,6 +68,9 @@ define(function (require) {
             // config.trackingDispatcher.trackEventNumber(321);
             this.trigger('edit');
         },
+        validate: function () {
+            console.dir(this.el);
+        },
         onDestroy: function () {
             this.filterView && this.filterView.destroy();
             this.filterModel.destroy();
