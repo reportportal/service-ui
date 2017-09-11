@@ -104,6 +104,7 @@ define(['util'], function () {
             avatar: 'Картинка профиля',
             minPrefix: 'По крайней мере ',
             minSufix: ' символы требуются.',
+            minSufix3: 'символа требуется.',
             minSufixAuto: ' символы требуются для автозаполнения.',
             minSufixAuto3: ' символа требуется для автозаполнения.',
             maxPrefix: 'Не более, чем ',
@@ -726,7 +727,8 @@ define(['util'], function () {
             namePlaceholder: 'Название',
             sortedBy: ' отсортировано по: ',
             addToTabs: 'Добавить во вкладки запусков',
-            removeFromTabs: 'Удалить из вкладок запусков'
+            removeFromTabs: 'Удалить из вкладок запусков',
+            total: 'Все'
         },
 
         launches: {

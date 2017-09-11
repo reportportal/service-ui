@@ -145,7 +145,7 @@ define(function (require) {
                     invalid = false;
                 }
                 this.model.set({
-                    hint: 'At least ' + this.model.get('valueMinLength') + ' symbols required.',
+                    hint: Localization.ui.minPrefix + ' ' + this.model.get('valueMinLength') + ' ' + Localization.ui.minSufix3,
                     invalid: invalid
                 });
                 if (value == '') {
@@ -516,7 +516,7 @@ define(function (require) {
                 model: this.model,
                 type: options.type || 'userAutoCompleteUrl',
                 startSearch: config.forms.triggerMin,
-                warning: 'At least  3  symbols required.'
+                warning: Localization.ui.minPrefix + ' 3 ' + Localization.ui.minSufix3
             })).$el;
         }
     });

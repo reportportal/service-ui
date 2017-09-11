@@ -104,6 +104,7 @@ define(['util'], function () {
             avatar: 'Profile image',
             minPrefix: 'At least ',
             minSufix: ' symbols required.',
+            minSufix3: ' symbols required.',
             minSufixAuto: ' symbols required for autocomplete.',
             minSufixAuto3: ' symbols required for autocomplete.',
             maxPrefix: 'No more than ',
@@ -669,7 +670,8 @@ define(['util'], function () {
             namePlaceholder: 'Name',
             sortedBy: ' sorted by: ',
             addToTabs: 'Add to launch tabs',
-            removeFromTabs: 'Remove from Launch Tabs'
+            removeFromTabs: 'Remove from Launch Tabs',
+            total: 'Total'
         },
 
         launches: {
