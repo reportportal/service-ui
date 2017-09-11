@@ -36,8 +36,8 @@ define(function (require) {
     var config = App.getInstance();
 
     var FilterSearchAddView = Epoxy.View.extend({
-        className: 'modal-add-widget-filter-search-add',
-        template: 'tpl-modal-add-widget-filter-search-add',
+        className: 'setting-filter-search-add',
+        template: 'tpl-modal-add-widget-setting-filter-search-add',
         events: {
             'click [data-js-cancel-edit]': 'onClickCancel',
             'click [data-js-ok-edit]': 'onClickOk',
@@ -46,8 +46,7 @@ define(function (require) {
         bindings: {
             '[data-js-filter-name]': 'text: name'
         },
-        initialize: function (options) {
-            this.modalType = options.modalType;
+        initialize: function () {
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.render();
             this.async = $.Deferred();
@@ -65,7 +64,6 @@ define(function (require) {
                 var filterNames = _.map(self.launchFilterCollection.models, function (model) {
                     return model.get('name');
                 });
-                //self.trigger('change:filter', self.model);
                 Util.hintValidator($('[data-js-name-input]', self.$el), [{
                     validator: 'minMaxRequired',
                     type: 'filterName',
@@ -78,21 +76,19 @@ define(function (require) {
                     model: self.model
                 });
                 $('input', $('[data-js-entity-choice-list] [data-js-link]', self.filterEntities.$el)).on('click', function () {
-                    if (this.modalType === 'edit') {
-                        config.trackingDispatcher.trackEventNumber(332);
-                    } else {
-                        config.trackingDispatcher.trackEventNumber(302);
-                    }
+                    self.trigger('send:event', {
+                        view: 'filter',
+                        action: 'entity choice click'
+                    });
                 });
                 self.filterSorting = new FilterSortingView({ model: self.model });
                 $('[data-js-filter-sorting]', self.$el).append(self.filterSorting.$el);
                 self.listenTo(self.model, 'change:id', self.onChangeId);
                 $('[data-js-sorting-list] a', self.filterSorting.$el).on('click', function () {
-                    if (this.modalType === 'edit') {
-                        config.trackingDispatcher.trackEventNumber(333);
-                    } else {
-                        config.trackingDispatcher.trackEventNumber(303);
-                    }
+                    self.trigger('send:event', {
+                        view: 'filter',
+                        action: 'sorting list click'
+                    });
                 });
             });
         },
@@ -103,39 +99,28 @@ define(function (require) {
             e.stopPropagation();
         },
         onClickCancel: function () {
-            if (this.modalType === 'edit') {
-                config.trackingDispatcher.trackEventNumber(334);
-            } else {
-                config.trackingDispatcher.trackEventNumber(304);
-            }
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'cancel add click'
+            });
             this.model.set({ newEntities: '' });
             this.launchFilterCollection.remove(this.model);
+            this.trigger('returnToFiltersList');
             this.async.reject();
         },
         onClickOk: function () {
             var $filterName = $('[data-js-name-input]', this.$el);
-            if (this.modalType === 'edit') {
-                config.trackingDispatcher.trackEventNumber(335);
-            } else {
-                config.trackingDispatcher.trackEventNumber(305);
-            }
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'ok add click'
+            });
             $filterName.trigger('validate');
             if (!$filterName.data('validate-error')) {
                 this.filterListener.trigger(this.filterEvents.ON_ADD_FILTER, {
                     cid: this.model.cid,
                     data: this.model.getDataFromServer({ name: $filterName.val() })
                 });
-                // this.model.set({
-                //     name: $filterName.val(),
-                //     isShared: false,
-                //     description: '',
-                //     entities: this.model.get('newEntities') || this.model.get('entities'),
-                //     newEntities: '',
-                //     selection_parameters: this.model.get('newSelectionParameters') || this.model.get('selection_parameters'),
-                //     newSelectionParameters: ''
-                // });
-                // // for right work listeners
-                // this.model.set({ temp: false });
+                this.trigger('returnToFiltersList');
             }
         },
         onChangeId: function () {

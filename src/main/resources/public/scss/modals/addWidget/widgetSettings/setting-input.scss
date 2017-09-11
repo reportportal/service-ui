@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 EPAM Systems
  *
@@ -19,17 +18,33 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-.modal-add-widget-setting-launch {
-  float: left;
-  margin: 17px 10px 0 10px;
+.modal-add-widget-setting-input {
+  padding: 20px 0 0 0;
   position: relative;
-  .select-launch-control {
+  width: 100%;
+  text-align: right;
+  & > span {
     display: inline-block;
-    margin-left: 8px;
-    width: 215px;
+    min-width: 37px;
+    max-width: 150px;
+    vertical-align: middle;
+  }
+  .input-wrapper {
+    position: relative;
+    display: inline-block;
+    margin-left: 18px;
+    width: 244px;
+    margin-bottom: 0;
+    text-align: left;
+    vertical-align: middle;
+    input {
+      width: 68px;
+    }
     .validate-hint {
       width: 100%;
+      top: auto;
+      bottom: 100%;
+      box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.2);
     }
   }
 }

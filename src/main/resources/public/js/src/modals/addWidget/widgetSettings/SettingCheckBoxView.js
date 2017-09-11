@@ -46,7 +46,7 @@ define(function (require) {
 
     var SettingDropDownView = SettingView.extend({
         className: 'modal-add-widget-setting-checkbox',
-        template: 'modal-add-widget-setting-checkbox',
+        template: 'tpl-modal-add-widget-setting-checkbox',
         bindings: {
             '[data-js-label-name]': 'html:label',
             '[data-js-checkbox-item]': 'checked:value'

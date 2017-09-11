@@ -86,9 +86,9 @@ define(function (require) {
         onChangeName: function () {
             if (this.validate()) {
                 config.trackingDispatcher.trackEventNumber(322);
-                this.trigger('disable:navigation', false);
+               // this.trigger('disable:navigation', false);
             } else {
-                this.trigger('disable:navigation', true);
+               // this.trigger('disable:navigation', true);
             }
         },
         updateSharedSwitcher: function () {

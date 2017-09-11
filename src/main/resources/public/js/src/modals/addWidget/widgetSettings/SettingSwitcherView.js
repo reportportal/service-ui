@@ -83,7 +83,7 @@ define(function (require) {
 
     var SettingSwitcherView = SettingView.extend({
         className: 'modal-add-widget-setting-switcher',
-        template: 'modal-add-widget-setting-switcher',
+        template: 'tpl-modal-add-widget-setting-switcher',
         events: {
             'click [data-js-switch-item]': 'onClickItem'
         },

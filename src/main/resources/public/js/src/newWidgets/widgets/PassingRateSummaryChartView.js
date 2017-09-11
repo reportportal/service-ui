@@ -54,7 +54,7 @@ define(function (require) {
                 return;
             }
             this.loadChartist().done(function () {
-                if (widgetOptions && widgetOptions.chartMode[0] === 'pieChartMode') {
+                if (self.isDrawPie(widgetOptions)) {
                     self.$el.html(Util.templates(self.template, {
                         filterName: widgetOptions.filterName[0]
                     }));
@@ -71,7 +71,7 @@ define(function (require) {
                             self.addNoAvailableBock(self.$el);
                         }
                     );
-                } else if (widgetOptions && widgetOptions.chartMode[0] === 'barMode') {
+                } else {
                     self.$el.html(Util.templates(self.template, {
                         filterName: widgetOptions.filterName[0]
                     }));
@@ -261,6 +261,9 @@ define(function (require) {
                     })
                 ]
             });
+        },
+        isDrawPie: function (widgetOptions) {
+            return (widgetOptions && widgetOptions.viewMode && widgetOptions.viewMode.length && widgetOptions.viewMode[0] === 'pieChartMode');
         },
         updateWidget: function () {
             if (!this.chart) {

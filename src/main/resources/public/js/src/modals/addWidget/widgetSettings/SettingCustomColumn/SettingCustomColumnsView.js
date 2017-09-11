@@ -62,7 +62,7 @@ define(function (require) {
 
     var SettingCustomColumnsView = SettingView.extend({
         className: 'modal-add-widget-setting-custom-columns',
-        template: 'modal-add-widget-setting-custom-columns',
+        template: 'tpl-modal-add-widget-setting-custom-columns',
         events: {
             'click [data-js-add-item]': 'onClickAddItem'
         },

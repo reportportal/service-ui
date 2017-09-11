@@ -25,26 +25,24 @@ define(function (require) {
     var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var WidgetService = require('newWidgets/WidgetService');
-    var SettingCriteriaView = require('modals/addWidget/widgetSettings/SettingCriteriaView');
-    var SettingItemsView = require('modals/addWidget/widgetSettings/SettingItemsView');
-    var SettingSwitchMode = require('modals/addWidget/widgetSettings/SettingSwitchMode');
-    var SettingActionView = require('modals/addWidget/widgetSettings/SettingActionView');
-    var SettingUsersView = require('modals/addWidget/widgetSettings/SettingUsersView');
-    var SettingLaunchView = require('modals/addWidget/widgetSettings/SettingLaunchView');
 
     var SettingInputItemsView = require('modals/addWidget/widgetSettings/SettingInputItemsView');
     var SettingDropDownView = require('modals/addWidget/widgetSettings/SettingDropDownView');
     var SettingCheckBoxView = require('modals/addWidget/widgetSettings/SettingCheckBoxView');
     var SettingSwitcherView = require('modals/addWidget/widgetSettings/SettingSwitcherView');
     var SettingCustomColumnsView = require('modals/addWidget/widgetSettings/SettingCustomColumn/SettingCustomColumnsView');
+    var SettingFiltersView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFiltersView');
+    var SettingInputView = require('modals/addWidget/widgetSettings/SettingInputView');
+    var SettingStaticData = require('modals/addWidget/widgetSettings/SettingStaticData');
 
-    var WidgetCriteriaView = Epoxy.View.extend({
-        className: 'modal-add-widget-criteria-list rp-form',
+    var WidgetSettingsView = Epoxy.View.extend({
+        className: 'modal-add-widget-settings-list rp-form',
         events: {
         },
         bindings: {
         },
-        initialize: function () {
+        initialize: function (options) {
+            this.isShortForm = options.isShortForm || false;
             this.renderedView = [];
         },
         renderView: function (ViewConstructor, data) {
@@ -57,20 +55,13 @@ define(function (require) {
         },
         activate: function () {
             var self = this;
-            _.each(this.renderedView, function (view) {
-                view.destroy();
-            });
-            this.renderedView = [];
-            this.renderView(SettingCriteriaView);
-            this.renderView(SettingActionView);
-            this.renderView(SettingItemsView);
-            this.renderView(SettingSwitchMode);
-            this.renderView(SettingUsersView);
-            this.renderView(SettingLaunchView);
+            this.destroyViews();
             WidgetService.getSettingsGadget(this.model.get('gadget')).done(function (widgetConfig) {
-                _.each(widgetConfig.uiControl, function (controlObg) {
+                _.each(widgetConfig.uiControl, function (controlObj) {
                     var constructor;
-                    switch (controlObg.control) {
+                    var options = controlObj.options;
+                    options.isShortForm = this.isShortForm;
+                    switch (controlObj.control) {
                     case 'inputItems':
                         constructor = SettingInputItemsView;
                         break;
@@ -86,11 +77,24 @@ define(function (require) {
                     case 'customColumns':
                         constructor = SettingCustomColumnsView;
                         break;
+                    case 'filters':
+                        constructor = SettingFiltersView;
+                        options.switchable = self.isShortForm;
+                        break;
+                    case 'input':
+                        constructor = SettingInputView;
+                        break;
+                    case 'static':
+                        constructor = SettingStaticData;
+                        break;
                     default:
                         break;
                     }
-                    constructor && self.renderSetting(constructor, controlObg.options);
+                    constructor && self.renderSetting(constructor, options);
                 }, self);
+                if (!self.model.get('itemsCount')) {
+                    self.model.set('itemsCount', 50);
+                }
             });
         },
         renderSetting: function (ViewConstructor, options) {
@@ -98,11 +102,26 @@ define(function (require) {
                 gadgetModel: this.model,
                 options: options
             });
+
+            this.listenTo(view, 'showBaseViewMode', this.viewModeHandler);
+            this.listenTo(view, 'send:event', this.sendEvent);
             this.renderedView.push(view);
             this.$el.append(view.$el);
             // set default state for model
             view.setValue(view.getValue(this.model, view), this.model);
             view.activate && view.activate();
+        },
+        sendEvent: function (eventOptions) {
+            this.trigger('send:event', eventOptions);
+        },
+        viewModeHandler: function (showBaseViewMode, settingView) {
+            if (showBaseViewMode) {
+                this.trigger('change:view', { mode: 'expandedSettingView' });
+                this.$el.attr('expanded-setting', settingView);
+            } else {
+                this.trigger('change:view', { mode: 'allSettingsView' });
+                this.$el.removeAttr('expanded-setting');
+            }
         },
         validate: function () {
             var result = true;
@@ -112,9 +131,17 @@ define(function (require) {
                 }
             });
             return result;
+        },
+        destroyViews: function () {
+            _.each(this.renderedView, function (view) {
+                view.destroy();
+            });
+            this.renderedView = [];
+        },
+        onDestroy: function () {
+            this.destroyViews();
         }
-
     });
 
-    return WidgetCriteriaView;
+    return WidgetSettingsView;
 });

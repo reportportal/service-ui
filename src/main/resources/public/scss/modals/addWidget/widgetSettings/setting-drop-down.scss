@@ -20,14 +20,17 @@
  */
 
 .modal-add-widget-setting-drop-down {
-  float: left;
-  padding: 17px 0 0 10px;
+  padding: 20px 0 0 0;
   position: relative;
   width: 100%;
   text-align: right;
+  & > span {
+    vertical-align: middle;
+  }
   .drop-down-component {
     vertical-align: middle;
-    margin-left: 10px;
-    width: 276px;
+    margin-left: 18px;
+    width: 244px;
+    height: 30px;
   }
 }

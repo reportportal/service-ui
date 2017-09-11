@@ -37,7 +37,8 @@ define(function (require) {
             var self = this;
             var gadget;
             var filterOptions;
-            this.filterModel = options.filterModel;
+            // TODO remove filter_model field from gadget model when WS will be ready to provide data for widget previews.
+            this.filterModel = options.model.get('filter_model') || null;
             if (options.sharedWidgetModel) {
                 this.model = new GadgetModel({ gadget: options.sharedWidgetModel.get('gadget') });
             }
@@ -51,7 +52,6 @@ define(function (require) {
             this.$el.html('<div class="preloader" style="display: block; padding-top: 50px;">' +
                 '<i class="material-icons loader-animation">refresh</i>' +
                 '</div>');
-
             if (options.sharedWidgetModel) {
                 Service.getSharedWidgetData(options.sharedWidgetModel.get('id'))
                     .done(function (data) {
@@ -69,10 +69,10 @@ define(function (require) {
                     });
             } else {
                 filterOptions = this.filterModel.getOptions();
-
                 filterOptions.push('filter.!in.status=IN_PROGRESS');
                 filterOptions.push('page.page=1');
                 filterOptions.push('page.size=' + this.model.get('itemsCount'));
+
                 this.request = Service.getWidgetData(this.filterModel.get('type'), filterOptions.join('&'))
                     .done(function (data) {
                         self.renderWidgetPreview(data);

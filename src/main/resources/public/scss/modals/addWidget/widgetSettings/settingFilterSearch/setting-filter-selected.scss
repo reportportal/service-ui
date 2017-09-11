@@ -19,21 +19,49 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.modal-add-widget-setting-items{
-  float: left;
-  padding: 17px 0 0 10px;
+.setting-filter-selected {
   position: relative;
-  width: 100%;
-  text-align: right;
-  span {
-    min-width: 37px;
-    display: inline-block;
+  border-bottom: 1px solid $COLOR--gray-91;
+
+  &:hover {
+    .filter-edit {
+      opacity: 1;
+    }
   }
-  .form-group {
-    text-align: left;
-    display: inline-block;
-    margin-left: 8px;
-    width: 276px;
-    margin-bottom: 0;
+  .filter-edit {
+    cursor: pointer;
+    position: absolute;
+    right: 8px;
+    top: 18px;
+    font-size: 20px;
+    color: $COLOR--gray-60;
+    &:hover {
+      color: $COLOR--black;
+    }
+  }
+  .setting-filter-search-item {
+    border: none;
+    padding-right: 40px;
+    label {
+      cursor: default;
+    }
+    input[type="radio"].rp-input-radio + span {
+      cursor: default;
+      padding-left: 0;
+      &:before, &:after {
+        display: none;
+      }
+    }
+    .filter-options {
+      i {
+        display: none;
+      }
+    }
+  }
+  &.load {
+    .preloader {
+      padding: 8px 0;
+      display: block;
+    }
   }
 }

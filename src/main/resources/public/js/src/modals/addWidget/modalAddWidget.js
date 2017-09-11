@@ -58,11 +58,7 @@ define(function (require) {
         },
         bindings: {
             '[data-js-widget-type]': 'text: gadgetName',
-            '[data-js-widget-description]': 'html: gadgetDescription',
-            '[data-js-next-second-step]': 'attr: {disabled: any(not(gadget), disableNavigate)}',
-            '[data-js-next-last-step]': 'attr: {disabled: any(not(gadgetIsFilterFill), disableNavigate)}',
-            '[data-js-previous-first-step]': 'attr: {disabled:  disableNavigate}',
-            '[data-js-add-widget]': 'attr: {disabled: any(not(name),disableNavigate)}'
+            '[data-js-widget-description]': 'html: gadgetDescription'
         },
 
         initialize: function (options) {
@@ -73,13 +69,13 @@ define(function (require) {
             options.filter_id && this.model.set('filter_id', options.filter_id);
             this.curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             this.viewModel = new (Epoxy.Model.extend({
-                defaults: { step: 1, disableNavigate: false }
+                defaults: {
+                    step: 1
+                }
             }))();
             this.render();
             this.selectWidgetView = new SelectWidgetView({ model: this.model });
             $('[data-js-step-1]', this.$el).html(this.selectWidgetView.$el);
-            this.configureWidgetView = new ConfigureWidgetView({ model: this.model });
-            $('[data-js-step-2]', this.$el).html(this.configureWidgetView.$el);
             this.saveWidget = new SaveWidgetView({
                 model: this.model,
                 dashboardModel: this.dashboardModel,
@@ -87,33 +83,100 @@ define(function (require) {
             });
             $('[data-js-step-3]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.viewModel, 'change:step', this.setState);
-            this.listenTo(this.configureWidgetView, 'disable:navigation', this.onChangeDisableNavigation);
-            this.listenTo(this.saveWidget, 'disable:navigation', this.onChangeDisableNavigation);
             this.listenTo(this.saveWidget, 'change::dashboard', this.onChangeDashboard);
             this.setState();
+            this.listenTo(this.model, 'change:gadget', this.onChangeGadgetType);
             this.listenTo(
                 this.model,
                 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount',
                 _.debounce(this.onChangePreview, 10)
             );
         },
+        onChangeGadgetType: function () {
+            this.hideWarningBlock();
+            this.renderConfigureWidget();
+        },
+        renderConfigureWidget: function () {
+            if (this.configureWidgetView) {
+                this.stopListening(this.configureWidgetView);
+                this.configureWidgetView.destroy();
+            }
+            this.configureWidgetView = new ConfigureWidgetView({ model: this.model });
+            $('[data-js-step-2]', this.$el).html(this.configureWidgetView.$el);
+            this.listenTo(this.configureWidgetView, 'send:event', this.sendEvent);
+        },
         onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(290);
+        },
+        sendEvent: function (eventOptions) {
+            switch (eventOptions.view) {
+            case 'filter':
+                switch (eventOptions.action) {
+                case 'add filter':
+                    config.trackingDispatcher.trackEventNumber(295);
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).attr('disabled', true);
+                    break;
+                case 'submit filter':
+                    config.trackingDispatcher.trackEventNumber(331);
+                    break;
+                case 'cancel filter':
+                    config.trackingDispatcher.trackEventNumber(330);
+                    break;
+                case 'change filter name':
+                    config.trackingDispatcher.trackEventNumber(294);
+                    break;
+                case 'edit filter item':
+                    config.trackingDispatcher.trackEventNumber(298);
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).attr('disabled', true);
+                    break;
+                case 'select filter item':
+                    config.trackingDispatcher.trackEventNumber(297);
+                    break;
+                case 'entity choice click':
+                    config.trackingDispatcher.trackEventNumber(302);
+                    break;
+                case 'sorting list click':
+                    config.trackingDispatcher.trackEventNumber(303);
+                    break;
+                case 'cancel add click':
+                    config.trackingDispatcher.trackEventNumber(304);
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).attr('disabled', false);
+                    break;
+                case 'ok add click':
+                    config.trackingDispatcher.trackEventNumber(305);
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).attr('disabled', false);
+                    break;
+                case 'edit entity':
+                    config.trackingDispatcher.trackEventNumber(307);
+                    break;
+                case 'edit entity choice click':
+                    config.trackingDispatcher.trackEventNumber(308);
+                    break;
+                case 'edit entity sorting list click':
+                    config.trackingDispatcher.trackEventNumber(309);
+                    break;
+                case 'cancel edit filter':
+                    config.trackingDispatcher.trackEventNumber(310);
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).attr('disabled', false);
+                    break;
+                case 'ok edit filter':
+                    config.trackingDispatcher.trackEventNumber(311);
+                    $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).attr('disabled', false);
+                    break;
+                }
+                break;
+            }
         },
         onChangePreview: function (model) {
             this.curWidget = WidgetService.getWidgetConfig(model.get('gadget'));
             this.previewWidgetView && this.previewWidgetView.destroy();
             this.previewWidgetView = new PreviewWidgetView({
-                model: this.model,
-                filterModel: this.configureWidgetView.getSelectedFilterModel()
+                model: this.model
             });
             $('[data-js-widget-preview]', this.$el).html(this.previewWidgetView.$el);
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
-        },
-        onChangeDisableNavigation: function (state) {
-            this.viewModel.set({ disableNavigate: state });
         },
         setState: function () {
             $('[data-js-step-1-title], [data-js-step-2-title], [data-js-step-3-title]', this.$el).removeClass('active visited');
@@ -145,6 +208,10 @@ define(function (require) {
             this.viewModel.set('step', 1);
         },
         onClickSecondStep: function () {
+            if (!this.model.get('gadget')) {
+                this.showWarningBlock('please select gadget');
+                return;
+            }
             config.trackingDispatcher.trackEventNumber(292);
             this.viewModel.set('step', 2);
         },

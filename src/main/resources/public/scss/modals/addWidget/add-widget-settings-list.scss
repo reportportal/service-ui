@@ -19,13 +19,22 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.modal-add-widget-setting-users {
-  float: left;
-  margin-top: 17px;
-  padding: 0 10px;
-  .users-container {
-    display: inline-block;
-    margin-left: 8px;
-    width: 160px;
+.modal-add-widget-settings-list {
+  width: 100%;
+  & > div:first-child {
+    margin-top: 0;
+    padding-top: 0;
+  }
+  &[expanded-setting] {
+    & > div {
+      display: none;
+    }
+  }
+  &[expanded-setting="settingFilters"] {
+    .modal-add-widget-setting-filters {
+      display: block;
+      margin-top: 0;
+      padding-top: 0;
+    }
   }
 }

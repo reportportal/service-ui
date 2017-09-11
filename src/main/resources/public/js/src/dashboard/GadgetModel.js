@@ -39,7 +39,7 @@ define(function (require) {
 
             // widgetData
             filter_id: '',
-            itemsCount: 50,
+            itemsCount: 0,
             widgetDescription: '',
             widgetOptions: '{}',
             content_fields: '[]'
@@ -121,6 +121,10 @@ define(function (require) {
                             return Localization.widgets.donutChartMode;
                         case 'panel':
                             return Localization.widgets.panelMode;
+                        case 'barMode':
+                            return Localization.widgets.barMode;
+                        case 'pieChartMode':
+                            return Localization.widgets.pieChartMode;
                         default:
                             break;
                         }
@@ -144,9 +148,7 @@ define(function (require) {
                 }
             }
         },
-        initialize: function () {
-
-        },
+        initialize: function () {},
         update: function () {
             var self = this;
             return Service.loadDashboardWidget(this.get('id'))

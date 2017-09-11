@@ -28,15 +28,13 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Backbone = require('backbone');
-    var WidgetService = require('newWidgets/WidgetService');
     var CoreService = require('coreService');
     var FilterModel = require('filters/FilterModel');
-    var FilterItem = require('modals/addWidget/FilterSearchItemView');
-    var FilterSearchEditView = require('modals/addWidget/FilterSearchEditView');
-    var FilterSearchAddView = require('modals/addWidget/FilterSearchAddView');
-    var App = require('app');
+    var FilterItemView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFilterSearchItemView');
+    var FilterSearchEditView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFilterSearchEditView');
+    var FilterSearchAddView = require('modals/addWidget/widgetSettings/SettingFilters/SettingFilterSearchAddView');
 
-    var config = App.getInstance();
+    var SettingView = require('modals/addWidget/widgetSettings/_settingView');
 
     var FilterCollection = Backbone.Collection.extend({
         model: FilterModel,
@@ -65,18 +63,20 @@ define(function (require) {
         }
     });
 
-    var FilterSearchView = Epoxy.View.extend({
-        className: 'modal-add-widget-filter-search',
-        template: 'tpl-modal-add-widget-filter-search',
+    var SettingFilterSearchView = SettingView.extend({
+        className: 'setting-filter-search',
+        template: 'tpl-modal-add-widget-setting-filter-search',
         events: {
             'validation:success [data-js-filter-name-search]': 'onChangeFilterName',
-            'click [data-js-add-filter]': 'onClickAddFilter'
+            'click [data-js-add-filter]': 'onClickAddFilter',
+            'click [data-js-submit-filter]': 'onClickSubmitFilter',
+            'click [data-js-cancel-filter]': 'onClickCancelFilter'
         },
         bindings: {
             ':el': 'classes: {hide: not(gadgetIsFilter)}',
             '[data-js-search-query]': 'text: search',
-            '[data-js-filter-none]': 'classes: {hide:    not(empty)}',
-            '[data-js-filter-empty]': 'classes: { hide:  not(notFound)  }',
+            '[data-js-filter-none]': 'classes: {hide: not(empty)}',
+            '[data-js-filter-empty]': 'classes: { hide: not(notFound)  }',
             '[data-js-filter-name-search]': 'attr: {disabled: empty}'
 
         },
@@ -89,11 +89,12 @@ define(function (require) {
             }
         },
         initialize: function (options) {
+            this.model = options.gadgetModel;
+            this.currentFilterId = this.model.get('filter_id');
             this.modalType = options.modalType;
             this.firstActivate = true;
             this.collection = new FilterCollection([], { mainModel: this.model });
-            this.renderViews = [];
-            this.render();
+            this.renderedFilterItems = [];
             this.viewModel = new Epoxy.Model({
                 search: '',
                 empty: false,
@@ -102,13 +103,7 @@ define(function (require) {
                 pageSize: 10,
                 totalPage: 1
             });
-            Util.hintValidator($('[data-js-filter-name-search]', this.$el), [{
-                validator: 'minMaxNotRequired',
-                type: 'filterName',
-                min: 3,
-                max: 128
-            }]);
-
+            this.render();
             this.listenTo(this.viewModel, 'change:search', _.debounce(this.updateFilters, 500));
             this.listenTo(this.collection, 'add', this.onAddCollectionItems);
             this.listenTo(this.collection, 'reset', this.onResetCollectionItems);
@@ -117,32 +112,43 @@ define(function (require) {
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
+            this.applyBindings();
+            this.setupValidators();
+        },
+        setupValidators: function () {
+            Util.hintValidator($('[data-js-filter-name-search]', this.$el), [{
+                validator: 'minMaxNotRequired',
+                type: 'filterName',
+                min: 3,
+                max: 128
+            }]);
         },
         setFilterModel: function (model) {
-            this.selectFilterView && this.selectFilterView.destroy();
+            if (this.filterItemView) {
+                this.stopListening(this.filterItemView);
+                this.filterItemView.destroy();
+            }
+            $('[data-js-select-filter-block]', this.$el).removeClass('error-state');
             if (model) {
                 $('[data-js-select-filter-block]', this.$el).removeClass('empty-state');
-                this.selectFilterView = new FilterItem({
+                this.filterItemView = new FilterItemView({
                     model: model, searchTerm: this.viewModel.get('search')
                 });
-                $('[data-js-select-filter-container]', this.$el).html(this.selectFilterView.$el);
+                $('[data-js-select-filter-container]', this.$el).html(this.filterItemView.$el);
+                this.listenTo(this.filterItemView, 'send:event', this.sendEvent);
                 this.selectedFilterModel = model;
             } else {
                 $('[data-js-select-filter-block]', this.$el).addClass('empty-state');
             }
         },
-        getSelectedFilterModel: function () {
-            if (!this.selectedFilterModel && this.model.get('filter_id')) {
-                this.launchFilterCollection = new SingletonLaunchFilterCollection();
-                this.setFilterModel(this.launchFilterCollection.get(this.model.get('filter_id')));
-            }
-            return this.selectedFilterModel;
+        sendEvent: function (eventOptions) {
+            this.trigger('send:event', eventOptions);
         },
         onSelectFilterCheck: function (model, active) {
             active && this.onSelectFilter(model);
         },
         onSelectFilter: function (filterModel) {
-            this.model.set({ filter_id: filterModel.get('id') });
+            this.model.set({ filter_id: filterModel.get('id'), filter_model: filterModel });
             var curOptions = this.model.getWidgetOptions();
             curOptions.filterName = [filterModel.get('name')];
             this.model.setWidgetOptions(curOptions);
@@ -150,72 +156,83 @@ define(function (require) {
         },
         onClickAddFilter: function (e) {
             var self = this;
-            if (this.modalType === 'edit') {
-                config.trackingDispatcher.trackEventNumber(328);
-            } else {
-                config.trackingDispatcher.trackEventNumber(295);
-            }
+            this.trigger('addFilterMode');
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'add filter'
+            });
             e.preventDefault();
             this.$el.addClass('hide-content');
             this.addFilterView && this.stopListening(this.addFilterView) &&
                 this.addFilterView.destroy();
-            this.addFilterView = new FilterSearchAddView({
-                gadgetModel: this.model,
-                modalType: this.modalType
-            });
+            this.addFilterView = new FilterSearchAddView();
             this.listenTo(this.addFilterView, 'change:filter', this.onSelectFilter);
+            this.listenTo(this.addFilterView, 'send:event', this.sendEvent);
+            this.listenTo(this.addFilterView, 'returnToFiltersList', function () {
+                this.trigger('returnToFiltersList');
+            });
             this.addFilterView.activate();
             $('[data-js-filter-add-container]', this.$el).html(this.addFilterView.$el);
-            this.trigger('disable:navigation', true);
             this.addFilterView.getReadyState()
                 .always(function () {
                     self.addFilterView.destroy();
                     self.$el.removeClass('hide-content');
-                    self.trigger('disable:navigation', false);
                     self.updateFilters();
                 });
-                // .fail(function () {
-                //     self.model.set({ filter_id: '' });
-                //     self.setFilterModel(null);
-                // });
+        },
+        onClickSubmitFilter: function () {
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'submit filter'
+            });
+            this.trigger('submitFilter');
+        },
+        onClickCancelFilter: function () {
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'cancel filter'
+            });
+            this.model.set('filter_id', this.currentFilterId);
+            this.trigger('cancelFilter');
         },
         onEditFilter: function (model) {
             var self = this;
+            this.trigger('editFilterMode');
             this.$el.addClass('hide-content');
-            this.editFilterView && this.editFilterView.destroy();
+            if (this.editFilterView) {
+                this.stopListening(this.editFilterView);
+                this.editFilterView.destroy();
+            }
             this.editFilterView = new FilterSearchEditView({
-                model: model,
-                gadgetModel: this.model,
-                modalType: this.modalType
+                model: model
+            });
+            this.listenTo(this.editFilterView, 'send:event', this.sendEvent);
+            this.listenTo(this.editFilterView, 'returnToFiltersList', function () {
+                this.trigger('returnToFiltersList');
             });
             $('[data-js-filter-edit-container]', this.$el).html(this.editFilterView.$el);
-            this.trigger('disable:navigation', true);
             this.editFilterView.getReadyState()
                 .always(function () {
                     self.editFilterView.destroy();
                     self.$el.removeClass('hide-content');
-                    self.trigger('disable:navigation', false);
                 });
         },
         activate: function () {
-            var curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             var self = this;
             if (!this.firstActivate) {
                 return;
             }
-            if (!curWidget.noFilters) {
-                this.firstActivate = false;
-                this.load().always(function () {
-                    self.baronScroll = Util.setupBaronScroll($('[data-js-filter-list-scroll]', self.$el));
-                    Util.setupBaronScrollSize(self.baronScroll, { maxHeight: 330 });
-                    self.baronScroll.on('scroll', function () {
-                        var elem = self.baronScroll.get(0);
-                        if (elem.scrollHeight - elem.scrollTop < elem.offsetHeight * 2) {
-                            self.addLoadData();
-                        }
-                    });
+            this.firstActivate = false;
+            this.load().always(function () {
+                self.baronScroll = Util.setupBaronScroll($('[data-js-filter-list-scroll]', self.$el));
+                Util.setupBaronScrollSize(self.baronScroll, { maxHeight: 330 });
+                self.baronScroll.on('scroll', function () {
+                    var elem = self.baronScroll.get(0);
+                    if (elem.scrollHeight - elem.scrollTop < elem.offsetHeight * 2) {
+                        self.addLoadData();
+                    }
                 });
-            }
+            });
         },
         addLoadData: function () {
             if (this.viewModel.get('currentPage') < this.viewModel.get('totalPage') && !this.$el.hasClass('load')) {
@@ -226,11 +243,10 @@ define(function (require) {
         onChangeFilterName: function (e) {
             var value = $(e.currentTarget).val();
             if (value) {
-                if (this.modalType === 'edit') {
-                    config.trackingDispatcher.trackEventNumber(327);
-                } else {
-                    config.trackingDispatcher.trackEventNumber(294);
-                }
+                this.trigger('send:event', {
+                    view: 'filter',
+                    action: 'change filter name'
+                });
             }
             this.viewModel.set({ search: value });
         },
@@ -238,22 +254,24 @@ define(function (require) {
             this.renderFilter(model);
         },
         onResetCollectionItems: function () {
-            _.each(this.renderViews, function (view) {
+            var self = this;
+            _.each(this.renderedFilterItems, function (view) {
+                self.stopListening(view);
                 view.destroy();
             });
-            this.renderViews = [];
+            this.renderedFilterItems = [];
             _.each(this.collection.models, function (model) {
                 this.renderFilter(model);
             }, this);
         },
         renderFilter: function (model) {
-            var filterItem = new FilterItem({
+            var filterItemView = new FilterItemView({
                 model: model,
-                searchTerm: this.viewModel.get('search'),
-                modalType: this.modalType
+                searchTerm: this.viewModel.get('search')
             });
-            $('[data-js-filter-list]', this.$el).append(filterItem.$el);
-            this.renderViews.push(filterItem);
+            this.listenTo(filterItemView, 'send:event', this.sendEvent);
+            $('[data-js-filter-list]', this.$el).append(filterItemView.$el);
+            this.renderedFilterItems.push(filterItemView);
         },
         updateFilters: function () {
             var self = this;
@@ -327,11 +345,18 @@ define(function (require) {
             }
             return url;
         },
+        validate: function () {
+            if (this.selectedFilterModel) {
+                return true;
+            }
+            $('[data-js-select-filter-block]', this.$el).addClass('error-state');
+            return false;
+        },
         onDestroy: function () {
             this.collection.destroy(true);
             this.$el.remove();
         }
     });
 
-    return FilterSearchView;
+    return SettingFilterSearchView;
 });
