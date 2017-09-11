@@ -22,8 +22,6 @@
 define(function (require) {
     'use strict';
 
-    var Util = require('util');
-    var $ = require('jquery');
     var _ = require('underscore');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
     var Epoxy = require('backbone-epoxy');
@@ -61,7 +59,7 @@ define(function (require) {
     var SettingStaticData = SettingView.extend({
         initialize: function (data) {
             var options = _.extend({
-                items: [],
+                fields: [],
                 value: 0
             }, data.options);
             this.model = new Epoxy.Model(options);
@@ -74,15 +72,7 @@ define(function (require) {
             options.getValue && (this.getValue = options.getValue);
         },
         activate: function () {
-            var self = this;
-            var curVal = this.getValue(this.gadgetModel, this);
-            _.each(this.model.get('items'), function (item, index) {
-                if (item.value === curVal) {
-                    self.model.set({ value: index });
-                    return false;
-                }
-                return true;
-            });
+            return true;
         },
         validate: function () {
             return true;
