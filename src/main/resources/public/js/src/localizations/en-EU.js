@@ -518,7 +518,7 @@ define(['util'], function () {
             customColumnDiscl: 'You can add custom column to view tags with chosen tag prefix',
             addCustomColumn: '+ Add custom column',
             groupLaunchesByFilter: 'Group launches by filter',
-            launchesOnFilter: 'launches are included in the filter'
+            launchesOnFilter: 'Number of launches in the filter is '
         },
 
         userProfile: {
