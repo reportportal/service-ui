@@ -52,9 +52,17 @@ define(function (require) {
         onChangeType: function () {
             var gadget = $('input:checked', this.$el).val();
             var defaults = this.model.defaults;
+            $('[data-js-select-widget-header]', this.$el).removeClass('error-state');
             config.trackingDispatcher.trackEventNumber(291);
             defaults.gadget = gadget;
             this.model.set(defaults);
+        },
+        validate: function () {
+            if ($('input:checked', this.$el).length) {
+                return true;
+            }
+            $('[data-js-select-widget-header]', this.$el).addClass('error-state');
+            return false;
         },
         onDestroy: function () {
         }

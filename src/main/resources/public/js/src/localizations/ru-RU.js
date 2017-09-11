@@ -574,7 +574,8 @@ define(['util'], function () {
             customColumnDiscl: 'Вы можете добавить свою колонкук для просмотра тегов с выбранным префиксом тега',
             addCustomColumn: '+ Добавить колонку',
             groupLaunchesByFilter: 'Групировать запуски по фильтру',
-            launchesOnFilter: 'Количество запусков в фильтре - '
+            launchesOnFilter: 'Количество запусков в фильтре - ',
+            selectWidget: 'Выберите тип виджета из списка'
         },
 
         userProfile: {

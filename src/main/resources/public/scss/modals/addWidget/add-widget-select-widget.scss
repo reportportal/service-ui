@@ -20,6 +20,27 @@
  */
 
 .modal-add-widget-select-widget {
+  .widget-select-header {
+    background: $COLOR--white-four;
+    overflow: hidden;
+    width: 100%;
+    height: 38px;
+    .caption {
+      font-size: 12px;
+      text-transform: uppercase;
+      margin: 0;
+      font-family: OpenSansSemibold;
+      color: $COLOR--gray-47;
+      line-height: 38px;
+      text-align: left;
+      padding-left: 10px;
+    }
+    &.error-state {
+      .caption {
+        color: $COLOR--orange-red;
+      }
+    }
+  }
   .widget-list {
     position: relative;
     width: 100%;

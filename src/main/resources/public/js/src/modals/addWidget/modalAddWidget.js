@@ -208,8 +208,7 @@ define(function (require) {
             this.viewModel.set('step', 1);
         },
         onClickSecondStep: function () {
-            if (!this.model.get('gadget')) {
-                this.showWarningBlock('please select gadget');
+            if (!this.selectWidgetView.validate()) {
                 return;
             }
             config.trackingDispatcher.trackEventNumber(292);
