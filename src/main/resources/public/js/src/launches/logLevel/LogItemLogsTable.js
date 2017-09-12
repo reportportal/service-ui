@@ -89,11 +89,11 @@ define(function (require) {
                 condition: 'in',
                 values: [
                     { name: Localization.filterNameByValue.ALL, value: 'All' },
-                    { name: Localization.filterNameByValue.TRACE, value: 'TRACE' },
-                    { name: Localization.filterNameByValue.DEBUG, value: 'DEBUG' },
-                    { name: Localization.filterNameByValue.INFO, value: 'INFO' },
-                    { name: Localization.filterNameByValue.WARN, value: 'WARN' },
-                    { name: Localization.filterNameByValue.ERROR, value: 'ERROR' }
+                    { name: 'Trace', value: 'TRACE' },
+                    { name: 'Debug', value: 'DEBUG' },
+                    { name: 'Info', value: 'INFO' },
+                    { name: 'Warn', value: 'WARN' },
+                    { name: 'Error', value: 'ERROR' }
                 ],
                 value: (startOptions['filter.in.level'] && decodeURIComponent(startOptions['filter.in.level'])) || 'All'
             });
