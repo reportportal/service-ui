@@ -78,7 +78,7 @@ define(function (require) {
             var config = {
                 old_line_chart: {
                     gadget_name: Localization.widgets.statisticsLineChart,
-                    img: 'trends_chart.png',
+                    img: 'launch-statistics-line-chart.svg',
                     description: Localization.widgets.statisticsLineChartDescription,
                     widget_type: 'line_chart',
                     gadget: 'old_line_chart',
@@ -133,7 +133,7 @@ define(function (require) {
                 },
                 statistic_trend: {
                     gadget_name: Localization.widgets.statisticsTrendChart,
-                    img: 'launch_statistics_trend_chart.png',
+                    img: 'launch-statistics-trend-chart.svg',
                     description: Localization.widgets.statisticsTrendChartDescription,
                     widget_type: 'trends_chart',
                     gadget: 'statistic_trend',
@@ -188,7 +188,7 @@ define(function (require) {
                 },
                 overall_statistics: {
                     gadget_name: Localization.widgets.overallStatisticsPanel,
-                    img: 'overall_statistics_panel.png',
+                    img: 'overall-statistics-panel.svg',
                     description: Localization.widgets.overallStatisticsPanelDescription,
                     widget_type: 'statistics_panel',
                     gadget: 'overall_statistics',
@@ -253,7 +253,7 @@ define(function (require) {
                 },
                 launches_duration_chart: {
                     gadget_name: Localization.widgets.durationChart,
-                    img: 'different_launches_comparison.png',
+                    img: 'launches-duration-chart.svg',
                     description: Localization.widgets.durationChartDescription,
                     widget_type: 'column_chart',
                     gadget: 'launches_duration_chart',
@@ -295,7 +295,7 @@ define(function (require) {
                 },
                 launch_statistics: {
                     gadget_name: Localization.widgets.executionIssueStatistics,
-                    img: 'launch_statistics_pie.png',
+                    img: 'launch-execution-and-issue-statistic.svg',
                     description: Localization.widgets.executionIssueStatisticsDescription,
                     widget_type: 'combine_pie_chart',
                     gadget: 'launch_statistics',
@@ -325,25 +325,9 @@ define(function (require) {
                         }
                     ]
                 },
-                last_launch: {
-                    gadget_name: Localization.widgets.executionIssueStatistics,
-                    img: 'launch_statistics_pie.png',
-                    description: Localization.widgets.executionIssueStatisticsDescription,
-                    widget_type: 'combine_pie_chart',
-                    gadget: 'last_launch',
-                    noCriteria: true,
-                    notShowOnWizard: true,
-                    staticCriteria: {}, // this.getLastLaunchStats(),
-                    limit: {
-                        display: false,
-                        min: 1,
-                        max: 1,
-                        def: 1
-                    }
-                },
                 activity_stream: {
                     gadget_name: Localization.widgets.projectActivityPanel,
-                    img: 'activity_stream.png',
+                    img: 'project-activity-panel.svg',
                     description: Localization.widgets.projectActivityPanelDescription,
                     widget_type: 'activity_panel',
                     gadget: 'activity_stream',
@@ -450,7 +434,7 @@ define(function (require) {
                 },
                 cases_trend: {
                     gadget_name: Localization.widgets.growthTrendChart,
-                    img: 'test-cases-growth-trend-chart.png',
+                    img: 'test-cases-growth-trend-chart.svg',
                     description: Localization.widgets.growthTrendChartDescription,
                     widget_type: 'cases_trend_chart',
                     gadget: 'cases_trend',
@@ -491,7 +475,7 @@ define(function (require) {
                 },
                 investigated_trend: {
                     gadget_name: Localization.widgets.percentageOfLaunches,
-                    img: 'to_investigate_trend.png',
+                    img: 'investigated-percentage-of-launches.svg',
                     description: Localization.widgets.percentageOfLaunchesDescription,
                     widget_type: 'column_chart',
                     gadget: 'investigated_trend',
@@ -534,7 +518,7 @@ define(function (require) {
                 },
                 launches_table: {
                     gadget_name: Localization.widgets.launchesTable,
-                    img: 'filter_results.png',
+                    img: 'launch-table.svg',
                     description: Localization.widgets.launchesTableDescription,
                     widget_type: 'launches_table',
                     gadget: 'launches_table',
@@ -628,7 +612,7 @@ define(function (require) {
                 },
                 unique_bug_table: {
                     gadget_name: Localization.widgets.uniqueBugsTable,
-                    img: 'unique_bugs_table.png',
+                    img: 'unique-bugs-table.svg',
                     description: Localization.widgets.uniqueBugsTableDescription,
                     widget_type: 'table',
                     gadget: 'unique_bug_table',
@@ -654,7 +638,7 @@ define(function (require) {
                     gadget_name: Localization.widgets.failedTestCasesTable,
                     widget_type: 'table',
                     gadget: 'most_failed_test_cases',
-                    img: 'filter_results_failure.png',
+                    img: 'most-failure-test-cases-table.svg',
                     description: Localization.widgets.failedTestCasesTableDescription,
                     uiControl: [
                         {
@@ -713,7 +697,7 @@ define(function (require) {
                 },
                 bug_trend: {
                     gadget_name: Localization.widgets.failedTrendChart,
-                    img: 'failed-cases-trend-chart.png',
+                    img: 'failed-cases-trend-chart.svg',
                     description: Localization.widgets.failedTrendChartDescription,
                     widget_type: 'bug_trend',
                     gadget: 'bug_trend',
@@ -746,7 +730,7 @@ define(function (require) {
                 },
                 not_passed: {
                     gadget_name: Localization.widgets.nonPassedTrendChart,
-                    img: 'non-passed_test-cases_trend.png',
+                    img: 'non-passed-test-cases-trend.svg',
                     description: Localization.widgets.nonPassedTrendChartDescription,
                     widget_type: 'not_passed_chart',
                     gadget: 'not_passed',
@@ -777,7 +761,7 @@ define(function (require) {
                 },
                 launches_comparison_chart: {
                     gadget_name: Localization.widgets.comparisonChart,
-                    img: 'launches_duration.png',
+                    img: 'different-launches-comparison-chart.svg',
                     description: Localization.widgets.comparisonChartDescription,
                     widget_type: 'column_chart',
                     gadget: 'launches_comparison_chart',
@@ -806,7 +790,7 @@ define(function (require) {
                 },
                 passing_rate_per_launch: {
                     gadget_name: Localization.widgets.passingRatePerLaunchChart,
-                    img: 'passing_rate_per_launch.png',
+                    img: 'passing-rate-launch.svg',
                     description: Localization.widgets.passingRatePerLaunchChartDescription,
                     widget_type: 'bar_chart',
                     gadget: 'passing_rate_per_launch',
@@ -854,7 +838,7 @@ define(function (require) {
                 },
                 passing_rate_summary: {
                     gadget_name: Localization.widgets.passingRateSummaryChart,
-                    img: 'passing_rate_summary.png',
+                    img: 'passing-rate-summery.svg',
                     description: Localization.widgets.passingRateSummaryChartDescription,
                     widget_type: 'bar_chart',
                     gadget: 'passing_rate_summary',
@@ -892,6 +876,22 @@ define(function (require) {
                             }
                         }
                     ]
+                },
+                last_launch: {
+                    gadget_name: Localization.widgets.executionIssueStatistics,
+                    img: '',
+                    description: Localization.widgets.executionIssueStatisticsDescription,
+                    widget_type: 'combine_pie_chart',
+                    gadget: 'last_launch',
+                    noCriteria: true,
+                    notShowOnWizard: true,
+                    staticCriteria: {}, // this.getLastLaunchStats(),
+                    limit: {
+                        display: false,
+                        min: 1,
+                        max: 1,
+                        def: 1
+                    }
                 }
             };
             _.each(WIDGETS, function (widget, key) {
@@ -1087,7 +1087,7 @@ define(function (require) {
             ];
         },
         getDefaultWidgetImg: function () {
-            return 'no_chart.png';
+            return 'undefined.svg';
         },
 
         getWidgetView: function (gadget) {

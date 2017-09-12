@@ -31,10 +31,9 @@ define(function (require) {
         getConfig: function () {
             return {
                 gadget_name: Localization.widgets.productStatus,
-                img: 'filter_results.png',
+                img: 'product-status.svg',
                 description: Localization.widgets.productStatusDescription,
-                widget_type: 'clean_widget', // TODO remove after refactoring
-                noFilters: true // TODO remove after refactoring
+                widget_type: 'clean_widget' // TODO remove after refactoring
             };
         },
         getSettings: function () {

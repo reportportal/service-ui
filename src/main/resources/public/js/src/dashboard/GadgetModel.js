@@ -62,8 +62,8 @@ define(function (require) {
             gadgetPreviewImg: {
                 deps: ['gadget'],
                 get: function (gadget) {
-                    if (!gadget) return 'img/popup/' + WidgetService.getDefaultWidgetImg();
-                    return 'img/popup/' + WidgetService.getWidgetConfig(gadget).img;
+                    if (!gadget) return 'img/widgets/' + WidgetService.getDefaultWidgetImg();
+                    return 'img/widgets/' + WidgetService.getWidgetConfig(gadget).img;
                 }
             },
             gadgetIsFilter: {

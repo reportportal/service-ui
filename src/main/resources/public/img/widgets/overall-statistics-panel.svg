@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="250" height="125" viewBox="0 0 250 125">
+    <defs>
+        <circle id="a" cx="183" cy="44" r="6"/>
+        <circle id="b" cx="113" cy="44" r="6"/>
+        <circle id="c" cx="113" cy="94" r="6"/>
+        <circle id="d" cx="183" cy="94" r="6"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path d="M0 0h250v125H0z"/>
+        <g stroke="#F5F5F5">
+            <path d="M1 103.5h248M1 81.5h248M1 60.5h248M1 38.5h248M1 16.5h248"/>
+        </g>
+        <path fill="#BAD0CB" d="M21 78c0-2.21 1.796-4 4.007-4h51.986A4.006 4.006 0 0 1 81 78c0 2.21-1.796 4-4.007 4H25.007A4.006 4.006 0 0 1 21 78z"/>
+        <path fill="#EE9583" d="M41 74h20v8H41z"/>
+        <path fill="#D9E2AD" d="M25 74h16v8H25a4 4 0 1 1 0-8z"/>
+        <g>
+            <use fill="#F7CC90" xlink:href="#a"/>
+            <circle cx="183" cy="44" r="5" stroke="#F9F9F9" stroke-width="2"/>
+        </g>
+        <g>
+            <use fill="#C2E2E3" xlink:href="#b"/>
+            <circle cx="113" cy="44" r="5" stroke="#F9F9F9" stroke-width="2"/>
+        </g>
+        <g>
+            <use fill="#6A949D" xlink:href="#c"/>
+            <circle cx="113" cy="94" r="5" stroke="#F9F9F9" stroke-width="2"/>
+        </g>
+        <g>
+            <use fill="#DBE1AF" xlink:href="#d"/>
+            <circle cx="183" cy="94" r="5" stroke="#F9F9F9" stroke-width="2"/>
+        </g>
+        <text fill="#999" font-family="OpenSans-Regular, Open Sans" font-size="15">
+            <tspan x="21" y="51">59</tspan>
+        </text>
+        <text fill="#999" font-family="OpenSans-Regular, Open Sans" font-size="15">
+            <tspan x="110" y="83">11</tspan>
+        </text>
+        <text fill="#999" font-family="OpenSans-Regular, Open Sans" font-size="15">
+            <tspan x="179" y="83">5</tspan>
+        </text>
+        <text fill="#999" font-family="OpenSans-Regular, Open Sans" font-size="15">
+            <tspan x="179" y="33">40</tspan>
+        </text>
+        <text fill="#999" font-family="OpenSans-Regular, Open Sans" font-size="15">
+            <tspan x="110" y="33">3</tspan>
+        </text>
+        <path fill="#CCC" d="M48 64v-4h-6v4h6zm-21 0v-4h-6v4h6zm7 0v-4h-6v4h6zm7 0v-4h-6v4h6zM149 96v-4h-6v4h6zm-21 0v-4h-6v4h6zm7 0v-4h-6v4h6zm7 0v-4h-6v4h6zM219 96v-4h-6v4h6zm-21 0v-4h-6v4h6zm7 0v-4h-6v4h6zm7 0v-4h-6v4h6zM149 46v-4h-6v4h6zm-21 0v-4h-6v4h6zm7 0v-4h-6v4h6zm7 0v-4h-6v4h6zM219 46v-4h-6v4h6zm-21 0v-4h-6v4h6zm7 0v-4h-6v4h6zm7 0v-4h-6v4h6z"/>
+    </g>
+</svg>
