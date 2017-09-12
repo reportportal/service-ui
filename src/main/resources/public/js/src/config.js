@@ -37,6 +37,7 @@ require.config({
         'nprogress': '../lib/nprogress',
         'localization': 'localizations/localizationController',
         'momentLib': '../lib/moment.2.10.2',
+        'momentRu': '../lib/momentRu',
         'moment': 'localizations/localizationDates',
         'SwipeGallery': '../lib/SwipeGallery',
         'Hammer': '../lib/hammer',
