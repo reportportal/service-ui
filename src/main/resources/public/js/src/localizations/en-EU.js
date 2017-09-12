@@ -739,13 +739,13 @@ define(['util'], function () {
             owner: 'Owner',
             addToDashboard: 'Add to dashboard',
             postIssue: 'Post Issue',
-            postBug: 'Post Bug',
+            postBug: 'Post Issue',
             postBugTo: 'Post Bug to',
-            loadBug: 'Load Bug',
+            loadBug: 'Load Issue',
             addIssueId: 'Add Issue ID',
             key: 'Issue Key (for multiple options - type issue ID and press Enter)',
-            configureTBS: 'Configure Bug Tracking System to post bugs',
-            configureTBSLoad: 'Configure Bug Tracking System to load bugs',
+            configureTBS: 'Configure Bug Tracking System to post issue',
+            configureTBSLoad: 'Configure Bug Tracking System to load issue',
             noIssues: 'You can\'t Post Bug if item has no issues',
             noIssuesLoad: 'You can\'t Load Bug if item has no issues',
             historyView: 'History',
@@ -2024,8 +2024,8 @@ define(['util'], function () {
         },
 
         modalDefectEditor: {
-            saveAndPost: 'Save and Post Bug',
-            saveAndLoad: 'Save and Load Bug'
+            saveAndPost: 'Save and Post Issue',
+            saveAndLoad: 'Save and Load Issue'
         }
     };
 });
