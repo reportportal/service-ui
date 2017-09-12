@@ -17,17 +17,12 @@
 define(function (require) {
     'use strict';
 
-    var momentLib = require('momentLib');
+    var moment = require('momentLib');
+    require('momentRu');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
 
     var appStorage = new SingletonAppStorage();
     var lang = appStorage.get('appLanguage') || 'en';
-    switch (lang) {
-    case 'ru':
-        momentLib.locale('ru');
-        break;
-    default:
-        momentLib.locale(lang);
-    }
-    return momentLib;
+    moment.locale(lang);
+    return moment;
 });
