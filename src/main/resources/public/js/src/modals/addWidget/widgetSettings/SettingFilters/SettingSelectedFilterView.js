@@ -69,7 +69,7 @@ define(function (require) {
             this.trigger('edit');
         },
         validate: function () {
-            console.dir(this.el);
+            return true;
         },
         onDestroy: function () {
             this.filterView && this.filterView.destroy();
