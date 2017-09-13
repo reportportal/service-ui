@@ -260,7 +260,7 @@ define(function (require) {
             if (this.saveWidget.validate()) {
                 config.trackingDispatcher.trackEventNumber(314);
                 this.$el.addClass('load');
-                if (!_.contains(['unique_bug_table', 'activity_stream', 'launches_table'], this.model.get('gadget'))) {
+                if (!_.contains(['unique_bug_table', 'activity_stream', 'launches_table', 'cumulative'], this.model.get('gadget'))) {
                     contentParameters.metadata_fields = ['name', 'number', 'start_time'];
                 }
                 if (this.model.get('gadget') === 'most_failed_test_cases') {

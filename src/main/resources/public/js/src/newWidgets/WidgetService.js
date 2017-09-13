@@ -39,6 +39,7 @@ define(function (require) {
     var PassingRateSummaryChart = require('newWidgets/widgets/PassingRateSummaryChartView');
     var PassingRatePerLaunchChart = require('newWidgets/widgets/PassingRatePerLaunchChartView');
     var ProductStatus = require('newWidgets/widgets/productStatus/index');
+    var CumulativeTrendChart = require('newWidgets/widgets/cumulativeTrendchart/index');
 
     var LastLaunchPieChart = require('newWidgets/widgets/LastLaunchPieChartView');
     var PercentageOfInvestigationChart = require('newWidgets/widgets/PercentageOfInvestigationChartView');
@@ -70,7 +71,8 @@ define(function (require) {
         },
     ]*/
     var WIDGETS = {
-        product_status: ProductStatus
+        product_status: ProductStatus,
+        cumulative: CumulativeTrendChart
     };
 
     var WidgetService = {
@@ -1126,6 +1128,8 @@ define(function (require) {
                 return PassingRateSummaryChart;
             case 'product_status':
                 return ProductStatus;
+            case 'cumulative':
+                return CumulativeTrendChart;
 
                 // status page widgets
             case 'activities':

@@ -41,8 +41,23 @@ define(function (require) {
             setValue: function (value, gadgetModel) {
                 gadgetModel.set('itemsCount', value);
             }
+        },
+        tagPrefix: {
+            getValue: function (gadgetModel, self) {
+                var widgetOptions = gadgetModel.getWidgetOptions();
+                if (widgetOptions.prefix && widgetOptions.prefix.length) {
+                    return widgetOptions.prefix[0];
+                }
+                return [];
+            },
+            setValue: function (value, gadgetModel) {
+                var widgetOptions = gadgetModel.getWidgetOptions();
+                widgetOptions.prefix = [value];
+                gadgetModel.setWidgetOptions(widgetOptions);
+            }
         }
     };
+
     var SettingInputView = SettingView.extend({
         className: 'modal-add-widget-setting-input',
         template: 'tpl-modal-add-widget-setting-input',
@@ -57,10 +72,11 @@ define(function (require) {
                 min: 1,
                 max: 150,
                 def: 50,
-                numsOnly: false,
                 value: ''
             }, data.options);
-
+            if (options.numOnly) {
+                this.$el.addClass('num-only');
+            }
             this.model = new Epoxy.Model(options);
             this.gadgetModel = data.gadgetModel;
             this.render();
@@ -75,7 +91,6 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, {
                 name: this.model.get('name')
             }));
-            this.bindValidators();
         },
         bindValidators: function () {
             if (this.model.get('numOnly')) {
@@ -93,11 +108,11 @@ define(function (require) {
                     max: this.model.get('max')
                 }]);
             }
-
         },
         activate: function () {
             this.listenTo(this.model, 'change:value', this.onChangeValue);
             this.model.set({ value: this.getValue(this.gadgetModel, this) });
+            this.bindValidators();
         },
         onChangeValue: function () {
             if (this.validate()) {

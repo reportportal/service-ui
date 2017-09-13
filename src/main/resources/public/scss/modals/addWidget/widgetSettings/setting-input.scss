@@ -38,13 +38,21 @@
     text-align: left;
     vertical-align: middle;
     input {
-      width: 68px;
+      width: 100%;
     }
     .validate-hint {
       width: 100%;
       top: auto;
       bottom: 100%;
       box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.2);
+    }
+  }
+  &.num-only {
+    input {
+      width: 68px;
+    }
+    .validate-hint {
+      width: 68px;
     }
   }
 }

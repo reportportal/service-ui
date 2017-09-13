@@ -331,7 +331,9 @@ define(['util'], function () {
             selectLaunch: 'Select launch',
             selectUser: 'Select user',
             chooseFilter: 'Choose filter from the list below',
+            chooseFilterShort: 'Choose filter',
             selectedFilterNotFound: 'The filter not found. Please choose another one.',
+            tagPrefix: 'Tag prefix',
             limit: 'Items count',
             items: 'Items',
             launchesCount: 'Launches count',
@@ -481,6 +483,9 @@ define(['util'], function () {
 
             productStatus: 'Product status',
             productStatusDescription: 'shows the configurable table that is representing launch statistics or group statistics by special filter',
+
+            cumulativeTrendChart: 'Cumulative trend chart',
+            cumulativeTrendChartDescription: 'shows the growth trend of summary statistics of launches with the same tag prefix',
 
             percentageOfInvestigationsChart: 'Percentage of investigations',
             percentageOfProductBugsChart: 'Percentage of product bugs',
