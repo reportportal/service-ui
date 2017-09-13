@@ -333,11 +333,14 @@ define(function (require) {
                 this.filterModel.trigger('add_entity', filterId, value);
             }
         },
-        onClickSelect: function () {
+        onClickSelect: function (e) {
             if (this.model.get('type') === 'SUITE') {
                 config.trackingDispatcher.trackEventNumber(100.1);
             } else {
                 config.trackingDispatcher.trackEventNumber(61.2);
+            }
+            if ((e.ctrlKey || e.metaKey) && !this.model.get('select')) {
+                this.model.trigger('check:before:items', this.model.get('id'));
             }
         },
         onClickEdit: function () {

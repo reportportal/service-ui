@@ -175,8 +175,11 @@ define(function (require) {
             });
             modal.show();
         },
-        onClickSelect: function () {
+        onClickSelect: function (e) {
             config.trackingDispatcher.trackEventNumber(152);
+            if ((e.ctrlKey || e.metaKey) && !this.model.get('select')) {
+                this.model.trigger('check:before:items', this.model.get('id'));
+            }
         },
         activateAccordion: function () {
             if (this.$el.innerHeight() > 198) {
