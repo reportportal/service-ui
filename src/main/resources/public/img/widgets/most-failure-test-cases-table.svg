@@ -1,34 +1,47 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="250" height="125" viewBox="0 0 250 125">
-    <g fill="none" fill-rule="evenodd">
-        <path d="M0 0h250v125H0z"/>
-        <g stroke="#F5F5F5">
-            <path d="M1 103.5h248M1 81.5h248M1 60.5h248M1 38.5h248M1 16.5h248"/>
-        </g>
-        <g fill="#CCC">
-            <path d="M67 62v-6H56v6h11zm36 0v-6H92v6h11zm-24 0v-6H68v6h11zm12 0v-6H80v6h11zm-60 0v-6H20v6h11zm12 0v-6H32v6h11zm12 0v-6H44v6h11zM31 72v-6H20v6h11zm12 0v-6H32v6h11zM218 62v-6h-11v6h11zm12 0v-6h-11v6h11z"/>
-        </g>
-        <path fill="#CCC" d="M67 31v-6H56v6h11zm36 0v-6H92v6h11zm-24 0v-6H68v6h11zm12 0v-6H80v6h11zm-60 0v-6H20v6h11zm12 0v-6H32v6h11zm12 0v-6H44v6h11zM31 41v-6H20v6h11zm12 0v-6H32v6h11zM218 31v-6h-11v6h11zm12 0v-6h-11v6h11z"/>
-        <path fill="#F19586" d="M143 25h4v4h-4z"/>
-        <path fill="#D2E6B4" d="M143 30h4v4h-4z"/>
-        <path fill="#F19586" d="M153 30h4v4h-4zM148 30h4v4h-4zM148 25h4v4h-4z"/>
-        <path fill="#D2E6B4" d="M153 25h4v4h-4z"/>
-        <path fill="#F19586" d="M158 25h4v4h-4zM163 25h4v4h-4z"/>
-        <g>
-            <path fill="#F19586" d="M143 56h4v4h-4z"/>
-            <path fill="#D2E6B4" d="M143 61h4v4h-4z"/>
-            <path fill="#F19586" d="M153 61h4v4h-4zM148 61h4v4h-4zM148 56h4v4h-4z"/>
-            <path fill="#D2E6B4" d="M153 56h4v4h-4z"/>
-            <path fill="#F19586" d="M158 56h4v4h-4zM163 56h4v4h-4z"/>
-        </g>
-        <g>
-            <path fill="#F19586" d="M143 87h4v4h-4z"/>
-            <path fill="#D2E6B4" d="M143 92h4v4h-4z"/>
-            <path fill="#F19586" d="M153 92h4v4h-4zM148 92h4v4h-4zM148 87h4v4h-4z"/>
-            <path fill="#D2E6B4" d="M153 87h4v4h-4z"/>
-            <path fill="#F19586" d="M158 87h4v4h-4zM163 87h4v4h-4z"/>
-        </g>
-        <g fill="#CCC">
-            <path d="M67 93v-6H56v6h11zm36 0v-6H92v6h11zm-24 0v-6H68v6h11zm12 0v-6H80v6h11zm-60 0v-6H20v6h11zm12 0v-6H32v6h11zm12 0v-6H44v6h11zM31 103v-6H20v6h11zm12 0v-6H32v6h11zM218 93v-6h-11v6h11zm12 0v-6h-11v6h11z"/>
-        </g>
+  <g fill="none" fill-rule="evenodd" transform="translate(0 -25)">
+    <rect width="250" height="125" y="25"/>
+    <g stroke="#F5F5F5" transform="translate(1 41)">
+      <path d="M-2.84217094e-14 87.5L248 87.5M-2.84217094e-14 65.5L248 65.5M-2.84217094e-14 44.5L248 44.5M-2.84217094e-14 22.5L248 22.5M-2.84217094e-14.5L248 .5"/>
     </g>
+    <g fill="#CCC" transform="translate(20 81)">
+      <path d="M47 6L47 0 36 0 36 6 47 6zM83 6L83 0 72 0 72 6 83 6zM59 6L59 0 48 0 48 6 59 6zM71 6L71 0 60 0 60 6 71 6zM11 6L11 0 0 0 0 6 11 6zM23 6L23 0 12 0 12 6 23 6zM35 6L35 0 24 0 24 6 35 6zM11 16L11 10 0 10 0 16 11 16zM23 16L23 10 12 10 12 16 23 16zM198 6L198 0 187 0 187 6 198 6zM210 6L210 0 199 0 199 6 210 6z"/>
+    </g>
+    <g transform="translate(20 50)">
+      <path fill="#CCC" d="M47 6L47 0 36 0 36 6 47 6zM83 6L83 0 72 0 72 6 83 6zM59 6L59 0 48 0 48 6 59 6zM71 6L71 0 60 0 60 6 71 6zM11 6L11 0 0 0 0 6 11 6zM23 6L23 0 12 0 12 6 23 6zM35 6L35 0 24 0 24 6 35 6zM11 16L11 10 0 10 0 16 11 16zM23 16L23 10 12 10 12 16 23 16zM198 6L198 0 187 0 187 6 198 6zM210 6L210 0 199 0 199 6 210 6z"/>
+      <g transform="translate(123)">
+        <rect width="4" height="4" fill="#F19586"/>
+        <rect width="4" height="4" y="5" fill="#D2E6B4"/>
+        <rect width="4" height="4" x="10" y="5" fill="#F19586"/>
+        <rect width="4" height="4" x="5" y="5" fill="#F19586"/>
+        <rect width="4" height="4" x="5" fill="#F19586"/>
+        <rect width="4" height="4" x="10" fill="#D2E6B4"/>
+        <rect width="4" height="4" x="15" fill="#F19586"/>
+        <rect width="4" height="4" x="20" fill="#F19586"/>
+      </g>
+      <g transform="translate(123 31)">
+        <rect width="4" height="4" fill="#F19586"/>
+        <rect width="4" height="4" y="5" fill="#D2E6B4"/>
+        <rect width="4" height="4" x="10" y="5" fill="#F19586"/>
+        <rect width="4" height="4" x="5" y="5" fill="#F19586"/>
+        <rect width="4" height="4" x="5" fill="#F19586"/>
+        <rect width="4" height="4" x="10" fill="#D2E6B4"/>
+        <rect width="4" height="4" x="15" fill="#F19586"/>
+        <rect width="4" height="4" x="20" fill="#F19586"/>
+      </g>
+      <g transform="translate(123 62)">
+        <rect width="4" height="4" fill="#F19586"/>
+        <rect width="4" height="4" y="5" fill="#D2E6B4"/>
+        <rect width="4" height="4" x="10" y="5" fill="#F19586"/>
+        <rect width="4" height="4" x="5" y="5" fill="#F19586"/>
+        <rect width="4" height="4" x="5" fill="#F19586"/>
+        <rect width="4" height="4" x="10" fill="#D2E6B4"/>
+        <rect width="4" height="4" x="15" fill="#F19586"/>
+        <rect width="4" height="4" x="20" fill="#F19586"/>
+      </g>
+    </g>
+    <g fill="#CCC" transform="translate(20 112)">
+      <path d="M47 6L47 0 36 0 36 6 47 6zM83 6L83 0 72 0 72 6 83 6zM59 6L59 0 48 0 48 6 59 6zM71 6L71 0 60 0 60 6 71 6zM11 6L11 0 0 0 0 6 11 6zM23 6L23 0 12 0 12 6 23 6zM35 6L35 0 24 0 24 6 35 6zM11 16L11 10 0 10 0 16 11 16zM23 16L23 10 12 10 12 16 23 16zM198 6L198 0 187 0 187 6 198 6zM210 6L210 0 199 0 199 6 210 6z"/>
+    </g>
+  </g>
 </svg>
