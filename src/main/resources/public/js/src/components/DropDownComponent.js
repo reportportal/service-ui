@@ -118,6 +118,12 @@ define(function (require) {
             this.$el.addClass('dropdown-error-state');
             $('[data-js-hint-message]', this.$el).html(message);
         },
+        disabled: function () {
+            $('[data-js-dropdown]', this.$el).attr('disabled', 'disabled');
+        },
+        enabled: function () {
+            $('[data-js-dropdown]', this.$el).removeAttr('disabled');
+        },
         onDestroy: function () {
             this.$el.html('');
             delete this;
