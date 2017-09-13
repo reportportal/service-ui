@@ -176,11 +176,29 @@ define(function (require) {
     var ConditionEntityView = Epoxy.View.extend({
         template: 'tpl-entity-conditions',
         className: 'input-group-sm filter-option-select',
+        bindings: {
+            '[data-js-condition-selected]': 'text:conditionText(condition)'
+        },
+        bindingFilters: {
+            conditionText: function (condition) {
+                return Localization.filterShortCut[condition];
+            }
+        },
         events: {
             'click .option-menu > li > a': 'changeOptions'
         },
         initialize: function () {
             this.render();
+            this.listenTo(this.model, 'change:condition', function (model, value) {
+                var conditionListItems = $('[data-js-condition-list] > li', this.$el);
+                conditionListItems.removeClass('active');
+                $.each(conditionListItems, function(i, item) {
+                    var conditionListItem = $(item);
+                    if ($('a', conditionListItem).data('value') === value) {
+                        conditionListItem.addClass('active');
+                    }
+                });
+            });
         },
         render: function () {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));
