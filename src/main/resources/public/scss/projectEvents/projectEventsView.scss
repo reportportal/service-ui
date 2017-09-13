@@ -53,6 +53,9 @@
               &.user-grid-cell {
                 width: 15%;
                 font-family: $OpenSansSemibold;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
               }
               &.action-grid-cell {
                 width: 15%;
@@ -64,6 +67,9 @@
               &.object-name-grid-cell {
                 width: 15%;
                 font-family: $OpenSansSemibold;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
               }
               &.old-val-grid-cell {
                 width: 15%;
