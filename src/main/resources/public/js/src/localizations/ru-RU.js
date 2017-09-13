@@ -386,7 +386,9 @@ define(['util'], function () {
             noData: 'Нет доступных данных.',
             selectLaunch: 'Выберите запуск',
             chooseFilter: 'Выберите фильтр из списка ниже',
+            chooseFilterShort: 'Выберите фильтр',
             selectedFilterNotFound: 'Фильтр не найден. Пожалуйста, выберите другой. ',
+            tagPrefix: 'Префикс тега',
             limit: 'Всего элементов',
             items: 'Элементы',
             launchesCount: 'Всего запусков',
@@ -539,6 +541,9 @@ define(['util'], function () {
 
             productStatus: 'Статус проекта',
             productStatusDescription: 'Widget shows the configurable table that is representing launch statistics or group statistics by special filter',
+
+            cumulativeTrendChart: 'Cumulative trend chart',
+            cumulativeTrendChartDescription: 'shows the growth trend of summary statistics of launches with the same tag prefix',
 
             launchStatisticsChart: 'Статистика запусков',
             trendChart: 'Диаграмма тенденций',

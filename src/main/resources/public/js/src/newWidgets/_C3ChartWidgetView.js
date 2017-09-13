@@ -26,7 +26,7 @@ define(function (require) {
 
     var C3ChartWidgetView = BaseWidgetView.extend({
         isDataExists: function () {
-            return (!_.isEmpty(this.model.getContent()) &&
+            return (!_.isEmpty(this.model.getContent()) && this.model.getContent().result.length &&
                 !_.isEmpty(this.model.getContent().result[0].values));
         },
         getValuesInPercents: function (total, values) {
