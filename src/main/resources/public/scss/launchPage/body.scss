@@ -146,6 +146,10 @@
   .multiple-selected-container {
     display: none;
   }
+  .crumbs-container {
+    max-width: 100%;
+    padding-right: 15px;
+  }
   &.multiple-select {
     .multiple-selected-container {
       display: block;
