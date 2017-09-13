@@ -21,7 +21,6 @@
 define(function (require) {
     'use strict';
 
-    var $ = require('jquery');
     var _ = require('underscore');
     var BaseWidgetView = require('newWidgets/_BaseWidgetView');
 
@@ -42,6 +41,9 @@ define(function (require) {
                 }
                 return rounded;
             });
+        },
+        getRoundedToDecimalPlaces: function (num, decimalPlaces) {
+            return Math.round(num * (Math.pow(10, decimalPlaces))) / Math.pow(10, decimalPlaces);
         }
     });
 
