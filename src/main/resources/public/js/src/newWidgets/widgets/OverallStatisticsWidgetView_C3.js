@@ -149,7 +149,6 @@ define(function (require) {
                 itemNames.push(key);
                 chartData.push([key, val]);
             }.bind(this));
-
             chart = c3.generate({
                 bindto: $el[0],
                 data: {
@@ -197,7 +196,7 @@ define(function (require) {
                         } else {
                             name = self.defetTypesCollection.getDefectByLocator(d[0].id).get('longName');
                         }
-                        return '<div class="tooltip-val">' + d[0].value + ' (' + (d[0].ratio * 100).toFixed(2) + '%)</div>' +
+                        return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces(d[0].ratio * 100, 2) + '%)</div>' +
                             '<div class="tooltip-title">' +
                                 '<div class="color-mark" style="background-color: ' + color(d[0].id) + ';"></div>' +
                                  name +
