@@ -1550,11 +1550,13 @@ define(['util'], function () {
 
         comparators: {
             eq: '=',
+            ne: '!=',
             gte: '>=',
             lte: '<=',
             gt: '>',
             lt: '<',
             cnt: 'содержит',
+            '!cnt': 'не содержит',
             ex: 'существует',
             btw: 'между',
             not: ' не ',

@@ -1494,11 +1494,13 @@ define(['util'], function () {
 
         comparators: {
             eq: '=',
+            ne: '!=',
             gte: '>=',
             lte: '<=',
             gt: '>',
             lt: '<',
             cnt: 'contains',
+            '!cnt': 'not contains',
             ex: 'exists',
             btw: 'between',
             not: ' not ',
