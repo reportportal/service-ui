@@ -51,10 +51,12 @@ define(function (require) {
         },
         onChangeType: function () {
             var gadget = $('input:checked', this.$el).val();
+            var filterId = this.model.get('filter_id');
             var defaults = this.model.defaults;
             $('[data-js-select-widget-header]', this.$el).removeClass('error-state');
             config.trackingDispatcher.trackEventNumber(291);
             defaults.gadget = gadget;
+            defaults.filter_id = filterId;
             this.model.set(defaults);
         },
         validate: function () {

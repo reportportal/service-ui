@@ -26,7 +26,6 @@ define(function (require) {
     var FilterEntitiesView = require('filterEntities/FilterEntitiesView');
     var ModalAddWidget = require('modals/addWidget/modalAddWidget');
     var ModalImportLaunch = require('modals/importLaunch/modalImportLaunch');
-    var GadgetModel = require('dashboard/GadgetModel');
 
     var config = App.getInstance();
 
@@ -126,7 +125,7 @@ define(function (require) {
             e.preventDefault();
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(17);
-            (new ModalAddWidget({ model: new GadgetModel({ gadget: '' }), filter_id: this.collectionItems.filterModel.get('id'), isNoDashboard: true })).show();
+            (new ModalAddWidget({ filter_id: this.collectionItems.filterModel.get('id'), isNoDashboard: true })).show();
         },
         onClickMultiAction: function (e) {
             var type = $(e.currentTarget).data('js-multi-action');

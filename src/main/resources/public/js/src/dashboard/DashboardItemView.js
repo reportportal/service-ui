@@ -275,13 +275,13 @@ define(function (require, exports, module) {
             e.preventDefault();
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(280);
-            (new ModalAddWidget({ model: (new GadgetModel({ gadget: '' })), dashboardModel: this.model })).show();
+            (new ModalAddWidget({ dashboardModel: this.model })).show();
         },
         onClickWidgetBottom: function (e) {
             e.preventDefault();
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(345);
-            (new ModalAddWidget({ model: (new GadgetModel({ gadget: '' })), dashboardModel: this.model })).show();
+            (new ModalAddWidget({ dashboardModel: this.model })).show();
         },
         onClickAddSharedWidget: function (e) {
             e.preventDefault();

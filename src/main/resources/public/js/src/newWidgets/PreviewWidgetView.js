@@ -37,11 +37,11 @@ define(function (require) {
             var self = this;
             var gadget;
             var filterOptions;
-            // TODO remove filter_model field from gadget model when WS will be ready to provide data for widget previews.
-            this.filterModel = options.model.get('filter_model') || null;
             if (options.sharedWidgetModel) {
                 this.model = new GadgetModel({ gadget: options.sharedWidgetModel.get('gadget') });
             }
+            // TODO remove filter_model field from gadget model when WS will be ready to provide data for widget previews.
+            this.filterModel = this.model.get('filter_model') || null;
             gadget = this.model.get('gadget');
             if ((!this.filterModel && !options.sharedWidgetModel) || gadget === 'activity_stream' || gadget === 'launches_table' ||
                 gadget === 'unique_bug_table' || gadget === 'most_failed_test_cases' || gadget === 'passing_rate_summary' ||

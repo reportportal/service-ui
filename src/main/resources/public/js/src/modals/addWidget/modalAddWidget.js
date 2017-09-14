@@ -35,6 +35,7 @@ define(function (require) {
     var DashboardCollection = require('dashboard/DashboardCollection');
     var Service = require('coreService');
     var Urls = require('dataUrlResolver');
+    var GadgetModel = require('dashboard/GadgetModel');
     var App = require('app');
 
     var config = App.getInstance();
@@ -62,12 +63,13 @@ define(function (require) {
         },
 
         initialize: function (options) {
-            if (!options.model) { return; }
-            this.model.set({ owner: config.userModel.get('name') });
+            this.model = new GadgetModel({
+                gadget: '',
+                owner: config.userModel.get('name'),
+                filter_id: options.filter_id
+            });
             this.dashboardModel = options.dashboardModel;
             this.isNoDashboard = options.isNoDashboard;
-            options.filter_id && this.model.set('filter_id', options.filter_id);
-            this.curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             this.viewModel = new (Epoxy.Model.extend({
                 defaults: {
                     step: 1
@@ -167,7 +169,6 @@ define(function (require) {
             }
         },
         onChangePreview: function (model) {
-            this.curWidget = WidgetService.getWidgetConfig(model.get('gadget'));
             this.previewWidgetView && this.previewWidgetView.destroy();
             this.previewWidgetView = new PreviewWidgetView({
                 model: this.model
@@ -255,6 +256,7 @@ define(function (require) {
             var self = this;
             var contentParameters = {};
             var data = {};
+            var curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             if (this.saveWidget.validate()) {
                 config.trackingDispatcher.trackEventNumber(314);
                 this.$el.addClass('load');
@@ -267,7 +269,7 @@ define(function (require) {
                 if (_.contains(['passing_rate_per_launch', 'activity_stream', 'most_failed_test_cases'], this.model.get('gadget'))) {
                     this.model.set('filter_id', '');
                 }
-                contentParameters.type = this.curWidget.widget_type;
+                contentParameters.type = curWidget.widget_type;
                 contentParameters.gadget = this.model.get('gadget');
                 contentParameters.itemsCount = this.model.get('itemsCount');
                 if (this.model.getContentFields().length) {
