@@ -191,10 +191,19 @@ define(function (require) {
                     },
                     contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
                         var name;
+                        var defectModel;
                         if (d[0].id === 'passed' || d[0].id === 'failed' || d[0].id === 'skipped') {
                             name = Localization.launchesHeaders[d[0].name].toUpperCase();
                         } else {
-                            name = self.defetTypesCollection.getDefectByLocator(d[0].id).get('longName');
+                            defectModel = self.defetTypesCollection.getDefectByLocator(d[0].id);
+                            if (defectModel) {
+                                name = defectModel.get('longName');
+                            } else {
+                                return '<div class="tooltip-title-invalid">' +
+                                    '<div class="color-mark-invalid"></div>' +
+                                    d[0].id +
+                                    '</div>';
+                            }
                         }
                         return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces(d[0].ratio * 100, 2) + '%)</div>' +
                             '<div class="tooltip-title">' +
@@ -230,10 +239,16 @@ define(function (require) {
                 .attr('data-id', function (id) { return id; })
                 .html(function (id) {
                     var name;
+                    var defectModel;
                     if (id === 'passed' || id === 'failed' || id === 'skipped') {
                         name = Localization.launchesHeaders[id];
                     } else {
-                        name = self.defetTypesCollection.getDefectByLocator(id).get('longName');
+                        defectModel = self.defetTypesCollection.getDefectByLocator(id);
+                        if (defectModel) {
+                            name = defectModel.get('longName');
+                        } else {
+                            return '<div class="invalid-color-mark"></div><span class="invalid">' + id + '</span>';
+                        }
                     }
                     return '<div class="color-mark"></div>' + name;
                 })
