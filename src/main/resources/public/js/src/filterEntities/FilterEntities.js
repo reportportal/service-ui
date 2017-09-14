@@ -177,7 +177,7 @@ define(function (require) {
         template: 'tpl-entity-conditions',
         className: 'input-group-sm filter-option-select',
         bindings: {
-            '[data-js-condition-selected]': 'text:conditionText(condition)'
+            '[data-js-condition-selected]': 'html:conditionText(condition)'
         },
         bindingFilters: {
             conditionText: function (condition) {
