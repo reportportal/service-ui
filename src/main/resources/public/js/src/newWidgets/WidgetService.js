@@ -111,16 +111,6 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.launchMode, value: 'launch' },
-                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
-                                ],
-                                action: 'switch_timeline_mode'
-                            }
-                        },
-                        {
                             control: 'input',
                             options: {
                                 name: Localization.widgets.items,
@@ -129,6 +119,16 @@ define(function (require) {
                                 def: 50,
                                 numOnly: true,
                                 action: 'limit'
+                            }
+                        },
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.launchMode, value: 'launch' },
+                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
+                                ],
+                                action: 'switch_timeline_mode'
                             }
                         },
                         {
@@ -173,16 +173,6 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.launchMode, value: 'launch' },
-                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
-                                ],
-                                action: 'switch_timeline_mode'
-                            }
-                        },
-                        {
                             control: 'input',
                             options: {
                                 name: Localization.widgets.items,
@@ -191,6 +181,16 @@ define(function (require) {
                                 def: 50,
                                 numOnly: true,
                                 action: 'limit'
+                            }
+                        },
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.launchMode, value: 'launch' },
+                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
+                                ],
+                                action: 'switch_timeline_mode'
                             }
                         },
                         {
@@ -235,6 +235,17 @@ define(function (require) {
                             }
                         },
                         {
+                            control: 'input',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                numOnly: true,
+                                action: 'limit'
+                            }
+                        },
+                        {
                             control: 'switcher',
                             options: {
                                 items: [
@@ -252,17 +263,6 @@ define(function (require) {
                                     { name: Localization.widgets.latestLaunches, value: 'latest' }
                                 ],
                                 action: 'switch_latest_mode'
-                            }
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
                             }
                         },
                         {
@@ -287,16 +287,6 @@ define(function (require) {
                             }
                         },
                         {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.allLaunches, value: 'all' },
-                                    { name: Localization.widgets.latestLaunches, value: 'latest' }
-                                ],
-                                action: 'switch_latest_mode'
-                            }
-                        },
-                        {
                             control: 'input',
                             options: {
                                 name: Localization.widgets.items,
@@ -305,6 +295,16 @@ define(function (require) {
                                 def: 50,
                                 numOnly: true,
                                 action: 'limit'
+                            }
+                        },
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.allLaunches, value: 'all' },
+                                    { name: Localization.widgets.latestLaunches, value: 'latest' }
+                                ],
+                                action: 'switch_latest_mode'
                             }
                         },
                         {
@@ -428,6 +428,17 @@ define(function (require) {
                             }
                         },
                         {
+                            control: 'input',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                numOnly: true,
+                                action: 'limit'
+                            }
+                        },
+                        {
                             control: 'inputItems',
                             options: {
                                 entity: 'user',
@@ -447,17 +458,6 @@ define(function (require) {
                                     widgetOptions.userRef = value;
                                     model.setWidgetOptions(widgetOptions);
                                 }
-                            }
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
                             }
                         },
                         {
@@ -481,16 +481,6 @@ define(function (require) {
                             options: {}
                         },
                         {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.launchMode, value: 'launch' },
-                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
-                                ],
-                                action: 'switch_timeline_mode'
-                            }
-                        },
-                        {
                             control: 'input',
                             options: {
                                 name: Localization.widgets.items,
@@ -499,6 +489,16 @@ define(function (require) {
                                 def: 50,
                                 numOnly: true,
                                 action: 'limit'
+                            }
+                        },
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.launchMode, value: 'launch' },
+                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
+                                ],
+                                action: 'switch_timeline_mode'
                             }
                         },
                         {
@@ -529,16 +529,6 @@ define(function (require) {
                             options: {}
                         },
                         {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.launchMode, value: 'launch' },
-                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
-                                ],
-                                action: 'switch_timeline_mode'
-                            }
-                        },
-                        {
                             control: 'input',
                             options: {
                                 name: Localization.widgets.items,
@@ -547,6 +537,16 @@ define(function (require) {
                                 def: 50,
                                 numOnly: true,
                                 action: 'limit'
+                            }
+                        },
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.launchMode, value: 'launch' },
+                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
+                                ],
+                                action: 'switch_timeline_mode'
                             }
                         },
                         {
@@ -577,6 +577,17 @@ define(function (require) {
                         {
                             control: 'filters',
                             options: {}
+                        },
+                        {
+                            control: 'input',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                numOnly: true,
+                                action: 'limit'
+                            }
                         },
                         {
                             control: 'dropDown',
@@ -647,17 +658,6 @@ define(function (require) {
                                     model.setContentFields(result);
                                 }
                             }
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
                         }
                     ]
                 },
@@ -712,6 +712,17 @@ define(function (require) {
                             }
                         },
                         {
+                            control: 'input',
+                            options: {
+                                name: Localization.widgets.launchesCount,
+                                min: 2,
+                                max: 150,
+                                def: 30,
+                                numOnly: true,
+                                action: 'limit'
+                            }
+                        },
+                        {
                             control: 'inputItems',
                             options: {
                                 entity: 'launch',
@@ -731,17 +742,6 @@ define(function (require) {
                                     widgetOptions.launchNameFilter = value;
                                     model.setWidgetOptions(widgetOptions);
                                 }
-                            }
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.launchesCount,
-                                min: 2,
-                                max: 150,
-                                def: 30,
-                                numOnly: true,
-                                action: 'limit'
                             }
                         },
                         {
@@ -934,16 +934,6 @@ define(function (require) {
                             options: {}
                         },
                         {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.barMode, value: 'barMode' },
-                                    { name: Localization.widgets.pieChartMode, value: 'pieChartMode' }
-                                ],
-                                action: 'switch_view_mode'
-                            }
-                        },
-                        {
                             control: 'input',
                             options: {
                                 name: Localization.widgets.items,
@@ -952,6 +942,16 @@ define(function (require) {
                                 def: 50,
                                 numOnly: true,
                                 action: 'limit'
+                            }
+                        },
+                        {
+                            control: 'switcher',
+                            options: {
+                                items: [
+                                    { name: Localization.widgets.barMode, value: 'barMode' },
+                                    { name: Localization.widgets.pieChartMode, value: 'pieChartMode' }
+                                ],
+                                action: 'switch_view_mode'
                             }
                         },
                         {
