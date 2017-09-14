@@ -126,7 +126,7 @@ define(function (require) {
             e.preventDefault();
             e.stopPropagation();
             config.trackingDispatcher.trackEventNumber(17);
-            (new ModalAddWidget({ model: new GadgetModel(), filter_id: this.collectionItems.filterModel.get('id'), isNoDashboard: true })).show();
+            (new ModalAddWidget({ model: new GadgetModel({ gadget: '' }), filter_id: this.collectionItems.filterModel.get('id'), isNoDashboard: true })).show();
         },
         onClickMultiAction: function (e) {
             var type = $(e.currentTarget).data('js-multi-action');

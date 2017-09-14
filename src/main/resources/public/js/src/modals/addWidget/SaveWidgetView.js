@@ -43,23 +43,15 @@ define(function (require) {
         initialize: function (options) {
             this.dashboardModel = options.dashboardModel;
             this.isNoDashboard = options.isNoDashboard;
-            if (this.dashboardModel && this.dashboardModel.get('share')) {
-                this.model.set('share', true);
-            }
+            // if (this.dashboardModel && this.dashboardModel.get('share')) {
+            //     this.model.set('share', true);
+            // }
             this.render();
-            Util.hintValidator($('[data-js-name-input]', this.$el), [
-                { validator: 'minMaxRequired', type: 'widgetName', min: 3, max: 128 },
-                { validator: 'noDuplications', type: 'widgetName', source: [] }
-            ]);
-            Util.hintValidator($('[data-js-description]', this.$el), {
-                validator: 'maxRequired',
-                type: '',
-                max: 256
-            });
+
             this.listenTo(this.model, 'change:name', this.onChangeName);
             this.listenTo(this.model, 'change:description', this.onChangeDescription);
             this.listenTo(this.model, 'change:share', this.onChangeShared);
-            this.updateSharedSwitcher();
+
         },
         onChangeDashboard: function (model) {
             this.dashboardModel = model;
@@ -111,6 +103,16 @@ define(function (require) {
             return !$('[data-js-name-input]', this.$el).trigger('validate').data('validate-error');
         },
         activate: function () {
+            Util.hintValidator($('[data-js-name-input]', this.$el), [
+                { validator: 'minMaxRequired', type: 'widgetName', min: 3, max: 128 },
+                { validator: 'noDuplications', type: 'widgetName', source: [] }
+            ]);
+            Util.hintValidator($('[data-js-description]', this.$el), {
+                validator: 'maxRequired',
+                type: '',
+                max: 256
+            });
+            this.updateSharedSwitcher();
             if (this.isNoDashboard) {
                 if (!this.selectDashboard) {
                     this.selectDashboard = new SelectDashboardView();

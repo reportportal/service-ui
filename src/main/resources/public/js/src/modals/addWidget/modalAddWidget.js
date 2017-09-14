@@ -93,7 +93,6 @@ define(function (require) {
             );
         },
         onChangeGadgetType: function () {
-            this.hideWarningBlock();
             this.renderConfigureWidget();
         },
         renderConfigureWidget: function () {
