@@ -260,17 +260,9 @@ define(function (require) {
             if (this.saveWidget.validate()) {
                 config.trackingDispatcher.trackEventNumber(314);
                 this.$el.addClass('load');
-                if (!_.contains(['unique_bug_table', 'activity_stream', 'launches_table', 'cumulative'], this.model.get('gadget'))) {
-                    contentParameters.metadata_fields = ['name', 'number', 'start_time'];
-                }
-                if (this.model.get('gadget') === 'most_failed_test_cases') {
-                    contentParameters.metadata_fields = ['name', 'start_time'];
-                }
-                if (_.contains(['passing_rate_per_launch', 'activity_stream', 'most_failed_test_cases'], this.model.get('gadget'))) {
-                    this.model.set('filter_id', '');
-                }
                 contentParameters.type = curWidget.widget_type;
                 contentParameters.gadget = this.model.get('gadget');
+                contentParameters.metadata_fields = this.model.get('metadata_fields');
                 contentParameters.itemsCount = this.model.get('itemsCount');
                 if (this.model.getContentFields().length) {
                     contentParameters.content_fields = this.model.getContentFields();

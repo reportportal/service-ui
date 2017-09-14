@@ -130,6 +130,13 @@ define(function (require) {
                                 numOnly: true,
                                 action: 'limit'
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'number', 'start_time']
+                            }
                         }
                     ]
                 },
@@ -184,6 +191,13 @@ define(function (require) {
                                 def: 50,
                                 numOnly: true,
                                 action: 'limit'
+                            }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'number', 'start_time']
                             }
                         }
                     ]
@@ -250,6 +264,13 @@ define(function (require) {
                                 numOnly: true,
                                 action: 'limit'
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'number', 'start_time']
+                            }
                         }
                     ]
                 },
@@ -292,6 +313,13 @@ define(function (require) {
                                 action: 'criteria',
                                 fields: ['start_time', 'end_time', 'name', 'number', 'status']
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'number', 'start_time']
+                            }
                         }
                     ]
                 },
@@ -323,6 +351,13 @@ define(function (require) {
                             options: {
                                 action: 'limit',
                                 value: 1
+                            }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'number', 'start_time']
                             }
                         }
                     ]
@@ -472,6 +507,13 @@ define(function (require) {
                                 action: 'criteria',
                                 fields: ['statistics$executions$total']
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'number', 'start_time']
+                            }
                         }
                     ]
                 },
@@ -514,6 +556,13 @@ define(function (require) {
                                 fields: function () {
                                     return _.keys(this.getTotalDefects());
                                 }.bind(this)
+                            }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'number', 'start_time']
                             }
                         }
                     ]
@@ -694,6 +743,13 @@ define(function (require) {
                                 numOnly: true,
                                 action: 'limit'
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'start_time']
+                            }
                         }
                     ]
                 },
@@ -727,6 +783,13 @@ define(function (require) {
                                     return _.keys(this.getTotalDefects());
                                 }.bind(this)
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'number', 'start_time']
+                            }
                         }
                     ]
                 },
@@ -758,6 +821,13 @@ define(function (require) {
                                 action: 'criteria',
                                 fields: ['statistics$executions$failed', 'statistics$executions$skipped', 'statistics$executions$total']
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'number', 'start_time']
+                            }
                         }
                     ]
                 },
@@ -786,6 +856,13 @@ define(function (require) {
                             options: {
                                 action: 'limit',
                                 value: 2
+                            }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'number', 'start_time']
                             }
                         }
                     ]
@@ -835,6 +912,13 @@ define(function (require) {
                                 action: 'limit',
                                 value: 30
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'number', 'start_time']
+                            }
                         }
                     ]
                 },
@@ -876,9 +960,17 @@ define(function (require) {
                                 action: 'criteria',
                                 fields: ['statistics$executions$total', 'statistics$executions$passed']
                             }
+                        },
+                        {
+                            control: 'static',
+                            options: {
+                                action: 'metadata_fields',
+                                fields: ['name', 'number', 'start_time']
+                            }
                         }
                     ]
                 },
+                // ------------------ STATUS PAGE WIDGETS ------------------
                 last_launch: {
                     gadget_name: Localization.widgets.executionIssueStatistics,
                     img: '',

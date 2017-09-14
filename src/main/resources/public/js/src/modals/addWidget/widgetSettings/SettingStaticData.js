@@ -53,6 +53,17 @@ define(function (require) {
             setValue: function (value, model) {
                 model.set('itemsCount', value);
             }
+        },
+        metadata_fields: {
+            getValue: function (model, self) {
+                if (model.get('metadata_fields')) {
+                    return model.get('metadata_fields');
+                }
+                return self.model.get('fields');
+            },
+            setValue: function (value, model) {
+                model.set('metadata_fields', value);
+            }
         }
     };
 
