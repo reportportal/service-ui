@@ -203,18 +203,9 @@ define(function (require) {
         render: function () {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));
         },
-        conditionFlipper: function (e) {
-            var $el = $(e.currentTarget);
-            var newShortCut = Localization.filterShortCut[$el.data('short')] || $el.data('short');
-            e.preventDefault();
-            $el.closest('.input-group').find('.select-value:first').text(newShortCut);
-            $el.closest('ul').find('.active').removeClass('active');
-            $el.parent().addClass('active');
-            this.model.set('condition', $el.data('value'));
-        },
-
         changeOptions: function (e) {
-            this.conditionFlipper(e);
+            e.preventDefault();
+            this.model.set('condition', $(e.currentTarget).data('value'));
         }
     });
     var TagEntityView = Epoxy.View.extend({
