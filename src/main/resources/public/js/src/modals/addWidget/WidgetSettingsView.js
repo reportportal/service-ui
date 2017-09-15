@@ -42,20 +42,14 @@ define(function (require) {
         bindings: {
         },
         initialize: function (options) {
+            this.lastFilterId = options.lastFilterId;
             this.isShortForm = options.isShortForm || false;
             this.renderedView = [];
-        },
-        renderView: function (ViewConstructor, data) {
-            var view = new ViewConstructor({ model: this.model });
-            if (!view.unActive) {
-                this.renderedView.push(view);
-                this.$el.append(view.$el);
-                view.activate && view.activate();
-            }
         },
         activate: function () {
             var self = this;
             this.destroyViews();
+            this.lastFilterId && this.model.set('filter_id', this.lastFilterId);
             WidgetService.getSettingsGadget(this.model.get('gadget')).done(function (widgetConfig) {
                 _.each(widgetConfig.uiControl, function (controlObj) {
                     var constructor;

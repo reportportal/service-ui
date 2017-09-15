@@ -49,6 +49,10 @@ define(function (require) {
             var defectTypesChartData;
             var defectTypesChartDataOrdered = {};
 
+            if (this.isPreview) {
+                this.$el.addClass('preview-view');
+            }
+
             if (!this.isDataExists()) {
                 this.addNoAvailableBock();
                 return;
@@ -167,8 +171,11 @@ define(function (require) {
                     order: null,
                     colors: colors
                 },
+                interaction: {
+                    enabled: !self.isPreview
+                },
                 padding: {
-                    top: 85
+                    top: self.isPreview ? 0 : 85
                 },
                 legend: {
                     show: false // we use custom legend
@@ -227,7 +234,8 @@ define(function (require) {
             this.charts.push(chart);
 
             // Configuring custom legend block
-            d3.select(chart.element)
+            if (!self.isPreview) {
+                d3.select(chart.element)
                 .insert('div', '.chart')
                 .attr('class', 'legend')
                 .insert('div', '.legend')
@@ -272,6 +280,7 @@ define(function (require) {
                 .attr('class', 'legend-border');
             legendScroller = Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
             this.scrollers.push(legendScroller);
+            }
 
             // Configuring custom donut chart title
             if ($el.hasClass('status-chart')) {
@@ -325,7 +334,7 @@ define(function (require) {
             this.scrollers.push(legendScroller);
         },
         restyleDonutTitle: function () {
-            if (!(this.$el.hasClass('w-less-then-6') || this.$el.hasClass('h-less-then-6'))) {
+            if (!(this.$el.hasClass('w-less-then-6') || this.$el.hasClass('h-less-then-6') || this.$el.hasClass('preview-view'))) {
                 $('.c3-chart-arcs-title', this.$el).attr('dy', '-10').find('tspan').attr('dy', '30');
             } else {
                 $('.c3-chart-arcs-title', this.$el).attr('dy', '-5').find('tspan').attr('dy', '15');

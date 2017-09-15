@@ -65,9 +65,9 @@ define(function (require) {
         initialize: function (options) {
             this.model = new GadgetModel({
                 gadget: '',
-                owner: config.userModel.get('name'),
-                filter_id: options.filter_id
+                owner: config.userModel.get('name')
             });
+            this.lastFilterId = options.filter_id;
             this.dashboardModel = options.dashboardModel;
             this.isNoDashboard = options.isNoDashboard;
             this.viewModel = new (Epoxy.Model.extend({
@@ -102,7 +102,7 @@ define(function (require) {
                 this.stopListening(this.configureWidgetView);
                 this.configureWidgetView.destroy();
             }
-            this.configureWidgetView = new ConfigureWidgetView({ model: this.model });
+            this.configureWidgetView = new ConfigureWidgetView({ model: this.model, lastFilterId: this.lastFilterId });
             $('[data-js-step-2]', this.$el).html(this.configureWidgetView.$el);
             this.listenTo(this.configureWidgetView, 'send:event', this.sendEvent);
         },
@@ -132,6 +132,9 @@ define(function (require) {
                     break;
                 case 'select filter item':
                     config.trackingDispatcher.trackEventNumber(297);
+                    break;
+                case 'select filter':
+                    this.lastFilterId = this.model.get('filter_id');
                     break;
                 case 'entity choice click':
                     config.trackingDispatcher.trackEventNumber(302);

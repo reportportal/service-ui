@@ -31,9 +31,9 @@ define(function (require) {
     var ConfigureWidgetView = Epoxy.View.extend({
         className: 'modal-add-widget-configure-widget',
         template: 'tpl-modal-add-widget-configure-widget',
-        initialize: function () {
+        initialize: function (options) {
             this.render();
-            this.widgetSettingsView = new WidgetSettingsView({ model: this.model });
+            this.widgetSettingsView = new WidgetSettingsView({ model: this.model, lastFilterId: options.lastFilterId });
             $('[data-js-enter-criteria]', this.$el).html(this.widgetSettingsView.$el);
             this.listenTo(this.widgetSettingsView, 'change:view', this.onChangeSettingsViewMode);
             this.listenTo(this.widgetSettingsView, 'send:event', this.sendEvent);
