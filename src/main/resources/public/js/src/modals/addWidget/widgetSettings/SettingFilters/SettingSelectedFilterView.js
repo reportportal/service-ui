@@ -53,7 +53,6 @@ define(function (require) {
             this.listenTo(this.filterModel, 'change:load', this.onChangeLoadFilter);
         },
         onChangeLoadFilter: function (model, load) {
-            this.model.set('filter_model', model);
             if (!load) {
                 this.$el.removeClass('load');
                 this.filterView && this.filterView.destroy();

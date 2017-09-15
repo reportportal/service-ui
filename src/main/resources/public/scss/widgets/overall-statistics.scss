@@ -242,7 +242,7 @@
         }
       }
     }
-    &.w-less-then-6, &.h-less-then-6 {
+    &.w-less-then-6, &.h-less-then-6, &.preview-view {
       .widget-wrapper {
         svg {
           .c3-chart {
@@ -259,6 +259,7 @@
         }
       }
     }
+
   }
   &.trend-chart-view {
     .widget-wrapper {
@@ -410,6 +411,7 @@
             color: $COLOR--charcoal-grey;
             text-overflow: ellipsis;
             overflow: hidden;
+            white-space: nowrap;
 
             .color-mark {
               position: absolute;
@@ -456,6 +458,15 @@
           .chart-container {
             top: 0;
           }
+        }
+      }
+    }
+
+    &.left-chart-hidden.preview-view {
+      .right-widget-wrapper {
+        .item-wrapper {
+          margin-right: 5px;
+          width: 115px;
         }
       }
     }

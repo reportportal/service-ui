@@ -168,7 +168,9 @@ define([
     var getWidgetData = function (type, params) {
         return call('GET', urls.getProjectBase() + '/' + type + '?' + params);
     };
-
+    var getWidgetPreviewData = function (data) {
+        return call('POST', urls.widgetPreview(), data);
+    };
     var loadWidget = function (url) {
         return call('GET', url);
     };
@@ -423,6 +425,7 @@ define([
         updateWidgetsOnDashboard: updateWidgetsOnDashboard,
         getWidgetNames: getWidgetNames,
         getWidgetData: getWidgetData,
+        getWidgetPreviewData: getWidgetPreviewData,
         loadWidget: loadWidget,
         getTestItemInfo: getTestItemInfo,
         getTestItemsInfo: getTestItemsInfo,

@@ -29,23 +29,20 @@ define(function (require) {
     var WidgetModel = require('newWidgets/WidgetModel');
     var WidgetView = require('newWidgets/WidgetView');
     var WidgetService = require('newWidgets/WidgetService');
-    var PreviewWidgetService = require('newWidgets/PreviewWidgetService');
 
     var PreviewWidgetView = Epoxy.View.extend({
         className: 'preview-widget-view',
         initialize: function (options) {
             var self = this;
             var gadget;
-            var filterOptions;
+            var curWidget;
+            var widgetData;
             if (options.sharedWidgetModel) {
                 this.model = new GadgetModel({ gadget: options.sharedWidgetModel.get('gadget') });
             }
-            // TODO remove filter_model field from gadget model when WS will be ready to provide data for widget previews.
-            this.filterModel = this.model.get('filter_model') || null;
             gadget = this.model.get('gadget');
-            if ((!this.filterModel && !options.sharedWidgetModel) || gadget === 'activity_stream' || gadget === 'launches_table' ||
-                gadget === 'unique_bug_table' || gadget === 'most_failed_test_cases' || gadget === 'passing_rate_summary' ||
-                gadget === 'passing_rate_per_launch' || gadget === 'overall_statistics' || gadget === 'product_status' || gadget === 'cumulative') {
+            if ((!this.model.get('filter_id') && !options.sharedWidgetModel) || gadget === 'activity_stream' || gadget === 'launches_table' ||
+                gadget === 'unique_bug_table' || gadget === 'most_failed_test_cases') {
                 this.$el.css('background-image', 'url(' + this.model.get('gadgetPreviewImg') + ')');
                 return true;
             }
@@ -68,22 +65,22 @@ define(function (require) {
                         Util.ajaxFailMessenger(error, 'sharedWidgetData');
                     });
             } else {
-                filterOptions = this.filterModel.getOptions();
-                filterOptions.push('filter.!in.status=IN_PROGRESS');
-                filterOptions.push('page.page=1');
-                filterOptions.push('page.size=' + this.model.get('itemsCount'));
-
-                this.request = Service.getWidgetData(this.filterModel.get('type'), filterOptions.join('&'))
-                    .done(function (data) {
-                        self.renderWidgetPreview(data);
-                    })
-                    .fail(function () {
-                        // Util.ajaxFailMessenger(null, 'widgetPreviewData');
-                    });
+                curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
+                widgetData = {
+                    content_parameters: {
+                        content_fields: this.model.getContentFields(),
+                        gadget: this.model.get('gadget'),
+                        itemsCount: this.model.get('itemsCount'),
+                        metadata_fields: this.model.get('metadata_fields'),
+                        type: curWidget.widget_type,
+                        widgetOptions: this.model.getWidgetOptions()
+                    },
+                    filter_id: this.model.get('filter_id')
+                };
+                Service.getWidgetPreviewData(widgetData).done(function (response) {
+                    self.renderWidgetPreview(response);
+                });
             }
-        },
-        parseWidgetPreviewData: function (data, model) {
-            return PreviewWidgetService.parseData(data, model);
         },
         getContentParameters: function () {
             var params = {
@@ -98,7 +95,7 @@ define(function (require) {
             var widgetModel = new WidgetModel({
                 id: _.uniqueId('preview-'),
                 content_parameters: this.getContentParameters(),
-                content: this.parseWidgetPreviewData(data, this.model)
+                content: data
             }, { parse: true });
             var CurrentView;
 

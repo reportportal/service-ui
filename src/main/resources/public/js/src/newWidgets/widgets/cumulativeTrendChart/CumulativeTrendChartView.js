@@ -63,6 +63,10 @@ define(function (require) {
         },
         loadTempFilterModel: function () {
             var async = $.Deferred();
+            if (this.isPreview) {
+                async.resolve();
+                return async;
+            }
             if (this.launchFilterCollection.get(this.model.get('filter_id'))) {
                 this.tempFilterModelData = {
                     temp: true,

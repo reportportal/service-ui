@@ -25,7 +25,7 @@ define(function (require) {
     var LaunchesTableWidget = require('newWidgets/widgets/LaunchesTableWidgetView');
     var MostFailedTestCases = require('newWidgets/widgets/MostFailedTestCasesWidgetView');
     var UniqueBugTable = require('newWidgets/widgets/UniqueBugTableWidgetView');
-    var OverallStatisticsWidget = require('newWidgets/widgets/OverallStatisticsWidgetView_C3');
+    var OverallStatisticsWidget = require('newWidgets/widgets/overallStatistics/index');
     var ProjectActivityWidget = require('newWidgets/widgets/ProjectActivityWidgetView');
     var LineLaunchStatisticsChart = require('newWidgets/widgets/LineLaunchStatisticsChartView');
     var TrendLaunchStatisticsChart = require('newWidgets/widgets/TrendLaunchStatisticsChartView');
@@ -71,6 +71,7 @@ define(function (require) {
         },
     ]*/
     var WIDGETS = {
+        overall_statistics: OverallStatisticsWidget,
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
     };
@@ -193,79 +194,6 @@ define(function (require) {
                                     { name: Localization.widgets.timelineMode, value: 'timeline' }
                                 ],
                                 action: 'switch_timeline_mode'
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'number', 'start_time']
-                            }
-                        }
-                    ]
-                },
-                overall_statistics: {
-                    gadget_name: Localization.widgets.overallStatisticsPanel,
-                    img: 'overall-statistics-panel.svg',
-                    description: Localization.widgets.overallStatisticsPanelDescription,
-                    widget_type: 'statistics_panel',
-                    gadget: 'overall_statistics',
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {
-                            }
-                        },
-                        {
-                            control: 'dropDown',
-                            options: {
-                                label: Localization.widgets.widgetCriteria,
-                                items: this.getExecutionsAndDefects(true),
-                                placeholder: Localization.wizard.criteriaSelectTitle,
-                                multiple: true,
-                                getValue: function (model, self) {
-                                    var contentFields = model.getContentFields();
-                                    if (contentFields.length) {
-                                        return contentFields;
-                                    }
-                                    return _.map(self.model.get('items'), function (item) {
-                                        return item.value;
-                                    });
-                                },
-                                setValue: function (value, model) {
-                                    model.setContentFields(value);
-                                }
-                            }
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.panelMode, value: 'panel' },
-                                    { name: Localization.widgets.donutChartMode, value: 'donut' }
-                                ],
-                                action: 'switch_view_mode'
-                            }
-                        },
-                        {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.allLaunches, value: 'all' },
-                                    { name: Localization.widgets.latestLaunches, value: 'latest' }
-                                ],
-                                action: 'switch_latest_mode'
                             }
                         },
                         {

@@ -148,11 +148,15 @@ define(function (require) {
             active && this.onSelectFilter(model);
         },
         onSelectFilter: function (filterModel) {
-            this.model.set({ filter_id: filterModel.get('id'), filter_model: filterModel });
+            this.model.set({ filter_id: filterModel.get('id') });
             var curOptions = this.model.getWidgetOptions();
             curOptions.filterName = [filterModel.get('name')];
             this.model.setWidgetOptions(curOptions);
             this.setFilterModel(filterModel);
+            this.trigger('send:event', {
+                view: 'filter',
+                action: 'select filter'
+            });
         },
         onClickAddFilter: function (e) {
             var self = this;
