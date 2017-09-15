@@ -95,6 +95,7 @@ define(function (require) {
                             options: {
                                 label: Localization.widgets.widgetCriteria,
                                 items: this.getExecutionsAndDefects(true),
+                                placeholder: Localization.wizard.criteriaSelectTitle,
                                 multiple: true,
                                 getValue: function (model, self) {
                                     var contentFields = model.getContentFields();
@@ -157,6 +158,7 @@ define(function (require) {
                             options: {
                                 label: Localization.widgets.widgetCriteria,
                                 items: this.getExecutionsAndDefects(true),
+                                placeholder: Localization.wizard.criteriaSelectTitle,
                                 multiple: true,
                                 getValue: function (model, self) {
                                     var contentFields = model.getContentFields();
@@ -219,6 +221,7 @@ define(function (require) {
                             options: {
                                 label: Localization.widgets.widgetCriteria,
                                 items: this.getExecutionsAndDefects(true),
+                                placeholder: Localization.wizard.criteriaSelectTitle,
                                 multiple: true,
                                 getValue: function (model, self) {
                                     var contentFields = model.getContentFields();
@@ -329,7 +332,7 @@ define(function (require) {
                     description: Localization.widgets.executionIssueStatisticsDescription,
                     widget_type: 'combine_pie_chart',
                     gadget: 'launch_statistics',
-                    noCriteria: true,
+                    // noCriteria: true,
                     uiControl: [
                         {
                             control: 'filters',
@@ -374,6 +377,7 @@ define(function (require) {
                             options: {
                                 label: Localization.widgets.widgetCriteria,
                                 items: this.getProjectActivityEventsData(),
+                                placeholder: Localization.wizard.criteriaSelectTitle,
                                 multiple: true,
                                 getValue: function (model, self) {
                                     var groupedActions = {
@@ -594,7 +598,9 @@ define(function (require) {
                             options: {
                                 label: Localization.widgets.widgetCriteria,
                                 items: this.getLaunchesTableWidgetData(),
+                                placeholder: Localization.wizard.criteriaSelectTitle,
                                 multiple: true,
+                                notEmpty: false,
                                 getValue: function (model, self) {
                                     var staticCriteria = ['name', 'number', 'last_modified', 'status'];
                                     var defectLocatorPattern = appConfig.patterns.defectsLocator;
@@ -697,6 +703,7 @@ define(function (require) {
                             options: {
                                 label: Localization.widgets.widgetCriteria,
                                 items: this.getFailed(true),
+                                placeholder: Localization.wizard.criteriaSelectTitle,
                                 multiple: false,
                                 getValue: function (model, self) {
                                     var contentFields = model.getContentFields();

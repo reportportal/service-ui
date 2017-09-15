@@ -1913,6 +1913,7 @@ define(['util'], function () {
             criteriaSelectTitle: 'Выбрать критерии',
             actionSelectTitle: 'Выбрать Действия',
             modeSelectTitle: 'Выбрать Режим',
+            selectColumn: 'Выбрать Колонки',
             previewDefault: 'Выберите шаблон виджета и фильтр, чтобы увидеть предпросмотр',
             previewNotAvailable: 'Предпросмотр не доступен для этого типа шаблона виджета',
             previewNoFilter: 'Выберите фильтр, чтобы увидеть предпросмотр',

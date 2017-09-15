@@ -1853,6 +1853,7 @@ define(['util'], function () {
             criteriaTitle: 'Criteria for Widget',
             modeTitle: 'Mode',
             criteriaSelectTitle: 'Select Criteria',
+            selectColumn: 'Select Columns',
             actionSelectTitle: 'Select Actions',
             modeSelectTitle: 'Select Mode',
             previewDefault: 'Select widget template and filter to see preview',

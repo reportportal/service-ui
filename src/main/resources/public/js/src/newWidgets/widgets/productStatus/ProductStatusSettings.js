@@ -75,7 +75,9 @@ define(function (require) {
                             { name: Localization.launchesHeaders.no_defect, value: 'no_defect' },
                             { name: Localization.launchesHeaders.to_investigate, value: 'to_investigate' }
                         ],
+                        placeholder: Localization.wizard.selectColumn,
                         multiple: true,
+                        notEmpty: false,
                         getValue: function (model, self) {
                             var widgetOptions = model.getWidgetOptions();
                             var answer = [];
