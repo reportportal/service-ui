@@ -80,6 +80,7 @@ define(function (require) {
                     control: 'dropDown',
                     options: {
                         label: Localization.widgets.widgetCriteria,
+                        placeholder: Localization.wizard.criteriaSelectTitle,
                         items: getItems(),
                         multiple: true,
                         getValue: function (model, self) {
@@ -94,6 +95,17 @@ define(function (require) {
                         setValue: function (value, model) {
                             model.setContentFields(value);
                         }
+                    }
+                },
+                {
+                    control: 'input',
+                    options: {
+                        name: Localization.widgets.items,
+                        min: 1,
+                        max: 150,
+                        def: 50,
+                        numOnly: true,
+                        action: 'limit'
                     }
                 },
                 {
@@ -114,17 +126,6 @@ define(function (require) {
                             { name: Localization.widgets.latestLaunches, value: 'latest' }
                         ],
                         action: 'switch_latest_mode'
-                    }
-                },
-                {
-                    control: 'input',
-                    options: {
-                        name: Localization.widgets.items,
-                        min: 1,
-                        max: 150,
-                        def: 50,
-                        numOnly: true,
-                        action: 'limit'
                     }
                 },
                 {
