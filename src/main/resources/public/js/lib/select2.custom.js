@@ -352,7 +352,7 @@ the specific language governing permissions and limitations under the Apache Lic
     }
 
 
-    function markMatch(text, term, markup, escapeMarkup, newButton) {
+    function markMatch(text, term, markup, escapeMarkup) {
         var match=stripDiacritics(text.toUpperCase()).indexOf(stripDiacritics(term.toUpperCase())),
             tl=term.length;
 
@@ -364,7 +364,7 @@ the specific language governing permissions and limitations under the Apache Lic
         markup.push(escapeMarkup(text.substring(0, match)));
         markup.push("<span class='select2-match'>");
         markup.push(escapeMarkup(text.substring(match, match + tl)));
-        markup.push("</span><span class='new-btn'>" + newButton + "</span>");
+        markup.push("</span>");
         markup.push(escapeMarkup(text.substring(match + tl, text.length)));
     }
 
@@ -963,7 +963,7 @@ the specific language governing permissions and limitations under the Apache Lic
                             label.attr("id", "select2-result-label-" + nextUid());
                             label.attr("role", "option");
 
-                            formatted=opts.formatResult(result, label, query, self.opts.escapeMarkup, self.opts.newButton);
+                            formatted=opts.formatResult(result, label, query, self.opts.escapeMarkup);
                             if (formatted!==undefined) {
                                 label.html(formatted);
                                 node.append(label);
@@ -3419,9 +3419,9 @@ the specific language governing permissions and limitations under the Apache Lic
         dropdownCss: {},
         containerCssClass: "",
         dropdownCssClass: "",
-        formatResult: function(result, container, query, escapeMarkup, newButton) {
+        formatResult: function(result, container, query, escapeMarkup) {
             var markup=[];
-            markMatch(result.text, query.term, markup, escapeMarkup, newButton);
+            markMatch(result.text, query.term, markup, escapeMarkup);
             return markup.join("");
         },
         formatSelection: function (data, container, escapeMarkup) {

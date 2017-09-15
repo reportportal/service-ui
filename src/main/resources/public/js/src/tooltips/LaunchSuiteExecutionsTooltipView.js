@@ -30,6 +30,7 @@ define(function (require, exports, module) {
         className: 'executions-tooltip',
 
         initialize: function(options) {
+            console.log(options);
             this.data = options.data;
             this.render();
         },

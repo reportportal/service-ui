@@ -1367,10 +1367,12 @@ textarea {
 
 /*--------------------------------*/
 
-.exact-match .select2-result-label .new-btn {
+.exact-match .select2-result-label::after,
+.exact-match .select2-result-label:after {
   position: absolute;
   display: inline-block;
   color: $COLOR--gray-80;
+  content: "New";
   right: 5px;
 }
 
