@@ -23,10 +23,15 @@
 .modal-add-widget-save-widget {
   .rp-form {
     width: 100%;
-    & > label > span:first-child {
-      width: 176px;
-      text-align: right;
-      & + input, & + textarea {
+    & > label {
+      & > span:first-child {
+        width: 176px;
+        text-align: right;
+        & + input, & + textarea {
+          width: 244px;
+        }
+      }
+      & > .validate-hint {
         width: 244px;
       }
     }
