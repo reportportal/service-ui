@@ -1862,7 +1862,12 @@ define(['util'], function () {
             previewDataNotAvailable: 'Can\'t get data for preview.',
 
             incomplete: 'Undone',
-            complete: 'Compete'
+            complete: 'Compete',
+
+            filters: 'Filters',
+            choiceFilter: 'Choice filter',
+            basicColumns: 'Basic columns',
+            choiceCriteria: 'Choice criteria'
         },
 
         dialogHeader: {

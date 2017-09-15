@@ -1920,7 +1920,12 @@ define(['util'], function () {
             previewDataNotAvailable: 'Нельзя получить данные для предпросмотра.',
 
             incomplete: 'Не закончено',
-            complete: 'Завершено'
+            complete: 'Завершено',
+
+            filters: 'Фильтры',
+            choiceFilter: 'Выберите фильтр',
+            basicColumns: 'Основные колонки',
+            choiceCriteria: 'Выберите критерий'
         },
 
         dialogHeader: {

@@ -42,7 +42,7 @@ define(function (require) {
         initialize: function (data) {
             var options = _.extend({
                 label: '',
-                inputPlaceholder: '',
+                placeholder: '',
                 minItemLength: 3,
                 maxItemLength: 256,
                 minItems: 0,
@@ -172,7 +172,7 @@ define(function (require) {
                 multiple: (this.model.get('maxItems') >= 2),
                 dropdownCssClass: 'rp-select2-separate-block',
                 allowClear: false,
-                placeholder: this.model.get('inputPlaceholder'),
+                placeholder: this.model.get('placeholder'),
                 tags: false,
                 initSelection: function (element, callback) {
                     self.getFunctions()

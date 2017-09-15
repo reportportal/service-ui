@@ -447,7 +447,7 @@ define(function (require) {
                             options: {
                                 entity: 'user',
                                 label: Localization.widgets.typeUserName,
-                                inputPlaceholder: Localization.widgets.selectUser,
+                                placeholder: Localization.widgets.selectUser,
                                 minItems: 1,
                                 maxItems: 64,
                                 getValue: function (model) {
@@ -734,7 +734,7 @@ define(function (require) {
                             options: {
                                 entity: 'launch',
                                 label: Localization.widgets.typeLaunchName,
-                                inputPlaceholder: Localization.widgets.selectLaunch,
+                                placeholder: Localization.widgets.selectLaunch,
                                 minItems: 1,
                                 maxItems: 1,
                                 getValue: function (model) {
@@ -886,7 +886,7 @@ define(function (require) {
                             options: {
                                 entity: 'launch',
                                 label: Localization.widgets.typeLaunchName,
-                                inputPlaceholder: Localization.widgets.selectLaunch,
+                                placeholder: Localization.widgets.selectLaunch,
                                 minItems: 1,
                                 maxItems: 1,
                                 getValue: function (model) {

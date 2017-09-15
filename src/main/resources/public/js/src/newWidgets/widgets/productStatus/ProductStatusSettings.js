@@ -43,7 +43,8 @@ define(function (require) {
                     control: 'inputItems',
                     options: {
                         entity: 'filter',
-                        label: 'Select filters',
+                        label: Localization.wizard.filters,
+                        placeholder: Localization.wizard.choiceFilter,
                         minItems: 1,
                         getValue: function (model) {
                             var widgetOptions = model.getWidgetOptions();
@@ -65,7 +66,7 @@ define(function (require) {
                 {
                     control: 'dropDown',
                     options: {
-                        label: 'Basic column',
+                        label: Localization.wizard.basicColumns,
                         items: [
                             { name: Localization.launchesHeaders.start_time, value: 'start_time' },
                             { name: Localization.launchesHeaders.status, value: 'status' },
@@ -75,7 +76,7 @@ define(function (require) {
                             { name: Localization.launchesHeaders.no_defect, value: 'no_defect' },
                             { name: Localization.launchesHeaders.to_investigate, value: 'to_investigate' }
                         ],
-                        placeholder: Localization.wizard.selectColumn,
+                        placeholder: Localization.wizard.choiceCriteria,
                         multiple: true,
                         notEmpty: false,
                         getValue: function (model, self) {
