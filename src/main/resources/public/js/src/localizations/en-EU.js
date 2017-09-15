@@ -913,8 +913,7 @@ define(['util'], function () {
             status: 'Status',
             type: 'Method Type',
             history_depth: 'History Depth',
-            owner: 'Owner',
-            user: 'User'
+            user: 'Owner'
         },
         filterNamePluralById: {
             product_bug: 'Product Bugs',

@@ -968,8 +968,7 @@ define(['util'], function () {
             status: 'Статус',
             type: 'Тип метода',
             history_depth: 'Глубина истории',
-            owner: 'Владелец',
-            user: 'Пользователь'
+            user: 'Владелец'
         },
         filterNamePluralById: {
             product_bug: 'Дефекты продукта',

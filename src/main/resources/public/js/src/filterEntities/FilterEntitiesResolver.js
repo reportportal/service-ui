@@ -213,7 +213,7 @@ define(function (require, exports, module) {
     var UserDebugFilters = function (userId) {
         var launchFilters = LaunchStepFilters();
         // place user filter on the second place but first is required Name filter so we insert at index 2
-        launchFilters.add(new Filters.EntityOwnerTagModel({ id: 'owner', condition: 'in', mode: 'DEBUG' }), { at: 1 });
+        launchFilters.add(new Filters.EntityOwnerTagModel({ id: 'user', condition: 'in', mode: 'DEBUG' }), { at: 1 });
         return launchFilters;
     };
 
@@ -264,7 +264,7 @@ define(function (require, exports, module) {
             valueMaxLength: 256,
             valueOnlyDigits: false
         }));
-        launchSuiteEntitiesCollection.add(new Filters.EntityOwnerTagModel({ id: 'owner', condition: 'in' }), { at: 1 });
+        launchSuiteEntitiesCollection.add(new Filters.EntityOwnerTagModel({ id: 'user', condition: 'in' }), { at: 1 });
         return launchSuiteEntitiesCollection;
     };
     var SuiteEntities = function () {
