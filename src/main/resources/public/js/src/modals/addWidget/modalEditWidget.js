@@ -140,6 +140,7 @@ define(function (require) {
         },
         onShow: function () {
             this.widgetSettingsView.activate();
+            this.saveWidget.activate();
         },
         onChangeSettingsViewMode: function (options) {
             if (options.mode === 'expandedSettingView') {
