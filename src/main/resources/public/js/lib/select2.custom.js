@@ -969,9 +969,7 @@ the specific language governing permissions and limitations under the Apache Lic
                                 node.append(label);
                             }
 
-
                             if (compound) {
-
                                 innerContainer=$("<ul></ul>");
                                 innerContainer.addClass("select2-result-sub");
                                 populate(result.children, innerContainer, depth+1);
@@ -981,9 +979,11 @@ the specific language governing permissions and limitations under the Apache Lic
                             node.data("select2-data", result);
                             nodes.push(node[0]);
                         }
-
                         // bulk append the created nodes
                         container.append(nodes);
+                        if(self.opts.newButton){
+                            $(container).find('li').first().find('.select2-match').append("<span class='new-btn'>" + self.opts.newButton + "</span>");
+                        }
                         liveRegion.text(opts.formatMatches(results.length));
                     };
 
