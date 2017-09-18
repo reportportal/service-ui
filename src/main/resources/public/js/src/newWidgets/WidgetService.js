@@ -447,7 +447,7 @@ define(function (require) {
                             options: {
                                 entity: 'user',
                                 label: Localization.widgets.typeUserName,
-                                placeholder: Localization.widgets.selectUser,
+                                placeholder: Localization.widgets.enterUserName,
                                 minItems: 1,
                                 maxItems: 64,
                                 getValue: function (model) {
@@ -583,17 +583,6 @@ define(function (require) {
                             options: {}
                         },
                         {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
                             control: 'dropDown',
                             options: {
                                 label: Localization.widgets.widgetCriteria,
@@ -663,6 +652,17 @@ define(function (require) {
                                     result = staticCriteria.concat(defects, launchCriteria, executions);
                                     model.setContentFields(result);
                                 }
+                            }
+                        },
+                        {
+                            control: 'input',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                numOnly: true,
+                                action: 'limit'
                             }
                         }
                     ]
@@ -734,7 +734,7 @@ define(function (require) {
                             options: {
                                 entity: 'launch',
                                 label: Localization.widgets.typeLaunchName,
-                                placeholder: Localization.widgets.selectLaunch,
+                                placeholder: Localization.wizard.enterLaunchName,
                                 minItems: 1,
                                 maxItems: 1,
                                 getValue: function (model) {

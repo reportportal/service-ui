@@ -17,16 +17,18 @@
 define(function (require) {
     'use strict';
 
+    var $ = require('jquery');
     var langEn = require('localizations/en-EU');
     var langRu = require('localizations/ru-RU');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
 
     var appStorage = new SingletonAppStorage();
     var lang = appStorage.get('appLanguage') || 'en';
+    var langRuSafe = $.extend(true, {}, langEn, langRu);
     var Localization = {};
     switch (lang) {
     case 'ru':
-        Localization = langRu;
+        Localization = langRuSafe;
         break;
     default:
         Localization = langEn;

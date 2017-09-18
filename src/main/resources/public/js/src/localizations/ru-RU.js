@@ -372,7 +372,7 @@ define(['util'], function () {
             limitResults: 'Лимит результатов',
             widgetSize: 'Размер виджета',
             widgetType: 'Тип виджета',
-            typeUserName: 'Написать имя пользователя',
+            typeUserName: 'Имя пользователя',
             typeLaunchName: 'Время запуска',
             widgetCriteria: 'Критерии для виджета',
             selectCriteria: 'Выбрать критерии',
@@ -384,6 +384,7 @@ define(['util'], function () {
             widgetCreatedBy: 'Виджет создан',
             noData: 'Нет доступных данных.',
             selectLaunch: 'Выберите запуск',
+            enterUserName: 'Введите имя пользователя',
             chooseFilter: 'Выберите фильтр из списка ниже',
             chooseFilterShort: 'Выберите фильтр',
             selectedFilterNotFound: 'Фильтр не найден. Пожалуйста, выберите другой. ',
@@ -1891,6 +1892,7 @@ define(['util'], function () {
             sharedWidgets: 'Доступные виджеты',
             widgetTemplates: 'Шаблоны виджетов',
             enterWidgetName: 'Напишите название виджета',
+            enterLaunchName: 'Введите имя запуска',
             createDashboard: 'Создать панель управления',
             sharedDashboards: 'Доступные панели управления',
             ownDashboards: 'Ваши Панели управления',
@@ -1927,7 +1929,9 @@ define(['util'], function () {
             basicColumns: 'Основные колонки',
             choiceCriteria: 'Выберите критерий',
             tagPrefixDescription: 'To view a dynamic of a definite tag you should type its part before colon ‘:’',
-            tagPrefixPlaceholder: 'Введите часть тега до ‘:’'
+            tagPrefixPlaceholder: 'Введите часть тега до ‘:’',
+
+            searchFilterByNAme: 'Поиск фильтра по имени'
         },
 
         dialogHeader: {

@@ -316,7 +316,7 @@ define(['util'], function () {
             limitResults: 'Limit of results',
             widgetSize: 'Widget size',
             widgetType: 'Widget type',
-            typeUserName: 'Type user name',
+            typeUserName: 'User name',
             typeLaunchName: 'Launch name',
             widgetCriteria: 'Criteria for widget',
             selectCriteria: 'Select Criteria',
@@ -328,7 +328,7 @@ define(['util'], function () {
             widgetCreatedBy: 'Widget was created by',
             noData: 'No Data Available.',
             selectLaunch: 'Select launch',
-            selectUser: 'Select user',
+            enterUserName: 'Enter user name',
             chooseFilter: 'Choose filter from the list below',
             chooseFilterShort: 'Choose filter',
             selectedFilterNotFound: 'The filter not found. Please choose another one.',
@@ -1833,6 +1833,7 @@ define(['util'], function () {
             sharedWidgets: 'Shared Widgets',
             widgetTemplates: 'Widget Templates',
             enterWidgetName: 'Enter new widget name',
+            enterLaunchName: 'Enter launch name',
             createDashboard: 'Create Dashboard',
             sharedDashboards: 'Shared Dashboards',
             ownDashboards: 'Own Dashboards',
@@ -1869,7 +1870,9 @@ define(['util'], function () {
             basicColumns: 'Basic columns',
             choiceCriteria: 'Choice criteria',
             tagPrefixDescription: 'To view a dynamic of a definite tag you should type its part before colon ‘:’',
-            tagPrefixPlaceholder: 'Enter a part of tag before ‘:’'
+            tagPrefixPlaceholder: 'Enter a part of tag before ‘:’',
+
+            searchFilterByNAme: 'Search filter by name'
         },
 
         dialogHeader: {
