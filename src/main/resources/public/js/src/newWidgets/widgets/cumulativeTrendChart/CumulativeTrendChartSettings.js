@@ -46,6 +46,8 @@ define(function (require) {
                     options: {
                         name: Localization.widgets.tagPrefix,
                         numOnly: false,
+                        description: Localization.wizard.tagPrefixDescription,
+                        placeholder: Localization.wizard.tagPrefixPlaceholder,
                         action: 'tagPrefix'
                     }
                 },

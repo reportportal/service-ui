@@ -55,4 +55,12 @@
       width: 68px;
     }
   }
+  .input-description {
+    color: $COLOR--gray-60;
+    padding: 5px 0 0 176px;
+    text-align: left;
+    &.hide {
+      display: none;
+    }
+  }
 }

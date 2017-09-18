@@ -64,7 +64,8 @@ define(function (require) {
         events: {
         },
         bindings: {
-            '[data-js-input]': 'value: value'
+            '[data-js-input]': 'value: value, attr: {placeholder: placeholder}',
+            '[data-js-description]': 'html: description, classes: {hide: not(description)}'
         },
         initialize: function (data) {
             var options = _.extend({
@@ -72,7 +73,9 @@ define(function (require) {
                 min: 1,
                 max: 150,
                 def: 50,
-                value: ''
+                value: '',
+                description: '',
+                placeholder: ''
             }, data.options);
             if (options.numOnly) {
                 this.$el.addClass('num-only');
