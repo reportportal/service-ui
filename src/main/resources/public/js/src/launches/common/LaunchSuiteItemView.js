@@ -43,9 +43,9 @@ define(function (require) {
         className: 'row rp-table-row',
         statusTpl: 'tpl-launch-suite-item-status',
         events: {
+            click: 'onClickView',
             'click [data-js-name-link]': 'onClickName', // common method
             'click [data-js-launch-menu]': 'showItemMenu',
-            // 'click [data-js-time-format]': 'toggleStartTimeView',
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-owner-name]': 'onClickOwnerName',
@@ -63,7 +63,6 @@ define(function (require) {
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
             '[data-js-time-from-now]': 'text: startFromNow',
-            // '[data-js-time-exact]': 'text: startFormat',
             '[data-js-select-item]': 'checked: select, attr: {disabled: launch_isProcessing}',
             '[data-js-tags-container]': 'sortTags: tags',
             '[data-js-statistics-total]': 'text: executionTotal, attr: {href: executionTotalLink}, classes: {"not-link": not(executionTotalLink)}',
@@ -241,8 +240,6 @@ define(function (require) {
             this.renderDuration();
             this.renderStartTime();
             this.renderDefects();
-
-            // this.renderStatistics();
         },
         highlightItem: function () {
             var self;
@@ -252,9 +249,6 @@ define(function (require) {
                 self.$el.addClass('hide-highlight');
             });
         },
-        // toggleStartTimeView: function () {
-        //     this.model.collection.trigger('change:time:format');
-        // },
         renderDuration: function () {
             this.duration && this.duration.destroy();
             this.duration = new ItemDurationView({
@@ -333,13 +327,23 @@ define(function (require) {
                 this.filterModel.trigger('add_entity', filterId, value);
             }
         },
+        onClickView: function (e) {
+            if ((e.ctrlKey || e.metaKey) && $(e.target).hasClass('overflow-wrapper')
+                && !this.model.get('launch_isProcessing')) {
+                this.model.set({ select: !this.model.get('select') });
+                if (e.altKey) {
+                    this.model.trigger('check:before:items', this.model.get('id'));
+                }
+            }
+        },
         onClickSelect: function (e) {
             if (this.model.get('type') === 'SUITE') {
                 config.trackingDispatcher.trackEventNumber(100.1);
             } else {
                 config.trackingDispatcher.trackEventNumber(61.2);
             }
-            if ((e.ctrlKey || e.metaKey) && !this.model.get('select')) {
+            if (e.altKey && !this.model.get('select')
+                && !this.model.get('launch_isProcessing')) {
                 this.model.trigger('check:before:items', this.model.get('id'));
             }
         },

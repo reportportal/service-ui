@@ -24,12 +24,12 @@
     width: 800px;
   }
   .info-block {
-    float: left;
+    position: absolute;
     background: $COLOR--white;
-    margin: 20px 0 10px 10px;
+    top: 20px;
+    left: 10px;
+    bottom: 10px;
     width: 320px;
-    height: 600px;
-    position: relative;
     .warning-block{
       position: absolute;
       bottom: 10px;
@@ -144,10 +144,11 @@
     }
   }
   .action-block {
-    float: left;
+    float: right;
     width: 420px;
     position: relative;
-    margin: 20px 0 70px 20px;
+    margin: 20px 10px 70px 20px;
+    min-height: 550px;
     & > div {
       display: none;
       &.active {

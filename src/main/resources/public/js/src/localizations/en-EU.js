@@ -1864,10 +1864,12 @@ define(['util'], function () {
             incomplete: 'Undone',
             complete: 'Compete',
 
-            filters: 'Filters',
+            selectFilter: 'Select filter',
             choiceFilter: 'Choice filter',
             basicColumns: 'Basic columns',
-            choiceCriteria: 'Choice criteria'
+            choiceCriteria: 'Choice criteria',
+            tagPrefixDescription: 'To view a dynamic of a definite tag you should type its part before colon ‘:’',
+            tagPrefixPlaceholder: 'Enter a part of tag before ‘:’'
         },
 
         dialogHeader: {

@@ -1922,10 +1922,12 @@ define(['util'], function () {
             incomplete: 'Не закончено',
             complete: 'Завершено',
 
-            filters: 'Фильтры',
+            selectFilter: 'Фильтр',
             choiceFilter: 'Выберите фильтр',
             basicColumns: 'Основные колонки',
-            choiceCriteria: 'Выберите критерий'
+            choiceCriteria: 'Выберите критерий',
+            tagPrefixDescription: 'To view a dynamic of a definite tag you should type its part before colon ‘:’',
+            tagPrefixPlaceholder: 'Введите часть тега до ‘:’'
         },
 
         dialogHeader: {

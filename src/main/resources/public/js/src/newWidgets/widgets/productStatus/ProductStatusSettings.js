@@ -43,7 +43,7 @@ define(function (require) {
                     control: 'inputItems',
                     options: {
                         entity: 'filter',
-                        label: Localization.wizard.filters,
+                        label: Localization.wizard.selectFilter,
                         placeholder: Localization.wizard.choiceFilter,
                         minItems: 1,
                         getValue: function (model) {
