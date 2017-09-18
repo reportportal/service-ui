@@ -1758,6 +1758,7 @@ define(['util'], function () {
             countWrongAmount: 'Количество элементов вне допустимого диапазона',
             countWrongAmountSize: 'Количество элементов должно иметь размер ',
             itemsSizeLength: 'Количество элементов должно иметь размер от %%% до %%%',
+            valueSizeLength: 'Значение должно иметь размер от %%% до %%%',
             selectAtLeastOneCriteria: 'Выберите как минимум один критерий ',
             selectAtLeastOneAction: 'Выберите как минимум одно действие',
             selectAllOptionsForWidget: 'Выберите все опции, чтобы добавить новый виджет',
