@@ -22,7 +22,9 @@
   .modal-content-wrapper {
     .modal-header {
       .beta-badge {
-        top: 0;
+        position: relative;
+        vertical-align: top;
+        margin-top: -6px;
       }
     }
     .modal-body {
