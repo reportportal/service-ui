@@ -25,7 +25,14 @@
   width: 100%;
   button.rp-btn-with-dropdown {
     span.select-value {
-      color: $COLOR--charcoal-grey;
+      color: $COLOR--gray-60;
+    }
+  }
+  &.selected {
+    button.rp-btn-with-dropdown {
+      span.select-value {
+        color: $COLOR--charcoal-grey;
+      }
     }
   }
   .dropdown-menu {
