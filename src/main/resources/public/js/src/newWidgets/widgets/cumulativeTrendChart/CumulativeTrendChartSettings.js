@@ -63,6 +63,7 @@ define(function (require) {
                             { name: Localization.launchesHeaders.no_defect, value: 'statistics$defects$no_defect$total' },
                             { name: Localization.launchesHeaders.to_investigate, value: 'statistics$defects$to_investigate$total' }
                         ],
+                        notEmpty: false,
                         placeholder: Localization.wizard.choiceCriteria,
                         multiple: true,
                         getValue: function (model, self) {
