@@ -57,7 +57,7 @@ define(function (require) {
                 img: 'project-activity-panel.svg',
                 description: Localization.widgets.projectActivityPanelDescription,
                 widget_type: 'activity_panel', // TODO remove after refactoring,
-                hasPreview: true
+                hasPreview: false
             };
         },
         getSettings: function () {

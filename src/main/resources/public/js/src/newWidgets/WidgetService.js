@@ -30,8 +30,8 @@ define(function (require) {
     var ProjectActivityWidget = require('newWidgets/widgets/projectActivity/index');
     var TestCasesGrowthTrendChart = require('newWidgets/widgets/testCasesGrowthTrendChart/index');
     var InvestigatedTrendChart = require('newWidgets/widgets/investigatedTrendChart/index');
+    var LaunchesTableWidget = require('newWidgets/widgets/launchesTable/index');
 
-    var LaunchesTableWidget = require('newWidgets/widgets/LaunchesTableWidgetView');
     var MostFailedTestCases = require('newWidgets/widgets/MostFailedTestCasesWidgetView');
     var UniqueBugTable = require('newWidgets/widgets/UniqueBugTableWidgetView');
     var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
@@ -80,6 +80,7 @@ define(function (require) {
         activity_stream: ProjectActivityWidget,
         cases_trend: TestCasesGrowthTrendChart,
         investigated_trend: InvestigatedTrendChart,
+        launches_table: LaunchesTableWidget,
 
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
@@ -88,102 +89,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                launches_table: {
-                    gadget_name: Localization.widgets.launchesTable,
-                    img: 'launch-table.svg',
-                    description: Localization.widgets.launchesTableDescription,
-                    widget_type: 'launches_table',
-                    gadget: 'launches_table',
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {}
-                        },
-                        {
-                            control: 'dropDown',
-                            options: {
-                                label: Localization.widgets.widgetCriteria,
-                                items: this.getLaunchesTableWidgetData(),
-                                placeholder: Localization.wizard.criteriaSelectTitle,
-                                multiple: true,
-                                notEmpty: false,
-                                getValue: function (model, self) {
-                                    var staticCriteria = ['name', 'number', 'last_modified', 'status'];
-                                    var defectLocatorPattern = appConfig.patterns.defectsLocator;
-                                    var contentFields = model.getContentFields();
-                                    var result;
-                                    if (!contentFields.length) {
-                                        result = _.map(self.model.get('items'), function (item) {
-                                            return item.value;
-                                        });
-                                    } else {
-                                        result = [];
-                                        _.each(contentFields, function (field) {
-                                            var splittedDefectField;
-                                            if (!~staticCriteria.indexOf(field)) {
-                                                if (~field.indexOf('statistics$defects$')) {
-                                                    splittedDefectField = field.split('$');
-                                                    if (defectLocatorPattern.test(splittedDefectField[3])) {
-                                                        splittedDefectField.length = 3;
-                                                        result.push(splittedDefectField.join('$') + '$total');
-                                                    }
-                                                } else {
-                                                    result.push(field);
-                                                }
-                                            }
-                                        });
-                                    }
-                                    return result;
-                                },
-                                setValue: function (value, model) {
-                                    var result;
-                                    var pref = 'statistics$defects$';
-                                    var typeRef;
-                                    var key;
-                                    var type;
-                                    var staticCriteria = ['name', 'number', 'last_modified', 'status'];
-                                    var defects = [];
-                                    var executions = [];
-                                    var launchCriteria = [];
-                                    var defectsCollection = new SingletonDefectTypeCollection();
-
-                                    defectsCollection.ready.done(function () {
-                                        _.each(value, function (criteria) {
-                                            if (~criteria.indexOf('statistics$defects$')) {
-                                                typeRef = criteria.split('$')[2].toUpperCase();
-                                                _.each(defectsCollection.models, function (defectModel) {
-                                                    if (defectModel.get('typeRef') === typeRef) {
-                                                        type = defectModel.get('typeRef').toLowerCase();
-                                                        key = pref + type + '$' + defectModel.get('locator');
-                                                        defects.push(key);
-                                                    }
-                                                });
-                                            } else if (~criteria.indexOf('statistics$executions$')) {
-                                                executions.push(criteria);
-                                            } else {
-                                                launchCriteria.push(criteria);
-                                            }
-                                        });
-                                    });
-
-                                    result = staticCriteria.concat(defects, launchCriteria, executions);
-                                    model.setContentFields(result);
-                                }
-                            }
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        }
-                    ]
-                },
                 unique_bug_table: {
                     gadget_name: Localization.widgets.uniqueBugsTable,
                     img: 'unique-bugs-table.svg',
