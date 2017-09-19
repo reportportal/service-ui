@@ -25,6 +25,7 @@ define(function (require) {
     var LaunchStatisticsLineChart = require('newWidgets/widgets/launchStatisticsLineChart/index');
     var LaunchStatisticsTrendChart = require('newWidgets/widgets/launchStatisticsTrendChart/index');
     var OverallStatisticsWidget = require('newWidgets/widgets/overallStatistics/index');
+    var LaunchesDurationChart = require('newWidgets/widgets/launchesDurationChart/index');
 
     var LaunchesTableWidget = require('newWidgets/widgets/LaunchesTableWidgetView');
     var MostFailedTestCases = require('newWidgets/widgets/MostFailedTestCasesWidgetView');
@@ -32,7 +33,6 @@ define(function (require) {
     var ProjectActivityWidget = require('newWidgets/widgets/ProjectActivityWidgetView');
     var InvestigatedTrendChart = require('newWidgets/widgets/InvestigatedTrendChartView');
     var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
-    var LaunchesDurationChart = require('newWidgets/widgets/LaunchesDurationChartView');
     var TestCasesGrowthTrendChart = require('newWidgets/widgets/TestCasesGrowthTrendChartView');
     var NotPassedCasesChart = require('newWidgets/widgets/NotPassedCasesChartView');
     var FailedCasesTrendChart = require('newWidgets/widgets/FailedCasesTrendChartView');
@@ -75,6 +75,7 @@ define(function (require) {
         old_line_chart: LaunchStatisticsLineChart,
         statistic_trend: LaunchStatisticsTrendChart,
         overall_statistics: OverallStatisticsWidget,
+        launches_duration_chart: LaunchesDurationChart,
 
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
@@ -83,55 +84,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                launches_duration_chart: {
-                    gadget_name: Localization.widgets.durationChart,
-                    img: 'launches-duration-chart.svg',
-                    description: Localization.widgets.durationChartDescription,
-                    widget_type: 'column_chart',
-                    gadget: 'launches_duration_chart',
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {
-                            }
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.allLaunches, value: 'all' },
-                                    { name: Localization.widgets.latestLaunches, value: 'latest' }
-                                ],
-                                action: 'switch_latest_mode'
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'criteria',
-                                fields: ['start_time', 'end_time', 'name', 'number', 'status']
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'number', 'start_time']
-                            }
-                        }
-                    ]
-                },
                 launch_statistics: {
                     gadget_name: Localization.widgets.executionIssueStatistics,
                     img: 'launch-execution-and-issue-statistic.svg',
