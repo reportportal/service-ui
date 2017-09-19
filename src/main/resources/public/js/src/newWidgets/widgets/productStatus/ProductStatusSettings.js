@@ -43,8 +43,8 @@ define(function (require) {
                     control: 'inputItems',
                     options: {
                         entity: 'filter',
-                        label: Localization.wizard.selectFilter,
-                        placeholder: Localization.wizard.choiceFilter,
+                        label: Localization.wizard.filters,
+                        placeholder: Localization.wizard.enterFilter,
                         minItems: 1,
                         getValue: function (model) {
                             var widgetOptions = model.getWidgetOptions();

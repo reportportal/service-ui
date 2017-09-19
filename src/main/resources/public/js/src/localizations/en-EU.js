@@ -1866,8 +1866,8 @@ define(['util'], function () {
             incomplete: 'Undone',
             complete: 'Compete',
 
-            selectFilter: 'Select filter',
-            choiceFilter: 'Choice filter',
+            filters: 'Filters',
+            enterFilter: 'Enter filter names',
             basicColumns: 'Basic columns',
             choiceCriteria: 'Choice criteria',
             tagPrefixDescription: 'To view a dynamic of a definite tag you should type its part before colon ‘:’',
