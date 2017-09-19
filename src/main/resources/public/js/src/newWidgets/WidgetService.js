@@ -26,6 +26,7 @@ define(function (require) {
     var LaunchStatisticsTrendChart = require('newWidgets/widgets/launchStatisticsTrendChart/index');
     var OverallStatisticsWidget = require('newWidgets/widgets/overallStatistics/index');
     var LaunchesDurationChart = require('newWidgets/widgets/launchesDurationChart/index');
+    var LaunchStatisticsComboPieChart = require('newWidgets/widgets/launchExecutionAndIssueStatistics/index');
 
     var LaunchesTableWidget = require('newWidgets/widgets/LaunchesTableWidgetView');
     var MostFailedTestCases = require('newWidgets/widgets/MostFailedTestCasesWidgetView');
@@ -36,7 +37,6 @@ define(function (require) {
     var TestCasesGrowthTrendChart = require('newWidgets/widgets/TestCasesGrowthTrendChartView');
     var NotPassedCasesChart = require('newWidgets/widgets/NotPassedCasesChartView');
     var FailedCasesTrendChart = require('newWidgets/widgets/FailedCasesTrendChartView');
-    var LaunchStatisticsComboPieChart = require('newWidgets/widgets/LaunchStatisticsComboPieChartView');
     var PassingRateSummaryChart = require('newWidgets/widgets/PassingRateSummaryChartView');
     var PassingRatePerLaunchChart = require('newWidgets/widgets/PassingRatePerLaunchChartView');
     var ProductStatus = require('newWidgets/widgets/productStatus/index');
@@ -76,6 +76,7 @@ define(function (require) {
         statistic_trend: LaunchStatisticsTrendChart,
         overall_statistics: OverallStatisticsWidget,
         launches_duration_chart: LaunchesDurationChart,
+        launch_statistics: LaunchStatisticsComboPieChart,
 
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
@@ -84,45 +85,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                launch_statistics: {
-                    gadget_name: Localization.widgets.executionIssueStatistics,
-                    img: 'launch-execution-and-issue-statistic.svg',
-                    description: Localization.widgets.executionIssueStatisticsDescription,
-                    widget_type: 'combine_pie_chart',
-                    gadget: 'launch_statistics',
-                    hasPreview: true,
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {}
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'criteria',
-                                fields: function () {
-                                    return _.map(this.getExecutionsAndDefects(true), function (item) {
-                                        return item.value;
-                                    });
-                                }.bind(this)
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'limit',
-                                value: 1
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'number', 'start_time']
-                            }
-                        }
-                    ]
-                },
                 activity_stream: {
                     gadget_name: Localization.widgets.projectActivityPanel,
                     img: 'project-activity-panel.svg',
