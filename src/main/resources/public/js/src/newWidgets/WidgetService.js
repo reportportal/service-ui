@@ -28,13 +28,13 @@ define(function (require) {
     var LaunchesDurationChart = require('newWidgets/widgets/launchesDurationChart/index');
     var LaunchStatisticsComboPieChart = require('newWidgets/widgets/launchExecutionAndIssueStatistics/index');
     var ProjectActivityWidget = require('newWidgets/widgets/projectActivity/index');
+    var TestCasesGrowthTrendChart = require('newWidgets/widgets/testCasesGrowthTrendChart/index');
 
     var LaunchesTableWidget = require('newWidgets/widgets/LaunchesTableWidgetView');
     var MostFailedTestCases = require('newWidgets/widgets/MostFailedTestCasesWidgetView');
     var UniqueBugTable = require('newWidgets/widgets/UniqueBugTableWidgetView');
     var InvestigatedTrendChart = require('newWidgets/widgets/InvestigatedTrendChartView');
     var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
-    var TestCasesGrowthTrendChart = require('newWidgets/widgets/TestCasesGrowthTrendChartView');
     var NotPassedCasesChart = require('newWidgets/widgets/NotPassedCasesChartView');
     var FailedCasesTrendChart = require('newWidgets/widgets/FailedCasesTrendChartView');
     var PassingRateSummaryChart = require('newWidgets/widgets/PassingRateSummaryChartView');
@@ -78,6 +78,7 @@ define(function (require) {
         launches_duration_chart: LaunchesDurationChart,
         launch_statistics: LaunchStatisticsComboPieChart,
         activity_stream: ProjectActivityWidget,
+        cases_trend: TestCasesGrowthTrendChart,
 
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
@@ -86,54 +87,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                cases_trend: {
-                    gadget_name: Localization.widgets.growthTrendChart,
-                    img: 'test-cases-growth-trend-chart.svg',
-                    description: Localization.widgets.growthTrendChartDescription,
-                    widget_type: 'cases_trend_chart',
-                    gadget: 'cases_trend',
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {}
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.launchMode, value: 'launch' },
-                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
-                                ],
-                                action: 'switch_timeline_mode'
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'criteria',
-                                fields: ['statistics$executions$total']
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'number', 'start_time']
-                            }
-                        }
-                    ]
-                },
                 investigated_trend: {
                     gadget_name: Localization.widgets.percentageOfLaunches,
                     img: 'investigated-percentage-of-launches.svg',
