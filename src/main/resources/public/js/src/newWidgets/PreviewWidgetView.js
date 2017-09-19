@@ -41,7 +41,8 @@ define(function (require) {
                 this.model = new GadgetModel({ gadget: options.sharedWidgetModel.get('gadget') });
             }
             gadget = this.model.get('gadget');
-            if (!WidgetService.getWidgetConfig(gadget).hasPreview || (!options.validateForPreview() && !options.sharedWidgetModel) || gadget === 'activity_stream' || gadget === 'launches_table' ||
+            if (!WidgetService.getWidgetConfig(gadget).hasPreview || (!options.validateForPreview() && !options.sharedWidgetModel)
+                || gadget === 'activity_stream' || gadget === 'launches_table' ||
                 gadget === 'unique_bug_table' || gadget === 'most_failed_test_cases') {
                 this.$el.css('background-image', 'url(' + this.model.get('gadgetPreviewImg') + ')');
                 return true;
