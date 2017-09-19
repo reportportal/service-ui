@@ -31,7 +31,7 @@ define(function (require) {
 
     var config = App.getInstance();
 
-    var LaunchStatisticsComboPieChart = ChartWidgetView.extend({
+    var LaunchExecutionAndIssueStatisticsView = ChartWidgetView.extend({
         initialize: function (options) {
             ChartWidgetView.prototype.initialize.call(this, options);
             this.issues = 0;
@@ -258,5 +258,5 @@ define(function (require) {
         }
     });
 
-    return LaunchStatisticsComboPieChart;
+    return LaunchExecutionAndIssueStatisticsView;
 });
