@@ -38,7 +38,9 @@
         color: $COLOR--charcoal-grey;
         line-height: 35px;
         .group-name {
-          float: left;
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
       .tooltip-body {
