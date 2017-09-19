@@ -179,6 +179,7 @@ define(function (require) {
             $('[data-js-label-input]', this.$el)
                 .on('select2-open', this.onEnterInput)
                 .on('select2-close', this.onOverInput);
+            this.activated = true;
         },
         onChangeValue: function (model, value) {
             this.setValue(value.split(','), this.gadgetModel, this);
@@ -192,8 +193,11 @@ define(function (require) {
                 $('[data-js-validate-hint]', this.$el).show();
             }
         },
-        validate: function () {
+        validate: function (options) {
             if (this.model.get('minItems') > 0 && !this.model.get('value').length) {
+                if (options && options.silent) {
+                    return false;
+                }
                 this.showErrorState(Localization.validation.moreAtItem);
                 return false;
             }

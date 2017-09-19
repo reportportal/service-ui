@@ -130,7 +130,8 @@ define(function (require) {
         onChangePreview: function () {
             this.previewWidgetView && this.previewWidgetView.destroy();
             this.previewWidgetView = new PreviewWidgetView({
-                model: this.model
+                model: this.model,
+                validateForPreview: this.validateForPreview.bind(this)
             });
             $('[data-js-widget-preview]', this.$el).html(this.previewWidgetView.$el);
         },
@@ -198,6 +199,9 @@ define(function (require) {
                         self.hideLoading();
                     });
             }
+        },
+        validateForPreview: function () {
+            return this.widgetSettingsView.validate({ forPreview: true });
         },
         onDestroy: function () {
             this.widgetSettingsView && this.widgetSettingsView.destroy();

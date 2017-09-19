@@ -174,7 +174,8 @@ define(function (require) {
         onChangePreview: function (model) {
             this.previewWidgetView && this.previewWidgetView.destroy();
             this.previewWidgetView = new PreviewWidgetView({
-                model: this.model
+                model: this.model,
+                validateForPreview: this.validateForPreview.bind(this)
             });
             $('[data-js-widget-preview]', this.$el).html(this.previewWidgetView.$el);
         },
@@ -241,6 +242,9 @@ define(function (require) {
             default:
                 break;
             }
+        },
+        validateForPreview: function () {
+            return this.configureWidgetView.validate({ forPreview: true });
         },
         checkNewDashboard: function () {
             var async = $.Deferred();

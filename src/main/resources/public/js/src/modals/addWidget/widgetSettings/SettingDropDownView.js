@@ -71,13 +71,17 @@ define(function (require) {
             $('[data-js-drop-down-container]', this.$el).html(this.dropDown.$el);
             this.listenTo(this.dropDown, 'change', this.onChangeDropDown);
             this.listenTo(this.model, 'change:value', this.validate);
+            this.activated = true;
         },
         onChangeDropDown: function (value) {
             this.model.set({ value: value });
             this.setValue(value, this.gadgetModel, true);
         },
-        validate: function () {
+        validate: function (options) {
             if (this.model.get('notEmpty') && !this.model.get('value').length) {
+                if (options && options.silent) {
+                    return false;
+                }
                 this.dropDown.setErrorState(Localization.validation.moreAtItem);
                 return false;
             }

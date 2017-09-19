@@ -119,6 +119,7 @@ define(function (require) {
             });
             this.listenTo(this.model, 'change:value', this.onChangeValue);
             this.onChangeValue();
+            this.activated = true;
         },
         onChangeValue: function () {
             $('[data-js-switch-item]', this.$el).removeClass('active').eq(this.model.get('value')).addClass('active');

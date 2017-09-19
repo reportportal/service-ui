@@ -260,7 +260,7 @@ define(function (require) {
                     description: Localization.widgets.executionIssueStatisticsDescription,
                     widget_type: 'combine_pie_chart',
                     gadget: 'launch_statistics',
-                    // noCriteria: true,
+                    hasPreview: true,
                     uiControl: [
                         {
                             control: 'filters',

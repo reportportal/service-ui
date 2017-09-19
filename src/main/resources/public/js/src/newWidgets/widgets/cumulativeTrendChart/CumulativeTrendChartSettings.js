@@ -31,7 +31,8 @@ define(function (require) {
                 gadget_name: Localization.widgets.cumulativeTrendChart,
                 img: 'cumulative_trend_chart.svg',
                 description: Localization.widgets.cumulativeTrendChartDescription,
-                widget_type: 'trends_chart' // TODO remove after refactoring
+                widget_type: 'trends_chart', // TODO remove after refactoring
+                hasPreview: true
             };
         },
         getSettings: function () {

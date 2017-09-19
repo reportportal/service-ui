@@ -65,7 +65,8 @@ define(function (require) {
                 gadget_name: Localization.widgets.overallStatisticsPanel,
                 img: 'overall-statistics-panel.svg',
                 description: Localization.widgets.overallStatisticsPanelDescription,
-                widget_type: 'statistics_panel' // TODO remove after refactoring
+                widget_type: 'statistics_panel', // TODO remove after refactoring,
+                hasPreview: true
             };
         },
         getSettings: function () {
