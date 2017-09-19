@@ -25,6 +25,7 @@ define(function (require) {
     var SingletonAppModel = require('model/SingletonAppModel');
     var Util = require('util');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var WidgetErrorView = require('newWidgets/WidgetErrorView');
     var $ = require('jquery');
     var _ = require('underscore');
     var Localization = require('localization');
@@ -61,7 +62,8 @@ define(function (require) {
         },
         addNoAvailableBock: function (el) {
             var $element = el ? $(el) : this.$el;
-            $element.after('<div class="no-data-error"><div class="no-data-content">' + Localization.widgets.noData + '</div></div>');
+            var view = new WidgetErrorView({ message: Localization.widgets.noData });
+            $element.after(view.$el);
         },
         getSeriesColor: function (name) {
             var defect = this.defectsCollection.getDefectType(name);

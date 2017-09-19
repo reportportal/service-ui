@@ -30,6 +30,7 @@ define(function (require) {
     var ModalEditWidget = require('modals/addWidget/modalEditWidget');
     var SimpleTooltipView = require('tooltips/SimpleTooltipView');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+    var WidgetErrorView = require('newWidgets/WidgetErrorView');
 
     var config = App.getInstance();
     var launchFilterCollection = new SingletonLaunchFilterCollection();
@@ -37,7 +38,6 @@ define(function (require) {
     var GadgetView = Epoxy.View.extend({
         className: 'gadget-view grid-stack-item',
         template: 'tpl-gadget-view',
-        errorTpl: 'tpl-gadget-unable-load',
         events: {
             'click [data-js-gadget-refresh]': 'onClickRefresh',
             'click [data-js-gadget-remove]': 'onClickRemove',
@@ -138,6 +138,7 @@ define(function (require) {
             var message = Localization.widgets.unableLoadData;
             var owner;
             var share;
+            var view;
             if (error && error.status === 404) {
                 message = Localization.widgets.widgetNotFound;
             } else {
@@ -147,7 +148,8 @@ define(function (require) {
                     message = Localization.widgets.unsharedWidget;
                 }
             }
-            $('[data-js-widget-container]', this.$el).html(Util.templates(this.errorTpl, { message: message }));
+            view = new WidgetErrorView({ message: message });
+            $('[data-js-widget-container]', this.$el).html(view.$el);
         },
         onClickRemove: function (e) {
             var self = this;

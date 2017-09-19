@@ -3,7 +3,7 @@
  *
  *
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,17 +18,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function (require) {
+    'use strict';
 
-@import 'widget-view';
-@import 'launches-table';
-@import 'rp-panels-statistics';
-@import 'uniq-bugs-table';
-@import 'most-failed-launches';
-@import 'project-activity-panel';
-@import 'launch-statictics-combo-pie';
-@import 'passing-rate-per-launch';
-@import 'passing-rate-summary';
-@import 'overall-statistics';
-@import 'product-status-widget';
-@import 'cumulative-trend-chart';
-@import 'widget-error-view';
+    var Epoxy = require('backbone-epoxy');
+    var Util = require('util');
+
+    var WidgetErrorView = Epoxy.View.extend({
+        className: 'widget-error-view',
+        template: 'tpl-widget-error',
+
+        initialize: function (options) {
+            this.render(options);
+        },
+        render: function (options) {
+            this.$el.html(Util.templates(this.template, options));
+        },
+        onDestroy: function () {
+            this.$el.remove();
+        }
+    });
+
+    return WidgetErrorView;
+});
