@@ -448,7 +448,7 @@ define(function (require) {
                                 entity: 'user',
                                 label: Localization.widgets.typeUserName,
                                 placeholder: Localization.widgets.enterUserName,
-                                minItems: 1,
+                                minItems: 0,
                                 maxItems: 64,
                                 getValue: function (model) {
                                     var widgetOptions = model.getWidgetOptions();
