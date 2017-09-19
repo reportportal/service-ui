@@ -41,6 +41,11 @@ define(function (require) {
 
         render: function () {
             var contentData;
+
+            if (this.isPreview) {
+                this.$el.addClass('preview-view');
+            }
+
             if (!this.isDataExists()) {
                 this.addNoAvailableBock();
                 return;
@@ -219,6 +224,7 @@ define(function (require) {
                 },
                 axis: {
                     x: {
+                        show: !self.isPreview,
                         type: 'category',
                         categories: _.map(dataGroupNames, function (category) {
                             return category.split(self.model.getWidgetOptions().prefix[0] + ':')[1];
@@ -227,18 +233,24 @@ define(function (require) {
                             centered: true,
                             inner: true
                         }
+                    },
+                    y: {
+                        show: !self.isPreview
                     }
                 },
                 grid: {
                     y: {
-                        show: true
+                        show: !self.isPreview
                     }
                 },
                 size: {
                     height: self.$el.parent().height()
                 },
+                interaction: {
+                    enabled: !self.isPreview
+                },
                 padding: {
-                    top: 85
+                    top: self.isPreview ? 0 : 85
                 },
                 legend: {
                     show: false // we use custom legend
@@ -280,39 +292,45 @@ define(function (require) {
             this.charts.push(chart);
 
             // Configuring custom legend block
-            d3.select(chart.element)
-                .insert('div', '.chart')
-                .attr('class', 'legend')
-                .insert('div', '.legend')
-                .attr('data-js-legend-wrapper', '') // wrapper for BaronScroll
-                .selectAll('span')
-                .data(_.map(chartDataColumns, function (column) { return column[0]; }))
-                .enter()
-                .append('span')
-                .attr('data-id', function (id) { return id; })
-                .html(function (id) {
-                    return '<div class="color-mark"></div>' + self.getBeautyName(id);
-                })
-                .each(function (id) {
-                    d3.select(this).select('.color-mark').style('background-color', chart.color(id));
-                })
-                .on('mouseover', function (id) {
-                    chart.focus(id);
-                })
-                .on('mouseout', function (id) {
-                    chart.revert();
-                })
-                .on('click', function (id) {
-                    $('.color-mark', $(this)).toggleClass('unchecked');
-                    chart.toggle(id);
-                });
-            d3.select(chart.element).select('.legend')
-                .append('div')
-                .attr('class', 'legend-gradient')
-                .append('div')
-                .attr('class', 'legend-border');
-            legendScroller = Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
-            this.scrollers.push(legendScroller);
+            if (!self.isPreview) {
+                d3.select(chart.element)
+                    .insert('div', '.chart')
+                    .attr('class', 'legend')
+                    .insert('div', '.legend')
+                    .attr('data-js-legend-wrapper', '') // wrapper for BaronScroll
+                    .selectAll('span')
+                    .data(_.map(chartDataColumns, function (column) {
+                        return column[0];
+                    }))
+                    .enter()
+                    .append('span')
+                    .attr('data-id', function (id) {
+                        return id;
+                    })
+                    .html(function (id) {
+                        return '<div class="color-mark"></div>' + self.getBeautyName(id);
+                    })
+                    .each(function (id) {
+                        d3.select(this).select('.color-mark').style('background-color', chart.color(id));
+                    })
+                    .on('mouseover', function (id) {
+                        chart.focus(id);
+                    })
+                    .on('mouseout', function (id) {
+                        chart.revert();
+                    })
+                    .on('click', function (id) {
+                        $('.color-mark', $(this)).toggleClass('unchecked');
+                        chart.toggle(id);
+                    });
+                d3.select(chart.element).select('.legend')
+                    .append('div')
+                    .attr('class', 'legend-gradient')
+                    .append('div')
+                    .attr('class', 'legend-border');
+                legendScroller = Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
+                this.scrollers.push(legendScroller);
+            }
         },
         getBeautyName: function (key) {
             switch (key) {
