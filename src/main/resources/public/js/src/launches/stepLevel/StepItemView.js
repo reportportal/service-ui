@@ -177,7 +177,7 @@ define(function (require) {
             modal.show();
         },
         onClickView: function (e) {
-            if ((e.ctrlKey || e.metaKey) && $(e.target).hasClass('overflow-wrapper')
+            if ((e.ctrlKey || e.metaKey) && !($(e.target).is('a') || $(e.target).parent('a').length)
                 && !this.model.get('launch_isProcessing')) {
                 this.model.set({ select: !this.model.get('select') });
                 if (e.altKey) {
