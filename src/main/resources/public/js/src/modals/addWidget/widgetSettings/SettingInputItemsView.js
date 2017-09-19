@@ -96,7 +96,7 @@ define(function (require) {
                             });
                     }
                 };
-            case 'launch':
+            case 'launchName':
                 return {
                     query: function (query) {
                         Service.searchLaunches(query)
@@ -115,13 +115,9 @@ define(function (require) {
                             });
                     },
                     getDataByIds: function (values, callback) {
-                        var query = { term: values[0] };
-                        Service.searchLaunches(query)
-                            .done(function (data) {
-                                callback(_.map(data, function (launch) {
-                                    return { id: launch, text: launch };
-                                }));
-                            });
+                        callback(_.map(values, function (launch) {
+                            return { id: launch, text: launch };
+                        }));
                     }
                 };
             case 'user':
