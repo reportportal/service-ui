@@ -38,7 +38,7 @@ define(function (require) {
             var widgetOptions;
             var contentData;
             if (!this.isDataExists()) {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
                 return;
             }
             widgetOptions = this.model.getParameters().widgetOptions;
@@ -51,7 +51,7 @@ define(function (require) {
                     { passed: this.passed, notPassed: this.notPassed }
                 );
             if (this.total === 0) {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
                 return;
             }
             this.loadChartist().done(function () {
@@ -70,7 +70,7 @@ define(function (require) {
                         }
                     ).fail(
                         function () {
-                            self.addNoAvailableBock(self.$el);
+                            self.addNoAvailableBock();
                         }
                     );
                 } else {
@@ -89,7 +89,7 @@ define(function (require) {
                         }
                     ).fail(
                         function () {
-                            self.addNoAvailableBock(self.$el);
+                            self.addNoAvailableBock();
                         }
                     );
                 }

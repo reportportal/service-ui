@@ -137,7 +137,7 @@ define(function (require) {
                     !this.isPreview && Util.setupBaronScroll($('.statistics-panel', this.$el));
                 }
             } else {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
             }
         },
         renderPieChart: function (data, id, title) {

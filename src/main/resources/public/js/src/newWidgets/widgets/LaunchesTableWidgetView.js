@@ -347,7 +347,7 @@ define(function (require, exports, module) {
                 !this.isPreview && Util.setupBaronScroll($('.launches-table-panel', this.$el));
                 this.updateWidget();
             } else {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
             }
         },
         getLink: function () {

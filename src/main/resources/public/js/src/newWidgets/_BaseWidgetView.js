@@ -51,7 +51,13 @@ define(function (require) {
             });
         },
         isEmptyData: function (data) {
-            return _.isEmpty(data);
+            if (_.isEmpty(data)) {
+                return true;
+            }
+            if (data.result && !data.result.length) {
+                return true;
+            }
+            return false;
         },
         addNoAvailableBock: function (el) {
             var $element = el ? $(el) : this.$el;

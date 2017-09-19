@@ -42,7 +42,7 @@ define(function (require) {
         render: function () {
             var contentData;
             if (!this.isDataExists()) {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
                 return;
             }
             this.charts = [];

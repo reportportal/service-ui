@@ -205,6 +205,7 @@ define(function (require) {
             return [this.el, this.model.get('x'), this.model.get('y'), this.model.get('width'), this.model.get('height')];
         },
         onDestroy: function () {
+            this.widgetView && this.widgetView.destroy();
             this.$el.remove();
         }
     });
