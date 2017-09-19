@@ -29,11 +29,11 @@ define(function (require) {
     var LaunchStatisticsComboPieChart = require('newWidgets/widgets/launchExecutionAndIssueStatistics/index');
     var ProjectActivityWidget = require('newWidgets/widgets/projectActivity/index');
     var TestCasesGrowthTrendChart = require('newWidgets/widgets/testCasesGrowthTrendChart/index');
+    var InvestigatedTrendChart = require('newWidgets/widgets/investigatedTrendChart/index');
 
     var LaunchesTableWidget = require('newWidgets/widgets/LaunchesTableWidgetView');
     var MostFailedTestCases = require('newWidgets/widgets/MostFailedTestCasesWidgetView');
     var UniqueBugTable = require('newWidgets/widgets/UniqueBugTableWidgetView');
-    var InvestigatedTrendChart = require('newWidgets/widgets/InvestigatedTrendChartView');
     var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
     var NotPassedCasesChart = require('newWidgets/widgets/NotPassedCasesChartView');
     var FailedCasesTrendChart = require('newWidgets/widgets/FailedCasesTrendChartView');
@@ -79,6 +79,7 @@ define(function (require) {
         launch_statistics: LaunchStatisticsComboPieChart,
         activity_stream: ProjectActivityWidget,
         cases_trend: TestCasesGrowthTrendChart,
+        investigated_trend: InvestigatedTrendChart,
 
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
@@ -87,56 +88,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                investigated_trend: {
-                    gadget_name: Localization.widgets.percentageOfLaunches,
-                    img: 'investigated-percentage-of-launches.svg',
-                    description: Localization.widgets.percentageOfLaunchesDescription,
-                    widget_type: 'column_chart',
-                    gadget: 'investigated_trend',
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {}
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.launchMode, value: 'launch' },
-                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
-                                ],
-                                action: 'switch_timeline_mode'
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'criteria',
-                                fields: function () {
-                                    return _.keys(this.getTotalDefects());
-                                }.bind(this)
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'number', 'start_time']
-                            }
-                        }
-                    ]
-                },
                 launches_table: {
                     gadget_name: Localization.widgets.launchesTable,
                     img: 'launch-table.svg',
