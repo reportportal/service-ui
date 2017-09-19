@@ -72,6 +72,7 @@ define(function (require) {
         activate: function () {
             this.model.set({ value: this.getValue(this.gadgetModel, this) });
             this.listenTo(this.model, 'change:value', this.onChangeValue);
+            this.activated = true;
         },
         onChangeValue: function () {
             this.setValue(this.model.get('value'), this.gadgetModel, this);

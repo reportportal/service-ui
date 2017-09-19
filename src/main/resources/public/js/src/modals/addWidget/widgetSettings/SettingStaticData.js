@@ -83,6 +83,7 @@ define(function (require) {
             options.getValue && (this.getValue = options.getValue);
         },
         activate: function () {
+            this.activated = true;
             return true;
         },
         validate: function () {

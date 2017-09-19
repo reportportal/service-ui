@@ -349,9 +349,12 @@ define(function (require) {
             }
             return url;
         },
-        validate: function () {
+        validate: function (options) {
             if (this.selectedFilterModel) {
                 return true;
+            }
+            if (options && options.silent) {
+                return false;
             }
             $('[data-js-select-filter-block]', this.$el).addClass('error-state');
             return false;

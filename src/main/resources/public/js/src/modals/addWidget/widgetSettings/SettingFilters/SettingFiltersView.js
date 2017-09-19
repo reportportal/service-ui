@@ -100,9 +100,13 @@ define(function (require) {
         },
         activate: function () {
             this.settingView && this.settingView.activate && this.settingView.activate();
+            this.activated = true;
         },
-        validate: function () {
+        validate: function (options) {
             if (this.settingView && this.settingView.validate) {
+                if (options && options.silent) {
+                    return this.settingView.validate({ silent: true });
+                }
                 return this.settingView.validate();
             }
             return true;

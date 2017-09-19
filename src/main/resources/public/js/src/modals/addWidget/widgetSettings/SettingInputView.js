@@ -28,6 +28,7 @@ define(function (require) {
     var _ = require('underscore');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
     var Localization = require('localization');
+    var Validators = require('validators');
     var App = require('app');
     var config = App.getInstance();
     var actionTypes = {
@@ -48,7 +49,7 @@ define(function (require) {
                 if (widgetOptions.prefix && widgetOptions.prefix.length) {
                     return widgetOptions.prefix[0];
                 }
-                return [];
+                return '';
             },
             setValue: function (value, gadgetModel) {
                 var widgetOptions = gadgetModel.getWidgetOptions();
@@ -116,6 +117,7 @@ define(function (require) {
             this.listenTo(this.model, 'change:value', this.onChangeValue);
             this.model.set({ value: this.getValue(this.gadgetModel, this) });
             this.bindValidators();
+            this.activated = true;
         },
         onChangeValue: function () {
             if (this.validate()) {
@@ -123,7 +125,21 @@ define(function (require) {
                 config.trackingDispatcher.trackEventNumber(299);
             }
         },
-        validate: function () {
+        validate: function (options) {
+            if (options && options.silent) {
+                if (this.model.get('numOnly')) {
+                    return !Validators.minMaxNumberRequired(this.model.get('value').toString(), {
+                        type: 'itemsSize',
+                        min: this.model.get('min'),
+                        max: this.model.get('max')
+                    }, Util);
+                }
+                return !Validators.minMaxRequired(this.model.get('value').toString(), {
+                    type: 'itemsSize',
+                    min: this.model.get('min'),
+                    max: this.model.get('max')
+                }, Util);
+            }
             return !$('[data-js-input]', this.$el).trigger('validate').data('validate-error');
         }
     });

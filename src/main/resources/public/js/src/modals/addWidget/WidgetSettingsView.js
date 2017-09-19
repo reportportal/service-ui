@@ -117,8 +117,19 @@ define(function (require) {
                 this.$el.removeAttr('expanded-setting');
             }
         },
-        validate: function () {
+        validate: function (options) {
             var result = true;
+            if (options && options.forPreview) {
+                if (!this.renderedView.length) {
+                    return false;
+                }
+                _.each(this.renderedView, function (view) {
+                    if (!view.activated || !view.validate({ silent: true })) {
+                        result = false;
+                    }
+                });
+                return result;
+            }
             _.each(this.renderedView, function (view) {
                 if (!view.validate()) {
                     result = false;

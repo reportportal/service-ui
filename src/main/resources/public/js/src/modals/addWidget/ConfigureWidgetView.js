@@ -41,7 +41,10 @@ define(function (require) {
         activate: function () {
             this.widgetSettingsView.activate();
         },
-        validate: function () {
+        validate: function (options) {
+            if (options && options.forPreview) {
+                return this.widgetSettingsView.validate({ forPreview: options.forPreview });
+            }
             return this.widgetSettingsView.validate();
         },
         sendEvent: function (eventOptions) {
