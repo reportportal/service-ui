@@ -732,7 +732,7 @@ define(function (require) {
                         {
                             control: 'inputItems',
                             options: {
-                                entity: 'launch',
+                                entity: 'launchName',
                                 label: Localization.widgets.typeLaunchName,
                                 placeholder: Localization.wizard.enterLaunchName,
                                 minItems: 1,
@@ -884,7 +884,7 @@ define(function (require) {
                         {
                             control: 'inputItems',
                             options: {
-                                entity: 'launch',
+                                entity: 'launchName',
                                 label: Localization.widgets.typeLaunchName,
                                 placeholder: Localization.widgets.selectLaunch,
                                 minItems: 1,
