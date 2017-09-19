@@ -23,16 +23,13 @@ define(function (require) {
 
     var _ = require('underscore');
     var $ = require('jquery');
-    var App = require('app');
     var Moment = require('moment');
     var Localization = require('localization');
     var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
     var nvd3 = require('nvd3');
 
-    var config = App.getInstance();
-
-    var TestCasesGrowthTrendChart = ChartWidgetView.extend({
+    var TestCasesGrowthTrendChartView = ChartWidgetView.extend({
         addColors: function (val) {
             switch (true) {
             case val < 0 :
@@ -228,5 +225,5 @@ define(function (require) {
         }
     });
 
-    return TestCasesGrowthTrendChart;
+    return TestCasesGrowthTrendChartView;
 });
