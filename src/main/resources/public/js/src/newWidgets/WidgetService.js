@@ -27,7 +27,7 @@ define(function (require) {
     var UniqueBugTable = require('newWidgets/widgets/UniqueBugTableWidgetView');
     var OverallStatisticsWidget = require('newWidgets/widgets/overallStatistics/index');
     var ProjectActivityWidget = require('newWidgets/widgets/ProjectActivityWidgetView');
-    var LineLaunchStatisticsChart = require('newWidgets/widgets/LineLaunchStatisticsChartView');
+    var LaunchStatisticsLineChart = require('newWidgets/widgets/launchStatisticsLineChart/index');
     var TrendLaunchStatisticsChart = require('newWidgets/widgets/TrendLaunchStatisticsChartView');
     var InvestigatedTrendChart = require('newWidgets/widgets/InvestigatedTrendChartView');
     var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
@@ -71,6 +71,7 @@ define(function (require) {
         },
     ]*/
     var WIDGETS = {
+        old_line_chart: LaunchStatisticsLineChart,
         overall_statistics: OverallStatisticsWidget,
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
@@ -79,69 +80,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                old_line_chart: {
-                    gadget_name: Localization.widgets.statisticsLineChart,
-                    img: 'launch-statistics-line-chart.svg',
-                    description: Localization.widgets.statisticsLineChartDescription,
-                    widget_type: 'line_chart',
-                    gadget: 'old_line_chart',
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {
-                            }
-                        },
-                        {
-                            control: 'dropDown',
-                            options: {
-                                label: Localization.widgets.widgetCriteria,
-                                items: this.getExecutionsAndDefects(true),
-                                placeholder: Localization.wizard.criteriaSelectTitle,
-                                multiple: true,
-                                getValue: function (model, self) {
-                                    var contentFields = model.getContentFields();
-                                    if (contentFields[0]) {
-                                        return contentFields;
-                                    }
-                                    return _.map(self.model.get('items'), function (item) {
-                                        return item.value;
-                                    });
-                                },
-                                setValue: function (value, model) {
-                                    model.setContentFields(value);
-                                }
-                            }
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.launchMode, value: 'launch' },
-                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
-                                ],
-                                action: 'switch_timeline_mode'
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'number', 'start_time']
-                            }
-                        }
-                    ]
-                },
                 statistic_trend: {
                     gadget_name: Localization.widgets.statisticsTrendChart,
                     img: 'launch-statistics-trend-chart.svg',
@@ -1122,7 +1060,7 @@ define(function (require) {
         getWidgetView: function (gadget) {
             switch (gadget) {
             case 'old_line_chart':
-                return LineLaunchStatisticsChart;
+                return LaunchStatisticsLineChart;
             case 'statistic_trend':
                 return TrendLaunchStatisticsChart;
             case 'investigated_trend':
