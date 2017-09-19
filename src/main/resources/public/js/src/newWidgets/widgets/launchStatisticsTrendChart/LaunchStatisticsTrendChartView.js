@@ -25,7 +25,6 @@ define(function (require) {
     var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
     var nvd3 = require('nvd3');
-    var _ = require('underscore');
 
     var TrendLaunchStatisticsChart = ChartWidgetView.extend({
 
