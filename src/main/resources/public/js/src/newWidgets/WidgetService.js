@@ -22,13 +22,14 @@
 define(function (require) {
     'use strict';
 
+    var LaunchStatisticsLineChart = require('newWidgets/widgets/launchStatisticsLineChart/index');
+    var LaunchStatisticsTrendChart = require('newWidgets/widgets/launchStatisticsTrendChart/index');
+    var OverallStatisticsWidget = require('newWidgets/widgets/overallStatistics/index');
+
     var LaunchesTableWidget = require('newWidgets/widgets/LaunchesTableWidgetView');
     var MostFailedTestCases = require('newWidgets/widgets/MostFailedTestCasesWidgetView');
     var UniqueBugTable = require('newWidgets/widgets/UniqueBugTableWidgetView');
-    var OverallStatisticsWidget = require('newWidgets/widgets/overallStatistics/index');
     var ProjectActivityWidget = require('newWidgets/widgets/ProjectActivityWidgetView');
-    var LaunchStatisticsLineChart = require('newWidgets/widgets/launchStatisticsLineChart/index');
-    var TrendLaunchStatisticsChart = require('newWidgets/widgets/TrendLaunchStatisticsChartView');
     var InvestigatedTrendChart = require('newWidgets/widgets/InvestigatedTrendChartView');
     var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
     var LaunchesDurationChart = require('newWidgets/widgets/LaunchesDurationChartView');
@@ -72,7 +73,9 @@ define(function (require) {
     ]*/
     var WIDGETS = {
         old_line_chart: LaunchStatisticsLineChart,
+        statistic_trend: LaunchStatisticsTrendChart,
         overall_statistics: OverallStatisticsWidget,
+
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
     };
@@ -80,69 +83,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                statistic_trend: {
-                    gadget_name: Localization.widgets.statisticsTrendChart,
-                    img: 'launch-statistics-trend-chart.svg',
-                    description: Localization.widgets.statisticsTrendChartDescription,
-                    widget_type: 'trends_chart',
-                    gadget: 'statistic_trend',
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {
-                            }
-                        },
-                        {
-                            control: 'dropDown',
-                            options: {
-                                label: Localization.widgets.widgetCriteria,
-                                items: this.getExecutionsAndDefects(true),
-                                placeholder: Localization.wizard.criteriaSelectTitle,
-                                multiple: true,
-                                getValue: function (model, self) {
-                                    var contentFields = model.getContentFields();
-                                    if (contentFields[0]) {
-                                        return contentFields;
-                                    }
-                                    return _.map(self.model.get('items'), function (item) {
-                                        return item.value;
-                                    });
-                                },
-                                setValue: function (value, model) {
-                                    model.setContentFields(value);
-                                }
-                            }
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.launchMode, value: 'launch' },
-                                    { name: Localization.widgets.timelineMode, value: 'timeline' }
-                                ],
-                                action: 'switch_timeline_mode'
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'number', 'start_time']
-                            }
-                        }
-                    ]
-                },
                 launches_duration_chart: {
                     gadget_name: Localization.widgets.durationChart,
                     img: 'launches-duration-chart.svg',
@@ -1062,7 +1002,7 @@ define(function (require) {
             case 'old_line_chart':
                 return LaunchStatisticsLineChart;
             case 'statistic_trend':
-                return TrendLaunchStatisticsChart;
+                return LaunchStatisticsTrendChart;
             case 'investigated_trend':
                 return InvestigatedTrendChart;
             case 'launch_statistics':
