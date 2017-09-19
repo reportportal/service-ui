@@ -711,10 +711,10 @@ define(function (require) {
                                     if (contentFields.length) {
                                         return contentFields;
                                     }
-                                    return self.model.get('items')[0].value;
+                                    return [self.model.get('items')[0].value];
                                 },
                                 setValue: function (value, model) {
-                                    model.setContentFields([value]);
+                                    model.setContentFields(value);
                                 }
                             }
                         },
