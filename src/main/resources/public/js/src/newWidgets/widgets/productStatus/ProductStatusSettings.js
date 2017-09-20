@@ -76,7 +76,7 @@ define(function (require) {
                             { name: Localization.launchesHeaders.no_defect, value: 'no_defect' },
                             { name: Localization.launchesHeaders.to_investigate, value: 'to_investigate' }
                         ],
-                        placeholder: Localization.wizard.choiceCriteria,
+                        placeholder: Localization.wizard.choiceColumns,
                         multiple: true,
                         notEmpty: false,
                         getValue: function (model, self) {

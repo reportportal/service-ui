@@ -45,12 +45,13 @@
   .form-group {
     display: inline-block;
     margin-left: 6px;
-    width: 107px;
+    width: 97px;
     input {
       width: 100%;
     }
     &.first-input {
       margin-left: 18px;
+      width: 117px;
     }
   }
   .remove-item {

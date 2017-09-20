@@ -1942,6 +1942,7 @@ define(['util'], function () {
             enterFilter: 'Введите имена фильтров',
             basicColumns: 'Основные колонки',
             choiceCriteria: 'Выберите критерий',
+            choiceColumns: 'Выберите колонки',
             tagPrefixDescription: 'To view a dynamic of a definite tag you should type its part before colon ‘:’',
             tagPrefixPlaceholder: 'Введите часть тега до ‘:’',
 
