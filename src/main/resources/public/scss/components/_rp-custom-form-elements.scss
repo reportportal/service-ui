@@ -137,7 +137,6 @@ input, textarea {
         &:disabled {
             background-color: #8f3917;
             color: #fff;
-            cursor: not-allowed;
         }
     }
 
@@ -472,7 +471,6 @@ label.rp-radio-wrap:hover input[type="radio"]:not(:checked) + span:before {
 
     &.disabled {
         @include rpLinksStyle(#999999, underline);
-        cursor: not-allowed;
 
         &:hover {
             @include rpLinksStyle(#999999, underline);
@@ -576,7 +574,6 @@ label.rp-radio-wrap:hover input[type="radio"]:not(:checked) + span:before {
                         color: $COLOR--gray-60;
                         background: transparent;
                         box-shadow: none;
-                        cursor: not-allowed;
                         &:hover {
                             background: transparent;
                         }

@@ -37,7 +37,6 @@
   border: 1px solid $COLOR--gray-80;
   cursor: pointer;
   &.disabled {
-    cursor: not-allowed;
     .turn-on {
       background-color: #bed379;
     }
