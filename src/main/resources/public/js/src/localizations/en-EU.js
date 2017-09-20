@@ -1715,7 +1715,7 @@ define(['util'], function () {
             countWrongAmount: 'Items count is out of range',
             countWrongAmountSize: 'Items count should have size ',
             itemsSizeLength: 'Items count should have size %%% to %%%',
-            valueSizeLength: 'Value should have size %%% to %%%',
+            valueSizeLength: 'Value should have size from %%% to %%%',
             selectAtLeastOneCriteria: 'Select at least one criteria option',
             selectAtLeastOneAction: 'Select at least one actions option',
             selectAllOptionsForWidget: 'Select all options to add new widget',
