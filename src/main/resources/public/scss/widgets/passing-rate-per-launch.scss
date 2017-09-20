@@ -98,6 +98,21 @@
     }
   }
 
+  &.preview-view {
+    .widget-wrapper {
+      padding: 20px;
+      .legend {
+        display: none;
+      }
+      .info-block {
+        display: none;
+      }
+      .chartist-tooltip {
+        display: none;
+      }
+    }
+  }
+
   &.w-less-then-12 {}
   &.w-less-then-11 {}
   &.w-less-then-10 {}

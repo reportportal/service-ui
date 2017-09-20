@@ -31,7 +31,7 @@ define(function (require) {
                 img: 'passing-rate-summery.svg',
                 description: Localization.widgets.passingRateSummaryChartDescription,
                 widget_type: 'bar_chart', // TODO remove after refactoring,
-                hasPreview: false
+                hasPreview: true
             };
         },
         getSettings: function () {

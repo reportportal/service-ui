@@ -31,7 +31,7 @@ define(function (require) {
                 img: 'passing-rate-launch.svg',
                 description: Localization.widgets.passingRatePerLaunchChartDescription,
                 widget_type: 'bar_chart', // TODO remove after refactoring,
-                hasPreview: false
+                hasPreview: true
             };
         },
         getSettings: function () {
