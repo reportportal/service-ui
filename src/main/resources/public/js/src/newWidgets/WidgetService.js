@@ -34,9 +34,9 @@ define(function (require) {
     var UniqueBugsTable = require('newWidgets/widgets/uniqueBugsTable/index');
     var MostFailedTestCasesTable = require('newWidgets/widgets/mostFailedTestCasesTable/index');
     var FailedCasesTrendChart = require('newWidgets/widgets/failedCasesTrendChart/index');
+    var NotPassedCasesChart = require('newWidgets/widgets/notPassedTestCasesTrendChart/index');
 
     var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
-    var NotPassedCasesChart = require('newWidgets/widgets/NotPassedCasesChartView');
     var PassingRateSummaryChart = require('newWidgets/widgets/PassingRateSummaryChartView');
     var PassingRatePerLaunchChart = require('newWidgets/widgets/PassingRatePerLaunchChartView');
     var ProductStatus = require('newWidgets/widgets/productStatus/index');
@@ -84,6 +84,7 @@ define(function (require) {
         unique_bug_table: UniqueBugsTable,
         most_failed_test_cases: MostFailedTestCasesTable,
         bug_trend: FailedCasesTrendChart,
+        not_passed: NotPassedCasesChart,
 
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
@@ -92,44 +93,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                not_passed: {
-                    gadget_name: Localization.widgets.nonPassedTrendChart,
-                    img: 'non-passed-test-cases-trend.svg',
-                    description: Localization.widgets.nonPassedTrendChartDescription,
-                    widget_type: 'not_passed_chart',
-                    gadget: 'not_passed',
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {}
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'criteria',
-                                fields: ['statistics$executions$failed', 'statistics$executions$skipped', 'statistics$executions$total']
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'number', 'start_time']
-                            }
-                        }
-                    ]
-                },
                 launches_comparison_chart: {
                     gadget_name: Localization.widgets.comparisonChart,
                     img: 'different-launches-comparison-chart.svg',
