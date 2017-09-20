@@ -22,6 +22,11 @@
 define(function (require) {
     'use strict';
 
+    var $ = require('jquery');
+    var _ = require('underscore');
+    var Localization = require('localization');
+    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+
     var LaunchStatisticsLineChart = require('newWidgets/widgets/launchStatisticsLineChart/index');
     var LaunchStatisticsTrendChart = require('newWidgets/widgets/launchStatisticsTrendChart/index');
     var OverallStatisticsWidget = require('newWidgets/widgets/overallStatistics/index');
@@ -51,26 +56,6 @@ define(function (require) {
     var IssuesTrendChart = require('newWidgets/widgets/IssuesTrendChartView');
     var IssuesLineChart = require('newWidgets/widgets/IssuesLineChartView');
 
-    var $ = require('jquery');
-    var _ = require('underscore');
-    var Localization = require('localization');
-    var Util = require('util');
-    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
-    var App = require('app');
-
-    var appConfig = App.getInstance();
-
-    /* uiControls: [
-        {
-             control: 'checkbox',
-             options: {
-                label: 'Select filters' // label after checkbox
-                action: '' // default actions: 'latest_launches', ...
-                setValue(value, model) {}, // if you want to override method
-                getValue(model) {} // if you want to override method
-            }
-        },
-    ]*/
     var WIDGETS = {
         old_line_chart: LaunchStatisticsLineChart,
         statistic_trend: LaunchStatisticsTrendChart,
@@ -104,7 +89,7 @@ define(function (require) {
                     gadget: 'last_launch',
                     noCriteria: true,
                     notShowOnWizard: true,
-                    staticCriteria: {}, // this.getLastLaunchStats(),
+                    staticCriteria: {},
                     limit: {
                         display: false,
                         min: 1,
@@ -133,7 +118,6 @@ define(function (require) {
             }
             return this.getFullWidgetConfig(gadget);
         },
-
         getWidgetConfig: function (gadget) {
             var configs = this.getAllWidgetsConfig();
             return configs[gadget];
@@ -142,11 +126,20 @@ define(function (require) {
             var widget = this.getWidgetConfig(gadget);
             var def = $.Deferred();
             var defectTypes = new SingletonDefectTypeCollection();
-            var self = this;
             defectTypes.ready.done(function () {
                 switch (gadget) {
                 case 'last_launch':
-                    widget.staticCriteria = self.getLastLaunchStats();
+                    widget.staticCriteria = {
+                        statistics$executions$total: Localization.launchesHeaders.total,
+                        statistics$executions$passed: Localization.launchesHeaders.passed,
+                        statistics$executions$failed: Localization.launchesHeaders.failed,
+                        statistics$executions$skipped: Localization.launchesHeaders.skipped,
+                        statistics$defects$product_bug: Localization.launchesHeaders.product_bug,
+                        statistics$defects$automation_bug: Localization.launchesHeaders.automation_bug,
+                        statistics$defects$system_issue: Localization.launchesHeaders.system_issue,
+                        statistics$defects$no_defect: Localization.launchesHeaders.no_defect,
+                        statistics$defects$to_investigate: Localization.launchesHeaders.to_investigate
+                    };
                     break;
                 default :
                     break;
@@ -155,143 +148,9 @@ define(function (require) {
             });
             return def;
         },
-        getExecutionsAndDefects: function (isFormatForControl) {
-            var result;
-            if (!isFormatForControl) {
-                result = _.merge(this.getExecutions(), this.getSubDefects());
-            } else {
-                result = _.map(_.merge(this.getExecutions(), this.getSubDefects()), function (key, val) {
-                    return { name: key, value: val };
-                });
-            }
-            return result;
-        },
-        getExecutions: function () {
-            return {
-                statistics$executions$total: Localization.launchesHeaders.total,
-                statistics$executions$passed: Localization.launchesHeaders.passed,
-                statistics$executions$failed: Localization.launchesHeaders.failed,
-                statistics$executions$skipped: Localization.launchesHeaders.skipped
-            };
-        },
-        getFailed: function (isFormatForControl) {
-            var result;
-            var exec = {
-                statistics$executions$failed: Localization.launchesHeaders.failed,
-                statistics$executions$skipped: Localization.launchesHeaders.skipped
-            };
-            var defects = this.getTotalDefects();
-            delete defects.statistics$defects$to_investigate$total;
-            if (!isFormatForControl) {
-                result = _.merge(exec, defects);
-            } else {
-                result = _.map(_.merge(exec, defects), function (key, val) {
-                    return { name: key, value: val };
-                });
-            }
-            return result;
-        },
-        getDefects: function () {
-            return {
-                statistics$defects$product_bug: Localization.launchesHeaders.product_bug,
-                statistics$defects$automation_bug: Localization.launchesHeaders.automation_bug,
-                statistics$defects$system_issue: Localization.launchesHeaders.system_issue,
-                statistics$defects$no_defect: Localization.launchesHeaders.no_defect,
-                statistics$defects$to_investigate: Localization.launchesHeaders.to_investigate
-            };
-        },
-        getTotalDefects: function () {
-            return {
-                statistics$defects$product_bug$total: Localization.launchesHeaders.product_bug,
-                statistics$defects$automation_bug$total: Localization.launchesHeaders.automation_bug,
-                statistics$defects$system_issue$total: Localization.launchesHeaders.system_issue,
-                statistics$defects$no_defect$total: Localization.launchesHeaders.no_defect,
-                statistics$defects$to_investigate$total: Localization.launchesHeaders.to_investigate
-            };
-        },
-        getLastLaunchStats: function () {
-            return _.merge(this.getExecutions(), this.getDefects());
-        },
-        getComparison: function () {
-            return _.merge(this.getExecutions(), this.getTotalDefects());
-        },
-        getDefaultTableData: function () {
-            return [
-                { id: 'tags', keys: ['tags'], name: Localization.forms.tags },
-                { id: 'user', keys: ['user'], name: Localization.forms.user },
-                { id: 'start_time', keys: ['start_time'], name: Localization.forms.startTime },
-                { id: 'end_time', keys: ['end_time'], name: Localization.forms.finishTime },
-                { id: 'description', keys: ['description'], name: Localization.forms.description }
-            ];
-        },
-        getLaunchesTableWidgetData: function () {
-            var launchData = {
-                tags: Localization.forms.tags,
-                user: Localization.forms.user,
-                start_time: Localization.forms.startTime,
-                end_time: Localization.forms.finishTime,
-                description: Localization.forms.description
-            };
-            var data = _.merge(this.getExecutions(), this.getTotalDefects(), launchData);
-
-            return _.map(data, function (key, val) {
-                return { name: key, value: val };
-            });
-        },
-        getGroupDefects: function (exceptionKeys) {
-            var defects = {};
-            _.each(this.getSubDefects(), function (v, k) {
-                var dd = k.split('$');
-                var key = dd[2];
-                var id = dd[3];
-                var sd = appConfig.patterns.defectsLocator;
-                if (!exceptionKeys || !_.find(exceptionKeys, key)) {
-                    if (defects[key]) {
-                        defects[key].keys.push(k);
-                    } else {
-                        defects[key] = {
-                            name: '',
-                            id: key,
-                            keys: [k]
-                        };
-                    }
-                    if (sd.test(id)) {
-                        defects[key].name = v;
-                    }
-                }
-            });
-            return _.values(defects);
-        },
-        getSubDefects: function () {
-            var collection = new SingletonDefectTypeCollection();
-            var pref = 'statistics$defects$';
-            var subDefects = {};
-            var defects = collection.toJSON();
-            var issueTypes = Util.getIssueTypes();
-
-            _.each(issueTypes, function (type) {
-                subDefects[type] = {};
-            });
-            _.each(defects, function (d) {
-                var type = d.typeRef.toLowerCase();
-                var key = pref + type + '$' + d.locator;
-                subDefects[type][key] = d.longName;
-            });
-            return _.reduce(_.values(subDefects), function (m, n) {
-                return _.extend(m, n);
-            }, {});
-        },
-        getExecutionsDefectsAndTableData: function () {
-            var exec = _.map(this.getExecutions(), function (v, k) {
-                return { id: k, keys: [k], name: v };
-            });
-            var defects = this.getGroupDefects(['no_defect']);
-            return exec.concat(defects, this.getDefaultTableData());
-        },
         getDefaultWidgetImg: function () {
             return 'undefined.svg';
         },
-
         getWidgetView: function (gadget) {
             switch (gadget) {
             case 'old_line_chart':
