@@ -58,7 +58,7 @@ build-statics:
 build: build-statics build-server
 
 # Builds server
-build-release:
+build-release: checkstyle test
 	$(eval v := $(or $(v),$(shell releaser bump)))
 
 	CGO_ENABLED=0 GOARCH=amd64 GOOS=linux $(GO) build ${BUILD_INFO_LDFLAGS} -o ${RELEASE_DIR}/service-ui_linux_amd64 ./
