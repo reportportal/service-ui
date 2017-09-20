@@ -328,10 +328,10 @@ define(function (require) {
             }
         },
         onClickView: function (e) {
-            if ((e.ctrlKey || e.metaKey) && !($(e.target).is('a') || $(e.target).parent('a').length)
+            if ((e.ctrlKey || e.metaKey) && !($(e.target).is('a') && !($(e.target).is('input')))
                 && !this.model.get('launch_isProcessing')) {
                 this.model.set({ select: !this.model.get('select') });
-                if (e.altKey) {
+                if (e.altKey && this.model.get('select')) {
                     this.model.trigger('check:before:items', this.model.get('id'));
                 }
             }
@@ -342,9 +342,8 @@ define(function (require) {
             } else {
                 config.trackingDispatcher.trackEventNumber(61.2);
             }
-            if (e.altKey && !this.model.get('select')
-                && !this.model.get('launch_isProcessing')) {
-                this.model.trigger('check:before:items', this.model.get('id'));
+            if (e.ctrlKey) {
+                this.model.set({ select: !this.model.get('select') });
             }
         },
         onClickEdit: function () {
