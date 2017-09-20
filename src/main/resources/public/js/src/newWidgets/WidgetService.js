@@ -32,8 +32,8 @@ define(function (require) {
     var InvestigatedTrendChart = require('newWidgets/widgets/investigatedTrendChart/index');
     var LaunchesTableWidget = require('newWidgets/widgets/launchesTable/index');
     var UniqueBugsTable = require('newWidgets/widgets/uniqueBugsTable/index');
+    var MostFailedTestCasesTable = require('newWidgets/widgets/mostFailedTestCasesTable/index');
 
-    var MostFailedTestCases = require('newWidgets/widgets/MostFailedTestCasesWidgetView');
     var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
     var NotPassedCasesChart = require('newWidgets/widgets/NotPassedCasesChartView');
     var FailedCasesTrendChart = require('newWidgets/widgets/FailedCasesTrendChartView');
@@ -82,6 +82,7 @@ define(function (require) {
         investigated_trend: InvestigatedTrendChart,
         launches_table: LaunchesTableWidget,
         unique_bug_table: UniqueBugsTable,
+        most_failed_test_cases: MostFailedTestCasesTable,
 
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
@@ -90,75 +91,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                most_failed_test_cases: {
-                    gadget_name: Localization.widgets.failedTestCasesTable,
-                    widget_type: 'table',
-                    gadget: 'most_failed_test_cases',
-                    img: 'most-failure-test-cases-table.svg',
-                    description: Localization.widgets.failedTestCasesTableDescription,
-                    uiControl: [
-                        {
-                            control: 'dropDown',
-                            options: {
-                                label: Localization.widgets.widgetCriteria,
-                                items: this.getFailed(true),
-                                placeholder: Localization.wizard.criteriaSelectTitle,
-                                multiple: false,
-                                getValue: function (model, self) {
-                                    var contentFields = model.getContentFields();
-
-                                    if (contentFields.length) {
-                                        return contentFields;
-                                    }
-                                    return [self.model.get('items')[0].value];
-                                },
-                                setValue: function (value, model) {
-                                    model.setContentFields(value);
-                                }
-                            }
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.launchesCount,
-                                min: 2,
-                                max: 150,
-                                def: 30,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
-                            control: 'inputItems',
-                            options: {
-                                entity: 'launchName',
-                                label: Localization.widgets.typeLaunchName,
-                                placeholder: Localization.wizard.enterLaunchName,
-                                minItems: 1,
-                                maxItems: 1,
-                                getValue: function (model) {
-                                    var widgetOptions = model.getWidgetOptions();
-                                    if (widgetOptions.launchNameFilter) {
-                                        return widgetOptions.launchNameFilter;
-                                    }
-                                    return [];
-                                },
-                                setValue: function (value, model) {
-                                    var widgetOptions = model.getWidgetOptions();
-                                    widgetOptions.launchNameFilter = value;
-                                    model.setWidgetOptions(widgetOptions);
-                                }
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'start_time']
-                            }
-                        }
-                    ]
-                },
                 bug_trend: {
                     gadget_name: Localization.widgets.failedTrendChart,
                     img: 'failed-cases-trend-chart.svg',
@@ -602,7 +534,7 @@ define(function (require) {
             case 'launches_table':
                 return LaunchesTableWidget;
             case 'most_failed_test_cases':
-                return MostFailedTestCases;
+                return MostFailedTestCasesTable;
             case 'passing_rate_per_launch':
                 return PassingRatePerLaunchChart;
             case 'passing_rate_summary':
