@@ -37,6 +37,11 @@ define(function (require) {
             var self = this;
             var widgetOptions;
             var contentData;
+
+            if (this.isPreview) {
+                this.$el.addClass('preview-view');
+            }
+
             if (!this.isDataExists()) {
                 this.addNoAvailableBock();
                 return;
@@ -127,7 +132,8 @@ define(function (require) {
                     }
                     return result;
                 },
-                chartPadding: (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) ? 15 : 30,
+                chartPadding: (this.isPreview) ? 0 : (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) ? 15 : 30,
+                showLabel: !this.isPreview,
                 labelOffset: (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) ? 10 : 20,
                 labelPosition: 'outside',
                 ignoreEmptyValues: true,
@@ -201,6 +207,7 @@ define(function (require) {
                 height: '100%',
                 stackBars: true,
                 horizontalBars: true,
+                showLabel: !this.isPreview,
                 chartPadding: {
                     top: 0,
                     right: (this.valuesInPercent.passed > 97 && this.valuesInPercent.passed !== 100) ? 10 : 0,
@@ -221,6 +228,9 @@ define(function (require) {
                     Chartist.plugins.ctBarLabels({
                         labelInterpolationFnc: function (value) {
                             var result = value + '%';
+                            if (self.isPreview) {
+                                return '';
+                            }
                             if (!value) {
                                 return '';
                             }
