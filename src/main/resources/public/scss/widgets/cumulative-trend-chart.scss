@@ -18,6 +18,14 @@
       .c3-axis {
         .tick {
           font-family: $OpenSansRegular;
+          fill: $COLOR--charcoal-grey;
+
+          line {
+            display: none;
+          }
+        }
+        .domain {
+          display: none;
         }
       }
     }
