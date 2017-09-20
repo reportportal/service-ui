@@ -41,7 +41,9 @@ define(function (require) {
         events: {
             'click [data-js-submit-ldap-auth-settings]': 'submitAuthSettings',
             'change [data-js-ldap-enable]': 'enableSubmit',
-            'keydown .rp-input': 'enableSubmit'
+            'keydown .rp-input': 'enableSubmit',
+            'keydown [data-js-manager-dn]': 'enableUserSearchFilterField',
+            'keydown [data-js-manager-password]': 'enableUserSearchFilterField'
         },
         bindings: {
             '[data-js-ldap-enable]': 'checked: ldapAuthEnabled',
@@ -128,6 +130,12 @@ define(function (require) {
                 }.bind(this))
                 .always(function () {
                     this.render();
+                    if (this.model.get('passwordEncoderType') === 'disabled') {
+                        $('[data-js-password-attribute]', this.$el).val('').attr('disabled', 'disabled');
+                    }
+                    if (!(this.model.get('managerDn') || this.model.get('managerPassword'))) {
+                        $('[data-js-user-search-filter]', this.$el).val('').attr('disabled', 'disabled');
+                    }
                 }.bind(this));
         },
         updateModel: function (settings) {
@@ -150,7 +158,7 @@ define(function (require) {
         setupEncTypeDropDown: function () {
             this.encTypeSelector = new DropDownComponent({
                 data: [
-                    { name: Localization.admin.noPasswordEncoder, value: 'disabled' },
+                    { name: Localization.ui.no.toUpperCase(), value: 'disabled' },
                     { name: 'PLAIN', value: 'PLAIN' },
                     { name: 'SHA', value: 'SHA' },
                     { name: 'LDAP_SHA', value: 'LDAP_SHA' },
@@ -163,14 +171,13 @@ define(function (require) {
             $('[data-js-pass-enc-type-dropdown]', this.$el).html(this.encTypeSelector.$el);
             this.listenTo(this.encTypeSelector, 'change', function (val) {
                 if (val === 'disabled') {
-                    $('[data-js-manager-password]', this.$el).val('').attr('disabled', 'disabled');
+                    $('[data-js-password-attribute]', this.$el).val('').attr('disabled', 'disabled');
                 } else {
-                    $('[data-js-manager-password]', this.$el).attr('disabled', false);
+                    $('[data-js-password-attribute]', this.$el).attr('disabled', false);
                 }
                 this.model.set('passwordEncoderType', val);
                 this.enableSubmit();
             });
-            this.encTypeSelector.trigger('change', $('.selected', this.encTypeSelector.$el).data('value'));
         },
         submitAuthSettings: function (e) {
             var ldapAuthEnabled;
@@ -203,6 +210,8 @@ define(function (require) {
                     this.updateModel(this.model.defaults);
                     $('.validate-error', this.$el).removeClass('validate-error');
                     this.encTypeSelector.activateItem('disabled');
+                    this.encTypeSelector.trigger('change', 'disabled');
+                    $('[data-js-user-search-filter]', this.$el).val('').attr('disabled', 'disabled');
                     Util.ajaxSuccessMessenger('deleteOAuthSettings');
                 }.bind(this))
                 .fail(function (error) {
@@ -242,6 +251,9 @@ define(function (require) {
         },
         enableSubmit: function () {
             $('[data-js-submit-ldap-auth-settings]', this.$el).attr('disabled', false);
+        },
+        enableUserSearchFilterField: function () {
+            $('[data-js-user-search-filter]', this.$el).attr('disabled', false);
         },
         onDestroy: function () {
             this.encTypeSelector && this.encTypeSelector.destroy();

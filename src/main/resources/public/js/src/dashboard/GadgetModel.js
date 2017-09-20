@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
@@ -39,7 +39,7 @@ define(function (require, exports, module) {
 
             // widgetData
             filter_id: '',
-            itemsCount: 50,
+            itemsCount: 0,
             widgetDescription: '',
             widgetOptions: '{}',
             content_fields: '[]'
@@ -62,8 +62,8 @@ define(function (require, exports, module) {
             gadgetPreviewImg: {
                 deps: ['gadget'],
                 get: function (gadget) {
-                    if (!gadget) return 'img/popup/' + WidgetService.getDefaultWidgetImg();
-                    return 'img/popup/' + WidgetService.getWidgetConfig(gadget).img;
+                    if (!gadget) return 'img/widgets/' + WidgetService.getDefaultWidgetImg();
+                    return 'img/widgets/' + WidgetService.getWidgetConfig(gadget).img;
                 }
             },
             gadgetIsFilter: {
@@ -115,6 +115,20 @@ define(function (require, exports, module) {
                 deps: ['widgetOptions'],
                 get: function () {
                     var options = this.getWidgetOptions();
+                    if (options.viewMode && options.viewMode.length) {
+                        switch (options.viewMode[0]) {
+                        case 'donut':
+                            return Localization.widgets.donutChartMode;
+                        case 'panel':
+                            return Localization.widgets.panelMode;
+                        case 'barMode':
+                            return Localization.widgets.barMode;
+                        case 'pieChartMode':
+                            return Localization.widgets.pieChartMode;
+                        default:
+                            break;
+                        }
+                    }
                     if (options.timeline && options.timeline.length) {
                         return Localization.widgets.timelineModeTitle;
                     }
@@ -134,9 +148,7 @@ define(function (require, exports, module) {
                 }
             }
         },
-        initialize: function () {
-
-        },
+        initialize: function () {},
         update: function () {
             var self = this;
             return Service.loadDashboardWidget(this.get('id'))

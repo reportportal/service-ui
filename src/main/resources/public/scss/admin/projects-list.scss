@@ -244,7 +244,7 @@
       text-align: center;
       color: $COLOR--gray-60;
       padding: 8px 10px;
-      width: 33.33333333%;
+      width: 25%;
       height: 40px;
       float: left;
 
@@ -511,6 +511,9 @@
           .go-to-members {
             border-right: 1px solid $COLOR--gray-91;
             border-left: 1px solid $COLOR--gray-91;
+          }
+          .go-to-events {
+            border-right: 1px solid $COLOR--gray-91;
           }
         }
       }

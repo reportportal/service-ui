@@ -24,6 +24,16 @@
             <span class="validate-hint"></span>
         </label>
         <label class="rp-field">
+            <span><%= data.text.admin.managerDn %></span>
+            <input type="text" class="rp-input" data-js-manager-dn>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
+            <span><%= data.text.admin.managerPassword %></span>
+            <input type="text" class="rp-input" data-js-manager-password>
+            <span class="validate-hint"></span>
+        </label>
+        <label class="rp-field">
             <span><%= data.text.admin.userDnPattern %></span>
             <input type="text" class="rp-input" data-js-user-dn-pattern>
             <span class="validate-hint"></span>
@@ -44,23 +54,13 @@
             <span class="validate-hint"></span>
         </label>
         <label class="rp-field">
+            <span><%= data.text.admin.passwordEncoderType %></span>
+            <div class="dropdown-container" data-js-pass-enc-type-dropdown></div>
+        </label>
+        <label class="rp-field">
             <span><%= data.text.admin.passwordAttribute %></span>
             <input type="text" class="rp-input" data-js-password-attribute>
             <span class="validate-hint"></span>
-        </label>
-        <label class="rp-field">
-            <span><%= data.text.admin.managerDn %></span>
-            <input type="text" class="rp-input" data-js-manager-dn>
-            <span class="validate-hint"></span>
-        </label>
-        <label class="rp-field">
-            <span><%= data.text.admin.managerPassword %></span>
-            <input type="text" class="rp-input" data-js-manager-password>
-            <span class="validate-hint"></span>
-        </label>
-        <label class="rp-field">
-            <span><%= data.text.admin.passwordEncoderType %></span>
-            <div class="dropdown-container" data-js-pass-enc-type-dropdown></div>
         </label>
         <label class="rp-field">
             <span class="required"><%= data.text.admin.email %></span>

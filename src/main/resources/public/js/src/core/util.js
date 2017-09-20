@@ -375,14 +375,6 @@ define(function (require, exports, module) {
                 this.messages.close();
             }
         },
-        // showOverlay: function (element, deleting) {
-        //     $(element).LoadingOverlay('show', {
-        //         image: 'img/graph_loader.gif'
-        //     });
-        // },
-        // hideOverlay: function (element) {
-        //     $(element).LoadingOverlay('hide');
-        // },
         hideMessagePanel: function () {
             var self = this;
             $('.cancel, [type="cancel"]').on('click', function () {
@@ -396,8 +388,10 @@ define(function (require, exports, module) {
             }
         },
         setupBaronScroll: function ($element, inner, options) {
+            var $scrollObject;
+            var baron = null;
             var direction = options && options.direction ? options.direction : 'v';
-            var wrapHtml = '<div class="baron baron__root baron__clipper ' + (direction == 'h' ? 'baron__horizontal' : '') + '"><div class="baron_scroller" tabindex="-1"></div></div>';
+            var wrapHtml = '<div class="baron baron__root baron__clipper"><div class="baron_scroller" tabindex="-1"></div></div>';
             var $rootElement = null;
             if (inner) {
                 $element.wrapInner(wrapHtml);
@@ -406,26 +400,43 @@ define(function (require, exports, module) {
                 $element.wrap(wrapHtml);
                 $rootElement = $element.parent('.baron_scroller').parent('.baron__root');
             }
-            var baron = null;
             if ($rootElement && $('body').hasClass('no-zero-scroll')) {
-                $rootElement.append('<div class="baron__track">' +
-                    '<div class="baron__control baron__up">▲</div>' +
-                    '<div class="baron__free">' +
-                    '<div class="baron__bar"></div>' +
-                    '</div>' +
-                    '<div class="baron__control baron__down">▼</div>' +
-                    '</div>');
-                baron = $rootElement.baron({
-                    cssGuru: true,
-                    root: '.baron',
-                    scroller: '.baron_scroller',
-                    bar: '.baron__bar',
-                    scrollingCls: '_scrolling',
-                    draggingCls: '_dragging',
-                    direction: direction
-                });
+                if (direction === 'v' || direction === 'm') {
+                    $rootElement.append('<div class="baron__track baron__track-vertical">' +
+                        '<div class="baron__free">' +
+                        '<div class="baron__bar baron__bar-vertical"></div>' +
+                        '</div>' +
+                        '</div>');
+                    baron = $rootElement.baron({
+                        cssGuru: true,
+                        root: '.baron',
+                        barOnCls: '_scrollbar_vertical',
+                        scroller: '.baron_scroller',
+                        bar: '.baron__bar-vertical',
+                        scrollingCls: '_scrolling',
+                        draggingCls: '_dragging',
+                        direction: 'v'
+                    });
+                }
+                if (direction === 'h' || direction === 'm') {
+                    $rootElement.append('<div class="baron__track baron__track-horizontal">' +
+                            '<div class="baron__free">' +
+                                '<div class="baron__bar baron__bar-horizontal"></div>' +
+                            '</div>' +
+                        '</div>');
+                    $rootElement.baron({
+                        cssGuru: true,
+                        root: '.baron',
+                        barOnCls: '_scrollbar_horizontal',
+                        scroller: '.baron_scroller',
+                        bar: '.baron__bar-horizontal',
+                        scrollingCls: '_scrolling',
+                        draggingCls: '_dragging',
+                        direction: 'h'
+                    });
+                }
             }
-            var $scrollObject = $element.parent('.baron_scroller');
+            $scrollObject = $element.parent('.baron_scroller');
             if ($scrollObject.length) {
                 $scrollObject.get(0).baron = baron;
             }
@@ -470,22 +481,6 @@ define(function (require, exports, module) {
         setEqualHeightRow: function (elem) {
             $(elem).responsiveEqualHeightGrid();
         },
-        // attachNiceScrollToDropDown: function (options) {
-        //     var found = $("li", options.holder).length,
-        //         target = $("ul:first", options.holder);
-        //     if (found > options.acceptable) {
-        //         options.holder
-        //             .on('shown.bs.dropdown', function () {
-        //
-        //                 Util.setupNiceScroll(target);
-        //             }).on('hidden.bs.dropdown', function () {
-        //             target.getNiceScroll().remove();
-        //         }).on('remove', function () {
-        //             target = null;
-        //             options.holder = null;
-        //         });
-        //     }
-        // },
 
         scrollToHighlight: function (id, needPurification) {
             id = config.commentAnchor || id;

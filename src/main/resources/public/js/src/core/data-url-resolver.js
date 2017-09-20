@@ -188,6 +188,12 @@ define(['app'], function (App) {
     var widget = function () {
         return getProjectBase() + '/widget';
     };
+    var widgetPreview = function () {
+        return getProjectBase() + '/widget/preview';
+    };
+    var emptyWidget = function () {
+        return getProjectBase() + '/widget/empty';
+    };
     var chart = function () {
         return getChartProjectBase() + '/widget';
     };
@@ -466,6 +472,9 @@ define(['app'], function (App) {
         var token = config.userModel.get('token');
         return getProjectBase() + '/launch/import' + '?access_token=' + token.split(' ')[1];
     };
+    var getProjectEvents = function (query) {
+        return getProjectBase() + '/activity' + query;
+    };
 
     return {
         getApiToken: getApiToken,
@@ -520,6 +529,8 @@ define(['app'], function (App) {
         updateProjectUnassign: updateProjectUnassign,
         updateProjectAssign: updateProjectAssign,
         widget: widget,
+        widgetPreview: widgetPreview,
+        emptyWidget: emptyWidget,
         chart: chart,
         widgetById: widgetById,
         chartById: chartById,
@@ -595,6 +606,7 @@ define(['app'], function (App) {
         postDemoDataUrl: postDemoDataUrl,
         adminAuthSettings: adminAuthSettings,
         toggleAnalytics: toggleAnalytics,
-        importLaunch: importLaunch
+        importLaunch: importLaunch,
+        getProjectEvents: getProjectEvents
     };
 });

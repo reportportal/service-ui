@@ -30,6 +30,7 @@ define(function (require) {
     var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
+    var ItemStartTimeView = require('launches/common/ItemStartTimeView');
     var CommonItemView = require('launches/common/CommonItemView');
 
     var config = App.getInstance();
@@ -38,8 +39,9 @@ define(function (require) {
         template: 'tpl-launch-step-item',
         className: 'row rp-table-row',
         events: {
+            click: 'onClickView',
             'click [data-js-name-link]': 'onClickName', // common method
-            'click [data-js-time-format]': 'toggleStartTimeView',
+            // 'click [data-js-time-format]': 'toggleStartTimeView',
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-toggle-open]': 'onClickOpen',
@@ -48,13 +50,13 @@ define(function (require) {
         bindings: {
             '[data-js-name-link]': 'attr: {href: url}',
             '[data-js-name]': 'text: name',
-            '[data-js-status]': 'text: status',
+            '[data-js-status]': 'text: status_loc',
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
             '[data-js-tags-container]': 'sortTags: tags',
             '[data-js-method-type]': 'text: showMethodType',
             '[data-js-time-from-now]': 'text: startFromNow',
-            '[data-js-time-exact]': 'text: startFormat',
+            // '[data-js-time-exact]': 'text: startFormat',
             ':el': 'classes: {failed: highlightedFailed, "select-state": select, "collapse-method": validateForCollapsed}',
             '[data-js-select-item]': 'checked:select, attr: {disabled: launch_isProcessing}'
         },
@@ -117,6 +119,7 @@ define(function (require) {
                 isCollapsedMethod: this.isCollapsedMethod()
             }));
             this.renderDuration();
+            this.renderStartTime();
             if (this.hasIssue() && !this.noIssue) {
                 this.renderIssue();
             }
@@ -128,6 +131,13 @@ define(function (require) {
                 self.$el.addClass('hide-highlight');
             });
         },
+        renderStartTime: function () {
+            this.startTime && this.startTime.destroy();
+            this.startTime = new ItemStartTimeView({
+                model: this.model
+            });
+            $('[data-js-start-time-container]', this.$el).html(this.startTime.$el);
+        },
         renderDuration: function () {
             this.duration && this.duration.destroy();
             this.duration = new ItemDurationView({
@@ -135,9 +145,9 @@ define(function (require) {
                 el: $('[data-js-item-status]', this.$el)
             });
         },
-        toggleStartTimeView: function () {
-            this.model.collection.trigger('change:time:format');
-        },
+        // toggleStartTimeView: function () {
+        //     this.model.collection.trigger('change:time:format');
+        // },
         isCollapsedMethod: function () {
             return this.model.get('type') !== 'STEP' && this.model.get('status') !== 'FAILED';
         },
@@ -166,8 +176,20 @@ define(function (require) {
             });
             modal.show();
         },
-        onClickSelect: function () {
+        onClickView: function (e) {
+            if ((e.ctrlKey || e.metaKey) && !($(e.target).is('a') && !($(e.target).is('input')))
+                && !this.model.get('launch_isProcessing')) {
+                this.model.set({ select: !this.model.get('select') });
+                if (e.altKey && this.model.get('select')) {
+                    this.model.trigger('check:before:items', this.model.get('id'));
+                }
+            }
+        },
+        onClickSelect: function (e) {
             config.trackingDispatcher.trackEventNumber(152);
+            if (e.ctrlKey) {
+                this.model.set({ select: !this.model.get('select') });
+            }
         },
         activateAccordion: function () {
             if (this.$el.innerHeight() > 198) {
@@ -181,6 +203,7 @@ define(function (require) {
         },
         onDestroy: function () {
             this.issueView && this.issueView.destroy();
+            this.duration && this.duration.destroy();
             this.duration && this.duration.destroy();
             this.markdownViewer && this.markdownViewer.destroy();
             this.$el.html('');

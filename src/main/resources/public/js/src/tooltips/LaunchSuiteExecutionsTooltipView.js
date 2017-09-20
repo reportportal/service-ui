@@ -18,10 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
-    var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
 
@@ -29,13 +28,13 @@ define(function (require, exports, module) {
         template: 'tpl-launch-suite-executions-tooltip',
         className: 'executions-tooltip',
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.data = options.data;
             this.render();
         },
 
-        render: function() {
-            this.$el.html(Util.templates(this.template, {stats: this.data}));
+        render: function () {
+            this.$el.html(Util.templates(this.template, { stats: this.data }));
         },
 
         update: function (data) {
@@ -49,7 +48,7 @@ define(function (require, exports, module) {
             this.unbind();
             this.$el.remove();
             delete this;
-        },
+        }
     });
 
     return LaunchSuiteExecutionsTooltip;

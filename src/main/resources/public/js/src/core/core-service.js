@@ -49,7 +49,6 @@ define([
 
     var getPreferences = function () {
         return call('GET', urls.getPreferences());
-        return call('GET', urls.getPreferences());
     };
 
     var getProfileImage = function (url) {
@@ -109,6 +108,9 @@ define([
     var saveWidget = function (data) {
         return call('POST', urls.widget(), data);
     };
+    var saveEmptyWidget = function (data) {
+        return call('POST', urls.emptyWidget(), data);
+    };
 
     var updateWidget = function (data, id) {
         return call('PUT', urls.widgetById(id), data);
@@ -166,7 +168,9 @@ define([
     var getWidgetData = function (type, params) {
         return call('GET', urls.getProjectBase() + '/' + type + '?' + params);
     };
-
+    var getWidgetPreviewData = function (data) {
+        return call('POST', urls.widgetPreview(), data);
+    };
     var loadWidget = function (url) {
         return call('GET', url);
     };
@@ -362,6 +366,9 @@ define([
     var toggleAnalytics = function (data) {
         return call('PUT', urls.toggleAnalytics(), data);
     };
+    var getProjectEvents = function (query) {
+        return call('GET', urls.getProjectEvents(query));
+    };
 
 
     return {
@@ -412,11 +419,13 @@ define([
         saveFilter: saveFilter,
 
         saveWidget: saveWidget,
+        saveEmptyWidget: saveEmptyWidget,
         updateWidget: updateWidget,
         addWidgetToDashboard: addWidgetToDashboard,
         updateWidgetsOnDashboard: updateWidgetsOnDashboard,
         getWidgetNames: getWidgetNames,
         getWidgetData: getWidgetData,
+        getWidgetPreviewData: getWidgetPreviewData,
         loadWidget: loadWidget,
         getTestItemInfo: getTestItemInfo,
         getTestItemsInfo: getTestItemsInfo,
@@ -461,6 +470,7 @@ define([
         getUserByEmail: getUserByEmail,
         generateDemoData: generateDemoData,
 
-        toggleAnalytics: toggleAnalytics
+        toggleAnalytics: toggleAnalytics,
+        getProjectEvents: getProjectEvents
     };
 });

@@ -128,6 +128,11 @@ body.fullscreen {
   .dashboard-item-view {
     position: relative;
     margin-top: -15px;
+    .no-result-found {
+      button, p {
+        display: none;
+      }
+    }
     .buttons-container {
       display: none;
     }

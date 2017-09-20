@@ -26,7 +26,7 @@ define(function (require) {
     var SimpleMDE = require('simplemde');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
     var Util = require('util');
-
+    var Localization = require('localization');
 
     var MainBreadcrumbsComponent = Epoxy.View.extend({
         className: 'markdown-editor',
@@ -48,90 +48,90 @@ define(function (require) {
                         name: 'heading-1',
                         action: SimpleMDE.toggleHeading1,
                         className: 'icon-header-1',
-                        title: 'Big Heading'
+                        title: Localization.ui.markdownBigHeading
                     },
                     {
                         name: 'heading-2',
                         action: SimpleMDE.toggleHeading2,
                         className: 'icon-header-2',
-                        title: 'Medium Heading'
+                        title: Localization.ui.markdownMediumHeading
                     },
                     {
                         name: 'heading-3',
                         action: SimpleMDE.toggleHeading3,
                         className: 'icon-header-3',
-                        title: 'Small Heading'
+                        title: Localization.ui.markdownSmallHeading
                     },
                     {
                         name: 'clean-block',
                         action: SimpleMDE.cleanBlock,
                         className: 'icon-clean-block',
-                        title: 'Clean block'
+                        title: Localization.ui.markdownClean
                     },
                     '|',
                     {
                         name: 'bold',
                         action: SimpleMDE.toggleBold,
                         className: 'icon-bold',
-                        title: 'Bold'
+                        title: Localization.ui.markdownBold
                     },
                     {
                         name: 'italic',
                         action: SimpleMDE.toggleItalic,
                         className: 'icon-italic',
-                        title: 'Italic'
+                        title: Localization.ui.markdownItalic
                     },
                     {
                         name: 'strikethrough',
                         action: SimpleMDE.toggleStrikethrough,
                         className: 'icon-strikethrough',
-                        title: 'Strikethrough'
+                        title: Localization.ui.markdownStrikethrough
                     },
                     '|',
                     {
                         name: 'unordered-list',
                         action: SimpleMDE.toggleUnorderedList,
                         className: 'icon-unordered-list',
-                        title: 'Generic List'
+                        title: Localization.ui.markdownGeneric
                     },
                     {
                         name: 'ordered-list',
                         action: SimpleMDE.toggleOrderedList,
                         className: 'icon-ordered-list',
-                        title: 'Numbered List'
+                        title: Localization.ui.markdownNumbered
                     },
                     '|',
                     {
                         name: 'image',
                         action: SimpleMDE.drawImage,
                         className: 'icon-image',
-                        title: 'Insert Image'
+                        title: Localization.ui.markdownImage
                     },
                     {
                         name: 'link',
                         action: SimpleMDE.drawLink,
                         className: 'icon-link',
-                        title: 'Create Link'
+                        title: Localization.ui.markdownLink
                     },
                     '|',
                     {
                         name: 'quote',
                         action: SimpleMDE.toggleBlockquote,
                         className: 'icon-quote',
-                        title: 'Quote'
+                        title: Localization.ui.markdownQuote
                     },
                     {
                         name: 'code',
                         action: SimpleMDE.toggleCodeBlock,
                         className: 'icon-code',
-                        title: 'Code'
+                        title: Localization.ui.markdownCode
                     },
                     '|',
                     {
                         name: 'preview',
                         action: SimpleMDE.togglePreview,
                         className: 'icon-preview no-disable',
-                        title: 'Toggle Preview'
+                        title: Localization.ui.markdownPreview
                     }
                 ],
                 placeholder: options.placeholder || '',

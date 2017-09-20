@@ -28,6 +28,14 @@
   }
   .control-buttons {
     margin-bottom: 10px;
+    .button-overflow {
+      position: relative;
+      display: inline-block;
+      margin-left: 8px;
+      .rp-btn {
+        margin-left: 0;
+      }
+    }
     .rp-btn {
       margin-left: 8px;
     }
@@ -145,6 +153,10 @@
   }
   .multiple-selected-container {
     display: none;
+  }
+  .crumbs-container {
+    max-width: 100%;
+    padding-right: 15px;
   }
   &.multiple-select {
     .multiple-selected-container {

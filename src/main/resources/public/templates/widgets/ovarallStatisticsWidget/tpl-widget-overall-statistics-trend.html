@@ -1,0 +1,32 @@
+<div class="left-widget-wrapper widget-wrapper" >
+    <div class="chart-container" data-js-left-chart-container>
+        <div class="align-wrapper">
+            <div class="total" data-js-total>
+                <div class="total-value" data-js-total-value></div>
+                <div class="total-title"><%= data.text.widgets.pieTotal %></div>
+            </div>
+            <div class="bar" data-js-bar>
+                <div class="bar-item bar-passed" data-js-bar-passed></div>
+                <div class="bar-item bar-failed" data-js-bar-failed></div>
+                <div class="bar-item bar-skipped" data-js-bar-skipped></div>
+            </div>
+            <div class="legend-wrapper" data-js-legend-wrapper>
+                <div class="legend-item legend-passed" data-js-legend-passed>
+                    <div class="legend-val" data-js-legend-passed-val></div>
+                    <div class="legend-title"><%= data.text.launchesHeaders.passed %></div>
+                </div>
+                <div class="legend-item legend-failed" data-js-legend-failed>
+                    <div class="legend-val" data-js-legend-failed-val></div>
+                    <div class="legend-title"><%= data.text.launchesHeaders.failed %></div>
+                </div>
+                <div class="legend-item legend-skipped" data-js-legend-skipped>
+                    <div class="legend-val" data-js-legend-skipped-val></div>
+                    <div class="legend-title"><%= data.text.launchesHeaders.skipped %></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="right-widget-wrapper widget-wrapper" >
+    <div class="chart-container" data-js-right-chart-container></div>
+</div>

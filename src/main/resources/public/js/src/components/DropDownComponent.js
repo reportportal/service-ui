@@ -72,9 +72,10 @@ define(function (require) {
             var curName = '';
             var curVal = '';
             this.$el.removeClass('dropdown-error-state');
+            this.$el.addClass('selected');
             _.each(this.options.data, function (item) {
                 if (item.value == value) { // Comparison with conversion
-                    curName = item.name;
+                    curName = item.shortName ? item.shortName : item.name;
                     curVal = item.value;
 
                     return false;
@@ -117,6 +118,12 @@ define(function (require) {
         setErrorState: function (message) {
             this.$el.addClass('dropdown-error-state');
             $('[data-js-hint-message]', this.$el).html(message);
+        },
+        disabled: function () {
+            $('[data-js-dropdown]', this.$el).attr('disabled', 'disabled');
+        },
+        enabled: function () {
+            $('[data-js-dropdown]', this.$el).removeAttr('disabled');
         },
         onDestroy: function () {
             this.$el.html('');

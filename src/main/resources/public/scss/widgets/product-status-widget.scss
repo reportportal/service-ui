@@ -1,0 +1,165 @@
+/*
+ * Copyright 2016 EPAM Systems
+ *
+ *
+ * This file is part of EPAM Report Portal.
+ * https://github.com/reportportal/service-ui
+ *
+ * Report Portal is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Report Portal is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+.product-status-widget {
+  width: 100%;
+  height: 100%;
+  .table-wrapper {
+    width: 100%;
+    height: 100%;
+  }
+  table.rp-table-grid {
+    min-width: 100%;
+    padding-bottom: 10px;
+    color: $COLOR--charcoal-grey;
+    tr {
+      border-left: none;
+      border-right: none;
+    }
+    th, td {
+      padding-right: 15px;
+    }
+    th {
+      font-weight: normal;
+      &:first-child {
+        padding-left: 20px;
+      }
+    }
+    td {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      &:first-child {
+        padding-left: 20px;
+      }
+    }
+    .type-cell-filter {
+      height: 40px;
+      color: $COLOR--gray-47;
+      font-family: $OpenSansSemibold;
+      .filter-name {
+        color: $COLOR--charcoal-grey;
+      }
+    }
+    .type-cell-name, .type-cell-filter_name {
+        h5 {
+          margin: 0;
+          font-size: 14px;
+          font-family: OpenSansSemiBold;
+          color: $COLOR--windows-blue;
+          word-wrap: break-word;
+          a {
+            word-wrap: break-word;
+          }
+        }
+
+        .rp-grid-tags {
+          margin-top: 10px;
+          font-size: 12px;
+          line-height: 18px;
+          & > li {
+            display: inline;
+            margin: 0 17px 2px 2px;
+            color: #999999;
+            word-break: break-word;
+            a {
+              color: $COLOR--gray-60;
+              cursor: pointer;
+              &:hover {
+                color: $COLOR--charcoal-grey;
+              }
+            }
+            i {
+              vertical-align: top;
+              font-size: 18px;
+              &.rp-icons-ticket {
+                font-size: 12px;
+                margin-top: 2px;
+              }
+            }
+          }
+          .launch-status-wrapper {
+            display: inline-block;
+            max-width: 100px;
+            vertical-align: middle;
+          }
+          .item_status {
+            float: left;
+            width: 4px;
+            height: 4px;
+            margin: 1px;
+            background: $COLOR--failed;
+            &.status_passed {
+              background: $COLOR--passed;
+            }
+          }
+        }
+    }
+    .type-cell-to_investigate {
+      span {
+        display: inline-block;
+        color: $COLOR--white-default;
+        font-family: $OpenSansSemibold;
+        background: $COLOR--to-investigate;
+        padding: 0 10px;
+        line-height: 19px;
+        border-radius: 10px;
+      }
+    }
+    .type-cell-total {
+      font-family: $OpenSansSemibold;
+    }
+    .type-cell-total, .type-cell-passed, .type-cell-failed, .type-cell-skipped {
+      width: 85px;
+      a {
+        color: $COLOR--windows-blue;
+      }
+    }
+    .type-cell-product_bug, .type-cell-auto_bug, .type-cell-system_issue, .type-cell-to_investigate {
+      width: 70px;
+    }
+    .type-cell-passing_rate {
+      width: 60px;
+    }
+    td.type-cell-passing_rate {
+      color: $COLOR--passed;
+      .less-100 {
+        color: $COLOR--failed;
+      }
+    }
+    .type-cell-start_time {
+      width: 100px;
+      min-width: 100px;
+    }
+    .type-cell-status {
+      min-width: 70px;
+    }
+    td.type-cell-status {
+      word-break: break-word;
+    }
+    tr:last-child {
+      background: $COLOR--light-yellow;
+      font-family: $OpenSansSemibold;;
+      .type-cell-name {
+        text-transform: uppercase;
+      }
+    }
+  }
+}

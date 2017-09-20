@@ -27,12 +27,14 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
-    var Localization = require('localization');
     var Service = require('coreService');
+    var Localization = require('localization');
+
+    var actionTypes = {};
 
     var SettingInputItemsView = SettingView.extend({
         className: 'modal-add-widget-setting-input-items',
-        template: 'modal-add-widget-setting-input-items',
+        template: 'tpl-modal-add-widget-setting-input-items',
         bindings: {
             '[data-js-label-name]': 'html:label',
             '[data-js-label-input]': 'value:value'
@@ -40,7 +42,7 @@ define(function (require) {
         initialize: function (data) {
             var options = _.extend({
                 label: '',
-                inputPlaceholder: '',
+                placeholder: '',
                 minItemLength: 3,
                 maxItemLength: 256,
                 minItems: 0,
@@ -52,15 +54,25 @@ define(function (require) {
             this.options = data.options;
             this.model = new Epoxy.Model(options);
             this.render();
+            if (options.action && actionTypes[options.action]) {
+                this.setValue = actionTypes[options.action].setValue;
+                this.getValue = actionTypes[options.action].getValue;
+            }
+            options.setValue && (this.setValue = options.setValue);
+            options.getValue && (this.getValue = options.getValue);
+            options.validate && (this.validate = options.validate.bind(this));
+            this.model.set({ value: this.getValue(this.gadgetModel, this) });
+            this.listenTo(this.model, 'change:value', this.onChangeValue);
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        getQueryFunc: function () {
+        getFunctions: function () {
             switch (this.model.get('entity')) {
             case 'filter':
-                return function (query) {
-                    Service.saveFilter('?page.sort=name&page.page=1&page.size=50&filter.cnt.name=' + query.term)
+                return {
+                    query: function (query) {
+                        Service.saveFilter('?page.sort=name&page.page=1&page.size=50&filter.cnt.name=' + query.term)
                             .done(function (response) {
                                 var data = { results: [] };
                                 _.each(response.content, function (item) {
@@ -74,23 +86,71 @@ define(function (require) {
                             .fail(function (error) {
                                 Util.ajaxFailMessenger(error);
                             });
-                };
-            case 'launch':
-                return function (query) {
-                    Service.searchLaunches(query)
-                        .done(function (response) {
-                            var data = { results: [] };
-                            _.each(response, function (item) {
-                                data.results.push({
-                                    id: item,
-                                    text: item
-                                });
+                    },
+                    getDataByIds: function (values, callback) {
+                        Service.getFilterData(values)
+                            .done(function (data) {
+                                callback(_.map(data, function (filter) {
+                                    return { id: filter.id, text: filter.name };
+                                }));
                             });
-                            query.callback(data);
-                        })
-                        .fail(function (error) {
-                            Util.ajaxFailMessenger(error);
+                    }
+                };
+            case 'launchName':
+                return {
+                    query: function (query) {
+                        Service.searchLaunches(query)
+                            .done(function (response) {
+                                var data = { results: [] };
+                                _.each(response, function (item) {
+                                    data.results.push({
+                                        id: item,
+                                        text: item
+                                    });
+                                });
+                                query.callback(data);
+                            })
+                            .fail(function (error) {
+                                Util.ajaxFailMessenger(error);
+                            });
+                    },
+                    getDataByIds: function (values, callback) {
+                        callback(_.map(values, function (launch) {
+                            return { id: launch, text: launch };
+                        }));
+                    }
+                };
+            case 'user':
+                return {
+                    query: function (query) {
+                        Service.getProjectUsersById(query.term)
+                            .done(function (response) {
+                                var data = { results: [] };
+                                _.each(response, function (item) {
+                                    data.results.push({
+                                        id: item,
+                                        text: item
+                                    });
+                                });
+                                query.callback(data);
+                            })
+                            .fail(function (error) {
+                                Util.ajaxFailMessenger(error);
+                            });
+                    },
+                    getDataByIds: function (values, callback) {
+                        var callbackData = [];
+                        var calls = [];
+                        _.each(values, function (value) {
+                            calls.push(Service.getUserInfo(value)
+                                .done(function (data) {
+                                    callbackData.push({ id: data.userId, text: data.userId });
+                                }));
                         });
+                        $.when.apply($, calls).then(function () {
+                            callback(callbackData);
+                        });
+                    }
                 };
             default:
                 return function (query) {
@@ -99,6 +159,7 @@ define(function (require) {
             }
         },
         activate: function () {
+            var self = this;
             Util.setupSelect2WhithScroll($('[data-js-label-input]', this.$el), {
                 min: this.model.get('minItems'),
                 minimumInputLength: this.model.get('minItemLength'),
@@ -107,20 +168,48 @@ define(function (require) {
                 multiple: (this.model.get('maxItems') >= 2),
                 dropdownCssClass: 'rp-select2-separate-block',
                 allowClear: false,
-                placeholder: this.model.get('inputPlaceholder'),
+                placeholder: this.model.get('placeholder'),
+                tags: false,
                 initSelection: function (element, callback) {
-                    callback({ id: element.val(), text: element.val() });
+                    self.getFunctions()
+                        .getDataByIds(self.getValue(self.gadgetModel, self), callback);
                 },
-                query: this.getQueryFunc()
+                query: this.getFunctions().query
             });
+            $('[data-js-label-input]', this.$el)
+                .on('select2-open', this.onEnterInput)
+                .on('select2-close', this.onOverInput);
+            this.activated = true;
         },
-        validate: function () {
-            var options = this.model.getWidgetOptions();
-            if (!options.actionType || _.isEmpty(options.actionType)) {
-                this.selectAction.setErrorState(Localization.validation.selectAtLeastOneAction);
+        onChangeValue: function (model, value) {
+            this.setValue(value.split(','), this.gadgetModel, this);
+            this.hideErrorState();
+        },
+        onOverInput: function () {
+            $('[data-js-validate-hint]', this.$el).hide();
+        },
+        onEnterInput: function () {
+            if ($('[data-js-input-wrapper]', this.$el).hasClass('validate-error')) {
+                $('[data-js-validate-hint]', this.$el).show();
+            }
+        },
+        validate: function (options) {
+            if (this.model.get('minItems') > 0 && !this.model.get('value').length) {
+                if (options && options.silent) {
+                    return false;
+                }
+                this.showErrorState(Localization.validation.moreAtItem);
                 return false;
             }
             return true;
+        },
+        showErrorState: function (message) {
+            $('[data-js-input-wrapper]', this.$el).addClass('validate-error');
+            $('[data-js-validate-hint]', this.$el).html(message);
+        },
+        hideErrorState: function () {
+            $('[data-js-input-wrapper]', this.$el).removeClass('validate-error');
+            $('[data-js-validate-hint]', this.$el).html('').hide();
         },
         onDestroy: function () {
             this.selectCriteria && this.selectCriteria.destroy();

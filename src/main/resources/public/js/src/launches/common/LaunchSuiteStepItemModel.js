@@ -69,6 +69,19 @@ define(function (require, exports, module) {
             filter_url: ''
         },
         computeds: {
+            status_loc: {
+                deps: ['status'],
+                get: function (status) {
+                    switch (status) {
+                    case 'PASSED': return Localization.testStatus.PASSED;
+                    case 'FAILED': return Localization.testStatus.FAILED;
+                    case 'STOPPED': return Localization.testStatus.STOPPED;
+                    case 'SKIPPED': return Localization.testStatus.SKIPPED;
+                    case 'INTERRUPTED': return Localization.testStatus.INTERRUPTED;
+                    case 'IN PROGRESS': return Localization.testStatus.IN_PROGRESS;
+                    }
+                }
+            },
             launch_owner: {
                 deps: ['owner', 'parent_launch_owner'],
                 get: function (owner, parent_launch_owner) {
@@ -112,6 +125,9 @@ define(function (require, exports, module) {
                     var index3 = window.location.hash.lastIndexOf('?');
                     var lastIndex = (index2 < index1) ? index3 : index2;
                     var baseUrl = window.location.hash.substr(0, lastIndex);
+                    if (!baseUrl) {
+                        baseUrl = '#' + this.appModel.get('projectId') + '/launches/all';
+                    }
                     if (hasChilds) {
                         return baseUrl + partUrl + '/' + id;
                     }
@@ -156,7 +172,8 @@ define(function (require, exports, module) {
         },
         initialize: function () {
             this.validate = this.getValidate();
-            this.listenTo(this, 'change:description change:tags change:issue', _.debounce(this.onChangeItemInfo, 10));
+            this.listenTo(this, 'change:description change:tags', _.debounce(this.onChangeItemInfo, 10));
+            this.listenTo(this, 'change:issue', _.debounce(this.onChangeIssueType, 10));
             this.appModel = new SingletonAppModel();
             this.userModel = new UserModel();
         },
@@ -193,37 +210,37 @@ define(function (require, exports, module) {
                 edit: function () {
                     if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
-                        return 'You are not a launch owner';
+                        return Localization.launches.notYourOwnLaunch;
                     }
                     return '';
                 },
                 merge: function () {
                     if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
-                        return 'You are not a launch owner';
+                        return Localization.launches.notYourOwnLaunch;
                     }
                     if (self.get('launch_status') === 'IN_PROGRESS') {
-                        return 'Launch should not be in the status IN PROGRESS';
+                        return Localization.launches.launchNotInProgress;
                     }
                     if (self.get('launch_isProcessing')) {
-                        return 'Launch should not be processing by Auto Analysis';
+                        return Localization.launches.launchIsProcessing;
                     }
                     return '';
                 },
                 changeMode: function () {
                     if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
-                        return 'You are not a launch owner';
+                        return Localization.launches.notYourOwnLaunch;
                     }
                     return '';
                 },
                 forceFinish: function () {
                     if (self.get('status') !== 'IN_PROGRESS') {
-                        return 'Launch is already finished';
+                        return Localization.launches.launchFinished;
                     }
                     if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
-                        return 'You are not a launch owner';
+                        return Localization.launches.notYourOwnLaunch;
                     }
                     return '';
                 },
@@ -236,10 +253,10 @@ define(function (require, exports, module) {
                 remove: function () {
                     if (self.get('launch_owner') !== config.userModel.get('name') &&
                         !isAdminLeadProjectMenedger()) {
-                        return 'You are not a launch owner';
+                        return Localization.launches.notYourOwnLaunch;
                     }
                     if (self.get('launch_status') === 'IN_PROGRESS') {
-                        return 'Launch should not be in the status IN PROGRESS';
+                        return Localization.launches.launchNotInProgress;
                     }
                     return '';
                 },
@@ -271,6 +288,9 @@ define(function (require, exports, module) {
                 }
             };
             return result;
+        },
+        onChangeIssueType: function () {
+            this.trigger('updated');
         },
         onChangeItemInfo: function () {
             var self = this;

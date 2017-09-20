@@ -38,19 +38,19 @@ define(function (require, exports, module) {
             widgets: '[]',
 
             active: false,
-            notLoad: false,
+            notLoad: false
         },
         computeds: {
             isMy: {
                 deps: ['owner'],
-                get: function(owner) {
-                    return owner == config.userModel.get('name');
+                get: function (owner) {
+                    return owner === config.userModel.get('name');
                 }
             },
             sharedTitle: {
                 deps: ['isMy', 'owner'],
-                get: function(isMy, owner) {
-                    if(isMy) {
+                get: function (isMy, owner) {
+                    if (isMy) {
                         return Localization.dashboard.dashboardShared;
                     }
                     return Localization.dashboard.dashboardSharedBy + ' ' + owner;
@@ -58,24 +58,24 @@ define(function (require, exports, module) {
             },
             url: {
                 deps: ['id'],
-                get: function(id) {
+                get: function (id) {
                     return '#' + appModel.get('projectId') + '/dashboard/' + id;
                 }
             }
         },
-        initialize: function() {
-            this.listenTo(this, 'change:share change:description change:name', _.debounce(this.onChangeData, 10)) ;
+        initialize: function () {
+            this.listenTo(this, 'change:share change:description change:name', _.debounce(this.onChangeData, 10));
             this.listenTo(this, 'change:widgets', this.onChangeWidgets);
         },
-        onChangeData: function() {
+        onChangeData: function () {
             var data = {
                 name: this.get('name'),
-                share: this.get('share'),
+                share: this.get('share')
             };
-            if(this.get('description')) {
+            var self = this;
+            if (this.get('description')) {
                 data.description = this.get('description');
             }
-            var self = this;
             Service.updateDashboard(this.get('id'), data)
                 .done(function () {
                     Util.ajaxSuccessMessenger('dashboardUpdated');
@@ -85,34 +85,40 @@ define(function (require, exports, module) {
                     Util.ajaxFailMessenger(error, 'updateDashboard');
                 });
         },
-        update: function() {
+        update: function () {
             var self = this;
-            return Service.getProjectDashboard(this.get('id')).done(function(data){
+            return Service.getProjectDashboard(this.get('id')).done(function (data) {
                 self.setWidgets(data.widgets, true);
-            })
+            });
         },
-        addWidget: function(model) {
-            var widgets = this.getWidgets();
+        addWidget: function (model) {
             var self = this;
             var widgetData = {
                 widgetId: model.get('id'),
                 widgetPosition: [model.get('x'), model.get('y')],
-                widgetSize: [model.get('width'), model.get('height')],
+                widgetSize: [model.get('width'), model.get('height')]
             };
             return Service.addWidgetToDashboard(widgetData, this.get('id'))
-                .done(function() {
-                    widgets.push(widgetData);
-                    self.setWidgets(widgets, true);
+                .done(function () {
+                    self.addWidgetToFirst(widgetData);
                     Util.ajaxSuccessMessenger('addedWidget');
                     self.trigger('add:widget', model);
                 });
-
         },
-        onChangeWidgets: function() {
-            Service.updateDashboard(this.get('id'), {updateWidgets: this.getWidgets()})
-                .fail(function(error) {
+        addWidgetToFirst: function (widgetData) {
+            var widgets = this.getWidgets();
+            var widgetHeight = widgetData.widgetSize[1];
+            _.each(widgets, function (widget) {
+                widget.widgetPosition[1] += widgetHeight;
+            });
+            widgets.push(widgetData);
+            this.setWidgets(widgets);
+        },
+        onChangeWidgets: function () {
+            Service.updateDashboard(this.get('id'), { updateWidgets: this.getWidgets() })
+                .fail(function (error) {
                     Util.ajaxFailMessenger(error, 'updateDashboard');
-                })
+                });
         },
         getWidgets: function () {
             try {
@@ -122,8 +128,8 @@ define(function (require, exports, module) {
             }
         },
         setWidgets: function (widgets, silent) {
-            this.set({widgets: JSON.stringify(widgets)}, {silent: (silent || false)});
-        },
+            this.set({ widgets: JSON.stringify(widgets) }, { silent: (silent || false) });
+        }
 
     });
 

@@ -30,9 +30,11 @@ define(function (require) {
     var DropDownComponent = require('components/DropDownComponent');
     var Localization = require('localization');
 
+    var actionTypes = {};
+
     var SettingDropDownView = SettingView.extend({
         className: 'modal-add-widget-setting-drop-down',
-        template: 'modal-add-widget-setting-drop-down',
+        template: 'tpl-modal-add-widget-setting-drop-down',
         bindings: {
             '[data-js-label-name]': 'html:label'
         },
@@ -42,16 +44,24 @@ define(function (require) {
                 label: '',
                 multiple: false,
                 placeholder: '',
+                notEmpty: true,
                 value: ''
             }, data.options);
             this.model = new Epoxy.Model(options);
             this.gadgetModel = data.gadgetModel;
             this.render();
+            if (options.action && actionTypes[options.action]) {
+                this.setValue = actionTypes[options.action].setValue;
+                this.getValue = actionTypes[options.action].getValue;
+            }
+            options.setValue && (this.setValue = options.setValue);
+            options.getValue && (this.getValue = options.getValue);
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
         activate: function () {
+            this.model.set({ value: this.getValue(this.gadgetModel, this) });
             this.dropDown = new DropDownComponent({
                 data: this.model.get('items'),
                 placeholder: this.model.get('placeholder'),
@@ -60,19 +70,19 @@ define(function (require) {
             });
             $('[data-js-drop-down-container]', this.$el).html(this.dropDown.$el);
             this.listenTo(this.dropDown, 'change', this.onChangeDropDown);
+            this.listenTo(this.model, 'change:value', this.validate);
+            this.activated = true;
         },
-        onChangeDropDown: function (actions) {
-            var values = [];
-            _.each(actions, function (item) {
-                values = values.concat(item.split(','));
-            });
-            console.log(values);
-            this.validate();
+        onChangeDropDown: function (value) {
+            this.model.set({ value: value });
+            this.setValue(value, this.gadgetModel, true);
         },
-        validate: function () {
-            var options = this.model.getWidgetOptions();
-            if (!options.actionType || _.isEmpty(options.actionType)) {
-                this.selectAction.setErrorState(Localization.validation.selectAtLeastOneAction);
+        validate: function (options) {
+            if (this.model.get('notEmpty') && !this.model.get('value').length) {
+                if (options && options.silent) {
+                    return false;
+                }
+                this.dropDown.setErrorState(Localization.validation.moreAtItem);
                 return false;
             }
             return true;

@@ -1,0 +1,130 @@
+.project-events {
+  .events-page-wrapper {
+    position: relative;
+
+    .events-refine-container {
+      width: 100%;
+      padding: 12px 100px 12px 60px;
+      .filter-entities-choice {
+        margin-right: 10px;
+      }
+      .refine-label {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 12px;
+        font-size: 12px;
+        color: $COLOR--gray-47;
+        font-family: $OpenSansSemibold;
+      }
+    }
+    .refresh-btn {
+      position: absolute;
+      right: 0;
+      top: 35px;
+    }
+    .events-table-container {
+      clear: both;
+
+      .project-events-table {
+        .project-events-grid {
+          .row {
+            min-height: 50px;
+
+            .grid-cell {
+              min-height: 40px;
+              color: $COLOR--charcoal-grey;
+
+              &.time-grid-cell {
+                width: 10%;
+                .time-exact {
+                  display: none;
+                }
+
+                &:hover {
+                  .from-now {
+                    display: none;
+                  }
+                  .time-exact {
+                    display: inline;
+                  }
+                }
+              }
+              &.user-grid-cell {
+                width: 15%;
+                font-family: $OpenSansSemibold;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+              &.action-grid-cell {
+                width: 15%;
+              }
+              &.object-type-grid-cell {
+                width: 15%;
+                font-family: $OpenSansSemibold;
+              }
+              &.object-name-grid-cell {
+                width: 15%;
+                font-family: $OpenSansSemibold;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+              &.old-val-grid-cell {
+                width: 15%;
+
+                .values-wrapper {
+                  .value-item {
+                    -ms-word-break: break-all;
+                    word-break: break-all;
+
+                    .value-field-name {
+                      font-family: $OpenSansSemibold;
+                    }
+                  }
+                }
+              }
+              &.new-val-grid-cell {
+                width: 15%;
+
+                .values-wrapper {
+                  .value-item {
+                    -ms-word-break: break-all;
+                    word-break: break-all;
+
+                    .value-field-name {
+                      font-family: $OpenSansSemibold;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        &.exact-driven {
+          .project-events-grid {
+            .row {
+              .time-grid-cell {
+                .time-exact {
+                  display: inline;
+                }
+                .from-now {
+                  display: none;
+                }
+                &:hover {
+                  .from-now {
+                    display: inline;
+                  }
+                  .time-exact {
+                    display: none;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

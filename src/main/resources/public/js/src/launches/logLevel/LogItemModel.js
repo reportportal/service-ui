@@ -49,38 +49,37 @@ define(function (require) {
             imagePath: {
                 deps: ['binary_content'],
                 get: function (binary_content) {
-                    var type;
                     if (!binary_content || config.userModel.get('token') === config.userModel.defaults.token) { return ''; }
                     if (!~binary_content.content_type.search('image/')) {
-                        type = binary_content.content_type.split('/')[1];
+                        var type = binary_content.content_type.split('/')[1];
                         switch (type) {
-                        case 'CSS':
-                        case 'css': return 'img/launch/attachments/css.svg';
-                        case 'HTML':
-                        case 'html': return 'img/launch/attachments/html.svg';
-                        case 'JAVASCRIPT':
-                        case 'javascript': return 'img/launch/attachments/js.svg';
-                        case 'CSV':
-                        case 'csv': return 'img/launch/attachments/csv.svg';
-                        case 'JSON':
-                        case 'json': return 'img/launch/attachments/json.svg';
-                        case 'PHP':
-                        case 'php': return 'img/launch/attachments/php.svg';
-                        case 'XML':
-                        case 'xml': return 'img/launch/attachments/xml.svg';
-                        case 'PLAIN':
-                        case 'plain': return 'img/launch/attachments/txt.svg';
-                        case 'RAR':
-                        case 'rar':
-                        case 'TAZ':
-                        case 'taz':
-                        case 'TAR':
-                        case 'tar':
-                        case 'GZIP':
-                        case 'gzip':
-                        case 'ZIP':
-                        case 'zip': return 'img/launch/attachments/archive.svg';
-                        default: return 'img/launch/attachment.png';
+                            case 'CSS':
+                            case 'css': return 'img/launch/attachments/css.svg';
+                            case 'HTML':
+                            case 'html': return 'img/launch/attachments/html.svg';
+                            case 'JAVASCRIPT':
+                            case 'javascript': return 'img/launch/attachments/js.svg';
+                            case 'CSV':
+                            case 'csv': return 'img/launch/attachments/csv.svg';
+                            case 'JSON':
+                            case 'json': return 'img/launch/attachments/json.svg';
+                            case 'PHP':
+                            case 'php': return 'img/launch/attachments/php.svg';
+                            case 'XML':
+                            case 'xml': return 'img/launch/attachments/xml.svg';
+                            case 'PLAIN':
+                            case 'plain': return 'img/launch/attachments/txt.svg';
+                            case 'RAR':
+                            case 'rar':
+                            case 'TAZ':
+                            case 'taz':
+                            case 'TAR':
+                            case 'tar':
+                            case 'GZIP':
+                            case 'gzip':
+                            case 'ZIP':
+                            case 'zip': return 'img/launch/attachments/archive.svg';
+                            default: return 'img/launch/attachment.png';
                         }
                     }
                     return Urls.getFileById(binary_content.thumbnail_id);

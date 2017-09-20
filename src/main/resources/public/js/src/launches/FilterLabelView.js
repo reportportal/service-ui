@@ -25,6 +25,7 @@ define(function (require) {
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
+    var FilterListener = require('controlers/filterControler/FilterListener');
     var Localization = require('localization');
     var SimpleTooltipView = require('tooltips/SimpleTooltipView');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
@@ -43,13 +44,23 @@ define(function (require) {
         },
         bindings: {
             '[data-js-filter-shared]': 'classes: {hide: any(not(share), notMyFilter)}',
-            '[data-js-filter-name]': 'text: name',
+            '[data-js-filter-name]': 'text: filterName(name, id)',
             '[data-js-filter-comment]': 'classes: {hide: not(description)}',
             '[data-js-filter-not-my]': 'classes: {hide: not(notMyFilter)}',
             '[data-js-filter-not-save]': 'classes: {hide: all(not(temp), not(newEntities), not(newSelectionParameters))}',
             ':el': 'attr: {href: url}, classes: {active: active}'
         },
+        bindingFilters: {
+            filterName: function (name, id) {
+                if (id === 'all') {
+                    return Localization.launches.noFilter;
+                }
+                return name;
+            }
+        },
         initialize: function () {
+            this.filterListener = new FilterListener();
+            this.filterEvents = this.filterListener.events;
             this.render();
             this.setTooltip();
             this.listenTo(this.model, 'change', this.update);
@@ -97,7 +108,13 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, {}));
         },
         onClickRemove: function () {
-            this.model.collection.remove(this.model);
+            this.filterListener.trigger(
+                this.filterEvents.ON_CHANGE_IS_LAUNCH,
+                {
+                    data: this.model.attributes,
+                    isLaunch: false
+                }
+            );
             this.destroy();
         },
         onDestroy: function () {

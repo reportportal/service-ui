@@ -20,7 +20,7 @@
  */
 
 
-.suit-grid, .step-grid, .log-grid {
+.suit-grid, .step-grid, .log-grid, .project-events-grid {
   .rp-grid-thead {
     .grid-cell {
       .short-size {
@@ -156,42 +156,6 @@
     line-height: 16px;
     &:hover {
       color: $COLOR--black;
-    }
-  }
-  &.exact-driven {
-    .pr-grid-show-time {
-      &:hover {
-        .exact-time {
-          visibility: hidden;
-        }
-        .from-now {
-          visibility: visible;
-        }
-      }
-      .exact-time {
-        visibility: visible;
-      }
-      .from-now {
-        visibility: hidden;
-      }
-    }
-  }
-  .pr-grid-show-time {
-    &:hover {
-      .from-now {
-        visibility: hidden;
-      }
-      .exact-time {
-        visibility: visible;
-      }
-    }
-    .from-now {
-      position: absolute;
-      display: inline-block;
-    }
-    .exact-time {
-      visibility: hidden;
-      display: inline-block;
     }
   }
   .grid-cell {

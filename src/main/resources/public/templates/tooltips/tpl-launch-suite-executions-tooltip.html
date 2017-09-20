@@ -1,9 +1,9 @@
 <div class="executions-tooltip">
     <ul class="stats-tip-list">
-        <% _.each(data.stats, function(val, key) { %>
+        <% _.each(data.stats, function(obj) { %>
         <li class="stats-tip">
-            <span class="status"><%= key %></span>
-            <span class="percents"><%= val %>%</span>
+            <span class="status"><%= obj.type %></span>
+            <span class="percents"><%= obj.stats %>%</span>
         </li>
         <% }); %>
     </ul>

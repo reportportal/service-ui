@@ -78,22 +78,30 @@ define(function (require) {
         window.router = config.router;
         window.config = config;
     }
-    (new ExternalService())
-        .done(function () {
-            // start app
-            var registryInfoModel = new SingletonRegistryInfoModel();
-            registryInfoModel.ready.done(function () {
-                if (registryInfoModel.get('sendStatistics')) {
-                    (new SingletonAnalyticsConnect()).init();
-                }
-                config.forSettings.btsList = _.map(registryInfoModel.get('bugTrackingExtensions'), function (service) {
-                    return { name: service.toUpperCase(), value: service.toUpperCase() };
-                });
-                config.userModel.ready.done(function () {
-                    $('html').removeClass('loading');
-                    Backbone.history.start();
-                    config.userModel.checkAuthUrl();
-                });
+    var registryInfoModel = new SingletonRegistryInfoModel();
+    // start app
+    registryInfoModel.ready.done(function () {
+        function afterRegistryReady() {
+            if (registryInfoModel.get('sendStatistics')) {
+                (new SingletonAnalyticsConnect()).init();
+            }
+            config.forSettings.btsList = _.map(registryInfoModel.get('bugTrackingExtensions'), function (service) {
+                return { name: service.toUpperCase(), value: service.toUpperCase() };
             });
-        });
+            config.userModel.ready.done(function () {
+                $('html').removeClass('loading');
+                Backbone.history.start();
+                config.userModel.checkAuthUrl();
+            });
+        };
+        if (registryInfoModel.get('loadExternalService')) {
+            (new ExternalService())
+                .done(function () {
+                    afterRegistryReady();
+                });
+        } else {
+            afterRegistryReady();
+        }
+
+    });
 });

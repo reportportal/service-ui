@@ -21,7 +21,7 @@
  */
 
 .preview-widget-view {
-  background-color: $COLOR--white-default;
+  background-color: $COLOR--white-four;
   background-repeat: no-repeat;
   background-position: center center;
   width: 100%;
@@ -29,6 +29,7 @@
   position: relative;
   .panel-body {
     padding: 0;
+    height: 100%;
     .statistics-panel {
       padding: 0;
       .statictic-block {

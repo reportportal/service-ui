@@ -20,128 +20,51 @@
  */
 
 .log-grid {
-  .message-grid-cell {
-    position: relative;
-    width: 78%;
-    i {
-      display: none;
-    }
-  }
-  .attachment-grid-cell {
-    position: relative;
-    width: 8%;
-  }
-  .time-grid-cell {
-    position: relative;
-    font-family: $FontMonacoMonospace;
-    width: 14%;
-
-    &.rp-grid-th {
-      font-family: $OpenSansSemibold;
-    }
-  }
   .mobile-block {
     display: none;
   }
   .rp-table-row {
     position: relative;
     overflow: hidden;
-    padding: 10px 0;
     line-height: 18px;
     max-height: 135px;
-
-    &.level-ERROR {
-      max-height: 240px;
-    }
-    &.open {
-      max-height: 100%;
-      padding-bottom: 40px;
-      .accordion-block {
-        box-shadow: none !important;
-        i {
-          display: none;
-        }
-        i.little {
-          display: inline-block;
-        }
-      }
-    }.accordion-block {
-       display: none;
-       position: absolute;
-       bottom: 0;
-       left: 0;
-       width: 100%;
-       background: white;
-       text-align: center;
-       font-size: 19px;
-       box-shadow: 0 0px 20px 15px white;
-       i {
-         position: relative;
-         color: $COLOR--gray-60;
-         padding: 0 75px 8px 55px;
-         width: 20px;
-         display: inline-block;
-         cursor: pointer;
-         &:before, &:after {
-           position: absolute;
-           content: '';
-           top: 7px;
-           width: 50px;
-           height: 5px;
-           background: url(../../img/launch/dots.svg) center top no-repeat;
-         }
-         &:before {
-           left: 0;
-         }
-         &:after {
-           right: 2px;
-         }
-         &:hover {
-           color: $COLOR--charcoal-grey;
-           &:after, &:before {
-             background: url(../../img/launch/dots-hover.svg) center top no-repeat;
-           }
-         }
-         &.little {
-           display: none;
-         }
-       }
-     }
-    &.show-accordion {
-      .accordion-block {
-        display: block;
-      }
-    }
-    .attachment-grid-cell {
-      img {
-        cursor: pointer;
-        max-width: 63px;
-        //border: 1px solid $COLOR--gray-60;
-      }
-    }
     &:after {
       content: "";
       position: absolute;
       top: 0;
       bottom: 0;
       left: 0;
-      width: 5px;
+      width: 3px;
       display: block;
     }
     &.level-INFO:after {
       background-color: $COLOR--windows-blue;
     }
-    &.level-ERROR {
-      background-color: $COLOR--light-red;
-      .accordion-block {
-        background-color: $COLOR--light-red;
-        box-shadow: 0 0px 20px 15px $COLOR--light-red;
-      }
-      &:after {
+    &.level-WARN:after {
+      background-color: $COLOR--to-investigate;
+    }
+    &.level-DEBUG:after {
+      background-color: $COLOR--gray-60;
+    }
+    &.level-TRACE:after {
+      background-color: $COLOR--gray-91;
+    }
+    &.level-ERROR:after {
         background-color: $COLOR--orange-red;
       }
+    .attachment-grid-cell {
+      position: relative;
+       img {
+         cursor: pointer;
+         max-width: 63px;
+       }
+     }
+    .time-grid-cell{
+      font-family: $FontMonacoMonospace;
+      position: relative;
     }
   }
+
   @media(max-width: 720px) {
     .message-grid-cell {
       width: 100%;

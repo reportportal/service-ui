@@ -42,9 +42,8 @@ define(function (require) {
             this.userStorage = new SingletonUserStorage();
             this.listenTo(this.collection, 'reset', this.renderItems);
             this.listenTo(this.collection, 'loading', this.onLoadingCollection);
-            this.listenTo(this.collection, 'change:time:format', this.onChangeTimeFormat);
             this.listenTo(this.collection, 'change', this.checkForFiltersAndReloadCollection);
-            this.onChangeTimeFormat(true);
+            this.listenTo(this.collection, 'check:before:items', this.onCheckItemsBefore);
             this.render();
             this.renderedItems = [];
             this.pagingModel = new Backbone.Model();
@@ -60,6 +59,9 @@ define(function (require) {
             if (!this.collection.models.length) {
                 this.$el.addClass('not-found');
             }
+            this.debounceCollectionLoad = _.debounce(function () {
+                self.collection.load();
+            }, 50);
             $(window)
                 .off('resize.launchItems')
                 .on('resize.launchItems', _.debounce(self.activateAccordions.bind(self), 100));
@@ -70,27 +72,34 @@ define(function (require) {
                 activeItem.trigger('scrollToAndHighlight');
             }
         },
-        onChangeTimeFormat: function (silent) {
-            var timeFormat = this.userStorage.get('startTimeFormat');
-            if (!silent) {
-                if (timeFormat === 'exact') {
-                    timeFormat = '';
-                } else {
-                    timeFormat = 'exact';
-                }
-                this.userStorage.set('startTimeFormat', timeFormat);
-            }
-            if (timeFormat) {
-                this.$el.addClass('exact-driven');
-            } else {
-                this.$el.removeClass('exact-driven');
-            }
-        },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
         onShow: function () {
             this.activateAccordions();
+        },
+        onCheckItemsBefore: function (modelId) {
+            var lastCheckedModelBeforeCurrent = '';
+            var checkNow = false;
+            _.each(this.collection.models, function (model) {
+                if (model.get('id') === modelId) {
+                    return false;
+                }
+                if (model.get('select')) {
+                    lastCheckedModelBeforeCurrent = model.get('id');
+                }
+            });
+            _.each(this.collection.models, function (model) {
+                if (model.get('id') === modelId) {
+                    return false;
+                }
+                if (model.get('id') === lastCheckedModelBeforeCurrent) {
+                    checkNow = true;
+                }
+                if (checkNow) {
+                    model.set({ select: true });
+                }
+            });
         },
         activateAccordions: function () {
             _.each(this.renderedItems, function (view) {
@@ -170,7 +179,7 @@ define(function (require) {
             });
             if (reload) {
                 this.listenToOnce(model, 'updated', function () {
-                    self.collection.load();
+                    self.debounceCollectionLoad();
                 });
             }
         },

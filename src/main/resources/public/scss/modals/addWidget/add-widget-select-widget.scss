@@ -20,13 +20,34 @@
  */
 
 .modal-add-widget-select-widget {
+  .widget-select-header {
+    background: $COLOR--white-four;
+    overflow: hidden;
+    width: 100%;
+    height: 38px;
+    .caption {
+      font-size: 12px;
+      text-transform: uppercase;
+      margin: 0;
+      font-family: OpenSansSemibold;
+      color: $COLOR--gray-47;
+      line-height: 38px;
+      text-align: left;
+      padding-left: 10px;
+    }
+    &.error-state {
+      .caption {
+        color: $COLOR--orange-red;
+      }
+    }
+  }
   .widget-list {
     position: relative;
     width: 100%;
     label {
       width: 50%;
       float: left;
-      padding: 10px 20px 0 8px;
+      padding: 10px 20px 0 0;
       height: 56px;
       margin: 0;
       //border-bottom: 1px solid gray;
@@ -36,6 +57,9 @@
       }
       span {
         color: $COLOR--charcoal-grey;
+      }
+      &:nth-child(even) {
+        padding-right: 0;
       }
     }
   }

@@ -1138,8 +1138,7 @@ textarea {
 
 .btn.dropdown-toggle,
 .form-control,
-.select2-container-multi
-.select2-choices {
+.select2-container-multi .select2-choices {
   background-color: $COLOR--white-default;
   border: 1px solid $COLOR--gray-80;
   font-size: 13px;
@@ -1148,9 +1147,15 @@ textarea {
     border-color: $COLOR--gray-47;
   }
 }
+.select2-container-disabled .select2-choices {
+  &:hover {
+    border-color: #ddd;
+  }
+}
 
 .select2-container-multi .select2-choices .select2-search-field input {
   padding: 4px 5px;
+  font-family: $OpenSansRegular;
 }
 
 .select2-container-multi .select2-choices .select2-search-choice.common-tag {
@@ -1363,12 +1368,10 @@ textarea {
 
 /*--------------------------------*/
 
-.exact-match .select2-result-label::after,
-.exact-match .select2-result-label:after {
+.exact-match .select2-result-label .new-btn {
   position: absolute;
   display: inline-block;
   color: $COLOR--gray-80;
-  content: "New";
   right: 5px;
 }
 

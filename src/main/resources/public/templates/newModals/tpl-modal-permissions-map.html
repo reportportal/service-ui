@@ -6,9 +6,9 @@
             <tr>
                 <th rowspan="2"><%= data.text.permissionMap.actionRole %></th>
                 <th rowspan="2"><%= data.text.ui.admin %></th>
-                <th rowspan="2"><%= data.text.ui.manager %></th>
-                <th rowspan="2"><%= data.text.ui.lead %></th>
+                <th rowspan="2" class="roles-th"><%= data.text.ui.manager %></th>
                 <th colspan="2" class="roles-th"><%= data.text.ui.member %></th>
+                <th rowspan="2" class="roles-th"><%= data.text.ui.operator %></th>
                 <th colspan="2" class="roles-th"><%= data.text.ui.customer %></th>
             </tr>
             <tr>
@@ -63,9 +63,7 @@
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
-                <td class="has-permission">
-                    <i class="rp-icons rp-icons-check"></i>
-                </td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -79,21 +77,14 @@
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
+
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
-                <td class="has-permission">
-                    <i class="rp-icons rp-icons-check"></i>
-                </td>
-                <td class="has-permission">
-                    <i class="rp-icons rp-icons-check"></i>
-                </td>
-                <td class="has-permission">
-                    <i class="rp-icons rp-icons-check"></i>
-                </td>
-                <td class="has-permission">
-                    <i class="rp-icons rp-icons-check"></i>
-                </td>
+                <td class="has-permission"><i class="rp-icons rp-icons-check"></i></td>
+                <td class="has-permission"><i class="rp-icons rp-icons-check"></i></td>
+                <td class="has-permission"><i class="rp-icons rp-icons-check"></i></td>
+                <td class="has-permission"><i class="rp-icons rp-icons-check"></i></td>
             </tr>
             <tr>
                 <td>
@@ -123,15 +114,9 @@
                 <td class="has-permission">
                     <div class="check-attention">
                         <i class="rp-icons rp-icons-check"></i>
-                        <span class="attention">*</span>
                     </div>
                 </td>
-                <td class="has-permission">
-                    <div class="check-attention">
-                        <i class="rp-icons rp-icons-check"></i>
-                        <span class="attention">*</span>
-                    </div>
-                </td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -149,15 +134,9 @@
                 <td class="has-permission">
                     <div class="check-attention">
                         <i class="rp-icons rp-icons-check"></i>
-                        <span class="attention">**</span>
                     </div>
                 </td>
-                <td class="has-permission">
-                    <div class="check-attention">
-                        <i class="rp-icons rp-icons-check"></i>
-                        <span class="attention">**</span>
-                    </div>
-                </td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -171,15 +150,9 @@
                 <td class="has-permission">
                     <div class="check-attention">
                         <i class="rp-icons rp-icons-check"></i>
-                        <span class="attention">*</span>
                     </div>
                 </td>
-                <td class="has-permission">
-                    <div class="check-attention">
-                        <i class="rp-icons rp-icons-check"></i>
-                        <span class="attention">*</span>
-                    </div>
-                </td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -224,7 +197,7 @@
             <tr>
                 <td>
                     <%= data.text.permissionMap.editOwnAccount1 %>
-                    <span class="attention">***</span>
+                    <span class="attention">*</span>
                 </td>
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
@@ -232,6 +205,7 @@
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
+
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
@@ -256,12 +230,11 @@
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
+
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
-                <td class="has-permission">
-                    <i class="rp-icons rp-icons-check"></i>
-                </td>
+                <td></td>
                 <td></td>
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
@@ -276,12 +249,11 @@
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
+
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
-                <td class="has-permission">
-                    <i class="rp-icons rp-icons-check"></i>
-                </td>
+                <td></td>
                 <td></td>
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
@@ -296,6 +268,7 @@
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
+
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
@@ -320,12 +293,11 @@
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
+
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
-                <td class="has-permission">
-                    <i class="rp-icons rp-icons-check"></i>
-                </td>
+                <td></td>
                 <td></td>
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
@@ -340,12 +312,11 @@
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
+
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
-                <td class="has-permission">
-                    <i class="rp-icons rp-icons-check"></i>
-                </td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -358,12 +329,11 @@
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
+
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
-                <td class="has-permission">
-                    <i class="rp-icons rp-icons-check"></i>
-                </td>
+                <td></td>
                 <td></td>
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
@@ -378,6 +348,7 @@
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
+
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
@@ -402,6 +373,7 @@
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
+
                 <td class="has-permission">
                     <i class="rp-icons rp-icons-check"></i>
                 </td>
@@ -424,13 +396,5 @@
     <div class="permission-attention">
         <span class="attention">*</span>
         <span><%= data.text.permissionMap.oneAttention %></span>
-    </div>
-    <div class="permission-attention">
-        <span class="attention">**</span>
-        <span><%= data.text.permissionMap.twoAttention %></span>
-    </div>
-    <div class="permission-attention">
-        <span class="attention">***</span>
-        <span><%= data.text.permissionMap.threeAttention %></span>
     </div>
 </div>

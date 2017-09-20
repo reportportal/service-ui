@@ -1,0 +1,45 @@
+<div class="filter-search-header clearfix">
+    <div class="input-filter form-group">
+        <input type="text" class="rp-input-search favorites-name-filter rp-input-sm form-control" data-js-filter-name-search name="userFilter" placeholder="<%- data.text.wizard.searchFilterByNAme %>" value="">
+        <i class="material-icons">search</i>
+        <div class="validate-hint">
+        </div>
+    </div>
+    <a href="#" class="rp-btn rp-btn-default rp-button-with-icon" data-js-add-filter>
+        <i class="rp-icons rp-icons-add-filter"></i>
+        <span class="rp-btn-val"><%- data.text.dashboard.addFilter %></span>
+    </a>
+</div>
+<div class="select-filter-wrapper empty-state" data-js-select-filter-block>
+    <span class="title"><%- data.text.widgets.chooseFilter %></span>
+    <div data-js-select-filter-container></div>
+</div>
+<div class="filter-list-wrapper">
+    <div class="filter-list" data-js-filter-list-scroll>
+        <div data-js-filter-list></div>
+        <div class="preloader">
+            <i class="material-icons loader-animation">refresh</i>
+        </div>
+        <div data-js-filter-empty class="filter-no-data">
+            <p class="no-data-warning">
+                <i class="rp-icons rp-icons-warning"></i>
+                <%= data.text.wizard.ownFiltersAbsent %> "<span data-js-search-query></span>"
+            </p>
+            <p><%= data.text.ui.checkQuery %></p>
+        </div>
+        <div data-js-filter-none  class="filter-no-data" >
+            <p class="no-data-warning">
+                <i class="rp-icons rp-icons-warning"></i>
+                <%= data.text.wizard.projectFiltersAbsent %>
+            </p>
+            <p><%= data.text.ui.addFirstFilter %></p>
+        </div>
+    </div>
+    <div class="filter-list-buttons rp-nav-right" data-js-filter-list-buttons>
+        <button class="rp-btn rp-btn-cancel" data-js-cancel-filter><%- data.text.ui.cancel %></button>
+        <button class="rp-btn rp-btn-submit" data-js-submit-filter><%- data.text.ui.submit %></button>
+    </div>
+</div>
+
+<div data-js-filter-edit-container></div>
+<div data-js-filter-add-container></div>

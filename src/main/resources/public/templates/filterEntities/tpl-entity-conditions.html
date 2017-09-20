@@ -1,11 +1,11 @@
 <button type="button" class="btn dropdown-toggle" data-value="<%= data.condition %>" data-toggle="dropdown" aria-expanded="false">
-    <span class="select-value">
+    <span class="select-value" data-js-condition-selected>
         <% var opt = _.find(data.options, function(o){ return data.condition == o.id }); %>
-        <%= opt.shortCut || data.condition %>
+        <%= data.text.filterShortCut[opt.id]  %>
     </span>
     <span class="caret"></span>
 </button>
-<ul class="dropdown-menu option-menu dropdown-menu-left" role="menu">
+<ul class="dropdown-menu option-menu dropdown-menu-left" role="menu" data-js-condition-list>
     <% _.each(data.options, function(o){ %>
         <li <% if(data.condition ==  o.id){ %>class="active"<% } %>><a href="#" data-short="<%= o.shortCut || '' %>" data-value="<%= o.id %>"><%= data.text.filterConditions[o.id] %></a></li>
     <% }); %>

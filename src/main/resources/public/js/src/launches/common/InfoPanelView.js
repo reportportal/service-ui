@@ -129,11 +129,20 @@ define(function (require, exports, module) {
         },
         update: function () {
             var stats =  this.model.get('statistics');
-            var data = {
-                passed: this.getExecutionStats(stats, 'passed'),
-                failed: this.getExecutionStats(stats, 'failed'),
-                skipped: this.getExecutionStats(stats, 'skipped'),
-            };
+            var data = [
+                {
+                    type: Localization.launches.launchPassed,
+                    stats: this.getExecutionStats(stats, 'passed')
+                },
+                {
+                    type: Localization.launches.launchFailed,
+                    stats: this.getExecutionStats(stats, 'failed')
+                },
+                {
+                    type: Localization.launches.launchSkipped,
+                    stats: this.getExecutionStats(stats, 'skipped')
+                }
+            ];
             this.loadDefectTooltip();
             this.executionsTooltip.update(data);
         },
@@ -199,11 +208,20 @@ define(function (require, exports, module) {
             var self = this;
             var el = $('[data-js-executions]');
             var stats =  this.model.get('statistics');
-            var data = {
-                passed: this.getExecutionStats(stats, 'passed'),
-                failed: this.getExecutionStats(stats, 'failed'),
-                skipped: this.getExecutionStats(stats, 'skipped'),
-            };
+            var data = [
+                {
+                    type: Localization.launches.launchPassed,
+                    stats: this.getExecutionStats(stats, 'passed')
+                },
+                {
+                    type: Localization.launches.launchFailed,
+                    stats: this.getExecutionStats(stats, 'failed')
+                },
+                {
+                    type: Localization.launches.launchSkipped,
+                    stats: this.getExecutionStats(stats, 'skipped')
+                }
+            ];
             var $hoverElement = el.next($('[data-js-hover-element]', this.$el));
             this.executionsTooltip = new LaunchSuiteExecutionsTooltipView({
                 data: data

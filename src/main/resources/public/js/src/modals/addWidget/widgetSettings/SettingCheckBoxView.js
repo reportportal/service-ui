@@ -27,9 +27,26 @@ define(function (require) {
     var _ = require('underscore');
     var SettingView = require('modals/addWidget/widgetSettings/_settingView');
 
+    var actionTypes = {
+        latest_launches: {
+            setValue: function (value, model) {
+                var widgetOptions = model.getWidgetOptions();
+                if (value) {
+                    widgetOptions.latest = [];
+                } else {
+                    delete widgetOptions.latest;
+                }
+                model.setWidgetOptions(widgetOptions);
+            },
+            getValue: function (model) {
+                return !!(model.getWidgetOptions().latest);
+            }
+        }
+    };
+
     var SettingDropDownView = SettingView.extend({
         className: 'modal-add-widget-setting-checkbox',
-        template: 'modal-add-widget-setting-checkbox',
+        template: 'tpl-modal-add-widget-setting-checkbox',
         bindings: {
             '[data-js-label-name]': 'html:label',
             '[data-js-checkbox-item]': 'checked:value'
@@ -42,12 +59,23 @@ define(function (require) {
             this.model = new Epoxy.Model(options);
             this.gadgetModel = data.gadgetModel;
             this.render();
+            if (options.action && actionTypes[options.action]) {
+                this.setValue = actionTypes[options.action].setValue;
+                this.getValue = actionTypes[options.action].getValue;
+            }
+            options.setValue && (this.setValue = options.setValue);
+            options.getValue && (this.getValue = options.getValue);
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
         activate: function () {
-
+            this.model.set({ value: this.getValue(this.gadgetModel, this) });
+            this.listenTo(this.model, 'change:value', this.onChangeValue);
+            this.activated = true;
+        },
+        onChangeValue: function () {
+            this.setValue(this.model.get('value'), this.gadgetModel, this);
         },
         validate: function () {
             return true;

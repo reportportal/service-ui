@@ -52,7 +52,7 @@
           border:none;
           margin-right: 0;
           min-width: unset;
-          width: 140px;
+          min-width: 150px;
           text-transform: uppercase;
           font-size: 13px;
           font-weight: 600;
@@ -307,9 +307,34 @@
       .rp-btn-with-dropdown {
         position: absolute;
         top: 0;
-        left: 0;
+        left: 82px;
         right: 50px;
         width: auto;
+        .select-value {
+          &:after {
+            display: block;
+            position: absolute;
+            width: 12px;
+            height: 8px;
+            content: '';
+            top: 10px;
+            right: 12px;
+            background-image: url(../../img/icons/arrow_down.svg);
+          }
+        }
+        .rp-caret {
+          display: none;
+        }
+      }
+
+      &.open {
+        .rp-btn-with-dropdown {
+          .select-value {
+            &:after {
+              background-image: url(../../img/icons/arrow_up.svg);
+            }
+          }
+        }
       }
     }
     .filter-block {
@@ -346,6 +371,9 @@
       }
     }
     .dropdown-menu {
+      left: 82px;
+      right: 0;
+      width: auto;
       .filter-item {
         width: 100%;
         height: 40px;
@@ -367,6 +395,52 @@
         &:first-child {
           .close-filter {
             display: none;
+          }
+        }
+      }
+    }
+    .launches-mode-dropdown {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 82px;
+      height: 30px;
+      .drop-down-component {
+        .rp-btn-with-dropdown {
+          position: static;
+          width: 82px;
+          background-color: $COLOR--gray-80;
+          text-transform: uppercase;
+
+          .select-value {
+            font-family: $OpenSansSemibold;
+            font-size: 13px;
+            color: $COLOR--charcoal-grey;
+            &:after {
+              display: none;
+            }
+          }
+          .rp-caret {
+            display: inline-block;
+          }
+        }
+        .dropdown-menu {
+          top: 30px;
+          left: 0;
+          width: 180px;
+          li {
+            a {
+              text-transform: uppercase;
+              min-height: 30px;
+              font-family: $OpenSansSemibold;
+              font-size: 13px;
+              color: $COLOR--gray-47;
+              line-height: 30px;
+
+              &.selected {
+                color: $COLOR--charcoal-grey;
+              }
+            }
           }
         }
       }

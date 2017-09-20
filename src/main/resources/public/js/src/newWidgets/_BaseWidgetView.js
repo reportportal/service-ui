@@ -25,6 +25,7 @@ define(function (require) {
     var SingletonAppModel = require('model/SingletonAppModel');
     var Util = require('util');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var WidgetErrorView = require('newWidgets/WidgetErrorView');
     var $ = require('jquery');
     var _ = require('underscore');
     var Localization = require('localization');
@@ -36,6 +37,7 @@ define(function (require) {
             this.unclickableChart = options.unclickableChart;
             this.appModel = new SingletonAppModel();
             this.defectsCollection = new SingletonDefectTypeCollection();
+            this.afterInitialize && this.afterInitialize();
         },
         tpl: '',
         className: 'panel-body',
@@ -50,10 +52,18 @@ define(function (require) {
             });
         },
         isEmptyData: function (data) {
-            return _.isEmpty(data);
+            if (_.isEmpty(data)) {
+                return true;
+            }
+            if (data.result && !data.result.length) {
+                return true;
+            }
+            return false;
         },
         addNoAvailableBock: function (el) {
-            $(el).after('<div class="no-data-error"><div class="no-data-content">' + Localization.widgets.noData + '</div></div>');
+            var $element = el ? $(el) : this.$el;
+            var view = new WidgetErrorView({ message: Localization.widgets.noData });
+            $element.after(view.$el);
         },
         getSeriesColor: function (name) {
             var defect = this.defectsCollection.getDefectType(name);
@@ -163,18 +173,15 @@ define(function (require) {
             }
             return encodeURI(getLink(filterStatus));
         },
-        addResize: function () {
-            var self = this;
-            var update = function (e) {
-                if ($(e.target).is($(window))) {
-                    self.updateWidget();
-                }
-            };
-            var resize = _.debounce(update, 500);
-            $(window).on('resize.' + this.id, resize);
-        },
-        noDataAvailableShow: function (el) {
-            el.find('.no-data-error').removeClass('hide');
+        addResize: function () {  // TODO remove this method from widgets. addSizeClasses - dublicat
+            // var self = this;
+            // var update = function (e) {
+            //     if ($(e.target).is($(window))) {
+            //         self.updateWidget();
+            //     }
+            // };
+            // var resize = _.debounce(update, 500);
+            // $(window).on('resize.' + this.id, resize);
         },
         updateWidget: function () {
         },
@@ -195,10 +202,14 @@ define(function (require) {
             });
             this.$el.removeClass(oldSizeClasses.join(' '));
             this.addSizeClasses(newGadgetSize);
+            this.afterUpdateSizeClasses();
+        },
+        afterUpdateSizeClasses: function () {
             this.updateWidget();
         },
         onDestroy: function () {
             $(window).off('resize.' + this.id);
+            this.onBeforeDestroy && this.onBeforeDestroy();
         }
     });
 
