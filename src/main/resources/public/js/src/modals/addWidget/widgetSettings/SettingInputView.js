@@ -106,7 +106,7 @@ define(function (require) {
             } else {
                 Util.hintValidator($('[data-js-input]', this.$el), [{
                     validator: 'minMaxRequired',
-                    type: 'itemsSize',
+                    type: 'valueSize',
                     min: this.model.get('min'),
                     max: this.model.get('max')
                 }]);

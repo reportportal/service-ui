@@ -42,7 +42,7 @@ define(function (require) {
         render: function () {
             var contentData;
             if (!this.isDataExists()) {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
                 return;
             }
             this.charts = [];
@@ -216,7 +216,18 @@ define(function (require) {
                 axis: {
                     x: {
                         type: 'category',
-                        categories: dataGroupNames
+                        categories: _.map(dataGroupNames, function (category) {
+                            return category.split(self.model.getWidgetOptions().prefix[0] + ':')[1];
+                        }),
+                        tick: {
+                            centered: true,
+                            inner: true
+                        }
+                    }
+                },
+                grid: {
+                    y: {
+                        show: true
                     }
                 },
                 size: {
@@ -244,22 +255,15 @@ define(function (require) {
                     },
                     contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
                         var groupName = dataGroupNames[d[0].index];
-                        var total = 0;
                         var itemsData = [];
-
                         _.each(d, function (item) {
-                            if (item.id === passed[0] || item.id === failed[0] || item.id === skipped[0]) {
-                                total += item.value;
-                            }
                             itemsData.push({
                                 color: color(item.id),
                                 name: self.getBeautyName(item.name),
                                 value: item.value
                             });
                         });
-
                         return Util.templates(self.tooltipTemplate, {
-                            total: total,
                             groupName: groupName,
                             items: itemsData
                         });

@@ -18,18 +18,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function (require) {
+    'use strict';
 
-.beta-badge {
-  position: absolute;
-  background: $COLOR--dark-pastel-green;
-  color: $COLOR--white-default;
-  display: inline-block;
-  font-size: 11px;
-  border-radius: 8px;
-  width: 28px;
-  height: 14px;
-  line-height: 14px;
-  text-align: center;
-  font-family: $OpenSansRegular, sans-serif;
-  text-transform: initial;
-}
+    var Epoxy = require('backbone-epoxy');
+    var Util = require('util');
+
+    var WidgetErrorView = Epoxy.View.extend({
+        className: 'widget-error-view',
+        template: 'tpl-widget-error',
+
+        initialize: function (options) {
+            this.render(options);
+        },
+        render: function (options) {
+            this.$el.html(Util.templates(this.template, options));
+        },
+        onDestroy: function () {
+            this.$el.remove();
+        }
+    });
+
+    return WidgetErrorView;
+});

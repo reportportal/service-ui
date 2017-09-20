@@ -189,7 +189,7 @@ define(function (require) {
                 !this.isPreview && Util.setupBaronScroll($('.project-activity-panel', this.$el));
                 this.getItemsInfo(_.uniq(this.testItems));
             } else {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
             }
         },
         getTickets: function (item) {

@@ -173,7 +173,7 @@ define(function (require) {
                     this.disabeLegendEvents();
                 }
             } else {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
             }
         }
     });

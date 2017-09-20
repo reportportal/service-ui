@@ -50,7 +50,7 @@ define(function (require) {
             var defectTypesChartDataOrdered = {};
 
             if (!this.isDataExists()) {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
                 return;
             }
             this.charts = [];
@@ -70,7 +70,7 @@ define(function (require) {
             });
 
             if (contentData.total === 0 || (_.isEmpty(defectTypesChartDataOrdered) && _.isEmpty(statusChartData))) {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
                 return;
             }
             this.defetTypesCollection = new SingletonDefectTypeCollection();

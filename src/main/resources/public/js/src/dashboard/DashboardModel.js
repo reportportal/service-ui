@@ -112,7 +112,6 @@ define(function (require, exports, module) {
                 widget.widgetPosition[1] += widgetHeight;
             });
             widgets.push(widgetData);
-            console.dir(widgetData);
             this.setWidgets(widgets);
         },
         onChangeWidgets: function () {

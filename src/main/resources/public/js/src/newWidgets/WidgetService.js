@@ -447,8 +447,8 @@ define(function (require) {
                             options: {
                                 entity: 'user',
                                 label: Localization.widgets.typeUserName,
-                                placeholder: Localization.widgets.selectUser,
-                                minItems: 1,
+                                placeholder: Localization.widgets.enterUserName,
+                                minItems: 0,
                                 maxItems: 64,
                                 getValue: function (model) {
                                     var widgetOptions = model.getWidgetOptions();
@@ -583,17 +583,6 @@ define(function (require) {
                             options: {}
                         },
                         {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
                             control: 'dropDown',
                             options: {
                                 label: Localization.widgets.widgetCriteria,
@@ -664,6 +653,17 @@ define(function (require) {
                                     model.setContentFields(result);
                                 }
                             }
+                        },
+                        {
+                            control: 'input',
+                            options: {
+                                name: Localization.widgets.items,
+                                min: 1,
+                                max: 150,
+                                def: 50,
+                                numOnly: true,
+                                action: 'limit'
+                            }
                         }
                     ]
                 },
@@ -711,10 +711,10 @@ define(function (require) {
                                     if (contentFields.length) {
                                         return contentFields;
                                     }
-                                    return self.model.get('items')[0].value;
+                                    return [self.model.get('items')[0].value];
                                 },
                                 setValue: function (value, model) {
-                                    model.setContentFields([value]);
+                                    model.setContentFields(value);
                                 }
                             }
                         },
@@ -732,9 +732,9 @@ define(function (require) {
                         {
                             control: 'inputItems',
                             options: {
-                                entity: 'launch',
+                                entity: 'launchName',
                                 label: Localization.widgets.typeLaunchName,
-                                placeholder: Localization.widgets.selectLaunch,
+                                placeholder: Localization.wizard.enterLaunchName,
                                 minItems: 1,
                                 maxItems: 1,
                                 getValue: function (model) {
@@ -884,7 +884,7 @@ define(function (require) {
                         {
                             control: 'inputItems',
                             options: {
-                                entity: 'launch',
+                                entity: 'launchName',
                                 label: Localization.widgets.typeLaunchName,
                                 placeholder: Localization.widgets.selectLaunch,
                                 minItems: 1,

@@ -39,6 +39,7 @@ define(function (require) {
         template: 'tpl-launch-step-item',
         className: 'row rp-table-row',
         events: {
+            click: 'onClickView',
             'click [data-js-name-link]': 'onClickName', // common method
             // 'click [data-js-time-format]': 'toggleStartTimeView',
             'click [data-js-item-edit]': 'onClickEdit',
@@ -175,9 +176,19 @@ define(function (require) {
             });
             modal.show();
         },
+        onClickView: function (e) {
+            if ((e.ctrlKey || e.metaKey) && !($(e.target).is('a') || $(e.target).parent('a').length)
+                && !this.model.get('launch_isProcessing')) {
+                this.model.set({ select: !this.model.get('select') });
+                if (e.altKey) {
+                    this.model.trigger('check:before:items', this.model.get('id'));
+                }
+            }
+        },
         onClickSelect: function (e) {
             config.trackingDispatcher.trackEventNumber(152);
-            if ((e.ctrlKey || e.metaKey) && !this.model.get('select')) {
+            if (e.altKey && !this.model.get('select')
+                && !this.model.get('launch_isProcessing')) {
                 this.model.trigger('check:before:items', this.model.get('id'));
             }
         },

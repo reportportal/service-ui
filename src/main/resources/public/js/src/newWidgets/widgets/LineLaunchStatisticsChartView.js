@@ -168,7 +168,7 @@ define(function (require) {
                 }
                 this.updateInvalidCriteria(vis);
             } else {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
             }
         }
     });

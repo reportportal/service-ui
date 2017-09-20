@@ -70,7 +70,7 @@ define(function (require) {
                 Util.hoverFullTime(this.$el);
                 !this.isPreview && Util.setupBaronScroll($('.most-failed-launches', this.$el));
             } else {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
             }
         }
     });

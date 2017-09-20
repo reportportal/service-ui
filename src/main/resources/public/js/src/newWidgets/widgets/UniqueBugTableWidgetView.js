@@ -89,7 +89,7 @@ define(function (require) {
                     });
                 }
             } else {
-                this.addNoAvailableBock(this.$el);
+                this.addNoAvailableBock();
             }
         },
         addPackItems: function () {

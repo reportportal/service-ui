@@ -43,8 +43,8 @@ define(function (require) {
                     control: 'inputItems',
                     options: {
                         entity: 'filter',
-                        label: Localization.wizard.selectFilter,
-                        placeholder: Localization.wizard.choiceFilter,
+                        label: Localization.wizard.filters,
+                        placeholder: Localization.wizard.enterFilter,
                         minItems: 1,
                         getValue: function (model) {
                             var widgetOptions = model.getWidgetOptions();
@@ -76,7 +76,7 @@ define(function (require) {
                             { name: Localization.launchesHeaders.no_defect, value: 'no_defect' },
                             { name: Localization.launchesHeaders.to_investigate, value: 'to_investigate' }
                         ],
-                        placeholder: Localization.wizard.choiceCriteria,
+                        placeholder: Localization.wizard.choiceColumns,
                         multiple: true,
                         notEmpty: false,
                         getValue: function (model, self) {
