@@ -1884,8 +1884,8 @@ define(['util'], function () {
             filters: 'Filters',
             enterFilter: 'Enter filter names',
             basicColumns: 'Basic columns',
-            choiceCriteria: 'Choice criteria',
-            choiceColumns: 'Choice columns',
+            choiceCriteria: 'Choose criteria',
+            choiceColumns: 'Choose columns',
             tagPrefixDescription: 'To view a dynamic of a definite tag you should type its part before colon ‘:’',
             tagPrefixPlaceholder: 'Enter a part of tag before ‘:’',
 
