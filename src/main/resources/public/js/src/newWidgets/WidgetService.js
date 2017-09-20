@@ -37,11 +37,11 @@ define(function (require) {
     var NotPassedCasesChart = require('newWidgets/widgets/notPassedTestCasesTrendChart/index');
     var LaunchesComparisonChart = require('newWidgets/widgets/launchesComparison/index');
     var PassingRatePerLaunchChart = require('newWidgets/widgets/passingRatePerLaunch/index');
-
-    var PassingRateSummaryChart = require('newWidgets/widgets/PassingRateSummaryChartView');
+    var PassingRateSummaryChart = require('newWidgets/widgets/passingRateSummary/index');
     var ProductStatus = require('newWidgets/widgets/productStatus/index');
     var CumulativeTrendChart = require('newWidgets/widgets/cumulativeTrendChart/index');
 
+    // ------------------ STATUS PAGE WIDGETS ------------------
     var LastLaunchPieChart = require('newWidgets/widgets/LastLaunchPieChartView');
     var PercentageOfInvestigationChart = require('newWidgets/widgets/PercentageOfInvestigationChartView');
     var PercentageOfProductBugsChart = require('newWidgets/widgets/PercentageOfProductBugsChartView');
@@ -87,7 +87,7 @@ define(function (require) {
         not_passed: NotPassedCasesChart,
         launches_comparison_chart: LaunchesComparisonChart,
         passing_rate_per_launch: PassingRatePerLaunchChart,
-
+        passing_rate_summary: PassingRateSummaryChart,
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
     };
@@ -95,54 +95,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                passing_rate_summary: {
-                    gadget_name: Localization.widgets.passingRateSummaryChart,
-                    img: 'passing-rate-summery.svg',
-                    description: Localization.widgets.passingRateSummaryChartDescription,
-                    widget_type: 'bar_chart',
-                    gadget: 'passing_rate_summary',
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {}
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.barMode, value: 'barMode' },
-                                    { name: Localization.widgets.pieChartMode, value: 'pieChartMode' }
-                                ],
-                                action: 'switch_view_mode'
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'criteria',
-                                fields: ['statistics$executions$total', 'statistics$executions$passed']
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'number', 'start_time']
-                            }
-                        }
-                    ]
-                },
                 // ------------------ STATUS PAGE WIDGETS ------------------
                 last_launch: {
                     gadget_name: Localization.widgets.executionIssueStatistics,
