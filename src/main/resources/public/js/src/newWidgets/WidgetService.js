@@ -152,44 +152,10 @@ define(function (require) {
             return 'undefined.svg';
         },
         getWidgetView: function (gadget) {
+            if (WIDGETS[gadget]) {
+                return WIDGETS[gadget];
+            }
             switch (gadget) {
-            case 'old_line_chart':
-                return LaunchStatisticsLineChart;
-            case 'statistic_trend':
-                return LaunchStatisticsTrendChart;
-            case 'investigated_trend':
-                return InvestigatedTrendChart;
-            case 'launch_statistics':
-                return LaunchStatisticsComboPieChart;
-            case 'overall_statistics':
-                return OverallStatisticsWidget;
-            case 'not_passed':
-                return NotPassedCasesChart;
-            case 'cases_trend':
-                return TestCasesGrowthTrendChart;
-            case 'unique_bug_table':
-                return UniqueBugsTable;
-            case 'bug_trend':
-                return FailedCasesTrendChart;
-            case 'activity_stream':
-                return ProjectActivityWidget;
-            case 'launches_comparison_chart':
-                return LaunchesComparisonChart;
-            case 'launches_duration_chart':
-                return LaunchesDurationChart;
-            case 'launches_table':
-                return LaunchesTableWidget;
-            case 'most_failed_test_cases':
-                return MostFailedTestCasesTable;
-            case 'passing_rate_per_launch':
-                return PassingRatePerLaunchChart;
-            case 'passing_rate_summary':
-                return PassingRateSummaryChart;
-            case 'product_status':
-                return ProductStatus;
-            case 'cumulative':
-                return CumulativeTrendChart;
-
                 // status page widgets
             case 'activities':
                 return ProjectActivityWidget;
