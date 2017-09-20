@@ -35,8 +35,8 @@ define(function (require) {
     var MostFailedTestCasesTable = require('newWidgets/widgets/mostFailedTestCasesTable/index');
     var FailedCasesTrendChart = require('newWidgets/widgets/failedCasesTrendChart/index');
     var NotPassedCasesChart = require('newWidgets/widgets/notPassedTestCasesTrendChart/index');
+    var LaunchesComparisonChart = require('newWidgets/widgets/launchesComparison/index');
 
-    var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
     var PassingRateSummaryChart = require('newWidgets/widgets/PassingRateSummaryChartView');
     var PassingRatePerLaunchChart = require('newWidgets/widgets/PassingRatePerLaunchChartView');
     var ProductStatus = require('newWidgets/widgets/productStatus/index');
@@ -85,6 +85,7 @@ define(function (require) {
         most_failed_test_cases: MostFailedTestCasesTable,
         bug_trend: FailedCasesTrendChart,
         not_passed: NotPassedCasesChart,
+        launches_comparison_chart: LaunchesComparisonChart,
 
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
@@ -93,42 +94,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                launches_comparison_chart: {
-                    gadget_name: Localization.widgets.comparisonChart,
-                    img: 'different-launches-comparison-chart.svg',
-                    description: Localization.widgets.comparisonChartDescription,
-                    widget_type: 'column_chart',
-                    gadget: 'launches_comparison_chart',
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {}
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'criteria',
-                                fields: function () {
-                                    return _.keys(this.getComparison());
-                                }.bind(this)
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'limit',
-                                value: 2
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'number', 'start_time']
-                            }
-                        }
-                    ]
-                },
                 passing_rate_per_launch: {
                     gadget_name: Localization.widgets.passingRatePerLaunchChart,
                     img: 'passing-rate-launch.svg',
