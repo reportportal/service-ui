@@ -33,10 +33,10 @@ define(function (require) {
     var LaunchesTableWidget = require('newWidgets/widgets/launchesTable/index');
     var UniqueBugsTable = require('newWidgets/widgets/uniqueBugsTable/index');
     var MostFailedTestCasesTable = require('newWidgets/widgets/mostFailedTestCasesTable/index');
+    var FailedCasesTrendChart = require('newWidgets/widgets/failedCasesTrendChart/index');
 
     var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
     var NotPassedCasesChart = require('newWidgets/widgets/NotPassedCasesChartView');
-    var FailedCasesTrendChart = require('newWidgets/widgets/FailedCasesTrendChartView');
     var PassingRateSummaryChart = require('newWidgets/widgets/PassingRateSummaryChartView');
     var PassingRatePerLaunchChart = require('newWidgets/widgets/PassingRatePerLaunchChartView');
     var ProductStatus = require('newWidgets/widgets/productStatus/index');
@@ -83,6 +83,7 @@ define(function (require) {
         launches_table: LaunchesTableWidget,
         unique_bug_table: UniqueBugsTable,
         most_failed_test_cases: MostFailedTestCasesTable,
+        bug_trend: FailedCasesTrendChart,
 
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
@@ -91,46 +92,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                bug_trend: {
-                    gadget_name: Localization.widgets.failedTrendChart,
-                    img: 'failed-cases-trend-chart.svg',
-                    description: Localization.widgets.failedTrendChartDescription,
-                    widget_type: 'bug_trend',
-                    gadget: 'bug_trend',
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {}
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.items,
-                                min: 1,
-                                max: 150,
-                                def: 50,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'criteria',
-                                fields: function () {
-                                    return _.keys(this.getTotalDefects());
-                                }.bind(this)
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'number', 'start_time']
-                            }
-                        }
-                    ]
-                },
                 not_passed: {
                     gadget_name: Localization.widgets.nonPassedTrendChart,
                     img: 'non-passed-test-cases-trend.svg',
