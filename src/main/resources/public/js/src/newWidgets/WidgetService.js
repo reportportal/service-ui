@@ -31,9 +31,9 @@ define(function (require) {
     var TestCasesGrowthTrendChart = require('newWidgets/widgets/testCasesGrowthTrendChart/index');
     var InvestigatedTrendChart = require('newWidgets/widgets/investigatedTrendChart/index');
     var LaunchesTableWidget = require('newWidgets/widgets/launchesTable/index');
+    var UniqueBugsTable = require('newWidgets/widgets/uniqueBugsTable/index');
 
     var MostFailedTestCases = require('newWidgets/widgets/MostFailedTestCasesWidgetView');
-    var UniqueBugTable = require('newWidgets/widgets/UniqueBugTableWidgetView');
     var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
     var NotPassedCasesChart = require('newWidgets/widgets/NotPassedCasesChartView');
     var FailedCasesTrendChart = require('newWidgets/widgets/FailedCasesTrendChartView');
@@ -81,6 +81,7 @@ define(function (require) {
         cases_trend: TestCasesGrowthTrendChart,
         investigated_trend: InvestigatedTrendChart,
         launches_table: LaunchesTableWidget,
+        unique_bug_table: UniqueBugsTable,
 
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
@@ -89,30 +90,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                unique_bug_table: {
-                    gadget_name: Localization.widgets.uniqueBugsTable,
-                    img: 'unique-bugs-table.svg',
-                    description: Localization.widgets.uniqueBugsTableDescription,
-                    widget_type: 'table',
-                    gadget: 'unique_bug_table',
-                    uiControl: [
-                        {
-                            control: 'filters',
-                            options: {}
-                        },
-                        {
-                            control: 'input',
-                            options: {
-                                name: Localization.widgets.maxLaunches,
-                                min: 1,
-                                max: 150,
-                                def: 10,
-                                numOnly: true,
-                                action: 'limit'
-                            }
-                        }
-                    ]
-                },
                 most_failed_test_cases: {
                     gadget_name: Localization.widgets.failedTestCasesTable,
                     widget_type: 'table',
@@ -613,7 +590,7 @@ define(function (require) {
             case 'cases_trend':
                 return TestCasesGrowthTrendChart;
             case 'unique_bug_table':
-                return UniqueBugTable;
+                return UniqueBugsTable;
             case 'bug_trend':
                 return FailedCasesTrendChart;
             case 'activity_stream':
