@@ -177,6 +177,7 @@ define(['util'], function () {
             markdownPreview: 'Toggle Preview',
             they: 'They',
             it: 'It',
+            new: 'New',
             days: [
                 'Sunday',
                 'Monday',

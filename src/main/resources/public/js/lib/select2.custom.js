@@ -685,7 +685,6 @@ the specific language governing permissions and limitations under the Apache Lic
         // abstract
         init: function (opts) {
             var results, search, resultsSelector = ".select2-results";
-
             // prepare options
             this.opts = opts = this.prepareOpts(opts);
 
@@ -984,6 +983,9 @@ the specific language governing permissions and limitations under the Apache Lic
 
                         // bulk append the created nodes
                         container.append(nodes);
+                        if(self.opts.newButton){
+                            $(container).find('li').first().find('.select2-match').append("<span class='new-btn'>" + self.opts.newButton + "</span>");
+                        }
                         liveRegion.text(opts.formatMatches(results.length));
                     };
 

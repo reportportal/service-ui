@@ -685,6 +685,7 @@ define(function (require) {
             dropdownCssClass: options.dropdownCssClass || '',
             minimumInputLength: options.min || 1,
             maximumInputLength: 128,
+            newButton: Localization.ui.new,
             formatResultCssClass: function (state) {
                 if ((remoteTags.length == 0 || _.indexOf(remoteTags, state.text) < 0) && $('.select2-input.select2-active').val() == state.text) {
                     return 'exact-match';
