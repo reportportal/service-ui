@@ -27,42 +27,53 @@ define(function (require) {
     return {
         getConfig: function () {
             return {
-                gadget_name: Localization.widgets.comparisonChart,
-                img: 'different-launches-comparison-chart.svg',
-                description: Localization.widgets.comparisonChartDescription,
-                widget_type: 'column_chart', // TODO remove after refactoring,
-                hasPreview: true
+                gadget_name: Localization.widgets.passingRatePerLaunchChart,
+                img: 'passing-rate-launch.svg',
+                description: Localization.widgets.passingRatePerLaunchChartDescription,
+                widget_type: 'bar_chart', // TODO remove after refactoring,
+                hasPreview: false
             };
         },
         getSettings: function () {
             var async = $.Deferred();
             async.resolve([
                 {
-                    control: 'filters',
-                    options: {}
+                    control: 'inputItems',
+                    options: {
+                        entity: 'launchName',
+                        label: Localization.widgets.typeLaunchName,
+                        placeholder: Localization.widgets.selectLaunch,
+                        minItems: 1,
+                        maxItems: 1,
+                        getValue: function (model) {
+                            var widgetOptions = model.getWidgetOptions();
+                            if (widgetOptions.launchNameFilter) {
+                                return widgetOptions.launchNameFilter;
+                            }
+                            return [];
+                        },
+                        setValue: function (value, model) {
+                            var widgetOptions = model.getWidgetOptions();
+                            widgetOptions.launchNameFilter = value;
+                            model.setWidgetOptions(widgetOptions);
+                        }
+                    }
                 },
                 {
-                    control: 'static',
+                    control: 'switcher',
                     options: {
-                        action: 'criteria',
-                        fields: [
-                            'statistics$executions$total',
-                            'statistics$executions$passed',
-                            'statistics$executions$failed',
-                            'statistics$executions$skipped',
-                            'statistics$defects$product_bug$total',
-                            'statistics$defects$automation_bug$total',
-                            'statistics$defects$system_issue$total',
-                            'statistics$defects$no_defect$total',
-                            'statistics$defects$to_investigate$total'
-                        ]
+                        items: [
+                            { name: Localization.widgets.barMode, value: 'barMode' },
+                            { name: Localization.widgets.pieChartMode, value: 'pieChartMode' }
+                        ],
+                        action: 'switch_view_mode'
                     }
                 },
                 {
                     control: 'static',
                     options: {
                         action: 'limit',
-                        value: 2
+                        value: 30
                     }
                 },
                 {

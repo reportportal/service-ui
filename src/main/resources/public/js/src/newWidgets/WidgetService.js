@@ -36,9 +36,9 @@ define(function (require) {
     var FailedCasesTrendChart = require('newWidgets/widgets/failedCasesTrendChart/index');
     var NotPassedCasesChart = require('newWidgets/widgets/notPassedTestCasesTrendChart/index');
     var LaunchesComparisonChart = require('newWidgets/widgets/launchesComparison/index');
+    var PassingRatePerLaunchChart = require('newWidgets/widgets/passingRatePerLaunch/index');
 
     var PassingRateSummaryChart = require('newWidgets/widgets/PassingRateSummaryChartView');
-    var PassingRatePerLaunchChart = require('newWidgets/widgets/PassingRatePerLaunchChartView');
     var ProductStatus = require('newWidgets/widgets/productStatus/index');
     var CumulativeTrendChart = require('newWidgets/widgets/cumulativeTrendChart/index');
 
@@ -86,6 +86,7 @@ define(function (require) {
         bug_trend: FailedCasesTrendChart,
         not_passed: NotPassedCasesChart,
         launches_comparison_chart: LaunchesComparisonChart,
+        passing_rate_per_launch: PassingRatePerLaunchChart,
 
         product_status: ProductStatus,
         cumulative: CumulativeTrendChart
@@ -94,61 +95,6 @@ define(function (require) {
     var WidgetService = {
         getAllWidgetsConfig: function () {
             var config = {
-                passing_rate_per_launch: {
-                    gadget_name: Localization.widgets.passingRatePerLaunchChart,
-                    img: 'passing-rate-launch.svg',
-                    description: Localization.widgets.passingRatePerLaunchChartDescription,
-                    widget_type: 'bar_chart',
-                    gadget: 'passing_rate_per_launch',
-                    uiControl: [
-                        {
-                            control: 'inputItems',
-                            options: {
-                                entity: 'launchName',
-                                label: Localization.widgets.typeLaunchName,
-                                placeholder: Localization.widgets.selectLaunch,
-                                minItems: 1,
-                                maxItems: 1,
-                                getValue: function (model) {
-                                    var widgetOptions = model.getWidgetOptions();
-                                    if (widgetOptions.launchNameFilter) {
-                                        return widgetOptions.launchNameFilter;
-                                    }
-                                    return [];
-                                },
-                                setValue: function (value, model) {
-                                    var widgetOptions = model.getWidgetOptions();
-                                    widgetOptions.launchNameFilter = value;
-                                    model.setWidgetOptions(widgetOptions);
-                                }
-                            }
-                        },
-                        {
-                            control: 'switcher',
-                            options: {
-                                items: [
-                                    { name: Localization.widgets.barMode, value: 'barMode' },
-                                    { name: Localization.widgets.pieChartMode, value: 'pieChartMode' }
-                                ],
-                                action: 'switch_view_mode'
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'limit',
-                                value: 30
-                            }
-                        },
-                        {
-                            control: 'static',
-                            options: {
-                                action: 'metadata_fields',
-                                fields: ['name', 'number', 'start_time']
-                            }
-                        }
-                    ]
-                },
                 passing_rate_summary: {
                     gadget_name: Localization.widgets.passingRateSummaryChart,
                     img: 'passing-rate-summery.svg',
