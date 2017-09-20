@@ -71,7 +71,7 @@ define(function (require) {
             this.listenTo(this.launchFilterCollection, 'add_entity change:newSelectionParameters', this.showFilterCriteriaPanel);
             this.listenTo(this.userStorage, 'change:launchFilterCriteriaHide', this.onChangeFilterCriteriaShow);
             this.appStorage = new SingletonAppStorage();
-            this.listenTo(this.appStorage, 'change:launchDistinct', this.onChangeSelectLink);
+            // this.listenTo(this.appStorage, 'change:launchDistinct', this.onChangeSelectLink);
             this.render();
         },
         render: function () {
@@ -98,9 +98,9 @@ define(function (require) {
             $('[data-js-launches-mode-dropdown]', this.$el).html(this.launchModeSelector.$el);
             this.listenTo(this.launchModeSelector, 'change', this.onLaunchModeSelect);
         },
-        onChangeSelectLink: function () {
-            config.router.navigate(this.model.get('url'), {trigger: true});
-        },
+        // onChangeSelectLink: function () {
+        //     config.router.navigate(this.model.get('url'), {trigger: true});
+        // },
         onLaunchModeSelect: function (mode) {
             this.appStorage.set({ launchDistinct: mode });
         },
