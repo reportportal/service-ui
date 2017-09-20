@@ -311,7 +311,7 @@ define(function (require) {
                     });
                     return _.extend(launchInfo, stats);
                 }, this);
-                return data.reverse();
+                return data;
             }
             return [];
         },
