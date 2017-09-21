@@ -134,7 +134,6 @@ define(function (require) {
                     config.trackingDispatcher.trackEventNumber(297);
                     break;
                 case 'select filter':
-                    this.lastFilterId = this.model.get('filter_id');
                     break;
                 case 'entity choice click':
                     config.trackingDispatcher.trackEventNumber(302);
@@ -196,6 +195,7 @@ define(function (require) {
                 $('[data-js-step-2-title], [data-js-step-2]', this.$el).addClass('active');
                 $('[data-js-previous-first-step],[data-js-next-last-step]', this.$el).removeClass('hide');
                 this.configureWidgetView.activate();
+                this.lastFilterId = '';
                 break;
             case 3:
                 $('[data-js-step-1-title], [data-js-step-2-title]', this.$el).addClass('visited');
