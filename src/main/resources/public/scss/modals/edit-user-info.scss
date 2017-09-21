@@ -23,6 +23,17 @@
     .modal-content-wrapper {
         .rp-edit-user-info {
             margin: 40px 0 20px;
+            .rp-form{
+              width: 500px;
+              label{
+                span{
+                  width: 30%;
+                }
+                input{
+                  width: 70%;
+                }
+              }
+            }
         }
     }
 }
