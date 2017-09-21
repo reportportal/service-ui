@@ -64,7 +64,6 @@ define(function (require) {
             this.appStorage = new SingletonAppStorage();
             this.ready = $.Deferred();
             this.listenTo(this, 'change:id', this.onChangeId);
-            this.listenTo(this.appStorage, 'change:launchDistinct', this.updateData);
             this.updateData();
         },
         getToInvestigate: function () {
@@ -90,9 +89,9 @@ define(function (require) {
             if (this.get('level') === 'filter') {
                 if (this.get('id') === 'all') {
                     if (this.appStorage.get('launchDistinct') === 'latest') {
-                        this.set({ name: Localization.launches.latestLaunches_short});
+                        this.set({ name: Localization.launches.latestLaunches_short });
                     } else {
-                        this.set({ name: Localization.launches.allLaunches_short  });
+                        this.set({ name: Localization.launches.allLaunches_short });
                     }
                 } else {
                     launchFilterCollection = new SingletonLaunchFilterCollection();
@@ -101,9 +100,9 @@ define(function (require) {
                         if (filterModel) {
                             self.set({ name: filterModel.get('name'), failLoad: false });
                         } else if (self.appStorage.get('launchDistinct') === 'latest') {
-                            self.set({ name: Localization.launches.latestLaunches_short});
+                            self.set({ name: Localization.launches.latestLaunches_short });
                         } else {
-                            self.set({ name: Localization.launches.allLaunches_short  });
+                            self.set({ name: Localization.launches.allLaunches_short });
                         }
                     });
                 }
@@ -142,6 +141,18 @@ define(function (require) {
 
         initialize: function (models, options) {
             this.context = options.context;
+            this.appStorage = new SingletonAppStorage();
+            this.listenTo(this.appStorage, 'change:launchDistinct', this.updateLatestMode);
+        },
+        updateLatestMode: function () {
+            var allModel = this.get('all');
+            if (allModel) {
+                if (this.appStorage.get('launchDistinct') === 'latest') {
+                    allModel.set({ name: Localization.launches.latestLaunches_short });
+                } else {
+                    allModel.set({ name: Localization.launches.allLaunches_short });
+                }
+            }
         },
         updateUrlModels: function () {
             var url = '';

@@ -132,7 +132,11 @@ define(function (require) {
                         },
                         setValue: function (value, model) {
                             var widgetOptions = model.getWidgetOptions();
-                            widgetOptions.userRef = value;
+                            if (!value || !value.length || (value.length === 1 && !value[0])) {
+                                widgetOptions.userRef && delete widgetOptions.userRef;
+                            } else {
+                                widgetOptions.userRef = value;
+                            }
                             model.setWidgetOptions(widgetOptions);
                         }
                     }
