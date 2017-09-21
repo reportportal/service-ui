@@ -531,7 +531,7 @@ define(function (require, exports, module) {
                              '<br>'+
                              '<div class="options">'+
                             // '<p>username: ' + this.user.get('name') + '</p>' +
-                            '<p>password: ' + this.model.get('apiToken') + '</p>' +
+                            '<p>uuid: ' + this.model.get('apiToken') + '</p>' +
                             '<p>endpoint: ' + document.location.origin + '/api/v1' + '</p>' +
                             '<p>project: ' + this.user.get('defaultProject') + '</p>' +
                             '<p>launch: ' + this.user.get('name') + '_TEST_EXAMPLE</p>' +
