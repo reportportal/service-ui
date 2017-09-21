@@ -105,14 +105,6 @@
         width: 420px;
         position: relative;
         margin: 20px 0 40px 20px;
-        h1 {
-          @include fontHeader;
-          color: $COLOR--gray-47;
-          font-size: 17px;
-          text-align: center;
-          text-transform: uppercase;
-          margin: 4px 0;
-        }
         .separate {
           background: $COLOR--gray-91;
           width: 100%;
