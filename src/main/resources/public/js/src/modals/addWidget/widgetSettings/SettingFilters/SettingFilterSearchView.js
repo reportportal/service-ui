@@ -142,6 +142,10 @@ define(function (require) {
             }
         },
         sendEvent: function (eventOptions) {
+            if (eventOptions.view === 'filter' && (eventOptions.action === 'ok edit filter' || eventOptions.action === 'ok add click')) {
+                this.viewModel.set('search', '');
+                $('[data-js-filter-name-search]', this.$el).val('');
+            }
             this.trigger('send:event', eventOptions);
         },
         onSelectFilterCheck: function (model, active) {
