@@ -25,7 +25,7 @@ help:
 	@echo "checkstyle - gofmt+golint+misspell"
 
 vendor: ## Install glide and sync vendored dependencies
-	$(if $(shell which glide 2>/dev/null),$(echo "Glide is already installed..."),$(shell curl https://glide.sh/get | sh))
+	$(if $(shell which glide 2>/dev/null),$(echo "Glide is already installed..."),$(shell go get github.com/Masterminds/glide))
 	glide install
 
 get-build-deps: vendor
