@@ -33,8 +33,12 @@
         background: $COLOR--white-default;
       }
     }
-    .rp-btn {
+    .rp-btn.rp-button-with-icon {
       float: right;
+      padding: 8px 10px 8px 15px;
+      i.rp-icons.rp-icons-add-filter{
+        width: 20px;
+      }
     }
   }
   .select-filter-wrapper {
