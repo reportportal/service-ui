@@ -33,8 +33,6 @@ define(function (require) {
     var ProjectActivityWidget = BaseWidgetView.extend({
         initialize: function (options) {
             BaseWidgetView.prototype.initialize.call(this, options);
-            this.isReverse = !_.isUndefined(options.isReverse)
-                ? options.isReverse : false; // for status page widget
             this.testItems = [];
         },
         tpl: 'tpl-widget-activity-stream',
@@ -60,7 +58,7 @@ define(function (require) {
             var dates = [];
             var contentData = this.model.getContent();
             if (contentData.result) {
-                _.each(this.isReverse ? contentData.result : contentData.result.reverse(),
+                _.each(contentData.result,
                     function (val) {
                         var date;
                         var dateWoTime;
