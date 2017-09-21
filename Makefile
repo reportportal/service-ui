@@ -24,9 +24,8 @@ help:
 	@echo "test       - go test"
 	@echo "checkstyle - gofmt+golint+misspell"
 
-vendor: ## Install govendor and sync vendored dependencies
-	$(GO) get -v github.com/Masterminds/glide
-	cd "$(GOPATH)/src/github.com/Masterminds/glide" && git checkout tags/v0.12.3 && go install && cd -
+vendor: ## Install glide and sync vendored dependencies
+	$(if $(shell which glide 2>/dev/null),$(echo "Glide is already installed..."),$(shell curl https://glide.sh/get | sh))
 	glide install
 
 get-build-deps: vendor
