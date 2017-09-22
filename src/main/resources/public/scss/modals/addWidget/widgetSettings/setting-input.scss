@@ -33,26 +33,36 @@
     position: relative;
     display: inline-block;
     margin-left: 18px;
-    width: 244px;
+    width: auto;
     margin-bottom: 0;
     text-align: left;
     vertical-align: middle;
     input {
-      width: 100%;
+      width: 244px;
+      margin-left: 17px;
     }
     .validate-hint {
-      width: 100%;
+      width: 244px;
+      left: unset;
+      right: 0;
       top: auto;
       bottom: 100%;
       box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.2);
     }
   }
   &.num-only {
-    input {
-      width: 68px;
-    }
-    .validate-hint {
-      width: 68px;
+    .input-wrapper {
+      width: auto;
+      margin-right: 176px;
+      text-align: center;
+      input {
+        width: 68px;
+        margin-left: 17px;
+      }
+      .validate-hint {
+        width: 100%;
+        text-align: left;
+      }
     }
   }
   .input-description {
