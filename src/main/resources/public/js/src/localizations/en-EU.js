@@ -178,6 +178,7 @@ define(['util'], function () {
             they: 'They',
             it: 'It',
             new: 'New',
+            enterEmail: 'Enter email',
             days: [
                 'Sunday',
                 'Monday',
