@@ -178,6 +178,7 @@ define(['util'], function () {
             they: 'ним',
             it: 'нему',
             new: 'Новый',
+            enterEmail: 'Введите адрес электронной почты',
             days: [
                 'Воскресенье',
                 'Понедельник',
@@ -267,7 +268,7 @@ define(['util'], function () {
             emailToBegin: 'Введите адрес электронной почты, чтобы начать',
             forgotPassword: 'Забыли пароль?',
             welcomeMsg: '<span class="big">Добро пожаловать,</span><br>войдите в вашу учетную запись',
-            welcomeMsgForgotPass: '<span class="big">Забыли пароль?</span><br> Впишите адрес вашей электронной почты, чтобы восстановить его',
+            welcomeMsgForgotPass: '<span class="big">Забыли пароль?</span><br> Введите адрес вашей электронной почты, чтобы восстановить его',
             welcomeMsgResetPass: '<span class="big">Сменить пароль</span><br> Введите новый пароль и подтвердите его',
             currentVersion: 'Текущая версия:',
             newVersions: 'Доступны новые версии.',
