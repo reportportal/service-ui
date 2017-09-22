@@ -852,6 +852,20 @@ define(['util'], function () {
             issueId: 'Issue ID'
         },
 
+        forSettings: {
+            hour1: '1 hour',
+            hour3: '3 hours',
+            hour6: '6 hours',
+            hour12: '12 hours',
+            day1: '1 day',
+            week1: '1 week',
+            week2: '2 weeks',
+            week3: '3 weeks',
+            month1: '1 month',
+            month3: '3 months',
+            months6: '6 months'
+        },
+
         launchStatus: {
             ALL: 'All',
             FAILED: 'Failed',
