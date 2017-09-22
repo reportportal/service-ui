@@ -273,7 +273,12 @@ define(['util'], function () {
             newVersions: 'New versions are available.',
             updateServices: 'Update to the latests',
             twitterCaption: 'Be informed with our latest tweets',
-            error: 'Error'
+            error: 'Error',
+            loginEpam: 'Login with EPAM',
+            loginGitHub: 'Login with GitHub',
+            or: 'or',
+            loginPlaceholder: 'Login',
+            password: 'Password'
         },
 
         topMenu: {
