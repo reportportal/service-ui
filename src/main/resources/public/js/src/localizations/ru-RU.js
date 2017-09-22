@@ -757,7 +757,11 @@ define(['util'], function () {
             sortedBy: ' отсортировано по: ',
             addToTabs: 'Добавить во вкладки запусков',
             removeFromTabs: 'Удалить из вкладок запусков',
-            total: 'Все'
+            total: 'Все',
+            or: 'или',
+            launchPage: 'странице Запусков',
+            noAvailableFilters: 'Нет доступных фильтров',
+            createFilter: 'Вы можете создать Ваш первый фильтр на '
         },
 
         launches: {
