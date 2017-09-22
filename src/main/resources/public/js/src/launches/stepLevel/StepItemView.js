@@ -45,7 +45,8 @@ define(function (require) {
             'click [data-js-item-edit]': 'onClickEdit',
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-toggle-open]': 'onClickOpen',
-            'click [data-js-select-item]': 'onClickSelect'
+            'click [data-js-select-label]': 'onClickSelectLabel',
+            'click [data-js-select-item]': 'onClickSelectInput'
         },
         bindings: {
             '[data-js-name-link]': 'attr: {href: url}',
@@ -185,10 +186,13 @@ define(function (require) {
                 }
             }
         },
-        onClickSelect: function (e) {
+        onClickSelectLabel: function (e) {
+            e.stopPropagation();
+        },
+        onClickSelectInput: function (e) {
             config.trackingDispatcher.trackEventNumber(152);
-            if (e.ctrlKey) {
-                this.model.set({ select: !this.model.get('select') });
+            if (e.ctrlKey && e.altKey) {
+                this.model.trigger('check:before:items', this.model.get('id'));
             }
         },
         activateAccordion: function () {

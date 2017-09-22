@@ -51,7 +51,8 @@ define(function (require) {
             'click [data-js-owner-name]': 'onClickOwnerName',
             'click [data-js-statistics-to-investigate]': 'onClickToInvestigate',
             'click [data-js-toggle-open]': 'onClickOpen',
-            'click [data-js-select-item]': 'onClickSelect'
+            'click [data-js-select-label]': 'onClickSelectLabel',
+            'click [data-js-select-item]': 'onClickSelectInput'
         },
         bindings: {
             ':el': 'classes: {"select-state": select}',
@@ -208,7 +209,6 @@ define(function (require) {
             this.statistics = [];
             this.filterModel = options.filterModel;
             this.render();
-            this.applyBindings();
 
             defectCollection.ready.done(function () {
                 var investigateFilter = '';
@@ -336,14 +336,17 @@ define(function (require) {
                 }
             }
         },
-        onClickSelect: function (e) {
+        onClickSelectLabel: function (e) {
+            e.stopPropagation();
+        },
+        onClickSelectInput: function (e) {
             if (this.model.get('type') === 'SUITE') {
                 config.trackingDispatcher.trackEventNumber(100.1);
             } else {
                 config.trackingDispatcher.trackEventNumber(61.2);
             }
-            if (e.ctrlKey) {
-                this.model.set({ select: !this.model.get('select') });
+            if (e.ctrlKey && e.altKey) {
+                this.model.trigger('check:before:items', this.model.get('id'));
             }
         },
         onClickEdit: function () {

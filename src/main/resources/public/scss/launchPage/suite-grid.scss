@@ -71,6 +71,8 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
       width: $launch-select-cell-width;
       text-align: center;
       padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
       .rp-checkbox-wrap span {
         height: 11px;
       }
