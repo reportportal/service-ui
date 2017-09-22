@@ -1,0 +1,45 @@
+<% function getItemHtml(name, shortName) {
+return '<div class="table-wrapper">' +
+    '<div class="middle-wrapper">' +
+        '<span class="text-overflow">' +
+                        '<span class="long-size">' + name + '</span>' +
+                        '<span class="short-size" title="' + name + '">' + shortName + '</span>&nbsp;' +
+                        '<div class="sort-icon-wrapper">' +
+                            '<i class="material-icons">keyboard_arrow_up</i>' +
+                            '<i class="material-icons">keyboard_arrow_down</i>' +
+                        '</div>' +
+                    '</span>' +
+        '</div>' +
+    '</div>';
+} %>
+<div class="grid-cell attachment-grid-cell rp-grid-th console-th ">
+    <%= getItemHtml('', '') %>
+</div>
+<div class="grid-cell time-grid-cell rp-grid-th console-th" data-sorter="time">
+    <%= getItemHtml(data.text.launchesHeaders.time, data.text.launchesHeaders.time_short) %>
+</div>
+<div class="grid-cell message-grid-cell rp-grid-th">
+    <div class="table-wrapper">
+        <div class="middle-wrapper">
+                        <span class="text-overflow">
+                            <span class="long-size"><%= data.text.launchesHeaders.message %></span>
+                            <span class="short-size" title="<%= data.text.launchesHeaders.message %>"><%= data.text.launchesHeaders.message_short %></span>&nbsp;
+                            <div class="sort-icon-wrapper">
+                                <i class="material-icons">keyboard_arrow_up</i>
+                                <i class="material-icons">keyboard_arrow_down</i>
+                            </div>
+                        </span>
+            <div class="filter-name-block">
+                <div data-js-name-filter></div>
+                <i class="material-icons">search</i>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="grid-cell attachment-grid-cell rp-grid-th block-th">
+    <%= getItemHtml('', '') %>
+</div>
+<div class="grid-cell time-grid-cell rp-grid-th block-th" data-sorter="time">
+    <%= getItemHtml(data.text.launchesHeaders.time, data.text.launchesHeaders.time_short) %>
+</div>
+

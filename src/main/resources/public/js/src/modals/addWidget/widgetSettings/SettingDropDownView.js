@@ -34,7 +34,7 @@ define(function (require) {
 
     var SettingDropDownView = SettingView.extend({
         className: 'modal-add-widget-setting-drop-down',
-        template: 'modal-add-widget-setting-drop-down',
+        template: 'tpl-modal-add-widget-setting-drop-down',
         bindings: {
             '[data-js-label-name]': 'html:label'
         },
@@ -44,6 +44,7 @@ define(function (require) {
                 label: '',
                 multiple: false,
                 placeholder: '',
+                notEmpty: true,
                 value: ''
             }, data.options);
             this.model = new Epoxy.Model(options);
@@ -60,19 +61,30 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, {}));
         },
         activate: function () {
+            this.model.set({ value: this.getValue(this.gadgetModel, this) });
             this.dropDown = new DropDownComponent({
                 data: this.model.get('items'),
                 placeholder: this.model.get('placeholder'),
                 multiple: this.model.get('multiple'),
-                defaultValue: this.getValue(this.gadgetModel, this)
+                defaultValue: this.model.get('value')
             });
             $('[data-js-drop-down-container]', this.$el).html(this.dropDown.$el);
             this.listenTo(this.dropDown, 'change', this.onChangeDropDown);
+            this.listenTo(this.model, 'change:value', this.validate);
+            this.activated = true;
         },
         onChangeDropDown: function (value) {
+            this.model.set({ value: value });
             this.setValue(value, this.gadgetModel, true);
         },
-        validate: function () {
+        validate: function (options) {
+            if (this.model.get('notEmpty') && !this.model.get('value').length) {
+                if (options && options.silent) {
+                    return false;
+                }
+                this.dropDown.setErrorState(Localization.validation.moreAtItem);
+                return false;
+            }
             return true;
         },
         onDestroy: function () {

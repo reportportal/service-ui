@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
@@ -40,6 +40,9 @@ define(function (require, exports, module) {
 
         initialize: function () {
             this.render();
+            if (this.model.get('gadget')) {
+                $('[value="' + this.model.get('gadget') + '"]', this.$el).attr('selected', 'selected');
+            }
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {
@@ -48,63 +51,18 @@ define(function (require, exports, module) {
         },
         onChangeType: function () {
             var gadget = $('input:checked', this.$el).val();
-            var self = this;
+            var defaults = this.model.defaults;
+            $('[data-js-select-widget-header]', this.$el).removeClass('error-state');
             config.trackingDispatcher.trackEventNumber(291);
-            $.when(WidgetService.getSettingsGadget(gadget)).done(function (widget) {
-                if (widget.newWidget) {
-                    self.newUpdateModel(gadget, widget);
-                } else {
-                    self.updateModel(gadget, widget);
-                }
-            });
+            defaults.gadget = gadget;
+            this.model.set(defaults);
         },
-        newUpdateModel: function (gadget, curWidget) {
-            this.model.set({
-                gadget: gadget,
-                itemsCount: (curWidget.limit && curWidget.limit.def) || 50,
-                widgetDescription: '',
-                widgetOptions: '{}',
-                content_fields: '[]',
-            });
-        },
-        updateModel: function (gadget, curWidget) {
-            var defaultCriteria = [];
-            var defaultActions = [];
-            this.model.set({
-                gadget: gadget,
-                itemsCount: (curWidget.limit && curWidget.limit.def) || 50,
-                widgetDescription: '',
-                widgetOptions: '{}',
-                content_fields: '[]'
-            });
-            if (curWidget.criteria && !curWidget.noCriteria) {
-                if (curWidget.defaultCriteria) {
-                    defaultCriteria = curWidget.defaultCriteria;
-                } else {
-                    defaultCriteria = [];
-                    _.each(curWidget.criteria, function (value, key) {
-                        if (typeof value === 'object') {
-                            _.each(value.keys, function (valueKey) {
-                                defaultCriteria = defaultCriteria.concat(valueKey.split(','));
-                            });
-                        } else {
-                            defaultCriteria.push(key);
-                        }
-                    });
-                }
+        validate: function () {
+            if ($('input:checked', this.$el).length) {
+                return true;
             }
-            if (curWidget.staticCriteria) {
-                _.each(curWidget.staticCriteria, function (val, key) {
-                    defaultCriteria.push(key);
-                });
-            }
-            this.model.setContentFields(_.uniq(defaultCriteria));
-            if (curWidget.actions) {
-                _.each(curWidget.actions, function (a) {
-                    Array.prototype.push.apply(defaultActions, a.actions);
-                });
-                this.model.setWidgetOptions({ actionType: defaultActions });
-            }
+            $('[data-js-select-widget-header]', this.$el).addClass('error-state');
+            return false;
         },
         onDestroy: function () {
         }

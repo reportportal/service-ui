@@ -35,7 +35,6 @@ button {
         &[disabled],
         &.disabled {
             box-shadow: none;
-            //cursor: no-drop;
             cursor: default;
             &:active {
                 pointer-events: none;

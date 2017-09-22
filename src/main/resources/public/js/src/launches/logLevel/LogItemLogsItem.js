@@ -22,7 +22,6 @@ define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
@@ -33,8 +32,6 @@ define(function (require) {
 
     var LogItemLogsItem = Epoxy.View.extend({
         className: 'rp-table-row',
-        template: 'tpl-launch-log-item-logs-item',
-
         events: {
             'click [data-js-toggle-open]': 'onClickOpen',
             'click [data-js-link]': 'onClickImg'
@@ -66,24 +63,26 @@ define(function (require) {
                 }
             }
         },
-
-        onClickOpen: function () {
-            config.trackingDispatcher.trackEventNumber(213);
-            this.$el.toggleClass('open');
-        },
-
         initialize: function () {
             this.render();
             this.listenTo(this.model, 'scrollTo', this.scrollTo);
             this.messageView = new LogMessageView({ message: this.model.get('message') });
             $('[data-js-message]', this.$el).html(this.messageView.$el);
-            this.listenTo(this.messageView, 'load', this.activateAccordion);
+            this.afterInitialize && this.afterInitialize();
         },
+        render: function () {
+            this.$el.html(Util.templates(this.template));
+        },
+        onClickOpen: function () {
+            config.trackingDispatcher.trackEventNumber(213);
+            this.$el.toggleClass('open');
+        },
+
         supportMarkdown: function () {
             return false;
         },
         resize: function () {
-            this.activateAccordion();
+            this.activateAccordion && this.activateAccordion();
         },
         scrollTo: function () {
             var self = this;
@@ -96,26 +95,12 @@ define(function (require) {
             });
         },
 
-        render: function () {
-            this.$el.html(Util.templates(this.template, {}));
-        },
         onClickImg: function (e) {
             e.preventDefault();
             config.trackingDispatcher.trackEventNumber(212);
             this.model.trigger('click:attachment', this.model);
         },
 
-        activateAccordion: function () {
-            var minHeight = 133;
-            if (this.model.get('level') === 'ERROR') {
-                minHeight = 238;
-            }
-            if (this.$el.innerHeight() > minHeight) {
-                this.$el.addClass('show-accordion');
-            } else {
-                this.$el.removeClass('show-accordion');
-            }
-        },
         onDestroy: function () {
             this.messageView && this.messageView.destroy();
         }

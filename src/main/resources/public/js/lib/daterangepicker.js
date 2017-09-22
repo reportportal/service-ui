@@ -70,7 +70,7 @@
                             '<input class="rp-input-checkbox" type="checkbox"/>'+
                             '<span>' + options.dynamicUpdateText + '</span>'+
                         '</label>'+
-                        '<p>Your time range will be updated every day</p>'+
+                        '<p>' + options.locale.timeRangeChange + '</p>' +
                     '</div>'+
                     '<div class="pull-right block-buttons">' +
                         '<button class="rp-btn rp-btn-cancel" data-js-cancel></button>' +

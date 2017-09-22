@@ -145,7 +145,7 @@ define(function (require) {
                     invalid = false;
                 }
                 this.model.set({
-                    hint: 'At least ' + this.model.get('valueMinLength') + ' symbols required.',
+                    hint: Localization.ui.minPrefix + ' ' + this.model.get('valueMinLength') + ' ' + Localization.ui.minSufix3,
                     invalid: invalid
                 });
                 if (value == '') {
@@ -176,26 +176,36 @@ define(function (require) {
     var ConditionEntityView = Epoxy.View.extend({
         template: 'tpl-entity-conditions',
         className: 'input-group-sm filter-option-select',
+        bindings: {
+            '[data-js-condition-selected]': 'html:conditionText(condition)'
+        },
+        bindingFilters: {
+            conditionText: function (condition) {
+                return Localization.filterShortCut[condition];
+            }
+        },
         events: {
             'click .option-menu > li > a': 'changeOptions'
         },
         initialize: function () {
             this.render();
+            this.listenTo(this.model, 'change:condition', function (model, value) {
+                var conditionListItems = $('[data-js-condition-list] > li', this.$el);
+                conditionListItems.removeClass('active');
+                $.each(conditionListItems, function(i, item) {
+                    var conditionListItem = $(item);
+                    if ($('a', conditionListItem).data('value') === value) {
+                        conditionListItem.addClass('active');
+                    }
+                });
+            });
         },
         render: function () {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));
         },
-        conditionFlipper: function (e) {
-            e.preventDefault();
-            var $el = $(e.currentTarget);
-            $el.closest('.input-group').find('.select-value:first').text($el.data('short'));
-            $el.closest('ul').find('.active').removeClass('active');
-            $el.parent().addClass('active');
-            this.model.set('condition', $el.data('value'));
-        },
-
         changeOptions: function (e) {
-            this.conditionFlipper(e);
+            e.preventDefault();
+            this.model.set('condition', $(e.currentTarget).data('value'));
         }
     });
     var TagEntityView = Epoxy.View.extend({
@@ -315,6 +325,7 @@ define(function (require) {
                 dynamicUpdateText: Localization.filters.dynamicUpdate,
                 separator: ' ' + Localization.ui.to + ' ',
                 locale: {
+                    timeRangeChange: Localization.ui.timeRangeChange,
                     applyLabel: Localization.ui.submit,
                     cancelLabel: Localization.ui.cancel,
                     fromLabel: Localization.ui.from,
@@ -470,7 +481,7 @@ define(function (require) {
                 }
             });
             this.model.set({ value: valueMas.join(',') });
-            $('[data-js-value]', this.$el).text(nameMas.join(', ') || 'All');
+            $('[data-js-value]', this.$el).text(nameMas.join(', ') || Localization.filterNameByValue.ALL);
         }
     });
 
@@ -514,7 +525,7 @@ define(function (require) {
                 model: this.model,
                 type: options.type || 'userAutoCompleteUrl',
                 startSearch: config.forms.triggerMin,
-                warning: 'At least  3  symbols required.'
+                warning: Localization.ui.minPrefix + ' 3 ' + Localization.ui.minSufix3
             })).$el;
         }
     });
@@ -562,10 +573,18 @@ define(function (require) {
             })).$el);
         }
     });
-    var EntityUserTagView = EntityBaseView.extend({
+    var EntityOwnerTagView = EntityBaseView.extend({
         onRender: function () {
             this.$content.append((new UserTagEntityView({
                 model: this.model
+            })).$el);
+        }
+    });
+    var EntityMemberTagView = EntityBaseView.extend({
+        onRender: function () {
+            this.$content.append((new UserTagEntityView({
+                model: this.model,
+                type: 'autocompleteUserUrl'
             })).$el);
         }
     });
@@ -578,7 +597,7 @@ define(function (require) {
                 model: this.model,
                 noResizeSearch: true,
                 startSearch: 1,
-                warning: 'Please enter 1 or more characters'
+                warning: Localization.ui.enterChars
             })).$el);
         }
     });
@@ -618,8 +637,11 @@ define(function (require) {
     var EntityConditionInputModel = Model.extend({
         view: EntityConditionInputView
     });
-    var EntityUserTagModel = Model.extend({
-        view: EntityUserTagView
+    var EntityOwnerTagModel = Model.extend({
+        view: EntityOwnerTagView
+    });
+    var EntityMemberTagModel = Model.extend({
+        view: EntityMemberTagView
     });
     var EntityConditionTagModel = Model.extend({
         view: EntityConditionTagView
@@ -663,6 +685,7 @@ define(function (require) {
             dropdownCssClass: options.dropdownCssClass || '',
             minimumInputLength: options.min || 1,
             maximumInputLength: 128,
+            newButton: Localization.ui.new,
             formatResultCssClass: function (state) {
                 if ((remoteTags.length == 0 || _.indexOf(remoteTags, state.text) < 0) && $('.select2-input.select2-active').val() == state.text) {
                     return 'exact-match';
@@ -734,7 +757,8 @@ define(function (require) {
     return {
         EntityInputModel: EntityInputModel,
         EntityConditionInputModel: EntityConditionInputModel,
-        EntityUserTagModel: EntityUserTagModel,
+        EntityOwnerTagModel: EntityOwnerTagModel,
+        EntityMemberTagModel: EntityMemberTagModel,
         EntityConditionTagModel: EntityConditionTagModel,
         EntityTimeRangeModel: EntityTimeRangeModel,
         EntityInvalidModel: EntityInvalidModel,

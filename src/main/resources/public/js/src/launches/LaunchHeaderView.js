@@ -52,11 +52,11 @@ define(function (require) {
             this.dropdownButtonLinks = {
                 links: [
                     {
-                        name: 'All Launches',
+                        name: Localization.launches.allLaunches,
                         value: 'all'
                     },
                     {
-                        name: 'Latest Launches',
+                        name: Localization.launches.latestLaunches,
                         value: 'latest'
                     }
                 ]
@@ -71,7 +71,7 @@ define(function (require) {
             this.listenTo(this.launchFilterCollection, 'add_entity change:newSelectionParameters', this.showFilterCriteriaPanel);
             this.listenTo(this.userStorage, 'change:launchFilterCriteriaHide', this.onChangeFilterCriteriaShow);
             this.appStorage = new SingletonAppStorage();
-            this.listenTo(this.appStorage, 'change:launchDistinct', this.onChangeSelectLink);
+            // this.listenTo(this.appStorage, 'change:launchDistinct', this.onChangeSelectLink);
             this.render();
         },
         render: function () {
@@ -93,14 +93,14 @@ define(function (require) {
                     { name: Localization.launches.latestLaunches, value: 'latest', shortName: Localization.launches.latestLaunches_short }
                 ],
                 multiple: false,
-                defaultValue: this.appStorage.get('launchDistinct')
+                defaultValue: this.appStorage.get('launchDistinct') || 'all'
             });
             $('[data-js-launches-mode-dropdown]', this.$el).html(this.launchModeSelector.$el);
             this.listenTo(this.launchModeSelector, 'change', this.onLaunchModeSelect);
         },
-        onChangeSelectLink: function () {
-            config.router.navigate(this.model.get('url'), {trigger: true});
-        },
+        // onChangeSelectLink: function () {
+        //     config.router.navigate(this.model.get('url'), {trigger: true});
+        // },
         onLaunchModeSelect: function (mode) {
             this.appStorage.set({ launchDistinct: mode });
         },

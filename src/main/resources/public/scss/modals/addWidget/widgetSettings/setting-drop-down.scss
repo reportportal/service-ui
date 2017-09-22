@@ -20,12 +20,20 @@
  */
 
 .modal-add-widget-setting-drop-down {
-  float: left;
-  margin-top: 17px;
-  padding: 0 10px;
+  padding: 20px 0 0 0;
+  position: relative;
+  width: 100%;
+  text-align: right;
+  & > span {
+    vertical-align: middle;
+  }
+  .dropdown-container {
+    display: inline-block;
+  }
   .drop-down-component {
     vertical-align: middle;
-    margin-left: 10px;
-    width: 215px;
+    margin-left: 18px;
+    width: 244px;
+    height: 30px;
   }
 }

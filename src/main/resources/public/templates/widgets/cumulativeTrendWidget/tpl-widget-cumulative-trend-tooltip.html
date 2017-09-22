@@ -1,0 +1,12 @@
+<div class="tooltip-header">
+    <span class="group-name"><%- data.groupName %></span>
+</div>
+<div class="tooltip-body">
+    <% _.each(data.items, function(item) { %>
+        <div class="item-wrapper">
+            <div class="color-mark" style="background-color: <%= item.color %>;"></div>
+            <div class="item-name"><%- item.name %></div>
+            <div class="item-value"><%- item.value %></div>
+        </div>
+    <% }); %>
+</div>

@@ -21,13 +21,12 @@
 define(function (require) {
     'use strict';
 
-    var $ = require('jquery');
     var _ = require('underscore');
     var BaseWidgetView = require('newWidgets/_BaseWidgetView');
 
     var C3ChartWidgetView = BaseWidgetView.extend({
         isDataExists: function () {
-            return (!_.isEmpty(this.model.getContent()) &&
+            return (!_.isEmpty(this.model.getContent()) && this.model.getContent().result.length &&
                 !_.isEmpty(this.model.getContent().result[0].values));
         },
         getValuesInPercents: function (total, values) {
@@ -42,6 +41,9 @@ define(function (require) {
                 }
                 return rounded;
             });
+        },
+        getRoundedToDecimalPlaces: function (num, decimalPlaces) {
+            return Math.round(num * (Math.pow(10, decimalPlaces))) / Math.pow(10, decimalPlaces);
         }
     });
 

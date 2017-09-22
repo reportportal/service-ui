@@ -168,7 +168,9 @@ define([
     var getWidgetData = function (type, params) {
         return call('GET', urls.getProjectBase() + '/' + type + '?' + params);
     };
-
+    var getWidgetPreviewData = function (data) {
+        return call('POST', urls.widgetPreview(), data);
+    };
     var loadWidget = function (url) {
         return call('GET', url);
     };
@@ -364,6 +366,9 @@ define([
     var toggleAnalytics = function (data) {
         return call('PUT', urls.toggleAnalytics(), data);
     };
+    var getProjectEvents = function (query) {
+        return call('GET', urls.getProjectEvents(query));
+    };
 
 
     return {
@@ -420,6 +425,7 @@ define([
         updateWidgetsOnDashboard: updateWidgetsOnDashboard,
         getWidgetNames: getWidgetNames,
         getWidgetData: getWidgetData,
+        getWidgetPreviewData: getWidgetPreviewData,
         loadWidget: loadWidget,
         getTestItemInfo: getTestItemInfo,
         getTestItemsInfo: getTestItemsInfo,
@@ -464,6 +470,7 @@ define([
         getUserByEmail: getUserByEmail,
         generateDemoData: generateDemoData,
 
-        toggleAnalytics: toggleAnalytics
+        toggleAnalytics: toggleAnalytics,
+        getProjectEvents: getProjectEvents
     };
 });

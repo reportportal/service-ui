@@ -95,14 +95,9 @@
 
 /* Disabled tokenfield */
 .tokenfield.disabled {
-  cursor: not-allowed;
   background-color: #eee;
 }
-.tokenfield.disabled .token-input {
-  cursor: not-allowed;
-}
 .tokenfield.disabled .close:hover {
-  cursor: not-allowed;
   opacity: 0.2;
 }
 

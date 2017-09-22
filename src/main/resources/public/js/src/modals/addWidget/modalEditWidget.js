@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var ModalView = require('modals/_modalView');
@@ -29,9 +29,7 @@ define(function (require, exports, module) {
     var WidgetService = require('newWidgets/WidgetService');
     var WidgetSettingsView = require('modals/addWidget/WidgetSettingsView');
     var SaveWidgetView = require('modals/addWidget/SaveWidgetView');
-    var SelectedFilterView = require('modals/addWidget/SelectedFilterView');
     var PreviewWidgetView = require('newWidgets/PreviewWidgetView');
-    var FilterSearchView = require('modals/addWidget/FilterSearchView');
     var Service = require('coreService');
     var App = require('app');
 
@@ -44,8 +42,6 @@ define(function (require, exports, module) {
 
         events: {
             'click [data-js-save]': 'onClickSaveWidget',
-            'click [data-js-cancel-filter]': 'onClickCancelFilterEdit',
-            'click [data-js-save-filter]': 'onClickSaveFilterEdit',
             'click [data-js-close]': 'onClickClose',
             'click [data-js-cancel]': 'onClickCancel'
         },
@@ -54,85 +50,107 @@ define(function (require, exports, module) {
             '[data-js-widget-description]': 'html: gadgetDescription'
         },
         initialize: function (options) {
-            var self;
             if (!options.model) {
-                // console.log('Model is not found');
                 return false;
             }
             this.originalModel = options.model;
             this.model = this.originalModel.clone();
             this.curWidget = WidgetService.getWidgetConfig(this.model.get('gadget'));
             this.render();
-            this.widgetSettingsView = new WidgetSettingsView({ model: this.model });
+
+            this.listenTo(this.model, 'change', this.disableHideBackdrop);
+        },
+        sendEvent: function (eventOptions) {
+            switch (eventOptions.view) {
+            case 'filter':
+                switch (eventOptions.action) {
+                case 'add filter':
+                    config.trackingDispatcher.trackEventNumber(328);
+                    break;
+                case 'submit filter':
+                    config.trackingDispatcher.trackEventNumber(331);
+                    break;
+                case 'cancel filter':
+                    config.trackingDispatcher.trackEventNumber(330);
+                    break;
+                case 'change filter name':
+                    config.trackingDispatcher.trackEventNumber(327);
+                    break;
+                case 'edit filter item':
+                    config.trackingDispatcher.trackEventNumber(298);
+                    break;
+                case 'select filter item':
+                    config.trackingDispatcher.trackEventNumber(329);
+                    break;
+                case 'entity choice click':
+                    config.trackingDispatcher.trackEventNumber(332);
+                    break;
+                case 'sorting list click':
+                    config.trackingDispatcher.trackEventNumber(333);
+                    break;
+                case 'cancel add click':
+                    config.trackingDispatcher.trackEventNumber(334);
+                    break;
+                case 'ok add click':
+                    config.trackingDispatcher.trackEventNumber(335);
+                    break;
+                case 'edit entity':
+                    config.trackingDispatcher.trackEventNumber(336);
+                    break;
+                case 'cancel edit filter':
+                    config.trackingDispatcher.trackEventNumber(337);
+                    break;
+                case 'ok edit filter':
+                    config.trackingDispatcher.trackEventNumber(338);
+                    break;
+                }
+                break;
+            }
+        },
+        render: function () {
+            this.$el.html(Util.templates(this.template, {}));
+            this.widgetSettingsView = new WidgetSettingsView({
+                model: this.model,
+                isShortForm: true
+            });
             $('[data-js-widget-settings]', this.$el).html(this.widgetSettingsView.$el);
+            this.listenTo(this.widgetSettingsView, 'change:view', this.onChangeSettingsViewMode);
+            this.listenTo(this.widgetSettingsView, 'send:event', this.sendEvent);
+
             this.saveWidget = new SaveWidgetView({
-                model: this.model, dashboardModel: this.dashboardModel
+                model: this.model,
+                dashboardModel: this.dashboardModel
             });
             $('[data-js-widget-save]', this.$el).html(this.saveWidget.$el);
             this.listenTo(this.model, 'change', _.debounce(this.onChangeModel, 10));
-            this.filterReadyAsync = $.Deferred();
-            self = this;
-            if (this.model.get('filter_id')) {
-                this.selectedFilterView = new SelectedFilterView({ model: this.model });
-                $('[data-js-widget-filter]', this.$el).html(this.selectedFilterView.$el);
-                this.listenTo(this.selectedFilterView, 'edit', this.onEditFilter);
-                this.selectedFilterView.getAsync().done(function () {
-                    self.filterReadyAsync.resolve();
-                });
-            } else {
-                this.filterReadyAsync.resolve();
-            }
-            this.listenTo(this.model, 'change', this.disableHideBackdrop);
         },
         onChangeModel: function (model) {
             this.curWidget = WidgetService.getWidgetConfig(model.get('gadget'));
-            // console.dir(model.changed);
         },
         onChangePreview: function () {
-            var filterModel = null;
             this.previewWidgetView && this.previewWidgetView.destroy();
-            if (this.model.get('gadgetIsFilter')) {
-                filterModel = this.selectedFilterView.getSelectedFilterModel();
-                if (this.filterSelectView) {
-                    filterModel = this.filterSelectView.getSelectedFilterModel();
-                }
-            }
             this.previewWidgetView = new PreviewWidgetView({
-                model: this.model, filterModel: filterModel
+                model: this.model,
+                validateForPreview: this.validateForPreview.bind(this)
             });
             $('[data-js-widget-preview]', this.$el).html(this.previewWidgetView.$el);
         },
-        onEditFilter: function (filterModel) {
-            config.trackingDispatcher.trackEventNumber(321);
-            this.$el.addClass('filter-edit-state');
-            this.destroyFilterSelect();
-            this.filterSelectView = new FilterSearchView({
-                model: this.model,
-                modalType: 'edit'
-            });
-            this.listenTo(this.filterSelectView, 'disable:navigation', this.onChangefilterSelectState);
-            $('[data-js-filter-search]', this.$el).html(this.filterSelectView.$el);
-            this.filterSelectView.setFilterModel(filterModel);
-            this.filterSelectView.activate();
-        },
-        destroyFilterSelect: function () {
-            if (this.filterSelectView) {
-                this.stopListening(this.filterSelectView);
-                this.filterSelectView.destroy();
-            }
-        },
-        closeFilterEdit: function () {
-            this.$el.removeClass('filter-edit-state');
-        },
         onShown: function () {
-            var self = this;
-            this.filterReadyAsync.done(function () {
-                self.listenTo(self.model, 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount', _.debounce(self.onChangePreview, 10));
-                self.onChangePreview();
-            });
+            this.listenTo(this.model, 'change:gadget change:widgetOptions change:content_fields change:filter_id change:itemsCount', _.debounce(this.onChangePreview, 10));
+            this.onChangePreview();
         },
         onShow: function () {
             this.widgetSettingsView.activate();
+            this.saveWidget.activate();
+        },
+        onChangeSettingsViewMode: function (options) {
+            if (options.mode === 'expandedSettingView') {
+                this.$el.addClass('expanded-setting-view-mode');
+                $('[data-js-cancel]', this.$el).add('[data-js-save]', this.$el).attr('disabled', 'disabled');
+                return;
+            }
+            $('[data-js-cancel]', this.$el).add('[data-js-save]', this.$el).removeAttr('disabled');
+            this.$el.removeClass('expanded-setting-view-mode');
         },
         onClickClose: function () {
             config.trackingDispatcher.trackEventNumber(320);
@@ -140,55 +158,25 @@ define(function (require, exports, module) {
         onClickCancel: function () {
             config.trackingDispatcher.trackEventNumber(325);
         },
-        render: function () {
-            this.$el.html(Util.templates(this.template, {}));
-        },
-        onClickCancelFilterEdit: function () {
-            config.trackingDispatcher.trackEventNumber(330);
-            this.model.set({ filter_id: this.selectedFilterView.getFilterModel().get('id') });
-            this.destroyFilterSelect();
-            this.closeFilterEdit();
-            this.enableHideBackdrop();
-            this.hideWarningBlock();
-        },
-        onClickSaveFilterEdit: function () {
-            if (this.filterSelectView && this.filterSelectView.getSelectedFilterModel()) {
-                config.trackingDispatcher.trackEventNumber(331);
-                this.selectedFilterView.setFilterModel(this.filterSelectView.getSelectedFilterModel());
-            }
-            this.destroyFilterSelect();
-            this.closeFilterEdit();
-        },
-        onChangefilterSelectState: function (state) {
-            if (state) {
-                this.$el.addClass('select-filter-edit-state');
-            } else {
-                this.$el.removeClass('select-filter-edit-state');
-            }
-        },
         onKeySuccess: function () {
             $('[data-js-save]', this.$el).focus().trigger('click');
         },
         onClickSaveWidget: function () {
+            var self = this;
+            var data;
+            var contentParameters = {};
             if (this.saveWidget.validate() && this.widgetSettingsView.validate()) {
                 config.trackingDispatcher.trackEventNumber(326);
                 this.$el.addClass('load');
-                var self = this;
-                var contentParameters = {};
-                if (!_.contains(['unique_bug_table', 'activity_stream', 'launches_table'], this.model.get('gadget'))) {
-                    contentParameters.metadata_fields = ['name', 'number', 'start_time'];
-                }
-                if (this.model.get('gadget') === 'most_failed_test_cases') {
-                    contentParameters.metadata_fields = ['name', 'start_time'];
-                }
                 contentParameters.type = this.curWidget.widget_type;
                 contentParameters.gadget = this.model.get('gadget');
+                contentParameters.metadata_fields = this.model.get('metadata_fields');
                 contentParameters.itemsCount = this.model.get('itemsCount');
                 if (this.model.getContentFields().length) {
                     contentParameters.content_fields = this.model.getContentFields();
                 }
                 contentParameters.widgetOptions = this.model.getWidgetOptions();
-                var data = {
+                data = {
                     name: this.model.get('name'),
                     share: this.model.get('share'),
                     content_parameters: contentParameters
@@ -206,15 +194,16 @@ define(function (require, exports, module) {
                         self.successClose(response.id);
                         Util.ajaxSuccessMessenger('widgetSave');
                     })
-                    .fail(function (error) {
+                    .fail(function () {
                         Util.ajaxFailMessenger(null, 'widgetSave');
                         self.hideLoading();
                     });
             }
         },
+        validateForPreview: function () {
+            return this.widgetSettingsView.validate({ forPreview: true });
+        },
         onDestroy: function () {
-            this.filterSelectView && this.filterSelectView.destroy();
-            this.selectedFilterView && this.selectedFilterView.destroy();
             this.widgetSettingsView && this.widgetSettingsView.destroy();
             this.saveWidget && this.saveWidget.destroy();
         }

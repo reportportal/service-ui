@@ -130,7 +130,7 @@ define(function (require, exports, module) {
             if (!window.localStorage) return false;
             var hash = window.localStorage.getItem('anonymous_lastInsideHash');
             window.localStorage.removeItem('anonymous_lastInsideHash');
-            if (hash === 'null') return false;
+            if (hash === 'null' || hash === '#null') return false;
             return hash;
         },
         isValidNotEmptyJSON: function (src) {

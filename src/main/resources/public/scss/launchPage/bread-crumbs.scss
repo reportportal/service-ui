@@ -62,6 +62,7 @@
       span {
         display: inline-block;
         vertical-align: top;
+        white-space: nowrap;
       }
       span.link-as-element {
         display: none;
@@ -69,7 +70,7 @@
       a, span.link-as-element {
         text-overflow: ellipsis;
         overflow: hidden;
-        white-space: nowrap;
+        white-space: normal;
         max-width: 100%;
         margin-bottom: 10px;
       }
@@ -119,8 +120,12 @@
   }
   &.min-size {
     .crumb{
+      span {
+        white-space: normal;
+      }
       span.link-as-element, a {
         max-width: 120px;
+        white-space: nowrap;
       }
     }
     .breadcrumb-plus {

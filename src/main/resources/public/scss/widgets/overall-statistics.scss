@@ -44,6 +44,7 @@
           font-family: $OpenSansRegular;
           font-size: 16px;
           color: $COLOR--charcoal-grey;
+          white-space: nowrap;
         }
         .tooltip-title {
           display: inline-block;
@@ -68,6 +69,33 @@
             width: 12px;
             height: 12px;
             border-radius: 100%;
+          }
+        }
+        .tooltip-title-invalid {
+          color: $COLOR--orange-red;
+
+          .color-mark-invalid {
+            display: inline-block;
+            position: relative;
+            top: 2px;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            margin-right: 5px;
+            border-radius: 100%;
+            background-color: $COLOR--orange-red;
+
+            &:before {
+              display: block;
+              content: '';
+              background-color: $COLOR--white-default;
+              width: 8px;
+              height: 8px;
+              position: absolute;
+              left: 2px;
+              top: 2px;
+              border-radius: 100%;
+            }
           }
         }
         &:after {
@@ -133,7 +161,7 @@
             &:before {
               display: none;
               content: '';
-              background-color: $COLOR--light-yellow;
+              background-color: $COLOR--white-default;
               width: 8px;
               height: 8px;
               position: absolute;
@@ -144,6 +172,34 @@
             &.unchecked:before {
               display: block;
             }
+          }
+
+          .invalid-color-mark {
+            position: absolute;
+            top: 2px;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            float: left;
+            border-radius: 100%;
+            background-color: $COLOR--orange-red;
+
+            &:before {
+              display: block;
+              content: '';
+              background-color: $COLOR--white-default;
+              width: 8px;
+              height: 8px;
+              position: absolute;
+              left: 2px;
+              top: 2px;
+              border-radius: 100%;
+            }
+          }
+          .invalid {
+            color: $COLOR--orange-red;
+            padding-left: 0;
+            margin-right: 0;
           }
         }
         .legend-gradient {
@@ -165,7 +221,7 @@
           }
         }
 
-        ._scrollbar + .legend-gradient {
+        ._scrollbar_vertical + .legend-gradient {
           display: block;
         }
       }
@@ -173,28 +229,20 @@
         background-color: $COLOR--light-yellow;
 
         .legend {
+          span {
+            .color-mark {
+              &:before {
+                background-color: $COLOR--light-yellow;
+              }
+            }
+          }
           .legend-gradient {
             background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), $COLOR--light-yellow);
           }
         }
       }
     }
-    &.w-less-then-5, &.h-less-then-5 {
-      .widget-wrapper {
-        svg {
-          .c3-chart {
-            .c3-chart-arcs {
-              .c3-chart-arc {
-                text {
-                  display: none;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    &.w-less-then-6, &.h-less-then-6 {
+    &.w-less-then-6, &.h-less-then-6, &.preview-view {
       .widget-wrapper {
         svg {
           .c3-chart {
@@ -211,12 +259,12 @@
         }
       }
     }
+
   }
   &.trend-chart-view {
     .widget-wrapper {
       float: left;
       height: 100%;
-      padding: 20px;
 
       &.left-widget-wrapper {
         position: absolute;
@@ -225,8 +273,14 @@
         width: 285px;
         background-color: $COLOR--light-yellow;
 
+        .baron {
+          .baron__track-vertical {
+            right: 5px;
+          }
+        }
         .chart-container {
           display: table;
+          padding: 20px;
           height: 100%;
           width: 100%;
 
@@ -336,40 +390,49 @@
         padding-left: 285px;
         overflow: hidden;
 
-        .item-wrapper {
-          width: 150px;
-          height: 41px;
-          float: left;
-          margin-left: 20px;
-          margin-bottom: 20px;
-
-          .item-val {
-            font-family: $OpenSansRegular;
-            font-size: 20px;
-            color: $COLOR--charcoal-grey;
+        .baron {
+          .baron__track-vertical {
+            right: 5px;
           }
-          .item-title {
-            position: relative;
-            display: inline-block;
-            max-width: 100%;
-            height: 20px;
-            border-radius: 100px;
-            border: solid 1px $COLOR--gray-80;
-            padding-left: 20px;
-            padding-right: 5px;
-            font-family: $OpenSansSemibold;
-            font-size: 12px;
-            color: $COLOR--charcoal-grey;
-            text-overflow: ellipsis;
-            overflow: hidden;
+        }
+        .chart-container {
+          padding: 20px;
+          .item-wrapper {
+            width: 150px;
+            height: 41px;
+            float: left;
+            margin-left: 20px;
+            margin-bottom: 20px;
 
-            .color-mark {
-              position: absolute;
-              top: 3px;
-              left: 3px;
-              width: 12px;
-              height: 12px;
-              border-radius: 100%;
+            .item-val {
+              font-family: $OpenSansRegular;
+              font-size: 20px;
+              color: $COLOR--charcoal-grey;
+            }
+            .item-title {
+              position: relative;
+              display: inline-block;
+              max-width: 100%;
+              height: 20px;
+              border-radius: 100px;
+              border: solid 1px $COLOR--gray-80;
+              padding-left: 20px;
+              padding-right: 5px;
+              font-family: $OpenSansSemibold;
+              font-size: 12px;
+              color: $COLOR--charcoal-grey;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              white-space: nowrap;
+
+              .color-mark {
+                position: absolute;
+                top: 3px;
+                left: 3px;
+                width: 12px;
+                height: 12px;
+                border-radius: 100%;
+              }
             }
           }
         }
@@ -408,6 +471,15 @@
           .chart-container {
             top: 0;
           }
+        }
+      }
+    }
+
+    &.left-chart-hidden.preview-view {
+      .right-widget-wrapper {
+        .item-wrapper {
+          margin-right: 5px;
+          width: 115px;
         }
       }
     }

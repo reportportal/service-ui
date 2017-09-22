@@ -1,0 +1,155 @@
+<div class="project-activity-panel">
+    <% if (!_.isEmpty(data.dates)) { %>
+    <% _.each(data.dates, function(date){ %>
+    <div class="activity-date-header">
+        <%= date.dayTitle %>
+    </div>
+    <% _.each(date.items, function(item){ %>
+    <div class="activity-item">
+        <% if(item.actionType !== 'create_user'){ %>
+        <div class="activity-avatar">
+            <img src="<%= data.methodUpdateImagePath(data.imageRoot() + item.userRef.split(' ').join('_')) %>" class="avatar" alt="<%= item.userRef %>" />
+        </div>
+        <% } %>
+        <div class="activity-item-summary-wrap">
+        <div class="activity-item-summary">
+            <% if(item.actionType == 'create_user' && item.objectType == 'user'){ %>
+                <strong><%- item.loggedObjectRef %></strong>,
+                <span style="text-transform: lowercase;"><%= data.text.members.welcomeTo %></span>
+                <%= data.text.ui.toolname %>!
+            <% } %>
+            <% if(item.actionType !== 'create_user'){ %>
+                <strong class="activity-item-user"><%= item.userRef %></strong>
+            <% } %>
+            <% if(item.objectType == 'launch'){ %>
+                <%= data.text.widgets[item.actionType] %>
+                <% if((item.actionType !== 'delete_launch') && (!_.isEmpty(item.name))){ %>
+                    <a class="rp-blue-link-undrl" target="_blank"
+                       href="#<%= data.properties.projectUrl %>/launches/all/<%= item.loggedObjectRef %>">
+                       <%- item.name %></a>.
+                <% } else { %>
+                    <%- item.name %>.
+                <% } %>
+            <% } %>
+            <% if(item.objectType == 'widget' || item.objectType == 'dashboard' || item.objectType == 'userFilter'){ %>
+                <%= data.text.widgets[item.actionType] %>
+                <strong><%- item.name  %></strong>.
+            <% } %>
+            <% if(item.objectType == 'defect_type'){ %>
+                <%= data.text.widgets[item.actionType] %>
+                <% if(item.actionType == 'delete_defect'){ %>
+                    <%= data.text.widgets.defectType %>
+                    <a class="rp-blue-link-undrl"
+                        target="_blank"
+                        href="#<%= data.properties.projectUrl %>/settings/defect">
+                        <%= item.name %>
+                    </a>
+                <% } else { %>
+                    <a class="rp-blue-link-undrl"
+                        target="_blank"
+                        href="#<%= data.properties.projectUrl %>/settings/defect">
+                        <%= data.text.widgets.defectTypes %>
+                    </a>
+                <% } %>
+            <% } %>
+            <% if(item.objectType == 'externalSystem'){ %>
+                <% var bts = data.getBts(item.name), btsType = bts.type, btsName = bts.name; %>
+                <%= data.text.widgets[item.actionType] %>
+                <%= btsType %>
+                <% if(item.actionType == 'update_bts'){ %>
+                    <%- btsName %>
+                    <a class="rp-blue-link-undrl" target="_blank" href="#<%= data.properties.projectUrl %>/settings/bts">
+                        <%= data.text.widgets.properties %></a>.
+                <% } %>
+                <% if(item.actionType == 'delete_bts'){ %>
+                    <% if(btsName){ %>
+                    <a class="rp-blue-link-undrl"
+                        target="_blank"
+                        href="#<%= data.properties.projectUrl %>/settings/bts">
+                        <%- btsName %>
+                    </a>
+                    <% } %>
+                    <%= data.text.ui.from %>
+                    <%= data.text.widgets.project %>.
+                <% } %>
+                <% if(item.actionType == 'create_bts'){ %>
+                    <a class="rp-blue-link-undrl"
+                        target="_blank"
+                        href="#<%= data.properties.projectUrl %>/settings/bts">
+                        <%- btsName %>
+                    </a>.
+                <% } %>
+            <% } %>
+            <% if(item.objectType == 'testItem' && item.actionType.indexOf('issue') > 0){ %>
+                <%= data.text.widgets[item.actionType] %>
+                <% var tickets = data.getTickets(item); %>
+                <% _.each(tickets, function(ticket, t){ %>
+                    <% var ticketData = data.getTicketUrlId(ticket), ticketId = ticketData.id,
+                        ticketUrl = ticketData.url,
+                        size = tickets.length,
+                        coma = size > 1 && t < size-1 ? ',' : '' %>
+                    <% if(ticketUrl){ %>
+                    <a class="rp-blue-link-undrl"
+                        target="_blank"
+                        href="<%= ticketUrl %>">
+                        <%= ticketId %>
+                    </a>
+                    <%= coma %>
+                    <% } else { %>
+                        <%= ticketId %>
+                        <%= coma %>
+                    <% } %>
+                <% }); %>
+                <%= data.text.ui.to %>
+                <%= data.text.widgets.testItem %>
+                <span id="itemId-<%= item.loggedObjectRef %>">
+                    <span class="loading-indicator"></span>
+                </span>.
+            <% } %>
+            <% if(item.objectType == 'email'){ %>
+                <%= data.text.widgets[item.actionType] %>
+                <a class="rp-blue-link-undrl"
+                    target="_blank"
+                    href="#<%= data.properties.projectUrl %>/settings/notifications">
+                    <%= data.text.widgets.emailNotifications %></a>.
+            <% } %>
+            <% if(item.objectType == 'project'){ %>
+                <span>
+                    <%=  data.text.widgets[item.actionType] %>
+                    <a class="rp-blue-link-undrl"
+                        target="_blank"
+                        href="#<%= data.properties.projectUrl %>/settings">
+                        <%= data.text.widgets.propertiesProj %></a>:
+                </span>
+                <% var size = _.size(item.history), i = 0; %>
+                <% _.each(item.history, function(v, k){ %>
+                    <% i++; %>
+                    <% if(v.newValue && v.oldValue){ %>
+                        <%= data.text.activity[k] %>
+                        <%= data.text.ui.from %>
+                        <%- data.replaceValues(v.oldValue) %>
+                        <%= data.text.ui.to %>
+                        <%- data.replaceValues(v.newValue) %><%= i < size ? ',' : '.' %>
+                    <% } else { %>
+                        <%= data.text.activity[k] %><%= i < size ? ',' : '' %>.
+                    <% } %>
+                <% }); %>
+            <% } %>
+        </div>
+        <div class="activity-item-info">
+            <span class="hoverFullTime">
+                <span class="timeMoment timeHover"><%= item.momentTime %></span>
+                <span class="time-full timeHover hidden">
+                    at <%= item.fullTime %>
+                </span>
+                <span class="time-ms hidden"><%= item.last_modified %></span>
+            </span>
+        </div>
+        </div>
+    </div>
+    <% }) %>
+    <% }) %>
+    <% }  %>
+    <div class="mobile-disabling-cover"></div>
+</div>
+

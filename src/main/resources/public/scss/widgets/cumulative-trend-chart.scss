@@ -1,0 +1,200 @@
+.cumulative-trend {
+  width: 100%;
+  height: 100%;
+
+  .widget-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    float: left;
+
+    svg {
+      .c3-grid {
+        line {
+          stroke: $COLOR--gray-80;
+          stroke-dasharray: none;
+        }
+      }
+      .c3-axis {
+        .tick {
+          font-family: $OpenSansRegular;
+          fill: $COLOR--charcoal-grey;
+
+          line {
+            display: none;
+          }
+        }
+        .domain {
+          display: none;
+        }
+      }
+    }
+
+    .c3-tooltip-container {
+      width: 215px;
+      background-color: $COLOR--white-default;
+      padding: 0 10px 5px 10px;
+      border: solid 1px $COLOR--gray-80;
+      border-radius: 2px;
+      font-size: 13px;
+
+      .tooltip-header {
+        width: 100%;
+        height: 35px;
+        border-bottom: solid 2px $COLOR--gray-91;
+        font-family: $OpenSansSemibold;
+        color: $COLOR--charcoal-grey;
+        line-height: 35px;
+        .group-name {
+          display: block;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+      .tooltip-body {
+        clear: both;
+        font-family: $OpenSansRegular;
+        color: $COLOR--gray-47;
+        overflow: hidden;
+
+        .item-wrapper {
+          clear: both;
+          position: relative;
+          height: 25px;
+          line-height: 25px;
+
+          .color-mark {
+            position: relative;
+            top: 7px;
+            float: left;
+            width: 12px;
+            height: 12px;
+            margin-right: 5px;
+            border-radius: 100%;
+          }
+          .item-name {
+            float: left;
+            max-width: 130px;
+          }
+          .item-value {
+            float: right;
+          }
+        }
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-top: 6px solid $COLOR--white-default;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+      }
+      &:before {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -7px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid $COLOR--gray-80;
+      }
+    }
+
+    .legend {
+      position: absolute;
+      padding: 20px 20px 0 20px;
+      overflow: hidden;
+      top: 0;
+      width: 100%;
+      height: 85px;
+      text-align: right;
+
+      span {
+        display: inline-block;
+        position: relative;
+        padding-left: 17px;
+        margin-right: 15px;
+        margin-bottom: 10px;
+        height: 15px;
+        max-width: 150px;
+        overflow: hidden;
+        font-family: $OpenSansRegular;
+        font-size: 11px;
+        color: $COLOR--charcoal-grey;
+        line-height: 15px;
+        white-space: nowrap;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        text-align: left;
+        cursor: pointer;
+
+        .color-mark {
+          position: absolute;
+          top: 2px;
+          left: 0;
+          width: 12px;
+          height: 12px;
+          float: left;
+          border-radius: 100%;
+
+          &:before {
+            display: none;
+            content: '';
+            background-color: $COLOR--white-default;
+            width: 8px;
+            height: 8px;
+            position: absolute;
+            left: 2px;
+            top: 2px;
+            border-radius: 100%;
+          }
+          &.unchecked:before {
+            display: block;
+          }
+        }
+      }
+      .legend-gradient {
+        display: none;
+        width: 100%;
+        height: 10px;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        margin-right: 10px;
+        margin-left: 10px;
+        background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), $COLOR--white-default);
+
+        .legend-border {
+          height: 100%;
+          width: 100%;
+          border-bottom: 1px solid $COLOR--gray-91;
+
+        }
+      }
+      ._scrollbar_vertical + .legend-gradient {
+        display: block;
+      }
+    }
+  }
+  .preloader {
+    width: 100%;
+    height: 100%;
+  }
+
+  &.w-less-then-6 {
+    svg {
+      .c3-axis-x {
+        .tick {
+          display: none;
+        }
+      }
+    }
+  }
+}

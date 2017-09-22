@@ -46,7 +46,7 @@ define(function (require) {
 
     var SettingDropDownView = SettingView.extend({
         className: 'modal-add-widget-setting-checkbox',
-        template: 'modal-add-widget-setting-checkbox',
+        template: 'tpl-modal-add-widget-setting-checkbox',
         bindings: {
             '[data-js-label-name]': 'html:label',
             '[data-js-checkbox-item]': 'checked:value'
@@ -72,6 +72,7 @@ define(function (require) {
         activate: function () {
             this.model.set({ value: this.getValue(this.gadgetModel, this) });
             this.listenTo(this.model, 'change:value', this.onChangeValue);
+            this.activated = true;
         },
         onChangeValue: function () {
             this.setValue(this.model.get('value'), this.gadgetModel, this);

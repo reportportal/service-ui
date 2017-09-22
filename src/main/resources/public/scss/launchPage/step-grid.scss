@@ -57,6 +57,8 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
           width: $step-select-cell-width;
           text-align: center;
           padding: 0;
+          user-select: none;
+          -webkit-user-select: none;
           .rp-checkbox-wrap span {
               height: 11px;
           }

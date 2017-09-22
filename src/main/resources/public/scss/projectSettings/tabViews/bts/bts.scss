@@ -134,7 +134,6 @@
               &.disabled {
                 a {
                   color: $COLOR--gray-60;
-                  cursor: not-allowed;
                 }
               }
               a {
@@ -374,7 +373,6 @@
           background-color: $COLOR--gray-91;
           border-color: $COLOR--gray-80;
           box-shadow: none;
-          cursor: no-drop;
         }
       }
 
@@ -533,7 +531,6 @@
       background-color: $COLOR--gray-91;
       border-color: $COLOR--gray-80;
       box-shadow: none;
-      cursor: no-drop;
     }
 
     .bts-field-checkbox {

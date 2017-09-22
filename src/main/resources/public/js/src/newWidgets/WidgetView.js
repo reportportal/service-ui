@@ -49,7 +49,6 @@ define(function (require) {
         },
         resize: function (newGadgetSize) {
             this.widget.updateSizeClasses(newGadgetSize);
-            this.widget.updateWidget();
         },
         onDestroy: function () {
             this.widget && this.widget.destroy();

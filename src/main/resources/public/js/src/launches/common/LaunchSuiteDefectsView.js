@@ -68,6 +68,7 @@ define(function (require) {
         },
         initialize: function (options) {
             this.type = options.type;
+            this.clickable = (typeof options.clickable !== 'undefined') ? options.clickable : true;
             this.defectsCollection = new SingletonDefectTypeCollection();
             this.defectsCollection.ready.done(function () {
                 this.render();
@@ -77,14 +78,15 @@ define(function (require) {
         render: function () {
             this.applyBindings();
             if (this.getBinding('totalDefects')) {
-                this.$el.html(Util.templates(this.template, {}));
+                this.$el.html(Util.templates(this.template, { clickable: this.clickable }));
                 this.drawPieChart();
                 var self = this;
                 // var $hoverElement = $('[data-js-hover-element]', this.$el);
                 this.hoverView = new LaunchSuiteDefectsHoverView({
                     el: $('[data-js-hover-view-container]', this.$el),
                     type: self.type,
-                    model: self.model
+                    model: self.model,
+                    noLink: !this.clickable
                 });
                 this.applyBindings();
             }

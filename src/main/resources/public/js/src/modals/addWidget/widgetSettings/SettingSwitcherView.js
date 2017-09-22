@@ -37,16 +37,10 @@ define(function (require) {
             },
             getValue: function (model, self) {
                 var viewMode = model.getWidgetOptions().viewMode;
-                var curNum = 0; // number of item in widgetService -> widget -> uiControl -> options -> items.
-                if (viewMode) {
-                    _.each(self.model.get('items'), function (item, number) {
-                        if (item.value === viewMode[0]) {
-                            curNum = number;
-                            return false;
-                        }
-                    });
+                if (!viewMode || !viewMode.length) {
+                    return self.model.get('items')[0];
                 }
-                return curNum;
+                return viewMode[0];
             }
         },
         switch_latest_mode: {
@@ -61,12 +55,10 @@ define(function (require) {
             },
             getValue: function (model, self) {
                 var latestMode = !!(model.getWidgetOptions().latest);
-                var curNum = 0; // number of item in widgetService -> widget -> uiControl -> options -> items.
-                var items = self.model.get('items');
-                if (items.length > 1 && items[0].value !== 'latest' && latestMode) {
-                    curNum = 1;
+                if (latestMode) {
+                    return 'latest';
                 }
-                return curNum;
+                return 'all';
             }
         },
         switch_timeline_mode: {
@@ -81,19 +73,17 @@ define(function (require) {
             },
             getValue: function (model, self) {
                 var timelineMode = !!(model.getWidgetOptions().timeline);
-                var curNum = 0; // number of item in widgetService -> widget -> uiControl -> options -> items.
-                var items = self.model.get('items');
-                if (items.length > 1 && items[0].value !== 'timeline' && timelineMode) {
-                    curNum = 1;
+                if (timelineMode) {
+                    return 'timeline';
                 }
-                return curNum;
+                return 'launch';
             }
         }
     };
 
     var SettingSwitcherView = SettingView.extend({
         className: 'modal-add-widget-setting-switcher',
-        template: 'modal-add-widget-setting-switcher',
+        template: 'tpl-modal-add-widget-setting-switcher',
         events: {
             'click [data-js-switch-item]': 'onClickItem'
         },
@@ -118,9 +108,18 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, this.model.get('items')));
         },
         activate: function () {
-            this.model.set({ value: this.getValue(this.gadgetModel, this) });
+            var self = this;
+            var curVal = this.getValue(this.gadgetModel, this);
+            _.each(this.model.get('items'), function (item, index) {
+                if (item.value === curVal) {
+                    self.model.set({ value: index });
+                    return false;
+                }
+                return true;
+            });
             this.listenTo(this.model, 'change:value', this.onChangeValue);
             this.onChangeValue();
+            this.activated = true;
         },
         onChangeValue: function () {
             $('[data-js-switch-item]', this.$el).removeClass('active').eq(this.model.get('value')).addClass('active');

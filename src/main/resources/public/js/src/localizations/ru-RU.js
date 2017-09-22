@@ -69,6 +69,7 @@ define(['util'], function () {
             restore: 'Восстановить',
             settings: 'Установки',
             members: 'Участники',
+            events: 'Мониторинг событий',
             action: 'Действие',
             filter: 'FILTER',
             clickToSubmit: 'Нажмите, чтобы подтвердить отправку формы',
@@ -103,7 +104,9 @@ define(['util'], function () {
             avatar: 'Картинка профиля',
             minPrefix: 'По крайней мере ',
             minSufix: ' символы требуются.',
+            minSufix3: 'символа требуется.',
             minSufixAuto: ' символы требуются для автозаполнения.',
+            minSufixAuto3: ' символа требуется для автозаполнения.',
             maxPrefix: 'Не более, чем ',
             maxSufix: ' символов допускается.',
             by: '',
@@ -140,9 +143,9 @@ define(['util'], function () {
             selectValue: 'Выбрать значение',
             from: 'от',
             to: 'до',
-            launch: 'launch',
+            launch: 'запуск',
             selectedLaunches: 'избранные запуски',
-            debug: 'Отладить',
+            debug: 'Отладку',
             allLaunches: 'Все запуски',
             smof: 'выкл',
             smon: 'вкл',
@@ -153,7 +156,28 @@ define(['util'], function () {
             sortBy: 'Сортировать по',
             name: 'Имя',
             description: 'Описание',
+            import: 'Импорт',
             note: 'Замечание:',
+            searchName: 'Поиск по Имени',
+            perPage: 'на странице',
+            timeRangeChange: 'Ваш временной диапазон будет обновляться каждый день',
+            markdownBigHeading: 'Большой заголовок',
+            markdownMediumHeading: 'Средний заголовок',
+            markdownSmallHeading: 'Маленький заголовок',
+            markdownClean: 'Абзац',
+            markdownBold: 'Жирное начертание',
+            markdownItalic: 'Курсив',
+            markdownStrikethrough: 'Перечеркнуть',
+            markdownGeneric: 'Маркированный список',
+            markdownNumbered: 'Нумерованный список',
+            markdownImage: 'Добавить изображение',
+            markdownLink: 'Создать ссылку',
+            markdownQuote: 'Цитата',
+            markdownCode: 'Добавить код',
+            markdownPreview: 'Предварительный просмотр',
+            they: 'ним',
+            it: 'нему',
+            new: 'Новый',
             days: [
                 'Воскресенье',
                 'Понедельник',
@@ -349,7 +373,7 @@ define(['util'], function () {
             limitResults: 'Лимит результатов',
             widgetSize: 'Размер виджета',
             widgetType: 'Тип виджета',
-            typeUserName: 'Написать имя пользователя',
+            typeUserName: 'Имя пользователя',
             typeLaunchName: 'Время запуска',
             widgetCriteria: 'Критерии для виджета',
             selectCriteria: 'Выбрать критерии',
@@ -361,8 +385,11 @@ define(['util'], function () {
             widgetCreatedBy: 'Виджет создан',
             noData: 'Нет доступных данных.',
             selectLaunch: 'Выберите запуск',
+            enterUserName: 'Введите имя пользователя',
             chooseFilter: 'Выберите фильтр из списка ниже',
+            chooseFilterShort: 'Выберите фильтр',
             selectedFilterNotFound: 'Фильтр не найден. Пожалуйста, выберите другой. ',
+            tagPrefix: 'Префикс тега',
             limit: 'Всего элементов',
             items: 'Элементы',
             launchesCount: 'Всего запусков',
@@ -411,7 +438,7 @@ define(['util'], function () {
             // nonPassedCases: 'Непройденные тестовые сценарии',
             failedCases: 'неудавшиеся сценарии',
             // ofInvestigation: 'of investigation',
-            ofTestCases: ' из тестовых сценариев',
+            ofTestCases: ' тестовых сценариев',
             ofIssues: 'из ошибок',
             growTestCases: 'Прирост тестовых сценариев',
             toInvestigate: 'Требуется Анализ',
@@ -429,13 +456,26 @@ define(['util'], function () {
 
             launchPassed: 'Успешно',
             launchNotPassed: 'Неудачно',
-            startLaunch: 'начатый запуск',
-            finishLaunch: 'оконченный запуск',
-            deleteLaunch: 'исключенный запуск',
-            shareWidget: 'доступный виджет',
-            unshareWidget: 'виджет не доступен',
-            shareDashboard: 'панель управления доступна',
-            unshareDashboard: 'панель управления не доступна',
+            start_launch: 'старт запуска',
+            finish_launch: 'окончание запуска',
+            delete_launch: 'удаление запуска',
+            create_dashboard: 'создание панели управления',
+            update_dashboard: 'обновление панели управления',
+            delete_dashboard: 'удаление панели управления',
+            create_widget: 'создание виджета',
+            update_widget: 'обновление виджета',
+            delete_widget: 'удаление виджета',
+            create_filter: 'создание фильтра',
+            update_filter: 'обновление фильтра',
+            delete_filter: 'удаление фильтра',
+            update_item: 'обновление элемента',
+            create_user: 'создание пользователя',
+            start_import: 'начало импорта',
+            finish_import: 'конец импорта',
+            // shareWidget: 'доступный виджет',
+            // unshareWidget: 'виджет не доступен',
+            // shareDashboard: 'панель управления доступна',
+            // unshareDashboard: 'панель управления не доступна',
             update_bts: 'обновлено',
             delete_bts: 'удалено',
             create_bts: 'сконфигурировано',
@@ -461,7 +501,7 @@ define(['util'], function () {
             off_email: 'выключено',
             update_email: 'обновлено',
 
-            overallStatisticsPanel: 'Панель общей статистики',
+            overallStatisticsPanel: 'Общая статистика',
             overallStatisticsPanelDescription: 'показывает сводку тестовых сценариев с каждым статусом в избранных запусках.',
             TestCasesStatisticsUniqueLaunches: 'Статистика тестовых сценариев в уникальных запусках',
 
@@ -504,23 +544,29 @@ define(['util'], function () {
             projectActivityPanel: 'Панель активностей проекта',
             projectActivityPanelDescription: 'показывает все действия, производимые над проектом.',
 
-            passingRatePerLaunchChart: 'Passing rate per launch',
-            passingRatePerLaunchChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for last run of selected launch.',
+            passingRatePerLaunchChart: 'Процент пройденных тестов для одного запуска',
+            passingRatePerLaunchChartDescription: 'показывает процентное соотношение между пройденными тестами и их общим количеством для последнего запуска.',
 
-            passingRateSummaryChart: 'Passing rate summary',
-            passingRateSummaryChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
+            passingRateSummaryChart: 'Процент пройденных тестов для выбранных запусков',
+            passingRateSummaryChartDescription: 'Показывает процентное соотношение между пройденными тестами и их общим количеством для выбранных запусков.',
 
             percentageOfInvestigationsChart: 'Процент исследований',
             percentageOfProductBugsChart: 'Процент дефектов продукта',
 
+            productStatus: 'Статус проекта',
+            productStatusDescription: 'Widget shows the configurable table that is representing launch statistics or group statistics by special filter',
+
+            cumulativeTrendChart: 'Cumulative trend chart',
+            cumulativeTrendChartDescription: 'shows the growth trend of summary statistics of launches with the same tag prefix',
+
             launchStatisticsChart: 'Статистика запусков',
             trendChart: 'Диаграмма тенденций',
             lineChart: 'Линейная диаграмма',
-            panelMode: 'Panel view',
-            chartMode: 'Pie chart view',
-            barMode: 'Bar view',
-            pieChartMode: 'Pie chart view',
-            donutChartMode: 'Donut view',
+            panelMode: 'В виде групп',
+            chartMode: 'Круговая диаграмма',
+            barMode: 'Гистограмма',
+            pieChartMode: 'Круговая диаграмма',
+            donutChartMode: 'Круговая диаграмма',
             trendChartMode: 'Trend view',
 
             defaultName: 'Название шаблона виджета',
@@ -541,7 +587,16 @@ define(['util'], function () {
             saveWidgetDashboard: 'Сохраните Виджет на Панели управления',
             launchName: 'ИМЯ ЗАПУСКА',
             latestLaunches: 'Последние запуски',
-            allLaunches: 'Все запуски'
+            allLaunches: 'Все запуски',
+
+            customColumn: 'Кастомная колонка',
+            columnName: 'Имя колонки',
+            tagPattern: 'Паттерн тега',
+            customColumnDiscl: 'Вы можете добавить свою колонкук для просмотра тегов с выбранным префиксом тега',
+            addCustomColumn: '+ Добавить колонку',
+            groupLaunchesByFilter: 'Групировать запуски по фильтру',
+            launchesOnFilter: 'Количество запусков в фильтре - ',
+            selectWidget: 'Выберите тип виджета из списка'
         },
 
         userProfile: {
@@ -597,7 +652,8 @@ define(['util'], function () {
             language: 'Язык',
             english: 'English (United States)',
             russian: 'Русский',
-            reloadPage: 'Изменения вступят в силу если <a href="">обновить</a> страницу'
+            reloadPage: 'Изменения вступят в силу если <a href="">обновить</a> страницу.<br>' +
+            'Русский язык находится в бета-версии. Пожалуйста помогите нам с переводом, отправьте Ваш ПР в <a target="blank" href ="https://github.com/reportportal/service-ui/blob/develop/src/main/resources/public/js/src/localizations/ru-RU.js">файл</a>.'
         },
 
         dashboard: {
@@ -679,7 +735,7 @@ define(['util'], function () {
             fName: 'Название фильтра',
             fOptions: 'Опции',
             fOwner: 'Владелец',
-            fShared: 'Поделился',
+            fShared: 'Поделиться',
             fDisplayOnLaunches: 'Отобразить на запусках',
             fDelete: 'Удалить',
             addFilter: 'Добавить фильтр',
@@ -691,7 +747,8 @@ define(['util'], function () {
             namePlaceholder: 'Название',
             sortedBy: ' отсортировано по: ',
             addToTabs: 'Добавить во вкладки запусков',
-            removeFromTabs: 'Удалить из вкладок запусков'
+            removeFromTabs: 'Удалить из вкладок запусков',
+            total: 'Все'
         },
 
         launches: {
@@ -733,6 +790,7 @@ define(['util'], function () {
             willBePostedTo: 'Ошибка будет отправлена в',
             willBeLoadedTo: 'Ошибка будет загружена в',
             noItemsInside: 'Внутри нет данных',
+            notYourOwnLaunch: 'Запуск был создан не Вами',
 
             actionTitle: 'Выберите несколько элементов для обработки',
             multiSelectError: 'Вы не можете выполнить операцию с недействительными элементами',
@@ -751,6 +809,7 @@ define(['util'], function () {
             shiftToDebug: 'Перейти к Отладке',
             owner: 'Владелец',
             addToDashboard: 'Добавить на панель управления',
+            postIssue: 'Отправить ошибку',
             postBug: 'Отправить ошибку',
             postBugTo: 'Отправить ошибку в',
             loadBug: 'Загрузить ошибку',
@@ -794,7 +853,7 @@ define(['util'], function () {
             launchEditor: 'Редактор Запусков',
             launchName: 'Название запуска',
             launchNumber: 'Номер запуска',
-            disclaimerChangeDescription: 'Изменение описания и ярлыков может повлиять на ваши результаты фильтрования, виджеты, тенденции',
+            disclaimerChangeDescription: 'Изменение описания и меток может повлиять на ваши результаты фильтрования, виджеты, тенденции',
             matchTitle: 'Сопоставить ошибки в Запуске',
             nothingToMatch: 'Запуск не имеет ошибок для сопоставления',
             export: 'Экспортировать',
@@ -813,26 +872,40 @@ define(['util'], function () {
             approximateTimeLessMin: '<1 мин осталось',
             approximateTimeExpected: 'Среднее время выполнения -',
             approximateTimeOverLap: 'текущее наложение -',
-            launchFinished: 'Запуск закончен',
+            launchFinished: 'Запуск уже завершен',
             launchIsDeleting: 'Запуск - в процессе удаления!',
             noItemInLaunch: 'Нет элементов<br> в Запуске',
             emptyItem: 'Элемент пуст',
-            severalItems: 'Существует несколько элементов с одинаковыми названиями, описаниями и ярлыками',
+            severalItems: 'Существует несколько элементов с одинаковыми названиями, описаниями и меткими',
             multipleSelectHeader: 'ВЫ МОЖЕТЕ ВЫПОЛНЯТЬ ДЕЙСТВИЯ С ВЫБРАННЫМИ ЭЛЕМЕНТАМИ:',
-            selectMoreItem: 'Вы можете выбрать более одного элемента',
-            latestLaunches: 'Latest launches',
-            latestLaunches_short: 'Latest',
-            allLaunches: 'All launches',
-            allLaunches_short: 'All',
-            noFilter: 'NO FILTER'
+            selectMoreItem: 'Вам надо выбрать более одного элемента',
+            latestLaunches: 'Последние Запуски',
+            latestLaunches_short: 'Последние',
+            allLaunches: 'Все Запуски',
+            allLaunches_short: 'Все',
+            noFilter: 'ФИЛЬТР НЕ ВЫБРАН',
+            launchPassed: 'Успешно',
+            launchFailed: 'Неудачно',
+            launchSkipped: 'Пропущено'
         },
 
         launchStatus: {
+            ALL: 'Все',
             FAILED: 'Неудачно',
             PASSED: 'Успешно',
             STOPPED: 'Остановлено',
+            SKIPPED: 'Пропущено',
             INTERRUPTED: 'Прервано',
             IN_PROGRESS: 'В процессе'
+        },
+
+        testStatus:{
+            FAILED: 'НЕУДАЧНО',
+            PASSED: 'УСПЕШНО',
+            STOPPED: 'ОСТАНОВЛЕНО',
+            SKIPPED: 'ПРОПУЩЕНО',
+            INTERRUPTED: 'ПРЕРВАНО',
+            IN_PROGRESS: 'В ПРОЦЕССЕ'
         },
 
         historyLine: {
@@ -843,7 +916,7 @@ define(['util'], function () {
                 SKIPPED: 'Пропущено',
                 INTERRUPTED: 'Прервано',
                 IN_PROGRESS: 'В процессе',
-                MANY: 'Существует несколько элементов с одинаковыми названиями, описаниями и ярлыками',
+                MANY: 'Существует несколько элементов с одинаковыми названиями, описаниями и метками',
                 NOT_FOUND: 'Нет элементов в Запуске'
             }
         },
@@ -858,6 +931,7 @@ define(['util'], function () {
         },
 
         testTableMethodTypes: {
+            ALL: 'Все',
             TEST: 'Тестовый класс',
             STEP: 'Тест',
             AFTER_CLASS: 'Пост-класс',
@@ -895,13 +969,14 @@ define(['util'], function () {
             system_issue: 'Системная ошибка',
             to_investigate: 'Требует анализа',
             no_defect: 'Нет дефектов',
-            tags: 'Ярлыки',
+            tags: 'Метки',
             start_time: 'Время начала',
+            end_time: 'Время окончания',
             message: 'Сообщение',
             description: 'Описание',
             name: 'Имя запуска',
             itemName: 'Имя элемента тестирования',
-            level: 'Уровень журнала',
+            level: 'Уровень логов',
             time: 'Временной диапазон',
             issue$issue_comment: 'Комментарий о дефекте',
             issue$issue_type: 'Тип дефекта',
@@ -936,7 +1011,63 @@ define(['util'], function () {
             ERROR: 'Ошибка',
             Screenshot: 'Приложение'
         },
-
+        projectEvents: {
+            tableHeaders: {
+                time: 'Время',
+                time_short: 'Время',
+                user: 'Пользователь',
+                user_short: 'Пользователь',
+                action: 'Действие',
+                action_short: 'Действ',
+                objectType: 'Тип объекта',
+                objectType_short: 'Тип объекта',
+                objectName: 'Имя объекта',
+                objectName_short: 'Имя объекта',
+                oldVal: 'Старое значение',
+                oldVal_short: 'Стар знач',
+                newVal: 'Новое значение',
+                newVal_short: 'Нов знач'
+            },
+            eventTypes: {
+                all: 'Все',
+                create_dashboard: 'Создание панели управления',
+                update_dashboard: 'Обновление панели управления',
+                delete_dashboard: 'Удаление панели управления',
+                create_widget: 'Создание виджета',
+                update_widget: 'Обновление виджета',
+                delete_widget: 'Удаление виджета',
+                create_filter: 'Создание фильтра',
+                update_filter: 'Обновление фильтра',
+                delete_filter: 'Удаление фильтра',
+                update_defect: 'Обновление дефекта',
+                delete_defect: 'Удаление дефекта',
+                create_bts: 'Создание СОО',
+                update_bts: 'Обновление СОО',
+                delete_bts: 'Удаление СОО',
+                start_launch: 'Старт запуска',
+                finish_launch: 'Финиш запуска',
+                delete_launch: 'Удаление запуска',
+                update_project: 'Обновление проекта',
+                post_issue: 'Публикация ошибки',
+                attach_issue: 'Добавление ошибки',
+                update_item: 'Обновление элемента',
+                create_user: 'Создание пользователя',
+                start_import: 'Начало импорта',
+                finish_import: 'Окончание импорта'
+            },
+            objectTypes: {
+                all: 'Все',
+                project: 'Проект',
+                defect_type: 'Тип дефекта',
+                testItem: 'Элемент тестирования',
+                launch: 'Запуск',
+                externalSystem: 'Внешняя системы',
+                dashboard: 'Панель управления',
+                user: 'Пользователь',
+                widget: 'Виджет',
+                userFilter: 'Фильтр'
+            }
+        },
         launchesHeaders: {
             start_time: 'Время начала',
             start_time_short: 'Начало',
@@ -975,10 +1106,12 @@ define(['util'], function () {
             issue_short: 'Тип дефекта',
             time: 'Время',
             time_short: 'Время',
-            message: 'Сообщение журнала',
-            message_short: 'Сообщение журнала',
+            message: 'Coдержание лога',
+            message_short: 'Coдержание лога',
             attachment: 'Приложение',
             attachment_short: 'Прил',
+            passing_rate: 'Passing Rate',
+            filter_name: 'Имя фильтра',
             interruptedAfter: 'Прогон ПРЕРВАН после:',
             stoppedAt: 'Остановлено в:',
             durationSpecific: 'Длительность - это интервал между началом первого подпрогона и окончанием последнего подпрогона. Но если подпрогоны происходят параллельно, время окончания - это окончание наиболее длительного подпрогона, в этом случае длительность не будет равна сумме длительностей подпрогонов.'
@@ -1000,19 +1133,20 @@ define(['util'], function () {
         logs: {
             noLogsFound: 'Записей журнала не найдено',
             openFile: 'Открыть файл в новом окне',
-            logLevel: 'Уровень журнала',
+            logLevel: 'Уровень логов',
             ticketNotFound: 'Ошибки не обнаружено:',
             ticketStatusProblem: 'Ошибка не существует или нет связи со Внешней Системой',
             summary: 'Сводка:',
             status: 'Статус:',
             prevTestItem: 'Предыдущий элемент тестирования',
             nextTestItem: 'Следующий элемент тестирования',
-            filterAttachments: 'Записи со вложениями',
+            filterAttachments: 'Логи с вложениями',
             notFoundActivity: 'Нет действий для отображения',
             notFoundAttachments: 'Нет вложений для отображения',
             notFoundStackTrace: 'Нет Трассировки Стека для отображения',
             goToLog: 'Перейдите к Трассировке Стека в Записи Журнала',
-            nextError: 'Следующая ошибка'
+            nextError: 'Следующая ошибка',
+            consoleView: 'Консольный вид'
         },
 
         defectNameById: {
@@ -1045,6 +1179,20 @@ define(['util'], function () {
             lte: 'меньше или равно'
         },
 
+        filterShortCut: {
+            eq: 'рав',
+            '!eq': 'нрв',
+            ne: 'нсд',
+            cnt: 'сд',
+            '!cnt': 'нсд',
+            and: 'и',
+            has: 'и',
+            in: 'или',
+            or: 'или',
+            gte: '&ge;',
+            lte: '&le;'
+        },
+
         filters: {
             moreCriteria: 'Больше критериев',
             toSaveText: 'Примените любой фильтр, чтобы сохранить фильтр в избранное',
@@ -1071,7 +1219,7 @@ define(['util'], function () {
             launchName: 'Имя запуска',
             suiteName: 'Имя набора',
             testName: 'Имя теста',
-            refine: 'УЛУЧШИТЬ:'
+            refine: 'УТОЧНИТЬ:'
         },
         filter: {
             name: 'Имя',
@@ -1105,7 +1253,7 @@ define(['util'], function () {
             settingsFor: 'Настройки для',
             name: 'Имя',
             launchesNames: 'Имена запусков',
-            selectTags: 'Избранные ярлыки',
+            selectTags: 'Избранные метки',
             selectLaunchNames: 'Избранные имена запусков',
             toolset: 'Проектный инструментарий:',
             specificProject: 'Добавьте контроль управления в соответствии со спецификой проекта',
@@ -1190,7 +1338,7 @@ define(['util'], function () {
             toInvestigate: 'Требуется анализ',
             automationBug: 'Ошибка теста',
 
-            addSubType: 'Добавить Тип дефекта',
+            addSubType: 'Добавить подтип',
             addSubTypeShort: 'Добавить',
             canBeAdded: 'подтипов можно добавить',
             limitReached: 'Все 10 подтипов уже добавлены',
@@ -1233,7 +1381,13 @@ define(['util'], function () {
             addNewIssue: 'Добавить новую Ошибку',
             btsInstances: 'Серверы СОД:',
             btsAddNewInstance: 'Добавить новый Сервер',
-            btsNotFound: 'Чтобы сконфигурировать систему отслеживания ошибок, пожалуйста, приведите в действие подходящий микросервис'
+            btsNotFound: 'Чтобы сконфигурировать систему отслеживания ошибок, пожалуйста, приведите в действие подходящий микросервис',
+            always: 'Всегда',
+            launchHasInvestigate: 'Запуск имеет элементы требующие анализа',
+            launchHasIssue: 'Запуск содержит ошибки',
+            more10: '> 10% элементов содержат ошибки',
+            more20: '> 20% элементов содержат ошибки',
+            more50: '> 50% элементов содержат ошибки'
         },
 
         admin: {
@@ -1279,6 +1433,7 @@ define(['util'], function () {
             addNewUser: 'Добавить нового пользователя',
             inviteNewUser: 'Пригласить пользователя на проект',
             configPage: ' страница настроек проекта',
+            projectEvents: 'События',
             projectMembers: 'Участники',
             enterProjectName: 'Введите название проекта',
             assigned: 'Назначено',
@@ -1312,6 +1467,7 @@ define(['util'], function () {
             titleAllProjects: 'Все проекты',
             titleMembers: 'Участники',
             titleSettings: 'Настройки',
+            titleEvents: 'События',
             internalProjects: 'Внутренние проекты',
             personalProjects: 'Персональные проекты',
             searchByName: 'Поиск по названию',
@@ -1414,16 +1570,18 @@ define(['util'], function () {
 
         comparators: {
             eq: '=',
+            ne: '!=',
             gte: '>=',
             lte: '<=',
             gt: '>',
             lt: '<',
             cnt: 'содержит',
+            '!cnt': 'не содержит',
             ex: 'существует',
             btw: 'между',
             not: ' не ',
             and: ' и ',
-            andb: ' И '
+            andb: ' ВКЛЮЧАЯ '
         },
 
         successMessages: {
@@ -1616,6 +1774,7 @@ define(['util'], function () {
             countWrongAmount: 'Количество элементов вне допустимого диапазона',
             countWrongAmountSize: 'Количество элементов должно иметь размер ',
             itemsSizeLength: 'Количество элементов должно иметь размер от %%% до %%%',
+            valueSizeLength: 'Значение должно иметь размер от %%% до %%%',
             selectAtLeastOneCriteria: 'Выберите как минимум один критерий ',
             selectAtLeastOneAction: 'Выберите как минимум одно действие',
             selectAllOptionsForWidget: 'Выберите все опции, чтобы добавить новый виджет',
@@ -1685,13 +1844,13 @@ define(['util'], function () {
             passwordLength: 'Пароль должен содержать от %%% до %%% знаков.',
             userNameLength: 'Имя должно содержать от %%% до %%% знаков.',
 
-            moreOneItem: 'Выберите не меньше одного элемента'
+            moreAtItem: 'Выберите не меньше одного элемента'
         },
 
         forms: {
             name: 'Имя',
             owner: 'Владелец',
-            tags: 'Ярлыки',
+            tags: 'Метки',
             description: 'Описание',
             startTime: 'Старт',
             endTime: 'Время окончания',
@@ -1733,8 +1892,11 @@ define(['util'], function () {
             createUser: 'Добавить, зарегистрировать пользователя',
             updateDefects: 'Обновить типы дефектов',
             updateBts: 'Обновить СОД',
-            projectNameIn: 'Имя проекта в',
-            bugWillBeLoaded: 'Ошибка будет загружена в ',
+            updateWidget: 'Обновить виджет',
+            updateDashboard: 'Обновить панель управления',
+            updateFilter: 'Обновить фильтр',
+            import: 'Импорт',
+            projectNameIn: 'Имя проекта в СОД',
             copyLink: 'Копировать ссылку'
         },
 
@@ -1747,6 +1909,7 @@ define(['util'], function () {
             sharedWidgets: 'Доступные виджеты',
             widgetTemplates: 'Шаблоны виджетов',
             enterWidgetName: 'Напишите название виджета',
+            enterLaunchName: 'Введите имя запуска',
             createDashboard: 'Создать панель управления',
             sharedDashboards: 'Доступные панели управления',
             ownDashboards: 'Ваши Панели управления',
@@ -1768,6 +1931,7 @@ define(['util'], function () {
             criteriaSelectTitle: 'Выбрать критерии',
             actionSelectTitle: 'Выбрать Действия',
             modeSelectTitle: 'Выбрать Режим',
+            selectColumn: 'Выбрать Колонки',
             previewDefault: 'Выберите шаблон виджета и фильтр, чтобы увидеть предпросмотр',
             previewNotAvailable: 'Предпросмотр не доступен для этого типа шаблона виджета',
             previewNoFilter: 'Выберите фильтр, чтобы увидеть предпросмотр',
@@ -1775,7 +1939,17 @@ define(['util'], function () {
             previewDataNotAvailable: 'Нельзя получить данные для предпросмотра.',
 
             incomplete: 'Не закончено',
-            complete: 'Завершено'
+            complete: 'Завершено',
+
+            filters: 'Фильтры',
+            enterFilter: 'Введите имена фильтров',
+            basicColumns: 'Основные колонки',
+            choiceCriteria: 'Выберите критерий',
+            choiceColumns: 'Выберите колонки',
+            tagPrefixDescription: 'To view a dynamic of a definite tag you should type its part before colon ‘:’',
+            tagPrefixPlaceholder: 'Введите часть тега до ‘:’',
+
+            searchFilterByNAme: 'Поиск фильтра по имени'
         },
 
         dialogHeader: {
@@ -1848,7 +2022,7 @@ define(['util'], function () {
             testItemDetails: 'Детали Элемента',
             launchDescrPlaceholder: 'Введите Описание Запуска',
             testItemDescrPlaceholder: 'Введите Описание Элемента',
-            launchTagPlaceholder: 'Введите Название Ярлыка',
+            launchTagPlaceholder: 'Введите название Метки',
             editFilter: 'Редактировать фильтр',
             addFilter: 'Добавить фильтр',
             moveLaunch: 'Вы хотите переместить %%% в %%%?',

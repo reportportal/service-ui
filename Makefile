@@ -24,9 +24,8 @@ help:
 	@echo "test       - go test"
 	@echo "checkstyle - gofmt+golint+misspell"
 
-vendor: ## Install govendor and sync vendored dependencies
-	$(GO) get -v github.com/Masterminds/glide
-	cd "$(GOPATH)/src/github.com/Masterminds/glide" && git checkout tags/v0.12.3 && go install && cd -
+vendor: ## Install glide and sync vendored dependencies
+	$(if $(shell which glide 2>/dev/null),$(echo "Glide is already installed..."),$(shell go get github.com/Masterminds/glide))
 	glide install
 
 get-build-deps: vendor
@@ -59,7 +58,8 @@ build: build-statics build-server
 
 # Builds server
 build-release: checkstyle test
-	$(eval v := $(shell releaser bump))
+	$(eval v := $(or $(v),$(shell releaser bump)))
+
 	CGO_ENABLED=0 GOARCH=amd64 GOOS=linux $(GO) build ${BUILD_INFO_LDFLAGS} -o ${RELEASE_DIR}/service-ui_linux_amd64 ./
 	CGO_ENABLED=0 GOARCH=amd64 GOOS=windows $(GO) build ${BUILD_INFO_LDFLAGS} -o ${RELEASE_DIR}/service-ui_win_amd64.exe ./
 	#gox -output "release/{{.Dir}}_{{.OS}}_{{.Arch}}" -os "linux windows" -arch "amd64" ${BUILD_INFO_LDFLAGS}

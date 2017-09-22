@@ -160,8 +160,6 @@ define(function (require) {
         },
         onClickFilter: function (e) {
             var filterId;
-            var launchFilterCollection = new SingletonLaunchFilterCollection();
-            var tempFilterModel = launchFilterCollection.generateTempModel();
             e.stopPropagation();
             filterId = $(e.currentTarget).closest('.rp-grid-th').data('filter');
             switch (filterId) {
@@ -182,12 +180,7 @@ define(function (require) {
                 break;
             default: break;
             }
-            if (this.filterModel.get('id') === 'all') {
-                config.router.navigate(tempFilterModel.get('url'), { trigger: true });
-                tempFilterModel.trigger('add_entity', filterId);
-            } else {
-                this.filterModel.trigger('add_entity', filterId);
-            }
+            this.filterModel.trigger('add_entity', filterId);
         },
         onChangeSelectionParameters: function () {
             var filterParams = this.filterModel.getParametersObj();

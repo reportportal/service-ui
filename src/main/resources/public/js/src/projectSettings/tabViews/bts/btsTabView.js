@@ -101,6 +101,9 @@ define(function (require) {
                 defaultValue: this.model.get('systemType')
             });
             $('[data-js-bts-switcher]', this.$el).html(btsSwitcher.$el);
+            if (!this.access) {
+                btsSwitcher.disabled();
+            }
             this.listenTo(btsSwitcher, 'change', this.changeBts);
             this.dropdownComponents.push(btsSwitcher);
 

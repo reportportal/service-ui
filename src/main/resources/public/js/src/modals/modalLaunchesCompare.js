@@ -24,12 +24,11 @@ define(function (require) {
     var Service = require('coreService');
     var WidgetService = require('newWidgets/WidgetService');
     var WidgetModel = require('newWidgets/WidgetModel');
-    var LaunchesComparisonChart = require('newWidgets/widgets/LaunchesComparisonChartView');
+    var LaunchesComparisonChart = require('newWidgets/widgets/launchesComparison/index');
 
     var ModalLaunchesCompare = ModalView.extend({
         template: 'tpl-modal-launches-compare',
         className: 'modal-launches-compare',
-
 
         initialize: function (options) {
             this.ids = _.map(options.items, function (item) {
@@ -58,14 +57,17 @@ define(function (require) {
             var self = this;
             $.when(WidgetService.getSettingsGadget(gadget)).done(function (widget) {
                 var curWidget = widget;
-                var criteria = curWidget.staticCriteria;
                 var widgetData = {
                     id: _.uniqueId() + '-' + gadget,
                     content_parameters: { gadget: gadget },
-                    content: response,
+                    content: response
                 };
-                delete criteria.statistics$defects$no_defect$total;
-                widgetData.content_parameters.content_fields = _.keys(criteria);
+                _.each(curWidget.uiControl, function (control) {
+                    if (control.control === 'static' && control.options.action === 'criteria') {
+                        widgetData.content_parameters.content_fields = control.options.fields;
+                        return false;
+                    }
+                });
                 self.widget = new LaunchesComparisonChart({
                     isPreview: false,
                     unclickableChart: true,

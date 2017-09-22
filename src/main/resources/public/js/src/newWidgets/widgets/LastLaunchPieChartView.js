@@ -18,12 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var _ = require('underscore');
     var Localization = require('localization');
-    var LaunchStatisticsComboPieChart = require('newWidgets/widgets/LaunchStatisticsComboPieChartView');
+    var LaunchStatisticsComboPieChart = require('newWidgets/widgets/launchExecutionAndIssueStatistics/index');
 
     var LastLaunchPieChartView = LaunchStatisticsComboPieChart.extend({
         initialize: function (options) {

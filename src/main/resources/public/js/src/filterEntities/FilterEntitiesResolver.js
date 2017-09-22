@@ -27,6 +27,7 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Filters = require('filterEntities/FilterEntities');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
     var Localization = require('localization');
 
     var defectTypeCollection = null;
@@ -73,7 +74,7 @@ define(function (require, exports, module) {
                 options: filterStatsOptions()
             });
         });
-        var totalName = 'Total ' + Localization.filterNamePluralById[type];
+        var totalName = Localization.favorites.total + ' ' + Localization.filterNamePluralById[type];
         if (filters.length == 1) {
             totalName = Localization.filterNameById[type];
             filters = [];
@@ -147,21 +148,21 @@ define(function (require, exports, module) {
                 id: 'type',
                 condition: 'in',
                 values: [
-                    { name: 'All', value: 'All' },
-                    { name: 'Before Suite', value: 'BEFORE_SUITE' },
-                    { name: 'Before Groups', value: 'BEFORE_GROUPS' },
-                    { name: 'Before Class', value: 'BEFORE_CLASS' },
-                    { name: 'Before Test', value: 'BEFORE_TEST' },
-                    { name: 'Test Class', value: 'TEST' },
-                    { name: 'Before Method', value: 'BEFORE_METHOD' },
-                    { name: 'Test', value: 'STEP' },
-                    { name: 'After Method', value: 'AFTER_METHOD' },
-                    { name: 'After Test', value: 'AFTER_TEST' },
-                    { name: 'After Class', value: 'AFTER_CLASS' },
-                    { name: 'After Groups', value: 'AFTER_GROUPS' },
-                    { name: 'After Suite', value: 'AFTER_SUITE' }
+                    { name: Localization.testTableMethodTypes.ALL, value: 'All' },
+                    { name: Localization.testTableMethodTypes.BEFORE_SUITE, value: 'BEFORE_SUITE' },
+                    { name: Localization.testTableMethodTypes.BEFORE_GROUPS, value: 'BEFORE_GROUPS' },
+                    { name: Localization.testTableMethodTypes.BEFORE_CLASS, value: 'BEFORE_CLASS' },
+                    { name: Localization.testTableMethodTypes.BEFORE_TEST, value: 'BEFORE_TEST' },
+                    { name: Localization.testTableMethodTypes.TEST, value: 'TEST' },
+                    { name: Localization.testTableMethodTypes.BEFORE_METHOD, value: 'BEFORE_METHOD' },
+                    { name: Localization.testTableMethodTypes.STEP, value: 'STEP' },
+                    { name: Localization.testTableMethodTypes.AFTER_METHOD, value: 'AFTER_METHOD' },
+                    { name: Localization.testTableMethodTypes.AFTER_TEST, value: 'AFTER_TEST' },
+                    { name: Localization.testTableMethodTypes.AFTER_CLASS, value: 'AFTER_CLASS' },
+                    { name: Localization.testTableMethodTypes.AFTER_GROUPS, value: 'AFTER_GROUPS' },
+                    { name: Localization.testTableMethodTypes.AFTER_SUITE, value: 'AFTER_SUITE' }
                 ],
-                value: 'All'
+                value: Localization.testTableMethodTypes.ALL
             }),
             new Filters.EntityConditionInputModel({
                 id: 'description',
@@ -173,12 +174,12 @@ define(function (require, exports, module) {
                 id: 'status',
                 condition: 'in',
                 values: [
-                    { name: 'All', value: 'All' },
-                    { name: 'Passed', value: 'PASSED' },
-                    { name: 'Failed', value: 'FAILED' },
-                    { name: 'Skipped', value: 'SKIPPED' },
-                    { name: 'Interrupted', value: 'INTERRUPTED' },
-                    { name: 'In Progress', value: 'IN_PROGRESS' }
+                    { name: Localization.launchStatus.ALL, value: 'All' },
+                    { name: Localization.launchStatus.PASSED, value: 'PASSED' },
+                    { name: Localization.launchStatus.FAILED, value: 'FAILED' },
+                    { name: Localization.launchStatus.SKIPPED, value: 'SKIPPED' },
+                    { name: Localization.launchStatus.INTERRUPTED, value: 'INTERRUPTED' },
+                    { name: Localization.launchStatus.IN_PROGRESS, value: 'IN_PROGRESS' }
                 ],
                 value: 'All'
             }),
@@ -212,7 +213,7 @@ define(function (require, exports, module) {
     var UserDebugFilters = function (userId) {
         var launchFilters = LaunchStepFilters();
         // place user filter on the second place but first is required Name filter so we insert at index 2
-        launchFilters.add(new Filters.EntityUserTagModel({ id: 'user', condition: 'in', mode: 'DEBUG' }), { at: 1 });
+        launchFilters.add(new Filters.EntityOwnerTagModel({ id: 'user', condition: 'in', mode: 'DEBUG' }), { at: 1 });
         return launchFilters;
     };
 
@@ -263,7 +264,7 @@ define(function (require, exports, module) {
             valueMaxLength: 256,
             valueOnlyDigits: false
         }));
-        launchSuiteEntitiesCollection.add(new Filters.EntityUserTagModel({ id: 'user', condition: 'in' }), { at: 1 });
+        launchSuiteEntitiesCollection.add(new Filters.EntityOwnerTagModel({ id: 'user', condition: 'in' }), { at: 1 });
         return launchSuiteEntitiesCollection;
     };
     var SuiteEntities = function () {
@@ -384,6 +385,87 @@ define(function (require, exports, module) {
         ];
     };
 
+    var ProjectEventsFilters = function () {
+        var infoModel = new SingletonRegistryInfoModel();
+        var actionTypeValues = [{ name: 'All', value: 'All' }];
+        var objectTypeValues = [{ name: 'All', value: 'All' }];
+
+        _.each(infoModel.get('activitiesEventsTypes'), function (item) {
+            actionTypeValues.push({
+                name: Localization.projectEvents.eventTypes[item] ? Localization.projectEvents.eventTypes[item] : item,
+                value: item
+            });
+        });
+        _.each(infoModel.get('activitiesObjectTypes'), function (item) {
+            objectTypeValues.push({
+                name: Localization.projectEvents.objectTypes[item] ? Localization.projectEvents.objectTypes[item] : item,
+                value: item
+            });
+        });
+        return new Backbone.Collection([
+            new Filters.EntitySelectModel({
+                label: Localization.projectEvents.tableHeaders.action,
+                name: Localization.projectEvents.tableHeaders.action,
+                id: 'actionType',
+                condition: 'in',
+                required: true,
+                values: actionTypeValues,
+                value: 'All'
+            }),
+            new Filters.EntityTimeRangeModel({
+                label: Localization.projectEvents.tableHeaders.time,
+                name: Localization.projectEvents.tableHeaders.time,
+                id: 'last_modified',
+                condition: 'btw',
+                values: ['Any'],
+                value: ''
+            }),
+            new Filters.EntitySelectModel({
+                label: Localization.projectEvents.tableHeaders.objectType,
+                name: Localization.projectEvents.tableHeaders.objectType,
+                id: 'objectType',
+                condition: 'in',
+                values: objectTypeValues,
+                value: 'All'
+            }),
+            new Filters.EntityConditionInputModel({
+                label: Localization.projectEvents.tableHeaders.oldVal,
+                name: Localization.projectEvents.tableHeaders.oldVal,
+                id: 'history$oldValue',
+                condition: 'cnt',
+                options: filterNameOptions(),
+                valueMinLength: 3,
+                valueMaxLength: 64,
+                valueOnlyDigits: false
+            }),
+            new Filters.EntityConditionInputModel({
+                label: Localization.projectEvents.tableHeaders.newVal,
+                name: Localization.projectEvents.tableHeaders.newVal,
+                id: 'history$newValue',
+                condition: 'cnt',
+                options: filterNameOptions(),
+                valueMinLength: 3,
+                valueMaxLength: 64,
+                valueOnlyDigits: false
+            }),
+            new Filters.EntityMemberTagModel({
+                label: Localization.projectEvents.tableHeaders.user,
+                name: Localization.projectEvents.tableHeaders.user,
+                id: 'userRef',
+                condition: 'in'
+            }),
+            new Filters.EntityConditionInputModel({
+                label: Localization.projectEvents.tableHeaders.objectName,
+                name: Localization.projectEvents.tableHeaders.objectName,
+                id: 'name',
+                condition: 'cnt',
+                options: filterNameOptions(),
+                valueMinLength: 3,
+                valueOnlyDigits: false
+            })
+        ]);
+    };
+
     var getDefaults = function (type, userId) {
         defectTypeCollection = new SingletonDefectTypeCollection();
         var async = $.Deferred();
@@ -412,6 +494,9 @@ define(function (require, exports, module) {
                     break;
                 case 'history':
                     filtersSet = HistoryStepFilters();
+                    break;
+                case 'projectEvents':
+                    filtersSet = ProjectEventsFilters();
                     break;
                 default:
                     break;

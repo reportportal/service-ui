@@ -206,9 +206,6 @@ define(function (require, exports, module) {
                 isPreview: false,
                 model: widgetModel
             };
-            if (widgetId == 'activities') {
-                widgetData.isReverse = true;
-            }
 
             $loading.hide();
             $errorEl.length && $errorEl.remove();

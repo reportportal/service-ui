@@ -306,7 +306,7 @@ define(function (require) {
             model = new GadgetModel(DataMock.getGadgetModelData());
             renderView(model, null, true);
             el = sandbox.find(view.$el);
-            noData = el.find('.gadget-no-data-error');
+            noData = el.find('.widget-error-view');
             expect(errorLoad).toHaveBeenCalled();
             expect(noData.length).toEqual(1);
             expect(noData.text().trim()).toEqual(Localization.widgets.widgetNotFound);

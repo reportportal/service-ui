@@ -110,7 +110,10 @@ define(function (require) {
         initialize: function (options) {
             this.filterListener = new FilterListener();
             this.filterEvents = this.filterListener.events;
-            this.context = options.context;
+            this.context = (options && options.context) || '';
+            if (this.context === 'projectEvents') {
+                this.set('selection_parameters', '{"is_asc": false, "sorting_column": "last_modified"}');
+            }
             this.listenTo(this, 'change:id', this.computedsUrl);
             this.listenTo(appModel, 'change:projectId', this.computedsUrl.bind(this));
             this.listenTo(this, 'change:temp', this.onChangeTemp);

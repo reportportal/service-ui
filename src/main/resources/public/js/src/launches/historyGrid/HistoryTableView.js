@@ -66,6 +66,7 @@ define(function (require, exports, module) {
             }
         },
         renderItems: function() {
+
             var $nameContainer = $('[data-js-history-names]', this.$el),
                 $cellsContainer = $('[data-js-history-items-cells]', this.$el);
             _.each(this.items.models, function(model) {
@@ -73,7 +74,6 @@ define(function (require, exports, module) {
                     cells = new HistoryItemCellsView({model: model, launches: this.launches, collectionItems: this.collectionItems});
                 $nameContainer.append(name.$el);
                 $cellsContainer.append(cells.$el);
-
                 var cellsHeight = cells.$el.height(),
                     nameHeight = name.$el.height(),
                     height = nameHeight >= cellsHeight ? nameHeight : cellsHeight;

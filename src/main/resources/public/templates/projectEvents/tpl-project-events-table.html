@@ -1,0 +1,52 @@
+<% function getItemHtml(name, shortName) {
+return '<div class="table-wrapper">' +
+    '<div class="middle-wrapper">' +
+        '<span class="text-overflow">' +
+                        '<div class="filter-icon-wrapper">' +
+                            '<i class="rp-icons rp-icons-filter"></i>' +
+                        '</div>&nbsp;' +
+                        '<span class="long-size">' + name + '</span>' +
+                        '<span class="short-size" title="' + name + '">' + shortName + '</span>&nbsp;' +
+                        '<div class="sort-icon-wrapper">' +
+                            '<i class="material-icons">keyboard_arrow_up</i>' +
+                            '<i class="material-icons">keyboard_arrow_down</i>' +
+                        '</div>' +
+                    '</span>' +
+        '</div>' +
+    '</div>';
+} %>
+
+<div class="rp-table-grid project-events-grid rp-table-hover" data-js-table-container>
+    <div class="row rp-grid-thead" data-js-fixed-header>
+        <div class="grid-cell time-grid-cell rp-grid-th" data-sorter="last_modified" data-filter="last_modified">
+            <%= getItemHtml(data.text.projectEvents.tableHeaders.time, data.text.projectEvents.tableHeaders.time_short) %>
+        </div>
+        <div class="grid-cell user-grid-cell rp-grid-th" data-sorter="userRef" data-filter="userRef">
+            <%= getItemHtml(data.text.projectEvents.tableHeaders.user, data.text.projectEvents.tableHeaders.user_short) %>
+        </div>
+        <div class="grid-cell action-grid-cell rp-grid-th" data-sorter="actionType" data-filter="actionType">
+            <%= getItemHtml(data.text.projectEvents.tableHeaders.action, data.text.projectEvents.tableHeaders.action_short) %>
+        </div>
+        <div class="grid-cell object-type-grid-cell rp-grid-th" data-sorter="objectType" data-filter="objectType">
+            <%= getItemHtml(data.text.projectEvents.tableHeaders.objectType, data.text.projectEvents.tableHeaders.objectType_short) %>
+        </div>
+        <div class="grid-cell object-name-grid-cell rp-grid-th" data-sorter="name" data-filter="name">
+            <%= getItemHtml(data.text.projectEvents.tableHeaders.objectName, data.text.projectEvents.tableHeaders.objectName_short) %>
+        </div>
+        <div class="grid-cell old-val-grid-cell rp-grid-th" data-sorter="history$oldValue" data-filter="history$oldValue">
+            <%= getItemHtml(data.text.projectEvents.tableHeaders.oldVal, data.text.projectEvents.tableHeaders.oldVal_short) %>
+        </div>
+        <div class="grid-cell new-val-grid-cell rp-grid-th" data-sorter="history$newValue" data-filter="history$newValue">
+            <%= getItemHtml(data.text.projectEvents.tableHeaders.newVal, data.text.projectEvents.tableHeaders.newVal_short) %>
+        </div>
+    </div>
+    <div class="preloader" data-js-preloader>
+        <i class="material-icons loader-animation">refresh</i>
+    </div>
+    <div class="no-result-found" data-js-no-results>
+        <i class="rp-icons rp-icons-warning"></i>
+        <span><%= data.text.ui.noResultsFound %></span>
+    </div>
+    <div class="events-items" data-js-items-container></div>
+    <div data-js-paginate-container></div>
+</div>

@@ -17,16 +17,37 @@
 define(function (require) {
     'use strict';
 
+    var _ = require('underscore');
     var langEn = require('localizations/en-EU');
     var langRu = require('localizations/ru-RU');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
 
     var appStorage = new SingletonAppStorage();
     var lang = appStorage.get('appLanguage') || 'en';
+    var langRuSafe = extendLoc(langEn, langRu);
     var Localization = {};
+
+    function extendLoc(baseLoc, newLoc) {
+        var result = _.cloneDeep(baseLoc);
+        var consoleString = '';
+        _.each(result, function (section, sectionKey) {
+            _.each(section, function (item, itemKey) {
+                if (newLoc[sectionKey] && newLoc[sectionKey][itemKey]) {
+                    result[sectionKey][itemKey] = newLoc[sectionKey][itemKey];
+                } else {
+                    consoleString += sectionKey + ' -> ' + itemKey + '\n';
+                }
+            });
+        });
+        if ('DEBUG_STATE') {
+            console.log('Undefined localization: \n' + consoleString);
+        }
+        return result;
+    }
+
     switch (lang) {
     case 'ru':
-        Localization = langRu;
+        Localization = langRuSafe;
         break;
     default:
         Localization = langEn;

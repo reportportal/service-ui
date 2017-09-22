@@ -34,7 +34,7 @@ define(function (require) {
 
     var SettingInputItemsView = SettingView.extend({
         className: 'modal-add-widget-setting-input-items',
-        template: 'modal-add-widget-setting-input-items',
+        template: 'tpl-modal-add-widget-setting-input-items',
         bindings: {
             '[data-js-label-name]': 'html:label',
             '[data-js-label-input]': 'value:value'
@@ -42,7 +42,7 @@ define(function (require) {
         initialize: function (data) {
             var options = _.extend({
                 label: '',
-                inputPlaceholder: '',
+                placeholder: '',
                 minItemLength: 3,
                 maxItemLength: 256,
                 minItems: 0,
@@ -96,22 +96,61 @@ define(function (require) {
                             });
                     }
                 };
-            case 'launch':
-                return function (query) {
-                    Service.searchLaunches(query)
-                        .done(function (response) {
-                            var data = { results: [] };
-                            _.each(response, function (item) {
-                                data.results.push({
-                                    id: item,
-                                    text: item
+            case 'launchName':
+                return {
+                    query: function (query) {
+                        Service.searchLaunches(query)
+                            .done(function (response) {
+                                var data = { results: [] };
+                                _.each(response, function (item) {
+                                    data.results.push({
+                                        id: item,
+                                        text: item
+                                    });
                                 });
+                                query.callback(data);
+                            })
+                            .fail(function (error) {
+                                Util.ajaxFailMessenger(error);
                             });
-                            query.callback(data);
-                        })
-                        .fail(function (error) {
-                            Util.ajaxFailMessenger(error);
+                    },
+                    getDataByIds: function (values, callback) {
+                        callback(_.map(values, function (launch) {
+                            return { id: launch, text: launch };
+                        }));
+                    }
+                };
+            case 'user':
+                return {
+                    query: function (query) {
+                        Service.getProjectUsersById(query.term)
+                            .done(function (response) {
+                                var data = { results: [] };
+                                _.each(response, function (item) {
+                                    data.results.push({
+                                        id: item,
+                                        text: item
+                                    });
+                                });
+                                query.callback(data);
+                            })
+                            .fail(function (error) {
+                                Util.ajaxFailMessenger(error);
+                            });
+                    },
+                    getDataByIds: function (values, callback) {
+                        var callbackData = [];
+                        var calls = [];
+                        _.each(values, function (value) {
+                            calls.push(Service.getUserInfo(value)
+                                .done(function (data) {
+                                    callbackData.push({ id: data.userId, text: data.userId });
+                                }));
                         });
+                        $.when.apply($, calls).then(function () {
+                            callback(callbackData);
+                        });
+                    }
                 };
             default:
                 return function (query) {
@@ -129,8 +168,8 @@ define(function (require) {
                 multiple: (this.model.get('maxItems') >= 2),
                 dropdownCssClass: 'rp-select2-separate-block',
                 allowClear: false,
-                placeholder: this.model.get('inputPlaceholder'),
-                tags: true,
+                placeholder: this.model.get('placeholder'),
+                tags: false,
                 initSelection: function (element, callback) {
                     self.getFunctions()
                         .getDataByIds(self.getValue(self.gadgetModel, self), callback);
@@ -140,6 +179,7 @@ define(function (require) {
             $('[data-js-label-input]', this.$el)
                 .on('select2-open', this.onEnterInput)
                 .on('select2-close', this.onOverInput);
+            this.activated = true;
         },
         onChangeValue: function (model, value) {
             this.setValue(value.split(','), this.gadgetModel, this);
@@ -153,9 +193,12 @@ define(function (require) {
                 $('[data-js-validate-hint]', this.$el).show();
             }
         },
-        validate: function () {
+        validate: function (options) {
             if (this.model.get('minItems') > 0 && !this.model.get('value').length) {
-                this.showErrorState(Localization.validation.moreOneItem);
+                if (options && options.silent) {
+                    return false;
+                }
+                this.showErrorState(Localization.validation.moreAtItem);
                 return false;
             }
             return true;

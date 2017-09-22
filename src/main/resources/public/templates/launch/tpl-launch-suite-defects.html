@@ -1,9 +1,17 @@
 <div class="launch-suite-defects" data-js-hover-defect>
+    <% if (data.clickable) { %>
     <a class="chart-overflow" data-js-link>
+    <% } else { %>
+    <div class="chart-overflow">
+    <% } %>
         <svg data-js-chart></svg>
         <div class="total-overflow">
             <span data-js-defects-total></span>
         </div>
+    <% if (data.clickable) { %>
     </a>
+    <% } else { %>
+    </div>
+    <% } %>
     <div class="defect-hover" data-js-hover-view-container></div>
 </div>

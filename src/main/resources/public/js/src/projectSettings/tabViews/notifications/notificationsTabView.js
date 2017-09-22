@@ -86,11 +86,11 @@ define(function (require) {
             this.$el.html(Util.templates(this.tpl, params));
             var emailNotificationsSwitcher = new DropDownComponent({
                 data: [
-                    { name: 'ON', value: 'ON' },
-                    { name: 'OFF', value: 'OFF' }
+                    { name:  Localization.ui.on, value: 'ON' },
+                    { name:  Localization.ui.off, value: 'OFF' }
                 ],
                 multiple: false,
-                defaultValue: this.model.get('emailEnabled') ? Localization.ui.on : Localization.ui.off
+                defaultValue: this.model.get('emailEnabled') ? 'ON' : 'OFF'
             });
             this.dropdownComponents.push(emailNotificationsSwitcher);
             $('[data-js-email-notifications-switcher]', this.$el).html(emailNotificationsSwitcher.$el);
@@ -351,7 +351,7 @@ define(function (require) {
                     maximumInputLength: 128,
                     formatInputTooShort: function () {
                         return Localization.ui.minPrefix +
-                        minimumInputLength + Localization.ui.minSufixAuto;
+                        minimumInputLength + Localization.ui.minSufixAuto3;
                     },
                     formatResultCssClass: function (state) {
                         if ((remoteUsers.length === 0 || _.indexOf(remoteUsers, state.text) < 0)
@@ -717,7 +717,7 @@ define(function (require) {
                     maximumInputLength: 128,
 
                     formatInputTooShort: function () {
-                        return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto;
+                        return Localization.ui.minPrefix + '3' + Localization.ui.minSufixAuto3;
                     },
                     formatResultCssClass: function (state) {
                         if ((remoteLaunches.length === 0 ||

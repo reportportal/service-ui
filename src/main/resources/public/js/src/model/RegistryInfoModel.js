@@ -66,12 +66,41 @@ define(function (require) {
                     return {};
                 }
             },
+            loadExternalService: {
+                deps: ['authExtensions'],
+                get: function (authExtensions) {
+                    if (authExtensions.epam) {
+                        return true;
+                    }
+                    return false;
+                }
+            },
             bugTrackingExtensions: {
                 deps: ['services'],
                 get: function (services) {
                     if (services && services.API && services.API.extensions
                         && services.API.extensions.bugtracking) {
                         return services.API.extensions.bugtracking;
+                    }
+                    return [];
+                }
+            },
+            activitiesEventsTypes: {
+                deps: ['services'],
+                get: function (services) {
+                    if (services && services.API && services.API.metadata
+                        && services.API.metadata.activitiesEventType) {
+                        return services.API.metadata.activitiesEventType;
+                    }
+                    return [];
+                }
+            },
+            activitiesObjectTypes: {
+                deps: ['services'],
+                get: function (services) {
+                    if (services && services.API && services.API.metadata
+                        && services.API.metadata.activitiesObjectType) {
+                        return services.API.metadata.activitiesObjectType;
                     }
                     return [];
                 }
