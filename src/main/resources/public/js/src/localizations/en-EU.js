@@ -701,7 +701,11 @@ define(['util'], function () {
             sortedBy: ' sorted by: ',
             addToTabs: 'Add to launch tabs',
             removeFromTabs: 'Remove from Launch Tabs',
-            total: 'Total'
+            total: 'Total',
+            or: 'or',
+            launchPage: 'Launch Page',
+            noAvailableFilters: 'There Are No Filters',
+            createFilter: 'You can create your first filter on the '
         },
 
         launches: {
