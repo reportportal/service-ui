@@ -899,7 +899,9 @@ define(['util'], function () {
             noFilter: 'ФИЛЬТР НЕ ВЫБРАН',
             launchPassed: 'Успешно',
             launchFailed: 'Неудачно',
-            launchSkipped: 'Пропущено'
+            launchSkipped: 'Пропущено',
+            issueLink: 'Введите ссылку на ошибку',
+            issueId: 'Введите ID ошибки'
         },
 
         launchStatus: {

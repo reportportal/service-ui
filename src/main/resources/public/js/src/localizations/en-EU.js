@@ -846,7 +846,9 @@ define(['util'], function () {
             noFilter: 'NO FILTER',
             launchPassed: 'Passed',
             launchFailed: 'Failed',
-            launchSkipped: 'Skipped'
+            launchSkipped: 'Skipped',
+            issueLink: 'Enter Link to Issue',
+            issueId: 'Issue ID'
         },
 
         launchStatus: {
