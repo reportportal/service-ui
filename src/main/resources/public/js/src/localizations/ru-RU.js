@@ -160,6 +160,7 @@ define(['util'], function () {
             note: 'Замечание:',
             searchName: 'Поиск по Имени',
             perPage: 'на странице',
+            of: 'из',
             timeRangeChange: 'Ваш временной диапазон будет обновляться каждый день',
             markdownBigHeading: 'Большой заголовок',
             markdownMediumHeading: 'Средний заголовок',

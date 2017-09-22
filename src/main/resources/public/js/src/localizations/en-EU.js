@@ -160,6 +160,7 @@ define(['util'], function () {
             note: 'Note:',
             searchName: 'Search by Name',
             perPage: 'per page',
+            of: 'of',
             timeRangeChange: 'Your time range will be updated every day',
             markdownBigHeading: 'Big Heading',
             markdownMediumHeading: 'Medium Heading',
