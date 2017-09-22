@@ -905,6 +905,20 @@ define(['util'], function () {
             issueId: 'Введите ID ошибки'
         },
 
+        forSettings: {
+            hour1: '1 час',
+            hour3: '3 часа',
+            hour6: '6 часов',
+            hour12: '12 часов',
+            day1: '1 день',
+            week1: '1 неделя',
+            week2: '2 недели',
+            week3: '3 недели',
+            month1: '1 месяц',
+            month3: '3 месяца',
+            months6: '6 месяцев'
+        },
+
         launchStatus: {
             ALL: 'Все',
             FAILED: 'Неудачно',
