@@ -18,7 +18,7 @@
     </ul>
     <% } %>
     <div class="left-block">
-        <%= data.from %> - <% if(data.to < data.totalElements) { %><%= data.to %><% } else { %><%= data.totalElements %><% } %> of <%= data.totalElements %>
+        <%= data.from %> - <% if(data.to < data.totalElements) { %><%= data.to %><% } else { %><%= data.totalElements %><% } %> <%= data.text.ui.of %>  <%= data.totalElements %>
     </div>
     <div class="right-block">
         <input type="text" maxlength="3" data-js-per-page-input>
