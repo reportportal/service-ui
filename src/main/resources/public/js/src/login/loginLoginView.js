@@ -74,11 +74,19 @@ define(function (require) {
         },
         renderOAuth: function () {
             var self = this;
-            _.each(this.registryModel.get('authExtensions'), function (value) {
-                var view = new LoginLoginAuthButtonView(value);
+            var key;
+            var buttonText;
+            var view;
+            var authExtensions = this.registryModel.get('authExtensions');
+            for (key in authExtensions) {
+                view = new LoginLoginAuthButtonView(authExtensions[key]);
                 self.oAuthButtons.push(view);
+                switch (key) {
+                case 'epam': $(view.$el).find('.rp-btn-submit').text(Localization.login.loginEpam); break;
+                case 'github': $(view.$el).find('span').text(Localization.login.loginGitHub); break;
+                }
                 $('[data-js-oauth-container]', self.$el).append(view.$el);
-            });
+            }
             if (this.oAuthButtons.length) {
                 $('[data-js-oauth-login]', this.$el).removeClass('hide');
             }

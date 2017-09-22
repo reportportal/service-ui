@@ -254,7 +254,7 @@ define(['util'], function () {
 
         login: {
             passwordTitle: 'Пароль',
-            loginTitle: 'Логин',
+            loginTitle: 'Войти',
             signIn: 'Войти',
             blockedLoginForm: 'Вы неправильно ввели логин или пароль несколько раз. Форма авторизации заблокирована на ',
             changePassword: 'Сменить пароль',
@@ -273,7 +273,12 @@ define(['util'], function () {
             newVersions: 'Доступны новые версии.',
             updateServices: 'Получить обновления',
             twitterCaption: 'Ознакомьтесь с нашими последними твитами',
-            error: 'Ошибка'
+            error: 'Ошибка',
+            loginEpam: 'Войти через EPAM',
+            loginGitHub: 'Войти через GitHub',
+            or: 'или',
+            loginPlaceholder: 'Логин',
+            password: 'Пароль'
         },
 
         landing: {
