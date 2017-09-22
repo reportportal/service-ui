@@ -1470,7 +1470,10 @@ define(['util'], function () {
             ' usability by tracking usage frequency of particular features. See below for details about what information is sent.',
             statisticsListMessage: 'Usage statistics reports usually won\'t include any personal information, but they might include:',
             statisticsPoint1: 'Device information - such as your hardware model, operating system version, screen resolution, browser version;',
-            statisticsPoint2: 'Log information - such as details of how you use ReportPortal, where you click and what actions you do, how long you leave app open.'
+            statisticsPoint2: 'Log information - such as details of how you use ReportPortal, where you click and what actions you do, how long you leave app open.',
+            month1: '1 month',
+            month3: '3 months',
+            month6: '6 months'
         },
 
         registration: {
