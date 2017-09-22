@@ -59,16 +59,11 @@ define(function (require) {
                 launchPassed: +contentData.passed,
                 launchNotPassed: +contentData.total - +contentData.passed
             };
+            this.$el.html(Util.templates(this.template));
             if (this.isDrawPie(widgetOptions)) {
-                this.$el.html(Util.templates(this.template, {
-                    launchNameFilter: widgetOptions.launchNameFilter[0]
-                }));
                 this.$el.addClass('passing-rate-pie-view');
                 this.drawPieChart($('[data-js-chart-container]', this.$el), chartData);
             } else {
-                this.$el.html(Util.templates(this.template, {
-                    launchNameFilter: widgetOptions.launchNameFilter[0]
-                }));
                 this.$el.addClass('passing-rate-bar-view');
                 this.drawBarChart($('[data-js-chart-container]', this.$el), chartData);
             }
