@@ -1051,7 +1051,9 @@ define(['util'], function () {
                 post_issue: 'Публикация ошибки',
                 attach_issue: 'Добавление ошибки',
                 update_item: 'Обновление элемента',
-                create_user: 'Создание пользователя'
+                create_user: 'Создание пользователя',
+                start_import: 'Начало импорта',
+                finish_import: 'Окончание импорта'
             },
             objectTypes: {
                 all: 'Все',

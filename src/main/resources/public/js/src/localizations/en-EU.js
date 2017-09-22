@@ -996,7 +996,9 @@ define(['util'], function () {
                 post_issue: 'Post issue',
                 attach_issue: 'Attach issue',
                 update_item: 'Update item',
-                create_user: 'Create user'
+                create_user: 'Create user',
+                start_import: 'Start import',
+                finish_import: 'Finish import'
             },
             objectTypes: {
                 all: 'all',
