@@ -1,132 +1,195 @@
 .passing-rate-per-launch {
   width: 100%;
   height: 100%;
-  padding: 0;
+
   .widget-wrapper {
     position: relative;
     width: 100%;
     height: 100%;
-    padding: 60px 20px 20px 20px;
+    float: left;
 
-    .legend {
+    .c3-tooltip-container {
+      max-width: 160px;
+      background-color: $COLOR--white-default;
+      padding: 10px;
+      border: solid 1px $COLOR--gray-80;
+      border-radius: 2px;
+
+      .tooltip-val {
+        font-family: $OpenSansRegular;
+        font-size: 16px;
+        color: $COLOR--charcoal-grey;
+        white-space: nowrap;
+      }
+      .tooltip-title {
+        display: inline-block;
+        position: relative;
+        width: 100%;
+        height: 15px;
+        padding-left: 17px;
+        font-family: $OpenSansSemibold;
+        font-size: 12px;
+        color: $COLOR--gray-47;
+        line-height: 15px;
+        overflow: hidden;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        .color-mark {
+          display: inline-block;
+          position: absolute;
+          top: 1px;
+          left: 0;
+          width: 12px;
+          height: 12px;
+          border-radius: 100%;
+        }
+      }
+      &:after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-top: 6px solid $COLOR--white-default;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+      }
+      &:before {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -7px;
+        width: 0;
+        height: 0;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-top: 8px solid $COLOR--gray-80;
+      }
+    }
+    .top-block {
       position: absolute;
-      top: 25px;
-      right: 20px;
-      z-index: 0;
-      ul {
-        li {
+      padding: 20px 20px 0 20px;
+      overflow: hidden;
+      top: 0;
+      width: 100%;
+      height: 85px;
+
+      .info-data {
+        display: inline-block;
+        float: left;
+        width: 70%;
+        text-align: left;
+        overflow: hidden;
+        white-space: nowrap;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        font-family: $OpenSansSemibold;
+        font-size: 12px;
+        color: $COLOR--gray-47;
+
+        span {
+          font-size: 13px;
+          color: $COLOR--charcoal-grey;
+        }
+      }
+      .legend {
+        display: inline-block;
+        float: right;
+        width: 30%;
+        text-align: right;
+
+        span {
+          display: inline-block;
+          position: relative;
           padding-left: 17px;
-          margin-left: 20px;
-          float: left;
+          margin-right: 15px;
+          margin-bottom: 10px;
+          height: 15px;
+          max-width: 150px;
+          overflow: hidden;
           font-family: $OpenSansRegular;
           font-size: 11px;
           color: $COLOR--charcoal-grey;
           line-height: 15px;
-          &:before {
+          white-space: nowrap;
+          -ms-text-overflow: ellipsis;
+          text-overflow: ellipsis;
+          text-align: left;
+
+          .color-mark {
+            position: absolute;
             top: 2px;
-          }
-        }
-      }
-    }
-    .info-block {
-      display: block;
-      position: absolute;
-      max-width: 250px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      top: 25px;
-      font-family: $OpenSansSemibold;
-      font-size: 12px;
-      color: $COLOR--gray-47;
-      span {
-        font-size: 13px;
-        color: $COLOR--charcoal-grey;
-      }
-    }
-    &.passing-rate-bar-view {
-      svg {
-        .ct-bar-label {
-          font-size: 12px;
-          font-family: $OpenSansCondBold;
-          fill: $COLOR--charcoal-grey;
-        }
-        .ct-series {
-          .ct-bar {
-            stroke-opacity: 1;
-            -webkit-transition: stroke-opacity 0.3s ease-in-out;
-            -moz-transition: stroke-opacity 0.3s ease-in-out;
-            -ms-transition: stroke-opacity 0.3s ease-in-out;
-            -o-transition: stroke-opacity 0.3s ease-in-out;
-            transition: stroke-opacity 0.3s ease-in-out;
-            &:hover {
-              stroke-opacity: 0.6;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            float: left;
+            border-radius: 100%;
+
+            &:before {
+              display: none;
+              content: '';
+              background-color: $COLOR--white-default;
+              width: 8px;
+              height: 8px;
+              position: absolute;
+              left: 2px;
+              top: 2px;
+              border-radius: 100%;
+            }
+            &.unchecked:before {
+              display: block;
             }
           }
         }
+        .legend-gradient {
+          display: none;
+          width: 100%;
+          height: 10px;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          margin-right: 10px;
+          margin-left: 10px;
+          background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0), $COLOR--white-default);
 
-      }
-    }
-    &.passing-rate-pie-view {
-      .legend {
-        ul {
-          li {
-            float: right;
+          .legend-border {
+            height: 100%;
+            width: 100%;
+            border-bottom: 1px solid $COLOR--gray-91;
           }
         }
       }
+    }
+  }
+
+  &.passing-rate-bar-view {
+    .widget-wrapper {
       svg {
-        .ct-label {
-          font-size: 12px;
-          font-family: $OpenSansCondBold;
-          fill: $COLOR--charcoal-grey;
-        }
-        .ct-series{
-          .ct-slice-pie {
-            fill-opacity: 1;
-            -webkit-transition: fill-opacity 0.3s ease-in-out;
-            -moz-transition: fill-opacity 0.3s ease-in-out;
-            -ms-transition: fill-opacity 0.3s ease-in-out;
-            -o-transition: fill-opacity 0.3s ease-in-out;
-            transition: fill-opacity 0.3s ease-in-out;
-            &:hover {
-              fill-opacity: 0.6;
-            }
-          }
+        .c3-grid {
+          display: none;
         }
       }
     }
   }
 
-  &.preview-view {
+  &.w-less-then-7 {
     .widget-wrapper {
-      padding: 20px;
-      .legend {
-        display: none;
-      }
-      .info-block {
-        display: none;
-      }
-      .chartist-tooltip {
-        display: none;
+      .top-block {
+        .info-data {
+          width: 100%;
+          clear: both;
+          text-align: left;
+          margin-bottom: 10px;
+        }
+        .legend {
+          width: 100%;
+          clear: both;
+          text-align: left;
+        }
       }
     }
   }
-
-  &.w-less-then-12 {}
-  &.w-less-then-11 {}
-  &.w-less-then-10 {}
-  &.w-less-then-9 {}
-  &.w-less-then-8 {}
-  &.w-less-then-7 {}
-  &.w-less-then-6 {
-    .widget-wrapper {
-      padding-top: 70px;
-      .legend {
-        left: 0;
-        top: 50px;
-      }
-    }
-  }
-  &.w-less-then-5 {}
 }

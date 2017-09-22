@@ -26,18 +26,20 @@ define(function (require) {
     var _ = require('underscore');
     var Util = require('util');
     var Localization = require('localization');
-    var ChartistWidgetView = require('newWidgets/_ChartistWidgetView');
+    var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
+    var d3 = require('d3');
+    var c3 = require('c3');
 
-    var PassingRatePerLaunchChart = ChartistWidgetView.extend({
+    var PassingRatePerLaunchChart = C3ChartWidgetView.extend({
 
         template: 'tpl-widget-passing-rate-per-launch',
         className: 'passing-rate-per-launch',
 
         render: function () {
-            var self = this;
             var widgetOptions;
             var contentData;
-
+            var chartData;
+            this.charts = [];
             if (this.isPreview) {
                 this.$el.addClass('preview-view');
             }
@@ -47,257 +49,236 @@ define(function (require) {
                 return;
             }
             widgetOptions = this.model.getParameters().widgetOptions;
+            this.infoData = widgetOptions.launchNameFilter[0];
             contentData = this.model.getContent().result[0].values;
-            this.total = +contentData.total;
-            this.passed = +contentData.passed;
-            this.notPassed = (contentData.total - contentData.passed);
-            this.valuesInPercent = this.getValuesInPercents(
-                    this.total,
-                    { passed: this.passed, notPassed: this.notPassed }
-                );
-            if (this.total === 0) {
+            if (contentData.total === 0) {
                 this.addNoAvailableBock();
                 return;
             }
-            this.loadChartist().done(function () {
-                if (self.isDrawPie(widgetOptions)) {
-                    self.$el.html(Util.templates(self.template, {
-                        launchNameFilter: widgetOptions.launchNameFilter[0]
-                    }));
-                    $('[data-js-chart-container]', self.$el).addClass('passing-rate-pie-view');
+            chartData = {
+                launchPassed: +contentData.passed,
+                launchNotPassed: +contentData.total - +contentData.passed
+            };
+            if (this.isDrawPie(widgetOptions)) {
+                this.$el.html(Util.templates(this.template, {
+                    launchNameFilter: widgetOptions.launchNameFilter[0]
+                }));
+                this.$el.addClass('passing-rate-pie-view');
+                this.drawPieChart($('[data-js-chart-container]', this.$el), chartData);
+            } else {
+                this.$el.html(Util.templates(this.template, {
+                    launchNameFilter: widgetOptions.launchNameFilter[0]
+                }));
+                this.$el.addClass('passing-rate-bar-view');
+                this.drawBarChart($('[data-js-chart-container]', this.$el), chartData);
+            }
+        },
+        drawPieChart: function ($el, data) {
+            var self = this;
+            var chart;
+            var processedData = this.getProcessedData(data);
+            var topBlockElem;
 
-                    $.when(
-                        self.loadChartistLegendPlugin(),
-                        self.loadChartistTooltipsPlugin()
-                    ).done(
-                        function () {
-                            self.drawPieChart();
-                        }
-                    ).fail(
-                        function () {
-                            self.addNoAvailableBock();
-                        }
-                    );
-                } else {
-                    self.$el.html(Util.templates(self.template, {
-                        launchNameFilter: widgetOptions.launchNameFilter[0]
-                    }));
-                    $('[data-js-chart-container]', self.$el).addClass('passing-rate-bar-view');
-
-                    $.when(
-                        self.loadChartistLegendPlugin(),
-                        self.loadChartistBarLabelsPlugin(),
-                        self.loadChartistTooltipsPlugin()
-                    ).done(
-                        function () {
-                            self.drawBarChart();
-                        }
-                    ).fail(
-                        function () {
-                            self.addNoAvailableBock();
-                        }
-                    );
+            chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: processedData.chartData.reverse(),
+                    type: 'pie',
+                    order: null,
+                    colors: processedData.colors
+                },
+                interaction: {
+                    enabled: !self.isPreview
+                },
+                pie: {
+                    label: {
+                        show: false
+                    }
+                },
+                padding: {
+                    top: self.isPreview ? 0 : 85
+                },
+                legend: {
+                    show: false // we use custom legend
+                },
+                tooltip: {
+                    position: function (d, width, height, element) {
+                        var left = d3.mouse(chart.element)[0] - (width / 2);
+                        var top = d3.mouse(chart.element)[1] - height;
+                        return {
+                            top: top - 8, // 8 - offset for tooltip arrow
+                            left: left
+                        };
+                    },
+                    contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+                        return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces(d[0].ratio * 100, 2) + '%)</div>' +
+                            '<div class="tooltip-title">' +
+                            '<div class="color-mark" style="background-color: ' + color(d[0].id) + ';"></div>' +
+                            Localization.widgets[d[0].name] +
+                            '</div>';
+                    }
+                },
+                onrendered: function () {
+                    $el.css('max-height', 'none');
                 }
             });
-            this.addResize();
+            this.charts.push(chart);
+            if (!self.isPreview) {
+                topBlockElem = d3.select(chart.element).insert('div', '.chart').attr('class', 'top-block');
+                this.setupInfoBlock(topBlockElem, this.infoData);
+                this.setupLegend(topBlockElem, processedData.itemNames, chart);
+            }
         },
-        drawPieChart: function () {
+        drawBarChart: function ($el, data) {
             var self = this;
-            var chartData = {
-                series: [
-                    {
-                        value: this.valuesInPercent.notPassed,
-                        meta: Localization.widgets.launchNotPassed,
-                        className: 'ct-series-notPassed'
+            var chart;
+            var total = data.launchPassed + data.launchNotPassed;
+            var processedData = this.getProcessedData(data);
+            var topBlockElem;
+
+            chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: processedData.chartData,
+                    groups: [
+                        ['launchPassed', 'launchNotPassed']
+                    ],
+                    type: 'bar',
+                    order: null,
+                    colors: processedData.colors
+                },
+                axis: {
+                    rotated: true,
+                    x: {
+                        show: false
                     },
-                    {
-                        value: this.valuesInPercent.passed,
-                        meta: Localization.widgets.launchPassed,
-                        className: 'ct-series-passed'
-                    }
-                ]
-            };
-            this.chart = new Chartist.Pie($('[data-js-chart-container]', this.$el)[0], chartData, {
-                labelInterpolationFnc: function (value) {
-                    var result = value + '%';
-                    if (value === 1 || value === 99) {
-                        _.each(self.valuesInPercent, function (val, key) {
-                            if (value === 1 && (((self[key] / self.total) * 100) < 1)) {
-                                result = '<1%';
-                            }
-                            if (value === 99 && (((self[key] / self.total) * 100) > 99)) {
-                                result = '>99%';
-                            }
-                        });
-                    }
-                    return result;
-                },
-                chartPadding: (this.isPreview) ? 0 : (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) ? 15 : 30,
-                showLabel: !this.isPreview,
-                labelOffset: (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) ? 10 : 20,
-                labelPosition: 'outside',
-                ignoreEmptyValues: true,
-                plugins: [
-                    Chartist.plugins.legend({
-                        position: $('[data-js-legend]', this.$el)[0],
-                        legendNames: [
-                            Localization.widgets.launchNotPassed,
-                            Localization.widgets.launchPassed
-                        ],
-                        classNames: ['notPassed', 'passed'],
-                        clickable: false
-                    }),
-                    Chartist.plugins.tooltip({
-                        tooltipFnc: function (meta) {
-                            var tooltipString = '';
-                            if (meta === Localization.widgets.launchPassed) {
-                                tooltipString = meta + ': ' + self.passed;
-                            } else if (meta === Localization.widgets.launchNotPassed) {
-                                tooltipString = meta + ': ' + self.notPassed;
-                            }
-                            return tooltipString;
-                        },
-                        tooltipOffset: {
-                            x: 0,
-                            y: -5
+                    y: {
+                        show: false,
+                        padding: {
+                            top: 0
                         }
-                    })
-                ]
-            });
-        },
-        drawBarChart: function () {
-            var self = this;
-            var chartData = {
-                labels: [Localization.widgets.launchPassed, Localization.widgets.launchNotPassed],
-                series: [
-                    {
-                        className: 'ct-series-passed',
-                        data: [
-                            {
-                                value: this.valuesInPercent.passed,
-                                meta: Localization.widgets.launchPassed
-                            }
-                        ]
+                    }
+                },
+                bar: {
+                    width: {
+                        ratio: 0.35
+                    }
+                },
+                interaction: {
+                    enabled: !self.isPreview
+                },
+                padding: {
+                    top: self.isPreview ? 0 : 30,
+                    left: 20,
+                    right: 20
+                },
+                legend: {
+                    show: false // we use custom legend
+                },
+                tooltip: {
+                    grouped: false,
+                    position: function (d, width, height, element) {
+                        var left = d3.mouse(chart.element)[0] - (width / 2);
+                        var top = d3.mouse(chart.element)[1] - height;
+                        return {
+                            top: top - 8, // 8 - offset for tooltip arrow
+                            left: left
+                        };
                     },
-                    {
-                        className: 'ct-series-notPassed',
-                        data: [
-                            {
-                                value: this.valuesInPercent.notPassed,
-                                meta: Localization.widgets.launchNotPassed
-                            }
-                        ]
+                    contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+                        return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces((d[0].value / total) * 100, 2) + '%)</div>' +
+                            '<div class="tooltip-title">' +
+                            '<div class="color-mark" style="background-color: ' + color(d[0].id) + ';"></div>' +
+                            Localization.widgets[d[0].name] +
+                            '</div>';
                     }
-                ]
-            };
-            this.chart = new Chartist.Bar($('[data-js-chart-container]', this.$el)[0], chartData, {
-                axisX: {
-                    offset: 0,
-                    showLabel: false,
-                    showGrid: false,
-                    scaleMinSpace: 1
                 },
-                axisY: {
-                    offset: 0,
-                    showLabel: false,
-                    showGrid: false,
-                    scaleMinSpace: 1
-                },
-                width: '100%',
-                height: '100%',
-                stackBars: true,
-                horizontalBars: true,
-                showLabel: !this.isPreview,
-                chartPadding: {
-                    top: 0,
-                    right: (this.valuesInPercent.passed > 97 && this.valuesInPercent.passed !== 100) ? 10 : 0,
-                    bottom: 0,
-                    left: (this.valuesInPercent.passed < 3 && this.valuesInPercent.passed !== 0) ? 10 : 0
-                },
-                ignoreEmptyValues: true,
-                plugins: [
-                    Chartist.plugins.legend({
-                        position: $('[data-js-legend]', this.$el)[0],
-                        legendNames: [
-                            Localization.widgets.launchPassed,
-                            Localization.widgets.launchNotPassed
-                        ],
-                        classNames: ['passed', 'notPassed'],
-                        clickable: false
-                    }),
-                    Chartist.plugins.ctBarLabels({
-                        labelInterpolationFnc: function (value) {
-                            var result = value + '%';
-                            if (self.isPreview) {
-                                return '';
-                            }
-                            if (!value) {
-                                return '';
-                            }
-                            if (value === 1 || value === 99) {
-                                _.each(self.valuesInPercent, function (val, key) {
-                                    if (value === 1 && (((self[key] / self.total) * 100) < 1)) {
-                                        result = '<1%';
-                                    }
-                                    if (value === 99 && (((self[key] / self.total) * 100) > 99)) {
-                                        result = '>99%';
-                                    }
-                                });
-                            }
-                            return result;
-                        },
-                        position: {
-                            y: function (data) {
-                                return data.y1 * 0.5;
-                            }
-                        }
-                    }),
-                    Chartist.plugins.tooltip({
-                        tooltipFnc: function (meta) {
-                            var tooltipString = '';
-                            if (meta === Localization.widgets.launchPassed) {
-                                tooltipString = meta + ': ' + self.passed;
-                            } else if (meta === Localization.widgets.launchNotPassed) {
-                                tooltipString = meta + ': ' + self.notPassed;
-                            }
-                            return tooltipString;
-                        },
-                        tooltipOffset: {
-                            x: 0,
-                            y: -5
-                        }
-                    })
-                ]
-            }).on('draw', function (data) {
-                if (data.type === 'bar') {
-                    data.element.attr({
-                        style: 'stroke-width: ' + (data.element.root().height() * 0.35) + 'px' // 35% from SVG height
-                    });
+                onrendered: function () {
+                    $el.css('max-height', 'none');
                 }
             });
+            this.charts.push(chart);
+            if (!self.isPreview) {
+                topBlockElem = d3.select(chart.element).insert('div', '.chart').attr('class', 'top-block');
+                this.setupInfoBlock(topBlockElem, this.infoData);
+                this.setupLegend(topBlockElem, processedData.itemNames, chart);
+            }
+        },
+        getProcessedData: function (data) {
+            var chartData = [];
+            var itemNames = [];
+            var colors = {};
+            _.each(data, function (val, key) {
+                switch (key) {
+                case 'launchPassed':
+                    colors[key] = '#8db677';
+                    break;
+                case 'launchNotPassed':
+                    colors[key] = '#e86c42';
+                    break;
+                default:
+                    break;
+                }
+                itemNames.push(key);
+                chartData.push([key, val]);
+            });
+            return {
+                chartData: chartData,
+                itemNames: itemNames,
+                colors: colors
+            };
+        },
+        setupLegend: function (el, itemNames, chart) {
+            // Configuring custom legend block
+            d3.select(el[0][0])
+                .insert('div')
+                .attr('class', 'legend')
+                .insert('div', '.legend')
+                .attr('data-js-legend-wrapper', '') // wrapper for BaronScroll
+                .selectAll('span')
+                .data(itemNames)
+                .enter()
+                .append('span')
+                .attr('data-id', function (id) {
+                    return id;
+                })
+                .html(function (id) {
+                    return '<div class="color-mark"></div>' + Localization.widgets[id];
+                })
+                .each(function (id) {
+                    d3.select(this).select('.color-mark').style('background-color', chart.color(id));
+                })
+                .on('mouseover', function (id) {
+                    chart.focus(id);
+                })
+                .on('mouseout', function (id) {
+                    chart.revert();
+                })
+                .on('click', function (id) {
+                    // $('.color-mark', $(this)).toggleClass('unchecked');
+                    // chart.toggle(id);
+                });
+            d3.select(chart.element).select('.legend')
+                .append('div')
+                .attr('class', 'legend-gradient')
+                .append('div')
+                .attr('class', 'legend-border');
+        },
+        setupInfoBlock: function (el, infodata) {
+            d3.select(el[0][0])
+                .insert('div')
+                .attr('class', 'info-data')
+                .html(function (id) {
+                    return Localization.widgets.launchName + ': <span>' + infodata + '</span>';
+                });
         },
         isDrawPie: function (widgetOptions) {
             return (widgetOptions && widgetOptions.viewMode && widgetOptions.viewMode.length && widgetOptions.viewMode[0] === 'pieChartMode');
         },
         updateWidget: function () {
-            if (!this.chart) {
-                return;
-            }
-            if ($(this.chart.container).hasClass('passing-rate-pie-view')) {
-                if (this.$el.hasClass('h-less-then-5') || this.$el.hasClass('w-less-then-5')) {
-                    this.chart && this.chart.update(null, {
-                        chartPadding: 15,
-                        labelOffset: 10
-                    }, true);
-                } else {
-                    this.chart && this.chart.update(null, {
-                        chartPadding: 30,
-                        labelOffset: 20
-                    }, true);
-                }
-            } else {
-                this.chart && this.chart.update();
-            }
+            _.each(this.charts, function (chart) {
+                chart.flush();
+            });
         }
     });
 
