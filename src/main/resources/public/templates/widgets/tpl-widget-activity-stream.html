@@ -31,7 +31,7 @@
                     <%- item.name %>.
                 <% } %>
             <% } %>
-            <% if(item.objectType == 'widget' || item.objectType == 'dashboard'){ %>
+            <% if(item.objectType == 'widget' || item.objectType == 'dashboard' || item.objectType == 'userFilter'){ %>
                 <%= data.text.widgets[item.actionType] %>
                 <strong><%- item.name  %></strong>.
             <% } %>
