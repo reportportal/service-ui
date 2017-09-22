@@ -290,11 +290,12 @@
           .inputs-caption {
             float: left;
             margin-left: 300px;
+            width: 310px;
           }
 
           .checkboxes-caption {
             float: left;
-            margin-left: 243px;
+            margin-left: 30px;
           }
         }
         .bts-fields {
@@ -349,6 +350,8 @@
 
 /*-----------------------------------*/
 /* STYLES OF DYNAMIC WIDTH OF SCREEN */
+
+
 
 /* xs - 767px */
 @media (max-width: $SCREEN_XS_MAX) {
@@ -551,9 +554,9 @@
 }
 
 /* sm - 768px - 991px */
-@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+@media (min-width: $SCREEN_SM_MIN) and (max-width: 1000px) {
   .bts-project-settings {
-    width: 600px;
+    width: 650px;
     margin: 0 auto;
 
     .bts-selector {
