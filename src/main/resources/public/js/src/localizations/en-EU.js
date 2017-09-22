@@ -1717,7 +1717,7 @@ define(['util'], function () {
             launchesCantBeEmpty: 'Select launch to create widget',
             countWrongAmount: 'Items count is out of range',
             countWrongAmountSize: 'Items count should have size ',
-            itemsSizeLength: 'Items count should have size %%% to %%%',
+            itemsSizeLength: 'Items count should have size from %%% to %%%',
             valueSizeLength: 'Value should have size from %%% to %%%',
             selectAtLeastOneCriteria: 'Select at least one criteria option',
             selectAtLeastOneAction: 'Select at least one actions option',
