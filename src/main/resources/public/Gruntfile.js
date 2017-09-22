@@ -34,7 +34,6 @@ module.exports = function (grunt) {
 
         'css/dropzone/dropzone.min.css',
         'css/dropzone/basic.min.css',
-        'css/chartist.css',
         'css/c3.css'
     ];
 
