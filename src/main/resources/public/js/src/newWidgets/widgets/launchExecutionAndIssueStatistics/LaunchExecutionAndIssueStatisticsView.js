@@ -24,239 +24,273 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Util = require('util');
-    var App = require('app');
-    var ChartWidgetView = require('newWidgets/_ChartWidgetView');
+    var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
+    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+    var Localization = require('localization');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
-
+    var c3 = require('c3');
+    var App = require('app');
     var config = App.getInstance();
 
-    var LaunchExecutionAndIssueStatisticsView = ChartWidgetView.extend({
-        initialize: function (options) {
-            ChartWidgetView.prototype.initialize.call(this, options);
-            this.issues = 0;
-            this.total = 0;
-            this.charts = [];
-        },
-        pieGrid: 'tpl-pie-grid',
-        addSVG: function (data) {
-            this.$el.attr(this.attributes()).append(
-                Util.templates(this.pieGrid, { id: this.id, stats: data })
-            );
-        },
-        roundLabels: function (d) {
-            var label = (d % 2 === 0) ? d * 100 : d3.round(d * 100, 2);
-            var sum = d3.round(this.forLabels.sum + label, 2);
-            this.forLabels.count += 1;
-            if (this.forLabels.count === this.forLabels.size) {
-                if (sum > 100 || sum < 100) {
-                    label = d3.round(100 - this.forLabels.sum, 2);
-                }
+    var LaunchExecutionAndIssueStatisticsWidget = C3ChartWidgetView.extend({
+        template: 'tpl-widget-launch-execution-and-issue-statistics',
+        className: 'launch-execution-and-issue-statistics',
+
+        render: function () {
+            var statusChartData = {};
+            var statusChartDataOrdered = {};
+            var defectTypesChartData = {};
+            var defectTypesChartDataOrdered = {};
+
+            if (this.isPreview) {
+                this.$el.addClass('preview-view');
             }
-            this.forLabels.sum = sum;
-            return label + '%';
+            if (!this.isDataExists()) {
+                this.addNoAvailableBock();
+                return;
+            }
+            this.charts = [];
+            this.scrollers = [];
+            _.each(this.model.getContent().result[0].values, function (val, key) {
+                var splitted = key.split('$');
+                var shortKey = splitted[splitted.length - 1];
+                if (~['passed', 'failed', 'skipped', 'total'].indexOf(shortKey)) {
+                    statusChartData[shortKey] = val;
+                } else {
+                    defectTypesChartData[shortKey] = val;
+                }
+            });
+            statusChartData.total && (statusChartDataOrdered.total = statusChartData.total);
+            statusChartData.passed && (statusChartDataOrdered.passed = statusChartData.passed);
+            statusChartData.failed && (statusChartDataOrdered.failed = statusChartData.failed);
+            statusChartData.skipped && (statusChartDataOrdered.skipped = statusChartData.skipped);
+
+            _.each(this.model.getContentFields(), function (field) {
+                var splitted = field.split('$');
+                _.each(defectTypesChartData, function (val, key) {
+                    if (key === splitted[splitted.length - 1]) {
+                        defectTypesChartDataOrdered[key] = val;
+                    }
+                });
+            });
+            if (+statusChartDataOrdered.total === 0 || (_.isEmpty(defectTypesChartDataOrdered) && _.isEmpty(statusChartDataOrdered))) {
+                this.addNoAvailableBock();
+                return;
+            }
+            this.defetTypesCollection = new SingletonDefectTypeCollection();
+            this.launchFilterCollection = new SingletonLaunchFilterCollection();
+            this.defetTypesCollection.ready.done(function () {
+                this.launchFilterCollection.ready.done(function () {
+                    this.$el.html(Util.templates(this.template, {}));
+                    this.$el.addClass('donut-chart-view');
+                    if (_.isEmpty(statusChartData)) {
+                        this.$el.addClass('left-chart-hidden');
+                    }
+                    if (_.isEmpty(defectTypesChartDataOrdered)) {
+                        this.$el.addClass('right-chart-hidden');
+                    }
+                    if (!_.isEmpty(statusChartData)) {
+                        $('[data-js-left-chart-container]', this.$el).addClass('status-chart');
+                        this.drawDonutChart($('[data-js-left-chart-container]', this.$el), statusChartDataOrdered);
+                    }
+                    if (!_.isEmpty(defectTypesChartDataOrdered)) {
+                        $('[data-js-right-chart-container]', this.$el).addClass('issues-chart');
+                        this.drawDonutChart($('[data-js-right-chart-container]', this.$el), defectTypesChartDataOrdered);
+                    }
+                    this.restyleDonutTitle();
+                }.bind(this));
+            }.bind(this));
         },
-        // LAST LAUNCH STATISTIC
-        renderPie: function (data, id, title) {
+
+        drawDonutChart: function ($el, data) {
             var self = this;
             var chart;
-            var vis;
-            var index;
-            if (!this.isEmptyData(data)) {
-                this.forLabels = { size: data.length, count: 0, sum: 0 };
-                chart = nvd3.models.pieChart()
-                    .x(function (d) {
-                        return d.key;
-                    })
-                    .y(function (d) {
-                        return d.value;
-                    })
-                    .margin({ top: !self.isPreview ? 30 : 0, right: 20, bottom: 0, left: 20 })
-                    .valueFormat(d3.format('f'))
-                    .showLabels(!self.isPreview)
-                    .color(function (d) {
-                        return d.data.color;
-                    })
-                    .title(!self.isPreview ? title + ':' : '')
-                    .titleOffset(-10)
-                    .growOnHover(false)
-                    .labelThreshold(0)
-                    .labelType('percent')
-                    .legendPosition(title === 'Issues' && data.length > 9 ? 'right' : 'top')
-                    .labelFormat(function (d) {
-                        return self.roundLabels(d);
-                    })
-                    .donut(true)
-                    .donutRatio(0.4)
-                    .tooltips(!self.isPreview)
-                    .showLegend(!self.isPreview)
-                ;
-
-                vis = d3.select($(id, this.$el).get(0))
-                    .datum(data)
-                    .call(chart)
-                ;
-
-                this.charts.push(chart);
-                this.addResize();
-                this.redirectOnElementClick(chart, 'pie');
-                this.updateOnLegendClick(chart, id);
-                if (self.isPreview) {
-                    this.disabeLegendEvents(chart);
-                }
-                this.updateInvalidCriteria(vis);
-            } else {
-                this.addNoAvailableBock(this.$el.find(id));
-            }
-
-            // fix for no data message for "LAST LAUNCH STATISTIC WIDGET" on status page
-            if (_.isEmpty(data)) {
-                index = this.charts.length;
-                if (index === 1) {
-                    this.noDataAvailableShow(this.$el.find(':nth-child(1)'));
-                } else {
-                    this.noDataAvailableShow(this.$el.find(':nth-child(2)'));
-                }
-
-                this.fixNoDataMessage(id);
-            }
-        },
-        noDataAvailableShow: function (el) {
-            el.find('.no-data-error').removeClass('hide');
-        },
-        updateTotal: function (id) {
-            var data = d3.select($(id, this.$el).get(0)).data()[0];
+            var chartData = [];
+            var itemNames = [];
+            var colors = {};
             var total = 0;
-            _.each(data, function (item) {
-                total = item.disabled ? total : total + parseInt(item.value, 10);
-            });
-            $('.nv-pie-title tspan', id).text(total);
-        },
-        updateOnLegendClick: function (chart, id) {
-            var self = this;
-            chart.legend.dispatch.on('legendClick', function (d, i) {
-                config.trackingDispatcher.trackEventNumber(342);
-                self.updateTotal(id);
-            });
-            chart.legend.dispatch.on('legendDblclick', function (d, i) {
-                config.trackingDispatcher.trackEventNumber(342);
-                self.updateTotal(id);
-            });
-        },
-        disabeLegendEvents: function (chart) {
-            var property;
-            if (chart.legend) {
-                for (property in chart.legend.dispatch) {
-                    chart.legend.dispatch[property] = function () {};
+            var donutTitle = '';
+            var legendScroller;
+
+            _.each(data, function (val, key) {
+                var defectModel;
+                if (key === 'total') {
+                    return;
                 }
-            }
-        },
-        renderTitle: function (id, type) {
-            var ts = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
-            $('.nv-pie-title', id).append($(ts).attr({ x: '0', dy: '1.2em' }).text(type));
-        },
-        redirectOnElementClick: function (chart, type) {
-            var self = this;
-            chart[type].dispatch.on('elementClick', null);
-            if (!this.isPreview) {
-                chart[type].dispatch.on('elementClick', function (e) {
-                    var key = e.label;
-                    var seria = _.find(self.series, function (v) {
-                        return v.key === key;
-                    });
-                    var seriesId = seria ? seria.seriesId : '';
-                    var id = e.point.launch.id;
-                    var link = seriesId && id ? self.linkToRedirectService(seriesId, id) : '';
-                    config.trackingDispatcher.trackEventNumber(344);
-                    nvd3.tooltip.cleanup();
-                    if (link) {
-                        document.location.hash = link;
+                switch (key) {
+                case 'passed':
+                    colors[key] = '#8db677';
+                    break;
+                case 'failed':
+                    colors[key] = '#e86c42';
+                    break;
+                case 'skipped':
+                    colors[key] = '#bfc7cc';
+                    break;
+                default:
+                    break;
+                }
+                defectModel = _.find(this.defetTypesCollection.models, function (model) {
+                    return model.get('locator') === key;
+                });
+                defectModel && (colors[key] = defectModel.get('color'));
+                total += +val;
+                itemNames.push(key);
+                chartData.push([key, val]);
+            }.bind(this));
+            chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: chartData,
+                    type: 'donut',
+                    onclick: function (d, element) {
+                        config.router.navigate(self.linkToRedirectService(d.id, self.model.getContent().result[0].id), { trigger: true });
+                    },
+                    order: null,
+                    colors: colors
+                },
+                interaction: {
+                    enabled: !self.isPreview
+                },
+                padding: {
+                    top: self.isPreview ? 0 : 85
+                },
+                legend: {
+                    show: false // we use custom legend
+                },
+                donut: {
+                    title: total,
+                    label: {
+                        show: false,
+                        threshold: 0.05
                     }
-                });
-            }
-        },
-        getData: function () {
-            var contentData = this.model.getContent() || [];
-            var series;
-            var data;
-            var stats;
-            var pairs;
-            if (!_.isEmpty(contentData) && !_.isEmpty(contentData.result)) {
-                series = this.getSeries();
-                data = contentData.result[0];
-                stats = {
-                    issues: [],
-                    exec: []
-                };
-                pairs = _.pairs(data.values);
-
-                pairs.sort(function (a, b) {
-                    return a[0] === b[0] ? 0 : a[0] < b[0] ? -1 : 1;
-                });
-                _.each(pairs, function (p) {
-                    var key = p[0];
-                    var a = key.split('$');
-                    var type = a[1];
-                    var id = _.last(a);
-                    var val = parseInt(p[1], 10);
-                    var seria = series[id];
-                    if (seria) {
-                        seria.value = val;
-                        seria.launch = {
-                            name: data.name,
-                            number: '#' + data.number,
-                            startTime: parseInt(data.startTime, 10),
-                            id: data.id
+                },
+                tooltip: {
+                    position: function (d, width, height, element) {
+                        var left = d3.mouse(chart.element)[0] - (width / 2);
+                        var top = d3.mouse(chart.element)[1] - height;
+                        return {
+                            top: top - 8, // 8 - offset for tooltip arrow
+                            left: left
                         };
+                    },
+                    contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+                        var name;
+                        var defectModel;
+                        if (d[0].id === 'passed' || d[0].id === 'failed' || d[0].id === 'skipped') {
+                            name = Localization.launchesHeaders[d[0].name].toUpperCase();
+                        } else {
+                            defectModel = self.defetTypesCollection.getDefectByLocator(d[0].id);
+                            if (defectModel) {
+                                name = defectModel.get('longName');
+                            } else {
+                                return '<div class="tooltip-title-invalid">' +
+                                    '<div class="color-mark-invalid"></div>' +
+                                    d[0].id +
+                                    '</div>';
+                            }
+                        }
+                        return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces(d[0].ratio * 100, 2) + '%)</div>' +
+                            '<div class="tooltip-title">' +
+                            '<div class="color-mark" style="background-color: ' + color(d[0].id) + ';"></div>' +
+                            name +
+                            '</div>';
                     }
-                    if (id === 'total') {
-                        this.total = val;
-                    } else if (type === 'executionCounter') {
-                        stats.exec.push(seria);
-                    } else if (type === 'issueCounter') {
-                        this.issues += val;
-                        stats.issues.push(seria);
+                },
+                onrendered: function () {
+                    $el.css('max-height', 'none');
+                    if (chart) {
+                        total = 0;
+                        _.each(chart.data.shown(), function (dataItem) {
+                            total += dataItem.values[0].value;
+                        });
                     }
-                }, this);
-                return stats;
-            }
-            return [];
-        },
-        render: function () {
-            var data = this.getData();
-            var exec = data.exec || [];
-            var issues = data.issues || [];
-            this.addSVG(data);
+                    self.restyleDonutTitle();
+                    $('.c3-chart-arcs-title', $el).contents()[0].textContent = total;
+                }
+            });
+            this.charts.push(chart);
 
-            this.renderPie(this.checkForZeroData(exec), '#' + this.id + '-svg1', 'Sum');
-            this.renderPie(this.checkForZeroData(issues), '#' + this.id + '-svg2', 'Issues');
-            if (!_.isEmpty(this.model.getContent())) {
-                this.renderTitle('#' + this.id + '-svg1', this.total);
-                this.renderTitle('#' + this.id + '-svg2', this.issues);
+            // Configuring custom legend block
+            if (!self.isPreview) {
+                d3.select(chart.element)
+                    .insert('div', '.chart')
+                    .attr('class', 'legend')
+                    .insert('div', '.legend')
+                    .attr('data-js-legend-wrapper', '') // wrapper for BaronScroll
+                    .selectAll('span')
+                    .data(itemNames)
+                    .enter()
+                    .append('span')
+                    .attr('data-id', function (id) { return id; })
+                    .html(function (id) {
+                        var name;
+                        var defectModel;
+                        if (id === 'passed' || id === 'failed' || id === 'skipped') {
+                            name = Localization.launchesHeaders[id];
+                        } else {
+                            defectModel = self.defetTypesCollection.getDefectByLocator(id);
+                            if (defectModel) {
+                                name = defectModel.get('longName');
+                            } else {
+                                return '<div class="invalid-color-mark"></div><span class="invalid">' + id + '</span>';
+                            }
+                        }
+                        return '<div class="color-mark"></div>' + name;
+                    })
+                    .each(function (id) {
+                        d3.select(this).select('.color-mark').style('background-color', chart.color(id));
+                    })
+                    .on('mouseover', function (id) {
+                        chart.focus(id);
+                    })
+                    .on('mouseout', function (id) {
+                        chart.revert();
+                    })
+                    .on('click', function (id) {
+                        $('.color-mark', $(this)).toggleClass('unchecked');
+                        chart.toggle(id);
+                    });
+                d3.select(chart.element).select('.legend')
+                    .append('div')
+                    .attr('class', 'legend-gradient')
+                    .append('div')
+                    .attr('class', 'legend-border');
+                legendScroller = Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
+                this.scrollers.push(legendScroller);
             }
+
+            // Configuring custom donut chart title
+            if ($el.hasClass('status-chart')) {
+                donutTitle = Localization.widgets.pieSum;
+            } else if ($el.hasClass('issues-chart')) {
+                donutTitle = Localization.widgets.pieIssues;
+            }
+            d3.select(chart.element).select('.c3-chart-arcs-title').attr('dy', -5)
+                .append('tspan')
+                .attr('dy', 16)
+                .attr('x', 0)
+                .text(donutTitle);
         },
-        checkForZeroData: function (data) {
-            return !_.all(data, function (v) {
-                return v.value === 0;
-            }) ? data : [];
-        },
-        fixNoDataMessage: function (id) {
-            var svg = $(id, this.$el);
-            var vis = d3.select(svg.get(0));
-            if (svg.width() > 180) {
-                vis.attr('viewBox', null)
-                    .attr('preserveAspectRatio', null);
+        restyleDonutTitle: function () {
+            if (!(this.$el.hasClass('w-less-then-6') || this.$el.hasClass('h-less-then-6') || this.$el.hasClass('preview-view'))) {
+                $('.c3-chart-arcs-title', this.$el).attr('dy', '-10').find('tspan').attr('dy', '30');
             } else {
-                vis.attr('viewBox', '-30 40 200 100')
-                    .attr('preserveAspectRatio', 'xMinYMid meet');
+                $('.c3-chart-arcs-title', this.$el).attr('dy', '-5').find('tspan').attr('dy', '15');
             }
         },
         updateWidget: function () {
             _.each(this.charts, function (chart) {
-                chart && chart.update();
-            }, this);
+                chart.flush();
+            });
+        },
+        onBeforeDestroy: function () {
+            _.each(this.scrollers, function (baronScrollElem) {
+                baronScrollElem.baron && baronScrollElem.baron().dispose();
+            });
         }
     });
 
-    return LaunchExecutionAndIssueStatisticsView;
+    return LaunchExecutionAndIssueStatisticsWidget;
 });
