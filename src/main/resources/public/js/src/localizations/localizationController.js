@@ -20,14 +20,16 @@ define(function (require) {
     var _ = require('underscore');
     var langEn = require('localizations/en-EU');
     var langRu = require('localizations/ru-RU');
+    var langBe = require('localizations/be-BY');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
 
     var appStorage = new SingletonAppStorage();
     var lang = appStorage.get('appLanguage') || 'en';
-    var langRuSafe = extendLoc(langEn, langRu);
+    var langRuSafe = extendLoc(langEn, langRu, 'ru');
+    var langBeSafe = extendLoc(langEn, langBe, 'ru');
     var Localization = {};
 
-    function extendLoc(baseLoc, newLoc) {
+    function extendLoc(baseLoc, newLoc, locName) {
         var result = _.cloneDeep(baseLoc);
         var consoleString = '';
         _.each(result, function (section, sectionKey) {
@@ -40,7 +42,7 @@ define(function (require) {
             });
         });
         if ('DEBUG_STATE') {
-            console.log('Undefined localization: \n' + consoleString);
+            console.log('Undefined localization ' + locName + ': \n' + consoleString);
         }
         return result;
     }
@@ -48,6 +50,9 @@ define(function (require) {
     switch (lang) {
     case 'ru':
         Localization = langRuSafe;
+        break;
+    case 'be':
+        Localization = langBeSafe;
         break;
     default:
         Localization = langEn;

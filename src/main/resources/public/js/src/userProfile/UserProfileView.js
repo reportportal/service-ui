@@ -80,7 +80,8 @@ define(function (require, exports, module) {
             this.dropDown = new DropDownComponent({
                 data: [
                     { name: '<span class="en-flag"></span>' + Localization.userProfile.english, value: 'en' },
-                    { name: '<span class="ru-flag"></span>' + Localization.userProfile.russian, value: 'ru' }
+                    { name: '<span class="ru-flag"></span>' + Localization.userProfile.russian, value: 'ru' },
+                    { name: 'Белорусский', value: 'be' }
                 ],
                 multiple: false,
                 defaultValue: this.appStorage.get('appLanguage') || 'en'
