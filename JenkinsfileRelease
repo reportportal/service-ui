@@ -18,10 +18,10 @@ node {
                 }
             }
             stage ('Build Server') {
-                withEnv(["GOPATH=${JENKINS_HOME}/workspace/${JOB_NAME}", "BINTRAY_TOKEN=${BINTRAY_TOKEN}"]) {
+                withEnv(["GOPATH=${JENKINS_HOME}/workspace/${JOB_NAME}", "BINTRAY_TOKEN=${BINTRAY_TOKEN}", "RELEASE_VERSION=${RELEASE_VERSION}"]) {
                         env.PATH="${GOPATH}/bin:$PATH"
                         sh 'go version'
-                        sh 'make release'
+                        sh 'make release -v=${RELEASE_VERSION}'
                         sh 'file release/service-ui_linux_amd64'
 
                 }
