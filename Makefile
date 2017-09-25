@@ -59,6 +59,8 @@ build: build-statics build-server
 # Builds server
 build-release: checkstyle test
 	$(eval v := $(or $(v),$(shell releaser bump)))
+	# make sure latest version is bumped to file
+	releaser bump --version ${v}
 
 	CGO_ENABLED=0 GOARCH=amd64 GOOS=linux $(GO) build ${BUILD_INFO_LDFLAGS} -o ${RELEASE_DIR}/service-ui_linux_amd64 ./
 	CGO_ENABLED=0 GOARCH=amd64 GOOS=windows $(GO) build ${BUILD_INFO_LDFLAGS} -o ${RELEASE_DIR}/service-ui_win_amd64.exe ./
