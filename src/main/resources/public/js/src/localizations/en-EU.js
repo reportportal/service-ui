@@ -303,6 +303,13 @@ define(['util'], function () {
             api: 'API'
         },
 
+        itemEvents: {
+            updateItemIssue: 'updated item issue',
+            updateItem: 'updated item',
+            attachIssue: 'attached issue',
+            postIssue: 'posted issue'
+        },
+
         widgets: {
             clickZoomIn: 'Click to Zoom in',
             clickZoomOut: 'Click to Zoom out',

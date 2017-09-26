@@ -359,6 +359,13 @@ define(['util'], function () {
             api: 'API'
         },
 
+        itemEvents: {
+            updateItemIssue: 'обновил данные элемента',
+            updateItem: 'обновил элемент',
+            attachIssue: 'привязал ошибку',
+            postIssue: 'отправил ошибку'
+        },
+
         widgets: {
             clickZoomIn: 'Щелкните, чтобы увеличить',
             clickZoomOut: 'Щелкните, чтобы уменьшить',

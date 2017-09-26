@@ -28,6 +28,8 @@ define(function (require) {
     var Service = require('coreService');
     var Moment = require('moment');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
+    var Localization = require('localization');
+    // var Textile = require('textile');
 
     var LogItemInfoActivityItemModel = Epoxy.Model.extend({
         defaults: {
@@ -57,11 +59,15 @@ define(function (require) {
             },
             actionName: {
                 deps: ['history', 'actionType'],
-                get: function (history, actionType) {
-                    var field = _.size(history) > 1 ? 'issue' : history[0].field.split('_').join(' ');
+                get: function(history, actionType) {
                     var aType = actionType.split('_');
-                    aType[0] = (aType[0].match('e$') ? aType[0] + 'd' : aType[0] + 'ed');
-                    return aType.join(' ') + ' ' + field;
+                    switch( aType[0] ){
+                        case 'update':{
+                            return _.size(history) > 1 ?  Localization.itemEvents.updateItemIssue : Localization.itemEvents.updateItem;
+                        }
+                        case 'post': return Localization.itemEvents.postIssue;
+                        case 'attach': return Localization.itemEvents.attachIssue;
+                    }
                 }
             },
             actionsHtml: {
