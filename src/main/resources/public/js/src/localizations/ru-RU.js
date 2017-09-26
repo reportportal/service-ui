@@ -230,7 +230,6 @@ define(['util'], function () {
             api: 'API',
             licensing: 'Лицензирование',
             lgplv3: 'LGPL 3.0',
-            forkUs: 'Создайте вилку на GitHub',
             chatSlack: 'Пообщайтесь с нами на Slack',
             textCopyright: '&copy; 2017 Report Portal. Все права защищены.',
             textSocial: 'Оставайтесь на связи с нами:',
