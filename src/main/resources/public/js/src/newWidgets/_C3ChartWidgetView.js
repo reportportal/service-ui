@@ -22,6 +22,7 @@ define(function (require) {
     'use strict';
 
     var _ = require('underscore');
+    var Util = require('util');
     var BaseWidgetView = require('newWidgets/_BaseWidgetView');
 
     var C3ChartWidgetView = BaseWidgetView.extend({
@@ -41,6 +42,9 @@ define(function (require) {
                 }
                 return rounded;
             });
+        },
+        formatDateTime: function (time) {
+            return Util.dateFormat(new Date(+time));
         },
         getRoundedToDecimalPlaces: function (num, decimalPlaces) {
             return Math.round(num * (Math.pow(10, decimalPlaces))) / Math.pow(10, decimalPlaces);
