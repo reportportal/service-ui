@@ -103,7 +103,7 @@ define(function (require) {
                 valueMinLength: 3,
                 valueMaxLength: 55,
                 valueOnlyDigits: false,
-                value: startOptions['filter.cnt.message'] || ''
+                value: decodeURIComponent(startOptions['filter.cnt.message'] || '')
             });
 
             this.render();
