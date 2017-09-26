@@ -119,6 +119,7 @@ define(function (require, exports, module) {
             url: {
                 deps: ['id', 'has_childs', 'filter_url'],
                 get: function (id, hasChilds, filterUrl) {
+                    var result;
                     var partUrl = filterUrl ? '|' + filterUrl : '';
                     var index1 = window.location.hash.lastIndexOf('/');
                     var index2 = window.location.hash.lastIndexOf('|');
@@ -129,9 +130,11 @@ define(function (require, exports, module) {
                         baseUrl = '#' + this.appModel.get('projectId') + '/launches/all';
                     }
                     if (hasChilds) {
-                        return baseUrl + partUrl + '/' + id;
+                        result = baseUrl + partUrl + '/' + id;
+                    } else {
+                        result = baseUrl + partUrl + '?' + filterUrl + '&log.item=' + id;
                     }
-                    return baseUrl + partUrl + '?' + filterUrl + '&log.item=' + id;
+                    return result.replaceAll('|', encodeURIComponent('|'));
                 }
             },
             numberText: {

@@ -158,7 +158,7 @@ define(function (require) {
             var url = '';
             _.each(this.models, function (model) {
                 model.set({ url: url + model.get('partUrl').replace('|', '?') });
-                url += model.get('partUrl');
+                url += model.get('partUrl').replaceAll('|', encodeURIComponent('|'));
             });
         },
         forceUpdate: function () {
