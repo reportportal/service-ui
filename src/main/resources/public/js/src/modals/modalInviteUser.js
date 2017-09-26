@@ -97,6 +97,7 @@ define(function (require) {
             Util.setupSelect2WhithScroll($('[data-js-user-project]', this.$el), {
                 multiple: false,
                 min: config.forms.projectNameRange[0],
+                language: 'bla',
                 minimumInputLength: config.forms.projectNameRange[0],
                 maximumInputLength: config.forms.projectNameRange[1],
                 placeholder: Localization.admin.enterProjectName,
@@ -123,6 +124,8 @@ define(function (require) {
                         });
                 }
             });
+            console.log('modal');
+            console.log(this.$el.select2);
         },
         setupValidators: function () {
             Util.hintValidator($('[data-js-email]', this.$el), [
