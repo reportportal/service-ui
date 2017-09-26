@@ -510,7 +510,7 @@ define(['util'], function () {
             passingRateSummaryChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
 
             productStatus: 'Product status',
-            productStatusDescription: 'shows the configurable table that is representing launch statistics or group statistics by special filter',
+            productStatusDescription: 'shows the configurable table that is representing launch statistics or group statistics on special filter',
 
             cumulativeTrendChart: 'Cumulative trend chart',
             cumulativeTrendChartDescription: 'shows the growth trend of summary statistics of launches with the same tag prefix',
