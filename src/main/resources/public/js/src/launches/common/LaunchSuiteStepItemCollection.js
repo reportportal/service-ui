@@ -325,11 +325,18 @@ define(function (require) {
             } else if (typesMas.length === 1) {
                 async.resolve(typesMas[0] || 'LAUNCH');
             } else {
-                // var levelPriority = ['SUITE', 'STORY', 'TEST', 'SCENARIO', 'STEP',
-                //  'BEFORE_CLASS', 'BEFORE_GROUPS', 'BEFORE_METHOD', 'BEFORE_SUITE',
-                // 'BEFORE_TEST', 'AFTER_CLASS', 'AFTER_GROUPS',
-                // 'AFTER_METHOD', 'AFTER_SUITE', 'AFTER_TEST'];
-                async.resolve(typesMas[0]);
+                var result = typesMas[0];
+                var levelPriority = ['SUITE', 'STORY', 'TEST', 'SCENARIO', 'STEP',
+                    'BEFORE_CLASS', 'BEFORE_GROUPS', 'BEFORE_METHOD', 'BEFORE_SUITE',
+                    'BEFORE_TEST', 'AFTER_CLASS', 'AFTER_GROUPS',
+                    'AFTER_METHOD', 'AFTER_SUITE', 'AFTER_TEST'];
+                _.each(levelPriority, function (level) {
+                    if (_.contains(typesMas, level)) {
+                        result = level;
+                        return false;
+                    }
+                });
+                async.resolve(result);
             }
             return async;
         },
