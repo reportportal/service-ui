@@ -187,25 +187,25 @@ define(function (require) {
                     { name: 'BDD', value: 'BDD' }
                 ],
                 interruptedJob: [
-                    { name: '1 hour', value: '1 hour' },
-                    { name: '3 hours', value: '3 hours' },
-                    { name: '6 hours', value: '6 hours' },
-                    { name: '12 hours', value: '12 hours' },
-                    { name: '1 day', value: '1 day' },
-                    { name: '1 week', value: '1 week' }
+                    { name: Localization.forSettings.hour1, value: '1 hour' },
+                    { name: Localization.forSettings.hour3, value: '3 hours' },
+                    { name: Localization.forSettings.hour6, value: '6 hours' },
+                    { name: Localization.forSettings.hour12, value: '12 hours' },
+                    { name: Localization.forSettings.day1, value: '1 day' },
+                    { name: Localization.forSettings.week1, value: '1 week' }
                 ],
                 keepLogs: [
-                    { name: '2 weeks', value: '2 weeks' },
-                    { name: '1 month', value: '1 month' },
-                    { name: '3 months', value: '3 months' },
-                    { name: '6 months', value: '6 months' }
+                    { name: Localization.forSettings.week2, value: '2 weeks' },
+                    { name: Localization.forSettings.month1, value: '1 month' },
+                    { name: Localization.forSettings.month3, value: '3 months' },
+                    { name: Localization.forSettings.month6, value: '6 months' }
                 ],
                 keepScreenshots: [
-                    { name: '1 week', value: '1 week' },
-                    { name: '2 weeks', value: '2 weeks' },
-                    { name: '3 weeks', value: '3 weeks' },
-                    { name: '1 month', value: '1 month' },
-                    { name: '3 months', value: '3 months' }
+                    { name: Localization.forSettings.week1, value: '1 week' },
+                    { name: Localization.forSettings.week2, value: '2 weeks' },
+                    { name: Localization.forSettings.week3, value: '3 weeks' },
+                    { name: Localization.forSettings.month1, value: '1 month' },
+                    { name: Localization.forSettings.month3, value: '3 months' }
                 ],
                 btsList: [
                     // {name: 'NONE', value: 'NONE'},
