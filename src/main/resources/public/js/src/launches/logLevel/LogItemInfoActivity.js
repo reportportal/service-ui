@@ -60,13 +60,12 @@ define(function (require) {
             actionName: {
                 deps: ['history', 'actionType'],
                 get: function(history, actionType) {
-                    var aType = actionType.split('_');
-                    switch( aType[0] ){
-                        case 'update':{
+                    switch( actionType ){
+                        case 'update_item':{
                             return _.size(history) > 1 ?  Localization.itemEvents.updateItemIssue : Localization.itemEvents.updateItem;
                         }
-                        case 'post': return Localization.itemEvents.postIssue;
-                        case 'attach': return Localization.itemEvents.attachIssue;
+                        case 'post_issue': return Localization.itemEvents.postIssue;
+                        case 'attach_issue': return Localization.itemEvents.attachIssue;
                     }
                 }
             },

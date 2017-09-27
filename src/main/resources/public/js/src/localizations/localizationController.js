@@ -18,14 +18,15 @@ define(function (require) {
     'use strict';
 
     var _ = require('underscore');
+    var $ = require('jquery');
     var langEn = require('localizations/en-EU');
     var langRu = require('localizations/ru-RU');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
-
     var appStorage = new SingletonAppStorage();
     var lang = appStorage.get('appLanguage') || 'en';
     var langRuSafe = extendLoc(langEn, langRu);
     var Localization = {};
+    require('select2');
 
     function extendLoc(baseLoc, newLoc) {
         var result = _.cloneDeep(baseLoc);
@@ -44,7 +45,7 @@ define(function (require) {
         }
         return result;
     }
-
+    $.extend($.fn.select2.defaults, $.fn.select2.locales[lang]);
     switch (lang) {
     case 'ru':
         Localization = langRuSafe;
