@@ -83,8 +83,8 @@ define(function (require) {
                         async.resolve();
                     });
                 })
-                .fail(function () {
-                    async.resolve();
+                .fail(function (e) {
+                    async.reject(e);
                 });
             return async;
         },
