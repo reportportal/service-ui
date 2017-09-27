@@ -97,6 +97,7 @@
     }
 
     .or-block {
+      position: relative;
       margin-bottom: 30px;
       margin-top: 20px;
 
@@ -108,8 +109,8 @@
         display: inline-block;
         border-top: 1px solid #6f898d;
         opacity: 0.2;
-        width: 165px;
-        margin-bottom: 4px;
+        margin-top: 10px;
+        width: 100%;
 
         @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
           width: 278px;
@@ -121,8 +122,13 @@
       }
 
       .or {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        padding: 0 14px;
+        background: white;
+        transform: translateX(-50%);
         display: inline-block;
-        margin: 0 5px;
         border: none;
         font-size: 15px;
         text-align: center;

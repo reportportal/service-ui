@@ -31,13 +31,11 @@ define(function (require, exports, module) {
     var App = require('app');
     var Validators = require('validators');
     var Service = require('coreService');
-    var SingletonAppStorage = require('storage/SingletonAppStorage');
 
     require('baron');
     require('cookie');
     // require('nicescroll');
     // require('isLoading');
-    require('select2');
 
 
     var config = App.getInstance(),
@@ -462,9 +460,6 @@ define(function (require, exports, module) {
             baron && baron.update();
         },
         setupSelect2WhithScroll: function (el, options) {
-            var appStorage = new SingletonAppStorage();
-            var language = appStorage.get('appLanguage');
-            $.extend($.fn.select2.defaults, $.fn.select2.locales[language]);
             el.one('select2-open', function (e) {
                 $('#select2-drop input.select2-input').on('input', function (ev) {
                     if ($(this).val().trim().length < 3) {

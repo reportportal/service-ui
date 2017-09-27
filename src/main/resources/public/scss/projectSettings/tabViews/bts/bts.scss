@@ -286,16 +286,22 @@
           margin-bottom: 4px;
           text-transform: uppercase;
           font-size: 12px;
+          display: table;
 
           .inputs-caption {
-            float: left;
-            margin-left: 300px;
             width: 310px;
+            display: table-cell;
+            padding-left: 300px;
+            width: 310px;
+            span{
+              display: inline-block;
+              width: 310px;
+            }
           }
 
           .checkboxes-caption {
-            float: left;
-            margin-left: 30px;
+            display: table-cell;
+            padding-left: 30px;
           }
         }
         .bts-fields {
@@ -554,9 +560,9 @@
 }
 
 /* sm - 768px - 991px */
-@media (min-width: $SCREEN_SM_MIN) and (max-width: 1000px) {
+@media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
   .bts-project-settings {
-    width: 650px;
+    width: 600px;
     margin: 0 auto;
 
     .bts-selector {
@@ -587,7 +593,7 @@
             }
             .group-title-block {
               .inputs-caption {
-                margin-left: 180px;
+                padding-left: 180px;
               }
             }
             .bts-fields {
