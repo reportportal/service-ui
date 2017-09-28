@@ -221,6 +221,7 @@ define(function (require) {
             var data = this.getData();
             var self = this;
             $('.rp-field', this.$el).find('input').trigger('validate');
+            this.checkFields();
             if ($('.validate-error', this.$el).length) { return; }
             if (this.loginDuplicate) {
                 this.$login.parent().addClass('validate-error');
