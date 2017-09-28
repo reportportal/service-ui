@@ -67,7 +67,6 @@ require.config({
 
         filtersPanel: 'filter/filters-panel',
         filtersResolver: 'filter/filters-resolver',
-        profile: 'login/user_profile',
 
         colorpicker: '../lib/colorpicker/bootstrap-colorpicker',
         colorpickerConfig: '../lib/colorpicker/bootstrap-colorpicker-cfg-custom',
@@ -139,8 +138,6 @@ require.config({
         '../tests/spec/dashboard/dashboardItemViewTests',
 
         '../tests/spec/components/paging',
-
-        '../tests/spec/user_profile/user_profile',
 
         '../tests/spec/sections/header',
         '../tests/spec/sections/sidebar',

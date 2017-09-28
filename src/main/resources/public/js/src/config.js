@@ -54,10 +54,7 @@ require.config({
         'd3Tip': '../lib/d3/d3.tip.custom',
         'nvd3': '../lib/nvd3/nv.d3.custom',
         'c3': '../lib/c3',
-        'profile': 'login/user_profile',
-        //'landingPage': 'landing/LandingPage',
-        
-        // 'landingDocs': 'landing/documentation',
+
         'log': 'log/logs',
         'TestRoute': 'router/TestRoute',
         'router': 'router/router',
