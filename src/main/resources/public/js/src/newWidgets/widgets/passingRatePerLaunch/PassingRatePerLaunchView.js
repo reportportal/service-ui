@@ -106,7 +106,7 @@ define(function (require) {
                         };
                     },
                     contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
-                        return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces(d[0].ratio * 100, 2) + '%)</div>' +
+                        return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces(d[0].ratio * 100, 2).toFixed(2) + '%)</div>' +
                             '<div class="tooltip-title">' +
                             '<div class="color-mark" style="background-color: ' + color(d[0].id) + ';"></div>' +
                             Localization.widgets[d[0].name] +
@@ -181,7 +181,7 @@ define(function (require) {
                         };
                     },
                     contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
-                        return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces((d[0].value / total) * 100, 2) + '%)</div>' +
+                        return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces((d[0].value / total) * 100, 2).toFixed(2) + '%)</div>' +
                             '<div class="tooltip-title">' +
                             '<div class="color-mark" style="background-color: ' + color(d[0].id) + ';"></div>' +
                             Localization.widgets[d[0].name] +
