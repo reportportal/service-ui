@@ -69,6 +69,7 @@ define(['util'], function () {
             restore: 'Узнавіць',
             settings: 'Налады',
             members: 'Удзельнікі',
+            events: 'Віжаванне падзей',
             action: 'Дзеянне',
             filter: 'ФІЛЬТР',
             clickToSubmit: 'Пстрыкніце каб адправіць гэтую форму',
@@ -102,8 +103,10 @@ define(['util'], function () {
             relogin: 'Аўтарызуйцеся наноў',
             avatar: 'Выява карыстальніка',
             minPrefix: 'Прынамсі ',
-            minSufix: ' знака(ў) неабходна.',
-            minSufixAuto: ' знака(ў) неабходна для самадавяршэння.',
+            minSufix: ' знакаў неабходна.',
+            minSufix3: ' знака неабходна.',
+            minSufixAuto: ' знакаў неабходна для самадавяршэння.',
+            minSufixAuto3: ' знака неабходна для самадавяршэння.',
             maxPrefix: 'Не болей за ',
             maxSufix: ' знака(ў) дазволена.',
             by: '',
@@ -128,8 +131,8 @@ define(['util'], function () {
             warningSm: 'увага',
             toolname: 'Report Portal',
             launches: 'запускі',
-            items: 'складнікі',
-            item: 'складнік',
+            items: 'элементы',
+            item: 'элемент',
             sec: 'секунда',
             month: 'месяц',
             monthsString: 'месяцаў',
@@ -155,6 +158,26 @@ define(['util'], function () {
             description: 'Апісанне',
             import: 'Імпарт',
             note: 'Зацемка:',
+            searchName: 'Search by Name',
+            perPage: 'per page',
+            timeRangeChange: 'Your time range will be updated every day',
+            markdownBigHeading: 'Big Heading',
+            markdownMediumHeading: 'Medium Heading',
+            markdownSmallHeading: 'Small Heading',
+            markdownClean: 'Clean block',
+            markdownBold: 'Bold',
+            markdownItalic: 'Italic',
+            markdownStrikethrough: 'Strikethrough',
+            markdownGeneric: 'Generic List',
+            markdownNumbered: 'Numbered List',
+            markdownImage: 'Insert Image',
+            markdownLink: 'Create Link',
+            markdownQuote: 'Quote',
+            markdownCode: 'Code',
+            markdownPreview: 'Toggle Preview',
+            they: 'They',
+            it: 'It',
+            new: 'New',
             days: [
                 'Нядзеля',
                 'Панядзелак',
@@ -306,8 +329,11 @@ define(['util'], function () {
             widgetCreatedBy: 'Віджэт створаны',
             noData: 'Няма даступных дадзеных.',
             selectLaunch: 'Выберыце запуск',
+            enterUserName: 'Enter user name',
             chooseFilter: 'Выберыце фільтр са спісу ніжэй',
+            chooseFilterShort: 'Choose filter',
             selectedFilterNotFound: 'Фільтр ня знойдзены. Калі ласка, выберыце іншы.',
+            tagPrefix: 'Tag prefix',
             limit: 'Усяго элементаў',
             items: 'Элементы',
             launchesCount: 'Усяго запускаў',
@@ -374,13 +400,28 @@ define(['util'], function () {
 
             launchPassed: 'Паспяхова',
             launchNotPassed: 'Няўдала',
-            startLaunch: 'распачаты запуск',
-            finishLaunch: 'скончаны запуск',
-            deleteLaunch: 'выдалены запуск',
-            shareWidget: 'агульны віджэт',
-            unshareWidget: 'недаступны віджэт',
-            shareDashboard: 'агульная панель кіравання',
-            unshareDashboard: 'недаступная панель кіравання',
+
+            // project activity widgets events
+            start_launch: 'распачаты запуск',
+            finish_launch: 'скончаны запуск',
+            delete_launch: 'выдалены запуск',
+            create_dashboard: 'created dashboard',
+            update_dashboard: 'updated dashboard',
+            delete_dashboard: 'deleted dashboard',
+            create_widget: 'created widget',
+            update_widget: 'updated widget',
+            delete_widget: 'deleted widget',
+            create_filter: 'created filter',
+            update_filter: 'updated filter',
+            delete_filter: 'deleted filter',
+            update_item: 'updated item',
+            create_user: 'created user',
+            start_import: 'started import',
+            finish_import: 'finished import',
+            // shareWidget: 'агульны віджэт',
+            // unshareWidget: 'недаступны віджэт',
+            // shareDashboard: 'агульная панель кіравання',
+            // unshareDashboard: 'недаступная панель кіравання',
             update_bts: 'абноўлена',
             delete_bts: 'выдалена',
             create_bts: 'наладжана',
@@ -455,6 +496,12 @@ define(['util'], function () {
             passingRateSummaryChart: 'Зводка каэфіціентаў праходжання',
             passingRateSummaryChartDescription: 'паказвае адсоткавыя суадносіны пройдзеных тэставых сцэнароў да агульнай колькасці сцэнароў для набору запускаў.',
 
+            productStatus: 'Product status',
+            productStatusDescription: 'shows the configurable table that is representing launch statistics or group statistics by special filter',
+
+            cumulativeTrendChart: 'Cumulative trend chart',
+            cumulativeTrendChartDescription: 'shows the growth trend of summary statistics of launches with the same tag prefix',
+
             percentageOfInvestigationsChart: 'Адсотак даследванняў',
             percentageOfProductBugsChart: 'Адсотак хібаў прадукта',
             launchStatisticsChart: 'Статыстыка запускаў',
@@ -485,7 +532,16 @@ define(['util'], function () {
             saveWidgetDashboard: 'Захаваць віджэт на панэлі кіравання',
             launchName: 'ІМЯ ЗАПУСКА',
             latestLaunches: 'Апошнія запускі',
-            allLaunches: 'Усе запускі'
+            allLaunches: 'Усе запускі',
+
+            customColumn: 'Custom column',
+            columnName: 'Column name',
+            tagPattern: 'Tag prefix',
+            customColumnDiscl: 'You can add custom column to view tags with chosen tag prefix',
+            addCustomColumn: '+ Add custom column',
+            groupLaunchesByFilter: 'Group launches by filter',
+            launchesOnFilter: 'Number of launches in the filter is ',
+            selectWidget: 'Choose widget type from the list below'
         },
 
         userProfile: {
@@ -541,7 +597,8 @@ define(['util'], function () {
             language: 'Мова',
             english: 'English (United States)',
             russian: 'Русский',
-            reloadPage: 'Каб ажыццявіць змену мовы, вам трэба <a href="">Перазаладаваць</a> старонку.'
+            reloadPage: 'Каб ажыццявіць змену мовы, вам трэба <a href="">Перазаладаваць</a> старонку.<br>' +
+            ' Беларуская версія ў стадыі перакладу. Калі ласка, дапамажыце перакласьці яе, даслаўшы свой PR для гэтага <a href ="https://github.com/reportportal/service-ui/blob/develop/src/main/resources/public/js/src/localizations/be-BY.js">файла</a>.'
         },
 
         dashboard: {
@@ -634,7 +691,8 @@ define(['util'], function () {
             namePlaceholder: 'Назва',
             sortedBy: ' сартаваны па: ',
             addToTabs: 'Дадаць у закладкі запускаў',
-            removeFromTabs: 'Выдаліць з закладак запускаў'
+            removeFromTabs: 'Выдаліць з закладак запускаў',
+            total: 'Усяго'
         },
 
         launches: {
@@ -677,6 +735,7 @@ define(['util'], function () {
             willBePostedTo: 'Хіба будзе адпраўлена',
             willBeLoadedTo: 'Хіба будзе загружаная',
             noItemsInside: 'Унутры няма элементаў',
+            notYourOwnLaunch: 'Вы не ўласнік запуска',
 
             actionTitle: 'Абярыце некалькі элементаў для апрацоўкі',
             multiSelectError: 'Вы не можаце выканаць аперацыю з няправільнымі элементамі',
@@ -695,6 +754,7 @@ define(['util'], function () {
             shiftToDebug: 'Перайсці ў Адладка',
             owner: 'Уласнік',
             addToDashboard: 'Дадаць да панэлі кіравання',
+            postIssue: 'Паведаміць аб праблеме',
             postBug: 'Даслаць хібу',
             postBugTo: 'Даслаць хібу ў',
             loadBug: 'Загрузіць хібу',
@@ -770,15 +830,29 @@ define(['util'], function () {
             latestLaunches_short: 'Апошні',
             allLaunches: 'Усе запускі',
             allLaunches_short: 'Усе',
-            noFilter: 'NO FILTER'
+            noFilter: 'NO FILTER',
+            launchPassed: 'Passed',
+            launchFailed: 'Failed',
+            launchSkipped: 'Skipped'
         },
 
         launchStatus: {
+            ALL: 'All',
             FAILED: 'Няўдалы',
             PASSED: 'Паспяховы',
             STOPPED: 'Супынены',
+            SKIPPED: 'Skipped',
             INTERRUPTED: 'Перарваны',
             IN_PROGRESS: 'У працэсе'
+        },
+
+        testStatus: {
+            FAILED: 'FAILED',
+            PASSED: 'PASSED',
+            STOPPED: 'STOPPED',
+            SKIPPED: 'SKIPPED',
+            INTERRUPTED: 'INTERRUPTED',
+            IN_PROGRESS: 'IN PROGRESS'
         },
 
         historyLine: {
@@ -843,6 +917,7 @@ define(['util'], function () {
             no_defect: 'No Defect',
             tags: 'Tags',
             start_time: 'Start Time',
+            end_time: 'Finish Time',
             message: 'Message',
             description: 'Description',
             name: 'Launch Name',
@@ -863,7 +938,6 @@ define(['util'], function () {
             to_investigate: 'To Investigates',
             no_defect: 'No Defects'
         },
-
         filterNameByValue: {
             ALL: 'All',
             PASSED: 'Passed',
@@ -882,7 +956,63 @@ define(['util'], function () {
             ERROR: 'Error',
             Screenshot: 'Attachment'
         },
-
+        projectEvents: {
+            tableHeaders: {
+                time: 'Time',
+                time_short: 'Time',
+                user: 'User',
+                user_short: 'User',
+                action: 'Action',
+                action_short: 'Action',
+                objectType: 'Object Type',
+                objectType_short: 'Obj Type',
+                objectName: 'Object Name',
+                objectName_short: 'Obj Name',
+                oldVal: 'Old Value',
+                oldVal_short: 'Old Val',
+                newVal: 'New Value',
+                newVal_short: 'New Val'
+            },
+            eventTypes: {
+                all: 'all',
+                create_dashboard: 'Create dashboard',
+                update_dashboard: 'Update dashboard',
+                delete_dashboard: 'Delete dashboard',
+                create_widget: 'Create widget',
+                update_widget: 'Update widget',
+                delete_widget: 'Delete widget',
+                create_filter: 'Create filter',
+                update_filter: 'Update filter',
+                delete_filter: 'Delete filter',
+                update_defect: 'Update defect',
+                delete_defect: 'Delete defect',
+                create_bts: 'Create BTS',
+                update_bts: 'Update BTS',
+                delete_bts: 'Delete BTS',
+                start_launch: 'Start launch',
+                finish_launch: 'Finish launch',
+                delete_launch: 'Delete launch',
+                update_project: 'Update project',
+                post_issue: 'Post issue',
+                attach_issue: 'Attach issue',
+                update_item: 'Update item',
+                create_user: 'Create user',
+                start_import: 'Start import',
+                finish_import: 'Finish import'
+            },
+            objectTypes: {
+                all: 'all',
+                project: 'Project',
+                defect_type: 'Defect type',
+                testItem: 'Test item',
+                launch: 'Launch',
+                externalSystem: 'External System',
+                dashboard: 'Dashboard',
+                user: 'User',
+                widget: 'Widget',
+                userFilter: 'User filter'
+            }
+        },
         launchesHeaders: {
             start_time: 'Start Time',
             start_time_short: 'Start',
@@ -925,6 +1055,8 @@ define(['util'], function () {
             message_short: 'Log Message',
             attachment: 'Attachment',
             attachment_short: 'ATH',
+            passing_rate: 'Passing Rate',
+            filter_name: 'Filter name',
             interruptedAfter: 'Run INTERRUPTED after:',
             stoppedAt: 'Stopped at:',
             durationSpecific: 'Duration is interval between first child starts and last child ends. But if child run in parallel, end time is a time of longest child, in this case duration will not be equal to child duration sum.'
@@ -958,7 +1090,8 @@ define(['util'], function () {
             notFoundAttachments: 'No attachments to display',
             notFoundStackTrace: 'No Stack Trace to display',
             goToLog: 'Go to Stack Trace in Log Message',
-            nextError: 'Next Error'
+            nextError: 'Next Error',
+            consoleView: 'Console view'
         },
 
         defectNameById: {
@@ -989,6 +1122,20 @@ define(['util'], function () {
             or: 'or',
             gte: 'greater than or equal',
             lte: 'less than or equal'
+        },
+
+        filterShortCut: {
+            eq: 'eq',
+            '!eq': '!eq',
+            ne: '!eq',
+            cnt: 'cnt',
+            '!cnt': '!cnt',
+            and: 'and',
+            has: 'and',
+            in: 'or',
+            or: 'or',
+            gte: '&ge;',
+            lte: '&le;'
         },
 
         filters: {
@@ -1179,7 +1326,13 @@ define(['util'], function () {
             addNewIssue: 'Add New Issue',
             btsInstances: 'Bts Instances:',
             btsAddNewInstance: 'Add New Instance',
-            btsNotFound: 'To configure Bug Tracking System, please deploy appropriate micro-service'
+            btsNotFound: 'To configure Bug Tracking System, please deploy appropriate micro-service',
+            always: 'Always',
+            launchHasInvestigate: 'Launch has "To Investigate" items',
+            launchHasIssue: 'Launch has issues',
+            more10: '> 10% of items have issues',
+            more20: '> 20% of items have issues',
+            more50: '> 50% of items have issues'
         },
 
         admin: {
@@ -1225,6 +1378,7 @@ define(['util'], function () {
             addNewUser: 'Add new user',
             inviteNewUser: 'Invite user to the project',
             configPage: ' project configuration page',
+            projectEvents: 'Events',
             projectMembers: 'Members',
             enterProjectName: 'Enter Project Name',
             assigned: 'Assigned',
@@ -1258,6 +1412,7 @@ define(['util'], function () {
             titleAllProjects: 'All Projects',
             titleMembers: 'Members',
             titleSettings: 'Settings',
+            titleEvents: 'Events',
             internalProjects: 'Internal projects',
             personalProjects: 'Personal projects',
             searchByName: 'Search by Name',
@@ -1360,11 +1515,13 @@ define(['util'], function () {
 
         comparators: {
             eq: '=',
+            ne: '!=',
             gte: '>=',
             lte: '<=',
             gt: '>',
             lt: '<',
             cnt: 'contains',
+            '!cnt': 'not contains',
             ex: 'exists',
             btw: 'between',
             not: ' not ',
@@ -1560,7 +1717,8 @@ define(['util'], function () {
             launchesCantBeEmpty: 'Select launch to create widget',
             countWrongAmount: 'Items count is out of range',
             countWrongAmountSize: 'Items count should have size ',
-            itemsSizeLength: 'Items count should have size %%% to %%%',
+            itemsSizeLength: 'Items count should have size from %%% to %%%',
+            valueSizeLength: 'Value should have size from %%% to %%%',
             selectAtLeastOneCriteria: 'Select at least one criteria option',
             selectAtLeastOneAction: 'Select at least one actions option',
             selectAllOptionsForWidget: 'Select all options to add new widget',
@@ -1629,7 +1787,7 @@ define(['util'], function () {
             passwordLength: 'Password length should have size from %%% to %%% characters.',
             userNameLength: 'Name length should have size from %%% to %%% characters.',
 
-            moreOneItem: 'You must select more than one item'
+            moreAtItem: 'You must select at least one item'
         },
 
         forms: {
@@ -1677,8 +1835,11 @@ define(['util'], function () {
             createUser: 'Add, register user',
             updateDefects: 'Update defect types',
             updateBts: 'Update BTS',
-            projectNameIn: 'Project Name in',
-            bugWillBeLoaded: 'Bug will be loaded to ',
+            updateWidget: 'Update widget',
+            updateDashboard: 'Update dashboard',
+            updateFilter: 'Update filter',
+            import: 'Import',
+            projectNameIn: 'Project Name in BTS',
             copyLink: 'Copy Link'
         },
 
@@ -1691,6 +1852,7 @@ define(['util'], function () {
             sharedWidgets: 'Shared Widgets',
             widgetTemplates: 'Widget Templates',
             enterWidgetName: 'Enter new widget name',
+            enterLaunchName: 'Enter launch name',
             createDashboard: 'Create Dashboard',
             sharedDashboards: 'Shared Dashboards',
             ownDashboards: 'Own Dashboards',
@@ -1706,12 +1868,13 @@ define(['util'], function () {
             impossibleShared: 'Impossible to choose shared widget',
             widgetOnSharedDashboard: 'The widget will be shared by default because the dashboard is shared',
 
-            actionTitle: 'Actions for Widget',
-            criteriaTitle: 'Criteria for Widget',
+            actionTitle: 'Actions for widget',
+            criteriaTitle: 'Criteria for widget',
             modeTitle: 'Mode',
-            criteriaSelectTitle: 'Select Criteria',
-            actionSelectTitle: 'Select Actions',
-            modeSelectTitle: 'Select Mode',
+            criteriaSelectTitle: 'Select criteria',
+            selectColumn: 'Select columns',
+            actionSelectTitle: 'Select actions',
+            modeSelectTitle: 'Select mode',
             previewDefault: 'Select widget template and filter to see preview',
             previewNotAvailable: 'Preview is not available for this type of widget template',
             previewNoFilter: 'Select a filter to see preview',
@@ -1719,7 +1882,17 @@ define(['util'], function () {
             previewDataNotAvailable: 'Can\'t get data for preview.',
 
             incomplete: 'Undone',
-            complete: 'Compete'
+            complete: 'Compete',
+
+            filters: 'Filters',
+            enterFilter: 'Enter filter names',
+            basicColumns: 'Basic columns',
+            choiceCriteria: 'Choose criteria',
+            choiceColumns: 'Choose columns',
+            tagPrefixDescription: 'To view a dynamic of a definite tag you should type its part before colon ‘:’',
+            tagPrefixPlaceholder: 'Enter a part of tag before ‘:’',
+
+            searchFilterByNAme: 'Search filter by name'
         },
 
         dialogHeader: {
@@ -1874,8 +2047,8 @@ define(['util'], function () {
         },
 
         modalDefectEditor: {
-            saveAndPost: 'Save and Post Bug',
-            saveAndLoad: 'Save and Load Bug'
+            saveAndPost: 'Save and Post Issue',
+            saveAndLoad: 'Save and Load Issue'
         }
     };
 });
