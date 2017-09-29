@@ -598,7 +598,7 @@ define(['util'], function () {
             english: 'English (United States)',
             russian: 'Русский',
             reloadPage: 'Каб ажыццявіць змену мовы, вам трэба <a href="">Перазаладаваць</a> старонку.<br>' +
-            ' Беларуская версія ў стадыі перакладу. Калі ласка, дапамажыце перакласьці яе, даслаўшы свой PR для гэтага <a href ="https://github.com/reportportal/service-ui/blob/develop/src/main/resources/public/js/src/localizations/be-BY.js">файла</a>.'
+            ' Беларуская версія ў стадыі перакладу. Калі ласка, дапамажыце перакласці яе, даслаўшы свой PR для гэтага <a href ="https://github.com/reportportal/service-ui/blob/develop/src/main/resources/public/js/src/localizations/be-BY.js">файла</a>.'
         },
 
         dashboard: {
@@ -837,11 +837,11 @@ define(['util'], function () {
         },
 
         launchStatus: {
-            ALL: 'All',
+            ALL: 'Усе',
             FAILED: 'Няўдалы',
             PASSED: 'Паспяховы',
             STOPPED: 'Супынены',
-            SKIPPED: 'Skipped',
+            SKIPPED: 'Прапушчаны',
             INTERRUPTED: 'Перарваны',
             IN_PROGRESS: 'У працэсе'
         },
