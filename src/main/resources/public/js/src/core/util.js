@@ -34,6 +34,8 @@ define(function (require, exports, module) {
 
     require('baron');
     require('cookie');
+    require('select2');
+
     // require('nicescroll');
     // require('isLoading');
 
