@@ -209,7 +209,7 @@ define(function (require) {
             this.statistics = [];
             this.filterModel = options.filterModel;
             this.render();
-
+            this.applyBindings();
             defectCollection.ready.done(function () {
                 var investigateFilter = '';
                 if (self.getBinding('defectToInvestigate')) {
