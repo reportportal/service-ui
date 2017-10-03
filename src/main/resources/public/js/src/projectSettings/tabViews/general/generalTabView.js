@@ -36,13 +36,15 @@ define(function (require) {
     var ProjectSettings = require('projectSettings/tabViews/general/generalSettingsModel');
 
     var GeneralTabView = Epoxy.View.extend({
-
         className: 'general-project-settings',
-
         tpl: 'tpl-project-settings-general',
 
         events: {
             'click #submit-settings': 'submitSettings'
+        },
+        bindings: {
+            '[data-js-is-auto-analize]': 'checked: isAutoAnalyzerEnabled',
+            '[data-js-analize-on-the-fly]': 'checked: analyzeOnTheFly'
         },
 
         initialize: function () {
@@ -94,38 +96,24 @@ define(function (require) {
                 multiple: false,
                 defaultValue: this.model.get('keepScreenshots')
             });
-            var isAutoAnalyzerEnabled = new DropDownComponent({
-                data: [
-                    { name: Localization.ui.on, value: 'ON' },
-                    { name: Localization.ui.off, value: 'OFF' }
-                ],
-                multiple: false,
-                defaultValue: (this.model.get('isAutoAnalyzerEnabled') ? 'ON' : 'OFF')
-            });
             $('[data-js-selector="interruptedJob"]', this.$el).html(interruptedJob.$el);
             $('[data-js-selector="keepLogs"]', this.$el).html(keepLogs.$el);
             $('[data-js-selector="keepScreenshots"]', this.$el).html(keepScreenshots.$el);
-            $('[data-js-selector="isAutoAnalyzerEnabled"]', this.$el).html(isAutoAnalyzerEnabled.$el);
             this.listenTo(interruptedJob, 'change', this.selectProp);
             this.listenTo(keepLogs, 'change', this.selectProp);
             this.listenTo(keepScreenshots, 'change', this.selectProp);
-            this.listenTo(isAutoAnalyzerEnabled, 'change', this.selectProp);
             if (!config.userModel.hasPermissions()) {
                 $('[data-js-selector] [data-js-dropdown]', this.$el).attr('disabled', 'disabled');
             }
             this.dropdownComponents.push(
                 interruptedJob,
                 keepLogs,
-                keepScreenshots,
-                isAutoAnalyzerEnabled
+                keepScreenshots
             );
         },
         selectProp: function (value, event) {
             var val = value;
             var property = $(event.currentTarget).closest('[data-js-selector]').attr('data-js-selector');
-            if (property === 'isAutoAnalyzerEnabled') {
-                val = (val === 'ON');
-            }
             this.model.set(property, val);
         },
 

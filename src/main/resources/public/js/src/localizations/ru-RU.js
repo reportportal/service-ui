@@ -1314,6 +1314,8 @@ define(['util'], function () {
             emailInCase: 'В случае',
             rule: 'ПРАВИЛО',
             deleteRule: 'Удалить ПРАВИЛО',
+            onTheFly: 'Auto analys on the fly',
+            onTheFlyDescription: 'If checked - each test item will be analyzed as soon as it\'s finished.',
             from: 'От',
             addRule: 'Добавить новое правило',
             launchOwner: 'Владелец запуска',

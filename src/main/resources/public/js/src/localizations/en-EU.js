@@ -1256,6 +1256,8 @@ define(['util'], function () {
             emailInCase: 'In case',
             rule: 'RULE',
             deleteRule: 'Delete RULE',
+            onTheFly: 'Auto analys on the fly',
+            onTheFlyDescription: 'If checked - each test item will be analyzed as soon as it\'s finished.',
             from: 'From',
             addRule: 'Add new rule',
             launchOwner: 'Launch owner',
