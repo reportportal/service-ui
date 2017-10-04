@@ -73,9 +73,9 @@ define(function (require) {
                 deps: ['history'],
                 get: function (history) {
                     var result = '';
-                    _.each(history, function (item, key) {
+                    _.each(history, function (item) {
                         result += '<div class="action-row">';
-                        if (key == 'ticketId') {
+                        if (item.field === 'ticketId') {
                             result += '<div class="action-item"><span>FROM: </span>' + this.getActionTicketsHtml(item.oldValue) + '</div>' +
                                 '<div class="separate-items"><i class="material-icons">keyboard_arrow_right</i></div>' +
                                 '<div class="action-item"><span>TO: </span>' + this.getActionTicketsHtml(item.newValue) + '</div>';
