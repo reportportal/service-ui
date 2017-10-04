@@ -99,6 +99,10 @@ define(function (require) {
                         var filterModel = launchFilterCollection.get(self.get('id'));
                         if (filterModel) {
                             self.set({ name: filterModel.get('name'), failLoad: false });
+                            self.stopListening(filterModel);
+                            self.listenTo(filterModel, 'change:name', function () {
+                                self.set({ name: filterModel.get('name') });
+                            });
                         } else if (self.appStorage.get('launchDistinct') === 'latest') {
                             self.set({ name: Localization.launches.latestLaunches_short });
                         } else {
