@@ -78,7 +78,7 @@ define(function (require, exports, module) {
                     case 'STOPPED': return Localization.testStatus.STOPPED;
                     case 'SKIPPED': return Localization.testStatus.SKIPPED;
                     case 'INTERRUPTED': return Localization.testStatus.INTERRUPTED;
-                    case 'IN PROGRESS': return Localization.testStatus.IN_PROGRESS;
+                    case 'IN_PROGRESS': return Localization.testStatus.IN_PROGRESS;
                     }
                 }
             },
