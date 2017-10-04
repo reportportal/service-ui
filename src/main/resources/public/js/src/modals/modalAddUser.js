@@ -275,7 +275,11 @@ define(function (require) {
             var els = [
                 this.$login, this.$fullName, this.$email, this.$password, this.$selectProject
             ];
-            $('input', this.$el).trigger('validate').data('validate-error');
+            // TODO not use validate remote true
+            if (!this.$login.data('validate-error') || !this.$email.data('validate-error')) {
+                return false;
+            }
+            $('input', this.$el).trigger('validate');
             return !_.any(els, function (el) { return el.data('validate-error'); });
         },
         onClickClose: function () {

@@ -1046,6 +1046,7 @@ define(function (require, exports, module) {
                                         result += message + '</br>';
                                         $holder.addClass('validate-error');
                                     }
+                                    $el.data('validate-error', data.valid);
                                     showResult(result);
                                     $el.trigger('validation::change');
                                 });
