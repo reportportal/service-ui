@@ -1359,9 +1359,9 @@ define(function (require, exports, module) {
         },
 
         getTicketUrlId: function (str) {
-            var pattern = config.patterns.urlT,
-                ind = str.search(pattern),
-                obj = { id: str, url: null };
+            var pattern = config.patterns.urlT;
+            var ind = str.search(pattern);
+            var obj = { id: str, url: null };
             if (ind >= 0) {
                 obj = {
                     id: str.slice(0, ind - 1),
