@@ -59,7 +59,7 @@ define(function (require) {
             if (this.isPreview) {
                 this.$el.addClass('preview-view');
             }
-            if ((!this.isTimeLine && !this.isDataExists()) || (this.isTimeLine && this.model.getContent().lenght)) {
+            if ((!this.isTimeLine && !this.isDataExists()) || (this.isTimeLine && _.isEmpty(this.model.getContent()))) {
                 this.addNoAvailableBock();
                 return;
             }
@@ -185,11 +185,22 @@ define(function (require) {
                         }),
                         tick: {
                             // ticks count calculation
-                            values: self.isTimeLine ? _.range(5, itemData.length, 18) : _.range(0, itemData.length, itemData.length > 25 ? 3 : 1),
+                            values: self.isTimeLine ?
+                                _.range( // 6 - ticks to display count, change it if need more or less
+                                    itemData.length > 6 ? ((itemData.length / 6 / 2).toFixed() / 2).toFixed() : 0, // start
+                                    itemData.length, // finish
+                                    itemData.length > 6 ? (itemData.length / 6).toFixed() : 1 // step
+                                ) :
+                                _.range(
+                                    0,
+                                    itemData.length,
+                                    itemData.length > 25 ? 3 : 1
+                                ),
                             width: 60,
                             centered: true,
                             inner: true,
-                            multiline: self.isTimeLine
+                            multiline: self.isTimeLine,
+                            outer: false
                         }
                     },
                     y: {

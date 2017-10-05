@@ -14,9 +14,25 @@
         .tick {
           font-family: $OpenSansRegular;
           fill: $COLOR--charcoal-grey;
-
-          line {
+        }
+        &.c3-axis-y {
+          .domain {
             display: none;
+          }
+          .tick {
+            line {
+              stroke: $COLOR--gray-80;
+            }
+          }
+        }
+        &.c3-axis-x {
+          .domain {
+            stroke: $COLOR--gray-80;
+          }
+          .tick {
+            line {
+              display: none;
+            }
           }
         }
       }
