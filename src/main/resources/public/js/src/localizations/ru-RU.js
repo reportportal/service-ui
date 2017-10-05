@@ -1127,6 +1127,7 @@ define(['util'], function () {
             to_investigate: 'Требуется анализ',
             to_investigate_short: 'ТА',
             to_investigate_super_short: 'ТА',
+            investigated: 'Проанализировано',
             no_defect: 'Нет дефектов',
             type: 'Тип метода',
             type_short: 'Тип метода',

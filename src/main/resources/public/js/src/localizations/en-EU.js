@@ -1069,6 +1069,7 @@ define(['util'], function () {
             to_investigate: 'To investigate',
             to_investigate_short: 'To invest',
             to_investigate_super_short: 'TI',
+            investigated: 'Investigated',
             no_defect: 'No defect',
             type: 'Method type',
             type_short: 'Method type',
