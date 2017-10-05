@@ -935,7 +935,8 @@ define(['util'], function () {
             STOPPED: 'ОСТАНОВЛЕНО',
             SKIPPED: 'ПРОПУЩЕНО',
             INTERRUPTED: 'ПРЕРВАНО',
-            IN_PROGRESS: 'В ПРОЦЕССЕ'
+            IN_PROGRESS: 'В ПРОЦЕССЕ',
+            RESETED: 'RESETED'
         },
 
         historyLine: {
