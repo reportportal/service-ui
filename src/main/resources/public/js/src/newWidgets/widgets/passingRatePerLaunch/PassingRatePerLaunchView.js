@@ -38,7 +38,7 @@ define(function (require) {
         render: function () {
             var widgetOptions;
             var contentData;
-            var chartData;
+            var chartDataPercents;
             this.charts = [];
             if (this.isPreview) {
                 this.$el.addClass('preview-view');
@@ -51,21 +51,23 @@ define(function (require) {
             widgetOptions = this.model.getParameters().widgetOptions;
             this.infoData = widgetOptions.launchNameFilter[0];
             contentData = this.model.getContent().result[0].values;
-            if (contentData.total === 0) {
+            if (+contentData.total === 0) {
                 this.addNoAvailableBock();
                 return;
             }
-            chartData = {
+            this.total = +contentData.total;
+            this.chartData = {
                 launchPassed: +contentData.passed,
                 launchNotPassed: +contentData.total - +contentData.passed
             };
+            chartDataPercents = this.getValuesInPercents(+contentData.total, this.chartData);
             this.$el.html(Util.templates(this.template));
             if (this.isDrawPie(widgetOptions)) {
                 this.$el.addClass('passing-rate-pie-view');
-                this.drawPieChart($('[data-js-chart-container]', this.$el), chartData);
+                this.drawPieChart($('[data-js-chart-container]', this.$el), chartDataPercents);
             } else {
                 this.$el.addClass('passing-rate-bar-view');
-                this.drawBarChart($('[data-js-chart-container]', this.$el), chartData);
+                this.drawBarChart($('[data-js-chart-container]', this.$el), chartDataPercents);
             }
         },
         drawPieChart: function ($el, data) {
@@ -106,9 +108,12 @@ define(function (require) {
                         };
                     },
                     contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
-                        return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces(d[0].ratio * 100, 2).toFixed(2) + '%)</div>' +
+                        var id = d[0].id;
+                        var value = self.chartData[id];
+                        var ratio = value / self.total;
+                        return '<div class="tooltip-val">' + value + ' (' + self.getRoundedToDecimalPlaces(ratio * 100, 2).toFixed(2) + '%)</div>' +
                             '<div class="tooltip-title">' +
-                            '<div class="color-mark" style="background-color: ' + color(d[0].id) + ';"></div>' +
+                            '<div class="color-mark" style="background-color: ' + color(id) + ';"></div>' +
                             Localization.widgets[d[0].name] +
                             '</div>';
                     }
@@ -127,7 +132,6 @@ define(function (require) {
         drawBarChart: function ($el, data) {
             var self = this;
             var chart;
-            var total = data.launchPassed + data.launchNotPassed;
             var processedData = this.getProcessedData(data);
             var topBlockElem;
 
@@ -181,9 +185,12 @@ define(function (require) {
                         };
                     },
                     contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
-                        return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces((d[0].value / total) * 100, 2).toFixed(2) + '%)</div>' +
+                        var id = d[0].id;
+                        var value = self.chartData[id];
+                        var ratio = value / self.total;
+                        return '<div class="tooltip-val">' + value + ' (' + self.getRoundedToDecimalPlaces(ratio * 100, 2).toFixed(2) + '%)</div>' +
                             '<div class="tooltip-title">' +
-                            '<div class="color-mark" style="background-color: ' + color(d[0].id) + ';"></div>' +
+                            '<div class="color-mark" style="background-color: ' + color(id) + ';"></div>' +
                             Localization.widgets[d[0].name] +
                             '</div>';
                     }
