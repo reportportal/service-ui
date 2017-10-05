@@ -51,6 +51,7 @@ define(function (require) {
         bindings: {
             '[data-js-name-link]': 'attr: {href: url}',
             '[data-js-name]': 'text: name',
+            '[data-js-item-edit]': 'classes: {hide: hideEdit}',
             '[data-js-status]': 'text: status_loc',
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
@@ -80,6 +81,12 @@ define(function (require) {
             }
         },
         computeds: {
+            hideEdit: {
+                deps: ['launch_owner'],
+                get: function () {
+                    return this.model.validate.edit();
+                }
+            },
             showMethodType: {
                 deps: ['type'],
                 get: function (type) {
