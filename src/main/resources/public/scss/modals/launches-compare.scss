@@ -33,9 +33,7 @@
         .widget-content {
           opacity: 0;
           transition: opacity 2s ease;
-          .panel-body {
-            height: 410px;
-          }
+          height: 410px;
         }
       }
       &.ready {
