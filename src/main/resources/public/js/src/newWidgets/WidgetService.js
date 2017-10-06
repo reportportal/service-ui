@@ -73,8 +73,8 @@ define(function (require) {
         launches_comparison_chart: LaunchesComparisonChart,
         passing_rate_per_launch: PassingRatePerLaunchChart,
         passing_rate_summary: PassingRateSummaryChart,
-        product_status: ProductStatus,
-        cumulative: CumulativeTrendChart
+        // product_status: ProductStatus,
+        // cumulative: CumulativeTrendChart
     };
 
     var WidgetService = {

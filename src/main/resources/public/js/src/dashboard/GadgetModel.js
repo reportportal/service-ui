@@ -49,6 +49,9 @@ define(function (require) {
                 deps: ['gadget'],
                 get: function (gadget) {
                     if (!gadget) return '';
+                    if (!WidgetService.getWidgetConfig(gadget)) {
+                        return '';
+                    }
                     return WidgetService.getWidgetConfig(gadget).gadget_name;
                 }
             },
@@ -56,6 +59,9 @@ define(function (require) {
                 deps: ['gadget'],
                 get: function (gadget) {
                     if (!gadget) return '';
+                    if (!WidgetService.getWidgetConfig(gadget)) {
+                        return '';
+                    }
                     return WidgetService.getWidgetConfig(gadget).description.escapeScript();
                 }
             },
@@ -63,6 +69,9 @@ define(function (require) {
                 deps: ['gadget'],
                 get: function (gadget) {
                     if (!gadget) return 'img/widgets/' + WidgetService.getDefaultWidgetImg();
+                    if (!WidgetService.getWidgetConfig(gadget)) {
+                        return '';
+                    }
                     return 'img/widgets/' + WidgetService.getWidgetConfig(gadget).img;
                 }
             },
@@ -70,6 +79,9 @@ define(function (require) {
                 deps: ['gadget'],
                 get: function (gadget) {
                     if (!gadget) return false;
+                    if (!WidgetService.getWidgetConfig(gadget)) {
+                        return false;
+                    }
                     return !WidgetService.getWidgetConfig(gadget).noFilters;
                 }
             },
