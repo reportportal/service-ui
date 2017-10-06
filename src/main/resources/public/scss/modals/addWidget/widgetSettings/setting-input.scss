@@ -55,9 +55,16 @@
       width: auto;
       margin-right: 176px;
       text-align: center;
+      & > span {
+        display: inline-block;
+        max-width: 135px;
+        vertical-align: middle;
+        text-align: right;
+      }
       input {
         width: 68px;
         margin-left: 17px;
+        vertical-align: middle;
       }
       .validate-hint {
         width: 100%;
