@@ -139,17 +139,9 @@ define(function (require) {
                             });
                     },
                     getDataByIds: function (values, callback) {
-                        var callbackData = [];
-                        var calls = [];
-                        _.each(values, function (value) {
-                            calls.push(Service.getUserInfo(value)
-                                .done(function (data) {
-                                    callbackData.push({ id: data.userId, text: data.userId });
-                                }));
-                        });
-                        $.when.apply($, calls).then(function () {
-                            callback(callbackData);
-                        });
+                        callback(_.map(values, function (user) {
+                            return { id: user, text: user };
+                        }));
                     }
                 };
             default:
