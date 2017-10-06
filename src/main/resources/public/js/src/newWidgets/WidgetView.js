@@ -33,22 +33,26 @@ define(function (require) {
         render: function (options) {
             var gadget = this.model.get('gadget');
             var CurrentView = WidgetService.getWidgetView(gadget);
-            var widgetData = {
-                model: this.model,
-                isPreview: (options && options.preview) || false
-            };
-            this.widget && this.widget.destroy();
-            this.widget = new CurrentView(widgetData);
-            this.$el.append(this.widget.$el);
+            if (CurrentView) {
+                var widgetData = {
+                    model: this.model,
+                    isPreview: (options && options.preview) || false
+                };
+                this.widget && this.widget.destroy();
+                this.widget = new CurrentView(widgetData);
+                this.$el.append(this.widget.$el);
+            }
         },
         onShow: function () {
-            if (!this.widget.isPreview) {
-                this.widget.addSizeClasses(this.gadgetSize);
+            if (this.widget) {
+                if (!this.widget.isPreview) {
+                    this.widget.addSizeClasses(this.gadgetSize);
+                }
+                this.widget.onShow();
             }
-            this.widget.onShow();
         },
         resize: function (newGadgetSize) {
-            this.widget.updateSizeClasses(newGadgetSize);
+            this.widget && this.widget.updateSizeClasses(newGadgetSize);
         },
         onDestroy: function () {
             this.widget && this.widget.destroy();
