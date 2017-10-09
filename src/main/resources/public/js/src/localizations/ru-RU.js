@@ -422,6 +422,7 @@ define(['util'], function () {
             failsOf: 'отказ ',
             testCaseExe: 'выполнение тестового сценария с',
             lastFailure: 'Последний отказ',
+            lastSwitch: 'Последнее переключение',
             findLastLaunch: 'Найти в последнем запуске',
             pieTotal: 'Всего',
             pieSum: 'Сумма',
@@ -502,6 +503,10 @@ define(['util'], function () {
             ofProductBugs: '% дефектов продукта',
             ofSystemIssues: '% системных ошибок',
             ofAutoBugs: '% ошибок автоматизации',
+            ofSwitching: '% переключений',
+            ofSwitchingShort: '% перекл',
+            switchingInExec: 'Переключения',
+            switchingInExecShort: 'Перекл',
             productBugs: 'Дефекты продукта',
             emailNotifications: 'Уведомления по электронной почте',
             on_email: 'сконфигурировано',
@@ -561,10 +566,13 @@ define(['util'], function () {
             percentageOfProductBugsChart: 'Процент дефектов продукта',
 
             productStatus: 'Статус проекта',
-            productStatusDescription: 'Показывает настраиваемую таблицу, которая представляет статистику фильтра отдельно по запускам или сгрупированную статистику фильтра',
+            productStatusDescription: 'Показывает настраиваемую таблицу, которая представляет статистику фильтра отдельно по запускам или сгрупированную статистику фильтра.',
 
             cumulativeTrendChart: 'Собирательная диаграмма тенденций',
-            cumulativeTrendChartDescription: 'показывает тенденцию роста суммарной статистики запусков с одним и тем же префиксом тега',
+            cumulativeTrendChartDescription: 'показывает тенденцию роста суммарной статистики запусков с одним и тем же префиксом тега.',
+
+            flakyTestCasesTable: 'Таблица самых изменчивых тестовых сценариев (ТОП-20)',
+            flakyTestCasesTableDescription: 'Показывает ТОП-20 наиболее изменчивых тестовых сценариев в обозначенных предыдущих запусках.',
 
             launchStatisticsChart: 'Статистика запусков',
             trendChart: 'Диаграмма тенденций',
@@ -931,7 +939,7 @@ define(['util'], function () {
             IN_PROGRESS: 'В процессе'
         },
 
-        testStatus:{
+        testStatus: {
             FAILED: 'НЕУДАЧНО',
             PASSED: 'УСПЕШНО',
             STOPPED: 'ОСТАНОВЛЕНО',

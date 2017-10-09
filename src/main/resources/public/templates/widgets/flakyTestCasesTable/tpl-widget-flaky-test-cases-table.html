@@ -1,0 +1,20 @@
+<div class="widget-wrapper">
+    <div class="info-block"><%- data.text.launches.launchName %>: <span><%- data.name %></span></div>
+    <div class="flaky-table">
+        <div class="scroll-wrapper" data-js-scroll>
+            <div class="flaky-table-header">
+                <div class="col col-name"><%- data.text.widgets.testCase %></div>
+                <div class="col col-count">
+                    <span class="full"><%- data.text.widgets.switchingInExec %></span>
+                    <span class="short"><%- data.text.widgets.switchingInExecShort %></span>
+                </div>
+                <div class="col col-percents">
+                    <span class="full"><%- data.text.widgets.ofSwitching %></span>
+                    <span class="short"><%- data.text.widgets.ofSwitchingShort %></span>
+                </div>
+                <div class="col col-date"><%- data.text.widgets.lastSwitch %></div>
+            </div>
+            <div class="flaky-table-body" data-js-items-container></div>
+        </div>
+    </div>
+</div>
