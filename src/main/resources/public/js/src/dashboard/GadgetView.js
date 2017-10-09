@@ -49,7 +49,7 @@ define(function (require) {
             '[data-js-name]': 'text: name',
             '[data-js-comment]': 'classes: {hide: not(description)}',
             '[data-js-shared]': 'classes: {hide: any(not(share), not(isMy))}',
-            '[data-js-widget-type]': 'text: gadgetName',
+            '[data-js-widget-type]': 'html: gadgetName',
             '[data-js-public]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
             '[data-js-gadget-remove]': 'classes: {hide: not(canRemove)}',
             '[data-js-gadget-edit]': 'classes: {hide: not(isMy)}',

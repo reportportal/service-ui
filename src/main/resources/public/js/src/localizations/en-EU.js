@@ -366,6 +366,7 @@ define(['util'], function () {
             failsOf: 'fails of',
             testCaseExe: 'test case executions with',
             lastFailure: 'Last failure',
+            lastSwitch: 'Last switch',
             findLastLaunch: 'Find in last launch',
             pieTotal: 'Total',
             pieSum: 'Sum',
@@ -443,6 +444,10 @@ define(['util'], function () {
             ofProductBugs: '% of Product bugs',
             ofSystemIssues: '% of System issues',
             ofAutoBugs: '% of Automation bugs',
+            ofSwitching: '% of switches',
+            ofSwitchingShort: '% swtchs',
+            switchingInExec: 'Switches',
+            switchingInExecShort: 'Swtchs',
             productBugs: 'Product bugs',
             emailNotifications: 'E-mail notifications',
             on_email: 'configured',
@@ -499,10 +504,13 @@ define(['util'], function () {
             passingRateSummaryChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
 
             productStatus: 'Product status',
-            productStatusDescription: 'shows the configurable table that is representing launch statistics or group statistics on special filter',
+            productStatusDescription: 'shows the configurable table that is representing launch statistics or group statistics on special filter.',
 
             cumulativeTrendChart: 'Cumulative trend chart',
-            cumulativeTrendChartDescription: 'shows the growth trend of summary statistics of launches with the same tag prefix',
+            cumulativeTrendChartDescription: 'shows the growth trend of summary statistics of launches with the same tag prefix.',
+
+            flakyTestCasesTable: 'Flaky test cases table <nobr>(TOP-20)</nobr>',
+            flakyTestCasesTableDescription: 'Shows the TOP-20 the most flaky test cases within the specified previous launches.',
 
             percentageOfInvestigationsChart: 'Percentage of investigations',
             percentageOfProductBugsChart: 'Percentage of product bugs',

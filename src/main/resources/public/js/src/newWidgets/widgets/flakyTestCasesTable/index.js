@@ -3,7 +3,7 @@
  *
  *
  * This file is part of EPAM Report Portal.
- * https://github.com/epam/ReportPortal
+ * https://github.com/reportportal/service-ui
  *
  * Report Portal is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,24 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
+define(function (require) {
+    'use strict';
 
-@import 'widget-view';
-@import 'launch-statistics-trend-chart';
-@import 'investigated-trend-chart';
-@import 'launches-table';
-@import 'rp-panels-statistics';
-@import 'uniq-bugs-table';
-@import 'not-passed-cases-trend-chart';
-@import 'failed-cases-trend-chart';
-@import 'test-cases-growth-trend-chart';
-@import 'launches-comparison-chart';
-@import 'most-failed-launches';
-@import 'project-activity-panel';
-@import 'launch-execution-and-issue-statistics';
-@import 'passing-rate-per-launch';
-@import 'passing-rate-summary';
-@import 'overall-statistics';
-@import 'product-status-widget';
-@import 'cumulative-trend-chart';
-@import 'widget-error-view';
-@import 'flaky-test-cases-table';
+    var FlakyTestCasesTableView = require('newWidgets/widgets/flakyTestCasesTable/FlakyTestCasesTableView');
+    var FlakyTestCasesTableSettings = require('newWidgets/widgets/flakyTestCasesTable/FlakyTestCasesTableSettings');
+
+    FlakyTestCasesTableView.getConfig = FlakyTestCasesTableSettings.getConfig;
+    FlakyTestCasesTableView.getSettings = FlakyTestCasesTableSettings.getSettings;
+
+    return FlakyTestCasesTableView;
+});
