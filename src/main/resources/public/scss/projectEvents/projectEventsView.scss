@@ -81,6 +81,11 @@
                     .value-field-name {
                       font-family: $OpenSansSemibold;
                     }
+                    .value {
+                      a {
+                        color: $COLOR--windows-blue;
+                      }
+                    }
                   }
                 }
               }
@@ -94,6 +99,11 @@
 
                     .value-field-name {
                       font-family: $OpenSansSemibold;
+                    }
+                    .value {
+                      a {
+                        color: $COLOR--windows-blue;
+                      }
                     }
                   }
                 }
