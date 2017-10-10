@@ -53,6 +53,7 @@ define(function (require) {
                             'statistics$defects$product_bug$total',
                             'statistics$defects$automation_bug$total',
                             'statistics$defects$system_issue$total',
+                            'statistics$defects$no_defect$total',
                             'statistics$defects$to_investigate$total'
                         ]
                     }
