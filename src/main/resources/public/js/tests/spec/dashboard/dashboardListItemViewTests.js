@@ -62,6 +62,9 @@ define(function (require) {
             sandbox.append('<div id="dynamic-content"></div>');
             initialState.initAuthUser();
             config = App.getInstance();
+            config.mainScrollElement = {
+                scrollTop: function () {}
+            };
             config.userModel.set(DataMock.getConfigUser());
             config.userModel.ready.resolve();
             config.trackingDispatcher = trackingDispatcher;
