@@ -115,6 +115,7 @@ define(function (require) {
                 config.trackingDispatcher.trackEventNumber(265);
             }
             config.router.navigate(this.model.get('url'), { trigger: true });
+            config.mainScrollElement.scrollTop(0);
         },
 
         setPreview: function () {
