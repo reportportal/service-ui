@@ -221,6 +221,12 @@
           display: inline;
         }
       }
+      &.status-RESETED {
+        @include logColorSet($COLOR--white, $COLOR--white);
+        .not-found-items {
+          display: inline;
+        }
+      }
       &.status-SKIPPED {
         @include logColorSet($COLOR--skipped-disabled, $COLOR--skipped);
       }
