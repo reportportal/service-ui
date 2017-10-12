@@ -60,3 +60,12 @@
     }
   }
 }
+
+@media print{
+  .launch-log-body {
+    padding: 0 15px 0 15px ;
+    .history-line-block{
+      display: none;
+    }
+  }
+}

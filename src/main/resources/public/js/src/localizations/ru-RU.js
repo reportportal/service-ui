@@ -691,7 +691,8 @@ define(['util'], function () {
             shared: 'Добавлена в доступ:',
             sharedSelect: 'Выберите доступную панель управления',
             sharedNoFound: 'Не найдено доступных панелей управления!',
-            project: 'Проект:',
+            project: 'Проект',
+            dashboard: 'Панель управления',
             noDashboard: 'У вас нет панелей управления',
             noSharedDashboard: 'Нет доступных панелей управления',
             noDashboardSearch: 'Не найдено панелей управления для',
@@ -779,6 +780,7 @@ define(['util'], function () {
         },
 
         launches: {
+            listOfLaunches: 'Список запусков',
             linkName: 'Название ссылки',
             clickToSaveLink: 'Щелкните, чтобы сохранить ссылку',
             openToHistory: 'Откройте Open to history view',

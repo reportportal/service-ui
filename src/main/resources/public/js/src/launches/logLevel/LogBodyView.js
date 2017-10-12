@@ -170,7 +170,9 @@ define(function (require) {
             this.historyItem.endGoToLog();
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, { context: this.context }));
+            this.$el.html(Util.templates(this.template, {
+                context: this.context
+            }));
         },
         onDestroy: function () {
             this.history && this.history.destroy();

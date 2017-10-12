@@ -95,7 +95,10 @@ define(function (require, exports, module) {
             if(!sharedDashboards.length) $('[data-js-shared-dashboard-not-found]', this.$el).addClass('rp-display-block');
         },
         render: function() {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, {
+                dashboardName: this.model.get('name'),
+                projectName: config.project.projectId
+            }));
             Util.hintValidator($('[data-js-filter-name]', this.$el), [{
                 validator: 'minMaxNotRequired',
                 type: 'dashboardName',

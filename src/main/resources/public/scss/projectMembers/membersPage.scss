@@ -275,3 +275,11 @@
     }
   }
 }
+
+@media print {
+  .rp-project-members{
+    .project-members-actions{
+      display: none;
+    }
+  }
+}

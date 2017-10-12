@@ -49,7 +49,7 @@ define(function (require) {
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.bodyTpl, {}));
+            this.$el.html(Util.templates(this.bodyTpl, { projectName: config.project.projectId }));
             this.$content = $('#contentTarget', this.$el);
             this.$content.html(Util.templates(this.tpl));
             this.$interval = $('.btn-group:first', this.$el);

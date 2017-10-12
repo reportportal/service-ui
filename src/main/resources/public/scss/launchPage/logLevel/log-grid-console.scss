@@ -51,3 +51,11 @@
   }
 }
 
+@media print{
+  .launch-log-items-wrapper{
+    .filters-block{
+      display: none;
+    }
+  }
+
+}

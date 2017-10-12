@@ -631,7 +631,8 @@ define(['util'], function () {
             shared: 'Shared:',
             sharedSelect: 'Select shared dashboard',
             sharedNoFound: 'No shared dashboards found!',
-            project: 'Project:',
+            project: 'Project',
+            dashboard: 'Dashboard',
             noDashboard: 'You have no dashboards',
             noSharedDashboard: 'No dashboards are shared',
             noDashboardSearch: 'No dashboard found for',
@@ -718,6 +719,7 @@ define(['util'], function () {
         },
 
         launches: {
+            listOfLaunches: 'List of launches',
             linkName: 'Link name',
             clickToSaveLink: 'Click to save the link',
             openToHistory: 'Open to history view',

@@ -91,7 +91,7 @@ define(function (require) {
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.tpl, {}));
+            this.$el.html(Util.templates(this.tpl, { projectName: config.project.projectId }));
             this.setupAnchors();
 
             Util.bootValidator(this.$searchFilter, [{

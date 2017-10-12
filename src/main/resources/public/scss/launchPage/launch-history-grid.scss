@@ -303,5 +303,10 @@ $borderRadius100: 100px;
   }
 }
 
+@media print{
+  .dashboard-header{
+    display: none;
+  }
+}
 
 

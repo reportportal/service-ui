@@ -152,3 +152,24 @@
     margin: 0 auto;
   }
 }
+
+@media print{
+  .general-project-settings{
+    .col-sm-4 {
+      width: 25%;
+    }
+    .col-sm-8 {
+      width: 33.33333333%;
+    }
+    .col-sm-12 {
+      width: 41.66666667%;
+    }
+    .rp-form-group{
+      .rp-text-description {
+        span, div.rp-help-block{
+          margin-left: 0;
+        }
+      }
+    }
+  }
+}

@@ -535,3 +535,14 @@
     }
   }
 }
+
+@media print{
+  .rp-projects-list-body{
+    .projects-list-view {
+      .project-list-row{
+        width: 25%;
+      }
+    }
+  }
+}
+

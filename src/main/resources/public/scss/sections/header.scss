@@ -599,3 +599,9 @@
      }
    }
  }
+
+@media print {
+  .header, .rp-main-panel > #contentHeader {
+    display: none;
+  }
+}

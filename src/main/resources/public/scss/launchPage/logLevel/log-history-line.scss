@@ -253,3 +253,9 @@
     display: none;
   }
 }
+
+@media print{
+  .launch-log-item-info{
+    display: none;
+  }
+}
