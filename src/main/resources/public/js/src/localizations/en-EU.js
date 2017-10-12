@@ -574,8 +574,6 @@ define(['util'], function () {
             confirmNewPass: 'Confirm new password',
             oldPass: 'Old password',
             newPass: 'New password',
-            oldPass: 'Old password',
-            newPass: 'New password',
             enter: 'Enter',
             confirmPass: 'Confirm',
             uploadPhoto: 'Upload photo',
