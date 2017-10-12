@@ -44,7 +44,7 @@ define(function (require) {
         },
         bindings: {
             '[data-js-is-auto-analize]': 'checked: isAutoAnalyzerEnabled',
-            '[data-js-analize-on-the-fly]': 'checked: analyzeOnTheFly, attr: {disabled: not(isAutoAnalyzerEnabled)}'
+            '[data-js-analize-on-the-fly]': 'checked: all(analyzeOnTheFly, isAutoAnalyzerEnabled), attr: {disabled: not(isAutoAnalyzerEnabled)}'
         },
 
         initialize: function () {
