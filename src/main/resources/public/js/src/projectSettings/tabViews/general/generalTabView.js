@@ -29,7 +29,6 @@ define(function (require) {
     var App = require('app');
     var Service = require('coreService');
     var DropDownComponent = require('components/DropDownComponent');
-    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -44,10 +43,11 @@ define(function (require) {
         },
         bindings: {
             '[data-js-is-auto-analize]': 'checked: isAutoAnalyzerEnabled',
-            '[data-js-analize-on-the-fly]': 'checked: all(analyzeOnTheFly, isAutoAnalyzerEnabled), attr: {disabled: not(isAutoAnalyzerEnabled)}'
+            '[data-js-analize-on-the-fly]': 'checked: analyzeOnTheFly, attr: {disabled: not(isAutoAnalyzerEnabled)}'
         },
 
         initialize: function () {
+            var self = this;
             this.model = new ProjectSettings(config.project.configuration);
             this.dropdownComponents = [];
             this.listenTo(this.model, 'change:interruptedJob', function () {
@@ -59,7 +59,10 @@ define(function (require) {
             this.listenTo(this.model, 'change:keepScreenshots', function () {
                 config.trackingDispatcher.trackEventNumber(383);
             });
-            this.listenTo(this.model, 'change:isAutoAnalyzerEnabled', function () {
+            this.listenTo(this.model, 'change:isAutoAnalyzerEnabled', function (model, value) {
+                if (!value) {
+                    self.model.set({ analyzeOnTheFly: false });
+                }
                 config.trackingDispatcher.trackEventNumber(384);
             });
             this.render();
