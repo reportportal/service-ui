@@ -1,5 +1,8 @@
 <% var canEdit = data.account_type === "INTERNAL" %>
 <div class="content rp-user-profile row">
+    <div class="print">
+        <p><%= data.text.userProfile.userProfile %></p>
+    </div>
     <div class="col-xs-12 col-md-6">
         <h2 class="user-profile-title"><%= data.text.userProfile.personalInfo %></h2>
         <div class="user-profile-info">

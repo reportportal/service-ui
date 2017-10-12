@@ -18,7 +18,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+.print{
+  display: none;
+}
 .preloader {
   position: relative;
   width: 100%;
@@ -174,5 +176,51 @@
 .rp-form-group {
   .rp-switcher-big {
     width: 100px;
+  }
+}
+
+@media print{
+  html, body{
+    background: unset;
+    height: auto;
+    .print{
+      display: block;
+      p{
+        font-family: "OpenSansCondBold", sans-serif;
+        letter-spacing: 1px;
+        font-size: 18px;
+        color: #777777;
+        span{
+          text-transform: uppercase;
+          color: #333333;
+        }
+      }
+    }
+    .visible-md, .visible-lg{
+      display: block !important;
+    }
+    .visible-sm{
+      display: none !important;
+    }
+    #filter-page{
+      .name-grid-cell, .option-grid-cell{
+        width: 30%;
+      }
+      .owner-grid-cell {
+        width: 13%;
+      }
+      .icons-grid-cell {
+        width: 8%;
+      }
+      .display-launch-grid-cell {
+        width: 11%;
+      }
+      .icons-grid-cell {
+        width: 8%;
+        .md-text-center{
+          text-align: center;
+        }
+      }
+    }
   }
 }

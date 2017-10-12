@@ -31,6 +31,7 @@ define(function (require) {
     var LogBodyView = require('launches/logLevel/LogBodyView');
     var HistoryControlView = require('launches/historyGrid/HistoryControlView');
     var HistoryBodyView = require('launches/historyGrid/HistoryBodyView');
+    var Localization = require('localization');
 
     var LaunchSuiteStepItemCollection = require('launches/common/LaunchSuiteStepItemCollection');
     var LaunchMultipleSelect = require('launches/LaunchMultipleSelect');
@@ -113,11 +114,23 @@ define(function (require) {
         onDrillItem: function (itemModel) {
             this.crumbs.cacheItem(itemModel);
         },
+        createHeaderForPrint: function () {
+            var crumbs = this.crumbs.collection.models.map(function (item) {
+                return item.get('name');
+            });
+            if (crumbs.length === 1) {
+                $(this.$el).find('.print p:last-child').html('<p>' + Localization.launches.listOfLaunches + '</p>');
+            } else {
+                crumbs = crumbs.slice(1).join(' / ');
+                $(this.$el).find('.print p:last-child').html('<p>' + Localization.projectEvents.objectTypes.launch + ': <span>' + crumbs + '</span></p>');
+            }
+        },
         onChangeItemCrumbs: function (launchModel, parentModel, optionsURL, nextItemId) {
             var self = this;
             this.collectionItems.update(launchModel, parentModel, optionsURL, this.crumbs)
                 .done(function () {
                     self.onChangePathId();
+                    self.createHeaderForPrint();
                 })
                 .always(function () {
                     $('[data-js-preloader-launch-body]', self.$el).removeClass('rp-display-block');
@@ -159,7 +172,7 @@ define(function (require) {
             }
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, { projectName: config.project.projectId }));
         },
         update: function (partPath, optionsURL) {
             this.multipleSelected.reset();

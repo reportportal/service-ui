@@ -345,3 +345,136 @@
     }
   }
 }
+
+@media print{
+  .launch-body-wrapper{
+    .step-grid, .suit-grid{
+      & > .rp-grid-thead:first-child{
+        display: block !important;
+        .grid-cell{
+          .long-size{
+            display: block;
+          }
+          .short-size{
+            display: none;
+          }
+        }
+      }
+    }
+    .launch-suite-step-items{
+      .name-grid-cell{
+        .rp-grid-tags{
+          & > li i.rp-icons-ticket {
+            line-height: 18px;
+            margin: 2px 0 0 0;
+          }
+          .mobile-tag{
+            display: none;
+          }
+        }
+      }
+      .rp-item-duration{
+        .duration-content {
+          padding-left: 18px;
+          .material-icons{
+            font-size: 16px;
+            line-height: 1;
+          }
+        }
+      }
+    }
+    .suit-grid{
+      .rp-table-row.row {
+        &.show-accordion {
+          .accordion-arrow {
+            display: none;
+          }
+        }
+      }
+      .grid-cell{
+        &.name-grid-cell{
+          width: 32%;
+          display: block;
+          .rp-grid-tags > li {
+            margin: 0 17px 2px 2px;
+          }
+        }
+        &.time-grid-cell {
+          width: 9%;
+          display: block;
+        }
+        &.number-grid-cell, &.counter-grid-cell {
+          width: 7%;
+          height: 50px;
+          text-align: left;
+          &:before{
+            border: unset;
+          }
+        }
+        &.select-grid-cell {
+          width: 2%;
+          display: block;
+        }
+      }
+      .launch-suite-step-items{
+        .rp-table-row.row{
+          padding-top: 0;
+          &.show-accordion {
+            .accordion-arrow{
+              display: none;
+            }
+          }
+          .statistics-block{
+            position: absolute;
+            top: 13px;
+            .grid-cell{
+              &.name-grid-cell{
+                width: 32%;
+                display: block;
+                .rp-grid-tags{
+                  & > li i.rp-icons-ticket {
+                    font-size: 12px;
+                    margin: 2px 0 0 0;
+                  }
+                  .mobile-tag{
+                    display: none;
+                  }
+                }
+              }
+              &.time-grid-cell {
+                width: 9%;
+                display: block;
+              }
+              &.number-grid-cell, &.counter-grid-cell {
+                a{
+                  position: static;
+                }
+                .mobile-title{
+                  display: none;
+                }
+                svg {
+                  display: block;
+                }
+                .total-overflow{
+                  position: absolute;
+                  right: 10px;
+                  padding-left: 46px;
+                  min-width: 75px;
+                  span{
+                    vertical-align: super;
+                    font-size: 13px;
+                    border-style: solid;
+                    border-width: 1px;
+                    border-radius: 10px;
+                    background: white;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+    }
+  }
+}

@@ -185,4 +185,25 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
     padding: 0 15px;
 }
 
-
+@media print{
+  .step-grid{
+    .grid-cell{
+      &.time-grid-cell{
+        display: block;
+        width: 11%;
+      }
+      &.status-grid-cell{
+        display: block;
+      }
+      &.select-grid-cell{
+        display: block;
+      }
+      &.name-grid-cell{
+        width: 45%;
+      }
+      &.type-grid-cell{
+        width: 22%;
+      }
+    }
+  }
+}

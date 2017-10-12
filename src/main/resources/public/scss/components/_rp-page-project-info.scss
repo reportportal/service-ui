@@ -371,3 +371,26 @@
     border-radius: 100px;
     margin: 0 6px;
 }
+
+@media print{
+  #ProjectInfo{
+    zoom: 90%;
+    .col-sm-12.col-md-9{
+      width: 75%;
+      float: left;
+      .col-sm-12{
+        width: 33%;
+      }
+    }
+    .col-sm-12.col-md-3{
+      width: 25%;
+      float: left;
+      .col-md-9,.col-md-3{
+        width: 100%;
+      }
+    }
+    .row.row-custom + .row{
+      page-break-after: always;
+    }
+  }
+}

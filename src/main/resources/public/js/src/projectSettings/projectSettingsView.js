@@ -60,7 +60,8 @@ define(function (require) {
                 tab: this.tab,
                 projectId: this.projectId,
                 generateDemoDataAccess: Util.isInPrivilegedGroup() || this.isPersonalProjectOwner(),
-                adminPage: this.adminPage
+                adminPage: this.adminPage,
+                projectName: config.project.projectId
             }));
             return this;
         },
