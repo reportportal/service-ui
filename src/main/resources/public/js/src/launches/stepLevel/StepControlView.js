@@ -48,12 +48,15 @@ define(function (require) {
         },
 
         computeds: {
-            validateForHistoryBtn: function () {
-                var interrupted = config.launchStatus.interrupted;
-                var showBtn = (this.launchModel.get('status') !== interrupted)
-                    && !this.collectionItems.validateForAllCases()
-                    && !_.isEmpty(this.collectionItems.models);
-                return showBtn;
+            validateForHistoryBtn: {
+                deps: ['itemsCount'],
+                get: function () {
+                    var interrupted = config.launchStatus.interrupted;
+                    var showBtn = (this.launchModel.get('status') !== interrupted)
+                        && !this.collectionItems.validateForAllCases()
+                        && !_.isEmpty(this.collectionItems.models);
+                    return showBtn;
+                }
             },
             getHistoryHref: function () {
                 return this.getHistoryLink();
@@ -91,11 +94,13 @@ define(function (require) {
             this.appModel = new SingletonAppModel();
             this.model = new (Epoxy.Model.extend({
                 defaults: {
-                    refreshItems: 0
+                    refreshItems: 0,
+                    itemsCount: 0
                 }
             }))();
             this.listenTo(this.collectionItems, 'loading', this.resetRefreshItems);
             this.listenTo(this.collectionItems, 'change:issue', _.debounce(this.updateInfoLine.bind(this), 50));
+            this.listenTo(this.collectionItems, 'reset', this.resetCollectionItems);
             this.render();
             this.filterEntities = new FilterEntitiesView({
                 el: $('[data-js-refine-entities]', this.$el),
@@ -112,6 +117,9 @@ define(function (require) {
         },
         updateInfoLine: function () {
             this.parentModel.collection.forceUpdate();
+        },
+        resetCollectionItems: function () {
+            this.model.set({ itemsCount: this.collectionItems.models.length });
         },
         activateMultiple: function () {
             $('[data-js-refresh], [data-js-history-view]', this.$el).addClass('disabled');
