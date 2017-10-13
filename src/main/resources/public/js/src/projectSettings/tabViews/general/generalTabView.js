@@ -29,10 +29,11 @@ define(function (require) {
     var App = require('app');
     var Service = require('coreService');
     var DropDownComponent = require('components/DropDownComponent');
+    var SingletonAppModel = require('model/SingletonAppModel');
 
     var config = App.getInstance();
-
-    var ProjectSettings = require('projectSettings/tabViews/general/generalSettingsModel');
+    var appModel = new SingletonAppModel();
+    var ProjectSettingsModel = require('projectSettings/tabViews/general/generalSettingsModel');
 
     var GeneralTabView = Epoxy.View.extend({
         className: 'general-project-settings',
@@ -48,7 +49,7 @@ define(function (require) {
 
         initialize: function () {
             var self = this;
-            this.model = new ProjectSettings(config.project.configuration);
+            this.model = new ProjectSettingsModel(appModel.get('configuration'));
             this.dropdownComponents = [];
             this.listenTo(this.model, 'change:interruptedJob', function () {
                 config.trackingDispatcher.trackEventNumber(381);
@@ -145,7 +146,9 @@ define(function (require) {
             this.clearFormErrors();
             Service.updateProject(externalSystemData)
                 .done(function () {
-                    _.merge(config.project.configuration, externalSystemData.configuration);
+                    var newConfig = appModel.get('configuration');
+                    _.merge(newConfig, externalSystemData.configuration);
+                    appModel.set({ configuration: newConfig });
                     Util.ajaxSuccessMessenger('updateProjectSettings');
                 })
                 .fail(function (error) {
