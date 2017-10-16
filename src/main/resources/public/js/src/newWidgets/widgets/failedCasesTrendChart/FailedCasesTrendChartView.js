@@ -226,12 +226,6 @@ define(function (require) {
                     // $('.color-mark', $(this)).toggleClass('unchecked');
                     // chart.toggle(id);
                 });
-        },
-        updateWidget: function () {
-            this.chart.resize({
-                height: this.$el.parent().height()
-            });
-            this.chart.flush();
         }
     });
 

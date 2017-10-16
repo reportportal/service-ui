@@ -21,7 +21,7 @@
 define(function (require) {
     'use strict';
 
-    var OverallStatisticsWidgetView = require('newWidgets/widgets/overallStatistics/OverallStatisticsWidgetView_C3');
+    var OverallStatisticsWidgetView = require('newWidgets/widgets/overallStatistics/OverallStatisticsWidgetView');
     var OverallStatisticsWidgetSettings = require('newWidgets/widgets/overallStatistics/OverallStatisticsWidgetSettings');
 
     OverallStatisticsWidgetView.getConfig = OverallStatisticsWidgetSettings.getConfig;
