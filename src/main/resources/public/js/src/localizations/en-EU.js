@@ -457,7 +457,7 @@ define(['util'], function () {
             failedTestCasesTableDescription: 'shows the TOP-20 most failing test cases within the specified previous launches.',
 
             uniqueBugsTable: 'Unique bugs table',
-            uniqueBugsTableDescription: 'shows real identified bugs, posted to the Bug tracking system, and existing in the BTS bugs, loaded on the project.',
+            uniqueBugsTableDescription: 'shows real identified bugs, posted to the bug tracking system, and existing in the BTS bugs, loaded on the project.',
 
             launchesTable: 'Launches table',
             launchesTableDescription: 'shows the configurable table of launches.',
@@ -1357,7 +1357,7 @@ define(['util'], function () {
             addNewIssue: 'Add new issue',
             btsInstances: 'BtS instances:',
             btsAddNewInstance: 'Add new instance',
-            btsNotFound: 'To configure Bug tracking system, please deploy appropriate micro-service',
+            btsNotFound: 'To configure bug tracking system, please deploy appropriate micro-service',
             always: 'Always',
             launchHasInvestigate: 'Launch has "To investigate" items',
             launchHasIssue: 'Launch has issues',
