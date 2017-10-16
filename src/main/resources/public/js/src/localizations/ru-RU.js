@@ -421,7 +421,7 @@ define(['util'], function () {
             failure: 'отказ',
             failsOf: 'отказ ',
             testCaseExe: 'выполнение тестового сценария с',
-            lastFailure: 'Последний отказ',
+            lastFail: 'Последний отказ',
             lastSwitch: 'Последнее переключение',
             findLastLaunch: 'Найти в последнем запуске',
             pieTotal: 'Всего',
@@ -505,8 +505,12 @@ define(['util'], function () {
             ofAutoBugs: '% ошибок автоматизации',
             ofSwitching: '% переключений',
             ofSwitchingShort: '% перекл',
+            ofFails: '% провалов',
+            ofFailsShort: '% пров',
             switchingInExec: 'Переключения',
             switchingInExecShort: 'Перекл',
+            failsInExec: 'Провалов в запуске',
+            failsInExecShort: 'Провалов',
             productBugs: 'Дефекты продукта',
             emailNotifications: 'Уведомления по электронной почте',
             on_email: 'сконфигурировано',
@@ -517,7 +521,7 @@ define(['util'], function () {
             overallStatisticsPanelDescription: 'показывает сводку тестовых сценариев с каждым статусом в избранных запусках.',
             TestCasesStatisticsUniqueLaunches: 'Статистика тестовых сценариев в уникальных запусках',
 
-            failedTestCasesTable: 'Таблица самых провальных тестовых сценариев',
+            failedTestCasesTable: 'Таблица самых провальных тестовых сценариев <nobr>(ТОП-20)</nobr>',
             failedTestCasesTableDescription: 'показывает топ-20 наиболее провальных тестовых сценариев в обозначенных предыдущих запусках.',
 
             uniqueBugsTable: 'Таблица уникальных ошибок',
@@ -571,7 +575,7 @@ define(['util'], function () {
             cumulativeTrendChart: 'Собирательная диаграмма тенденций',
             cumulativeTrendChartDescription: 'показывает тенденцию роста суммарной статистики запусков с одним и тем же префиксом тега.',
 
-            flakyTestCasesTable: 'Таблица самых изменчивых тестовых сценариев (ТОП-20)',
+            flakyTestCasesTable: 'Таблица самых изменчивых тестовых сценариев <nobr>(ТОП-20)</nobr>',
             flakyTestCasesTableDescription: 'Показывает ТОП-20 наиболее изменчивых тестовых сценариев в обозначенных предыдущих запусках.',
 
             launchStatisticsChart: 'Статистика запусков',
