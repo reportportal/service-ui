@@ -54,10 +54,6 @@ define(function (require) {
         getSettings: function () {
             var async = $.Deferred();
             async.resolve([
-                { // remove that control after WS refactoring
-                    control: 'filters',
-                    options: {}
-                },
                 {
                     control: 'dropDown',
                     options: {
