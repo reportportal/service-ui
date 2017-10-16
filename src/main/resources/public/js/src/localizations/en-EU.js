@@ -905,6 +905,7 @@ define(['util'], function () {
         },
 
         testTableMethodTypes: {
+            ALL: 'All',
             TEST: 'Test class',
             STEP: 'Test',
             AFTER_CLASS: 'After class',
