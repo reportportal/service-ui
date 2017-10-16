@@ -74,7 +74,7 @@ define(function (require) {
                     }
                 },
                 point: {
-                    r: 1,
+                    r: itemData.length === 1 ? 5 : 1,
                     focus: {
                         expand: {
                             r: 5

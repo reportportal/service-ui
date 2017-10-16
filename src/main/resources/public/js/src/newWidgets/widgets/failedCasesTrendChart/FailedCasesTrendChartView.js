@@ -71,7 +71,6 @@ define(function (require) {
                 });
                 chartData.push(item.values.issuesCount);
             });
-
             this.chart = c3.generate({
                 bindto: $el[0],
                 data: {
@@ -81,7 +80,7 @@ define(function (require) {
                     }
                 },
                 point: {
-                    r: 1,
+                    r: itemData.length === 1 ? 5 : 1,
                     focus: {
                         expand: {
                             r: 5
