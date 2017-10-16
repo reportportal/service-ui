@@ -48,6 +48,15 @@ define(function (require) {
         },
         getRoundedToDecimalPlaces: function (num, decimalPlaces) {
             return Math.round(num * (Math.pow(10, decimalPlaces))) / Math.pow(10, decimalPlaces);
+        },
+        updateWidget: function () {
+            this.charts && _.each(this.charts, function (chart) {
+                chart.flush();
+                chart.resize({
+                    height: this.$el.parent().height()
+                });
+            }.bind(this));
+            this.chart && this.chart.resize({ height: this.$el.parent().height() }) && this.chart.flush();
         }
     });
 

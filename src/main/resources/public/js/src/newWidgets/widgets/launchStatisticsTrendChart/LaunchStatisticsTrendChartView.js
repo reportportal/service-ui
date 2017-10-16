@@ -346,12 +346,6 @@ define(function (require) {
                     }
                 });
         },
-        updateWidget: function () {
-            this.chart.resize({
-                height: this.$el.parent().height()
-            });
-            this.chart.flush();
-        },
         onBeforeDestroy: function () {
             _.each(this.scrollers, function (baronScrollElem) {
                 baronScrollElem.baron && baronScrollElem.baron().dispose();

@@ -280,11 +280,6 @@ define(function (require) {
                 $('.c3-chart-arcs-title', this.$el).attr('dy', '-5').find('tspan').attr('dy', '15');
             }
         },
-        updateWidget: function () {
-            _.each(this.charts, function (chart) {
-                chart.flush();
-            });
-        },
         onBeforeDestroy: function () {
             _.each(this.scrollers, function (baronScrollElem) {
                 baronScrollElem.baron && baronScrollElem.baron().dispose();
