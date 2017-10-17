@@ -365,7 +365,8 @@ define(['util'], function () {
             failure: 'failure',
             failsOf: 'fails of',
             testCaseExe: 'test case executions with',
-            lastFailure: 'Last failure',
+            lastFail: 'Last fail',
+            lastSwitch: 'Last switch',
             findLastLaunch: 'Find in last launch',
             pieTotal: 'Total',
             pieSum: 'Sum',
@@ -443,6 +444,14 @@ define(['util'], function () {
             ofProductBugs: '% of Product bugs',
             ofSystemIssues: '% of System issues',
             ofAutoBugs: '% of Automation bugs',
+            ofSwitching: '% of switches',
+            ofSwitchingShort: '% swtchs',
+            ofFails: '% of fails',
+            ofFailsShort: '% fails',
+            switchingInExec: 'Switches',
+            switchingInExecShort: 'Swtchs',
+            failsInExec: 'Fails in execution',
+            failsInExecShort: 'Fails',
             productBugs: 'Product bugs',
             emailNotifications: 'E-mail notifications',
             on_email: 'configured',
@@ -453,11 +462,11 @@ define(['util'], function () {
             overallStatisticsPanelDescription: 'shows summary of test cases with each statuses in the selected launches.',
             TestCasesStatisticsUniqueLaunches: 'Test-cases statistics in unique launches',
 
-            failedTestCasesTable: 'Most failure test-cases table',
+            failedTestCasesTable: 'Most failed test-cases <nobr>table (TOP-20)</nobr>',
             failedTestCasesTableDescription: 'shows the TOP-20 most failing test cases within the specified previous launches.',
 
             uniqueBugsTable: 'Unique bugs table',
-            uniqueBugsTableDescription: 'shows real identified bugs, posted to the Bug Tracking System, and existing in the BTS bugs, loaded on the project.',
+            uniqueBugsTableDescription: 'shows real identified bugs, posted to the bug tracking system, and existing in the BTS bugs, loaded on the project.',
 
             launchesTable: 'Launches table',
             launchesTableDescription: 'shows the configurable table of launches.',
@@ -477,17 +486,17 @@ define(['util'], function () {
             percentageOfLaunches: 'Investigated percentage of launches',
             percentageOfLaunchesDescription: '- in "Launch mode" shows whether the launches are analyzed or not (the percentage of "Investigated"/"To investigate") from run to run,<br> - in "Timeline mode" shows percentage of "Investigated"/"To investigate" tests in all runs per day distributed by dates.',
 
-            nonPassedTrendChart: 'Non-Passed test-cases trend chart',
+            nonPassedTrendChart: 'Non-passed test-cases trend chart',
             nonPassedTrendChartDescription: 'shows the percent ratio of non-passed test cases (Failed + Skipped) to Total cases from run to run.',
 
-            growthTrendChart: 'Test-Cases growth trend chart',
+            growthTrendChart: 'Test-cases growth trend chart',
             growthTrendChartDescription: '- in "Launch mode" shows the increment of test-cases from run to run,<br> - in "Timeline mode" shows the increment of test-cases distributed by dates (in launches with the largest number of test-cases per day).',
 
             failedTrendChart: 'Failed cases trend chart',
             failedTrendChartDescription: 'shows the trend of growth in the number of failed test cases from run to run.',
 
             executionIssueStatistics: 'Launch execution and issue statistic',
-            executionIssueStatisticsDescription: 'shows statistics of the last launch divided into 2 sections:</br> - Skipped, Passed, Failed </br> - Product bug, System issue, To Investigate, Automation bugs.',
+            executionIssueStatisticsDescription: 'shows statistics of the last launch divided into 2 sections:</br> - Skipped, Passed, Failed </br> - Product bug, System issue, To investigate, Automation bugs.',
 
             projectActivityPanel: 'Project activity panel',
             projectActivityPanelDescription: 'shows all activities occurring on the project.',
@@ -499,10 +508,13 @@ define(['util'], function () {
             passingRateSummaryChartDescription: 'shows the percentage ratio of Passed test cases to Total cases for set of launches.',
 
             productStatus: 'Product status',
-            productStatusDescription: 'shows the configurable table that is representing launch statistics or group statistics on special filter',
+            productStatusDescription: 'shows the configurable table that is representing launch statistics or group statistics on special filter.',
 
             cumulativeTrendChart: 'Cumulative trend chart',
-            cumulativeTrendChartDescription: 'shows the growth trend of summary statistics of launches with the same tag prefix',
+            cumulativeTrendChartDescription: 'shows the growth trend of summary statistics of launches with the same tag prefix.',
+
+            flakyTestCasesTable: 'Flaky test cases table <nobr>(TOP-20)</nobr>',
+            flakyTestCasesTableDescription: 'shows the TOP-20 the most flaky test cases within the specified previous launches.',
 
             percentageOfInvestigationsChart: 'Percentage of investigations',
             percentageOfProductBugsChart: 'Percentage of product bugs',
@@ -543,7 +555,8 @@ define(['util'], function () {
             addCustomColumn: '+ Add custom column',
             groupLaunchesByFilter: 'Group launches by filter',
             launchesOnFilter: 'Number of launches in the filter is ',
-            selectWidget: 'Choose widget type from the list below'
+            selectWidget: 'Choose widget type from the list below',
+            launchInterrupted: 'Run interrupted'
         },
 
         userProfile: {
@@ -572,8 +585,6 @@ define(['util'], function () {
             enterOldPass: 'Enter old password',
             enterNewPass: 'Enter new password',
             confirmNewPass: 'Confirm new password',
-            oldPass: 'Old password',
-            newPass: 'New password',
             oldPass: 'Old password',
             newPass: 'New password',
             enter: 'Enter',
@@ -771,8 +782,8 @@ define(['util'], function () {
             loadBug: 'Load issue',
             addIssueId: 'Add issue ID',
             key: 'Issue key (for multiple options - type issue ID and press Enter)',
-            configureTBS: 'Configure Bug Tracking System to post issue',
-            configureTBSLoad: 'Configure Bug Tracking System to load issue',
+            configureTBS: 'Configure bug tracking system to post issue',
+            configureTBSLoad: 'Configure bug tracking system to load issue',
             noIssues: 'You can\'t post bug if item has no issues',
             noIssuesLoad: 'You can\'t Load bug if item has no issues',
             historyView: 'History',
@@ -815,7 +826,7 @@ define(['util'], function () {
             export: 'Export',
             itemName: 'Test item name',
             extendWithOriginal: 'Extend child suites description with original launch name (e.g. @launch \'Launch #1\')',
-            launchNotInProgress: 'Launch should not be in the status IN PROGRESS!',
+            launchNotInProgress: 'Launch should not be in the status In progress!',
             launchIsProcessing: 'Launch should not be processing by Auto analysis!',
             forbiddenIsProcessing: 'Update of test item is forbidden for launch with Auto analyze in progress',
             replaceComments: 'Replace comments to all selected items',
@@ -892,7 +903,8 @@ define(['util'], function () {
                 INTERRUPTED: 'Interrupted',
                 IN_PROGRESS: 'In progress',
                 MANY: 'There are several items with the same names, descriptions and tags',
-                NOT_FOUND: 'No item in launch'
+                NOT_FOUND: 'No item in launch',
+                RESETED: 'No item in launch'
             }
         },
 
@@ -906,6 +918,7 @@ define(['util'], function () {
         },
 
         testTableMethodTypes: {
+            ALL: 'All',
             TEST: 'Test class',
             STEP: 'Test',
             AFTER_CLASS: 'After class',
@@ -1239,7 +1252,7 @@ define(['util'], function () {
             howKeepScreen: 'How long to keep screenshots in system',
             strategyRegular: 'Regular',
             strategyBdd: 'BDD',
-            bts: 'Bug Tracking System',
+            bts: 'Bug tracking system',
             properties: 'Properties',
             linkBts: 'Link to issue tracker system',
             forExample: 'for example,',
@@ -1274,7 +1287,7 @@ define(['util'], function () {
             enterRecipients: 'Select team members',
             generalTab: 'General',
             notificationsTab: 'Notifications',
-            btsTab: 'Bug Tracking System',
+            btsTab: 'Bug tracking system',
             demoDataSettings: 'Demo data',
             generateDemoData: 'Generate demo data',
             generateDemoDataTitle: 'the system will generate the following demo data:',
@@ -1350,14 +1363,14 @@ define(['util'], function () {
             removeProject: 'Remove project',
             projectNameIn: 'Project name',
             tbsChangeWarning: 'Warning! If you configure new system settings, the current project will be reset!',
-            configureFields: 'Configure Bug Tracking System default properties to post issues',
+            configureFields: 'Configure bug tracking system default properties to post issues',
             issueId: 'Issue ID',
             linkToIssue: 'Link to issue',
             addNewIssues: 'Add new issues',
             addNewIssue: 'Add new issue',
             btsInstances: 'BtS instances:',
             btsAddNewInstance: 'Add new instance',
-            btsNotFound: 'To configure Bug Tracking System, please deploy appropriate micro-service',
+            btsNotFound: 'To configure bug tracking system, please deploy appropriate micro-service',
             always: 'Always',
             launchHasInvestigate: 'Launch has "To investigate" items',
             launchHasIssue: 'Launch has issues',
@@ -1463,7 +1476,7 @@ define(['util'], function () {
             url: 'URL',
             photo: 'Photo attribute',
             baseDN: 'Base DN',
-            email: 'Email Attribute',
+            email: 'Email attribute',
             fullName: 'Full name attribute',
             userDnPattern: 'User DN pattern',
             userSearchFilter: 'User search filter',

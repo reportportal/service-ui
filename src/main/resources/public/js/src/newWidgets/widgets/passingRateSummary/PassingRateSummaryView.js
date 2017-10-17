@@ -276,11 +276,6 @@ define(function (require) {
         },
         isDrawPie: function (widgetOptions) {
             return (widgetOptions && widgetOptions.viewMode && widgetOptions.viewMode.length && widgetOptions.viewMode[0] === 'pieChartMode');
-        },
-        updateWidget: function () {
-            _.each(this.charts, function (chart) {
-                chart.flush();
-            });
         }
     });
 

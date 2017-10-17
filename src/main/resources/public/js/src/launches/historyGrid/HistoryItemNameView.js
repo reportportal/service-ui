@@ -18,16 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
-    var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
-    var HistoryItemCellView = require('launches/historyGrid/HistoryItemCellView');
     var LaunchItemInfoTooltipView = require('tooltips/LaunchItemInfoTooltipView');
 
     var config = App.getInstance();
@@ -39,18 +36,18 @@ define(function (require, exports, module) {
             'click [data-js-name]': 'onClickName'
         },
         bindings: {
-            '[data-js-name]': 'text: name, attr: {href: getUrl}',
+            '[data-js-name]': 'text: name, attr: {href: getUrl}'
         },
         computeds: {
             getUrl: {
                 deps: ['launches'],
-                get: function(launches) {
+                get: function (launches) {
                     var hash = window.location.hash,
                         link = hash.split('?')[0],
                         lastLaunch = _.last(this.launches.models),
                         items = launches[lastLaunch.get('launchNumber')],
                         lastItem = !_.isEmpty(items) ? items[0] : null;
-                    if(!lastItem || lastItem.status === config.launchStatus.reseted) {
+                    if (!lastItem) {
                         $('[data-js-name]', this.$el).addClass('not-link');
                         return '';
                     }
@@ -58,31 +55,31 @@ define(function (require, exports, module) {
                 }
             }
         },
-        initialize: function(options) {
+        initialize: function (options) {
             this.launches = options.launches;
             this.render();
             this.applyBindings();
             this.collectionItems = options.collectionItems;
             var lastLaunchItem = this.collectionItems.get(this.model.get('id'));
-            if(lastLaunchItem){
-                this.tooltip = new LaunchItemInfoTooltipView({model: lastLaunchItem});
+            if (lastLaunchItem) {
+                this.tooltip = new LaunchItemInfoTooltipView({ model: lastLaunchItem });
                 var self = this;
-                Util.appendTooltip(function() {
+                Util.appendTooltip(function () {
                     return self.tooltip.$el;
                 }, $('[data-js-name]', this.$el), $('[data-js-name-block]', this.$el));
             }
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {
                 item: this.model.toJSON()
             }));
         },
-        onClickName: function(e) {
+        onClickName: function (e) {
             e.preventDefault();
             var href = $(e.currentTarget).attr('href');
-            if(href) {
+            if (href) {
                 config.trackingDispatcher.trackEventNumber(133);
-                config.router.navigate(href, {trigger: true});
+                config.router.navigate(href, { trigger: true });
             }
         },
         destroy: function () {

@@ -88,7 +88,7 @@ define(function (require) {
             mainImagePath: {
                 deps: ['binary_content'],
                 get: function (binaryContent) {
-                    if (binaryContent && binaryContent.id) {
+                    if (binaryContent && binaryContent.id && config.userModel.get('token') !== config.userModel.defaults.token) {
                         if (!~binaryContent.content_type.search('image/')) {
                             return this.get('imagePath');
                         }

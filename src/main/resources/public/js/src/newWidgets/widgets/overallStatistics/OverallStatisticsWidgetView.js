@@ -346,11 +346,6 @@ define(function (require) {
             }
             return false;
         },
-        updateWidget: function () {
-            _.each(this.charts, function (chart) {
-                chart.flush();
-            });
-        },
         onBeforeDestroy: function () {
             _.each(this.scrollers, function (baronScrollElem) {
                 baronScrollElem.baron && baronScrollElem.baron().dispose();
