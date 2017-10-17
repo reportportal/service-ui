@@ -555,7 +555,8 @@ define(['util'], function () {
             addCustomColumn: '+ Add custom column',
             groupLaunchesByFilter: 'Group launches by filter',
             launchesOnFilter: 'Number of launches in the filter is ',
-            selectWidget: 'Choose widget type from the list below'
+            selectWidget: 'Choose widget type from the list below',
+            launchInterrupted: 'Run interrupted'
         },
 
         userProfile: {

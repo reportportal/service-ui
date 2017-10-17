@@ -615,7 +615,8 @@ define(['util'], function () {
             addCustomColumn: '+ Добавить колонку',
             groupLaunchesByFilter: 'Групировать запуски по фильтру',
             launchesOnFilter: 'Количество запусков в фильтре - ',
-            selectWidget: 'Выберите тип виджета из списка'
+            selectWidget: 'Выберите тип виджета из списка',
+            launchInterrupted: 'Прогон прерван'
         },
 
         userProfile: {
