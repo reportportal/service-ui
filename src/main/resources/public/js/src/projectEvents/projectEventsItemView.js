@@ -64,20 +64,27 @@ define(function (require) {
                     var $wrapper = $(document.createElement('div')).addClass('values-wrapper');
 
                     _.each(values, function (value) {
+                        var $valueView;
+                        var oldLinks = [];
+                        var newLinks = [];
                         if (this.view.model.get('actionType') === 'post_issue' || this.view.model.get('actionType') === 'attach_issue') {
                             _.each(value, function (val, key) {
-                                var linkParts = val.split(':');
+                                var linkParts;
                                 if (key === 'newValue' || key === 'oldValue') {
-                                    link = '<a target="_blank" href="' + linkParts[1] + ':' + linkParts[2] + '">' + linkParts[0] + '</a>';
+                                    _.each(val.split(','), function (item) {
+                                        linkParts = item.split(':');
+                                        link = '<a target="_blank" href="' + linkParts[1] + ':' + linkParts[2] + '">' + linkParts[0] + '</a>';
+                                        (key === 'newValue') ? newLinks.push(link) : oldLinks.push(link);
+                                    });
                                 }
                             });
                         }
-                        var $valueView = $(document.createElement('div')).addClass('value-item').html(
+                        $valueView = $(document.createElement('div')).addClass('value-item').html(
                             Util.templates(this.view.valueTemplate, {
                                 valueFieldName: value.field,
                                 value: isOld ?
-                                    ((value.oldValue && link) ? link : value.oldValue) :
-                                    ((value.newValue && link) ? link : value.newValue)
+                                    ((value.oldValue && oldLinks.length) ? oldLinks.join(', ') : value.oldValue) :
+                                    ((value.newValue && newLinks.length) ? newLinks.join(', ') : value.newValue)
                             })
                         );
                         $wrapper.append($valueView);
