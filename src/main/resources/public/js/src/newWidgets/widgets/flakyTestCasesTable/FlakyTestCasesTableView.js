@@ -88,7 +88,7 @@ define(function (require) {
             return !(data && data.flaky && data.flaky.length);
         },
         onBeforeDestroy: function () {
-            this.scroller.baron && this.scroller.baron().dispose();
+            this.scroller && this.scroller.baron && this.scroller.baron().dispose();
         }
     });
 

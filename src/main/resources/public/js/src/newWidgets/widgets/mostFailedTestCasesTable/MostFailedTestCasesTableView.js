@@ -88,7 +88,7 @@ define(function (require) {
             return !(data && data.most_failed && data.most_failed.length);
         },
         onBeforeDestroy: function () {
-            this.scroller.baron && this.scroller.baron().dispose();
+            this.scroller && this.scroller.baron && this.scroller.baron().dispose();
         }
     });
 
