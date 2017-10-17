@@ -462,7 +462,7 @@ define(['util'], function () {
             overallStatisticsPanelDescription: 'shows summary of test cases with each statuses in the selected launches.',
             TestCasesStatisticsUniqueLaunches: 'Test-cases statistics in unique launches',
 
-            failedTestCasesTable: 'Most failed test-cases table <nobr>(TOP-20)</nobr>',
+            failedTestCasesTable: 'Most failed test-cases <nobr>table (TOP-20)</nobr>',
             failedTestCasesTableDescription: 'shows the TOP-20 most failing test cases within the specified previous launches.',
 
             uniqueBugsTable: 'Unique bugs table',
@@ -514,7 +514,7 @@ define(['util'], function () {
             cumulativeTrendChartDescription: 'shows the growth trend of summary statistics of launches with the same tag prefix.',
 
             flakyTestCasesTable: 'Flaky test cases table <nobr>(TOP-20)</nobr>',
-            flakyTestCasesTableDescription: 'Shows the TOP-20 the most flaky test cases within the specified previous launches.',
+            flakyTestCasesTableDescription: 'shows the TOP-20 the most flaky test cases within the specified previous launches.',
 
             percentageOfInvestigationsChart: 'Percentage of investigations',
             percentageOfProductBugsChart: 'Percentage of product bugs',

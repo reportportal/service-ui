@@ -22,24 +22,7 @@ define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var _ = require('underscore');
     var Localization = require('localization');
-
-    var getCriteriaItems = function () {
-        var executions = {
-            statistics$executions$failed: Localization.launchesHeaders.failed,
-            statistics$executions$skipped: Localization.launchesHeaders.skipped
-        };
-        var defects = {
-            statistics$defects$product_bug$total: Localization.launchesHeaders.product_bug,
-            statistics$defects$automation_bug$total: Localization.launchesHeaders.automation_bug,
-            statistics$defects$system_issue$total: Localization.launchesHeaders.system_issue,
-            statistics$defects$no_defect$total: Localization.launchesHeaders.no_defect
-        };
-        return _.map(_.merge(executions, defects), function (key, val) {
-            return { name: key, value: val };
-        });
-    };
 
     return {
         getConfig: function () {
@@ -54,26 +37,6 @@ define(function (require) {
         getSettings: function () {
             var async = $.Deferred();
             async.resolve([
-                {
-                    control: 'dropDown',
-                    options: {
-                        label: Localization.widgets.widgetCriteria,
-                        items: getCriteriaItems(),
-                        placeholder: Localization.wizard.criteriaSelectTitle,
-                        multiple: false,
-                        getValue: function (model, self) {
-                            var contentFields = model.getContentFields();
-
-                            if (contentFields.length) {
-                                return contentFields;
-                            }
-                            return self.model.get('items')[0].value;
-                        },
-                        setValue: function (value, model) {
-                            Array.isArray(value) ? model.setContentFields(value) : model.setContentFields([value]);
-                        }
-                    }
-                },
                 {
                     control: 'input',
                     options: {
