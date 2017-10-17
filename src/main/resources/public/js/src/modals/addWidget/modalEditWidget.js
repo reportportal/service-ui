@@ -46,7 +46,7 @@ define(function (require) {
             'click [data-js-cancel]': 'onClickCancel'
         },
         bindings: {
-            '[data-js-widget-type]': 'text: gadgetName',
+            '[data-js-widget-type]': 'html: gadgetName',
             '[data-js-widget-description]': 'html: gadgetDescription'
         },
         initialize: function (options) {
