@@ -74,7 +74,7 @@
             margin-top: 1px;
           }
         }
-        .many-items, .not-found-items {
+        .many-items, .not-found-items, .rp-icons-warning2 {
           display: none;
         }
         .issue-type {
@@ -223,7 +223,7 @@
       }
       &.status-RESETED {
         @include logColorSet($COLOR--white, $COLOR--white);
-        .not-found-items {
+        .rp-icons-warning2 {
           display: inline;
         }
       }
