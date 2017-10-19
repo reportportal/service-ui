@@ -8,6 +8,32 @@
     height: 100%;
     float: left;
 
+    svg {
+      .c3-chart {
+        .c3-chart-arcs {
+          .c3-chart-arc {
+            path {
+              stroke-width: 0;
+            }
+            text {
+              font-family: $OpenSansSemibold;
+            }
+          }
+        }
+        .c3-chart-texts {
+          .c3-chart-text {
+            text {
+              font-family: $OpenSansSemibold;
+              font-size: 13px;
+              fill: $COLOR--white-default !important;
+            }
+          }
+        }
+      }
+      .c3-brush {
+        display: none;
+      }
+    }
     .c3-tooltip-container {
       max-width: 160px;
       background-color: $COLOR--white-default;
@@ -164,7 +190,6 @@
       }
     }
   }
-
   &.passing-rate-bar-view {
     .widget-wrapper {
       svg {
@@ -174,7 +199,24 @@
       }
     }
   }
-
+  &.passing-rate-pie-view.w-less-then-6 {
+    .widget-wrapper {
+      svg {
+        .c3-chart {
+          .c3-chart-arcs {
+            .c3-chart-arc {
+              path {
+                stroke-width: 0;
+              }
+              text {
+                font-size: 11px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   &.w-less-then-7 {
     .widget-wrapper {
       .top-block {
