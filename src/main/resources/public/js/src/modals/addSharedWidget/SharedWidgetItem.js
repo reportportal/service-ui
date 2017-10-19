@@ -19,11 +19,9 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
-    var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var Localization = require('localization');
@@ -42,19 +40,19 @@ define(function (require, exports, module) {
         computeds: {
             getAddedTitle: {
                 deps: ['added'],
-                get: function(added){
+                get: function (added) {
                     return added ? Localization.wizard.sharedWidgetAdded : '';
                 }
             }
         },
 
-        initialize: function(options) {
+        initialize: function () {
             this.render();
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        destroy: function() {
+        destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
