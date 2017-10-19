@@ -49,6 +49,14 @@ define(function (require) {
         getRoundedToDecimalPlaces: function (num, decimalPlaces) {
             return Math.round(num * (Math.pow(10, decimalPlaces))) / Math.pow(10, decimalPlaces);
         },
+        getFormattedLabels: function (id) {
+            var ratio = this.chartData[id] / this.total;
+            var percents = this.getRoundedToDecimalPlaces(ratio * 100, 2).toFixed(2);
+            if (!this.isPreview && percents > 0) {
+                return percents + '%';
+            }
+            return '';
+        },
         updateWidget: function () {
             this.charts && _.each(this.charts, function (chart) {
                 chart.flush();

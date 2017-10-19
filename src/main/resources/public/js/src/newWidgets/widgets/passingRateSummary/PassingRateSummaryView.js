@@ -89,7 +89,11 @@ define(function (require) {
                 },
                 pie: {
                     label: {
-                        show: false
+                        show: !self.isPreview,
+                        threshold: 0.05,
+                        format: function (value, r, id) {
+                            return self.getFormattedLabels(id);
+                        }
                     }
                 },
                 padding: {
@@ -120,6 +124,15 @@ define(function (require) {
                 },
                 onrendered: function () {
                     $el.css('max-height', 'none');
+                    d3.selectAll($('.c3-chart-arc text', $el)).each(function (d, i, j) {
+                        var elem = d3.select(this);
+                        // var textBoxWidth = d3.select(this).node().getBBox().width;
+                        if ((((elem.datum().endAngle - elem.datum().startAngle) / 2) + elem.datum().startAngle) > Math.PI) {
+                            elem.attr('dx', 10);
+                        } else {
+                            elem.attr('dx', -10);
+                        }
+                    });
                 }
             });
             this.charts.push(chart);
@@ -144,7 +157,12 @@ define(function (require) {
                     ],
                     type: 'bar',
                     order: null,
-                    colors: processedData.colors
+                    colors: processedData.colors,
+                    labels: {
+                        format: function (v, id, i, j) {
+                            return self.getFormattedLabels(id);
+                        }
+                    }
                 },
                 axis: {
                     rotated: true,
@@ -197,6 +215,19 @@ define(function (require) {
                 },
                 onrendered: function () {
                     $el.css('max-height', 'none');
+                    d3.selectAll($('.c3-chart-texts text', $el)).each(function (d, i, j) {
+                        var barBox = d3.selectAll($('.c3-bars-' + d.id, self.$el)).node().getBBox();
+                        var textBox = d3.select(this).node().getBBox();
+                        // put bar labels in center of the bar.
+                        var x = (barBox.x + (barBox.width / 2)) - (textBox.width / 2);
+                        if (d.id === 'launchPassed' && x < 5) {
+                            x = 5;
+                        }
+                        if (d.id === 'launchNotPassed' && x + textBox.width > barBox.x + barBox.width) {
+                            x = barBox.x + barBox.width - textBox.width - 5;
+                        }
+                        d3.select(this).attr('x', x);
+                    });
                 }
             });
             this.charts.push(chart);
