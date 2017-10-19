@@ -35,7 +35,7 @@ define(function (require, exports, module) {
             '[data-js-widget-select]': 'checked: active, disabled: added',
             ':el': 'classes: {"widget-already-added": added}, attr: {title: getAddedTitle}',
             '[data-js-widget-name]': 'text: name',
-            '[data-js-gadget-name]': 'text: gadgetName',
+            '[data-js-gadget-name]': 'html: gadgetName',
             '[data-js-owner-name]': 'text: owner',
             '[data-js-description]': 'text: description'
         },
