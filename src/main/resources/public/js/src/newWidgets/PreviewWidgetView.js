@@ -76,7 +76,8 @@ define(function (require) {
                     },
                     filter_id: this.model.get('filter_id')
                 };
-                Service.getWidgetPreviewData(widgetData).done(function (response) {
+                this.request && this.request.abort();
+                this.request = Service.getWidgetPreviewData(widgetData).done(function (response) {
                     self.renderWidgetPreview(response);
                 });
             }
