@@ -52,6 +52,8 @@ define(function (require) {
                 deps: ['gadget'],
                 get: function (gadget) {
                     if (!gadget) return '';
+                    var gadgetConfig = WidgetService.getWidgetConfig(gadget);
+                    if (!gadgetConfig) return '';
                     return WidgetService.getWidgetConfig(gadget).gadget_name;
                 }
             }

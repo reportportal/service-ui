@@ -135,12 +135,14 @@ define(function (require) {
             this.appendTooltip();
         },
         onLoadDataError: function (error) {
-            var message = Localization.widgets.unableLoadData;
+            var message = '';
             var owner;
             var share;
             var view;
             if (error && error.status === 404) {
                 message = Localization.widgets.widgetNotFound;
+            } else if (error && error.status === 500) {
+                message = Localization.widgets.unableLoadData;
             } else {
                 owner = this.model.get('owner');
                 share = this.model.get('share');
