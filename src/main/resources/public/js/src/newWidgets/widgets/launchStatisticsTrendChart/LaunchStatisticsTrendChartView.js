@@ -88,26 +88,14 @@ define(function (require) {
                 var defectModel;
                 var splitted = key.split('$');
                 var shortKey = splitted[splitted.length - 1];
-                switch (shortKey) {
-                case 'total':
-                    colors[shortKey] = '#489BC1';
-                    break;
-                case 'passed':
-                    colors[shortKey] = '#8db677';
-                    break;
-                case 'failed':
-                    colors[shortKey] = '#e86c42';
-                    break;
-                case 'skipped':
-                    colors[shortKey] = '#bfc7cc';
-                    break;
-                default:
-                    break;
+                if (~['passed', 'failed', 'skipped', 'total'].indexOf(shortKey)) {
+                    colors[shortKey] = config.defaultColors[shortKey];
+                } else {
+                    defectModel = _.find(this.defectTypesCollection.models, function (model) {
+                        return model.get('locator') === shortKey;
+                    });
+                    defectModel && (colors[shortKey] = defectModel.get('color'));
                 }
-                defectModel = _.find(this.defectTypesCollection.models, function (model) {
-                    return model.get('locator') === shortKey;
-                });
-                defectModel && (colors[shortKey] = defectModel.get('color'));
                 chartData[shortKey] = [shortKey];
             }.bind(this));
 
@@ -150,6 +138,7 @@ define(function (require) {
             itemNames = _.map(chartDataOrdered, function (item) {
                 return item[0];
             });
+
             this.chart = c3.generate({
                 bindto: $el[0],
                 data: {

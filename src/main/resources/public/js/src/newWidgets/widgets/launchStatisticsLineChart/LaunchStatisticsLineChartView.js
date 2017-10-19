@@ -23,153 +23,378 @@ define(function (require) {
 
     var $ = require('jquery');
     var _ = require('underscore');
+    var Util = require('util');
+    var Service = require('coreService');
+    var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
+    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+    var Localization = require('localization');
+    var d3 = require('d3');
+    var c3 = require('c3');
     var App = require('app');
     var Moment = require('moment');
-    var ChartWidgetView = require('newWidgets/_ChartWidgetView');
-    var d3 = require('d3');
-    var nvd3 = require('nvd3');
-
     var config = App.getInstance();
 
-    var LaunchStatisticsLineChart = ChartWidgetView.extend({
+    var LaunchStatisticsLineChart = C3ChartWidgetView.extend({
+        template: 'tpl-widget-launch-statistics-line-chart',
+        tooltipTemplate: 'tpl-widget-launch-statistics-line-chart-tooltip',
+        className: 'launch-statistics-line-chart',
 
-        redirectOnElementClick: function () {
-            var self;
-            var svg;
-            var point;
-            this.chart.stacked.dispatch.on('areaClick', null);
-            this.chart.stacked.dispatch.on('areaClick.toggle', null);
-            if (!this.isPreview) {
-                self = this;
-                svg = d3.select('#' + this.id + ' svg');
-                point = svg.select('.nv-scatterWrap').selectAll('path.nv-point');
-
-                this.chart.stacked.dispatch.on('areaClick', function (e) {
-                    config.trackingDispatcher.trackEventNumber(344);
-                    self.redirectTo(e);
-                });
-                point.each(function () {
-                    d3.select(this).on('click', function (e) {
-                        config.trackingDispatcher.trackEventNumber(344);
-                        self.redirectTo(e);
-                    });
-                });
-            }
-        },
-        redirectTo: function (e) {
-            var o = { series: {} };
-            var svg;
-            var data;
-            var cat;
-            if (!_.has(e, 'pointIndex')) {
-                svg = d3.select('#' + this.id + ' svg');
-                data = svg.data();
-                o.series.key = (data && data[0] && data[0][e.seriesIndex]) ?
-                    data[0][e.seriesIndex].key : null;
-                o.pointIndex = parseInt(e.index, 10);
-            } else {
-                o.series.key = e.series;
-                o.pointIndex = parseInt(e.pointIndex, 10);
-            }
-            if (this.model.get('isTimeline')) {
-                cat = this.categories[o.pointIndex];
-                o.point = { startTime: cat.startTime };
-                this.redirectForTimeLine(o);
-            } else {
-                this.redirectToLaunch(o);
-            }
-        },
-        updateTooltips: function () {
-            var contentGenerator = this.chart.interactiveLayer.tooltip.contentGenerator();
-            var tooltip = this.chart.interactiveLayer.tooltip;
-            tooltip.contentGenerator(function (d) {
-                var date = d.value.split('>')[d.value.split('>').length - 2];
-                var dateClear = date.split('<')[0];
-                d.value = Moment(dateClear).format('YYYY-MM-DD');
-                return contentGenerator(d);
-            });
-        },
         render: function () {
-            var data = this.getData();
-            var self = this;
-            var vis;
-            var tip;
-            var cup;
-            var update;
-            var emptyData = this.model.getContent();
-            if (!this.isEmptyData(emptyData)) {
-                this.addSVG();
-                this.chart = nvd3.models.stackedAreaChart()
-                    .margin({ left: 70 })
-                    .x(function (d) {
-                        return d.x;
-                    })
-                    .y(function (d) {
-                        return d.y;
-                    })
-                    .useInteractiveGuideline(!self.isPreview)
-                    .showControls(false)
-                    .clipEdge(true)
-                    .showLegend(!self.isPreview)
-                ;
-                this.chart.xAxis
-                    .showMaxMin(false)
-                    .tickFormat(function (d) {
-                        return self.formatNumber(d);
-                    })
-                ;
-                this.chart.yAxis
-                    .axisLabelDistance(-10)
-                    .axisLabel('cases')
-                ;
-                this.chart.yAxisTickFormat(d3.format('d'));
-                vis = d3.select($('svg', this.$el).get(0))
-                    .datum(data)
-                    .call(this.chart);
-                tip = this.createTooltip();
-                if (self.model.get('isTimeline')) {
-                    self.updateTooltips();
-                } else {
-                    vis.call(tip);
-                }
-                if (self.model.get('isTimeline')) {
-                    this.updateTickForTimeLine(vis);
-                }
-                this.addLaunchNameTip(vis, tip);
-                this.chart.xAxis
-                    .tickFormat(function (d) {
-                        return self.formatCategories(d);
+            var data;
+            this.isTimeLine = !!this.model.getWidgetOptions().timeline;
+            if (this.isTimeLine) {
+                data = [];
+                _.each(this.model.getContent(), function (item, key) {
+                    data.push({
+                        date: key,
+                        values: item[0].values
                     });
-                cup = self.chart.update;
-                update = function () {
-                    self.updateInvalidCriteria(vis);
-                    self.chart.xAxis.tickFormat(function (d) {
-                        return self.formatNumber(d);
-                    });
-                    cup();
-                    self.chart.xAxis
-                        .tickFormat(function (d) {
-                            return self.formatCategories(d);
-                        });
-                    self.chart.update = update;
-                    if (self.model.get('isTimeline')) {
-                        self.updateTickForTimeLine(vis);
-                    }
-                    self.addLaunchNameTip(vis, tip);
-                    self.redirectOnElementClick();
-                    self.addLegendClick(vis);
-                };
-                this.chart.update = update;
-                this.addResize();
-                this.redirectOnElementClick();
-                this.addLegendClick(vis);
-                if (self.isPreview) {
-                    this.disabeLegendEvents();
-                }
-                this.updateInvalidCriteria(vis);
+                });
+                this.$el.addClass('timeline-mode');
             } else {
-                this.addNoAvailableBock();
+                data = this.model.getContent().result;
             }
+            this.scrollers = [];
+            if (this.isPreview) {
+                this.$el.addClass('preview-view');
+            }
+            if ((!this.isTimeLine && !this.isDataExists()) || (this.isTimeLine && _.isEmpty(this.model.getContent()))) {
+                this.addNoAvailableBock();
+                return;
+            }
+
+            this.defectTypesCollection = new SingletonDefectTypeCollection();
+            this.launchFilterCollection = new SingletonLaunchFilterCollection();
+            this.defectTypesCollection.ready.done(function () {
+                this.launchFilterCollection.ready.done(function () {
+                    this.$el.html(Util.templates(this.template, {}));
+                    this.drawStackedBarChart($('[data-js-chart-container]', this.$el), data);
+                }.bind(this));
+            }.bind(this));
+        },
+
+        drawStackedBarChart: function ($el, data) {
+            var self = this;
+            var chartData = {};
+            var chartDataOrdered = [];
+            var legendScroller;
+            var itemNames;
+            var itemData = [];
+            var colors = {};
+            var contentFields = this.model.getContentFields();
+            var isSingleColumn;
+            // prepare columns array and fill it witch field names
+            _.each(data[0].values, function (val, key) {
+                var defectModel;
+                var splitted = key.split('$');
+                var shortKey = splitted[splitted.length - 1];
+                if (~['passed', 'failed', 'skipped', 'total'].indexOf(shortKey)) {
+                    colors[shortKey] = config.defaultColors[shortKey];
+                } else {
+                    defectModel = _.find(this.defectTypesCollection.models, function (model) {
+                        return model.get('locator') === shortKey;
+                    });
+                    defectModel && (colors[shortKey] = defectModel.get('color'));
+                }
+                chartData[shortKey] = [shortKey];
+            }.bind(this));
+
+            // fill columns arrays with values
+            if (this.isTimeLine) {
+                _.each(data, function (item) {
+                    itemData.push({
+                        date: item.date
+                    });
+                    _.each(item.values, function (val, key) {
+                        var splitted = key.split('$');
+                        var shortKey = splitted[splitted.length - 1];
+                        chartData[shortKey].push(val);
+                    });
+                });
+            } else {
+                _.each(data, function (item) {
+                    itemData.push({
+                        id: item.id,
+                        name: item.name,
+                        number: item.number,
+                        startTime: item.startTime
+                    });
+                    _.each(item.values, function (val, key) {
+                        var splitted = key.split('$');
+                        var shortKey = splitted[splitted.length - 1];
+                        chartData[shortKey].push(val);
+                    });
+                });
+            }
+            isSingleColumn = itemData.length < 2;
+            // reorder colums array in accordance with contentFields array
+            _.each(contentFields, function (key) {
+                var splitted = key.split('$');
+                var shortKey = splitted[splitted.length - 1];
+                chartDataOrdered.push(chartData[shortKey]);
+            });
+
+            // get column item names in correct order
+            itemNames = _.map(chartDataOrdered, function (item) {
+                return item[0];
+            });
+            this.chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: chartDataOrdered,
+                    type: 'area-spline',
+                    order: null,
+                    groups: [itemNames],
+                    colors: colors
+                },
+                point: {
+                    show: isSingleColumn,
+                    r: 3,
+                    focus: {
+                        expand: {
+                            r: 5
+                        }
+                    }
+                },
+                axis: {
+                    x: {
+                        show: !self.isPreview,
+                        type: 'category',
+                        categories: _.map(itemData, function (item) {
+                            var day;
+                            if (self.isTimeLine) {
+                                day = Moment(item.date).format('dddd').substring(0, 3);
+                                return day + ', ' + item.date;
+                            }
+                            return '#' + item.number;
+                        }),
+                        tick: {
+                            // ticks count calculation
+                            values: self.isTimeLine ?
+                                _.range( // 6 - ticks to display count, change it if need more or less
+                                    itemData.length > 6 ? ((itemData.length / 6 / 2).toFixed() / 2).toFixed() : 0, // start
+                                    itemData.length, // finish
+                                    itemData.length > 6 ? (itemData.length / 6).toFixed() : 1 // step
+                                ) :
+                                _.range(
+                                    0,
+                                    itemData.length,
+                                    itemData.length > 25 ? 3 : 1
+                                ),
+                            width: 60,
+                            centered: true,
+                            inner: true,
+                            multiline: self.isTimeLine,
+                            outer: false
+                        }
+                    },
+                    y: {
+                        show: false,
+                        padding: {
+                            top: 3
+                        }
+                    }
+                },
+                interaction: {
+                    enabled: !self.isPreview
+                },
+                // zoom: {
+                //     enabled: true,
+                //     rescale: true
+                // },
+                // subchart: {
+                //     show: true
+                // },
+                padding: {
+                    top: self.isPreview ? 0 : 85,
+                    left: self.isPreview ? 0 : 20,
+                    right: self.isPreview ? 0 : 20,
+                    bottom: self.isPreview || !self.isTimeLine ? 0 : 10
+                },
+                legend: {
+                    show: false // we use custom legend
+                },
+                size: {
+                    height: self.$el.parent().height()
+                },
+                onrendered: function () {
+                    var interactElems = isSingleColumn ? d3.selectAll('.c3-circle', $el) : d3.selectAll('.c3-area', $el);
+                    var offset = this.margin.left;
+                    var rects = $('.c3-event-rect', $el); // C3 event rectangles
+                    var rectWidth = $(rects[0]).attr('width');
+                    var rectsStartXCoords = [];
+                    var tooltip = d3.select('.c3-tooltip-container', $el);
+                    var areaLocator;
+                    var x;
+                    var rectIndex;
+
+                    $el.css('max-height', 'none');
+                    if (isSingleColumn) {
+                        interactElems.each(function (d) {
+                            if (!d.value) {
+                                d3.select(this).style('display', 'none');
+                            }
+                        });
+                    }
+                    if (self.isPreview) {
+                        return;
+                    }
+                    $.each(rects, function (i, elem) {
+                        +rectsStartXCoords.push($(elem).attr('x'));
+                    });
+
+                    // Custom area mouse events configuring
+                    interactElems
+                        .on('click', function () {
+                            var link;
+                            if (self.isTimeLine) {
+                                link = self.redirectForTimeLine(itemData[rectIndex].date); // uses rectIndex calculated in mousemove event
+                            } else {
+                                link = self.linkToRedirectService(areaLocator, itemData[rectIndex].id); // uses areaLocator & rectIndex calculated in mousemove event
+                            }
+                            link && config.router.navigate(link, { trigger: true });
+                        })
+                        .on('mousemove', function (d) {
+                            var itemName;
+                            var defectModel;
+                            var launchData;
+                            areaLocator = d.id;
+                            x = d3.mouse(self.chart.element)[0] - offset;
+                            rectIndex = _.findIndex(rectsStartXCoords, function (coord) {
+                                return x - rectWidth < coord;
+                            });
+                            launchData = itemData[rectIndex];
+                            if (~['passed', 'failed', 'skipped', 'total'].indexOf(areaLocator)) {
+                                itemName = Localization.launchesHeaders[areaLocator];
+                            } else {
+                                defectModel = self.defectTypesCollection.getDefectByLocator(areaLocator);
+                                if (defectModel) {
+                                    itemName = defectModel.get('longName');
+                                } else {
+                                    itemName = areaLocator;
+                                }
+                            }
+                            tooltip
+                                .html(function () {
+                                    return Util.templates(self.tooltipTemplate, {
+                                        launchName: launchData.name,
+                                        launchNumber: launchData.number,
+                                        startTime: self.isTimeLine ? launchData.date : self.formatDateTime(launchData.startTime),
+                                        color: colors[areaLocator],
+                                        itemName: itemName,
+                                        itemCases: isSingleColumn ? d.value : d.values[rectIndex].value
+                                    });
+                                })
+                                .style('left', function () {
+                                    return (d3.mouse(self.chart.element)[0] - (this.clientWidth / 2)) + 'px';
+                                })
+                                .style('top', function () {
+                                    return (d3.mouse(self.chart.element)[1] - this.clientHeight - 8) + 'px';
+                                });
+                        })
+                        .on('mouseover', function () {
+                            tooltip.style('display', 'block');
+                        })
+                        .on('mouseout', function () {
+                            tooltip.style('display', 'none');
+                        });
+                }
+            });
+            // Configuring custom legend block
+            if (!self.isPreview) {
+                d3.select(this.chart.element)
+                    .insert('div', '.chart')
+                    .attr('class', 'legend')
+                    .insert('div', '.legend')
+                    .attr('data-js-legend-wrapper', '') // wrapper for BaronScroll
+                    .selectAll('span')
+                    .data(itemNames)
+                    .enter()
+                    .append('span')
+                    .attr('data-id', function (id) { return id; })
+                    .html(function (id) {
+                        var name;
+                        var defectModel;
+                        if (~['passed', 'failed', 'skipped', 'total'].indexOf(id)) {
+                            name = Localization.launchesHeaders[id];
+                        } else {
+                            defectModel = self.defectTypesCollection.getDefectByLocator(id);
+                            if (defectModel) {
+                                name = defectModel.get('longName');
+                            } else {
+                                return '<div class="invalid-color-mark"></div><span class="invalid">' + id + '</span>';
+                            }
+                        }
+                        return '<div class="color-mark"></div>' + name;
+                    })
+                    .each(function (id) {
+                        d3.select(this).select('.color-mark').style('background-color', self.chart.color(id));
+                    })
+                    .on('mouseover', function (id) {
+                        self.chart.focus(id);
+                    })
+                    .on('mouseout', function (id) {
+                        self.chart.revert();
+                    })
+                    .on('click', function (id) {
+                        if ($('.color-mark', $(this)).hasClass('unchecked')) {
+                            $('.color-mark', $(this)).removeClass('unchecked');
+                            $('.c3-target-' + id.replace('_', '-'), $el).show();
+                        } else {
+                            $('.color-mark', $(this)).addClass('unchecked');
+                            $('.c3-target-' + id.replace('_', '-'), $el).hide();
+                        }
+                        self.chart.toggle(id);
+                    });
+                d3.select(this.chart.element).select('.legend')
+                    .append('div')
+                    .attr('class', 'legend-gradient')
+                    .append('div')
+                    .attr('class', 'legend-border');
+                legendScroller = Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
+                this.scrollers.push(legendScroller);
+            }
+        },
+        redirectForTimeLine: function (date) {
+            var range = 86400000;
+            var filterId = this.model.get('filter_id');
+            Service.getFilterData([filterId])
+                .done(function (response) {
+                    var time = Moment(date);
+                    var dateFilter = {
+                        condition: 'btw',
+                        filtering_field: 'start_time',
+                        is_negative: false,
+                        value: time.format('x') + ',' + (parseInt(time.format('x'), 10) + range)
+                    };
+                    var filtersCollection = new SingletonLaunchFilterCollection();
+                    var newFilter = filtersCollection.generateTempModel();
+                    var entities = response[0].entities || [];
+                    var link = newFilter.get('url');
+
+                    entities.push(dateFilter);
+                    newFilter.set('newEntities', JSON.stringify(entities));
+                    link += '?' + newFilter.getOptions().join('&');
+                    if (link) {
+                        config.router.navigate(link, { trigger: true });
+                    }
+                });
+        },
+        updateWidget: function () {
+            this.chart && this.removeChartListeners() && this.chart.resize({ height: this.$el.parent().height() }) && this.chart.flush();
+        },
+        removeChartListeners: function () {
+            var interactElems = (this.chart.data.shown()[0].values.length < 2) ?
+                    d3.selectAll('[data-js-chart-container] .c3-circle', this.$el) :
+                    d3.selectAll('[data-js-chart-container] .c3-area', this.$el);
+            interactElems.on('click mousemove mouseover mouseout', null);
+        },
+        onBeforeDestroy: function () {
+            this.chart && this.removeChartListeners();
+            _.each(this.scrollers, function (baronScrollElem) {
+                baronScrollElem.baron && baronScrollElem.baron().dispose();
+            });
         }
     });
 
