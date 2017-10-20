@@ -1,7 +1,9 @@
 package main
 
 import (
+	"github.com/go-chi/chi"
 	"github.com/gorilla/handlers"
+	"github.com/unrolled/secure"
 	"gopkg.in/reportportal/commons-go.v1/commons"
 	"gopkg.in/reportportal/commons-go.v1/conf"
 	"gopkg.in/reportportal/commons-go.v1/server"
@@ -10,7 +12,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"github.com/go-chi/chi"
 )
 
 func main() {
@@ -40,22 +41,26 @@ func main() {
 
 	srv := server.New(rpConf.Cfg, info)
 	srv.WithRouter(func(router *chi.Mux) {
+
+		//apply compression
 		router.Use(func(next http.Handler) http.Handler {
 			return handlers.CompressHandler(next)
+		})
+
+		//apply content security policies
+		router.Use(func(next http.Handler) http.Handler {
+			return secure.New(secure.Options{
+				FrameDeny:             true,
+				ContentTypeNosniff:    true,
+				BrowserXssFilter:      true,
+				ContentSecurityPolicy: "default-src 'self'",
+			}).Handler(next)
 		})
 
 		err := os.Chdir(rpConf.StaticsPath)
 		if nil != err {
 			log.Fatalf("Dir %s not found", rpConf.StaticsPath)
 		}
-
-		router.Use(func(next http.Handler) http.Handler {
-			return handlers.LoggingHandler(os.Stdout, next)
-		})
-
-		router.Use(func(next http.Handler) http.Handler {
-			return handlers.LoggingHandler(os.Stdout, next)
-		})
 
 		router.Handle("/*", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			//trim query params

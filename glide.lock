@@ -1,5 +1,5 @@
-hash: 8360e760de6ef58dda187de74f1588d5cb7d506a07434c412dc0674d12768bab
-updated: 2017-10-17T16:02:13.999890582+03:00
+hash: 73ae3d1e98f412f028ecd80976093f8b811f293aa2ff9c82d10a03c43f24df73
+updated: 2017-10-20T13:00:51.675722+03:00
 imports:
 - name: github.com/avarabyeu/env
   version: 4946e6742a05770376d9415afcaf28f67fd7b0e4
@@ -45,6 +45,8 @@ imports:
   version: 645ef00459ed84a119197bfb8d8205042c6df63d
 - name: github.com/sirupsen/logrus
   version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
+- name: github.com/unrolled/secure
+  version: 19a872c81779b0456e9ee495a8162fb60c57b0c0
 - name: golang.org/x/crypto
   version: c84b36c635ad003a10f0c755dff5685ceef18c71
   subpackages:
@@ -67,7 +69,7 @@ imports:
 - name: gopkg.in/go-playground/validator.v9
   version: a021b2ec9a8a8bb970f3f15bc42617cb520e8a64
 - name: gopkg.in/reportportal/commons-go.v1
-  version: 2b0558de8f79299e6fdefc9f512c8cfa1bf128fa
+  version: 46bb64cec9fb0c257d7a6ddfddf1df3617ae4cef
   subpackages:
   - commons
   - conf
