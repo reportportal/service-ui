@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/go-chi/chi"
 	"github.com/gorilla/handlers"
+	"github.com/unrolled/secure"
 	"gopkg.in/reportportal/commons-go.v1/commons"
 	"gopkg.in/reportportal/commons-go.v1/conf"
 	"gopkg.in/reportportal/commons-go.v1/server"
@@ -46,15 +47,30 @@ func main() {
 			return handlers.CompressHandler(next)
 		})
 
+		//content security policy
+		csp := map[string][]string{
+			"default-src": {"'self'", "'unsafe-inline'"},
+			"script-src": {
+				"'self'",
+				"'unsafe-inline'",
+				"'unsafe-eval'",
+				"status.reportportal.io",
+				"www.google-analytics.com",
+				"*.uservoice.com",
+			},
+			"img-src":    {"'self'", "www.google-analytics.com"},
+			"object-src": {"'self'"},
+		}
+
 		//apply content security policies
-		//router.Use(func(next http.Handler) http.Handler {
-		//	return secure.New(secure.Options{
-		//		FrameDeny:             true,
-		//		ContentTypeNosniff:    true,
-		//		BrowserXssFilter:      true,
-		//		ContentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' www.google-analytics.com *.uservoice.com; img-src www.google-analytics.com; object-src 'self' status.reportportal.io",
-		//	}).Handler(next)
-		//})
+		router.Use(func(next http.Handler) http.Handler {
+			return secure.New(secure.Options{
+				FrameDeny:             true,
+				ContentTypeNosniff:    true,
+				BrowserXssFilter:      true,
+				ContentSecurityPolicy: buildCSP(csp),
+			}).Handler(next)
+		})
 
 		err := os.Chdir(rpConf.StaticsPath)
 		if nil != err {
@@ -85,6 +101,15 @@ func trimQuery(s string, sep string) string {
 		return s[:sepIndex]
 	}
 	return s
+}
+
+func buildCSP(csp map[string][]string) string {
+	instr := make([]string, len(csp))
+	for k, v := range csp {
+		instr = append(instr, k+" "+strings.Join(v, " "))
+	}
+	return strings.Join(instr, "; ")
+
 }
 
 type redirectingRW struct {
