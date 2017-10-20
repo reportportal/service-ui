@@ -219,12 +219,12 @@ define(function (require) {
                     height: self.$el.parent().height()
                 },
                 onrendered: function () {
-                    var interactElems = isSingleColumn ? d3.selectAll('.c3-circle', $el) : d3.selectAll('.c3-area', $el);
+                    var interactElems = isSingleColumn ? d3.selectAll($('.c3-circle', $el)) : d3.selectAll($('.c3-area', $el));
                     var offset = this.margin.left;
                     var rects = $('.c3-event-rect', $el); // C3 event rectangles
                     var rectWidth = $(rects[0]).attr('width');
                     var rectsStartXCoords = [];
-                    var tooltip = d3.select('.c3-tooltip-container', $el);
+                    var tooltip = d3.selectAll($('.c3-tooltip-container', $el));
                     var areaLocator;
                     var x;
                     var rectIndex;
@@ -386,8 +386,8 @@ define(function (require) {
         },
         removeChartListeners: function () {
             var interactElems = (this.chart.data.shown()[0].values.length < 2) ?
-                    d3.selectAll('[data-js-chart-container] .c3-circle', this.$el) :
-                    d3.selectAll('[data-js-chart-container] .c3-area', this.$el);
+                    d3.selectAll($('[data-js-chart-container] .c3-circle', this.$el)) :
+                    d3.selectAll($('[data-js-chart-container] .c3-area', this.$el));
             interactElems.on('click mousemove mouseover mouseout', null);
             return true;
         },
