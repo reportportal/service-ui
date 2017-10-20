@@ -57,6 +57,16 @@ define(function (require) {
             }
             return '';
         },
+        getLaunchAxisTicks: function (itemsLength) {
+            return _.range(0, itemsLength, Math.round(itemsLength / 12));
+        },
+        getTimelineAxisTicks: function (itemsLength) {
+            return _.range( // 6 - ticks to display count, change it if need more or less
+                itemsLength > 6 ? ((itemsLength / 6 / 2).toFixed() / 2).toFixed() : 0, // start
+                itemsLength, // finish
+                itemsLength > 6 ? (itemsLength / 6).toFixed() : 1 // step
+            );
+        },
         updateWidget: function () {
             this.charts && _.each(this.charts, function (chart) {
                 chart.flush();

@@ -161,18 +161,7 @@ define(function (require) {
                             return '#' + item.number;
                         }),
                         tick: {
-                            // ticks count calculation
-                            values: self.isTimeLine ?
-                                _.range( // 6 - ticks to display count, change it if need more or less
-                                    itemData.length > 6 ? ((itemData.length / 6 / 2).toFixed() / 2).toFixed() : 0, // start
-                                    itemData.length, // finish
-                                    itemData.length > 6 ? (itemData.length / 6).toFixed() : 1 // step
-                                ) :
-                                _.range(
-                                    0,
-                                    itemData.length,
-                                    itemData.length > 25 ? 3 : 1
-                                ),
+                            values: self.isTimeLine ? self.getTimelineAxisTicks(itemData.length) : self.getLaunchAxisTicks(itemData.length),
                             width: 60,
                             centered: true,
                             inner: true,

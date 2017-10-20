@@ -122,8 +122,7 @@ define(function (require) {
                             return '#' + item.number;
                         }),
                         tick: {
-                            // ticks count calculation
-                            values: _.range(0, itemData.length, itemData.length > 25 ? 3 : 1),
+                            values: self.getLaunchAxisTicks(itemData.length),
                             width: 60,
                             centered: true,
                             inner: true,
