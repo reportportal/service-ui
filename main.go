@@ -56,6 +56,7 @@ func main() {
 				"'unsafe-eval'",
 				"status.reportportal.io",
 				"www.google-analytics.com",
+				"stats.g.doubleclick.net",
 				"*.epam.com",
 				"*.uservoice.com",
 			},
