@@ -53,7 +53,7 @@ func main() {
 				FrameDeny:             true,
 				ContentTypeNosniff:    true,
 				BrowserXssFilter:      true,
-				ContentSecurityPolicy: "default-src 'self'; script-src 'self' www.google-analytics.com *.uservoice.com; img-src www.google-analytics.com; object-src 'self' status.reportportal.io",
+				ContentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' www.google-analytics.com *.uservoice.com; img-src www.google-analytics.com; object-src 'self' status.reportportal.io",
 			}).Handler(next)
 		})
 
