@@ -141,11 +141,6 @@ define(function (require) {
                         }
                     }
                 },
-                bar: {
-                    width: {
-                        ratio: 0.9 // this makes bar width 50% of length between ticks
-                    }
-                },
                 grid: {
                     y: {
                         show: !self.isPreview

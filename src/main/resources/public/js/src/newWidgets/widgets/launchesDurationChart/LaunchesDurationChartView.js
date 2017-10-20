@@ -108,11 +108,6 @@ define(function (require) {
                         link && config.router.navigate(link, { trigger: true });
                     }
                 },
-                bar: {
-                    width: {
-                        ratio: 0.7
-                    }
-                },
                 grid: {
                     y: {
                         show: !self.isPreview
