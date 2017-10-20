@@ -75,6 +75,10 @@ define(function (require) {
                 qty: numberOfCriteria
             });
         },
+        getFilterByNameRedirectLink: function (launchId, itemName) {
+            var appModel = new SingletonAppModel();
+            return encodeURI('#' + appModel.get('projectId') + '/launches/all|page.page=1&page.size=50&page.sort=start_time/' + launchId + '?page.page=1&page.size=50&page.sort=start_time&filter.eq.has_childs=false&filter.ctn.name=' + itemName);
+        },
         linkToRedirectService: function (series, id) {
             var defectTypes = new SingletonDefectTypeCollection();
             var appModel = new SingletonAppModel();
@@ -107,8 +111,6 @@ define(function (require) {
             case 'total':
             case 'Grow test cases':
             case 'grow_test_cases':
-            case 'most_failed':
-            case 'flaky':
                 filterStatus = getFilter('filter.in.type=STEP&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED');
                 break;
             case 'Passed':
