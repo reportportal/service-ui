@@ -255,11 +255,6 @@ define(function (require) {
                 legend: {
                     show: false // we use custom legend
                 },
-                bar: {
-                    width: {
-                        ratio: 0.6 // this makes bar width 50% of length between ticks
-                    }
-                },
                 tooltip: {
                     position: function (d, width, height, element) {
                         var left = d3.mouse(chart.element)[0] - (width / 2);

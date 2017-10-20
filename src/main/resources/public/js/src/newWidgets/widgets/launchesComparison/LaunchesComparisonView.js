@@ -166,11 +166,6 @@ define(function (require) {
                     order: null,
                     colors: colors
                 },
-                bar: {
-                    width: {
-                        ratio: 0.8 // this makes bar width 50% of length between ticks
-                    }
-                },
                 grid: {
                     y: {
                         show: !self.isPreview

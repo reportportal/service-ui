@@ -155,11 +155,6 @@ define(function (require) {
                     groups: [itemNames],
                     colors: colors
                 },
-                bar: {
-                    width: {
-                        ratio: 0.9 // this makes bar width 50% of length between ticks
-                    }
-                },
                 axis: {
                     x: {
                         show: !self.isPreview,
