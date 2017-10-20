@@ -53,7 +53,7 @@ func main() {
 				FrameDeny:             true,
 				ContentTypeNosniff:    true,
 				BrowserXssFilter:      true,
-				ContentSecurityPolicy: "default-src 'self'",
+				ContentSecurityPolicy: "default-src 'self'; script-src 'self' http://widget.uservoice.com; object-src 'self' http://status.reportportal.io",
 			}).Handler(next)
 		})
 
