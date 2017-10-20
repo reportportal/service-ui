@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/go-chi/chi"
 	"github.com/gorilla/handlers"
-	"github.com/unrolled/secure"
 	"gopkg.in/reportportal/commons-go.v1/commons"
 	"gopkg.in/reportportal/commons-go.v1/conf"
 	"gopkg.in/reportportal/commons-go.v1/server"
