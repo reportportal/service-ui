@@ -48,14 +48,14 @@ func main() {
 		})
 
 		//apply content security policies
-		router.Use(func(next http.Handler) http.Handler {
-			return secure.New(secure.Options{
-				FrameDeny:             true,
-				ContentTypeNosniff:    true,
-				BrowserXssFilter:      true,
-				ContentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' www.google-analytics.com *.uservoice.com; img-src www.google-analytics.com; object-src 'self' status.reportportal.io",
-			}).Handler(next)
-		})
+		//router.Use(func(next http.Handler) http.Handler {
+		//	return secure.New(secure.Options{
+		//		FrameDeny:             true,
+		//		ContentTypeNosniff:    true,
+		//		BrowserXssFilter:      true,
+		//		ContentSecurityPolicy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' www.google-analytics.com *.uservoice.com; img-src www.google-analytics.com; object-src 'self' status.reportportal.io",
+		//	}).Handler(next)
+		//})
 
 		err := os.Chdir(rpConf.StaticsPath)
 		if nil != err {
