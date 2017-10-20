@@ -56,6 +56,7 @@ func main() {
 				"'unsafe-eval'",
 				"status.reportportal.io",
 				"www.google-analytics.com",
+				"*.epam.com",
 				"*.uservoice.com",
 			},
 			"img-src":    {"'self'", "www.google-analytics.com"},
