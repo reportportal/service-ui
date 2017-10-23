@@ -311,6 +311,11 @@
           padding: 6px 0;
           text-overflow: ellipsis;
           overflow: hidden;
+          color: $COLOR--windows-blue;
+          cursor: pointer;
+          &:hover {
+            text-decoration: underline;
+          }
         }
         .project-select {
           .select2-container .select2-choice .select2-chosen {
