@@ -265,6 +265,12 @@ define(function (require) {
                 },
                 onrendered: function () {
                     $el.css('max-height', 'none');
+                    d3.selectAll($('.c3-chart-bar path', $el)).each(function () {
+                        var elem = d3.select(this);
+                        if (elem.datum().value === 0) {
+                            elem.style('stroke-width', '3px');
+                        }
+                    });
                 }
             });
             // Configuring custom legend block
