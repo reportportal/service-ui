@@ -67,7 +67,6 @@ func main() {
 		//apply content security policies
 		router.Use(func(next http.Handler) http.Handler {
 			return secure.New(secure.Options{
-				FrameDeny:             true,
 				ContentTypeNosniff:    true,
 				BrowserXssFilter:      true,
 				ContentSecurityPolicy: buildCSP(csp),
