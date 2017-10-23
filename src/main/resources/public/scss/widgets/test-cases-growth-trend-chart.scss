@@ -8,12 +8,21 @@
               shape-rendering: initial;
             }
           }
+          .c3-bars-offset {
+            path {
+              stroke-width: 0 !important;
+            }
+          }
         }
         .c3-chart-texts {
           .c3-texts-bar {
             text {
               font-family: $OpenSansSemibold;
+              fill: $COLOR--charcoal-grey !important;
             }
+          }
+          @media (max-width: $SCREEN_XS_MAX) {
+            display: none !important;
           }
         }
       }
@@ -140,7 +149,7 @@
     .widget-wrapper {
       svg {
         .c3-chart-texts {
-          display: none;
+          display: none !important;
         }
       }
     }
