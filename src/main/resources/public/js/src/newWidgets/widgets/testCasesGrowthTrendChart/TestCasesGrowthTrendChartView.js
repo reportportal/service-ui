@@ -104,7 +104,7 @@ define(function (require) {
                 data: {
                     columns: [offsets, bars],
                     type: 'bar',
-                    order: self.isTimeLine ? 'desc' : 'asc',
+                    order: null,
                     onclick: function (d, element) {
                         if (d.id === 'bar') {
                             if (self.isTimeLine) {
@@ -133,7 +133,7 @@ define(function (require) {
                     },
                     labels: {
                         format: function (v, id, i, j) {
-                            var step = self.isTimeLine ? (itemData.length < 25 ? 1 : 6) : 2;
+                            var step = (itemData.length < 20) ? 1 : (self.isTimeLine ? 6 : 2);
                             if (self.isPreview || id !== 'bar' || (i % step) !== 0) {
                                 return null;
                             }
@@ -233,6 +233,12 @@ define(function (require) {
                 },
                 onrendered: function () {
                     $el.css('max-height', 'none');
+                    d3.selectAll($('.c3-bars-bar path', $el)).each(function () {
+                        var elem = d3.select(this);
+                        if (elem.datum().value === 0) {
+                            elem.style('stroke-width', '1px').style('stroke', '#464547');
+                        }
+                    });
                 }
             });
         },
