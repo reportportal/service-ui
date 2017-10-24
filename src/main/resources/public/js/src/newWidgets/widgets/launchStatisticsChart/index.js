@@ -21,11 +21,11 @@
 define(function (require) {
     'use strict';
 
-    var LaunchStatisticsTrendChartView = require('newWidgets/widgets/launchStatisticsTrendChart/LaunchStatisticsTrendChartView');
-    var LaunchStatisticsTrendChartSettings = require('newWidgets/widgets/launchStatisticsTrendChart/LaunchStatisticsTrendChartSettings');
+    var LaunchStatisticsChartView = require('newWidgets/widgets/launchStatisticsChart/LaunchStatisticsChartView');
+    var LaunchStatisticsChartSettings = require('newWidgets/widgets/launchStatisticsChart/LaunchStatisticsChartSettings');
 
-    LaunchStatisticsTrendChartView.getConfig = LaunchStatisticsTrendChartSettings.getConfig;
-    LaunchStatisticsTrendChartView.getSettings = LaunchStatisticsTrendChartSettings.getSettings;
+    LaunchStatisticsChartView.getConfig = LaunchStatisticsChartSettings.getConfig;
+    LaunchStatisticsChartView.getSettings = LaunchStatisticsChartSettings.getSettings;
 
-    return LaunchStatisticsTrendChartView;
+    return LaunchStatisticsChartView;
 });

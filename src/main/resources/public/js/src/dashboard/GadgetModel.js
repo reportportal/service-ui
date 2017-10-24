@@ -137,6 +137,8 @@ define(function (require) {
                             return Localization.widgets.barMode;
                         case 'pieChartMode':
                             return Localization.widgets.pieChartMode;
+                        case 'areaChartMode':
+                            return Localization.widgets.areaChartMode;
                         default:
                             break;
                         }

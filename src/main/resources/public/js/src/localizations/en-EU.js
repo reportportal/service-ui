@@ -471,11 +471,8 @@ define(['util'], function () {
             launchesTable: 'Launches table',
             launchesTableDescription: 'shows the configurable table of launches.',
 
-            statisticsLineChart: 'Launch statistics line chart',
-            statisticsLineChartDescription: '- in "Launch mode" shows the growth trend in the number of test cases with each selected statuses from run to run,<br> - in "Timeline mode" shows sum, distributed by dates.',
-
-            statisticsTrendChart: 'Launch statistics trend chart',
-            statisticsTrendChartDescription: '- in "Launch mode" shows the growth trend in the number of test cases with each selected statuses from run to run,<br> - in "Timeline mode" shows sum, distributed by dates.',
+            statisticsChart: 'Launch statistics chart',
+            statisticsChartDescription: '- in "Launch mode" shows the growth trend in the number of test cases with each selected statuses from run to run,<br> - in "Timeline mode" shows sum, distributed by dates.',
 
             comparisonChart: 'Different launches comparison chart',
             comparisonChartDescription: 'allows to compare statistics for 2 last launches side by side.',
@@ -527,6 +524,7 @@ define(['util'], function () {
             pieChartMode: 'Pie chart view',
             donutChartMode: 'Donut view',
             trendChartMode: 'Trend view',
+            areaChartMode: 'Area view',
 
             defaultName: 'Widget template name',
             defaultDescription: 'Select widget template and filter to render data trough - and you\'ll see preview at the right side',
@@ -556,7 +554,8 @@ define(['util'], function () {
             groupLaunchesByFilter: 'Group launches by filter',
             launchesOnFilter: 'Number of launches in the filter is ',
             selectWidget: 'Choose widget type from the list below',
-            launchInterrupted: 'Run interrupted'
+            launchInterrupted: 'Run interrupted',
+            zoomWidgetArea: 'Zoom widget area'
         },
 
         userProfile: {

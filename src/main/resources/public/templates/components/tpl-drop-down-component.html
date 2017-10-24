@@ -9,7 +9,7 @@
     <% _.each(data.data, function(item) { %>
     <li>
         <% if(data.multiple) {%>
-        <label class="checkbox rp-checkbox-wrap" data-js-label>
+        <label class="checkbox rp-checkbox-wrap <%= item.isSubOption ? 'sub-option' : ''%>" data-js-label>
             <input class="criteria-option rp-input-checkbox" type="checkbox" data-value="<%- item.value %>", data-name="<%- item.name %>">
             <span><%= item.name %></span>
         </label>

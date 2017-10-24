@@ -44,7 +44,7 @@ define(function (require) {
         }
     };
 
-    var SettingDropDownView = SettingView.extend({
+    var SettingCheckBoxView = SettingView.extend({
         className: 'modal-add-widget-setting-checkbox',
         template: 'tpl-modal-add-widget-setting-checkbox',
         bindings: {
@@ -84,5 +84,5 @@ define(function (require) {
         }
     });
 
-    return SettingDropDownView;
+    return SettingCheckBoxView;
 });
