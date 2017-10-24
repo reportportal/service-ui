@@ -27,8 +27,7 @@ define(function (require) {
     var Localization = require('localization');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
 
-    var LaunchStatisticsLineChart = require('newWidgets/widgets/launchStatisticsLineChart/index');
-    var LaunchStatisticsTrendChart = require('newWidgets/widgets/launchStatisticsTrendChart/index');
+    var LaunchStatisticsChart = require('newWidgets/widgets/launchStatisticsChart/index');
     var OverallStatisticsWidget = require('newWidgets/widgets/overallStatistics/index');
     var LaunchesDurationChart = require('newWidgets/widgets/launchesDurationChart/index');
     var LaunchStatisticsComboPieChart = require('newWidgets/widgets/launchExecutionAndIssueStatistics/index');
@@ -57,8 +56,7 @@ define(function (require) {
     var LaunchStatisticsBarChartView = require('newWidgets/widgets/projectInfoWidgets/LaunchStatisticsBarChartView');
 
     var WIDGETS = {
-        old_line_chart: LaunchStatisticsLineChart,
-        statistic_trend: LaunchStatisticsTrendChart,
+        statistic_trend: LaunchStatisticsChart,
         overall_statistics: OverallStatisticsWidget,
         launches_duration_chart: LaunchesDurationChart,
         launch_statistics: LaunchStatisticsComboPieChart,

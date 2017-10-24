@@ -24,7 +24,6 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Util = require('util');
-    var Service = require('coreService');
     var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
@@ -35,14 +34,15 @@ define(function (require) {
     var Moment = require('moment');
     var config = App.getInstance();
 
-    var LaunchStatisticsLineChart = C3ChartWidgetView.extend({
-        template: 'tpl-widget-launch-statistics-line-chart',
-        tooltipTemplate: 'tpl-widget-launch-statistics-line-chart-tooltip',
-        className: 'launch-statistics-line-chart',
+    var LaunchStatisticsAreaChart = C3ChartWidgetView.extend({
+
+        tooltipTemplate: 'tpl-widget-launch-statistics-chart-tooltip',
 
         render: function () {
             var data;
+            this.$el.addClass('stacked-area-view');
             this.isTimeLine = !!this.model.getWidgetOptions().timeline;
+            this.isZoomEnabled = !!this.model.getWidgetOptions().zoom;
             if (this.isTimeLine) {
                 data = [];
                 _.each(this.model.getContent(), function (item, key) {
@@ -63,18 +63,16 @@ define(function (require) {
                 this.addNoAvailableBock();
                 return;
             }
-
             this.defectTypesCollection = new SingletonDefectTypeCollection();
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.defectTypesCollection.ready.done(function () {
                 this.launchFilterCollection.ready.done(function () {
-                    this.$el.html(Util.templates(this.template, {}));
-                    this.drawStackedBarChart($('[data-js-chart-container]', this.$el), data);
+                    this.drawStackedAreaChart($('[data-js-chart-container]', this.$el), data);
                 }.bind(this));
             }.bind(this));
         },
 
-        drawStackedBarChart: function ($el, data) {
+        drawStackedAreaChart: function ($el, data) {
             var self = this;
             var chartData = {};
             var chartDataOrdered = [];
@@ -84,20 +82,19 @@ define(function (require) {
             var colors = {};
             var contentFields = this.model.getContentFields();
             var isSingleColumn;
+
             // prepare columns array and fill it witch field names
             _.each(data[0].values, function (val, key) {
                 var defectModel;
-                var splitted = key.split('$');
-                var shortKey = splitted[splitted.length - 1];
-                if (~['passed', 'failed', 'skipped', 'total'].indexOf(shortKey)) {
-                    colors[shortKey] = config.defaultColors[shortKey];
+                chartData[key] = [key];
+                if (~key.indexOf('$executions$') || ~key.indexOf('$total')) {
+                    colors[key] = config.defaultColors[key.split('$')[2]];
                 } else {
                     defectModel = _.find(this.defectTypesCollection.models, function (model) {
-                        return model.get('locator') === shortKey;
+                        return model.get('locator') === key.split('$')[3];
                     });
-                    defectModel && (colors[shortKey] = defectModel.get('color'));
+                    defectModel && (colors[key] = defectModel.get('color'));
                 }
-                chartData[shortKey] = [shortKey];
             }.bind(this));
 
             // fill columns arrays with values
@@ -107,9 +104,7 @@ define(function (require) {
                         date: item.date
                     });
                     _.each(item.values, function (val, key) {
-                        var splitted = key.split('$');
-                        var shortKey = splitted[splitted.length - 1];
-                        chartData[shortKey].push(val);
+                        chartData[key].push(+val);
                     });
                 });
             } else {
@@ -121,24 +116,22 @@ define(function (require) {
                         startTime: item.startTime
                     });
                     _.each(item.values, function (val, key) {
-                        var splitted = key.split('$');
-                        var shortKey = splitted[splitted.length - 1];
-                        chartData[shortKey].push(val);
+                        chartData[key].push(+val);
                     });
                 });
             }
             isSingleColumn = itemData.length < 2;
+
             // reorder colums array in accordance with contentFields array
             _.each(contentFields, function (key) {
-                var splitted = key.split('$');
-                var shortKey = splitted[splitted.length - 1];
-                chartDataOrdered.push(chartData[shortKey]);
+                chartDataOrdered.push(chartData[key]);
             });
 
             // get column item names in correct order
             itemNames = _.map(chartDataOrdered, function (item) {
                 return item[0];
             });
+
             this.chart = c3.generate({
                 bindto: $el[0],
                 data: {
@@ -188,13 +181,19 @@ define(function (require) {
                 interaction: {
                     enabled: !self.isPreview
                 },
-                // zoom: {
-                //     enabled: true,
-                //     rescale: true
-                // },
-                // subchart: {
-                //     show: true
-                // },
+                zoom: {
+                    enabled: !self.isPreview && self.isZoomEnabled,
+                    rescale: !self.isPreview && self.isZoomEnabled,
+                    onzoomend: function (domain) {
+                        self.chart.flush();
+                    }
+                },
+                subchart: {
+                    show: !self.isPreview && self.isZoomEnabled,
+                    size: {
+                        height: 30
+                    }
+                },
                 padding: {
                     top: self.isPreview ? 0 : 85,
                     left: self.isPreview ? 0 : 20,
@@ -214,7 +213,7 @@ define(function (require) {
                     var rectWidth = $(rects[0]).attr('width');
                     var rectsStartXCoords = [];
                     var tooltip = d3.selectAll($('.c3-tooltip-container', $el));
-                    var areaLocator;
+                    var id;
                     var x;
                     var rectIndex;
 
@@ -235,12 +234,14 @@ define(function (require) {
 
                     // Custom area mouse events configuring
                     interactElems
-                        .on('click', function () {
+                        .on('click', function (d) {
                             var link;
                             if (self.isTimeLine) {
-                                link = self.redirectForTimeLine(itemData[rectIndex].date); // uses rectIndex calculated in mousemove event
+                                link = self.redirectForTimeLine(itemData[rectIndex].date);
+                            } else if ((~d.id.indexOf('$executions$') || ~d.id.indexOf('$total'))) {
+                                link = self.linkToRedirectService(d.id.split('$')[2], itemData[rectIndex].id);
                             } else {
-                                link = self.linkToRedirectService(areaLocator, itemData[rectIndex].id); // uses areaLocator & rectIndex calculated in mousemove event
+                                link = self.linkToRedirectService(d.id.split('$')[3], itemData[rectIndex].id);
                             }
                             link && config.router.navigate(link, { trigger: true });
                         })
@@ -248,21 +249,19 @@ define(function (require) {
                             var itemName;
                             var defectModel;
                             var launchData;
-                            areaLocator = d.id;
+                            id = d.id;
                             x = d3.mouse(self.chart.element)[0] - offset;
                             rectIndex = _.findIndex(rectsStartXCoords, function (coord) {
                                 return x - rectWidth < coord;
                             });
                             launchData = itemData[rectIndex];
-                            if (~['passed', 'failed', 'skipped', 'total'].indexOf(areaLocator)) {
-                                itemName = Localization.launchesHeaders[areaLocator];
+                            if (~d.id.indexOf('$executions$') || ~d.id.indexOf('$total')) {
+                                itemName = Localization.filterNameById[d.id];
                             } else {
-                                defectModel = self.defectTypesCollection.getDefectByLocator(areaLocator);
-                                if (defectModel) {
-                                    itemName = defectModel.get('longName');
-                                } else {
-                                    itemName = areaLocator;
-                                }
+                                defectModel = _.find(self.defectTypesCollection.models, function (model) {
+                                    return model.get('locator') === d.id.split('$')[3];
+                                });
+                                (defectModel) ? (itemName = defectModel.get('longName')) : (itemName = d.id.split('$')[3]);
                             }
                             tooltip
                                 .html(function () {
@@ -270,7 +269,7 @@ define(function (require) {
                                         launchName: launchData.name,
                                         launchNumber: launchData.number,
                                         startTime: self.isTimeLine ? launchData.date : self.formatDateTime(launchData.startTime),
-                                        color: colors[areaLocator],
+                                        color: colors[id],
                                         itemName: itemName,
                                         itemCases: isSingleColumn ? d.value : d.values[rectIndex].value
                                     });
@@ -290,6 +289,7 @@ define(function (require) {
                         });
                 }
             });
+
             // Configuring custom legend block
             if (!self.isPreview) {
                 d3.select(this.chart.element)
@@ -305,15 +305,13 @@ define(function (require) {
                     .html(function (id) {
                         var name;
                         var defectModel;
-                        if (~['passed', 'failed', 'skipped', 'total'].indexOf(id)) {
-                            name = Localization.launchesHeaders[id];
+                        if (~id.indexOf('$executions$') || ~id.indexOf('$total')) {
+                            name = Localization.filterNameById[id];
                         } else {
-                            defectModel = self.defectTypesCollection.getDefectByLocator(id);
-                            if (defectModel) {
-                                name = defectModel.get('longName');
-                            } else {
-                                return '<div class="invalid-color-mark"></div><span class="invalid">' + id + '</span>';
-                            }
+                            defectModel = _.find(self.defectTypesCollection.models, function (model) {
+                                return model.get('locator') === id.split('$')[3];
+                            });
+                            (defectModel) ? (name = defectModel.get('longName')) : (name = id.split('$')[3]);
                         }
                         return '<div class="color-mark"></div>' + name;
                     })
@@ -329,10 +327,10 @@ define(function (require) {
                     .on('click', function (id) {
                         if ($('.color-mark', $(this)).hasClass('unchecked')) {
                             $('.color-mark', $(this)).removeClass('unchecked');
-                            $('.c3-target-' + id.replace('_', '-'), $el).show();
+                            $('.c3-target-' + id.replaceAll(/[$_]/, '-'), $el).show();
                         } else {
                             $('.color-mark', $(this)).addClass('unchecked');
-                            $('.c3-target-' + id.replace('_', '-'), $el).hide();
+                            $('.c3-target-' + id.replaceAll(/[$_]/, '-'), $el).hide();
                         }
                         self.chart.toggle(id);
                     });
@@ -345,48 +343,24 @@ define(function (require) {
                 this.scrollers.push(legendScroller);
             }
         },
-        redirectForTimeLine: function (date) {
-            var range = 86400000;
-            var filterId = this.model.get('filter_id');
-            Service.getFilterData([filterId])
-                .done(function (response) {
-                    var time = Moment(date);
-                    var dateFilter = {
-                        condition: 'btw',
-                        filtering_field: 'start_time',
-                        is_negative: false,
-                        value: time.format('x') + ',' + (parseInt(time.format('x'), 10) + range)
-                    };
-                    var filtersCollection = new SingletonLaunchFilterCollection();
-                    var newFilter = filtersCollection.generateTempModel();
-                    var entities = response[0].entities || [];
-                    var link = newFilter.get('url');
-
-                    entities.push(dateFilter);
-                    newFilter.set('newEntities', JSON.stringify(entities));
-                    link += '?' + newFilter.getOptions().join('&');
-                    if (link) {
-                        config.router.navigate(link, { trigger: true });
-                    }
-                });
-        },
         updateWidget: function () {
             this.chart && this.removeChartListeners() && this.chart.resize({ height: this.$el.parent().height() }) && this.chart.flush();
         },
         removeChartListeners: function () {
             var interactElems = (this.chart.data.shown()[0].values.length < 2) ?
-                    d3.selectAll($('[data-js-chart-container] .c3-circle', this.$el)) :
-                    d3.selectAll($('[data-js-chart-container] .c3-area', this.$el));
+                d3.selectAll($('[data-js-chart-container] .c3-circle', this.$el)) :
+                d3.selectAll($('[data-js-chart-container] .c3-area', this.$el));
             interactElems.on('click mousemove mouseover mouseout', null);
             return true;
         },
         onBeforeDestroy: function () {
             this.chart && this.removeChartListeners();
+            this.chart && (this.chart = this.chart.destroy());
             _.each(this.scrollers, function (baronScrollElem) {
                 baronScrollElem.baron && baronScrollElem.baron().dispose();
             });
         }
     });
 
-    return LaunchStatisticsLineChart;
+    return LaunchStatisticsAreaChart;
 });

@@ -24,6 +24,11 @@ define(function (require) {
     var _ = require('underscore');
     var Util = require('util');
     var BaseWidgetView = require('newWidgets/_BaseWidgetView');
+    var App = require('app');
+    var Moment = require('moment');
+    var config = App.getInstance();
+    var Service = require('coreService');
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
 
     var C3ChartWidgetView = BaseWidgetView.extend({
         isDataExists: function () {
@@ -78,6 +83,31 @@ define(function (require) {
         },
         onBeforeDestroy: function () {
             this.chart && (this.chart = this.chart.destroy());
+        },
+        redirectForTimeLine: function (date) {
+            var range = 86400000;
+            var filterId = this.model.get('filter_id');
+            Service.getFilterData([filterId])
+                .done(function (response) {
+                    var time = Moment(date);
+                    var dateFilter = {
+                        condition: 'btw',
+                        filtering_field: 'start_time',
+                        is_negative: false,
+                        value: time.format('x') + ',' + (parseInt(time.format('x'), 10) + range)
+                    };
+                    var filtersCollection = new SingletonLaunchFilterCollection();
+                    var newFilter = filtersCollection.generateTempModel();
+                    var entities = response[0].entities || [];
+                    var link = newFilter.get('url');
+
+                    entities.push(dateFilter);
+                    newFilter.set('newEntities', JSON.stringify(entities));
+                    link += '?' + newFilter.getOptions().join('&');
+                    if (link) {
+                        config.router.navigate(link, { trigger: true });
+                    }
+                });
         }
     });
 

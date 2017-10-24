@@ -59,6 +59,9 @@
           text-overflow: ellipsis;
           overflow: hidden;
         }
+        &.sub-option {
+          padding-left: 36px;
+        }
       }
     }
   }

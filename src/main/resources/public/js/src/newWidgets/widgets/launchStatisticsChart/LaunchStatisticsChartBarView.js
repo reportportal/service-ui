@@ -24,7 +24,6 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Util = require('util');
-    var Service = require('coreService');
     var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
@@ -35,14 +34,15 @@ define(function (require) {
     var Moment = require('moment');
     var config = App.getInstance();
 
-    var LaunchStatisticsTrendChart = C3ChartWidgetView.extend({
-        template: 'tpl-widget-launch-statistics-trend-chart',
-        tooltipTemplate: 'tpl-widget-launch-statistics-trend-chart-tooltip',
-        className: 'launch-statistics-trend-chart',
+    var LaunchStatisticsBarChart = C3ChartWidgetView.extend({
+
+        tooltipTemplate: 'tpl-widget-launch-statistics-chart-tooltip',
 
         render: function () {
             var data;
+            this.$el.addClass('stacked-bar-view');
             this.isTimeLine = !!this.model.getWidgetOptions().timeline;
+            this.isZoomEnabled = !!this.model.getWidgetOptions().zoom;
             if (this.isTimeLine) {
                 data = [];
                 _.each(this.model.getContent(), function (item, key) {
@@ -68,12 +68,10 @@ define(function (require) {
             this.launchFilterCollection = new SingletonLaunchFilterCollection();
             this.defectTypesCollection.ready.done(function () {
                 this.launchFilterCollection.ready.done(function () {
-                    this.$el.html(Util.templates(this.template, {}));
                     this.drawStackedBarChart($('[data-js-chart-container]', this.$el), data);
                 }.bind(this));
             }.bind(this));
         },
-
         drawStackedBarChart: function ($el, data) {
             var self = this;
             var chartData = {};
@@ -83,20 +81,19 @@ define(function (require) {
             var itemData = [];
             var colors = {};
             var contentFields = this.model.getContentFields();
+
             // prepare columns array and fill it witch field names
             _.each(data[0].values, function (val, key) {
                 var defectModel;
-                var splitted = key.split('$');
-                var shortKey = splitted[splitted.length - 1];
-                if (~['passed', 'failed', 'skipped', 'total'].indexOf(shortKey)) {
-                    colors[shortKey] = config.defaultColors[shortKey];
+                chartData[key] = [key];
+                if (~key.indexOf('$executions$') || ~key.indexOf('$total')) {
+                    colors[key] = config.defaultColors[key.split('$')[2]];
                 } else {
                     defectModel = _.find(this.defectTypesCollection.models, function (model) {
-                        return model.get('locator') === shortKey;
+                        return model.get('locator') === key.split('$')[3];
                     });
-                    defectModel && (colors[shortKey] = defectModel.get('color'));
+                    defectModel && (colors[key] = defectModel.get('color'));
                 }
-                chartData[shortKey] = [shortKey];
             }.bind(this));
 
             // fill columns arrays with values
@@ -106,9 +103,7 @@ define(function (require) {
                         date: item.date
                     });
                     _.each(item.values, function (val, key) {
-                        var splitted = key.split('$');
-                        var shortKey = splitted[splitted.length - 1];
-                        chartData[shortKey].push(val);
+                        chartData[key].push(+val);
                     });
                 });
             } else {
@@ -120,18 +115,14 @@ define(function (require) {
                         startTime: item.startTime
                     });
                     _.each(item.values, function (val, key) {
-                        var splitted = key.split('$');
-                        var shortKey = splitted[splitted.length - 1];
-                        chartData[shortKey].push(val);
+                        chartData[key].push(+val);
                     });
                 });
             }
 
             // reorder colums array in accordance with contentFields array
             _.each(contentFields, function (key) {
-                var splitted = key.split('$');
-                var shortKey = splitted[splitted.length - 1];
-                chartDataOrdered.push(chartData[shortKey]);
+                chartDataOrdered.push(chartData[key]);
             });
 
             // get column item names in correct order
@@ -145,11 +136,15 @@ define(function (require) {
                     columns: chartDataOrdered,
                     type: 'bar',
                     onclick: function (d, element) {
+                        var link;
                         if (self.isTimeLine) {
-                            self.redirectForTimeLine(itemData[d.index].date);
+                            link = self.redirectForTimeLine(itemData[d.index].date);
+                        } else if ((~d.id.indexOf('$executions$') || ~d.id.indexOf('$total'))) {
+                            link = self.linkToRedirectService(d.id.split('$')[2], itemData[d.index].id);
                         } else {
-                            config.router.navigate(self.linkToRedirectService(d.id, itemData[d.index].id), { trigger: true });
+                            link = self.linkToRedirectService(d.id.split('$')[3], itemData[d.index].id);
                         }
+                        link && config.router.navigate(link, { trigger: true });
                     },
                     order: null,
                     groups: [itemNames],
@@ -186,13 +181,16 @@ define(function (require) {
                 interaction: {
                     enabled: !self.isPreview
                 },
-                // zoom: {
-                //     enabled: true,
-                //     rescale: true
-                // },
-                // subchart: {
-                //     show: true
-                // },
+                zoom: {
+                    enabled: !self.isPreview && self.isZoomEnabled,
+                    rescale: !self.isPreview && self.isZoomEnabled
+                },
+                subchart: {
+                    show: !self.isPreview && self.isZoomEnabled,
+                    size: {
+                        height: 30
+                    }
+                },
                 padding: {
                     top: self.isPreview ? 0 : 85,
                     left: self.isPreview ? 0 : 20,
@@ -217,22 +215,19 @@ define(function (require) {
                         var id = d[0].id;
                         var itemName;
                         var defectModel;
-                        if (~['passed', 'failed', 'skipped', 'total'].indexOf(id)) {
-                            itemName = Localization.launchesHeaders[id];
+                        if (~id.indexOf('$executions$') || ~id.indexOf('$total')) {
+                            itemName = Localization.filterNameById[id];
                         } else {
-                            defectModel = self.defectTypesCollection.getDefectByLocator(id);
-                            if (defectModel) {
-                                itemName = defectModel.get('longName');
-                            } else {
-                                itemName = id;
-                            }
+                            defectModel = _.find(self.defectTypesCollection.models, function (model) {
+                                return model.get('locator') === id.split('$')[3];
+                            });
+                            (defectModel) ? (itemName = defectModel.get('longName')) : (itemName = id.split('$')[3]);
                         }
-
                         return Util.templates(self.tooltipTemplate, {
                             launchName: launchData.name,
                             launchNumber: launchData.number,
                             startTime: self.isTimeLine ? launchData.date : self.formatDateTime(launchData.startTime),
-                            color: color(d[0].id),
+                            color: color(id),
                             itemName: itemName,
                             itemCases: d[0].value
                         });
@@ -260,15 +255,14 @@ define(function (require) {
                     .html(function (id) {
                         var name;
                         var defectModel;
-                        if (~['passed', 'failed', 'skipped', 'total'].indexOf(id)) {
-                            name = Localization.launchesHeaders[id];
+
+                        if (~id.indexOf('$executions$') || ~id.indexOf('$total')) {
+                            name = Localization.filterNameById[id];
                         } else {
-                            defectModel = self.defectTypesCollection.getDefectByLocator(id);
-                            if (defectModel) {
-                                name = defectModel.get('longName');
-                            } else {
-                                return '<div class="invalid-color-mark"></div><span class="invalid">' + id + '</span>';
-                            }
+                            defectModel = _.find(self.defectTypesCollection.models, function (model) {
+                                return model.get('locator') === id.split('$')[3];
+                            });
+                            (defectModel) ? (name = defectModel.get('longName')) : (name = id.split('$')[3]);
                         }
                         return '<div class="color-mark"></div>' + name;
                     })
@@ -294,37 +288,13 @@ define(function (require) {
                 this.scrollers.push(legendScroller);
             }
         },
-        redirectForTimeLine: function (date) {
-            var range = 86400000;
-            var filterId = this.model.get('filter_id');
-            Service.getFilterData([filterId])
-                .done(function (response) {
-                    var time = Moment(date);
-                    var dateFilter = {
-                        condition: 'btw',
-                        filtering_field: 'start_time',
-                        is_negative: false,
-                        value: time.format('x') + ',' + (parseInt(time.format('x'), 10) + range)
-                    };
-                    var filtersCollection = new SingletonLaunchFilterCollection();
-                    var newFilter = filtersCollection.generateTempModel();
-                    var entities = response[0].entities || [];
-                    var link = newFilter.get('url');
-
-                    entities.push(dateFilter);
-                    newFilter.set('newEntities', JSON.stringify(entities));
-                    link += '?' + newFilter.getOptions().join('&');
-                    if (link) {
-                        config.router.navigate(link, { trigger: true });
-                    }
-                });
-        },
         onBeforeDestroy: function () {
+            this.chart && (this.chart = this.chart.destroy());
             _.each(this.scrollers, function (baronScrollElem) {
                 baronScrollElem.baron && baronScrollElem.baron().dispose();
             });
         }
     });
 
-    return LaunchStatisticsTrendChart;
+    return LaunchStatisticsBarChart;
 });

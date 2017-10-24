@@ -34,6 +34,24 @@ define(function (require) {
             { name: Localization.launchesHeaders.failed, value: 'statistics$executions$failed' },
             { name: Localization.launchesHeaders.skipped, value: 'statistics$executions$skipped' }
         ];
+        var defectTotals = {
+            product_bug: {
+                name: Localization.launchesHeaders.total + ' ' + Localization.filterNamePluralById.product_bug,
+                value: 'statistics$defects$product_bug$total'
+            },
+            automation_bug: {
+                name: Localization.launchesHeaders.total + ' ' + Localization.filterNamePluralById.automation_bug,
+                value: 'statistics$defects$automation_bug$total'
+            },
+            system_issue: {
+                name: Localization.launchesHeaders.total + ' ' + Localization.filterNamePluralById.system_issue,
+                value: 'statistics$defects$system_issue$total'
+            },
+            no_defect: {
+                name: Localization.launchesHeaders.total + ' ' + Localization.filterNamePluralById.no_defect,
+                value: 'statistics$defects$no_defect$total'
+            }
+        };
         var allDefects = function () {
             var collection = new SingletonDefectTypeCollection();
             var pref = 'statistics$defects$';
@@ -49,9 +67,13 @@ define(function (require) {
                 var key = pref + type + '$' + d.locator;
                 subDefects[type][key] = d.longName;
             });
-            _.each(_.values(subDefects), function (defectGroup) {
-                _.each(defectGroup, function (defectName, defectKey) {
-                    result.push({ name: defectName, value: defectKey });
+            _.each(subDefects, function (defectGroupVal, gefectGroupKey) {
+                var hasSubTypes = (Object.keys(defectGroupVal).length > 1);
+                if (hasSubTypes) {
+                    result.push(defectTotals[gefectGroupKey]);
+                }
+                _.each(defectGroupVal, function (defectName, defectKey) {
+                    result.push({ name: defectName, value: defectKey, isSubOption: hasSubTypes });
                 });
             });
             return result;
@@ -62,9 +84,9 @@ define(function (require) {
     return {
         getConfig: function () {
             return {
-                gadget_name: Localization.widgets.statisticsTrendChart,
+                gadget_name: Localization.widgets.statisticsChart,
                 img: 'launch-statistics-trend-chart.svg',
-                description: Localization.widgets.statisticsTrendChartDescription,
+                description: Localization.widgets.statisticsChartDescription,
                 widget_type: 'trends_chart', // TODO remove after refactoring,
                 hasPreview: true
             };
@@ -117,6 +139,38 @@ define(function (require) {
                             { name: Localization.widgets.timelineMode, value: 'timeline' }
                         ],
                         action: 'switch_timeline_mode'
+                    }
+                },
+                {
+                    control: 'switcher',
+                    options: {
+                        items: [
+                            { name: Localization.widgets.areaChartMode, value: 'areaChartMode' },
+                            { name: Localization.widgets.barMode, value: 'barMode' }
+                        ],
+                        action: 'switch_view_mode'
+                    }
+                },
+                {
+                    control: 'checkbox',
+                    options: {
+                        label: Localization.widgets.zoomWidgetArea,
+                        getValue: function (model, self) {
+                            var widgetOptions = model.getWidgetOptions();
+                            if (widgetOptions.zoom) {
+                                return true;
+                            }
+                            return false;
+                        },
+                        setValue: function (value, model) {
+                            var widgetOptions = model.getWidgetOptions();
+                            if (value) {
+                                widgetOptions.zoom = [];
+                            } else {
+                                delete widgetOptions.zoom;
+                            }
+                            model.setWidgetOptions(widgetOptions);
+                        }
                     }
                 },
                 {

@@ -334,10 +334,7 @@ define(function (require) {
             }
         },
         isDrawDonut: function (widgetOptions) {
-            if (widgetOptions && widgetOptions.viewMode && widgetOptions.viewMode.length && widgetOptions.viewMode[0] === 'donut') {
-                return true;
-            }
-            return false;
+            return (widgetOptions && widgetOptions.viewMode && widgetOptions.viewMode.length && widgetOptions.viewMode[0] === 'donut');
         },
         onBeforeDestroy: function () {
             _.each(this.scrollers, function (baronScrollElem) {
