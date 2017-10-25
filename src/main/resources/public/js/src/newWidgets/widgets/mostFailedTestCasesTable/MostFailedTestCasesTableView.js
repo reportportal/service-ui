@@ -59,7 +59,7 @@ define(function (require) {
             _.each(contentData.most_failed, function (item) {
                 itemsHtml += Util.templates(self.itemTemplate, {
                     name: item.name,
-                    link: self.getFilterByNameRedirectLink(launchData.id, item.name),
+                    link: self.getFilterByUIDRedirectLink(launchData.id, item.uniqueId),
                     percents: item.percentage,
                     count: item.failedCount + ' ' + Localization.ui.of + ' ' + item.total,
                     isFailed: item.isFailed,

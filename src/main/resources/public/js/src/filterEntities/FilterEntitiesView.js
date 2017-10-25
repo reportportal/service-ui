@@ -99,7 +99,7 @@ define(function (require) {
                         value: entity.value,
                         visible: true
                     });
-                } else if (entity.filtering_field === 'has_childs') {
+                } else if (entity.filtering_field === 'has_childs' || entity.filtering_field === 'uniqueId') {
                     this.hiddenFields.push(entity);
                 } else { // hidden fields
                     this.invalidCollection.add(new (FilterEntitiesResolver.getInvalidModel())({

@@ -79,6 +79,10 @@ define(function (require) {
             var appModel = new SingletonAppModel();
             return encodeURI('#' + appModel.get('projectId') + '/launches/all|page.page=1&page.size=50&page.sort=start_time/' + launchId + '?page.page=1&page.size=50&page.sort=start_time&filter.eq.has_childs=false&filter.ctn.name=' + itemName);
         },
+        getFilterByUIDRedirectLink: function (launchId, uid) {
+            var appModel = new SingletonAppModel();
+            return encodeURI('#' + appModel.get('projectId') + '/launches/all|page.page=1&page.size=50&page.sort=start_time/' + launchId + '?page.page=1&page.size=50&page.sort=start_time&filter.eq.has_childs=false&filter.eq.uniqueId=' + uid);
+        },
         linkToRedirectService: function (series, id) {
             var defectTypes = new SingletonDefectTypeCollection();
             var appModel = new SingletonAppModel();
