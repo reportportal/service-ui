@@ -59,7 +59,7 @@ define(function (require) {
             _.each(contentData.flaky, function (item) {
                 itemsHtml += Util.templates(self.itemTemplate, {
                     name: item.name,
-                    link: self.getFilterByNameRedirectLink(launchData.id, item.name),
+                    link: self.getFilterByUIDRedirectLink(launchData.id, item.uniqueId),
                     percents: item.percentage,
                     count: item.switchCounter + ' ' + Localization.ui.of + ' ' + item.total,
                     statuses: item.statuses,
