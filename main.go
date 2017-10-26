@@ -60,7 +60,7 @@ func main() {
 				"*.epam.com",
 				"*.uservoice.com",
 			},
-			"img-src":    {"'self'", "data:", "www.google-analytics.com", "*.epam.com"},
+			"img-src":    {"'self'", "data:", "www.google-analytics.com", "stats.g.doubleclick.net", "*.epam.com"},
 			"object-src": {"'self'"},
 		}
 
