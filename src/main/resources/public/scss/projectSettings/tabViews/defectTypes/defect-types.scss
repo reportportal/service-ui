@@ -141,20 +141,6 @@
             &.holder-color-picker {
               padding: 0 3px;
             }
-
-            .nvd3-svg {
-              position: absolute;
-              display: block;
-              overflow: visible;
-              top: -10px;
-              left: 25px;
-              right: 0;
-              padding: 10px;
-              margin: 0 auto;
-              text-align: center;
-              max-height: 67px;
-              min-height: 67px;
-            }
           }
           .dt-edit-cell {
             @media (max-width: $SCREEN_XS_MAX) {
@@ -162,6 +148,25 @@
             }
           }
           .dt-diagramm-cell {
+            .chart-container {
+              position: absolute !important;
+              left: 25px;
+              width: 56px;
+              height: 56px;
+              z-index: 1;
+              svg {
+                .c3-chart {
+                  .c3-chart-arcs {
+                    .c3-chart-arc {
+                      path {
+                        stroke-width: 0;
+                        cursor: default !important;
+                      }
+                    }
+                  }
+                }
+              }
+            }
             @media (max-width: $SCREEN_XS_MAX) {
               display: none;
             }
