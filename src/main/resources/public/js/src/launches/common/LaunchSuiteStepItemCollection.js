@@ -33,20 +33,13 @@ define(function (require) {
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
-
-    var App = require('app');
-
-    var config = App.getInstance();
-
-    var SingletonAppModel = require('model/SingletonAppModel');
-    var appModel = new SingletonAppModel();
-
+    var LaunchUtils = require('launches/LaunchUtils');
 
     /*  TRIGGERS:
-    *   loading(true or false) - start or end loading
-    *   change:paging(pagingObj) - change paging object
-    *
-    * */
+     *   loading(true or false) - start or end loading
+     *   change:paging(pagingObj) - change paging object
+     *
+     * */
 
     var LaunchSuiteStepItemCollection = Backbone.Collection.extend({
         model: LaunchSuiteStepItemModel,
@@ -94,12 +87,19 @@ define(function (require) {
             var activeFilter;
             var launchFilters;
             var difference;
+            var options;
+            var prop;
 
             this.crumbs = crumbs;
             this.pagingPage = 1;
             this.pagingTotalPages = 1;
 
-            filterData = this.calculateFilterOptions(optionsURLParam); // set this.logOptions
+            options = LaunchUtils.calculateFilterOptions(optionsURLParam);
+            for (prop in options.toAsign) {
+                this[prop] = options.toAsign[prop]; // set this.logOptions
+            }
+            var filterData = {};
+            filterData.entities = options.entities;
             difference = this.checkForDifference(launchModel, parentModel, filterData);
             this.launchModel = launchModel;
             this.parentModel = parentModel;
@@ -198,54 +198,6 @@ define(function (require) {
             if (parentItemModel) {
                 this.trigger('activate:log', parentItemModel);
             }
-        },
-        calculateFilterOptions: function (optionsUrl) {
-            var options = optionsUrl.split('&');
-            var filterEntities = [];
-            var answer = {};
-            this.noChildFilter = false;
-            this.logOptions = {};
-            this.historyOptions = {};
-            _.each(options, function (option) {
-                var optionSeparate = option.split('=');
-                var keySeparate = optionSeparate[0].split('.');
-                var keyFirstPart = keySeparate[0];
-                var valueSeparate;
-                var joinKey;
-                if (keyFirstPart === 'filter') {
-                    if (optionSeparate[0] === 'filter.eq.has_childs') {
-                        this.noChildFilter = true;
-                    }
-                    filterEntities.push({
-                        condition: keySeparate[1],
-                        filtering_field: keySeparate[2],
-                        value: decodeURIComponent(optionSeparate[1])
-                    });
-                }
-                if (keyFirstPart === 'page') {
-                    if (keySeparate[1] === 'page') {
-                        this.pagingPage = parseInt(optionSeparate[1], 10);
-                    } else if (keySeparate[1] === 'size') {
-                        this.pagingSize = parseInt(optionSeparate[1], 10);
-                    } else if (keySeparate[1] === 'sort') {
-                        valueSeparate = optionSeparate[1].split('%2C');
-                        answer.selection_parameters = JSON.stringify({
-                            is_asc: (valueSeparate[1] === 'ASC'),
-                            sorting_column: valueSeparate[0]
-                        });
-                    }
-                }
-                keySeparate.shift();
-                joinKey = keySeparate.join('.');
-                if (keyFirstPart === 'log') {
-                    this.logOptions[joinKey] = optionSeparate[1];
-                }
-                if (keyFirstPart === 'history') {
-                    this.historyOptions[joinKey] = optionSeparate[1];
-                }
-            }, this);
-            answer.entities = JSON.stringify(filterEntities);
-            return answer;
         },
         changeSelectionParameters: function () {
             this.load();
@@ -432,7 +384,7 @@ define(function (require) {
         },
         loadSuiteStepChildren: function () {  // only for check type
             var path = Urls.getGridUrl('suit') + '?filter.eq.launch=' + this.launchModel.get('id') +
-                    '&filter.eq.parent=' + this.parentModel.get('id');
+                '&filter.eq.parent=' + this.parentModel.get('id');
             return call('GET', path);
         },
         onRemove: function () {
