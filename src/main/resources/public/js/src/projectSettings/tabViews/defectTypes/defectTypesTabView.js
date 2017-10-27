@@ -19,15 +19,17 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
-    "use strict";
+define(function (require) {
+    'use strict';
+
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
     var App = require('app');
     var Localization = require('localization');
-    var D3 = require('d3');
-    var NVD3 = require('nvd3');
+    var d3 = require('d3');
+    var c3 = require('c3');
     var SingletonAppModel = require('model/SingletonAppModel');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var ModalConfirm = require('modals/modalConfirm');
@@ -41,30 +43,28 @@ define(function (require, exports, module) {
         showOrder: ['product_bug', 'automation_bug', 'system_issue', 'no_defect', 'to_investigate'],
         editAccess: ['PROJECT_MANAGER', 'LEAD'],
         confirmModal: 'tpl-modal-with-confirm',
-        item: 'tpl-defect-type-item',
         canEdit: true,
 
         className: 'defect-types-project-settings',
-
         template: 'tpl-defect-type-main-view',
-
+        item: 'tpl-defect-type-item',
         events: {
             'click #reset-color': 'onResetColors'
         },
 
-        initialize: function (options) {
+        initialize: function () {
+            var self = this;
             this.appModel = new SingletonAppModel();
             this.drawOrder = this.showOrder.slice(0, this.showOrder.length).reverse();
             this.settings = config.project;
             this.roles = config.userModel.get('projects')[this.appModel.get('projectId')];
             this.userRole = config.userModel.get('userRole') || 'ADMINISTRATOR';
 
-            if (this.userRole === "ADMINISTRATOR") {
-                this.canEdit = true
+            if (this.userRole === 'ADMINISTRATOR') {
+                this.canEdit = true;
             } else {
                 this.canEdit = _.include(this.editAccess, this.roles.projectRole);
             }
-            var self = this;
             this.defectTypes = new SingletonDefectTypeCollection();
             this.defectTypes.on('reset', function () {
                 this.renderTypes();
@@ -73,12 +73,10 @@ define(function (require, exports, module) {
 
             this.render();
         },
-
         updateControls: function () {
-            this.drawChart();
+            this.drawStackedAreaChart();
             this.disableReset();
         },
-
         render: function () {
             this.$el.html(Util.templates(this.template, {
                 order: this.showOrder,
@@ -86,14 +84,12 @@ define(function (require, exports, module) {
             }));
             return this;
         },
-
         onShow: function () {
             this.renderTypes();
         },
-
         renderTypes: function () {
             var self = this;
-            _.each(this.showOrder, function (value, key) {
+            _.each(this.showOrder, function (value) {
                 var currentColor = this.getColor(value);
                 var view = new DefectTypeView({
                     name: value,
@@ -107,105 +103,90 @@ define(function (require, exports, module) {
 
             this.updateControls();
         },
-
         getColor: function (section) {
             var color;
             _.each(this.defectTypes.models, function (item) {
                 var id = item.get('locator');
                 var itemSection = item.get('typeRef').toLowerCase();
                 var fstId = item.get('shortName') + '001';
-                if (id === fstId && itemSection == section) {
+                if (id === fstId && itemSection === section) {
                     color = item.get('color');
                 }
             });
             return color;
         },
-
-        drawChart: function () {
-            var data = this.getChartData();
-            this.chart = NVD3.addGraph(function () {
-
-                var chart = NVD3.models.stackedAreaChart()
-                    .margin({
-                        left: 0
-                    })
-                    .margin({
-                        right: 0
-                    })
-                    .margin({
-                        top: 0
-                    })
-                    .margin({
-                        bottom: 0
-                    })
-                    .style('stack_percent')
-                    .x(function (d) {
-                        return d[0]
-                    })
-                    .y(function (d) {
-                        return d[1]
-                    })
-                    .useInteractiveGuideline(false)
-                    .rightAlignYAxis(true)
-                    .showControls(false)
-                    .clipEdge(true)
-                    .height(150)
-                    .showXAxis(false)
-                    .showYAxis(false)
-                    .showLegend(false);
-
-                D3.select('#chart svg')
-                    .datum(data)
-                    .call(chart);
-
-                chart.stacked.dispatch.on("areaClick", null);
-                chart.stacked.dispatch.on("areaClick.toggle", null);
-
-                NVD3.utils.windowResize(chart.update);
-
-                return chart;
-            });
-        },
-
         getChartData: function () {
-            var data = [];
-            _.each(this.drawOrder, function (item, key) {
-                _.each(this.defectTypes.models, function (model, i) {
+            var chartData = {
+                columns: [],
+                colors: {}
+            };
+            _.each(this.drawOrder, function (item) {
+                _.each(this.defectTypes.models, function (model) {
                     if (model.get('typeRef').toLowerCase() !== item) {
                         return;
                     }
-                    data.push({
-                        key: model.get('typeRef'),
-                        color: model.get('color'),
-                        values: this.generateChartValues(i, key)
-                    })
+                    chartData.columns.push([model.get('locator')]
+                        .concat([
+                            _.random(5, 10),
+                            _.random(2, 6),
+                            _.random(5, 10),
+                            _.random(2, 6),
+                            _.random(5, 10)
+                        ]));
+                    chartData.colors[model.get('locator')] = model.get('color');
                 }, this);
             }, this);
-
-            return data;
+            return chartData;
         },
+        drawStackedAreaChart: function () {
+            var self = this;
+            var data = this.getChartData();
+            var $el = $('[data-js-colors-chart]', this.$el);
 
-        generateChartValues: function (modelNo, key) {
-            var data = [];
-            var val;
-            // magic formuls. I do not understand what is going on here
-            for (var i = 1; i < 6; i++) {
-                if (i == 0) {
-                    val = 20 + (key + modelNo + i) * 3
-                } else {
-                    val = (i & 1) ?
-                        ((modelNo & 1) ?
-                            Math.random() * (50 - (10 + key + modelNo * 3)) + 10 :
-                            Math.random() * (10 - key + modelNo) + 10) :
-                        ((key & 1) ?
-                            Math.random() * (10 - key + modelNo) + 10 :
-                            Math.random() * (20 - (1 + key + modelNo * 3)) + 10);
+            d3.selectAll($('.c3-area', $el)).on('click', null);
+            this.chart && (this.chart = this.chart.destroy());
+
+            this.chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: data.columns,
+                    type: 'area-spline',
+                    order: null,
+                    groups: [_.map(data.columns, function (column) { return column[0]; })],
+                    colors: data.colors
+                },
+                point: {
+                    show: false
+                },
+                axis: {
+                    x: {
+                        show: false
+                    },
+                    y: {
+                        show: false,
+                        padding: {
+                            top: 0
+                        }
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                size: {
+                    height: 150
+                },
+                onrendered: function () {
+                    $el.css('max-height', 'none');
+                    d3.selectAll($('.c3-area', $el))
+                        .on('click', function (d) {
+                            var shown = _.map(self.chart.data.shown(), function (dataItem) {
+                                return dataItem.id;
+                            });
+                            (shown.length > 1) ? self.chart.hide(_.without(shown, d.id)) : self.chart.show();
+                        });
                 }
-                data.push([i, val]);
-            }
-            return data;
+            });
         },
-
         onResetColors: function (event) {
             event.preventDefault();
             if ($(event.target).hasClass('disabled')) {
@@ -221,7 +202,7 @@ define(function (require, exports, module) {
                 bodyText: Localization.dialog.msgResetColorsDefectType,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonDanger: true,
-                okButtonText: Localization.uiCommonElements.reset,
+                okButtonText: Localization.uiCommonElements.reset
             });
             $('[data-js-close]', modal.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(423);
@@ -235,19 +216,18 @@ define(function (require, exports, module) {
                 Util.ajaxSuccessMessenger('changedColorDefectTypes');
             });
         },
-
         resetColors: function () {
             this.defectTypes.trigger('resetColors');
         },
-
         disableReset: function () {
             var defaultColors = [];
+            var disable;
             _.each(this.defectTypes.models, function (type) {
                 if (type.get('mainType')) {
                     defaultColors.push(type.get('color'));
                 }
             });
-            var disable = _.every(this.defectTypes.models, function (type) {
+            disable = _.every(this.defectTypes.models, function (type) {
                 return _.contains(defaultColors, type.get('color'));
             }, this);
             if (disable) {
@@ -256,9 +236,9 @@ define(function (require, exports, module) {
             }
             $('#reset-color', this.$el).removeClass('disabled').removeAttr('title');
         },
-
         onDestroy: function () {
-
+            d3.selectAll($('[data-js-colors-chart].c3-area', this.$el)).on('click', null);
+            this.chart && (this.chart = this.chart.destroy());
         }
     });
 

@@ -311,6 +311,38 @@
           margin: 0 0 4px 0;
           padding: 0;
         }
+
+        .colors-chart-container {
+          svg {
+            .c3-chart {
+              .c3-chart-line {
+                .c3-lines {
+                   display: none;
+                 }
+                .c3-areas {
+                  .c3-area {
+                    pointer-events: all !important;
+                    opacity: 0.8 !important;
+                    cursor: pointer;
+
+                    &:hover {
+                      opacity: 1 !important;
+                    }
+                  }
+                }
+                .c3-circles {
+                  display: none;
+                }
+              }
+              .c3-event-rects {
+                pointer-events: none;
+              }
+            }
+            .c3-xgrid-focus {
+              display: none;
+            }
+          }
+        }
       }
 
       .dt-form-group-footer {
