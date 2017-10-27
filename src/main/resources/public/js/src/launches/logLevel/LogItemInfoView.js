@@ -23,9 +23,12 @@ define(function (require) {
 
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
+    var Backbone = require('backbone');
     var Util = require('util');
 
     var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
+    var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
+    var LogItemInfoRetryItemView = require('launches/logLevel/LogItemInfoRetryItemView');
 
     var LogItemInfoTabs = require('launches/logLevel/LogItemInfoTabs/LogItemInfoTabs');
     var App = require('app');
@@ -39,6 +42,10 @@ define(function (require) {
     var _ = require('underscore');
 
     var config = App.getInstance();
+
+    var RetiesCollection = Backbone.Collection.extend({
+        model: LaunchSuiteStepItemModel
+    });
 
     var LogItemInfoView = Epoxy.View.extend({
         template: 'tpl-launch-log-item-info',
@@ -123,7 +130,9 @@ define(function (require) {
                     el: $('[data-js-step-issue]', this.$el)
                 });
             }
+            this.renderedRetries = [];
             this.renderTabs();
+            this.renderRetries();
         },
         renderTabs: function () {
             if (this.tabsView) {
@@ -137,6 +146,24 @@ define(function (require) {
             $('[data-js-tabs-container]', this.$el).html(this.tabsView.$el);
             this.listenTo(this.tabsView, 'goToLog', this.goToLog);
             this.listenTo(this.tabsView, 'click:attachment', this.onClickAttachment);
+        },
+        renderRetries: function() {
+            var self = this;
+            var retries = [];
+            if (this.viewModel.get('retries')) {
+                retries = this.viewModel.get('retries').reverse();
+                retries.push(this.viewModel.toJSON());
+                this.retriesCollection = new RetiesCollection(retries);
+                _.each(this.retriesCollection.models, function(model) {
+                    var view = new LogItemInfoRetryItemView({
+                        model: model
+                    });
+                    $('[data-js-retries-container]', self.$el).append(view.$el);
+                    self.renderedRetries.push(view);
+                })
+                this.retriesCollection
+            }
+
         },
         onClickAttachment: function (model) {
             this.trigger('click:attachment', model);
@@ -177,14 +204,8 @@ define(function (require) {
                 });
         },
         render: function () {
-            var retries = [];
-            if (this.viewModel.get('retries')) {
-                retries = this.viewModel.get('retries').reverse();
-                retries.push(this.viewModel.toJSON());
-            }
             this.$el.html(Util.templates(this.template, {
-                context: this.context,
-                retries: retries
+                context: this.context
             }));
         },
 
