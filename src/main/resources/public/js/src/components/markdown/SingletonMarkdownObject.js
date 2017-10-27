@@ -29,6 +29,7 @@ define(function (require, exports, module) {
     var getInstance = function () {
         if (!instance) {
             instance = new SimpleMDE({
+                autoDownloadFontAwesome: false,
                 element: $('textarea', el).get(0),
                 blockStyles: {
                     bold: '**',
