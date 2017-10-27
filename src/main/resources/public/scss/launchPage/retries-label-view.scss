@@ -19,17 +19,24 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-@import 'log-body';
-@import 'log-history-line';
-@import 'log-info';
-@import 'log-info-details';
-@import 'log-info-activity';
-@import 'log-info-attachments';
-@import 'log-info-stack-trace';
-@import 'log-grid';
-@import 'log-grid-console';
-@import 'log-grid-block';
-@import 'log-info-items';
-@import 'log-next-error';
-@import 'log-message-view';
-@import 'launch-log-item-info-tabs';
+.retries-label-view {
+  ul {
+    display: inline-block;
+  }
+  li {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    background: $COLOR--failed;
+    &.status-PASSED {
+      background: $COLOR--passed;
+    }
+    &.status-SKIPPED {
+      background: $COLOR--skipped;
+    }
+  }
+  span {
+    cursor: pointer;
+    color: $COLOR--windows-blue;
+  }
+}

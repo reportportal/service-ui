@@ -104,7 +104,15 @@ $launch-min-counter-cell-width: (100 - $launch-min-name-cell-width - $launch-min
       }
     }
   }
+  .retries-block-container {
+    position: relative;
+    width: 100%;
+    float: left;
+  }
   @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+    .retries-block-container {
+      display: none;
+    }
     .rp-grid-thead {
       display: none;
     }

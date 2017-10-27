@@ -218,6 +218,7 @@ define(function (require) {
             });
             newLogOption.item = this.collectionItems.getInfoLog().item;
             newLogOption.history = this.collectionItems.getInfoLog().history;
+            newLogOption.retry = this.collectionItems.getInfoLog().retry;
             this.collectionItems.setInfoLog(newLogOption);
         },
         onStartLoading: function () {

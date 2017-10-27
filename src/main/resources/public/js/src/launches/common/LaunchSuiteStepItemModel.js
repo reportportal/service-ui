@@ -53,6 +53,8 @@ define(function (require, exports, module) {
             tags: '',
             type: '',
 
+            retries: [],
+
             // test step append
             has_childs: true,
             issue: '',

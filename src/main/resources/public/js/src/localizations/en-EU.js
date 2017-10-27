@@ -857,7 +857,12 @@ define(['util'], function () {
             launchFailed: 'Failed',
             launchSkipped: 'Skipped',
             issueLink: 'Enter link to issue',
-            issueId: 'Issue ID'
+            issueId: 'Issue ID',
+
+            retries: 'retries',
+            retriesShort: 'rtr',
+            stackTrace: 'STACK TRACE',
+            openInLog: 'Open in Log view'
         },
 
         forSettings: {

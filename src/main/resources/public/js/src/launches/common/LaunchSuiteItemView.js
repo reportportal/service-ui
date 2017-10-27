@@ -35,6 +35,8 @@ define(function (require) {
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
     var CommonItemView = require('launches/common/CommonItemView');
+    var RetriesLabelView = require('launches/common/retries/RetriesLabelView');
+    var RetriesBlockView = require('launches/common/retries/RetriesBlockView');
 
     var config = App.getInstance();
 
@@ -240,6 +242,7 @@ define(function (require) {
             this.renderDuration();
             this.renderStartTime();
             this.renderDefects();
+            this.renderRetries();
         },
         highlightItem: function () {
             var self;
@@ -262,6 +265,24 @@ define(function (require) {
                 model: this.model
             });
             $('[data-js-start-time-container]', this.$el).html(this.startTime.$el);
+        },
+        renderRetries: function () {
+            this.retries && this.retries.destroy();
+            this.retries = new RetriesLabelView({
+                model: this.model
+            });
+            $('[data-js-retries-container]', this.$el).html(this.retries.$el);
+            this.listenTo(this.retries, 'activate:retries', this.onActivateRetries);
+        },
+        onActivateRetries: function () {
+            if (!this.retriesView) {
+                this.retriesView = new RetriesBlockView({
+                    model: this.model
+                });
+                $('[data-js-retries-block-container]', this.$el).html(this.retriesView.$el);
+                this.activateAccordion();
+                this.$el.addClass('open');
+            }
         },
         renderDefects: function () {
             this.productBug && this.productBug.destroy();
@@ -380,6 +401,8 @@ define(function (require) {
             this.menu && this.menu.destroy();
             this.duration && this.duration.destroy();
             this.startTime && this.startTime.destroy();
+            this.retries && this.retries.destroy();
+            this.retriesView && this.retriesView.destroy();
             _.each(this.statistics, function (v) {
                 if (_.isFunction(v.destroy)) {
                     v.destroy();

@@ -917,7 +917,10 @@ define(['util'], function () {
             launchFailed: 'Неудачно',
             launchSkipped: 'Пропущено',
             issueLink: 'Введите ссылку на ошибку',
-            issueId: 'Введите ID ошибки'
+            issueId: 'Введите ID ошибки',
+
+            retries: 'попыток',
+            retriesShort: 'пптк'
         },
 
         forSettings: {

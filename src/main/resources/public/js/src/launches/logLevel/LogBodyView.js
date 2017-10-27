@@ -75,6 +75,10 @@ define(function (require) {
         onLoadHistory: function () {
             $('[data-js-log-item-container]', this.$el).removeClass('load');
         },
+        /* Отправлять с вьюхи logItemInfo событие при оновлении ретрая, в этой вьюхе обновлять logOptions у колекции элементов и втихую подменять url
+        *
+        * при этом перерендеривать вьюху таблицы логов, передавая ему новую модель ретрая
+        * */
         selectHistoryItem: function (itemModel, firstInit) {
             var curOptions = this.collectionItems.getInfoLog();
             var itemModelFromCollection;

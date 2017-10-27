@@ -104,10 +104,19 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
             }
         }
     }
+  .retries-block-container {
+    position: relative;
+    width: 100%;
+    float: left;
+    padding-left: 11%;
+  }
     @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
         .rp-grid-thead {
             display: none;
         }
+      .retries-block-container {
+        display: none;
+      }
       .rp-table-row.row {
         &.show-accordion {
           .accordion-arrow {

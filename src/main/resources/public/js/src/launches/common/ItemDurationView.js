@@ -32,6 +32,7 @@ define(function (require) {
 
     var ItemDurationView = Epoxy.View.extend({
         template: 'tpl-launch-suite-item-duration',
+        className: 'item-duration-view',
         events: {
         },
         bindings: {
