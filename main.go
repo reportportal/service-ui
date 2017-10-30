@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gorilla/handlers"
+	"github.com/unrolled/secure"
 	"github.com/reportportal/commons-go/commons"
 	"github.com/reportportal/commons-go/conf"
 	"github.com/reportportal/commons-go/server"
@@ -32,6 +33,32 @@ func main() {
 	srv.AddRoute(func(router *goji.Mux) {
 		router.Use(func(next http.Handler) http.Handler {
 			return handlers.CompressHandler(next)
+		})
+
+		//content security policy
+		csp := map[string][]string{
+			"default-src": {"'self'", "'unsafe-inline'"},
+			"script-src": {
+				"'self'",
+				"'unsafe-inline'",
+				"'unsafe-eval'",
+				"status.reportportal.io",
+				"www.google-analytics.com",
+				"stats.g.doubleclick.net",
+				"*.epam.com",
+				"*.uservoice.com",
+			},
+			"img-src":    {"'self'", "data:", "www.google-analytics.com", "stats.g.doubleclick.net", "*.epam.com"},
+			"object-src": {"'self'"},
+		}
+
+		//apply content security policies
+		router.Use(func(next http.Handler) http.Handler {
+			return secure.New(secure.Options{
+				ContentTypeNosniff:    true,
+				BrowserXssFilter:      true,
+				ContentSecurityPolicy: buildCSP(csp),
+			}).Handler(next)
 		})
 
 		dir := rpConf.Get("staticsPath").(string)
@@ -72,6 +99,15 @@ func trimQuery(s string, sep string) string {
 		return s[:sepIndex]
 	}
 	return s
+}
+
+func buildCSP(csp map[string][]string) string {
+	instr := make([]string, len(csp))
+	for k, v := range csp {
+		instr = append(instr, k+" "+strings.Join(v, " "))
+	}
+	return strings.Join(instr, "; ")
+
 }
 
 type redirectingRW struct {

@@ -55,6 +55,8 @@ imports:
   - conf
   - registry
   - server
+- name: github.com/unrolled/secure
+  version: 19a872c81779b0456e9ee495a8162fb60c57b0c0
 - name: github.com/spf13/afero
   version: 9be650865eab0c12963d8753212f4f9c66cdcf12
   subpackages:
