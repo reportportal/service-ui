@@ -35,7 +35,7 @@ define(function (require) {
     var LaunchesQuantityChart = C3ChartWidgetView.extend({
         template: 'tpl-widget-project-info-chart',
         tooltipTemplate: 'tpl-widget-project-info-chart-tooltip',
-        className: 'project-info-chart',
+        className: 'project-info-chart quantity-of-launches',
 
         render: function () {
             var self = this;
@@ -56,7 +56,6 @@ define(function (require) {
             }
             this.$el.html(Util.templates(this.template, {}));
             container = $('[data-js-chart-container]', this.$el);
-            this.$el.addClass('quantity-of-launches');
 
             _.each(this.model.getContent(), function (val, key) {
                 var itemData = val[0].values;

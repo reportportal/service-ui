@@ -30,13 +30,12 @@ define(function (require) {
     var d3 = require('d3');
     var c3 = require('c3');
     var App = require('app');
-
     var config = App.getInstance();
 
-    var LaunchStatisticsbarChart = C3ChartWidgetView.extend({
+    var PercentageOfInvestigationChart = C3ChartWidgetView.extend({
         template: 'tpl-widget-project-info-chart',
         tooltipTemplate: 'tpl-widget-project-info-chart-tooltip',
-        className: 'project-info-chart launch-statistics',
+        className: 'project-info-chart percentage-of-investigations',
 
         render: function () {
             var self = this;
@@ -47,14 +46,10 @@ define(function (require) {
             var chartData = {
                 columns: {
                     toInvestigate: ['toInvestigate'],
-                    systemIssue: ['systemIssue'],
-                    automationBug: ['automationBug'],
-                    productBug: ['productBug']
+                    investigated: ['investigated']
                 },
                 colors: {
-                    productBug: config.defaultColors.productBug,
-                    automationBug: config.defaultColors.automationBug,
-                    systemIssue: config.defaultColors.systemIssue,
+                    investigated: config.defaultColors.investigated,
                     toInvestigate: config.defaultColors.toInvestigate
                 }
             };
@@ -75,13 +70,10 @@ define(function (require) {
                 return isWeeks ? item.date.split('-W')[1] : Moment(item.date).unix();
             });
 
-            // fill chart data with converted to percent values
+            // fill chart data with values
             _.each(contentDataSorted, function (itemData) {
-                var total = +itemData.automationBug + +itemData.productBug + +itemData.systemIssue + +itemData.toInvestigate;
-                chartData.columns.productBug.push(this.getRoundedToDecimalPlaces((+itemData.productBug / total) * 100, 2).toFixed(2));
-                chartData.columns.automationBug.push(this.getRoundedToDecimalPlaces((+itemData.automationBug / total) * 100, 2).toFixed(2));
-                chartData.columns.systemIssue.push(this.getRoundedToDecimalPlaces((+itemData.systemIssue / total) * 100, 2).toFixed(2));
-                chartData.columns.toInvestigate.push(this.getRoundedToDecimalPlaces((+itemData.toInvestigate / total) * 100, 2).toFixed(2));
+                chartData.columns.investigated.push(+itemData.investigated);
+                chartData.columns.toInvestigate.push(+itemData.toInvestigate);
                 itemsData.push({
                     date: itemData.date
                 });
@@ -177,5 +169,5 @@ define(function (require) {
         }
     });
 
-    return LaunchStatisticsbarChart;
+    return PercentageOfInvestigationChart;
 });
