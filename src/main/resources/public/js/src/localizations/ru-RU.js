@@ -426,7 +426,7 @@ define(['util'], function () {
             findLastLaunch: 'Найти в последнем запуске',
             pieTotal: 'Всего',
             pieSum: 'Сумма',
-            totalTestCases: 'Всего сценариев',
+            totalTestCases: 'Всего тестовых сценариев',
             pieIssues: 'Ошибки',
             addNewWidget: 'Добавить новый виджет',
             addSharedWidget: 'Добавить виджет и поделиться',
@@ -452,7 +452,7 @@ define(['util'], function () {
             failedCases: 'неудавшиеся сценарии',
             ofTestCases: ' тестовых сценариев',
             ofIssues: 'из ошибок',
-            growTestCases: 'Прирост сценариев',
+            growTestCases: 'Прирост тестовых сценариев',
             toInvestigate: 'Требуется анализ',
             automationBug: 'Ошибка теста',
             productBug: 'Дефект продукта',
@@ -835,7 +835,6 @@ define(['util'], function () {
             summarizeIssue: 'Обобщите название ошибки:',
             shiftToLaunches: 'Перейти ко всем запускам',
             shiftToDebug: 'Перейти к отладке',
-            owner: 'Владелец',
             addToDashboard: 'Добавить на панель управления',
             postIssue: 'Отправить ошибку',
             postBug: 'Отправить ошибку',
@@ -965,7 +964,7 @@ define(['util'], function () {
                 IN_PROGRESS: 'В процессе',
                 MANY: 'Существует несколько элементов с одинаковыми названиями, описаниями и метками',
                 NOT_FOUND: 'Нет элементов в запуске',
-                RESETED: 'Элемент пуст'
+                RESETED: 'Нет элементов в запуске'
             }
         },
 
