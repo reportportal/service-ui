@@ -49,7 +49,7 @@ define(function (require) {
 
     // ------------------ PROJECT INFO PAGE WIDGETS ------------------
     var LastLaunchPieChart = require('newWidgets/widgets/LastLaunchPieChartView');
-    var PercentageOfInvestigationChart = require('newWidgets/widgets/PercentageOfInvestigationChartView');
+    var PercentageOfInvestigationChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfInvestigationChartView');
     var PercentageOfProductBugsChart = require('newWidgets/widgets/PercentageOfProductBugsChartView');
     var PercentageOfAutoBugsChart = require('newWidgets/widgets/PercentageOfAutoBugsChartView');
     var PercentageOfSystemIssuesChart = require('newWidgets/widgets/PercentageOfSystemIssuesChartView');
