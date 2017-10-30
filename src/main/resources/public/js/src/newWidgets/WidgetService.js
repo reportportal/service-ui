@@ -47,13 +47,13 @@ define(function (require) {
     var CumulativeTrendChart = require('newWidgets/widgets/cumulativeTrendChart/index');
     var FlakyTestCasesTable = require('newWidgets/widgets/flakyTestCasesTable/index');
 
-    // ------------------ STATUS PAGE WIDGETS ------------------
+    // ------------------ PROJECT INFO PAGE WIDGETS ------------------
     var LastLaunchPieChart = require('newWidgets/widgets/LastLaunchPieChartView');
     var PercentageOfInvestigationChart = require('newWidgets/widgets/PercentageOfInvestigationChartView');
     var PercentageOfProductBugsChart = require('newWidgets/widgets/PercentageOfProductBugsChartView');
     var PercentageOfAutoBugsChart = require('newWidgets/widgets/PercentageOfAutoBugsChartView');
     var PercentageOfSystemIssuesChart = require('newWidgets/widgets/PercentageOfSystemIssuesChartView');
-    var LaunchesQuantityChart = require('newWidgets/widgets/LaunchesQuantityChartView');
+    var LaunchesQuantityChart = require('newWidgets/widgets/projectInfoWidgets/LaunchesQuantityChartView');
     var IssuesTrendChart = require('newWidgets/widgets/IssuesTrendChartView');
     var IssuesLineChart = require('newWidgets/widgets/IssuesLineChartView');
 

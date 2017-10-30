@@ -75,6 +75,9 @@ define(function (require) {
                 });
             }.bind(this));
             this.chart && this.chart.resize({ height: this.$el.parent().height() }) && this.chart.flush();
+        },
+        onBeforeDestroy: function () {
+            this.chart && (this.chart = this.chart.destroy());
         }
     });
 
