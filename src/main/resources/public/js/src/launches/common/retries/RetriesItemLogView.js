@@ -32,9 +32,23 @@ define(function (require) {
         events: {
         },
         bindings: {
-            '[data-js-number]': 'text: number'
+            '[data-js-number]': 'text: number',
+            '[data-js-link]': 'attr: {href: link}'
         },
-        initialize: function () {
+        computeds: {
+            link: {
+                deps: [''],
+                get: function () {
+                    var baseUrl = this.retryLastModel.get('url') + '&log.retry=' + this.model.get('id');
+                    if (this.retryLastModel.get('has_childs')) {
+                        baseUrl += '&log.item=' + this.retryLastModel.get('id');
+                    }
+                    return baseUrl;
+                }
+            }
+        },
+        initialize: function (options) {
+            this.retryLastModel = options.lastRetryModel;
             this.render();
         },
         render: function () {

@@ -98,17 +98,30 @@ define(function (require) {
                 context: this.context,
                 itemModel: itemModel,
                 launchModel: this.launchModel,
-                supportedLogBinary: this.supportedLogBinary
+                supportedLogBinary: this.supportedLogBinary,
+                collectionItems: this.collectionItems
             });
             this.listenTo(this.historyItem, 'goToLog', this.goToLog);
             this.listenTo(this.historyItem, 'change:issue', this.onChangeItemIssue);
             this.listenTo(this.historyItem, 'click:attachment', this.onClickAttachments);
+            this.listenTo(this.historyItem, 'change:retry', this.onChangeRetry);
+
+            this.onChangeRetry(this.historyItem.getCurrentRetry(), firstInit);
+
+        },
+        onChangeRetry: function (retryModel, firstInit) {
+            var curOptions = this.collectionItems.getInfoLog();
+            curOptions.retry = retryModel.get('id');
+            this.collectionItems.setInfoLog(curOptions);
+            !firstInit && config.router.navigate(
+                this.collectionItems.getPathByLogItemId(curOptions.item), { trigger: false }
+            );
             this.logsItem && this.stopListening(this.logsItem) && this.logsItem.destroy();
             this.logsItem = new LogItemLogsTable({
                 el: $('[data-js-item-logs]', this.$el),
-                itemModel: itemModel,
+                itemModel: retryModel,
                 collectionItems: this.collectionItems,
-                mainPath: this.collectionItems.getPathByLogItemId(curOptions.item),
+                mainPath: this.collectionItems.getPathByLogItemId(this.collectionItems.getInfoLog().item),
                 options: this.collectionItems.getInfoLog(),
                 supportedLogBinary: this.supportedLogBinary
             });

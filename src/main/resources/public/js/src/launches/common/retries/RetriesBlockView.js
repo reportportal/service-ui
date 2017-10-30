@@ -87,7 +87,7 @@ define(function (require) {
             this.render();
             this.collection = new RetriesBlockCollection();
             var curNumber = this.model.get('retries').length;
-            var retries = _.map(this.model.get('retries'), function (item) {
+            var retries = _.map(_.clone(this.model.get('retries')), function (item) {
                 item.number = curNumber;
                 curNumber -= 1;
                 return item;
@@ -107,7 +107,8 @@ define(function (require) {
                 });
                 this.logView && this.logView.destroy();
                 this.logView = new RetriesItemLogView({
-                    model: model
+                    model: model,
+                    lastRetryModel: this.model
                 });
                 $('[data-js-log-container]', this.$el).html(this.logView.$el);
             }

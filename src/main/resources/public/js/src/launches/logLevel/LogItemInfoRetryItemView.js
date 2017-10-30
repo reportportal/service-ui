@@ -23,8 +23,7 @@ define(function (require) {
 
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var Localization = require('localization');
-    var _ = require('underscore');
+    var $ = require('jquery');
 
 
     var LogItemInfoRetryItemView = Epoxy.View.extend({
@@ -32,17 +31,23 @@ define(function (require) {
         className: 'launch-log-item-info-retry-item',
 
         events: {
+            click: 'onClickItem'
         },
 
         bindings: {
-            '[data-js-number]': 'text: number'
+            '[data-js-number]': 'text: number',
+            ':el': 'classes: {active: select}'
         },
         initialize: function () {
+            this.render();
+            $('[data-js-status]', this.$el).addClass('status-' + this.model.get('status'));
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-
+        onClickItem: function () {
+            this.model.trigger('select:item', this.model);
+        },
         onDestroy: function () {
             this.$el.html('');
         }

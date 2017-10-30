@@ -119,6 +119,7 @@ define(function (require) {
             this.appModel = new SingletonAppModel();
             this.viewModel = options.itemModel;
             this.launchModel = options.launchModel;
+            this.collectionItems = options.collectionItems;
             this.listenTo(this.launchModel, 'change:isProcessing', this.onChangeLaunchProcessing);
             this.listenTo(this.viewModel, 'change:issue', this.onChangeIssue);
             this.onChangeLaunchProcessing();
@@ -131,39 +132,72 @@ define(function (require) {
                 });
             }
             this.renderedRetries = [];
-            this.renderTabs();
             this.renderRetries();
         },
-        renderTabs: function () {
+        getCurrentRetry: function () {
+            var curOptions = this.collectionItems.getInfoLog();
+            if (curOptions.retry) {
+                var retryData;
+                _.each(this.viewModel.get('retries'), function (retry) {
+                    if (retry.id === curOptions.retry) {
+                        retryData = retry;
+                    }
+                });
+                if (retryData) {
+                    return (new LaunchSuiteStepItemModel(retryData));
+                }
+                return this.viewModel;
+            }
+            return this.viewModel;
+        },
+        renderTabs: function (model) {
             if (this.tabsView) {
                 this.stopListening(this.tabsView);
                 this.tabsView.destroy();
             }
             this.tabsView = new LogItemInfoTabs({
-                itemModel: this.viewModel,
+                itemModel: model,
                 launchModel: this.launchModel
             });
             $('[data-js-tabs-container]', this.$el).html(this.tabsView.$el);
             this.listenTo(this.tabsView, 'goToLog', this.goToLog);
             this.listenTo(this.tabsView, 'click:attachment', this.onClickAttachment);
         },
-        renderRetries: function() {
+        renderRetries: function () {
             var self = this;
             var retries = [];
-            if (this.viewModel.get('retries')) {
-                retries = this.viewModel.get('retries').reverse();
+            if (this.viewModel.get('retries') && this.viewModel.get('retries').length) {
+                var activeRetry = this.getCurrentRetry().id;
+                $('[data-js-retries-container]', self.$el).removeClass('hide');
+                retries = _.clone(this.viewModel.get('retries')).reverse();
                 retries.push(this.viewModel.toJSON());
+                _.each(retries, function (item, num) {
+                    item.number = num + 1;
+                    if (item.id === activeRetry) {
+                        item.select = true;
+                    }
+                });
                 this.retriesCollection = new RetiesCollection(retries);
-                _.each(this.retriesCollection.models, function(model) {
+                _.each(this.retriesCollection.models, function (modelRetry) {
                     var view = new LogItemInfoRetryItemView({
-                        model: model
+                        model: modelRetry
                     });
                     $('[data-js-retries-container]', self.$el).append(view.$el);
                     self.renderedRetries.push(view);
-                })
-                this.retriesCollection
+                });
+                this.listenTo(this.retriesCollection, 'select:item', this.activateRetry);
             }
-
+            this.renderTabs(this.getCurrentRetry());
+        },
+        activateRetry: function (retryModel) {
+            if (!retryModel.get('select')) {
+                _.each(this.retriesCollection.models, function (retry) {
+                    retry.set({ select: false });
+                });
+                retryModel.set({ select: true });
+                this.renderTabs(retryModel);
+                this.trigger('change:retry', retryModel);
+            }
         },
         onClickAttachment: function (model) {
             this.trigger('click:attachment', model);
