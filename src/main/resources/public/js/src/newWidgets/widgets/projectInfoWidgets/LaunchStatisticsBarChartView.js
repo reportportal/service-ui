@@ -24,15 +24,16 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Moment = require('moment');
-    var Util = require('util');
     var Localization = require('localization');
+    var Util = require('util');
     var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
     var d3 = require('d3');
     var c3 = require('c3');
     var App = require('app');
+
     var config = App.getInstance();
 
-    var LaunchesQuantityChart = C3ChartWidgetView.extend({
+    var LaunchStatisticsbarChart = C3ChartWidgetView.extend({
         template: 'tpl-widget-project-info-chart',
         tooltipTemplate: 'tpl-widget-project-info-chart-tooltip',
         className: 'project-info-chart',
@@ -44,9 +45,17 @@ define(function (require) {
             var container;
             var isWeeks = this.model.get('interval') !== 1;
             var chartData = {
-                columns: ['numberOfLaunches'],
+                columns: {
+                    toInvestigate: ['toInvestigate'],
+                    systemIssue: ['systemIssue'],
+                    automationBug: ['automationBug'],
+                    productBug: ['productBug']
+                },
                 colors: {
-                    numberOfLaunches: config.defaultColors.numberLaunches
+                    productBug: config.defaultColors.productBug,
+                    automationBug: config.defaultColors.automationBug,
+                    systemIssue: config.defaultColors.systemIssue,
+                    toInvestigate: config.defaultColors.toInvestigate
                 }
             };
             var itemsData = [];
@@ -57,39 +66,36 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, {}));
             container = $('[data-js-chart-container]', this.$el);
             this.$el.addClass('quantity-of-launches');
-
             _.each(this.model.getContent(), function (val, key) {
                 var itemData = val[0].values;
                 itemData.date = key;
                 contentData.push(itemData);
             });
-
             // sort data by start time
             contentDataSorted = _.sortBy(contentData, function (item) {
-                return Moment(item.start).unix();
+                return isWeeks ? item.date.split('-W')[1] : Moment(item.date).unix();
             });
 
-
+            // fill chart data with converted to percent values
             _.each(contentDataSorted, function (itemData) {
-                chartData.columns.push(itemData.count);
+                var total = +itemData.automationBug + +itemData.productBug + +itemData.systemIssue + +itemData.toInvestigate;
+                chartData.columns.productBug.push(this.getRoundedToDecimalPlaces((+itemData.productBug / total) * 100, 2).toFixed(2));
+                chartData.columns.automationBug.push(this.getRoundedToDecimalPlaces((+itemData.automationBug / total) * 100, 2).toFixed(2));
+                chartData.columns.systemIssue.push(this.getRoundedToDecimalPlaces((+itemData.systemIssue / total) * 100, 2).toFixed(2));
+                chartData.columns.toInvestigate.push(this.getRoundedToDecimalPlaces((+itemData.toInvestigate / total) * 100, 2).toFixed(2));
                 itemsData.push({
-                    xTick: isWeeks ? itemData.date.split('-W')[1] : itemData.date.split('-')[2],
-                    count: itemData.count,
-                    start: itemData.start,
-                    end: itemData.end,
-                    interval: itemData.interval
+                    date: itemData.date
                 });
-            });
+            }, this);
 
             this.chart = c3.generate({
                 bindto: container[0],
                 data: {
-                    columns: [chartData.columns],
+                    columns: _.values(chartData.columns),
                     type: 'bar',
+                    order: null,
+                    groups: [_.keys(chartData.columns)],
                     colors: chartData.colors
-                },
-                padding: {
-                    top: 0
                 },
                 grid: {
                     y: {
@@ -99,10 +105,12 @@ define(function (require) {
                 axis: {
                     x: {
                         show: true,
+                        type: 'category',
+                        categories: _.map(itemsData, function (item) {
+                            return isWeeks ? item.date.split('-W')[1] : item.date.split('-')[2];
+                        }),
                         tick: {
-                            format: function (d) {
-                                return itemsData[d].xTick;
-                            },
+                            values: self.getTimelineAxisTicks(itemsData.length),
                             width: 60,
                             centered: true,
                             inner: true,
@@ -117,8 +125,7 @@ define(function (require) {
                     y: {
                         show: true,
                         padding: {
-                            top: 0,
-                            bottom: 0
+                            top: 0
                         }
                     }
                 },
@@ -126,10 +133,10 @@ define(function (require) {
                     show: false
                 },
                 tooltip: {
+                    grouped: false,
                     position: function (d, width, height, element) {
                         var left = d3.mouse(self.chart.element)[0] - (width / 2);
                         var top = d3.mouse(self.chart.element)[1] - height;
-
                         return {
                             top: top - 8, // 8 - offset for tooltip arrow
                             left: left
@@ -137,11 +144,22 @@ define(function (require) {
                     },
                     contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
                         var itemData = itemsData[d[0].index];
+                        var start;
+                        var end;
+                        var period;
+                        if (isWeeks) {
+                            start = Moment(itemData.date).format(config.widgetTimeFormat);
+                            end = Moment(itemData.date).add('day', 6).format(config.widgetTimeFormat);
+                            period = start + ' - ' + end;
+                        } else {
+                            period = itemData.date;
+                        }
                         return Util.templates(self.tooltipTemplate, {
-                            period: isWeeks ? itemData.start + ' - ' + itemData.end : itemData.start,
-                            showCount: true,
-                            count: itemData.count,
-                            measure: Localization.widgets.launches
+                            period: period,
+                            showRate: true,
+                            color: color(d[0].id),
+                            name: Localization.widgets[d[0].name],
+                            percentage: d[0].value + '%'
                         });
                     }
                 },
@@ -155,5 +173,5 @@ define(function (require) {
         }
     });
 
-    return LaunchesQuantityChart;
+    return LaunchStatisticsbarChart;
 });

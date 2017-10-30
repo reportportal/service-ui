@@ -54,7 +54,7 @@ define(function (require) {
     var PercentageOfAutoBugsChart = require('newWidgets/widgets/PercentageOfAutoBugsChartView');
     var PercentageOfSystemIssuesChart = require('newWidgets/widgets/PercentageOfSystemIssuesChartView');
     var LaunchesQuantityChart = require('newWidgets/widgets/projectInfoWidgets/LaunchesQuantityChartView');
-    var IssuesTrendChart = require('newWidgets/widgets/IssuesTrendChartView');
+    var LaunchStatisticsBarChartView = require('newWidgets/widgets/projectInfoWidgets/LaunchStatisticsBarChartView');
     var IssuesLineChart = require('newWidgets/widgets/IssuesLineChartView');
 
     var WIDGETS = {
@@ -175,7 +175,7 @@ define(function (require) {
                 return LaunchesQuantityChart;
             case 'issues_chart_trend':
             case 'issues_chart':
-                return IssuesTrendChart;
+                return LaunchStatisticsBarChartView;
             case 'issues_chart_line':
                 return IssuesLineChart;
             default:
