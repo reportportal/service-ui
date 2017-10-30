@@ -44,7 +44,7 @@ define(function (require) {
                 keepLogs: this.get('keepLogs'),
                 keepScreenshots: this.get('keepScreenshots'),
                 projectSpecific: this.get('projectSpecific'),
-                analyzeOnTheFly: this.get('analyzeOnTheFly')
+                // analyzeOnTheFly: this.get('analyzeOnTheFly')
             };
             return {
                 configuration: data
