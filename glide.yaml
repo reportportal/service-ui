@@ -11,3 +11,4 @@ import:
   version: ^2.0.0
   subpackages:
   - pat
+- package: github.com/unrolled/secure
