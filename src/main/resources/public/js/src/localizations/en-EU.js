@@ -843,7 +843,7 @@ define(['util'], function () {
             launchIsDeleting: 'The launch is in the removal process!',
             noItemInLaunch: 'No item<br> in launch',
             emptyItem: 'Item is empty',
-            severalItems: 'There’re several items with the same names, descriptions and tags',
+            severalItems: 'There’re several items with the same UID meaning.',
             multipleSelectHeader: 'YOU CAN PERFORM ACTIONS WITH SELECTED ITEMS:',
             selectMoreItem: 'You must select more than one item',
             interruptImportWarning: 'Are you sure you want to interrupt import launches?',
