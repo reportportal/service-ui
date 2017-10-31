@@ -51,16 +51,16 @@ define(function (require) {
             widgetOptions = this.model.getParameters().widgetOptions;
             this.infoData = widgetOptions.filterName[0];
             contentData = this.model.getContent().result[0].values;
-            if (+contentData.total === 0) {
+            if (+contentData.statistics$executions$total === 0) {
                 this.addNoAvailableBock();
                 return;
             }
-            this.total = +contentData.total;
+            this.total = +contentData.statistics$executions$total;
             this.chartData = {
-                launchPassed: +contentData.passed,
-                launchNotPassed: +contentData.total - +contentData.passed
+                launchPassed: +contentData.statistics$executions$passed,
+                launchNotPassed: +contentData.statistics$executions$total - +contentData.statistics$executions$passed
             };
-            chartDataPercents = this.getValuesInPercents(+contentData.total, this.chartData);
+            chartDataPercents = this.getValuesInPercents(+contentData.statistics$executions$total, this.chartData);
             this.$el.html(Util.templates(this.template));
             if (this.isDrawPie(widgetOptions)) {
                 this.$el.addClass('passing-rate-pie-view');
