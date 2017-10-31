@@ -87,7 +87,7 @@ define(function (require) {
                 data: {
                     columns: _.values(chartData.columns),
                     type: 'area-spline',
-                   // groups: [_.keys(chartData.columns)],  // TODO: TBD the need of stacking.
+                    groups: [_.keys(chartData.columns)],
                     colors: chartData.colors
                 },
                 point: {
@@ -174,6 +174,12 @@ define(function (require) {
 
                     // Custom area mouse events configuring
                     interactElems
+                        .on('click', function (d) {
+                            var shown = _.map(self.chart.data.shown(), function (dataItem) {
+                                return dataItem.id;
+                            });
+                            (shown.length > 1) ? self.chart.hide(_.without(shown, d.id)) : self.chart.show();
+                        })
                         .on('mousemove', function (d) {
                             var itemData;
                             var start;
@@ -208,8 +214,10 @@ define(function (require) {
                                     return (d3.mouse(self.chart.element)[1] - this.clientHeight - 8) + 'px';
                                 });
                         })
-                        .on('mouseover', function () {
-                            tooltip.style('display', 'block');
+                        .on('mouseover', function (d) {
+                            if (_.find(self.chart.data.shown(), function (shownItem) { return shownItem.id === d.id; })) {
+                                tooltip.style('display', 'block');
+                            }
                         })
                         .on('mouseout', function () {
                             tooltip.style('display', 'none');
