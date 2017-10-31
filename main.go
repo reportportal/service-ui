@@ -37,7 +37,7 @@ func main() {
 
 		//content security policy
 		csp := map[string][]string{
-			"default-src": {"'self'", "'unsafe-inline'"},
+			"default-src": {"'self'", "'unsafe-inline'", "*.uservoice.com"},
 			"script-src": {
 				"'self'",
 				"'unsafe-inline'",
@@ -48,7 +48,7 @@ func main() {
 				"*.epam.com",
 				"*.uservoice.com",
 			},
-			"img-src":    {"'self'", "data:", "www.google-analytics.com", "stats.g.doubleclick.net", "*.epam.com"},
+			"img-src":    {"'self'", "data:", "www.google-analytics.com", "stats.g.doubleclick.net", "*.epam.com", "*.uservoice.com"},
 			"object-src": {"'self'"},
 		}
 
@@ -58,6 +58,9 @@ func main() {
 				ContentTypeNosniff:    true,
 				BrowserXssFilter:      true,
 				ContentSecurityPolicy: buildCSP(csp),
+				STSSeconds:            315360000,
+				STSIncludeSubdomains:  true,
+				STSPreload:            true,
 			}).Handler(next)
 		})
 
