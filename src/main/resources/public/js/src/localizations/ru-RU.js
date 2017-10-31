@@ -387,7 +387,7 @@ define(['util'], function () {
             widgetSize: 'Размер виджета',
             widgetType: 'Тип виджета',
             typeUserName: 'Имя пользователя',
-            typeLaunchName: 'Время запуска',
+            typeLaunchName: 'Название запуска',
             widgetCriteria: 'Критерии для виджета',
             selectCriteria: 'Выбрать критерии',
             selectShared: 'Выбрать доступный критерий',
@@ -426,7 +426,7 @@ define(['util'], function () {
             findLastLaunch: 'Найти в последнем запуске',
             pieTotal: 'Всего',
             pieSum: 'Сумма',
-            totalTestCases: 'Всего сценариев',
+            totalTestCases: 'Всего тестовых сценариев',
             pieIssues: 'Ошибки',
             addNewWidget: 'Добавить новый виджет',
             addSharedWidget: 'Добавить виджет и поделиться',
@@ -452,7 +452,7 @@ define(['util'], function () {
             failedCases: 'неудавшиеся сценарии',
             ofTestCases: ' тестовых сценариев',
             ofIssues: 'из ошибок',
-            growTestCases: 'Прирост сценариев',
+            growTestCases: 'Прирост тестовых сценариев',
             toInvestigate: 'Требуется анализ',
             automationBug: 'Ошибка теста',
             productBug: 'Дефект продукта',
@@ -537,7 +537,7 @@ define(['util'], function () {
             statisticsTrendChartDescription: '- в "Режиме запуска" показывает тенденцию роста количества тестовых сценариев с каждым выбранным статусом от прогона к прогону,<br> - в "Режиме графика" показывает сумму с распределением по датам.',
 
             comparisonChart: 'Диаграмма сравнения разных запусков',
-            comparisonChartDescription: 'позволяет сравнить статистику за 2 последних запуска рядом.',
+            comparisonChartDescription: 'позволяет сравнить статистику за 2 последних запуска.',
 
             durationChart: 'Диаграмма длительности запусков',
             durationChartDescription: 'показывает длительность избранных запусков.',
@@ -555,7 +555,7 @@ define(['util'], function () {
             failedTrendChartDescription: 'показывает тенденцию роста количества неудачных тестовых сценариев от прогона к прогону.',
 
             executionIssueStatistics: 'Статистика выполнения и ошибок запусков',
-            executionIssueStatisticsDescription: 'показывает статистику последнего запуска, разделенную на 2 части:</br> - Пропущено, Прошло, Неудачно </br> - Ошибка продукта, Системная ошибка, Исследовать, Ошибки автоматизации.',
+            executionIssueStatisticsDescription: 'показывает статистику последнего запуска, разделенную на 2 части:</br> - Пропущено, Прошло, Неудачно </br> - Ошибка продукта, Системная ошибка, Исследовать, Ошибка автоматизации.',
 
             projectActivityPanel: 'Панель активностей проекта',
             projectActivityPanelDescription: 'показывает все действия, производимые над проектом.',
@@ -813,6 +813,7 @@ define(['util'], function () {
             rallyCredentials: 'Учетные данные Rally:',
             userName: 'Имя пользователя',
             password: 'Пароль',
+            owner: 'Владелец',
             includeData: 'Включить данные',
             willBePostedTo: 'Ошибка будет отправлена в',
             willBeLoadedTo: 'Ошибка будет загружена в',
@@ -834,7 +835,6 @@ define(['util'], function () {
             summarizeIssue: 'Обобщите название ошибки:',
             shiftToLaunches: 'Перейти ко всем запускам',
             shiftToDebug: 'Перейти к отладке',
-            owner: 'Владелец',
             addToDashboard: 'Добавить на панель управления',
             postIssue: 'Отправить ошибку',
             postBug: 'Отправить ошибку',
@@ -964,7 +964,7 @@ define(['util'], function () {
                 IN_PROGRESS: 'В процессе',
                 MANY: 'Существует несколько элементов с одинаковыми названиями, описаниями и метками',
                 NOT_FOUND: 'Нет элементов в запуске',
-                RESETED: 'Элемент пуст'
+                RESETED: 'Нет элементов в запуске'
             }
         },
 
@@ -972,8 +972,8 @@ define(['util'], function () {
             product_bug: 'Дефекты Продукта',
             automation_bug: 'Ошибки Теста',
             system_issue: 'Системные Ошибки',
-            to_investigate: 'Требуется Анализ',
-            no_defect: 'Нет Дефектов',
+            to_investigate: 'To Investigate',
+            no_defect: 'Без Дефектов',
             total: 'Всего'
         },
 
@@ -1003,19 +1003,19 @@ define(['util'], function () {
             statistics$defects$automation_bug: 'Ошибка Теста',
             statistics$defects$system_issue: 'Системная Ошибка',
             statistics$defects$to_investigate: 'Требуется Анализ',
-            statistics$defects$no_defect: 'Нет Дефектов',
+            statistics$defects$no_defect: 'Без Дефектов',
 
             statistics$defects$product_bug$total: 'Всего ДП',
             statistics$defects$automation_bug$total: 'Всего ОТ',
             statistics$defects$system_issue$total: 'Всего СО',
             statistics$defects$to_investigate$total: 'ТА',
-            statistics$defects$no_defect$total: 'Всего НД',
+            statistics$defects$no_defect$total: 'Всего БД',
 
             product_bug: 'Дефект Продукта',
             automation_bug: 'Ошибка Теста',
             system_issue: 'Системная Ошибка',
             to_investigate: 'Требует Анализа',
-            no_defect: 'Нет Дефектов',
+            no_defect: 'Без Дефектов',
             tags: 'Метки',
             start_time: 'Время начала',
             end_time: 'Время окончания',
@@ -1037,7 +1037,7 @@ define(['util'], function () {
             automation_bug: 'Ошибки Теста',
             system_issue: 'Системные Ошибки',
             to_investigate: 'Требуется Анализ',
-            no_defect: 'Нет Дефектов'
+            no_defect: 'Без Дефектов'
         },
 
         filterNameByValue: {
@@ -1046,7 +1046,7 @@ define(['util'], function () {
             FAILED: 'Неудачно',
             SKIPPED: 'Пропущено',
             TO_INVESTIGATE: 'Требует анализа',
-            NO_DEFECT: 'Нет дефектов',
+            NO_DEFECT: 'Без дефектов',
             PRODUCT_BUGS: 'Дефект продукта',
             AUTOMATION_BUGS: 'Ошибка теста',
             inProgress: 'В процессе',
@@ -1131,21 +1131,21 @@ define(['util'], function () {
             failed_short: 'Неудачно',
             skipped: 'Пропущено',
             skipped_short: 'Проп',
-            product_bug: 'Дефект Продукта',
+            product_bug: 'Product Bug',
             product_bug_short: 'Дефект Продукта',
             product_bug_super_short: 'ДП',
             auto_bug: 'Ошибка Теста',
-            automation_bug: 'Ошибка Теста',
+            automation_bug: 'Automation Bug',
             automation_bug_short: 'Ошибка Теста',
             automation_bug_super_short: 'ОТ',
-            system_issue: 'Системная Ошибка',
+            system_issue: 'System Issue',
             system_issue_short: 'Системная Ошибка',
             system_issue_super_short: 'СО',
-            to_investigate: 'Требуется Анализ',
+            to_investigate: 'To Investigate',
             to_investigate_short: 'ТА',
             to_investigate_super_short: 'ТА',
             investigated: 'Проанализировано',
-            no_defect: 'Нет Дефектов',
+            no_defect: 'No Defect',
             type: 'Тип метода',
             type_short: 'Тип метода',
             status: 'Статус',
@@ -1202,7 +1202,7 @@ define(['util'], function () {
             PRODUCT_BUG: 'Дефект продукта',
             AUTOMATION_BUG: 'Ошибка теста',
             SYSTEM_ISSUE: 'Системная ошибка',
-            NO_DEFECT: 'Нет дефектов'
+            NO_DEFECT: 'Без дефектов'
         },
 
         defectShortCutById: {
@@ -1210,7 +1210,7 @@ define(['util'], function () {
             PRODUCT_BUG: 'ДП',
             AUTOMATION_BUG: 'ОТ',
             SYSTEM_ISSUE: 'СО',
-            NO_DEFECT: 'НД'
+            NO_DEFECT: 'БД'
         },
 
         filterConditions: {
@@ -1382,7 +1382,7 @@ define(['util'], function () {
                 titleToInvestigate: 'Требуется анализ'
             },
 
-            noDefect: 'Нет дефектов',
+            noDefect: 'Без дефектов',
             systemIssue: 'Системная ошибка',
             productBug: 'Дефект продукта',
             toInvestigate: 'Требуется анализ',

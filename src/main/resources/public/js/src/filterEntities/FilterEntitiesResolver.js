@@ -76,7 +76,7 @@ define(function (require, exports, module) {
         });
         var totalName = Localization.favorites.total + ' ' + Localization.filterNamePluralById[type];
         if (filters.length == 1) {
-            totalName = Localization.filterNameById[type];
+            totalName = filters[0].get('label');
             filters = [];
         }
         filters.unshift(new Filters.EntityConditionInputModel({
