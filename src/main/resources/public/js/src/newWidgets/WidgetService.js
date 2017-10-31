@@ -48,14 +48,13 @@ define(function (require) {
     var FlakyTestCasesTable = require('newWidgets/widgets/flakyTestCasesTable/index');
 
     // ------------------ PROJECT INFO PAGE WIDGETS ------------------
-    var LastLaunchPieChart = require('newWidgets/widgets/LastLaunchPieChartView');
+    var LastLaunchPieChart = require('newWidgets/widgets/projectInfoWidgets/LastLaunchPieChartView');
     var PercentageOfInvestigationChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfInvestigationChartView');
     var PercentageOfProductBugsChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfProductBugsChartView');
     var PercentageOfAutoBugsChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfAutomationBugsChartView');
     var PercentageOfSystemIssuesChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfSystemIssuesChartView');
     var LaunchesQuantityChart = require('newWidgets/widgets/projectInfoWidgets/LaunchesQuantityChartView');
     var LaunchStatisticsBarChartView = require('newWidgets/widgets/projectInfoWidgets/LaunchStatisticsBarChartView');
-    var IssuesLineChart = require('newWidgets/widgets/IssuesLineChartView');
 
     var WIDGETS = {
         old_line_chart: LaunchStatisticsLineChart,
@@ -176,8 +175,6 @@ define(function (require) {
             case 'issues_chart_trend':
             case 'issues_chart':
                 return LaunchStatisticsBarChartView;
-            case 'issues_chart_line':
-                return IssuesLineChart;
             default:
                 return null;
             }
