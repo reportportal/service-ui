@@ -154,23 +154,19 @@ define(function (require) {
                     columns: [],
                     colors: {}
                 };
-                _.each(this.defectTypes.models, function (model) {
-                    var locator;
-                    if (model.get('typeRef') === type.toUpperCase()) {
-                        locator = model.get('locator');
-                        chartData.columns.push([locator, defects[locator]]);
-                        chartData.colors[locator] = model.get('color');
+                _.each(defects, function (val, defectType) {
+                    var defectModel;
+                    if (defectType !== 'total') {
+                        defectModel = this.defectTypes.getDefectByLocator(defectType);
+                        defectModel && chartData.columns.push([defectType, val]);
+                        defectModel && (chartData.colors[defectType] = defectModel.get('color'));
                     }
                 }, this);
                 this.drawDonutChart(chartData, id);
             }, this);
         },
         getDefectByType: function (item, type) {
-            var typeCC = _.map(type.split('_'), function (t, i) {
-                return i ? t.capitalize() : t;
-            });
-            var key = 'statistics$issueCounter$' + typeCC.join('');
-            return item[key];
+            return item['statistics$defects$' + type];
         },
         showDefectTooltip: function (e) {
             var el = $(e.currentTarget);
@@ -288,7 +284,7 @@ define(function (require) {
                         var group = _.initial(a).join('$');
                         var defect = _.last(a);
                         var val = parseInt(v, 10);
-                        if (k.indexOf('statistics$issueCounter') >= 0) {
+                        if (k.indexOf('statistics$defects') >= 0) {
                             if (stats[group]) {
                                 stats[group].total += val;
                             } else {
