@@ -110,4 +110,33 @@
       border-top: 8px solid $COLOR--gray-80;
     }
   }
+
+  &.percentage-of-defects {
+    svg {
+      .c3-chart {
+        .c3-chart-line {
+          .c3-lines {
+            display: none;
+          }
+          .c3-areas {
+            .c3-area {
+              pointer-events: all !important;
+              opacity: 1 !important;
+              cursor: pointer;
+
+              &:hover {
+                opacity: 0.8 !important;
+              }
+            }
+          }
+          .c3-circles {
+            pointer-events: all !important;
+          }
+        }
+        .c3-event-rects {
+          pointer-events: none;
+        }
+      }
+    }
+  }
 }

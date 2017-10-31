@@ -78,15 +78,14 @@ define(function (require) {
             // fill chart data with converted to percent values
             _.each(contentDataSorted, function (itemData) {
                 var total = +itemData.automationBug + +itemData.productBug + +itemData.systemIssue + +itemData.toInvestigate;
-                chartData.columns.productBug.push(this.getRoundedToDecimalPlaces((+itemData.productBug / total) * 100, 2).toFixed(2));
-                chartData.columns.automationBug.push(this.getRoundedToDecimalPlaces((+itemData.automationBug / total) * 100, 2).toFixed(2));
-                chartData.columns.systemIssue.push(this.getRoundedToDecimalPlaces((+itemData.systemIssue / total) * 100, 2).toFixed(2));
-                chartData.columns.toInvestigate.push(this.getRoundedToDecimalPlaces((+itemData.toInvestigate / total) * 100, 2).toFixed(2));
+                chartData.columns.productBug.push(isNaN(+itemData.productBug / total) ? 0 : this.getRoundedToDecimalPlaces((+itemData.productBug / total) * 100, 2).toFixed(2));
+                chartData.columns.automationBug.push(isNaN(+itemData.automationBug / total) ? 0 : this.getRoundedToDecimalPlaces((+itemData.automationBug / total) * 100, 2).toFixed(2));
+                chartData.columns.systemIssue.push(isNaN(+itemData.systemIssue / total) ? 0 : this.getRoundedToDecimalPlaces((+itemData.systemIssue / total) * 100, 2).toFixed(2));
+                chartData.columns.toInvestigate.push(isNaN(+itemData.toInvestigate / total) ? 0 : this.getRoundedToDecimalPlaces((+itemData.toInvestigate / total) * 100, 2).toFixed(2));
                 itemsData.push({
                     date: itemData.date
                 });
             }, this);
-
             this.chart = c3.generate({
                 bindto: container[0],
                 data: {
@@ -123,6 +122,7 @@ define(function (require) {
                     },
                     y: {
                         show: true,
+                        max: 100,
                         padding: {
                             top: 0
                         },

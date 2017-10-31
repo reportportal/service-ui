@@ -118,6 +118,7 @@ define(function (require) {
                         padding: {
                             top: 0
                         },
+                        max: 100,
                         tick: {
                             format: function (d) {
                                 return d + '%';
