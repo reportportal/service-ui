@@ -50,9 +50,9 @@ define(function (require) {
     // ------------------ PROJECT INFO PAGE WIDGETS ------------------
     var LastLaunchPieChart = require('newWidgets/widgets/LastLaunchPieChartView');
     var PercentageOfInvestigationChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfInvestigationChartView');
-    var PercentageOfProductBugsChart = require('newWidgets/widgets/PercentageOfProductBugsChartView');
-    var PercentageOfAutoBugsChart = require('newWidgets/widgets/PercentageOfAutoBugsChartView');
-    var PercentageOfSystemIssuesChart = require('newWidgets/widgets/PercentageOfSystemIssuesChartView');
+    var PercentageOfProductBugsChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfProductBugsChartView');
+    var PercentageOfAutoBugsChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfAutomationBugsChartView');
+    var PercentageOfSystemIssuesChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfSystemIssuesChartView');
     var LaunchesQuantityChart = require('newWidgets/widgets/projectInfoWidgets/LaunchesQuantityChartView');
     var LaunchStatisticsBarChartView = require('newWidgets/widgets/projectInfoWidgets/LaunchStatisticsBarChartView');
     var IssuesLineChart = require('newWidgets/widgets/IssuesLineChartView');

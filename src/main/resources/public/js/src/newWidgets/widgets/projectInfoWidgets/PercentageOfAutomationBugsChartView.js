@@ -18,19 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
-    var Localization = require('localization');
-    var PercentageOfProductBugsChart = require('newWidgets/widgets/PercentageOfProductBugsChartView');
+    var PercentageOfDefectsChartView = require('newWidgets/widgets/projectInfoWidgets/_PercentageOfDefectsChartView');
 
-    var PercentageOfSystemIssuesChart = PercentageOfProductBugsChart.extend({
-        averageKey: 'systemIssue',
-        label: Localization.widgets.ofSystemIssues,
-        getCriteria: function () {
-            return ['systemIssue', 'toInvestigate'];
-        }
+    var PercentageOfAutomationBugsChartView = PercentageOfDefectsChartView.extend({
+        criteria: 'automationBug'
     });
 
-    return PercentageOfSystemIssuesChart;
+    return PercentageOfAutomationBugsChartView;
 });
