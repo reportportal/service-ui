@@ -28,7 +28,7 @@ define(function (require) {
     var Moment = require('moment');
     var config = App.getInstance();
     var Service = require('coreService');
-    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+    var FilterModel = require('filters/FilterModel');
 
     var C3ChartWidgetView = BaseWidgetView.extend({
         isDataExists: function () {
@@ -89,6 +89,9 @@ define(function (require) {
             var filterId = this.model.get('filter_id');
             Service.getFilterData([filterId])
                 .done(function (response) {
+                    var filterModel = new FilterModel();
+                    var link;
+                    var entities;
                     var time = Moment(date);
                     var dateFilter = {
                         condition: 'btw',
@@ -96,14 +99,11 @@ define(function (require) {
                         is_negative: false,
                         value: time.format('x') + ',' + (parseInt(time.format('x'), 10) + range)
                     };
-                    var filtersCollection = new SingletonLaunchFilterCollection();
-                    var newFilter = filtersCollection.generateTempModel();
-                    var entities = response[0].entities || [];
-                    var link = newFilter.get('url');
-
+                    filterModel.parseServerData(response[0]);
+                    entities = filterModel.getEntitiesObj() || [];
                     entities.push(dateFilter);
-                    newFilter.set('newEntities', JSON.stringify(entities));
-                    link += '?' + newFilter.getOptions().join('&');
+                    filterModel.set('newEntities', JSON.stringify(entities));
+                    link = filterModel.get('url') + 'all?' + filterModel.getOptions().join('&');
                     if (link) {
                         config.router.navigate(link, { trigger: true });
                     }
