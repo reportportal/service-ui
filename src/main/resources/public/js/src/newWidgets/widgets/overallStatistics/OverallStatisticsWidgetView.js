@@ -61,19 +61,17 @@ define(function (require) {
             this.scrollers = [];
             widgetOptions = this.model.getParameters().widgetOptions;
             contentData = this.model.getContent().result[0].values;
-            statusChartData = _.pick(contentData, ['passed', 'failed', 'skipped', 'total']);
-            defectTypesChartData = _.omit(contentData, ['failed', 'passed', 'skipped', 'total']);
+            statusChartData = _.pick(contentData, ['statistics$executions$passed', 'statistics$executions$failed', 'statistics$executions$skipped', 'statistics$executions$total']);
+            defectTypesChartData = _.omit(contentData, ['statistics$executions$failed', 'statistics$executions$passed', 'statistics$executions$skipped', 'statistics$executions$total']);
 
             _.each(this.model.getContentFields(), function (field) {
-                var splitted = field.split('$');
                 _.each(defectTypesChartData, function (val, key) {
-                    if (key === splitted[splitted.length - 1]) {
+                    if (key === field) {
                         defectTypesChartDataOrdered[key] = val;
                     }
                 });
             });
-
-            if (contentData.total === 0 || (_.isEmpty(defectTypesChartDataOrdered) && _.isEmpty(statusChartData))) {
+            if (contentData.statistics$executions$total === 0 || (_.isEmpty(defectTypesChartDataOrdered) && _.isEmpty(statusChartData))) {
                 this.addNoAvailableBock();
                 return;
             }
@@ -129,29 +127,21 @@ define(function (require) {
 
             _.each(data, function (val, key) {
                 var defectModel;
-                if (key === 'total') {
+                var locator = key.split('$')[key.split('$').length - 1];
+                if (key === 'statistics$executions$total') {
                     return;
                 }
-                switch (key) {
-                case 'passed':
-                    colors[key] = '#8db677';
-                    break;
-                case 'failed':
-                    colors[key] = '#e86c42';
-                    break;
-                case 'skipped':
-                    colors[key] = '#bfc7cc';
-                    break;
-                default:
-                    break;
+                if (~['statistics$executions$passed', 'statistics$executions$failed', 'statistics$executions$skipped'].indexOf(key)) {
+                    colors[key] = config.defaultColors[locator];
+                } else {
+                    defectModel = _.find(this.defetTypesCollection.models, function (model) {
+                        return model.get('locator') === locator;
+                    });
+                    defectModel && (colors[key] = defectModel.get('color'));
                 }
-                defectModel = _.find(this.defetTypesCollection.models, function (model) {
-                    return model.get('locator') === key;
-                });
-                defectModel && (colors[key] = defectModel.get('color'));
                 total += +val;
                 itemNames.push(key);
-                chartData.push([key, val]);
+                chartData.push([key, +val]);
             }.bind(this));
             chart = c3.generate({
                 bindto: $el[0],
@@ -199,16 +189,17 @@ define(function (require) {
                     contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
                         var name;
                         var defectModel;
-                        if (d[0].id === 'passed' || d[0].id === 'failed' || d[0].id === 'skipped') {
-                            name = Localization.launchesHeaders[d[0].name].toUpperCase();
+                        var locator = d[0].id.split('$')[d[0].id.split('$').length - 1];
+                        if (~['statistics$executions$passed', 'statistics$executions$failed', 'statistics$executions$skipped'].indexOf(d[0].id)) {
+                            name = Localization.launchesHeaders[locator].toUpperCase();
                         } else {
-                            defectModel = self.defetTypesCollection.getDefectByLocator(d[0].id);
+                            defectModel = self.defetTypesCollection.getDefectByLocator(locator);
                             if (defectModel) {
                                 name = defectModel.get('longName');
                             } else {
                                 return '<div class="tooltip-title-invalid">' +
                                     '<div class="color-mark-invalid"></div>' +
-                                    d[0].id +
+                                    locator +
                                     '</div>';
                             }
                         }
@@ -248,14 +239,15 @@ define(function (require) {
                 .html(function (id) {
                     var name;
                     var defectModel;
-                    if (id === 'passed' || id === 'failed' || id === 'skipped') {
-                        name = Localization.launchesHeaders[id];
+                    var locator = id.split('$')[id.split('$').length - 1];
+                    if (~['statistics$executions$passed', 'statistics$executions$failed', 'statistics$executions$skipped'].indexOf(id)) {
+                        name = Localization.launchesHeaders[locator];
                     } else {
-                        defectModel = self.defetTypesCollection.getDefectByLocator(id);
+                        defectModel = self.defetTypesCollection.getDefectByLocator(locator);
                         if (defectModel) {
                             name = defectModel.get('longName');
                         } else {
-                            return '<div class="invalid-color-mark"></div><span class="invalid">' + id + '</span>';
+                            return '<div class="invalid-color-mark"></div><span class="invalid">' + locator + '</span>';
                         }
                     }
                     return '<div class="color-mark"></div>' + name;
@@ -296,21 +288,21 @@ define(function (require) {
         },
         drawStackedBarChart: function ($el, data) {
             var legendScroller;
-            if (data.total) {
-                $('[data-js-total-value]', $el).html(data.total);
+            if (data.statistics$executions$total) {
+                $('[data-js-total-value]', $el).html(data.statistics$executions$total);
             } else {
                 $('[data-js-total]', $el).add($('[data-js-bar]', $el)).addClass('hidden');
             }
-            if (!data.passed && !data.failed && !data.skipped) {
+            if (!data.statistics$executions$passed && !data.statistics$executions$failed && !data.statistics$executions$skipped) {
                 $('[data-js-bar]', $el).addClass('hidden');
             }
-            (data.passed) ? $('[data-js-legend-passed-val]', $el).html(data.passed) : $('[data-js-legend-passed]', $el).addClass('hidden');
-            (data.failed) ? $('[data-js-legend-failed-val]', $el).html(data.failed) : $('[data-js-legend-failed]', $el).addClass('hidden');
-            (data.skipped) ? $('[data-js-legend-skipped-val]', $el).html(data.skipped) : $('[data-js-legend-skipped]', $el).addClass('hidden');
+            (data.statistics$executions$passed) ? $('[data-js-legend-passed-val]', $el).html(data.statistics$executions$passed) : $('[data-js-legend-passed]', $el).addClass('hidden');
+            (data.statistics$executions$failed) ? $('[data-js-legend-failed-val]', $el).html(data.statistics$executions$failed) : $('[data-js-legend-failed]', $el).addClass('hidden');
+            (data.statistics$executions$skipped) ? $('[data-js-legend-skipped-val]', $el).html(data.statistics$executions$skipped) : $('[data-js-legend-skipped]', $el).addClass('hidden');
 
-            $('[data-js-bar-passed]', $el).width(((data.passed / data.total) * 100) + '%');
-            $('[data-js-bar-failed]', $el).width(((data.failed / data.total) * 100) + '%');
-            $('[data-js-bar-skipped]', $el).width(((data.skipped / data.total) * 100) + '%');
+            $('[data-js-bar-passed]', $el).width(((data.statistics$executions$passed / data.statistics$executions$total) * 100) + '%');
+            $('[data-js-bar-failed]', $el).width(((data.statistics$executions$failed / data.statistics$executions$total) * 100) + '%');
+            $('[data-js-bar-skipped]', $el).width(((data.statistics$executions$skipped / data.statistics$executions$total) * 100) + '%');
             legendScroller = Util.setupBaronScroll($el);
             this.scrollers.push(legendScroller);
         },
@@ -318,13 +310,14 @@ define(function (require) {
             var legendScroller;
             var $fragment = $(document.createDocumentFragment());
             _.each(data, function (val, title) {
+                var locator = title.split('$')[title.split('$').length - 1];
                 var color = _.find(this.defetTypesCollection.models, function (model) {
-                    return model.get('locator') === title;
+                    return model.get('locator') === locator;
                 }).get('color');
                 $fragment.append(Util.templates(
                     this.templatePanelItem, {
                         val: val,
-                        title: this.defetTypesCollection.getDefectByLocator(title).get('longName'),
+                        title: this.defetTypesCollection.getDefectByLocator(locator).get('longName'),
                         color: color
                     }
                 ));
