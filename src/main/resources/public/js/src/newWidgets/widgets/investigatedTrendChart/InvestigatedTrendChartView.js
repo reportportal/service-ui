@@ -24,7 +24,6 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Util = require('util');
-    var Service = require('coreService');
     var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var Localization = require('localization');
@@ -268,31 +267,6 @@ define(function (require) {
                 legendScroller = Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
                 this.scrollers.push(legendScroller);
             }
-        },
-        redirectForTimeLine: function (date) {
-            var range = 86400000;
-            var filterId = this.model.get('filter_id');
-            Service.getFilterData([filterId])
-                .done(function (response) {
-                    var time = Moment(date);
-                    var dateFilter = {
-                        condition: 'btw',
-                        filtering_field: 'start_time',
-                        is_negative: false,
-                        value: time.format('x') + ',' + (parseInt(time.format('x'), 10) + range)
-                    };
-                    var filtersCollection = new SingletonLaunchFilterCollection();
-                    var newFilter = filtersCollection.generateTempModel();
-                    var entities = response[0].entities || [];
-                    var link = newFilter.get('url');
-
-                    entities.push(dateFilter);
-                    newFilter.set('newEntities', JSON.stringify(entities));
-                    link += '?' + newFilter.getOptions().join('&');
-                    if (link) {
-                        config.router.navigate(link, { trigger: true });
-                    }
-                });
         },
         onBeforeDestroy: function () {
             _.each(this.scrollers, function (baronScrollElem) {
