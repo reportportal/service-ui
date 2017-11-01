@@ -68,7 +68,7 @@ define(function (require) {
                     self.filterId = 'all';
                 }
                 if (self.filterId === 'all') {
-                    if (options.subContext[3]) {
+                    if (options.subContext[3] && !options.subContext[2]) {
                         filters = LaunchUtils.calculateFilterOptions(options.subContext[3]);
                         if (filters.entities !== '[]') {
                             tempFilterModel = self.launchFilterCollection.generateTempModel(filters);
