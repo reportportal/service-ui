@@ -62,8 +62,8 @@ define(function (require) {
         },
         addNoAvailableBock: function (el) {
             var $element = el ? $(el) : this.$el;
-            var view = new WidgetErrorView({ message: Localization.widgets.noData });
-            $element.after(view.$el);
+            this.errorView = new WidgetErrorView({ message: Localization.widgets.noData });
+            $element.after(this.errorView.$el);
         },
         getSeriesColor: function (name) {
             var defect = this.defectsCollection.getDefectType(name);
@@ -215,6 +215,7 @@ define(function (require) {
             this.updateWidget();
         },
         onDestroy: function () {
+            this.errorView && this.errorView.destroy();
             $(window).off('resize.' + this.id);
             this.onBeforeDestroy && this.onBeforeDestroy();
         }
