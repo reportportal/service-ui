@@ -62,8 +62,8 @@
 
 #ProjectInfo {
     background: #fff;
-    padding-right: 0px;
-    padding-left: 0px;
+    padding-right: 0;
+    padding-left: 0;
 
     .item-col-custom {
         margin-bottom: 20px;
@@ -80,6 +80,7 @@
         .widget-body {
             max-height: 600px;
             overflow-y: auto;
+            position: relative;
 
             .panel-body {
                 border: none;

@@ -199,6 +199,13 @@
           }
         }
       }
+      &.left-widget-wrapper {
+        .c3-tooltip-container {
+          .tooltip-title {
+            text-transform: uppercase;
+          }
+        }
+      }
     }
   }
 

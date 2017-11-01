@@ -153,7 +153,7 @@ define(function (require) {
                         var period;
                         if (isWeeks) {
                             start = Moment(itemData.date).format(config.widgetTimeFormat);
-                            end = Moment(itemData.date).add('day', 6).format(config.widgetTimeFormat);
+                            end = Moment(itemData.date).add(6, 'day').format(config.widgetTimeFormat);
                             period = start + ' - ' + end;
                         } else {
                             period = itemData.date;
