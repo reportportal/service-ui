@@ -908,7 +908,7 @@ define(['util'], function () {
                 SKIPPED: 'Skipped',
                 INTERRUPTED: 'Interrupted',
                 IN_PROGRESS: 'In progress',
-                MANY: 'There are several items with the same names, descriptions and tags',
+                MANY: 'There’re several items with the same UID meaning.',
                 NOT_FOUND: 'No item in launch',
                 RESETED: 'Item is empty'
             }
