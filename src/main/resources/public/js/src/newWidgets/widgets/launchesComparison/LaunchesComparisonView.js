@@ -67,45 +67,9 @@ define(function (require) {
 
             // prepare columns array and fill it witch field names
             _.each(data[0].values, function (val, key) {
-                var defectModel;
-                var locator;
-                var splitted = key.split('$');
-                var shortKey = ~key.indexOf('$executionCounter') ? splitted[splitted.length - 1] : splitted[splitted.length - 2];
-                switch (shortKey) {
-                case 'total':
-                    colors[shortKey] = '#489BC1';
-                    break;
-                case 'passed':
-                    colors[shortKey] = '#8db677';
-                    break;
-                case 'failed':
-                    colors[shortKey] = '#e86c42';
-                    break;
-                case 'skipped':
-                    colors[shortKey] = '#bfc7cc';
-                    break;
-                case 'productBug':
-                    locator = 'PB001';
-                    break;
-                case 'automationBug':
-                    locator = 'AB001';
-                    break;
-                case 'systemIssue':
-                    locator = 'SI001';
-                    break;
-                case 'noDefect':
-                    locator = 'ND001';
-                    break;
-                case 'toInvestigate':
-                    locator = 'TI001';
-                    break;
-                default:
-                    break;
-                }
-                defectModel = this.defectTypesCollection.getDefectByLocator(locator);
-                defectModel && (colors[shortKey] = defectModel.get('color'));
-                chartData[shortKey] = [shortKey];
-            }.bind(this));
+                chartData[key] = [key];
+                colors[key] = config.defaultColors[key.split('$')[2]];
+            });
 
             // fill columns arrays with values
             _.each(data, function (item) {
@@ -116,40 +80,16 @@ define(function (require) {
                     startTime: item.startTime
                 });
                 _.each(item.values, function (val, key) {
-                    var splitted = key.split('$');
-                    var shortKey = ~key.indexOf('$executionCounter') ? splitted[splitted.length - 1] : splitted[splitted.length - 2];
-                    chartData[shortKey].push(val);
+                    chartData[key].push(val);
                 });
             });
 
             // reorder colums array in accordance with contentFields array
             _.each(contentFields, function (key) {
-                var splitted = key.split('$');
-                var shortKey = ~key.indexOf('$executions') ? splitted[splitted.length - 1] : splitted[splitted.length - 2];
-                var column;
-                if (shortKey !== 'total') {
-                    switch (shortKey) {
-                    case 'product_bug':
-                        column = chartData.productBug;
-                        break;
-                    case 'automation_bug':
-                        column = chartData.automationBug;
-                        break;
-                    case 'system_issue':
-                        column = chartData.systemIssue;
-                        break;
-                    case 'no_defect':
-                        column = chartData.noDefect;
-                        break;
-                    case 'to_investigate':
-                        column = chartData.toInvestigate;
-                        break;
-                    default:
-                        column = chartData[shortKey];
-                        break;
-                    }
-                    column && chartDataOrdered.push(column);
+                if (key === 'statistics$executions$total') { // do not show executionsTotal
+                    return;
                 }
+                chartDataOrdered.push(chartData[key]);
             });
             // get column item names in correct order
             itemNames = _.map(chartDataOrdered, function (item) {
@@ -228,34 +168,12 @@ define(function (require) {
                     contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
                         var launchData = itemData[d[0].index];
                         var id = d[0].id;
-                        var name;
-                        switch (id) {
-                        case 'productBug':
-                            name = self.defectTypesCollection.getDefectByLocator('PB001').get('longName');
-                            break;
-                        case 'automationBug':
-                            name = self.defectTypesCollection.getDefectByLocator('AB001').get('longName');
-                            break;
-                        case 'systemIssue':
-                            name = self.defectTypesCollection.getDefectByLocator('SI001').get('longName');
-                            break;
-                        case 'noDefect':
-                            name = self.defectTypesCollection.getDefectByLocator('ND001').get('longName');
-                            break;
-                        case 'toInvestigate':
-                            name = self.defectTypesCollection.getDefectByLocator('TI001').get('longName');
-                            break;
-                        default:
-                            name = Localization.launchesHeaders[id];
-                            break;
-                        }
-
                         return Util.templates(self.tooltipTemplate, {
                             launchName: launchData.name,
                             launchNumber: launchData.number,
                             startTime: self.formatDateTime(launchData.startTime),
-                            color: color(d[0].id),
-                            itemName: name,
+                            color: color(id),
+                            itemName: Localization.filterNameById[id.split('$total')[0]],
                             itemCases: d[0].value
                         });
                     }
@@ -286,28 +204,7 @@ define(function (require) {
                     .append('span')
                     .attr('data-id', function (id) { return id; })
                     .html(function (id) {
-                        var name;
-                        switch (id) {
-                        case 'productBug':
-                            name = self.defectTypesCollection.getDefectByLocator('PB001').get('longName');
-                            break;
-                        case 'automationBug':
-                            name = self.defectTypesCollection.getDefectByLocator('AB001').get('longName');
-                            break;
-                        case 'systemIssue':
-                            name = self.defectTypesCollection.getDefectByLocator('SI001').get('longName');
-                            break;
-                        case 'noDefect':
-                            name = self.defectTypesCollection.getDefectByLocator('ND001').get('longName');
-                            break;
-                        case 'toInvestigate':
-                            name = self.defectTypesCollection.getDefectByLocator('TI001').get('longName');
-                            break;
-                        default:
-                            name = Localization.launchesHeaders[id];
-                            break;
-                        }
-                        return '<div class="color-mark"></div>' + name;
+                        return '<div class="color-mark"></div>' + Localization.filterNameById[id.split('$total')[0]];
                     })
                     .each(function (id) {
                         d3.select(this).select('.color-mark').style('background-color', self.chart.color(id));
