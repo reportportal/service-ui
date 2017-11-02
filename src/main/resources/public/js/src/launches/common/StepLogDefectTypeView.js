@@ -141,6 +141,7 @@ define(function (require) {
             '[data-js-issue-name]': 'text: issueName',
             '[data-js-issue-color]': 'attr: {style: format("background-color: $1", issueColor)}',
             '[data-js-issue-title]': 'attr: {title: issueTitle}',
+            '[data-js-aa-badge]': 'classes: {show: issueAutoanalyzed}',
             '[data-js-edit-defect]': 'attr: {disabled: launch_isProcessing, title: editIssueTitle}, classes: {disabled: launch_isProcessing}'
         },
         computeds: {
@@ -165,6 +166,12 @@ define(function (require) {
                         return defectModel.get('longName').setMaxLength(20);
                     }
                     return '';
+                }
+            },
+            issueAutoanalyzed: {
+                deps: ['issue'],
+                get: function () {
+                    return this.model.getIssue().autoAnalyzed === 'true';
                 }
             },
             issueTitle: {
