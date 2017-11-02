@@ -80,10 +80,10 @@ define(function (require) {
             _.each(data, function (item) {
                 if (+item.values.delta < 0) {
                     isPositive.push(false);
-                    offsets.push(+item.values.statistics$executionCounter$total);
+                    offsets.push(+item.values.statistics$executions$total);
                 } else {
                     isPositive.push(true);
-                    offsets.push(item.values.statistics$executionCounter$total - item.values.delta);
+                    offsets.push(+item.values.statistics$executions$total - +item.values.delta);
                 }
                 bars.push(Math.abs(+item.values.delta));
                 if (self.isTimeLine) {
@@ -102,7 +102,7 @@ define(function (require) {
                 data: {
                     columns: [offsets, bars],
                     type: 'bar',
-                    order: 'DESC',
+                    order: null,
                     onclick: function (d, element) {
                         if (d.id === 'bar') {
                             if (self.isTimeLine) {
