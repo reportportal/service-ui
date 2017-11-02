@@ -104,6 +104,7 @@ define(function (require) {
                     entities.push(dateFilter);
                     filterModel.set('newEntities', JSON.stringify(entities));
                     link = filterModel.get('url') + 'all?' + filterModel.getOptions().join('&');
+                    filterModel.destroy();
                     if (link) {
                         config.router.navigate(link, { trigger: true });
                     }
