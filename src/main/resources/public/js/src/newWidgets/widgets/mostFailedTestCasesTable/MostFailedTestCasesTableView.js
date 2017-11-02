@@ -77,6 +77,7 @@ define(function (require) {
             }
         },
         onClickItem: function (e) {
+            config.trackingDispatcher.trackEventNumber(344);
             config.router.navigate($(e.currentTarget).attr('data-js-link'), { trigger: true });
         },
         formatDate: function () {

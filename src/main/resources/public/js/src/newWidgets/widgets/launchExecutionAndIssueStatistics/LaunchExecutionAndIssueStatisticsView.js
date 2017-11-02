@@ -235,6 +235,7 @@ define(function (require) {
                         chart.revert();
                     })
                     .on('click', function (id) {
+                        config.trackingDispatcher.trackEventNumber(342);
                         $('.color-mark', $(this)).toggleClass('unchecked');
                         chart.toggle(id);
                     });
