@@ -367,6 +367,7 @@ define(['util'], function () {
         },
 
         widgets: {
+            all: 'Все',
             clickZoomIn: 'Щелкните, чтобы увеличить',
             clickZoomOut: 'Щелкните, чтобы уменьшить',
             clickEdit: 'Щелкните, чтобы отредактировать виджет',
