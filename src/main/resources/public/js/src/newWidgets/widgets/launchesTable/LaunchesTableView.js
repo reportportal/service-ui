@@ -64,6 +64,7 @@ define(function (require) {
             this.widgetId = options.widgetId;
             this.criteria = options.criteria;
             this.link = options.link;
+            this.contentFields = options.contentFields;
             this.charts = [];
             this.appModel = new SingletonAppModel();
             this.defectTypes = new SingletonDefectTypeCollection();
@@ -166,7 +167,16 @@ define(function (require) {
             }, this);
         },
         getDefectByType: function (item, type) {
-            return item['statistics$defects$' + type];
+            var ordered = {};
+            ordered.total = item['statistics$defects$' + type].total;
+            _.each(this.contentFields, function (field) {
+                _.each(item['statistics$defects$' + type], function (val, key) {
+                    if (~field.indexOf('statistics$defects$') && (key === field.split('$')[field.split('$').length - 1])) {
+                        ordered[key] = val;
+                    }
+                });
+            });
+            return ordered;
         },
         showDefectTooltip: function (e) {
             var el = $(e.currentTarget);
@@ -349,7 +359,8 @@ define(function (require) {
                     model: new Epoxy.Model(launch),
                     criteria: this.getCriteria(),
                     widgetId: this.id,
-                    link: this.getLink()
+                    link: this.getLink(),
+                    contentFields: this.model.getContentFields()
                 });
                 $('[data-js-items]', this.$el).append(item.$el);
 
