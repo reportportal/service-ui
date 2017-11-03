@@ -311,6 +311,7 @@ define(['util'], function () {
         },
 
         widgets: {
+            all: 'All',
             clickZoomIn: 'Click to zoom in',
             clickZoomOut: 'Click to zoom out',
             clickEdit: 'Click to edit widget',
