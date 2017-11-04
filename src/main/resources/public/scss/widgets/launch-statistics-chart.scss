@@ -36,6 +36,14 @@
           }
         }
       }
+      .c3-brush {
+        .background {
+          cursor: ew-resize !important;
+        }
+        .extent {
+          cursor: ew-resize !important;
+        }
+      }
     }
     .c3-tooltip-container {
       max-width: 215px;

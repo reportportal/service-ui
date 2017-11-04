@@ -24,9 +24,7 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var Util = require('util');
-    var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
-    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
-    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
+    var LaunchStatisticsCommonView = require('newWidgets/widgets/launchStatisticsChart/LaunchStatisticsChartCommonView');
     var Localization = require('localization');
     var d3 = require('d3');
     var c3 = require('c3');
@@ -34,115 +32,24 @@ define(function (require) {
     var Moment = require('moment');
     var config = App.getInstance();
 
-    var LaunchStatisticsAreaChart = C3ChartWidgetView.extend({
+    var LaunchStatisticsAreaChart = LaunchStatisticsCommonView.extend({
 
-        tooltipTemplate: 'tpl-widget-launch-statistics-chart-tooltip',
-
-        render: function () {
-            var data;
-            this.$el.addClass('stacked-area-view');
-            this.isTimeLine = !!this.model.getWidgetOptions().timeline;
-            this.isZoomEnabled = !!this.model.getWidgetOptions().zoom;
-            if (this.isTimeLine) {
-                data = [];
-                _.each(this.model.getContent(), function (item, key) {
-                    data.push({
-                        date: key,
-                        values: item[0].values
-                    });
-                });
-                this.$el.addClass('timeline-mode');
-            } else {
-                data = this.model.getContent().result;
-            }
-            this.scrollers = [];
-            if (this.isPreview) {
-                this.$el.addClass('preview-view');
-            }
-            if ((!this.isTimeLine && !this.isDataExists()) || (this.isTimeLine && _.isEmpty(this.model.getContent()))) {
-                this.addNoAvailableBock();
-                return;
-            }
-            this.defectTypesCollection = new SingletonDefectTypeCollection();
-            this.launchFilterCollection = new SingletonLaunchFilterCollection();
-            this.defectTypesCollection.ready.done(function () {
-                this.launchFilterCollection.ready.done(function () {
-                    this.drawStackedAreaChart($('[data-js-chart-container]', this.$el), data);
-                }.bind(this));
-            }.bind(this));
-        },
-
-        drawStackedAreaChart: function ($el, data) {
+        drawChart: function ($el, data) {
             var self = this;
-            var chartData = {};
-            var chartDataOrdered = [];
             var legendScroller;
-            var itemNames;
-            var itemData = [];
-            var colors = {};
-            var contentFields = this.model.getContentFields();
-            var isSingleColumn;
-
-            // prepare columns array and fill it witch field names
-            _.each(data[0].values, function (val, key) {
-                var defectModel;
-                chartData[key] = [key];
-                if (~key.indexOf('$executions$') || ~key.indexOf('$total')) {
-                    colors[key] = config.defaultColors[key.split('$')[2]];
-                } else {
-                    defectModel = _.find(this.defectTypesCollection.models, function (model) {
-                        return model.get('locator') === key.split('$')[3];
-                    });
-                    defectModel && (colors[key] = defectModel.get('color'));
-                }
-            }.bind(this));
-
-            // fill columns arrays with values
-            if (this.isTimeLine) {
-                _.each(data, function (item) {
-                    itemData.push({
-                        date: item.date
-                    });
-                    _.each(item.values, function (val, key) {
-                        chartData[key].push(+val);
-                    });
-                });
-            } else {
-                _.each(data, function (item) {
-                    itemData.push({
-                        id: item.id,
-                        name: item.name,
-                        number: item.number,
-                        startTime: item.startTime
-                    });
-                    _.each(item.values, function (val, key) {
-                        chartData[key].push(+val);
-                    });
-                });
-            }
-            isSingleColumn = itemData.length < 2;
-
-            // reorder colums array in accordance with contentFields array
-            _.each(contentFields, function (key) {
-                chartDataOrdered.push(chartData[key]);
-            });
-
-            // get column item names in correct order
-            itemNames = _.map(chartDataOrdered, function (item) {
-                return item[0];
-            });
-
+            var chartData = this.getProcessedData(data);
+            this.$el.addClass('stacked-area-view');
             this.chart = c3.generate({
                 bindto: $el[0],
                 data: {
-                    columns: chartDataOrdered,
+                    columns: chartData.columns,
                     type: 'area-spline',
                     order: null,
-                    groups: [itemNames],
-                    colors: colors
+                    groups: [chartData.itemNames],
+                    colors: chartData.colors
                 },
                 point: {
-                    show: isSingleColumn,
+                    show: chartData.isSingleColumn,
                     r: 3,
                     focus: {
                         expand: {
@@ -154,7 +61,7 @@ define(function (require) {
                     x: {
                         show: !self.isPreview,
                         type: 'category',
-                        categories: _.map(itemData, function (item) {
+                        categories: _.map(chartData.itemsData, function (item) {
                             var day;
                             if (self.isTimeLine) {
                                 day = Moment(item.date).format('dddd').substring(0, 3);
@@ -163,7 +70,7 @@ define(function (require) {
                             return '#' + item.number;
                         }),
                         tick: {
-                            values: self.isTimeLine ? self.getTimelineAxisTicks(itemData.length) : self.getLaunchAxisTicks(itemData.length),
+                            values: self.isTimeLine ? self.getTimelineAxisTicks(chartData.itemsData.length) : self.getLaunchAxisTicks(chartData.itemsData.length),
                             width: 60,
                             centered: true,
                             inner: true,
@@ -184,7 +91,7 @@ define(function (require) {
                 zoom: {
                     enabled: !self.isPreview && self.isZoomEnabled,
                     rescale: !self.isPreview && self.isZoomEnabled,
-                    onzoomend: function (domain) {
+                    onzoomend: function () {
                         self.chart.flush();
                     }
                 },
@@ -207,7 +114,7 @@ define(function (require) {
                     height: self.$el.parent().height()
                 },
                 onrendered: function () {
-                    var interactElems = isSingleColumn ? d3.selectAll($('.c3-circle', $el)) : d3.selectAll($('.c3-area', $el));
+                    var interactElems = chartData.isSingleColumn ? d3.selectAll($('.c3-circle', $el)) : d3.selectAll($('.c3-area', $el));
                     var offset = this.margin.left;
                     var rects = $('.c3-event-rect', $el); // C3 event rectangles
                     var rectWidth = $(rects[0]).attr('width');
@@ -218,7 +125,7 @@ define(function (require) {
                     var rectIndex;
 
                     $el.css('max-height', 'none');
-                    if (isSingleColumn) {
+                    if (chartData.isSingleColumn) {
                         interactElems.each(function (d) {
                             if (!d.value) {
                                 d3.select(this).style('display', 'none');
@@ -237,11 +144,11 @@ define(function (require) {
                         .on('click', function (d) {
                             var link;
                             if (self.isTimeLine) {
-                                link = self.redirectForTimeLine(itemData[rectIndex].date);
+                                link = self.redirectForTimeLine(chartData.itemsData[rectIndex].date);
                             } else if ((~d.id.indexOf('$executions$') || ~d.id.indexOf('$total'))) {
-                                link = self.linkToRedirectService(d.id.split('$')[2], itemData[rectIndex].id);
+                                link = self.linkToRedirectService(d.id.split('$')[2], chartData.itemsData[rectIndex].id);
                             } else {
-                                link = self.linkToRedirectService(d.id.split('$')[3], itemData[rectIndex].id);
+                                link = self.linkToRedirectService(d.id.split('$')[3], chartData.itemsData[rectIndex].id);
                             }
                             link && config.router.navigate(link, { trigger: true });
                         })
@@ -254,7 +161,7 @@ define(function (require) {
                             rectIndex = _.findIndex(rectsStartXCoords, function (coord) {
                                 return x - rectWidth < coord;
                             });
-                            launchData = itemData[rectIndex];
+                            launchData = chartData.itemsData[rectIndex];
                             if (~d.id.indexOf('$executions$') || ~d.id.indexOf('$total')) {
                                 itemName = Localization.filterNameById[d.id];
                             } else {
@@ -269,9 +176,9 @@ define(function (require) {
                                         launchName: launchData.name,
                                         launchNumber: launchData.number,
                                         startTime: self.isTimeLine ? launchData.date : self.formatDateTime(launchData.startTime),
-                                        color: colors[id],
+                                        color: chartData.colors[id],
                                         itemName: itemName,
-                                        itemCases: isSingleColumn ? d.value : d.values[rectIndex].value
+                                        itemCases: chartData.isSingleColumn ? d.value : d.values[rectIndex].value
                                     });
                                 })
                                 .style('left', function () {
@@ -289,56 +196,9 @@ define(function (require) {
                         });
                 }
             });
-
-            // Configuring custom legend block
+            this.hiddenItems && this.chart.hide(this.hiddenItems);
             if (!self.isPreview) {
-                d3.select(this.chart.element)
-                    .insert('div', '.chart')
-                    .attr('class', 'legend')
-                    .insert('div', '.legend')
-                    .attr('data-js-legend-wrapper', '') // wrapper for BaronScroll
-                    .selectAll('span')
-                    .data(itemNames)
-                    .enter()
-                    .append('span')
-                    .attr('data-id', function (id) { return id; })
-                    .html(function (id) {
-                        var name;
-                        var defectModel;
-                        if (~id.indexOf('$executions$') || ~id.indexOf('$total')) {
-                            name = Localization.filterNameById[id];
-                        } else {
-                            defectModel = _.find(self.defectTypesCollection.models, function (model) {
-                                return model.get('locator') === id.split('$')[3];
-                            });
-                            (defectModel) ? (name = defectModel.get('longName')) : (name = id.split('$')[3]);
-                        }
-                        return '<div class="color-mark"></div>' + name;
-                    })
-                    .each(function (id) {
-                        d3.select(this).select('.color-mark').style('background-color', self.chart.color(id));
-                    })
-                    .on('mouseover', function (id) {
-                        self.chart.focus(id);
-                    })
-                    .on('mouseout', function (id) {
-                        self.chart.revert();
-                    })
-                    .on('click', function (id) {
-                        if ($('.color-mark', $(this)).hasClass('unchecked')) {
-                            $('.color-mark', $(this)).removeClass('unchecked');
-                            $('.c3-target-' + id.replaceAll(/[$_]/, '-'), $el).show();
-                        } else {
-                            $('.color-mark', $(this)).addClass('unchecked');
-                            $('.c3-target-' + id.replaceAll(/[$_]/, '-'), $el).hide();
-                        }
-                        self.chart.toggle(id);
-                    });
-                d3.select(this.chart.element).select('.legend')
-                    .append('div')
-                    .attr('class', 'legend-gradient')
-                    .append('div')
-                    .attr('class', 'legend-border');
+                this.setupLegend(chartData);
                 legendScroller = Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
                 this.scrollers.push(legendScroller);
             }
@@ -354,6 +214,7 @@ define(function (require) {
             return true;
         },
         onBeforeDestroy: function () {
+            this.destroyLegend();
             this.chart && this.removeChartListeners();
             this.chart && (this.chart = this.chart.destroy());
             _.each(this.scrollers, function (baronScrollElem) {

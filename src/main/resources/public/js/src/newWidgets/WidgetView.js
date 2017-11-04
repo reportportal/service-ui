@@ -28,6 +28,7 @@ define(function (require) {
         className: 'widget-view',
         initialize: function (options) {
             this.gadgetSize = options.gadgetSize;
+            this.hiddenItems = options.hiddenItems;
             this.render(options);
         },
         render: function (options) {
@@ -36,7 +37,8 @@ define(function (require) {
             if (CurrentView) {
                 var widgetData = {
                     model: this.model,
-                    isPreview: (options && options.preview) || false
+                    isPreview: (options && options.preview) || false,
+                    hiddenItems: this.hiddenItems
                 };
                 this.widget && this.widget.destroy();
                 this.widget = new CurrentView(widgetData);
