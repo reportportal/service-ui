@@ -615,7 +615,7 @@ define(['util'], function () {
             launchesOnFilter: 'Количество запусков в фильтре - ',
             selectWidget: 'Выберите тип виджета из списка',
             launchInterrupted: 'Прогон прерван',
-            zoomWidgetArea: 'Масштабирование области виджета'
+            zoomWidgetArea: 'Масштабирование виджета'
         },
 
         userProfile: {

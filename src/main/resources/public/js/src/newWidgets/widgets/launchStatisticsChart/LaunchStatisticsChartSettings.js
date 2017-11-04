@@ -85,7 +85,7 @@ define(function (require) {
         getConfig: function () {
             return {
                 gadget_name: Localization.widgets.statisticsChart,
-                img: 'launch-statistics-trend-chart.svg',
+                img: 'launch-statistics-line-chart.svg',
                 description: Localization.widgets.statisticsChartDescription,
                 widget_type: 'trends_chart', // TODO remove after refactoring,
                 hasPreview: true
@@ -170,7 +170,8 @@ define(function (require) {
                                 delete widgetOptions.zoom;
                             }
                             model.setWidgetOptions(widgetOptions);
-                        }
+                        },
+                        beta: true
                     }
                 },
                 {
