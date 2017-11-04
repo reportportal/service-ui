@@ -347,7 +347,7 @@ define(function (require) {
             this.chart && this.removeChartListeners() && this.chart.resize({ height: this.$el.parent().height() }) && this.chart.flush();
         },
         removeChartListeners: function () {
-            var interactElems = (this.chart.data.shown()[0].values.length < 2) ?
+            var interactElems = (this.chart.data()[0].values.length < 2) ?
                 d3.selectAll($('[data-js-chart-container] .c3-circle', this.$el)) :
                 d3.selectAll($('[data-js-chart-container] .c3-area', this.$el));
             interactElems.on('click mousemove mouseover mouseout', null);
