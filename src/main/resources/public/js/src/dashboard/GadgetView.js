@@ -17,7 +17,6 @@
 define(function (require) {
     'use strict';
 
-
     var $ = require('jquery');
     var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
@@ -70,6 +69,7 @@ define(function (require) {
         },
         initialize: function () {
             this.activate = false;
+            this.isInitialWidgetUpdate = true;
             this.render();
             this.$el.addClass('load');
             this.$el.attr({
@@ -121,18 +121,34 @@ define(function (require) {
             this.activate && this.update(true);
         },
         updateWidget: function () {
-            this.widgetView && this.widgetView.destroy();
-            if (!this.model.get('gadget')) {
-                this.onLoadDataError();
-                return;
+            var hiddenItems;
+            var widget;
+
+            if (this.isInitialWidgetUpdate ||
+                (!_.isEqual(this.widgetView.model.getContent(), this.model.get('widgetData').content)) ||
+                (!_.isEqual(this.widgetView.model.getParameters(), this.model.get('widgetData').content_parameters))
+            ) {
+                this.isInitialWidgetUpdate = false;
+                if (this.widgetView && this.widgetView.widget && this.widgetView.widget.widgetView) {
+                    widget = this.widgetView.widget.widgetView;
+                    if (widget.chart) {
+                        hiddenItems = _.difference(_.map(widget.chart.data(), function (item) { return item.id; }), _.map(widget.chart.data.shown(), function (item) { return item.id; }));
+                    }
+                }
+                this.widgetView && this.widgetView.destroy();
+                if (!this.model.get('gadget')) {
+                    this.onLoadDataError();
+                    return;
+                }
+                this.widgetView = new WidgetView({
+                    gadgetSize: { width: this.model.get('width'), height: this.model.get('height') },
+                    model: (new WidgetModel(this.model.get('widgetData'), { parse: true })),
+                    hiddenItems: hiddenItems || []
+                });
+                $('[data-js-widget-container]', this.$el).html(this.widgetView.$el);
+                this.widgetView.onShow();
+                this.appendTooltip();
             }
-            this.widgetView = new WidgetView({
-                gadgetSize: { width: this.model.get('width'), height: this.model.get('height') },
-                model: (new WidgetModel(this.model.get('widgetData'), { parse: true }))
-            });
-            $('[data-js-widget-container]', this.$el).html(this.widgetView.$el);
-            this.widgetView.onShow();
-            this.appendTooltip();
         },
         onLoadDataError: function (error) {
             var message = '';

@@ -35,6 +35,7 @@ define(function (require) {
             this.id = 'widget-' + this.model.get('id');
             this.isPreview = options.isPreview;
             this.unclickableChart = options.unclickableChart;
+            this.hiddenItems = options.hiddenItems;
             this.appModel = new SingletonAppModel();
             this.defectsCollection = new SingletonDefectTypeCollection();
             this.afterInitialize && this.afterInitialize();
