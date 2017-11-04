@@ -20,12 +20,14 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
+    var Backbone = require('backbone');
     var App = require('app');
     var Util = require('util');
     var CoreService = require('coreService');
     var Localization = require('localization');
     var MarkdownEditor = require('components/markdown/MarkdownEditor');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var SingletonAppStorage = require('storage/SingletonAppStorage');
     var SingletonAppModel = require('model/SingletonAppModel');
 
     var config = App.getInstance();
@@ -38,7 +40,8 @@ define(function (require) {
             '[data-js-save-post-wrapper]': 'classes: {disabled: not(isBtsConfigure)}',
             '[data-js-save-load-wrapper]': 'classes: {disabled: not(isBtsAdded)}',
             '[data-js-save-post]': 'attr: {disabled: not(isBtsConfigure)}',
-            '[data-js-save-load]': 'attr: {disabled: not(isBtsAdded)}'
+            '[data-js-save-load]': 'attr: {disabled: not(isBtsAdded)}',
+            '[data-js-replace-comment]': 'checked: replaceComment'
         },
         events: {
             'click [data-js-save]': 'onClickSave',
@@ -67,6 +70,10 @@ define(function (require) {
                 self.successClose({ action: 'postBug' });
             });
         },
+        setReplaceComment: function () {
+            var curVal = this.viewModel.get('replaceComment');
+            this.appStorage.set({ replaceComment: curVal });
+        },
         onClickSaveLoad: function () {
             config.trackingDispatcher.trackEventNumber(526);
             var self = this;
@@ -75,6 +82,13 @@ define(function (require) {
             });
         },
         initialize: function (option) {
+            this.appStorage = new SingletonAppStorage();
+            this.viewModel = new Backbone.Model();
+            if (this.appStorage.get('replaceComment') === undefined) {
+                this.viewModel.set({ replaceComment: true });
+            } else {
+                this.viewModel.set({ replaceComment: this.appStorage.get('replaceComment') });
+            }
             this.items = option.items;
             this.appModel = new SingletonAppModel();
             this.defectTypesCollection = new SingletonDefectTypeCollection();
@@ -97,6 +111,7 @@ define(function (require) {
             this.applyBindings();
             this.setupAnchors();
             this.setupMarkdownEditor();
+            this.listenTo(this.viewModel, 'change:replaceComment', this.setReplaceComment);
         },
 
         isMultipleEdit: function () {
@@ -217,7 +232,7 @@ define(function (require) {
             var comment = this.markdownEditor.getValue();
             var selectedIssue = this.selectedIssue;
             var issues = [];
-            var replaceComments = this.$replaceComments.is(':checked');
+            var replaceComments = this.viewModel.get('replaceComment');
             var self = this;
             if (!this.isChanged()) {
                 promise.resolve();
