@@ -53,6 +53,7 @@ define(function (require) {
             launchData = {
                 id: contentData.lastLaunch[0].id,
                 name: contentData.lastLaunch[0].name,
+                issueType: Localization.launchesHeaders[self.model.getContentFields()[0].split('$')[2]],
                 number: contentData.lastLaunch[0].number
             };
             this.$el.html(Util.templates(this.template, launchData));
