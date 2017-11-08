@@ -7,7 +7,7 @@
     padding: 0 20px 20px 20px;
 
     .info-block {
-      height: 45px;
+      height: 72px;
       font-family: $OpenSansSemibold;
       font-size: 12px;
       line-height: 45px;
@@ -17,15 +17,20 @@
       text-overflow: ellipsis;
       overflow: hidden;
 
-      span {
-        font-size: 13px;
-        color: $COLOR--charcoal-grey;
-        text-transform: none;
+      p {
+        margin: 12px 0 0 0;
+        line-height: 17px;
+
+        span {
+          font-size: 13px;
+          color: $COLOR--charcoal-grey;
+          text-transform: none;
+        }
       }
     }
     .most-failed-table {
       position: absolute;
-      top: 45px;
+      top: 72px;
       bottom: 20px;
       left: 20px;
       right: 20px;
@@ -136,10 +141,10 @@
                       height: 4px;
                       margin-right: 1px;
                       margin-bottom: 1px;
-                      background-color: $COLOR--passed;
+                      background-color: $COLOR--booger;
 
                       &.failed {
-                        background-color: $COLOR--failed;
+                        background-color: $COLOR--tealish;
                       }
                     }
                   }
@@ -192,7 +197,7 @@
     }
   }
 
-  &.w-less-then-6 {
+  &.w-less-then-7 {
     .widget-wrapper {
       .most-failed-table{
         .scroll-wrapper {
