@@ -864,7 +864,11 @@ define(['util'], function () {
             retries: 'retries',
             retriesShort: 'rtr',
             stackTrace: 'STACK TRACE',
-            openInLog: 'Open in Log view'
+            openInLog: 'Open in Log view',
+
+            aaBadgeTooltip: 'Investigated by Auto-Analysis',
+            withAA: 'With AA mark',
+            withoutAA: 'Without AA mark'
         },
 
         forSettings: {
@@ -977,7 +981,8 @@ define(['util'], function () {
             status: 'Status',
             type: 'Method type',
             history_depth: 'History depth',
-            user: 'Owner'
+            user: 'Owner',
+            issue$auto_analyzed: 'AA'
         },
         filterNamePluralById: {
             product_bug: 'Product Bugs',
