@@ -395,6 +395,9 @@
         &.name-grid-cell{
           width: 32%;
           display: block;
+          .item-edit-icon{
+            display: none;
+          }
           .rp-grid-tags > li {
             margin: 0 17px 2px 2px;
           }
@@ -410,10 +413,6 @@
           &:before{
             border: unset;
           }
-        }
-        &.select-grid-cell {
-          width: 2%;
-          display: block;
         }
       }
       .launch-suite-step-items{
@@ -474,7 +473,6 @@
           }
         }
       }
-
     }
   }
 }

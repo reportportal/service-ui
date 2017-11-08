@@ -187,6 +187,9 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
 
 @media print{
   .step-grid{
+    .item-edit-icon{
+      display:  none;
+    }
     .grid-cell{
       &.time-grid-cell{
         display: block;
@@ -195,14 +198,11 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
       &.status-grid-cell{
         display: block;
       }
-      &.select-grid-cell{
-        display: block;
-      }
       &.name-grid-cell{
         width: 45%;
       }
       &.type-grid-cell{
-        width: 22%;
+        width: 24%;
       }
     }
   }
