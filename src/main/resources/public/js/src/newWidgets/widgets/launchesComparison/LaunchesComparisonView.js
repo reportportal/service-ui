@@ -207,6 +207,9 @@ define(function (require) {
                         return '<div class="color-mark"></div>' + Localization.filterNameById[id.split('$total')[0]];
                     })
                     .each(function (id) {
+                        if (~self.hiddenItems.indexOf(id)) {
+                            $('.color-mark', $(this)).addClass('unchecked');
+                        }
                         d3.select(this).select('.color-mark').style('background-color', self.chart.color(id));
                     })
                     .on('mouseover', function (id) {
@@ -220,6 +223,7 @@ define(function (require) {
                         $('.color-mark', $(this)).toggleClass('unchecked');
                         self.chart.toggle(id);
                     });
+                this.hiddenItems && this.chart.hide(this.hiddenItems);
                 d3.select(this.chart.element).select('.legend')
                     .append('div')
                     .attr('class', 'legend-gradient')
