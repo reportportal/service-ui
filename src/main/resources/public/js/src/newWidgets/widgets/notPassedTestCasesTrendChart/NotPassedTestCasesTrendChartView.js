@@ -55,7 +55,7 @@ define(function (require) {
             var topBlockElem;
 
             _.each(data, function (item) {
-                var value = parseFloat(item.values[Localization.widgets.not_passed]);
+                var value = parseFloat(item.values['% (Failed+Skipped)/Total']);
                 itemData.push({
                     id: item.id,
                     name: item.name,
