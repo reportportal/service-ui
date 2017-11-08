@@ -42,7 +42,7 @@ define(function (require) {
                     options: {
                         entity: 'launchName',
                         label: Localization.widgets.typeLaunchName,
-                        placeholder: Localization.widgets.selectLaunch,
+                        placeholder: Localization.widgets.enterLaunchName,
                         minItems: 1,
                         maxItems: 1,
                         getValue: function (model) {
