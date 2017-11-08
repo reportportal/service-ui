@@ -67,7 +67,6 @@ define(function (require) {
             options.getValue && (this.getValue = options.getValue);
         },
         render: function (options) {
-            console.log(options);
             this.$el.html(Util.templates(this.template, { beta: options.beta }));
         },
         activate: function () {
