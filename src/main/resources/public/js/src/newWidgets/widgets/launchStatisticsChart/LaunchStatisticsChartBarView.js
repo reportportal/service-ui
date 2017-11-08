@@ -53,7 +53,7 @@ define(function (require) {
                         } else {
                             link = self.linkToRedirectService(d.id.split('$')[3], chartData.itemsData[d.index].id);
                         }
-                        link && config.router.navigate(link, { trigger: true });
+                        link && _.debounce(function () { config.router.navigate(link, { trigger: true }); }, 100)(); // to prevent c3 internal js error
                     },
                     order: null,
                     groups: [chartData.itemNames],
