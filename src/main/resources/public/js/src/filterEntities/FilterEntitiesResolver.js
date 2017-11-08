@@ -206,6 +206,12 @@ define(function (require, exports, module) {
                 id: 'tags',
                 condition: 'has',
                 options: filterTagsOptions()
+            }),
+            new Filters.EntitySelectModel({
+                id: 'issue$auto_analyzed',
+                condition: 'in',
+                values: [{ name: Localization.launches.withAA, value: 'true' }, { name: Localization.launches.withoutAA, value: 'false' }],
+                value: 'All'
             })
         ];
     };

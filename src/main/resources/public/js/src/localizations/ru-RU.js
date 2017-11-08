@@ -921,7 +921,11 @@ define(['util'], function () {
             issueId: 'Введите ID ошибки',
 
             retries: 'попыток',
-            retriesShort: 'пптк'
+            retriesShort: 'пптк',
+
+            aaBadgeTooltip: 'Проанализировано Авто-Анализом',
+            withAA: 'C AA меткой',
+            withoutAA: 'Без AA метки'
         },
 
         forSettings: {
@@ -1034,7 +1038,8 @@ define(['util'], function () {
             status: 'Статус',
             type: 'Тип метода',
             history_depth: 'Глубина истории',
-            user: 'Владелец'
+            user: 'Владелец',
+            issue$auto_analyzed: 'AA'
         },
         filterNamePluralById: {
             product_bug: 'Дефекты Продукта',
