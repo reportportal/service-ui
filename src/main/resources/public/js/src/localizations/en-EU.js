@@ -331,6 +331,7 @@ define(['util'], function () {
             widgetSize: 'Widget size',
             widgetType: 'Widget type',
             typeUserName: 'User name',
+            enterLaunchName: 'Enter launch name',
             typeLaunchName: 'Launch name',
             widgetCriteria: 'Criteria for widget',
             selectCriteria: 'Select criteria',
