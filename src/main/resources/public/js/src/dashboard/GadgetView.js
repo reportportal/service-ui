@@ -129,10 +129,16 @@ define(function (require) {
                 (!_.isEqual(this.widgetView.model.getParameters(), this.model.get('widgetData').content_parameters))
             ) {
                 this.isInitialWidgetUpdate = false;
-                if (this.widgetView && this.widgetView.widget && this.widgetView.widget.widgetView) {
-                    widget = this.widgetView.widget.widgetView;
+                if (this.widgetView && this.widgetView.widget && this.widgetView.widget) {
+                    widget = this.widgetView.widget.widgetView ? this.widgetView.widget.widgetView : this.widgetView.widget;
                     if (widget.chart) {
                         hiddenItems = _.difference(_.map(widget.chart.data(), function (item) { return item.id; }), _.map(widget.chart.data.shown(), function (item) { return item.id; }));
+                    }
+                    if (widget.charts) {
+                        hiddenItems = [];
+                        _.each(widget.charts, function (chart) {
+                            hiddenItems = hiddenItems.concat(_.difference(_.map(chart.data(), function (item) { return item.id; }), _.map(chart.data.shown(), function (item) { return item.id; })));
+                        });
                     }
                 }
                 this.widgetView && this.widgetView.destroy();
