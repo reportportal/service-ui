@@ -67,7 +67,7 @@ define(function (require) {
                 placeholder: this.model.get('placeholder'),
                 multiple: this.model.get('multiple'),
                 defaultValue: this.model.get('value'),
-                isShowAll: true
+                isShowAll: this.model.get('multiple')
             });
             $('[data-js-drop-down-container]', this.$el).html(this.dropDown.$el);
             this.listenTo(this.dropDown, 'change', this.onChangeDropDown);
