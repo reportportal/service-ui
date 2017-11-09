@@ -115,7 +115,7 @@
                 <div class="filter-tb-td">
                     <% if(failed && failed !== '0'){ %>
                     <a class="cases-view rp-blue-link-undrl"
-                       href="<%= data.allCasesUrl('failed') %>"><%= failed %></a>
+                       href="<%= data.allCasesUrl('failedPlusInterrupted') %>"><%= failed %></a>
                     <p class="visible-xs cell-name"><%= data.text.launchesHeaders.failed%></p>
                     <% } else { %>
                     <span class="text-muted visible-xs-inline">0</span>

@@ -163,7 +163,7 @@ define(function (require) {
                 deps: ['url', 'has_childs'],
                 get: function (url, hasChilds) {
                     if (hasChilds) {
-                        return this.allCasesUrl('failed');
+                        return this.allCasesUrl('failedPlusInterrupted');
                     }
                     return undefined;
                 }
@@ -193,6 +193,9 @@ define(function (require) {
             switch (type) {
             case 'total':
                 statusFilter = '&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED&filter.in.type=STEP';
+                break;
+            case 'failedPlusInterrupted':
+                statusFilter = '&filter.in.status=FAILED,INTERRUPTED&filter.in.type=STEP';
                 break;
             case 'passed':
             case 'failed':

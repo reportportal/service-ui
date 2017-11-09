@@ -116,6 +116,9 @@ define(function (require) {
             case 'total':
                 statusFilter = '&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED&filter.in.type=STEP';
                 break;
+            case 'failedPlusInterrupted':
+                statusFilter = '&filter.in.status=FAILED,INTERRUPTED&filter.in.type=STEP';
+                break;
             case 'passed':
             case 'failed':
             case 'skipped':
