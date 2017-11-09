@@ -78,7 +78,6 @@ define(function (require) {
                 if (item.value == value) { // Comparison with conversion
                     curName = item.shortName ? item.shortName : item.name;
                     curVal = item.value;
-
                     return false;
                 }
             });
