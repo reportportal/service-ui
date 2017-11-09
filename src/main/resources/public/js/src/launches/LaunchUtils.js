@@ -49,6 +49,7 @@ define(function (require) {
                     answer.toAsign.historyOptions[joinKey] = optionSeparate[1];
                 }
             }, this);
+            answer.newEntities = JSON.stringify(filterEntities);
             answer.entities = JSON.stringify(filterEntities);
             return answer;
         }
