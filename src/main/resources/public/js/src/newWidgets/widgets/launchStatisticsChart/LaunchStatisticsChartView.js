@@ -44,7 +44,9 @@ define(function (require) {
             return (widgetOptions && widgetOptions.viewMode && widgetOptions.viewMode.length && widgetOptions.viewMode[0] === 'barMode');
         },
         addSizeClasses: function (gadgetSize) {
-            this.widgetView && this.widgetView.addSizeClasses(gadgetSize);
+            if (this.widgetView && !this.widgetView.isPreview) {
+                this.widgetView.addSizeClasses(gadgetSize);
+            }
         },
         updateSizeClasses: function (newGadgetSize) {
             this.widgetView && this.widgetView.updateSizeClasses(newGadgetSize);
