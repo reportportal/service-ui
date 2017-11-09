@@ -39,13 +39,17 @@
     width: 100%;
     li {
       &.all-selector{
+        padding: 0 10px;
+        label{
+          padding: 6px 5px;
+        }
         &:after{
           content: '';
           display: block;
-          width: 224px;
+          width: 100%;
           height: 1px;
           background: #e9e9e9;
-          margin: 3px auto 5px auto;
+          margin: 3px 0 5px 0;
         }
       }
       a {
