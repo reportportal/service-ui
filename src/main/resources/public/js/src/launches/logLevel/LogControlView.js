@@ -101,8 +101,12 @@ define(function (require) {
             var currentModelId;
             if (isLoading) {
                 $('[data-js-preloader]', this.$el).show();
+                $('[data-js-button-prev]', this.$el).prop('disabled', true);
+                $('[data-js-button-next]', this.$el).prop('disabled', true);
                 return;
             }
+            $('[data-js-button-prev]', this.$el).removeProp('disabled');
+            $('[data-js-button-next]', this.$el).removeProp('disabled');
             $('[data-js-preloader]', this.$el).hide();
             switch (this.lastClickedNavButton) {
             case 'next':
@@ -118,6 +122,16 @@ define(function (require) {
             default:
             }
             this.stopListening(this.collectionItems, 'loading');
+        },
+        attachHotkeys: function () {
+            $(window).on('keydown.logControl', function (e) {
+                if ((e.ctrlKey && e.keyCode === 39) || (e.metaKey && e.keyCode === 39)) {
+                    $('[data-js-button-next]', this.$el).trigger('click');
+                }
+                if ((e.ctrlKey && e.keyCode === 37) || (e.metaKey && e.keyCode === 37)) {
+                    $('[data-js-button-prev]', this.$el).trigger('click');
+                }
+            }.bind(this));
         },
         onClickPrev: function (e) {
             config.trackingDispatcher.trackEventNumber(186);
@@ -140,10 +154,12 @@ define(function (require) {
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
+            this.attachHotkeys();
         },
 
         onDestroy: function () {
             this.$el.html('');
+            $(window).off('keydown.logControl');
             delete this;
         }
     });
