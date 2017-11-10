@@ -190,6 +190,9 @@ define(function (require) {
                 el: $('[data-js-step-issue]', this.$el)
             });
             this.listenTo(this.issueView, 'load:comment', this.activateAccordion);
+            this.listenTo(this.issueView, 'quickFilter:AA', function () {
+                this.filterModel.trigger('add_entity', 'issue$auto_analyzed', 'TRUE');
+            });
         },
         onClickTag: function (e) {
             var tag = $(e.currentTarget).data('js-tag');

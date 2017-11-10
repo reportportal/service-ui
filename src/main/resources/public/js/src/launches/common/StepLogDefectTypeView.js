@@ -134,7 +134,8 @@ define(function (require) {
     var StepLogDefectTypeView = Epoxy.View.extend({
         template: 'tpl-launch-step-log-defect-type',
         events: {
-            'click [data-js-edit-defect]': 'onClickEditDefect'
+            'click [data-js-issue-title]': 'onClickEditDefect',
+            'click [data-js-aa-badge]': 'onAABadgeClick'
         },
         bindings: {
             // '[data-js-issue-comment]': 'html: issueComment',
@@ -171,7 +172,7 @@ define(function (require) {
             issueAutoanalyzed: {
                 deps: ['issue'],
                 get: function () {
-                    return this.model.getIssue().autoAnalyzed === 'true';
+                    return this.model.getIssue().autoAnalyzed === true;
                 }
             },
             issueTitle: {
@@ -242,6 +243,9 @@ define(function (require) {
                 $container.append(view.$el);
                 self.ticketsView.push(view);
             });
+        },
+        onAABadgeClick: function () {
+            this.trigger('quickFilter:AA');
         },
         onChangeIssue: function () {
             var tickets = [];

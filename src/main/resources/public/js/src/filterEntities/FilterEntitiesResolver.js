@@ -207,11 +207,10 @@ define(function (require, exports, module) {
                 condition: 'has',
                 options: filterTagsOptions()
             }),
-            new Filters.EntitySelectModel({
+            new Filters.EntityDropDownModel({
                 id: 'issue$auto_analyzed',
                 condition: 'in',
-                values: [{ name: Localization.launches.withAA, value: 'true' }, { name: Localization.launches.withoutAA, value: 'false' }],
-                value: 'All'
+                options: [{ name: Localization.launches.withAA, value: 'TRUE' }, { name: Localization.launches.withoutAA, value: 'FALSE' }],
             })
         ];
     };
