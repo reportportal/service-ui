@@ -270,6 +270,13 @@ define(function (require, exports, module) {
             valueMaxLength: 256,
             valueOnlyDigits: false
         }));
+        launchSuiteEntitiesCollection.unshift(new Filters.EntityConditionInputModel({
+            id: 'number',
+            name: Localization.filters.launchNumber,
+            condition: 'gte',
+            options: filterStatsOptions(),
+            valueOnlyDigits: true
+        }));
         launchSuiteEntitiesCollection.add(new Filters.EntityOwnerTagModel({ id: 'user', condition: 'in' }), { at: 1 });
         return launchSuiteEntitiesCollection;
     };
