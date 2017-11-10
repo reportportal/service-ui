@@ -44,17 +44,6 @@ define(function (require) {
                 data: {
                     columns: chartData.columns,
                     type: 'bar',
-                    onclick: function (d, element) {
-                        var link;
-                        if (self.isTimeLine) {
-                            link = self.redirectForTimeLine(chartData.itemsData[d.index].date);
-                        } else if ((~d.id.indexOf('$executions$') || ~d.id.indexOf('$total'))) {
-                            link = self.linkToRedirectService(d.id.split('$')[2], chartData.itemsData[d.index].id);
-                        } else {
-                            link = self.linkToRedirectService(d.id.split('$')[3], chartData.itemsData[d.index].id);
-                        }
-                        link && _.debounce(function () { config.router.navigate(link, { trigger: true }); }, 100)(); // to prevent c3 internal js error
-                    },
                     order: null,
                     groups: [chartData.itemNames],
                     colors: chartData.colors
@@ -109,44 +98,62 @@ define(function (require) {
                 legend: {
                     show: false // we use custom legend
                 },
-                tooltip: {
-                    grouped: false,
-                    position: function (d, width, height, element) {
-                        var left = d3.mouse(self.chart.element)[0] - (width / 2);
-                        var top = d3.mouse(self.chart.element)[1] - height;
-                        return {
-                            top: top - 8, // 8 - offset for tooltip arrow
-                            left: left
-                        };
-                    },
-                    contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
-                        var launchData = chartData.itemsData[d[0].index];
-                        var id = d[0].id;
-                        var itemName;
-                        var defectModel;
-                        if (~id.indexOf('$executions$') || ~id.indexOf('$total')) {
-                            itemName = Localization.filterNameById[id];
-                        } else {
-                            defectModel = _.find(self.defectTypesCollection.models, function (model) {
-                                return model.get('locator') === id.split('$')[3];
-                            });
-                            (defectModel) ? (itemName = defectModel.get('longName')) : (itemName = id.split('$')[3]);
-                        }
-                        return Util.templates(self.tooltipTemplate, {
-                            launchName: launchData.name,
-                            launchNumber: launchData.number,
-                            startTime: self.isTimeLine ? launchData.date : self.formatDateTime(launchData.startTime),
-                            color: color(id),
-                            itemName: itemName,
-                            itemCases: d[0].value
-                        });
-                    }
-                },
                 size: {
                     height: self.$el.parent().height()
                 },
                 onrendered: function () {
+                    var tooltip = d3.selectAll($('.c3-tooltip-container', $el));
                     $el.css('max-height', 'none');
+
+                    d3.selectAll($('.c3-bar', $el))
+                        .on('click', function (d) {
+                            var link;
+                            if (self.isTimeLine) {
+                                link = self.redirectForTimeLine(chartData.itemsData[d.index].date);
+                            } else if ((~d.id.indexOf('$executions$') || ~d.id.indexOf('$total'))) {
+                                link = self.linkToRedirectService(d.id.split('$')[2], chartData.itemsData[d.index].id);
+                            } else {
+                                link = self.linkToRedirectService(d.id.split('$')[3], chartData.itemsData[d.index].id);
+                            }
+                            link && config.router.navigate(link, { trigger: true });
+                        })
+                        .on('mousemove', function (d) {
+                            var launchData = chartData.itemsData[d.index];
+                            var id = d.id;
+                            var itemName;
+                            var defectModel;
+                            if (~id.indexOf('$executions$') || ~id.indexOf('$total')) {
+                                itemName = Localization.filterNameById[id];
+                            } else {
+                                defectModel = _.find(self.defectTypesCollection.models, function (model) {
+                                    return model.get('locator') === id.split('$')[3];
+                                });
+                                (defectModel) ? (itemName = defectModel.get('longName')) : (itemName = id.split('$')[3]);
+                            }
+                            tooltip
+                                .html(function () {
+                                    return Util.templates(self.tooltipTemplate, {
+                                        launchName: launchData.name,
+                                        launchNumber: launchData.number,
+                                        startTime: self.isTimeLine ? launchData.date : self.formatDateTime(launchData.startTime),
+                                        color: chartData.colors[id],
+                                        itemName: itemName,
+                                        itemCases: d.value
+                                    });
+                                })
+                                .style('left', function () {
+                                    return (d3.mouse(self.chart.element)[0] - (this.clientWidth / 2)) + 'px';
+                                })
+                                .style('top', function () {
+                                    return (d3.mouse(self.chart.element)[1] - this.clientHeight - 8) + 'px';
+                                });
+                        })
+                        .on('mouseover', function () {
+                            tooltip.style('display', 'block');
+                        })
+                        .on('mouseout', function () {
+                            tooltip.style('display', 'none');
+                        });
                 }
             });
             this.hiddenItems && this.chart.hide(this.hiddenItems);
@@ -156,12 +163,9 @@ define(function (require) {
                 this.scrollers.push(legendScroller);
             }
         },
-        onBeforeDestroy: function () {
-            this.destroyLegend();
-            this.chart && (this.chart = this.chart.destroy());
-            _.each(this.scrollers, function (baronScrollElem) {
-                baronScrollElem.baron && baronScrollElem.baron().dispose();
-            });
+        removeChartListeners: function () {
+            d3.selectAll($('[data-js-chart-container] .c3-bar', this.$el)).on('click mousemove mouseover mouseout', null);
+            return true;
         }
     });
 

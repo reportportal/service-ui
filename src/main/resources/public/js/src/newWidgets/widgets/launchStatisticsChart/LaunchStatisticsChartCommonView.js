@@ -182,6 +182,14 @@ define(function (require) {
             d3.selectAll($('[data-js-legend-wrapper] span', this.$el)).on('click mouseover mouseout', null);
             $('.legend', this.$el).remove();
             return true;
+        },
+        onBeforeDestroy: function () {
+            this.destroyLegend();
+            this.chart && this.removeChartListeners();
+            this.chart && (this.chart = this.chart.destroy());
+            _.each(this.scrollers, function (baronScrollElem) {
+                baronScrollElem.baron && baronScrollElem.baron().dispose();
+            });
         }
     });
 
