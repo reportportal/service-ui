@@ -4,6 +4,24 @@
       .c3-xgrid-focus {
         display: none;
       }
+      .c3-chart {
+        .c3-chart-bars {
+          .c3-bars {
+            .c3-bar {
+              pointer-events: all !important;
+              opacity: 1 !important;
+              cursor: pointer;
+
+              &:hover {
+                opacity: 0.8 !important;
+              }
+            }
+          }
+        }
+        .c3-event-rects {
+          pointer-events: none;
+        }
+      }
       .c3-grid {
         line {
           stroke: $COLOR--gray-80;
@@ -38,10 +56,13 @@
       }
       .c3-brush {
         .background {
-          cursor: ew-resize !important;
+          cursor: crosshair !important;
         }
         .extent {
           cursor: ew-resize !important;
+        }
+        .resize {
+          cursor: col-resize !important;
         }
       }
     }
