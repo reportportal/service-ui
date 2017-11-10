@@ -623,11 +623,14 @@ define(function (require) {
         getLinks: function () {
             var backLinks = {};
             _.forEach(this.items, function (item) {
-                if (item.get('filter_url')) {
-                    backLinks[item.id] = window.location.protocol + '//' + window.location.host + '/' + item.get('url').replaceAll('|', encodeURIComponent('|'));
-                } else {
-                    backLinks[item.id] = window.location.href.replaceAll('|', encodeURIComponent('|'));
-                }
+                backLinks[item.id] = encodeURI(
+                    window.location.protocol + '//' + window.location.host + '/#' + config.project.projectId +
+                    '/launches/all|page.page=1&page.size=50&page.sort=start_time/' + item.get('launchId') +
+                    '|page.page=1&page.size=50&page.sort=start_time&filter.eq.has_childs=false&filter.eq.uniqueId=' +
+                    item.get('uniqueId') +
+                    '?page.page=1&page.size=50&page.sort=start_time&filter.eq.has_childs=false&filter.eq.uniqueId=' +
+                    item.get('uniqueId') + '&log.item=' + item.get('id')
+                );
             });
             return backLinks;
         },
