@@ -1041,7 +1041,8 @@ define(['util'], function () {
             type: 'Тип метода',
             history_depth: 'Глубина истории',
             user: 'Владелец',
-            issue$auto_analyzed: 'AA'
+            issue$auto_analyzed: 'AA',
+            number: 'Номер запуска'
         },
         filterNamePluralById: {
             product_bug: 'Дефекты Продукта',
@@ -1276,6 +1277,7 @@ define(['util'], function () {
             any: 'Любое',
             dynamicUpdate: 'Динамическое обновление',
             launchName: 'Имя запуска',
+            launchNumber: 'Номер запуска',
             suiteName: 'Имя набора',
             testName: 'Имя теста',
             refine: 'УТОЧНИТЬ:'

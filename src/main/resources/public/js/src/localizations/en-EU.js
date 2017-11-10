@@ -983,7 +983,8 @@ define(['util'], function () {
             type: 'Method type',
             history_depth: 'History depth',
             user: 'Owner',
-            issue$auto_analyzed: 'AA'
+            issue$auto_analyzed: 'AA',
+            number: 'Launch number'
         },
         filterNamePluralById: {
             product_bug: 'Product Bugs',
@@ -1217,6 +1218,7 @@ define(['util'], function () {
             any: 'Any',
             dynamicUpdate: 'Dynamic update',
             launchName: 'Launch name',
+            launchNumber: 'Launch number',
             suiteName: 'Suite name',
             testName: 'Test name',
             refine: 'REFINE:'
