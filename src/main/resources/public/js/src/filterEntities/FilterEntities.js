@@ -394,7 +394,8 @@ define(function (require) {
             'change input[data-subtype]': 'onChangeMainType',
             'change input[data-maintype]': 'onChangeSubType',
             'click [data-js-toggle-all]': 'onClickToggle',
-            'change .rp-input-checkbox': 'onChangeState'
+            'change .rp-input-checkbox': 'onChangeState',
+            'click .dropdown-menu li': 'preventHide'
         },
         initialize: function () {
             this.render();
@@ -404,6 +405,9 @@ define(function (require) {
         render: function () {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));
             this.applyBindings();
+        },
+        preventHide: function (e) {
+            e.stopPropagation();
         },
         onChangeMainType: function (e) {
             var checked = $(e.currentTarget).is(':checked');
