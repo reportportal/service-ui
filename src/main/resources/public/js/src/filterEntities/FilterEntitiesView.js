@@ -77,6 +77,9 @@ define(function (require) {
             if (currentEntity) {
                 if (value) {
                     var values = currentEntity.get('value');
+                    if (currentEntity.get('id') === 'issue$auto_analyzed') {
+                        values = value;
+                    }
                     if (currentEntity.get('id') === 'tags' || currentEntity.get('id') === 'user') {
                         values = values ? values + ',' + value : value;
                     }

@@ -499,7 +499,7 @@ define(function (require) {
             validateValue: {
                 set: function ($element, value) {
                     var option = _.find(this.view.model.get('options'), function (o) { return o.value === '' + value; });
-                    $element.text(option.name);
+                    option && $element.text(option.name);
                 }
             }
         },

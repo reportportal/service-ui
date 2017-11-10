@@ -19,7 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
@@ -40,21 +40,20 @@ define(function (require, exports, module) {
             this.filterLevel = options.filterLevel;
             this.render();
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
             this.$choiceList = $('[data-js-entity-choice-list]', this.$el);
-            _.each(this.collection.models, function(model) {
+            _.each(this.collection.models, function (model) {
                 this.$choiceList.append((new FilterEntityChoiceView({
                     model: model,
                     filterLevel: this.filterLevel
                 })).$el);
-            }, this)
+            }, this);
         },
-        onClickMoreEntities: function(){
-            if(this.filterLevel == 'suit'){
+        onClickMoreEntities: function () {
+            if (this.filterLevel === 'suit') {
                 config.trackingDispatcher.trackEventNumber(97.1);
-            }
-            else if(this.filterLevel == 'test'){
+            } else if (this.filterLevel === 'test') {
                 config.trackingDispatcher.trackEventNumber(136);
             }
         }
