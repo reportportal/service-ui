@@ -185,6 +185,13 @@
     height: auto;
     .print{
       display: block;
+      &.launches{
+        p{
+          span {
+            text-transform: none;
+          }
+        }
+      }
       p{
         font-family: "OpenSansCondBold", sans-serif;
         letter-spacing: 1px;

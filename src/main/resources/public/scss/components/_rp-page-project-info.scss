@@ -369,9 +369,12 @@
     .col-sm-12.col-md-9{
       width: 75%;
       float: left;
-      .col-sm-12{
-        width: 33%;
+      &>.row{
+        &>.col-sm-12{
+          width: 33%;
+        }
       }
+
     }
     .col-sm-12.col-md-3{
       width: 25%;

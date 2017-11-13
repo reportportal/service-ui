@@ -195,3 +195,18 @@
     margin: 7px 0;
   }
 }
+
+@media print{
+  .dashboard-list-item-view{
+    &:hover {
+      .name-wrapper {
+        .icons-block {
+          i {
+            opacity: 0;
+          }
+        }
+      }
+    }
+  }
+
+}

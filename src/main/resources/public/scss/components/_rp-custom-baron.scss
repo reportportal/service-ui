@@ -140,6 +140,9 @@
 }
 
 @media print{
+  .baron.baron__root._scrollbar_vertical > .baron__track-vertical{
+    display: none;
+  }
   .no-zero-scroll > .baron.baron__root {
     overflow: visible;
     height: unset;

@@ -360,3 +360,15 @@
     @extend %MOBILE_DISABLING_COVER;
   }
 }
+
+@media print{
+  .launches-table-panel{
+    .rp-table-row{
+      .statistics-block{
+          position: absolute;
+          height: unset;
+          margin-bottom: unset;
+      }
+    }
+  }
+}
