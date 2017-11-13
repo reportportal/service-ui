@@ -124,7 +124,7 @@ define(function (require) {
                 break;
             case 'Failed':
             case 'failed':
-                filterStatus = getFilter('&filter.in.type=STEP&filter.in.status=FAILED');
+                filterStatus = getFilter('&filter.in.type=STEP&filter.in.status=FAILED,INTERRUPTED');
                 break;
             case 'Skipped':
             case 'skipped':
