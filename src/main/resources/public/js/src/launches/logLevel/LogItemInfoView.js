@@ -51,37 +51,16 @@ define(function (require) {
         template: 'tpl-launch-log-item-info',
 
         events: {
-            'click [data-js-match]': 'onClickMatch',
             'click [data-js-post-bug]': 'onClickPostBug',
             'click [data-js-load-bug]': 'onClickLoadBug'
         },
 
         bindings: {
-            '[data-js-match]': 'classes: {hide: not(parent_launch_investigate), disabled: not(validateMatchIssues)}, attr: {title: matchIssuesTitle}',
             '[data-js-post-bug]': 'classes: {disabled: validatePostBug}, attr: {title: postBugTitle}',
             '[data-js-load-bug]': 'classes: {disabled: validateLoadBug}, attr: {title: loadBugTitle}'
         },
 
         computeds: {
-            validateMatchIssues: {
-                deps: ['parent_launch_isProcessing', 'parent_launch_status'],
-                get: function (parent_launch_isProcessing, parent_launch_status) {
-                    return (!parent_launch_isProcessing &&
-                    parent_launch_status !== config.launchStatus.inProgress);
-                }
-            },
-            matchIssuesTitle: {
-                deps: ['parent_launch_isProcessing', 'parent_launch_status'],
-                get: function (parent_launch_isProcessing, parent_launch_status) {
-                    if (parent_launch_status === config.launchStatus.inProgress) {
-                        return Localization.launches.launchNotInProgress;
-                    }
-                    if (parent_launch_isProcessing) {
-                        return Localization.launches.launchIsProcessing;
-                    }
-                    return Localization.launches.matchTitle;
-                }
-            },
             validateLoadBug: {
                 deps: ['launch_isProcessing'],
                 get: function () {
@@ -224,18 +203,6 @@ define(function (require) {
         onClickLoadBug: function () {
             config.trackingDispatcher.trackEventNumber(194);
             LoadBugAction({ items: [this.viewModel], from: 'logs' });
-        },
-        onClickMatch: function () {
-            var self = this;
-            config.trackingDispatcher.trackEventNumber(195);
-            call('POST', Urls.launchMatchUrl(this.viewModel.get('launchId')))
-                .done(function () {
-                    self.launchModel.set({ isProcessing: true });
-                    Util.ajaxSuccessMessenger('startAnalyzeAction');
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, 'startAnalyzeAction');
-                });
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {
