@@ -101,7 +101,7 @@ define(function (require) {
                     columns: chartDataOrdered,
                     type: 'bar',
                     onclick: function (d, element) {
-                        !self.unclickableChart && config.router.navigate(self.linkToRedirectService(d.id, itemData[d.index].id), { trigger: true });
+                        !self.unclickableChart && config.router.navigate(self.linkToRedirectService(d.id.split('$')[2], itemData[d.index].id), { trigger: true });
                     },
                     order: null,
                     colors: colors
