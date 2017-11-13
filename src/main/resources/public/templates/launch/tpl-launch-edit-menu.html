@@ -9,13 +9,6 @@
     <a data-js-finish><%= data.text.launches.forceFinish %></a>
 </li>
 <% if(!data.isDebug){ %>
-    <li data-js-can-match>
-        <a data-js-can-match data-js-start-analyze data-type="match">
-            <%= data.text.launches.matchTitle %>
-        </a>
-    </li>
-<% } %>
-<% if(!data.isDebug){ %>
     <li data-js-can-analyze>
         <a data-js-can-analyze data-js-start-analyze data-analyze-type="analyze">
             <%= data.text.ui.analyze %>

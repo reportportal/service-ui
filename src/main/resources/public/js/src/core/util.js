@@ -901,19 +901,6 @@ define(function (require, exports, module) {
             return config.project.configuration.externalSystem.length;
         },
 
-        canStartMatchIssues: function (launch) {
-            if (!launch) return false;
-            /* var userValid = Util.isInPrivilegedGroup();
-             if (!userValid) {
-             userValid = launch.owner === config.user.user_login;
-             }*/
-            return launch.status !== 'IN_PROGRESS'
-                && launch.statistics
-                && launch.statistics.defects
-                && (+launch.statistics.defects.to_investigate.total > 0)
-                && !launch.isProcessing;
-        },
-
         // don't touch
         isUnassignedLock: function (member, project) {
             return !member;
