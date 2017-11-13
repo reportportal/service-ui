@@ -20,7 +20,7 @@ define(function (require) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
-
+    var _ = require('underscore');
     var LaunchControlView = require('launches/launchLevel/LaunchControlView');
     var LaunchTableView = require('launches/launchLevel/LaunchTableView');
     var SuiteControlView = require('launches/suiteLevel/SuiteControlView');
@@ -115,8 +115,12 @@ define(function (require) {
             this.crumbs.cacheItem(itemModel);
         },
         createHeaderForPrint: function () {
-            var crumbs = this.crumbs.collection.models.map(function (item) {
-                return item.get('name');
+            var crumbs = [];
+            _.each(this.crumbs.collection.models, function (item) {
+                _.each(item.get('path_names'), function (value) {
+                    crumbs.push(value);
+                });
+                crumbs.push(item.get('name'));
             });
             if (crumbs.length === 1) {
                 $(this.$el).find('.print p:last-child').html('<p>' + Localization.launches.listOfLaunches + '</p>');

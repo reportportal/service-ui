@@ -151,3 +151,14 @@
     }
   }
 }
+
+@media print{
+  .gadget-view {
+    position: relative !important;
+    top: unset !important;
+    margin-bottom: 15px;
+    page-break-inside: avoid;
+  }
+}
+
+

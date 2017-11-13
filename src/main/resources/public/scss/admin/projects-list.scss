@@ -543,6 +543,53 @@
         width: 25%;
       }
     }
+    .projects-table-view{
+      .project-delete-col{
+        float: right;
+        width: 80px;
+        position: unset;
+        right: unset;
+        bottom: unset;
+        height: auto;
+      }
+      .project-name-col{
+        width: 32%;
+      }
+      .project-kpi-col{
+        width: 8%;
+      }
+      .project-members-col{
+        width: 12%;
+      }
+      .project-launches-col{
+        width: 12%;
+      }
+      .project-date-col{
+        width: 18%;
+      }
+      .project-actions-col{
+        width: 18%;
+      }
+      .rp-table-thead {
+        display: block;
+      }
+      .project-cols-group {
+        margin-right: 80px;
+      }
+      .project-table-row{
+        .project-title-mobile {
+          display: none;
+        }
+        .grid-cell{
+          padding: 0 0 0 15px;
+        }
+        .projects-actions{
+          padding: 2px 8px;
+          border-left: 1px solid #e9e9e9;
+          border-right: 1px solid #e9e9e9;
+        }
+      }
+    }
   }
 }
 

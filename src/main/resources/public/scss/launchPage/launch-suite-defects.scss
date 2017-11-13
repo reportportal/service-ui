@@ -102,3 +102,22 @@
     }
   }
 }
+
+@media print{
+  .gadget-body{
+    .chart-overflow {
+      .total-overflow {
+        position: absolute;
+        right: 10px;
+        padding-left: 46px;
+        min-width: 75px;
+        span{
+          border-style: solid;
+          border-width: 1px;
+          background: white;
+          font-family: "OpenSansSemibold", sans-serif;
+        }
+      }
+    }
+  }
+}
