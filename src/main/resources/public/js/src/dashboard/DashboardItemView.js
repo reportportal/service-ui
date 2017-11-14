@@ -89,7 +89,8 @@ define(function (require, exports, module) {
         render: function () {
             this.$el.html(Util.templates(this.template, {
                 isMyDashboard: this.isMyDashboard(),
-                dashboardName: this.model.get('name')
+                dashboardName: this.model.get('name'),
+                projectName: config.project.projectId
             }));
         },
         isMyDashboard: function () {
