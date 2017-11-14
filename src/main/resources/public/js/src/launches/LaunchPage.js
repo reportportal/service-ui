@@ -74,12 +74,15 @@ define(function (require) {
                             tempFilterModel = self.launchFilterCollection.generateTempModel(filters);
                             self.launchFilterCollection.activateFilter(tempFilterModel.get('id')).done(function () {
                                 config.router.navigate(tempFilterModel.get('url') + '?' + options.subContext[3], { trigger: false, replace: true });
+                                self.body.update([tempFilterModel.get('id')], '');
                             });
+                        } else {
+                            self.body.update(pathPart, query);
                         }
                     } else {
                         self.launchFilterCollection.activateFilter(self.filterId);
+                        self.body.update(pathPart, query);
                     }
-                    self.body.update(pathPart, query);
                 } else {
                     self.launchFilterCollection.activateFilter(self.filterId)
                         .fail(function () {
