@@ -25,6 +25,15 @@
     label {
       margin-bottom: 0;
     }
+    .log-level-label {
+      float: left;
+      height: 30px;
+      line-height: 30px;
+      font-family: $OpenSansSemibold;
+      font-size: 12px;
+      color: $COLOR--gray-47;
+      text-transform: uppercase;
+    }
     .switcher-label{
        float: right;
       line-height: 30px;
