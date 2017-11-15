@@ -86,10 +86,10 @@ define(function (require) {
         initialize: function () {
             this.render();
             this.collection = new RetriesBlockCollection();
-            var curNumber = this.model.get('retries').length;
+            var curNumber = 1;
             var retries = _.map(_.clone(this.model.get('retries')), function (item) {
                 item.number = curNumber;
-                curNumber -= 1;
+                curNumber += 1;
                 return item;
             });
             this.collection.reset(retries);

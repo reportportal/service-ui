@@ -921,7 +921,6 @@ define(['util'], function () {
             issueId: 'Введите ID ошибки',
 
             retries: 'попыток',
-            retriesShort: 'пптк',
 
             aaBadgeTooltip: 'Проанализировано Авто-Анализом',
             withAA: 'C AA меткой',
