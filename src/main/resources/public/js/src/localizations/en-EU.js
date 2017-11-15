@@ -307,7 +307,8 @@ define(['util'], function () {
             updateItemIssue: 'updated item issue',
             updateItem: 'updated item',
             attachIssue: 'attached issue',
-            postIssue: 'posted issue'
+            postIssue: 'posted issue',
+            changedByAnalyzer: 'changed by analyzer'
         },
 
         widgets: {
