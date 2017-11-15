@@ -363,7 +363,8 @@ define(['util'], function () {
             updateItemIssue: 'обновил данные элемента',
             updateItem: 'обновил элемент',
             attachIssue: 'привязал ошибку',
-            postIssue: 'отправил ошибку'
+            postIssue: 'отправил ошибку',
+            changedByAnalyzer: 'изменено анализатором'
         },
 
         widgets: {

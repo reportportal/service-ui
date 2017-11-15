@@ -59,13 +59,17 @@ define(function (require) {
             },
             actionName: {
                 deps: ['history', 'actionType'],
-                get: function(history, actionType) {
-                    switch( actionType ){
-                        case 'update_item':{
-                            return _.size(history) > 1 ?  Localization.itemEvents.updateItemIssue : Localization.itemEvents.updateItem;
-                        }
-                        case 'post_issue': return Localization.itemEvents.postIssue;
-                        case 'attach_issue': return Localization.itemEvents.attachIssue;
+                get: function (history, actionType) {
+                    switch (actionType) {
+                    case 'update_item': {
+                        return _.size(history) > 1 ?
+                            Localization.itemEvents.updateItemIssue :
+                            Localization.itemEvents.updateItem;
+                    }
+                    case 'post_issue': return Localization.itemEvents.postIssue;
+                    case 'attach_issue': return Localization.itemEvents.attachIssue;
+                    case 'analyze_item': return Localization.itemEvents.changedByAnalyzer;
+                    default: break;
                     }
                 }
             },
