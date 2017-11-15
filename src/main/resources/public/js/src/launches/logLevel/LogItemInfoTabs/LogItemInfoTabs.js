@@ -63,11 +63,17 @@ define(function (require) {
             '[data-js-item-stack-trace-label]': 'classes: {active: stackTrace}',
             '[data-js-item-gallery-label]': 'classes: {active: attachments}',
             '[data-js-item-details-label]': 'classes: {active: itemDetails}',
-            '[data-js-item-activity-label]': 'classes: {active: activity}',
+            '[data-js-item-activity-label]': 'classes: {hide: isShowActivities, active: activity}',
             '[data-js-item-stack-trace]': 'classes: {hide: not(stackTrace)}',
             '[data-js-item-gallery]': 'classes: {hide: not(attachments)}',
             '[data-js-item-details]': 'classes: {hide: not(itemDetails)}',
             '[data-js-item-activity]': 'classes: {hide: not(activity)}'
+        },
+
+        computeds: {
+            isShowActivities: function () {
+                return ~this.viewModel.get('id').indexOf('retry:');
+            }
         },
         initialize: function (options) {
             this.viewModel = options.itemModel;
