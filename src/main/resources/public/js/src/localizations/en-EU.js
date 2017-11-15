@@ -862,7 +862,6 @@ define(['util'], function () {
             issueId: 'Issue ID',
 
             retries: 'retries',
-            retriesShort: 'rtr',
             stackTrace: 'STACK TRACE',
             openInLog: 'Open in Log view',
 

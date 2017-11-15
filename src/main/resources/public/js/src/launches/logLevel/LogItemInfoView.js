@@ -148,7 +148,7 @@ define(function (require) {
             if (this.viewModel.get('retries') && this.viewModel.get('retries').length) {
                 var activeRetry = this.getCurrentRetry().id;
                 $('[data-js-retries-container]', self.$el).removeClass('hide');
-                retries = _.clone(this.viewModel.get('retries')).reverse();
+                retries = _.clone(this.viewModel.get('retries'));
                 retries.push(this.viewModel.toJSON());
                 _.each(retries, function (item, num) {
                     item.number = num + 1;
