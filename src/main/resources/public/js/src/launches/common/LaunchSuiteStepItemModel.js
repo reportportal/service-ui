@@ -52,6 +52,7 @@ define(function (require, exports, module) {
             status: '',
             tags: '',
             type: '',
+            hasRetries: false,
 
             retries: [],
 

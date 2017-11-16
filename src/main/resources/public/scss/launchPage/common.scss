@@ -219,6 +219,9 @@
         margin: 0 17px 2px 2px;
         color: #999999;
         word-break: break-word;
+        &.rp-item-is-retries {
+          margin: 0 12px 2px 0;
+        }
         a {
           color: $COLOR--gray-60;
           cursor: pointer;
@@ -240,6 +243,13 @@
         span {
           color: $COLOR--charcoal-grey;
         }
+      }
+      .retry-icon {
+        display: inline-block;
+        width: 18px;
+        height: 15px;
+        vertical-align: top;
+        background: url(../img/launch/retry.svg) center bottom no-repeat;
       }
     }
     @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
