@@ -39,8 +39,10 @@ define(function (require) {
             }
         },
         render: function () {
+            var retries = this.model.get('retries');
+            retries.push(this.model.attributes);
             this.$el.html(Util.templates(this.template, {
-                retries: this.model.get('retries')
+                retries: retries
             }));
         },
         onClickLink: function () {
