@@ -1,6 +1,6 @@
 <ul>
-    <% _.each(data.retries, function(retri){ %>
-    <li class="status-<%= retri.status %>"></li>
+    <% _.each(data.retries, function(retry){ %>
+        <li class="status-<%= retry.status %>"></li>
     <% }); %>
 </ul>
 <span data-js-retries-link><%= '#' + data.retries.length + ' ' + data.text.launches.retries %></span>
