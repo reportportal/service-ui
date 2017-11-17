@@ -5,7 +5,7 @@
 </button>
 <ul class="dropdown-menu rp-width-100">
     <% _.each(data.values, function(option, index) { %>
-    <li class="filter">
+    <li class="filter <%= option.value == 'All'? 'all-selector' : '' %>">
         <a class="checkbox value-selector <%= option.subOption ? 'sub-option' : ''%>">
             <label class="rp-checkbox-wrap" <%= (option.value == 'All') ? 'data-js-toggle-all' : '' %>>
                 <% if (option.value != 'All') { %>
