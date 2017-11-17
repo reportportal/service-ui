@@ -192,7 +192,7 @@ define(function (require) {
                 }
             });
             // Configuring custom legend block
-            if (!self.isPreview) {
+            if (!self.isPreview && !self.unclickableChart) {
                 d3.select(this.chart.element)
                     .insert('div', '.chart')
                     .attr('class', 'legend')

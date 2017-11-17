@@ -79,7 +79,7 @@ define(function (require) {
                         }
                     },
                     y: {
-                        show: false,
+                        show: !self.isPreview,
                         padding: {
                             top: 3
                         }
@@ -103,7 +103,7 @@ define(function (require) {
                 },
                 padding: {
                     top: self.isPreview ? 0 : 85,
-                    left: self.isPreview ? 0 : 20,
+                    left: self.isPreview ? 0 : 40,
                     right: self.isPreview ? 0 : 20,
                     bottom: self.isPreview || !self.isTimeLine ? 0 : 10
                 },

@@ -28,12 +28,22 @@
           stroke-dasharray: none;
         }
       }
-      .c3-axis, .c3-axis-x {
+      .c3-axis {
         .tick {
           font-family: $OpenSansRegular;
           fill: $COLOR--charcoal-grey;
         }
         &.c3-axis-y {
+          display: none;
+
+          @media print{
+            display: inline;
+            .domain {
+              stroke: $COLOR--gray-80 !important;
+              display: inline !important;
+            }
+          }
+
           .domain {
             display: none;
           }
@@ -287,6 +297,26 @@
               }
             }
           }
+        }
+      }
+    }
+  }
+}
+
+.fullscreen {
+  .launch-statistics-chart {
+    svg {
+      .c3-grid {
+        line {
+          display: inline !important;
+        }
+      }
+      .c3-axis-y {
+        display: inline !important;
+
+        .domain {
+          display: inline !important;
+          stroke: $COLOR--gray-80 !important;
         }
       }
     }
