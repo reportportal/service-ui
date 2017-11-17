@@ -39,11 +39,11 @@ define(function (require, exports, module) {
         className: 'log-item-next-error',
 
         events: {
-            'click [data-js-next-error]': 'onClickNextError',
+            'click [data-js-next-error]': 'onClickNextError'
         },
 
         bindings: {
-            '[data-js-next-error]': 'attr: { disabled: disable}, classes: {load: load}'
+            '[data-js-next-error]': 'attr: { disabled: disable }, classes: {load: load}'
         },
 
         computeds: {
@@ -156,7 +156,7 @@ define(function (require, exports, module) {
             var async = $.Deferred();
             var errorFilter = false;
             _.each(this.filterModel.getEntitiesObj(), function(field) {
-                if(field.filtering_field == 'level' && (~field.value.search(/ERROR/) || field.value == '')) {
+                if(field.filtering_field == 'level' && (~field.value.search(/ERROR|WARN|INFO|DEBUG|TRACE/) || field.value == '')) {
                     errorFilter = true;
                 }
             });
