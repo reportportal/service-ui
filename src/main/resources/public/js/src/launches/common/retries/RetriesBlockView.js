@@ -96,7 +96,7 @@ define(function (require) {
             this.renderedItems = [];
             this.renderItems();
             this.listenTo(this.collection, 'change:select', this.onChangeSelect);
-            this.collection.models[0].set({ select: true });
+            this.collection.models[this.collection.models.length - 1].set({ select: true });
         },
         onChangeSelect: function (model, value) {
             if (value) {
@@ -120,7 +120,7 @@ define(function (require) {
         },
         renderItems: function () {
             var self = this;
-            _.each(this.collection.models, function (model) {
+            _.each(_.clone(this.collection.models).reverse(), function (model) {
                 var itemView = new RetriesBlockItemView({
                     model: model
                 });
