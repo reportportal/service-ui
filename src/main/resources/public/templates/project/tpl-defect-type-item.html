@@ -1,8 +1,14 @@
 <div class="col-xs-7 col-sm-4 col-md-4 col-lg-4" data-type="longName">
     <div class="dt-full-name">
-        <label class="dt-tag-wrap">
+        <label class="dt-tag-wrap" data-js-defect-type>
             <span class="dt-tag-point" style="background-color: <%= data.model.color %>;"></span>
             <span class="dt-tag-name"><%= data.model.longName %></span>
+            <div class="locator-tooltip-wrapper">
+                <div class="locator-tooltip-content">
+                    <span><%- data.text.ui.locator %>: </span>
+                    <span class="locator"><%= data.model.locator %></span>
+                </div>
+            </div>
         </label>
     </div>
 </div>

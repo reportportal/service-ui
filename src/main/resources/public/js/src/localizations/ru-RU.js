@@ -74,6 +74,7 @@ define(['util'], function () {
             events: 'Мониторинг событий',
             action: 'Действие',
             filter: 'FILTER',
+            locator: 'Локатор',
             clickToSubmit: 'Нажмите, чтобы подтвердить отправку формы',
             clickToCancel: 'Нажмите для отмены',
             noResultsFound: 'Результатов не найдено',
