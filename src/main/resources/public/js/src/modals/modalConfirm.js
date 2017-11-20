@@ -59,7 +59,9 @@ define(function (require) {
                     btnText: options.okButtonText,
                     btnClass: (options.okButtonText === Localization.ui.move ||
                         options.okButtonText === Localization.ui.update ||
-                        options.okButtonText === Localization.dialog.changeRoleBtn )? 'rp-btn-submit' : 'rp-btn-danger',
+                        options.okButtonText === Localization.dialog.changeRoleBtn ||
+                        options.okButtonText === Localization.ui.include
+                    ) ? 'rp-btn-submit' : 'rp-btn-danger',
                     label: 'data-js-ok'
                 }
             ];

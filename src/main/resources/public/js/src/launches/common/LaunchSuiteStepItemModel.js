@@ -292,6 +292,18 @@ define(function (require, exports, module) {
                         return Localization.launches.launchIsProcessing;
                     }
                     return '';
+                },
+                ignoreaa: function () {
+                    if (self.getIssue().ignoreAnalyzer === true) {
+                        return Localization.launches.alreadyIgnoredAA;
+                    }
+                    return '';
+                },
+                includeaa: function () {
+                    if (self.getIssue().ignoreAnalyzer === false) {
+                        return Localization.launches.alreadyIncludedAA;
+                    }
+                    return '';
                 }
             };
             return result;
