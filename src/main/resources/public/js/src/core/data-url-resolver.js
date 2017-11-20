@@ -324,14 +324,16 @@ define(['app'], function (App) {
         if (!query.size) query.size = 10;
         var startUrl = config.apiVersion + 'user/';
         var sort = '';
+        var search = '';
         if (query.search) {
-            startUrl += 'search/' + query.search;
+            startUrl += 'search/';
             sort = '&page.sort=login,ASC';
+            search = '&term=' + query.search;
         } else {
             startUrl += 'all';
             sort = '&page.sort=login,ASC';
         }
-        return startUrl + '?page.page=' + query.page + '&page.size=' + query.size + sort;
+        return startUrl + '?page.page=' + query.page + '&page.size=' + query.size + sort + search;
     };
     var searchUsersSafe = function (query) {
         var query = query;
