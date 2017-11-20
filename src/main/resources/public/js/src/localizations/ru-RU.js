@@ -933,7 +933,9 @@ define(['util'], function () {
             includeAA: 'Включить в Авто-Анализ',
             ignoreAutoanalyzerTooltip: 'Игнорировать дефект при Авто-Анализе',
             alreadyIgnoredAA: 'Элемент уже игнорируется Авто-Анализом',
-            alreadyIncludedAA: 'Элемент уже включен в Авто-Анализ'
+            alreadyIncludedAA: 'Элемент уже включен в Авто-Анализ',
+            linkedBug: 'Ошибка в СОД',
+            noLinkedBug: 'Нет ошибки в СОД'
         },
 
         forSettings: {
@@ -1048,6 +1050,7 @@ define(['util'], function () {
             history_depth: 'Глубина истории',
             user: 'Владелец',
             issue$auto_analyzed: 'AA',
+            issue$externalSystemIssues$ticket_id: 'Опубликовано в СОД',
             number: 'Номер запуска'
         },
         filterNamePluralById: {

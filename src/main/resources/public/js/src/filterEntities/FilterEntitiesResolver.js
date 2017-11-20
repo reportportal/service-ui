@@ -211,6 +211,11 @@ define(function (require, exports, module) {
                 id: 'issue$auto_analyzed',
                 condition: 'in',
                 options: [{ name: Localization.launches.withAA, value: 'TRUE' }, { name: Localization.launches.withoutAA, value: 'FALSE' }],
+            }),
+            new Filters.EntityDropDownModel({
+                id: 'issue$externalSystemIssues$ticket_id',
+                condition: 'ex',
+                options: [{ name: Localization.launches.linkedBug, value: 'TRUE' }, { name: Localization.launches.noLinkedBug, value: 'FALSE' }],
             })
         ];
     };
