@@ -125,11 +125,10 @@ define(function (require) {
             var self = this,
                 el = $(e.currentTarget),
                 id = this.model.get('id'),
-                isLaunchAnalyze = el.data('analyze-type') === 'analyze',
-                type = isLaunchAnalyze ? 'startLaunchAnalyze' : 'startLaunchMatch';
+                isLaunchAnalyze = el.data('analyze-type') === 'analyze';
             if (!el.hasClass('disabled')) {
                 config.trackingDispatcher.trackEventNumber(isLaunchAnalyze ? 28 : 27);
-                Service[type](id)
+                Service.startLaunchAnalyze(id)
                     .done(function (response) {
                         self.model.set('isProcessing', true);
                         Util.ajaxSuccessMessenger('startAnalyzeAction');
