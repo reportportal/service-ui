@@ -876,7 +876,10 @@ define(['util'], function () {
             includeAA: 'Include into Auto Analysis',
             ignoreAutoanalyzerTooltip: 'Ignore defect type for Auto-Analysis',
             alreadyIgnoredAA: 'Item already ignored by Auto-Analysis',
-            alreadyIncludedAA: 'Item already included into Auto-Analysis'
+            alreadyIncludedAA: 'Item already included into Auto-Analysis',
+            linkedBug: 'Linked bug',
+            noLinkedBug: 'No linked bug'
+
         },
 
         forSettings: {
@@ -991,6 +994,7 @@ define(['util'], function () {
             history_depth: 'History depth',
             user: 'Owner',
             issue$auto_analyzed: 'AA',
+            issue$externalSystemIssues$ticket_id: 'Posted in BTS',
             number: 'Launch number'
         },
         filterNamePluralById: {
