@@ -29,7 +29,7 @@
         cursor: default;
       }
     }
-    .aa-badge {
+    .aa-badge, .ignore-aa-badge {
       display: none;
       width: 30px;
       height: 20px;
@@ -43,6 +43,13 @@
       padding-left: 6px;
       line-height: 17px;
       margin-right: 5px;
+      margin-bottom: 5px;
+    }
+    .ignore-aa-badge {
+      width: 70px;
+      color: $COLOR--gray-60;
+      border: solid 1px $COLOR--gray-60;
+      background-color: $COLOR--reseted;
     }
     .defect-type-badge {
       background: $COLOR--white-default;

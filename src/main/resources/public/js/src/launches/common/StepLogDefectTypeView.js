@@ -135,6 +135,7 @@ define(function (require) {
         template: 'tpl-launch-step-log-defect-type',
         events: {
             'click [data-js-issue-title]': 'onClickEditDefect',
+            'click [data-js-edit-defect-icon]': 'onClickEditDefect',
             'click [data-js-aa-badge]': 'onAABadgeClick'
         },
         bindings: {
@@ -142,7 +143,8 @@ define(function (require) {
             '[data-js-issue-name]': 'text: issueName',
             '[data-js-issue-color]': 'attr: {style: format("background-color: $1", issueColor)}',
             '[data-js-issue-title]': 'attr: {title: issueTitle}',
-            '[data-js-aa-badge]': 'classes: {show: issueAutoanalyzed}',
+            '[data-js-aa-badge]': 'classes: {show: all(not(ignoreAnalyzer), issueAutoanalyzed)}',
+            '[data-js-ignore-aa-badge]': 'classes: {show: ignoreAnalyzer}',
             '[data-js-edit-defect]': 'attr: {disabled: launch_isProcessing, title: editIssueTitle}, classes: {disabled: launch_isProcessing}'
         },
         computeds: {
@@ -173,6 +175,12 @@ define(function (require) {
                 deps: ['issue'],
                 get: function () {
                     return this.model.getIssue().autoAnalyzed === true;
+                }
+            },
+            ignoreAnalyzer: {
+                deps: ['issue'],
+                get: function () {
+                    return this.model.getIssue().ignoreAnalyzer === true;
                 }
             },
             issueTitle: {

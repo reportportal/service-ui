@@ -10,7 +10,9 @@
                         <i data-js-issue-color style="background: <%= defectType ? defectType.color : '' %>"></i>
                         <span data-js-issue-name><%= defectType ? defectType.longName : '' %></span>
                     </span>
-                    <span data-js-noissue-name style="<% if(defectType){ %>display:none;<% } %>"><%= data.text.dialog.choseDefectType %></span>
+                    <span data-js-noissue-name class="no-issue-name"
+                          style="<% if(defectType){ %>display:none;<% } %>"><%=
+                        data.text.dialog.choseDefectType %></span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu rp-defects-menu">
@@ -37,6 +39,7 @@
                     <% }); %>
                 </ul>
             </div>
+            <div class="ignore-aa-switcher-container" data-js-ignore-aa-switcher-container></div>
         </div>
         <div class="text-editor" data-js-issue-comment></div>
         <div class="rp-defect-editor-bottom">

@@ -40,6 +40,8 @@ define(['util'], function () {
             ok: 'Ok',
             reset: 'Reset',
             merge: 'Merge',
+            ignore: 'Ignore',
+            include: 'Include',
             viewEmail: 'View email',
             sendEmail: 'Send email',
             sendInvite: 'Send invite',
@@ -867,7 +869,13 @@ define(['util'], function () {
 
             aaBadgeTooltip: 'Investigated by Auto-Analysis',
             withAA: 'With AA mark',
-            withoutAA: 'Without AA mark'
+            withoutAA: 'Without AA mark',
+            ignoreAA: 'Ignore in Auto Analysis',
+            ignoreAAShort: 'Ignore AA',
+            includeAA: 'Include into Auto Analysis',
+            ignoreAutoanalyzerTooltip: 'Ignore defect type for Auto-Analysis',
+            alreadyIgnoredAA: 'Item already ignored by Auto-Analysis',
+            alreadyIncludedAA: 'Item already included into Auto-Analysis'
         },
 
         forSettings: {
@@ -1612,6 +1620,10 @@ define(['util'], function () {
             deleteTestItem: 'Item was deleted',
             deleteTestItems: 'Items were deleted',
             submitKeys: 'Defect link is added',
+            ignoreItemAA: 'Item was successfully ignored in Auto-Analysis',
+            ignoreItemsAA: 'Item were successfully ignored by Auto-Analysis',
+            includeItemAA: 'Item was successfully included in Auto-Analysis',
+            includeItemsAA: 'Item were successfully Included in Auto-Analysis',
 
             editFilter: 'Filter has been updated!',
             sharedFilter: 'Filter name has been shared!',
@@ -1981,7 +1993,9 @@ define(['util'], function () {
             regenerateUUID: 'REGENERATE UUID',
             deleteOrg: 'Delete GitHub organization',
             logAttachment: 'ATTACHMENT',
-            importLaunch: 'Import launch'
+            importLaunch: 'Import launch',
+            ignoreAA: 'Ignore %%% in Auto-Analysis',
+            includeAA: 'Include %%% into Auto-Analysis'
         },
 
         dialog: {
@@ -2041,6 +2055,8 @@ define(['util'], function () {
             msgMessageTop: 'Are you sure you want to delete the defect type?  All Investigated as <strong>\'%%%\'</strong> defects will be marked as <strong>\'%%%\'</strong>.',
             msgImportLaunch: 'If your runner does not write the test start time in .xml file, then the current server time will be used.',
             importLaunchTip: 'Drop only <strong>.zip</strong> file under 32 MB to upload or <span class="blue">click</span> to add it',
+            msgIgnoreAA: 'Are you sure to ignore %%% in Auto-Analysis?',
+            msgIncludeAA: 'Are you sure to include %%% into Auto-Analysis?',
             invalidFileType: 'Incorrect file format',
             invalidFileSize: 'File size is more than 32 Mb'
         },

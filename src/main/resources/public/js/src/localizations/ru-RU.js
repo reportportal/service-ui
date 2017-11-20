@@ -40,6 +40,8 @@ define(['util'], function () {
             ok: 'Ok',
             reset: 'Переустановить',
             merge: 'Соединить',
+            ignore: 'Игнорировать',
+            include: 'Включить',
             viewEmail: 'Просмотреть письмо',
             sendEmail: 'Отправить письмо',
             sendInvite: 'Отправить приглашение',
@@ -925,7 +927,13 @@ define(['util'], function () {
 
             aaBadgeTooltip: 'Проанализировано Авто-Анализом',
             withAA: 'C AA меткой',
-            withoutAA: 'Без AA метки'
+            withoutAA: 'Без AA метки',
+            ignoreAA: 'Игнорировать при Авто-Анализе',
+            ignoreAAShort: 'Игнорировать АА',
+            includeAA: 'Включить в Авто-Анализ',
+            ignoreAutoanalyzerTooltip: 'Игнорировать дефект при Авто-Анализе',
+            alreadyIgnoredAA: 'Элемент уже игнорируется Авто-Анализом',
+            alreadyIncludedAA: 'Элемент уже включен в Авто-Анализ'
         },
 
         forSettings: {
@@ -1671,6 +1679,10 @@ define(['util'], function () {
             deleteTestItem: 'Элемент был удален',
             deleteTestItems: 'Элементы были удалены',
             submitKeys: 'Добавлена недействительная ссылка',
+            ignoreItemAA: 'Элемент успешно игнорируется при Авто-Анализе',
+            ignoreItemsAA: 'Элементы успешно игнорируются при Авто-Анализе',
+            includeItemAA: 'Элемент успешно добавлен в Авто-Анализ',
+            includeItemsAA: 'Элементы успешно добавлены в Авто-Анализ',
 
             editFilter: 'Фильтр обновлен!',
             sharedFilter: 'Имя фильтра было предоставлено!',
@@ -2040,7 +2052,9 @@ define(['util'], function () {
             regenerateUUID: 'СОЗДАТЬ НОВЫЙ UUID',
             deleteOrg: 'Удалить организацию GitHub',
             logAttachment: 'ВЛОЖЕНИЕ',
-            importLaunch: 'Импортировать запуск'
+            importLaunch: 'Импортировать запуск',
+            ignoreAA: 'Игнорировать %%% при Авто-Анализе',
+            includeAA: 'Включить %%% в Авто-Анализ'
         },
 
         dialog: {
@@ -2100,6 +2114,8 @@ define(['util'], function () {
             msgMessageTop: 'Вы уверены, что хотите удалить тип дефекта? Все дефекты, которые признаны <strong>\'%%%\'</strong>, будут отмечены как <strong>\'%%%\'</strong>.',
             msgImportLaunch: 'Если в xml файле нет времени старта, то в качестве времени начала запуска используется текущее время сервера.',
             importLaunchTip: 'Перетащите только <strong>zip</strong> файлы с объемом менее 32 mb или <span class="blue">кликните</span> мышкой, чтобы добавить их',
+            msgIgnoreAA: 'Вы уверены, что хотите игнорировать %%% при Авто-Анализе?',
+            msgIncludeAA: 'Вы уверены, что хотите включить %%% в Авто-Анализ?',
             invalidFileType: 'Неверный формат файла',
             invalidFileSize: 'Размер файла больше 32 Mb'
         },
