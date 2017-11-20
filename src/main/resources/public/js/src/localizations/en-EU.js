@@ -74,6 +74,7 @@ define(['util'], function () {
             events: 'Events monitoring',
             action: 'Action',
             filter: 'FILTER',
+            locator: 'Locator',
             clickToSubmit: 'Click to submit this form',
             clickToCancel: 'Click to cancel',
             noResultsFound: 'No results found',
