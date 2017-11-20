@@ -248,10 +248,6 @@ define([
         return call('POST', urls.launchAnalyzeUrl(id), null, null, true);
     };
 
-    var startLaunchMatch = function (id) {
-        return call('POST', urls.launchMatchUrl(id), null, null, true);
-    };
-
     var mergeLaunches = function (data) {
         return call('POST', urls.getMerge(), data);
     };
@@ -405,7 +401,6 @@ define([
         updateLaunch: updateLaunch,
         updateTestItem: updateTestItem,
         startLaunchAnalyze: startLaunchAnalyze,
-        startLaunchMatch: startLaunchMatch,
         mergeLaunches: mergeLaunches,
         finishLaunch: finishLaunch,
         removeTicket: removeTicket,

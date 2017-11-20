@@ -147,10 +147,7 @@ define(['app'], function (App) {
         return getProjectBase() + '/item/' + id;
     };
     var launchAnalyzeUrl = function (id) {
-        return getProjectBase() + '/launch/' + id + '/analyze/history';
-    };
-    var launchMatchUrl = function (id) {
-        return getProjectBase() + '/launch/' + id + '/analyze/single';
+        return getProjectBase() + '/launch/' + id + '/analyze';
     };
     var launchFinishUrl = function (id) {
         return getProjectBase() + '/launch/' + id + '/stop';
@@ -507,7 +504,6 @@ define(['app'], function (App) {
         updateTestItemUrl: updateTestItemUrl,
         deleteTestItemUrl: deleteTestItemUrl,
         launchAnalyzeUrl: launchAnalyzeUrl,
-        launchMatchUrl: launchMatchUrl,
         launchFinishUrl: launchFinishUrl,
         tabUrl: tabUrl,
 
