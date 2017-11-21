@@ -186,7 +186,7 @@ define(function (require) {
                 bodyText: Util.replaceTemplate(Localization.dialog.deletedWidget,
                     this.model.get('name')
                 ),
-                confirmText: !dangerRemove ? '' : Localization.dialog.deletedWidgetDangerConfirmText,
+                confirmText: !dangerRemove ? Localization.dialog.deletedOwnWidgetDangerConfirmText : Localization.dialog.deletedWidgetDangerConfirmText,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete
