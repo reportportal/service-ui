@@ -80,7 +80,7 @@ define(function (require) {
                         items: getDynamicCriteriaItems(),
                         placeholder: Localization.wizard.criteriaSelectTitle,
                         multiple: true,
-                        notEmpty: false,
+                        notEmpty: true,
                         getValue: function (model, self) {
                             var defectLocatorPattern = appConfig.patterns.defectsLocator;
                             var contentFields = model.getContentFields();
