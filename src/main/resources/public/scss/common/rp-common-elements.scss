@@ -186,7 +186,7 @@
     .print{
       display: block;
       &.launches{
-        p{
+        p:last-child{
           span {
             text-transform: none;
           }

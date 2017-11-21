@@ -134,7 +134,7 @@ body.fullscreen {
       }
     }
     .buttons-container {
-      display: none;
+      display: block;
     }
     .fullscreen-overflow {
       display: block;
@@ -150,6 +150,7 @@ body.fullscreen {
 @media print{
   .dashboard-item-view{
     .buttons-container {
+      display: block;
       .rp-nav-left, .rp-nav-right{
         display: none;
       }
@@ -161,6 +162,9 @@ body.fullscreen {
     }
     .dashboard-list-item-view{
       width: 25%;
+    }
+    .filter-dashboard{
+      display: block !important;
     }
   }
 }
