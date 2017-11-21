@@ -30,6 +30,7 @@ define(function (require) {
     var Service = require('coreService');
     var DropDownComponent = require('components/DropDownComponent');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
 
     var config = App.getInstance();
     var appModel = new SingletonAppModel();
@@ -49,6 +50,7 @@ define(function (require) {
 
         initialize: function () {
             var self = this;
+            this.registryInfoModel = new SingletonRegistryInfoModel();
             this.model = new ProjectSettingsModel(appModel.get('configuration'));
             this.dropdownComponents = [];
             this.listenTo(this.model, 'change:interruptedJob', function () {
@@ -79,6 +81,9 @@ define(function (require) {
             return this;
         },
         setupDropdowns: function () {
+            var self = this;
+            var isEpamInstance = this.registryInfoModel.get('isEpamInstance');
+
             var interruptedJob = new DropDownComponent({
                 data: _.map(config.forSettings.interruptedJob, function (val) {
                     return { name: val.name, value: val.value, disabled: false };
@@ -87,16 +92,22 @@ define(function (require) {
                 defaultValue: this.model.get('interruptedJob')
             });
             var keepLogs = new DropDownComponent({
-                data: _.map(config.forSettings.keepLogs, function (val) {
-                    return { name: val.name, value: val.value, disabled: false };
-                }),
+                data: _.map(
+                    isEpamInstance ? _.reject(config.forSettings.keepLogs, function (val) { return val.value === 'forever'; }) : config.forSettings.keepLogs,
+                    function (val) {
+                        return { name: val.name, value: val.value, disabled: false };
+                    }
+                ),
                 multiple: false,
                 defaultValue: this.model.get('keepLogs')
             });
             var keepScreenshots = new DropDownComponent({
-                data: _.map(config.forSettings.keepScreenshots, function (val) {
-                    return { name: val.name, value: val.value, disabled: false };
-                }),
+                data: _.map(
+                    isEpamInstance ? _.reject(config.forSettings.keepScreenshots, function (val) { return val.value === 'forever'; }) : config.forSettings.keepScreenshots,
+                    function (val) {
+                        return { name: val.name, value: val.value, disabled: false };
+                    }
+                ),
                 multiple: false,
                 defaultValue: this.model.get('keepScreenshots')
             });

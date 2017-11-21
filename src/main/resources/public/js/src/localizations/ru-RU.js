@@ -950,7 +950,8 @@ define(['util'], function () {
             week3: '3 недели',
             month1: '1 месяц',
             month3: '3 месяца',
-            months6: '6 месяцев'
+            month6: '6 месяцев',
+            forever: 'бессрочно'
         },
 
         launchStatus: {

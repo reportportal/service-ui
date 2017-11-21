@@ -893,7 +893,8 @@ define(['util'], function () {
             week3: '3 weeks',
             month1: '1 month',
             month3: '3 months',
-            months6: '6 months'
+            month6: '6 months',
+            forever: 'forever'
         },
 
         launchStatus: {
