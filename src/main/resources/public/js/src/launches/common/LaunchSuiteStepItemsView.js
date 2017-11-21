@@ -67,10 +67,14 @@ define(function (require) {
                 .on('resize.launchItems', _.debounce(self.activateAccordions.bind(self), 100));
         },
         activateNextId: function (id) {
-            var activeItem = this.collection.get(id);
-            if (activeItem) {
-                activeItem.trigger('scrollToAndHighlight');
-            }
+            var self = this;
+            var activeItem;
+            this.listenToOnce(this, 'itemsLoaded', function () {
+                activeItem = self.collection.get(id);
+                if (activeItem) {
+                    activeItem.trigger('scrollToAndHighlight');
+                }
+            });
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
@@ -111,6 +115,7 @@ define(function (require) {
                 this.$el.addClass('load').removeClass('not-found');
                 return;
             }
+            this.trigger('itemsLoaded');
             this.activateAccordions();
             this.$el.removeClass('load');
             if (!this.collection.models.length) {
