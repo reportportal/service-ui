@@ -193,6 +193,9 @@ define(function (require) {
             this.listenTo(this.issueView, 'quickFilter:AA', function () {
                 this.filterModel.trigger('add_entity', 'issue$auto_analyzed', 'TRUE');
             });
+            this.listenTo(this.issueView, 'quickFilter:ignoreAA', function () {
+                this.filterModel.trigger('add_entity', 'issue$ignore_analyzer', 'TRUE');
+            });
         },
         onClickTag: function (e) {
             var tag = $(e.currentTarget).data('js-tag');

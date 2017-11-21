@@ -136,7 +136,8 @@ define(function (require) {
         events: {
             'click [data-js-issue-title]': 'onClickEditDefect',
             'click [data-js-edit-defect-icon]': 'onClickEditDefect',
-            'click [data-js-aa-badge]': 'onAABadgeClick'
+            'click [data-js-aa-badge]': 'onAABadgeClick',
+            'click [data-js-ignore-aa-badge]': 'onIgnoreAABadgeClick'
         },
         bindings: {
             // '[data-js-issue-comment]': 'html: issueComment',
@@ -254,6 +255,9 @@ define(function (require) {
         },
         onAABadgeClick: function () {
             this.trigger('quickFilter:AA');
+        },
+        onIgnoreAABadgeClick: function () {
+            this.trigger('quickFilter:ignoreAA');
         },
         onChangeIssue: function () {
             var tickets = [];
