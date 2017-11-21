@@ -93,8 +93,8 @@ define(function (require) {
                 Backbone.history.start();
                 config.userModel.checkAuthUrl();
             });
-        };
-        if (registryInfoModel.get('loadExternalService')) {
+        }
+        if (registryInfoModel.get('isEpamInstance')) {
             (new ExternalService())
                 .done(function () {
                     afterRegistryReady();

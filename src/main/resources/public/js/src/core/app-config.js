@@ -203,14 +203,16 @@ define(function (require) {
                     { name: Localization.forSettings.week2, value: '2 weeks' },
                     { name: Localization.forSettings.month1, value: '1 month' },
                     { name: Localization.forSettings.month3, value: '3 months' },
-                    { name: Localization.forSettings.month6, value: '6 months' }
+                    { name: Localization.forSettings.month6, value: '6 months' },
+                    { name: Localization.forSettings.forever, value: 'forever' }
                 ],
                 keepScreenshots: [
                     { name: Localization.forSettings.week1, value: '1 week' },
                     { name: Localization.forSettings.week2, value: '2 weeks' },
                     { name: Localization.forSettings.week3, value: '3 weeks' },
                     { name: Localization.forSettings.month1, value: '1 month' },
-                    { name: Localization.forSettings.month3, value: '3 months' }
+                    { name: Localization.forSettings.month3, value: '3 months' },
+                    { name: Localization.forSettings.forever, value: 'forever' }
                 ],
                 btsList: [
                     // {name: 'NONE', value: 'NONE'},

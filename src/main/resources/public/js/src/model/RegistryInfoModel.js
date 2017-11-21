@@ -66,15 +66,6 @@ define(function (require) {
                     return {};
                 }
             },
-            loadExternalService: {
-                deps: ['authExtensions'],
-                get: function (authExtensions) {
-                    if (authExtensions.epam) {
-                        return true;
-                    }
-                    return false;
-                }
-            },
             bugTrackingExtensions: {
                 deps: ['services'],
                 get: function (services) {
@@ -103,6 +94,12 @@ define(function (require) {
                         return services.API.metadata.activitiesObjectType;
                     }
                     return [];
+                }
+            },
+            isEpamInstance: {
+                deps: ['authExtensions'],
+                get: function (authExtensions) {
+                    return !!authExtensions.epam;
                 }
             }
         },
