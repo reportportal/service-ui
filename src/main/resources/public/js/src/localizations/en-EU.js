@@ -869,8 +869,10 @@ define(['util'], function () {
             openInLog: 'Open in Log view',
 
             aaBadgeTooltip: 'Investigated by Auto-Analysis',
-            withAA: 'With AA mark',
-            withoutAA: 'Without AA mark',
+            withAA: 'With "AA" mark',
+            withoutAA: 'Without "AA" mark',
+            withIgnoreAA: 'With "Ignore AA" mark',
+            withoutIgnoreAA: 'Without "Ignore AA" mark',
             ignoreAA: 'Ignore in Auto Analysis',
             ignoreAAShort: 'Ignore AA',
             includeAA: 'Include into Auto Analysis',
@@ -994,6 +996,7 @@ define(['util'], function () {
             history_depth: 'History depth',
             user: 'Owner',
             issue$auto_analyzed: 'AA',
+            issue$ignore_analyzer: 'Ignore AA',
             issue$externalSystemIssues$ticket_id: 'Posted in BTS',
             number: 'Launch number'
         },

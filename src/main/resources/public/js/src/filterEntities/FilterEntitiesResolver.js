@@ -210,7 +210,12 @@ define(function (require, exports, module) {
             new Filters.EntityDropDownModel({
                 id: 'issue$auto_analyzed',
                 condition: 'in',
-                options: [{ name: Localization.launches.withAA, value: 'TRUE' }, { name: Localization.launches.withoutAA, value: 'FALSE' }],
+                options: [{ name: Localization.launches.withAA, value: 'TRUE' }, { name: Localization.launches.withoutAA, value: 'FALSE' }]
+            }),
+            new Filters.EntityDropDownModel({
+                id: 'issue$ignore_analyzer',
+                condition: 'in',
+                options: [{ name: Localization.launches.withIgnoreAA, value: 'TRUE' }, { name: Localization.launches.withoutIgnoreAA, value: 'FALSE' }]
             }),
             new Filters.EntityDropDownModel({
                 id: 'issue$externalSystemIssues$ticket_id',

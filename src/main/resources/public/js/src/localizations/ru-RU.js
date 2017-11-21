@@ -927,8 +927,10 @@ define(['util'], function () {
             retries: 'попыток',
 
             aaBadgeTooltip: 'Проанализировано Авто-Анализом',
-            withAA: 'C AA меткой',
-            withoutAA: 'Без AA метки',
+            withAA: 'C "AA" меткой',
+            withoutAA: 'Без "AA" метки',
+            withIgnoreAA: 'C "Игнорировать AA" меткой',
+            withoutIgnoreAA: 'Без "Игнорировать AA" метки',
             ignoreAA: 'Игнорировать при Авто-Анализе',
             ignoreAAShort: 'Игнорировать АА',
             includeAA: 'Включить в Авто-Анализ',
@@ -1051,6 +1053,7 @@ define(['util'], function () {
             history_depth: 'Глубина истории',
             user: 'Владелец',
             issue$auto_analyzed: 'AA',
+            issue$ignore_analyzer: 'Игнорировать AA',
             issue$externalSystemIssues$ticket_id: 'Опубликовано в СОД',
             number: 'Номер запуска'
         },
