@@ -192,7 +192,7 @@ define(function (require) {
             this.listenTo(this.model, 'change:condition', function (model, value) {
                 var conditionListItems = $('[data-js-condition-list] > li', this.$el);
                 conditionListItems.removeClass('active');
-                $.each(conditionListItems, function(i, item) {
+                $.each(conditionListItems, function (i, item) {
                     var conditionListItem = $(item);
                     if ($('a', conditionListItem).data('value') === value) {
                         conditionListItem.addClass('active');
@@ -433,9 +433,14 @@ define(function (require) {
         initState: function () {
             var self = this;
             var checkedValue = this.model.get('value').split(',');
+            var initValue = this.model.get('value');
             _.each($('.rp-input-checkbox', this.$el), function (checkbox) {
                 var $checkbox = $(checkbox);
-                $checkbox.prop('checked', _.contains(checkedValue, $checkbox.data('value')));
+                if (initValue === 'All' || initValue === '') {
+                    $checkbox.prop('checked', true);
+                } else {
+                    $checkbox.prop('checked', _.contains(checkedValue, $checkbox.data('value')));
+                }
             });
             _.each($('.rp-input-checkbox[data-subtype]', this.$el), function (checkbox) {
                 var $checkbox = $(checkbox);
@@ -485,7 +490,7 @@ define(function (require) {
                 }
             });
             this.model.set({ value: valueMas.join(',') });
-            $('[data-js-value]', this.$el).text(nameMas.join(', ') || Localization.filterNameByValue.ALL);
+            $('[data-js-value]', this.$el).text(nameMas.join(', ') || '');
         }
     });
 
