@@ -26,6 +26,8 @@ define(function (require) {
     var Util = require('util');
     var $ = require('jquery');
     var Localization = require('localization');
+    var App = require('app');
+    var config = App.getInstance();
 
     var ModalView = Epoxy.View.extend({
         templateWrapper: '_tpl-modal',
@@ -47,6 +49,11 @@ define(function (require) {
 
         show: function () {
             var self = this;
+            this.listenTo(config.router, 'beforeRoute', function (e) {
+                config.router.skipNextRoute = true;
+                self.hide();
+            });
+
             this.modalBlock = true;
             this.closeAsync = $.Deferred();
             $('.rp-modal-dialog, .modal-backdrop').remove();
