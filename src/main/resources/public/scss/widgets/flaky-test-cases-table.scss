@@ -1,3 +1,50 @@
+@mixin reducedView() {
+  .widget-wrapper {
+    .flaky-table{
+      .scroll-wrapper {
+        .flaky-table-header {
+          .col-date {
+            display: none;
+          }
+          .col-count {
+            width: 40%;
+
+            .full {
+              display: none;
+            }
+            .short {
+              display: inline;
+            }
+          }
+          .col-percents {
+            width: 20%;
+
+            .full {
+              display: none;
+            }
+            .short {
+              display: inline;
+            }
+          }
+        }
+        .flaky-table-body {
+          .row {
+            .col-date {
+              display: none;
+            }
+            .col-count {
+              width: 40%;
+            }
+            .col-percents {
+              width: 20%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 .flaky-test-cases {
   height: 100%;
   overflow: hidden;
@@ -197,50 +244,13 @@
     }
   }
 
-  &.w-less-then-6 {
-    .widget-wrapper {
-      .flaky-table{
-        .scroll-wrapper {
-          .flaky-table-header {
-            .col-date {
-              display: none;
-            }
-            .col-count {
-              width: 40%;
+  &.w-less-then-7 {
+    @include reducedView;
+  }
+}
 
-              .full {
-                display: none;
-              }
-              .short {
-                display: inline;
-              }
-            }
-            .col-percents {
-              width: 20%;
-
-              .full {
-                display: none;
-              }
-              .short {
-                display: inline;
-              }
-            }
-          }
-          .flaky-table-body {
-            .row {
-              .col-date {
-                display: none;
-              }
-              .col-count {
-                width: 40%;
-              }
-              .col-percents {
-                width: 20%;
-              }
-            }
-          }
-        }
-      }
-    }
+.grid-stack-one-column-mode {
+  .flaky-test-cases {
+    @include reducedView;
   }
 }
