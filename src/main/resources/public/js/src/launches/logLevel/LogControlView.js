@@ -42,6 +42,7 @@ define(function (require) {
             this.collectionItems = options.collectionItems;
             this.render();
             this.updateNavButton(this.collectionItems.logOptions.item);
+            this.listenTo(this.collectionItems, 'change:log:item', this.updateNavButton);
         },
         updateNavButton: function (currentActiveId) {
             var index = 0;
