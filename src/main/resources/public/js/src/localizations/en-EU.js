@@ -1775,7 +1775,8 @@ define(['util'], function () {
         infoMessages: {
             defaults: 'System state has been changed',
             logOuted: 'You have been logged out',
-            noResults: 'No results to display'
+            noResults: 'No results to display',
+            restoredTestItem: 'Link to test-item become invalid. Test-item was restored by id from server.'
         },
 
         validation: {

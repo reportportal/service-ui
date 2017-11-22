@@ -32,6 +32,8 @@ define(function (require) {
     var Urls = require('dataUrlResolver');
     var ModalLogAttachmentImage = require('modals/modalLogAttachmentImage');
     var ModalLogAttachmentBinary = require('modals/modalLogAttachmentBinary');
+    var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
+    var Service = require('coreService');
 
     var config = App.getInstance();
 
@@ -52,7 +54,19 @@ define(function (require) {
             }
             this.supportedLogBinary = ['xml', 'javascript', 'json', 'css', 'php'];
         },
+        tryGetItemById: function () {
+            var async = $.Deferred();
+            Service.getTestItemInfo(this.collectionItems.logOptions.item)
+                .done(function (response) {
+                    async.resolve(new LaunchSuiteStepItemModel(response));
+                })
+                .fail(function (response) {
+                    async.reject(response);
+                });
+            return async;
+        },
         onChangeLogItem: function () {
+            var self = this;
             $('[data-js-log-item-container]', this.$el).removeClass('not-found');
             $('[data-js-log-item-container]', this.$el).addClass('load');
             this.history && this.off(this.history);
@@ -60,7 +74,21 @@ define(function (require) {
             this.historyItem && this.historyItem.destroy();
             this.logsItem && this.logsItem.destroy();
             if (!this.collectionItems.get(this.collectionItems.getInfoLog().item)) {
-                $('[data-js-log-item-container]', this.$el).addClass('not-found');
+                this.tryGetItemById()
+                    .done(function (model) {
+                        self.collectionItems.pagingData = {
+                            number: 1,
+                            size: self.collectionItems.pagingSize,
+                            totalElements: 1,
+                            totalPages: 1
+                        };
+                        self.collectionItems.reset(model);
+                        self.collectionItems.trigger('change:log:item', model.get('id'), false);
+                        Util.ajaxInfoMessenger('restoredTestItem');
+                    })
+                    .fail(function () {
+                        $('[data-js-log-item-container]', self.$el).addClass('not-found');
+                    });
                 $('[data-js-log-item-container]', this.$el).removeClass('load');
             } else {
                 this.history = new LogHistoryLine({
@@ -107,7 +135,6 @@ define(function (require) {
             this.listenTo(this.historyItem, 'change:retry', this.onChangeRetry);
 
             this.onChangeRetry(this.historyItem.getCurrentRetry(), firstInit);
-
         },
         onChangeRetry: function (retryModel, firstInit) {
             var curOptions = this.collectionItems.getInfoLog();
