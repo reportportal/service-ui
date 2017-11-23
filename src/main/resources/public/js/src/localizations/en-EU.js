@@ -343,6 +343,7 @@ define(['util'], function () {
             widgetCriteria: 'Criteria for widget',
             selectCriteria: 'Select criteria',
             selectShared: 'Select shared widget',
+            sharedWidgetsSearchPlaceholder: 'Search widget by name',
             widgetExists: 'Widget already exists on dashboard',
             emptyShared: 'No shared widgets found!',
             sharedBy: 'shared by',
