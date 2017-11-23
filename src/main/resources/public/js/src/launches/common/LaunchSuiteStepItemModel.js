@@ -294,12 +294,18 @@ define(function (require, exports, module) {
                     return '';
                 },
                 ignoreaa: function () {
+                    if (!self.get('issue')) {
+                        return Localization.launches.withoutDefect;
+                    }
                     if (self.getIssue().ignoreAnalyzer === true) {
                         return Localization.launches.alreadyIgnoredAA;
                     }
                     return '';
                 },
                 includeaa: function () {
+                    if (!self.get('issue')) {
+                        return Localization.launches.withoutDefect;
+                    }
                     if (self.getIssue().ignoreAnalyzer === false) {
                         return Localization.launches.alreadyIncludedAA;
                     }
