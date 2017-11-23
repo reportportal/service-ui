@@ -61,7 +61,7 @@ define(function (require) {
             this.historyItem && this.historyItem.destroy();
             this.logsItem && this.logsItem.destroy();
             if (!this.collectionItems.get(this.collectionItems.getInfoLog().item)) {
-                this.collectionItems.getItemById()
+                this.collectionItems.loadLogLevelById()
                     .done(function () {
                         Util.ajaxInfoMessenger('restoredTestItem');
                     })
