@@ -934,9 +934,10 @@ define(['util'], function () {
             ignoreAA: 'Игнорировать при Авто-Анализе',
             ignoreAAShort: 'Игнорировать АА',
             includeAA: 'Включить в Авто-Анализ',
-            ignoreAutoanalyzerTooltip: 'Игнорировать дефект при Авто-Анализе',
+            ignoreAutoanalyzerTooltip: 'Игнорировать элемент при Авто-Анализе',
             alreadyIgnoredAA: 'Элемент уже игнорируется Авто-Анализом',
             alreadyIncludedAA: 'Элемент уже включен в Авто-Анализ',
+            withoutDefect: 'Элемент не имеет деффекта',
             linkedBug: 'Ошибка в СОД',
             noLinkedBug: 'Нет ошибки в СОД'
         },

@@ -876,9 +876,10 @@ define(['util'], function () {
             ignoreAA: 'Ignore in Auto Analysis',
             ignoreAAShort: 'Ignore AA',
             includeAA: 'Include into Auto Analysis',
-            ignoreAutoanalyzerTooltip: 'Ignore defect type for Auto-Analysis',
+            ignoreAutoanalyzerTooltip: 'Ignore item for Auto-Analysis',
             alreadyIgnoredAA: 'Item already ignored by Auto-Analysis',
             alreadyIncludedAA: 'Item already included into Auto-Analysis',
+            withoutDefect: 'Item does not have defect type',
             linkedBug: 'Linked bug',
             noLinkedBug: 'No linked bug'
 
