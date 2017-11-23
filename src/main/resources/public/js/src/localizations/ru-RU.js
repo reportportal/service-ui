@@ -748,7 +748,13 @@ define(['util'], function () {
             description: 'Описание',
             dashboardEmptyHeader: 'У вас нет виджетов на этой панели управления',
             notMyDashboardEmptyHeader: 'На этой панели управления нет виджетов',
-            dashboardEmptyText: 'Добавьте первый виджет, чтобы проанализировать статистику'
+            dashboardEmptyText: 'Добавьте первый виджет, чтобы проанализировать статистику',
+            thShared: 'Доступность',
+            thDelete: 'Удалить',
+            thEdit: 'Редактировать',
+            thOwner: 'Владелец',
+            thDescription: 'Описание',
+            thName: 'Имя панели управления'
         },
 
 

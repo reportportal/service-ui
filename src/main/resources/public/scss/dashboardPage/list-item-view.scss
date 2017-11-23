@@ -19,183 +19,275 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-.dashboard-list-item-view {
-  float: left;
-  width: 25%;
-  margin: 15px 0;
-  .dashboard-content {
-    margin: 0 8px;
-    height: 100%;
-    border: 1px solid $COLOR--gray-91;
-    background: $COLOR--white-four;
-    cursor: pointer;
-    &:hover {
-      box-shadow: 0 0 20px 0 $COLOR--gray-91;
+.dashboard-list-view-table{
+  .dashboard-list-item-view {
+    float: left;
+    width: 25%;
+    margin: 15px 0;
+    .dashboard-content {
+      margin: 0 8px;
+      height: 100%;
+      border: 1px solid $COLOR--gray-91;
+      background: $COLOR--white-four;
+      cursor: pointer;
+      &:hover {
+        box-shadow: 0 0 20px 0 $COLOR--gray-91;
+      }
     }
-  }
-  .name-wrapper {
-    position: relative;
-    width: 100%;
-    height: 47px;
-    border-bottom: 1px solid $COLOR--gray-91;
-    background:$COLOR--white;
-    p {
-      color: $COLOR--topaz;
-      font-size: 16px;
-      @include fontHeader;
-      line-height: 47px;
-      padding: 0 70px 0 13px;
+    .name-wrapper {
+      position: relative;
+      width: 100%;
+      height: 47px;
+      border-bottom: 1px solid $COLOR--gray-91;
+      background:$COLOR--white;
+      p {
+        color: $COLOR--topaz;
+        font-size: 16px;
+        @include fontHeader;
+        line-height: 47px;
+        padding: 0 70px 0 13px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      .icons-block {
+        position: absolute;
+        right: 0;
+        top: 0;
+        @media (max-width: $SCREEN_XS_MAX) {
+          display: none;
+        }
+        i {
+          float: right;
+          color: $COLOR--gray-60;
+          font-size: 20px;
+          line-height: 21px;
+          margin: 13px 3px;
+          width: 20px;
+          cursor: pointer;
+          opacity: 0;
+          &.close-icon {
+            font-size: 24px;
+            margin-right: 10px;
+          }
+          &:hover {
+            color: $COLOR--black;
+          }
+        }
+      }
+    }
+    .description-wrapper {
+      position: relative;
+      width: 100%;
+      height: 145px;
+      overflow: hidden;
+      p {
+        position: absolute;
+        bottom: 15px;
+        margin: 0;
+        left: 15px;
+        right: 15px;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+        z-index: 1;
+      }
+
+      &:after {
+        background-position: center;
+        -webkit-background-size: 100%;
+        background-size: contain;
+        background-repeat: no-repeat;
+        content: "";
+        opacity: 0.3;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        -webkit-box-shadow: inset 0px -30px 100px 3px $COLOR--reseted;
+        -moz-box-shadow: inset 0px -30px 100px 3px $COLOR--reseted;
+        box-shadow: inset inset 0px -30px 100px 3px $COLOR--reseted;
+
+        @-moz-document url-prefix() {
+          opacity: 0.35;
+        }
+      }
+
+      &.preview-0:after {
+        background-image: url('../../img/widgets/different-launches-comparison-chart.svg');
+      }
+      &.preview-1:after {
+        background-image: url('../../img/widgets/failed-cases-trend-chart.svg');
+      }
+      &.preview-2:after {
+        background-image: url('../../img/widgets/investigated-percentage-of-launches.svg');
+      }
+      &.preview-3:after {
+        background-image: url('../../img/widgets/launch-execution-and-issue-statistic.svg');
+      }
+      &.preview-4:after {
+        background-image: url('../../img/widgets/launch-statistics-line-chart.svg');
+      }
+      &.preview-5:after {
+        background-image: url('../../img/widgets/launch-statistics-trend-chart.svg');
+      }
+      &.preview-6:after {
+        background-image: url('../../img/widgets/launch-table.svg');
+      }
+      &.preview-7:after {
+        background-image: url('../../img/widgets/launches-duration-chart.svg');
+      }
+      &.preview-8:after {
+        background-image: url('../../img/widgets/most-failure-test-cases-table.svg');
+      }
+      &.preview-9:after {
+        background-image: url('../../img/widgets/non-passed-test-cases-trend.svg');
+      }
+      &.preview-10:after {
+        background-image: url('../../img/widgets/overall-statistics-panel.svg');
+      }
+      &.preview-11:after {
+        background-image: url('../../img/widgets/passing-rate-launch.svg');
+      }
+      &.preview-12:after {
+        background-image: url('../../img/widgets/passing-rate-summery.svg');
+      }
+      &.preview-13:after {
+        background-image: url('../../img/widgets/product-status.svg');
+      }
+    }
+    .icons-wrapper {
+      width: 100%;
+      height: 40px;
+      border-top: 1px solid $COLOR--gray-91;
+      background:$COLOR--white;
+      color: $COLOR--charcoal-grey;
+      padding: 11px 15px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
-    }
-    .icons-block {
-      position: absolute;
-      right: 0;
-      top: 0;
-      @media (max-width: $SCREEN_XS_MAX) {
-        display: none;
+      div {
+        display: inline;
       }
       i {
-        float: right;
-        color: $COLOR--gray-60;
-        font-size: 20px;
-        line-height: 21px;
-        margin: 13px 3px;
-        width: 20px;
-        cursor: pointer;
-        opacity: 0;
-        &.close-icon {
-          font-size: 24px;
-          margin-right: 10px;
-        }
-        &:hover {
-          color: $COLOR--black;
+        font-size: 17px;
+        line-height: 13px;
+        vertical-align: top;
+        margin-top: 3px;
+      }
+    }
+    &:hover {
+      .name-wrapper {
+        .icons-block {
+          i {
+            opacity: 1;
+          }
         }
       }
     }
-  }
-  .description-wrapper {
-    position: relative;
-    width: 100%;
-    height: 145px;
-    overflow: hidden;
-    p {
-      position: absolute;
-      bottom: 15px;
-      margin: 0;
-      left: 15px;
-      right: 15px;
-      white-space: pre-wrap;
-      word-wrap: break-word;
-      z-index: 1;
+    @media(max-width: 1200px) {
+      width: 33.3%;
     }
-
-    &:after {
-      background-position: center;
-      -webkit-background-size: 100%;
-      background-size: contain;
-      background-repeat: no-repeat;
-      content: "";
-      opacity: 0.3;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      position: absolute;
-      -webkit-box-shadow: inset 0px -30px 100px 3px $COLOR--reseted;
-      -moz-box-shadow: inset 0px -30px 100px 3px $COLOR--reseted;
-      box-shadow: inset inset 0px -30px 100px 3px $COLOR--reseted;
-
-      @-moz-document url-prefix() {
-        opacity: 0.35;
-      }
+    @media(max-width: 900px) {
+      width: 50%;
     }
-
-    &.preview-0:after {
-      background-image: url('../../img/widgets/different-launches-comparison-chart.svg');
+    @media(max-width: 550px) {
+      width: 100%;
+      margin: 7px 0;
     }
-    &.preview-1:after {
-      background-image: url('../../img/widgets/failed-cases-trend-chart.svg');
-    }
-    &.preview-2:after {
-      background-image: url('../../img/widgets/investigated-percentage-of-launches.svg');
-    }
-    &.preview-3:after {
-      background-image: url('../../img/widgets/launch-execution-and-issue-statistic.svg');
-    }
-    &.preview-4:after {
-      background-image: url('../../img/widgets/launch-statistics-line-chart.svg');
-    }
-    &.preview-5:after {
-      background-image: url('../../img/widgets/launch-statistics-trend-chart.svg');
-    }
-    &.preview-6:after {
-      background-image: url('../../img/widgets/launch-table.svg');
-    }
-    &.preview-7:after {
-      background-image: url('../../img/widgets/launches-duration-chart.svg');
-    }
-    &.preview-8:after {
-      background-image: url('../../img/widgets/most-failure-test-cases-table.svg');
-    }
-    &.preview-9:after {
-      background-image: url('../../img/widgets/non-passed-test-cases-trend.svg');
-    }
-    &.preview-10:after {
-      background-image: url('../../img/widgets/overall-statistics-panel.svg');
-    }
-    &.preview-11:after {
-      background-image: url('../../img/widgets/passing-rate-launch.svg');
-    }
-    &.preview-12:after {
-      background-image: url('../../img/widgets/passing-rate-summery.svg');
-    }
-    &.preview-13:after {
-      background-image: url('../../img/widgets/product-status.svg');
-    }
-  }
-  .icons-wrapper {
-    width: 100%;
-    height: 40px;
-    border-top: 1px solid $COLOR--gray-91;
-    background:$COLOR--white;
-    color: $COLOR--charcoal-grey;
-    padding: 11px 15px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    div {
-      display: inline;
-    }
-    i {
-      font-size: 17px;
-      line-height: 13px;
-      vertical-align: top;
-      margin-top: 3px;
-    }
-  }
-  &:hover {
-    .name-wrapper {
-      .icons-block {
-        i {
-          opacity: 1;
-        }
-      }
-    }
-  }
-  @media(max-width: 1200px) {
-    width: 33.3%;
-  }
-  @media(max-width: 900px) {
-    width: 50%;
-  }
-  @media(max-width: 550px) {
-    width: 100%;
-    margin: 7px 0;
   }
 }
-
+.dashboard-list-view-list{
+  .dashboard-table-view{
+      margin: 20px -15px 0 -15px;
+      .rp-table-thead{
+        background: #f5f5f5;
+        margin: 0;
+        .rp-table-th {
+          text-transform: uppercase;
+          padding: 16px 0;
+          color: #777;
+          font-weight: 600;
+          font-size: 12px;
+        }
+      }
+      .dashboard-delete-col {
+        float: right;
+        width: 80px;
+        padding:  5px 0;
+      }
+      .dashboard-table-row {
+        position: relative;
+        padding: 10px 0;
+        border-bottom: 1px solid #e9e9e9;
+        i{
+          font-size: 18px;
+          vertical-align: middle;
+          color: #999;
+          cursor: pointer;
+          margin: 0 10px;
+          &.rp-icons-share{
+            color: #333;
+            font-weight: bold;
+          }
+          &:hover {
+            color: #333;
+          }
+        }
+        .dashboard-edit-col{
+          border-left: 1px solid #e9e9e9;
+          border-right: 1px solid #e9e9e9;
+          min-height: 30px;
+          div{
+            margin-right: 15px;
+            text-align: center;
+          }
+        }
+        .dashboard-shared-col{
+          i{
+            cursor: default;
+          }
+        }
+        .dashboard-name {
+          line-height: 18px;
+          font-size: 16px;
+          font-family: OpenSansCondBold,sans-serif;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          color: #1a9cb0;
+          cursor: pointer;
+          margin: 0;
+        }
+        .dashboard-owner{
+          line-height: 1.54;
+          color: #464547;
+        }
+        .remove-dashboard {
+          text-align: center;
+        }
+      }
+      .dashboard-name-col {
+        width: 30%;
+      }
+      .dashboard-description-col {
+        width: 40%;
+      }
+      .dashboard-owner-col {
+        width: 16%;
+      }
+      .dashboard-shared-col, .dashboard-edit-col {
+        width: 7%;
+      }
+      .dashboard-cols-group {
+        margin-right: 80px;
+      }
+      .grid-cell {
+        float: left;
+        min-height: 1px;
+        padding: 5px 0 5px 15px;
+      }
+    }
+}
 @media print{
   .dashboard-list-item-view{
     &:hover {
@@ -208,5 +300,14 @@
       }
     }
   }
-
+  .dashboard-list-view-table{
+    .input-filter{
+      display: none;
+    }
+    .dashboard-list-item-view{
+      width: 25%;
+    }
+  }
 }
+
+
