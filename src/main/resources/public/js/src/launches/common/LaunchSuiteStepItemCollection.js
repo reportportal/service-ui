@@ -162,7 +162,7 @@ define(function (require) {
             value && options.push('predefined_filter=' + value);
             return mainHash + '?' + options.join('&');
         },
-        getItemById: function () {
+        loadLogLevelById: function () {
             var async = $.Deferred();
             var self = this;
             Service.getTestItemInfo(this.logOptions.item)
