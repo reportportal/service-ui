@@ -137,8 +137,11 @@ define([
     };
 
 
-    var getSharedWidgets = function () {
-        return call('GET', urls.widgetsShared());
+    var getSharedWidgets = function (data) {
+        return call('GET', urls.widgetsShared(data));
+    };
+    var sharedWidgetSearch = function (data) {
+        return call('GET', urls.sharedWidgetSearch(data));
     };
 
     var getSharedWidgetData = function (id) {
@@ -466,6 +469,7 @@ define([
         generateDemoData: generateDemoData,
 
         toggleAnalytics: toggleAnalytics,
-        getProjectEvents: getProjectEvents
+        getProjectEvents: getProjectEvents,
+        sharedWidgetSearch: sharedWidgetSearch
     };
 });

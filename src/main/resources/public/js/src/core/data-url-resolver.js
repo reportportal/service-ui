@@ -79,8 +79,11 @@ define(['app'], function (App) {
     var widgetNamesShared = function () {
         return getProjectBase() + '/widget/names/shared';
     };
-    var widgetsShared = function () {
-        return getProjectBase() + '/widget/shared';
+    var widgetsShared = function (data) {
+        return getProjectBase() + '/widget/shared?page.size=10&page.page=' + data.page;
+    };
+    var sharedWidgetSearch = function (data) {
+        return getProjectBase() + '/widget/shared/search?term=' + data.term + '&page.size=10&page.page=' + data.page;
     };
     var updateFilter = function (id) {
         return saveFilter() + '/' + id;
@@ -605,6 +608,7 @@ define(['app'], function (App) {
         adminAuthSettings: adminAuthSettings,
         toggleAnalytics: toggleAnalytics,
         importLaunch: importLaunch,
-        getProjectEvents: getProjectEvents
+        getProjectEvents: getProjectEvents,
+        sharedWidgetSearch: sharedWidgetSearch
     };
 });
