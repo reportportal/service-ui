@@ -40,7 +40,7 @@ define(function (require) {
             name: '',
             description: '',
             entities: '',
-            selection_parameters: '{"is_asc": false, "sorting_column": "start_time"}',
+            selection_parameters: '{"is_asc": false, "sorting_column": "start_time,number"}',
             owner: '',
             share: '',
             id: '',
@@ -245,18 +245,29 @@ define(function (require) {
         },
         getOptions: function () {
             var data = [];
+            var selectionParameters = this.getParametersObj();
+            var sortDirection = 'ASC';
+            var sortingColumn;
             _.each(this.getEntitiesObj(), function (entity) {
                 if (entity.value) {
                     data.push('filter.' + entity.condition + '.' + entity.filtering_field +
                         '=' + encodeURIComponent(entity.value));
                 }
             });
-            var selectionParameters = this.getParametersObj();
-            var sortDirection = 'ASC';
-            if (!selectionParameters.is_asc) {
-                sortDirection = 'DESC';
+            if (selectionParameters.orders) {
+                sortingColumn = _.map(selectionParameters.orders, function (parameter) {
+                    return parameter.sorting_column;
+                }).join(',');
+                if (!selectionParameters.orders[0].is_asc) {
+                    sortDirection = 'DESC';
+                }
+            } else {
+                sortingColumn = selectionParameters.sorting_column;
+                if (!selectionParameters.is_asc) {
+                    sortDirection = 'DESC';
+                }
             }
-            data.push('page.sort=' + selectionParameters.sorting_column + '%2C' + sortDirection);
+            data.push('page.sort=' + sortingColumn + '%2C' + sortDirection);
             return data;
         },
         computedsUrl: function () {
@@ -277,9 +288,12 @@ define(function (require) {
         getDataFromServer: function (changes) {
             var cloneModel = this.clone();
             var entities;
+            var params;
             var result;
+            var orders = [];
             changes && cloneModel.set(changes);
             entities = cloneModel.getEntitiesObj();
+            params = cloneModel.getParametersObj();
             if (!entities.length) {
                 entities.push({
                     condition: 'cnt',
@@ -287,11 +301,20 @@ define(function (require) {
                     value: ''
                 });
             }
+            _.each(params.sorting_column.split(','), function (sortColumn) {
+                orders.push({
+                    is_asc: params.is_asc,
+                    sorting_column: sortColumn
+                });
+            });
             result = {
                 name: cloneModel.get('name'),
                 entities: entities,
                 share: cloneModel.get('share'),
-                selection_parameters: cloneModel.getParametersObj(),
+                selection_parameters: {
+                    orders: orders,
+                    page_number: params.page_number
+                },
                 type: cloneModel.get('type')
             };
             if (cloneModel.get('description')) {
