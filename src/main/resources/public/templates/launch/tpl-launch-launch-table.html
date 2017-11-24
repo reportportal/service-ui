@@ -23,7 +23,7 @@
         <div class="grid-cell name-grid-cell rp-grid-th" data-sorter="name" data-filter="name">
             <%= getItemHtml(data.text.launchesHeaders.name, data.text.launchesHeaders.name_short) %>
         </div>
-        <div class="grid-cell time-grid-cell rp-grid-th" data-sorter="start_time" data-filter="start_time">
+        <div class="grid-cell time-grid-cell rp-grid-th" data-sorter="start_time,number" data-filter="start_time">
             <%= getItemHtml(data.text.launchesHeaders.start_time, data.text.launchesHeaders.start_time_short) %>
         </div>
         <div class="grid-cell number-grid-cell rp-grid-th" data-sorter="statistics$executions$total" data-filter="statistics$executions$total">
