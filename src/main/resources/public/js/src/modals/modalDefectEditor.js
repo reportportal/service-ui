@@ -83,6 +83,7 @@ define(function (require) {
             });
         },
         initialize: function (option) {
+            this.context = option.context;
             this.appStorage = new SingletonAppStorage();
             this.viewModel = new Backbone.Model();
             if (this.appStorage.get('replaceComment') === undefined) {
@@ -113,7 +114,7 @@ define(function (require) {
             this.applyBindings();
             this.setupAnchors();
             this.setupMarkdownEditor();
-            if (!this.isMultipleEdit()) {
+            if (!this.isMultipleEdit() && (this.context !== 'userdebug')) {
                 this.viewModel.set('ignoreAA', this.items[0].getIssue().ignoreAnalyzer);
                 this.ignoreSwitcher = new TinySwitcherComponent({
                     holder: $('[data-js-ignore-aa-switcher-container]', this.$el),
