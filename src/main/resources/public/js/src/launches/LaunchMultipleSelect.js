@@ -183,6 +183,7 @@ define(function (require) {
                     } else if (actionType && actionType.action === 'loadBug') {
                         self.actionCall.loadbug.call(self);
                     } else {
+                        self.collectionItems.load();
                         self.reset();
                     }
                     self.editDefectAction = null;
