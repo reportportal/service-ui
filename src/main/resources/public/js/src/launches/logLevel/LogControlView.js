@@ -124,16 +124,16 @@ define(function (require) {
             }
             this.stopListening(this.collectionItems, 'loading');
         },
-        attachHotkeys: function () {
-            $(window).on('keydown.logControl', function (e) {
-                if ((e.ctrlKey && e.keyCode === 39) || (e.metaKey && e.keyCode === 39)) {
-                    $('[data-js-button-next]', this.$el).trigger('click');
-                }
-                if ((e.ctrlKey && e.keyCode === 37) || (e.metaKey && e.keyCode === 37)) {
-                    $('[data-js-button-prev]', this.$el).trigger('click');
-                }
-            }.bind(this));
-        },
+        // attachHotkeys: function () {
+        //     $(window).on('keydown.logControl', function (e) {
+        //         if ((e.ctrlKey && e.shiftKey && e.keyCode === 39) || (e.ctrlKey && e.shiftKey && e.keyCode === 39)) {
+        //             $('[data-js-button-next]', this.$el).trigger('click');
+        //         }
+        //         if ((e.ctrlKey && e.shiftKey && e.keyCode === 37) || (e.ctrlKey && e.shiftKey && e.keyCode === 37)) {
+        //             $('[data-js-button-prev]', this.$el).trigger('click');
+        //         }
+        //     }.bind(this));
+        // },
         onClickPrev: function (e) {
             config.trackingDispatcher.trackEventNumber(186);
             this.onClickNavigation(e);
@@ -155,7 +155,7 @@ define(function (require) {
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
-            this.attachHotkeys();
+            // this.attachHotkeys();
         },
 
         onDestroy: function () {
