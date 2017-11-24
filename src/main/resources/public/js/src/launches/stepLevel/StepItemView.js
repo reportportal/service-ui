@@ -112,6 +112,7 @@ define(function (require) {
             var self = this;
             this.noIssue = options.noIssue;
             this.filterModel = options.filterModel;
+            this.context = options.context;
             this.render();
             this.listenTo(this.model, 'scrollToAndHighlight', this.highlightItem);
             this.markdownViewer = new MarkdownViewer({ text: this.model.get('description') });
@@ -187,7 +188,8 @@ define(function (require) {
         renderIssue: function () {
             this.issueView = new StepLogDefectTypeView({
                 model: this.model,
-                el: $('[data-js-step-issue]', this.$el)
+                el: $('[data-js-step-issue]', this.$el),
+                context: this.context
             });
             this.listenTo(this.issueView, 'load:comment', this.activateAccordion);
             this.listenTo(this.issueView, 'quickFilter:AA', function () {

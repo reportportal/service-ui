@@ -97,6 +97,7 @@ define(function (require) {
             this.context = options.context;
             this.appModel = new SingletonAppModel();
             this.viewModel = options.itemModel;
+            (this.context === 'userdebug') && this.viewModel.set('mode', 'DEBUG');
             this.launchModel = options.launchModel;
             this.collectionItems = options.collectionItems;
             this.listenTo(this.launchModel, 'change:isProcessing', this.onChangeLaunchProcessing);
@@ -107,7 +108,8 @@ define(function (require) {
                 this.issueView = new StepLogDefectTypeView({
                     model: this.viewModel,
                     pageType: 'logs',
-                    el: $('[data-js-step-issue]', this.$el)
+                    el: $('[data-js-step-issue]', this.$el),
+                    context: this.context
                 });
             }
             this.renderedRetries = [];
@@ -136,7 +138,8 @@ define(function (require) {
             }
             this.tabsView = new LogItemInfoTabs({
                 itemModel: model,
-                launchModel: this.launchModel
+                launchModel: this.launchModel,
+                context: this.context
             });
             $('[data-js-tabs-container]', this.$el).html(this.tabsView.$el);
             this.listenTo(this.tabsView, 'goToLog', this.goToLog);

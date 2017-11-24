@@ -219,6 +219,7 @@ define(function (require) {
         },
         initialize: function (options) {
             var self = this;
+            this.context = options.context;
             this.pageType = options.pageType;
             this.defetTypesCollection = new SingletonDefectTypeCollection();
             this.defetTypesCollection.ready.done(function () {
@@ -269,7 +270,8 @@ define(function (require) {
         },
         onClickEditDefect: function () {
             var defectEditor = new ModalDefectEditor({
-                items: [this.model]
+                items: [this.model],
+                context: this.context
             });
             if (this.pageType === 'logs') {
                 config.trackingDispatcher.trackEventNumber(192);
