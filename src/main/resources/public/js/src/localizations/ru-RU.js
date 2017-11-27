@@ -1059,7 +1059,7 @@ define(['util'], function () {
             history_depth: 'Глубина истории',
             user: 'Владелец',
             issue$auto_analyzed: 'AA',
-            issue$ignore_analyzer: 'Игнорировать AA',
+            issue$ignore_analyzer: 'Игнорировать в AA',
             issue$externalSystemIssues$ticket_id: 'Опубликовано в СОД',
             number: 'Номер запуска'
         },

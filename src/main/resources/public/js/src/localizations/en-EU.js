@@ -1002,7 +1002,7 @@ define(['util'], function () {
             history_depth: 'History depth',
             user: 'Owner',
             issue$auto_analyzed: 'Analysed by RP (AA)',
-            issue$ignore_analyzer: 'Ignore AA',
+            issue$ignore_analyzer: 'Ignored from AA',
             issue$externalSystemIssues$ticket_id: 'Issue in BTS',
             number: 'Launch number'
         },
