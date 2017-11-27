@@ -436,7 +436,7 @@ define(function (require) {
             var initValue = this.model.get('value');
             _.each($('.rp-input-checkbox', this.$el), function (checkbox) {
                 var $checkbox = $(checkbox);
-                if (initValue === 'All' || initValue === '') {
+                if (initValue === 'All') {
                     $checkbox.prop('checked', true);
                 } else {
                     $checkbox.prop('checked', _.contains(checkedValue, $checkbox.data('value')));
