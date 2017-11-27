@@ -45,7 +45,12 @@
     }
     &.action-cell, &.mobile-action-cell {
       width: 15%;
-      font-family: OpenSansSemibold;
+      font-family: $OpenSansSemibold;
+    }
+    &.action-cell {
+      &.double-column-width {
+        width: 26%;
+      }
     }
     &.mobile-action-cell {
       display: none;
@@ -126,6 +131,11 @@
         padding-right: 25px;
         &:after {
           right: 13px;
+        }
+      }
+      &.action-cell {
+        &.double-column-width {
+          width: auto;
         }
       }
       &.difference-cell {

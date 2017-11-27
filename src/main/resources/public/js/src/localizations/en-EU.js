@@ -311,7 +311,7 @@ define(['util'], function () {
             updateItem: 'updated item',
             attachIssue: 'attached issue',
             postIssue: 'posted issue',
-            changedByAnalyzer: 'changed by analyzer'
+            changedByAnalyzer: 'AA changed defect type'
         },
 
         widgets: {
