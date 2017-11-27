@@ -997,9 +997,9 @@ define(['util'], function () {
             type: 'Method type',
             history_depth: 'History depth',
             user: 'Owner',
-            issue$auto_analyzed: 'AA',
+            issue$auto_analyzed: 'Analysed by RP (AA)',
             issue$ignore_analyzer: 'Ignore AA',
-            issue$externalSystemIssues$ticket_id: 'Posted in BTS',
+            issue$externalSystemIssues$ticket_id: 'Issue in BTS',
             number: 'Launch number'
         },
         filterNamePluralById: {
