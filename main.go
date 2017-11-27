@@ -12,6 +12,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"github.com/go-chi/chi/middleware"
 )
 
 func main() {
@@ -21,11 +22,13 @@ func main() {
 		log.Fatalf("Cannot get workdir: %s", e.Error())
 	}
 
+	cfg := conf.EmptyConfig()
+	cfg.Consul.Tags = []string{"urlprefix-/ui/ opts strip=/ui"}
 	rpConf := struct {
 		Cfg         *conf.RpConfig
 		StaticsPath string `env:"RP_STATICS_PATH"`
 	}{
-		Cfg:         conf.EmptyConfig(),
+		Cfg:         cfg,
 		StaticsPath: currDir,
 	}
 
@@ -43,9 +46,8 @@ func main() {
 	srv.WithRouter(func(router *chi.Mux) {
 
 		//apply compression
-		router.Use(func(next http.Handler) http.Handler {
-			return handlers.CompressHandler(next)
-		})
+		router.Use(handlers.CompressHandler)
+		router.Use(middleware.RedirectSlashes)
 
 		//content security policy
 		csp := map[string][]string{
