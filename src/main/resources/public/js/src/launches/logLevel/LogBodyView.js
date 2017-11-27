@@ -112,6 +112,7 @@ define(function (require) {
             this.listenTo(this.historyItem, 'change:issue', this.onChangeItemIssue);
             this.listenTo(this.historyItem, 'click:attachment', this.onClickAttachments);
             this.listenTo(this.historyItem, 'change:retry', this.onChangeRetry);
+            this.listenTo(this.historyItem, 'update:issue', this.onChangeLogItem);
 
             this.onChangeRetry(this.historyItem.getCurrentRetry(), firstInit);
         },

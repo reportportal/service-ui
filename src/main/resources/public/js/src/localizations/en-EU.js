@@ -42,6 +42,8 @@ define(['util'], function () {
             merge: 'Merge',
             ignore: 'Ignore',
             include: 'Include',
+            send: 'Send',
+            receive: 'Receive',
             viewEmail: 'View email',
             sendEmail: 'Send email',
             sendInvite: 'Send invite',
@@ -788,6 +790,8 @@ define(['util'], function () {
             postBugTo: 'Post bug to',
             loadBug: 'Load issue',
             addIssueId: 'Add issue ID',
+            receiveIssue: 'Receive previous result',
+            sendIssue: 'Send result to the last item',
             key: 'Issue key (for multiple options - type issue ID and press Enter)',
             configureTBS: 'Configure bug tracking system to post issue',
             configureTBSLoad: 'Configure bug tracking system to load issue',
@@ -2006,7 +2010,9 @@ define(['util'], function () {
             logAttachment: 'ATTACHMENT',
             importLaunch: 'Import launch',
             ignoreAA: 'Ignore %%% in Auto-Analysis',
-            includeAA: 'Include %%% into Auto-Analysis'
+            includeAA: 'Include %%% into Auto-Analysis',
+            receiveIssue: 'Receive previous result',
+            sendIssue: 'Send result to the last item'
         },
 
         dialog: {
@@ -2069,6 +2075,8 @@ define(['util'], function () {
             importLaunchTip: 'Drop only <strong>.zip</strong> file under 32 MB to upload or <span class="blue">click</span> to add it',
             msgIgnoreAA: 'Are you sure to ignore %%% in Auto-Analysis?',
             msgIncludeAA: 'Are you sure to include %%% into Auto-Analysis?',
+            msgReceiveIssue: 'Are you sure to receive defect data from previous failed item?',
+            msgSendIssue: 'Are you sure to send defect data to the last item?',
             invalidFileType: 'Incorrect file format',
             invalidFileSize: 'File size is more than 32 Mb'
         },
