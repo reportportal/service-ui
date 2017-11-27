@@ -22,25 +22,21 @@ define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Backbone = require('backbone');
     var Util = require('util');
-
     var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
     var LogItemInfoRetryItemView = require('launches/logLevel/LogItemInfoRetryItemView');
-
     var LogItemInfoTabs = require('launches/logLevel/LogItemInfoTabs/LogItemInfoTabs');
+    var ModalConfirm = require('modals/modalConfirm');
     var App = require('app');
     var PostBugAction = require('launches/multipleActions/postBugAction');
     var LoadBugAction = require('launches/multipleActions/loadBugAction');
     var SingletonAppModel = require('model/SingletonAppModel');
     var Localization = require('localization');
-    var CallService = require('callService');
-    var Urls = require('dataUrlResolver');
-    var call = CallService.call;
-    var _ = require('underscore');
-
+    var Service = require('coreService');
     var config = App.getInstance();
 
     var RetiesCollection = Backbone.Collection.extend({
@@ -52,15 +48,45 @@ define(function (require) {
 
         events: {
             'click [data-js-post-bug]': 'onClickPostBug',
-            'click [data-js-load-bug]': 'onClickLoadBug'
+            'click [data-js-load-bug]': 'onClickLoadBug',
+            'click [data-js-send-issue]': 'onClickSendIssue',
+            'click [data-js-receive-issue]': 'onClickReceiveIssue'
         },
 
         bindings: {
             '[data-js-post-bug]': 'classes: {disabled: validatePostBug}, attr: {title: postBugTitle}',
-            '[data-js-load-bug]': 'classes: {disabled: validateLoadBug}, attr: {title: loadBugTitle}'
+            '[data-js-load-bug]': 'classes: {disabled: validateLoadBug}, attr: {title: loadBugTitle}',
+            '[data-js-send-issue]': 'classes: {disabled: isDisabledSendIssue, hidden: isVisibleSendIssue}',
+            '[data-js-receive-issue]': 'classes: {disabled: isDisabledReceiveIssue, hidden: isVisibleReceiveIssue}'
         },
 
         computeds: {
+            isDisabledSendIssue: {
+                get: function () {
+                    return !(this.viewModel.collection.length > 1) || !(this.viewModel.get('status') === 'FAILED');
+                }
+            },
+            isVisibleSendIssue: {
+                get: function () {
+                    return this.viewModel.get('id') === this.viewModel.collection.models[this.viewModel.collection.models.length - 1].get('id');
+                }
+            },
+            isDisabledReceiveIssue: {
+                get: function () {
+                    var hasFailedItems = false;
+                    _.each(this.viewModel.collection.models, function (model, key) {
+                        if ((key !== (this.viewModel.collection.models.length - 1)) && (model.get('status') === 'FAILED')) {
+                            hasFailedItems = true;
+                        }
+                    }.bind(this));
+                    return !(this.viewModel.collection.length > 1) || !(this.viewModel.get('status') === 'FAILED') || !hasFailedItems;
+                }
+            },
+            isVisibleReceiveIssue: {
+                get: function () {
+                    return this.viewModel.get('id') !== this.viewModel.collection.models[this.viewModel.collection.models.length - 1].get('id');
+                }
+            },
             validateLoadBug: {
                 deps: ['launch_isProcessing'],
                 get: function () {
@@ -204,12 +230,79 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(194);
             LoadBugAction({ items: [this.viewModel], from: 'logs' });
         },
+        onClickSendIssue: function () {
+            var lastItemModel = this.viewModel.collection.models[this.viewModel.collection.models.length - 1];
+            var activeItemIssue = this.viewModel.getIssue();
+            var lastItemIssue = lastItemModel.getIssue();
+            var data = {
+                issues: [{
+                    test_item_id: lastItemModel.get('id'),
+                    issue: {
+                        autoAnalyzed: lastItemIssue.autoAnalyzed,
+                        ignoreAnalyzer: lastItemIssue.ignoreAnalyzer,
+                        issue_type: activeItemIssue.issue_type,
+                        comment: activeItemIssue.comment || '',
+                        externalSystemIssues: activeItemIssue.externalSystemIssues || []
+                    }
+                }]
+            };
+            (new ModalConfirm({
+                headerText: Localization.dialogHeader.sendIssue,
+                confirmText: '',
+                bodyText: Util.replaceTemplate(Localization.dialog.msgSendIssue),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonText: Localization.ui.send,
+                okButtonDanger: false
+            })).show()
+                .done(function () {
+                    Service.updateDefect(data).done(function () {
+                        this.trigger('update:issue');
+                        Util.ajaxSuccessMessenger('updateDefect');
+                    }.bind(this));
+                }.bind(this));
+        },
+        onClickReceiveIssue: function () {
+            var previousFailedItemModel;
+            var previousFailedItemIssue;
+            var data;
+            _.each(this.viewModel.collection.models, function (model, key) {
+                if ((key !== (this.viewModel.collection.models.length - 1)) && (model.get('status') === 'FAILED')) {
+                    previousFailedItemModel = model;
+                }
+            }.bind(this));
+            previousFailedItemIssue = previousFailedItemModel.getIssue();
+            data = {
+                issues: [{
+                    test_item_id: this.viewModel.get('id'),
+                    issue: {
+                        autoAnalyzed: this.viewModel.get('autoAnalyzed'),
+                        ignoreAnalyzer: this.viewModel.get('ignoreAnalyzer'),
+                        issue_type: previousFailedItemIssue.issue_type,
+                        comment: previousFailedItemIssue.comment || '',
+                        externalSystemIssues: previousFailedItemIssue.externalSystemIssues || []
+                    }
+                }]
+            };
+            (new ModalConfirm({
+                headerText: Localization.dialogHeader.receiveIssue,
+                confirmText: '',
+                bodyText: Util.replaceTemplate(Localization.dialog.msgReceiveIssue),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonText: Localization.ui.receive,
+                okButtonDanger: false
+            })).show()
+                .done(function () {
+                    Service.updateDefect(data).done(function () {
+                        this.trigger('update:issue');
+                        Util.ajaxSuccessMessenger('updateDefect');
+                    }.bind(this));
+                }.bind(this));
+        },
         render: function () {
             this.$el.html(Util.templates(this.template, {
                 context: this.context
             }));
         },
-
         onDestroy: function () {
             this.issueView && this.issueView.destroy();
             this.$el.html('');
