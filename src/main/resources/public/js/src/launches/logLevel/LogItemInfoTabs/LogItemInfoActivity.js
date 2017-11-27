@@ -120,9 +120,18 @@ define(function (require) {
             '[data-js-action-name]': 'text: actionName',
             '[data-js-moment-time]': 'text: momentTime',
             '[data-js-full-time]': 'text: fullTime',
-            '[data-js-difference]': 'html: actionsHtml'
+            '[data-js-difference]': 'html: actionsHtml',
+            '[data-js-name-cell]': 'classes: {hide: isHideNameCell}',
+            '[data-js-action-cell]': 'classes: {"double-column-width": isHideNameCell}'
         },
-
+        computeds: {
+            isHideNameCell: {
+                deps: ['actionType'],
+                get: function (actionType) {
+                    return actionType === 'analyze_item';
+                }
+            }
+        },
         initialize: function () {
             this.render();
         },
