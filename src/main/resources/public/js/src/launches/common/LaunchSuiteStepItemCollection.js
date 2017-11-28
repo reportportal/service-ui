@@ -31,6 +31,7 @@ define(function (require) {
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var CallService = require('callService');
+    var Service = require('coreService');
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
     var LaunchUtils = require('launches/LaunchUtils');
@@ -160,6 +161,26 @@ define(function (require) {
             var mainHash = window.location.hash.split('?')[0];
             value && options.push('predefined_filter=' + value);
             return mainHash + '?' + options.join('&');
+        },
+        loadLogLevelById: function () {
+            var async = $.Deferred();
+            var self = this;
+            Service.getTestItemInfo(this.logOptions.item)
+                .done(function (response) {
+                    self.pagingData = {
+                        number: 1,
+                        size: self.pagingSize,
+                        totalElements: 1,
+                        totalPages: 1
+                    };
+                    self.reset(new LaunchSuiteStepItemModel(response));
+                    self.trigger('change:log:item', response.id, false);
+                    async.resolve();
+                })
+                .fail(function (response) {
+                    async.reject(response);
+                });
+            return async;
         },
         setPredefinedFilter: function (filterName) {
             this.predefinedFilter = filterName;

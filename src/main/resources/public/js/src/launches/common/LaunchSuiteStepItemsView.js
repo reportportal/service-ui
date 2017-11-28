@@ -67,10 +67,14 @@ define(function (require) {
                 .on('resize.launchItems', _.debounce(self.activateAccordions.bind(self), 100));
         },
         activateNextId: function (id) {
-            var activeItem = this.collection.get(id);
-            if (activeItem) {
-                activeItem.trigger('scrollToAndHighlight');
-            }
+            var self = this;
+            var activeItem;
+            this.listenToOnce(this, 'itemsLoaded', function () {
+                activeItem = self.collection.get(id);
+                if (activeItem) {
+                    activeItem.trigger('scrollToAndHighlight');
+                }
+            });
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
@@ -111,6 +115,7 @@ define(function (require) {
                 this.$el.addClass('load').removeClass('not-found');
                 return;
             }
+            this.trigger('itemsLoaded');
             this.activateAccordions();
             this.$el.removeClass('load');
             if (!this.collection.models.length) {
@@ -142,13 +147,13 @@ define(function (require) {
                         $itemsContainer.append(prentItem.$el);
                         self.renderedItems.push(prentItem);
                     }
-                    var item = new self.itemView({ model: model, filterModel: self.filterModel });
+                    var item = new self.itemView({ model: model, filterModel: self.filterModel, context: self.context });
                     $itemsContainer.append(item.$el);
                     self.renderedItems.push(item);
                 });
             } else {
                 _.each(self.collection.models, function (model) {
-                    var item = new self.itemView({ model: model, filterModel: self.filterModel });
+                    var item = new self.itemView({ model: model, filterModel: self.filterModel, context: self.context });
                     $itemsContainer.append(item.$el);
                     self.renderedItems.push(item);
                 });

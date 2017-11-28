@@ -123,10 +123,10 @@ define(function (require) {
                 crumbs.push(item.get('name'));
             });
             if (crumbs.length === 1) {
-                $(this.$el).find('.print p:last-child').html('<p>' + Localization.launches.listOfLaunches + '</p>');
+                $(this.$el).find('.print p:last-child').html( Localization.launches.listOfLaunches );
             } else {
                 crumbs = crumbs.slice(1).join(' / ');
-                $(this.$el).find('.print p:last-child').html('<p>' + Localization.projectEvents.objectTypes.launch + ': <span>' + crumbs + '</span></p>');
+                $(this.$el).find('.print p:last-child').html(Localization.projectEvents.objectTypes.launch + ': <span>' + crumbs + '</span>');
             }
         },
         onChangeItemCrumbs: function (launchModel, parentModel, optionsURL, nextItemId) {

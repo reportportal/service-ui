@@ -35,6 +35,12 @@
       @media (max-width: 500px) {
         display: none;
       }
+
+      .send-issue-data, .receive-issue-data {
+        @media (max-width: 900px) { // as in history line style.
+          display: none;
+        }
+      }
     }
     .item-issue-container {
       padding: 0 10px;

@@ -221,23 +221,10 @@ define(function (require) {
             this.currentLoadCollection = new Backbone.Collection();
             this.totalPages = 1;
             this.curPage = 1;
-
-            this.galleryPreviews = new SwipeGalleryComponent({
-                el: $('[data-js-min-gallery]', self.$el),
-                collection: this.collectionPreviews,
-                itemView: ItemAttachmentsView,
-                options: {
-                    // mouseEvents: true,
-                    loop: true
-                }
-            });
             this.listenTo(this.collectionMain, 'click:attachment', this.onClickMainImage);
             this.listenTo(this.collectionPreviews, 'change:itemModels', this.updateLoadItems);
-            this.listenTo(this.galleryPreviews, 'change:slide', this.onChangeSlide);
-
             this.listenTo(this.currentLoadCollection, 'change:active:slide', this.onChangeMainActiveSlide);
             this.listenTo(this.currentLoadCollection, 'click:min:item', this.activateMainGallery);
-            this.listenTo(this.galleryPreviews, 'after:click:right after:click:left', this.onClickPreviewNav);
         },
         onClickMainImage: function (model) {
             this.trigger('click:attachment', model);
@@ -246,6 +233,17 @@ define(function (require) {
             if (show && !this.isLoad) {
                 this.isLoad = true;
                 this.load();
+                this.galleryPreviews = new SwipeGalleryComponent({
+                    el: $('[data-js-min-gallery]', self.$el),
+                    collection: this.collectionPreviews,
+                    itemView: ItemAttachmentsView,
+                    options: {
+                        // mouseEvents: true,
+                        loop: true
+                    }
+                });
+                this.listenTo(this.galleryPreviews, 'change:slide', this.onChangeSlide);
+                this.listenTo(this.galleryPreviews, 'after:click:right after:click:left', this.onClickPreviewNav);
             }
         },
         goToAttachmentsPrev: function () {

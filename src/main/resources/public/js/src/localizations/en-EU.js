@@ -42,6 +42,8 @@ define(['util'], function () {
             merge: 'Merge',
             ignore: 'Ignore',
             include: 'Include',
+            send: 'Send',
+            receive: 'Receive',
             viewEmail: 'View email',
             sendEmail: 'Send email',
             sendInvite: 'Send invite',
@@ -311,7 +313,7 @@ define(['util'], function () {
             updateItem: 'updated item',
             attachIssue: 'attached issue',
             postIssue: 'posted issue',
-            changedByAnalyzer: 'changed by analyzer'
+            changedByAnalyzer: 'AA changed defect type'
         },
 
         widgets: {
@@ -794,6 +796,8 @@ define(['util'], function () {
             postBugTo: 'Post bug to',
             loadBug: 'Load issue',
             addIssueId: 'Add issue ID',
+            receiveIssue: 'Receive previous result',
+            sendIssue: 'Send result to the last item',
             key: 'Issue key (for multiple options - type issue ID and press Enter)',
             configureTBS: 'Configure bug tracking system to post issue',
             configureTBSLoad: 'Configure bug tracking system to load issue',
@@ -882,9 +886,10 @@ define(['util'], function () {
             ignoreAA: 'Ignore in Auto Analysis',
             ignoreAAShort: 'Ignore AA',
             includeAA: 'Include into Auto Analysis',
-            ignoreAutoanalyzerTooltip: 'Ignore defect type for Auto-Analysis',
+            ignoreAutoanalyzerTooltip: 'Ignore item for Auto-Analysis',
             alreadyIgnoredAA: 'Item already ignored by Auto-Analysis',
             alreadyIncludedAA: 'Item already included into Auto-Analysis',
+            withoutDefect: 'Item does not have defect type',
             linkedBug: 'Linked bug',
             noLinkedBug: 'No linked bug'
 
@@ -1002,9 +1007,9 @@ define(['util'], function () {
             type: 'Method type',
             history_depth: 'History depth',
             user: 'Owner',
-            issue$auto_analyzed: 'AA',
+            issue$auto_analyzed: 'Analysed by RP (AA)',
             issue$ignore_analyzer: 'Ignore AA',
-            issue$externalSystemIssues$ticket_id: 'Posted in BTS',
+            issue$externalSystemIssues$ticket_id: 'Issue in BTS',
             number: 'Launch number'
         },
         filterNamePluralById: {
@@ -1781,7 +1786,8 @@ define(['util'], function () {
         infoMessages: {
             defaults: 'System state has been changed',
             logOuted: 'You have been logged out',
-            noResults: 'No results to display'
+            noResults: 'No results to display',
+            restoredTestItem: 'Link to test-item become invalid. Test-item was restored by id from server.'
         },
 
         validation: {
@@ -2010,7 +2016,9 @@ define(['util'], function () {
             logAttachment: 'ATTACHMENT',
             importLaunch: 'Import launch',
             ignoreAA: 'Ignore %%% in Auto-Analysis',
-            includeAA: 'Include %%% into Auto-Analysis'
+            includeAA: 'Include %%% into Auto-Analysis',
+            receiveIssue: 'Receive previous result',
+            sendIssue: 'Send result to the last item'
         },
 
         dialog: {
@@ -2073,6 +2081,8 @@ define(['util'], function () {
             importLaunchTip: 'Drop only <strong>.zip</strong> file under 32 MB to upload or <span class="blue">click</span> to add it',
             msgIgnoreAA: 'Are you sure to ignore %%% in Auto-Analysis?',
             msgIncludeAA: 'Are you sure to include %%% into Auto-Analysis?',
+            msgReceiveIssue: 'Are you sure to receive defect data from previous failed item?',
+            msgSendIssue: 'Are you sure to send defect data to the last item?',
             invalidFileType: 'Incorrect file format',
             invalidFileSize: 'File size is more than 32 Mb'
         },

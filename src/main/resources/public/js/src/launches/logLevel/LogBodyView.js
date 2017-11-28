@@ -53,6 +53,7 @@ define(function (require) {
             this.supportedLogBinary = ['xml', 'javascript', 'json', 'css', 'php'];
         },
         onChangeLogItem: function () {
+            var self = this;
             $('[data-js-log-item-container]', this.$el).removeClass('not-found');
             $('[data-js-log-item-container]', this.$el).addClass('load');
             this.history && this.off(this.history);
@@ -60,7 +61,13 @@ define(function (require) {
             this.historyItem && this.historyItem.destroy();
             this.logsItem && this.logsItem.destroy();
             if (!this.collectionItems.get(this.collectionItems.getInfoLog().item)) {
-                $('[data-js-log-item-container]', this.$el).addClass('not-found');
+                this.collectionItems.loadLogLevelById()
+                    .done(function () {
+                        Util.ajaxInfoMessenger('restoredTestItem');
+                    })
+                    .fail(function () {
+                        $('[data-js-log-item-container]', self.$el).addClass('not-found');
+                    });
                 $('[data-js-log-item-container]', this.$el).removeClass('load');
             } else {
                 this.history = new LogHistoryLine({
@@ -105,9 +112,9 @@ define(function (require) {
             this.listenTo(this.historyItem, 'change:issue', this.onChangeItemIssue);
             this.listenTo(this.historyItem, 'click:attachment', this.onClickAttachments);
             this.listenTo(this.historyItem, 'change:retry', this.onChangeRetry);
+            this.listenTo(this.historyItem, 'update:issue', this.onChangeLogItem);
 
             this.onChangeRetry(this.historyItem.getCurrentRetry(), firstInit);
-
         },
         onChangeRetry: function (retryModel, firstInit) {
             var curOptions = this.collectionItems.getInfoLog();

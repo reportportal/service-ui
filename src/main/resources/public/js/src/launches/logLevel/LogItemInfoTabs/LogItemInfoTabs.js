@@ -76,6 +76,7 @@ define(function (require) {
             }
         },
         initialize: function (options) {
+            this.context = options.context;
             this.viewModel = options.itemModel;
             this.model = new (Epoxy.Model.extend({
                 defaults: {
@@ -91,7 +92,8 @@ define(function (require) {
                 this.issueView = new StepLogDefectTypeView({
                     model: this.viewModel,
                     pageType: 'logs',
-                    el: $('[data-js-step-issue]', this.$el)
+                    el: $('[data-js-step-issue]', this.$el),
+                    context: this.context
                 });
             }
             this.stackTrace = new LogItemInfoStackTraceView({
