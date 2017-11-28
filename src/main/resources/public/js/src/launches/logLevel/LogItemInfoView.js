@@ -63,7 +63,8 @@ define(function (require) {
         computeds: {
             isDisabledSendIssue: {
                 get: function () {
-                    return !(this.viewModel.collection.length > 1) || !(this.viewModel.get('status') === 'FAILED');
+                    return !(this.viewModel.collection.length > 1) || !(this.viewModel.get('status') === 'FAILED') ||
+                        !(this.viewModel.collection.models[this.viewModel.collection.models.length - 1].get('status') === 'FAILED');
                 }
             },
             isVisibleSendIssue: {
@@ -302,8 +303,25 @@ define(function (require) {
                 }.bind(this));
         },
         render: function () {
+            var previousFailedLaunchNumber;
+            var lastFailedLaunchNumber = this.viewModel.collection.models[this.viewModel.collection.models.length - 1].get('launchNumber');
+            var sendDefectBtnText;
+            var copyDefectBtnText;
+            _.each(this.viewModel.collection.models, function (model, key) {
+                if ((key !== (this.viewModel.collection.models.length - 1)) && (model.get('status') === 'FAILED')) {
+                    previousFailedLaunchNumber = model.get('launchNumber');
+                }
+            }.bind(this));
+            copyDefectBtnText = (previousFailedLaunchNumber ?
+                Localization.launches.copyDefect + ' ' + Localization.ui.from + ' #' + previousFailedLaunchNumber :
+                Localization.launches.copyDefect);
+            sendDefectBtnText = (lastFailedLaunchNumber ?
+                Localization.launches.sendDefect + ' ' + Localization.ui.to + ' #' + lastFailedLaunchNumber :
+                Localization.launches.sendDefect);
             this.$el.html(Util.templates(this.template, {
-                context: this.context
+                context: this.context,
+                sendDefectBtnText: sendDefectBtnText,
+                copyDefectBtnText: copyDefectBtnText
             }));
         },
         onDestroy: function () {
