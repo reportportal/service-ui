@@ -146,8 +146,7 @@ define(function (require) {
             var $nav = $(e.currentTarget);
             e.preventDefault();
             if ($nav.attr('data-js-button-load-selection') !== undefined) { return; }
-            this.collectionItems.setLogItem($nav.data('id'));
-            this.updateNavButton($nav.data('id'));
+            this.collectionItems.setLogItem($nav.data('id')); // triggers 'change:log:item' & executes this.updateNavButton
         },
         onClickRefresh: function () {
             config.trackingDispatcher.trackEventNumber(188);
