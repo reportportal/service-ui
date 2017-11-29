@@ -690,7 +690,13 @@ define(['util'], function () {
             description: 'Description',
             dashboardEmptyHeader: 'You have no widgets on this dashboard',
             notMyDashboardEmptyHeader: 'There are no widgets on this dashboard',
-            dashboardEmptyText: 'Add your first widget to analyse statistics'
+            dashboardEmptyText: 'Add your first widget to analyse statistics',
+            thShared: 'Shared',
+            thDelete: 'Delete',
+            thEdit: 'Edit',
+            thOwner: 'Owner',
+            thDescription: 'Description',
+            thName: 'Dashboard name'
         },
 
         favorites: {
