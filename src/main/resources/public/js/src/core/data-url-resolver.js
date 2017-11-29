@@ -225,7 +225,7 @@ define(['app'], function (App) {
         return dashboard() + '/' + id;
     };
     var dashboardShared = function () {
-        return dashboard() + '/shared';
+        return dashboard() + '/shared?page.page=1&page.size=300';
     };
     var redirectToDashboard = function (id) {
         return '#' + config.project.projectId + '/dashboard' + (id ? '/' + id : '');

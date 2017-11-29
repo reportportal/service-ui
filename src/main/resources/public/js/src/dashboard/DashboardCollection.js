@@ -98,7 +98,7 @@ define(function (require) {
             var self = this;
             Service.getSharedDashboards()
                 .done(function (data) {
-                    async.resolve(self.parseShared(data, startId));
+                    async.resolve(self.parseShared(data.content, startId));
                 })
                 .fail(function (data) {
                     async.reject(data);
@@ -116,15 +116,15 @@ define(function (require) {
         },
         parseShared: function (data, startId) {
             var widgetsData = [];
-            _.each(data, function (value, key) {
-                var newValue = value;
-                if (key === startId) {
+            _.each(data, function (item) {
+                var newValue = item;
+                if (item.id === startId) {
                     newValue.active = true;
                 }
                 newValue.share = true;
-                newValue.id = key;
+                newValue.id = item.id;
                 newValue.notLoad = true;
-                widgetsData.push(value);
+                widgetsData.push(item);
             });
             return widgetsData;
         },
