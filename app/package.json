@@ -9,7 +9,6 @@
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "dependencies": {
-    "@storybook/react": "^3.2.16",
     "@cerebral/forms": "^2.5.0",
     "@cerebral/react": "^2.5.0",
     "@cerebral/router": "^2.5.0",
@@ -23,6 +22,9 @@
     "reset-css": "^2.2.1"
   },
   "devDependencies": {
+    "@storybook/react": "^3.2.16",
+    "@storybook/addon-actions": "^3.2.16",
+    "@storybook/addon-options": "^3.2.16",
     "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",
     "babel-loader": "^7.1.2",

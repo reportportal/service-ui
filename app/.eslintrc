@@ -12,6 +12,10 @@
     "browser": true,
     "jest": true
   },
+  "globals": {
+    "React": true,
+    "Utils": true
+  },
   "rules": {
     "jsx-a11y/no-static-element-interactions": 0,
     "global-require": 0,

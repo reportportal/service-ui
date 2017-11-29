@@ -9,6 +9,7 @@ import CompressionPlugin from 'compression-webpack-plugin';
 const defaultEnv = {
   dev: true,
   production: false,
+  storybook: false,
 };
 
 export default (env = defaultEnv) => ({
@@ -30,8 +31,12 @@ export default (env = defaultEnv) => ({
   },
   plugins: [
     new WebpackNotifierPlugin({ skipFirstNotification: true }),
+    new webpack.DefinePlugin({
+      STORYBOOK: JSON.stringify(env.storybook),
+    }),
     new webpack.ProvidePlugin({
       React: 'react',
+      Utils: 'common/utils',
     }),
     new ExtractTextPlugin({
       filename: '[name].[hash:6].css',
