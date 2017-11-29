@@ -179,14 +179,17 @@ define(function (require) {
             var self = this;
             var dangerRemove = (!this.model.get('isMy') && !this.model.get('isMyDashboard'));
             var modal;
+            var confirmText = '';
             e.stopPropagation();
+            dangerRemove && (confirmText = Localization.dialog.deletedWidgetDangerConfirmText);
+            (this.model.get('isMy') && this.model.get('isMyDashboard') && this.model.get('share') && (confirmText = Localization.dialog.deletedOwnSharedWidgetDangerConfirmText));
             config.trackingDispatcher.trackEventNumber(288);
             modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deletedWidget,
                 bodyText: Util.replaceTemplate(Localization.dialog.deletedWidget,
                     this.model.get('name')
                 ),
-                confirmText: !dangerRemove ? Localization.dialog.deletedOwnWidgetDangerConfirmText : Localization.dialog.deletedWidgetDangerConfirmText,
+                confirmText: confirmText,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete
