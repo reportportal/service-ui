@@ -964,7 +964,7 @@ define(['util'], function () {
             month1: '1 месяц',
             month3: '3 месяца',
             month6: '6 месяцев',
-            forever: 'бессрочно'
+            forever: 'Бессрочно'
         },
 
         launchStatus: {
