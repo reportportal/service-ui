@@ -59,12 +59,12 @@ define(function (require) {
             optionsString: {
                 deps: ['entities', 'selection_parameters'],
                 get: function (entities, selection_params) {
-                    var selection_parameters = this.getParametersObj();
+                    var selectionParameters = this.getParametersObj();
                     var result = '(' + this.getFilterOptions(this.getEntitiesObj(), Localization.comparators) + ')';
-                    var sortKey = selection_parameters && this.getLastKey(selection_parameters.sorting_column);
+                    var sortKey = selectionParameters && this.getLastKey(selectionParameters.sorting_column);
 
                     if (sortKey) {
-                        result += Localization.favorites.sortedBy + ' ' + Localization.launchesHeaders[sortKey];
+                        result += Localization.favorites.sortedBy + ' ' + Localization.launchesHeaders[sortKey.split(',')[0]];
                     }
 
                     return result;
@@ -232,12 +232,27 @@ define(function (require) {
             }
         },
         getParametersObj: function () {
+            var data;
             try {
                 if (this.get('newSelectionParameters')) {
-                    var data = JSON.parse(this.get('newSelectionParameters'));
+                    data = JSON.parse(this.get('newSelectionParameters'));
+                    if (data.orders) {
+                        data.is_asc = data.orders[0].is_asc;
+                        data.sorting_column = _.map(data.orders, function (order) {
+                            return order.sorting_column;
+                        }).join(',');
+                        delete data.orders;
+                    }
                     return data;
                 }
-                var data = JSON.parse(this.get('selection_parameters'));
+                data = JSON.parse(this.get('selection_parameters'));
+                if (data.orders) {
+                    data.is_asc = data.orders[0].is_asc;
+                    data.sorting_column = _.map(data.orders, function (order) {
+                        return order.sorting_column;
+                    }).join(',');
+                    delete data.orders;
+                }
                 return data;
             } catch (err) {
                 return {};
@@ -247,27 +262,16 @@ define(function (require) {
             var data = [];
             var selectionParameters = this.getParametersObj();
             var sortDirection = 'ASC';
-            var sortingColumn;
             _.each(this.getEntitiesObj(), function (entity) {
                 if (entity.value) {
                     data.push('filter.' + entity.condition + '.' + entity.filtering_field +
                         '=' + encodeURIComponent(entity.value));
                 }
             });
-            if (selectionParameters.orders) {
-                sortingColumn = _.map(selectionParameters.orders, function (parameter) {
-                    return parameter.sorting_column;
-                }).join(',');
-                if (!selectionParameters.orders[0].is_asc) {
-                    sortDirection = 'DESC';
-                }
-            } else {
-                sortingColumn = selectionParameters.sorting_column;
-                if (!selectionParameters.is_asc) {
-                    sortDirection = 'DESC';
-                }
+            if (!selectionParameters.is_asc) {
+                sortDirection = 'DESC';
             }
-            data.push('page.sort=' + sortingColumn + '%2C' + sortDirection);
+            data.push('page.sort=' + selectionParameters.sorting_column + '%2C' + sortDirection);
             return data;
         },
         computedsUrl: function () {

@@ -54,16 +54,16 @@ define(function (require) {
             var self = this;
             this.render();
             this.collection = new Backbone.Collection([
-                { name: Localization.launches.launchName, active: false, id: 'name' },
+                { name: Localization.launches.launchName, active: false, id: 'name,number' },
                 { name: Localization.launchesHeaders.start_time, active: false, id: 'start_time,number' },
-                { name: Localization.launchesHeaders.total, active: false, id: 'statistics$executions$total' },
-                { name: Localization.launchesHeaders.passed, active: false, id: 'statistics$executions$passed' },
-                { name: Localization.launchesHeaders.failed, active: false, id: 'statistics$executions$failed' },
-                { name: Localization.launchesHeaders.skipped, active: false, id: 'statistics$executions$skipped' },
-                { name: Localization.launchesHeaders.product_bug, active: false, id: 'statistics$defects$product_bug$total' },
-                { name: Localization.launchesHeaders.automation_bug, active: false, id: 'statistics$defects$automation_bug$total' },
-                { name: Localization.launchesHeaders.system_issue, active: false, id: 'statistics$defects$system_issue$total' },
-                { name: Localization.launchesHeaders.to_investigate, active: false, id: 'statistics$defects$to_investigate$total' }
+                { name: Localization.launchesHeaders.total, active: false, id: 'statistics$executions$total,number' },
+                { name: Localization.launchesHeaders.passed, active: false, id: 'statistics$executions$passed,number' },
+                { name: Localization.launchesHeaders.failed, active: false, id: 'statistics$executions$failed,number' },
+                { name: Localization.launchesHeaders.skipped, active: false, id: 'statistics$executions$skipped,number' },
+                { name: Localization.launchesHeaders.product_bug, active: false, id: 'statistics$defects$product_bug$total,number' },
+                { name: Localization.launchesHeaders.automation_bug, active: false, id: 'statistics$defects$automation_bug$total,number' },
+                { name: Localization.launchesHeaders.system_issue, active: false, id: 'statistics$defects$system_issue$total,number' },
+                { name: Localization.launchesHeaders.to_investigate, active: false, id: 'statistics$defects$to_investigate$total,number' }
             ]);
             _.each(this.collection.models, function (model) {
                 var view = new FilterSortingItemView({ viewModel: model, model: self.model });
