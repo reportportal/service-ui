@@ -2037,7 +2037,7 @@ define(['util'], function () {
             dashboardDeleteDangerConfirmText: 'You are going to delete not your own dashboard. This may affect other users information on the project.',
             deletedWidget: 'Are you sure you want to delete widget <b>\'%%%\'</b>? You will no longer have access to it. This action can\'t be undone.',
             deletedWidgetDangerConfirmText: 'You are going to delete not your own widget. This may affect other users information on the project.',
-            deletedOwnWidgetDangerConfirmText: 'You are going to delete your own widget. This may affect other information on your own dashboards.',
+            deletedOwnSharedWidgetDangerConfirmText: 'You are going to delete your own widget. This may affect other information on your own dashboards.',
             deleteBtsBtn: 'Remove',
             dashboardDeleteBtn: 'Remove',
 
