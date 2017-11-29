@@ -901,7 +901,7 @@ define(['util'], function () {
             month1: '1 month',
             month3: '3 months',
             month6: '6 months',
-            forever: 'forever'
+            forever: 'Forever'
         },
 
         launchStatus: {
