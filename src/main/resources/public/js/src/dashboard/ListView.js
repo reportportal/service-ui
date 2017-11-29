@@ -25,15 +25,13 @@ define(function (require) {
     var ListView = Epoxy.View.extend({
         className: 'dashboard-list-view-list',
         template: 'tpl-dashboards-list',
-        bindings: {
-            '[data-js-search-text]': 'text: search'
-        },
-        initialize: function () {
+        initialize: function (options) {
+            this.search = options.search;
             this.collection.models = this.sortDashboardCollectionByASC(this.collection.models);
             this.render();
         },
         render: function () {
-            this.$el.html(Util.templates(this.template));
+            this.$el.html(Util.templates(this.template, { search: this.search }));
             var self = this;
             _.each(this.collection.models, function (model) {
                 var view = new DashboardListItemView({ model: model, blockTemplate: false });

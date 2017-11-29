@@ -36,19 +36,31 @@ define(function (require) {
             'click [data-js-view-type]': 'changeDashboardsView'
         },
         bindings: {
-            ':el': 'classes: {search: any(search)}'
+            ':el': 'classes: {search: any(search)}',
+            '[data-js-view-table]': 'classes: {active: isTable}',
+            '[data-js-view-list]': 'classes: {active: not(isTable)}'
+        },
+        computeds: {
+            isTable: {
+                deps: ['dashboardView'],
+                get: function (dashboardView) {
+                    if (dashboardView === 'table') {
+                        return true;
+                    }
+                    return false;
+                }
+            }
         },
         initialize: function () {
             var self = this;
             this.appStorage = new SingletonAppStorage();
             this.model = new (Epoxy.Model.extend({
                 defaults: {
-                    search: ''
+                    search: '',
+                    dashboardView: 'table'
                 }
             }));
-            if (this.appStorage.get('dashboardView') === undefined) {
-                this.model.set({ dashboardView: 'table' });
-            } else {
+            if (this.appStorage.get('dashboardView')) {
                 this.model.set({ dashboardView: this.appStorage.get('dashboardView') });
             }
             this.render();
@@ -72,9 +84,6 @@ define(function (require) {
         changeDashboardsView: function (event) {
             var $target = $(event.currentTarget);
             var dashboardView = $target.data('js-view-type');
-            event.preventDefault();
-            $('.dashboards-view.active').removeClass('active');
-            $target.addClass('active');
             this.model.set('dashboardView', dashboardView);
         },
         onAddCollection: function () {
@@ -99,19 +108,17 @@ define(function (require) {
             if (this.model.get('dashboardView') === 'list') {
                 this.dashboardsView = new ListView({
                     collection: tempCollection,
-                    model: this.model
+                    search: this.model.get('search')
                 });
             } else {
                 this.dashboardsView = new BlockView({
                     collection: tempCollection,
-                    model: this.model
-
+                    search: this.model.get('search')
                 });
             }
             $('[data-js-list-views]', this.$el).html(this.dashboardsView.$el);
         },
         render: function () {
-            var curView;
             this.$el.html(Util.templates(this.template, {
                 dashboardName: this.model.get('name'),
                 projectName: config.project.projectId
@@ -122,8 +129,6 @@ define(function (require) {
                 min: 3,
                 max: 128
             }]);
-            curView = this.model.get('dashboardView');
-            $('[data-js-view-type = ' + curView + ']', this.$el).addClass('active');
         },
         onClickAddDashboard: function () {
             config.trackingDispatcher.trackEventNumber(346);

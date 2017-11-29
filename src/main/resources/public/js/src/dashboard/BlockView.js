@@ -29,10 +29,8 @@ define(function (require, exports, module) {
     var BlockView = Epoxy.View.extend({
         className: 'dashboard-list-view-table',
         template: 'tpl-dashboards-table',
-        bindings: {
-            '[data-js-search-text]': 'text: search'
-        },
-        initialize: function () {
+        initialize: function (options) {
+            this.search = options.search;
             this.render();
             this.myDashboardCollection = new Backbone.Collection();
             this.myDashboardViews = [];
@@ -40,7 +38,6 @@ define(function (require, exports, module) {
             this.sharedDashboardViews = [];
             this.listenTo(this.myDashboardCollection, 'reset', this.renderMyDashboards);
             this.listenTo(this.sharedDashboardCollectoin, 'reset', this.renderSharedDashboards);
-
             $('[data-js-dashboard-not-found]', this.$el).removeClass('rp-display-block');
             $('[data-js-shared-dashboard-not-found]', this.$el).removeClass('rp-display-block');
             var myDashboards = [];
@@ -59,7 +56,7 @@ define(function (require, exports, module) {
             if (!sharedDashboards.length) $('[data-js-shared-dashboard-not-found]', this.$el).addClass('rp-display-block');
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, { search: this.search }));
         },
         renderMyDashboards: function () {
             _.each(this.myDashboardViews, function (view) { view.destroy(); });
