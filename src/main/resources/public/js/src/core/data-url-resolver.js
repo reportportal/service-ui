@@ -80,10 +80,10 @@ define(['app'], function (App) {
         return getProjectBase() + '/widget/names/shared';
     };
     var widgetsShared = function (data) {
-        return getProjectBase() + '/widget/shared?page.size=10&page.page=' + data.page;
+        return getProjectBase() + '/widget/shared?page.size=10&page.page=' + ((data && data.page) ? data.page : 1);
     };
     var sharedWidgetSearch = function (data) {
-        return getProjectBase() + '/widget/shared/search?term=' + data.term + '&page.size=10&page.page=' + data.page;
+        return getProjectBase() + '/widget/shared/search?term=' + ((data && data.term) ? data.term : '') + '&page.size=10&page.page=' + ((data && data.page) ? data.page : 1);
     };
     var updateFilter = function (id) {
         return saveFilter() + '/' + id;
