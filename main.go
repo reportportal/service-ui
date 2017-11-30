@@ -12,7 +12,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"github.com/go-chi/chi/middleware"
 )
 
 func main() {
@@ -47,7 +46,6 @@ func main() {
 
 		//apply compression
 		router.Use(handlers.CompressHandler)
-		router.Use(middleware.RedirectSlashes)
 
 		//content security policy
 		csp := map[string][]string{
