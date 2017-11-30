@@ -67,11 +67,15 @@ define(function (require, exports, module) {
             if (_.isFunction(router.before)) {
                 router.before.apply(router, args);
             }
-            if (router && !router.skipNextRoute) {
-                router.execute(callback, args);
-                router.trigger.apply(router, ['route:' + name].concat(args));
-                router.trigger('route', name, args);
-                Backbone.history.trigger('route', router, name, args);
+            if (router) {
+                if (!router.skipNextRoute) {
+                    router.execute(callback, args);
+                    router.trigger.apply(router, ['route:' + name].concat(args));
+                    router.trigger('route', name, args);
+                    Backbone.history.trigger('route', router, name, args);
+                } else {
+                    window.history.forward();
+                }
             }
             router.skipNextRoute = false;
             if (_.isFunction(router.after)) {
