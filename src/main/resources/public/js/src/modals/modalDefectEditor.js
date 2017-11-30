@@ -114,17 +114,19 @@ define(function (require) {
             this.applyBindings();
             this.setupAnchors();
             this.setupMarkdownEditor();
-            if (!this.isMultipleEdit() && (this.context !== 'userdebug')) {
+            if (!this.isMultipleEdit()) {
                 this.viewModel.set('ignoreAA', this.items[0].getIssue().ignoreAnalyzer);
-                this.ignoreSwitcher = new TinySwitcherComponent({
-                    holder: $('[data-js-ignore-aa-switcher-container]', this.$el),
-                    isEnabledByDefault: this.viewModel.get('ignoreAA'),
-                    label: Localization.launches.ignoreAA,
-                    labelPosition: 'r'
-                });
-                this.listenTo(this.ignoreSwitcher, 'changeState', function (isEnabled) {
-                    this.viewModel.set('ignoreAA', isEnabled);
-                });
+                if (this.context !== 'userdebug') {
+                    this.ignoreSwitcher = new TinySwitcherComponent({
+                        holder: $('[data-js-ignore-aa-switcher-container]', this.$el),
+                        isEnabledByDefault: this.viewModel.get('ignoreAA'),
+                        label: Localization.launches.ignoreAA,
+                        labelPosition: 'r'
+                    });
+                    this.listenTo(this.ignoreSwitcher, 'changeState', function (isEnabled) {
+                        this.viewModel.set('ignoreAA', isEnabled);
+                    });
+                }
             }
             this.listenTo(this.viewModel, 'change:replaceComment', this.setReplaceComment);
         },
