@@ -56,6 +56,9 @@ define(function (require) {
             'click [data-js-item-activity-label]': function () {
                 config.trackingDispatcher.trackEventNumber(203);
                 this.toggleModelField('activity');
+            },
+            'click [data-js-item-parametres-label]': function () {
+                this.toggleModelField('parametres');
             }
         },
 
@@ -63,17 +66,30 @@ define(function (require) {
             '[data-js-item-stack-trace-label]': 'classes: {active: stackTrace}',
             '[data-js-item-gallery-label]': 'classes: {active: attachments}',
             '[data-js-item-details-label]': 'classes: {active: itemDetails}',
+            '[data-js-item-parametres-label]': 'classes: {active: parametres}',
             '[data-js-item-activity-label]': 'classes: {hide: isShowActivities, active: activity}',
             '[data-js-item-stack-trace]': 'classes: {hide: not(stackTrace)}',
             '[data-js-item-gallery]': 'classes: {hide: not(attachments)}',
             '[data-js-item-details]': 'classes: {hide: not(itemDetails)}',
-            '[data-js-item-activity]': 'classes: {hide: not(activity)}'
+            '[data-js-item-activity]': 'classes: {hide: not(activity)}',
+            '[data-js-item-parametres]': 'classes: {hide: not(parametres)}',
+            '[data-js-no-parametres]': 'classes: {hide: isParameters}',
+            '[data-js-item-parametres-container]': 'classes: {hide: not(isParameters)}'
         },
 
         computeds: {
             isShowActivities: function () {
                 return ~this.viewModel.get('id').indexOf('retry:');
-            }
+            },
+            isParameters: {
+                deps: ['parameters'],
+                get: function (parameters) {
+                    if (parameters) {
+                        return true;
+                    }
+                    return false;
+                }
+            },
         },
         initialize: function (options) {
             this.context = options.context;
@@ -83,10 +99,11 @@ define(function (require) {
                     stackTrace: false,
                     attachments: false,
                     itemDetails: false,
-                    activity: false
+                    activity: false,
+                    parametres: false
                 }
             }))();
-            this.listenTo(this.model, 'change:stackTrace change:attachments change:itemDetails change:activity', this.onChangeTabModel);
+            this.listenTo(this.model, 'change:stackTrace change:attachments change:itemDetails change:activity change:parametres', this.onChangeTabModel);
             this.render();
             if (this.validateForIssue()) {
                 this.issueView = new StepLogDefectTypeView({
@@ -149,7 +166,9 @@ define(function (require) {
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, {params: this.viewModel.get('parameters')}));
+            this.baron = Util.setupBaronScroll($('[data-js-item-parametres-container] table', this.$el),null, { direction: 'h'});
+            Util.setupBaronScrollSize(this.baron, {maxHeight: 200});
         },
 
         onDestroy: function () {

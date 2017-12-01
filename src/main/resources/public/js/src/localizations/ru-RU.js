@@ -1205,7 +1205,8 @@ define(['util'], function () {
             stackTrace: 'трассировка стека',
             attachments: 'вложения',
             itemDetails: 'описание элемента',
-            historyOfActions: 'история действий'
+            historyOfActions: 'история действий',
+            parametres: 'параметры'
         },
 
         statisticsPanel: {
@@ -1228,6 +1229,7 @@ define(['util'], function () {
             filterAttachments: 'Логи с вложениями',
             notFoundActivity: 'Нет действий для отображения',
             notFoundAttachments: 'Нет вложений для отображения',
+            notFoundParametres: 'Нет параметров для отображения',
             notFoundStackTrace: 'Нет трассировки стека для отображения',
             goToLog: 'Перейдите к трассировке стека в записи журнала',
             nextError: 'Следующая ошибка',
@@ -2075,6 +2077,7 @@ define(['util'], function () {
             importLaunch: 'Импортировать запуск',
             ignoreAA: 'Игнорировать %%% при Авто-Анализе',
             includeAA: 'Включить %%% в Авто-Анализ',
+            testItemsDetails: 'Детали тестового элемента',
             receiveIssue: 'Получить предыдущий результат',
             sendIssue: 'Отправить результат в последний элемент'
         },
@@ -2142,7 +2145,14 @@ define(['util'], function () {
             msgReceiveIssue: 'Вы уверены, что хотите получить данные о дефекте из предыдущего неудачного элемента?',
             msgSendIssue: 'Вы уверены, что хотите отправить данные о дефекте в последний элемент?',
             invalidFileType: 'Неверный формат файла',
-            invalidFileSize: 'Размер файла больше 32 Mb'
+            invalidFileSize: 'Размер файла больше 32 Mb',
+            testUID: 'UID элемента:',
+            testDuration: 'Длительность:',
+            testTags: 'Метки:',
+            testParametres: 'Параметры:',
+            testDescription: 'Описание:',
+            key: 'Ключ',
+            value: 'Значение'
         },
 
         time: {

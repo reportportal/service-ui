@@ -1148,7 +1148,8 @@ define(['util'], function () {
             stackTrace: 'stack trace',
             attachments: 'attachments',
             itemDetails: 'item details',
-            historyOfActions: 'history of actions'
+            historyOfActions: 'history of actions',
+            parametres: 'parametres'
         },
 
         statisticsPanel: {
@@ -1171,6 +1172,7 @@ define(['util'], function () {
             filterAttachments: 'Logs with attachments',
             notFoundActivity: 'No activities to display',
             notFoundAttachments: 'No attachments to display',
+            notFoundParametres: 'No parametres to display',
             notFoundStackTrace: 'No stack trace to display',
             goToLog: 'Go to stack trace in log message',
             nextError: 'Next error',
@@ -2019,7 +2021,8 @@ define(['util'], function () {
             ignoreAA: 'Ignore %%% in Auto-Analysis',
             includeAA: 'Include %%% into Auto-Analysis',
             receiveIssue: 'Receive previous result',
-            sendIssue: 'Send result to the last item'
+            sendIssue: 'Send result to the last item',
+            testItemsDetails: 'Test item details'
         },
 
         dialog: {
@@ -2085,7 +2088,14 @@ define(['util'], function () {
             msgReceiveIssue: 'Are you sure to receive defect data from previous failed item?',
             msgSendIssue: 'Are you sure to send defect data to the last item?',
             invalidFileType: 'Incorrect file format',
-            invalidFileSize: 'File size is more than 32 Mb'
+            invalidFileSize: 'File size is more than 32 Mb',
+            testUID: 'Unique test case ID:',
+            testDuration: 'Duration:',
+            testTags: 'Tags:',
+            testParametres: 'Parametres:',
+            testDescription: 'Description:',
+            key: 'Key',
+            value: 'Value'
         },
 
         time: {
