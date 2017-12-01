@@ -7,7 +7,7 @@ const cx = classNames.bind(styles);
 function inputWithIcon(props) {
   const itemClasses = cx({
     button: true,
-    blue: (props.color === 'blue'),
+    blue: (props.color === 'blue')
   });
   return (
     <button {...props} className={itemClasses}>
