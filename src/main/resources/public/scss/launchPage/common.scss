@@ -151,12 +151,25 @@
     font-size: 18px;
     color: $COLOR--gray-60;
     cursor: pointer;
+    display:  inline;
     width: 0px;
     opacity: 0;
     line-height: 16px;
     &:hover {
       color: $COLOR--black;
     }
+  }
+  .item-details-icon{
+    opacity: 0;
+  }
+  .item-details-icon:hover{
+    cursor: pointer;
+    &::after{
+      content: url('../img/launch/test_param_hover.svg');
+    }
+  }
+  .item-details-icon::after{
+    content: url('../img/launch/test_param.svg');
   }
   .grid-cell {
     position: relative;

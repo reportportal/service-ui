@@ -29,6 +29,7 @@ define(function (require) {
     var ItemDurationView = require('launches/common/ItemDurationView');
     var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
+    var ModalStepItemDetails = require('modals/modalStepItemDetails');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
     var ItemStartTimeView = require('launches/common/ItemStartTimeView');
     var CommonItemView = require('launches/common/CommonItemView');
@@ -48,7 +49,8 @@ define(function (require) {
             'click [data-js-tag]': 'onClickTag',
             'click [data-js-toggle-open]': 'onClickOpen',
             'click [data-js-select-label]': 'onClickSelectLabel',
-            'click [data-js-select-item]': 'onClickSelectInput'
+            'click [data-js-select-item]': 'onClickSelectInput',
+            'click [data-js-item-details]': 'onClickDetails'
         },
         bindings: {
             '[data-js-name-link]': 'attr: {href: url}',
@@ -212,6 +214,14 @@ define(function (require) {
                 item: this.model
             });
             modal.show();
+        },
+        onClickDetails: function () {
+            var modal = new ModalStepItemDetails({
+                model: this.model
+            });
+            modal.show();
+            modal.scrool = Util.setupBaronScroll($('[data-js-parametres]', modal.$el),null, { direction: 'h'});
+            Util.setupBaronScrollSize(modal.scrool, {maxHeight: 200});
         },
         onClickView: function (e) {
             if ((e.ctrlKey || e.metaKey) && !($(e.target).is('a') && !($(e.target).is('input')))
