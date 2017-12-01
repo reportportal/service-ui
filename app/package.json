@@ -6,7 +6,8 @@
     "eslint": "eslint -f node_modules/eslint-friendly-formatter \"src/**/*.jsx\" \"src/**/*.js\"",
     "dev": "webpack-dev-server --port 3000",
     "build": "webpack -p --env.production",
-    "storybook": "start-storybook -p 9001 -c .storybook"
+    "storybook": "start-storybook -p 9001 -c .storybook",
+    "storybook:bild": "build-storybook -c .storybook -o .storybook_app"
   },
   "dependencies": {
     "@cerebral/forms": "^2.5.0",

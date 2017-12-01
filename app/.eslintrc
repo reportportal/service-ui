@@ -22,6 +22,7 @@
     "prefer-arrow-callback": 0,
     "jsx-a11y/label-has-for": 0,
     "import/prefer-default-export": 0,
+    "import/no-extraneous-dependencies": 0,
     "react/no-unused-prop-types": 0,
     "react/react-in-jsx-scope": 0,
     "react/forbid-prop-types": 0
