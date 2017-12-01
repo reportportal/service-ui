@@ -1,0 +1,24 @@
+.input {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+  padding: 6px 10px;
+  margin: 0;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  background-color: $COLOR--white;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  line-height: 13px;
+
+  &[type=number]::-webkit-inner-spin-button,
+  &[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+.disabled {
+  background-color: $COLOR--white-two;
+}
