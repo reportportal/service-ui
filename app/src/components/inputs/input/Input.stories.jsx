@@ -34,9 +34,9 @@ storiesOf('Components/Inputs/Input', module)
     <Input maxLength="10" />
   ))
   .add('disabled', () => (
-    <Input disabled="true" />
+    <Input disabled />
   ))
   .add('with actions', () => (
-    <Input onFocus={action('focused')} onChange={action('change')} onBlur={action('change')} />
+    <Input onFocus={action('focused')} onChange={action('change')} onBlur={action('blur')} />
   ));
 
