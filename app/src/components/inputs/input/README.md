@@ -3,8 +3,13 @@
 Has no own size. Width and Height = 100% of it's parent.
 
 ### Props:
-* **type**: string, optional, default = text
-* **defaultValue**: string, optional
-* **placeholder**: string, optional
-* **maxLength**: number, optional, default = 256
-* **disabled**: bool, optional, default = false
+* **type**: _string_, optional, default = "text"
+* **defaultValue**: _string_, optional, default = ""
+* **placeholder**: _string_, optional, default = ""
+* **maxLength**: _number_, optional, default = 256
+* **disabled**: _bool_, optional, default = false
+
+### Events:
+* **onFocus**
+* **onBlur**
+* **onChange** - returns { value: _string_ }
