@@ -1,3 +1,5 @@
+[![Build Status](https://semaphoreci.com/api/v1/lexecon/rp_service-ui/branches/develop/badge.svg)](http://reportportal.io/service-ui/index.html)
+
 1. Install nodejs
 
 2. Open console from the project root
