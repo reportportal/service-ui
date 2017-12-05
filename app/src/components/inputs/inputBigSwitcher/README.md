@@ -1,4 +1,4 @@
-## **Small switcher field with optional text**
+## **Big switcher field with optional text**
 
 Has no own size. Width and Height = 100% of it's parent.
 
@@ -9,6 +9,7 @@ Has no own size. Width and Height = 100% of it's parent.
 ### Props:
 * **CHILDREN**: _node_, optional, default ""
 * **value**: _bool_, optional, default = false
+* **disabled**: _bool_, optional, default = false
 
 ### Events:
 * **onFocus**
