@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@cerebral/forms": "^2.5.0",
+    "@cerebral/http": "^3.6.0",
     "@cerebral/react": "^2.5.0",
     "@cerebral/router": "^2.5.0",
     "cerebral": "^3.5.0",

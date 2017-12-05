@@ -6,7 +6,7 @@ import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
 
 import controller from './controller/controller';
-import RouteContainer from './components/routeContainer/routeContainer';
+import App from './app/app';
 
 const rerenderApp = (AppContainer) => {
   render((
@@ -16,10 +16,11 @@ const rerenderApp = (AppContainer) => {
   ), document.querySelector('#app'));
 };
 
-rerenderApp(RouteContainer);
+rerenderApp(App);
+
 if (module.hot) {
-  module.hot.accept('./components/routeContainer/routeContainer', () => {
-    const app = require('./components/routeContainer/routeContainer').default;
+  module.hot.accept('./app/app', () => {
+    const app = require('./app/app').default;
     rerenderApp(app);
   });
 }

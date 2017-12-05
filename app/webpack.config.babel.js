@@ -6,6 +6,11 @@ import WebpackNotifierPlugin from 'webpack-notifier';
 import CleanWebpackPlugin from 'clean-webpack-plugin';
 import CompressionPlugin from 'compression-webpack-plugin';
 
+import proxyConfig from './config-proxy';
+
+if (proxyConfig.path === '') {
+  console.log('========== Specify the path for the proxy in the config-proxy.js file =========');
+}
 const defaultEnv = {
   dev: true,
   production: false,
@@ -14,7 +19,7 @@ const defaultEnv = {
 
 export default (env = defaultEnv) => ({
   entry: [
-    path.resolve('src', 'app.jsx'),
+    path.resolve('src', 'index.jsx'),
   ],
   output: {
     path: path.resolve('build'),
@@ -25,6 +30,7 @@ export default (env = defaultEnv) => ({
     extensions: ['.js', '.jsx'],
     alias: {
       components: path.resolve(__dirname, 'src/components'),
+      controller: path.resolve(__dirname, 'src/controller'),
       common: path.resolve(__dirname, 'src/common'),
       pages: path.resolve(__dirname, 'src/pages'),
     },
@@ -131,5 +137,17 @@ export default (env = defaultEnv) => ({
     contentBase: './build',
     hot: true,
     historyApiFallback: true,
+    https: false,
+    host: '0.0.0.0',
+    proxy: [
+      {
+        context: ['/composite', '/api/', '/uat/'],
+        // path: /^\/(composite|api|uat|ui).*/,
+        target: proxyConfig.path,
+        bypass(req) {
+          console.log(`proxy url: ${req.url}`);
+        },
+      },
+    ],
   },
 });
