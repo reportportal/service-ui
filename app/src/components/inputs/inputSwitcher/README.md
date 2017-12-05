@@ -1,6 +1,6 @@
-## **Typical checkbox field with optional text**
+## **Small switcher field with optional text**
 
-Has no own size. Width and Height = 100% of it's parent. 
+Has no own size. Width and Height = 100% of it's parent.
 
 ### Align:
 * **Vertical** - middle

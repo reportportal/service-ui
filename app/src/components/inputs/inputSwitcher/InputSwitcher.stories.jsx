@@ -23,12 +23,12 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import InputCheckbox from './InputCheckbox';
+import InputSwitcher from './InputSwitcher';
 import README from './README.md';
 
-storiesOf('Components/Inputs/InputCheckbox', module)
+storiesOf('Components/Inputs/InputSwitcher', module)
   .addDecorator(host({
-    title: 'InputCheckbox component',
+    title: 'InputSwitcher component',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
     background: '#ffffff',
@@ -37,21 +37,18 @@ storiesOf('Components/Inputs/InputCheckbox', module)
   }))
   .addDecorator(withReadme(README))
   .add('default state', () => (
-    <InputCheckbox />
+    <InputSwitcher />
   ))
   .add('with long text', () => (
-    <InputCheckbox>Some long text. Some long text. Some long text. Some long text.</InputCheckbox>
+    <InputSwitcher>
+      Some very long text. Some very long text. Some very long text. Some very long text.
+    </InputSwitcher>
   ))
-  .add('checked', () => (
-    <InputCheckbox value>Some text.</InputCheckbox>
-  ))
-  .add('disabled', () => (
-    <InputCheckbox disabled>Some text.</InputCheckbox>
-  ))
-  .add('checked & disabled', () => (
-    <InputCheckbox text="Some text." value disabled>Some text.</InputCheckbox>
+  .add('enabled', () => (
+    <InputSwitcher value >Some text.</InputSwitcher>
   ))
   .add('with actions', () => (
-    <InputCheckbox onChange={action('change')} onFocus={action('focused')} onBlur={action('blur')}>Some text.</InputCheckbox>
-  ));
+    <InputSwitcher onChange={action('changed')} onFocus={action('onFocus')} onBlur={action('onBlur')}>Some text.</InputSwitcher>
+  ))
+;
 
