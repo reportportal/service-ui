@@ -31,6 +31,7 @@ define(function (require) {
     var LogItemInfoDetailsView = require('launches/logLevel/LogItemInfoTabs/LogItemInfoDetailsView');
     var LogItemInfoActivity = require('launches/logLevel/LogItemInfoTabs/LogItemInfoActivity');
     var LogItemInfoAttachmentsView = require('launches/logLevel/LogItemInfoTabs/LogItemInfoAttachments');
+    var LogItemInfoParametresView = require('launches/logLevel/LogItemInfoTabs/LogItemInfoParametresView');
     var App = require('app');
     var _ = require('underscore');
 
@@ -72,24 +73,13 @@ define(function (require) {
             '[data-js-item-gallery]': 'classes: {hide: not(attachments)}',
             '[data-js-item-details]': 'classes: {hide: not(itemDetails)}',
             '[data-js-item-activity]': 'classes: {hide: not(activity)}',
-            '[data-js-item-parametres]': 'classes: {hide: not(parametres)}',
-            '[data-js-no-parametres]': 'classes: {hide: isParameters}',
-            '[data-js-item-parametres-container]': 'classes: {hide: not(isParameters)}'
+            '[data-js-item-parametres]': 'classes: {hide: not(parametres)}'
         },
 
         computeds: {
             isShowActivities: function () {
                 return ~this.viewModel.get('id').indexOf('retry:');
-            },
-            isParameters: {
-                deps: ['parameters'],
-                get: function (parameters) {
-                    if (parameters) {
-                        return true;
-                    }
-                    return false;
-                }
-            },
+            }
         },
         initialize: function (options) {
             this.context = options.context;
@@ -133,6 +123,10 @@ define(function (require) {
                 itemModel: this.viewModel,
                 parentModel: this.model
             });
+            this.parametres = new LogItemInfoParametresView({
+                el: $('[data-js-item-parametres]', this.$el),
+                model: this.viewModel
+            });
             this.listenTo(this.stackTrace, 'goToLog', this.goToLog);
             this.listenTo(this.attachments, 'click:attachment', this.onClickAttachment);
         },
@@ -166,9 +160,7 @@ define(function (require) {
         },
 
         render: function () {
-            this.$el.html(Util.templates(this.template, {params: this.viewModel.get('parameters')}));
-            this.baron = Util.setupBaronScroll($('[data-js-item-parametres-container] table', this.$el),null, { direction: 'h'});
-            Util.setupBaronScrollSize(this.baron, {maxHeight: 200});
+            this.$el.html(Util.templates(this.template));
         },
 
         onDestroy: function () {

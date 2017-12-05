@@ -24,9 +24,9 @@ define(function (require) {
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
     var $ = require('jquery');
 
-    var ModalDefectEditor = ModalView.extend({
+    var ModalStepItemDetails = ModalView.extend({
         template: 'tpl-modal-step-item-details',
-        className: 'modal-step-item-details-editor',
+        className: 'modal-step-item-details',
         events: {
             'click [data-js-ok]': 'onClickOk'
         },
@@ -97,5 +97,5 @@ define(function (require) {
         }
     });
 
-    return ModalDefectEditor;
+    return ModalStepItemDetails;
 });

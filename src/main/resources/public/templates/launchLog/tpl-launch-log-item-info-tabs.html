@@ -37,28 +37,7 @@
     <i class="arrow-up material-icons">keyboard_arrow_up</i>
     <i class="arrow-down material-icons">keyboard_arrow_down</i>
 </div>
-<div class="tabs-item parametres" data-js-item-parametres>
-    <div class="no-result-found" data-js-no-parametres>
-        <i class="rp-icons rp-icons-warning"></i>
-        <span><%= data.text.logs.notFoundParametres %></span>
-    </div>
-    <div class="parametres-container" data-js-item-parametres-container>
-        <table>
-            <tr>
-                <th><%= data.text.dialog.key %></th>
-                <%  _.each( data.params, function(item){ %>
-                <td><%= item.key %></td>
-                <% }) %>
-            </tr>
-            <tr>
-                <th><%= data.text.dialog.value %></th>
-                <% _.each( data.params, function(item){ %>
-                <td><%= item.value %></td>
-                <% }) %>
-            </tr>
-        </table>
-    </div>
-</div>
+<div class="tabs-item parametres" data-js-item-parametres></div>
 <div data-js-item-activity-label class="mobile-tab">
     <i class="material-icons">access_time</i>
     <span><%= data.text.launchLogItem.historyOfActions %></span>
