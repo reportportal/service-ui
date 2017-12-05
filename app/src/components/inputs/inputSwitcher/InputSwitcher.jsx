@@ -21,53 +21,42 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './Input.scss';
+import styles from './InputSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
-const Input = ({ type, value, placeholder, maxLength, disabled, onChange, onFocus, onBlur }) => {
-  const classes = cx({
-    input: true,
-    disabled,
+const InputSwitcher = ({ children, value, onChange, onFocus, onBlur }) => {
+  const sliderClasses = cx({
+    'switcher-slider': true,
+    centered: !children,
+    enabled: value,
   });
   const handlerOnChange = (e) => {
-    onChange({ value: e.target.value });
+    onChange({ value: e.target.checked });
   };
   return (
-    <input
-      type={type}
-      className={classes}
-      value={value}
-      placeholder={placeholder}
-      maxLength={maxLength}
-      disabled={disabled}
-      onChange={handlerOnChange}
-      onFocus={onFocus}
-      onBlur={onBlur}
-    />
+    <label className={cx('input-switcher')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
+      <input type="checkbox" className={cx('input')} checked={value} onChange={handlerOnChange} />
+      <span className={sliderClasses} />
+      <span className={cx('children-container')}>{children}</span>
+    </label>
   );
 };
 
-Input.propTypes = {
-  type: PropTypes.string,
-  value: PropTypes.string,
-  placeholder: PropTypes.string,
-  maxLength: PropTypes.string,
-  disabled: PropTypes.bool,
+InputSwitcher.propTypes = {
+  children: PropTypes.node,
+  value: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
 };
 
-Input.defaultProps = {
-  type: 'text',
-  value: '',
-  placeholder: '',
-  maxLength: '254',
-  disabled: false,
+InputSwitcher.defaultProps = {
+  children: '',
+  value: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},
 };
 
-export default Input;
+export default InputSwitcher;
