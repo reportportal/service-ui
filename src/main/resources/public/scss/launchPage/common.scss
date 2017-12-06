@@ -146,12 +146,12 @@
       display: block;
     }
   }
-  .item-edit-icon {
+  .item-edit-icon, .item-details-icon {
     vertical-align: top;
     font-size: 18px;
     color: $COLOR--gray-60;
     cursor: pointer;
-    display:  inline;
+    display: inline;
     width: 0px;
     opacity: 0;
     line-height: 16px;
@@ -159,17 +159,16 @@
       color: $COLOR--black;
     }
   }
-  .item-details-icon{
-    opacity: 0;
-  }
   .item-details-icon:hover{
     cursor: pointer;
-    &::after{
-      content: url('../img/launch/test_param_hover.svg');
-    }
+    background-image: url('../img/launch/test_param_hover.svg');
+    background-repeat: no-repeat;
+    background-position: 0 6px;
   }
-  .item-details-icon::after{
-    content: url('../img/launch/test_param.svg');
+  .item-details-icon{
+    background: url(../img/launch/test_param.svg);
+    background-repeat: no-repeat;
+    background-position: 0 6px;
   }
   .grid-cell {
     position: relative;
