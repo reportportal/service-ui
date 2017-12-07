@@ -269,6 +269,7 @@ define(function (require) {
             this.ticketCollection.reset(tickets);
         },
         onClickEditDefect: function () {
+            var self = this;
             var defectEditor = new ModalDefectEditor({
                 items: [this.model],
                 context: this.context
@@ -285,6 +286,7 @@ define(function (require) {
                     } else if (actionType && actionType.action === 'loadBug') {
                         LoadBugAction({ items: defectEditor.items });
                     }
+                    self.trigger('update:issue');
                 });
         },
 
