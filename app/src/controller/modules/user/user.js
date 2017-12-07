@@ -1,3 +1,4 @@
+import modules from './modules/modules';
 import getInfo from './signals/getInfo';
 
 export default {
@@ -9,4 +10,5 @@ export default {
   signals: {
     getInfo,
   },
+  modules,
 };

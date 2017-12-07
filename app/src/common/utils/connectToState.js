@@ -7,4 +7,3 @@ export default function (connectProps, component) {
   }
   return connect(connectProps, component);
 }
-
