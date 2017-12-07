@@ -138,6 +138,9 @@ define(function (require) {
                     el: $('[data-js-step-issue]', this.$el),
                     context: this.context
                 });
+                this.listenTo(this.issueView, 'update:issue', function () {
+                    this.trigger('update:issue');
+                });
             }
             this.renderedRetries = [];
             this.renderRetries();
