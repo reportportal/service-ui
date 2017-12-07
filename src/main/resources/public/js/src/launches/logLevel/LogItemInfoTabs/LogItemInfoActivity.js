@@ -83,6 +83,12 @@ define(function (require) {
                             result += '<div class="action-item"><span>FROM: </span>' + this.getActionTicketsHtml(item.oldValue) + '</div>' +
                                 '<div class="separate-items"><i class="material-icons">keyboard_arrow_right</i></div>' +
                                 '<div class="action-item"><span>TO: </span>' + this.getActionTicketsHtml(item.newValue) + '</div>';
+                        } else if (item.field === 'ignoreAnalyzer') {
+                            result += '<div class="action-item"><span>FROM: </span>' +
+                                ((item.oldValue === 'true') ? Localization.launches.ignoreAA : '') + '</div>' +
+                                '<div class="separate-items"><i class="material-icons">keyboard_arrow_right</i></div>' +
+                                '<div class="action-item"><span>TO: </span>' +
+                                ((item.newValue === 'true') ? Localization.launches.ignoreAA : '') + '</div>';
                         } else {
                             result += '<div class="action-item"><span>FROM: </span>' + this.getActionValueHtml(item.oldValue) + '</div>' +
                                 '<div class="separate-items"><i class="material-icons">keyboard_arrow_right</i></div>' +
