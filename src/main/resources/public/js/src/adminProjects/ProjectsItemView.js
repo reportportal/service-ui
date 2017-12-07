@@ -43,7 +43,7 @@ define(function (require) {
             '[data-js-project-new]': 'classes: {hide: not(isNew)}',
             '[data-js-project-users]': 'html: getUsersQuantity',
             '[data-js-project-launches]': 'html: getLaunchesQuantity',
-            '[data-js-project-last-run]': 'text: getLastRun',
+            '[data-js-project-last-run]': 'html: getLastRun',
             '[data-js-settings-link]': 'attr: {href: getSettingsUrl}',
             '[data-js-members-link]': 'attr: {href: getMembersUrl}',
             '[data-js-events-link]': 'attr: {href: getEventsUrl}',
@@ -63,24 +63,26 @@ define(function (require) {
                 deps: ['usersQuantity'],
                 get: function (usersQuantity) {
                     var view = this.filterModel.get('viewType');
-                    return '<strong>' + usersQuantity + '</strong> ' +
-                        (view !== 'table' ? (usersQuantity === 1 ? Localization.admin.usersQuantitySingular : Localization.admin.usersQuantity) : '');
+                    var label = (view !== 'table' ? (usersQuantity === 1 ? Localization.admin.usersQuantitySingular : Localization.admin.usersQuantity) : '');
+                    return '<span class="mobile-name">' + label + '</span> <strong>' + usersQuantity + '</strong><span>' + label + '</span>';
                 }
             },
             getLaunchesQuantity: {
                 deps: ['launchesQuantity'],
                 get: function (launchesQuantity) {
                     var view = this.filterModel.get('viewType');
-                    return '<strong>' + launchesQuantity + '</strong> ' +
-                        (view !== 'table' ? (launchesQuantity === 1 ? Localization.admin.launchesQuantitySingular : Localization.admin.launchesQuantity) : '');
+                    var label = (view !== 'table' ? (launchesQuantity === 1 ? Localization.admin.launchesQuantitySingular : Localization.admin.launchesQuantity) : '');
+                    return '<span class="mobile-name">' + label + '</span> <strong>' + launchesQuantity + '</strong><span>' + label + '</span>';
                 }
             },
             getLastRun: {
                 deps: ['lastRun'],
                 get: function (lastRun) {
-                    return Localization.admin.lastRunPrefix + ' ' + (lastRun ? Util.daysFromNow(lastRun) : Localization.admin.lastRunSuffix);
+                    return '<span class="mobile-name">' + Localization.admin.lastRunMobile + '</span> ' +
+                        (lastRun ? Util.daysFromNow(lastRun) : Localization.admin.lastRunSuffix) + '<span>' + Localization.admin.lastRunPrefix + '</span>';
                 }
             },
+
             getProjectDetailsUrl: {
                 deps: ['projectId'],
                 get: function (projectId) {
