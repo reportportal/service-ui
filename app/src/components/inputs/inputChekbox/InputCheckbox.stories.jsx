@@ -49,7 +49,7 @@ storiesOf('Components/Inputs/InputCheckbox', module)
     <InputCheckbox disabled>Some text.</InputCheckbox>
   ))
   .add('checked & disabled', () => (
-    <InputCheckbox text="Some text." value disabled>Some text.</InputCheckbox>
+    <InputCheckbox value disabled>Some text.</InputCheckbox>
   ))
   .add('with actions', () => (
     <InputCheckbox onChange={action('change')} onFocus={action('focused')} onBlur={action('blur')}>Some text.</InputCheckbox>

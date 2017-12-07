@@ -1,0 +1,31 @@
+.dropdown-option {
+  display: inline-block;
+  width: 100%;
+  height: 30px;
+  padding-right: 20px;
+  padding-left: 20px;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  line-height: 30px;
+  box-sizing: border-box;
+
+  &:hover {
+    background-color: $COLOR--tealish-hover;
+  }
+  &.active {
+    background-color: $COLOR--gray-91;
+  }
+  &.disabled {
+    color: $COLOR--gray-60;
+
+    &:hover {
+      background-color: $COLOR--white-two;
+      cursor: default;
+    }
+  }
+}
+.single-option {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
