@@ -132,8 +132,10 @@
         padding-right: 0;
 
         .select-value {
-          color: $COLOR--charcoal-grey;
-          font-family: $OpenSansSemibold, sans-serif;
+          font-size: 16px;
+          color: $COLOR--topaz;
+          font-weight: bold;
+          font-family: $OpenSansRegular, sans-serif;
 
           &:after {
             display: block;
@@ -276,7 +278,9 @@
 
   .projects-table-view {
     margin: 0;
-
+    @media(max-width: $SCREEN_XS_MAX) {
+      border-top: 1px solid $COLOR--gray-91;
+    }
     .rp-table-thead {
       background: $COLOR--white;
       margin: 0;
@@ -344,11 +348,7 @@
         width: 100%;
       }
       .project-delete-col {
-        position: absolute;
-        right: 0;
-        bottom: 10px;
-        width: 25%;
-        height: 40px;
+        display: none;
         .remove-project {
           margin-top: 6px;
         }
@@ -373,8 +373,15 @@
       @media (max-width: $SCREEN_SM_MAX) {
         .project-title-mobile {
           display: block;
-          width: 50%;
+          width: auto;
           float: left;
+          padding: 6px 10px 6px 15px;
+          h5{
+            color: $COLOR--gray-47;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+          }
         }
       }
       .project-name {
@@ -397,10 +404,21 @@
         .project-launches,
         .project-date {
           float: left;
-          width: 50%;
+          width: auto;
           border: none;
-          padding: 10px 15px;
+          padding: 4px 0;
           margin: 0;
+          strong{
+            font-weight: normal;
+            color: $COLOR--charcoal-grey;
+          }
+        }
+        .project-name{
+          padding: 6px 15px;
+          font-size: 16px;
+          font-family: $OpenSansRegular, 'sans-serif';
+          font-weight: bold;
+          font-stretch: condensed;
         }
       }
       @media (max-width: $SCREEN_SM_MAX) {
@@ -408,7 +426,11 @@
           width: 100%;
           border: none;
           .project-link {
-            width: 25%;
+            width: 33.3333333%;
+            &.go-to-members{
+              border-left: 1px solid $COLOR--gray-91;
+              border-right: 1px solid $COLOR--gray-91;
+            }
           }
         }
       }
@@ -422,6 +444,11 @@
           padding: 0;
           height: auto;
         }
+      }
+    }
+    .project-info{
+      span{
+        display: none;
       }
     }
   }
@@ -498,6 +525,9 @@
             .project-info {
               padding: 0;
               margin: 3px 0;
+              span.mobile-name{
+                display: none;
+              }
               strong {
                 margin-right: 5px;
               }
@@ -521,6 +551,41 @@
     @media (max-width: $SCREEN_XS_MAX) {
       .project-list-row {
         width: 100%;
+        .project-wrapper{
+          .project-name{
+            font-size: 16px;
+            font-family: $OpenSansRegular, 'sans-serif';
+            font-weight: bold;
+            font-stretch: condensed;
+          }
+          .project-info-wrapper{
+            .project-info-block{
+              .project-info{
+                span{
+                  display: none;
+                }
+                span.mobile-name{
+                  display: inline-block;
+                  margin-right: 25px;
+                  width: 65px;
+                  font-family: $OpenSansRegular;
+                  font-size: 12px;
+                  text-transform: uppercase;
+                  font-weight: 600;
+                  line-height: 2.08;
+                  color: $COLOR--gray-47;
+                }
+              }
+            }
+            .heartbeat-block{
+              .health-icon{
+                i.rp-icons-heartbeat{
+                  font-size: 55px;
+                }
+              }
+            }
+          }
+        }
       }
     }
     @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
