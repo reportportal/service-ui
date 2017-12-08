@@ -20,14 +20,15 @@
     }
   }
   .baron {
-    height: 60px !important;
     table {
+      width: 100px;
       tr {
         border-bottom: 1px solid $COLOR--gray-91;
         border-top: 1px solid $COLOR--gray-91;
         line-height: 25px;
         th, td {
           padding: 0 10px;
+          vertical-align: top;
         }
       }
     }

@@ -2095,6 +2095,7 @@ define(['util'], function () {
             testTags: 'Tags:',
             testParametres: 'Parametres:',
             testDescription: 'Description:',
+            testStacktrace: 'Stacktrace:',
             key: 'Key',
             value: 'Value'
         },

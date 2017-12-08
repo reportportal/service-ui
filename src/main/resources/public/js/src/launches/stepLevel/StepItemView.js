@@ -220,8 +220,6 @@ define(function (require) {
                 model: this.model
             });
             modal.show();
-            modal.scrool = Util.setupBaronScroll($('[data-js-parametres]', modal.$el),null, { direction: 'h'});
-            Util.setupBaronScrollSize(modal.scrool, {maxHeight: 200});
         },
         onClickView: function (e) {
             if ((e.ctrlKey || e.metaKey) && !($(e.target).is('a') && !($(e.target).is('input')))

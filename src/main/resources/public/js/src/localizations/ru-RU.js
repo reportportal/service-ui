@@ -2153,6 +2153,7 @@ define(['util'], function () {
             testTags: 'Метки:',
             testParametres: 'Параметры:',
             testDescription: 'Описание:',
+            testStacktrace: 'Трассировка стека:',
             key: 'Ключ',
             value: 'Значение'
         },

@@ -60,6 +60,8 @@ define(function (require) {
             },
             'click [data-js-item-parametres-label]': function () {
                 this.toggleModelField('parametres');
+                this.scroll = Util.setupBaronScroll($('[data-js-item-parametres-container] table', this.$el), null, { direction: 'm' });
+                Util.setupBaronScrollSize(this.scroll, { maxHeight: 445 });
             }
         },
 
