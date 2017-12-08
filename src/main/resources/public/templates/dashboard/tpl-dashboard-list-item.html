@@ -15,10 +15,18 @@
             <p data-js-description></p>
         </div>
         <div class="grid-cell dashboard-owner-col">
+            <span class="mobile-title">
+                <%= data.text.dashboard.thOwner %>:
+            </span>
             <p data-js-owner class="dashboard-owner"></p>
         </div>
         <div class="grid-cell dashboard-shared-col">
-            <i class="material-icons rp-icons-share" data-js-shared-container>check</i>
+            <div data-js-shared-container>
+                <span class="mobile-title">
+                    <%= data.text.dashboard.shared %>
+                </span>
+                <i class="material-icons rp-icons-share">check</i>
+            </div>
         </div>
         <div class="grid-cell dashboard-edit-col">
             <div>

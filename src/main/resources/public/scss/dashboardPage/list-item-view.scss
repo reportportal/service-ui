@@ -284,9 +284,77 @@
         float: left;
         min-height: 1px;
         padding: 5px 0 5px 15px;
+        .mobile-title{
+          display: none;
+        }
       }
     }
+  @media (max-width: $SCREEN_SM_MAX) {
+    .dashboard-table-view{
+      .dashboard-description-col {
+        width: 30%;
+      }
+      .dashboard-owner-col {
+        width: 16%;
+      }
+      .dashboard-shared-col, .dashboard-edit-col {
+        width: 12%;
+      }
+    }
+  }
+  @media (max-width: $SCREEN_XS_MAX){
+    .dashboard-table-view{
+      margin-top: 0;
+      .rp-table-thead{
+        display: none;
+      }
+      .dashboard-table-row{
+        padding:  15px 0;
+        i{
+          margin: 0 5px;
+          vertical-align: sub;
+        }
+        .dashboard-delete-col, .dashboard-edit-col{
+          display: none;
+        }
+        .dashboard-name-col,
+        .dashboard-description-col,
+        .dashboard-owner-col,
+        .dashboard-shared-col {
+          width: 100%;
+          padding-left: 10px;
+          p{
+            margin: 0 0 2px 0;
+          }
+        }
+        .grid-cell {
+          &.dashboard-shared-col,
+          &.dashboard-description-col{
+            padding: 0;
+            & > div, p{
+              padding: 5px 0 5px 10px;
+            }
+          }
+          .mobile-title {
+            display: inline-block;
+            font-family: $OpenSansRegular;
+            font-size: 12px;
+            font-weight: 600;
+            color: $COLOR--gray-47;
+            text-transform: uppercase;
+          }
+        }
+        .dashboard-owner-col{
+          p{
+            display: inline-block;
+            margin-left: 5px;
+          }
+        }
+      }
+    }
+  }
 }
+
 @media print{
   .dashboard-list-item-view{
     &:hover {

@@ -41,7 +41,7 @@ define(function (require) {
         bindings: {
             '[data-js-name]': 'html: getName',
             '[data-js-owner]': 'text: owner',
-            '[data-js-description]': 'text: displayingDescription',
+            '[data-js-description]': 'text: displayingDescription, classes: {hide: not(description)}',
             '[data-js-share-icon]': 'classes: {hide: not(isMy)}, attr: {title: sharedTitle}',
             '[data-js-global-icon]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
             '[data-js-icon-description]': 'text: sharedTitle',
