@@ -1149,7 +1149,7 @@ define(['util'], function () {
             attachments: 'attachments',
             itemDetails: 'item details',
             historyOfActions: 'history of actions',
-            parametres: 'parametres'
+            parametres: 'parameters'
         },
 
         statisticsPanel: {
@@ -1172,7 +1172,7 @@ define(['util'], function () {
             filterAttachments: 'Logs with attachments',
             notFoundActivity: 'No activities to display',
             notFoundAttachments: 'No attachments to display',
-            notFoundParametres: 'No parametres to display',
+            notFoundParametres: 'No parameters to display',
             notFoundStackTrace: 'No stack trace to display',
             goToLog: 'Go to stack trace in log message',
             nextError: 'Next error',
