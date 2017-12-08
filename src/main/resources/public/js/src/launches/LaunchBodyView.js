@@ -252,6 +252,9 @@ define(function (require) {
                 collectionItems: this.collectionItems,
                 launchModel: info.launchModel
             });
+            this.listenTo(this.body, 'update:crumbs', function (partPath, optionsURL) {
+                this.crumbs.collection.isLaunchLost() && this.crumbs.update(partPath, optionsURL);
+            }.bind(this));
         },
         renderHistory: function (info) {
             this.control = new HistoryControlView({

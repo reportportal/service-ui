@@ -63,6 +63,10 @@ define(function (require) {
             if (!this.collectionItems.get(this.collectionItems.getInfoLog().item)) {
                 this.collectionItems.loadLogLevelById()
                     .done(function () {
+                        var model = self.collectionItems.models[0];
+                        var partPath = [model.get('launchId')].concat(_.keys(model.get('path_names')));
+                        var optionsUrl = 'log.item=' + model.get('id');
+                        self.trigger('update:crumbs', partPath, optionsUrl);
                         Util.ajaxInfoMessenger('restoredTestItem');
                     })
                     .fail(function () {
