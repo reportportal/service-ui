@@ -48,8 +48,6 @@ define(function (require) {
 
         render: function () {
             this.$el.html(Util.templates(this.template, { params: this.model.get('parameters') }));
-            this.baron = Util.setupBaronScroll($('[data-js-item-parametres-container] table', this.$el), null, { direction: 'h' });
-            Util.setupBaronScrollSize(this.baron, { maxHeight: 200 });
         },
 
         destroy: function () {

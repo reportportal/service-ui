@@ -22,13 +22,17 @@ define(function (require) {
     var Localization = require('localization');
     var ItemDurationView = require('launches/common/ItemDurationView');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
+    var FilterModel = require('filters/FilterModel');
+    var LogItemCollection = require('launches/logLevel/LogItemCollection');
     var $ = require('jquery');
 
     var ModalStepItemDetails = ModalView.extend({
         template: 'tpl-modal-step-item-details',
         className: 'modal-step-item-details',
         events: {
-            'click [data-js-ok]': 'onClickOk'
+            'click [data-js-ok]': 'onClickOk',
+            'click [data-js-toggle-open-description]': 'onClickOpenDescription',
+            'click [data-js-toggle-open-stacktrace]': 'onClickOpenStacktrace'
         },
         bindings: {
             '[data-js-item-name]': 'text: name',
@@ -73,7 +77,53 @@ define(function (require) {
             }
         },
         initialize: function () {
+            var filterModel = new FilterModel({
+                temp: true,
+                entities: '[{"filtering_field":"level","condition":"in","value":"ERROR"}]',
+                selection_parameters: '{"is_asc": false, "sorting_column": "time"}'
+            });
+            this.collection = new LogItemCollection({
+                filterModel: filterModel,
+                itemModel: this.model
+            });
+            this.load();
             this.render();
+            this.listenTo(this.collection, 'loading:true', this.onStartLoading);
+            this.listenTo(this.collection, 'loading:false', this.onStopLoading);
+            this.listenTo(this.collection, 'reset', this.onResetCollection);
+        },
+        load: function () {
+            this.collection.setPaging(1, 1); // call loading
+        },
+        onShown: function () {
+            var innerHeight = 150;
+            if ($('[data-js-description]', this.$el).innerHeight() > innerHeight) {
+                $('[data-js-description-container]', this.$el).addClass('show-accordion');
+            }
+            if ($('[data-js-stack-trace]', this.$el).innerHeight() > innerHeight) {
+                $('[data-js-stack-trace-container]', this.$el).addClass('show-accordion');
+            }
+            this.scrool = Util.setupBaronScroll($('[data-js-parametres]', this.$el), null, { direction: 'm' });
+            Util.setupBaronScrollSize(this.scrool, { maxHeight: 200 });
+        },
+        onStartLoading: function () {
+            $('[data-js-stack-trace-container]', this.$el).addClass('load');
+        },
+        onStopLoading: function () {
+            $('[data-js-stack-trace-container]', this.$el).removeClass('load');
+        },
+        onResetCollection: function () {
+            if (this.collection.models.length) {
+                $('[data-js-stack-trace]', this.$el).html(this.collection.models[0].get('message'));
+            } else {
+                $('.item-stack-trace', this.$el).addClass('hide');
+            }
+        },
+        onClickOpenDescription: function () {
+            $('[data-js-description-container]', this.$el).toggleClass('open');
+        },
+        onClickOpenStacktrace: function () {
+            $('[data-js-stack-trace-container]', this.$el).toggleClass('open');
         },
         render: function () {
             var footerButtons = [
@@ -84,13 +134,16 @@ define(function (require) {
                 }
             ];
             var params = this.model.get('parameters');
-            this.$el.html(Util.templates(this.template, { footerButtons: footerButtons, params: params }));
+            this.$el.html(Util.templates(this.template, {
+                footerButtons: footerButtons,
+                params: params
+            }));
             this.duration = new ItemDurationView({
                 model: this.model,
                 el: $('[data-js-duration]', this.$el)
             });
-            this.markdownViewer = new MarkdownViewer({ text: this.model.get('description') });
-            $('[data-js-description]', this.$el).html(this.markdownViewer.$el);
+            this.description = new MarkdownViewer({ text: this.model.get('description') });
+            $('[data-js-description]', this.$el).html(this.description.$el);
         },
         onClickOk: function () {
             this.successClose();

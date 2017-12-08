@@ -1,33 +1,53 @@
 <%= data.includeTemplate('_tpl-modal-header', {headerText: data.text.dialogHeader.testItemsDetails }) %>
 <div class="modal-body">
     <p class="item-name" data-js-item-name></p>
-    <label class="item-label"><%= data.text.dialog.testUID %><span data-js-uid></span></label>
-    <label class="item-label item-duration"><%= data.text.dialog.testDuration %><span data-js-duration></span></label>
-    <label class="item-label item-tags" data-js-tags-container><%= data.text.dialog.testTags %><span data-js-tags></span></label>
-    <div data-js-parametres-container>
-        <label class="item-label item-paremetres" data-js-parametres-label><%= data.text.dialog.testParametres %></label>
-        <div data-js-parametres>
-        <table>
-            <tr>
-                <th><%= data.text.dialog.key %></th>
-                <%  _.each( data.params, function(item){ %>
-                    <td><%= item.key %></td>
-                <% }) %>
-            </tr>
-            <tr>
-                <th><%= data.text.dialog.value %></th>
-                <% _.each( data.params, function(item){ %>
-                    <td><%= item.value %></td>
-                <% }) %>
-            </tr>
-        </table>
+    <div class="item-info">
+        <label class="item-label"><%= data.text.dialog.testUID %><span data-js-uid></span></label>
     </div>
+    <div class="item-info">
+        <label class="item-label item-duration"><%= data.text.dialog.testDuration %><span data-js-duration></span></label>
+        <label class="item-label item-tags" data-js-tags-container><%= data.text.dialog.testTags %><span data-js-tags></span></label>
     </div>
-    <div data-js-description-container>
-        <label class="item-label item-description"><%= data.text.dialog.testDescription %></label>
+    <div class="item-info">
+        <div data-js-parametres-container>
+            <label class="item-label item-paremetres" data-js-parametres-label><%= data.text.dialog.testParametres %></label>
+            <div data-js-parametres>
+                <table>
+                    <tr>
+                        <th><%= data.text.dialog.key %></th>
+                        <%  _.each( data.params, function(item){ %>
+                        <td><%= item.key %></td>
+                        <% }) %>
+                    </tr>
+                    <tr>
+                        <th><%= data.text.dialog.value %></th>
+                        <% _.each( data.params, function(item){ %>
+                        <td><%= item.value %></td>
+                        <% }) %>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="item-info item-description" data-js-description-container>
+        <label class="item-label "><%= data.text.dialog.testDescription %></label>
         <div data-js-description></div>
+        <div class="accordion-block">
+            <i class="material-icons" data-js-toggle-open-description>keyboard_arrow_down</i>
+            <i class="material-icons little" data-js-toggle-open-description>keyboard_arrow_up</i>
+        </div>
     </div>
-
+    <div class="item-info item-stack-trace" data-js-stack-trace-container>
+        <label class="item-label item-description"><%= data.text.dialog.testStacktrace %></label>
+        <div class="preloader activity-preloader">
+            <i class="material-icons loader-animation">refresh</i>
+        </div>
+        <div class="stack-trace-message" data-js-stack-trace></div>
+        <div class="accordion-block">
+            <i class="material-icons" data-js-toggle-open-stacktrace>keyboard_arrow_down</i>
+            <i class="material-icons little" data-js-toggle-open-stacktrace>keyboard_arrow_up</i>
+        </div>
+    </div>
 </div>
 <%= data.includeTemplate('_tpl-modal-footer', data.footerButtons)  %>
 
