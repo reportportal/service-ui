@@ -23,31 +23,39 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import InputSwitcher from './InputSwitcher';
+import InputBigSwitcher from './inputBigSwitcher';
 import README from './README.md';
 
-storiesOf('Components/Inputs/InputSwitcher', module)
+storiesOf('Components/Inputs/InputBigSwitcher', module)
   .addDecorator(host({
-    title: 'InputSwitcher component',
+    title: 'InputBigSwitcher component',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
     background: '#ffffff',
-    height: 30,
+    height: 60,
     width: 300,
   }))
   .addDecorator(withReadme(README))
   .add('default state', () => (
-    <InputSwitcher />
+    <InputBigSwitcher />
+  ))
+  .add('turned-on', () => (
+    <InputBigSwitcher value>Some text.</InputBigSwitcher>
+  ))
+  .add('disabled', () => (
+    <InputBigSwitcher disabled>Some text.</InputBigSwitcher>
+  ))
+  .add('turned-on disabled', () => (
+    <InputBigSwitcher value disabled>Some text.</InputBigSwitcher>
   ))
   .add('with long text', () => (
-    <InputSwitcher>
+    <InputBigSwitcher>
       Some very long text. Some very long text. Some very long text. Some very long text.
-    </InputSwitcher>
-  ))
-  .add('enabled', () => (
-    <InputSwitcher value >Some text.</InputSwitcher>
+    </InputBigSwitcher>
   ))
   .add('with actions', () => (
-    <InputSwitcher onChange={action('changed')} onFocus={action('onFocus')} onBlur={action('onBlur')}>Some text.</InputSwitcher>
+    <InputBigSwitcher onChange={action('changed')} onFocus={action('onFocus')} onBlur={action('onBlur')}>Some text.</InputBigSwitcher>
+  ))
+  .add('disabled with actions', () => (
+    <InputBigSwitcher onChange={action('changed')} onFocus={action('onFocus')} onBlur={action('onBlur')} disabled>Some text.</InputBigSwitcher>
   ));
-

@@ -23,39 +23,40 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import InputBigSwitcher from './InputBigSwitcher';
+import Input from './input';
 import README from './README.md';
 
-storiesOf('Components/Inputs/InputBigSwitcher', module)
+storiesOf('Components/Inputs/Input', module)
   .addDecorator(host({
-    title: 'InputBigSwitcher component',
+    title: 'Input component',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#ffffff',
-    height: 60,
+    height: 30,
     width: 300,
   }))
   .addDecorator(withReadme(README))
   .add('default state', () => (
-    <InputBigSwitcher />
+    <Input />
   ))
-  .add('turned-on', () => (
-    <InputBigSwitcher value>Some text.</InputBigSwitcher>
+  .add('with placeholder', () => (
+    <Input placeholder="Placeholder test" />
+  ))
+  .add('with predefined value', () => (
+    <Input value="Predefined text" />
+  ))
+  .add('type number', () => (
+    <Input type="number" />
+  ))
+  .add('type password', () => (
+    <Input type="password" />
+  ))
+  .add('max length (10)', () => (
+    <Input maxLength="10" />
   ))
   .add('disabled', () => (
-    <InputBigSwitcher disabled>Some text.</InputBigSwitcher>
-  ))
-  .add('turned-on disabled', () => (
-    <InputBigSwitcher value disabled>Some text.</InputBigSwitcher>
-  ))
-  .add('with long text', () => (
-    <InputBigSwitcher>
-      Some very long text. Some very long text. Some very long text. Some very long text.
-    </InputBigSwitcher>
+    <Input disabled />
   ))
   .add('with actions', () => (
-    <InputBigSwitcher onChange={action('changed')} onFocus={action('onFocus')} onBlur={action('onBlur')}>Some text.</InputBigSwitcher>
-  ))
-  .add('disabled with actions', () => (
-    <InputBigSwitcher onChange={action('changed')} onFocus={action('onFocus')} onBlur={action('onBlur')} disabled>Some text.</InputBigSwitcher>
+    <Input onFocus={action('focused')} onChange={action('change')} onBlur={action('blur')} />
   ));
+

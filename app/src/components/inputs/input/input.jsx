@@ -22,7 +22,7 @@
 import PropTypes from 'prop-types';
 import { state, signal, props } from 'cerebral/tags';
 import classNames from 'classnames/bind';
-import styles from './Input.scss';
+import styles from './input.scss';
 
 const cx = classNames.bind(styles);
 

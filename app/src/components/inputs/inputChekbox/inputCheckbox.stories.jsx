@@ -23,40 +23,35 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import Input from './Input';
+import InputCheckbox from './inputCheckbox';
 import README from './README.md';
 
-storiesOf('Components/Inputs/Input', module)
+storiesOf('Components/Inputs/InputCheckbox', module)
   .addDecorator(host({
-    title: 'Input component',
+    title: 'InputCheckbox component',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
+    background: '#ffffff',
     height: 30,
     width: 300,
   }))
   .addDecorator(withReadme(README))
   .add('default state', () => (
-    <Input />
+    <InputCheckbox />
   ))
-  .add('with placeholder', () => (
-    <Input placeholder="Placeholder test" />
+  .add('with long text', () => (
+    <InputCheckbox>Some long text. Some long text. Some long text. Some long text.</InputCheckbox>
   ))
-  .add('with predefined value', () => (
-    <Input value="Predefined text" />
-  ))
-  .add('type number', () => (
-    <Input type="number" />
-  ))
-  .add('type password', () => (
-    <Input type="password" />
-  ))
-  .add('max length (10)', () => (
-    <Input maxLength="10" />
+  .add('checked', () => (
+    <InputCheckbox value>Some text.</InputCheckbox>
   ))
   .add('disabled', () => (
-    <Input disabled />
+    <InputCheckbox disabled>Some text.</InputCheckbox>
+  ))
+  .add('checked & disabled', () => (
+    <InputCheckbox value disabled>Some text.</InputCheckbox>
   ))
   .add('with actions', () => (
-    <Input onFocus={action('focused')} onChange={action('change')} onBlur={action('blur')} />
+    <InputCheckbox onChange={action('change')} onFocus={action('focused')} onBlur={action('blur')}>Some text.</InputCheckbox>
   ));
 

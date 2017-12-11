@@ -21,7 +21,7 @@
 
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './InputSwitcher.scss';
+import styles from './inputSwitcher.scss';
 
 const cx = classNames.bind(styles);
 
