@@ -63,8 +63,8 @@ define(function (require) {
         computeds: {
             isDisabledSendIssue: {
                 get: function () {
-                    return !(this.viewModel.collection.length > 1) || !(this.viewModel.get('status') === 'FAILED') ||
-                        !(this.viewModel.collection.models[this.viewModel.collection.models.length - 1].get('status') === 'FAILED');
+                    return !(this.viewModel.collection.length > 1) || _.isEmpty(this.viewModel.getIssue()) ||
+                        _.isEmpty(this.viewModel.collection.models[this.viewModel.collection.models.length - 1].getIssue());
                 }
             },
             isVisibleSendIssue: {
@@ -74,13 +74,13 @@ define(function (require) {
             },
             isDisabledReceiveIssue: {
                 get: function () {
-                    var hasFailedItems = false;
+                    var hasDefectiveItems = false;
                     _.each(this.viewModel.collection.models, function (model, key) {
-                        if ((key !== (this.viewModel.collection.models.length - 1)) && (model.get('status') === 'FAILED')) {
-                            hasFailedItems = true;
+                        if ((key !== (this.viewModel.collection.models.length - 1)) && !_.isEmpty(model.getIssue())) {
+                            hasDefectiveItems = true;
                         }
                     }.bind(this));
-                    return !(this.viewModel.collection.length > 1) || !(this.viewModel.get('status') === 'FAILED') || !hasFailedItems;
+                    return !(this.viewModel.collection.length > 1) || _.isEmpty(this.viewModel.getIssue()) || !hasDefectiveItems;
                 }
             },
             isVisibleReceiveIssue: {
@@ -269,24 +269,24 @@ define(function (require) {
                 }.bind(this));
         },
         onClickReceiveIssue: function () {
-            var previousFailedItemModel;
-            var previousFailedItemIssue;
+            var previousDefectiveItemModel;
+            var previousDefectiveItemIssue;
             var data;
             _.each(this.viewModel.collection.models, function (model, key) {
-                if ((key !== (this.viewModel.collection.models.length - 1)) && (model.get('status') === 'FAILED')) {
-                    previousFailedItemModel = model;
+                if ((key !== (this.viewModel.collection.models.length - 1)) && !_.isEmpty(model.getIssue())) {
+                    previousDefectiveItemModel = model;
                 }
             }.bind(this));
-            previousFailedItemIssue = previousFailedItemModel.getIssue();
+            previousDefectiveItemIssue = previousDefectiveItemModel.getIssue();
             data = {
                 issues: [{
                     test_item_id: this.viewModel.get('id'),
                     issue: {
                         autoAnalyzed: this.viewModel.get('autoAnalyzed'),
                         ignoreAnalyzer: this.viewModel.get('ignoreAnalyzer'),
-                        issue_type: previousFailedItemIssue.issue_type,
-                        comment: previousFailedItemIssue.comment || '',
-                        externalSystemIssues: previousFailedItemIssue.externalSystemIssues || []
+                        issue_type: previousDefectiveItemIssue.issue_type,
+                        comment: previousDefectiveItemIssue.comment || '',
+                        externalSystemIssues: previousDefectiveItemIssue.externalSystemIssues || []
                     }
                 }]
             };
@@ -306,20 +306,20 @@ define(function (require) {
                 }.bind(this));
         },
         render: function () {
-            var previousFailedLaunchNumber;
-            var lastFailedLaunchNumber = this.viewModel.collection.models[this.viewModel.collection.models.length - 1].get('launchNumber');
+            var previousDefectiveLaunchNumber;
+            var lastDefectiveLaunchNumber = this.viewModel.collection.models[this.viewModel.collection.models.length - 1].get('launchNumber');
             var sendDefectBtnText;
             var copyDefectBtnText;
             _.each(this.viewModel.collection.models, function (model, key) {
-                if ((key !== (this.viewModel.collection.models.length - 1)) && (model.get('status') === 'FAILED')) {
-                    previousFailedLaunchNumber = model.get('launchNumber');
+                if ((key !== (this.viewModel.collection.models.length - 1)) && !_.isEmpty(model.getIssue())) {
+                    previousDefectiveLaunchNumber = model.get('launchNumber');
                 }
             }.bind(this));
-            copyDefectBtnText = (previousFailedLaunchNumber ?
-                Localization.launches.copyDefect + ' ' + Localization.ui.from + ' #' + previousFailedLaunchNumber :
+            copyDefectBtnText = (previousDefectiveLaunchNumber ?
+                Localization.launches.copyDefect + ' ' + Localization.ui.from + ' #' + previousDefectiveLaunchNumber :
                 Localization.launches.copyDefect);
-            sendDefectBtnText = (lastFailedLaunchNumber ?
-                Localization.launches.sendDefect + ' ' + Localization.ui.to + ' #' + lastFailedLaunchNumber :
+            sendDefectBtnText = (lastDefectiveLaunchNumber ?
+                Localization.launches.sendDefect + ' ' + Localization.ui.to + ' #' + lastDefectiveLaunchNumber :
                 Localization.launches.sendDefect);
             this.$el.html(Util.templates(this.template, {
                 context: this.context,
