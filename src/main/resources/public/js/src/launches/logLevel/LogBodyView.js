@@ -56,7 +56,7 @@ define(function (require) {
             var self = this;
             $('[data-js-log-item-container]', this.$el).removeClass('not-found');
             $('[data-js-log-item-container]', this.$el).addClass('load');
-            this.history && this.off(this.history);
+            this.history && this.stopListening(this.history);
             this.history && this.history.destroy();
             this.historyItem && this.historyItem.destroy();
             this.logsItem && this.logsItem.destroy();
