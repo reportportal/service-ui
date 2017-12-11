@@ -69,6 +69,7 @@ define(function (require) {
                     case 'post_issue': return Localization.itemEvents.postIssue;
                     case 'attach_issue': return Localization.itemEvents.attachIssue;
                     case 'analyze_item': return Localization.itemEvents.changedByAnalyzer;
+                    case 'attach_issue_aa': return Localization.itemEvents.issueAttachByAnalyzer;
                     default: break;
                     }
                 }
@@ -134,7 +135,7 @@ define(function (require) {
             isHideNameCell: {
                 deps: ['actionType'],
                 get: function (actionType) {
-                    return actionType === 'analyze_item';
+                    return actionType === 'analyze_item' || actionType === 'attach_issue_aa';
                 }
             }
         },
