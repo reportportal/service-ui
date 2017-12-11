@@ -369,7 +369,8 @@ define(['util'], function () {
             updateItem: 'обновил элемент',
             attachIssue: 'привязал ошибку',
             postIssue: 'отправил ошибку',
-            changedByAnalyzer: 'АА изменил тип дефекта'
+            changedByAnalyzer: 'АА изменил тип дефекта',
+            issueAttachByAnalyzer: 'AA привязал ошибку'
         },
 
         widgets: {

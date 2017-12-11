@@ -313,7 +313,8 @@ define(['util'], function () {
             updateItem: 'updated item',
             attachIssue: 'attached issue',
             postIssue: 'posted issue',
-            changedByAnalyzer: 'AA changed defect type'
+            changedByAnalyzer: 'AA changed defect type',
+            issueAttachByAnalyzer: 'AA attached issue'
         },
 
         widgets: {
