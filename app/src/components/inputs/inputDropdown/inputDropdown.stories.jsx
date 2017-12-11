@@ -25,7 +25,7 @@ import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
 import PropTypes from 'prop-types';
-import Dropdown from './InputDropdown';
+import Dropdown from './inputDropdown';
 import README from './README.md';
 
 const getState = ({ multiple, selectAll, disabled, isFocus }) => Controller({

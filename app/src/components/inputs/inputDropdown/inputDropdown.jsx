@@ -23,8 +23,8 @@ import { connect } from '@cerebral/react';
 import { state, props } from 'cerebral/tags';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import styles from './InputDropdown.scss';
-import DropdownOption from './inputDropdownOption/InputDropdownOption';
+import styles from './inputDropdown.scss';
+import DropdownOption from './inputDropdownOption/inputDropdownOption';
 
 const cx = classNames.bind(styles);
 
