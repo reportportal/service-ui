@@ -33,6 +33,7 @@ define(function (require) {
     var Service = require('coreService');
     var WidgetService = require('newWidgets/WidgetService');
     var App = require('app');
+    var Localization = require('localization');
 
     var config = App.getInstance();
 
@@ -161,6 +162,12 @@ define(function (require) {
             var self = this;
             var view;
             if (this.collection.isEmpty()) {
+                if (this.term) {
+                    $('[data-js-empty-message]', this.$el).text(Localization.ui.noResultsFound);
+                } else {
+                    $('[data-js-empty-message]', this.$el).text(Localization.wizard.noSharedWidgets);
+                    $('[data-js-shared-widget-search]', self.$el).prop({ disabled: 'disabled' });
+                }
                 $('[data-js-widgets-empty]', this.$el).removeClass('hide');
                 return;
             }
