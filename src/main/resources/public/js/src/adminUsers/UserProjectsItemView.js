@@ -83,7 +83,8 @@ define(function (require) {
         },
 
         events: {
-            'click [data-js-unassign]': 'confirmUnassign'
+            'click [data-js-unassign]': 'confirmUnassign',
+            'click [data-js-project]': 'redirectToProject'
         },
 
         initialize: function (options) {
@@ -151,7 +152,9 @@ define(function (require) {
             });
             modal.show();
         },
-
+        redirectToProject: function (e) {
+            config.router.navigate('#administrate/project-details/' + this.model.get('projectId'), { trigger: true });
+        },
         unAssign: function () {
             return CallService.call('PUT', Urls.updateProjectUnassign(this.model.get('projectId')), { userNames: [this.userModel.get('userId')] })
                 .done(function () {

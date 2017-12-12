@@ -87,7 +87,11 @@ define(function (require, exports, module) {
             this.updateGadgetsTimer(TIME_UPDATE);
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, { isMyDashboard: this.isMyDashboard() }));
+            this.$el.html(Util.templates(this.template, {
+                isMyDashboard: this.isMyDashboard(),
+                dashboardName: this.model.get('name'),
+                projectName: config.project.projectId
+            }));
         },
         isMyDashboard: function () {
             return this.model.get('owner') === config.userModel.get('name');

@@ -103,20 +103,14 @@ define(function (require) {
                 launch.id = launch.launchId;
                 _.forEach(launch.resources, function (item) {
                     var newItem = {
-                        id: item.id, name: item.name, description: item.description || '', tags: item.tags, launches: {}
+                        id: item.id, name: item.name, description: item.description || '', tags: item.tags, launches: {}, uniqueId: item.uniqueId
                     };
                     newItem.launches[key] = [item];
                     if (_.isEmpty(items)) {
                         items.push(newItem);
                     } else {
                         var oneName = _.find(items, function (obj) {
-                            var name = obj.name === newItem.name;
-                            var description = obj.description === newItem.description;
-                            var tags = _.size(obj.tags) === _.size(newItem.tags) && _.every(obj.tags,
-                                    function (i) {
-                                        return _.contains(newItem.tags, i);
-                                    });
-                            return (name && description && tags);
+                            return (obj.uniqueId === newItem.uniqueId);
                         });
                         if (!oneName) {
                             items.push(newItem);

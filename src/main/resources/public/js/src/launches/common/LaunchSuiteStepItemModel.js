@@ -52,6 +52,9 @@ define(function (require, exports, module) {
             status: '',
             tags: '',
             type: '',
+            hasRetries: false,
+
+            retries: [],
 
             // test step append
             has_childs: true,
@@ -120,6 +123,7 @@ define(function (require, exports, module) {
             url: {
                 deps: ['id', 'has_childs', 'filter_url'],
                 get: function (id, hasChilds, filterUrl) {
+                    var result;
                     var partUrl = filterUrl ? '|' + filterUrl : '';
                     var index1 = window.location.hash.lastIndexOf('/');
                     var index2 = window.location.hash.lastIndexOf('|');
@@ -130,9 +134,11 @@ define(function (require, exports, module) {
                         baseUrl = '#' + this.appModel.get('projectId') + '/launches/all';
                     }
                     if (hasChilds) {
-                        return baseUrl + partUrl + '/' + id;
+                        result = baseUrl + partUrl + '/' + id;
+                    } else {
+                        result = baseUrl + partUrl + '?' + filterUrl + '&log.item=' + id;
                     }
-                    return baseUrl + partUrl + '?' + filterUrl + '&log.item=' + id;
+                    return result.replaceAll('|', encodeURIComponent('|'));
                 }
             },
             numberText: {
@@ -284,6 +290,24 @@ define(function (require, exports, module) {
                     }
                     if (self.get('launch_isProcessing')) {
                         return Localization.launches.launchIsProcessing;
+                    }
+                    return '';
+                },
+                ignoreaa: function () {
+                    if (!self.get('issue')) {
+                        return Localization.launches.withoutDefect;
+                    }
+                    if (self.getIssue().ignoreAnalyzer === true) {
+                        return Localization.launches.alreadyIgnoredAA;
+                    }
+                    return '';
+                },
+                includeaa: function () {
+                    if (!self.get('issue')) {
+                        return Localization.launches.withoutDefect;
+                    }
+                    if (self.getIssue().ignoreAnalyzer === false) {
+                        return Localization.launches.alreadyIncludedAA;
                     }
                     return '';
                 }

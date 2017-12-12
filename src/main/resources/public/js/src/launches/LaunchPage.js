@@ -22,6 +22,7 @@ define(function (require) {
     var App = require('app');
     var LaunchHeaderView = require('launches/LaunchHeaderView');
     var LaunchBodyView = require('launches/LaunchBodyView');
+    var LaunchUtils = require('launches/LaunchUtils');
 
     var config = App.getInstance();
 
@@ -61,12 +62,27 @@ define(function (require) {
                 this.onChangeLevel('LAUNCH');
             }
             this.launchFilterCollection.ready.done(function () {
+                var filters;
+                var tempFilterModel;
                 if (!self.launchFilterCollection.get(self.filterId)) {
                     self.filterId = 'all';
                 }
                 if (self.filterId === 'all') {
-                    self.launchFilterCollection.activateFilter(self.filterId);
-                    self.body.update(pathPart, query);
+                    if (options.subContext[3] && !options.subContext[2]) {
+                        filters = LaunchUtils.calculateFilterOptions(options.subContext[3]);
+                        if (filters.entities !== '[]') {
+                            tempFilterModel = self.launchFilterCollection.generateTempModel(filters);
+                            self.launchFilterCollection.activateFilter(tempFilterModel.get('id')).done(function () {
+                                config.router.navigate(tempFilterModel.get('url') + '?' + options.subContext[3], { trigger: false, replace: true });
+                                self.body.update([tempFilterModel.get('id')], '');
+                            });
+                        } else {
+                            self.body.update(pathPart, query);
+                        }
+                    } else {
+                        self.launchFilterCollection.activateFilter(self.filterId);
+                        self.body.update(pathPart, query);
+                    }
                 } else {
                     self.launchFilterCollection.activateFilter(self.filterId)
                         .fail(function () {

@@ -76,7 +76,6 @@
 
             filtersPanel: 'filter/filters-panel',
             filtersResolver: 'filter/filters-resolver',
-            profile: 'login/user_profile',
 
             "colorpicker": "../lib/colorpicker/bootstrap-colorpicker",
             "colorpickerConfig": "../lib/colorpicker/bootstrap-colorpicker-cfg-custom",
@@ -90,8 +89,6 @@
             'gridstack': '../lib/gridstack/gridstack.custom',
 
             d3: '../lib/d3/d3.v3.min',
-            nvd3: '../lib/nvd3/nv.d3.custom',
-            d3Tip: '../lib/d3/d3.tip.custom',
             'landingMain': 'landing/main',
             'landingUI': 'landing/ui',
             'landingDocs': 'landing/documentation',
@@ -116,7 +113,6 @@
             jasminejQuery: {exports: 'jasminejQuery', deps : ["jquery"] },
             bootstrap: { deps : ["jquery"] },
             select2: { deps: ["jquery"]},
-            nvd3: { 'deps': ['d3'], exports : "nv"},
             'gridstack': ['jquery', 'underscore'],
             'fullscreen': ['jquery']
         }
@@ -137,7 +133,6 @@
         'spec/member/invite_member',
         //'spec/favorites/favorites',
         'spec/launches/historyGrid',
-        'spec/user_profile/user_profile',
         'spec/components/paging',
         'spec/project/projectinfo',
         'spec/wizard/widget-wizard',

@@ -134,13 +134,18 @@ define(function (require) {
     var StepLogDefectTypeView = Epoxy.View.extend({
         template: 'tpl-launch-step-log-defect-type',
         events: {
-            'click [data-js-edit-defect]': 'onClickEditDefect'
+            'click [data-js-issue-title]': 'onClickEditDefect',
+            'click [data-js-edit-defect-icon]': 'onClickEditDefect',
+            'click [data-js-aa-badge]': 'onAABadgeClick',
+            'click [data-js-ignore-aa-badge]': 'onIgnoreAABadgeClick'
         },
         bindings: {
             // '[data-js-issue-comment]': 'html: issueComment',
             '[data-js-issue-name]': 'text: issueName',
             '[data-js-issue-color]': 'attr: {style: format("background-color: $1", issueColor)}',
             '[data-js-issue-title]': 'attr: {title: issueTitle}',
+            '[data-js-aa-badge]': 'classes: {show: all(not(ignoreAnalyzer), issueAutoanalyzed)}',
+            '[data-js-ignore-aa-badge]': 'classes: {show: ignoreAnalyzer}',
             '[data-js-edit-defect]': 'attr: {disabled: launch_isProcessing, title: editIssueTitle}, classes: {disabled: launch_isProcessing}'
         },
         computeds: {
@@ -165,6 +170,18 @@ define(function (require) {
                         return defectModel.get('longName').setMaxLength(20);
                     }
                     return '';
+                }
+            },
+            issueAutoanalyzed: {
+                deps: ['issue'],
+                get: function () {
+                    return this.model.getIssue().autoAnalyzed === true;
+                }
+            },
+            ignoreAnalyzer: {
+                deps: ['issue'],
+                get: function () {
+                    return this.model.getIssue().ignoreAnalyzer === true;
                 }
             },
             issueTitle: {
@@ -202,6 +219,7 @@ define(function (require) {
         },
         initialize: function (options) {
             var self = this;
+            this.context = options.context;
             this.pageType = options.pageType;
             this.defetTypesCollection = new SingletonDefectTypeCollection();
             this.defetTypesCollection.ready.done(function () {
@@ -236,6 +254,12 @@ define(function (require) {
                 self.ticketsView.push(view);
             });
         },
+        onAABadgeClick: function () {
+            this.trigger('quickFilter:AA');
+        },
+        onIgnoreAABadgeClick: function () {
+            this.trigger('quickFilter:ignoreAA');
+        },
         onChangeIssue: function () {
             var tickets = [];
             var issue = this.model.getIssue();
@@ -245,8 +269,10 @@ define(function (require) {
             this.ticketCollection.reset(tickets);
         },
         onClickEditDefect: function () {
+            var self = this;
             var defectEditor = new ModalDefectEditor({
-                items: [this.model]
+                items: [this.model],
+                context: this.context
             });
             if (this.pageType === 'logs') {
                 config.trackingDispatcher.trackEventNumber(192);
@@ -260,6 +286,7 @@ define(function (require) {
                     } else if (actionType && actionType.action === 'loadBug') {
                         LoadBugAction({ items: defectEditor.items });
                     }
+                    self.trigger('update:issue');
                 });
         },
 

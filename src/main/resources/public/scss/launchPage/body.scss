@@ -228,3 +228,12 @@
   100% {
   }
 }
+
+
+@media print{
+  .launches-header-bar{
+    .multiple-selected-container, .crumbs-container, .control-buttons , .filter-entities{
+      display: none;
+    }
+  }
+}

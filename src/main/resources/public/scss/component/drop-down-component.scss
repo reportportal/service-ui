@@ -38,6 +38,16 @@
   .dropdown-menu {
     width: 100%;
     li {
+      &.all-selector{
+        label{
+          span{
+            padding-left: 5px !important;
+            &::before, &::after{
+              display:  none;
+            }
+          }
+        }
+      }
       a {
         color: $COLOR--charcoal-grey;
         &.selected {
@@ -58,6 +68,9 @@
           -ms-text-overflow: ellipsis;
           text-overflow: ellipsis;
           overflow: hidden;
+        }
+        &.sub-option {
+          padding-left: 36px;
         }
       }
     }

@@ -1,13 +1,12 @@
 package main
 
 import (
+	"github.com/go-chi/chi"
 	"github.com/gorilla/handlers"
 	"github.com/unrolled/secure"
-	"github.com/reportportal/commons-go/commons"
-	"github.com/reportportal/commons-go/conf"
-	"github.com/reportportal/commons-go/server"
-	"goji.io"
-	"goji.io/pat"
+	"gopkg.in/reportportal/commons-go.v1/commons"
+	"gopkg.in/reportportal/commons-go.v1/conf"
+	"gopkg.in/reportportal/commons-go.v1/server"
 	"log"
 	"net/http"
 	"os"
@@ -22,18 +21,31 @@ func main() {
 		log.Fatalf("Cannot get workdir: %s", e.Error())
 	}
 
-	rpConf := conf.LoadConfig("", map[string]interface{}{"staticsPath": currDir})
+	cfg := conf.EmptyConfig()
+	cfg.Consul.Tags = []string{"urlprefix-/ui/ opts strip=/ui"}
+	rpConf := struct {
+		Cfg         *conf.RpConfig
+		StaticsPath string `env:"RP_STATICS_PATH"`
+	}{
+		Cfg:         cfg,
+		StaticsPath: currDir,
+	}
 
-	rpConf.AppName = "ui"
+	err := conf.LoadConfig(&rpConf)
+	if nil != err {
+		log.Fatalf("Cannot log app config")
+	}
+
+	rpConf.Cfg.AppName = "ui"
 
 	info := commons.GetBuildInfo()
 	info.Name = "Service UI"
 
-	srv := server.New(rpConf, info)
-	srv.AddRoute(func(router *goji.Mux) {
-		router.Use(func(next http.Handler) http.Handler {
-			return handlers.CompressHandler(next)
-		})
+	srv := server.New(rpConf.Cfg, info)
+	srv.WithRouter(func(router *chi.Mux) {
+
+		//apply compression
+		router.Use(handlers.CompressHandler)
 
 		//content security policy
 		csp := map[string][]string{
@@ -64,21 +76,12 @@ func main() {
 			}).Handler(next)
 		})
 
-		dir := rpConf.Get("staticsPath").(string)
-		err := os.Chdir(dir)
+		err := os.Chdir(rpConf.StaticsPath)
 		if nil != err {
-			log.Fatalf("Dir %s not found", dir)
+			log.Fatalf("Dir %s not found", rpConf.StaticsPath)
 		}
 
-		router.Use(func(next http.Handler) http.Handler {
-			return handlers.LoggingHandler(os.Stdout, next)
-		})
-
-		router.Use(func(next http.Handler) http.Handler {
-			return handlers.LoggingHandler(os.Stdout, next)
-		})
-
-		router.Handle(pat.Get("/*"), http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		router.Handle("/*", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			//trim query params
 			ext := filepath.Ext(trimQuery(r.URL.String(), "?"))
 
@@ -87,7 +90,7 @@ func main() {
 				w.Header().Add("Cache-Control", "no-cache")
 			}
 
-			http.FileServer(http.Dir(dir)).ServeHTTP(&redirectingRW{ResponseWriter: w, Request: r}, r)
+			http.FileServer(http.Dir(rpConf.StaticsPath)).ServeHTTP(&redirectingRW{ResponseWriter: w, Request: r}, r)
 		}))
 
 	})

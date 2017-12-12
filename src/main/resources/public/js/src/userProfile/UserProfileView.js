@@ -99,6 +99,7 @@ define(function (require, exports, module) {
             return this;
         },
         onChangeLanguage: function (lang) {
+            config.trackingDispatcher.trackEventNumber(575);
             this.appStorage.set('appLanguage', lang);
             $('[data-js-disclamer]', this.$el).removeClass('hide');
         },

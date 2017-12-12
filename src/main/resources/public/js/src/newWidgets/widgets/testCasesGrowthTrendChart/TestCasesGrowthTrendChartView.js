@@ -21,209 +21,231 @@
 define(function (require) {
     'use strict';
 
-    var _ = require('underscore');
     var $ = require('jquery');
-    var Moment = require('moment');
+    var _ = require('underscore');
+    var Util = require('util');
+    var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var Localization = require('localization');
-    var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
+    var c3 = require('c3');
+    var App = require('app');
+    var Moment = require('moment');
+    var config = App.getInstance();
 
-    var TestCasesGrowthTrendChartView = ChartWidgetView.extend({
-        addColors: function (val) {
-            switch (true) {
-            case val < 0 :
-                this.colors.push(this.getSeriesColor('negative'));
-                break;
-            case val === 0 :
-                this.colors.push(this.getSeriesColor('zero'));
-                break;
-            case val > 0 :
-                this.colors.push(this.getSeriesColor('positive'));
-                break;
-            default:
-            }
-        },
-        getData: function () {
-            var key = Localization.widgets.growTestCases;
-            var series;
-            var contentData = this.model.getContent() || [];
-            var pairs;
-            this.categories = [];
-            this.colors = [];
-            this.startVal = 0;
-            if (!_.isEmpty(contentData)) {
-                key = Localization.widgets.growTestCases;
-                series = {
-                    key: key,
-                    color: this.getSeriesColor(key),
-                    seriesId: 'grow_test_cases',
-                    values: []
-                };
-                if (!this.model.get('isTimeline')) {
-                    _.each(contentData.result, function (d, i) {
-                        var values = d.values;
-                        var val = parseInt(values.statistics$executionCounter$total, 10);
-                        var added = parseInt(values.delta, 10);
-                        var cat = {
-                            id: d.id,
-                            name: d.name,
-                            number: '#' + d.number,
-                            startTime: parseInt(d.startTime, 10)
-                        };
-                        this.categories.push(cat);
-                        if (i === 0) {
-                            this.startVal = parseInt(val, 10);
-                        }
-                        this.addColors(added);
-                        series.values.push(_.extend({ y: added, value: val, x: i + 1 }, cat));
-                    }, this);
-                } else {
-                    pairs = _.pairs(contentData);
-                    pairs.sort(function (a, b) {
-                        return Moment(a[0], 'YYYY-MM-DD').unix() - Moment(b[0], 'YYYY-MM-DD').unix();
-                    });
-                    _.each(pairs, function (p, i) {
-                        var values = p[1][0].values;
-                        var date = Moment(p[0], 'YYYY-MM-DD');
-                        var cat = {
-                            time: date.format('YYYY-MM-DD'),
-                            startTime: date.unix()
-                        };
-                        var val = parseInt(values.statistics$executionCounter$total, 10);
-                        var added = parseInt(values.delta, 10);
+    var TestCasesGrowthTrendChart = C3ChartWidgetView.extend({
+        template: 'tpl-widget-test-cases-growth-trend-chart',
+        tooltipTemplate: 'tpl-widget-test-cases-growth-trend-chart-tooltip',
+        className: 'test-cases-growth-trend-chart',
 
-                        this.categories.push(cat);
-                        if (i === 0) {
-                            this.startVal = val;
-                        }
-                        this.addColors(added);
-                        series.values.push({
-                            x: i + 1,
-                            startTime: date.unix(),
-                            y: added,
-                            value: val
-                        });
-                    }, this);
-                }
-                this.series = [series];
-                return this.series;
-            }
-            return [];
-        },
-        tooltipContent: function () {
-            var self = this;
-            var index;
-            var cat;
-            var date;
-            return function (key, x, y, e) {
-                index = e.pointIndex;
-                cat = self.categories[index];
-                if (self.model.get('isTimeline')) {
-                    return '<p style="text-align:left">' + cat.time + '<br/>' + key + ': <strong>' + y + '</strong><br/>' + Localization.widgets.totalTestCases + ': <strong>' + e.point.value + '</strong></p>';
-                }
-                date = self.formatDateTime(cat.startTime);
-                return '<p style="text-align:left"><strong>' + cat.name + ' ' + cat.number + '</strong><br/>' + date + '<br/>' + key + ': <strong>' + y + '</strong><br/>' + Localization.widgets.totalTestCases + ': <strong>' + e.point.value + '</strong></p>';
-            };
-        },
-        getDomain: function (data) {
-            var y = this.startVal;
-            var m = !_.isEmpty(data) ? _.map(data[0].values, function (a) {
-                return (y += a.y);
-            }) : 0;
-            var max = _.max(m);
-            var min = _.min(m);
-            if (max === min) {
-                max += 1;
-            }
-            return [min, max];
-        },
         render: function () {
-            var data = this.getData();
-            var self = this;
-            var tooltip = this.tooltipContent();
-            var yDomain = this.getDomain(data);
-            var tip;
-            var vis;
-            var cup;
-            var update;
-            var emptyData = this.model.getContent();
-            if (!this.isEmptyData(emptyData)) {
-                this.addSVG();
+            var data;
+            this.isTimeLine = !!this.model.getWidgetOptions().timeline;
 
-                this.chart = nvd3.models.trendBarChart()
-                    .x(function (d) {
-                        return d.x;
-                    })
-                    .y(function (d) {
-                        return d.y;
-                    })
-                    .yDomain(yDomain)
-                    .valueFormat(d3.format('f'))
-                    .tooltips(!self.isPreview)
-                    .showValues(true)
-                    .color(this.colors)
-                ;
-
-                this.chart.tooltipContent(tooltip);
-
-                this.chart.yAxis
-                    .tickFormat(d3.format('d'))
-                    .axisLabelDistance(-10)
-                    .axisLabel('cases')
-                ;
-
-                this.chart.xAxis
-                    .staggerLabels(false)
-                    .tickFormat(function (d) {
-                        return self.formatNumber(d);
-                    })
-                ;
-
-                tip = this.createTooltip();
-                vis = d3.select($('svg', this.$el).get(0))
-                    .datum(data)
-                    .call(this.chart)
-                    .call(tip)
-                ;
-
-                if (self.model.get('isTimeline')) {
-                    this.updateTickForTimeLine(vis);
-                }
-                this.addLaunchNameTip(vis, tip);
-
-                this.chart.xAxis
-                    .tickFormat(function (d) {
-                        return self.formatCategories(d);
+            if (this.isTimeLine) {
+                data = [];
+                _.each(this.model.getContent(), function (item, key) {
+                    data.push({
+                        date: key,
+                        values: item[0].values
                     });
-
-                cup = self.chart.update;
-                update = function () {
-                    self.chart.xAxis
-                        .tickFormat(function (d) {
-                            return self.formatNumber(d);
-                        });
-                    cup();
-                    self.chart.xAxis
-                        .tickFormat(function (d) {
-                            return self.formatCategories(d);
-                        });
-                    self.chart.update = update;
-                    if (self.model.get('isTimeline')) {
-                        self.updateTickForTimeLine(vis);
-                    }
-                };
-                this.chart.update = update;
-                this.addResize();
-                this.redirectOnElementClick('trendbar');
-                if (self.isPreview) {
-                    this.disabeLegendEvents();
-                }
+                });
+                this.$el.addClass('timeline-mode');
             } else {
-                this.addNoAvailableBock();
+                data = this.model.getContent().result;
             }
+            this.scrollers = [];
+            if (this.isPreview) {
+                this.$el.addClass('preview-view');
+            }
+            if ((!this.isTimeLine && !this.isDataExists()) || (this.isTimeLine && _.isEmpty(this.model.getContent()))) {
+                this.addNoAvailableBock();
+                return;
+            }
+
+            this.launchFilterCollection = new SingletonLaunchFilterCollection();
+            this.launchFilterCollection.ready.done(function () {
+                this.$el.html(Util.templates(this.template, {}));
+                this.drawStackedBarChart($('[data-js-chart-container]', this.$el), data);
+            }.bind(this));
+        },
+
+        drawStackedBarChart: function ($el, data) {
+            var self = this;
+            var itemData = [];
+            var offsets = ['offset'];
+            var bars = ['bar'];
+            var isPositive = [];
+
+            _.each(data, function (item) {
+                if (+item.values.delta < 0) {
+                    isPositive.push(false);
+                    offsets.push(+item.values.statistics$executions$total);
+                } else {
+                    isPositive.push(true);
+                    offsets.push(+item.values.statistics$executions$total - +item.values.delta);
+                }
+                bars.push(Math.abs(+item.values.delta));
+                if (self.isTimeLine) {
+                    itemData.push({ date: item.date });
+                } else {
+                    itemData.push({
+                        id: item.id,
+                        name: item.name,
+                        number: item.number,
+                        startTime: item.startTime
+                    });
+                }
+            });
+            this.chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: [offsets, bars],
+                    type: 'bar',
+                    order: null,
+                    onclick: function (d, element) {
+                        if (d.id === 'bar') {
+                            if (self.isTimeLine) {
+                                self.redirectForTimeLine(itemData[d.index].date);
+                            } else {
+                                config.router.navigate(self.linkToRedirectService('Grow test cases', itemData[d.index].id), { trigger: true });
+                            }
+                        }
+                    },
+                    groups: [['offset', 'bar']],
+                    color: function (c, d) {
+                        var color;
+                        switch (d.id) {
+                        case 'bar':
+                            if (isPositive[d.index]) {
+                                color = config.defaultColors.positive;
+                                break;
+                            }
+                            color = config.defaultColors.negative;
+                            break;
+                        default:
+                            color = null;
+                            break;
+                        }
+                        return color;
+                    },
+                    labels: {
+                        format: function (v, id, i, j) {
+                            var step = (itemData.length < 20) ? 1 : (self.isTimeLine ? 6 : 2);
+                            if (self.isPreview || id !== 'bar' || (i % step) !== 0) {
+                                return null;
+                            }
+                            return isPositive[i] ? v : -v;
+                        }
+                    }
+                },
+                grid: {
+                    y: {
+                        show: !self.isPreview
+                    }
+                },
+                axis: {
+                    x: {
+                        show: !self.isPreview,
+                        type: 'category',
+                        categories: _.map(itemData, function (item) {
+                            var day;
+                            if (self.isTimeLine) {
+                                day = Moment(item.date).format('dddd').substring(0, 3);
+                                return day + ', ' + item.date;
+                            }
+                            return '#' + item.number;
+                        }),
+                        tick: {
+                            values: self.isTimeLine ? self.getTimelineAxisTicks(itemData.length) : self.getLaunchAxisTicks(itemData.length),
+                            width: 60,
+                            centered: true,
+                            inner: true,
+                            multiline: self.isTimeLine,
+                            outer: false
+                        }
+                    },
+                    y: {
+                        show: true,
+                        padding: {
+                            top: 10,
+                            bottom: 0
+                        },
+                        label: {
+                            text: Localization.widgets.casesLabel,
+                            position: 'outer-middle'
+                        }
+                    }
+                },
+                interaction: {
+                    enabled: !self.isPreview
+                },
+                // // zoom: {
+                // //     enabled: true,
+                // //     rescale: true
+                // // },
+                // // subchart: {
+                // //     show: true
+                // // },
+                padding: {
+                    top: self.isPreview ? 0 : 10,
+                    left: self.isPreview ? 0 : 60,
+                    right: self.isPreview ? 0 : 20,
+                    bottom: self.isPreview || !self.isTimeLine ? 0 : 10
+                },
+                legend: {
+                    show: false
+                },
+                tooltip: {
+                    grouped: true,
+                    position: function (d, width, height, element) {
+                        var left = d3.mouse(self.chart.element)[0] - (width / 2);
+                        var top = d3.mouse(self.chart.element)[1] - height;
+                        return {
+                            top: top - 8, // 8 - offset for tooltip arrow
+                            left: left
+                        };
+                    },
+                    contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+                        var launchData = itemData[d[0].index];
+                        var total;
+                        var growth;
+                        if (isPositive[d[0].index]) {
+                            growth = d[1].value;
+                            total = d[0].value + d[1].value;
+                        } else {
+                            growth = -d[1].value;
+                            total = d[0].value;
+                        }
+                        return Util.templates(self.tooltipTemplate, {
+                            launchName: launchData.name,
+                            launchNumber: launchData.number,
+                            startTime: self.isTimeLine ? launchData.date : self.formatDateTime(launchData.startTime),
+                            total: total,
+                            growth: growth
+                        });
+                    }
+                },
+                size: {
+                    height: self.$el.parent().height()
+                },
+                onrendered: function () {
+                    $el.css('max-height', 'none');
+                    d3.selectAll($('.c3-bars-bar path', $el)).each(function () {
+                        var elem = d3.select(this);
+                        if (elem.datum().value === 0) {
+                            elem.style('stroke-width', '1px').style('stroke', '#464547');
+                        }
+                    });
+                }
+            });
+        },
+        onBeforeDestroy: function () {
+            _.each(this.scrollers, function (baronScrollElem) {
+                baronScrollElem.baron && baronScrollElem.baron().dispose();
+            });
         }
     });
 
-    return TestCasesGrowthTrendChartView;
+    return TestCasesGrowthTrendChart;
 });

@@ -37,47 +37,47 @@ define(function (require, exports, module) {
     var LogHistoryLineCollection = Backbone.Collection.extend({
         model: LaunchSuiteStepItemModel,
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.launchModel = options.launchModel;
             this.launchId = options.launchId;
             this.listenTo(this, 'activate', this.activateItem);
         },
-        activateItem: function(activeModel) {
-            _.each(this.models, function(model) {
-                model.set({active: false});
-            })
-            activeModel.set({active: true});
+        activateItem: function (activeModel) {
+            _.each(this.models, function (model) {
+                model.set({ active: false });
+            });
+            activeModel.set({ active: true });
         },
-        load: function(itemId, historyId) {
+        load: function (itemId, historyId) {
             var self = this;
             return Service.loadHistory(itemId)
-                .done(function(data) {
+                .done(function (data) {
                     self.reset(self.parse(data, historyId));
-                })
+                });
         },
-        parse: function(data, itemId) {
+        parse: function (data, itemId) {
             var self = this;
-            var answerData = _.map(data, function(item, num) {
-                var answer = {launchNumber: item.launchNumber, active: false, parent_launch_status: item.launchStatus};
-                _.each(item.resources, function(resource) {
-                    if(resource.id == itemId) {
+            var answerData = _.map(data, function (item, num) {
+                var answer = { launchNumber: item.launchNumber, active: false, parent_launch_status: item.launchStatus };
+                _.each(item.resources, function (resource) {
+                    if (resource.id == itemId) {
                         answer.active = true;
                     }
                 });
-                if(item.launchId == self.launchModel.get('id') || (num == 0 && self.launchModel.get('failLoad'))) {
+                if (item.launchId == self.launchModel.get('id') || (num == 0 && self.launchModel.get('failLoad'))) {
                     answer.parent_launch_investigate = self.launchModel.getToInvestigate();
-                    if(!answer.active) {
+                    if (!answer.active) {
                         answer = _.extend(answer, self.updateDataForModel(item.resources[0]));
                     } else {
-                        _.each(item.resources, function(resource) {
-                            if(resource.id == itemId) {
+                        _.each(item.resources, function (resource) {
+                            if (resource.id == itemId) {
                                 answer = _.extend(answer, self.updateDataForModel(resource));
                             }
-                        })
+                        });
                     }
-                } else if(item.resources.length == 1){
+                } else if (item.resources.length == 1) {
                     answer = _.extend(answer, self.updateDataForModel(item.resources[0]));
-                } else if(item.resources.length == 0) {
+                } else if (item.resources.length == 0) {
                     answer.status = 'NOT_FOUND';
                 } else {
                     answer.status = 'MANY';
@@ -87,11 +87,11 @@ define(function (require, exports, module) {
             });
             return answerData.reverse();
         },
-        updateDataForModel: function(data) {
-            if(data.issue) {
+        updateDataForModel: function (data) {
+            if (data.issue) {
                 data.issue = JSON.stringify(data.issue);
             }
-            if(data.tags) {
+            if (data.tags) {
                 data.tags = JSON.stringify(data.tags);
             }
             return data;
@@ -103,72 +103,72 @@ define(function (require, exports, module) {
         className: 'history-line-item',
 
         events: {
-            'click': 'onClickItem'
+            click: 'onClickItem'
         },
         bindings: {
             '[data-js-launch-number]': 'text: launchNumber',
             ':el': 'classes: {active: active}',
-            '[data-js-tooltip-item]': 'attr: {title: statusTitle}',
+            '[data-js-tooltip-item]': 'attr: {title: statusTitle}'
         },
 
         computeds: {
             statusTitle: {
                 deps: ['status'],
-                get: function(status) {
+                get: function (status) {
                     return Localization.historyLine.tooltips[status];
                 }
             }
         },
-        isAction: function() {
-            return this.model.get('status') != 'MANY' && this.model.get('status') != 'NOT_FOUND';
+        isAction: function () {
+            return this.model.get('status') !== 'MANY' && this.model.get('status') !== 'NOT_FOUND';
         },
-        initialize: function() {
+        initialize: function () {
             this.render();
             this.$el.addClass('status-' + this.model.get('status'));
             this.defectTypeCollection = new SingletonDefectTypeCollection();
             this.updateIssue();
             this.listenTo(this.model, 'change:issue', this.updateIssue);
-            if(this.model.get('parent_launch_status') == 'IN_PROGRESS') {
+            if (this.model.get('parent_launch_status') === 'IN_PROGRESS') {
                 this.$el.addClass('launch-is-progress');
             }
         },
-        updateIssue: function() {
+        updateIssue: function () {
             var self = this;
             var issue = this.model.getIssue();
-            if(issue.comment) {
+            if (issue.comment) {
                 $('[data-js-comment]', this.$el).removeClass('hide');
             } else {
-                $('[data-js-comment]', this.$el).addClass('hide')
+                $('[data-js-comment]', this.$el).addClass('hide');
             }
-            if(issue.issue_type) {
-                this.defectTypeCollection.ready.done(function() {
+            if (issue.issue_type) {
+                this.defectTypeCollection.ready.done(function () {
                     var defectTypeModel = self.defectTypeCollection.getDefectByLocator(issue.issue_type);
                     $('[data-js-issue-type]', self.$el).removeClass('hide').css({
                         backgroundColor: defectTypeModel.get('color'),
                         color: defectTypeModel.get('reverseColor'),
-                        boxShadow: '0 0 1px ' + defectTypeModel.get('reverseColor'),
+                        boxShadow: '0 0 1px ' + defectTypeModel.get('reverseColor')
                     }).text(defectTypeModel.get('shortName'));
-                })
+                });
             } else {
-                $('[data-js-issue-type]', self.$el).addClass('hide')
+                $('[data-js-issue-type]', self.$el).addClass('hide');
             }
-            if(issue.externalSystemIssues && issue.externalSystemIssues.length) {
+            if (issue.externalSystemIssues && issue.externalSystemIssues.length) {
                 $('[data-js-ticket]', this.$el).removeClass('hide');
             } else {
-                $('[data-js-ticket]', this.$el).addClass('hide')
+                $('[data-js-ticket]', this.$el).addClass('hide');
             }
         },
-        onClickItem: function() {
-            if(!this.model.get('active') && this.isAction()){
+        onClickItem: function () {
+            if (!this.model.get('active') && this.isAction()) {
                 config.trackingDispatcher.trackEventNumber(190);
                 this.model.trigger('activate', this.model);
                 this.model.trigger('hover:false');
             }
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, this.model.toJSON()));
         },
-        destroy: function() {
+        destroy: function () {
             this.undelegateEvents();
             this.stopListening();
             this.unbind();
@@ -180,11 +180,11 @@ define(function (require, exports, module) {
     var LogHistoryLineView = Epoxy.View.extend({
         template: 'tpl-launch-log-history-line',
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.collectionItems = options.collectionItems;
             this.launchModel = options.launchModel;
             this.renderedItems = [];
-            this.collection = new LogHistoryLineCollection({launchModel: this.launchModel});
+            this.collection = new LogHistoryLineCollection({ launchModel: this.launchModel });
             this.listenTo(this.collection, 'reset', this.onResetHistoryItems);
             this.listenTo(this.collection, 'hover:true', this.onHoverItem);
             this.listenTo(this.collection, 'hover:false', this.onOutItem);
@@ -194,34 +194,34 @@ define(function (require, exports, module) {
             var itemModel = this.collectionItems.get(itemId);
             if (itemModel) {
                 this.load = this.collection.load(itemId, this.collectionItems.getInfoLog().history || itemId)
-                    .always(function() {
+                    .always(function () {
                         self.trigger('load:history');
-                        var activeModels = self.collection.where({active: true});
-                        if(activeModels.length == 1) {
+                        var activeModels = self.collection.where({ active: true });
+                        if (activeModels.length == 1) {
                             self.trigger('activate:item', activeModels[0], true);
                         }
                     });
             }
 
-            this.listenTo(this.collection, 'activate', function(model) {
+            this.listenTo(this.collection, 'activate', function (model) {
                 self.trigger('activate:item', model);
-            })
+            });
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {}));
         },
-        onResetHistoryItems: function() {
+        onResetHistoryItems: function () {
             var $itemsContainer = $('[data-js-history-container]', this.$el);
             var self = this;
-            _.each(this.collection.models, function(model) {
-                var item = new LogHistoryLineItemView({model: model});
+            _.each(this.collection.models, function (model) {
+                var item = new LogHistoryLineItemView({ model: model });
                 $itemsContainer.append(item.$el);
                 self.renderedItems.push(item);
-            })
+            });
         },
         destroy: function () {
             this.load && this.load.abort();
-            while(this.renderedItems.length) {
+            while (this.renderedItems.length) {
                 this.renderedItems.pop().destroy();
             }
             this.undelegateEvents();
@@ -229,8 +229,8 @@ define(function (require, exports, module) {
             this.unbind();
             this.$el.html('');
             delete this;
-        },
-    })
+        }
+    });
 
     return LogHistoryLineView;
 });

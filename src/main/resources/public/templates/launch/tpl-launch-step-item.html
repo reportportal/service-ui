@@ -6,14 +6,14 @@
         <div class="name-grid-overflow">
             <i class="accordion-arrow rp-icons rp-icons-expand" data-js-toggle-open></i>
             <h5 class="rp-grid-name">
-                <a href="" data-js-name-link><span data-js-name></span><span data-js-launch-number></span></a>&nbsp;&nbsp;<i class="item-edit-icon material-icons" data-js-item-edit>edit</i>
+                <a href="" data-js-name-link><span data-js-name></span><span data-js-launch-number></span></a>&nbsp;&nbsp;<i class="item-details-icon material-icons" data-js-item-details>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i>&nbsp;<i class="item-edit-icon material-icons" data-js-item-edit>edit</i>
             </h5>
             <ul class="rp-grid-tags">
                 <li class="rp-item-duration" >
                     <span data-js-item-status></span>
                     <span class="mobile-tag">&nbsp;&nbsp;|&nbsp;&nbsp;<span data-js-time-from-now></span></span>
                 </li>
-                <li title="Owner" class="rp-launch-owner owner" data-js-owner-block>
+                <li title="<%= data.text.launches.owner%>" class="rp-launch-owner owner" data-js-owner-block>
                     <i class="material-icons">person</i>
                     <a data-js-owner-name></a>
                 </li>
@@ -24,6 +24,7 @@
                 <li class="mobile-tag">
                     <span>@</span><span data-js-method-type></span>&nbsp;&nbsp;|&nbsp;&nbsp;<span data-js-status></span>
                 </li>
+                <li data-js-retries-container></li>
             </ul>
             <div class="rp-grid-description" data-js-description></div>
         </div>
@@ -45,6 +46,7 @@
         </div>
     </div>
     <% } %>
+    <div class="retries-block-container" data-js-retries-block-container></div>
     <div class="accordion-block">
         <div class="mobile-open" data-js-toggle-open></div>
         <i class="material-icons" data-js-toggle-open>keyboard_arrow_down</i>

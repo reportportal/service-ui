@@ -19,13 +19,11 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define(function (require, exports, module) {
-    "use strict";
+define(function (require) {
+    'use strict';
 
-    var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var UserModel = require('model/UserModel');
     var App = require('app');
 
     var config = App.getInstance();
@@ -34,7 +32,7 @@ define(function (require, exports, module) {
         tpl: 'tpl-invalid-page',
         className: 'invalid-page',
         events: {
-            'click [data-js-back-home]': 'onClickHome',
+            'click [data-js-back-home]': 'onClickHome'
         },
 
         initialize: function () {
@@ -43,13 +41,13 @@ define(function (require, exports, module) {
 
         render: function () {
             this.$el.html(Util.templates(this.tpl));
-            config.userModel.set({lastInsideHash: config.userModel.getDefaultProjectHash()});
+            config.userModel.set({ lastInsideHash: config.userModel.getDefaultProjectHash() });
             return this;
         },
-        onClickHome: function() {
-            config.router.navigate(config.userModel.getDefaultProjectHash(), {trigger: true})
+        onClickHome: function () {
+            config.router.navigate(config.userModel.getDefaultProjectHash(), { trigger: true });
         },
-        onDestroy: function() {
+        onDestroy: function () {
             this.remove();
         }
     });

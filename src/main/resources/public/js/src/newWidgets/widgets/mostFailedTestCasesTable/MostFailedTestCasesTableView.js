@@ -26,54 +26,73 @@ define(function (require) {
     var Util = require('util');
     var Moment = require('moment');
     var BaseWidgetView = require('newWidgets/_BaseWidgetView');
+    var Localization = require('localization');
+    var SingletonUserStorage = require('storage/SingletonUserStorage');
+    var App = require('app');
+    var config = App.getInstance();
 
-    var MostFailedTestCases = BaseWidgetView.extend({
+    var MostFailedTestCasesTable = BaseWidgetView.extend({
 
-        tpl: 'tpl-widget-most-failed-table',
-        getData: function () {
-            var contentData = this.model.getContent() || {};
-            var lastLaunch = contentData.lastLaunch;
-            var items;
-            delete contentData.lastLaunch;
-            items = _.map(contentData, function (val, key) {
-                return {
-                    name: key,
-                    runs: val[0].values['All runs'],
-                    failed: val[0].values['Failed'],
-                    affected: val[0].values['Affected by'],
-                    depth: val[0].values['Launch depth'],
-                    lastDate: val[0].values['Last Failure']
-                };
-            });
-            return {
-                items: items,
-                lastLaunch: lastLaunch ? lastLaunch[0] : {}
-            };
+        template: 'tpl-widget-most-failed-test-cases-table',
+        itemTemplate: 'tpl-widget-most-failed-test-cases-table-item',
+        className: 'most-failed-test-cases',
+        events: {
+            'click [data-js-date]': 'formatDate',
+            'click [data-js-link]': 'onClickItem'
         },
+
         render: function () {
-            var data = this.getData();
-            var widgetOptions = this.model.getWidgetOptions();
-            var launchNameFilter = widgetOptions.launchNameFilter || [];
-            var params;
-            if (!this.isEmptyData(data.items)) {
-                params = {
-                    items: data.items,
-                    lastLaunch: {
-                        id: data.lastLaunch.id,
-                        link: this.linkToRedirectService('most_failed', data.lastLaunch.id),
-                        name: launchNameFilter.length ? launchNameFilter[0] : ''
-                    },
-                    dateFormat: Util.dateFormat,
-                    moment: Moment
-                };
-                this.$el.html(Util.templates(this.tpl, params));
-                Util.hoverFullTime(this.$el);
-                !this.isPreview && Util.setupBaronScroll($('.most-failed-launches', this.$el));
-            } else {
+            var self = this;
+            var contentData = this.model.getContent();
+            var itemsHtml = '';
+            var launchData;
+            if (this.isEmpty(contentData)) {
                 this.addNoAvailableBock();
+                return;
             }
+            launchData = {
+                id: contentData.lastLaunch[0].id,
+                name: contentData.lastLaunch[0].name,
+                issueType: Localization.launchesHeaders[self.model.getContentFields()[0].split('$')[2]],
+                number: contentData.lastLaunch[0].number
+            };
+            this.$el.html(Util.templates(this.template, launchData));
+            _.each(contentData.most_failed, function (item) {
+                itemsHtml += Util.templates(self.itemTemplate, {
+                    name: item.name,
+                    link: self.getFilterByUIDRedirectLink(launchData.id, item.uniqueId),
+                    percents: item.percentage,
+                    count: item.failedCount + ' ' + Localization.ui.of + ' ' + item.total,
+                    isFailed: item.isFailed,
+                    date: Util.dateFormat(item.lastTime),
+                    dateFrom: Moment(Util.dateFormat(item.lastTime)).fromNow()
+                });
+            });
+            this.scroller = Util.setupBaronScroll($('[data-js-scroll]', this.$el));
+            $('[data-js-items-container]', this.$el).html(itemsHtml);
+
+            this.userStorage = new SingletonUserStorage();
+            this.timeFormat = this.userStorage.get('startTimeFormat');
+            if (this.timeFormat !== 'exact') {
+                $('[data-js-date]', this.$el).toggleClass('date-from-now');
+            }
+        },
+        onClickItem: function (e) {
+            config.trackingDispatcher.trackEventNumber(344);
+            config.router.navigate($(e.currentTarget).attr('data-js-link'), { trigger: true });
+        },
+        formatDate: function () {
+            (this.timeFormat === 'exact') ? this.timeFormat = '' : this.timeFormat = 'exact';
+            this.userStorage.set('startTimeFormat', this.timeFormat);
+            $('[data-js-date]', this.$el).toggleClass('date-from-now');
+        },
+        isEmpty: function (data) {
+            return !(data && data.most_failed && data.most_failed.length);
+        },
+        onBeforeDestroy: function () {
+            this.scroller && this.scroller.baron && this.scroller.baron().dispose();
         }
     });
 
-    return MostFailedTestCases;
+    return MostFailedTestCasesTable;
 });

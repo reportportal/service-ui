@@ -27,8 +27,7 @@ define(function (require) {
     var Localization = require('localization');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
 
-    var LaunchStatisticsLineChart = require('newWidgets/widgets/launchStatisticsLineChart/index');
-    var LaunchStatisticsTrendChart = require('newWidgets/widgets/launchStatisticsTrendChart/index');
+    var LaunchStatisticsChart = require('newWidgets/widgets/launchStatisticsChart/index');
     var OverallStatisticsWidget = require('newWidgets/widgets/overallStatistics/index');
     var LaunchesDurationChart = require('newWidgets/widgets/launchesDurationChart/index');
     var LaunchStatisticsComboPieChart = require('newWidgets/widgets/launchExecutionAndIssueStatistics/index');
@@ -45,20 +44,19 @@ define(function (require) {
     var PassingRateSummaryChart = require('newWidgets/widgets/passingRateSummary/index');
     var ProductStatus = require('newWidgets/widgets/productStatus/index');
     var CumulativeTrendChart = require('newWidgets/widgets/cumulativeTrendChart/index');
+    var FlakyTestCasesTable = require('newWidgets/widgets/flakyTestCasesTable/index');
 
-    // ------------------ STATUS PAGE WIDGETS ------------------
-    var LastLaunchPieChart = require('newWidgets/widgets/LastLaunchPieChartView');
-    var PercentageOfInvestigationChart = require('newWidgets/widgets/PercentageOfInvestigationChartView');
-    var PercentageOfProductBugsChart = require('newWidgets/widgets/PercentageOfProductBugsChartView');
-    var PercentageOfAutoBugsChart = require('newWidgets/widgets/PercentageOfAutoBugsChartView');
-    var PercentageOfSystemIssuesChart = require('newWidgets/widgets/PercentageOfSystemIssuesChartView');
-    var LaunchesQuantityChart = require('newWidgets/widgets/LaunchesQuantityChartView');
-    var IssuesTrendChart = require('newWidgets/widgets/IssuesTrendChartView');
-    var IssuesLineChart = require('newWidgets/widgets/IssuesLineChartView');
+    // ------------------ PROJECT INFO PAGE WIDGETS ------------------
+    var LastLaunchPieChart = require('newWidgets/widgets/projectInfoWidgets/LastLaunchPieChartView');
+    var PercentageOfInvestigationChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfInvestigationChartView');
+    var PercentageOfProductBugsChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfProductBugsChartView');
+    var PercentageOfAutoBugsChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfAutomationBugsChartView');
+    var PercentageOfSystemIssuesChart = require('newWidgets/widgets/projectInfoWidgets/PercentageOfSystemIssuesChartView');
+    var LaunchesQuantityChart = require('newWidgets/widgets/projectInfoWidgets/LaunchesQuantityChartView');
+    var LaunchStatisticsBarChartView = require('newWidgets/widgets/projectInfoWidgets/LaunchStatisticsBarChartView');
 
     var WIDGETS = {
-        old_line_chart: LaunchStatisticsLineChart,
-        statistic_trend: LaunchStatisticsTrendChart,
+        statistic_trend: LaunchStatisticsChart,
         overall_statistics: OverallStatisticsWidget,
         launches_duration_chart: LaunchesDurationChart,
         launch_statistics: LaunchStatisticsComboPieChart,
@@ -74,7 +72,8 @@ define(function (require) {
         passing_rate_per_launch: PassingRatePerLaunchChart,
         passing_rate_summary: PassingRateSummaryChart,
         // product_status: ProductStatus,
-        // cumulative: CumulativeTrendChart
+        // cumulative: CumulativeTrendChart,
+        flaky_test_cases: FlakyTestCasesTable
     };
 
     var WidgetService = {
@@ -173,9 +172,7 @@ define(function (require) {
                 return LaunchesQuantityChart;
             case 'issues_chart_trend':
             case 'issues_chart':
-                return IssuesTrendChart;
-            case 'issues_chart_line':
-                return IssuesLineChart;
+                return LaunchStatisticsBarChartView;
             default:
                 return null;
             }

@@ -34,7 +34,7 @@ define(function (require) {
             statistics$defects$product_bug$total: Localization.launchesHeaders.product_bug,
             statistics$defects$automation_bug$total: Localization.launchesHeaders.automation_bug,
             statistics$defects$system_issue$total: Localization.launchesHeaders.system_issue,
-            statistics$defects$no_defect$total: Localization.launchesHeaders.no_defect,
+            statistics$defects$no_defect$total: Localization.launchesHeaders.no_defect
         };
         return _.map(_.merge(executions, defects), function (key, val) {
             return { name: key, value: val };

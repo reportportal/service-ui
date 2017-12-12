@@ -134,45 +134,66 @@
         }
 
       }
-      .rp-defect-type-label {
-        padding-top: 9px;
+      .container-fluid {
+        .rp-defect-type-label {
+          float: left;
+          line-height: 30px;
+          padding-top: 0;
+          margin-bottom: 0;
+          margin-right: 10px;
+        }
+        .rp-defect-type-btn-group {
+          float: left;
+          width: 270px;
+          min-height: 30px;
+          position: static;
+          margin-right: 30px;
+          @media (max-width: 590px) {
+            max-width: none;
+          }
+          .rp-defect-type-dropdown {
+            width: 100%;
+            padding-top: 4px;
+            padding-bottom: 0;
+            float: none;
+            text-align: left;
+            display: inline-block;
+
+            .no-issue-name {
+              display: inline-block;
+              margin-bottom: 4px;
+              line-height: 20px;
+            }
+          }
+          .rp-defects-menu {
+            width: 550px;
+            left: auto;
+            right: 0;
+            font-size: 13px;
+            padding: 8px 10px 10px;
+
+            @media (max-width: 590px) {
+              width: 100%;
+            }
+            .divider {
+              margin: 8px 0;
+              float: left;
+              width: 100%;
+              box-sizing: content-box;
+              display: none;
+            }
+          }
+        }
+        .ignore-aa-switcher-container {
+          float: left;
+          height: 30px;
+        }
       }
+
       .rp-defect-row-first {
         border-bottom: 1px solid #e9e9e9;
         padding: 7px 3px 10px;
         margin-bottom: 7px;
-      }
-      .rp-defect-type-btn-group {
-        float: right;
-        width: 100%;
-        max-width: 440px;
-        @media (max-width: 590px) {
-          max-width: none;
-        }
-      }
-      .rp-defect-type-dropdown {
-        width: 100%;
-        float: none;
-        text-align: left;
-        display: inline-block;
-      }
-      .rp-defects-menu {
-        width: 550px;
-        left: auto;
-        right: 0;
-        font-size: 13px;
-        padding: 8px 10px 10px;
-
-        @media (max-width: 590px) {
-          width: 100%;
-        }
-        .divider {
-          margin: 8px 0;
-          float: left;
-          width: 100%;
-          box-sizing: content-box;
-          display: none;
-        }
       }
       .rp-defect-row {
         padding: 3px;
@@ -261,7 +282,6 @@
         .rp-btn-submit{
           margin-right: 0;
           min-width: unset;
-          width: 60px;
         }
         .rp-button-dropdown{
           background: #a3c644;

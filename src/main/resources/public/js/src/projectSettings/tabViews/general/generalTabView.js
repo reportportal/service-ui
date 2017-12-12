@@ -29,24 +29,29 @@ define(function (require) {
     var App = require('app');
     var Service = require('coreService');
     var DropDownComponent = require('components/DropDownComponent');
-    var Localization = require('localization');
+    var SingletonAppModel = require('model/SingletonAppModel');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
 
     var config = App.getInstance();
-
-    var ProjectSettings = require('projectSettings/tabViews/general/generalSettingsModel');
+    var appModel = new SingletonAppModel();
+    var ProjectSettingsModel = require('projectSettings/tabViews/general/generalSettingsModel');
 
     var GeneralTabView = Epoxy.View.extend({
-
         className: 'general-project-settings',
-
         tpl: 'tpl-project-settings-general',
 
         events: {
             'click #submit-settings': 'submitSettings'
         },
+        bindings: {
+            '[data-js-is-auto-analize]': 'checked: isAutoAnalyzerEnabled',
+            '[data-js-analize-on-the-fly]': 'checked: analyzeOnTheFly, attr: {disabled: not(isAutoAnalyzerEnabled)}'
+        },
 
         initialize: function () {
-            this.model = new ProjectSettings(config.project.configuration);
+            var self = this;
+            this.registryInfoModel = new SingletonRegistryInfoModel();
+            this.model = new ProjectSettingsModel(appModel.get('configuration'));
             this.dropdownComponents = [];
             this.listenTo(this.model, 'change:interruptedJob', function () {
                 config.trackingDispatcher.trackEventNumber(381);
@@ -57,7 +62,10 @@ define(function (require) {
             this.listenTo(this.model, 'change:keepScreenshots', function () {
                 config.trackingDispatcher.trackEventNumber(383);
             });
-            this.listenTo(this.model, 'change:isAutoAnalyzerEnabled', function () {
+            this.listenTo(this.model, 'change:isAutoAnalyzerEnabled', function (model, value) {
+                if (!value) {
+                    self.model.set({ analyzeOnTheFly: false });
+                }
                 config.trackingDispatcher.trackEventNumber(384);
             });
             this.render();
@@ -73,6 +81,9 @@ define(function (require) {
             return this;
         },
         setupDropdowns: function () {
+            var self = this;
+            var isEpamInstance = this.registryInfoModel.get('isEpamInstance');
+
             var interruptedJob = new DropDownComponent({
                 data: _.map(config.forSettings.interruptedJob, function (val) {
                     return { name: val.name, value: val.value, disabled: false };
@@ -81,51 +92,43 @@ define(function (require) {
                 defaultValue: this.model.get('interruptedJob')
             });
             var keepLogs = new DropDownComponent({
-                data: _.map(config.forSettings.keepLogs, function (val) {
-                    return { name: val.name, value: val.value, disabled: false };
-                }),
+                data: _.map(
+                    isEpamInstance ? _.reject(config.forSettings.keepLogs, function (val) { return val.value === 'forever'; }) : config.forSettings.keepLogs,
+                    function (val) {
+                        return { name: val.name, value: val.value, disabled: false };
+                    }
+                ),
                 multiple: false,
                 defaultValue: this.model.get('keepLogs')
             });
             var keepScreenshots = new DropDownComponent({
-                data: _.map(config.forSettings.keepScreenshots, function (val) {
-                    return { name: val.name, value: val.value, disabled: false };
-                }),
+                data: _.map(
+                    isEpamInstance ? _.reject(config.forSettings.keepScreenshots, function (val) { return val.value === 'forever'; }) : config.forSettings.keepScreenshots,
+                    function (val) {
+                        return { name: val.name, value: val.value, disabled: false };
+                    }
+                ),
                 multiple: false,
                 defaultValue: this.model.get('keepScreenshots')
-            });
-            var isAutoAnalyzerEnabled = new DropDownComponent({
-                data: [
-                    { name: Localization.ui.on, value: 'ON' },
-                    { name: Localization.ui.off, value: 'OFF' }
-                ],
-                multiple: false,
-                defaultValue: (this.model.get('isAutoAnalyzerEnabled') ? 'ON' : 'OFF')
             });
             $('[data-js-selector="interruptedJob"]', this.$el).html(interruptedJob.$el);
             $('[data-js-selector="keepLogs"]', this.$el).html(keepLogs.$el);
             $('[data-js-selector="keepScreenshots"]', this.$el).html(keepScreenshots.$el);
-            $('[data-js-selector="isAutoAnalyzerEnabled"]', this.$el).html(isAutoAnalyzerEnabled.$el);
             this.listenTo(interruptedJob, 'change', this.selectProp);
             this.listenTo(keepLogs, 'change', this.selectProp);
             this.listenTo(keepScreenshots, 'change', this.selectProp);
-            this.listenTo(isAutoAnalyzerEnabled, 'change', this.selectProp);
             if (!config.userModel.hasPermissions()) {
                 $('[data-js-selector] [data-js-dropdown]', this.$el).attr('disabled', 'disabled');
             }
             this.dropdownComponents.push(
                 interruptedJob,
                 keepLogs,
-                keepScreenshots,
-                isAutoAnalyzerEnabled
+                keepScreenshots
             );
         },
         selectProp: function (value, event) {
             var val = value;
             var property = $(event.currentTarget).closest('[data-js-selector]').attr('data-js-selector');
-            if (property === 'isAutoAnalyzerEnabled') {
-                val = (val === 'ON');
-            }
             this.model.set(property, val);
         },
 
@@ -154,7 +157,9 @@ define(function (require) {
             this.clearFormErrors();
             Service.updateProject(externalSystemData)
                 .done(function () {
-                    _.merge(config.project.configuration, externalSystemData.configuration);
+                    var newConfig = appModel.get('configuration');
+                    _.merge(newConfig, externalSystemData.configuration);
+                    appModel.set({ configuration: newConfig });
                     Util.ajaxSuccessMessenger('updateProjectSettings');
                 })
                 .fail(function (error) {

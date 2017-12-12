@@ -77,6 +77,9 @@ define(function (require) {
             if (currentEntity) {
                 if (value) {
                     var values = currentEntity.get('value');
+                    if (currentEntity.get('id') === 'issue$auto_analyzed' || currentEntity.get('id') === 'issue$ignore_analyzer' || currentEntity.get('id') === 'issue$externalSystemIssues$ticket_id') {
+                        values = value;
+                    }
                     if (currentEntity.get('id') === 'tags' || currentEntity.get('id') === 'user') {
                         values = values ? values + ',' + value : value;
                     }
@@ -99,7 +102,7 @@ define(function (require) {
                         value: entity.value,
                         visible: true
                     });
-                } else if (entity.filtering_field === 'has_childs') {
+                } else if (entity.filtering_field === 'has_childs' || entity.filtering_field === 'uniqueId') {
                     this.hiddenFields.push(entity);
                 } else { // hidden fields
                     this.invalidCollection.add(new (FilterEntitiesResolver.getInvalidModel())({

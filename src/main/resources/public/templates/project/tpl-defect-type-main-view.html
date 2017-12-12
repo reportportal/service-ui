@@ -29,7 +29,7 @@
                 </div>                <div class="dt-content-item-wrap" id="<%= element %>"></div>
             <% }        }); %>        <div id="chart" class="collection-colors">
             <h4><%= data.text.project.ExplChosenColors %></h4>
-            <svg></svg>
+            <div class="colors-chart-container" data-js-colors-chart></div>
         </div>        <div class="dt-form-group-footer">
             <% if (data.edit) { %>
                 <a href="javascript:void(0);" id="reset-color" class="rp-link float-right" title=""><%= data.text.project.LinkResetToDefaultColors %></a>

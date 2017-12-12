@@ -35,6 +35,8 @@ define(function (require) {
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var ModalLaunchItemEdit = require('modals/modalLaunchItemEdit');
     var CommonItemView = require('launches/common/CommonItemView');
+    var RetriesLabelView = require('launches/common/retries/RetriesLabelView');
+    var RetriesBlockView = require('launches/common/retries/RetriesBlockView');
 
     var config = App.getInstance();
 
@@ -61,6 +63,7 @@ define(function (require) {
             '[data-js-name]': 'text: name, attr: {title: nameTitle}',
             '[data-js-launch-number]': 'text: numberText',
             '[data-js-item-edit]': 'classes: {hide: hideEdit}',
+            '[data-js-is-retries]': 'classes: {hide: not(hasRetries)}',
             '[data-js-owner-block]': 'classes: {hide: not(owner)}',
             '[data-js-owner-name]': 'text: owner',
             '[data-js-time-from-now]': 'text: startFromNow',
@@ -161,7 +164,7 @@ define(function (require) {
                 deps: ['url', 'has_childs'],
                 get: function (url, hasChilds) {
                     if (hasChilds) {
-                        return this.allCasesUrl('failed');
+                        return this.allCasesUrl('failedPlusInterrupted');
                     }
                     return undefined;
                 }
@@ -191,6 +194,9 @@ define(function (require) {
             switch (type) {
             case 'total':
                 statusFilter = '&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED&filter.in.type=STEP';
+                break;
+            case 'failedPlusInterrupted':
+                statusFilter = '&filter.in.status=FAILED,INTERRUPTED&filter.in.type=STEP';
                 break;
             case 'passed':
             case 'failed':
@@ -240,6 +246,7 @@ define(function (require) {
             this.renderDuration();
             this.renderStartTime();
             this.renderDefects();
+            this.renderRetries();
         },
         highlightItem: function () {
             var self;
@@ -262,6 +269,24 @@ define(function (require) {
                 model: this.model
             });
             $('[data-js-start-time-container]', this.$el).html(this.startTime.$el);
+        },
+        renderRetries: function () {
+            this.retries && this.retries.destroy();
+            this.retries = new RetriesLabelView({
+                model: this.model
+            });
+            $('[data-js-retries-container]', this.$el).html(this.retries.$el);
+            this.listenTo(this.retries, 'activate:retries', this.onActivateRetries);
+        },
+        onActivateRetries: function () {
+            if (!this.retriesView) {
+                this.retriesView = new RetriesBlockView({
+                    model: this.model
+                });
+                $('[data-js-retries-block-container]', this.$el).html(this.retriesView.$el);
+                this.activateAccordion();
+                this.$el.addClass('open');
+            }
         },
         renderDefects: function () {
             this.productBug && this.productBug.destroy();
@@ -380,6 +405,8 @@ define(function (require) {
             this.menu && this.menu.destroy();
             this.duration && this.duration.destroy();
             this.startTime && this.startTime.destroy();
+            this.retries && this.retries.destroy();
+            this.retriesView && this.retriesView.destroy();
             _.each(this.statistics, function (v) {
                 if (_.isFunction(v.destroy)) {
                     v.destroy();

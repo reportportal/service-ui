@@ -263,10 +263,6 @@ a, a:hover {
   padding-right: 5px;
 }
 
-.d3-tip {
-  z-index: 10002;
-}
-
 .text-uppercase {
   text-transform: uppercase;
 }
@@ -1542,3 +1538,23 @@ li {
 }
 
 /*--------------------------------*/
+
+@media print {
+  #main_content{
+    .wrapper{
+      padding-left: 0px;
+      background: #ffffff;
+      .content-wrapper{
+        padding-top: 0;
+        #filter-page {
+          .print{
+            margin: 25px 15px 15px 15px;
+          }
+          .filter-header{
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

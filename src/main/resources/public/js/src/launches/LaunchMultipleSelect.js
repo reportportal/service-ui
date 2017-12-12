@@ -31,6 +31,8 @@ define(function (require) {
     var RemoveAction = require('launches/multipleActions/removeAction');
     var ChangeModeAction = require('launches/multipleActions/changeModeAction');
     var PostBugAction = require('launches/multipleActions/postBugAction');
+    var IgnoreAAAction = require('launches/multipleActions/ignoreAAAction');
+    var IncludeAAAction = require('launches/multipleActions/includeAAAction');
     var LoadBugAction = require('launches/multipleActions/loadBugAction');
     var Localization = require('localization');
 
@@ -136,6 +138,16 @@ define(function (require) {
                 _.each(this.collection.models, function (model) {
                     model.set({ invalidMessage: model.validate.loadbug() });
                 });
+            },
+            includeaa: function () {
+                _.each(this.collection.models, function (model) {
+                    model.set({ invalidMessage: model.validate.includeaa() });
+                });
+            },
+            ignoreaa: function () {
+                _.each(this.collection.models, function (model) {
+                    model.set({ invalidMessage: model.validate.ignoreaa() });
+                });
             }
         },
         actionCall: {
@@ -171,6 +183,7 @@ define(function (require) {
                     } else if (actionType && actionType.action === 'loadBug') {
                         self.actionCall.loadbug.call(self);
                     } else {
+                        self.collectionItems.load();
                         self.reset();
                     }
                     self.editDefectAction = null;
@@ -215,6 +228,28 @@ define(function (require) {
             loadbug: function () {
                 var self = this;
                 LoadBugAction({ items: this.collection.models }).done(function () {
+                    self.reset();
+                });
+            },
+            includeaa: function () {
+                var self = this;
+                this.includeAAAction = new IncludeAAAction({
+                    items: this.collection.models
+                });
+                this.includeAAAction.getAsync().done(function () {
+                    self.collectionItems.load();
+                    self.includeAAAction = null;
+                    self.reset();
+                });
+            },
+            ignoreaa: function () {
+                var self = this;
+                this.ignoreAAAction = new IgnoreAAAction({
+                    items: this.collection.models
+                });
+                this.ignoreAAAction.getAsync().done(function () {
+                    self.collectionItems.load();
+                    self.ignoreAAAction = null;
                     self.reset();
                 });
             }

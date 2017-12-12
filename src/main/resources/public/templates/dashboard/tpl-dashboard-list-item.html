@@ -1,19 +1,37 @@
-<div class="dashboard-content">
-    <div class="name-wrapper">
-        <p data-js-name></p>
-        <div class="icons-block">
-            <i class="material-icons close-icon" data-js-remove>close</i>
-            <i class="material-icons" data-js-edit>edit</i>
+<div class="dashboard-table-row project-item clearfix">
+    <div class="dashboard-delete-col">
+        <div class="remove-dashboard">
+            <i class="rp-icons rp-icons-delete" data-js-remove></i>
         </div>
     </div>
-    <div class="description-wrapper" data-js-description-wrapper>
-        <p data-js-description></p>
-    </div>
-    <div class="icons-wrapper">
-        <div data-js-shared-container>
-            <i class="material-icons" data-js-share-icon>share</i>
-            <i class="material-icons" data-js-global-icon>public</i>
-            <span data-js-icon-description></span>
+    <div class="dashboard-cols-group">
+        <div class="grid-cell dashboard-name-col">
+            <h2 class="dashboard-name" data-js-dashboard-info>
+                <span class="name" data-js-name>
+                </span>
+            </h2>
+        </div>
+        <div class="grid-cell dashboard-description-col">
+            <p data-js-description></p>
+        </div>
+        <div class="grid-cell dashboard-owner-col">
+            <span class="mobile-title">
+                <%= data.text.dashboard.thOwner %>:
+            </span>
+            <p data-js-owner class="dashboard-owner"></p>
+        </div>
+        <div class="grid-cell dashboard-shared-col">
+            <div data-js-shared-container>
+                <span class="mobile-title">
+                    <%= data.text.dashboard.shared %>
+                </span>
+                <i class="material-icons rp-icons-share">check</i>
+            </div>
+        </div>
+        <div class="grid-cell dashboard-edit-col">
+            <div>
+                <i class="material-icons" data-js-edit>edit</i>
+            </div>
         </div>
     </div>
 </div>

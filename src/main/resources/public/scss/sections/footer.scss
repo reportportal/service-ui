@@ -153,3 +153,9 @@
     }
   }
 }
+
+@media print{
+  .sidebar-content, .footer{
+    display: none !important;
+  }
+}

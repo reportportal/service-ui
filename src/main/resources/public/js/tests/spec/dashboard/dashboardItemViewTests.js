@@ -37,7 +37,7 @@ define(function (require) {
     var ModalConfirm = require('modals/modalConfirm');
     var ModalAddWidget = require('modals/addWidget/modalAddWidget');
     var ModalAddSharedWidget = require('modals/addSharedWidget/modalAddSharedWidget');
-
+    require('bootstrap');
     require('updateBackbone');
 
     $('body > #sandbox').remove();

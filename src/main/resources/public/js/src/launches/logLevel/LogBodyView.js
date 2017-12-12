@@ -53,6 +53,7 @@ define(function (require) {
             this.supportedLogBinary = ['xml', 'javascript', 'json', 'css', 'php'];
         },
         onChangeLogItem: function () {
+            var self = this;
             $('[data-js-log-item-container]', this.$el).removeClass('not-found');
             $('[data-js-log-item-container]', this.$el).addClass('load');
             this.history && this.off(this.history);
@@ -60,7 +61,17 @@ define(function (require) {
             this.historyItem && this.historyItem.destroy();
             this.logsItem && this.logsItem.destroy();
             if (!this.collectionItems.get(this.collectionItems.getInfoLog().item)) {
-                $('[data-js-log-item-container]', this.$el).addClass('not-found');
+                this.collectionItems.loadLogLevelById()
+                    .done(function () {
+                        var model = self.collectionItems.models[0];
+                        var partPath = [model.get('launchId')].concat(_.keys(model.get('path_names')));
+                        var optionsUrl = 'log.item=' + model.get('id');
+                        self.trigger('update:crumbs', partPath, optionsUrl);
+                        Util.ajaxInfoMessenger('restoredTestItem');
+                    })
+                    .fail(function () {
+                        $('[data-js-log-item-container]', self.$el).addClass('not-found');
+                    });
                 $('[data-js-log-item-container]', this.$el).removeClass('load');
             } else {
                 this.history = new LogHistoryLine({
@@ -75,6 +86,10 @@ define(function (require) {
         onLoadHistory: function () {
             $('[data-js-log-item-container]', this.$el).removeClass('load');
         },
+        /* Отправлять с вьюхи logItemInfo событие при оновлении ретрая, в этой вьюхе обновлять logOptions у колекции элементов и втихую подменять url
+        *
+        * при этом перерендеривать вьюху таблицы логов, передавая ему новую модель ретрая
+        * */
         selectHistoryItem: function (itemModel, firstInit) {
             var curOptions = this.collectionItems.getInfoLog();
             var itemModelFromCollection;
@@ -94,17 +109,30 @@ define(function (require) {
                 context: this.context,
                 itemModel: itemModel,
                 launchModel: this.launchModel,
-                supportedLogBinary: this.supportedLogBinary
+                supportedLogBinary: this.supportedLogBinary,
+                collectionItems: this.collectionItems
             });
             this.listenTo(this.historyItem, 'goToLog', this.goToLog);
             this.listenTo(this.historyItem, 'change:issue', this.onChangeItemIssue);
             this.listenTo(this.historyItem, 'click:attachment', this.onClickAttachments);
+            this.listenTo(this.historyItem, 'change:retry', this.onChangeRetry);
+            this.listenTo(this.historyItem, 'update:issue', this.onChangeLogItem);
+
+            this.onChangeRetry(this.historyItem.getCurrentRetry(), firstInit);
+        },
+        onChangeRetry: function (retryModel, firstInit) {
+            var curOptions = this.collectionItems.getInfoLog();
+            curOptions.retry = retryModel.get('id');
+            this.collectionItems.setInfoLog(curOptions);
+            !firstInit && config.router.navigate(
+                this.collectionItems.getPathByLogItemId(curOptions.item), { trigger: false }
+            );
             this.logsItem && this.stopListening(this.logsItem) && this.logsItem.destroy();
             this.logsItem = new LogItemLogsTable({
                 el: $('[data-js-item-logs]', this.$el),
-                itemModel: itemModel,
+                itemModel: retryModel,
                 collectionItems: this.collectionItems,
-                mainPath: this.collectionItems.getPathByLogItemId(curOptions.item),
+                mainPath: this.collectionItems.getPathByLogItemId(this.collectionItems.getInfoLog().item),
                 options: this.collectionItems.getInfoLog(),
                 supportedLogBinary: this.supportedLogBinary
             });
@@ -153,7 +181,9 @@ define(function (require) {
             this.historyItem.endGoToLog();
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, { context: this.context }));
+            this.$el.html(Util.templates(this.template, {
+                context: this.context
+            }));
         },
         onDestroy: function () {
             this.history && this.history.destroy();

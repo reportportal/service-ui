@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Util = require('util');
@@ -22,39 +22,51 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
-    var Localization = require('localization');
-    var DashboardListItemView = require('dashboard/DashboardListItemView');
-
+    var ListView = require('dashboard/ListView');
+    var BlockView = require('dashboard/BlockView');
+    var SingletonAppStorage = require('storage/SingletonAppStorage');
     var config = App.getInstance();
 
     var DashboardListView = Epoxy.View.extend({
         className: 'dashboard-list-view',
-        template: 'tpl-dashboard-list',
+        template: 'tpl-dashboards',
         events: {
             'validation:success [data-js-filter-name]': 'onChangeDashboardName',
             'click [data-js-add-dashboard]': 'onClickAddDashboard',
+            'click [data-js-view-type]': 'changeDashboardsView'
         },
         bindings: {
-            '[data-js-search-text]': 'text: search',
             ':el': 'classes: {search: any(search)}',
+            '[data-js-view-table]': 'classes: {active: isTable}',
+            '[data-js-view-list]': 'classes: {active: not(isTable)}'
         },
-        initialize: function() {
+        computeds: {
+            isTable: {
+                deps: ['dashboardView'],
+                get: function (dashboardView) {
+                    if (dashboardView === 'table') {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+        },
+        initialize: function () {
+            var self = this;
+            this.appStorage = new SingletonAppStorage();
             this.model = new (Epoxy.Model.extend({
                 defaults: {
                     search: '',
+                    dashboardView: 'table'
                 }
             }));
+            if (this.appStorage.get('dashboardView')) {
+                this.model.set({ dashboardView: this.appStorage.get('dashboardView') });
+            }
             this.render();
-            this.myDashboardCollection = new Backbone.Collection();
-            this.myDashboardViews = [];
-            this.sharedDashboardCollectoin = new Backbone.Collection();
-            this.sharedDashboardViews = [];
-            var self = this;
-            this.listenTo(this.myDashboardCollection, 'reset', this.renderMyDashboards);
-            this.listenTo(this.sharedDashboardCollectoin, 'reset', this.renderSharedDashboards);
-            this.collection.ready.done(function() {
+            this.collection.ready.done(function () {
                 if (!self.collection.models.length) {
-                    $('[data-js-filter-name]', self.$el).prop({disabled: 'disabled'});
+                    $('[data-js-filter-name]', self.$el).prop({ disabled: 'disabled' });
                 }
                 self.listenTo(self.collection, 'change:owner change:name reset', self.changeCollection);
                 self.listenTo(self.collection, 'add', self.onAddCollection);
@@ -62,40 +74,55 @@ define(function (require, exports, module) {
                 self.changeCollection();
             });
             this.listenTo(this.model, 'change:search', this.onChangeSearch);
-
+            this.listenTo(this.model, 'change:dashboardView', this.setDashboardView);
         },
-        onAddCollection: function() {
-            $('[data-js-filter-name]', this.$el).prop({disabled: null});
+        setDashboardView: function () {
+            var curVal = this.model.get('dashboardView');
+            this.appStorage.set({ dashboardView: curVal });
             this.changeCollection();
         },
-        onRemoveCollection: function(model) {
-            this.myDashboardCollection.remove(model);
-            if(!this.myDashboardCollection.models.length) {
+        changeDashboardsView: function (event) {
+            var $target = $(event.currentTarget);
+            var dashboardView = $target.data('js-view-type');
+            this.model.set('dashboardView', dashboardView);
+        },
+        onAddCollection: function () {
+            $('[data-js-filter-name]', this.$el).prop({ disabled: null });
+            this.changeCollection();
+        },
+        onRemoveCollection: function (model) {
+            this.collection.remove(model);
+            if (!this.collection.models.length) {
                 this.changeCollection();
             }
         },
-        changeCollection: function() {
-            $('[data-js-dashboard-not-found]', this.$el).removeClass('rp-display-block');
-            $('[data-js-shared-dashboard-not-found]', this.$el).removeClass('rp-display-block');
-            var myDashboards = [];
-            var sharedDashboards = [];
+        changeCollection: function () {
+            var tempCollection = new Backbone.Collection();
             var self = this;
-            _.each(this.collection.models, function(model) {
-                if((self.model.get('search') && ~model.get('name').toLowerCase().indexOf(self.model.get('search').toLowerCase())) || !self.model.get('search')) {
-                    if (model.get('owner') == config.userModel.get('name')) {
-                        myDashboards.push(model);
-                    } else {
-                        sharedDashboards.push(model);
-                    }
+            this.dashboardsView && this.onDestroy();
+            _.each(this.collection.models, function (model) {
+                if ((self.model.get('search') && ~model.get('name').toLowerCase().indexOf(self.model.get('search').toLowerCase())) || !self.model.get('search')) {
+                    tempCollection.push(model);
                 }
-            })
-            this.myDashboardCollection.reset(myDashboards);
-            this.sharedDashboardCollectoin.reset(sharedDashboards);
-            if(!myDashboards.length) $('[data-js-dashboard-not-found]', this.$el).addClass('rp-display-block');
-            if(!sharedDashboards.length) $('[data-js-shared-dashboard-not-found]', this.$el).addClass('rp-display-block');
+            });
+            if (this.model.get('dashboardView') === 'list') {
+                this.dashboardsView = new ListView({
+                    collection: tempCollection,
+                    search: this.model.get('search')
+                });
+            } else {
+                this.dashboardsView = new BlockView({
+                    collection: tempCollection,
+                    search: this.model.get('search')
+                });
+            }
+            $('[data-js-list-views]', this.$el).html(this.dashboardsView.$el);
         },
-        render: function() {
-            this.$el.html(Util.templates(this.template, {}));
+        render: function () {
+            this.$el.html(Util.templates(this.template, {
+                dashboardName: this.model.get('name'),
+                projectName: config.project.projectId
+            }));
             Util.hintValidator($('[data-js-filter-name]', this.$el), [{
                 validator: 'minMaxNotRequired',
                 type: 'dashboardName',
@@ -103,56 +130,21 @@ define(function (require, exports, module) {
                 max: 128
             }]);
         },
-        onClickAddDashboard: function() {
+        onClickAddDashboard: function () {
             config.trackingDispatcher.trackEventNumber(346);
             this.collection.createNewDashboard();
         },
-        onChangeSearch: function(){
+        onChangeSearch: function () {
             config.trackingDispatcher.trackEventNumber(261);
         },
         onChangeDashboardName: function (e) {
             $(e.currentTarget).val($(e.currentTarget).val().trim());
-            this.model.set({search: $(e.currentTarget).val().trim()});
+            this.model.set({ search: $(e.currentTarget).val().trim() });
             this.changeCollection();
         },
-        renderMyDashboards: function() {
-            _.each(this.myDashboardViews, function(view) { view.destroy(); });
-            this.myDashboardViews = [];
-            this.myDashboardCollection.models = this.sortDashboardCollectionByASC(this.myDashboardCollection.models);
-            var self = this;
-            _.each(this.myDashboardCollection.models, function(model) {
-                var view = new DashboardListItemView({model: model, viewModel: self.model})
-                self.myDashboardViews.push(view);
-                $('[data-js-my-dashboards-container]', self.$el).append(view.$el);
-            });
-        },
-        renderSharedDashboards: function() {
-            _.each(this.sharedDashboardViews, function(view) { view.destroy(); })
-            this.sharedDashboardViews = [];
-            this.sharedDashboardCollectoin.models = this.sortDashboardCollectionByASC(this.sharedDashboardCollectoin.models);
-            var self = this;
-            _.each(this.sharedDashboardCollectoin.models, function(model) {
-                var view = new DashboardListItemView({model: model});
-                self.sharedDashboardViews.push(view);
-                $('[data-js-shared-dashboards-container]', self.$el).append(view.$el);
-            })
-        },
-        sortDashboardCollectionByASC: function (collection) {
-            return _.sortBy(collection, function (item) {
-                return item.get('name').toUpperCase();
-            });
-        },
-
         onDestroy: function () {
-            _.each(this.myDashboardViews, function(view) {
-                view.destroy();
-            });
-            _.each(this.sharedDashboardViews, function(view) {
-                view.destroy();
-            });
-        },
+            this.dashboardsView.destroy();
+        }
     });
-
-
     return DashboardListView;
 });

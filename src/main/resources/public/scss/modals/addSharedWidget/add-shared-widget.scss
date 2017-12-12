@@ -107,8 +107,27 @@
         display: block;
       }
     }
+    .shared-widgets-search {
+      width: 100%;
+      height: 50px;
+      padding: 10px;
+      background-color: $COLOR--white-four;
+
+      .input-filter {
+        width: 100%;
+        height: 30px;
+        margin: 0;
+        input {
+          background-color: $COLOR--white-default;
+          border-color: $COLOR--gray-80;
+          &[disabled]{
+            background-color: #e9e9e9;
+            border-color: #cccccc;
+          }
+        }
+      }
+    }
     .shared-widgets-list-wrapper {
-      border-top: 1px solid $COLOR--gray-91;
       .shared-widgets-empty {
         color: $COLOR--gray-47;
         font-size: 17px;

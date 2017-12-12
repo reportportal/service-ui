@@ -50,7 +50,40 @@ define(function (require, exports, module) {
         this.onDestroy && this.onDestroy();
         this.stopListening();
     };
-
+    Backbone.Router.prototype.route = function(route, name, callback) { // add beforeRoute & afterRoute events
+        var router = this;
+        if (!_.isRegExp(route)) {
+            route = this._routeToRegExp(route);
+        }
+        if (_.isFunction(name)) {
+            callback = name;
+            name = '';
+        }
+        if (!callback) {
+            callback = this[name];
+        }
+        Backbone.history.route(route, function(fragment) {
+            var args = router._extractParameters(route, fragment);
+            if (_.isFunction(router.before)) {
+                router.before.apply(router, args);
+            }
+            if (router) {
+                if (!router.skipNextRoute) {
+                    router.execute(callback, args);
+                    router.trigger.apply(router, ['route:' + name].concat(args));
+                    router.trigger('route', name, args);
+                    Backbone.history.trigger('route', router, name, args);
+                } else {
+                    window.history.forward();
+                }
+            }
+            router.skipNextRoute = false;
+            if (_.isFunction(router.after)) {
+                router.after.apply(router, args);
+            }
+        });
+        return this;
+    };
 
     // overwrite click events
 

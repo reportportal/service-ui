@@ -147,13 +147,13 @@ define(function (require) {
                         $itemsContainer.append(prentItem.$el);
                         self.renderedItems.push(prentItem);
                     }
-                    var item = new self.itemView({ model: model, filterModel: self.filterModel });
+                    var item = new self.itemView({ model: model, filterModel: self.filterModel, context: self.context });
                     $itemsContainer.append(item.$el);
                     self.renderedItems.push(item);
                 });
             } else {
                 _.each(self.collection.models, function (model) {
-                    var item = new self.itemView({ model: model, filterModel: self.filterModel });
+                    var item = new self.itemView({ model: model, filterModel: self.filterModel, context: self.context });
                     $itemsContainer.append(item.$el);
                     self.renderedItems.push(item);
                 });

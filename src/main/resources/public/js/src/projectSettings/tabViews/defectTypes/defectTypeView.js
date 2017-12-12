@@ -26,27 +26,22 @@ define(function (require) {
     var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
-    var App = require('app');
-    var D3 = require('d3');
-    var NVD3 = require('nvd3');
+    var d3 = require('d3');
+    var c3 = require('c3');
     var DefectTypeModel = require('defectType/DefectTypeModel');
-
+    var DefectTypeSubView = require('projectSettings/tabViews/defectTypes/defectTypeSubView');
+    var App = require('app');
     var config = App.getInstance();
 
-    var DefectTypeSubView = require('projectSettings/tabViews/defectTypes/defectTypeSubView');
-
     var DefectTypeView = Epoxy.View.extend({
-
-        collection: {},
-        name: '',
-        diagrammParams: [],
-
         template: 'tpl-defect-type',
         subTemplate: 'tpl-defect-subType',
-
         events: {
             'click .add-item': 'addItem'
         },
+
+        collection: {},
+        name: '',
 
         initialize: function (options) {
             _.extend(this, options);
@@ -57,7 +52,6 @@ define(function (require) {
             this.collection.on('remove', this.onRemove, this);
             this.render();
         },
-
         render: function () {
             var data;
             data = {
@@ -69,22 +63,18 @@ define(function (require) {
             this.$el.html(Util.templates(this.template, data));
             this.updateControls();
         },
-
         onShow: function () {
             this.renderSubTypes();
         },
-
         renderSubTypes: function () {
             if (this.collection.length === 0) {
                 return;
             }
-
             _.each(this.collection.models, function (model) {
                 var data;
                 if (model.get('typeRef').toLowerCase() !== this.name) {
                     return;
                 }
-
                 data = {
                     model: model,
                     parent: this,
@@ -95,11 +85,8 @@ define(function (require) {
                     $('.controll-panel', this.$el).remove();
                 }
             }, this);
-
-            this.getDataForDiagramm(this.collection);
-            this.getDataForGraph(this.diagrammParams);
+            this.drawDonutChart(this.getChartData());
         },
-
         renderItem: function (args) {
             var data = args;
             var id = data.model.get('locator');
@@ -116,7 +103,6 @@ define(function (require) {
 
             return view;
         },
-
         addItem: function (event) {
             var editModel;
             var data;
@@ -138,87 +124,64 @@ define(function (require) {
             view = this.renderItem(data);
             view.editItem();
         },
-
-        getDataForDiagramm: function (data) {
-            var item;
-            var temporaryArray = [];
-            _.map(data.models, function (list) {
-                if (list.get('typeRef').toLowerCase() !== this.name) {
+        getChartData: function () {
+            var data = {
+                columns: [],
+                colors: {}
+            };
+            _.each(this.collection.models, function (model) {
+                if (model.get('typeRef') !== this.name.toUpperCase()) {
                     return;
                 }
-                item = {
-                    parent: list.get('typeRef').toLowerCase(),
-                    child: {
-                        itemLongName: list.get('longName').toLowerCase(),
-                        itemShortName: list.get('shortName').toLowerCase(),
-                        itemColor: list.get('color')
+                data.columns.push([model.get('locator'), 1]);
+                data.colors[model.get('locator')] = model.get('color');
+            }, this);
+            return data;
+        },
+        drawDonutChart: function (data) {
+            var $el = $('[data-js-chart-container]', this.$el);
+            this.chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: data.columns,
+                    type: 'donut',
+                    order: null,
+                    colors: data.colors
+                },
+                size: {
+                    width: 56,
+                    height: 56
+                },
+                interaction: {
+                    enabled: true
+                },
+                legend: {
+                    show: false
+                },
+                donut: {
+                    width: 12,
+                    label: {
+                        show: false
                     }
-                };
-                temporaryArray.push(item);
-            }, this);
-            this.diagrammParams = _.groupBy(temporaryArray, 'parent');
-            return this.diagrammParams;
+                },
+                tooltip: {
+                    show: false
+                }
+            });
         },
-
-        getDataForGraph: function (data) {
-            _.map(data, function (param, key) {
-                this.drawPieChart(param, key);
-            }, this);
+        updateChart: function () {
+            var data = this.getChartData();
+            this.chart && this.chart.data.colors(data.colors);
+            this.chart && this.chart.load({
+                columns: data.columns
+            });
         },
-
-        drawPieChart: function (params, selector) {
-            var chart;
-            var data = [];
-            var pieWidth = 46;
-            var pieHeight = 46;
-            var id = '#diagramm_' + selector;
-            _.map(params, function (param) {
-                data.push({
-                    key: param.child.itemLongName,
-                    y: 1,
-                    color: param.child.itemColor
-                });
-            }, this);
-
-            chart = NVD3.models.pie()
-                .x(function (d) {
-                    return d.key;
-                })
-                .y(function (d) {
-                    return d.y;
-                })
-                .width(pieWidth)
-                .height(pieHeight)
-                .showLabels(false)
-                .donut(true)
-                .donutRatio(0.40)
-                .color(function (d) {
-                    return d.data.color;
-                })
-                .valueFormat(D3.format('f'));
-
-            D3.select(id)
-                .datum([data])
-                .transition()
-                .duration(350)
-                .attr('width', pieWidth)
-                .attr('height', pieHeight)
-                .call(chart);
-
-            return chart;
-        },
-
-        updateDiagramm: function () {
-            this.getDataForDiagramm(this.collection);
-            this.getDataForGraph(this.diagrammParams);
-        },
-
-        onRemove: function () {
+        onRemove: function (model) {
+            this.chart && this.chart.unload({
+                ids: [model.get('locator')]
+            });
             this.updateControls();
-            this.getDataForDiagramm(this.collection);
-            this.getDataForGraph(this.diagrammParams);
         },
-
         lockAddButton: function () {
             var collectionLength = this.getCollectionLength();
             if (collectionLength >= 10 || $('#newItem', this.$el).length) {
@@ -227,7 +190,6 @@ define(function (require) {
             }
             $('.add-item', this.$el).prop('disabled', false);
         },
-
         getCollectionLength: function () {
             var length = 0;
             _.each(this.collection.models, function (el) {
@@ -239,7 +201,6 @@ define(function (require) {
 
             return length;
         },
-
         recountAddLeft: function () {
             var collectionLength = this.getCollectionLength();
             var parent = this.$el.find('.add-item').parent();
@@ -250,18 +211,16 @@ define(function (require) {
                 $(parent).find('p:first').show();
                 return;
             }
-
             $(parent).find('p:first').hide();
             $(parent).find('p:last').show();
         },
-
         updateControls: function () {
             this.recountAddLeft();
             this.lockAddButton();
-            this.updateDiagramm();
+            this.updateChart();
         },
-
         onDestroy: function () {
+            this.chart && (this.chart = this.chart.destroy());
             this.remove();
         }
     });

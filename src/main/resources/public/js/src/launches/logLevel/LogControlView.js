@@ -42,6 +42,7 @@ define(function (require) {
             this.collectionItems = options.collectionItems;
             this.render();
             this.updateNavButton(this.collectionItems.logOptions.item);
+            this.listenTo(this.collectionItems, 'change:log:item', this.updateNavButton);
         },
         updateNavButton: function (currentActiveId) {
             var index = 0;
@@ -101,8 +102,12 @@ define(function (require) {
             var currentModelId;
             if (isLoading) {
                 $('[data-js-preloader]', this.$el).show();
+                $('[data-js-button-prev]', this.$el).prop('disabled', true);
+                $('[data-js-button-next]', this.$el).prop('disabled', true);
                 return;
             }
+            $('[data-js-button-prev]', this.$el).removeProp('disabled');
+            $('[data-js-button-next]', this.$el).removeProp('disabled');
             $('[data-js-preloader]', this.$el).hide();
             switch (this.lastClickedNavButton) {
             case 'next':
@@ -119,6 +124,16 @@ define(function (require) {
             }
             this.stopListening(this.collectionItems, 'loading');
         },
+        // attachHotkeys: function () {
+        //     $(window).on('keydown.logControl', function (e) {
+        //         if ((e.ctrlKey && e.shiftKey && e.keyCode === 39) || (e.ctrlKey && e.shiftKey && e.keyCode === 39)) {
+        //             $('[data-js-button-next]', this.$el).trigger('click');
+        //         }
+        //         if ((e.ctrlKey && e.shiftKey && e.keyCode === 37) || (e.ctrlKey && e.shiftKey && e.keyCode === 37)) {
+        //             $('[data-js-button-prev]', this.$el).trigger('click');
+        //         }
+        //     }.bind(this));
+        // },
         onClickPrev: function (e) {
             config.trackingDispatcher.trackEventNumber(186);
             this.onClickNavigation(e);
@@ -131,8 +146,7 @@ define(function (require) {
             var $nav = $(e.currentTarget);
             e.preventDefault();
             if ($nav.attr('data-js-button-load-selection') !== undefined) { return; }
-            this.collectionItems.setLogItem($nav.data('id'));
-            this.updateNavButton($nav.data('id'));
+            this.collectionItems.setLogItem($nav.data('id')); // triggers 'change:log:item' & executes this.updateNavButton
         },
         onClickRefresh: function () {
             config.trackingDispatcher.trackEventNumber(188);
@@ -140,10 +154,12 @@ define(function (require) {
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
+            // this.attachHotkeys();
         },
 
         onDestroy: function () {
             this.$el.html('');
+            $(window).off('keydown.logControl');
             delete this;
         }
     });

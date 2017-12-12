@@ -1,0 +1,18 @@
+<div class="launch-name"><%- data.launchName %> #<%- data.launchNumber %></div>
+<div class="launch-start-time"><%- data.startTime %></div>
+<div class="item-wrapper">
+    <div class="item-cases">
+        <div class="item-cases-growth">
+            <% if (data.growth < 0) { %>
+                <%- data.text.widgets.growTestCases %>: <span class="decrease"><%- data.growth %></span>
+            <% } else if (data.growth > 0) { %>
+                <%- data.text.widgets.growTestCases %>: <span class="increase">+<%- data.growth %></span>
+            <% } else { %>
+                <%- data.text.widgets.growTestCases %>: <span><%- data.growth %></span>
+            <% } %>
+        </div>
+        <div class="item-cases-total">
+            <%- data.text.widgets.totalTestCases %>: <span><%- data.total %></span>
+        </div>
+    </div>
+</div>

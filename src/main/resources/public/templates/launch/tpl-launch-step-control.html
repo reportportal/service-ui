@@ -11,12 +11,19 @@
                 <a data-js-multi-action="editdefect"><%= data.text.launches.editDefects %></a>
             </li>
             <% if (!isDebug) { %>
-            <li>
-                <a data-js-multi-action="postbug"><%= data.text.launches.postBug %></a>
-            </li>
-            <li>
-                <a data-js-multi-action="loadbug"><%= data.text.launches.loadBug %></a>
-            </li>
+                <li>
+                    <a data-js-multi-action="postbug"><%= data.text.launches.postBug %></a>
+                </li>
+                <li>
+                    <a data-js-multi-action="loadbug"><%= data.text.launches.loadBug %></a>
+                </li>
+
+                <li>
+                    <a data-js-multi-action="ignoreaa"><%= data.text.launches.ignoreAA %></a>
+                </li>
+                <li>
+                    <a data-js-multi-action="includeaa"><%= data.text.launches.includeAA %></a>
+                </li>
             <% } %>
             <li>
                 <a data-js-multi-action="remove"><%= data.text.ui.delete %></a>

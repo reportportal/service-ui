@@ -1,14 +1,24 @@
-hash: 1b7c4bb7c21a7808157aeb1699e4358630569ad173ead14a30e3e10d999c0b8f
-updated: 2017-09-20T13:05:12.49822484+03:00
+hash: 73ae3d1e98f412f028ecd80976093f8b811f293aa2ff9c82d10a03c43f24df73
+updated: 2017-10-20T13:00:51.675722+03:00
 imports:
+- name: github.com/avarabyeu/env
+  version: 4946e6742a05770376d9415afcaf28f67fd7b0e4
 - name: github.com/cenkalti/backoff
   version: 4dc77674aceaabba2c7e3da25d4c823edfb73f99
 - name: github.com/clbanning/x2j
   version: 5ee34bb343f10ecfc125261107681de62f985cf6
 - name: github.com/franela/goreq
   version: 9df54ca75ad62b6295f33ca96e16a2ca10bc137a
-- name: github.com/fsnotify/fsnotify
-  version: 4da3e2cfbabc9f751898f250b49f2439785783a1
+- name: github.com/go-chi/chi
+  version: f7c66f685bcab06bcce78ac212c5f3553c063d19
+  subpackages:
+  - middleware
+- name: github.com/go-playground/locales
+  version: 1e5f1161c6416a5ff48840eb8724a394e48cc534
+  subpackages:
+  - currency
+- name: github.com/go-playground/universal-translator
+  version: 71201497bace774495daed26a3874fd339e0b538
 - name: github.com/gorilla/handlers
   version: a4043c62cc2329bacda331d33fc908ab11ef0ec3
 - name: github.com/hashicorp/consul
@@ -19,82 +29,50 @@ imports:
   version: 3573b8b52aa7b37b9358d966a898feb387f62437
 - name: github.com/hashicorp/go-rootcerts
   version: 6bb64b370b90e7ef1fa532be9e591a81c3493e00
-- name: github.com/hashicorp/hcl
-  version: 392dba7d905ed5d04a5794ba89f558b27e2ba1ca
-  subpackages:
-  - hcl/ast
-  - hcl/parser
-  - hcl/scanner
-  - hcl/strconv
-  - hcl/token
-  - json/parser
-  - json/scanner
-  - json/token
 - name: github.com/hashicorp/serf
-  version: e39abe475740649229c5c72b0cc1da10da7ed23a
+  version: 555c6fa2a11d1f8e08ac9964015e864a3f61e7c3
   subpackages:
   - coordinate
 - name: github.com/hudl/fargo
   version: 14ced469f7dc175f6fbf9f55d799f9f12e302965
-- name: github.com/magiconair/properties
-  version: be5ece7dd465ab0765a9682137865547526d1dfb
 - name: github.com/miekg/dns
   version: f01e44c2fdbf755201344b5b7917f974a4badd13
 - name: github.com/mitchellh/go-homedir
   version: b8bc1bf767474819792c23f32d8286a45736f1c6
-- name: github.com/mitchellh/mapstructure
-  version: d0303fe809921458f417bcf828397a65db30a7e4
 - name: github.com/op/go-logging
   version: d2e44aa77b7195c0ef782189985dd8550e22e4de
-- name: github.com/pelletier/go-toml
-  version: 69d355db5304c0f7f809a2edc054553e7142f016
-- name: github.com/reportportal/commons-go
-  version: 6c0e7d8bb557889e55c5a870a2377d4d114cb7c2
-  subpackages:
-  - commons
-  - conf
-  - registry
-  - server
+- name: github.com/pkg/errors
+  version: 645ef00459ed84a119197bfb8d8205042c6df63d
+- name: github.com/sirupsen/logrus
+  version: f006c2ac4710855cf0f916dd6b77acf6b048dc6e
 - name: github.com/unrolled/secure
   version: 19a872c81779b0456e9ee495a8162fb60c57b0c0
-- name: github.com/spf13/afero
-  version: 9be650865eab0c12963d8753212f4f9c66cdcf12
+- name: golang.org/x/crypto
+  version: c84b36c635ad003a10f0c755dff5685ceef18c71
   subpackages:
-  - mem
-- name: github.com/spf13/cast
-  version: acbeb36b902d72a7a4c18e8f3241075e7ab763e4
-- name: github.com/spf13/jwalterweatherman
-  version: 0efa5202c04663c757d84f90f5219c1250baf94f
-- name: github.com/spf13/pflag
-  version: e57e3eeb33f795204c1ca35f56c44f83227c6e66
-- name: github.com/spf13/viper
-  version: c1de95864d73a5465492829d7cb2dd422b19ac96
-- name: goji.io
-  version: 0d89ff54b2c18c9c4ba530e32496aef902d3c6cd
-  subpackages:
-  - internal
-  - middleware
-  - pat
-  - pattern
+  - ssh/terminal
 - name: golang.org/x/net
-  version: f01ecb60fe3835d80d9a0b7b2bf24b228c89260e
+  version: 0a9397675ba34b2845f758fe3cd68828369c6517
   subpackages:
   - context
 - name: golang.org/x/sys
-  version: abf9c25f54453410d0c6668e519582a9e1115027
+  version: 314a259e304ff91bd6985da2a7149bbf91237993
   subpackages:
   - unix
-- name: golang.org/x/text
-  version: cfdf022e86b4ecfb646e1efbd7db175dd623a8fa
-  subpackages:
-  - transform
-  - unicode/norm
+  - windows
 - name: gopkg.in/gcfg.v1
   version: 0ef1a8547f99b94fac9af5377dd72febba18f37c
   subpackages:
   - scanner
   - token
   - types
-- name: gopkg.in/yaml.v2
-  version: 1be3d31502d6eabc0dd7ce5b0daab022e14a5538
+- name: gopkg.in/go-playground/validator.v9
+  version: a021b2ec9a8a8bb970f3f15bc42617cb520e8a64
+- name: gopkg.in/reportportal/commons-go.v1
+  version: 46bb64cec9fb0c257d7a6ddfddf1df3617ae4cef
+  subpackages:
+  - commons
+  - conf
+  - registry
+  - server
 testImports: []

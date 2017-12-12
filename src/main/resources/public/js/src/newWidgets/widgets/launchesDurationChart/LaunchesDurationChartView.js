@@ -23,22 +23,180 @@ define(function (require) {
 
     var $ = require('jquery');
     var _ = require('underscore');
-    var App = require('app');
-    var Moment = require('moment');
+    var Util = require('util');
+    var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
     var Localization = require('localization');
-    var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
-
+    var c3 = require('c3');
+    var Moment = require('moment');
+    var App = require('app');
     var config = App.getInstance();
 
-    var LaunchesDurationChart = ChartWidgetView.extend({
-        initialize: function (options) {
-            ChartWidgetView.prototype.initialize.call(this, options);
-            this.categories = [];
-            this.colors = [];
-            this.max = 0;
-            this.ITERUPT = 'INTERRUPTED';
+    var LaunchesDurationChart = C3ChartWidgetView.extend({
+        template: 'tpl-widget-launches-duration-chart',
+        tooltipTemplate: 'tpl-widget-launches-duration-chart-tooltip',
+        className: 'launches-duration-chart',
+
+        render: function () {
+            if (this.isPreview) {
+                this.$el.addClass('preview-view');
+            }
+            if (!this.isDataExists()) {
+                this.addNoAvailableBock();
+                return;
+            }
+            this.ITERUPTED = 'INTERRUPTED';
+            this.$el.html(Util.templates(this.template, {}));
+            this.drawBarChart($('[data-js-chart-container]', this.$el), this.model.getContent().result);
+        },
+        drawBarChart: function ($el, data) {
+            var self = this;
+            var chartData = ['duration'];
+            var itemData = [];
+            var count = 0;
+            var max = 0;
+            var average = 0; // average not-interrupted launches duration
+            var sum = 0; // sum of not-interrupted launches duration
+            var timeType;
+
+            // average time calculation
+            _.each(data, function (item) {
+                if (!self.isInterrupted(item.values)) {
+                    count += 1;
+                    sum += +item.values.duration;
+                }
+            });
+
+            average = sum / count;
+
+            // data preparation
+            _.each(data.reverse(), function (item) {
+                var duration = parseInt(item.values.duration, 10);
+                max = duration > max ? duration : max;
+                itemData.push({
+                    id: item.id,
+                    name: item.name,
+                    number: item.number,
+                    status: item.values.status,
+                    start_time: item.values.start_time,
+                    end_time: item.values.end_time,
+                    duration: duration
+                });
+                chartData.push(self.isInterrupted(item.values) ? average : duration);
+            });
+            timeType = this.getTimeType(max);
+            this.chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: [chartData],
+                    type: 'bar',
+                    colors: {
+                        duration: config.defaultColors.duration
+                    },
+
+                    groups: [
+                        ['duration']
+                    ],
+                    color: function (color, d) {
+                        if (itemData[d.index] && self.isInterrupted(itemData[d.index])) {
+                            return config.defaultColors.interrupted;
+                        }
+                        return color;
+                    },
+                    onclick: function (d, element) {
+                        var link = self.linkToRedirectService(d.id, itemData[d.index].id);
+                        link && config.router.navigate(link, { trigger: true });
+                    }
+                },
+                grid: {
+                    y: {
+                        show: !self.isPreview
+                    }
+                },
+                axis: {
+                    rotated: true,
+                    x: {
+                        show: !self.isPreview,
+                        type: 'category',
+                        categories: _.map(itemData, function (item) {
+                            return '#' + item.number;
+                        }),
+                        tick: {
+                            values: self.getLaunchAxisTicks(itemData.length),
+                            width: 60,
+                            centered: true,
+                            inner: true,
+                            multiline: false,
+                            outer: false
+                        }
+                    },
+                    y: {
+                        show: !self.isPreview,
+                        tick: {
+                            format: function (d) {
+                                return (parseInt(d, 10) / timeType.value).toFixed(2);
+                            }
+                        },
+                        padding: {
+                            top: 0,
+                            bottom: 0
+                        },
+                        label: {
+                            text: Localization.time[timeType.type],
+                            position: 'outer-center'
+                        }
+                    }
+                },
+                interaction: {
+                    enabled: !self.isPreview
+                },
+                // zoom: {
+                //     enabled: true,
+                //     rescale: true
+                // },
+                // subchart: {
+                //     show: true
+                // },
+                padding: {
+                    top: self.isPreview ? 0 : 20,
+                    left: self.isPreview ? 0 : 40,
+                    right: self.isPreview ? 0 : 20,
+                    bottom: self.isPreview ? 0 : 10
+                },
+                legend: {
+                    show: false // we use custom legend
+                },
+                tooltip: {
+                    grouped: true,
+                    position: function (d, width, height, element) {
+                        var left = d3.mouse(self.chart.element)[0] - (width / 2);
+                        var top = d3.mouse(self.chart.element)[1] - height;
+
+                        return {
+                            top: top - 8, // 8 - offset for tooltip arrow
+                            left: left
+                        };
+                    },
+                    contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+                        var launchData = itemData[d[0].index];
+                        return Util.templates(self.tooltipTemplate, {
+                            launchName: launchData.name,
+                            launchNumber: launchData.number,
+                            isInterrupted: self.isInterrupted(launchData),
+                            duration: Moment.duration(Math.abs(launchData.duration / timeType.value), timeType.type).humanize(true)
+                        });
+                    }
+                },
+                size: {
+                    height: self.$el.parent().height()
+                },
+                onrendered: function () {
+                    $el.css('max-height', 'none');
+                }
+            });
+        },
+        isInterrupted: function (v) {
+            return v.status === this.ITERUPTED;
         },
         getTimeType: function (max) {
             var time = { value: 3600000, type: Localization.time.hours };
@@ -50,135 +208,6 @@ define(function (require) {
                 }
             }
             return time;
-        },
-        getData: function () {
-            var contentData = this.model.getContent() || [];
-            var size = 0;
-            var sum = 0;
-            var avg = 0;
-            var key = 'duration';
-            var inKey = 'interrupted';
-            var data = _.clone(contentData.result).reverse();
-            var series = {
-                key: Localization.widgets[key],
-                color: this.getSeriesColor(key),
-                seriesId: 'duration',
-                values: []
-            };
-            if (!_.isEmpty(contentData) && contentData.result) {
-                _.each(data, function (d, i) {
-                    var values = d.values;
-                    var duration = parseInt(values.duration, 10);
-                    var cat = {
-                        id: d.id,
-                        name: d.name,
-                        number: '#' + d.number
-                    };
-                    this.categories.push(cat);
-                    series.values.push(_.extend(values, { num: i + 1 }, cat));
-                    if (!this.isInterupt(values)) {
-                        this.max = duration > this.max ? duration : this.max;
-                        sum += duration;
-                        size += 1;
-                    }
-                }, this);
-
-                avg = sum / size;
-                _.each(series.values, function (k) {
-                    if (this.isInterupt(k)) {
-                        k.duration = avg && !isNaN(avg) ? avg : k.duration;
-                        this.colors.push(this.getSeriesColor(inKey));
-                    } else {
-                        this.colors.push(this.getSeriesColor(key));
-                    }
-                }, this);
-                this.series = [series];
-                return this.series;
-            }
-            return [];
-        },
-        isInterupt: function (v) {
-            return v.status === this.ITERUPT;
-        },
-        tooltipContent: function () {
-            var self = this;
-            var type = this.getTimeType(this.max);
-            var index;
-            var time;
-            var cat;
-            var status;
-            var tipTitle;
-            var tipVal;
-            return function (key, x, y, e) {
-                index = e.pointIndex;
-                time = Moment.duration(Math.abs(e.value), type.type).humanize(true);
-                cat = self.categories[index];
-                status = e.point.status;
-                tipTitle = '<p style="text-align:left;"><b>' + cat.name + ' ' + cat.number + '</b><br/>';
-                tipVal = '<b>' + ((status !== self.ITERUPT) ? e.series.key + ':' : '<span style="color: ' + self.getSeriesColor(status) + ';">Run ' + self.ITERUPT.toLowerCase().capitalize() + '</span>') + ' </b> ' + ((status !== self.ITERUPT) ? time : '') + ' <br/></p>';
-                return tipTitle + tipVal;
-            };
-        },
-        render: function () {
-            var self = this;
-            var data = this.getData();
-            var tooltip = this.tooltipContent();  // should call after this.max calculation in get data.
-            var type = this.getTimeType(this.max); // should call after this.max calculation in get data.
-            var cup;
-            var update;
-            var emptyData = this.model.getContent();
-            var emptyResult = this.model.getContent().result;
-            if (!this.isEmptyData(emptyData) && !this.isEmptyData(emptyResult)) {
-                this.addSVG();
-                this.chart = nvd3.models.multiBarHorizontalChart()
-                    .x(function (d) {
-                        return d.num;
-                    })
-                    .y(function (d) {
-                        return parseInt(d.duration, 10) / type.value;
-                    })
-                    .showValues(false)
-                    .tooltips(!self.isPreview)
-                    .showControls(false)
-                    .reduceXTicks(true)
-                    .barColor(this.colors)
-                    .valueFormat(d3.format(',.2f'))
-                    .showXAxis(true)
-                    .showLegend(false)
-                ;
-
-                this.chart.tooltipContent(tooltip);
-
-                this.chart.xAxis
-                    .tickFormat(function (d) {
-                        return self.formatNumber(d, self.categories);
-                    });
-                this.chart.yAxis
-                    .tickFormat(d3.format(',.2f'))
-                    .axisLabel(type.type);
-                d3.select($('svg', this.$el).get(0))
-                    .datum(data)
-                    .call(this.chart);
-                cup = self.chart.update;
-                update = function () {
-                    self.chart.xAxis.tickFormat(function (d) {
-                        return self.formatNumber(d);
-                    });
-                    cup();
-                    // self.chart.xAxis
-                    //     .tickFormat(function (d) {
-                    //         return self.formatCategories(d);
-                    //     });
-                };
-                this.chart.update = update;
-                this.addResize();
-                this.redirectOnElementClick('multibar');
-                if (self.isPreview) {
-                    this.disabeLegendEvents();
-                }
-            } else {
-                this.addNoAvailableBock();
-            }
         }
     });
 

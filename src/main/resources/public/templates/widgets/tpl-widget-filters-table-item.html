@@ -80,7 +80,7 @@
     <div class="col-xs-12 col-sm-7 nopadding rp-mobile-padding">
         <div class="col-xs-12 col-sm-6 nopadding">
             <% if (data.criteria.total) { %>
-            <% var total = data.item.statistics$executionCounter$total; %>
+            <% var total = data.item.statistics$executions$total; %>
             <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors total">
                 <div class="filter-tb-td">
                     <% if(total && total !== '0'){ %>
@@ -95,7 +95,7 @@
             </div>
             <% } %>
             <% if (data.criteria.passed) { %>
-            <% var passed = data.item.statistics$executionCounter$passed; %>
+            <% var passed = data.item.statistics$executions$passed; %>
             <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors passed">
                 <div class="filter-tb-td">
                     <% if(passed && passed !== '0'){ %>
@@ -110,12 +110,12 @@
             </div>
             <% } %>
             <% if (data.criteria.failed) { %>
-            <% var failed = data.item.statistics$executionCounter$failed; %>
+            <% var failed = data.item.statistics$executions$failed; %>
             <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors failed">
                 <div class="filter-tb-td">
                     <% if(failed && failed !== '0'){ %>
                     <a class="cases-view rp-blue-link-undrl"
-                       href="<%= data.allCasesUrl('failed') %>"><%= failed %></a>
+                       href="<%= data.allCasesUrl('failedPlusInterrupted') %>"><%= failed %></a>
                     <p class="visible-xs cell-name"><%= data.text.launchesHeaders.failed%></p>
                     <% } else { %>
                     <span class="text-muted visible-xs-inline">0</span>
@@ -125,7 +125,7 @@
             </div>
             <% } %>
             <% if (data.criteria.skipped) { %>
-            <% var skipped = data.item.statistics$executionCounter$skipped; %>
+            <% var skipped = data.item.statistics$executions$skipped; %>
             <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors skipped">
                 <div class="filter-tb-td">
                     <% if(skipped && skipped !== '0'){ %>
@@ -142,7 +142,7 @@
         </div>
         <div class="col-xs-12 col-sm-6 nopadding">
             <% if (data.criteria.product_bug) { %>
-            <% var product_bugs = data.item.statistics$issueCounter$productBug; %>
+            <% var product_bugs = data.item.statistics$defects$product_bug; %>
             <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors pb">
                 <div class="filter-tb-td">
                     <% if(product_bugs && product_bugs.total){ %>
@@ -153,7 +153,7 @@
                     <div class="launch-suite-defects" data-js-launch-defect data-defect-type="<%= stats %>"
                          id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
                         <a href="<%- link %>" class="chart-overflow">
-                            <svg data-js-chart></svg>
+                            <div class="chart-container" data-js-chart></div>
                             <div class="total-overflow">
                                         <span class="pr-grid-defect-total"
                                               style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
@@ -177,7 +177,7 @@
             </div>
             <% } %>
             <% if (data.criteria.automation_bug){ %>
-            <% var test_bugs = data.item.statistics$issueCounter$automationBug; %>
+            <% var test_bugs = data.item.statistics$defects$automation_bug; %>
             <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors ab">
                 <div class="filter-tb-td">
                     <% if(test_bugs && test_bugs.total){ %>
@@ -188,7 +188,7 @@
                     <div class="launch-suite-defects" data-js-launch-defect data-defect-type="<%= stats %>"
                          id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
                         <a href="<%- link %>" class="chart-overflow">
-                            <svg data-js-chart></svg>
+                            <div class="chart-container" data-js-chart></div>
                             <div class="total-overflow">
                                         <span class="pr-grid-defect-total"
                                               style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
@@ -212,7 +212,7 @@
             </div>
             <% } %>
             <% if (data.criteria.system_issue){ %>
-            <% var system_issue = data.item.statistics$issueCounter$systemIssue; %>
+            <% var system_issue = data.item.statistics$defects$system_issue; %>
             <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors si">
                 <div class="filter-tb-td">
                     <% if(system_issue && system_issue.total){ %>
@@ -223,7 +223,7 @@
                     <div class="launch-suite-defects" data-js-launch-defect data-defect-type="<%= stats %>"
                          id="<%= data.widgetId %>-defect-<%= id %>-<%= stats %>">
                         <a href="<%- link %>" class="chart-overflow">
-                            <svg data-js-chart></svg>
+                            <div class="chart-container" data-js-chart></div>
                             <div class="total-overflow">
                                         <span
                                             style="border-color: <%= data.getDefectColor(value, stats, data.defectTypes) %>">
@@ -249,7 +249,7 @@
             <% if (data.criteria.to_investigate){ %>
             <div class="col-xs-3 col-sm-3 ftp-cols rp-info rp-colors ti">
                 <div class="filter-tb-td">
-                    <% var to_investigate = data.item.statistics$issueCounter$toInvestigate; %>
+                    <% var to_investigate = data.item.statistics$defects$to_investigate; %>
                     <% if(to_investigate && to_investigate.total){ %>
                     <% var total = to_investigate.total,
                     stats = 'to_investigate',

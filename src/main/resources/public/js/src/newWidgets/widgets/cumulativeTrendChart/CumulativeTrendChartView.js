@@ -96,14 +96,14 @@ define(function (require) {
             var chart;
             var legendScroller;
             var chartDataColumns = [];
-            var passed = ['statistics$executionCounter$passed'];
-            var failed = ['statistics$executionCounter$failed'];
-            var skipped = ['statistics$executionCounter$skipped'];
-            var pb = ['statistics$issueCounter$productBug$total'];
-            var ab = ['statistics$issueCounter$automationBug$total'];
-            var si = ['statistics$issueCounter$systemIssue$total'];
-            var nd = ['statistics$issueCounter$noDefect$total'];
-            var ti = ['statistics$issueCounter$toInvestigate$total'];
+            var passed = ['statistics$executions$passed'];
+            var failed = ['statistics$executions$failed'];
+            var skipped = ['statistics$executions$skipped'];
+            var pb = ['statistics$defects$product_bug$total'];
+            var ab = ['statistics$defects$automation_bug$total'];
+            var si = ['statistics$defects$system_issue$total'];
+            var nd = ['statistics$defects$no_defect$total'];
+            var ti = ['statistics$defects$to_investigate$total'];
             var colors = {};
             var dataGroupNames = [];
 
@@ -141,45 +141,18 @@ define(function (require) {
                 });
             });
             _.each(data[0].values, function (val, key) { // gets colors for items
-                switch (key) {
-                case passed[0]:
-                    colors[key] = '#8db677';
-                    break;
-                case failed[0]:
-                    colors[key] = '#e86c42';
-                    break;
-                case skipped[0]:
-                    colors[key] = '#bfc7cc';
-                    break;
-                case pb[0]:
-                    colors[key] = self.defectsCollection.getDefectByLocator('PB001').get('color');
-                    break;
-                case ab[0]:
-                    colors[key] = self.defectsCollection.getDefectByLocator('AB001').get('color');
-                    break;
-                case si[0]:
-                    colors[key] = self.defectsCollection.getDefectByLocator('SI001').get('color');
-                    break;
-                case nd[0]:
-                    colors[key] = self.defectsCollection.getDefectByLocator('ND001').get('color');
-                    break;
-                case ti[0]:
-                    colors[key] = self.defectsCollection.getDefectByLocator('TI001').get('color');
-                    break;
-                default:
-                    break;
-                }
+                colors[key] = config.defaultColors[key.split('$')[2]];
             });
 
             // pushing data in correct order
-            data[0].values.statistics$executionCounter$passed && chartDataColumns.push(passed);
-            data[0].values.statistics$executionCounter$failed && chartDataColumns.push(failed);
-            data[0].values.statistics$executionCounter$skipped && chartDataColumns.push(skipped);
-            data[0].values.statistics$issueCounter$productBug$total && chartDataColumns.push(pb);
-            data[0].values.statistics$issueCounter$automationBug$total && chartDataColumns.push(ab);
-            data[0].values.statistics$issueCounter$systemIssue$total && chartDataColumns.push(si);
-            data[0].values.statistics$issueCounter$noDefect$total && chartDataColumns.push(nd);
-            data[0].values.statistics$issueCounter$toInvestigate$total && chartDataColumns.push(ti);
+            data[0].values.statistics$executions$passed && chartDataColumns.push(passed);
+            data[0].values.statistics$executions$failed && chartDataColumns.push(failed);
+            data[0].values.statistics$executions$skipped && chartDataColumns.push(skipped);
+            data[0].values.statistics$defects$product_bug$total && chartDataColumns.push(pb);
+            data[0].values.statistics$defects$automation_bug$total && chartDataColumns.push(ab);
+            data[0].values.statistics$defects$system_issue$total && chartDataColumns.push(si);
+            data[0].values.statistics$defects$no_defect$total && chartDataColumns.push(nd);
+            data[0].values.statistics$defects$to_investigate$total && chartDataColumns.push(ti);
 
             chart = c3.generate({
                 bindto: $el[0],
@@ -255,11 +228,6 @@ define(function (require) {
                 legend: {
                     show: false // we use custom legend
                 },
-                bar: {
-                    width: {
-                        ratio: 0.6 // this makes bar width 50% of length between ticks
-                    }
-                },
                 tooltip: {
                     position: function (d, width, height, element) {
                         var left = d3.mouse(chart.element)[0] - (width / 2);
@@ -275,7 +243,7 @@ define(function (require) {
                         _.each(d, function (item) {
                             itemsData.push({
                                 color: color(item.id),
-                                name: self.getBeautyName(item.name),
+                                name: Localization.filterNameById[item.name.split('$total')[0]],
                                 value: item.value
                             });
                         });
@@ -308,9 +276,12 @@ define(function (require) {
                         return id;
                     })
                     .html(function (id) {
-                        return '<div class="color-mark"></div>' + self.getBeautyName(id);
+                        return '<div class="color-mark"></div>' + Localization.filterNameById[id.split('$total')[0]];
                     })
                     .each(function (id) {
+                        if (~self.hiddenItems.indexOf(id)) {
+                            $('.color-mark', $(this)).addClass('unchecked');
+                        }
                         d3.select(this).select('.color-mark').style('background-color', chart.color(id));
                     })
                     .on('mouseover', function (id) {
@@ -320,9 +291,11 @@ define(function (require) {
                         chart.revert();
                     })
                     .on('click', function (id) {
+                        config.trackingDispatcher.trackEventNumber(342);
                         $('.color-mark', $(this)).toggleClass('unchecked');
                         chart.toggle(id);
                     });
+                this.hiddenItems && chart.hide(this.hiddenItems);
                 d3.select(chart.element).select('.legend')
                     .append('div')
                     .attr('class', 'legend-gradient')
@@ -331,29 +304,6 @@ define(function (require) {
                 legendScroller = Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
                 this.scrollers.push(legendScroller);
             }
-        },
-        getBeautyName: function (key) {
-            switch (key) {
-            case 'statistics$executionCounter$passed':
-                return Localization.launchesHeaders.passed;
-            case 'statistics$executionCounter$failed':
-                return Localization.launchesHeaders.failed;
-            case 'statistics$executionCounter$skipped':
-                return Localization.launchesHeaders.skipped;
-            case 'statistics$issueCounter$productBug$total':
-                return Localization.launchesHeaders.product_bug;
-            case 'statistics$issueCounter$automationBug$total':
-                return Localization.launchesHeaders.automation_bug;
-            case 'statistics$issueCounter$systemIssue$total':
-                return Localization.launchesHeaders.system_issue;
-            case 'statistics$issueCounter$noDefect$total':
-                return Localization.launchesHeaders.no_defect;
-            case 'statistics$issueCounter$toInvestigate$total':
-                return Localization.launchesHeaders.to_investigate;
-            default:
-                break;
-            }
-            return false;
         },
         updateWidget: function () {
             $('[data-js-preloader-cumulative-widget]', this.$el).addClass('show');

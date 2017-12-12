@@ -48,22 +48,13 @@
     margin: 0px;
 }
 
-/* TODO */
-/*.rp-wrapper-of-project-details .nvd3 text {*/
-.page-settings-wrap .nvd3 text {
-    font-family: "OpenSansRegular", sans-serif !important;
-    font-weight: normal !important;
-    font-size: 13px !important;
-    color: #777777 !important;
-}
-
 /*--------------*/
 /* PROJECT INFO */
 
 #ProjectInfo {
     background: #fff;
-    padding-right: 0px;
-    padding-left: 0px;
+    padding-right: 0;
+    padding-left: 0;
 
     .item-col-custom {
         margin-bottom: 20px;
@@ -80,6 +71,7 @@
         .widget-body {
             max-height: 600px;
             overflow-y: auto;
+            position: relative;
 
             .panel-body {
                 border: none;
@@ -369,4 +361,30 @@
 .in-header-block label.btn-custom:not(:first-child):not(:last-child):not(.dropdown-toggle) {
     border-radius: 100px;
     margin: 0 6px;
+}
+
+@media print{
+  #ProjectInfo{
+    zoom: 90%;
+    .col-sm-12.col-md-9{
+      width: 75%;
+      float: left;
+      &>.row{
+        &>.col-sm-12{
+          width: 33%;
+        }
+      }
+
+    }
+    .col-sm-12.col-md-3{
+      width: 25%;
+      float: left;
+      .col-md-9,.col-md-3{
+        width: 100%;
+      }
+    }
+    .row.row-custom + .row{
+      page-break-after: always;
+    }
+  }
 }

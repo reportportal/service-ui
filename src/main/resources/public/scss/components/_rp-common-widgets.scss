@@ -146,25 +146,10 @@
         text-decoration: underline;
     }
 }
-#previewContent .widget-invalid-data,
-#previewContent svg .nv-legend-symbol, 
-#previewContent svg .nv-legend-text {
+#previewContent .widget-invalid-data {
     cursor: default;
 }
 
-#previewContent svg .nvd3.nv-stackedarea path.nv-area,
-#previewContent svg .nvd3.nv-stackedarea path.nv-area.hover,
-#previewContent svg .nvd3 .nv-multibar .nv-groups rect,
-#previewContent svg .nvd3 .nv-multibar .nv-groups rect.hover,
-#previewContent svg .nvd3 .nv-multibarHorizontal .nv-groups rect,
-#previewContent svg .nvd3 .nv-multibarHorizontal .nv-groups rect.hover,
-#previewContent svg .nvd3 .nv-discretebar .nv-groups rect,
-#previewContent svg .nvd3 .nv-discretebar .nv-groups rect.hover,
-#previewContent svg .nvd3.nv-pie path,
-#previewContent svg .nvd3.nv-pie .hover path {
-    cursor: default;
-    fill-opacity: 0.7;
-}
 
 /*Temp change modal widget wizard ----------------------------- */
 

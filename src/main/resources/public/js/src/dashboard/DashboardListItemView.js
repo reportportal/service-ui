@@ -30,17 +30,18 @@ define(function (require) {
 
     var DashboardListItemView = Epoxy.View.extend({
         className: 'dashboard-list-item-view',
-        template: 'tpl-dashboard-list-item',
-
+        templateBlock: 'tpl-dashboard-block-item',
+        templateList: 'tpl-dashboard-list-item',
         events: {
             'click [data-js-edit]': 'onClickEdit',
             'click [data-js-remove]': 'onClickRemove',
-            click: 'onClickItem'
+            'click [data-js-dashboard-info]': 'onClickItem'
         },
 
         bindings: {
             '[data-js-name]': 'html: getName',
-            '[data-js-description]': 'text: displayingDescription',
+            '[data-js-owner]': 'text: owner',
+            '[data-js-description]': 'text: displayingDescription, classes: {hide: not(description)}',
             '[data-js-share-icon]': 'classes: {hide: not(isMy)}, attr: {title: sharedTitle}',
             '[data-js-global-icon]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
             '[data-js-icon-description]': 'text: sharedTitle',
@@ -73,12 +74,16 @@ define(function (require) {
                 }
             }
         },
-
-        initialize: function () {
+        initialize: function (option) {
+            this.blockTemplate = option.blockTemplate;
             this.render();
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, {}));
+            if (this.blockTemplate) {
+                this.$el.html(Util.templates(this.templateBlock, {}));
+            } else {
+                this.$el.html(Util.templates(this.templateList, {}));
+            }
             this.setPreview();
         },
         onClickEdit: function (e) {
@@ -115,6 +120,7 @@ define(function (require) {
                 config.trackingDispatcher.trackEventNumber(265);
             }
             config.router.navigate(this.model.get('url'), { trigger: true });
+            config.mainScrollElement.scrollTop(0);
         },
 
         setPreview: function () {

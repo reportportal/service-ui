@@ -37,8 +37,7 @@ define(function (require) {
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var LogItemNextErrorView = require('launches/logLevel/LogItemNextError/LogItemNextErrorView');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
-    var Localization = require('localization');
-
+    var SliderComponent = require('components/SliderComponent');
     var config = App.getInstance();
 
     var LogItemLogsTable = Epoxy.View.extend({
@@ -69,6 +68,7 @@ define(function (require) {
             }
         },
         initialize: function (options) {
+            var self = this;
             var startOptions = options.options;
             var isAscSort = 'true';
             this.appStorage = new SingletonAppStorage();
@@ -84,26 +84,13 @@ define(function (require) {
                 selection_parameters: '{"is_asc": ' + isAscSort + ', "sorting_column": "time"}'
             });
             this.pagingModel = new Backbone.Model();
-            this.selectModel = new FilterEntities.EntitySelectModel({
-                id: 'level',
-                condition: 'in',
-                values: [
-                    { name: Localization.filterNameByValue.ALL, value: 'All' },
-                    { name: 'Trace', value: 'TRACE' },
-                    { name: 'Debug', value: 'DEBUG' },
-                    { name: 'Info', value: 'INFO' },
-                    { name: 'Warn', value: 'WARN' },
-                    { name: 'Error', value: 'ERROR' }
-                ],
-                value: (startOptions['filter.in.level'] && decodeURIComponent(startOptions['filter.in.level'])) || 'All'
-            });
             this.nameModel = new FilterEntities.EntityInputModel({
                 id: 'message',
                 condition: 'cnt',
                 valueMinLength: 3,
                 valueMaxLength: 55,
                 valueOnlyDigits: false,
-                value: startOptions['filter.cnt.message'] || ''
+                value: decodeURIComponent(startOptions['filter.cnt.message'] || '')
             });
 
             this.render();
@@ -132,7 +119,6 @@ define(function (require) {
             this.listenTo(this.collection, 'click:attachment', this.onClickAttachments);
             this.collection.load();
             this.listenTo(this.collection, 'reset', this.onResetCollection);
-            this.listenTo(this.selectModel, 'change:condition change:value', this.onChangeSelect);
             this.listenTo(this.nameModel, 'change:value', this.onChangeName);
             this.listenTo(this.filterModel, 'change:newSelectionParameters', this.onChangeSelectionParameters);
             this.onChangeSelectionParameters();
@@ -143,16 +129,14 @@ define(function (require) {
             $('[data-js-select-filter] [data-toggle="dropdown"]', this.$el).on('click', function () {
                 config.trackingDispatcher.trackEventNumber(204);
             });
-            var self = this;
             $(window)
                 .off('resize.logItems')
                 .on('resize.logItems', _.debounce(self.resize.bind(self), 100));
         },
         resetFilters: function () {
+            this.slider.slider.slider('value', this.slider.options.items.length); // activates all items in slider
             this.nameModel.set({ value: '' });
-            this.selectModel.set({ value: '' });
             $('[data-js-attachments-filter]', this.$el).prop('checked', false);
-            this.selectModel.trigger('changeState');
         },
         setupStickyHeader: function () {
             this.destroyStickyHeader();
@@ -172,7 +156,20 @@ define(function (require) {
             $container = $('[data-js-fixed-header]', this.$el);
             $container.html(Util.templates('tpl-launch-log-item-table-header', {}));
             this.updateHeader();
-            $('[data-js-select-filter]', this.$el).html((new this.selectModel.view({ model: this.selectModel })).$el);
+            this.slider = new SliderComponent({
+                holder: $('[data-js-select-filter-slider]', this.$el),
+                items: [
+                    { name: 'Fatal', value: 'FATAL' },
+                    { name: 'Error', value: 'ERROR' },
+                    { name: 'Warn', value: 'WARN' },
+                    { name: 'Info', value: 'INFO' },
+                    { name: 'Debug', value: 'DEBUG' },
+                    { name: 'Trace', value: 'TRACE' }
+                ],
+                orientation: 'horizontal',
+                defaultVal: this.userStorage.get('logFilteringLevel') || 'TRACE'
+            });
+            this.listenTo(this.slider, 'change', this.onChangeSelect);
             $('[data-js-name-filter]', this.$el).html((new this.nameModel.view({ model: this.nameModel })).$el);
             this.paging = new Components.PagingToolbar({
                 el: $('[data-js-paginate-container]', this.$el),
@@ -218,6 +215,7 @@ define(function (require) {
             });
             newLogOption.item = this.collectionItems.getInfoLog().item;
             newLogOption.history = this.collectionItems.getInfoLog().history;
+            newLogOption.retry = this.collectionItems.getInfoLog().retry;
             this.collectionItems.setInfoLog(newLogOption);
         },
         onStartLoading: function () {
@@ -244,8 +242,12 @@ define(function (require) {
         },
         onChangeFilter: function () {
             var newEntities = [];
-            newEntities.push(this.selectModel.getInfo());
             newEntities.push(this.nameModel.getInfo());
+            this.slider && newEntities.push({
+                filtering_field: 'level',
+                condition: 'gte',
+                value: this.slider.active
+            });
             if ($('[data-js-attachments-filter]', this.$el).is(':checked')) {
                 newEntities.push({
                     condition: 'ex',
@@ -253,6 +255,7 @@ define(function (require) {
                     value: 'true'
                 });
             }
+            this.userStorage.set('logFilteringLevel', this.slider.active);
             this.filterModel.set({ newEntities: JSON.stringify(newEntities) });
         },
         onClickSorter: function (e) {

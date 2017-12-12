@@ -31,22 +31,16 @@ define(function (require) {
     var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
     var SingletonUserStorage = require('storage/SingletonUserStorage');
     var CallService = require('callService');
+    var Service = require('coreService');
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
-
-    var App = require('app');
-
-    var config = App.getInstance();
-
-    var SingletonAppModel = require('model/SingletonAppModel');
-    var appModel = new SingletonAppModel();
-
+    var LaunchUtils = require('launches/LaunchUtils');
 
     /*  TRIGGERS:
-    *   loading(true or false) - start or end loading
-    *   change:paging(pagingObj) - change paging object
-    *
-    * */
+     *   loading(true or false) - start or end loading
+     *   change:paging(pagingObj) - change paging object
+     *
+     * */
 
     var LaunchSuiteStepItemCollection = Backbone.Collection.extend({
         model: LaunchSuiteStepItemModel,
@@ -94,12 +88,19 @@ define(function (require) {
             var activeFilter;
             var launchFilters;
             var difference;
+            var options;
+            var prop;
 
             this.crumbs = crumbs;
             this.pagingPage = 1;
             this.pagingTotalPages = 1;
 
-            filterData = this.calculateFilterOptions(optionsURLParam); // set this.logOptions
+            options = LaunchUtils.calculateFilterOptions(optionsURLParam);
+            for (prop in options.toAsign) {
+                this[prop] = options.toAsign[prop]; // set this.logOptions
+            }
+            var filterData = {};
+            filterData.entities = options.entities;
             difference = this.checkForDifference(launchModel, parentModel, filterData);
             this.launchModel = launchModel;
             this.parentModel = parentModel;
@@ -151,6 +152,7 @@ define(function (require) {
             var mainHash = window.location.hash.split('?')[0];
             options.push('log.item=' + logItemId);
             this.logOptions.history && options.push('log.history=' + this.logOptions.history);
+            this.logOptions.retry && options.push('log.retry=' + this.logOptions.retry);
 
             return mainHash + '?' + options.join('&');
         },
@@ -159,6 +161,26 @@ define(function (require) {
             var mainHash = window.location.hash.split('?')[0];
             value && options.push('predefined_filter=' + value);
             return mainHash + '?' + options.join('&');
+        },
+        loadLogLevelById: function () {
+            var async = $.Deferred();
+            var self = this;
+            Service.getTestItemInfo(this.logOptions.item)
+                .done(function (response) {
+                    self.pagingData = {
+                        number: 1,
+                        size: self.pagingSize,
+                        totalElements: 1,
+                        totalPages: 1
+                    };
+                    self.reset(new LaunchSuiteStepItemModel(response));
+                    self.trigger('change:log:item', response.id, false);
+                    async.resolve();
+                })
+                .fail(function (response) {
+                    async.reject(response);
+                });
+            return async;
         },
         setPredefinedFilter: function (filterName) {
             this.predefinedFilter = filterName;
@@ -198,54 +220,6 @@ define(function (require) {
             if (parentItemModel) {
                 this.trigger('activate:log', parentItemModel);
             }
-        },
-        calculateFilterOptions: function (optionsUrl) {
-            var options = optionsUrl.split('&');
-            var filterEntities = [];
-            var answer = {};
-            this.noChildFilter = false;
-            this.logOptions = {};
-            this.historyOptions = {};
-            _.each(options, function (option) {
-                var optionSeparate = option.split('=');
-                var keySeparate = optionSeparate[0].split('.');
-                var keyFirstPart = keySeparate[0];
-                var valueSeparate;
-                var joinKey;
-                if (keyFirstPart === 'filter') {
-                    if (optionSeparate[0] === 'filter.eq.has_childs') {
-                        this.noChildFilter = true;
-                    }
-                    filterEntities.push({
-                        condition: keySeparate[1],
-                        filtering_field: keySeparate[2],
-                        value: decodeURIComponent(optionSeparate[1])
-                    });
-                }
-                if (keyFirstPart === 'page') {
-                    if (keySeparate[1] === 'page') {
-                        this.pagingPage = parseInt(optionSeparate[1], 10);
-                    } else if (keySeparate[1] === 'size') {
-                        this.pagingSize = parseInt(optionSeparate[1], 10);
-                    } else if (keySeparate[1] === 'sort') {
-                        valueSeparate = optionSeparate[1].split('%2C');
-                        answer.selection_parameters = JSON.stringify({
-                            is_asc: (valueSeparate[1] === 'ASC'),
-                            sorting_column: valueSeparate[0]
-                        });
-                    }
-                }
-                keySeparate.shift();
-                joinKey = keySeparate.join('.');
-                if (keyFirstPart === 'log') {
-                    this.logOptions[joinKey] = optionSeparate[1];
-                }
-                if (keyFirstPart === 'history') {
-                    this.historyOptions[joinKey] = optionSeparate[1];
-                }
-            }, this);
-            answer.entities = JSON.stringify(filterEntities);
-            return answer;
         },
         changeSelectionParameters: function () {
             this.load();
@@ -325,11 +299,18 @@ define(function (require) {
             } else if (typesMas.length === 1) {
                 async.resolve(typesMas[0] || 'LAUNCH');
             } else {
-                // var levelPriority = ['SUITE', 'STORY', 'TEST', 'SCENARIO', 'STEP',
-                //  'BEFORE_CLASS', 'BEFORE_GROUPS', 'BEFORE_METHOD', 'BEFORE_SUITE',
-                // 'BEFORE_TEST', 'AFTER_CLASS', 'AFTER_GROUPS',
-                // 'AFTER_METHOD', 'AFTER_SUITE', 'AFTER_TEST'];
-                async.resolve(typesMas[0]);
+                var result = typesMas[0];
+                var levelPriority = ['SUITE', 'STORY', 'TEST', 'SCENARIO', 'STEP',
+                    'BEFORE_CLASS', 'BEFORE_GROUPS', 'BEFORE_METHOD', 'BEFORE_SUITE',
+                    'BEFORE_TEST', 'AFTER_CLASS', 'AFTER_GROUPS',
+                    'AFTER_METHOD', 'AFTER_SUITE', 'AFTER_TEST'];
+                _.each(levelPriority, function (level) {
+                    if (_.contains(typesMas, level)) {
+                        result = level;
+                        return false;
+                    }
+                });
+                async.resolve(result);
             }
             return async;
         },
@@ -425,7 +406,7 @@ define(function (require) {
         },
         loadSuiteStepChildren: function () {  // only for check type
             var path = Urls.getGridUrl('suit') + '?filter.eq.launch=' + this.launchModel.get('id') +
-                    '&filter.eq.parent=' + this.parentModel.get('id');
+                '&filter.eq.parent=' + this.parentModel.get('id');
             return call('GET', path);
         },
         onRemove: function () {

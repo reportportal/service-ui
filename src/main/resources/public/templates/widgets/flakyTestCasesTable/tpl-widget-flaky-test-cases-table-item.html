@@ -1,0 +1,19 @@
+<div class="row">
+    <div class="col col-name"><span data-js-link="<%- data.link %>"><%- data.name %></span></div>
+    <div class="col col-count">
+        <div class="count"><%- data.count %></div>
+        <div class="matrix">
+            <div class="squares-wrapper">
+                <% _.each(data.statuses, function(statuses) {  %>
+                <div class="square <%- statuses.toLowerCase()%>"></div>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+    <div class="col col-percents"><%- data.percents %></div>
+    <div class="col col-date" data-js-date>
+        <span class="absolute"><%- data.date %></span>
+        <span class="relative"><%- data.dateFrom %></span>
+    </div>
+</div>
+

@@ -91,7 +91,9 @@ define(function (require) {
             this.$header.html(this.mainBreadcrumbs.$el);
             defectTypeCollection.ready.done(function () {
                 var self = this;
-                this.$el.html(Util.templates(this.template, {}));
+                this.$el.html(Util.templates(this.template, {
+                    projectName: config.project.projectId
+                }));
                 this.$filterName = $('[data-js-filter-name]', this.$el);
                 this.$filterList = $('[data-js-filter-list]', this.$el);
                 this.$filterPaginate = $('[data-js-filter-paginate]', this.$el);

@@ -22,84 +22,70 @@ define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
+    var Backbone = require('backbone');
     var Util = require('util');
-
     var StepLogDefectTypeView = require('launches/common/StepLogDefectTypeView');
-
-    var LogItemInfoStackTraceView = require('launches/logLevel/LogItemInfoStackTraceView');
-    var LogItemInfoDetailsView = require('launches/logLevel/LogItemInfoDetailsView');
-    var LogItemInfoActivity = require('launches/logLevel/LogItemInfoActivity');
-    var LogItemInfoAttachmentsView = require('launches/logLevel/LogItemInfoAttachments');
+    var LaunchSuiteStepItemModel = require('launches/common/LaunchSuiteStepItemModel');
+    var LogItemInfoRetryItemView = require('launches/logLevel/LogItemInfoRetryItemView');
+    var LogItemInfoTabs = require('launches/logLevel/LogItemInfoTabs/LogItemInfoTabs');
+    var ModalConfirm = require('modals/modalConfirm');
     var App = require('app');
     var PostBugAction = require('launches/multipleActions/postBugAction');
     var LoadBugAction = require('launches/multipleActions/loadBugAction');
     var SingletonAppModel = require('model/SingletonAppModel');
     var Localization = require('localization');
-    var CallService = require('callService');
-    var Urls = require('dataUrlResolver');
-    var call = CallService.call;
-    var _ = require('underscore');
-
+    var Service = require('coreService');
     var config = App.getInstance();
+
+    var RetiesCollection = Backbone.Collection.extend({
+        model: LaunchSuiteStepItemModel
+    });
 
     var LogItemInfoView = Epoxy.View.extend({
         template: 'tpl-launch-log-item-info',
 
         events: {
-            'click [data-js-item-stack-trace-label]': function () {
-                config.trackingDispatcher.trackEventNumber(200);
-                this.toggleModelField('stackTrace');
-            },
-            'click [data-js-item-gallery-label]': function () {
-                config.trackingDispatcher.trackEventNumber(201);
-                this.toggleModelField('attachments');
-            },
-            'click [data-js-item-details-label]': function () {
-                config.trackingDispatcher.trackEventNumber(202);
-                this.toggleModelField('itemDetails');
-            },
-            'click [data-js-item-activity-label]': function () {
-                config.trackingDispatcher.trackEventNumber(203);
-                this.toggleModelField('activity');
-            },
-            'click [data-js-match]': 'onClickMatch',
             'click [data-js-post-bug]': 'onClickPostBug',
-            'click [data-js-load-bug]': 'onClickLoadBug'
+            'click [data-js-load-bug]': 'onClickLoadBug',
+            'click [data-js-send-issue]': 'onClickSendIssue',
+            'click [data-js-receive-issue]': 'onClickReceiveIssue'
         },
 
         bindings: {
-            '[data-js-item-stack-trace-label]': 'classes: {active: stackTrace}',
-            '[data-js-item-gallery-label]': 'classes: {active: attachments}',
-            '[data-js-item-details-label]': 'classes: {active: itemDetails}',
-            '[data-js-item-activity-label]': 'classes: {active: activity}',
-            '[data-js-item-stack-trace]': 'classes: {hide: not(stackTrace)}',
-            '[data-js-item-gallery]': 'classes: {hide: not(attachments)}',
-            '[data-js-item-details]': 'classes: {hide: not(itemDetails)}',
-            '[data-js-item-activity]': 'classes: {hide: not(activity)}',
-            '[data-js-match]': 'classes: {hide: not(parent_launch_investigate), disabled: not(validateMatchIssues)}, attr: {title: matchIssuesTitle}',
             '[data-js-post-bug]': 'classes: {disabled: validatePostBug}, attr: {title: postBugTitle}',
-            '[data-js-load-bug]': 'classes: {disabled: validateLoadBug}, attr: {title: loadBugTitle}'
+            '[data-js-load-bug]': 'classes: {disabled: validateLoadBug}, attr: {title: loadBugTitle}',
+            '[data-js-send-issue]': 'classes: {disabled: isDisabledSendIssue, hidden: isVisibleSendIssue}',
+            '[data-js-receive-issue]': 'classes: {disabled: isDisabledReceiveIssue, hidden: isVisibleReceiveIssue}'
         },
 
         computeds: {
-            validateMatchIssues: {
-                deps: ['parent_launch_isProcessing', 'parent_launch_status'],
-                get: function (parent_launch_isProcessing, parent_launch_status) {
-                    return (!parent_launch_isProcessing &&
-                    parent_launch_status !== config.launchStatus.inProgress);
+            isDisabledSendIssue: {
+                get: function () {
+                    return !(this.viewModel.collection.length > 1) || !(this.viewModel.get('status') === 'FAILED') ||
+                        !(this.viewModel.collection.models[this.viewModel.collection.models.length - 1].get('status') === 'FAILED');
                 }
             },
-            matchIssuesTitle: {
-                deps: ['parent_launch_isProcessing', 'parent_launch_status'],
-                get: function (parent_launch_isProcessing, parent_launch_status) {
-                    if (parent_launch_status === config.launchStatus.inProgress) {
-                        return Localization.launches.launchNotInProgress;
-                    }
-                    if (parent_launch_isProcessing) {
-                        return Localization.launches.launchIsProcessing;
-                    }
-                    return Localization.launches.matchTitle;
+            isVisibleSendIssue: {
+                get: function () {
+                    return this.viewModel.get('id') === this.viewModel.collection.models[this.viewModel.collection.models.length - 1].get('id');
+                }
+            },
+            isDisabledReceiveIssue: {
+                get: function () {
+                    var hasFailedItems = false;
+                    _.each(this.viewModel.collection.models, function (model, key) {
+                        if ((key !== (this.viewModel.collection.models.length - 1)) && (model.get('status') === 'FAILED')) {
+                            hasFailedItems = true;
+                        }
+                    }.bind(this));
+                    return !(this.viewModel.collection.length > 1) || !(this.viewModel.get('status') === 'FAILED') || !hasFailedItems;
+                }
+            },
+            isVisibleReceiveIssue: {
+                get: function () {
+                    return this.viewModel.get('id') !== this.viewModel.collection.models[this.viewModel.collection.models.length - 1].get('id');
                 }
             },
             validateLoadBug: {
@@ -138,16 +124,9 @@ define(function (require) {
             this.context = options.context;
             this.appModel = new SingletonAppModel();
             this.viewModel = options.itemModel;
+            (this.context === 'userdebug') && this.viewModel.set('mode', 'DEBUG');
             this.launchModel = options.launchModel;
-            this.model = new (Epoxy.Model.extend({
-                defaults: {
-                    stackTrace: false,
-                    attachments: false,
-                    itemDetails: false,
-                    activity: false
-                }
-            }))();
-            this.listenTo(this.model, 'change:stackTrace change:attachments change:itemDetails change:activity', this.onChangeTabModel);
+            this.collectionItems = options.collectionItems;
             this.listenTo(this.launchModel, 'change:isProcessing', this.onChangeLaunchProcessing);
             this.listenTo(this.viewModel, 'change:issue', this.onChangeIssue);
             this.onChangeLaunchProcessing();
@@ -156,31 +135,81 @@ define(function (require) {
                 this.issueView = new StepLogDefectTypeView({
                     model: this.viewModel,
                     pageType: 'logs',
-                    el: $('[data-js-step-issue]', this.$el)
+                    el: $('[data-js-step-issue]', this.$el),
+                    context: this.context
+                });
+                this.listenTo(this.issueView, 'update:issue', function () {
+                    this.trigger('update:issue');
                 });
             }
-            this.stackTrace = new LogItemInfoStackTraceView({
-                el: $('[data-js-item-stack-trace]', this.$el),
-                itemModel: this.viewModel,
-                parentModel: this.model
+            this.renderedRetries = [];
+            this.renderRetries();
+        },
+        getCurrentRetry: function () {
+            var curOptions = this.collectionItems.getInfoLog();
+            if (curOptions.retry) {
+                var retryData;
+                _.each(this.viewModel.get('retries'), function (retry) {
+                    if (retry.id === curOptions.retry) {
+                        retryData = retry;
+                    }
+                });
+                if (retryData) {
+                    return (new LaunchSuiteStepItemModel(retryData));
+                }
+                return this.viewModel;
+            }
+            return this.viewModel;
+        },
+        renderTabs: function (model) {
+            if (this.tabsView) {
+                this.stopListening(this.tabsView);
+                this.tabsView.destroy();
+            }
+            this.tabsView = new LogItemInfoTabs({
+                itemModel: model,
+                launchModel: this.launchModel,
+                context: this.context
             });
-            this.details = new LogItemInfoDetailsView({
-                el: $('[data-js-item-details]', this.$el),
-                itemModel: this.viewModel,
-                parentModel: this.model
-            });
-            this.activity = new LogItemInfoActivity({
-                el: $('[ data-js-item-activity]', this.$el),
-                itemModel: this.viewModel,
-                parentModel: this.model
-            });
-            this.attachments = new LogItemInfoAttachmentsView({
-                el: $('[data-js-item-gallery]', this.$el),
-                itemModel: this.viewModel,
-                parentModel: this.model
-            });
-            this.listenTo(this.stackTrace, 'goToLog', this.goToLog);
-            this.listenTo(this.attachments, 'click:attachment', this.onClickAttachment);
+            $('[data-js-tabs-container]', this.$el).html(this.tabsView.$el);
+            this.listenTo(this.tabsView, 'goToLog', this.goToLog);
+            this.listenTo(this.tabsView, 'click:attachment', this.onClickAttachment);
+        },
+        renderRetries: function () {
+            var self = this;
+            var retries = [];
+            if (this.viewModel.get('retries') && this.viewModel.get('retries').length) {
+                var activeRetry = this.getCurrentRetry().id;
+                $('[data-js-retries-container]', self.$el).removeClass('hide');
+                retries = _.clone(this.viewModel.get('retries'));
+                retries.push(this.viewModel.toJSON());
+                _.each(retries, function (item, num) {
+                    item.number = num + 1;
+                    if (item.id === activeRetry) {
+                        item.select = true;
+                    }
+                });
+                this.retriesCollection = new RetiesCollection(retries);
+                _.each(this.retriesCollection.models, function (modelRetry) {
+                    var view = new LogItemInfoRetryItemView({
+                        model: modelRetry
+                    });
+                    $('[data-js-retries-container]', self.$el).append(view.$el);
+                    self.renderedRetries.push(view);
+                });
+                this.listenTo(this.retriesCollection, 'select:item', this.activateRetry);
+            }
+            this.renderTabs(this.getCurrentRetry());
+        },
+        activateRetry: function (retryModel) {
+            if (!retryModel.get('select')) {
+                _.each(this.retriesCollection.models, function (retry) {
+                    retry.set({ select: false });
+                });
+                retryModel.set({ select: true });
+                this.renderTabs(retryModel);
+                this.trigger('change:retry', retryModel);
+            }
         },
         onClickAttachment: function (model) {
             this.trigger('click:attachment', model);
@@ -189,15 +218,7 @@ define(function (require) {
             this.trigger('goToLog', logId);
         },
         endGoToLog: function () {
-            this.stackTrace.endGoToLog();
-        },
-        goToAttachment: function (logId) {
-            var self = this;
-            config.mainScrollElement.animate({ scrollTop: this.el.offsetTop }, 500, function () {
-                self.attachments.goToAttachmentsPrev();
-                self.model.set({ attachments: true });
-                self.attachments.goToAttachments(logId);
-            });
+            this.tabsView.endGoToLog();
         },
         onChangeIssue: function () {
             this.trigger('change:issue');
@@ -216,38 +237,99 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(194);
             LoadBugAction({ items: [this.viewModel], from: 'logs' });
         },
-        onClickMatch: function () {
-            var self = this;
-            config.trackingDispatcher.trackEventNumber(195);
-            call('POST', Urls.launchMatchUrl(this.viewModel.get('launchId')))
+        onClickSendIssue: function () {
+            var lastItemModel = this.viewModel.collection.models[this.viewModel.collection.models.length - 1];
+            var activeItemIssue = this.viewModel.getIssue();
+            var lastItemIssue = lastItemModel.getIssue();
+            var data = {
+                issues: [{
+                    test_item_id: lastItemModel.get('id'),
+                    issue: {
+                        autoAnalyzed: lastItemIssue.autoAnalyzed,
+                        ignoreAnalyzer: lastItemIssue.ignoreAnalyzer,
+                        issue_type: activeItemIssue.issue_type,
+                        comment: activeItemIssue.comment || '',
+                        externalSystemIssues: activeItemIssue.externalSystemIssues || []
+                    }
+                }]
+            };
+            (new ModalConfirm({
+                headerText: Localization.dialogHeader.sendIssue,
+                confirmText: '',
+                bodyText: Util.replaceTemplate(Localization.dialog.msgSendIssue),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonText: Localization.ui.send,
+                okButtonDanger: false
+            })).show()
                 .done(function () {
-                    self.launchModel.set({ isProcessing: true });
-                    Util.ajaxSuccessMessenger('startAnalyzeAction');
-                })
-                .fail(function (error) {
-                    Util.ajaxFailMessenger(error, 'startAnalyzeAction');
-                });
+                    Service.updateDefect(data).done(function () {
+                        this.trigger('update:issue');
+                        Util.ajaxSuccessMessenger('updateDefect');
+                    }.bind(this));
+                }.bind(this));
         },
-        onChangeTabModel: function (model, value) {
-            if (value) {
-                this.model.set(_.extend(_.clone(this.model.defaults), model.changed));
-            }
+        onClickReceiveIssue: function () {
+            var previousFailedItemModel;
+            var previousFailedItemIssue;
+            var data;
+            _.each(this.viewModel.collection.models, function (model, key) {
+                if ((key !== (this.viewModel.collection.models.length - 1)) && (model.get('status') === 'FAILED')) {
+                    previousFailedItemModel = model;
+                }
+            }.bind(this));
+            previousFailedItemIssue = previousFailedItemModel.getIssue();
+            data = {
+                issues: [{
+                    test_item_id: this.viewModel.get('id'),
+                    issue: {
+                        autoAnalyzed: this.viewModel.get('autoAnalyzed'),
+                        ignoreAnalyzer: this.viewModel.get('ignoreAnalyzer'),
+                        issue_type: previousFailedItemIssue.issue_type,
+                        comment: previousFailedItemIssue.comment || '',
+                        externalSystemIssues: previousFailedItemIssue.externalSystemIssues || []
+                    }
+                }]
+            };
+            (new ModalConfirm({
+                headerText: Localization.dialogHeader.receiveIssue,
+                confirmText: '',
+                bodyText: Util.replaceTemplate(Localization.dialog.msgReceiveIssue),
+                cancelButtonText: Localization.ui.cancel,
+                okButtonText: Localization.ui.receive,
+                okButtonDanger: false
+            })).show()
+                .done(function () {
+                    Service.updateDefect(data).done(function () {
+                        this.trigger('update:issue');
+                        Util.ajaxSuccessMessenger('updateDefect');
+                    }.bind(this));
+                }.bind(this));
         },
-        toggleModelField: function (field) {
-            this.model.set(field, !this.model.get(field));
-        },
-
         render: function () {
-            this.$el.html(Util.templates(this.template, { context: this.context }));
+            var previousFailedLaunchNumber;
+            var lastFailedLaunchNumber = this.viewModel.collection.models[this.viewModel.collection.models.length - 1].get('launchNumber');
+            var sendDefectBtnText;
+            var copyDefectBtnText;
+            _.each(this.viewModel.collection.models, function (model, key) {
+                if ((key !== (this.viewModel.collection.models.length - 1)) && (model.get('status') === 'FAILED')) {
+                    previousFailedLaunchNumber = model.get('launchNumber');
+                }
+            }.bind(this));
+            copyDefectBtnText = (previousFailedLaunchNumber ?
+                Localization.launches.copyDefect + ' ' + Localization.ui.from + ' #' + previousFailedLaunchNumber :
+                Localization.launches.copyDefect);
+            sendDefectBtnText = (lastFailedLaunchNumber ?
+                Localization.launches.sendDefect + ' ' + Localization.ui.to + ' #' + lastFailedLaunchNumber :
+                Localization.launches.sendDefect);
+            this.$el.html(Util.templates(this.template, {
+                context: this.context,
+                sendDefectBtnText: sendDefectBtnText,
+                copyDefectBtnText: copyDefectBtnText
+            }));
         },
-
-        destroy: function () {
+        onDestroy: function () {
             this.issueView && this.issueView.destroy();
-            this.undelegateEvents();
-            this.stopListening();
-            this.unbind();
             this.$el.html('');
-            delete this;
         }
     });
 

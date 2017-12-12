@@ -17,7 +17,6 @@
 define(function (require) {
     'use strict';
 
-
     var $ = require('jquery');
     var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
@@ -49,7 +48,7 @@ define(function (require) {
             '[data-js-name]': 'text: name',
             '[data-js-comment]': 'classes: {hide: not(description)}',
             '[data-js-shared]': 'classes: {hide: any(not(share), not(isMy))}',
-            '[data-js-widget-type]': 'text: gadgetName',
+            '[data-js-widget-type]': 'html: gadgetName',
             '[data-js-public]': 'classes: {hide: isMy}, attr: {title: sharedTitle}',
             '[data-js-gadget-remove]': 'classes: {hide: not(canRemove)}',
             '[data-js-gadget-edit]': 'classes: {hide: not(isMy)}',
@@ -70,6 +69,7 @@ define(function (require) {
         },
         initialize: function () {
             this.activate = false;
+            this.isInitialWidgetUpdate = true;
             this.render();
             this.$el.addClass('load');
             this.$el.attr({
@@ -121,26 +121,50 @@ define(function (require) {
             this.activate && this.update(true);
         },
         updateWidget: function () {
-            this.widgetView && this.widgetView.destroy();
-            if (!this.model.get('gadget')) {
-                this.onLoadDataError();
-                return;
+            var hiddenItems;
+            var widget;
+
+            if (this.isInitialWidgetUpdate ||
+                (!_.isEqual(this.widgetView.model.getContent(), this.model.get('widgetData').content)) ||
+                (!_.isEqual(this.widgetView.model.getParameters(), this.model.get('widgetData').content_parameters))
+            ) {
+                this.isInitialWidgetUpdate = false;
+                if (this.widgetView && this.widgetView.widget && this.widgetView.widget) {
+                    widget = this.widgetView.widget.widgetView ? this.widgetView.widget.widgetView : this.widgetView.widget;
+                    if (widget.chart) {
+                        hiddenItems = _.difference(_.map(widget.chart.data(), function (item) { return item.id; }), _.map(widget.chart.data.shown(), function (item) { return item.id; }));
+                    }
+                    if (widget.charts) {
+                        hiddenItems = [];
+                        _.each(widget.charts, function (chart) {
+                            hiddenItems = hiddenItems.concat(_.difference(_.map(chart.data(), function (item) { return item.id; }), _.map(chart.data.shown(), function (item) { return item.id; })));
+                        });
+                    }
+                }
+                this.widgetView && this.widgetView.destroy();
+                if (!this.model.get('gadget')) {
+                    this.onLoadDataError();
+                    return;
+                }
+                this.widgetView = new WidgetView({
+                    gadgetSize: { width: this.model.get('width'), height: this.model.get('height') },
+                    model: (new WidgetModel(this.model.get('widgetData'), { parse: true })),
+                    hiddenItems: hiddenItems || []
+                });
+                $('[data-js-widget-container]', this.$el).html(this.widgetView.$el);
+                this.widgetView.onShow();
+                this.appendTooltip();
             }
-            this.widgetView = new WidgetView({
-                gadgetSize: { width: this.model.get('width'), height: this.model.get('height') },
-                model: (new WidgetModel(this.model.get('widgetData'), { parse: true }))
-            });
-            $('[data-js-widget-container]', this.$el).html(this.widgetView.$el);
-            this.widgetView.onShow();
-            this.appendTooltip();
         },
         onLoadDataError: function (error) {
-            var message = Localization.widgets.unableLoadData;
+            var message = '';
             var owner;
             var share;
             var view;
             if (error && error.status === 404) {
                 message = Localization.widgets.widgetNotFound;
+            } else if (error && error.status === 500) {
+                message = Localization.widgets.unableLoadData;
             } else {
                 owner = this.model.get('owner');
                 share = this.model.get('share');
@@ -155,14 +179,17 @@ define(function (require) {
             var self = this;
             var dangerRemove = (!this.model.get('isMy') && !this.model.get('isMyDashboard'));
             var modal;
+            var confirmText = '';
             e.stopPropagation();
+            dangerRemove && (confirmText = Localization.dialog.deletedWidgetDangerConfirmText);
+            (this.model.get('isMy') && this.model.get('isMyDashboard') && this.model.get('share') && (confirmText = Localization.dialog.deletedOwnSharedWidgetDangerConfirmText));
             config.trackingDispatcher.trackEventNumber(288);
             modal = new ModalConfirm({
                 headerText: Localization.dialogHeader.deletedWidget,
                 bodyText: Util.replaceTemplate(Localization.dialog.deletedWidget,
                     this.model.get('name')
                 ),
-                confirmText: !dangerRemove ? '' : Localization.dialog.deletedWidgetDangerConfirmText,
+                confirmText: confirmText,
                 okButtonDanger: true,
                 cancelButtonText: Localization.ui.cancel,
                 okButtonText: Localization.ui.delete

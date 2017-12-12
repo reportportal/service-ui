@@ -20,7 +20,7 @@ define(function (require) {
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
-
+    var _ = require('underscore');
     var LaunchControlView = require('launches/launchLevel/LaunchControlView');
     var LaunchTableView = require('launches/launchLevel/LaunchTableView');
     var SuiteControlView = require('launches/suiteLevel/SuiteControlView');
@@ -31,6 +31,7 @@ define(function (require) {
     var LogBodyView = require('launches/logLevel/LogBodyView');
     var HistoryControlView = require('launches/historyGrid/HistoryControlView');
     var HistoryBodyView = require('launches/historyGrid/HistoryBodyView');
+    var Localization = require('localization');
 
     var LaunchSuiteStepItemCollection = require('launches/common/LaunchSuiteStepItemCollection');
     var LaunchMultipleSelect = require('launches/LaunchMultipleSelect');
@@ -113,11 +114,27 @@ define(function (require) {
         onDrillItem: function (itemModel) {
             this.crumbs.cacheItem(itemModel);
         },
+        createHeaderForPrint: function () {
+            var crumbs = [];
+            _.each(this.crumbs.collection.models, function (item) {
+                _.each(item.get('path_names'), function (value) {
+                    crumbs.push(value);
+                });
+                crumbs.push(item.get('name'));
+            });
+            if (crumbs.length === 1) {
+                $(this.$el).find('.print p:last-child').html( Localization.launches.listOfLaunches );
+            } else {
+                crumbs = crumbs.slice(1).join(' / ');
+                $(this.$el).find('.print p:last-child').html(Localization.projectEvents.objectTypes.launch + ': <span>' + crumbs + '</span>');
+            }
+        },
         onChangeItemCrumbs: function (launchModel, parentModel, optionsURL, nextItemId) {
             var self = this;
             this.collectionItems.update(launchModel, parentModel, optionsURL, this.crumbs)
                 .done(function () {
                     self.onChangePathId();
+                    self.createHeaderForPrint();
                 })
                 .always(function () {
                     $('[data-js-preloader-launch-body]', self.$el).removeClass('rp-display-block');
@@ -159,7 +176,7 @@ define(function (require) {
             }
         },
         render: function () {
-            this.$el.html(Util.templates(this.template, {}));
+            this.$el.html(Util.templates(this.template, { projectName: config.project.projectId }));
         },
         update: function (partPath, optionsURL) {
             this.multipleSelected.reset();
@@ -235,6 +252,9 @@ define(function (require) {
                 collectionItems: this.collectionItems,
                 launchModel: info.launchModel
             });
+            this.listenTo(this.body, 'update:crumbs', function (partPath, optionsURL) {
+                this.crumbs.collection.isLaunchLost() && this.crumbs.update(partPath, optionsURL);
+            }.bind(this));
         },
         renderHistory: function (info) {
             this.control = new HistoryControlView({

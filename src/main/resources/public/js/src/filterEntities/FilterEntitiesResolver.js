@@ -76,7 +76,7 @@ define(function (require, exports, module) {
         });
         var totalName = Localization.favorites.total + ' ' + Localization.filterNamePluralById[type];
         if (filters.length == 1) {
-            totalName = Localization.filterNameById[type];
+            totalName = filters[0].get('label');
             filters = [];
         }
         filters.unshift(new Filters.EntityConditionInputModel({
@@ -206,6 +206,21 @@ define(function (require, exports, module) {
                 id: 'tags',
                 condition: 'has',
                 options: filterTagsOptions()
+            }),
+            new Filters.EntityDropDownModel({
+                id: 'issue$auto_analyzed',
+                condition: 'in',
+                options: [{ name: Localization.launches.withAA, value: 'TRUE' }, { name: Localization.launches.withoutAA, value: 'FALSE' }]
+            }),
+            new Filters.EntityDropDownModel({
+                id: 'issue$ignore_analyzer',
+                condition: 'in',
+                options: [{ name: Localization.launches.withIgnoreAA, value: 'TRUE' }, { name: Localization.launches.withoutIgnoreAA, value: 'FALSE' }]
+            }),
+            new Filters.EntityDropDownModel({
+                id: 'issue$externalSystemIssues$ticket_id',
+                condition: 'ex',
+                options: [{ name: Localization.launches.linkedBug, value: 'TRUE' }, { name: Localization.launches.noLinkedBug, value: 'FALSE' }],
             })
         ];
     };
@@ -263,6 +278,13 @@ define(function (require, exports, module) {
             valueMinLength: 3,
             valueMaxLength: 256,
             valueOnlyDigits: false
+        }));
+        launchSuiteEntitiesCollection.unshift(new Filters.EntityConditionInputModel({
+            id: 'number',
+            name: Localization.filters.launchNumber,
+            condition: 'gte',
+            options: filterStatsOptions(),
+            valueOnlyDigits: true
         }));
         launchSuiteEntitiesCollection.add(new Filters.EntityOwnerTagModel({ id: 'user', condition: 'in' }), { at: 1 });
         return launchSuiteEntitiesCollection;

@@ -22,7 +22,13 @@ define(function (require) {
     'use strict';
 
     var _ = require('underscore');
+    var Util = require('util');
     var BaseWidgetView = require('newWidgets/_BaseWidgetView');
+    var App = require('app');
+    var Moment = require('moment');
+    var config = App.getInstance();
+    var Service = require('coreService');
+    var FilterModel = require('filters/FilterModel');
 
     var C3ChartWidgetView = BaseWidgetView.extend({
         isDataExists: function () {
@@ -42,8 +48,67 @@ define(function (require) {
                 return rounded;
             });
         },
+        formatDateTime: function (time) {
+            return Util.dateFormat(new Date(+time));
+        },
         getRoundedToDecimalPlaces: function (num, decimalPlaces) {
             return Math.round(num * (Math.pow(10, decimalPlaces))) / Math.pow(10, decimalPlaces);
+        },
+        getFormattedLabels: function (id) {
+            var ratio = this.chartData[id] / this.total;
+            var percents = this.getRoundedToDecimalPlaces(ratio * 100, 2).toFixed(2);
+            if (!this.isPreview && percents > 0) {
+                return percents + '%';
+            }
+            return '';
+        },
+        getLaunchAxisTicks: function (itemsLength) {
+            return _.range(0, itemsLength, itemsLength > 6 ? Math.round(itemsLength / 12) : 1);
+        },
+        getTimelineAxisTicks: function (itemsLength) {
+            return _.range( // 6 - ticks to display count, change it if need more or less
+                itemsLength > 5 ? ((itemsLength / 5 / 2).toFixed() / 2).toFixed() : 0, // start
+                itemsLength, // finish
+                itemsLength > 5 ? (itemsLength / 5).toFixed() : 1 // step
+            );
+        },
+        updateWidget: function () {
+            this.charts && _.each(this.charts, function (chart) {
+                chart.flush();
+                chart.resize({
+                    height: this.$el.parent().height()
+                });
+            }.bind(this));
+            this.chart && this.chart.resize({ height: this.$el.parent().height() }) && this.chart.flush();
+        },
+        onBeforeDestroy: function () {
+            this.chart && (this.chart = this.chart.destroy());
+        },
+        redirectForTimeLine: function (date) {
+            var range = 86400000;
+            var filterId = this.model.get('filter_id');
+            Service.getFilterData([filterId])
+                .done(function (response) {
+                    var filterModel = new FilterModel();
+                    var link;
+                    var entities;
+                    var time = Moment(date);
+                    var dateFilter = {
+                        condition: 'btw',
+                        filtering_field: 'start_time',
+                        is_negative: false,
+                        value: time.format('x') + ',' + (parseInt(time.format('x'), 10) + range)
+                    };
+                    filterModel.parseServerData(response[0]);
+                    entities = filterModel.getEntitiesObj() || [];
+                    entities.push(dateFilter);
+                    filterModel.set('newEntities', JSON.stringify(entities));
+                    link = filterModel.get('url') + 'all?' + filterModel.getOptions().join('&');
+                    filterModel.destroy();
+                    if (link) {
+                        config.router.navigate(link, { trigger: true });
+                    }
+                });
         }
     });
 

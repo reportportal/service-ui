@@ -1,0 +1,38 @@
+:global(.react-autosuggest__container) {
+  width: 100%;
+  height: 100%;
+}
+:global(.react-autosuggest__suggestions-container) {
+  display: none;
+  position: absolute;
+  top: 100%;
+  margin-top: 4px;
+  width: 100%;
+  box-shadow: 0 1px 3px 0 $COLOR--silver;
+  background-color: $COLOR--white;
+  font-family: $FONT-REGULAR;
+  color: $COLOR--charcoal-grey;
+  font-size: 14px;
+  padding: 12px 0;
+  overflow: hidden;
+}
+
+:global(.react-autosuggest__suggestions-container--open) {
+  display: block;
+  z-index: 10;
+}
+
+:global(.react-autosuggest__suggestions-list) {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+:global(.react-autosuggest__suggestion) {
+  cursor: pointer;
+  padding: 4px 16px;
+}
+
+:global(.react-autosuggest__suggestion--highlighted) {
+  background-color: $COLOR--pale-grey-two;
+}

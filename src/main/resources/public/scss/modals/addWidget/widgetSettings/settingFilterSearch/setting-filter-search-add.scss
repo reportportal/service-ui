@@ -98,13 +98,6 @@
     .sorting-wrapper {
       margin-bottom: 20px;
       clear: both;
-      .filter-sorting-view {
-        .dropdown-toggle {
-          &> span {
-            text-transform: capitalize;
-          }
-        }
-      }
     }
   }
   .entities-container {

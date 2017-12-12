@@ -1,0 +1,45 @@
+.launch-log-item-info-tabs {
+  .mobile-tab, .desktop-tab {
+    .item-parametres {
+      font-size: 17px;
+      display: inline-block;
+      width: 24px;
+      &::after {
+        content: url('../img/launch/test_param_tab.svg');
+      }
+    }
+    &.active {
+      .item-parametres::after {
+        content: url('../img/launch/test_param_tab_active.svg');
+      }
+    }
+    &:hover {
+      .item-parametres::after {
+        content: url('../img/launch/test_param_hover.svg');
+      }
+    }
+  }
+  .baron {
+    height: 60px !important;
+    table {
+      tr {
+        border-bottom: 1px solid $COLOR--gray-91;
+        border-top: 1px solid $COLOR--gray-91;
+        line-height: 25px;
+        th, td {
+          padding: 0 10px;
+        }
+      }
+    }
+  }
+  .tabs-item {
+    &.parametres {
+      .parametres-container {
+        padding: 15px 15px 10px 15px;
+      }
+      .no-result-found {
+        display: block;
+      }
+    }
+  }
+}

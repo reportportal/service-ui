@@ -40,7 +40,7 @@ define(function (require) {
             name: '',
             description: '',
             entities: '',
-            selection_parameters: '{"is_asc": false, "sorting_column": "start_time"}',
+            selection_parameters: '{"is_asc": false, "sorting_column": "start_time,number"}',
             owner: '',
             share: '',
             id: '',
@@ -59,12 +59,12 @@ define(function (require) {
             optionsString: {
                 deps: ['entities', 'selection_parameters'],
                 get: function (entities, selection_params) {
-                    var selection_parameters = this.getParametersObj();
+                    var selectionParameters = this.getParametersObj();
                     var result = '(' + this.getFilterOptions(this.getEntitiesObj(), Localization.comparators) + ')';
-                    var sortKey = selection_parameters && this.getLastKey(selection_parameters.sorting_column);
+                    var sortKey = selectionParameters && this.getLastKey(selectionParameters.sorting_column);
 
                     if (sortKey) {
-                        result += Localization.favorites.sortedBy + ' ' + Localization.launchesHeaders[sortKey];
+                        result += Localization.favorites.sortedBy + ' ' + Localization.launchesHeaders[sortKey.split(',')[0]];
                     }
 
                     return result;
@@ -232,12 +232,27 @@ define(function (require) {
             }
         },
         getParametersObj: function () {
+            var data;
             try {
                 if (this.get('newSelectionParameters')) {
-                    var data = JSON.parse(this.get('newSelectionParameters'));
+                    data = JSON.parse(this.get('newSelectionParameters'));
+                    if (data.orders) {
+                        data.is_asc = data.orders[0].is_asc;
+                        data.sorting_column = _.map(data.orders, function (order) {
+                            return order.sorting_column;
+                        }).join(',');
+                        delete data.orders;
+                    }
                     return data;
                 }
-                var data = JSON.parse(this.get('selection_parameters'));
+                data = JSON.parse(this.get('selection_parameters'));
+                if (data.orders) {
+                    data.is_asc = data.orders[0].is_asc;
+                    data.sorting_column = _.map(data.orders, function (order) {
+                        return order.sorting_column;
+                    }).join(',');
+                    delete data.orders;
+                }
                 return data;
             } catch (err) {
                 return {};
@@ -245,14 +260,14 @@ define(function (require) {
         },
         getOptions: function () {
             var data = [];
+            var selectionParameters = this.getParametersObj();
+            var sortDirection = 'ASC';
             _.each(this.getEntitiesObj(), function (entity) {
                 if (entity.value) {
                     data.push('filter.' + entity.condition + '.' + entity.filtering_field +
                         '=' + encodeURIComponent(entity.value));
                 }
             });
-            var selectionParameters = this.getParametersObj();
-            var sortDirection = 'ASC';
             if (!selectionParameters.is_asc) {
                 sortDirection = 'DESC';
             }
@@ -277,9 +292,12 @@ define(function (require) {
         getDataFromServer: function (changes) {
             var cloneModel = this.clone();
             var entities;
+            var params;
             var result;
+            var orders = [];
             changes && cloneModel.set(changes);
             entities = cloneModel.getEntitiesObj();
+            params = cloneModel.getParametersObj();
             if (!entities.length) {
                 entities.push({
                     condition: 'cnt',
@@ -287,11 +305,20 @@ define(function (require) {
                     value: ''
                 });
             }
+            _.each(params.sorting_column.split(','), function (sortColumn) {
+                orders.push({
+                    is_asc: params.is_asc,
+                    sorting_column: sortColumn
+                });
+            });
             result = {
                 name: cloneModel.get('name'),
                 entities: entities,
                 share: cloneModel.get('share'),
-                selection_parameters: cloneModel.getParametersObj(),
+                selection_parameters: {
+                    orders: orders,
+                    page_number: params.page_number
+                },
                 type: cloneModel.get('type')
             };
             if (cloneModel.get('description')) {

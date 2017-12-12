@@ -23,119 +23,208 @@ define(function (require) {
 
     var $ = require('jquery');
     var _ = require('underscore');
-    var App = require('app');
+    var Util = require('util');
+    var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
     var Localization = require('localization');
-    var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
-
+    var c3 = require('c3');
+    var App = require('app');
     var config = App.getInstance();
 
-    var FailedCasesTrendChart = ChartWidgetView.extend({
-        initialize: function (options) {
-            ChartWidgetView.prototype.initialize.call(this, options);
-            this.label = Localization.widgets.casesLabel;
-            this.labelName = Localization.widgets.failedCases;
-        },
-        getData: function () {
-            var series = {};
-            var contentData = this.model.getContent() || [];
-            this.categories = [];
-            if (!_.isEmpty(contentData)) {
-                series.key = Localization.widgets.failed;
-                series.color = this.getSeriesColor('failed');
-                series.values = [];
-                _.each(contentData.result, function (d, i) {
-                    var val = d.values.issuesCount;
-                    var cat = {
-                        id: d.id,
-                        name: d.name,
-                        number: '#' + d.number,
-                        startTime: parseInt(d.startTime, 10)
-                    };
-                    this.categories.push(cat);
-                    series.values.push(_.extend({ value: parseInt(val, 10), num: i + 1 }, cat));
-                }, this);
-                return [series];
-            }
-            return [];
-        },
+    var FailedCasesTrendChart = C3ChartWidgetView.extend({
+
+        template: 'tpl-widget-failed-cases-trend-chart',
+        tooltipTemplate: 'tpl-widget-failed-cases-trend-chart-tooltip',
+        className: 'failed-cases-trend-chart',
+
         render: function () {
-            var data = this.getData();
-            var self = this;
-            var tip;
-            var vis;
-            var cup;
-            var update;
-            var emptyData = this.model.getContent();
-            if (!this.isEmptyData(emptyData)) {
-                this.addSVG();
-
-                this.chart = nvd3.models.lineChart()
-
-                    .x(function (d) {
-                        return d.num;
-                    })
-                    .y(function (d) {
-                        return d.value;
-                    })
-                    .interactive(false)
-                    .useInteractiveGuideline(!self.isPreview)
-                    .showLegend(!self.isPreview)
-                ;
-
-                this.chart.yAxis
-                    .tickFormat(function (d) {
-                        return d.toFixed();
-                    })
-                    .axisLabelDistance(-10)
-                    .axisLabel(this.labelName)
-                ;
-
-                this.chart.xAxis
-                    .tickFormat(function (d) {
-                        return self.formatNumber(d);
-                    });
-
-                if (this.yDomain) {
-                    this.chart.yDomain(this.yDomain);
-                }
-
-                tip = this.createTooltip();
-                vis = d3.select($('svg', this.$el).get(0))
-                    .datum(data)
-                    .call(this.chart)
-                    .call(tip)
-                ;
-
-                this.addLaunchNameTip(vis, tip);
-
-                this.chart.xAxis
-                    .tickFormat(function (d) {
-                        return self.formatCategories(d);
-                    });
-
-                cup = self.chart.update;
-                update = function () {
-                    self.chart.xAxis.tickFormat(function (d) {
-                        return self.formatNumber(d);
-                    });
-                    cup();
-                    self.chart.xAxis
-                        .tickFormat(function (d) {
-                            return self.formatCategories(d);
-                        });
-                    self.chart.update = update;
-                    self.addLaunchNameTip(vis, tip);
-                };
-                this.chart.update = update;
-                this.addResize();
-                if (self.isPreview) {
-                    this.disabeLegendEvents();
-                }
-            } else {
-                this.addNoAvailableBock();
+            if (this.isPreview) {
+                this.$el.addClass('preview-view');
             }
+            if (!this.isDataExists()) {
+                this.addNoAvailableBock();
+                return;
+            }
+            this.$el.html(Util.templates(this.template, {}));
+            this.drawLineChart($('[data-js-chart-container]', this.$el), this.model.getContent().result);
+        },
+        drawLineChart: function ($el, data) {
+            var self = this;
+            var chartData = ['failed'];
+            var itemData = [];
+            var topExtremum = 0;
+            var bottomExtremum = Infinity;
+            var topBlockElem;
+
+            _.each(data, function (item) {
+                if (+item.values.issuesCount > topExtremum) {
+                    topExtremum = +item.values.issuesCount;
+                }
+                if (+item.values.issuesCount < bottomExtremum) {
+                    bottomExtremum = +item.values.issuesCount;
+                }
+                itemData.push({
+                    id: item.id,
+                    name: item.name,
+                    number: item.number,
+                    startTime: item.startTime
+                });
+                chartData.push(item.values.issuesCount);
+            });
+            this.chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: [chartData],
+                    colors: {
+                        failed: config.defaultColors.failed
+                    }
+                },
+                point: {
+                    r: itemData.length === 1 ? 5 : 1,
+                    focus: {
+                        expand: {
+                            r: 5
+                        }
+                    }
+                },
+                grid: {
+                    y: {
+                        show: !self.isPreview
+                    }
+                },
+                axis: {
+                    x: {
+                        show: !self.isPreview,
+                        type: 'category',
+                        categories: _.map(itemData, function (item) {
+                            return '#' + item.number;
+                        }),
+                        tick: {
+                            values: self.getLaunchAxisTicks(itemData.length),
+                            width: 60,
+                            centered: true,
+                            inner: true,
+                            multiline: false,
+                            outer: false
+                        }
+                    },
+                    y: {
+                        show: !self.isPreview,
+                        tick: {
+                            values: self.getTicks(bottomExtremum, topExtremum)
+                        },
+                        padding: {
+                            top: 5,
+                            bottom: 0
+                        },
+                        label: {
+                            text: Localization.widgets.failedCases,
+                            position: 'outer-middle'
+                        }
+                    }
+                },
+                interaction: {
+                    enabled: !self.isPreview
+                },
+                // zoom: {
+                //     enabled: true,
+                //     rescale: true
+                // },
+                // subchart: {
+                //     show: true
+                // },
+                padding: {
+                    top: self.isPreview ? 0 : 85,
+                    left: self.isPreview ? 0 : 60,
+                    right: self.isPreview ? 0 : 20,
+                    bottom: 0
+                },
+                legend: {
+                    show: false // we use custom legend
+                },
+                tooltip: {
+                    grouped: true,
+                    position: function (d, width, height, element) {
+                        var left = d3.mouse(self.chart.element)[0] - (width / 2);
+                        var top = d3.mouse(self.chart.element)[1] - height;
+                        return {
+                            top: top - 8, // 8 - offset for tooltip arrow
+                            left: left
+                        };
+                    },
+                    contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+                        var launchData = itemData[d[0].index];
+                        return Util.templates(self.tooltipTemplate, {
+                            launchName: launchData.name,
+                            launchNumber: launchData.number,
+                            startTime: self.formatDateTime(launchData.startTime),
+                            itemCases: d[0].value
+                        });
+                    }
+                },
+                size: {
+                    height: self.$el.parent().height()
+                },
+                onrendered: function () {
+                    $el.css('max-height', 'none');
+                }
+            });
+            if (!this.isPreview) {
+                topBlockElem = d3.select(this.chart.element).insert('div', '.chart').attr('class', 'top-block');
+                this.setupLegend(topBlockElem, ['failed'], this.chart);
+            }
+        },
+        getTicks: function (bottom, top) {
+            var count = 6; // change it if want to increase/decrease Y-lines
+            var height = top - bottom;
+            var step;
+            var result = [bottom];
+            switch (true) {
+            case height < 1:
+                step = 0.2;
+                break;
+            case height < 10:
+                step = 2;
+                break;
+            default:
+                step = Math.round((height / count) / 10) * 10;
+                break;
+            }
+            _.each(_.range(0, top, step), function (item) {
+                if (item > bottom) {
+                    result.push(item);
+                }
+            });
+            result.push(top);
+            return result;
+        },
+        setupLegend: function (el, itemNames, chart) {
+            // Configuring custom legend block
+            d3.select(el[0][0])
+                .insert('div')
+                .attr('class', 'legend')
+                .insert('div', '.legend')
+                .attr('data-js-legend-wrapper', '') // wrapper for BaronScroll
+                .selectAll('span')
+                .data(itemNames)
+                .enter()
+                .append('span')
+                .attr('data-id', function (id) {
+                    return id;
+                })
+                .html(function (id) {
+                    return '<div class="color-mark"></div>' + Localization.widgets[id];
+                })
+                .on('mouseover', function (id) {
+                    chart.focus(id);
+                })
+                .on('mouseout', function (id) {
+                    chart.revert();
+                })
+                .on('click', function (id) {
+                    // $('.color-mark', $(this)).toggleClass('unchecked');
+                    // chart.toggle(id);
+                });
         }
     });
 

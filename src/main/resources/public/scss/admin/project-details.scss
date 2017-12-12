@@ -25,3 +25,15 @@
       margin-top: 17px;
     }
 }
+
+@media print{
+  .rp-admin-project-details{
+    .print{
+      margin: 0 -30px 0 -30px;
+      border-bottom: solid 2px #e9e9e9;
+      p{
+        margin: 25px 15px 15px 25px;
+      }
+    }
+  }
+}

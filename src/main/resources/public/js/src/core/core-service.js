@@ -137,8 +137,11 @@ define([
     };
 
 
-    var getSharedWidgets = function () {
-        return call('GET', urls.widgetsShared());
+    var getSharedWidgets = function (data) {
+        return call('GET', urls.widgetsShared(data));
+    };
+    var sharedWidgetSearch = function (data) {
+        return call('GET', urls.sharedWidgetSearch(data));
     };
 
     var getSharedWidgetData = function (id) {
@@ -246,10 +249,6 @@ define([
 
     var startLaunchAnalyze = function (id) {
         return call('POST', urls.launchAnalyzeUrl(id), null, null, true);
-    };
-
-    var startLaunchMatch = function (id) {
-        return call('POST', urls.launchMatchUrl(id), null, null, true);
     };
 
     var mergeLaunches = function (data) {
@@ -405,7 +404,6 @@ define([
         updateLaunch: updateLaunch,
         updateTestItem: updateTestItem,
         startLaunchAnalyze: startLaunchAnalyze,
-        startLaunchMatch: startLaunchMatch,
         mergeLaunches: mergeLaunches,
         finishLaunch: finishLaunch,
         removeTicket: removeTicket,
@@ -471,6 +469,7 @@ define([
         generateDemoData: generateDemoData,
 
         toggleAnalytics: toggleAnalytics,
-        getProjectEvents: getProjectEvents
+        getProjectEvents: getProjectEvents,
+        sharedWidgetSearch: sharedWidgetSearch
     };
 });

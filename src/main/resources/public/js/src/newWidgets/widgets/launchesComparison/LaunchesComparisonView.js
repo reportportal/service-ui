@@ -23,146 +23,220 @@ define(function (require) {
 
     var $ = require('jquery');
     var _ = require('underscore');
-    var App = require('app');
+    var Util = require('util');
+    var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
+    var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var Localization = require('localization');
-    var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
-
+    var c3 = require('c3');
+    var App = require('app');
     var config = App.getInstance();
 
-    var LaunchesComparisonChart = ChartWidgetView.extend({
-
-        initialize: function (options) {
-            ChartWidgetView.prototype.initialize.call(this, options);
-            this.tooltipLabel = '%';
-        },
-
-        getSeries: function () {
-            var series = {};
-            var contentFields = this.model.getContentFields();
-
-            _.each(contentFields, function (i) {
-                var a = i.split('$');
-                var type = a[1];
-                var t = type === 'defects' ? a[2] : _.last(a);
-                var seriesId = t;
-                var sd = config.patterns.defectsLocator;
-                var name = Localization.launchesHeaders[seriesId];
-                var defect;
-                if (seriesId !== 'total') {
-                    if (type === 'defects') {
-                        defect = _.map(a[2].split('_'), function (d, n) { return n > 0 ? d.capitalize() : d; });
-                        t = defect.join('');
-                    }
-                    if (!series[t]) {
-                        series[t] = {
-                            key: name,
-                            seriesId: seriesId,
-                            color: this.getSeriesColor(seriesId),
-                            values: []
-                        };
-                    }
-                    if (type === 'defects' && sd.test(_.last(a))) {
-                        series[t].key = name;
-                    }
-                }
-            }, this);
-            this.series = series;
-            return this.series;
-        },
-
-        getData: function () {
-            var contentData = this.model.getContent() || [];
-            var series;
-            this.categories = [];
-            if (!_.isEmpty(contentData)) {
-                series = this.getSeries();
-
-                _.each(contentData.result, function (d, i) {
-                    var cat = {
-                        id: d.id,
-                        name: d.name,
-                        number: '#' + d.number,
-                        startTime: parseInt(d.startTime, 10)
-                    };
-                    this.categories.push(cat);
-                    _.each(d.values, function (v, k) {
-                        var a = k.split('$');
-                        var type = a[1];
-                        var id = type === 'issueCounter' ? a[2] : _.last(a);
-                        var prop = _.extend({ x: i + 1, y: parseFloat(v) }, cat);
-
-                        if (series[id]) {
-                            if (_.isObject(series[id].values[i])) {
-                                series[id].values[i].y += parseFloat(v);
-                            } else {
-                                series[id].values.push(prop);
-                            }
-                        }
-                    });
-                }, this);
-                return _.values(series);
-            }
-            return [];
-        },
+    var LaunchesComparisonChart = C3ChartWidgetView.extend({
+        template: 'tpl-widget-launches-comparison-chart',
+        tooltipTemplate: 'tpl-widget-launches-comparison-chart-tooltip',
+        className: 'launches-comparison-chart',
 
         render: function () {
-            var data = this.getData();
-            var self = this;
-            var tooltip = this.tooltipContent();
-            var vis;
-            var tip;
-            var emptyData = this.model.getContent();
-            if (!this.isEmptyData(emptyData)) {
-                this.addSVG();
-
-                this.chart = nvd3.models.multiBarChart()
-                    .x(function (d) {
-                        return d.x;
-                    })
-                    .y(function (d) {
-                        return d.y;
-                    })
-                    .forceY([0, 1])
-                    .showControls(false)
-                    .clipEdge(true)
-                    .showXAxis(true)
-                    .yDomain([0, 100])
-                    .tooltips(!self.isPreview)
-                    .showLegend(!self.isPreview)
-                ;
-
-                this.chart.tooltipContent(tooltip);
-                this.chart.yAxis
-                    .axisLabelDistance(-10)
-                    .tickFormat(function (d) {
-                        return d;
-                    })
-                    .tickValues(_.range(0, 101, 10))
-                    .axisLabel('% ' + Localization.widgets.ofTestCases);
-
-                this.chart.xAxis
-                    .tickFormat(function (d) {
-                        return self.formatNumber(d);
-                    });
-
-                tip = this.createTooltip();
-                vis = d3.select($('svg', this.$el).get(0))
-                    .datum(data)
-                    .call(this.chart)
-                    .call(tip);
-
-                this.addLaunchNameTip(vis, tip);
-                this.addLegendClick(vis);
-                this.redirectOnElementClick('multibar');
-                this.addResize();
-                if (self.isPreview) {
-                    this.disabeLegendEvents();
-                }
-            } else {
-                this.addNoAvailableBock();
+            var data;
+            this.scrollers = [];
+            if (this.isPreview) {
+                this.$el.addClass('preview-view');
             }
+            if (!this.isDataExists()) {
+                this.addNoAvailableBock();
+                return;
+            }
+            data = this.model.getContent().result;
+            this.defectTypesCollection = new SingletonDefectTypeCollection();
+            this.defectTypesCollection.ready.done(function () {
+                this.$el.html(Util.templates(this.template, {}));
+                this.drawGroupedBarChart($('[data-js-chart-container]', this.$el), data);
+            }.bind(this));
+        },
+
+        drawGroupedBarChart: function ($el, data) {
+            var self = this;
+            var chartData = {};
+            var chartDataOrdered = [];
+            var legendScroller;
+            var itemNames;
+            var itemData = [];
+            var colors = {};
+            var contentFields = this.model.getContentFields();
+
+            // prepare columns array and fill it witch field names
+            _.each(data[0].values, function (val, key) {
+                chartData[key] = [key];
+                colors[key] = config.defaultColors[key.split('$')[2]];
+            });
+
+            // fill columns arrays with values
+            _.each(data, function (item) {
+                itemData.push({
+                    id: item.id,
+                    name: item.name,
+                    number: item.number,
+                    startTime: item.startTime
+                });
+                _.each(item.values, function (val, key) {
+                    chartData[key].push(val);
+                });
+            });
+
+            // reorder colums array in accordance with contentFields array
+            _.each(contentFields, function (key) {
+                if (key === 'statistics$executions$total') { // do not show executionsTotal
+                    return;
+                }
+                chartDataOrdered.push(chartData[key]);
+            });
+            // get column item names in correct order
+            itemNames = _.map(chartDataOrdered, function (item) {
+                return item[0];
+            });
+            this.chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: chartDataOrdered,
+                    type: 'bar',
+                    onclick: function (d, element) {
+                        !self.unclickableChart && config.router.navigate(self.linkToRedirectService(d.id.split('$')[2], itemData[d.index].id), { trigger: true });
+                    },
+                    order: null,
+                    colors: colors
+                },
+                grid: {
+                    y: {
+                        show: !self.isPreview
+                    }
+                },
+                axis: {
+                    x: {
+                        show: !self.isPreview,
+                        type: 'category',
+                        categories: _.map(itemData, function (item) {
+                            return '#' + item.number;
+                        }),
+                        tick: {
+                            centered: true,
+                            inner: true,
+                            outer: false
+                        }
+                    },
+                    y: {
+                        show: !self.isPreview,
+                        padding: {
+                            top: 0
+                        },
+                        max: 100,
+                        label: {
+                            text: '% ' + Localization.widgets.ofTestCases,
+                            position: 'outer-middle'
+                        }
+                    }
+                },
+                interaction: {
+                    enabled: !self.isPreview
+                },
+                // zoom: {
+                //     enabled: true,
+                //     rescale: true
+                // },
+                // subchart: {
+                //     show: true
+                // },
+                padding: {
+                    top: self.isPreview ? 0 : 85,
+                    left: self.isPreview ? 0 : 60,
+                    right: self.isPreview ? 0 : 20,
+                    bottom: 0
+                },
+                legend: {
+                    show: false // we use custom legend
+                },
+                tooltip: {
+                    grouped: false,
+                    position: function (d, width, height, element) {
+                        var left = d3.mouse(self.chart.element)[0] - (width / 2);
+                        var top = d3.mouse(self.chart.element)[1] - height;
+                        return {
+                            top: top - 8, // 8 - offset for tooltip arrow
+                            left: left
+                        };
+                    },
+                    contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+                        var launchData = itemData[d[0].index];
+                        var id = d[0].id;
+                        return Util.templates(self.tooltipTemplate, {
+                            launchName: launchData.name,
+                            launchNumber: launchData.number,
+                            startTime: self.formatDateTime(launchData.startTime),
+                            color: color(id),
+                            itemName: Localization.filterNameById[id.split('$total')[0]],
+                            itemCases: d[0].value
+                        });
+                    }
+                },
+                size: {
+                    height: self.$el.parent().height()
+                },
+                onrendered: function () {
+                    $el.css('max-height', 'none');
+                    d3.selectAll($('.c3-chart-bar path', $el)).each(function () {
+                        var elem = d3.select(this);
+                        if (elem.datum().value === 0) {
+                            elem.style('stroke-width', '3px');
+                        }
+                    });
+                }
+            });
+            // Configuring custom legend block
+            if (!self.isPreview && !self.unclickableChart) {
+                d3.select(this.chart.element)
+                    .insert('div', '.chart')
+                    .attr('class', 'legend')
+                    .insert('div', '.legend')
+                    .attr('data-js-legend-wrapper', '') // wrapper for BaronScroll
+                    .selectAll('span')
+                    .data(itemNames)
+                    .enter()
+                    .append('span')
+                    .attr('data-id', function (id) { return id; })
+                    .html(function (id) {
+                        return '<div class="color-mark"></div>' + Localization.filterNameById[id.split('$total')[0]];
+                    })
+                    .each(function (id) {
+                        if (~self.hiddenItems.indexOf(id)) {
+                            $('.color-mark', $(this)).addClass('unchecked');
+                        }
+                        d3.select(this).select('.color-mark').style('background-color', self.chart.color(id));
+                    })
+                    .on('mouseover', function (id) {
+                        self.chart.focus(id);
+                    })
+                    .on('mouseout', function (id) {
+                        self.chart.revert();
+                    })
+                    .on('click', function (id) {
+                        config.trackingDispatcher.trackEventNumber(342);
+                        $('.color-mark', $(this)).toggleClass('unchecked');
+                        self.chart.toggle(id);
+                    });
+                this.hiddenItems && this.chart.hide(this.hiddenItems);
+                d3.select(this.chart.element).select('.legend')
+                    .append('div')
+                    .attr('class', 'legend-gradient')
+                    .append('div')
+                    .attr('class', 'legend-border');
+                legendScroller = Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
+                this.scrollers.push(legendScroller);
+            }
+        },
+        onBeforeDestroy: function () {
+            _.each(this.scrollers, function (baronScrollElem) {
+                baronScrollElem.baron && baronScrollElem.baron().dispose();
+            });
         }
     });
 

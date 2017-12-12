@@ -49,7 +49,6 @@ define(function (require) {
         bindings: {
             '[data-js-finish]': 'attr:{title: titleForceFinish, disabled: any(titleForceFinish)}',
             '[data-js-export-format]': 'attr:{disabled:not(isExport)}',
-            '[data-js-can-match]': 'attr:{disabled:not(isMatchIssues)}',
             '[data-js-can-analyze]': 'attr:{disabled:not(isAnalyze)}',
             '[data-js-switch-mode]': 'text:itemModeText, attr:{title: titleChangeMode, disabled:not(isChangeMode)}',
             '[data-js-remove]': 'attr: {title: removeTitle, disabled: any(removeTitle)}'
@@ -106,12 +105,6 @@ define(function (require) {
                     return (mode == 'DEBUG') ? Localization.launches.shiftToLaunches : Localization.launches.shiftToDebug;
                 }
             },
-            isMatchIssues: {
-                deps: ['launch_status', 'launch_isProcessing', 'launch_toInvestigate'],
-                get: function (launchStatus, launchIsProcessing, launch_toInvestigate) {
-                    return (launchStatus != 'IN_PROGRESS' && !launchIsProcessing && launch_toInvestigate > 0);
-                }
-            }
         },
         render: function () {
             var model = this.model.toJSON({ computed: true });
@@ -132,11 +125,10 @@ define(function (require) {
             var self = this,
                 el = $(e.currentTarget),
                 id = this.model.get('id'),
-                isLaunchAnalyze = el.data('analyze-type') === 'analyze',
-                type = isLaunchAnalyze ? 'startLaunchAnalyze' : 'startLaunchMatch';
+                isLaunchAnalyze = el.data('analyze-type') === 'analyze';
             if (!el.hasClass('disabled')) {
                 config.trackingDispatcher.trackEventNumber(isLaunchAnalyze ? 28 : 27);
-                Service[type](id)
+                Service.startLaunchAnalyze(id)
                     .done(function (response) {
                         self.model.set('isProcessing', true);
                         Util.ajaxSuccessMessenger('startAnalyzeAction');

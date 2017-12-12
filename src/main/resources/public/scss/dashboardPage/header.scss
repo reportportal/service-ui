@@ -36,7 +36,7 @@
   @media (max-width: 767px) {
     background: $COLOR--white-default;
     padding: 13px 10px;
-    margin-bottom: 15px;
+    display: none;
     & > .rp-btn, .breadcrumbs {
       display: none;
     }
@@ -50,6 +50,7 @@
         text-overflow: ellipsis;
         color: $COLOR--charcoal-grey;
         font-family: "OpenSansSemibold", sans-serif;
+        text-transform: uppercase;
       }
       .dropdown-menu {
         width: 100%;

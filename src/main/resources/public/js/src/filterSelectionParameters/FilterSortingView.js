@@ -18,12 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var Epoxy = require('backbone-epoxy');
     var Backbone = require('backbone');
     var Util = require('util');
+    var $ = require('jquery');
     var _ = require('underscore');
     var Localization = require('localization');
     var FilterSortingItemView = require('filterSelectionParameters/FilterSortingItemView');
@@ -50,20 +51,20 @@ define(function (require, exports, module) {
             }
         },
         initialize: function () {
+            var self = this;
             this.render();
             this.collection = new Backbone.Collection([
-                { name: Localization.launches.launchName, active: false, id: 'name' },
-                { name: Localization.launchesHeaders.start_time, active: false, id: 'start_time' },
-                { name: Localization.launchesHeaders.total, active: false, id: 'statistics$executions$total' },
-                { name: Localization.launchesHeaders.passed, active: false, id: 'statistics$executions$passed' },
-                { name: Localization.launchesHeaders.failed, active: false, id: 'statistics$executions$failed' },
-                { name: Localization.launchesHeaders.skipped, active: false, id: 'statistics$executions$skipped' },
-                { name: Localization.launchesHeaders.product_bug, active: false, id: 'statistics$defects$product_bug$total' },
-                { name: Localization.launchesHeaders.automation_bug, active: false, id: 'statistics$defects$automation_bug$total' },
-                { name: Localization.launchesHeaders.system_issue, active: false, id: 'statistics$defects$system_issue$total' },
-                { name: Localization.launchesHeaders.to_investigate, active: false, id: 'statistics$defects$to_investigate$total' }
+                { name: Localization.launches.launchName, active: false, id: 'name,number' },
+                { name: Localization.launchesHeaders.start_time, active: false, id: 'start_time,number' },
+                { name: Localization.launchesHeaders.total, active: false, id: 'statistics$executions$total,number' },
+                { name: Localization.launchesHeaders.passed, active: false, id: 'statistics$executions$passed,number' },
+                { name: Localization.launchesHeaders.failed, active: false, id: 'statistics$executions$failed,number' },
+                { name: Localization.launchesHeaders.skipped, active: false, id: 'statistics$executions$skipped,number' },
+                { name: Localization.launchesHeaders.product_bug, active: false, id: 'statistics$defects$product_bug$total,number' },
+                { name: Localization.launchesHeaders.automation_bug, active: false, id: 'statistics$defects$automation_bug$total,number' },
+                { name: Localization.launchesHeaders.system_issue, active: false, id: 'statistics$defects$system_issue$total,number' },
+                { name: Localization.launchesHeaders.to_investigate, active: false, id: 'statistics$defects$to_investigate$total,number' }
             ]);
-            var self = this;
             _.each(this.collection.models, function (model) {
                 var view = new FilterSortingItemView({ viewModel: model, model: self.model });
                 $('[data-js-sorting-list]', self.$el).append(view.$el);

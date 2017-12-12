@@ -20,12 +20,15 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
     var ModalView = require('modals/_modalView');
+    var Backbone = require('backbone');
     var App = require('app');
     var Util = require('util');
     var CoreService = require('coreService');
     var Localization = require('localization');
     var MarkdownEditor = require('components/markdown/MarkdownEditor');
+    var TinySwitcherComponent = require('components/TinySwitcherComponent');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
+    var SingletonAppStorage = require('storage/SingletonAppStorage');
     var SingletonAppModel = require('model/SingletonAppModel');
 
     var config = App.getInstance();
@@ -38,7 +41,8 @@ define(function (require) {
             '[data-js-save-post-wrapper]': 'classes: {disabled: not(isBtsConfigure)}',
             '[data-js-save-load-wrapper]': 'classes: {disabled: not(isBtsAdded)}',
             '[data-js-save-post]': 'attr: {disabled: not(isBtsConfigure)}',
-            '[data-js-save-load]': 'attr: {disabled: not(isBtsAdded)}'
+            '[data-js-save-load]': 'attr: {disabled: not(isBtsAdded)}',
+            '[data-js-replace-comment]': 'checked: replaceComment'
         },
         events: {
             'click [data-js-save]': 'onClickSave',
@@ -61,21 +65,34 @@ define(function (require) {
             config.trackingDispatcher.trackEventNumber(524);
         },
         onClickSavePost: function () {
-            config.trackingDispatcher.trackEventNumber(525);
             var self = this;
+            config.trackingDispatcher.trackEventNumber(525);
             this.onClickAction(function () {
                 self.successClose({ action: 'postBug' });
             });
         },
+        setReplaceComment: function () {
+            var curVal = this.viewModel.get('replaceComment');
+            this.appStorage.set({ replaceComment: curVal });
+        },
         onClickSaveLoad: function () {
-            config.trackingDispatcher.trackEventNumber(526);
             var self = this;
+            config.trackingDispatcher.trackEventNumber(526);
             this.onClickAction(function () {
                 self.successClose({ action: 'loadBug' });
             });
         },
         initialize: function (option) {
+            this.context = option.context;
+            this.appStorage = new SingletonAppStorage();
+            this.viewModel = new Backbone.Model();
+            if (this.appStorage.get('replaceComment') === undefined) {
+                this.viewModel.set({ replaceComment: true });
+            } else {
+                this.viewModel.set({ replaceComment: this.appStorage.get('replaceComment') });
+            }
             this.items = option.items;
+
             this.appModel = new SingletonAppModel();
             this.defectTypesCollection = new SingletonDefectTypeCollection();
             this.defectTypesCollection.ready.done(function () {
@@ -97,6 +114,21 @@ define(function (require) {
             this.applyBindings();
             this.setupAnchors();
             this.setupMarkdownEditor();
+            if (!this.isMultipleEdit()) {
+                this.viewModel.set('ignoreAA', this.items[0].getIssue().ignoreAnalyzer);
+                if (this.context !== 'userdebug') {
+                    this.ignoreSwitcher = new TinySwitcherComponent({
+                        holder: $('[data-js-ignore-aa-switcher-container]', this.$el),
+                        isEnabledByDefault: this.viewModel.get('ignoreAA'),
+                        label: Localization.launches.ignoreAA,
+                        labelPosition: 'r'
+                    });
+                    this.listenTo(this.ignoreSwitcher, 'changeState', function (isEnabled) {
+                        this.viewModel.set('ignoreAA', isEnabled);
+                    });
+                }
+            }
+            this.listenTo(this.viewModel, 'change:replaceComment', this.setReplaceComment);
         },
 
         isMultipleEdit: function () {
@@ -160,7 +192,7 @@ define(function (require) {
             $('[data-js-noissue-name]', this.$el).hide();
             $('[data-js-issue-title]', this.$el).show();
             $('[data-js-issue-title] i', this.$el).css('background', issueType.color);
-            if (this.getIssueType(this.items[0]) !== this.selectedIssue ) {
+            if (this.getIssueType(this.items[0]) !== this.selectedIssue) {
                 this.disableHideBackdrop();
             }
         },
@@ -179,16 +211,20 @@ define(function (require) {
                 selectedIssue: this.selectedIssue,
                 replaceComments: this.$replaceComments.is(':checked')
             };
+            !this.isMultipleEdit() && (this.initState.ignoreAA = this.viewModel.get('ignoreAA'));
         },
         isChanged: function () {
-            if (this.initState.comment === this.markdownEditor.getValue() &&
+            var answer = !(this.initState.comment === this.markdownEditor.getValue() &&
             this.initState.selectedIssue === this.selectedIssue &&
-            this.initState.replaceComments === this.$replaceComments.is(':checked')) {
-                return false;
+            this.initState.replaceComments === this.$replaceComments.is(':checked')
+            );
+            if (!this.isMultipleEdit()) {
+                answer = answer || !(this.initState.ignoreAA === this.viewModel.get('ignoreAA'));
             }
-            return true;
+            return answer;
         },
         onHide: function () {
+            this.ignoreSwitcher && this.ignoreSwitcher.destroy();
             this.markdownEditor.destroy();
         },
         onClickClose: function () {
@@ -199,7 +235,7 @@ define(function (require) {
         },
         onClickAction: function (successCalback) {
             var self = this;
-            self.showLoading();
+            this.showLoading();
             this.updateDefectType().done(function () {
                 successCalback();
             }).fail(function (error) {
@@ -217,8 +253,9 @@ define(function (require) {
             var comment = this.markdownEditor.getValue();
             var selectedIssue = this.selectedIssue;
             var issues = [];
-            var replaceComments = this.$replaceComments.is(':checked');
+            var replaceComments = this.viewModel.get('replaceComment');
             var self = this;
+            var data;
             if (!this.isChanged()) {
                 promise.resolve();
                 return promise;
@@ -236,7 +273,11 @@ define(function (require) {
                     issue: issue
                 });
             }, this);
-            CoreService.updateDefect({ issues: issues })
+            data = {
+                issues: issues
+            };
+            !this.isMultipleEdit() && (data.issues[0].issue.ignoreAnalyzer = this.viewModel.get('ignoreAA'));
+            CoreService.updateDefect(data)
                 .done(function () {
                     var itemIssue = this.getIssueType(this.items[0]);
                     if (selectedIssue && itemIssue !== selectedIssue) {
@@ -250,6 +291,7 @@ define(function (require) {
                             issue.comment = comment;
                         }
                         issue.issue_type = selectedIssue || this.getIssueType(item);
+                        issue.ignoreAnalyzer = self.viewModel.get('ignoreAA');
                         item.setIssue(issue);
                     }, self);
                     promise.resolve();

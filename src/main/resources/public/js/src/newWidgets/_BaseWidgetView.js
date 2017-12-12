@@ -35,6 +35,7 @@ define(function (require) {
             this.id = 'widget-' + this.model.get('id');
             this.isPreview = options.isPreview;
             this.unclickableChart = options.unclickableChart;
+            this.hiddenItems = options.hiddenItems;
             this.appModel = new SingletonAppModel();
             this.defectsCollection = new SingletonDefectTypeCollection();
             this.afterInitialize && this.afterInitialize();
@@ -62,8 +63,8 @@ define(function (require) {
         },
         addNoAvailableBock: function (el) {
             var $element = el ? $(el) : this.$el;
-            var view = new WidgetErrorView({ message: Localization.widgets.noData });
-            $element.after(view.$el);
+            this.errorView = new WidgetErrorView({ message: Localization.widgets.noData });
+            $element.after(this.errorView.$el);
         },
         getSeriesColor: function (name) {
             var defect = this.defectsCollection.getDefectType(name);
@@ -74,6 +75,14 @@ define(function (require) {
             return Util.templates('tpl-widget-invalid-data', {
                 qty: numberOfCriteria
             });
+        },
+        getFilterByNameRedirectLink: function (launchId, itemName) {
+            var appModel = new SingletonAppModel();
+            return encodeURI('#' + appModel.get('projectId') + '/launches/all|page.page=1&page.size=50&page.sort=start_time/' + launchId + '?page.page=1&page.size=50&page.sort=start_time&filter.eq.has_childs=false&filter.ctn.name=' + itemName);
+        },
+        getFilterByUIDRedirectLink: function (launchId, uid) {
+            var appModel = new SingletonAppModel();
+            return encodeURI('#' + appModel.get('projectId') + '/launches/all|page.page=1&page.size=50&page.sort=start_time/' + launchId + '?page.page=1&page.size=50&page.sort=start_time&filter.eq.has_childs=false&filter.eq.uniqueId=' + uid);
         },
         linkToRedirectService: function (series, id) {
             var defectTypes = new SingletonDefectTypeCollection();
@@ -107,7 +116,6 @@ define(function (require) {
             case 'total':
             case 'Grow test cases':
             case 'grow_test_cases':
-            case 'most_failed':
                 filterStatus = getFilter('filter.in.type=STEP&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED');
                 break;
             case 'Passed':
@@ -116,7 +124,7 @@ define(function (require) {
                 break;
             case 'Failed':
             case 'failed':
-                filterStatus = getFilter('&filter.in.type=STEP&filter.in.status=FAILED');
+                filterStatus = getFilter('&filter.in.type=STEP&filter.in.status=FAILED,INTERRUPTED');
                 break;
             case 'Skipped':
             case 'skipped':
@@ -208,6 +216,7 @@ define(function (require) {
             this.updateWidget();
         },
         onDestroy: function () {
+            this.errorView && this.errorView.destroy();
             $(window).off('resize.' + this.id);
             this.onBeforeDestroy && this.onBeforeDestroy();
         }

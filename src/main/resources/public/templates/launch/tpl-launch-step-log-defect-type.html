@@ -1,9 +1,11 @@
 <div data-js-issue-type class="step-log-defect-type">
     <div class="defect-type-badge-overflow" data-js-edit-defect>
+        <div class="aa-badge" title="<%- data.text.launches.aaBadgeTooltip %>" data-js-aa-badge><%- data.text.ui.autoAnalyzeShort %></div>
+        <div class="ignore-aa-badge" title="<%- data.text.launches.ignoreAutoanalyzerTooltip %>" data-js-ignore-aa-badge><%- data.text.launches.ignoreAAShort %></div>
         <span class="defect-type-badge" data-js-issue-title>
             <i data-js-issue-color></i>
             <span data-js-issue-name></span>
-        </span>&nbsp;&nbsp;<i class="material-icons edit-defect" >edit</i>
+        </span>&nbsp;&nbsp;<i class="material-icons edit-defect" data-js-edit-defect-icon>edit</i>
     </div>
     <div data-js-issue-tickets class="tickets-container"></div>
     <div class="defect-type-description" data-js-issue-comment></div>

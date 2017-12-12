@@ -515,6 +515,8 @@ define(function (require) {
         532: ['Login', 'Click on Icon VK on Welcome screen', 'Transition to VK'],
         533: ['Login', 'Click on Icon Slack on Welcome screen', 'Transition to Slack'],
         534: ['Login', 'Click on Icon Mail on Welcome screen', 'Arise Mail window'],
+
+        575: ['Profile', 'Edit input Language', 'Change language']
     };
 
     function getExportTitle(type) {

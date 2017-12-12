@@ -18,12 +18,13 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
-    var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var App = require('app');
+    var config = App.getInstance();
 
     var TwitterNewsItemView = Epoxy.View.extend({
         className: 'post-news-item',
@@ -32,20 +33,19 @@ define(function (require, exports, module) {
             'click [data-js-social-link]': 'onClickSocialLink'
         },
         bindings: {
-            '[data-js-text]': 'html: textHtml',
+            '[data-js-text]': 'html: textHtml'
         },
 
-        initialize: function() {
+        initialize: function () {
             this.render();
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template));
         },
         onClickSocialLink: function () {
             config.trackingDispatcher.trackEventNumber(527);
         }
     });
-
 
     return TwitterNewsItemView;
 });

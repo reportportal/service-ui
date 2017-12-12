@@ -10,7 +10,9 @@
                         <i data-js-issue-color style="background: <%= defectType ? defectType.color : '' %>"></i>
                         <span data-js-issue-name><%= defectType ? defectType.longName : '' %></span>
                     </span>
-                    <span data-js-noissue-name style="<% if(defectType){ %>display:none;<% } %>"><%= data.text.dialog.choseDefectType %></span>
+                    <span data-js-noissue-name class="no-issue-name"
+                          style="<% if(defectType){ %>display:none;<% } %>"><%=
+                        data.text.dialog.choseDefectType %></span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu rp-defects-menu">
@@ -37,12 +39,13 @@
                     <% }); %>
                 </ul>
             </div>
+            <div class="ignore-aa-switcher-container" data-js-ignore-aa-switcher-container></div>
         </div>
         <div class="text-editor" data-js-issue-comment></div>
         <div class="rp-defect-editor-bottom">
             <% if(data.isMultipleEdit){ %>
             <label class="rp-checkbox-wrap replace-comments">
-                <input class="rp-input-checkbox" type="checkbox" checked="checked" data-js-replace-comment>
+                <input class="rp-input-checkbox" type="checkbox"  data-js-replace-comment>
                 <span><%= data.text.launches.replaceComments %></span>
             </label>
             <% } %>
@@ -57,7 +60,7 @@
     <div class="footer-buttons">
         <button class="rp-btn rp-btn-cancel" type="button" data-js-cancel><%- data.text.ui.cancel %></button>
         <div class="dropdown-button">
-            <button class="rp-btn rp-btn-submit" type="button" data-js-save >Save</button>
+            <button class="rp-btn rp-btn-submit" type="button" data-js-save ><%- data.text.ui.save %></button>
             <button class=" rp-btn rp-button-dropdown" data-toggle="dropdown" data-js-dropdown>
                 <i class="material-icons">keyboard_arrow_down</i>
             </button>

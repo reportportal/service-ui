@@ -2,13 +2,6 @@ package: github.com/reportportal/service-ui
 import:
 - package: github.com/gorilla/handlers
   version: ^1.2.1
-- package: github.com/reportportal/commons-go
-  subpackages:
-  - commons
-  - conf
-  - server
-- package: goji.io
-  version: ^2.0.0
-  subpackages:
-  - pat
+- package: gopkg.in/reportportal/commons-go.v1
+  version: ^1.0.0
 - package: github.com/unrolled/secure

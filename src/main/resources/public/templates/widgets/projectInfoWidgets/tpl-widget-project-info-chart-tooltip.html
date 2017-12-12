@@ -1,0 +1,14 @@
+<div class="period"><%- data.period %></div>
+<% if (data.showCount) { %>
+    <div class="count-block">
+        <span class="count"><%- data.count %></span>
+        <span class="measure"><%- data.measure %></div>
+    </div>
+<% } %>
+<% if (data.showRate) { %>
+    <div class="rate-block">
+        <div class="color-mark" style="background-color: <%= data.color %>;"></div>
+        <span class="rate-name"><%- data.name %>: </span>
+        <span class="percentage"><%- data.percentage %></span>
+    </div>
+<% } %>

@@ -104,10 +104,19 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
             }
         }
     }
+  .retries-block-container {
+    position: relative;
+    width: 100%;
+    float: left;
+    padding-left: 11%;
+  }
     @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
         .rp-grid-thead {
             display: none;
         }
+      .retries-block-container {
+        display: none;
+      }
       .rp-table-row.row {
         &.show-accordion {
           .accordion-arrow {
@@ -176,4 +185,25 @@ $step-type-cell-width: (100 - $step-name-cell-width - $step-time-cell-width*2 - 
     padding: 0 15px;
 }
 
-
+@media print{
+  .step-grid{
+    .item-edit-icon{
+      display:  none;
+    }
+    .grid-cell{
+      &.time-grid-cell{
+        display: block;
+        width: 11%;
+      }
+      &.status-grid-cell{
+        display: block;
+      }
+      &.name-grid-cell{
+        width: 45%;
+      }
+      &.type-grid-cell{
+        width: 24%;
+      }
+    }
+  }
+}

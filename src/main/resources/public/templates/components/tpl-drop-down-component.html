@@ -6,10 +6,18 @@
     </div>
 </button>
 <ul class="dropdown-menu" data-js-dropdown-menu>
+    <% if(data.isShowAll) { %>
+        <li class="all-selector">
+            <label class="checkbox rp-checkbox-wrap" data-js-label>
+                <input class="criteria-option rp-input-checkbox" type="checkbox" value="all" data-name="<%- data.text.widgets.all %>">
+                <span><%= data.text.widgets.all %></span>
+            </label>
+        </li>
+    <% } %>
     <% _.each(data.data, function(item) { %>
     <li>
         <% if(data.multiple) {%>
-        <label class="checkbox rp-checkbox-wrap" data-js-label>
+        <label class="checkbox rp-checkbox-wrap <%= item.isSubOption ? 'sub-option' : ''%>" data-js-label>
             <input class="criteria-option rp-input-checkbox" type="checkbox" data-value="<%- item.value %>", data-name="<%- item.name %>">
             <span><%= item.name %></span>
         </label>

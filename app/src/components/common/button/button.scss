@@ -1,0 +1,20 @@
+.button {
+  border: none;
+  outline: none;
+  min-width: 160px;
+  height: 40px;
+  border-radius: 3px;
+  padding: 0 15px;
+  font-size: 16px;
+  color: $COLOR--white;
+  font-family: $FONT-BOLD;
+  cursor: pointer;
+  &.blue {
+    background: $COLOR--tealish;
+    color: $COLOR--white;
+  }
+  &.grey {
+    background: $COLOR--silver;
+    color: $COLOR--white;
+  }
+}

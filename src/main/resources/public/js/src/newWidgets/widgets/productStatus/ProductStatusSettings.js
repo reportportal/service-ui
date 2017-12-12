@@ -122,8 +122,8 @@ define(function (require) {
                     control: 'switcher',
                     options: {
                         items: [
-                            { name: 'All launches', value: 'all' },
-                            { name: 'Latest launches', value: 'latest' }
+                            { name: Localization.launches.allLaunches, value: 'all' },
+                            { name: Localization.launches.latestLaunches, value: 'latest' }
                         ],
                         getValue: function (model, self) {
                             if (!model.getWidgetOptions().latest) {

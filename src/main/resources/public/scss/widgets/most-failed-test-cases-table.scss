@@ -1,0 +1,256 @@
+@mixin reducedView() {
+  .widget-wrapper {
+    .most-failed-table{
+      .scroll-wrapper {
+        .most-failed-table-header {
+          .col-date {
+            display: none;
+          }
+          .col-count {
+            width: 40%;
+
+            .full {
+              display: none;
+            }
+            .short {
+              display: inline;
+            }
+          }
+          .col-percents {
+            width: 20%;
+
+            .full {
+              display: none;
+            }
+            .short {
+              display: inline;
+            }
+          }
+        }
+        .most-failed-table-body {
+          .row {
+            .col-date {
+              display: none;
+            }
+            .col-count {
+              width: 40%;
+            }
+            .col-percents {
+              width: 20%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.most-failed-test-cases {
+  height: 100%;
+  overflow: hidden;
+
+  .widget-wrapper {
+    height: 100%;
+    padding: 0 20px 20px 20px;
+
+    .info-block {
+      height: 72px;
+      font-family: $OpenSansSemibold;
+      font-size: 12px;
+      line-height: 45px;
+      color: $COLOR--gray-47;
+      text-transform: uppercase;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+
+      p {
+        margin: 12px 0 0 0;
+        line-height: 17px;
+
+        span {
+          font-size: 13px;
+          color: $COLOR--charcoal-grey;
+          text-transform: none;
+        }
+      }
+    }
+    .most-failed-table {
+      position: absolute;
+      top: 72px;
+      bottom: 20px;
+      left: 20px;
+      right: 20px;
+
+      .scroll-wrapper {
+        .most-failed-table-header {
+          height: 45px;
+          border-bottom: 1px solid $COLOR--gray-91;
+          background-color: $COLOR--white-default;
+          font-family: $OpenSansSemibold;
+          font-size: 12px;
+          color: $COLOR--gray-47;
+          text-transform: uppercase;
+
+          .col {
+            float: left;
+            line-height: 45px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &.col-name {
+              width: 40%;
+            }
+            &.col-count {
+              width: 20%;
+
+              .short {
+                display: none;
+              }
+            }
+            &.col-percents {
+              width: 20%;
+
+              .short {
+                display: none;
+              }
+            }
+            &.col-date {
+              width: 20%;
+            }
+          }
+        }
+        .most-failed-table-body {
+          width: 100%;
+          overflow: hidden;
+
+          .row {
+            display: table;
+            table-layout: fixed;
+            margin-right: 0;
+            margin-left: 0;
+            height: 45px;
+            width: 100%;
+            border-bottom: 1px solid $COLOR--gray-91;
+            font-size: 13px;
+
+            &:hover {
+              background-color: $COLOR--tealish-light;
+            }
+
+            &:last-child {
+              border-bottom: none;
+            }
+
+            .col {
+              display: table-cell;
+              vertical-align: middle;
+              padding-right: 5px;
+
+              &.col-name {
+                width: 40%;
+                font-size: 14px;
+                font-family: $OpenSansSemibold;
+                color: $COLOR--windows-blue;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+
+                span {
+                  cursor: pointer;
+                }
+              }
+              &.col-count {
+                width: 20%;
+                padding: 5px 5px 5px 0;
+                position: relative;
+
+                .count {
+                  color: $COLOR--charcoal-grey;
+                  position: absolute;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  left: 60px;
+                }
+                .matrix {
+                  display: table;
+                  max-width: 50px;
+                  min-height: 35px;
+
+                  .squares-wrapper {
+                    display: table-cell;
+                    vertical-align: middle;
+
+                    .square {
+                      float: left;
+                      width: 4px;
+                      height: 4px;
+                      margin-right: 1px;
+                      margin-bottom: 1px;
+                      background-color: $COLOR--booger;
+
+                      &.failed {
+                        background-color: $COLOR--tealish;
+                      }
+                    }
+                  }
+                }
+              }
+              &.col-percents {
+                width: 20%;
+                color: $COLOR--charcoal-grey;
+              }
+              &.col-date {
+                width: 20%;
+                color: $COLOR--charcoal-grey;
+                cursor: pointer;
+
+                .relative {
+                  display: none;
+                }
+
+                &:hover {
+                  .absolute {
+                    display: none;
+                  }
+                  .relative {
+                    display: inline;
+                  }
+                }
+
+                &.date-from-now {
+                  .absolute {
+                    display: none;
+                  }
+                  .relative {
+                    display: inline;
+                  }
+
+                  &:hover {
+                    .absolute {
+                      display: inline;
+                    }
+                    .relative {
+                      display: none;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.w-less-then-7 {
+    @include reducedView;
+  }
+}
+
+.grid-stack-one-column-mode {
+  .most-failed-test-cases {
+    @include reducedView;
+  }
+}

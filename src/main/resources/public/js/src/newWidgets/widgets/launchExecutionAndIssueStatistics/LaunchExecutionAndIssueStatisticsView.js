@@ -39,9 +39,9 @@ define(function (require) {
 
         render: function () {
             var statusChartData = {};
-            var statusChartDataOrdered = {};
+            var statusChartDataOrdered = [];
             var defectTypesChartData = {};
-            var defectTypesChartDataOrdered = {};
+            var defectTypesChartDataOrdered = [];
 
             if (this.isPreview) {
                 this.$el.addClass('preview-view');
@@ -53,28 +53,25 @@ define(function (require) {
             this.charts = [];
             this.scrollers = [];
             _.each(this.model.getContent().result[0].values, function (val, key) {
-                var splitted = key.split('$');
-                var shortKey = splitted[splitted.length - 1];
-                if (~['passed', 'failed', 'skipped', 'total'].indexOf(shortKey)) {
-                    statusChartData[shortKey] = val;
+                if (~key.indexOf('$executions$')) {
+                    statusChartData[key] = +val;
                 } else {
-                    defectTypesChartData[shortKey] = val;
+                    defectTypesChartData[key] = +val;
                 }
             });
-            statusChartData.total && (statusChartDataOrdered.total = statusChartData.total);
-            statusChartData.passed && (statusChartDataOrdered.passed = statusChartData.passed);
-            statusChartData.failed && (statusChartDataOrdered.failed = statusChartData.failed);
-            statusChartData.skipped && (statusChartDataOrdered.skipped = statusChartData.skipped);
+            // statusChartData.statistics$executions$total && (statusChartDataOrdered.push(['statistics$executions$total', statusChartData.statistics$executions$total]));
+            statusChartData.statistics$executions$passed && (statusChartDataOrdered.push(['statistics$executions$passed', statusChartData.statistics$executions$passed]));
+            statusChartData.statistics$executions$failed && (statusChartDataOrdered.push(['statistics$executions$failed', statusChartData.statistics$executions$failed]));
+            statusChartData.statistics$executions$skipped && (statusChartDataOrdered.push(['statistics$executions$skipped', statusChartData.statistics$executions$skipped]));
 
             _.each(this.model.getContentFields(), function (field) {
-                var splitted = field.split('$');
                 _.each(defectTypesChartData, function (val, key) {
-                    if (key === splitted[splitted.length - 1]) {
-                        defectTypesChartDataOrdered[key] = val;
+                    if (field === key) {
+                        defectTypesChartDataOrdered.push([field, defectTypesChartData[field]]);
                     }
                 });
             });
-            if (+statusChartDataOrdered.total === 0 || (_.isEmpty(defectTypesChartDataOrdered) && _.isEmpty(statusChartDataOrdered))) {
+            if (+statusChartDataOrdered.statistics$executions$total === 0 || ((!defectTypesChartDataOrdered.length) && (!statusChartDataOrdered.legth))) {
                 this.addNoAvailableBock();
                 return;
             }
@@ -84,17 +81,17 @@ define(function (require) {
                 this.launchFilterCollection.ready.done(function () {
                     this.$el.html(Util.templates(this.template, {}));
                     this.$el.addClass('donut-chart-view');
-                    if (_.isEmpty(statusChartData)) {
+                    if (!defectTypesChartDataOrdered.length) {
                         this.$el.addClass('left-chart-hidden');
                     }
-                    if (_.isEmpty(defectTypesChartDataOrdered)) {
+                    if (!defectTypesChartDataOrdered.length) {
                         this.$el.addClass('right-chart-hidden');
                     }
-                    if (!_.isEmpty(statusChartData)) {
+                    if (statusChartDataOrdered.length) {
                         $('[data-js-left-chart-container]', this.$el).addClass('status-chart');
                         this.drawDonutChart($('[data-js-left-chart-container]', this.$el), statusChartDataOrdered);
                     }
-                    if (!_.isEmpty(defectTypesChartDataOrdered)) {
+                    if (defectTypesChartDataOrdered.length) {
                         $('[data-js-right-chart-container]', this.$el).addClass('issues-chart');
                         this.drawDonutChart($('[data-js-right-chart-container]', this.$el), defectTypesChartDataOrdered);
                     }
@@ -106,46 +103,35 @@ define(function (require) {
         drawDonutChart: function ($el, data) {
             var self = this;
             var chart;
-            var chartData = [];
             var itemNames = [];
             var colors = {};
             var total = 0;
             var donutTitle = '';
             var legendScroller;
 
-            _.each(data, function (val, key) {
+            _.each(data, function (val) {
                 var defectModel;
-                if (key === 'total') {
-                    return;
+                if (~val[0].indexOf('$executions$')) {
+                    colors[val[0]] = config.defaultColors[val[0].split('$')[2]];
+                } else {
+                    defectModel = _.find(this.defetTypesCollection.models, function (model) {
+                        return model.get('locator') === val[0].split('$')[3];
+                    });
+                    defectModel && (colors[val[0]] = defectModel.get('color'));
                 }
-                switch (key) {
-                case 'passed':
-                    colors[key] = '#8db677';
-                    break;
-                case 'failed':
-                    colors[key] = '#e86c42';
-                    break;
-                case 'skipped':
-                    colors[key] = '#bfc7cc';
-                    break;
-                default:
-                    break;
-                }
-                defectModel = _.find(this.defetTypesCollection.models, function (model) {
-                    return model.get('locator') === key;
-                });
-                defectModel && (colors[key] = defectModel.get('color'));
-                total += +val;
-                itemNames.push(key);
-                chartData.push([key, val]);
+                total += val[1];
+                itemNames.push(val[0]);
             }.bind(this));
             chart = c3.generate({
                 bindto: $el[0],
                 data: {
-                    columns: chartData,
+                    columns: data,
                     type: 'donut',
                     onclick: function (d, element) {
-                        config.router.navigate(self.linkToRedirectService(d.id, self.model.getContent().result[0].id), { trigger: true });
+                        config.router.navigate(
+                            self.linkToRedirectService(d.id.split('$')[d.id.split('$').length - 1],
+                            self.model.getContent().result[0].id),
+                            { trigger: true });
                     },
                     order: null,
                     colors: colors
@@ -178,20 +164,20 @@ define(function (require) {
                     contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
                         var name;
                         var defectModel;
-                        if (d[0].id === 'passed' || d[0].id === 'failed' || d[0].id === 'skipped') {
-                            name = Localization.launchesHeaders[d[0].name].toUpperCase();
+                        if (~d[0].id.indexOf('$executions$')) {
+                            name = Localization.filterNameById[d[0].id].toUpperCase();
                         } else {
-                            defectModel = self.defetTypesCollection.getDefectByLocator(d[0].id);
+                            defectModel = self.defetTypesCollection.getDefectByLocator(d[0].id.split('$')[3]);
                             if (defectModel) {
                                 name = defectModel.get('longName');
                             } else {
                                 return '<div class="tooltip-title-invalid">' +
                                     '<div class="color-mark-invalid"></div>' +
-                                    d[0].id +
+                                    d[0].id.split('$')[3] +
                                     '</div>';
                             }
                         }
-                        return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces(d[0].ratio * 100, 2) + '%)</div>' +
+                        return '<div class="tooltip-val">' + d[0].value + ' (' + self.getRoundedToDecimalPlaces(d[0].ratio * 100, 2).toFixed(2) + '%)</div>' +
                             '<div class="tooltip-title">' +
                             '<div class="color-mark" style="background-color: ' + color(d[0].id) + ';"></div>' +
                             name +
@@ -227,19 +213,22 @@ define(function (require) {
                     .html(function (id) {
                         var name;
                         var defectModel;
-                        if (id === 'passed' || id === 'failed' || id === 'skipped') {
-                            name = Localization.launchesHeaders[id];
+                        if (~id.indexOf('$executions$')) {
+                            name = Localization.filterNameById[id];
                         } else {
-                            defectModel = self.defetTypesCollection.getDefectByLocator(id);
+                            defectModel = self.defetTypesCollection.getDefectByLocator(id.split('$')[3]);
                             if (defectModel) {
                                 name = defectModel.get('longName');
                             } else {
-                                return '<div class="invalid-color-mark"></div><span class="invalid">' + id + '</span>';
+                                return '<div class="invalid-color-mark"></div><span class="invalid">' + id.split('$')[3] + '</span>';
                             }
                         }
                         return '<div class="color-mark"></div>' + name;
                     })
                     .each(function (id) {
+                        if (~self.hiddenItems.indexOf(id)) {
+                            $('.color-mark', $(this)).addClass('unchecked');
+                        }
                         d3.select(this).select('.color-mark').style('background-color', chart.color(id));
                     })
                     .on('mouseover', function (id) {
@@ -249,9 +238,11 @@ define(function (require) {
                         chart.revert();
                     })
                     .on('click', function (id) {
+                        config.trackingDispatcher.trackEventNumber(342);
                         $('.color-mark', $(this)).toggleClass('unchecked');
                         chart.toggle(id);
                     });
+                this.hiddenItems && chart.hide(this.hiddenItems);
                 d3.select(chart.element).select('.legend')
                     .append('div')
                     .attr('class', 'legend-gradient')
@@ -279,11 +270,6 @@ define(function (require) {
             } else {
                 $('.c3-chart-arcs-title', this.$el).attr('dy', '-5').find('tspan').attr('dy', '15');
             }
-        },
-        updateWidget: function () {
-            _.each(this.charts, function (chart) {
-                chart.flush();
-            });
         },
         onBeforeDestroy: function () {
             _.each(this.scrollers, function (baronScrollElem) {

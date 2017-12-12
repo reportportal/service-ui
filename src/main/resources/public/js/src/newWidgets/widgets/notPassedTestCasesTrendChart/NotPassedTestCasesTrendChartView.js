@@ -23,125 +23,190 @@ define(function (require) {
 
     var $ = require('jquery');
     var _ = require('underscore');
-    var App = require('app');
+    var Util = require('util');
+    var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
     var Localization = require('localization');
-    var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
-
+    var c3 = require('c3');
+    var App = require('app');
     var config = App.getInstance();
 
-    var NotPassedCasesChart = ChartWidgetView.extend({
-        initialize: function (options) {
-            ChartWidgetView.prototype.initialize.call(this, options);
-            this.seriesTotal = Localization.widgets.not_passed;
-            this.label = '%';
-            this.labelName = Localization.widgets.nonPassedCases;
-            this.yDomain = [0, 100];
-        },
-        getChartData: function () {
-            var contentData = this.model.getContent() || [];
-            var series;
-            this.categories = [];
-            if (!_.isEmpty(contentData)) {
-                series = {
-                    key: this.seriesTotal,
-                    color: this.getSeriesColor('not_passed'),
-                    values: []
-                };
-                _.each(contentData.result, function (d, i) {
-                    var cat = {
-                        id: d.id,
-                        name: d.name,
-                        number: '#' + d.number,
-                        startTime: parseInt(d.startTime)
-                    };
-                    this.categories.push(cat);
-                    series.values.push(_.extend({ value: parseFloat(d.values[series.key]),
-                        num: i + 1 }, cat));
-                }, this);
-                return [series];
-            }
-            return [];
-        },
+    var NotPassedTestCasesTrendChart = C3ChartWidgetView.extend({
+
+        template: 'tpl-widget-not-passed-cases-trend-chart',
+        tooltipTemplate: 'tpl-widget-not-passed-cases-trend-chart-tooltip',
+        className: 'not-passed-cases-trend-chart',
+
         render: function () {
-            var data = this.getChartData();
-            var self = this;
-            var tip;
-            var vis;
-            var cup;
-            var update;
-            var emptyData = this.model.getContent();
-            if (!this.isEmptyData(emptyData)) {
-                this.addSVG();
-
-                this.chart = nvd3.models.lineChart()
-                    .x(function (d) {
-                        return d.num;
-                    })
-                    .y(function (d) {
-                        return d.value;
-                    })
-                    .interactive(false)
-                    .useInteractiveGuideline(!self.isPreview)
-                    .showLegend(!self.isPreview)
-                ;
-
-                this.chart.yAxis
-                    .tickFormat(function (d) {
-                        return d.toFixed();
-                    })
-                    .axisLabelDistance(-10)
-                    .axisLabel(this.labelName)
-                ;
-
-                this.chart.xAxis
-                    .tickFormat(function (d) {
-                        return self.formatNumber(d);
-                    });
-
-                if (this.yDomain) {
-                    this.chart.yDomain(this.yDomain);
-                }
-
-                tip = this.createTooltip();
-                vis = d3.select($('svg', this.$el).get(0))
-                    .datum(data)
-                    .call(this.chart)
-                    .call(tip)
-                ;
-
-                this.addLaunchNameTip(vis, tip);
-
-                this.chart.xAxis
-                    .tickFormat(function (d) {
-                        return self.formatCategories(d);
-                    });
-
-                cup = self.chart.update;
-                update = function () {
-                    self.chart.xAxis
-                        .tickFormat(function (d) {
-                            return self.formatNumber(d);
-                        });
-                    cup();
-                    self.chart.xAxis
-                        .tickFormat(function (d) {
-                            return self.formatCategories(d);
-                        });
-                    self.chart.update = update;
-                    self.addLaunchNameTip(vis, tip);
-                };
-                this.chart.update = update;
-                this.addResize();
-                if (self.isPreview) {
-                    this.disabeLegendEvents();
-                }
-            } else {
-                this.addNoAvailableBock();
+            if (this.isPreview) {
+                this.$el.addClass('preview-view');
             }
+            if (!this.isDataExists()) {
+                this.addNoAvailableBock();
+                return;
+            }
+            this.$el.html(Util.templates(this.template, {}));
+            this.drawLineChart($('[data-js-chart-container]', this.$el), this.model.getContent().result);
+        },
+        drawLineChart: function ($el, data) {
+            var self = this;
+            var chartData = ['notPassed'];
+            var itemData = [];
+            var topBlockElem;
+
+            _.each(data, function (item) {
+                var value = parseFloat(item.values['% (Failed+Skipped)/Total']);
+                itemData.push({
+                    id: item.id,
+                    name: item.name,
+                    number: item.number,
+                    startTime: item.startTime
+                });
+                chartData.push(value);
+            });
+
+            this.chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: [chartData],
+                    colors: {
+                        notPassed: config.defaultColors.notPassed
+                    }
+                },
+                point: {
+                    r: itemData.length === 1 ? 5 : 1,
+                    focus: {
+                        expand: {
+                            r: 5
+                        }
+                    }
+                },
+                grid: {
+                    y: {
+                        show: !self.isPreview
+                    }
+                },
+                axis: {
+                    x: {
+                        show: !self.isPreview,
+                        type: 'category',
+                        categories: _.map(itemData, function (item) {
+                            return '#' + item.number;
+                        }),
+                        tick: {
+                            values: self.getLaunchAxisTicks(itemData.length),
+                            width: 60,
+                            centered: true,
+                            inner: true,
+                            multiline: false,
+                            outer: false
+                        }
+                    },
+                    y: {
+                        show: !self.isPreview,
+                        max: 100,
+                        min: 0,
+                        padding: {
+                            top: 5,
+                            bottom: 0
+                        },
+                        label: {
+                            text: Localization.widgets.nonPassedCases,
+                            position: 'outer-middle'
+                        }
+                    }
+                },
+                interaction: {
+                    enabled: !self.isPreview
+                },
+                // zoom: {
+                //     enabled: true,
+                //     rescale: true
+                // },
+                // subchart: {
+                //     show: true
+                // },
+                padding: {
+                    top: self.isPreview ? 0 : 85,
+                    left: self.isPreview ? 0 : 60,
+                    right: self.isPreview ? 0 : 20,
+                    bottom: 0
+                },
+                legend: {
+                    show: false // we use custom legend
+                },
+                tooltip: {
+                    grouped: true,
+                    position: function (d, width, height, element) {
+                        var left = d3.mouse(self.chart.element)[0] - (width / 2);
+                        var top = d3.mouse(self.chart.element)[1] - height;
+
+                        // Uncomment to not allow appear tooltip out of the right&left borders of widget
+                        // var tooltipWidth = this.tooltip.node().getBoundingClientRect().width;
+                        // var chartWidth = self.chart.element.clientWidth;
+                        // if ((left + tooltipWidth) > chartWidth) {
+                        //     left = chartWidth - tooltipWidth;
+                        // }
+                        // if (left < 0) {
+                        //     left = 0;
+                        // }
+
+                        return {
+                            top: top - 8, // 8 - offset for tooltip arrow
+                            left: left
+                        };
+                    },
+                    contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+                        var launchData = itemData[d[0].index];
+                        return Util.templates(self.tooltipTemplate, {
+                            launchName: launchData.name,
+                            launchNumber: launchData.number,
+                            startTime: self.formatDateTime(launchData.startTime),
+                            itemCases: d[0].value.toFixed(2)
+                        });
+                    }
+                },
+                size: {
+                    height: self.$el.parent().height()
+                },
+                onrendered: function () {
+                    $el.css('max-height', 'none');
+                }
+            });
+            if (!this.isPreview) {
+                topBlockElem = d3.select(this.chart.element).insert('div', '.chart').attr('class', 'top-block');
+                this.setupLegend(topBlockElem, ['notPassed'], this.chart);
+            }
+        },
+        setupLegend: function (el, itemNames, chart) {
+            // Configuring custom legend block
+            d3.select(el[0][0])
+                .insert('div')
+                .attr('class', 'legend')
+                .insert('div', '.legend')
+                .attr('data-js-legend-wrapper', '') // wrapper for BaronScroll
+                .selectAll('span')
+                .data(itemNames)
+                .enter()
+                .append('span')
+                .attr('data-id', function (id) {
+                    return id;
+                })
+                .html(function (id) {
+                    return '<div class="color-mark"></div>' + Localization.widgets.not_passed;
+                })
+                .on('mouseover', function (id) {
+                    chart.focus(id);
+                })
+                .on('mouseout', function (id) {
+                    chart.revert();
+                })
+                .on('click', function (id) {
+                    // $('.color-mark', $(this)).toggleClass('unchecked');
+                    // chart.toggle(id);
+                });
         }
     });
 
-    return NotPassedCasesChart;
+    return NotPassedTestCasesTrendChart;
 });

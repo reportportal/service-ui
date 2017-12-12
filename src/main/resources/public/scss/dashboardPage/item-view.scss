@@ -146,3 +146,25 @@ body.fullscreen {
     }
   }
 }
+
+@media print{
+  .dashboard-item-view{
+    .buttons-container {
+      display: block;
+      .rp-nav-left, .rp-nav-right{
+        display: none;
+      }
+    }
+  }
+  .dashboard-list-view{
+    .input-filter{
+      display: none;
+    }
+    .dashboard-list-item-view{
+      width: 25%;
+    }
+    .filter-dashboard{
+      display: block !important;
+    }
+  }
+}

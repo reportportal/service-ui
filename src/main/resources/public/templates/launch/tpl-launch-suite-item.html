@@ -10,7 +10,10 @@
                     <span data-js-item-status></span>
                     <span class="mobile-tag">| <span data-js-time-from-now></span></span>
                 </li>
-                <li title="Owner" class="rp-launch-owner owner" data-js-owner-block>
+                <li class="rp-item-is-retries" data-js-is-retries>
+                    <div class="retry-icon"></div>
+                </li>
+                <li title="<%= data.text.launches.owner%>" class="rp-launch-owner owner" data-js-owner-block>
                     <i class="material-icons">person</i>
                     <a data-js-owner-name></a>
                 </li>
@@ -18,12 +21,14 @@
                     <i class="rp-icons rp-icons-ticket"></i>
                     <span data-js-tags></span>
                 </li>
+                <li data-js-retries-container></li>
             </ul>
             <div class="rp-grid-description" data-js-description></div>
         </div>
     </div>
     <div class="grid-cell time-grid-cell" data-js-start-time-container>
     </div>
+    <div class="retries-block-container" data-js-retries-block-container></div>
     <div class="accordion-block">
         <div class="mobile-open" data-js-toggle-open></div>
         <i class="material-icons" data-js-toggle-open>keyboard_arrow_down</i>

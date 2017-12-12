@@ -39,6 +39,7 @@ define(function (require) {
             var self = this;
             this.context = Context;
             this.user = new UserModel();
+            this.skipNextRoute = false;
 
             testRoute.addTest('insidePage', function () {
                 var async = $.Deferred();
@@ -89,6 +90,12 @@ define(function (require) {
                 this.navigate('', { trigger: true });
                 Context.logout();
             }
+        },
+        before: function () {
+            this.trigger('beforeRoute');
+        },
+        after: function () {
+            this.trigger('afterRoute');
         },
         routes: {
             '': 'openLogin',

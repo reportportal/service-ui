@@ -9,11 +9,19 @@
     </div>
     <div class="action-block" data-js-action-block>
         <h1><%- data.text.widgets.selectShared %></h1>
+        <div class="shared-widgets-search">
+            <div class="input-filter form-group">
+                <input type="text" class="rp-input-search form-control" data-js-shared-widget-search placeholder="<%- data.text.widgets.sharedWidgetsSearchPlaceholder %>" value="">
+                <i class="material-icons">search</i>
+                <div class="validate-hint">
+                </div>
+            </div>
+        </div>
         <div class="shared-widgets-list-wrapper">
             <div data-js-widgets-list-scroll>
                 <div class="shared-widgets-list" data-js-widgets-list></div>
                 <div class="shared-widgets-empty hide" data-js-widgets-empty>
-                    <span><%= data.text.wizard.noSharedWidgets %></span>
+                    <span data-js-empty-message></span>
                 </div>
             </div>
         </div>

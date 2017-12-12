@@ -162,7 +162,7 @@ define(function (require) {
             var url = '';
             _.each(this.models, function (model) {
                 model.set({ url: url + model.get('partUrl').replace('|', '?') });
-                url += model.get('partUrl');
+                url += model.get('partUrl').replaceAll('|', encodeURIComponent('|'));
             });
         },
         forceUpdate: function () {
@@ -253,13 +253,24 @@ define(function (require) {
                             }
                         });
                     } else if (launchModel.get('failLoad')) {
-                        async.reject(1);
+                        if (self.models.length === 2) { // lost launch after merge case
+                            parentModel = lastModel;
+                            async.resolve(launchModel, parentModel);
+                        } else {
+                            async.reject(1);
+                        }
                     } else {
                         async.resolve(launchModel, parentModel);
                     }
                 });
             }
             return async.promise();
+        },
+        isLaunchLost: function() {
+            var launchCrumbModel = _.find(this.models, function (model) {
+                return model.get('level') === 'launch';
+            });
+            return launchCrumbModel && launchCrumbModel.get('failLoad');
         },
         checkLostLaunch: function (async, launchModel, parentModel) {
             var self = this;

@@ -275,3 +275,23 @@
     }
   }
 }
+
+@media print {
+  .all-users-actions{
+    .all-users-filter{
+      display: none;
+    }
+  }
+  .rp-project-members{
+    .project-members-actions{
+      display: none;
+    }
+  }
+  .users-project-roles{
+    .rp-button-with-icon{
+      span{
+        display: block !important;
+      }
+    }
+  }
+}

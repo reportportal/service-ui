@@ -444,12 +444,6 @@
     #logHistory {
         #defectWell {
             .defect-type {
-                .label.match-issue {
-                    padding: 3px 12px;
-                    color: #666;
-                    font-size: 90%;
-                }
-
                 .label {
                     font-weight: 700;
                     line-height: 1;
@@ -1230,17 +1224,6 @@
     width: 100%;
 }
 
-/*---------round diagrams & their tooltip-----------*/
-.nvd3.nv-pie path {
-    stroke-width: 0;
-}
-
-.nvd3.nv-pie .nv-pie-title {
-    font-size: 1.2em;
-    fill: #333;
-}
-
-/*---*/
 .pr-grid-defect-stats:hover .defects-tooltip {
     display: block;
 }

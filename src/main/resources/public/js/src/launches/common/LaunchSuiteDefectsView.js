@@ -26,10 +26,9 @@ define(function (require) {
     var Util = require('util');
     var App = require('app');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
+    var c3 = require('c3');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var LaunchSuiteDefectsHoverView = require('launches/common/LaunchSuiteDefectsHoverView');
-
     var config = App.getInstance();
 
     var LaunchSuiteDefectsView = Epoxy.View.extend({
@@ -76,11 +75,11 @@ define(function (require) {
         },
 
         render: function () {
+            var self = this;
             this.applyBindings();
             if (this.getBinding('totalDefects')) {
                 this.$el.html(Util.templates(this.template, { clickable: this.clickable }));
-                this.drawPieChart();
-                var self = this;
+                this.drawDonutChart();
                 // var $hoverElement = $('[data-js-hover-element]', this.$el);
                 this.hoverView = new LaunchSuiteDefectsHoverView({
                     el: $('[data-js-hover-view-container]', this.$el),
@@ -104,6 +103,8 @@ define(function (require) {
                 case ('system_issue'):
                     config.trackingDispatcher.trackEventNumber(130.1);
                     break;
+                default:
+                    break;
                 }
             } else {
                 switch (this.type) {
@@ -116,6 +117,8 @@ define(function (require) {
                 case ('system_issue'):
                     config.trackingDispatcher.trackEventNumber(58.2);
                     break;
+                default:
+                    break;
                 }
             }
         },
@@ -123,59 +126,57 @@ define(function (require) {
             var statistics = this.model.get('statistics');
             return statistics.defects[this.type];
         },
-        getStatisticsByType: function () {
-            return parseInt(this.getDefectByType().total);
-        },
-        getDefectChartData: function (defect) {
-            var data = [];
-            var defect = this.getDefectByType();
-
-            _.each(defect, function (v, k) {
-                if (k !== 'total') {
-                    var customDefect = this.defectsCollection.getDefectType(k);
-                    if (customDefect) {
-                        data.push({ color: customDefect.color, key: customDefect.longName, value: parseInt(v) });
-                    }
+        getDefectChartData: function () {
+            var data = {
+                columns: [],
+                colors: {}
+            };
+            var defects = this.getDefectByType();
+            _.each(defects, function (val, key) {
+                if (key !== 'total') {
+                    data.columns.push([key]);
+                    data.colors[key] = this.defectsCollection.getDefectType(key).color;
+                }
+            }, this);
+            _.each(defects, function (val, key) {
+                if (key !== 'total') {
+                    _.find(data.columns, function (column) { return column[0] === key; }).push(val);
                 }
             }, this);
             return data;
         },
-        drawPieChart: function () {
-            var pieWidth = 44;
-            var pieHeight = 44;
+        drawDonutChart: function () {
             var data = this.getDefectChartData();
-
-            this.chart = nvd3.models.pie()
-                .x(function (d) {
-                    return d.key;
-                })
-                .y(function (d) {
-                    return d.value;
-                })
-                .width(pieWidth)
-                .height(pieHeight)
-                .showLabels(false)
-                .donut(true)
-                .growOnHover(false)
-                .donutRatio(0.40)
-                .startAngle(function (d) {
-                    return d.startAngle - Math.PI / 2;
-                })
-                .endAngle(function (d) {
-                    return d.endAngle - Math.PI / 2;
-                })
-                .color(function (d) {
-                    return d.data.color;
-                })
-                .valueFormat(d3.format('f'));
-
-            d3.select($('[data-js-chart]', this.$el).get(0))
-                .datum([data])
-                .call(this.chart);
+            var $el = $('[data-js-chart]', this.$el);
+            this.chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: data.columns,
+                    type: 'donut',
+                    order: null,
+                    colors: data.colors
+                },
+                size: {
+                    width: 56,
+                    height: 56
+                },
+                donut: {
+                    width: 12,
+                    label: {
+                        show: false
+                    }
+                },
+                interaction: {
+                    enabled: false
+                },
+                legend: {
+                    show: false
+                }
+            });
         },
         onDestroy: function () {
             this.hoverView && this.hoverView.destroy();
-            this.chart = null;
+            this.chart && (this.chart = this.chart.destroy());
             this.$el.remove();
             delete this;
         }

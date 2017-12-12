@@ -197,3 +197,14 @@
     }
   }
 }
+
+@media print{
+  .info-wrapper{
+    .info_section > li.br-block{
+      display: none;
+    }
+    .progress-block{
+      display: block;
+    }
+  }
+}

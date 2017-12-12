@@ -1,13 +1,16 @@
 <div class="col-sm-12 rp-admin-project-details" id="contentBody">
+    <div class="print">
+        <p><%- data.text.dashboard.project %>: <span><%- data.projectName %></span></p>
+    </div>
     <div class="btn-group rp-nav-right in-header-block project-intervals" data-toggle="buttons">
         <label class="btn btn-custom ">
-            <input type="radio" name="interval" id="interval6" autocomplete="off" data-value="6">6 months
+            <input type="radio" name="interval" id="interval6" autocomplete="off" data-value="6"><%= data.text.admin.month6 %>
         </label>
         <label class="btn btn-custom active">
-            <input type="radio" name="interval" id="interval3" autocomplete="off" checked="" data-value="3">3 months
+            <input type="radio" name="interval" id="interval3" autocomplete="off" checked="" data-value="3"><%= data.text.admin.month3 %>
         </label>
         <label class="btn btn-custom ">
-            <input type="radio" name="interval" id="interval1" autocomplete="off" data-value="1">1 month
+            <input type="radio" name="interval" id="interval1" autocomplete="off" data-value="1"><%= data.text.admin.month1 %>
         </label>
     </div>
     <div id="contentTarget"></div>

@@ -11,7 +11,7 @@ ADD ${APP_DOWNLOAD_URL}/ui.tar.gz /
 RUN chmod +x /service-ui
 RUN tar -zxvf ui.tar.gz -C / && rm -f ui.tar.gz
 
-ENV RP_STATICSPATH=/public
+ENV RP_STATICS_PATH=/public
 
 
 EXPOSE 8080

@@ -20,10 +20,17 @@
  */
 
 @import 'widget-view';
+@import 'launch-statistics-chart';
+@import 'investigated-trend-chart';
 @import 'launches-table';
 @import 'rp-panels-statistics';
 @import 'uniq-bugs-table';
-@import 'most-failed-launches';
+@import 'not-passed-cases-trend-chart';
+@import 'failed-cases-trend-chart';
+@import 'test-cases-growth-trend-chart';
+@import 'launches-comparison-chart';
+@import 'launches-duration-chart';
+@import 'most-failed-test-cases-table';
 @import 'project-activity-panel';
 @import 'launch-execution-and-issue-statistics';
 @import 'passing-rate-per-launch';
@@ -32,3 +39,5 @@
 @import 'product-status-widget';
 @import 'cumulative-trend-chart';
 @import 'widget-error-view';
+@import 'flaky-test-cases-table';
+@import 'project-info-widgets';

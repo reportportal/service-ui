@@ -44,7 +44,7 @@ define(function (require) {
         }
     };
 
-    var SettingDropDownView = SettingView.extend({
+    var SettingCheckBoxView = SettingView.extend({
         className: 'modal-add-widget-setting-checkbox',
         template: 'tpl-modal-add-widget-setting-checkbox',
         bindings: {
@@ -58,7 +58,7 @@ define(function (require) {
             }, data.options);
             this.model = new Epoxy.Model(options);
             this.gadgetModel = data.gadgetModel;
-            this.render();
+            this.render(options);
             if (options.action && actionTypes[options.action]) {
                 this.setValue = actionTypes[options.action].setValue;
                 this.getValue = actionTypes[options.action].getValue;
@@ -66,8 +66,8 @@ define(function (require) {
             options.setValue && (this.setValue = options.setValue);
             options.getValue && (this.getValue = options.getValue);
         },
-        render: function () {
-            this.$el.html(Util.templates(this.template, {}));
+        render: function (options) {
+            this.$el.html(Util.templates(this.template, { beta: options.beta }));
         },
         activate: function () {
             this.model.set({ value: this.getValue(this.gadgetModel, this) });
@@ -84,5 +84,5 @@ define(function (require) {
         }
     });
 
-    return SettingDropDownView;
+    return SettingCheckBoxView;
 });

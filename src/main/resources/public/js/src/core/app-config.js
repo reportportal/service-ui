@@ -140,10 +140,15 @@ define(function (require) {
                 failed: '#f36c4a',
                 skipped: '#bdc7cc',
                 automationBug: '#f7d63e',
+                automation_bug: '#f7d63e',
                 noDefect: '#777777',
+                no_defect: '#777777',
                 productBug: '#ec3900',
+                product_bug: '#ec3900',
                 systemIssue: '#0274d1',
+                system_issue: '#0274d1',
                 toInvestigate: '#ffb743',
+                to_investigate: '#ffb743',
                 investigated: '#87b87f',
                 duration: '#507fd5',
                 interrupted: '#a94442',
@@ -161,7 +166,7 @@ define(function (require) {
                 emailWrong: /wrong email/i,
                 login: /^[0-9a-zA-Z-_.]{1,128}$/,
                 fullName: /^[a-z0-9._-\s\u0400-\u04FF]{3,256}$/i,
-                domain: /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,6}$/,
+                domain: /^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9\.])?)+[a-zA-Z]{2,6}$/,
                 originalPass: /^(.){4,25}$/,
                 onlyIntegers: /^\d+$/,
                 doubles: /^[0-9]+(\.[0-9]+)?$/,
@@ -187,25 +192,27 @@ define(function (require) {
                     { name: 'BDD', value: 'BDD' }
                 ],
                 interruptedJob: [
-                    { name: '1 hour', value: '1 hour' },
-                    { name: '3 hours', value: '3 hours' },
-                    { name: '6 hours', value: '6 hours' },
-                    { name: '12 hours', value: '12 hours' },
-                    { name: '1 day', value: '1 day' },
-                    { name: '1 week', value: '1 week' }
+                    { name: Localization.forSettings.hour1, value: '1 hour' },
+                    { name: Localization.forSettings.hour3, value: '3 hours' },
+                    { name: Localization.forSettings.hour6, value: '6 hours' },
+                    { name: Localization.forSettings.hour12, value: '12 hours' },
+                    { name: Localization.forSettings.day1, value: '1 day' },
+                    { name: Localization.forSettings.week1, value: '1 week' }
                 ],
                 keepLogs: [
-                    { name: '2 weeks', value: '2 weeks' },
-                    { name: '1 month', value: '1 month' },
-                    { name: '3 months', value: '3 months' },
-                    { name: '6 months', value: '6 months' }
+                    { name: Localization.forSettings.week2, value: '2 weeks' },
+                    { name: Localization.forSettings.month1, value: '1 month' },
+                    { name: Localization.forSettings.month3, value: '3 months' },
+                    { name: Localization.forSettings.month6, value: '6 months' },
+                    { name: Localization.forSettings.forever, value: 'forever' }
                 ],
                 keepScreenshots: [
-                    { name: '1 week', value: '1 week' },
-                    { name: '2 weeks', value: '2 weeks' },
-                    { name: '3 weeks', value: '3 weeks' },
-                    { name: '1 month', value: '1 month' },
-                    { name: '3 months', value: '3 months' }
+                    { name: Localization.forSettings.week1, value: '1 week' },
+                    { name: Localization.forSettings.week2, value: '2 weeks' },
+                    { name: Localization.forSettings.week3, value: '3 weeks' },
+                    { name: Localization.forSettings.month1, value: '1 month' },
+                    { name: Localization.forSettings.month3, value: '3 months' },
+                    { name: Localization.forSettings.forever, value: 'forever' }
                 ],
                 btsList: [
                     // {name: 'NONE', value: 'NONE'},

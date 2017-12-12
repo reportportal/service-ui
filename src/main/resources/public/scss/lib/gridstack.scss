@@ -160,3 +160,16 @@ $animation_speed: .3s !default;
     }
   }
 }
+
+@media print {
+  .grid-stack{
+    zoom: 78%;
+    & > .grid-stack-item{
+      float: left;
+      position: relative !important;
+      margin-bottom: 10px;
+      top: 0 !important;
+      left: 0 !important;
+    }
+  }
+}

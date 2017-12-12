@@ -29,7 +29,7 @@ define(function (require) {
     var Util = require('util');
     var Moment = require('moment');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
+    var c3 = require('c3');
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
@@ -64,6 +64,8 @@ define(function (require) {
             this.widgetId = options.widgetId;
             this.criteria = options.criteria;
             this.link = options.link;
+            this.contentFields = options.contentFields;
+            this.charts = [];
             this.appModel = new SingletonAppModel();
             this.defectTypes = new SingletonDefectTypeCollection();
             this.render();
@@ -114,6 +116,9 @@ define(function (require) {
             case 'total':
                 statusFilter = '&filter.in.status=PASSED,FAILED,SKIPPED,INTERRUPTED&filter.in.type=STEP';
                 break;
+            case 'failedPlusInterrupted':
+                statusFilter = '&filter.in.status=FAILED,INTERRUPTED&filter.in.type=STEP';
+                break;
             case 'passed':
             case 'failed':
             case 'skipped':
@@ -147,17 +152,34 @@ define(function (require) {
             _.each(defectCell, function (cell) {
                 var el = $(cell);
                 var type = el.data('defectType');
-                var defect = this.getDefectByType(this.model.toJSON(), type);
+                var defects = this.getDefectByType(this.model.toJSON(), type);
                 var id = this.widgetId + '-defect-' + this.model.get('id') + '-' + type;
-                this.drawPieChart(defect, id);
+                var chartData = {
+                    columns: [],
+                    colors: {}
+                };
+                _.each(defects, function (val, defectType) {
+                    var defectModel;
+                    if (defectType !== 'total') {
+                        defectModel = this.defectTypes.getDefectByLocator(defectType);
+                        defectModel && chartData.columns.push([defectType, val]);
+                        defectModel && (chartData.colors[defectType] = defectModel.get('color'));
+                    }
+                }, this);
+                this.drawDonutChart(chartData, id);
             }, this);
         },
         getDefectByType: function (item, type) {
-            var typeCC = _.map(type.split('_'), function (t, i) {
-                return i ? t.capitalize() : t;
+            var ordered = {};
+            ordered.total = item['statistics$defects$' + type].total;
+            _.each(this.contentFields, function (field) {
+                _.each(item['statistics$defects$' + type], function (val, key) {
+                    if (~field.indexOf('statistics$defects$') && (key === field.split('$')[field.split('$').length - 1])) {
+                        ordered[key] = val;
+                    }
+                });
             });
-            var key = 'statistics$issueCounter$' + typeCC.join('');
-            return item[key];
+            return ordered;
         },
         showDefectTooltip: function (e) {
             var el = $(e.currentTarget);
@@ -216,63 +238,41 @@ define(function (require) {
             }
             return Util.getDefaultColor(type);
         },
-        getDefectChartData: function (defect) {
-            var data = [];
-            var defects;
-            var customDefect;
-            _.each(defect, function (v, k) {
-                if (k !== 'total') {
-                    defects = this.defectTypes;
-                    customDefect = defects.getDefectType(k);
-                    if (customDefect) {
-                        data.push({
-                            color: customDefect.color,
-                            key: customDefect.longName,
-                            value: parseInt(v, 10)
-                        });
+        drawDonutChart: function (data, id) {
+            var $el = $('#' + id + ' [data-js-chart]', this.$el);
+            var chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: data.columns,
+                    type: 'donut',
+                    order: null,
+                    colors: data.colors
+                },
+                size: {
+                    width: 56,
+                    height: 56
+                },
+                donut: {
+                    width: 12,
+                    label: {
+                        show: false
                     }
+                },
+                interaction: {
+                    enabled: false
+                },
+                legend: {
+                    show: false
                 }
-            }, this);
-            return data;
-        },
-        drawPieChart: function (defect, id) {
-            var chart;
-            var pieWidth = 48;
-            var pieHeight = 48;
-            var data = this.getDefectChartData(defect);
-
-            chart = nvd3.models.pie()
-                .x(function (d) {
-                    return d.key;
-                })
-                .y(function (d) {
-                    return d.value;
-                })
-                .width(pieWidth)
-                .height(pieHeight)
-                .showLabels(false)
-                .donut(true)
-                .growOnHover(false)
-                .donutRatio(0.40)
-                .startAngle(function (d) {
-                    return d.startAngle - (Math.PI / 2);
-                })
-                .endAngle(function (d) {
-                    return d.endAngle - (Math.PI / 2);
-                })
-                .color(function (d) {
-                    return d.data.color;
-                })
-                .valueFormat(d3.format('f'))
-            ;
-
-            d3.select($('#' + id + ' svg', this.$el).get(0))
-                .datum([data])
-                .call(chart)
-            ;
+            });
+            this.charts.push(chart);
         },
         onDestroy: function () {
             this.markdownViewer && this.markdownViewer.destroy();
+            _.each(this.charts, function (chart) {
+                chart.destroy();
+            });
+            this.charts = null;
             this.$el.remove();
             delete this;
         }
@@ -297,7 +297,7 @@ define(function (require) {
                         var group = _.initial(a).join('$');
                         var defect = _.last(a);
                         var val = parseInt(v, 10);
-                        if (k.indexOf('statistics$issueCounter') >= 0) {
+                        if (k.indexOf('statistics$defects') >= 0) {
                             if (stats[group]) {
                                 stats[group].total += val;
                             } else {
@@ -362,7 +362,8 @@ define(function (require) {
                     model: new Epoxy.Model(launch),
                     criteria: this.getCriteria(),
                     widgetId: this.id,
-                    link: this.getLink()
+                    link: this.getLink(),
+                    contentFields: this.model.getContentFields()
                 });
                 $('[data-js-items]', this.$el).append(item.$el);
 

@@ -139,3 +139,19 @@
   padding: 5px;
 }
 
+@media print{
+  .baron.baron__root._scrollbar_vertical > .baron__track-vertical{
+    display: none;
+  }
+  .no-zero-scroll > .baron.baron__root {
+    overflow: visible;
+    height: unset;
+    & > *:first-child {
+      position: relative;
+      right: 0;
+      overflow-y: visible;
+      overflow-x: visible;
+    }
+  }
+}
+

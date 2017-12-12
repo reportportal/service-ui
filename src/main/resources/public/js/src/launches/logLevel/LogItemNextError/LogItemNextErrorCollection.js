@@ -18,21 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
-    var $ = require('jquery');
+    var _ = require('underscore');
     var Backbone = require('backbone');
-    var Util = require('util');
-    var App = require('app');
-    var Localization = require('localization');
     var CallService = require('callService');
     var Urls = require('dataUrlResolver');
     var call = CallService.call;
     var LogItemModel = require('launches/logLevel/LogItemModel');
-
-    var config = App.getInstance();
-
 
     var LogItemNextErrorCollection = Backbone.Collection.extend({
         model: LogItemModel,
@@ -40,29 +34,29 @@ define(function (require, exports, module) {
             this.filterModel = options.filterModel;
             this.itemModel = options.itemModel;
         },
-        load: function() {
+        load: function () {
             var path = Urls.getLogsUrl() + '?' + this.getParamsForRequest().join('&');
             var self = this;
             this.request && this.request.abort();
             this.request = call('GET', path)
-                .done(function(data) {
+                .done(function (data) {
                     self.reset(data.content);
                 });
             return this.request;
         },
-        getParamsForRequest: function() {
-            var answer = ['filter.eq.item='+this.itemModel.get('id')];
+        getParamsForRequest: function () {
+            var answer = ['filter.eq.item=' + this.itemModel.get('id')];
+            var options = this.filterModel.getOptions();
             answer.push('page.page=1');
             answer.push('page.size=100');
-            var options = this.filterModel.getOptions();
-            _.each(options, function(option) {
-                if(!~option.search('filter.in.level')) {
+            _.each(options, function (option) {
+                if (!~option.search('filter.gte.level')) {
                     answer.push(option);
                 }
             });
-            answer.push('filter.in.level=ERROR');
+            answer.push('filter.gte.level=ERROR');
             return answer;
-        },
+        }
     });
 
     return LogItemNextErrorCollection;

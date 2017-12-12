@@ -74,7 +74,7 @@
             margin-top: 1px;
           }
         }
-        .many-items, .not-found-items {
+        .many-items, .not-found-items, .rp-icons-warning2 {
           display: none;
         }
         .issue-type {
@@ -221,6 +221,12 @@
           display: inline;
         }
       }
+      &.status-RESETED {
+        @include logColorSet($COLOR--white, $COLOR--white);
+        .rp-icons-warning2 {
+          display: inline;
+        }
+      }
       &.status-SKIPPED {
         @include logColorSet($COLOR--skipped-disabled, $COLOR--skipped);
       }
@@ -244,6 +250,12 @@
     border: solid 1px $COLOR--gray-80;
   }
   @media (max-width: $SCREEN_MAX_WIDTH_LAUNCHES) {
+    display: none;
+  }
+}
+
+@media print{
+  .launch-log-item-info{
     display: none;
   }
 }

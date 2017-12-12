@@ -1,0 +1,33 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "settings": {
+    "import/resolver": {
+      "webpack": {
+        "config": "webpack.config.babel.js"
+      }
+    }
+  },
+  "env": {
+    "browser": true,
+    "jest": true
+  },
+  "globals": {
+    "React": true,
+    "Utils": true
+  },
+  "rules": {
+    "jsx-a11y/no-static-element-interactions": 0,
+    "global-require": 0,
+    "no-unused-expressions": ["error", { "allowTernary": true }],
+    "prefer-arrow-callback": 0,
+    "jsx-a11y/label-has-for": 0,
+    "jsx-a11y/tabindex-no-positive": 0,
+    "jsx-a11y/no-noninteractive-tabindex": 0,
+    "import/prefer-default-export": 0,
+    "import/no-extraneous-dependencies": 0,
+    "react/no-unused-prop-types": 0,
+    "react/react-in-jsx-scope": 0,
+    "react/forbid-prop-types": 0
+  }
+}

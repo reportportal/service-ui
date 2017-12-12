@@ -29,6 +29,28 @@
         cursor: default;
       }
     }
+    .aa-badge, .ignore-aa-badge {
+      display: none;
+      width: 30px;
+      height: 20px;
+      border: 1px solid $COLOR--orange-red;
+      border-radius: 100px;
+      float: left;
+      color: $COLOR--orange-red;
+      font-size: 12px;
+      font-family: "OpenSansSemibold", sans-serif;
+      background-color: $COLOR--white-default;
+      padding-left: 6px;
+      line-height: 17px;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+    .ignore-aa-badge {
+      width: 70px;
+      color: $COLOR--gray-60;
+      border: solid 1px $COLOR--gray-60;
+      background-color: $COLOR--reseted;
+    }
     .defect-type-badge {
       background: $COLOR--white-default;
       border-radius: 20px;

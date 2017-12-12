@@ -79,8 +79,11 @@ define(['app'], function (App) {
     var widgetNamesShared = function () {
         return getProjectBase() + '/widget/names/shared';
     };
-    var widgetsShared = function () {
-        return getProjectBase() + '/widget/shared';
+    var widgetsShared = function (data) {
+        return getProjectBase() + '/widget/shared?page.size=10&page.page=' + ((data && data.page) ? data.page : 1);
+    };
+    var sharedWidgetSearch = function (data) {
+        return getProjectBase() + '/widget/shared/search?term=' + ((data && data.term) ? data.term : '') + '&page.size=10&page.page=' + ((data && data.page) ? data.page : 1);
     };
     var updateFilter = function (id) {
         return saveFilter() + '/' + id;
@@ -147,10 +150,7 @@ define(['app'], function (App) {
         return getProjectBase() + '/item/' + id;
     };
     var launchAnalyzeUrl = function (id) {
-        return getProjectBase() + '/launch/' + id + '/analyze/history';
-    };
-    var launchMatchUrl = function (id) {
-        return getProjectBase() + '/launch/' + id + '/analyze/single';
+        return getProjectBase() + '/launch/' + id + '/analyze';
     };
     var launchFinishUrl = function (id) {
         return getProjectBase() + '/launch/' + id + '/stop';
@@ -225,7 +225,7 @@ define(['app'], function (App) {
         return dashboard() + '/' + id;
     };
     var dashboardShared = function () {
-        return dashboard() + '/shared';
+        return dashboard() + '/shared?page.page=1&page.size=300';
     };
     var redirectToDashboard = function (id) {
         return '#' + config.project.projectId + '/dashboard' + (id ? '/' + id : '');
@@ -327,14 +327,16 @@ define(['app'], function (App) {
         if (!query.size) query.size = 10;
         var startUrl = config.apiVersion + 'user/';
         var sort = '';
+        var search = '';
         if (query.search) {
-            startUrl += 'search/' + query.search;
+            startUrl += 'search/';
             sort = '&page.sort=login,ASC';
+            search = '&term=' + query.search;
         } else {
             startUrl += 'all';
             sort = '&page.sort=login,ASC';
         }
-        return startUrl + '?page.page=' + query.page + '&page.size=' + query.size + sort;
+        return startUrl + '?page.page=' + query.page + '&page.size=' + query.size + sort + search;
     };
     var searchUsersSafe = function (query) {
         var query = query;
@@ -507,7 +509,6 @@ define(['app'], function (App) {
         updateTestItemUrl: updateTestItemUrl,
         deleteTestItemUrl: deleteTestItemUrl,
         launchAnalyzeUrl: launchAnalyzeUrl,
-        launchMatchUrl: launchMatchUrl,
         launchFinishUrl: launchFinishUrl,
         tabUrl: tabUrl,
 
@@ -607,6 +608,7 @@ define(['app'], function (App) {
         adminAuthSettings: adminAuthSettings,
         toggleAnalytics: toggleAnalytics,
         importLaunch: importLaunch,
-        getProjectEvents: getProjectEvents
+        getProjectEvents: getProjectEvents,
+        sharedWidgetSearch: sharedWidgetSearch
     };
 });

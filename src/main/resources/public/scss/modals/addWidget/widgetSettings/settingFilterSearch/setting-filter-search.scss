@@ -23,18 +23,27 @@
   .filter-search-header {
     background: $COLOR--white;
     width: 100%;
+    display: table;
     height: 50px;
     padding: 10px;
     .input-filter {
       margin: 0;
-      width: 245px;
-      float: left;
+      display: table-cell;
       input {
+        float: left;
+        max-width: 245px;
         background: $COLOR--white-default;
       }
+      .material-icons{
+        position: relative;
+        margin-left: -30px;
+        top: unset;
+        vertical-align: sub;
+        right: unset;
+      }
     }
-    .rp-btn {
-      float: right;
+    .rp-btn.rp-button-with-icon {
+      display:  table-cell;
     }
   }
   .select-filter-wrapper {

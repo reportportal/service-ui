@@ -51,13 +51,8 @@ require.config({
         'gridstackUi': '../lib/gridstack/gridstack.jQueryUI',
         'validate': '../lib/jquery.validate',
         'd3': '../lib/d3/d3.v3.min',
-        'd3Tip': '../lib/d3/d3.tip.custom',
-        'nvd3': '../lib/nvd3/nv.d3.custom',
         'c3': '../lib/c3',
-        'profile': 'login/user_profile',
-        //'landingPage': 'landing/LandingPage',
-        
-        // 'landingDocs': 'landing/documentation',
+
         'log': 'log/logs',
         'TestRoute': 'router/TestRoute',
         'router': 'router/router',
@@ -108,7 +103,6 @@ require.config({
         'gridstack': ['jquery', 'underscore'],
         'gridstackUi': ['gridstack'],
         'validate': { deps : ['jquery'] },
-        'nvd3': {deps: ['d3'], exports : 'nv'},
         'underscore': {
             exports: '_'
         },

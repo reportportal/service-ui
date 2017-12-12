@@ -23,158 +23,260 @@ define(function (require) {
 
     var $ = require('jquery');
     var _ = require('underscore');
-    var Moment = require('moment');
+    var Util = require('util');
+    var C3ChartWidgetView = require('newWidgets/_C3ChartWidgetView');
+    var SingletonLaunchFilterCollection = require('filters/SingletonLaunchFilterCollection');
     var Localization = require('localization');
-    var ChartWidgetView = require('newWidgets/_ChartWidgetView');
     var d3 = require('d3');
-    var nvd3 = require('nvd3');
+    var c3 = require('c3');
+    var App = require('app');
+    var Moment = require('moment');
+    var config = App.getInstance();
 
-    var InvestigatedTrendChart = ChartWidgetView.extend({
-        initialize: function (options) {
-            ChartWidgetView.prototype.initialize.call(this, options);
-            this.tooltipLabel = '%';
-        },
-
-        getData: function () {
-            var contentData = this.model.getContent() || [];
-            var series;
-            var pairs;
-            this.categories = [];
-            if (!_.isEmpty(contentData)) {
-                series = {
-                    to_investigate: { key: Localization.widgets.toInvestigate, seriesId: 'to_investigate' },
-                    investigated: { key: Localization.widgets.investigated, seriesId: 'investigated' }
-                };
-                _.each(series, function (val, key) {
-                    val.color = this.getSeriesColor(key);
-                    val.values = [];
-                }, this);
-                if (!this.model.get('isTimeline')) {
-                    _.each(contentData.result, function (d, i) {
-                        var cat = {
-                            id: d.id,
-                            name: d.name,
-                            number: '#' + d.number,
-                            startTime: parseInt(d.startTime, 10)
-                        };
-                        this.categories.push(cat);
-                        _.each(d.values, function (v, k) {
-                            var prop = _.extend({ x: i + 1, y: parseFloat(v) }, cat);
-                            series[k].values.push(prop);
-                        });
-                    }, this);
-                } else {
-                    pairs = _.pairs(contentData);
-                    pairs.sort(function (a, b) {
-                        return Moment(a[0], 'YYYY-MM-DD').unix() - Moment(b[0], 'YYYY-MM-DD').unix();
-                    });
-                    _.each(pairs, function (p, i) {
-                        var values = p[1][0].values;
-                        var date = Moment(p[0], 'YYYY-MM-DD');
-                        var cat = {
-                            time: date.format('YYYY-MM-DD'),
-                            startTime: date.unix()
-                        };
-                        this.categories.push(cat);
-                        _.each(values, function (v, k) {
-                            var prop = { startTime: date.unix(), x: i + 1, y: parseFloat(v) };
-                            series[k].values.push(prop);
-                        });
-                    }, this);
-                }
-                this.series = _.values(series);
-                return this.series;
-            }
-            return [];
-        },
+    var InvestigatedTrendChart = C3ChartWidgetView.extend({
+        template: 'tpl-widget-investigated-trend-chart',
+        tooltipTemplate: 'tpl-widget-investigated-trend-chart-tooltip',
+        className: 'investigated-trend-chart',
 
         render: function () {
-            var data = this.getData();
-            var self = this;
-            var tooltip = this.tooltipContent();
-            var tip;
-            var vis;
-            var cup;
-            var update;
-            var emptyData = this.model.getContent();
-            if (!this.isEmptyData(emptyData)) {
-                this.addSVG();
+            var data;
+            this.isTimeLine = !!this.model.getWidgetOptions().timeline;
 
-                this.chart = nvd3.models.multiBarChart()
-                    .x(function (d) {
-                        return d.x;
-                    })
-                    .y(function (d) {
-                        return d.y;
-                    })
-                    .stacked(true)
-                    .forceY([0, 1])
-                    .showControls(false)
-                    .clipEdge(true)
-                    .showXAxis(true)
-                    .yDomain([0, 100])
-                    .tooltips(!self.isPreview)
-                    .showLegend(!self.isPreview)
-                ;
-
-                this.chart.tooltipContent(tooltip);
-
-                this.chart.yAxis
-                    .tickFormat(function (d) {
-                        return d;
-                    })
-                    .axisLabelDistance(-10)
-                    .axisLabel(Localization.widgets.ofInvestigation)
-                ;
-
-                this.chart.xAxis
-                    .showMaxMin(false)
-                    .tickFormat(function (d) {
-                        return self.formatNumber(d);
+            if (this.isTimeLine) {
+                data = [];
+                _.each(this.model.getContent(), function (item, key) {
+                    data.push({
+                        date: key,
+                        values: item[0].values
                     });
-
-                tip = this.createTooltip();
-                vis = d3.select($('svg', this.$el).get(0))
-                    .datum(data)
-                    .call(this.chart)
-                    .call(tip);
-
-                if (self.model.get('isTimeline')) {
-                    this.updateTickForTimeLine(vis);
-                }
-
-                this.addLaunchNameTip(vis, tip);
-
-                this.chart.xAxis
-                    .tickFormat(function (d) {
-                        return self.formatCategories(d);
-                    });
-                cup = self.chart.update;
-                update = function () {
-                    self.chart.xAxis.tickFormat(function (d) {
-                        return self.formatNumber(d);
-                    });
-                    cup();
-                    self.chart.xAxis
-                        .tickFormat(function (d) {
-                            return self.formatCategories(d);
-                        });
-                    self.chart.update = update;
-
-                    if (self.model.get('isTimeline')) {
-                        self.updateTickForTimeLine(vis);
-                    }
-                };
-                this.chart.update = update;
-                this.addResize();
-                this.redirectOnElementClick('multibar');
-                this.addLegendClick(vis);
-                if (self.isPreview) {
-                    this.disabeLegendEvents();
-                }
+                });
+                this.$el.addClass('timeline-mode');
             } else {
-                this.addNoAvailableBock();
+                data = this.model.getContent().result;
             }
+
+            this.scrollers = [];
+            if (this.isPreview) {
+                this.$el.addClass('preview-view');
+            }
+            if ((!this.isTimeLine && !this.isDataExists()) || (this.isTimeLine && _.isEmpty(this.model.getContent()))) {
+                this.addNoAvailableBock();
+                return;
+            }
+
+            this.launchFilterCollection = new SingletonLaunchFilterCollection();
+            this.launchFilterCollection.ready.done(function () {
+                this.$el.html(Util.templates(this.template, {}));
+                this.drawStackedBarChart($('[data-js-chart-container]', this.$el), data);
+            }.bind(this));
+        },
+
+        drawStackedBarChart: function ($el, data) {
+            var self = this;
+            var chartData = {};
+            var legendScroller;
+            var itemNames;
+            var itemData = [];
+            var colors = {};
+            // prepare columns array and fill it witch field names
+            _.each(data[0].values, function (val, key) {
+                var splitted = key.split('$');
+                var shortKey = splitted[splitted.length - 1];
+                switch (shortKey) {
+                case 'to_investigate':
+                    colors[shortKey] = '#FFB743';
+                    break;
+                case 'investigated':
+                    colors[shortKey] = '#87B87F';
+                    break;
+                default:
+                    break;
+                }
+                chartData[shortKey] = [shortKey];
+            });
+            // fill columns arrays with values
+            if (this.isTimeLine) {
+                _.each(data, function (item) {
+                    itemData.push({
+                        date: item.date
+                    });
+                    _.each(item.values, function (val, key) {
+                        var splitted = key.split('$');
+                        var shortKey = splitted[splitted.length - 1];
+                        chartData[shortKey].push(val);
+                    });
+                });
+            } else {
+                _.each(data, function (item) {
+                    itemData.push({
+                        id: item.id,
+                        name: item.name,
+                        number: item.number,
+                        startTime: item.startTime
+                    });
+                    _.each(item.values, function (val, key) {
+                        var splitted = key.split('$');
+                        var shortKey = splitted[splitted.length - 1];
+                        chartData[shortKey].push(val);
+                    });
+                });
+            }
+
+            itemNames = _.map(chartData, function (item) {
+                return item[0];
+            });
+
+            this.chart = c3.generate({
+                bindto: $el[0],
+                data: {
+                    columns: [chartData[itemNames[0]], chartData[itemNames[1]]],
+                    type: 'bar',
+                    onclick: function (d, element) {
+                        if (self.isTimeLine) {
+                            self.redirectForTimeLine(itemData[d.index].date);
+                        } else {
+                            config.router.navigate(self.linkToRedirectService(d.id, itemData[d.index].id), { trigger: true });
+                        }
+                    },
+                    order: null,
+                    groups: [itemNames],
+                    colors: colors
+                },
+                grid: {
+                    y: {
+                        show: !self.isPreview
+                    }
+                },
+                axis: {
+                    x: {
+                        show: !self.isPreview,
+                        type: 'category',
+                        categories: _.map(itemData, function (item) {
+                            var day;
+                            if (self.isTimeLine) {
+                                day = Moment(item.date).format('dddd').substring(0, 3);
+                                return day + ', ' + item.date;
+                            }
+                            return '#' + item.number;
+                        }),
+                        tick: {
+                            values: self.isTimeLine ? self.getTimelineAxisTicks(itemData.length) : self.getLaunchAxisTicks(itemData.length),
+                            width: 60,
+                            centered: true,
+                            inner: true,
+                            multiline: self.isTimeLine,
+                            outer: false
+                        }
+                    },
+                    y: {
+                        show: true,
+                        max: 100,
+                        padding: {
+                            top: 0
+                        },
+                        label: {
+                            text: Localization.widgets.ofInvestigation,
+                            position: 'outer-middle'
+                        }
+                    }
+                },
+                interaction: {
+                    enabled: !self.isPreview
+                },
+                // zoom: {
+                //     enabled: true,
+                //     rescale: true
+                // },
+                // subchart: {
+                //     show: true
+                // },
+                padding: {
+                    top: self.isPreview ? 0 : 85,
+                    left: self.isPreview ? 0 : 60,
+                    right: self.isPreview ? 0 : 20,
+                    bottom: self.isPreview || !self.isTimeLine ? 0 : 10
+                },
+                legend: {
+                    show: false // we use custom legend
+                },
+                tooltip: {
+                    grouped: false,
+                    position: function (d, width, height, element) {
+                        var left = d3.mouse(self.chart.element)[0] - (width / 2);
+                        var top = d3.mouse(self.chart.element)[1] - height;
+                        return {
+                            top: top - 8, // 8 - offset for tooltip arrow
+                            left: left
+                        };
+                    },
+                    contents: function (d, defaultTitleFormat, defaultValueFormat, color) {
+                        var launchData = itemData[d[0].index];
+                        var id = d[0].id;
+                        var itemName = Localization.launchesHeaders[id];
+
+                        return Util.templates(self.tooltipTemplate, {
+                            launchName: launchData.name,
+                            launchNumber: launchData.number,
+                            startTime: self.isTimeLine ? launchData.date : self.formatDateTime(launchData.startTime),
+                            color: color(d[0].id),
+                            itemName: itemName,
+                            itemCases: d[0].value
+                        });
+                    }
+                },
+                size: {
+                    height: self.$el.parent().height()
+                },
+                onrendered: function () {
+                    $el.css('max-height', 'none');
+                }
+            });
+            // Configuring custom legend block
+            if (!self.isPreview) {
+                d3.select(this.chart.element)
+                    .insert('div', '.chart')
+                    .attr('class', 'legend')
+                    .insert('div', '.legend')
+                    .attr('data-js-legend-wrapper', '') // wrapper for BaronScroll
+                    .selectAll('span')
+                    .data(itemNames)
+                    .enter()
+                    .append('span')
+                    .attr('data-id', function (id) { return id; })
+                    .html(function (id) {
+                        return '<div class="color-mark"></div>' + Localization.launchesHeaders[id];
+                    })
+                    .each(function (id) {
+                        if (~self.hiddenItems.indexOf(id)) {
+                            $('.color-mark', $(this)).addClass('unchecked');
+                        }
+                        d3.select(this).select('.color-mark').style('background-color', self.chart.color(id));
+                    })
+                    .on('mouseover', function (id) {
+                        self.chart.focus(id);
+                    })
+                    .on('mouseout', function (id) {
+                        self.chart.revert();
+                    })
+                    .on('click', function (id) {
+                        config.trackingDispatcher.trackEventNumber(342);
+                        $('.color-mark', $(this)).toggleClass('unchecked');
+                        self.chart.toggle(id);
+                    });
+                this.hiddenItems && this.chart.hide(this.hiddenItems);
+                d3.select(this.chart.element).select('.legend')
+                    .append('div')
+                    .attr('class', 'legend-gradient')
+                    .append('div')
+                    .attr('class', 'legend-border');
+                legendScroller = Util.setupBaronScroll($('[data-js-legend-wrapper]', $el));
+                this.scrollers.push(legendScroller);
+            }
+        },
+        onBeforeDestroy: function () {
+            _.each(this.scrollers, function (baronScrollElem) {
+                baronScrollElem.baron && baronScrollElem.baron().dispose();
+            });
         }
     });
 
