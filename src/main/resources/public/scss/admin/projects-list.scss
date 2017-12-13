@@ -504,7 +504,7 @@
 
           .heartbeat-block {
             float: left;
-            width: 45%;
+            width: 35%;
             text-align: center;
 
             .health-icon {
@@ -520,7 +520,7 @@
           .project-info-block {
             font-family: $OpenSansRegular;
             float: left;
-            width: 55%;
+            width: 65%;
 
             .project-info {
               padding: 0;
@@ -566,7 +566,7 @@
                 }
                 span.mobile-name{
                   display: inline-block;
-                  margin-right: 25px;
+                  margin-right: 5px;
                   width: 65px;
                   font-family: $OpenSansRegular;
                   font-size: 12px;
