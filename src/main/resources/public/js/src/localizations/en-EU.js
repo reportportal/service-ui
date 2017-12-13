@@ -1179,7 +1179,8 @@ define(['util'], function () {
             notFoundStackTrace: 'No stack trace to display',
             goToLog: 'Go to stack trace in log message',
             nextError: 'Next error',
-            consoleView: 'Console view'
+            consoleView: 'Console view',
+            harFileError: 'Your browser doesn\'t support viewer for .har files. You can download file using <a href="%%%" target="_blank" >link</a>.'
         },
 
         defectNameById: {

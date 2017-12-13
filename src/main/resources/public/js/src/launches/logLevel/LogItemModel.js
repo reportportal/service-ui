@@ -61,6 +61,8 @@ define(function (require) {
                             case 'javascript': return 'img/launch/attachments/js.svg';
                             case 'CSV':
                             case 'csv': return 'img/launch/attachments/csv.svg';
+                            case 'har':
+                            case 'HAR': return 'img/launch/attachments/har.svg';
                             case 'JSON':
                             case 'json': return 'img/launch/attachments/json.svg';
                             case 'PHP':

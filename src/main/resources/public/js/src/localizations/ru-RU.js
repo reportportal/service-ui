@@ -1237,7 +1237,8 @@ define(['util'], function () {
             notFoundStackTrace: 'Нет трассировки стека для отображения',
             goToLog: 'Перейдите к трассировке стека в записи журнала',
             nextError: 'Следующая ошибка',
-            consoleView: 'Консольный вид'
+            consoleView: 'Консольный вид',
+            harFileError: 'Ваш браузер не поддерживает плагин для отображения файлов с расширением .har. Вы можете скачать файл по <a target="_blank" href="%%%">ссылке</a>.'
         },
 
         defectNameById: {

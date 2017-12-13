@@ -32,7 +32,7 @@ define(function (require) {
     var Urls = require('dataUrlResolver');
     var ModalLogAttachmentImage = require('modals/modalLogAttachmentImage');
     var ModalLogAttachmentBinary = require('modals/modalLogAttachmentBinary');
-
+    var ModalLogAttachmentBinaryHar = require('modals/modalLogAttachmentBinaryHar');
     var config = App.getInstance();
 
     var LogBodyView = Epoxy.View.extend({
@@ -50,7 +50,7 @@ define(function (require) {
             if (this.context === 'userdebug') {
                 this.$el.find('[data-js-log-item-container]').addClass('debug-mode');
             }
-            this.supportedLogBinary = ['xml', 'javascript', 'json', 'css', 'php'];
+            this.supportedLogBinary = ['xml', 'javascript', 'json', 'css', 'php', 'har'];
         },
         onChangeLogItem: function () {
             var self = this;
@@ -162,6 +162,13 @@ define(function (require) {
                 if (isImage) {
                     modal = new ModalLogAttachmentImage({
                         imageId: binaryId
+                    });
+                    modal.show();
+                } else if (language === 'har') {
+                    modal = new ModalLogAttachmentBinaryHar({
+                        binaryId: binaryId,
+                        language: language,
+                        supportedLanguages: this.supportedLogBinary
                     });
                     modal.show();
                 } else {
