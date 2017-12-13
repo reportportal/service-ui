@@ -270,6 +270,10 @@
       }
       .dashboard-description-col {
         width: 40%;
+        p{
+          white-space: pre-wrap;
+          word-wrap: break-word;
+        }
       }
       .dashboard-owner-col {
         width: 16%;
