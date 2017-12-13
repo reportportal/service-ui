@@ -41,6 +41,7 @@ require.config({
         'moment': 'localizations/localizationDates',
         'SwipeGallery': '../lib/SwipeGallery',
         'Hammer': '../lib/hammer',
+        'PerfCascade': '../lib/perf-cascade/perf-cascade',
         'message': 'message/message-panel',
         'app': 'core/app-config',
         'validators': 'core/validators',

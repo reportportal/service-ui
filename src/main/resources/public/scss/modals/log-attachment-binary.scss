@@ -37,3 +37,27 @@
     }
   }
 }
+.modal-log-attachment-binary-har{
+  .modal-dialog{
+    min-width: 600px;
+    max-width: 98%;
+    width: auto;
+    .modal-body{
+      &.load{
+        .preloader{
+          display: block;
+        }
+      }
+      .error-block{
+        display: none;
+        padding: 40px 0;
+        text-align: center;
+        font-size: 13px;
+        a{
+          cursor: pointer;
+          color: $COLOR--windows-blue;
+        }
+      }
+    }
+  }
+}
