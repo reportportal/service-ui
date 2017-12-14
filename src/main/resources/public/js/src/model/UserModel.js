@@ -265,8 +265,11 @@ define(function (require, exports, module) {
             return permission;
         },
         getRoleForCurrentProject: function () {
-            var project = this.get('projects')[this.appModel.get('projectId')];
+            var project = null;
             var role = '';
+            if (this.get('projects')) {
+                project = this.get('projects')[this.appModel.get('projectId')];
+            }
             if (project) {
                 role = project.projectRole;
             }
