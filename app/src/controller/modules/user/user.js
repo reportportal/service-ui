@@ -1,5 +1,7 @@
 import modules from './modules/modules';
 import getInfo from './signals/getInfo';
+import logout from './signals/logout';
+import setUserToken from './signals/setUserToken';
 
 export default {
   state: {
@@ -9,6 +11,8 @@ export default {
   },
   signals: {
     getInfo,
+    setUserToken,
+    logout,
   },
   modules,
 };

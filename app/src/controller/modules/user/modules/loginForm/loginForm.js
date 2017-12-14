@@ -1,3 +1,5 @@
+import submitForm from './signals/submitForm';
+
 export default {
   state: {
     login: {
@@ -16,5 +18,8 @@ export default {
     },
     isLoad: false,
     isValid: true,
+  },
+  signals: {
+    submitForm,
   },
 };

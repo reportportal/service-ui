@@ -1,6 +1,7 @@
 import { when } from 'cerebral/operators';
 import { state } from 'cerebral/tags';
 
+import { setUserTokenFromStorage } from 'controller/globalActions';
 import getInitialData from 'controller/signals/getInitialData';
 
 export default continueSequence => [
@@ -8,6 +9,7 @@ export default continueSequence => [
   {
     true: continueSequence,
     false: [
+      setUserTokenFromStorage,
       getInitialData,
       continueSequence,
     ],

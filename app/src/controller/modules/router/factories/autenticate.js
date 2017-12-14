@@ -11,4 +11,6 @@ const autenticate = continueSequence => [
   },
 ];
 
-export default initialData(autenticate);
+export default continueSequence => (
+  initialData(autenticate(continueSequence))
+);
