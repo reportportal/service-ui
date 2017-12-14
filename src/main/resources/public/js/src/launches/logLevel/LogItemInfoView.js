@@ -240,13 +240,12 @@ define(function (require) {
         onClickSendIssue: function () {
             var lastItemModel = this.viewModel.collection.models[this.viewModel.collection.models.length - 1];
             var activeItemIssue = this.viewModel.getIssue();
-            var lastItemIssue = lastItemModel.getIssue();
             var data = {
                 issues: [{
                     test_item_id: lastItemModel.get('id'),
                     issue: {
-                        autoAnalyzed: lastItemIssue.autoAnalyzed,
-                        ignoreAnalyzer: lastItemIssue.ignoreAnalyzer,
+                        autoAnalyzed: false,
+                        ignoreAnalyzer: activeItemIssue.ignoreAnalyzer,
                         issue_type: activeItemIssue.issue_type,
                         comment: activeItemIssue.comment || '',
                         externalSystemIssues: activeItemIssue.externalSystemIssues || []
@@ -282,8 +281,8 @@ define(function (require) {
                 issues: [{
                     test_item_id: this.viewModel.get('id'),
                     issue: {
-                        autoAnalyzed: this.viewModel.get('autoAnalyzed'),
-                        ignoreAnalyzer: this.viewModel.get('ignoreAnalyzer'),
+                        autoAnalyzed: false,
+                        ignoreAnalyzer: previousDefectiveItemIssue.ignoreAnalyzer,
                         issue_type: previousDefectiveItemIssue.issue_type,
                         comment: previousDefectiveItemIssue.comment || '',
                         externalSystemIssues: previousDefectiveItemIssue.externalSystemIssues || []

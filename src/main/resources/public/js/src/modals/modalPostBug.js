@@ -366,12 +366,13 @@ define(function (require) {
             var val;
             var comment;
             _.forEach(items, function (item) {
+                var itemIssue = item.getIssue();
                 defectBadge = $('.inline-editor .rp-defect-type-dropdown .pr-defect-type-badge');
                 chosenIssue = defectBadge.length > 0 ? defectBadge.data('id') : null;
                 issue = {
-                    issue_type: chosenIssue || item.getIssue().issue_type,
-                    comment: item.getIssue().comment,
-                    externalSystemIssues: item.getIssue().externalSystemIssues || []
+                    issue_type: chosenIssue || itemIssue.issue_type,
+                    comment: itemIssue.comment,
+                    externalSystemIssues: itemIssue.externalSystemIssues || []
                 };
 
                 if ($('#replaceComments').prop('checked')) {
@@ -383,6 +384,8 @@ define(function (require) {
                     comment = item.issue.comment;
                     issue.comment = comment && (val.trim() === comment.trim()) ? comment : val;
                 }
+                issue.ignoreAnalyzer = itemIssue.ignoreAnalyzer;
+                issue.autoAnalyzed = false;
                 issue.externalSystemIssues.push({
                     ticketId: response.id,
                     systemId: this.user.bts.current.id,
