@@ -37,6 +37,11 @@
     right: 0;
     bottom: 30px;
     background: $COLOR--light-red;
+    .baroon-container{
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
     .table-block {
       position: absolute;
       display: table;
