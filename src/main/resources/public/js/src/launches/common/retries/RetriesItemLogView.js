@@ -58,6 +58,7 @@ define(function (require) {
                 parentModel: new Epoxy.Model()
             });
             $('[data-js-message-container]', this.$el).html(this.stackTrace.$el);
+            this.baron = Util.setupBaronScroll($('[data-js-message-container] ', this.$el));
             this.stackTrace.onShow(true, true);
         },
         onDestroy: function () {
