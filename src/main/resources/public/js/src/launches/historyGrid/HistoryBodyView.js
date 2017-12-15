@@ -124,7 +124,7 @@ define(function (require) {
                 delete launch.resources;
                 launches.push(launch);
             });
-            launches.sort(function (a, b) { return parseInt(a.startTime) - parseInt(b.startTime); });
+            launches.sort(function (a, b) { return parseInt(a.launchNumber) - parseInt(b.launchNumber); });
             this.launches.add(launches, { merge: true });
             this.items.add(items, { merge: true });
         },
