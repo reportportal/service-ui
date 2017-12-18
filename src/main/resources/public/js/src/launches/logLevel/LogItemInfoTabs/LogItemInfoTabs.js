@@ -80,12 +80,13 @@ define(function (require) {
 
         computeds: {
             isShowActivities: function () {
-                return ~this.viewModel.get('id').indexOf('retry:');
+                return !(this.lastRunItemId === this.viewModel.get('id'));
             }
         },
         initialize: function (options) {
             this.context = options.context;
             this.viewModel = options.itemModel;
+            this.lastRunItemId = options.lastRunItemId;
             this.model = new (Epoxy.Model.extend({
                 defaults: {
                     stackTrace: false,

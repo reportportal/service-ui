@@ -167,6 +167,7 @@ define(function (require) {
                 this.tabsView.destroy();
             }
             this.tabsView = new LogItemInfoTabs({
+                lastRunItemId: this.viewModel.get('id'),
                 itemModel: model,
                 launchModel: this.launchModel,
                 context: this.context
