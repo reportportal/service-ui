@@ -5,5 +5,9 @@ export default function (connectProps, component) {
   if (STORYBOOK) {
     return component;
   }
+  // eslint-disable-next-line no-undef
+  if (JEST) {
+    return component;
+  }
   return connect(connectProps, component);
 }
