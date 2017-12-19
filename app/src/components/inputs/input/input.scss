@@ -1,5 +1,8 @@
 .input {
   display: inline-block;
+  position: absolute;
+  top: 0;
+  left: 0;
   height: 100%;
   width: 100%;
   padding: 6px 10px;
@@ -12,6 +15,7 @@
   font-size: 13px;
   color: $COLOR--charcoal-grey;
   line-height: 13px;
+  -webkit-box-shadow: 0 0 0 1000px #fdffeb inset;
 
   &[type=number]::-webkit-inner-spin-button,
   &[type=number]::-webkit-outer-spin-button {

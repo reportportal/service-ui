@@ -19,12 +19,26 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default function getPropsWithoutChildren(props, unnecessaryKey) {
-  const newProps = {};
-  Object.keys(props).forEach((key) => {
-    if (!unnecessaryKey.some(item => (item === key))) {
-      newProps[key] = props[key];
-    }
-  });
-  return newProps;
-}
+import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
+import styles from './loginPageSection.scss';
+
+const cx = classNames.bind(styles);
+
+const LoginPageSection = ({ left, children }) => (
+  <div className={cx({ 'login-page-section': true, left })}>
+    { children }
+  </div>
+);
+
+LoginPageSection.propTypes = {
+  children: PropTypes.node,
+  left: PropTypes.bool,
+};
+
+LoginPageSection.defaultProps = {
+  children: null,
+  left: false,
+};
+
+export default LoginPageSection;

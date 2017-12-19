@@ -1,4 +1,4 @@
-.input-error-hint {
+.field-error-hint {
   position: relative;
   &.show {
     .hint {
@@ -23,8 +23,8 @@
   padding: 10px 11px;
   font-size: 12px;
   font-family: $FONT-REGULAR;
-  color: $COLOR--steel-grey;
-  background-color: $COLOR--white;
+  color: $COLOR--charcoal-grey;
+  background-color: $COLOR--white-two;
   border: 1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }

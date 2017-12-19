@@ -19,12 +19,13 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default function getPropsWithoutChildren(props, unnecessaryKey) {
-  const newProps = {};
-  Object.keys(props).forEach((key) => {
-    if (!unnecessaryKey.some(item => (item === key))) {
-      newProps[key] = props[key];
-    }
-  });
-  return newProps;
-}
+import classNames from 'classnames/bind';
+import styles from './sectionsSeparator.scss';
+
+const cx = classNames.bind(styles);
+
+const SectionsSeparator = () => (
+  <div className={cx('sections-separator')} />
+);
+
+export default SectionsSeparator;

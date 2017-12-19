@@ -19,12 +19,40 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default function getPropsWithoutChildren(props, unnecessaryKey) {
-  const newProps = {};
-  Object.keys(props).forEach((key) => {
-    if (!unnecessaryKey.some(item => (item === key))) {
-      newProps[key] = props[key];
-    }
+import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
+import styles from './bigButton.scss';
+
+const cx = classNames.bind(styles);
+
+const BigButton = ({ type, children, disabled, color, onClick }) => {
+  const classes = cx({
+    'big-button': true,
+    disabled,
+    [`color-${color}`]: color,
   });
-  return newProps;
-}
+
+  return (
+    <button type={type} className={classes} onClick={onClick} >
+      { children }
+    </button>
+  );
+};
+
+BigButton.propTypes = {
+  children: PropTypes.node,
+  disabled: PropTypes.bool,
+  color: PropTypes.string,
+  type: PropTypes.string,
+  onClick: PropTypes.func,
+};
+
+BigButton.defaultProps = {
+  children: '',
+  disabled: false,
+  color: 'booger',
+  type: 'button',
+  onClick: () => {},
+};
+
+export default BigButton;

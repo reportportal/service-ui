@@ -1,37 +1,34 @@
 import { cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
-import { connect } from '@cerebral/react';
 import { props, state } from 'cerebral/tags';
 import { field } from '@cerebral/forms';
-
-import { getObjWithoutKeys, checkInvalidField } from 'common/utils';
-
-import styles from './inputErrorHint.scss';
+import { checkInvalidField } from 'common/utils';
+import styles from './fieldErrorHint.scss';
 
 const cx = classNames.bind(styles);
 
-const InputErrorHint = (propsObj) => {
+const FieldErrorHint = (
+    { formPath, fieldName, formField, formShowErrors, isFocus, errorMessage, hintType, children },
+  ) => {
   const classes = cx({
-    'input-error-hint': true,
-    show: checkInvalidField(propsObj.formField, propsObj.formShowErrors) && propsObj.isFocus,
-    'bottom-type': propsObj.hintType === 'bottom',
+    'field-error-hint': true,
+    show: checkInvalidField(formField, formShowErrors) && isFocus,
+    'bottom-type': hintType === 'bottom',
   });
   return (
     <div className={classes}>
-      {propsObj.children && cloneElement(propsObj.children, getObjWithoutKeys(propsObj, [
-        'children', 'hintType', 'errorMessage', 'isFocus', 'formField', 'formShowErrors',
-      ]))}
+      {children && cloneElement(children, { formPath, fieldName })}
       <div className={cx('hint')}>
         <div className={cx('hint-content')}>
-          {propsObj.errorMessage}
+          {errorMessage}
         </div>
       </div>
     </div>
   );
 };
 
-InputErrorHint.propTypes = {
+FieldErrorHint.propTypes = {
   formPath: PropTypes.string,
   fieldName: PropTypes.string,
   formField: PropTypes.object,
@@ -41,7 +38,7 @@ InputErrorHint.propTypes = {
   hintType: PropTypes.string,
   children: PropTypes.node,
 };
-InputErrorHint.defaultProps = {
+FieldErrorHint.defaultProps = {
   formPath: '',
   fieldName: '',
   formField: {},
@@ -52,10 +49,9 @@ InputErrorHint.defaultProps = {
   children: null,
 };
 
-const ConnectComponent = connect({
+export default Utils.connectToState({
   formField: field(state`${props`formPath`}.${props`fieldName`}`),
   formShowErrors: state`${props`formPath`}.showErrors`,
   isFocus: state`${props`formPath`}.${props`fieldName`}.isFocus`,
   errorMessage: state`${props`formPath`}.${props`fieldName`}.errorMessage`,
-}, InputErrorHint);
-export { InputErrorHint as component, ConnectComponent as default };
+}, FieldErrorHint);
