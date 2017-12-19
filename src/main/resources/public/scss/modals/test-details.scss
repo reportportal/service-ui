@@ -10,7 +10,6 @@
             margin-top: 10px;
             & > code {
               margin: 0;
-              padding: 0 15px;
             }
           }
           p{
@@ -29,15 +28,18 @@
         .item-description{
           position: relative;
           overflow: hidden;
-          max-height: 150px;
+          max-height: 175px;
           label{
             margin-bottom: 5px;
+          }
+          &>div[data-js-description]{
+            margin-bottom: 40px;
           }
         }
         .item-stack-trace{
           position: relative;
           overflow: hidden;
-          max-height: 150px;
+          max-height: 145px;
           &.load{
             .preloader{
               display: block;
@@ -47,8 +49,9 @@
             position: relative;
             padding: 15px;
             font-family: $FontMonacoMonospace;
+            margin-bottom: 30px;
             color: $COLOR--charcoal-grey;
-            font-size: 12px;
+            font-size: 13px;
             &::before{
               content: '';
               position: absolute;
@@ -76,7 +79,8 @@
               vertical-align: top;
             }
             td{
-              word-break: break-word;
+              white-space: pre-wrap;
+              word-break: break-all;
               p{
                 min-width: 200px;
               }
