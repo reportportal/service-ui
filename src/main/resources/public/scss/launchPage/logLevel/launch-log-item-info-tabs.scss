@@ -36,7 +36,39 @@
     float: left;
     padding: 0 10px;
     color: $COLOR--gray-47;
+    position: relative;
     cursor: pointer;
+    &.latest-action{
+      cursor: default;
+      p{
+        margin: 0;
+        padding: 0;
+        text-transform: none;
+        display: inline-block;
+        vertical-align: sub;
+        &.user-name{
+          font-weight: 600;
+        }
+      }
+      &:hover{
+        color: $COLOR--gray-47;
+      }
+      @media (max-width: 1050px) {
+        display: none;
+      }
+    }
+    &:not(:first-child){
+      &::before{
+        content: '';
+        width: 1px;
+        height: 20px;
+        display: block;
+        position: absolute;
+        left: 0;
+        background: $COLOR--gray-80;
+        top: 3px;
+      }
+    }
     &:hover {
       color: $COLOR--black-four;
       .item-parametres::after{

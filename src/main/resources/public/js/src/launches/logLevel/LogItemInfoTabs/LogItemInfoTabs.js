@@ -32,6 +32,7 @@ define(function (require) {
     var LogItemInfoActivity = require('launches/logLevel/LogItemInfoTabs/LogItemInfoActivity');
     var LogItemInfoAttachmentsView = require('launches/logLevel/LogItemInfoTabs/LogItemInfoAttachments');
     var LogItemInfoParametresView = require('launches/logLevel/LogItemInfoTabs/LogItemInfoParametresView');
+    var LogItemInfoLastAction = require('launches/logLevel/LogItemInfoTabs/LogItemInfoLastAction');
     var App = require('app');
     var _ = require('underscore');
 
@@ -161,6 +162,10 @@ define(function (require) {
 
         render: function () {
             this.$el.html(Util.templates(this.template));
+            this.latest = new LogItemInfoLastAction({
+                itemModel: this.viewModel
+            });
+            $('[data-js-latest-container]', this.$el).html(this.latest.$el);
         },
 
         onDestroy: function () {
