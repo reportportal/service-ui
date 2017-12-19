@@ -38,6 +38,7 @@ export default (env = defaultEnv) => ({
   plugins: [
     new WebpackNotifierPlugin({ skipFirstNotification: true }),
     new webpack.DefinePlugin({
+      JEST: false,
       STORYBOOK: JSON.stringify(env.storybook),
     }),
     new webpack.ProvidePlugin({

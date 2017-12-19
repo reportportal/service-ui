@@ -19,12 +19,20 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export default function getPropsWithoutChildren(props, unnecessaryKey) {
-  const newProps = {};
-  Object.keys(props).forEach((key) => {
-    if (!unnecessaryKey.some(item => (item === key))) {
-      newProps[key] = props[key];
-    }
-  });
-  return newProps;
-}
+import classNames from 'classnames/bind';
+import styles from './socialSection.scss';
+import NewsBlock from './newsBlock/newsBlock';
+import SectionsSeparator from './sectionsSeparator/sectionsSeparator';
+import SocialsBlock from './socialsBlock/socialsBlock';
+
+const cx = classNames.bind(styles);
+
+const SocialSection = () => (
+  <div className={cx('social-section')}>
+    <NewsBlock />
+    <SectionsSeparator />
+    <SocialsBlock />
+  </div>
+);
+
+export default SocialSection;

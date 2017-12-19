@@ -1,0 +1,45 @@
+.big-button {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid;
+  border-radius: 3px;
+  font-family: $FONT-REGULAR;
+  font-size: 16px;
+  line-height: 25px;
+  color: $COLOR--white-two;
+  cursor: pointer;
+  box-sizing: border-box;
+  outline: none;
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+  &.color-booger {
+    background-color: $COLOR--booger;
+    border-color: $COLOR--booger;
+
+    &:hover {
+      background-color: darken( $COLOR--booger, 15% );
+      border-color: darken( $COLOR--booger, 15% );
+    }
+    &:active {
+      background-color: darken( $COLOR--booger, 30% );
+      border-color: darken( $COLOR--booger, 30% );
+    }
+  }
+  &.color-organish {
+    background-color: $COLOR--organish;
+    border-color: $COLOR--organish;
+
+    &:hover {
+      background-color: darken( $COLOR--organish, 15% );
+      border-color: darken( $COLOR--organish, 15% );
+    }
+    &:active {
+      background-color: darken( $COLOR--organish, 30% );
+      border-color: darken( $COLOR--organish, 30% );
+    }
+  }
+}

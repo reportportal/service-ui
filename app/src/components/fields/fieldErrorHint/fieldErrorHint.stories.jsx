@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/react';
-import { component as InputErrorHint } from './index';
+import { component as InputErrorHint } from './fieldErrorHint';
 
 storiesOf('Input error hint', module)
   .add('default state', () => (

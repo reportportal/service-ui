@@ -20,28 +20,20 @@
  */
 
 import classNames from 'classnames/bind';
-import styles from './loginPage.scss';
-import LoginPageSection from './loginPageSection/loginPageSection';
-import SocialSection from './socialSection/socialSection';
-import LoginBlock from './loginBlock/loginBlock';
-import ServiceVersionsBlock from './serviceVersionsBlock/serviceVersionsBlock';
+import styles from './socialsBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const LoginPage = () => (
-  <div className={cx('login-page')}>
-    <div className={cx('login-page-content')}>
-      <div className={cx('background')} />
-      <div className={cx('logo')} />
-      <LoginPageSection left>
-        <SocialSection />
-      </LoginPageSection>
-      <LoginPageSection>
-        <LoginBlock />
-        <ServiceVersionsBlock />
-      </LoginPageSection>
-    </div>
+const SocialsBlock = () => (
+  <div className={cx('socials-block')}>
+    <a href="https://github.com/reportportal" target="_blank" className={cx('gh-icon')}>{}</a>
+    <a href="https://www.facebook.com/ReportPortal.io" target="_blank" className={cx('fb-icon')}>{}</a>
+    <a href="http://twitter.com/ReportPortal_io" target="_blank" className={cx('tw-icon')}>{}</a>
+    <a href="http://youtube.com/c/ReportPortalCommunity" target="_blank" className={cx('yt-icon')}>{}</a>
+    <a href="https://vk.com/reportportal_io" target="_blank" className={cx('vk-icon')}>{}</a>
+    <a href="https://reportportal-slack-auto.herokuapp.com/" target="_blank" className={cx('slk-icon')}>{}</a>
+    <a href="mailto:support@reportportal.io" className={cx('mail-icon')}>{}</a>
   </div>
-  );
+);
 
-export default LoginPage;
+export default SocialsBlock;
