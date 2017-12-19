@@ -25,7 +25,8 @@ define(function (require) {
     var _ = require('underscore');
     var Epoxy = require('backbone-epoxy');
     var App = require('app');
-
+    var RetriesLabelView = require('launches/common/retries/RetriesLabelView');
+    var RetriesBlockView = require('launches/common/retries/RetriesBlockView');
     var config = App.getInstance();
 
     var CommonItemView = Epoxy.View.extend({
@@ -42,6 +43,25 @@ define(function (require) {
             if (this.model.get('has_childs')) {
                 this.model.trigger('drill:item', this.model);
             }
+        },
+        renderRetries: function () {
+            this.retries && this.retries.destroy();
+            this.retries = new RetriesLabelView({
+                model: this.model
+            });
+            $('[data-js-retries-container]', this.$el).html(this.retries.$el);
+            this.listenTo(this.retries, 'activate:retries', this.onActivateRetries);
+        },
+        onActivateRetries: function () {
+            if (!this.retriesView) {
+                this.retriesView = new RetriesBlockView({
+                    model: this.model
+                });
+                $('[data-js-retries-block-container]', this.$el).html(this.retriesView.$el);
+            }
+            this.activateAccordion();
+            this.$el.addClass('open');
+            config.mainScrollElement.animate({ scrollTop: this.el.offsetTop + this.el.offsetHeight }, 500);
         }
     });
 

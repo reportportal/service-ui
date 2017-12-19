@@ -33,8 +33,7 @@ define(function (require) {
     var MarkdownViewer = require('components/markdown/MarkdownViewer');
     var ItemStartTimeView = require('launches/common/ItemStartTimeView');
     var CommonItemView = require('launches/common/CommonItemView');
-    var RetriesLabelView = require('launches/common/retries/RetriesLabelView');
-    var RetriesBlockView = require('launches/common/retries/RetriesBlockView');
+
 
     var config = App.getInstance();
 
@@ -136,24 +135,6 @@ define(function (require) {
             this.renderRetries();
             if (this.hasIssue() && !this.noIssue) {
                 this.renderIssue();
-            }
-        },
-        renderRetries: function () {
-            this.retries && this.retries.destroy();
-            this.retries = new RetriesLabelView({
-                model: this.model
-            });
-            $('[data-js-retries-container]', this.$el).html(this.retries.$el);
-            this.listenTo(this.retries, 'activate:retries', this.onActivateRetries);
-        },
-        onActivateRetries: function () {
-            if (!this.retriesView) {
-                this.retriesView = new RetriesBlockView({
-                    model: this.model
-                });
-                $('[data-js-retries-block-container]', this.$el).html(this.retriesView.$el);
-                this.activateAccordion();
-                this.$el.addClass('open');
             }
         },
         highlightItem: function () {
