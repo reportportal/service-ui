@@ -115,14 +115,6 @@
         opacity: 0.2;
         margin-top: 10px;
         width: 100%;
-
-        @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
-          width: 278px;
-        }
-
-        @media (max-width: $SCREEN_XS_MAX) {
-          width: 114px;
-        }
       }
 
       .or {
