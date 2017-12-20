@@ -34,7 +34,7 @@ define(function (require, exports, module) {
     var HistoryTableView = Epoxy.View.extend({
         template: 'tpl-launch-history-table',
         events: {},
-        initialize: function(options) {
+        initialize: function (options) {
             this.filterModel = options.filterModel;
             this.collectionItems = options.collectionItems;
             this.launches = options.launches;
@@ -42,36 +42,34 @@ define(function (require, exports, module) {
             this.renderedItems = [];
             this.render();
         },
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template, {
                 launches: this.launches.toJSON(),
                 nameWidth: this.getNameCellWidth()
             }));
             this.renderItems();
-            Util.setupBaronScroll($('[data-js-history-scroll]', this.$el), null, {direction: 'h'});
+            var scroll = Util.setupBaronScroll($('[data-js-history-items-cells]', this.$el), null, { direction: 'h' });
+            Util.setupBaronScrollSize(scroll, {});
+            $(window).resize();
         },
-        getNameCellWidth: function(){
+        getNameCellWidth: function () {
             var launchesSize = this.launches.length;
-            if(launchesSize > 10){
+            if (launchesSize > 10) {
                 return 15;
-            }
-            else if (launchesSize > 5){
+            } else if (launchesSize > 5) {
                 return 20;
-            }
-            else if (launchesSize >= 3 && launchesSize <= 5){
+            } else if (launchesSize >= 3 && launchesSize <= 5) {
                 return 35;
-            }
-            else if(launchesSize <= 2){
+            } else if (launchesSize <= 2) {
                 return 50;
             }
         },
-        renderItems: function() {
-
+        renderItems: function () {
             var $nameContainer = $('[data-js-history-names]', this.$el),
                 $cellsContainer = $('[data-js-history-items-cells]', this.$el);
-            _.each(this.items.models, function(model) {
-                var name = new HistoryItemNameView({model: model, launches: this.launches, collectionItems: this.collectionItems}),
-                    cells = new HistoryItemCellsView({model: model, launches: this.launches, collectionItems: this.collectionItems});
+            _.each(this.items.models, function (model) {
+                var name = new HistoryItemNameView({ model: model, launches: this.launches, collectionItems: this.collectionItems }),
+                    cells = new HistoryItemCellsView({ model: model, launches: this.launches, collectionItems: this.collectionItems });
                 $nameContainer.append(name.$el);
                 $cellsContainer.append(cells.$el);
                 var cellsHeight = cells.$el.height(),
@@ -83,12 +81,10 @@ define(function (require, exports, module) {
 
                 this.renderedItems.push(name);
                 this.renderedItems.push(cells);
-
-
             }, this);
         },
         destroy: function () {
-            while(this.renderedItems.length) {
+            while (this.renderedItems.length) {
                 this.renderedItems.pop().destroy();
             }
             this.undelegateEvents();
@@ -96,7 +92,7 @@ define(function (require, exports, module) {
             this.unbind();
             this.$el.html('');
             delete this;
-        },
+        }
     });
 
     return HistoryTableView;

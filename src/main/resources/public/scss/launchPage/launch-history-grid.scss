@@ -59,6 +59,7 @@ $borderRadius100: 100px;
   }
   .history-grid-items {
     float: left;
+    position: relative;
     .history-col {
       min-width: 68px;
       &:first-child {
