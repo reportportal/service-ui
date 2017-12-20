@@ -1,7 +1,7 @@
 import { httpDelete, httpAbort } from '@cerebral/http/operators';
 import { state, string } from 'cerebral/tags';
 import { set } from 'cerebral/operators';
-import { checkAuthUrl, setUserToken } from 'controller/globalActions';
+import { checkAuthUrl, setUserToken } from '../../../globalActions';
 
 export default [
   set(state`user.isLoad`, false),
