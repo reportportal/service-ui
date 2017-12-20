@@ -23,6 +23,7 @@ define(function (require) {
 
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
+    var _ = require('underscore');
 
     var RetriesLabelView = Epoxy.View.extend({
         template: 'tpl-retries-label',
@@ -39,7 +40,7 @@ define(function (require) {
             }
         },
         render: function () {
-            var retries = this.model.get('retries');
+            var retries = _.clone(this.model.get('retries'));
             retries.push(this.model.attributes);
             this.$el.html(Util.templates(this.template, {
                 retries: retries

@@ -18,13 +18,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
-define(function (require, exports, module) {
+define(function (require) {
     'use strict';
 
     var $ = require('jquery');
-    var Backbone = require('backbone');
     var Epoxy = require('backbone-epoxy');
-    var Util = require('util')
+    var Util = require('util');
 
     var StepItemView = require('launches/stepLevel/StepItemView');
 
@@ -32,10 +31,10 @@ define(function (require, exports, module) {
         template: 'tpl-launch-log-item-info-details',
 
         events: {
-            'click [data-ja-close]': 'onClickClose',
+            'click [data-ja-close]': 'onClickClose'
         },
 
-        initialize: function(options) {
+        initialize: function (options) {
             this.render();
             this.itemModel = options.itemModel;
             this.parentModel = options.parentModel;
@@ -43,17 +42,17 @@ define(function (require, exports, module) {
                 el: $('[data-js-item-detail-container]', this.$el),
                 noIssue: true,
                 model: this.itemModel
-            })
+            });
         },
 
-        render: function() {
+        render: function () {
             this.$el.html(Util.templates(this.template), {});
         },
-        onClickClose: function() {
-            this.parentModel.set({itemDetails: false});
+        onClickClose: function () {
+            this.parentModel.set({ itemDetails: false });
         },
 
-        destroy: function() {
+        destroy: function () {
             this.itemView.destroy();
             this.undelegateEvents();
             this.stopListening();
@@ -61,7 +60,7 @@ define(function (require, exports, module) {
             this.$el.html('');
             delete this;
         }
-    })
+    });
 
     return LogItemInfoDetailsView;
 });
