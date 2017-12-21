@@ -131,6 +131,14 @@ define(function (require) {
                 el: $('[data-js-item-parametres]', this.$el),
                 model: this.viewModel
             });
+            this.applyBindings();
+            if (!this.getBinding('isShowActivities')) {
+                this.latest = new LogItemInfoLastAction({
+                    itemModel: this.viewModel
+                });
+                $('[data-js-latest-container]', this.$el).html(this.latest.$el);
+            }
+
             this.listenTo(this.stackTrace, 'goToLog', this.goToLog);
             this.listenTo(this.attachments, 'click:attachment', this.onClickAttachment);
         },
@@ -165,10 +173,6 @@ define(function (require) {
 
         render: function () {
             this.$el.html(Util.templates(this.template));
-            this.latest = new LogItemInfoLastAction({
-                itemModel: this.viewModel
-            });
-            $('[data-js-latest-container]', this.$el).html(this.latest.$el);
         },
 
         onDestroy: function () {
@@ -176,6 +180,7 @@ define(function (require) {
             this.details && this.details.destroy();
             this.activity && this.activity.destroy();
             this.attachments && this.attachments.destroy();
+            this.latest && this.latest.destroy();
         }
     });
 
