@@ -906,7 +906,10 @@ define(function (require, exports, module) {
             return !member;
         },
         isDeleteLock: function (project) {
-            return project.projectId.toLowerCase() === config.demoProjectName;
+            if (project && project.entryType && project.entryType !== 'INTERNAL') {
+                return true;
+            }
+            return false;
         },
 
         canManageMembers: function () {

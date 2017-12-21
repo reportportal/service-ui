@@ -106,7 +106,6 @@ define(function (require, exports, module) {
         getMembersDataObject: function () {
             var data = {
                 container: this.membersTab
-                // isDefaultProject: config.project.projectId === config.demoProjectName
             };
             if (this.subContext !== 'invite') {
                 data.projectId = config.project.projectId;

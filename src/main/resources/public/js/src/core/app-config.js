@@ -81,7 +81,6 @@ define(function (require) {
             accountRolesEnum: { user: 'USER', administrator: 'ADMINISTRATOR' },
             accountTypesEnum: { internal: 'INTERNAL' },
             btsEnum: { jira: 'JIRA', tfs: 'TFS', rally: 'RALLY' },
-            demoProjectName: '',  // TODO remove all
             breadcrumbMode: { expanded: 'expanded' },
             commentAnchor: '',
 

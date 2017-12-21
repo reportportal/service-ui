@@ -129,7 +129,7 @@ define(function (require) {
             canDeleteProject: {
                 deps: ['entryType'],
                 get: function (entryType) {
-                    return !(this.isDeleteLock() || this.isPersonalProject(entryType));
+                    return !(this.isDeleteLock());
                 }
             }
         },
@@ -167,7 +167,7 @@ define(function (require) {
             return search ? Util.textWrapper(str, search) : str;
         },
 
-        isPersonalProject: function (entryType) {
+        isPersonalProject: function (entryType) { //TODO delete
             return entryType === 'PERSONAL';
         },
 
