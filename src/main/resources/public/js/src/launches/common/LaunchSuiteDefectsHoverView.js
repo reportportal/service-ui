@@ -82,7 +82,8 @@ define(function (require) {
             var defectsCollection = new SingletonDefectTypeCollection();
             var subDefects = [];
 
-            var url = this.model.get('url');
+            var urlWithParameters = this.model.get('url');
+            var url = urlWithParameters.split('?')[0];
             var appendFilter = 'filter.eq.has_childs=false&filter.in.issue$issue_type=';
             _.each(defects, function (value, key) {
                 var subDefectModel = defectsCollection.getDefectByLocator(key);
