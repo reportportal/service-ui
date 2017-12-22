@@ -35,7 +35,9 @@ define(function (require) {
             isAnalyzerOn: {
                 deps: ['services'],
                 get: function (services) {
-                    if (services && services.ANALYZER) {
+                    if (services && services.API && services.API.extensions
+                        && services.API.extensions.analyzer
+                        && services.API.extensions.analyzer.length) {
                         return true;
                     }
                     return false;
