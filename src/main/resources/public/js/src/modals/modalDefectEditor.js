@@ -30,6 +30,7 @@ define(function (require) {
     var SingletonDefectTypeCollection = require('defectType/SingletonDefectTypeCollection');
     var SingletonAppStorage = require('storage/SingletonAppStorage');
     var SingletonAppModel = require('model/SingletonAppModel');
+    var SingletonRegistryInfoModel = require('model/SingletonRegistryInfoModel');
 
     var config = App.getInstance();
 
@@ -84,6 +85,7 @@ define(function (require) {
         },
         initialize: function (option) {
             this.context = option.context;
+            this.registryInfo = new SingletonRegistryInfoModel();
             this.appStorage = new SingletonAppStorage();
             this.viewModel = new Backbone.Model();
             if (this.appStorage.get('replaceComment') === undefined) {
@@ -116,7 +118,7 @@ define(function (require) {
             this.setupMarkdownEditor();
             if (!this.isMultipleEdit()) {
                 this.viewModel.set('ignoreAA', this.items[0].getIssue().ignoreAnalyzer);
-                if (this.context !== 'userdebug') {
+                if (this.context !== 'userdebug' && this.registryInfo.get('isAnalyzerOn')) {
                     this.ignoreSwitcher = new TinySwitcherComponent({
                         holder: $('[data-js-ignore-aa-switcher-container]', this.$el),
                         isEnabledByDefault: this.viewModel.get('ignoreAA'),

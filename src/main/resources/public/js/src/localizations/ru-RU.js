@@ -947,6 +947,7 @@ define(['util'], function () {
             ignoreAAShort: 'Игнорировать АА',
             includeAA: 'Включить в Авто-Анализ',
             ignoreAutoanalyzerTooltip: 'Игнорировать элемент при Авто-Анализе',
+            noAnalyzer: 'Нет включенных анализаторов',
             alreadyIgnoredAA: 'Элемент уже игнорируется Авто-Анализом',
             alreadyIncludedAA: 'Элемент уже включен в Авто-Анализ',
             withoutDefect: 'Элемент не имеет деффекта',

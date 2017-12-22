@@ -889,6 +889,7 @@ define(['util'], function () {
             ignoreAAShort: 'Ignore AA',
             includeAA: 'Include into Auto Analysis',
             ignoreAutoanalyzerTooltip: 'Ignore item in Auto-Analysis',
+            noAnalyzer: 'No analyzer enabled',
             alreadyIgnoredAA: 'Item already ignored in Auto-Analysis',
             alreadyIncludedAA: 'Item already included into Auto-Analysis',
             withoutDefect: 'Item does not have defect type',

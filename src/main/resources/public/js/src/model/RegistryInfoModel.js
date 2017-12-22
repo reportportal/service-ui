@@ -32,6 +32,15 @@ define(function (require) {
             services: {}
         },
         computeds: {
+            isAnalyzerOn: {
+                deps: ['services'],
+                get: function (services) {
+                    if (services && services.ANALYZER) {
+                        return true;
+                    }
+                    return false;
+                }
+            },
             analyticsExtensions: {
                 deps: ['services'],
                 get: function (services) {
