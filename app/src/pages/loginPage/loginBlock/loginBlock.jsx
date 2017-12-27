@@ -20,6 +20,7 @@
  */
 
 import classNames from 'classnames/bind';
+import { FormattedMessage } from 'react-intl';
 import styles from './loginBlock.scss';
 import LoginForm from './loginForm/loginForm';
 
@@ -28,7 +29,17 @@ const cx = classNames.bind(styles);
 const LoginBlock = () => (
   <div className={cx('login-block')}>
     <span className={cx('welcome-msg')}>
-      <span className={cx('big')}>Welcome,</span><br />login to your account
+      <span className={cx('big')}>
+        <FormattedMessage
+          id={'LoginBlock.welcome'}
+          defaultMessage={'Welcome,'}
+        />
+      </span>
+      <br />
+      <FormattedMessage
+        id={'LoginBlock.login'}
+        defaultMessage={'login to your account'}
+      />
     </span>
     <LoginForm />
   </div>

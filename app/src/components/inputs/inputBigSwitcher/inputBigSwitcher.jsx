@@ -20,6 +20,7 @@
  */
 
 import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
 import classNames from 'classnames/bind';
 import styles from './inputBigSwitcher.scss';
 
@@ -41,7 +42,12 @@ const InputSwitcher = ({ children, disabled, value, onChange, onFocus, onBlur })
   return (
     <label className={cx('input-big-switcher')} onFocus={onFocus} onBlur={onBlur} tabIndex="1">
       <div className={classes}>
-        <div className={cx('on')}>ON</div>
+        <div className={cx('on')}>
+          <FormattedMessage
+            id={'Input.switcher'}
+            defaultMessage={'ON'}
+          />
+        </div>
         <div className={cx('off')}>OFF</div>
         <input className={cx('input')} type="checkbox" disabled={disabled} onChange={handlerOnChange} />
         <div className={sliderClasses} />
