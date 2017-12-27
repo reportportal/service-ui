@@ -3,4 +3,5 @@
         <li class="status-<%= retry.status %>"></li>
     <% }); %>
 </ul>
-<span data-js-retries-link><%= data.retries.length + ' ' + data.text.launches.retries %></span>
+<span class="hidden-md hidden-lg mobile" ><%= '#' + data.retries.length + ' ' + data.text.launches.rtr %></span>
+<span class="hidden-xs hidden-sm" data-js-retries-link><%= '#' + data.retries.length + ' ' + data.text.launches.retries %></span>

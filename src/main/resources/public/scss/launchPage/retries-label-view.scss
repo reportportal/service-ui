@@ -38,5 +38,9 @@
   span {
     cursor: pointer;
     color: $COLOR--windows-blue;
+    &.mobile{
+      color: $COLOR--charcoal-grey;
+      cursor: default;
+    }
   }
 }
