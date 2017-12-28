@@ -21,7 +21,6 @@ export default sequence('Log in', [
           },
           setUserToken,
           updateUserInfo,
-          checkAuthUrl,
         ],
         error: [],
         abort: [],

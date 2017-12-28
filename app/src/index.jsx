@@ -9,6 +9,7 @@ import 'common/css/common.scss';
 import controller from './controller/controller';
 import App from './app/app';
 
+(controller.getSignal('getInitialData'))();
 
 const rerenderApp = (AppContainer) => {
   render((

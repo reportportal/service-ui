@@ -11,6 +11,8 @@ const notAutenticate = continueSequence => [
   },
 ];
 
-export default continueSequence => (
-  initialData(notAutenticate(continueSequence))
-);
+export default notAutenticate
+
+// export default continueSequence => (
+//   initialData(notAutenticate(continueSequence))
+// );

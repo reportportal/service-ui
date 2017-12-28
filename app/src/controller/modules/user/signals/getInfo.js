@@ -1,7 +1,7 @@
 import { httpGet } from '@cerebral/http/operators';
 import { state, props, string } from 'cerebral/tags';
 import { set } from 'cerebral/operators';
-import setUserToken from './setUserToken';
+import setToken from '../actions/setToken';
 
 export default [
   set(state`user.isLoad`, true),
@@ -14,7 +14,7 @@ export default [
     error: [
       set(state`user.data`, {}),
       set(state`user.auth`, false),
-      setUserToken,
+      setToken,
     ],
     abort: [
       set(state`user.data`, {}),

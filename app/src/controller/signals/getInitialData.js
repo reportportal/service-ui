@@ -2,12 +2,12 @@ import { parallel } from 'cerebral';
 import { state } from 'cerebral/tags';
 import { set } from 'cerebral/operators';
 
-import getUserInfo from 'controller/modules/user/signals/getInfo';
-import getAppInfo from 'controller/modules/app/modules/info/signals/getInfo';
+import updateUserStatus from '../modules/user/signals/updateUserStatus';
+import getAppInfo from '../modules/app/modules/info/signals/getInfo';
 
 export default [
   parallel([
-    getUserInfo,
+    updateUserStatus,
     getAppInfo,
   ]),
   set(state`hasLoadedInitialData`, true),
