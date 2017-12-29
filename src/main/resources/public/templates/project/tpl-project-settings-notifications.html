@@ -12,11 +12,11 @@
 </div>
 <div id="emailNotificationsSettings" class="email-notifications-settings" <% if(!data.isEmailEnabled) {%>style="display: none"<% }%>>
     <div class="rp-form-group clearfix">
-        <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col rp-point-required obligatory-field" for="from">
+        <label class="col-md-3 col-sm-3 col-xs-12 rp-control-label rp-custom-col rp-point-required" for="from">
             <%= data.text.project.from %>
         </label>
         <div class="col-md-4 col-sm-9 col-xs-12 rp-custom-col">
-            <input type="text" class="rp-input bts-property" id="from" value="<%- data.fromAddress || '' %>" <%= notAllowed %> />
+            <input type="text" disabled class="rp-input bts-property" id="from" value="<%- data.fromAddress || '' %>" <%= notAllowed %> />
             <span class="help-inline"></span>
         </div>
         <div class="col-md-5 hidden-sm hidden-xs rp-custom-col"></div>
