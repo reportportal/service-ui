@@ -105,6 +105,7 @@ define(function (require) {
             }
             this.scrool = Util.setupBaronScroll($('[data-js-parametres]', this.$el), null, { direction: 'm' });
             Util.setupBaronScrollSize(this.scrool, { maxHeight: 200 });
+            $(window).resize(); // for scroll rerender
         },
         onStartLoading: function () {
             $('[data-js-stack-trace-container]', this.$el).addClass('load');
