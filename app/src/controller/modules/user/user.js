@@ -1,5 +1,4 @@
 import modules from './modules/modules';
-import getInfo from './signals/getInfo';
 import login from './signals/login';
 import logout from './signals/logout';
 import updateUserStatus from './signals/updateUserStatus';
@@ -14,7 +13,6 @@ export default {
     data: {},
   },
   signals: {
-    getInfo,
     setUserToken,
     login,
     logout,

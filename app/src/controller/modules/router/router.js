@@ -4,7 +4,6 @@ import notAutenticate from './factories/notAutenticate';
 import autenticate from './factories/autenticate';
 import checkAuthUrl from './actions/checkAuthUrl';
 
-
 export const route = {
   state: {
     currentPage: '',

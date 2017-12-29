@@ -1,18 +1,16 @@
-import { isValidForm, resetForm } from '@cerebral/forms/operators';
 import { state } from 'cerebral/tags';
 import getToken from '../modules/loginForm/actions/getToken';
-
+import setToken from '../actions/setToken';
+import updateUserStatus from './updateUserStatus';
+import redirectRouter from '../actions/redirectRouter';
 
 export default [
-  isValidForm(state`user.loginForm`), {
+  getToken,
+  {
     true: [
-      getToken,
-      {
-        true: [],
-      },
-    ],
-    false: [
-
+      setToken,
+      updateUserStatus,
+      redirectRouter,
     ],
   },
 ];
