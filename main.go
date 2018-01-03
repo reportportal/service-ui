@@ -25,7 +25,7 @@ func main() {
 	cfg.Consul.Tags = []string{
 		"urlprefix-/ui/ opts strip=/ui",
 		"traefik.frontend.rule=PathPrefixStrip:/ui/",
-		}
+	}
 	rpConf := struct {
 		Cfg         *conf.RpConfig
 		StaticsPath string `env:"RP_STATICS_PATH"`
