@@ -34,9 +34,11 @@
     display: none;
   }
   @media (max-width: 767px) {
+    &.hide-header{
+      display: none;
+    }
     background: $COLOR--white-default;
     padding: 13px 10px;
-    display: none;
     & > .rp-btn, .breadcrumbs {
       display: none;
     }
