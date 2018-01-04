@@ -52,7 +52,7 @@ define(function (require) {
                 $('[data-js-action]', this.$el).text(this.actionName(data[0].actionType));
             }
         },
-        actionName: function (actionType) {
+        actionName: function ( actionType, history, userRef) {
             switch (actionType) {
             case 'update_item': {
                 return _.size(history) > 1 ?
@@ -61,8 +61,8 @@ define(function (require) {
             }
             case 'post_issue': return Localization.itemEvents.postIssue;
             case 'attach_issue': return Localization.itemEvents.attachIssue;
-            case 'analyze_item': return Localization.itemEvents.changedByAnalyzer;
-            case 'attach_issue_aa': return Localization.itemEvents.issueAttachByAnalyzer;
+            case 'analyze_item': return userRef + ' ' + Localization.itemEvents.changedByAnalyzer;
+            case 'attach_issue_aa': return userRef + ' ' + Localization.itemEvents.issueAttachByAnalyzer;
             default: break;
             }
         },
