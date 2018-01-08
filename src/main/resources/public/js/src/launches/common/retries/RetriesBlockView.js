@@ -21,6 +21,7 @@
 define(function (require) {
     'use strict';
 
+    var _ = require('underscore');
     var $ = require('jquery');
     var Epoxy = require('backbone-epoxy');
     var Util = require('util');
@@ -84,10 +85,13 @@ define(function (require) {
         bindings: {
         },
         initialize: function () {
+            var curNumber = 1;
+            var clonedRetries = _.clone(this.model.get('retries'));
+            var retries;
             this.render();
             this.collection = new RetriesBlockCollection();
-            var curNumber = 1;
-            var retries = _.map(_.clone(this.model.get('retries')), function (item) {
+            clonedRetries.push(this.model.attributes);
+            retries = _.map(clonedRetries, function (item) {
                 item.number = curNumber;
                 curNumber += 1;
                 return item;
