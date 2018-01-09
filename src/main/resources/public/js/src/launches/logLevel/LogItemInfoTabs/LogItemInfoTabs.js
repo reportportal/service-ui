@@ -63,6 +63,7 @@ define(function (require) {
                 this.toggleModelField('parametres');
                 this.scroll = Util.setupBaronScroll($('[data-js-item-parametres-container] table', this.$el), null, { direction: 'm' });
                 Util.setupBaronScrollSize(this.scroll, { maxHeight: 445 });
+                $(window).resize(); // for scroll rerender
             }
         },
 
