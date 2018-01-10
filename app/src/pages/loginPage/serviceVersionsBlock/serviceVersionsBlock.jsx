@@ -20,12 +20,46 @@
  */
 
 import classNames from 'classnames/bind';
+import { FormattedMessage } from 'react-intl';
+import { state } from 'cerebral/tags';
+import PropTypes from 'prop-types';
 import styles from './serviceVersionsBlock.scss';
+import ServiceVersionItem from './serviceVersionItem/serviceVersionItem';
 
 const cx = classNames.bind(styles);
 
-const ServiceVersionsBlock = () => (
-  <div className={cx('service-versions-block')} />
-);
+const ServiceVersionsBlock = serviceVersions => (
+  <div className={cx('service-versions-block')}>
+    <span className={cx('current-version')}>
+      <FormattedMessage
+        id={'ServiceVersionsBlock.currentVersion'}
+        defaultMessage={'Current version'}
+      />:
+    </span>
+    <span className={cx('versions-list')}>
+      {
+          Object.values(serviceVersions.serviceVersions).map(
+            (val, id) => (
+              <ServiceVersionItem
+                // eslint-disable-next-line react/no-array-index-key
+                key={id}
+                serviceName={val.build.name}
+                serviceVersion={val.build.version}
+              />
+            ),
+          )
+        }
+    </span>
+  </div>
+  );
 
-export default ServiceVersionsBlock;
+ServiceVersionsBlock.propTypes = {
+  serviceVersions: PropTypes.object,
+};
+ServiceVersionsBlock.defaultProps = {
+  serviceVersions: {},
+};
+
+export default Utils.connectToState({
+  serviceVersions: state`app.info.data`,
+}, ServiceVersionsBlock);

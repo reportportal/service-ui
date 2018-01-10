@@ -23,6 +23,7 @@
     "cerebral": "^3.5.0",
     "classnames": "^2.2.5",
     "fetch-jsonp": "^1.1.3",
+    "html-react-parser": "^0.4.1",
     "intl": "^1.2.5",
     "prop-types": "^15.6.0",
     "react": "^16.0.0",
