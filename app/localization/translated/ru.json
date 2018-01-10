@@ -1,5 +1,6 @@
 {
-  "Input.switcher": "ВКЛ",
+  "Input.switcher": "Вкл",
   "LoginBlock.login": "войдите в ваш аккаунт",
-  "LoginBlock.welcome": "Добро пожаловать,"
+  "LoginBlock.welcome": "Добро пожаловать,",
+  "ServiceVersionsBlock.currentVersion": "Текущая версия"
 }

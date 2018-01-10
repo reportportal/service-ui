@@ -21,34 +21,19 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import Parser from 'html-react-parser';
-import BigButton from 'components/buttons/bigButton/bigButton';
-import styles from './externalLoginBlock.scss';
+import styles from './serviceVersionItem.scss';
 
 const cx = classNames.bind(styles);
 
-const ExternalLoginBlock = ({ externalAuth }) => (
-  <div className={cx('external-login-block')}>
-    {
-      Object.values(externalAuth).map((val, id) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <div className={cx('external-auth-btn')} key={id}>
-          <BigButton color="booger">
-            <span onClick={() => { window.location = `${window.location.protocol}//${window.location.host}/uat${val.path}`; }}>
-              {Parser(val.button)}
-            </span>
-          </BigButton>
-        </div>
-        ))
-    }
-  </div>
-);
+const ServiceVersionItem = ({ serviceName, serviceVersion }) => <span className={cx('service-version-item')}>{`${serviceName}: ${serviceVersion};`}</span>;
 
-ExternalLoginBlock.propTypes = {
-  externalAuth: PropTypes.object,
+ServiceVersionItem.propTypes = {
+  serviceName: PropTypes.string,
+  serviceVersion: PropTypes.string,
 };
-ExternalLoginBlock.defaultProps = {
-  externalAuth: {},
+ServiceVersionItem.defaultProps = {
+  serviceName: '',
+  serviceVersion: '',
 };
 
-export default ExternalLoginBlock;
+export default ServiceVersionItem;

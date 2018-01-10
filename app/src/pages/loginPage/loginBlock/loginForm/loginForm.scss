@@ -21,6 +21,8 @@
 
   @media (max-width: $SCREEN_XS_MAX) {
     width: 100%;
+    margin-bottom: 25px;
+    margin-top: 37px;
   }
 }
 .line {
@@ -76,4 +78,12 @@
   width: 160px;
   height: 40px;
   margin: 0 auto 50px auto;
+
+  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-bottom: 30px;
+  }
 }

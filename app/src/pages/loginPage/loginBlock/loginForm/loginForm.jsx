@@ -25,6 +25,7 @@ import FieldErrorHint from 'components/fields/fieldErrorHint/fieldErrorHint';
 import { state, signal } from 'cerebral/tags';
 import { form } from '@cerebral/forms';
 import Input from 'components/inputs/input/input';
+import InputPassword from 'components/inputs/inputPassword/inputPassword';
 import BigButton from 'components/buttons/bigButton/bigButton';
 import PropTypes from 'prop-types';
 import LoginIcon from './img/login-field-icon.svg';
@@ -34,14 +35,14 @@ import ExternalLoginBlock from './externalLoginBlock/externalLoginBlock';
 
 const cx = classNames.bind(styles);
 
-const LoginForm = ({ submitForm, forgotPass }) => {
+const LoginForm = ({ submitForm, externalAuth, forgotPass }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     submitForm();
   };
   return (
     <form className={cx('login-form')} onSubmit={submitHandler}>
-      <ExternalLoginBlock />
+      <ExternalLoginBlock externalAuth={externalAuth} />
       <div className={cx('separator')}>
         <div className={cx('line')} />
         <div className={cx('or')}>or</div>
@@ -56,7 +57,7 @@ const LoginForm = ({ submitForm, forgotPass }) => {
       <div className={cx('password-field')}>
         <FieldErrorHint formPath={'user.loginForm'} fieldName={'password'} >
           <FieldWithIcon icon={PasswordIcon}>
-            <Input type={'password'} />
+            <InputPassword />
           </FieldWithIcon>
         </FieldErrorHint>
       </div>
