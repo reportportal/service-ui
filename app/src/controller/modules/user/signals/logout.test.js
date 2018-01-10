@@ -2,7 +2,6 @@ import { runSignal } from 'cerebral/test';
 import { httpAbort, httpDelete } from '@cerebral/http/operators';
 import logout from './logout';
 
-jest.mock('../../../globalActions');
 jest.mock('@cerebral/http/operators', () => ({
   httpGet: jest.fn(),
   httpAbort: jest.fn(),

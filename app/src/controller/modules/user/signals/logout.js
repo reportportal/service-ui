@@ -1,14 +1,15 @@
 import { httpDelete, httpAbort } from '@cerebral/http/operators';
 import { state, string } from 'cerebral/tags';
 import { set } from 'cerebral/operators';
-import { checkAuthUrl, setUserToken } from '../../../globalActions';
+import setToken from '../actions/setToken';
+import redirectRouter from '../actions/redirectRouter';
 
 export default [
   set(state`user.isLoad`, false),
-  set(state`user.auth`, false),
   set(state`user.data`, {}),
+  set(state`user.auth`, false),
   httpAbort('*'),
-  checkAuthUrl,
+  redirectRouter,
   httpDelete(string`/uat/sso/me`),
   {
     success: [
@@ -18,5 +19,5 @@ export default [
     abort: [
     ],
   },
-  setUserToken,
+  setToken,
 ];

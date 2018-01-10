@@ -78,6 +78,6 @@ LoginForm.defaultProps = {
 };
 
 export default Utils.connectToState({
-  submitForm: signal`user.loginForm.submitForm`,
+  submitForm: signal`user.login`,
   externalAuth: state`app.info.data.UAT.auth_extensions`,
 }, LoginForm);
