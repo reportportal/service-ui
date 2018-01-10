@@ -30,16 +30,10 @@ const LoginBlock = () => (
   <div className={cx('login-block')}>
     <span className={cx('welcome-msg')}>
       <span className={cx('big')}>
-        <FormattedMessage
-          id={'LoginBlock.welcome'}
-          defaultMessage={'Welcome,'}
-        />
+        <FormattedMessage id={'LoginBlock.welcome'} defaultMessage={'Welcome,'} />
       </span>
       <br />
-      <FormattedMessage
-        id={'LoginBlock.login'}
-        defaultMessage={'login to your account'}
-      />
+      <FormattedMessage id={'LoginBlock.login'} defaultMessage={'login to your account'} />
     </span>
     <LoginForm />
   </div>

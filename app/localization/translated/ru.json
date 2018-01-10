@@ -1,6 +1,13 @@
 {
   "Input.switcher": "Вкл",
-  "LoginBlock.login": "войдите в ваш аккаунт",
+  "LoginBlock.login": "войдите в вашу учетную запись",
   "LoginBlock.welcome": "Добро пожаловать,",
+  "LoginForm.login": "Войти",
+  "LoginForm.or": "или",
+  "LoginForm.forgotPass": "Забыли пароль?",
+  "ForgotPasswordBlock.forgotPass": "Забыли пароль?",
+  "ForgotPasswordBlock.enterEmail": "Введите адрес вашей электронной почты, чтобы восстановить его",
+  "ForgotPasswordForm.cancel": "Отменить",
+  "ForgotPasswordForm.sendEmail": "Отправить письмо",
   "ServiceVersionsBlock.currentVersion": "Текущая версия"
 }
