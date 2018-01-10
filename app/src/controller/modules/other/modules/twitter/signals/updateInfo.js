@@ -1,9 +1,7 @@
-import { state } from 'cerebral/tags';
-import { set } from 'cerebral/operators';
-import updateInfo from '../actions/updateInfo';
+import getTwits from '../actions/getTwits';
+import setTwits from '../actions/setTwits';
 
 export default [
-  set(state`other.twitter.isLoad`, true),
-  updateInfo,
-  set(state`other.twitter.isLoad`, false),
+  getTwits,
+  setTwits,
 ];

@@ -6,6 +6,7 @@ import autenticate from './factories/autenticate';
 export const route = {
   state: {
     currentPage: '',
+    pageParams: {},
   },
   signals: {
     loginRouted: notAutenticate(changePage('login')),

@@ -34,7 +34,7 @@ import ExternalLoginBlock from './externalLoginBlock/externalLoginBlock';
 
 const cx = classNames.bind(styles);
 
-const LoginForm = ({ submitForm }) => {
+const LoginForm = ({ submitForm, forgotPass }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     submitForm();
@@ -60,7 +60,7 @@ const LoginForm = ({ submitForm }) => {
           </FieldWithIcon>
         </FieldErrorHint>
       </div>
-      <div className={cx('forgot-pass')}>Forgot password?</div>
+      <div className={cx('forgot-pass')} onClick={() => forgotPass()}>Forgot password?</div>
       <div className={cx('login-button-container')}>
         <BigButton type={'submit'} color={'organish'}>Login</BigButton>
       </div>
@@ -71,13 +71,16 @@ const LoginForm = ({ submitForm }) => {
 LoginForm.propTypes = {
   externalAuth: PropTypes.object,
   submitForm: PropTypes.func,
+  forgotPass: PropTypes.func,
 };
 LoginForm.defaultProps = {
   submitForm: () => {},
   externalAuth: {},
+  forgotPass: () => {},
 };
 
 export default Utils.connectToState({
   submitForm: signal`user.login`,
+  forgotPass: signal`user.forgotPassRoute`,
   externalAuth: state`app.info.data.UAT.auth_extensions`,
 }, LoginForm);
