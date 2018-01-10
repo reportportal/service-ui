@@ -22,6 +22,7 @@
 import classNames from 'classnames/bind';
 import FieldWithIcon from 'components/fields/fieldWithIcon/fieldWithIcon';
 import FieldErrorHint from 'components/fields/fieldErrorHint/fieldErrorHint';
+import { FormattedMessage } from 'react-intl';
 import { state, signal } from 'cerebral/tags';
 import { form } from '@cerebral/forms';
 import Input from 'components/inputs/input/input';
@@ -45,7 +46,9 @@ const LoginForm = ({ submitForm, externalAuth, forgotPass }) => {
       <ExternalLoginBlock externalAuth={externalAuth} />
       <div className={cx('separator')}>
         <div className={cx('line')} />
-        <div className={cx('or')}>or</div>
+        <div className={cx('or')}>
+          <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
+        </div>
       </div>
       <div className={cx('login-field')}>
         <FieldErrorHint formPath={'user.loginForm'} fieldName={'login'} >
@@ -61,9 +64,13 @@ const LoginForm = ({ submitForm, externalAuth, forgotPass }) => {
           </FieldWithIcon>
         </FieldErrorHint>
       </div>
-      <div className={cx('forgot-pass')} onClick={() => forgotPass()}>Forgot password?</div>
+      <div className={cx('forgot-pass')} onClick={() => forgotPass()}>
+        <FormattedMessage id={'LoginForm.forgotPass'} defaultMessage={'Forgot password?'} />
+      </div>
       <div className={cx('login-button-container')}>
-        <BigButton type={'submit'} color={'organish'}>Login</BigButton>
+        <BigButton type={'submit'} color={'organish'}>
+          <FormattedMessage id={'LoginForm.login'} defaultMessage={'Login'} />
+        </BigButton>
       </div>
     </form>
   );

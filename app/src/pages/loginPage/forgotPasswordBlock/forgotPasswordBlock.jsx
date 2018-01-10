@@ -20,30 +20,24 @@
  */
 
 import classNames from 'classnames/bind';
-import styles from './loginPage.scss';
-import LoginPageSection from './loginPageSection/loginPageSection';
-import SocialSection from './socialSection/socialSection';
-// import LoginBlock from './loginBlock/loginBlock';
-import ForgotPasswordBlock from './forgotPasswordBlock/forgotPasswordBlock';
-import ServiceVersionsBlock from './serviceVersionsBlock/serviceVersionsBlock';
+import { FormattedMessage } from 'react-intl';
+import ForgotPasswordForm from './forgotPasswordForm/forgotPasswordForm';
+import styles from './forgotPasswordBlock.scss';
+
 
 const cx = classNames.bind(styles);
 
-const LoginPage = () => (
-  <div className={cx('login-page')}>
-    <div className={cx('login-page-content')}>
-      <div className={cx('background')} />
-      <div className={cx('logo')} />
-      <LoginPageSection left>
-        <SocialSection />
-      </LoginPageSection>
-      <LoginPageSection>
-        {/* <LoginBlock /> */}
-        <ForgotPasswordBlock />
-        <ServiceVersionsBlock />
-      </LoginPageSection>
-    </div>
+const ForgotPasswordBlock = () => (
+  <div className={cx('forgot-password-block')}>
+    <span className={cx('forgot-password-msg')}>
+      <span className={cx('big')}>
+        <FormattedMessage id={'ForgotPasswordBlock.forgotPass'} defaultMessage={'Forgot password?'} />
+      </span>
+      <br />
+      <FormattedMessage id={'ForgotPasswordBlock.enterEmail'} defaultMessage={'enter your email to restore'} />
+    </span>
+    <ForgotPasswordForm />
   </div>
-  );
+);
 
-export default LoginPage;
+export default ForgotPasswordBlock;

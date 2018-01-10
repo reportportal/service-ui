@@ -43,4 +43,17 @@
       border-color: darken( $COLOR--organish, 30% );
     }
   }
+  &.color-gray-60 {
+    background-color: $COLOR--gray-60;
+    border-color: $COLOR--gray-60;
+
+    &:hover {
+      background-color: darken( $COLOR--gray-60, 15% );
+      border-color: darken( $COLOR--gray-60, 15% );
+    }
+    &:active {
+      background-color: darken( $COLOR--gray-60, 30% );
+      border-color: darken( $COLOR--gray-60, 30% );
+    }
+  }
 }
