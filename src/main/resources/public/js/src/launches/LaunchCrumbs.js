@@ -253,7 +253,7 @@ define(function (require) {
                             }
                         });
                     } else if (launchModel.get('failLoad')) {
-                        if (self.models.length === 2) { // lost launch after merge case
+                        if (self.models.length === 2 && lastModel.get('level') === 'item') { // lost launch after merge case for log level link
                             parentModel = lastModel;
                             async.resolve(launchModel, parentModel);
                         } else {

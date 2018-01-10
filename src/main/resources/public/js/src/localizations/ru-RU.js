@@ -400,7 +400,7 @@ define(['util'], function () {
             widgetCriteria: 'Критерии для виджета',
             selectCriteria: 'Выбрать критерии',
             selectShared: 'Выбрать доступный критерий',
-            sharedWidgetsSearchPlaceholder: 'Поиск по имени, типу, владельцу',
+            sharedWidgetsSearchPlaceholder: 'Поиск по имени, владельцу',
             widgetExists: 'Виджет уже существует на панели управления',
             emptyShared: 'Не найдено доступных виджетов!',
             sharedBy: 'предоставлено',
