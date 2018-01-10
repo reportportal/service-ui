@@ -202,13 +202,13 @@ define(function (require) {
                 coreService.getTestItemInfo(ikey)
                     .done(function (responce) {
                         var path = [responce.launchId].concat(_.keys(responce.path_names));
-                        $.each($('[id="itemId-' + ikey + '"]'), function () {
+                        $.each($('[data-js-item-id="' + ikey + '"]'), function () {
                             $(this).html(' ' + responce.name).wrap('<a class="rp-blue-link-undrl" target="_blank" href="#' + projectId + '/launches/all/' + path.join('/') + '?log.item=' + ikey + '"></a>');
                         });
                     })
                     .fail(function () {
                         // Util.ajaxFailMessenger(error, 'getItemsWidgetBugTable');
-                        $('#itemId-' + ikey, self.$el).html(Localization.widgets.testItemNotFound);
+                        $('[data-js-item-id="' + ikey + '"]', self.$el).html(Localization.widgets.testItemNotFound);
                     });
             });
         },
