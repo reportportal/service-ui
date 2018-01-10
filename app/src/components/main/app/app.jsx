@@ -2,20 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from '@cerebral/react';
 import { state } from 'cerebral/tags';
-import { IntlProvider, addLocaleData } from 'react-intl';
-import en from 'react-intl/locale-data/en';
-import ru from 'react-intl/locale-data/ru';
+import LocalizationContainer from '../localizationContainer/localizationContainer';
 
-import LoginPage from '../pages/loginPage/loginPage';
-import AppPage from '../pages/appPage/appPage';
-
-import localeRU from '../../localization/translated/ru.json';
-
-addLocaleData([...en, ...ru]);
-const language = 'en';
-const messages = {
-  ru: localeRU,
-};
+import LoginPage from '../../../pages/loginPage/loginPage';
+import AppPage from '../../../pages/appPage/appPage';
 
 const pages = {
   login: LoginPage,
@@ -35,9 +25,9 @@ const App = ({ currentPage, hasLoadedInitialData }) => {
     content = <div />;
   }
   return (
-    <IntlProvider locale={language} messages={messages[language]}>
+    <LocalizationContainer>
       {content}
-    </IntlProvider>
+    </LocalizationContainer>
   );
 };
 App.propTypes = {

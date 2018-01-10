@@ -3,6 +3,7 @@ import { set, when } from 'cerebral/operators';
 import getInfo from '../actions/getInfo';
 import setInfo from '../actions/setInfo';
 import setToken from '../actions/setToken';
+import getDefaultToken from '../actions/getDefaultToken';
 
 export default [
   set(state`user.isLoad`, true),
@@ -15,6 +16,7 @@ export default [
     ],
     false: [
       set(state`user.auth`, false),
+      getDefaultToken,
       setToken,
     ],
   },

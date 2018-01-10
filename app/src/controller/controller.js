@@ -20,6 +20,7 @@ export default Controller({
   ],
   state: {
     hasLoadedInitialData: false,
+    lang: 'ru',
   },
   signals: {
     getInitialData,

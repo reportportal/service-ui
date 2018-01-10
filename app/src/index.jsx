@@ -7,7 +7,7 @@ import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
 
 import controller from './controller/controller';
-import App from './app/app';
+import App from './components/main/app/app';
 
 (controller.getSignal('getInitialData'))();
 
@@ -20,23 +20,9 @@ const rerenderApp = (AppContainer) => {
 };
 
 if (module.hot) {
-  module.hot.accept('./app/app', () => {
-    const app = require('./app/app').default;
+  module.hot.accept('./components/main/app/app', () => {
+    const app = require('./components/main/app/app').default;
     rerenderApp(app);
   });
 }
-
-if (!window.Intl) {
-  require.ensure([
-    'intl',
-    'intl/locale-data/jsonp/en.js',
-    'intl/locale-data/jsonp/ru.js',
-  ], (require) => {
-    require('intl');
-    require('intl/locale-data/jsonp/en.js');
-    require('intl/locale-data/jsonp/ru.js');
-    rerenderApp(App);
-  });
-} else {
-  rerenderApp(App);
-}
+rerenderApp(App);
