@@ -94,36 +94,19 @@ define(function (require) {
             });
             this.onChangeInput();
         },
-        onSelectAll: function (curElement) {
-            var self = this;
-            if ($(curElement, this.$el).is(':checked')) {
-                _.each(this.options.data, function (item) {
-                    $('[data-value="' + item.value + '"]', self.$el).prop({ checked: 'checked' });
-                });
-            } else {
-                _.each(this.options.data, function (item) {
-                    $('[data-value="' + item.value + '"]', self.$el).attr('checked', false);
-                });
-            }
-        },
-        isAllChecked: function () {
-            var checkboxItems = $('input:checked[data-value]', this.$el).length;
-            if (checkboxItems === this.options.data.length || checkboxItems === 0) {
-                var activate = $('input:checked[data-value]', this.$el).is(':checked');
-                if (activate) {
-                    $('[value="all"]', this.$el).prop({ checked: 'checked' });
-                } else {
-                    $('[value="all"]', this.$el).attr('checked', false);
-                }
-            }
+        onSelectAll: function () {
+            var allChecked = true;
+            var checkboxMas = $('input[data-value]', this.$el);
+            checkboxMas.each(function () {
+                if (!$(this).is(':checked')) { allChecked = false; }
+            });
+            checkboxMas.prop('checked', !allChecked);
         },
         onChangeInput: function (e) {  // multiple select
             var curValue = [];
             var curName = [];
-            var curElement;
             if (e && e.target.value === 'all') {
-                curElement = e.target;
-                this.onSelectAll(curElement);
+                this.onSelectAll();
             }
             this.$el.removeClass('dropdown-error-state');
             _.each($('input:checked', this.$el), function (item) {
@@ -141,7 +124,6 @@ define(function (require) {
                 this.$el.removeClass('selected');
                 $('[data-js-select-value]', this.$el).html(this.options.placeholder);
             }
-            this.isAllChecked();
         },
         getValue: function () {
             return this.currentValue;

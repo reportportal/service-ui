@@ -68,13 +68,17 @@ define(function (require) {
         },
         activateNextId: function (id) {
             var self = this;
-            var activeItem;
-            this.listenToOnce(this, 'itemsLoaded', function () {
-                activeItem = self.collection.get(id);
-                if (activeItem) {
-                    activeItem.trigger('scrollToAndHighlight');
-                }
-            });
+            var activeItem = this.collection.get(id);
+            if (activeItem) {
+                activeItem.trigger('scrollToAndHighlight');
+            } else {  // workaround for a double load of collection on STEP level.
+                this.listenToOnce(this, 'itemsLoaded', function () {
+                    activeItem = self.collection.get(id);
+                    if (activeItem) {
+                        activeItem.trigger('scrollToAndHighlight');
+                    }
+                });
+            }
         },
         render: function () {
             this.$el.html(Util.templates(this.template, {}));
