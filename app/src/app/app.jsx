@@ -22,7 +22,7 @@ const pages = {
   app: AppPage,
 };
 
-const App = ({ currentPage }) => {
+const App = ({ currentPage, hasLoadedInitialData }) => {
   let content = <div />;
   if (currentPage !== '') {
     let Page = pages[currentPage];
@@ -30,6 +30,9 @@ const App = ({ currentPage }) => {
       Page = LoginPage;
     }
     content = <Page />;
+  }
+  if (!hasLoadedInitialData) {
+    content = <div />;
   }
   return (
     <IntlProvider locale={language} messages={messages[language]}>
@@ -39,12 +42,15 @@ const App = ({ currentPage }) => {
 };
 App.propTypes = {
   currentPage: PropTypes.string,
+  hasLoadedInitialData: PropTypes.bool,
 };
 
 App.defaultProps = {
   currentPage: '',
+  hasLoadedInitialData: true,
 };
 
 export default connect({
   currentPage: state`route.currentPage`,
+  hasLoadedInitialData: state`hasLoadedInitialData`,
 }, App);

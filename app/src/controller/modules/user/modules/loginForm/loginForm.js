@@ -1,5 +1,3 @@
-import submitForm from './signals/submitForm';
-
 export default {
   state: {
     login: {
@@ -20,6 +18,5 @@ export default {
     isValid: true,
   },
   signals: {
-    submitForm,
   },
 };

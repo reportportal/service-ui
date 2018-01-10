@@ -1,4 +1,3 @@
-import { state } from 'cerebral/tags';
 import getToken from '../modules/loginForm/actions/getToken';
 import setToken from '../actions/setToken';
 import updateUserStatus from './updateUserStatus';

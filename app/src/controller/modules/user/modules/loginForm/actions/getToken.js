@@ -11,17 +11,16 @@ export default ({ state, forms, http, path }) => {
         }
         return { token };
       })
-      .catch(error => {
+      .catch((error) => {
         state.set('user.loginForm.isLoad', false);
         if (path && path.false) {
-          return path.false({error});
+          return path.false({ error });
         }
-        return {error}
-      })
-  } else {
-    if (path && path.false) {
-      return path.false({error: 'Not Valid'});
-    }
-    return {error: 'Not Valid'}
+        return { error };
+      });
   }
+  if (path && path.false) {
+    return path.false({ error: 'Not Valid' });
+  }
+  return { error: 'Not Valid' };
 };

@@ -43,6 +43,7 @@
     "babel-loader": "^7.1.2",
     "babel-plugin-react-intl": "^2.3.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-preset-airbnb": "^2.4.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-react": "^6.5.0",
     "babel-preset-react-hmre": "^1.1.1",
@@ -78,7 +79,7 @@
     "style-loader": "^0.19.0",
     "url-loader": "^0.6.2",
     "webpack": "^3.7.1",
-    "webpack-dev-server": "^2.9.2",
+    "webpack-dev-server": "2.9.7",
     "webpack-hot-middleware": "^2.20.0",
     "webpack-notifier": "^1.5.0"
   },

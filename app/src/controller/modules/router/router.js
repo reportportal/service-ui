@@ -2,7 +2,6 @@ import Router from '@cerebral/router';
 import changePage from './factories/changePage';
 import notAutenticate from './factories/notAutenticate';
 import autenticate from './factories/autenticate';
-import checkAuthUrl from './actions/checkAuthUrl';
 
 export const route = {
   state: {
@@ -12,9 +11,6 @@ export const route = {
     loginRouted: notAutenticate(changePage('login')),
     forgotPassRouted: notAutenticate(changePage('forgotPass')),
     appRouted: autenticate(changePage('app')),
-    checkAuthURL: [
-      checkAuthUrl,
-    ],
   },
 };
 
