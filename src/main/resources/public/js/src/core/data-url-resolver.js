@@ -322,12 +322,13 @@ define(['app'], function (App) {
 
     var searchUsersUrl = function (query) {
         var query = query;
-        if (!query) query = {};
-        if (!query.page) query.page = 1;
-        if (!query.size) query.size = 10;
         var startUrl = config.apiVersion + 'user/';
         var sort = '';
         var search = '';
+        if (!query) query = {};
+        if (!query.page) query.page = 1;
+        if (!query.size) query.size = 10;
+
         if (query.search) {
             startUrl += 'search/';
             sort = '&page.sort=login,ASC';
@@ -340,20 +341,22 @@ define(['app'], function (App) {
     };
     var searchUsersSafe = function (query) {
         var query = query;
-        if (!query) query = {};
-        if (!query.page) query.page = 1;
-        if (!query.size) query.size = 10;
         var startUrl = config.apiVersion + 'project/' + (config.project.projectId || config.userModel.get('defaultProject'))
             + '/usernames/';
         var sort = '';
+        var search = '';
+        if (!query) query = {};
+        if (!query.page) query.page = 1;
+        if (!query.size) query.size = 10;
         if (query.search) {
-            startUrl += 'search/' + query.search;
+            startUrl += 'search/';
             sort = '&page.sort=login,ASC';
+            search = '&term=' + query.search;
         } else {
             startUrl += 'all';
             sort = '&page.sort=login,ASC';
         }
-        return startUrl + '?page.page=' + query.page + '&page.size=' + query.size + sort;
+        return startUrl + '?page.page=' + query.page + '&page.size=' + query.size + sort + search;
     };
 
     var modifyUserUrl = function (id) {
