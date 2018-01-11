@@ -47,7 +47,8 @@ define(function (require) {
         renderRetries: function () {
             this.retries && this.retries.destroy();
             this.retries = new RetriesLabelView({
-                model: this.model
+                model: this.model,
+                context: this.context
             });
             $('[data-js-retries-container]', this.$el).html(this.retries.$el);
             this.listenTo(this.retries, 'activate:retries', this.onActivateRetries);

@@ -34,7 +34,8 @@ define(function (require) {
         },
         bindings: {
         },
-        initialize: function () {
+        initialize: function (options) {
+            this.context = options.context;
             if (this.model.get('retries') && this.model.get('retries').length) {
                 this.render();
             }
@@ -43,11 +44,12 @@ define(function (require) {
             var retries = _.clone(this.model.get('retries'));
             retries.push(this.model.attributes);
             this.$el.html(Util.templates(this.template, {
-                retries: retries
+                retries: retries,
+                isLogLevel: this.context === 'logLevel'
             }));
         },
         onClickLink: function () {
-            this.trigger('activate:retries');
+            (this.context !== 'logLevel') && this.trigger('activate:retries');
         },
         onDestroy: function () {
             this.$el.empty();
