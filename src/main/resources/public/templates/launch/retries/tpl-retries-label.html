@@ -3,4 +3,6 @@
         <li class="status-<%= retry.status %>"></li>
     <% }); %>
 </ul>
-<span data-js-retries-link><%= data.retries.length + ' ' + data.text.launches.retries %></span>
+<span data-js-retries-link class="<%- data.isLogLevel ? 'not-a-link' : null %>"><%= data.retries.length + ' ' +
+    data.text.launches.retries
+    %></span>
