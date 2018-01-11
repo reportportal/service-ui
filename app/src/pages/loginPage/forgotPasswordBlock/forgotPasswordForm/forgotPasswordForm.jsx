@@ -33,7 +33,7 @@ import styles from './forgotPasswordForm.scss';
 
 const cx = classNames.bind(styles);
 
-const ForgotPasswordForm = ({ submitForm }) => {
+const ForgotPasswordForm = ({ submitForm, cancel }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     submitForm();
@@ -49,7 +49,7 @@ const ForgotPasswordForm = ({ submitForm }) => {
       </div>
       <div className={cx('forgot-password-buttons-container')}>
         <div className={cx('forgot-password-button')}>
-          <BigButton type={'button'} color={'gray-60'}>
+          <BigButton type={'button'} color={'gray-60'} onClick={() => cancel()}>
             <FormattedMessage id={'ForgotPasswordForm.cancel'} defaultMessage={'Cancel'} />
           </BigButton>
         </div>
@@ -65,11 +65,14 @@ const ForgotPasswordForm = ({ submitForm }) => {
 
 ForgotPasswordForm.propTypes = {
   submitForm: PropTypes.func,
+  cancel: PropTypes.func,
 };
 ForgotPasswordForm.defaultProps = {
   submitForm: () => {},
+  cancel: () => {},
 };
 
 export default Utils.connectToState({
-  submitForm: signal`user.login`,
+  submitForm: signal`user.forgotPass`,
+  cancel: signal`user.loginRoute`,
 }, ForgotPasswordForm);
