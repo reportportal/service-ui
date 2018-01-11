@@ -21,14 +21,18 @@
 
 import { connect } from '@cerebral/react';
 
-export default function (connectProps, component) {
+export default function (connectProps, componentOrFunc, component) {
+  const realComponent = component || componentOrFunc;
   // eslint-disable-next-line no-undef
   if (STORYBOOK) {
-    return component;
+    return realComponent;
   }
   // eslint-disable-next-line no-undef
   if (JEST) {
-    return component;
+    return realComponent;
   }
-  return connect(connectProps, component);
+  if (arguments.length === 2) {
+    return connect(connectProps, componentOrFunc);
+  }
+  return connect(connectProps, componentOrFunc, component);
 }
