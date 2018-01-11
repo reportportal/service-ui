@@ -2,45 +2,80 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from '@cerebral/react';
 import { state } from 'cerebral/tags';
+import classNames from 'classnames/bind';
 import LocalizationContainer from '../localizationContainer/localizationContainer';
+import styles from './app.scss';
+
+import Sidebar from '../sidebar/sidebar';
+import Header from '../header/header';
 
 import LoginPage from '../../../pages/loginPage/loginPage';
 import AppPage from '../../../pages/appPage/appPage';
 
-const pages = {
-  login: LoginPage,
-  app: AppPage,
+const PAGES = {
+  login: {
+    container: 'empty',
+    page: LoginPage,
+  },
+  app: {
+    container: 'app',
+    page: AppPage,
+  },
 };
 
-const App = ({ currentPage, hasLoadedInitialData }) => {
-  let content = <div />;
-  if (currentPage !== '') {
-    let Page = pages[currentPage];
-    if (!Page) {
-      Page = LoginPage;
+const cx = classNames.bind(styles);
+
+const App = ({ currentPage }) => {
+  function getContainer(pageName) {
+    let result = <div />;
+    if (pageName === '' || !PAGES[pageName]) {
+      return result;
     }
-    content = <Page />;
-  }
-  if (!hasLoadedInitialData) {
-    content = <div />;
+    const Page = PAGES[pageName].page;
+    switch (PAGES[pageName].container) {
+      case 'empty':
+        result = (
+          <div className={cx('empty-container')}>
+            <Page />
+          </div>
+        );
+        break;
+      case 'app':
+        result = (
+          <div className={cx('app-container')}>
+            <div className={cx('sidebar-container')}>
+              <Sidebar />
+            </div>
+            <div className={cx('content')}>
+              <div className={cx('header-container')}>
+                <Header />
+              </div>
+              <div className={cx('page-container')}>
+                <Page />
+              </div>
+            </div>
+          </div>
+        );
+        break;
+      default:
+        break;
+    }
+    return result;
   }
   return (
     <LocalizationContainer>
-      {content}
+      {getContainer(currentPage)}
     </LocalizationContainer>
   );
 };
 App.propTypes = {
   currentPage: PropTypes.string,
-  hasLoadedInitialData: PropTypes.bool,
 };
 
 App.defaultProps = {
   currentPage: '',
-  hasLoadedInitialData: true,
 };
 
 export default connect({
   currentPage: state`route.currentPage`,
-  hasLoadedInitialData: state`hasLoadedInitialData`,
 }, App);
