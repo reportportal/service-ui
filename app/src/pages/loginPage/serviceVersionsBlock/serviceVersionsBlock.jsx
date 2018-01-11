@@ -19,47 +19,55 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import { state } from 'cerebral/tags';
+import { state, signal } from 'cerebral/tags';
 import PropTypes from 'prop-types';
 import styles from './serviceVersionsBlock.scss';
 import ServiceVersionItem from './serviceVersionItem/serviceVersionItem';
 
 const cx = classNames.bind(styles);
 
-const ServiceVersionsBlock = serviceVersions => (
-  <div className={cx('service-versions-block')}>
-    <span className={cx('current-version')}>
-      <FormattedMessage
-        id={'ServiceVersionsBlock.currentVersion'}
-        defaultMessage={'Current version'}
-      />:
-    </span>
-    <span className={cx('versions-list')}>
-      {
-          Object.values(serviceVersions.serviceVersions).map(
-            (val, id) => (
-              <ServiceVersionItem
-                // eslint-disable-next-line react/no-array-index-key
-                key={id}
-                serviceName={val.build.name}
-                serviceVersion={val.build.version}
-              />
-            ),
-          )
-        }
-    </span>
-  </div>
-  );
+class ServiceVersionsBlock extends Component {
+  componentWillMount() {
+    this.props.getLastServiceVersions();
+  }
+  render() {
+    return (
+      <div className={cx('service-versions-block')}>
+        <span className={cx('current-version')}>
+          <FormattedMessage id={'ServiceVersionsBlock.currentVersion'} defaultMessage={'Current version'} />:
+        </span>
+        <span className={cx('versions-list')}>
+          {
+            Object.values(this.props.serviceVersions).map(
+              (val, id) => (
+                <ServiceVersionItem
+                  // eslint-disable-next-line react/no-array-index-key
+                  key={id}
+                  serviceName={val.build.name}
+                  serviceVersion={val.build.version}
+                />
+              ),
+            )
+          }
+        </span>
+      </div>
+    );
+  }
+}
 
 ServiceVersionsBlock.propTypes = {
   serviceVersions: PropTypes.object,
+  getLastServiceVersions: PropTypes.func,
 };
 ServiceVersionsBlock.defaultProps = {
   serviceVersions: {},
+  getLastServiceVersions: () => {},
 };
 
 export default Utils.connectToState({
   serviceVersions: state`app.info.data`,
+  getLastServiceVersions: signal`other.modules.lastServiceVersions.getData`,
 }, ServiceVersionsBlock);

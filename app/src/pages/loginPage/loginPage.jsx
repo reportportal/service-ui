@@ -20,16 +20,18 @@
  */
 
 import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
+import { state } from 'cerebral/tags';
 import styles from './loginPage.scss';
 import LoginPageSection from './loginPageSection/loginPageSection';
 import SocialSection from './socialSection/socialSection';
-// import LoginBlock from './loginBlock/loginBlock';
+import LoginBlock from './loginBlock/loginBlock';
 import ForgotPasswordBlock from './forgotPasswordBlock/forgotPasswordBlock';
 import ServiceVersionsBlock from './serviceVersionsBlock/serviceVersionsBlock';
 
 const cx = classNames.bind(styles);
 
-const LoginPage = () => (
+const LoginPage = ({ routeParams }) => (
   <div className={cx('login-page')}>
     <div className={cx('login-page-content')}>
       <div className={cx('background')} />
@@ -38,12 +40,20 @@ const LoginPage = () => (
         <SocialSection />
       </LoginPageSection>
       <LoginPageSection>
-        {/* <LoginBlock /> */}
-        <ForgotPasswordBlock />
+        { routeParams.forgot ? <ForgotPasswordBlock /> : <LoginBlock /> }
         <ServiceVersionsBlock />
       </LoginPageSection>
     </div>
   </div>
-  );
+);
 
-export default LoginPage;
+LoginPage.propTypes = {
+  routeParams: PropTypes.object,
+};
+LoginPage.defaultProps = {
+  routeParams: {},
+};
+
+export default Utils.connectToState({
+  routeParams: state`route.pageParams`,
+}, LoginPage);
