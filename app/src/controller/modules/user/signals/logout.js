@@ -3,7 +3,7 @@ import { state, string } from 'cerebral/tags';
 import { set } from 'cerebral/operators';
 import setToken from '../actions/setToken';
 import redirectRouter from '../actions/redirectRouter';
-import getDefaultToken from '../actions/getDefaultToken'
+import getDefaultToken from '../actions/getDefaultToken';
 
 export default [
   set(state`user.isLoad`, false),

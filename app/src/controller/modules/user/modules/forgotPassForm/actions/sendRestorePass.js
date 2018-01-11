@@ -4,7 +4,7 @@ export default ({ state, forms, http, path }) => {
     return http.post('/api/v1/user/password/restore', {
       email: state.get('user.forgotPassForm.email.value'),
     })
-      .then((response) => {
+      .then(() => {
         state.set('user.forgotPassForm.isLoad', false);
         if (path && path.true) {
           return path.true();
