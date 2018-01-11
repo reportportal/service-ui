@@ -1,7 +1,7 @@
 import { runAction } from 'cerebral/test';
 import setFocus from './setFocus';
 
-it('should change the value to false', () => runAction(setFocus, {
+test('should change the value to false', () => runAction(setFocus, {
   state: {
     testForm: {
       testField: {
@@ -18,7 +18,7 @@ it('should change the value to false', () => runAction(setFocus, {
   }),
 );
 
-it('should change the value to false, if value undefined', () => runAction(setFocus, {
+test('should change the value to false, if value undefined', () => runAction(setFocus, {
   state: {
     testForm: {
       testField: {

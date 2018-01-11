@@ -1,7 +1,7 @@
 import { runAction } from 'cerebral/test';
 import changeValue from './changeValue';
 
-it('should change right field', () => runAction(changeValue, {
+test('should change right field', () => runAction(changeValue, {
   state: {
     testForm: {
       testField: {
