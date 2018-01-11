@@ -71,72 +71,74 @@ define(function (require) {
         },
         getSettings: function () {
             var async = $.Deferred();
-            async.resolve([
-                {
-                    control: 'filters',
-                    options: {
-                    }
-                },
-                {
-                    control: 'dropDown',
-                    options: {
-                        label: Localization.widgets.widgetCriteria,
-                        placeholder: Localization.wizard.criteriaSelectTitle,
-                        items: getItems(),
-                        multiple: true,
-                        getValue: function (model, self) {
-                            var contentFields = model.getContentFields();
-                            if (contentFields.length) {
-                                return contentFields;
+            (new SingletonDefectTypeCollection()).ready.done(function () {
+                async.resolve([
+                    {
+                        control: 'filters',
+                        options: {
+                        }
+                    },
+                    {
+                        control: 'dropDown',
+                        options: {
+                            label: Localization.widgets.widgetCriteria,
+                            placeholder: Localization.wizard.criteriaSelectTitle,
+                            items: getItems(),
+                            multiple: true,
+                            getValue: function (model, self) {
+                                var contentFields = model.getContentFields();
+                                if (contentFields.length) {
+                                    return contentFields;
+                                }
+                                return _.map(self.model.get('items'), function (item) {
+                                    return item.value;
+                                });
+                            },
+                            setValue: function (value, model) {
+                                model.setContentFields(value);
                             }
-                            return _.map(self.model.get('items'), function (item) {
-                                return item.value;
-                            });
-                        },
-                        setValue: function (value, model) {
-                            model.setContentFields(value);
+                        }
+                    },
+                    {
+                        control: 'input',
+                        options: {
+                            name: Localization.widgets.items,
+                            min: 1,
+                            max: 150,
+                            def: 50,
+                            numOnly: true,
+                            action: 'limit'
+                        }
+                    },
+                    {
+                        control: 'switcher',
+                        options: {
+                            items: [
+                                { name: Localization.widgets.panelMode, value: 'panel' },
+                                { name: Localization.widgets.donutChartMode, value: 'donut' }
+                            ],
+                            action: 'switch_view_mode'
+                        }
+                    },
+                    {
+                        control: 'switcher',
+                        options: {
+                            items: [
+                                { name: Localization.widgets.allLaunches, value: 'all' },
+                                { name: Localization.widgets.latestLaunches, value: 'latest' }
+                            ],
+                            action: 'switch_latest_mode'
+                        }
+                    },
+                    {
+                        control: 'static',
+                        options: {
+                            action: 'metadata_fields',
+                            fields: ['name', 'number', 'start_time']
                         }
                     }
-                },
-                {
-                    control: 'input',
-                    options: {
-                        name: Localization.widgets.items,
-                        min: 1,
-                        max: 150,
-                        def: 50,
-                        numOnly: true,
-                        action: 'limit'
-                    }
-                },
-                {
-                    control: 'switcher',
-                    options: {
-                        items: [
-                            { name: Localization.widgets.panelMode, value: 'panel' },
-                            { name: Localization.widgets.donutChartMode, value: 'donut' }
-                        ],
-                        action: 'switch_view_mode'
-                    }
-                },
-                {
-                    control: 'switcher',
-                    options: {
-                        items: [
-                            { name: Localization.widgets.allLaunches, value: 'all' },
-                            { name: Localization.widgets.latestLaunches, value: 'latest' }
-                        ],
-                        action: 'switch_latest_mode'
-                    }
-                },
-                {
-                    control: 'static',
-                    options: {
-                        action: 'metadata_fields',
-                        fields: ['name', 'number', 'start_time']
-                    }
-                }
-            ]);
+                ]);
+            });
 
             return async.promise();
         }
