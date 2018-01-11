@@ -9,8 +9,6 @@ import 'common/css/common.scss';
 import controller from './controller/controller';
 import App from './components/main/app/app';
 
-(controller.getSignal('getInitialData'))();
-
 const rerenderApp = (AppContainer) => {
   render((
     <Container controller={controller} >

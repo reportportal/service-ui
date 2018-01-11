@@ -2,6 +2,8 @@ import Router from '@cerebral/router';
 import changePage from './factories/changePage';
 import notAutenticate from './factories/notAutenticate';
 import autenticate from './factories/autenticate';
+import initialData from './factories/initialData';
+import loginPageDataLoad from './factories/loginPageDataLoad';
 
 export const route = {
   state: {
@@ -9,9 +11,9 @@ export const route = {
     pageParams: {},
   },
   signals: {
-    loginRouted: notAutenticate(changePage('login')),
-    forgotPassRouted: notAutenticate(changePage('forgotPass')),
-    appRouted: autenticate(changePage('app')),
+    loginRouted: initialData(notAutenticate(loginPageDataLoad(changePage('login')))),
+    forgotPassRouted: initialData(notAutenticate(loginPageDataLoad(changePage('forgotPass')))),
+    appRouted: initialData(autenticate(changePage('app'))),
   },
 };
 
