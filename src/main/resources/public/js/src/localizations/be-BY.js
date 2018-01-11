@@ -1887,8 +1887,8 @@ define(['util'], function () {
             filters: 'Фільтры',
             enterFilter: 'Увядзіце назвы фільтраў',
             basicColumns: 'Асноўныя слупкі',
-            choiceCriteria: 'Выбярыце крытэрыі',
-            choiceColumns: 'Выбярыце слупкі',
+            choiceCriteria: 'Вылучце крытэрыі',
+            choiceColumns: 'Вылучце слупкі',
             tagPrefixDescription: 'Каб бачыць дынаміку пэўнага тэга, вам трэба ўвесці яго частку перад двукроп\'ем ‘:’',
             tagPrefixPlaceholder: 'Увядзіце частку тэга да ‘:’',
 
