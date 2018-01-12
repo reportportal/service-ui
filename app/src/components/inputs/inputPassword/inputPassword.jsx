@@ -23,6 +23,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { state, signal, props } from 'cerebral/tags';
 import classNames from 'classnames/bind';
+import Input from 'components/inputs/input/input';
 import styles from './inputPassword.scss';
 
 const cx = classNames.bind(styles);
@@ -34,24 +35,6 @@ class InputPassword extends Component {
     this.state = { passwordShown: false };
   }
 
-  handlerOnChange = (e) => {
-    this.props.onChange({
-      formPath: this.props.formPath,
-      fieldName: this.props.fieldName,
-      value: e.target.value });
-  };
-  handlerOnFocus = () => {
-    this.props.onFocus({
-      formPath: this.props.formPath,
-      fieldName: this.props.fieldName,
-    });
-  };
-  handlerOnBlur = () => {
-    this.props.onBlur({
-      formPath: this.props.formPath,
-      fieldName: this.props.fieldName,
-    });
-  };
   showPass = (e) => {
     e.preventDefault();
     !this.state.passwordShown && this.setState({ passwordShown: true });
@@ -62,27 +45,18 @@ class InputPassword extends Component {
   };
 
   render() {
-    const classes = cx({
-      'input-password': true,
-      disabled: this.props.disabled,
-    });
     const iconClasses = cx({
       'eye-icon': true,
       opened: this.state.passwordShown,
     });
 
     return (
-      <div>
-        <input
+      <div className={cx('input-password')}>
+        <Input
           type={this.state.passwordShown ? 'text' : 'password'}
-          className={classes}
-          value={this.props.value}
-          placeholder={this.props.placeholder}
-          maxLength={this.props.maxLength}
-          disabled={this.props.disabled}
-          onChange={this.handlerOnChange}
-          onFocus={this.handlerOnFocus}
-          onBlur={this.handlerOnBlur}
+          hasRightIcon
+          formPath={this.props.formPath}
+          fieldName={this.props.fieldName}
         />
         <div
           className={iconClasses}
