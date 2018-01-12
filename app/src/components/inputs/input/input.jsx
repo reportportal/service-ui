@@ -26,11 +26,13 @@ import styles from './input.scss';
 
 const cx = classNames.bind(styles);
 
-const Input = ({ formPath, fieldName,
-                 type, value, placeholder, maxLength, disabled, onChange, onFocus, onBlur }) => {
+const Input = ({ formPath, fieldName, type, value,
+                 placeholder, maxLength, disabled, hasRightIcon,
+                 onChange, onFocus, onBlur }) => {
   const classes = cx({
     input: true,
     disabled,
+    'has-right-icon': hasRightIcon,
   });
   const handlerOnChange = (e) => {
     onChange({ formPath, fieldName, value: e.target.value });
@@ -64,6 +66,7 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   maxLength: PropTypes.string,
   disabled: PropTypes.bool,
+  hasRightIcon: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
   onBlur: PropTypes.func,
@@ -77,6 +80,7 @@ Input.defaultProps = {
   placeholder: '',
   maxLength: '254',
   disabled: false,
+  hasRightIcon: false,
   onChange: () => {},
   onFocus: () => {},
   onBlur: () => {},

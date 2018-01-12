@@ -23,7 +23,7 @@ import classNames from 'classnames/bind';
 import FieldWithIcon from 'components/fields/fieldWithIcon/fieldWithIcon';
 import FieldErrorHint from 'components/fields/fieldErrorHint/fieldErrorHint';
 import { FormattedMessage } from 'react-intl';
-import { state, signal } from 'cerebral/tags';
+import { signal } from 'cerebral/tags';
 import { form } from '@cerebral/forms';
 import Input from 'components/inputs/input/input';
 import InputPassword from 'components/inputs/inputPassword/inputPassword';
@@ -36,14 +36,14 @@ import ExternalLoginBlock from './externalLoginBlock/externalLoginBlock';
 
 const cx = classNames.bind(styles);
 
-const LoginForm = ({ submitForm, externalAuth, forgotPass }) => {
+const LoginForm = ({ submitForm, forgotPass }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     submitForm();
   };
   return (
     <form className={cx('login-form')} onSubmit={submitHandler}>
-      <ExternalLoginBlock externalAuth={externalAuth} />
+      <ExternalLoginBlock />
       <div className={cx('separator')}>
         <div className={cx('line')} />
         <div className={cx('or')}>
@@ -77,18 +77,15 @@ const LoginForm = ({ submitForm, externalAuth, forgotPass }) => {
 };
 
 LoginForm.propTypes = {
-  externalAuth: PropTypes.object,
   submitForm: PropTypes.func,
   forgotPass: PropTypes.func,
 };
 LoginForm.defaultProps = {
   submitForm: () => {},
-  externalAuth: {},
   forgotPass: () => {},
 };
 
 export default Utils.connectToState({
   submitForm: signal`user.login`,
   forgotPass: signal`user.forgotPassRoute`,
-  externalAuth: state`app.info.data.UAT.auth_extensions`,
 }, LoginForm);
