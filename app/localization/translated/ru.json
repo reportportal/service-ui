@@ -1,4 +1,7 @@
 {
+  "AdminHeader.btnLogout": "Выйти",
+  "AdminHeader.btnToProject": "Назад к проекту",
+  "AdminHeader.header": "Управление",
   "Input.switcher": "Вкл",
   "LoginBlock.login": "войдите в вашу учетную запись",
   "LoginBlock.welcome": "Добро пожаловать,",
