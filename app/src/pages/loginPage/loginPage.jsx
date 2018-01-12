@@ -22,6 +22,7 @@
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import { state } from 'cerebral/tags';
+import { referenceDictionary } from 'common/utils';
 import styles from './loginPage.scss';
 import LoginPageSection from './loginPageSection/loginPageSection';
 import SocialSection from './socialSection/socialSection';
@@ -35,7 +36,9 @@ const LoginPage = ({ routeParams }) => (
   <div className={cx('login-page')}>
     <div className={cx('login-page-content')}>
       <div className={cx('background')} />
-      <div className={cx('logo')} />
+      <a href={referenceDictionary.rpLanding} target="_blank">
+        <div className={cx('logo')} />
+      </a>
       <LoginPageSection left>
         <SocialSection />
       </LoginPageSection>

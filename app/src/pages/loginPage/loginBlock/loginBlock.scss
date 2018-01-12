@@ -3,7 +3,7 @@
   padding: 60px;
   box-sizing: border-box;
 
-  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     height: auto;
     width: 100%;
     margin: 0;

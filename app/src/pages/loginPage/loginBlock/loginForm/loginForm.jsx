@@ -23,7 +23,7 @@ import classNames from 'classnames/bind';
 import FieldWithIcon from 'components/fields/fieldWithIcon/fieldWithIcon';
 import FieldErrorHint from 'components/fields/fieldErrorHint/fieldErrorHint';
 import { FormattedMessage } from 'react-intl';
-import { signal } from 'cerebral/tags';
+import { signal, state } from 'cerebral/tags';
 import { form } from '@cerebral/forms';
 import Input from 'components/inputs/input/input';
 import InputPassword from 'components/inputs/inputPassword/inputPassword';
@@ -36,20 +36,29 @@ import ExternalLoginBlock from './externalLoginBlock/externalLoginBlock';
 
 const cx = classNames.bind(styles);
 
-const LoginForm = ({ submitForm, forgotPass }) => {
+const LoginForm = ({ submitForm, forgotPass, externalAuth }) => {
   const submitHandler = (e) => {
     e.preventDefault();
     submitForm();
   };
+
   return (
     <form className={cx('login-form')} onSubmit={submitHandler}>
-      <ExternalLoginBlock />
-      <div className={cx('separator')}>
-        <div className={cx('line')} />
-        <div className={cx('or')}>
-          <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
-        </div>
-      </div>
+      {
+        !Utils.isEmptyObject(externalAuth)
+          ?
+            <div>
+              <ExternalLoginBlock />
+              <div className={cx('separator')}>
+                <div className={cx('line')} />
+                <div className={cx('or')}>
+                  <FormattedMessage id={'LoginForm.or'} defaultMessage={'or'} />
+                </div>
+              </div>
+            </div>
+          : null
+      }
+
       <div className={cx('login-field')}>
         <FieldErrorHint formPath={'user.loginForm'} fieldName={'login'} >
           <FieldWithIcon icon={LoginIcon}>
@@ -79,13 +88,16 @@ const LoginForm = ({ submitForm, forgotPass }) => {
 LoginForm.propTypes = {
   submitForm: PropTypes.func,
   forgotPass: PropTypes.func,
+  externalAuth: PropTypes.object,
 };
 LoginForm.defaultProps = {
   submitForm: () => {},
   forgotPass: () => {},
+  externalAuth: {},
 };
 
 export default Utils.connectToState({
   submitForm: signal`user.login`,
   forgotPass: signal`user.forgotPassRoute`,
+  externalAuth: state`app.info.data.UAT.auth_extensions`,
 }, LoginForm);

@@ -14,12 +14,13 @@
   margin-top: 20px;
   text-align: center;
 
-  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     left: -115px;
     width: 610px;
   }
 
   @media (max-width: $SCREEN_XS_MAX) {
+    left: 0;
     width: 100%;
     margin-bottom: 25px;
     margin-top: 37px;
@@ -79,7 +80,7 @@
   height: 40px;
   margin: 0 auto 50px auto;
 
-  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     margin-bottom: 0;
   }
 
