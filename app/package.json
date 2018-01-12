@@ -31,7 +31,8 @@
     "react-dom": "^16.0.0",
     "react-hot-loader": "^3.1.1",
     "react-intl": "^2.4.0",
-    "reset-css": "^2.2.1"
+    "reset-css": "^2.2.1",
+    "semver-diff": "^2.1.0"
   },
   "devDependencies": {
     "@storybook/addon-actions": "^3.2.16",

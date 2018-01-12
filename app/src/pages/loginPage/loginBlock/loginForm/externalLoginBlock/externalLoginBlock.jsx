@@ -30,16 +30,20 @@ const cx = classNames.bind(styles);
 const ExternalLoginBlock = ({ externalAuth }) => (
   <div className={cx('external-login-block')}>
     {
-      Object.values(externalAuth).map((val, id) => (
-        // eslint-disable-next-line react/no-array-index-key
-        <div className={cx('external-auth-btn')} key={id}>
-          <BigButton color="booger">
-            <span onClick={() => { window.location = `${window.location.protocol}//${window.location.host}/uat${val.path}`; }}>
-              {Parser(val.button)}
-            </span>
-          </BigButton>
-        </div>
-        ))
+      Object.keys(externalAuth).map((objKey) => {
+        const val = externalAuth[objKey];
+
+        return (
+          // eslint-disable-next-line react/no-array-index-key
+          <div className={cx('external-auth-btn')} key={objKey}>
+            <BigButton color="booger">
+              <span onClick={() => { window.location = `${window.location.protocol}//${window.location.host}/uat${val.path}`; }}>
+                {Parser(val.button)}
+              </span>
+            </BigButton>
+          </div>
+          );
+      })
     }
   </div>
 );

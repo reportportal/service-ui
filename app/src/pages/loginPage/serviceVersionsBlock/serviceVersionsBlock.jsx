@@ -19,55 +19,84 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import React, { Component } from 'react';
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import { state, signal } from 'cerebral/tags';
+import semverDiff from 'semver-diff';
+import { state } from 'cerebral/tags';
 import PropTypes from 'prop-types';
 import styles from './serviceVersionsBlock.scss';
 import ServiceVersionItem from './serviceVersionItem/serviceVersionItem';
 
 const cx = classNames.bind(styles);
 
-class ServiceVersionsBlock extends Component {
-  componentWillMount() {
-    this.props.getLastServiceVersions();
-  }
-  render() {
-    return (
-      <div className={cx('service-versions-block')}>
-        <span className={cx('current-version')}>
-          <FormattedMessage id={'ServiceVersionsBlock.currentVersion'} defaultMessage={'Current version'} />:
-        </span>
-        <span className={cx('versions-list')}>
-          {
-            Object.values(this.props.serviceVersions).map(
-              (val, id) => (
-                <ServiceVersionItem
-                  // eslint-disable-next-line react/no-array-index-key
-                  key={id}
-                  serviceName={val.build.name}
-                  serviceVersion={val.build.version}
-                />
-              ),
-            )
-          }
-        </span>
-      </div>
-    );
-  }
-}
+const ServiceVersionsBlock = ({ services }) => (
+  <div className={cx('service-versions-block')}>
+    <span className={cx('current-version')} >
+      <FormattedMessage id={'ServiceVersionsBlock.currentVersion'} defaultMessage={'Current version'} />:
+    </span>
+    <span className={cx('versions-list')}>
+      {
+        Object.keys(services).map(
+          (objKey) => {
+            const value = services[objKey];
+
+            return (
+              <ServiceVersionItem
+                // eslint-disable-next-line react/no-array-index-key
+                key={objKey}
+                serviceName={value.name}
+                serviceVersion={value.version}
+                serviceNewVersion={value.newVersion}
+                isDeprecated={value.isDeprecated}
+              />
+            );
+          },
+        )
+      }
+    </span>
+  </div>
+);
 
 ServiceVersionsBlock.propTypes = {
   serviceVersions: PropTypes.object,
-  getLastServiceVersions: PropTypes.func,
+  latestServiceVersions: PropTypes.object,
+  services: PropTypes.object,
 };
 ServiceVersionsBlock.defaultProps = {
   serviceVersions: {},
-  getLastServiceVersions: () => {},
+  latestServiceVersions: {},
+  services: {},
 };
 
-export default Utils.connectToState({
-  serviceVersions: state`app.info.data`,
-  getLastServiceVersions: signal`other.modules.lastServiceVersions.getData`,
-}, ServiceVersionsBlock);
+export default Utils.connectToState(
+  {
+    serviceVersions: state`app.info.data`,
+    latestServiceVersions: state`other.lastServiceVersions`,
+  },
+  ({ serviceVersions, latestServiceVersions }) => {
+    const services = { services: {} };
+
+    Object.keys(serviceVersions).map(
+      (objKey) => {
+        const value = serviceVersions[objKey];
+        const currentVersion = value.build.version;
+        const latestVersion = latestServiceVersions.data[value.build.repo];
+
+        services.services[objKey] = {
+          name: value.build.name,
+          version: value.build.version,
+          newVersion: latestVersion || null,
+          repo: value.build.repo || null,
+          isDeprecated:
+            !!value.build.repo
+              && !!latestVersion
+              && !!semverDiff(currentVersion, latestVersion),
+        };
+
+        return true;
+      },
+    );
+    return services;
+  },
+  ServiceVersionsBlock,
+);

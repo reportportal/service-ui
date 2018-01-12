@@ -9,5 +9,6 @@
   "ForgotPasswordBlock.enterEmail": "Введите адрес вашей электронной почты, чтобы восстановить его",
   "ForgotPasswordForm.cancel": "Отменить",
   "ForgotPasswordForm.sendEmail": "Отправить письмо",
-  "ServiceVersionsBlock.currentVersion": "Текущая версия"
+  "ServiceVersionsBlock.currentVersion": "Текущая версия",
+  "ServiceVersionItem.newVersion": "Доступна новая версия: {newVersion}"
 }
