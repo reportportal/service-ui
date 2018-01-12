@@ -108,8 +108,8 @@ define(function (require) {
                 .done(function () {
                     config.userModel.get('projects')[name] = { projectRole: 'MEMBER', entryType: 'INTERNAL' };
                     Util.ajaxSuccessMessenger('projectCreated', name);
-                    config.router.navigate(self.getProjectUrl(name, 'settings'), { trigger: true });
                     self.successClose();
+                    config.router.navigate(self.getProjectUrl(name, 'settings'), { trigger: true });
                 })
                 .fail(function (error) {
                     self.hideLoading();

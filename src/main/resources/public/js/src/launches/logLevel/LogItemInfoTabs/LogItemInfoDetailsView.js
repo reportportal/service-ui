@@ -41,7 +41,8 @@ define(function (require) {
             this.itemView = new StepItemView({
                 el: $('[data-js-item-detail-container]', this.$el),
                 noIssue: true,
-                model: this.itemModel
+                model: this.itemModel,
+                context: 'logLevel'
             });
         },
 
