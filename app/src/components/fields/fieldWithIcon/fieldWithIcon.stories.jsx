@@ -22,7 +22,7 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import { FieldWithIcon } from './fieldWithIcon';
+import FieldWithIcon from './fieldWithIcon';
 import TestIcon from './img/test-stories-icon.svg';
 import README from './README.md';
 
