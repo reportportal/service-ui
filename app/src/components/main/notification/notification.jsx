@@ -33,7 +33,7 @@ Notification.propTypes = {
 Notification.defaultProps = {
   message: '',
   type: '',
-}
+};
 
 export default connectToState({
   message: state`app.notification.currentMessage`,
