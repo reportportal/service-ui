@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames/bind';
 import { state } from 'cerebral/tags';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { connectToState } from 'common/utils';
 import styles from './notification.scss';
 
@@ -14,14 +15,22 @@ const Notification = ({ message, type }) => {
     }
     const level = type || 'info';
     return (
-      <div className={cx('message-container', level)}>
-        <p>{message}</p>
+      <div key={message}>
+        <div className={cx('message-container', level)}>
+          <p>{message}</p>
+        </div>
       </div>
     );
   }
   return (
     <div className={cx('notification-container')}>
-      {getNotification(message, type)}
+      <ReactCSSTransitionGroup
+        transitionName="notification-opacity"
+        transitionEnterTimeout={200}
+        transitionLeaveTimeout={700}
+      >
+        {getNotification(message, type)}
+      </ReactCSSTransitionGroup>
     </div>
   );
 };

@@ -28,4 +28,27 @@
     background: $COLOR--tomato;
     text-shadow: 0 1px 1px darken($COLOR--tomato, 10%);
   }
+    &.opacity-enter-active {
+      opacity: 1;
+      transition: opacity 5500ms ease-in;
+    }
+    &.opacity-leave-active {
+      transition: opacity 5300ms ease-in;
+    }
+}
+:global {
+  .notification-opacity-enter {
+    opacity: 0;
+    transition: opacity 200ms ease-in;
+  }
+  .notification-opacity-enter-active {
+    opacity: 1;
+  }
+  .notification-opacity-leave {
+    opacity: 1;
+    transition: opacity 700ms ease-in;
+  }
+  .notification-opacity-leave-active {
+    opacity: 0;
+  }
 }
