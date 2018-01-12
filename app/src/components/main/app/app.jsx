@@ -8,6 +8,7 @@ import styles from './app.scss';
 
 import Sidebar from '../sidebar/sidebar';
 import Header from '../header/header';
+import Notification from '../notification/notification';
 
 import LoginPage from '../../../pages/loginPage/loginPage';
 import AppPage from '../../../pages/appPage/appPage';
@@ -37,6 +38,7 @@ const App = ({ currentPage }) => {
         result = (
           <div className={cx('empty-container')}>
             <Page />
+            <Notification />
           </div>
         );
         break;
@@ -54,6 +56,7 @@ const App = ({ currentPage }) => {
                 <Page />
               </div>
             </div>
+            <Notification />
           </div>
         );
         break;
