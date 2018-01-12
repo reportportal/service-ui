@@ -1,3 +1,7 @@
 .service-version-item {
   margin-right: 13px;
+
+  &.depricated {
+    color: $COLOR--tomato;
+  }
 }

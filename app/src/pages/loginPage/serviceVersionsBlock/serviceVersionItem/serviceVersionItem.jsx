@@ -21,19 +21,49 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
+import { injectIntl, intlShape, defineMessages } from 'react-intl';
 import styles from './serviceVersionItem.scss';
 
 const cx = classNames.bind(styles);
 
-const ServiceVersionItem = ({ serviceName, serviceVersion }) => <span className={cx('service-version-item')}>{`${serviceName}: ${serviceVersion};`}</span>;
+const ServiceVersionItem = ({ serviceName, serviceVersion,
+                              serviceNewVersion, isDeprecated, intl }) => {
+  const classes = {
+    'service-version-item': true,
+    depricated: isDeprecated,
+  };
+  const messages = defineMessages({
+    newVersion: {
+      id: 'ServiceVersionItem.newVersion',
+      defaultMessage: 'New version available: {newVersion}',
+    },
+  });
+  return (
+    <span
+      className={cx(classes)}
+      title={
+        isDeprecated
+          ? intl.formatMessage(messages.newVersion, { newVersion: serviceNewVersion })
+          : null
+      }
+    >
+      {`${serviceName}: ${serviceVersion};`}
+    </span>
+  );
+};
 
 ServiceVersionItem.propTypes = {
   serviceName: PropTypes.string,
   serviceVersion: PropTypes.string,
+  serviceNewVersion: PropTypes.string,
+  isDeprecated: PropTypes.bool,
+  intl: intlShape.isRequired,
 };
 ServiceVersionItem.defaultProps = {
   serviceName: '',
   serviceVersion: '',
+  serviceNewVersion: '',
+  isDeprecated: false,
 };
 
-export default ServiceVersionItem;
+export default injectIntl(ServiceVersionItem);
