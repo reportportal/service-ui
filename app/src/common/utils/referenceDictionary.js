@@ -19,16 +19,14 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import getObjWithoutKeys from './getObjWithoutKeys';
-import checkInvalidField from './checkInvalidField';
-import connectToState from './connectToState';
-import isEmptyObject from './isEmptyObject';
-import referenceDictionary from './referenceDictionary';
-
-export {
-  getObjWithoutKeys,
-  checkInvalidField,
-  connectToState,
-  isEmptyObject,
-  referenceDictionary,
+export default {
+  rpLanding: 'http://reportportal.io/',
+  rpDoc: 'http://reportportal.io/docs',
+  rpGitHub: 'https://github.com/reportportal',
+  rpFacebook: 'https://www.facebook.com/ReportPortal.io',
+  rpTwitter: 'http://twitter.com/ReportPortal_io',
+  rpYoutube: 'http://youtube.com/c/ReportPortalCommunity',
+  rpVk: 'https://vk.com/reportportal_io',
+  rpSlack: 'https://reportportal-slack-auto.herokuapp.com/',
+  rpEmail: 'mailto:support@reportportal.io',
 };

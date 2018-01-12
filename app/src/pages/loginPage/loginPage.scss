@@ -6,7 +6,7 @@
   padding-top: 20px;
   box-sizing: border-box;
 
-  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     width: 768px;
     height: 1044px;
     padding-bottom: 20px;
@@ -14,6 +14,7 @@
   @media (max-width: $SCREEN_XS_MAX) {
     width: 320px;
     height: auto;
+    padding-bottom: 0;
   }
 }
 .login-page-content {
@@ -25,10 +26,11 @@
   background-color: $COLOR--white-two;
   box-sizing: border-box;
 
-  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     padding: 80px 50px 0;
   }
   @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0;
     overflow: hidden;
   }
 }
@@ -43,7 +45,7 @@
   background-repeat: no-repeat;
   background-size: 100%;
 
-  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     width: 100%;
     background-image: url(./img/login-page-tablet-bgc.svg);
   }
@@ -65,7 +67,7 @@
   cursor: pointer;
   z-index: 1;
 
-  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     left: 50px;
   }
   @media (max-width: $SCREEN_XS_MAX) {

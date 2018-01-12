@@ -3,7 +3,7 @@
   text-align: center;
 }
 
-a {
+.social-link {
   display: inline-block;
   width: 22px;
   height: 22px;
@@ -11,7 +11,7 @@ a {
   background-repeat: no-repeat;
   background-position: center;
 
-  @media (min-width: $SCREEN_SM_MIN) and (max-width: $SCREEN_SM_MAX) {
+  @media (max-width: $SCREEN_SM_MAX) {
     margin-right: 60px;
   }
 

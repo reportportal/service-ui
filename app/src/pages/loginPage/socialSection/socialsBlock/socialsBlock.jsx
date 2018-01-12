@@ -20,19 +20,20 @@
  */
 
 import classNames from 'classnames/bind';
+import { referenceDictionary } from 'common/utils';
 import styles from './socialsBlock.scss';
 
 const cx = classNames.bind(styles);
 
 const SocialsBlock = () => (
   <div className={cx('socials-block')}>
-    <a href="https://github.com/reportportal" target="_blank" className={cx('gh-icon')}>{}</a>
-    <a href="https://www.facebook.com/ReportPortal.io" target="_blank" className={cx('fb-icon')}>{}</a>
-    <a href="http://twitter.com/ReportPortal_io" target="_blank" className={cx('tw-icon')}>{}</a>
-    <a href="http://youtube.com/c/ReportPortalCommunity" target="_blank" className={cx('yt-icon')}>{}</a>
-    <a href="https://vk.com/reportportal_io" target="_blank" className={cx('vk-icon')}>{}</a>
-    <a href="https://reportportal-slack-auto.herokuapp.com/" target="_blank" className={cx('slk-icon')}>{}</a>
-    <a href="mailto:support@reportportal.io" className={cx('mail-icon')}>{}</a>
+    <a href={referenceDictionary.rpGitHub} target="_blank" className={cx({ 'social-link': true, 'gh-icon': true })}>{}</a>
+    <a href={referenceDictionary.rpGitHub} target="_blank" className={cx({ 'social-link': true, 'fb-icon': true })}>{}</a>
+    <a href={referenceDictionary.rpGitHub} target="_blank" className={cx({ 'social-link': true, 'tw-icon': true })}>{}</a>
+    <a href={referenceDictionary.rpGitHub} target="_blank" className={cx({ 'social-link': true, 'yt-icon': true })}>{}</a>
+    <a href={referenceDictionary.rpGitHub} target="_blank" className={cx({ 'social-link': true, 'vk-icon': true })}>{}</a>
+    <a href={referenceDictionary.rpGitHub} target="_blank" className={cx({ 'social-link': true, 'slk-icon': true })}>{}</a>
+    <a href={referenceDictionary.rpGitHub} className={cx({ 'social-link': true, 'mail-icon': true })}>{}</a>
   </div>
 );
 
