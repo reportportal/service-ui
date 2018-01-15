@@ -1,6 +1,7 @@
+import { Module } from 'cerebral';
 import getInfo from './signals/getInfo';
 
-export default {
+export default Module({
   state: {
     isReady: false,
     isLoad: false,
@@ -9,4 +10,4 @@ export default {
   signals: {
     getInfo,
   },
-};
+});

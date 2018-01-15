@@ -1,6 +1,7 @@
+import { Module } from 'cerebral';
 import updateInfo from './signals/updateInfo';
 
-export default {
+export default Module({
   state: {
     isLoad: false,
     twits: [],
@@ -9,4 +10,4 @@ export default {
   signals: {
     updateInfo,
   },
-};
+});

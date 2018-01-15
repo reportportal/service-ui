@@ -1,4 +1,6 @@
-export default {
+import { Module } from 'cerebral';
+
+export default Module({
   state: {
     email: {
       value: '',
@@ -12,4 +14,4 @@ export default {
   },
   signals: {
   },
-};
+});

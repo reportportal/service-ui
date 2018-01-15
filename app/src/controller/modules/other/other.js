@@ -1,6 +1,7 @@
+import { Module } from 'cerebral';
 import modules from './modules/modules';
 
-export default {
+export default Module({
   state: {},
   modules,
-};
+});

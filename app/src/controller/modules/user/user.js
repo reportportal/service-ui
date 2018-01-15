@@ -1,3 +1,4 @@
+import { Module } from 'cerebral';
 import modules from './modules/modules';
 import login from './signals/login';
 import logout from './signals/logout';
@@ -7,7 +8,7 @@ import setUserToken from './signals/setUserToken';
 import forgotPassRoute from './signals/forgotPassRoute';
 import loginRoute from './signals/loginRoute';
 
-export default {
+export default Module({
   state: {
     auth: false,
     isLoad: false,
@@ -25,4 +26,4 @@ export default {
     loginRoute,
   },
   modules,
-};
+});

@@ -1,6 +1,7 @@
+import { Module } from 'cerebral';
 import showMessage from './signals/showMessage';
 
-export default {
+export default Module({
   state: {
     currentMessage: '',
     currentType: '',
@@ -9,4 +10,4 @@ export default {
   signals: {
     showMessage,
   },
-};
+});

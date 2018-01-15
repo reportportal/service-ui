@@ -1,4 +1,6 @@
-export default {
+import { Module } from 'cerebral';
+
+export default Module({
   state: {
     login: {
       value: '',
@@ -19,4 +21,4 @@ export default {
   },
   signals: {
   },
-};
+});

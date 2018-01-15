@@ -1,7 +1,8 @@
 import forms from './forms';
 
 test('should provide a set of signals', () => {
-  expect(forms.signals.changeValue).toBeDefined();
-  expect(forms.signals.setFocus).toBeDefined();
-  expect(forms.signals.setBlur).toBeDefined();
+  // TODO use public api
+  expect(forms.moduleDescription.signals.changeValue).toBeDefined();
+  expect(forms.moduleDescription.signals.setFocus).toBeDefined();
+  expect(forms.moduleDescription.signals.setBlur).toBeDefined();
 });

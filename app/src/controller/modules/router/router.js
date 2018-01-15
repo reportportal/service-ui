@@ -1,3 +1,4 @@
+import { Module } from 'cerebral';
 import Router from '@cerebral/router';
 import changePage from './factories/changePage';
 import notAutenticate from './factories/notAutenticate';
@@ -5,7 +6,7 @@ import autenticate from './factories/autenticate';
 import initialData from './factories/initialData';
 import loginPageDataLoad from './factories/loginPageDataLoad';
 
-export const route = {
+export const route = Module({
   state: {
     currentPage: '',
     pageParams: {},
@@ -15,7 +16,7 @@ export const route = {
     forgotPassRouted: initialData(notAutenticate(loginPageDataLoad(changePage('forgotPass')))),
     appRouted: initialData(autenticate(changePage('app'))),
   },
-};
+});
 
 export default Router({
   routes: [
