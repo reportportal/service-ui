@@ -42,7 +42,7 @@ class ScrollWrapper extends Component {
   };
 
   render() {
-    return ( // base props ere defined. For mo info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
+    return ( // base props are defined. For more info see https://github.com/malte-wessel/react-custom-scrollbars/blob/master/docs/API.md
       <Scrollbars
         ref={(scrollbars) => { this.scrollbars = scrollbars; }}
         className={cx('scroll-component')}

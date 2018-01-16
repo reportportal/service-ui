@@ -127,10 +127,6 @@ export default (env = defaultEnv) => ({
           name: 'media/[name].[ext]',
         },
       },
-      {
-        test: /\.md$/,
-        use: 'raw-loader',
-      },
     ],
   },
   devtool: env.dev ? 'eval-source-map' : false,
