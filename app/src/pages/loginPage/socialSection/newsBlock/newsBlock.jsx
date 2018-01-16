@@ -20,12 +20,65 @@
  */
 
 import classNames from 'classnames/bind';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { FormattedMessage } from 'react-intl';
+import { state } from 'cerebral/tags';
+import ScrollWrapper from 'components/common/scrollWrapper/scrollWrapper';
 import styles from './newsBlock.scss';
+import PostBlock from './postBlock/postBlock';
 
 const cx = classNames.bind(styles);
 
-const NewsBlock = () => (
-  <div className={cx('news-block')} />
-);
+class NewsBlock extends Component {
+  constructor() {
+    super();
+    this.state = { twitterBlockHeight: window.innerWidth < 992 ? 160 : 500 };
+    window.addEventListener('resize', this.windowResizeHandler, false);
+  }
+  componentWillUnmount = () => {
+    window.removeEventListener('resize', this.windowResizeHandler, false);
+  };
+  windowResizeHandler = (e) => {
+    if (this.state.twitterBlockHeight === 500 && e.target.innerWidth < 992) {
+      this.setState({ twitterBlockHeight: 160 });
+    }
+    if (this.state.twitterBlockHeight === 160 && e.target.innerWidth > 991) {
+      this.setState({ twitterBlockHeight: 500 });
+    }
+  };
+  render() {
+    return (
+      <div className={cx('news-block')}>
+        <div className={cx('twitter-block')}>
+          <div className={cx('twitter-title')}>
+            <div className={cx('twitter-icon')} />
+            <FormattedMessage id={'NewsBlock.twitterTitle'} defaultMessage={'Be informed with our latest tweets'} />
+          </div>
+          <div className={cx('twitter-news')}>
+            <ScrollWrapper autoHeight autoHeightMax={this.state.twitterBlockHeight} >
+              {
+                Array.map(this.props.twits,
+                  twitId => <PostBlock key={twitId} twitData={this.props.twitById[twitId]} />)
+              }
+            </ScrollWrapper>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
 
-export default NewsBlock;
+NewsBlock.propTypes = {
+  twitById: PropTypes.object,
+  twits: PropTypes.array,
+};
+NewsBlock.defaultProps = {
+  twitById: {},
+  twits: [],
+};
+
+export default Utils.connectToState({
+  twitById: state`other.twitter.twitById`,
+  twits: state`other.twitter.twits`,
+}, NewsBlock);

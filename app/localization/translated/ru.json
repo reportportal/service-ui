@@ -5,6 +5,7 @@
   "LoginForm.login": "Войти",
   "LoginForm.or": "или",
   "LoginForm.forgotPass": "Забыли пароль?",
+  "NewsBlock.twitterTitle": "Ознакомьтесь с нашими последними твитами",
   "ForgotPasswordBlock.forgotPass": "Забыли пароль?",
   "ForgotPasswordBlock.enterEmail": "Введите адрес вашей электронной почты, чтобы восстановить его",
   "ForgotPasswordForm.cancel": "Отменить",

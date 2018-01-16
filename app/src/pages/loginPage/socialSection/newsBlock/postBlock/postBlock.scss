@@ -1,0 +1,22 @@
+.post-block {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  border-radius: 2px;
+  background-color: $COLOR--white-two;
+  font-family: $FONT-REGULAR;
+  font-size: 13px;
+  color: $COLOR--charcoal-grey;
+  line-height: 18px;
+  box-sizing: border-box;
+
+  .twit-link {
+    color: $COLOR--topaz;
+    text-decoration: none;
+
+    &:hover {
+      color: $COLOR--tealish;
+    }
+  }
+}
