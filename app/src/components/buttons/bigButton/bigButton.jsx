@@ -33,7 +33,7 @@ const BigButton = ({ type, children, disabled, color, onClick }) => {
   });
 
   return (
-    <button type={type} className={classes} onClick={onClick} >
+    <button type={type} disabled={disabled} className={classes} onClick={onClick} >
       { children }
     </button>
   );

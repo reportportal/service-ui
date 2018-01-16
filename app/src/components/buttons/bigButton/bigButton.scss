@@ -21,11 +21,11 @@
     background-color: $COLOR--booger;
     border-color: $COLOR--booger;
 
-    &:hover {
+    &:hover:not(.disabled) {
       background-color: darken( $COLOR--booger, 15% );
       border-color: darken( $COLOR--booger, 15% );
     }
-    &:active {
+    &:active:not(.disabled) {
       background-color: darken( $COLOR--booger, 30% );
       border-color: darken( $COLOR--booger, 30% );
     }
@@ -34,11 +34,11 @@
     background-color: $COLOR--organish;
     border-color: $COLOR--organish;
 
-    &:hover {
+    &:hover:not(.disabled) {
       background-color: darken( $COLOR--organish, 15% );
       border-color: darken( $COLOR--organish, 15% );
     }
-    &:active {
+    &:active:not(.disabled) {
       background-color: darken( $COLOR--organish, 30% );
       border-color: darken( $COLOR--organish, 30% );
     }
@@ -47,11 +47,11 @@
     background-color: $COLOR--gray-60;
     border-color: $COLOR--gray-60;
 
-    &:hover {
+    &:hover:not(.disabled) {
       background-color: darken( $COLOR--gray-60, 15% );
       border-color: darken( $COLOR--gray-60, 15% );
     }
-    &:active {
+    &:active:not(.disabled) {
       background-color: darken( $COLOR--gray-60, 30% );
       border-color: darken( $COLOR--gray-60, 30% );
     }
