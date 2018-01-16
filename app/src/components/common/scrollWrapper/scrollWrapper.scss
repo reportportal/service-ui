@@ -1,0 +1,40 @@
+.scroll-component {
+  &:hover {
+    .thumb-horizontal {
+      opacity: 0.5;
+    }
+    .thumb-vertical {
+      opacity: 0.5;
+    }
+  }
+}
+.track-horizontal {
+  right: 2px;
+  bottom: 0;
+  left: 2px;
+  height: 8px !important;
+  border-radius: 3px;
+}
+.track-vertical {
+  right: 0;
+  bottom: 2px;
+  top: 2px;
+  width: 8px !important;
+  border-radius: 3px;
+}
+.thumb-horizontal {
+  cursor: pointer;
+  border-radius: inherit;
+  background-color: $COLOR--charcoal-grey;
+  opacity: 0;
+  transition: opacity 200ms
+}
+.thumb-vertical {
+  cursor: pointer;
+  border-radius: inherit;
+  background-color: $COLOR--charcoal-grey;
+  opacity: 0;
+  transition: opacity 400ms
+}
+.scrolling-content {
+}
