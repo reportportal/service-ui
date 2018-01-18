@@ -25,7 +25,7 @@ import { withReadme } from 'storybook-readme';
 import AdminHeader from './header';
 import README from './README.md';
 
-storiesOf('Components/Admin/Header', module)
+storiesOf('Components/Main/Admin/Header', module)
   .addDecorator(host({
     title: 'AdminHeader component',
     align: 'center middle',
