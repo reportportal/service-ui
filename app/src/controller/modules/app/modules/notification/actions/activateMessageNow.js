@@ -1,14 +1,16 @@
-const activateMessageNow = ({ state, props }) => {
-  state.set('app.notification.currentMessage', props.message);
-  state.set('app.notification.currentType', props.type);
+const activateMessageNow = ({ module, props }) => {
+  module.set('currentMessage', props.message || '');
+  module.set('currentType', props.type || '');
+  module.set('currentMessageId', props.messageId || '');
   setTimeout(() => {
-    const newMessage = state.get('app.notification.stack')[0];
+    const newMessage = module.get('stack')[0];
     if (newMessage) {
-      state.shift('app.notification.stack');
-      activateMessageNow({ state, props: newMessage });
+      module.shift('stack');
+      activateMessageNow({ module, props: newMessage });
     } else {
-      state.set('app.notification.currentMessage', '');
-      state.set('app.notification.currentType', '');
+      module.set('currentMessage', '');
+      module.set('currentType', '');
+      module.set('currentMessageId', '');
     }
   }, 5000);
 };

@@ -1,3 +1,4 @@
+import { successNotification } from 'controller/providers/notification';
 import getToken from '../modules/loginForm/actions/getToken';
 import setToken from '../actions/setToken';
 import updateUserStatus from './updateUserStatus';
@@ -10,6 +11,12 @@ export default [
       setToken,
       updateUserStatus,
       redirectRouter,
+      successNotification('successLogin'),
+    ],
+    false: [
+      ({ props, notification }) => {
+        notification.errorMessage(props.error.response.result.message);
+      },
     ],
   },
 ];

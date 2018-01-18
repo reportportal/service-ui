@@ -1,6 +1,7 @@
 import { Module, Controller } from 'cerebral';
 import FormsProvider from '@cerebral/forms';
 import HttpProvider from '@cerebral/http';
+import NotificationProvider from './providers/notification';
 import modules from './modules/modules';
 
 const Devtools = (
@@ -12,6 +13,7 @@ const rootModule = Module({
   providers: {
     forms: FormsProvider({}),
     http: HttpProvider({}),
+    notification: NotificationProvider,
   },
   state: {
     hasLoadedInitialData: false,
