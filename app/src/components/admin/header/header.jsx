@@ -27,35 +27,33 @@ import styles from './header.scss';
 
 const cx = classNames.bind(styles);
 
-const AdminHeader = ({ onClickBackToProject, onClickLogout, adminHeaderCrumb }) => {
-  return (
-    <div className={cx('adminHeader')} >
-      <div className={cx('container')}>
-        <h3>
+const AdminHeader = ({ onClickBackToProject, onClickLogout, adminHeaderCrumb }) => (
+  <div className={cx('adminHeader')} >
+    <div className={cx('container')}>
+      <h3>
+        <FormattedMessage
+          id={'AdminHeader.header'}
+          defaultMessage={'Management board'}
+        />
+        <span className={cx('header-crumb')}>{adminHeaderCrumb}</span>
+      </h3>
+      <div className={cx('adminHeaderControls')}>
+        <button className={cx('backToProject')} onClick={onClickBackToProject}>
           <FormattedMessage
-            id={'AdminHeader.header'}
-            defaultMessage={'Management board'}
+            id={'AdminHeader.btnToProject'}
+            defaultMessage={'Back to project'}
           />
-          <span className={cx('header-crumb')}>{adminHeaderCrumb}</span>
-        </h3>
-        <div className={cx('adminHeaderControls')}>
-          <button className={cx('backToProject')} onClick={onClickBackToProject}>
-            <FormattedMessage
-              id={'AdminHeader.btnToProject'}
-              defaultMessage={'Back to project'}
-            />
-          </button>
-          <button className={cx('logout')} onClick={onClickLogout}>
-            <FormattedMessage
-              id={'AdminHeader.btnLogout'}
-              defaultMessage={'Logout'}
-            />
-          </button>
-        </div>
+        </button>
+        <button className={cx('logout')} onClick={onClickLogout}>
+          <FormattedMessage
+            id={'AdminHeader.btnLogout'}
+            defaultMessage={'Logout'}
+          />
+        </button>
       </div>
     </div>
+  </div>
   );
-};
 
 AdminHeader.propTypes = {
   adminHeaderCrumb: PropTypes.string,

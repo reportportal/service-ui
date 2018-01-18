@@ -7,8 +7,11 @@ jest.mock('@cerebral/http/operators', () => ({
   httpAbort: jest.fn(),
   httpDelete: jest.fn(),
 }));
+jest.mock('controller/providers/notification', () => ({
+  infoNotification: jest.fn(),
+}));
 
-it('must discard all requests and send a request for logout', () => {
+test('must discard all requests and send a request for logout', () => {
   runSignal(logout);
 
   expect(httpAbort.mock.calls.length).toBe(1);

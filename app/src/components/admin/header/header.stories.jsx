@@ -32,7 +32,7 @@ storiesOf('Components/Admin/Header', module)
     backdrop: 'rgba(70, 69, 71, 0.2)',
     background: '#ffffff',
     height: 100,
-    width: '100%'
+    width: '100%',
   }))
   .addDecorator(withReadme(README))
   .add('default state', () => (
