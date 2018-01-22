@@ -19,14 +19,39 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import loginForm from './loginForm/loginForm';
-import forgotPassForm from './forgotPassForm/forgotPassForm';
-import registrationForm from './registrationForm/registrationForm';
-import changePassForm from './changePassForm/changePassForm';
+import { Module } from 'cerebral';
 
-export default {
-  loginForm,
-  forgotPassForm,
-  registrationForm,
-  changePassForm,
-};
+export default Module({
+  state: {
+    newPassword: {
+      value: '',
+      defaultValue: '',
+      isRequired: true,
+      forceInvalid: false,
+      validationRules: [
+        /^(.){4,25}$/,
+        'minLength:4',
+        'maxLength:25',
+      ],
+      errorMessageId: 'passwordHint',
+    },
+    confirmNewPassword: {
+      value: '',
+      defaultValue: '',
+      isRequired: true,
+      forceInvalid: false,
+      validationRules: [
+        /^(.){4,25}$/,
+        'minLength:4',
+        'maxLength:25',
+        'equalsField:user.changePassForm.newPassword',
+      ],
+      errorMessageId: 'confirmPasswordHint',
+    },
+    token: '',
+    isLoad: false,
+    isValid: true,
+  },
+  signals: {
+  },
+});

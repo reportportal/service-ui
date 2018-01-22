@@ -22,7 +22,7 @@
 import classNames from 'classnames/bind';
 import FieldWithIcon from 'components/fields/fieldWithIcon/fieldWithIcon';
 import FieldErrorHint from 'components/fields/fieldErrorHint/fieldErrorHint';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { signal } from 'cerebral/tags';
 import { form } from '@cerebral/forms';
 import Input from 'components/inputs/input/input';
@@ -33,17 +33,25 @@ import styles from './forgotPasswordForm.scss';
 
 const cx = classNames.bind(styles);
 
-const ForgotPasswordForm = ({ submitForm, cancel }) => {
+const ForgotPasswordForm = ({ submitForm, cancel, intl }) => {
+  const { formatMessage } = intl;
+  const placeholders = defineMessages({
+    email: {
+      id: 'ForgotPasswordForm.emailPlaceholder',
+      defaultMessage: 'Enter email',
+    },
+  });
   const submitHandler = (e) => {
     e.preventDefault();
     submitForm();
   };
+
   return (
     <form className={cx('forgot-password-form')} onSubmit={submitHandler}>
       <div className={cx('email-field')}>
         <FieldErrorHint formPath={'user.forgotPassForm'} fieldName={'email'} >
           <FieldWithIcon icon={EmailIcon}>
-            <Input />
+            <Input placeholder={formatMessage(placeholders.email)} />
           </FieldWithIcon>
         </FieldErrorHint>
       </div>
@@ -66,6 +74,7 @@ const ForgotPasswordForm = ({ submitForm, cancel }) => {
 ForgotPasswordForm.propTypes = {
   submitForm: PropTypes.func,
   cancel: PropTypes.func,
+  intl: intlShape.isRequired,
 };
 ForgotPasswordForm.defaultProps = {
   submitForm: () => {},
@@ -75,4 +84,4 @@ ForgotPasswordForm.defaultProps = {
 export default Utils.connectToState({
   submitForm: signal`user.forgotPass`,
   cancel: signal`user.loginRoute`,
-}, ForgotPasswordForm);
+}, injectIntl(ForgotPasswordForm));
