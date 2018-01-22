@@ -2,7 +2,7 @@
 
 Has no own size. Width and Height = 100% of it's parent.
 
-!!! Children should be provided !!!
+> Children should be provided
 
 ### Props (main):
 * **autoHeight**: _bool_, optional, default = false

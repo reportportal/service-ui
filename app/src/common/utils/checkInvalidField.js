@@ -20,5 +20,5 @@
  */
 
 export default function checkInvalidField(field, formShowError) {
-  return !field.isValid && (!field.isPristine || formShowError);
+  return field.forceInvalid || (!field.isValid && (!field.isPristine || formShowError));
 }

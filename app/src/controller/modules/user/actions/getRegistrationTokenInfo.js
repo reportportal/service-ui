@@ -19,12 +19,19 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import loginForm from './loginForm/loginForm';
-import forgotPassForm from './forgotPassForm/forgotPassForm';
-import registrationForm from './registrationForm/registrationForm';
-
-export default {
-  loginForm,
-  forgotPassForm,
-  registrationForm,
+export default ({ props, http, state }) => {
+  if (props.uuid) {
+    state.set('user.registrationTokenData.isTokenProvided', true);
+    return http.get(`/api/v1/user/registration?uuid=${props.uuid}`)
+      .then((response) => {
+        const result = response.result;
+        result.isTokenProvided = true;
+        return { registrationTokenInfo: result };
+      })
+      .catch((error) => {
+        state.set('user.registrationTokenData.isLoad', false);
+        return { error };
+      });
+  }
+  return { registrationTokenInfo: { isTokenProvided: false } };
 };

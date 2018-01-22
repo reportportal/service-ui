@@ -1,0 +1,157 @@
+.registration-page {
+  position: relative;
+  width: 1000px;
+  height: 746px;
+  margin: 0 auto;
+  padding-top: 20px;
+  box-sizing: border-box;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 768px;
+    height: 1044px;
+    padding-bottom: 20px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 320px;
+    height: auto;
+    padding-bottom: 0;
+  }
+}
+.registration-page-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 2px;
+  box-shadow: 0 1px 3px 0 $COLOR--skipped;
+  background-color: $COLOR--white-two;
+  box-sizing: border-box;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    padding: 80px 50px 0;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding: 0;
+    overflow: hidden;
+  }
+}
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-image: url(./img/registration-page-bgc.svg);
+  background-color: $COLOR--light-blue;
+  background-repeat: no-repeat;
+  background-size: 100%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    width: 100%;
+    background-image: url(./img/registration-page-tablet-bgc.svg);
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    height: 145px;
+    background-image: url(./img/registration-page-mobile-bgc.svg);
+  }
+
+  &.failed {
+    width: 100%;
+    background-image: url(./img/registration-fail-page-bgc.svg);
+
+    @media (max-width: $SCREEN_SM_MAX) {
+      width: 100%;
+      background-image: url(./img/registration-fail-page-tablet-bgc.svg);
+    }
+    @media (max-width: $SCREEN_XS_MAX) {
+      width: 100%;
+      height: 100%;
+      background-image: url(./img/registration-fail-page-mobile-bgc.svg);
+    }
+  }
+}
+.logo {
+  position: absolute;
+  top: 30px;
+  left: 60px;
+  width: 140px;
+  height: 23px;
+  background-image: url(./img/rp-logo.svg);
+  background-repeat: no-repeat;
+  background-size: 100%;
+  cursor: pointer;
+  z-index: 1;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    left: 50px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    top: 15px;
+    left: 20px;
+    width: 100px;
+    height: 16px;
+  }
+}
+.couple-minutes {
+  width: 300px;
+  margin: 350px auto 0;
+  text-align: center;
+  font-family: $FONT-REGULAR;
+  font-size: 16px;
+  color: $COLOR--steel-grey;
+  line-height: 22px;
+}
+.welcome-msg {
+  display: block;
+  width: 100%;
+  margin-bottom: 50px;
+  font-family: $FONT-REGULAR;
+  font-size: 24px;
+  color: $COLOR--steel-grey;
+  text-align: center;
+  line-height: 1.4;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-top: 50px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    font-size: 16px;
+    margin-bottom: 40px;
+  }
+}
+.fail-msg {
+  display: inline-block;
+  width: 335px;
+  font-family: $FONT-REGULAR;
+  font-size: 24px;
+  color: $COLOR--steel-grey;
+  text-align: center;
+  line-height: 1.4;
+  margin-top: 190px;
+  margin-bottom: 30px;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    margin-top: 230px;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 240px;
+    margin-top: 180px;
+    font-size: 16px;
+  }
+}
+.big {
+  font-size: 32px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    font-size: 24px;
+  }
+}
+.visit-rp {
+  font-family: $FONT-REGULAR;
+  font-size: 16px;
+  color: $COLOR--steel-grey;
+}
+.backlink {
+  color: $COLOR--tealish;
+  text-decoration: none;
+}
