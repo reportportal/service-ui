@@ -19,12 +19,9 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import loginForm from './loginForm/loginForm';
-import forgotPassForm from './forgotPassForm/forgotPassForm';
-import registrationForm from './registrationForm/registrationForm';
-
-export default {
-  loginForm,
-  forgotPassForm,
-  registrationForm,
+export default ({ state, forms }) => {
+  !forms.get('user.registrationForm').login.isValid && state.set('user.registrationForm.login.forceInvalid', true);
+  !forms.get('user.registrationForm').name.isValid && state.set('user.registrationForm.name.forceInvalid', true);
+  !forms.get('user.registrationForm').password.isValid && state.set('user.registrationForm.password.forceInvalid', true);
+  !forms.get('user.registrationForm').confirmPassword.isValid && state.set('user.registrationForm.confirmPassword.forceInvalid', true);
 };

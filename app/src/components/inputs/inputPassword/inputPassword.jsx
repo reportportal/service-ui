@@ -55,6 +55,10 @@ class InputPassword extends Component {
         <Input
           type={this.state.passwordShown ? 'text' : 'password'}
           hasRightIcon
+          placeholder={this.props.placeholder}
+          value={this.props.value}
+          maxLength={this.props.maxLength}
+          disabled={this.props.disabled}
           formPath={this.props.formPath}
           fieldName={this.props.fieldName}
         />

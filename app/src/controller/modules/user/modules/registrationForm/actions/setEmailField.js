@@ -19,12 +19,7 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import loginForm from './loginForm/loginForm';
-import forgotPassForm from './forgotPassForm/forgotPassForm';
-import registrationForm from './registrationForm/registrationForm';
-
-export default {
-  loginForm,
-  forgotPassForm,
-  registrationForm,
+export default ({ props, state }) => {
+  state.set('user.registrationForm.email.value', props.registrationTokenInfo.email);
+  return {};
 };

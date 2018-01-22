@@ -11,12 +11,17 @@ import Header from '../header/header';
 import Notification from '../notification/notification';
 
 import LoginPage from '../../../pages/loginPage/loginPage';
+import RegistrationPage from '../../../pages/registrationPage/registrationPage';
 import AppPage from '../../../pages/appPage/appPage';
 
 const PAGES = {
   login: {
     container: 'empty',
     page: LoginPage,
+  },
+  registration: {
+    container: 'empty',
+    page: RegistrationPage,
   },
   app: {
     container: 'app',

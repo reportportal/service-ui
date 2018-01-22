@@ -19,12 +19,21 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import loginForm from './loginForm/loginForm';
-import forgotPassForm from './forgotPassForm/forgotPassForm';
-import registrationForm from './registrationForm/registrationForm';
+import classNames from 'classnames/bind';
+import PropTypes from 'prop-types';
+import styles from './registrationFailBlock.scss';
 
-export default {
-  loginForm,
-  forgotPassForm,
-  registrationForm,
+const cx = classNames.bind(styles);
+
+const RegistrationPage = ({ children }) => (
+  <div className={cx('registration-fail-block')}>{children}</div>
+);
+
+RegistrationPage.propTypes = {
+  children: PropTypes.node,
 };
+RegistrationPage.defaultProps = {
+  children: null,
+};
+
+export default RegistrationPage;

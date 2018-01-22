@@ -1,0 +1,15 @@
+.registration-fail-block {
+  width: 100%;
+  height: 100%;
+
+  @media (max-width: $SCREEN_SM_MAX) {
+    background-image: url(./img/registration-fail-form-tablet.svg);
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 100%;
+    height: 568px;
+    background: none;
+  }
+}

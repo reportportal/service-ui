@@ -19,12 +19,8 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import loginForm from './loginForm/loginForm';
-import forgotPassForm from './forgotPassForm/forgotPassForm';
-import registrationForm from './registrationForm/registrationForm';
+import { redirectToSignal } from '@cerebral/router/operators';
 
-export default {
-  loginForm,
-  forgotPassForm,
-  registrationForm,
-};
+export default [
+  redirectToSignal('route.registrationRouted', {}),
+];
