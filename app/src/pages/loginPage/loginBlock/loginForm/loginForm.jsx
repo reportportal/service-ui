@@ -22,7 +22,7 @@
 import classNames from 'classnames/bind';
 import FieldWithIcon from 'components/fields/fieldWithIcon/fieldWithIcon';
 import FieldErrorHint from 'components/fields/fieldErrorHint/fieldErrorHint';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, injectIntl, intlShape, defineMessages } from 'react-intl';
 import { signal, state } from 'cerebral/tags';
 import { form } from '@cerebral/forms';
 import Input from 'components/inputs/input/input';
@@ -36,7 +36,18 @@ import ExternalLoginBlock from './externalLoginBlock/externalLoginBlock';
 
 const cx = classNames.bind(styles);
 
-const LoginForm = ({ submitForm, forgotPass, externalAuth }) => {
+const LoginForm = ({ submitForm, forgotPass, externalAuth, intl }) => {
+  const { formatMessage } = intl;
+  const placeholders = defineMessages({
+    login: {
+      id: 'LoginForm.loginPlaceholder',
+      defaultMessage: 'Login',
+    },
+    password: {
+      id: 'LoginForm.passwordPlaceholder',
+      defaultMessage: 'Password',
+    },
+  });
   const submitHandler = (e) => {
     e.preventDefault();
     submitForm();
@@ -62,14 +73,14 @@ const LoginForm = ({ submitForm, forgotPass, externalAuth }) => {
       <div className={cx('login-field')}>
         <FieldErrorHint formPath={'user.loginForm'} fieldName={'login'} >
           <FieldWithIcon icon={LoginIcon}>
-            <Input />
+            <Input placeholder={formatMessage(placeholders.login)} />
           </FieldWithIcon>
         </FieldErrorHint>
       </div>
       <div className={cx('password-field')}>
         <FieldErrorHint formPath={'user.loginForm'} fieldName={'password'} >
           <FieldWithIcon icon={PasswordIcon}>
-            <InputPassword />
+            <InputPassword placeholder={formatMessage(placeholders.password)} />
           </FieldWithIcon>
         </FieldErrorHint>
       </div>
@@ -89,6 +100,7 @@ LoginForm.propTypes = {
   submitForm: PropTypes.func,
   forgotPass: PropTypes.func,
   externalAuth: PropTypes.object,
+  intl: intlShape.isRequired,
 };
 LoginForm.defaultProps = {
   submitForm: () => {},
@@ -100,4 +112,4 @@ export default Utils.connectToState({
   submitForm: signal`user.login`,
   forgotPass: signal`user.forgotPassRoute`,
   externalAuth: state`app.info.data.UAT.auth_extensions`,
-}, LoginForm);
+}, injectIntl(LoginForm));

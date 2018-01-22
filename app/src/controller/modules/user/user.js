@@ -25,6 +25,7 @@ import login from './signals/login';
 import logout from './signals/logout';
 import register from './signals/register';
 import forgotPass from './signals/forgotPass';
+import changePass from './signals/changePass';
 import updateUserStatus from './signals/updateUserStatus';
 import setUserToken from './signals/setUserToken';
 import forgotPassRoute from './signals/forgotPassRoute';
@@ -53,6 +54,7 @@ export default Module({
     logout,
     register,
     forgotPass,
+    changePass,
     updateUserStatus,
     forgotPassRoute,
     loginRoute,

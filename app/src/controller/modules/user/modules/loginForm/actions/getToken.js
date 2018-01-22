@@ -20,7 +20,7 @@ export default ({ state, forms, http, path }) => {
       });
   }
   if (path && path.false) {
-    return path.false({ error: 'Not Valid' });
+    return path.false();
   }
-  return { error: 'Not Valid' };
+  return {};
 };

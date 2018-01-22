@@ -19,14 +19,24 @@
  * along with Report Portal.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import loginForm from './loginForm/loginForm';
-import forgotPassForm from './forgotPassForm/forgotPassForm';
-import registrationForm from './registrationForm/registrationForm';
-import changePassForm from './changePassForm/changePassForm';
+import classNames from 'classnames/bind';
+import { FormattedMessage } from 'react-intl';
+import ChangePasswordForm from './changePasswordForm/changePasswordForm';
+import styles from './changePasswordBlock.scss';
 
-export default {
-  loginForm,
-  forgotPassForm,
-  registrationForm,
-  changePassForm,
-};
+const cx = classNames.bind(styles);
+
+const ChangePasswordBlock = () => (
+  <div className={cx('change-password-block')}>
+    <span className={cx('change-password-msg')}>
+      <span className={cx('big')}>
+        <FormattedMessage id={'ChangePasswordBlock.changePass'} defaultMessage={'Change password'} />
+      </span>
+      <br />
+      <FormattedMessage id={'ChangePasswordBlock.enterEmail'} defaultMessage={'enter new password and confirm it'} />
+    </span>
+    <ChangePasswordForm />
+  </div>
+);
+
+export default ChangePasswordBlock;

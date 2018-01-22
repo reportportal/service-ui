@@ -1,21 +1,18 @@
 import { when } from 'cerebral/operators';
 import { state, props } from 'cerebral/tags';
 import { isValidForm } from '@cerebral/forms/operators';
-import { successNotification } from 'controller/providers/notification';
-import highlightInvalidFields from '../modules/loginForm/actions/highlightInvalidFields';
-import getToken from '../modules/loginForm/actions/getToken';
-import setToken from '../actions/setToken';
-import updateUserStatus from './updateUserStatus';
-import redirectRouter from '../actions/redirectRouter';
+import highlightInvalidFields from '../modules/changePassForm/actions/highlightInvalidFields';
+import sendChangePass from '../modules/changePassForm/actions/sendChangePass';
+import loginRoute from './loginRoute';
 
 export default [
-  getToken,
+  sendChangePass,
   {
     true: [
-      setToken,
-      updateUserStatus,
-      redirectRouter,
-      successNotification('successLogin'),
+      loginRoute,
+      ({ props: properties, notification }) => {
+        notification.successMessage(properties.message);
+      },
     ],
     false: [
       when(props`error`),
@@ -26,7 +23,7 @@ export default [
           },
         ],
         false: [
-          isValidForm(state`user.loginForm`), {
+          isValidForm(state`user.changePassForm`), {
             true: [],
             false: [
               highlightInvalidFields,
@@ -34,7 +31,6 @@ export default [
           },
         ],
       },
-
     ],
   },
 ];
