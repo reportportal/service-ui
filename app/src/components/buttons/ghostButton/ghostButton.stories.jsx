@@ -23,12 +23,13 @@ import { storiesOf } from '@storybook/react';
 import { action } from '@storybook/addon-actions';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import BigButton from './bigButton';
+import TestIcon from './img/test-icon-inline.svg';
+import GhostButton from './ghostButton';
 import README from './README.md';
 
-storiesOf('Components/Buttons/bigButton', module)
+storiesOf('Components/Buttons/ghostButton', module)
   .addDecorator(host({
-    title: 'Big button component',
+    title: 'Ghost button component',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
     background: '#fff',
@@ -37,21 +38,30 @@ storiesOf('Components/Buttons/bigButton', module)
   }))
   .addDecorator(withReadme(README))
   .add('default state', () => (
-    <BigButton />
+    <GhostButton />
   ))
   .add('with text', () => (
-    <BigButton>Button title</BigButton>
+    <GhostButton>Button title</GhostButton>
   ))
-  .add('colored', () => (
-    <BigButton color={'organish'}>Button title</BigButton>
+  .add('with icon', () => (
+    <GhostButton icon={TestIcon} />
   ))
-  .add('disabled', () => (
-    <BigButton disabled>Button title</BigButton>
+  .add('with icon & text', () => (
+    <GhostButton icon={TestIcon}>Button title</GhostButton>
+  ))
+  .add('disabled with text', () => (
+    <GhostButton disabled>Button title</GhostButton>
+  ))
+  .add('disabled with icon', () => (
+    <GhostButton icon={TestIcon} disabled />
+  ))
+  .add('disabled with icon & text', () => (
+    <GhostButton icon={TestIcon} disabled>Button title</GhostButton>
   ))
   .add('with actions', () => (
-    <BigButton onClick={action('clicked')}>Button title</BigButton>
+    <GhostButton onClick={action('clicked')}>Button title</GhostButton>
   ))
   .add('disabled with actions', () => (
-    <BigButton disabled onClick={action('clicked')}>Button title</BigButton>
+    <GhostButton disabled onClick={action('clicked')}>Button title</GhostButton>
   ))
 ;

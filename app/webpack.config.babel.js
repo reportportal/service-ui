@@ -122,6 +122,15 @@ export default (env = defaultEnv) => ({
       {
         test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
         loader: 'url-loader',
+        exclude: /\/*-inline.svg/,
+        query: {
+          limit: 1000,
+          name: 'media/[name].[ext]',
+        },
+      },
+      {
+        test: /\/*-inline.svg/,
+        loader: 'svg-inline-loader',
         query: {
           limit: 1000,
           name: 'media/[name].[ext]',

@@ -83,6 +83,7 @@
     "storybook-host": "^4.1.4",
     "storybook-readme": "^3.1.1",
     "style-loader": "^0.19.0",
+    "svg-inline-loader": "^0.8.0",
     "url-loader": "^0.6.2",
     "webpack": "^3.7.1",
     "webpack-dev-server": "2.9.7",
