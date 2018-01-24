@@ -1,19 +1,18 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { Container } from '@cerebral/react';
+import { HashRouter } from 'react-router-dom';
 
 import 'reset-css';
 import 'common/css/fonts/fonts.scss';
 import 'common/css/common.scss';
 
-import controller from './controller/controller';
 import App from './components/main/app/app';
 
 const rerenderApp = (AppContainer) => {
   render((
-    <Container controller={controller} >
+    <HashRouter>
       <AppContainer />
-    </Container>
+    </HashRouter>
   ), document.querySelector('#app'));
 };
 
