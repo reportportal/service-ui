@@ -131,10 +131,6 @@ export default (env = defaultEnv) => ({
       {
         test: /\/*-inline.svg/,
         loader: 'svg-inline-loader',
-        query: {
-          limit: 1000,
-          name: 'media/[name].[ext]',
-        },
       },
     ],
   },
