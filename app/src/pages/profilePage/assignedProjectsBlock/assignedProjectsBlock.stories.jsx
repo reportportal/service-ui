@@ -22,14 +22,29 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import PersonalInfoBlock from './personalInfoBlock';
+import AssignedProjectsBlock from './assignedProjectsBlock';
 import README from './README.md';
-import bigAvatar from './storiesImg/big.jpg';
-import smallAvatar from './storiesImg/small.jpg';
 
-storiesOf('Pages/ProfilePage/personalInfoBlock', module)
+const projectsMockUp = [
+  { name: 'project_bmzc9virhi', role: 'project_manager' },
+  { name: 'project_aue1166vqq', role: 'project_manager' },
+  { name: 'default_project', role: 'member' },
+  { name: 'artem', role: 'project_manager' },
+  { name: 'autotest_projectxqdrmvsq9c', role: 'project_manager' },
+  { name: 'project_vhi2nmfmlc', role: 'project_manager' },
+  { name: 'neb', role: 'project_manager' },
+  { name: 'epm-rpp', role: 'project_manager' },
+  { name: 'artem-test', role: 'project_manager' },
+  { name: 'veronikaproject', role: 'project_manager' },
+  { name: 'project_b7c2w99ppk', role: 'project_manager' },
+  { name: 'project_yhkv4d7ohk', role: 'project_manager' },
+  { name: 'demo-project', role: 'project_manager' },
+  { name: 'sviatlana_kashtsialian_personal', role: 'operator' },
+];
+
+storiesOf('Pages/ProfilePage/assignedProjectsBlock', module)
   .addDecorator(host({
-    title: 'Personal info form on profile page',
+    title: 'Assigned projects table on profile page',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
     background: '#f5f5f5',
@@ -38,17 +53,9 @@ storiesOf('Pages/ProfilePage/personalInfoBlock', module)
   }))
   .addDecorator(withReadme(README))
   .add('default state (no provided info)', () => (
-    <PersonalInfoBlock />
+    <AssignedProjectsBlock />
   ))
-  .add('with info', () => (
-    <PersonalInfoBlock login="superadmin" name="RP Admin" email="superadmin@email.com" photoSrc={bigAvatar} />
-  ))
-  .add('with extreme info', () => (
-    <PersonalInfoBlock
-      login="superadminsuperadminsuperadminsuperadmin"
-      name="RP Admin RP Admin RP Admin RP Admin RP Admin RP Admin RP Admin RP Admin"
-      email="superadminsuperadminsuperadminsuperadminsuperadminsuperadminsuperadminsuperadmin@email.com"
-      photoSrc={smallAvatar}
-    />
+  .add('with projects', () => (
+    <AssignedProjectsBlock projects={projectsMockUp} />
   ))
 ;
