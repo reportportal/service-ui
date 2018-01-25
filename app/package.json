@@ -28,6 +28,7 @@
     "react-hot-loader": "^3.1.1",
     "react-intl": "^2.4.0",
     "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
     "reset-css": "^2.2.1",
     "semver-diff": "^2.1.0"
   },

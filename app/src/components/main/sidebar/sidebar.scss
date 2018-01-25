@@ -3,3 +3,12 @@
   height: 100%;
   background-color: $COLOR--charcoal-grey;
 }
+.item {
+  display: block;
+  width: 90px;
+  height: 90px;
+  color: $COLOR--white;
+  &.active {
+    color: $COLOR--greenish-beige;
+  }
+}
