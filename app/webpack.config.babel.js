@@ -30,9 +30,10 @@ export default (env = defaultEnv) => ({
     extensions: ['.js', '.jsx'],
     alias: {
       components: path.resolve(__dirname, 'src/components'),
-      controller: path.resolve(__dirname, 'src/controller'),
+      controllers: path.resolve(__dirname, 'src/controllers'),
       common: path.resolve(__dirname, 'src/common'),
       pages: path.resolve(__dirname, 'src/pages'),
+      store: path.resolve(__dirname, 'src/store')
     },
   },
   plugins: [
