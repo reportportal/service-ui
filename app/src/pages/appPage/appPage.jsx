@@ -1,4 +1,4 @@
-
+import PersonalInfo from 'pages/profilePage/personalInfoBlock/personalInfoBlock';
 import { signal } from 'cerebral/tags';
 
 // eslint-disable-next-line react/prop-types
@@ -9,6 +9,9 @@ const AppPage = ({ logOut, sendNotification }) => (
       sendNotification({ message: `testMessage ${(Math.random() * (20 - 0)) + 0}`, type: 'info' });
     }}
     >send notification</button>
+    <div style={{ width: '50%', height: 400 }}>
+      <PersonalInfo />
+    </div>
   </div>
 );
 
