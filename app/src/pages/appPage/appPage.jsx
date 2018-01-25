@@ -1,4 +1,4 @@
-import AssignedProjects from 'pages/profilePage/assignedProjectsBlock/assignedProjectsBlock';
+import UUID from 'pages/profilePage/uuidBlock/uuidBlock';
 import { signal } from 'cerebral/tags';
 
 // eslint-disable-next-line react/prop-types
@@ -10,7 +10,7 @@ const AppPage = ({ logOut, sendNotification }) => (
     }}
     >send notification</button>
     <div style={{ width: '50%', height: 'auto' }}>
-      <AssignedProjects projects={[]} />
+      <UUID />
     </div>
   </div>
 );

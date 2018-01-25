@@ -51,5 +51,8 @@
   "RegistrationPage.visit": "Посетите",
   "RegistrationPage.welcome": "Добро пожаловать,",
   "ServiceVersionItem.newVersion": "Доступна новая версия: {newVersion}",
-  "ServiceVersionsBlock.currentVersion": "Текущая версия"
+  "ServiceVersionsBlock.currentVersion": "Текущая версия",
+  "UuidBlock.headerNameCol": "Универсальный уникальный идентификатор",
+  "UuidBlock.regenerate": "Создать новый",
+  "UuidBlock.tip": "Чтобы обеспечить надежность вашего доменного пароля, вы можете использовать пользовательский опознавательный номер, называемый UUID, чтобы подтвердить, что ваша учетная запись может загружаться агентом."
 }
