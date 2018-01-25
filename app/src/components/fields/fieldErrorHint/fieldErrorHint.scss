@@ -1,5 +1,7 @@
 .field-error-hint {
   position: relative;
+  text-align: left;
+
   &.show {
     .hint {
       display: block;

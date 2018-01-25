@@ -49,7 +49,7 @@ const RegistrationForm = ({ submitForm, resetForm, intl }) => {
     resetForm();
   };
   const { formatMessage } = intl;
-  const messages = defineMessages({
+  const placeholders = defineMessages({
     login: {
       id: 'RegistrationForm.loginPlaceholder',
       defaultMessage: 'Login',
@@ -74,7 +74,7 @@ const RegistrationForm = ({ submitForm, resetForm, intl }) => {
         <FieldBottomConstraints formPath={'user.registrationForm'} fieldName={'login'} text={<FormattedMessage id={'RegistrationForm.loginConstraints'} defaultMessage={'1-128 symbols, latin, numeric characters, symbols: hyphen, underscore, dot'} />}>
           <FieldErrorHint>
             <FieldWithIcon icon={LoginIcon}>
-              <Input maxLength={'128'} placeholder={formatMessage(messages.login)} />
+              <Input maxLength={'128'} placeholder={formatMessage(placeholders.login)} />
             </FieldWithIcon>
           </FieldErrorHint>
         </FieldBottomConstraints>
@@ -83,7 +83,7 @@ const RegistrationForm = ({ submitForm, resetForm, intl }) => {
         <FieldBottomConstraints formPath={'user.registrationForm'} fieldName={'name'} text={<FormattedMessage id={'RegistrationForm.nameConstraints'} defaultMessage={'3-256 symbols, latin, cyrillic, numeric characters, symbols: hyphen, underscore, dot, space'} />}>
           <FieldErrorHint>
             <FieldWithIcon icon={NameIcon}>
-              <Input maxLength={'256'} placeholder={formatMessage(messages.name)} />
+              <Input maxLength={'256'} placeholder={formatMessage(placeholders.name)} />
             </FieldWithIcon>
           </FieldErrorHint>
         </FieldBottomConstraints>
@@ -97,7 +97,7 @@ const RegistrationForm = ({ submitForm, resetForm, intl }) => {
         <FieldBottomConstraints formPath={'user.registrationForm'} fieldName={'password'} text={<FormattedMessage id={'RegistrationForm.passwordConstraints'} defaultMessage={'4-25 symbols'} />}>
           <FieldErrorHint>
             <FieldWithIcon icon={PasswordIcon}>
-              <InputPassword maxLength={'25'} placeholder={formatMessage(messages.password)} />
+              <InputPassword maxLength={'25'} placeholder={formatMessage(placeholders.password)} />
             </FieldWithIcon>
           </FieldErrorHint>
         </FieldBottomConstraints>
@@ -105,7 +105,7 @@ const RegistrationForm = ({ submitForm, resetForm, intl }) => {
       <div className={cx('confirm-password-field')}>
         <FieldErrorHint formPath={'user.registrationForm'} fieldName={'confirmPassword'} >
           <FieldWithIcon icon={PasswordIcon}>
-            <InputPassword maxLength={'25'} placeholder={formatMessage(messages.confirmPassword)} />
+            <InputPassword maxLength={'25'} placeholder={formatMessage(placeholders.confirmPassword)} />
           </FieldWithIcon>
         </FieldErrorHint>
       </div>

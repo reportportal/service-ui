@@ -6,7 +6,7 @@
   background-color: $COLOR--white;
   border: solid 1px $COLOR--silver;
   &.invalid {
-    border-color: red;
+    border-color: $COLOR--orange-red;
   }
   box-sizing: border-box;
 }

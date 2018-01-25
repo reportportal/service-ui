@@ -6,6 +6,9 @@ export default [
   {
     true: [
       loginRoute,
+      ({ props: properties, notification }) => {
+        notification.successMessage(properties.message);
+      },
     ],
   },
 ];
