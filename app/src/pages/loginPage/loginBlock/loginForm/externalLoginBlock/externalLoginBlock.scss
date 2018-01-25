@@ -14,15 +14,16 @@
   @media (max-width: $SCREEN_XS_MAX) {
     margin-right: 0;
   }
-}
-svg {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-top: 2px;
-  margin-right: 8px;
-  color: $COLOR--white-two;
-  fill: $COLOR--white-two;
-  vertical-align: top;
 
+  svg {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    margin-right: 8px;
+    color: $COLOR--white-two;
+    fill: $COLOR--white-two;
+    vertical-align: top;
+  }
 }
+

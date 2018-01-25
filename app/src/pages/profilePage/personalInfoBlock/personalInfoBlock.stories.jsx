@@ -22,19 +22,33 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import AdminHeader from './header';
+import PersonalInfoBlock from './personalInfoBlock';
 import README from './README.md';
+import bigAvatar from './storiesImg/big.jpg';
+import smallAvatar from './storiesImg/small.jpg';
 
-storiesOf('Components/Admin/Header', module)
+storiesOf('Pages/ProfilePage/personalInfoBlock', module)
   .addDecorator(host({
-    title: 'AdminHeader component',
+    title: 'Big button component',
     align: 'center middle',
     backdrop: 'rgba(70, 69, 71, 0.2)',
-    background: '#ffffff',
-    height: 100,
-    width: '100%',
+    background: '#f5f5f5',
+    height: 'auto',
+    width: '70%',
   }))
   .addDecorator(withReadme(README))
-  .add('default state', () => (
-    <AdminHeader adminHeaderCrumb=" / All users" />
-  ));
+  .add('default state (no provided info)', () => (
+    <PersonalInfoBlock />
+  ))
+  .add('with info', () => (
+    <PersonalInfoBlock login="superadmin" name="RP Admin" email="superadmin@email.com" photoSrc={bigAvatar} />
+  ))
+  .add('with extreme info', () => (
+    <PersonalInfoBlock
+      login="superadminsuperadminsuperadminsuperadmin"
+      name="RP Admin RP Admin RP Admin RP Admin RP Admin RP Admin RP Admin RP Admin"
+      email="superadminsuperadminsuperadminsuperadminsuperadminsuperadminsuperadminsuperadmin@email.com"
+      photoSrc={smallAvatar}
+    />
+  ))
+;

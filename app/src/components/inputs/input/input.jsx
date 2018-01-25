@@ -26,7 +26,7 @@ import styles from './input.scss';
 
 const cx = classNames.bind(styles);
 
-const Input = ({ formPath, fieldName, type, value,
+const Input = ({ formPath, fieldName, type, value, readonly,
                  placeholder, maxLength, disabled, hasRightIcon,
                  onChange, onFocus, onBlur }) => {
   const classes = cx({
@@ -51,6 +51,7 @@ const Input = ({ formPath, fieldName, type, value,
       placeholder={placeholder}
       maxLength={maxLength}
       disabled={disabled}
+      readOnly={readonly}
       onChange={handlerOnChange}
       onFocus={handlerOnFocus}
       onBlur={handlerOnBlur}
@@ -66,6 +67,7 @@ Input.propTypes = {
   placeholder: PropTypes.string,
   maxLength: PropTypes.string,
   disabled: PropTypes.bool,
+  readonly: PropTypes.bool,
   hasRightIcon: PropTypes.bool,
   onChange: PropTypes.func,
   onFocus: PropTypes.func,
@@ -80,6 +82,7 @@ Input.defaultProps = {
   placeholder: '',
   maxLength: '254',
   disabled: false,
+  readonly: false,
   hasRightIcon: false,
   onChange: () => {},
   onFocus: () => {},

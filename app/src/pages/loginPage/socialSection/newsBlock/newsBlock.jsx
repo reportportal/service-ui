@@ -24,7 +24,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { FormattedMessage } from 'react-intl';
 import { state } from 'cerebral/tags';
-import ScrollWrapper from 'components/common/scrollWrapper/scrollWrapper';
+import ScrollWrapper from 'components/main/scrollWrapper/scrollWrapper';
 import styles from './newsBlock.scss';
 import PostBlock from './postBlock/postBlock';
 
