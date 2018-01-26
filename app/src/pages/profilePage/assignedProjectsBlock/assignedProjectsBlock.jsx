@@ -31,11 +31,11 @@ const AssignedProjectsBlock = ({ projects }) => (
   <div className={cx('assigned-projects-block')}>
     <BlockContainer.Header>
       <div className={cx('name-col')}>
-        <FormattedMessage id={'AssignedProjects.headerNameCol'} defaultMessage={'Assigned on projects'} />
+        <FormattedMessage id={'AssignedProjectsBlock.headerNameCol'} defaultMessage={'Assigned on projects'} />
         {` (${projects.length})`}
       </div>
       <div className={cx('role-col')}>
-        <FormattedMessage id={'AssignedProjects.headerRoleCol'} defaultMessage={'Project role'} />
+        <FormattedMessage id={'AssignedProjectsBlock.headerRoleCol'} defaultMessage={'Project role'} />
       </div>
     </BlockContainer.Header>
     <BlockContainer.Body>
@@ -56,7 +56,7 @@ const AssignedProjectsBlock = ({ projects }) => (
   );
 
 AssignedProjectsBlock.propTypes = {
-  projects: PropTypes.array,
+  projects: PropTypes.arrayOf(PropTypes.object),
 };
 
 AssignedProjectsBlock.defaultProps = {

@@ -9,11 +9,12 @@
   box-sizing: border-box;
 }
 .tab {
+  position: relative;
+  top: 3px;
   display: inline-block;
   max-width: 200px;
   height: 30px;
   padding: 0 15px;
-  margin-top: -1px;
   box-sizing: border-box;
   font-family: $FONT-BOLD;
   font-size: 14px;
