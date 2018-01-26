@@ -111,7 +111,9 @@ const nodejsConfig = {
 const ConfigExamplesBlock = () => (
   <div className={cx('config-example-block')}>
     <BlockContainer.Header>
-      <FormattedMessage id={'ConfigExamplesBlock.header'} defaultMessage={'Configuration examples'} />
+      <span className={cx('header')}>
+        <FormattedMessage id={'ConfigExamplesBlock.header'} defaultMessage={'Configuration examples'} />
+      </span>
     </BlockContainer.Header>
     <BlockContainer.Body>
       <div className={cx('content-container')}>
