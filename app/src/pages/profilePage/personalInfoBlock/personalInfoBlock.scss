@@ -7,6 +7,10 @@
   min-height: 160px;
   padding: 15px;
   box-sizing: border-box;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    min-height: 120px;
+  }
 }
 .avatar-wrapper {
   position: absolute;
@@ -14,6 +18,11 @@
   height: 120px;
   overflow: hidden;
   background-color: $COLOR--white;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    width: 40px;
+    height: 55px
+  }
 }
 .avatar{
   position: absolute;
@@ -28,6 +37,10 @@
   padding-left: 125px;
   box-sizing: border-box;
   display: inline-block;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-left: 50px;
+  }
 }
 .login {
   height: 20px;
@@ -43,6 +56,10 @@
   text-transform: uppercase;
   -ms-text-overflow: ellipsis;
   text-overflow: ellipsis;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin-right: 0;
+  }
 }
 .name-field {
   height: 20px;
@@ -65,9 +82,17 @@
   -ms-text-overflow: ellipsis;
   text-overflow: ellipsis;
 
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-right: 0;
+  }
+
   &:hover{
     .name-pencil-icon {
       display: inline;
+
+      @media (max-width: $SCREEN_XS_MAX) {
+        display: none;
+      }
     }
   }
 }
@@ -100,6 +125,10 @@
   &:hover{
     .email-pencil-icon {
       display: inline;
+
+      @media (max-width: $SCREEN_XS_MAX) {
+        display: none;
+      }
     }
   }
 }
@@ -117,6 +146,10 @@
 
 .photo-controls {
   position: relative;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 .input-file {
   display: none;
@@ -133,4 +166,8 @@
   position: absolute;
   top: 15px;
   right: 15px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }

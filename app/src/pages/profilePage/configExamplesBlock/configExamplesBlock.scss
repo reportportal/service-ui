@@ -1,6 +1,13 @@
 .config-example-block {
   width: 100%;
 }
+.header {
+  display: inline-block;
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 .content-container {
   padding-top: 10px;
   box-sizing: border-box;

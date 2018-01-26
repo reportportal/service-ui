@@ -13,11 +13,17 @@
 .body-wrapper {
   position: relative;
   padding: 15px;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 .field-wrapper {
   position: relative;
   height: 30px;
 }
+
 .label {
   float: left;
   display: block;
@@ -26,6 +32,10 @@
   font-family: $FONT-REGULAR;
   font-size: 13px;
   color: $COLOR--charcoal-grey;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 .field {
   position: relative;
@@ -35,12 +45,24 @@
   border: 1px solid $COLOR--gray-80;
   box-sizing: border-box;
 
+  @media (max-width: $SCREEN_XS_MAX) {
+    margin: 0;
+
+    input {
+      background-color: $COLOR--gray-91;
+    }
+  }
+
   &:hover {
     border-color: $COLOR--gray-47;
   }
 }
 .regenerate-btn {
   float: right;
+
+  @media (max-width: $SCREEN_XS_MAX) {
+    display: none;
+  }
 }
 .tip {
   margin-top: 10px;
