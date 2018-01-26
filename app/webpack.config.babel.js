@@ -33,7 +33,9 @@ export default (env = defaultEnv) => ({
       controllers: path.resolve(__dirname, 'src/controllers'),
       common: path.resolve(__dirname, 'src/common'),
       pages: path.resolve(__dirname, 'src/pages'),
-      store: path.resolve(__dirname, 'src/store')
+      store: path.resolve(__dirname, 'src/store'),
+      routes: path.resolve(__dirname, 'src/routes'),
+      layouts: path.resolve(__dirname, 'src/layouts'),
     },
   },
   plugins: [
