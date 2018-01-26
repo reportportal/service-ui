@@ -2,21 +2,15 @@ FROM golang:1.9
 WORKDIR /go/src/github.com/reportportal/service-ui/
 ARG service
 ARG version
-COPY ./Makefile ./
-COPY ./glide.yaml ./
-COPY ./glide.lock ./
-COPY ./main.go ./
-RUN make get-build-deps build-server
+COPY ./Makefile ./glide.yaml ./glide.lock ./main.go ./
+RUN make get-build-deps
+RUN make build-server
 
 FROM node:argon
-# Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
-# Install app dependencies
-COPY ./Makefile ./
 COPY ./src/main/resources/public/package.json /usr/src/app/
 RUN npm install
-# Bundle app source
 COPY ./src/main/resources/public/ /usr/src/app/
 RUN npm run build && npm run test
 
