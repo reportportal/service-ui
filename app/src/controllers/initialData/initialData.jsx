@@ -11,7 +11,14 @@ import {
   DEFAULT_TOKEN,
 } from 'controllers/auth';
 
-class InitialData extends Component {
+@connect(null, {
+  fetchInfo,
+  fetchUser,
+  setToken,
+  clearToken,
+  authSuccess,
+})
+export class InitialData extends Component {
   static propTypes = {
     fetchInfo: PropTypes.func.isRequired,
     fetchUser: PropTypes.func.isRequired,
@@ -41,11 +48,3 @@ class InitialData extends Component {
     );
   }
 }
-
-export default connect(null, {
-  fetchInfo,
-  fetchUser,
-  setToken,
-  clearToken,
-  authSuccess,
-})(InitialData);

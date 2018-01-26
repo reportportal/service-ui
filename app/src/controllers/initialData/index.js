@@ -1,1 +1,1 @@
-export { default as InitialData } from './initialData';
+export { InitialData } from './initialData';
