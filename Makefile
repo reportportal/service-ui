@@ -53,16 +53,14 @@ build-statics:
 	npm --prefix $(UI_BUILD_ROOT) run build
 	npm --prefix $(UI_BUILD_ROOT) run test
 	npm --prefix $(UI_BUILD_REACT) install
-    npm --prefix $(UI_BUILD_REACT) run eslint
-    npm --prefix $(UI_BUILD_REACT) run test
-
+	npm --prefix $(UI_BUILD_REACT) run eslint
+	npm --prefix $(UI_BUILD_REACT) run test
 
 build-react:
-    npm --prefix $(UI_BUILD_REACT) install
-    npm --prefix $(UI_BUILD_REACT) run eslint
-    npm --prefix $(UI_BUILD_REACT) run test
-    npm --prefix $(UI_BUILD_REACT) run build
-
+	npm --prefix $(UI_BUILD_REACT) install
+	npm --prefix $(UI_BUILD_REACT) run eslint
+	npm --prefix $(UI_BUILD_REACT) run test
+	npm --prefix $(UI_BUILD_REACT) run build
 
 # Builds the project
 build: build-statics build-server
