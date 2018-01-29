@@ -15,6 +15,7 @@ REPO_NAME=reportportal/service-ui
 
 UI_BUILD_ROOT=src/main/resources/public/
 UI_BUILD_REACT=app/
+
 BUILD_INFO_LDFLAGS=-ldflags "-extldflags '"-static"' -X ${PACKAGE_COMMONS}/commons.repo=${REPO_NAME} -X ${PACKAGE_COMMONS}/commons.branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.version=${v}"
 IMAGE_NAME=reportportal/service-ui$(IMAGE_POSTFIX)
 
