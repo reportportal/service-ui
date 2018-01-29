@@ -108,7 +108,13 @@
     ],
     "moduleNameMapper": {
       "^.+\\.(css|scss)$": "identity-obj-proxy",
-      "^controller[/](.+)": "<rootDir>/src/controller/$1"
+      "^components[/](.+)": "<rootDir>/src/components/$1",
+      "^controllers[/](.+)": "<rootDir>/src/controllers/$1",
+      "^common[/](.+)": "<rootDir>/src/common/$1",
+      "^pages[/](.+)": "<rootDir>/src/pages/$1",
+      "^store[/](.+)": "<rootDir>/src/store/$1",
+      "^routes[/](.+)": "<rootDir>/src/routes/$1",
+      "^layouts[/](.+)": "<rootDir>/src/layouts/$1"
     },
     "notify": true
   }
