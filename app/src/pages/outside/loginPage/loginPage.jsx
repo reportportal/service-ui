@@ -21,46 +21,34 @@
 
 import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
-import { state } from 'cerebral/tags';
 import { referenceDictionary } from 'common/utils';
 import styles from './loginPage.scss';
-import LoginPageSection from './loginPageSection/loginPageSection';
-import SocialSection from './socialSection/socialSection';
-import LoginBlock from './loginBlock/loginBlock';
-import ForgotPasswordBlock from './forgotPasswordBlock/forgotPasswordBlock';
-import ChangePasswordBlock from './changePasswordBlock/changePasswordBlock';
-import ServiceVersionsBlock from './serviceVersionsBlock/serviceVersionsBlock';
+import { LoginPageSection } from './loginPageSection/loginPageSection';
+import { SocialSection } from './socialSection/socialSection';
+import { LoginBlock } from './loginBlock/loginBlock';
+// import ForgotPasswordBlock from './forgotPasswordBlock/forgotPasswordBlock';
+// import ChangePasswordBlock from './changePasswordBlock/changePasswordBlock';
+import { ServiceVersionsBlock } from './serviceVersionsBlock';
 
 const cx = classNames.bind(styles);
 
-const LoginPage = ({ routeParams }) => {
-  const getFormBlock = () => {
-    if (routeParams.forgot) {
-      return <ForgotPasswordBlock />;
-    } else if (routeParams.reset) {
-      return <ChangePasswordBlock />;
-    }
-    return <LoginBlock />;
-  };
-
-  return (
-    <div className={cx('login-page')}>
-      <div className={cx('login-page-content')}>
-        <div className={cx('background')} />
-        <a href={referenceDictionary.rpLanding} target="_blank">
-          <div className={cx('logo')} />
-        </a>
-        <LoginPageSection left>
-          <SocialSection />
-        </LoginPageSection>
-        <LoginPageSection>
-          { getFormBlock() }
-          <ServiceVersionsBlock />
-        </LoginPageSection>
-      </div>
+export const LoginPage = () => (
+  <div className={cx('login-page')}>
+    <div className={cx('login-page-content')}>
+      <div className={cx('background')} />
+      <a href={referenceDictionary.rpLanding} target="_blank">
+        <div className={cx('logo')} />
+      </a>
+      <LoginPageSection left>
+        <SocialSection />
+      </LoginPageSection>
+      <LoginPageSection>
+        <LoginBlock />
+        <ServiceVersionsBlock />
+      </LoginPageSection>
     </div>
-  );
-};
+  </div>
+);
 
 LoginPage.propTypes = {
   routeParams: PropTypes.object,
@@ -68,7 +56,3 @@ LoginPage.propTypes = {
 LoginPage.defaultProps = {
   routeParams: {},
 };
-
-export default Utils.connectToState({
-  routeParams: state`route.pageParams`,
-}, LoginPage);

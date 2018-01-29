@@ -25,7 +25,7 @@ import styles from './loginPageSection.scss';
 
 const cx = classNames.bind(styles);
 
-const LoginPageSection = ({ left, children }) => (
+export const LoginPageSection = ({ left, children }) => (
   <div className={cx({ 'login-page-section': true, left })}>
     { children }
   </div>
@@ -40,5 +40,3 @@ LoginPageSection.defaultProps = {
   children: null,
   left: false,
 };
-
-export default LoginPageSection;

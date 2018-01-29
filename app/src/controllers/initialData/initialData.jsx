@@ -24,7 +24,12 @@ export class InitialData extends Component {
     fetchUser: PropTypes.func.isRequired,
     setToken: PropTypes.func.isRequired,
     clearToken: PropTypes.func.isRequired,
-    authSuccess: PropTypes.func,
+    authSuccess: PropTypes.func.isRequired,
+    children: PropTypes.node,
+  };
+
+  static defaultProps = {
+    children: null,
   };
 
   state = {

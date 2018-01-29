@@ -21,18 +21,16 @@
 
 import classNames from 'classnames/bind';
 import styles from './socialSection.scss';
-import NewsBlock from './newsBlock/newsBlock';
+import { NewsBlock } from './newsBlock';
 import SectionsSeparator from './sectionsSeparator/sectionsSeparator';
 import SocialsBlock from './socialsBlock/socialsBlock';
 
 const cx = classNames.bind(styles);
 
-const SocialSection = () => (
+export const SocialSection = () => (
   <div className={cx('social-section')}>
     <NewsBlock />
     <SectionsSeparator />
     <SocialsBlock />
   </div>
 );
-
-export default SocialSection;

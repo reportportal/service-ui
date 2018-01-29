@@ -21,14 +21,13 @@
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { state, signal, props } from 'cerebral/tags';
 import classNames from 'classnames/bind';
-import Input from 'components/inputs/input/input';
+import { Input } from 'components/inputs/input/input';
 import styles from './inputPassword.scss';
 
 const cx = classNames.bind(styles);
 
-class InputPassword extends Component {
+export class InputPassword extends Component {
 
   constructor() {
     super();
@@ -59,8 +58,9 @@ class InputPassword extends Component {
           value={this.props.value}
           maxLength={this.props.maxLength}
           disabled={this.props.disabled}
-          formPath={this.props.formPath}
-          fieldName={this.props.fieldName}
+          onChange={this.props.onChange}
+          onBlur={this.props.onBlur}
+          onFocus={this.props.onFocus}
         />
         <div
           className={iconClasses}
@@ -77,8 +77,6 @@ class InputPassword extends Component {
 }
 
 InputPassword.propTypes = {
-  formPath: PropTypes.string,
-  fieldName: PropTypes.string,
   value: PropTypes.string,
   placeholder: PropTypes.string,
   maxLength: PropTypes.string,
@@ -89,21 +87,14 @@ InputPassword.propTypes = {
 };
 
 InputPassword.defaultProps = {
-  formPath: '',
-  fieldName: '',
   value: '',
   placeholder: '',
   maxLength: '254',
   disabled: false,
-  onChange: () => {},
-  onFocus: () => {},
-  onBlur: () => {},
+  onChange: () => {
+  },
+  onFocus: () => {
+  },
+  onBlur: () => {
+  },
 };
-
-export default Utils.connectToState({
-  value: state`${props`formPath`}.${props`fieldName`}.value`,
-  disabled: state`${props`formPath`}.${props`fieldName`}.disabled`,
-  onChange: signal`forms.changeValue`,
-  onFocus: signal`forms.setFocus`,
-  onBlur: signal`forms.setBlur`,
-}, InputPassword);

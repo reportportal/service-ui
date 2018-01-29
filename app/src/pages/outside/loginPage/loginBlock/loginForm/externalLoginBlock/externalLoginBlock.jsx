@@ -23,12 +23,11 @@ import classNames from 'classnames/bind';
 import PropTypes from 'prop-types';
 import Parser from 'html-react-parser';
 import BigButton from 'components/buttons/bigButton/bigButton';
-import { state } from 'cerebral/tags';
 import styles from './externalLoginBlock.scss';
 
 const cx = classNames.bind(styles);
 
-const ExternalLoginBlock = ({ externalAuth }) => (
+export const ExternalLoginBlock = ({ externalAuth }) => (
   <div className={cx('external-login-block')}>
     {
       Object.keys(externalAuth).map((objKey) => {
@@ -55,7 +54,3 @@ ExternalLoginBlock.propTypes = {
 ExternalLoginBlock.defaultProps = {
   externalAuth: {},
 };
-
-export default Utils.connectToState({
-  externalAuth: state`app.info.data.UAT.auth_extensions`,
-}, ExternalLoginBlock);

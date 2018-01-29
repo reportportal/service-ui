@@ -22,11 +22,11 @@
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
 import styles from './loginBlock.scss';
-import LoginForm from './loginForm/loginForm';
+import { LoginForm } from './loginForm/loginForm';
 
 const cx = classNames.bind(styles);
 
-const LoginBlock = () => (
+export const LoginBlock = () => (
   <div className={cx('login-block')}>
     <span className={cx('welcome-msg')}>
       <span className={cx('big')}>
@@ -38,5 +38,3 @@ const LoginBlock = () => (
     <LoginForm />
   </div>
 );
-
-export default LoginBlock;

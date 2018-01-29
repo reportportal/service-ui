@@ -21,17 +21,15 @@
 
 import classNames from 'classnames/bind';
 import { FormattedMessage } from 'react-intl';
-import semverDiff from 'semver-diff';
-import { state } from 'cerebral/tags';
 import PropTypes from 'prop-types';
 import styles from './serviceVersionsBlock.scss';
 import ServiceVersionItem from './serviceVersionItem/serviceVersionItem';
 
 const cx = classNames.bind(styles);
 
-const ServiceVersionsBlock = ({ services }) => (
+export const ServiceVersionsBlock = ({ services }) => (
   <div className={cx('service-versions-block')}>
-    <span className={cx('current-version')} >
+    <span className={cx('current-version')}>
       <FormattedMessage id={'ServiceVersionsBlock.currentVersion'} defaultMessage={'Current version'} />:
     </span>
     <span className={cx('versions-list')}>
@@ -67,36 +65,3 @@ ServiceVersionsBlock.defaultProps = {
   latestServiceVersions: {},
   services: {},
 };
-
-export default Utils.connectToState(
-  {
-    serviceVersions: state`app.info.data`,
-    latestServiceVersions: state`other.lastServiceVersions`,
-  },
-  ({ serviceVersions, latestServiceVersions }) => {
-    const services = { services: {} };
-
-    Object.keys(serviceVersions).map(
-      (objKey) => {
-        const value = serviceVersions[objKey];
-        const currentVersion = value.build.version;
-        const latestVersion = latestServiceVersions.data[value.build.repo];
-
-        services.services[objKey] = {
-          name: value.build.name,
-          version: value.build.version,
-          newVersion: latestVersion || null,
-          repo: value.build.repo || null,
-          isDeprecated:
-            !!value.build.repo
-              && !!latestVersion
-              && !!semverDiff(currentVersion, latestVersion),
-        };
-
-        return true;
-      },
-    );
-    return services;
-  },
-  ServiceVersionsBlock,
-);

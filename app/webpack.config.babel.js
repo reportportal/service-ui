@@ -93,6 +93,7 @@ export default (env = defaultEnv) => ({
             'react-hot-loader/babel',
             'transform-decorators-legacy',
             'transform-class-properties',
+            'transform-object-rest-spread',
           ],
         },
       },

@@ -2,23 +2,24 @@ import React from 'react';
 import { Switch, Route, Link } from 'react-router-dom';
 import { AuthorizedArea } from 'controllers/authorizedArea';
 
-import EmptyLayout from '../layouts/emptyLayout/emptyLayout';
-import AppLayout from '../layouts/appLayout/appLayout';
-import AdminLayout from '../layouts/adminLayout/adminLayout';
+import EmptyLayout from 'layouts/emptyLayout/emptyLayout';
+import AppLayout from 'layouts/appLayout/appLayout';
+import AdminLayout from 'layouts/adminLayout/adminLayout';
 
-import ProfilePage from '../pages/inside/profilePage/profilePage';
-import ApiPage from '../pages/inside/apiPage/apiPage';
-import DashboardPage from '../pages/inside/dashboardPage/dashboardPage';
-import LaunchesPage from '../pages/inside/launchesPage/launchesPage';
-import FiltersPage from '../pages/inside/filtersPage/filtersPage';
-import DebugPage from '../pages/inside/debugPage/debugPage';
-import MembersPage from '../pages/inside/membersPage/membersPage';
-import SettingsPage from '../pages/inside/settingsPage/settingsPage';
+import ProfilePage from 'pages/inside/profilePage/profilePage';
+import ApiPage from 'pages/inside/apiPage/apiPage';
+import DashboardPage from 'pages/inside/dashboardPage/dashboardPage';
+import LaunchesPage from 'pages/inside/launchesPage/launchesPage';
+import FiltersPage from 'pages/inside/filtersPage/filtersPage';
+import DebugPage from 'pages/inside/debugPage/debugPage';
+import MembersPage from 'pages/inside/membersPage/membersPage';
+import SettingsPage from 'pages/inside/settingsPage/settingsPage';
+
+import { LoginPage } from 'pages/outside/loginPage/loginPage';
 
 const LoginRoute = () => (
   <EmptyLayout>
-    <h1>login page</h1>
-    <Link to="/default_project/dashboard">Login</Link>
+    <LoginPage />
   </EmptyLayout>
 );
 const AppRoute = () => (

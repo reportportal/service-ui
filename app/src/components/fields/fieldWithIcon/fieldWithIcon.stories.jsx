@@ -22,7 +22,7 @@
 import { storiesOf } from '@storybook/react';
 import { host } from 'storybook-host';
 import { withReadme } from 'storybook-readme';
-import FieldWithIcon from './fieldWithIcon';
+import { FieldWithIcon } from './fieldWithIcon';
 import TestIcon from './img/test-stories-icon.svg';
 import README from './README.md';
 
@@ -36,15 +36,21 @@ storiesOf('Components/Fields/fieldWithIcon', module)
     width: 382,
   }))
   .addDecorator(withReadme(README))
-  .add('default state', () => (
+  .add('default valid state', () => (
     <FieldWithIcon />
   ))
-  .add('default state with icon', () => (
+  .add('default valid state with icon', () => (
     <FieldWithIcon icon={TestIcon} />
   ))
-  .add('valid state', () => (
-    <FieldWithIcon formField={{ isValid: true }} />
+  .add('touched invalid state', () => (
+    <FieldWithIcon error="test error" touched />
   ))
-  .add('valid state with icon', () => (
-    <FieldWithIcon formField={{ isValid: true }} icon={TestIcon} />
+  .add('touched invalid state with icon', () => (
+    <FieldWithIcon error="test error" touched icon={TestIcon} />
+  ))
+  .add('default active invalid state', () => (
+    <FieldWithIcon error="test error" active />
+  ))
+  .add('default active invalid state with icon', () => (
+    <FieldWithIcon error="test error" active icon={TestIcon} />
   ));

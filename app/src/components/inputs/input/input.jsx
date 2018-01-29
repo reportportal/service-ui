@@ -20,13 +20,12 @@
  */
 
 import PropTypes from 'prop-types';
-import { state, signal, props } from 'cerebral/tags';
 import classNames from 'classnames/bind';
 import styles from './input.scss';
 
 const cx = classNames.bind(styles);
 
-const Input = ({ formPath, fieldName, type, value,
+export const Input = ({ type, value,
                  placeholder, maxLength, disabled, hasRightIcon,
                  onChange, onFocus, onBlur }) => {
   const classes = cx({
@@ -34,15 +33,7 @@ const Input = ({ formPath, fieldName, type, value,
     disabled,
     'has-right-icon': hasRightIcon,
   });
-  const handlerOnChange = (e) => {
-    onChange({ formPath, fieldName, value: e.target.value });
-  };
-  const handlerOnFocus = () => {
-    onFocus({ formPath, fieldName });
-  };
-  const handlerOnBlur = () => {
-    onBlur({ formPath, fieldName });
-  };
+
   return (
     <input
       type={type}
@@ -51,16 +42,14 @@ const Input = ({ formPath, fieldName, type, value,
       placeholder={placeholder}
       maxLength={maxLength}
       disabled={disabled}
-      onChange={handlerOnChange}
-      onFocus={handlerOnFocus}
-      onBlur={handlerOnBlur}
+      onChange={onChange}
+      onFocus={onFocus}
+      onBlur={onBlur}
     />
   );
 };
 
 Input.propTypes = {
-  formPath: PropTypes.string,
-  fieldName: PropTypes.string,
   type: PropTypes.string,
   value: PropTypes.string,
   placeholder: PropTypes.string,
@@ -73,8 +62,6 @@ Input.propTypes = {
 };
 
 Input.defaultProps = {
-  formPath: '',
-  fieldName: '',
   type: 'text',
   value: '',
   placeholder: '',
@@ -85,11 +72,3 @@ Input.defaultProps = {
   onFocus: () => {},
   onBlur: () => {},
 };
-
-export default Utils.connectToState({
-  value: state`${props`formPath`}.${props`fieldName`}.value`,
-  disabled: state`${props`formPath`}.${props`fieldName`}.disabled`,
-  onChange: signal`forms.changeValue`,
-  onFocus: signal`forms.setFocus`,
-  onBlur: signal`forms.setBlur`,
-}, Input);
