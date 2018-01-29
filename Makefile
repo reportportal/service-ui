@@ -14,6 +14,7 @@ PACKAGE_COMMONS=github.com/reportportal/service-ui/vendor/gopkg.in/reportportal/
 REPO_NAME=reportportal/service-ui
 
 UI_BUILD_ROOT=src/main/resources/public/
+UI_BUILD_REACT=app/
 BUILD_INFO_LDFLAGS=-ldflags "-extldflags '"-static"' -X ${PACKAGE_COMMONS}/commons.repo=${REPO_NAME} -X ${PACKAGE_COMMONS}/commons.branch=${COMMIT_HASH} -X ${PACKAGE_COMMONS}/commons.buildDate=${BUILD_DATE} -X ${PACKAGE_COMMONS}/commons.version=${v}"
 IMAGE_NAME=reportportal/service-ui$(IMAGE_POSTFIX)
 
@@ -51,6 +52,16 @@ build-statics:
 	npm --prefix $(UI_BUILD_ROOT) install
 	npm --prefix $(UI_BUILD_ROOT) run build
 	npm --prefix $(UI_BUILD_ROOT) run test
+	npm --prefix $(UI_BUILD_REACT) install
+    npm --prefix $(UI_BUILD_REACT) run eslint
+    npm --prefix $(UI_BUILD_REACT) run test
+
+
+build-react:
+    npm --prefix $(UI_BUILD_REACT) install
+    npm --prefix $(UI_BUILD_REACT) run eslint
+    npm --prefix $(UI_BUILD_REACT) run test
+    npm --prefix $(UI_BUILD_REACT) run build
 
 
 # Builds the project
