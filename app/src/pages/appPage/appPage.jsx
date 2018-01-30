@@ -1,4 +1,3 @@
-
 import { signal } from 'cerebral/tags';
 
 // eslint-disable-next-line react/prop-types

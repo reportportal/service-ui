@@ -8,6 +8,8 @@
   "AdminSidebar.btnProfile": "Профиль",
   "AdminSidebar.btnToProject": "Назад к проекту",
   "AdminSidebar.settings": "Настройки сервера",
+  "AssignedProjects.headerNameCol": "Присвоенные проекты",
+  "AssignedProjects.headerRoleCol": "Проектная роль",
   "ChangePasswordBlock.changePass": "Изменение пароля",
   "ChangePasswordBlock.enterEmail": "введите новый пароль и подтвердите его",
   "ChangePasswordForm.changePassword": "Изменить пароль",
@@ -30,6 +32,10 @@
   "NewsBlock.twitterTitle": "Ознакомьтесь с нашими последними твитами",
   "Notification.infoLogout": "Вы вышли",
   "Notification.successLogin": "Успешный вход",
+  "PersonalInfoBlock.changePassword": "Изменить пароль",
+  "PersonalInfoBlock.header": "Персональная информация",
+  "PersonalInfoBlock.removePhoto": "Убрать фото",
+  "PersonalInfoBlock.uploadPhoto": "Загрузить фото",
   "RegistrationForm.confirmPasswordHint": "Пароли не совпадают",
   "RegistrationForm.loginConstraints": "1-128 символов, латинские буквы, цифры, знаки: дефис, нижнее подчеркивание",
   "RegistrationForm.loginHint": "Логин должен содержать от '1' до '128' символов, включая латинские буквы, цифры, дефис, нижнее подчеркивание и точку.",
@@ -51,5 +57,8 @@
   "RegistrationPage.visit": "Посетите",
   "RegistrationPage.welcome": "Добро пожаловать,",
   "ServiceVersionItem.newVersion": "Доступна новая версия: {newVersion}",
-  "ServiceVersionsBlock.currentVersion": "Текущая версия"
+  "ServiceVersionsBlock.currentVersion": "Текущая версия",
+  "UuidBlock.headerNameCol": "Универсальный уникальный идентификатор",
+  "UuidBlock.regenerate": "Создать новый",
+  "UuidBlock.tip": "Чтобы обеспечить надежность вашего доменного пароля, вы можете использовать пользовательский опознавательный номер, называемый UUID, чтобы подтвердить, что ваша учетная запись может загружаться агентом."
 }
