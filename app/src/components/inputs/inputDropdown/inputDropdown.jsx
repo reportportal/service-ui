@@ -30,6 +30,34 @@ const cx = classNames.bind(styles);
 
 // eslint-disable-next-line react/prefer-stateless-function
 class Dropdown extends Component {
+  static propTypes = {
+    formPath: PropTypes.string,
+    fieldName: PropTypes.string,
+    displayedValue: PropTypes.string,
+    options: PropTypes.array,
+    multiple: PropTypes.bool,
+    selectAll: PropTypes.bool,
+    disabled: PropTypes.bool,
+    isFocus: PropTypes.bool,
+    onChange: PropTypes.func,
+    onFocus: PropTypes.func,
+    onBlur: PropTypes.func,
+  };
+
+  static defaultProps = {
+    formPath: '',
+    fieldName: '',
+    displayedValue: '',
+    options: [],
+    multiple: false,
+    selectAll: false,
+    disabled: false,
+    isFocus: false,
+    onChange: () => {},
+    onFocus: () => {},
+    onBlur: () => {},
+  };
+
   componentDidMount() {
     document.addEventListener('click', this.handleClickOutside);
   }
@@ -59,6 +87,7 @@ class Dropdown extends Component {
       />
     ));
   }
+
   render() {
     const classes = cx({
       dropdown: true,
@@ -82,34 +111,6 @@ class Dropdown extends Component {
     );
   }
 }
-
-Dropdown.propTypes = {
-  formPath: PropTypes.string,
-  fieldName: PropTypes.string,
-  displayedValue: PropTypes.string,
-  options: PropTypes.array,
-  multiple: PropTypes.bool,
-  selectAll: PropTypes.bool,
-  disabled: PropTypes.bool,
-  isFocus: PropTypes.bool,
-  onChange: PropTypes.func,
-  onFocus: PropTypes.func,
-  onBlur: PropTypes.func,
-};
-
-Dropdown.defaultProps = {
-  formPath: '',
-  fieldName: '',
-  displayedValue: '',
-  options: [],
-  multiple: false,
-  selectAll: false,
-  disabled: false,
-  isFocus: false,
-  onChange: () => {},
-  onFocus: () => {},
-  onBlur: () => {},
-};
 
 export default connect({
   multiple: state`${props`formPath`}.${props`fieldName`}.multiple`,
